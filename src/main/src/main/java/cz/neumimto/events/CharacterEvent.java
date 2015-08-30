@@ -1,0 +1,22 @@
+package cz.neumimto.events;
+
+import cz.neumimto.players.IActiveCharacter;
+
+/**
+ * Created by NeumimTo on 13.3.2015.
+ */
+public class CharacterEvent extends CancellableEvent {
+    private IActiveCharacter IActiveCharacter;
+
+    public CharacterEvent(IActiveCharacter IActiveCharacter) {
+        this.IActiveCharacter = IActiveCharacter;
+    }
+
+    public IActiveCharacter getActiveCharacter() {
+        return IActiveCharacter;
+    }
+
+    public void setActiveCharacter(IActiveCharacter IActiveCharacter) {
+        this.IActiveCharacter = IActiveCharacter;
+    }
+}
