@@ -1,3 +1,21 @@
+/*    
+ *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *     
+ */
+
 package cz.neumimto.players;
 
 import cz.neumimto.GroupService;
@@ -9,6 +27,10 @@ import cz.neumimto.effects.EffectService;
 import cz.neumimto.effects.IGlobalEffect;
 import cz.neumimto.effects.common.def.ManaRegeneration;
 import cz.neumimto.events.*;
+import cz.neumimto.events.character.EventCharacterArmorPostUpdate;
+import cz.neumimto.events.character.PlayerDataPreloadComplete;
+import cz.neumimto.events.character.WeaponEquipEvent;
+import cz.neumimto.events.party.PartyInviteEvent;
 import cz.neumimto.inventory.InventoryService;
 import cz.neumimto.ioc.Inject;
 import cz.neumimto.ioc.Singleton;
@@ -680,7 +702,7 @@ public class CharacterService {
         if (event.isCancelled())
             return 2;
         Set<IGlobalEffect> effects = event.getLastItem().getEffects().keySet();
-        effects.stream().forEach(g -> effectService.removeEffect(g.getIEffectClass(), character));
+        effects.stream().forEach(g -> effectService.removeEffect(g.asEffectClass(), character));
         Map<IGlobalEffect, Integer> toadd = event.getNewItem().getEffects();
         effectService.applyGlobalEffectsAsEnchantments(toadd, character);
         return 0;
@@ -692,7 +714,7 @@ public class CharacterService {
         }*/
         Weapon armor1 = character.getEquipedArmor().get(type);
         if (armor1 != null) {
-            armor1.getEffects().keySet().forEach(g -> effectService.removeEffect(g.getIEffectClass(), character));
+            armor1.getEffects().keySet().forEach(g -> effectService.removeEffect(g.asEffectClass(), character));
             character.getEquipedArmor().remove(type);
         }
         if (armor != null) {
@@ -700,5 +722,9 @@ public class CharacterService {
         }
 
         return 0;
+    }
+
+    public boolean canUseItemType(IActiveCharacter character, ItemType type) {
+        return character.canUse(type);
     }
 }

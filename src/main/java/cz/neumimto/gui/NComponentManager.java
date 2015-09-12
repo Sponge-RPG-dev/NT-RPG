@@ -1,3 +1,21 @@
+/*    
+ *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *     
+ */
+
 package cz.neumimto.gui;
 
 import com.google.common.base.Optional;
@@ -43,17 +61,19 @@ public class NComponentManager implements ComponentManager {
     @PostProcess(priority = 500)
     public void initializeComponents() {
         Optional<MinecraftGuiService> provide = game.getServiceManager().provide(MinecraftGuiService.class);
-        minecraftGuiService = provide.get();
-        IoC.get().registerInterfaceImplementation(MinecraftGuiService.class, minecraftGuiService);
-        Path path = Paths.get(NtRpgPlugin.workingDir + File.separator + "GuiComponents.xml");
-        FileUtils.createFileIfNotExists(path);
-        Path css = Paths.get(NtRpgPlugin.workingDir + File.separator + "GuiAttributes.css");
-        FileUtils.createFileIfNotExists(css);
-        root = ComponentFactory.load(path.toFile(), CSSFactory.load(css.toFile()));
-        Path resource = Paths.get(NtRpgPlugin.workingDir + File.separator + "GuiResources.xml");
-        FileUtils.createFileIfNotExists(resource);
-        this.resource = ResourceFactory.load(resource.toFile());
-        minecraftGuiService.registerComponentManager(this, false);
+        if (provide.isPresent()) {
+            minecraftGuiService = provide.get();
+            IoC.get().registerInterfaceImplementation(MinecraftGuiService.class, minecraftGuiService);
+            Path path = Paths.get(NtRpgPlugin.workingDir + File.separator + "GuiComponents.xml");
+            FileUtils.createFileIfNotExists(path);
+            Path css = Paths.get(NtRpgPlugin.workingDir + File.separator + "GuiAttributes.css");
+            FileUtils.createFileIfNotExists(css);
+            root = ComponentFactory.load(path.toFile(), CSSFactory.load(css.toFile()));
+            Path resource = Paths.get(NtRpgPlugin.workingDir + File.separator + "GuiResources.xml");
+            FileUtils.createFileIfNotExists(resource);
+            this.resource = ResourceFactory.load(resource.toFile());
+            minecraftGuiService.registerComponentManager(this, false);
+        }
     }
 
     @Override

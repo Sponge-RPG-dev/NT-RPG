@@ -6,7 +6,7 @@
 
     <groupId>nt</groupId>
     <artifactId>NtRpg</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.4</version>
 
     <properties>
         <timestamp>${maven.build.timestamp}</timestamp>
@@ -27,7 +27,7 @@
         <dependency>
             <groupId>com.github.djxy</groupId>
             <artifactId>MinecraftGUI-Plugin</artifactId>
-            <version>v1.1</version>
+            <version>v1.1.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

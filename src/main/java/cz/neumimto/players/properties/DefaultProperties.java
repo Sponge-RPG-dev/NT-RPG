@@ -1,3 +1,21 @@
+/*    
+ *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *     
+ */
+
 package cz.neumimto.players.properties;
 
 /**
@@ -126,11 +144,8 @@ public class DefaultProperties {
     @Property(name = "fire_damage_protection_mult", default_ = 1)
     public static short fire_damage_protection_mult;
 
-    @Property(name = "ice_damage_bonus_mult", default_ = 1)
-    public static short wither_damage_bonus_mult;
-
-    @Property(name = "wiher_damage_protection_mult", default_ = 1)
-    public static short wither_damage_protection_mult;
+    @Property(name = "physical_damage_protection_mult", default_ = 1)
+    public static short physical_damage_protection_mult;
 
     @Property(name = "lightning_damage_bonus_mult", default_ = 1)
     public static short lightning_damage_bonus_mult;
@@ -150,6 +165,15 @@ public class DefaultProperties {
     @Property(name = "mana_regen_mult", default_ = 0)
     public static short mana_regen_mult;
 
-    @Property
-    public static short current_weapon_damage;
+    @Property(name = "ice_damage_protection_mult", default_ = 1)
+    public static short ice_damage_protection_mult;
+
+    @Property(name = "physical_damaga_bonus_mult",default_ = 1)
+    public static short physical_damage_bonus_mult;
+
+    @Property(name = "ice_damage_bonus_mult",default_ = 1)
+    public static short ice_damage_bonus_mult;
+
+    @Property(name = "staffs_damage_mult", default_ = 1)
+    public static short staffs_damage_mult;
 }

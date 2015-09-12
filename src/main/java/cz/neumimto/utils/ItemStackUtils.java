@@ -1,5 +1,25 @@
+/*    
+ *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *     
+ */
+
 package cz.neumimto.utils;
 
+import com.google.common.base.*;
+import com.google.common.base.Optional;
 import com.typesafe.config.Config;
 import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.Weapon;
@@ -11,12 +31,15 @@ import cz.neumimto.skills.SkillInfo;
 import cz.neumimto.skills.SkillItemIcon;
 import cz.neumimto.skills.SkillSettings;
 import cz.neumimto.skills.SkillTree;
+import org.junit.Test;
+import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
 import org.spongepowered.api.data.manipulator.mutable.item.LoreData;
 import org.spongepowered.api.data.value.mutable.ListValue;
 import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackBuilder;
 import org.spongepowered.api.text.Text;
@@ -25,6 +48,7 @@ import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 import static cz.neumimto.NtRpgPlugin.GlobalScope;
@@ -35,7 +59,7 @@ import static org.spongepowered.api.item.ItemTypes.*;
  */
 public class ItemStackUtils {
     protected static String ID = "id";
-    protected static String COUNT = "amount";
+    protected static String QUANTITY = "quantity";
     protected static String DAMAGE = "damage";
     protected static String DISPLAY_NAME = "name";
     protected static String LORE = "lore";
@@ -78,6 +102,11 @@ public class ItemStackUtils {
         add(BOW);
     }};
 
+    public static Set<ItemType> staffs = new HashSet<ItemType>() {{
+        add(BLAZE_ROD);
+        add(STICK);
+    }};
+
     public static Set<ItemType> weapons = new HashSet<ItemType>() {{
         addAll(swords);
         addAll(axes);
@@ -85,6 +114,8 @@ public class ItemStackUtils {
         addAll(pickaxes);
         addAll(hoes);
     }};
+
+
 
     public static boolean isSword(ItemType type) {
         return swords.contains(type);
@@ -110,21 +141,47 @@ public class ItemStackUtils {
         return weapons.contains(type);
     }
 
-    public static ItemStack fromConfig(Config c) {
-        ItemType type = null; /* GlobalScope.game.getRegistry().getType(ItemType.class, c.getString("type")); */
-        int amount = c.getInt(COUNT);
-        int damage = c.getInt(DAMAGE);
-        return GlobalScope.game.getRegistry().createItemBuilder().itemType(type).quantity(amount).build();
+
+    public static boolean isStaff(ItemType type) {
+        return staffs.contains(type);
     }
 
-    public static void loadItemLore(org.spongepowered.api.item.inventory.ItemStack o, List<String> lore) {
+    public static ItemStack fromConfig(Config c) {
+        String type = c.getString(ID);
+        int amount = c.getInt(QUANTITY);
+        int damage = c.getInt(DAMAGE);
+        String name = c.getString(DISPLAY_NAME);
+        List<Text> stringList = new ArrayList<>();
+        c.getStringList(LORE).stream().forEach(s -> stringList.add(Texts.of(s)));
+        Optional<ItemType> asd = globalScope.game.getRegistry().getType(ItemType.class, type);
+        if (asd.isPresent()) {
+            ItemStack item = GlobalScope.game.getRegistry().createItemBuilder().itemType(asd.get()).build();
+            item.setQuantity(amount);
+            item.offer(Keys.ITEM_LORE,stringList);
+            item.offer(Keys.DISPLAY_NAME,Texts.of(name));
+            item.offer(Keys.ITEM_DURABILITY,damage);
+            return item;
+        }
+        throw new RuntimeException("Non existing item type " + type);
+    }
 
+    private static BiFunction<String,String,String> formatedConfig = (k,v) -> Utils.newLine(k+": "+v+";");
+
+    public static String itemStackToFormatedConfig(ItemStack itemStack) {
+
+        String s = "{"+Utils.LineSeparator;
+        s += formatedConfig.apply(ID,itemStack.getItem().getId());
+        s += formatedConfig.apply(QUANTITY, String.valueOf(itemStack.getQuantity()));
+        s += formatedConfig.apply(DAMAGE, String.valueOf(itemStack.get(Keys.ITEM_DURABILITY).get()));
+        s += formatedConfig.apply(DISPLAY_NAME, Texts.toPlain(itemStack.get(Keys.DISPLAY_NAME).get()));
+        s += "}";
+        return s;
     }
 
     public static String itemStackToString(ItemStack item) {
         StringBuilder builder = new StringBuilder();
         createProperty(builder, ID, item.getItem().getId());
-        createProperty(builder, COUNT, item.getQuantity());
+        createProperty(builder, QUANTITY, item.getQuantity());
         createProperty(builder, DISPLAY_NAME, item.get(Keys.DISPLAY_NAME).get());
         return builder.toString();
     }
@@ -133,9 +190,10 @@ public class ItemStackUtils {
         return null;
     }
 
+
     private static void createProperty(StringBuilder builder, String value, String key) {
         if (key != null)
-            builder.append(value).append(key).append(";");
+            builder.append(value).append(":").append(key).append(";");
     }
 
     private static void createProperty(StringBuilder builder, String value, Text key) {
@@ -244,6 +302,15 @@ public class ItemStackUtils {
      */
     public static Map<IGlobalEffect, Integer> getItemEffects(ItemStack is) {
         List<Text> texts = is.get(Keys.ITEM_LORE).get();
+        return getItemEffects(texts);
+    }
+
+    /**
+     * Builds a effect map from item lore.
+     * @param texts
+     * @return Map<Effect,Level>
+     */
+    public static Map<IGlobalEffect, Integer> getItemEffects(List<Text> texts) {
         Map<IGlobalEffect, Integer> map = new HashMap<>();
         texts.stream().filter(t -> t.getFormat().getColor() == TextColors.AQUA).forEach(t -> {
             String eff = Texts.toPlain(t).substring(3).toLowerCase();
@@ -257,10 +324,18 @@ public class ItemStackUtils {
         return map;
     }
 
+    /**
+     * Creates Weapon object from itemstack
+     * @param itemStack
+     * @return
+     */
     public static Weapon itemStackToWeapon(ItemStack itemStack) {
+        if (itemStack == null)
+            return Weapon.EmptyHand;
         Map<IGlobalEffect, Integer> itemEffects = getItemEffects(itemStack);
         Weapon weapon = new Weapon(itemStack.getItem());
         weapon.setEffects(itemEffects);
         return weapon;
     }
+
 }

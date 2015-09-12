@@ -1,3 +1,21 @@
+/*    
+ *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *     
+ */
+
 package cz.neumimto.gui;
 
 import cz.neumimto.NtRpgPlugin;
@@ -6,6 +24,11 @@ import cz.neumimto.ioc.PostProcess;
 import cz.neumimto.ioc.Singleton;
 import cz.neumimto.skills.SkillService;
 import cz.neumimto.utils.FileUtils;
+import org.spongepowered.api.Game;
+import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.event.SpongeEventFactory;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.entity.DamageEntityEvent;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -24,6 +47,8 @@ import java.util.Properties;
  */
 @Singleton
 public class GuiService {
+
+    Game game;
 
     @Inject
     private SkillService skillService;

@@ -1,3 +1,21 @@
+/*    
+ *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *     
+ */
+
 package cz.neumimto.players;
 
 import cz.neumimto.Weapon;
@@ -15,6 +33,7 @@ import cz.neumimto.skills.ISkill;
 import cz.neumimto.skills.SkillInfo;
 import cz.neumimto.skills.StartingPoint;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
@@ -39,23 +58,25 @@ public class ActiveCharacter implements IActiveCharacter {
     private Health health = new Health(this);
     private transient Player pl;
     private transient Map<Class<? extends IEffect>, IEffect> effects = new HashMap<>();
-    private transient Weapon cachedWeapon = Weapon.EmptyHand;
     private transient Click click = new Click();
     private transient Set<ItemType> allowedArmorIds = new HashSet<>();
     private transient Map<ItemType, Double> allowedWeapons = new HashMap<>();
-    private transient Map<EquipmentTypeWorn, Object> equipedArmor = new HashMap<>();
+    private transient Map<EquipmentTypeWorn, Weapon> equipedArmor = new HashMap<>();
     private transient Party party;
     private Map<String, ExtendedSkillInfo> skills = new HashMap<>();
     private Guild guild = Guild.Default;
     private Race race = Race.Default;
     private transient Set<ExtendedNClass> classes = new HashSet<>();
     private transient ExtendedNClass primary;
-    private transient Weapon mainHand = new Weapon(null);
-    private transient Weapon offHand = new Weapon(null);
-    private transient CharacterBase base;
+    private transient Weapon mainHand = Weapon.EmptyHand;
+    private transient Weapon offHand = Weapon.EmptyHand;
+    private CharacterBase base;
     private transient boolean silenced = false;
     private transient boolean isusingguimod;
     private transient WeakReference<Party> pendingPartyInvite = new WeakReference<Party>(null);
+    private transient double weaponDamage;
+    private transient double armorvalue;
+    private transient DamageType preferedDamageType = null;
 
     public ActiveCharacter(Player pl, CharacterBase base) {
         this.pl = pl;
@@ -102,10 +123,12 @@ public class ActiveCharacter implements IActiveCharacter {
         characterProperties[index] = value;
     }
 
+    @Override
     public void setCharacterLevelProperty(int index, float value) {
         characterPropertiesLevel[index] = value;
     }
 
+    @Override
     public float getCharacterPropertyWithoutLevel(int index) {
         return characterProperties[index];
     }
@@ -230,9 +253,6 @@ public class ActiveCharacter implements IActiveCharacter {
 
     @Override
     public void onRightClickBlock(int slotId) {
-        if (cachedWeapon.getSlot() == slotId) {
-            return;
-        }
         //todo lets see how will work mc 1.9
     }
 
@@ -484,7 +504,6 @@ public class ActiveCharacter implements IActiveCharacter {
         return getPrimaryClass().getnClass();
     }
 
-
     @Override
     public Party getParty() {
         return party;
@@ -506,6 +525,41 @@ public class ActiveCharacter implements IActiveCharacter {
     @Override
     public boolean isInPartyWith(IActiveCharacter character) {
         return (character.hasParty() && hasParty() && character.getParty() == character.getParty());
+    }
+
+    @Override
+    public void setWeaponDamage(double damage) {
+        weaponDamage = damage;
+    }
+
+    @Override
+    public double getWeaponDamage() {
+        return weaponDamage;
+    }
+
+    @Override
+    public void setArmorValue(double value) {
+        armorvalue = value;
+    }
+
+    @Override
+    public double getArmorValue() {
+        return armorvalue;
+    }
+
+    @Override
+    public boolean hasPreferedDamageType() {
+        return preferedDamageType != null;
+    }
+
+    @Override
+    public DamageType getDamageType() {
+        return preferedDamageType;
+    }
+
+    @Override
+    public void setDamageType(DamageType damageType) {
+        this.preferedDamageType = damageType;
     }
 
     @Override

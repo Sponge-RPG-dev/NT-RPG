@@ -1,6 +1,6 @@
 var SkillSpeed =new (Java.extend(ActiveSkill, {
     init: function() {
-        var s =Java.super(SkillSpeed);
+        var s = Java.super(SkillSpeed);
         s.setName("Speed");
         s.setDescription("For a duration boosts player's speed");
         var SkillSpeedSettings = new SkillSettings();
@@ -15,7 +15,7 @@ var SkillSpeed =new (Java.extend(ActiveSkill, {
 }));
 var SuperJump = new (Java.extend(ActiveSkill, {
     init: function () {
-        var s =Java.super(SuperJump);
+        var s = Java.super(SuperJump);
         s.setName("SuperJump");
         s.setDescription("Launches player into air");
         var SkillSpeedSettings = new SkillSettings();
@@ -54,7 +54,6 @@ var Heal = new (Java.extend(ActiveSkill, {
         s.setSettings(HealSettings);
     },
     cast: function(character, extendedSkillInfo) {
-        character.sendMessage(extendedSkillInfo.getLevel()+"");
         GlobalScope.game.getScheduler().getTaskBuilder().delay(getLevelNode(extendedSkillInfo,"delay"), TimeUnit.MILLISECONDS).name("healtask").execute(function() {
             var healedamount = getLevelNode(extendedSkillInfo, "healed-amount") * getLevelNode(extendedSkillInfo,"default-regen-mult");
             healedamount = GlobalScope.characterService.healCharacter(character, healedamount);

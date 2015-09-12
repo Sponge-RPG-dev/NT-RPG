@@ -1,3 +1,21 @@
+/*    
+ *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *     
+ */
+
 package cz.neumimto.gui;
 
 import cz.neumimto.effects.EffectStatusType;
@@ -68,7 +86,7 @@ public class MCGUIMessaging implements IPlayerMessage {
             int radius = 20;
             double x = Math.cos(angle) * radius + centerX;
             double y = Math.sin(angle) * radius + centerY;
-
+            angle = +360 / center.getDepending().size();
             Component buttoncenter = new Component(ComponentType.BUTTON, panel);
             buttoncenter.getAttributes().setAttribute(ComponentAttribute.X_RELATIVE.name(), x);
             buttoncenter.getAttributes().setAttribute(ComponentAttribute.Y_RELATIVE.name(), y);
@@ -77,7 +95,7 @@ public class MCGUIMessaging implements IPlayerMessage {
             image.getAttributes().setAttribute(ComponentAttribute.IMAGE_TYPE.name(), "png");
             Component level = new Component(ComponentType.PARAGRAPH, image);
             level.getAttributes().setAttribute(ComponentAttribute.POSITION.name(), "");
-            angle = +360 / center.getDepending().size();
+
         }
 
     }
