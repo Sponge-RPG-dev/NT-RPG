@@ -33,14 +33,15 @@ import org.spongepowered.api.event.entity.DamageEntityEvent;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 /**
  * Created by ja on 1.9.2015.
@@ -48,7 +49,7 @@ import java.util.Properties;
 @Singleton
 public class GuiService {
 
-    Game game;
+    private Game game;
 
     @Inject
     private SkillService skillService;
@@ -58,27 +59,33 @@ public class GuiService {
     @PostProcess(priority = 350)
     public void createStubSkillIcons() {
         Properties properties = new Properties();
-        Path prop = Paths.get(NtRpgPlugin.workingDir + "/skillsicons.properties");
+        Path prop = Paths.get(NtRpgPlugin.workingDir + "/skillicons.properties");
         FileUtils.createFileIfNotExists(prop);
         try {
             properties.load(new FileInputStream(prop.toFile()));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Path outputdir = FileUtils.createDirectoryIfNotExists(Paths.get(NtRpgPlugin.workingDir + "/icons/skills"));
-        skillService.getSkills().values().stream().forEach(skill -> {
-            if (!properties.containsKey(skill.getName())) {
-                try {
+        Path outputdir = Paths.get(NtRpgPlugin.workingDir + "/icons/skills");
+        FileUtils.createDirectoryIfNotExists(outputdir);
+        try(final PrintWriter p = new PrintWriter(new BufferedWriter(new FileWriter(prop.toFile(), true)))) {
+            skillService.getSkills().values().stream().forEach(skill -> {
+                if (!properties.containsKey(skill.getName())) {
                     BufferedImage img = createImageFromText(skill.getName());
                     File file = new File(outputdir + "/" + skill.getName() + ".png");
-                    ImageIO.write(img, "png", file);
+                    try {
+                        ImageIO.write(img, "png", file);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     String uri = file.toPath().toUri().toString();
                     properties.put(skill.getName(), uri);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+                    p.println(skill.getName()+"="+uri);
                 }
-            }
-        });
+            });
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
         skillIconsUrls = (Map) properties;
     }
 

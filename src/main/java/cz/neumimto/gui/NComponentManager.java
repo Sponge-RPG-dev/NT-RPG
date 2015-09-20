@@ -57,11 +57,12 @@ public class NComponentManager implements ComponentManager {
     public Component root;
 
     private List<Resource> resource;
-
+/*
     @PostProcess(priority = 500)
     public void initializeComponents() {
         Optional<MinecraftGuiService> provide = game.getServiceManager().provide(MinecraftGuiService.class);
         if (provide.isPresent()) {
+
             minecraftGuiService = provide.get();
             IoC.get().registerInterfaceImplementation(MinecraftGuiService.class, minecraftGuiService);
             Path path = Paths.get(NtRpgPlugin.workingDir + File.separator + "GuiComponents.xml");
@@ -75,7 +76,7 @@ public class NComponentManager implements ComponentManager {
             minecraftGuiService.registerComponentManager(this, false);
         }
     }
-
+*/
     @Override
     public void initPlayerGUI(String playerUUID) {
         game.getScheduler().createTaskBuilder().async().execute(() -> {

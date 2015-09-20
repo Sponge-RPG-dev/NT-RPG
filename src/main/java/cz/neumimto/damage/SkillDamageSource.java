@@ -93,10 +93,11 @@ public class SkillDamageSource implements ISkillDamageSource {
         return isExplosion;
     }
 
-    @Override
+
     public boolean isStarvationBased() {
         return isStarvationBased;
     }
+
 
     @Override
     public boolean isMagic() {

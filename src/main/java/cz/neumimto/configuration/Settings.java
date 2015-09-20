@@ -23,7 +23,7 @@ package cz.neumimto.configuration;
  */
 public class Settings {
 
+    public static boolean ENABLED_GUI = false;
     public static short CHARACTER_PROPERTIES;
 
-    public final static int SKILLNAME_MAX_LENGTH = 20;
 }

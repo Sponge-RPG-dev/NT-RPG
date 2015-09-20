@@ -19,9 +19,12 @@
 package cz.neumimto.players.properties;
 
 import cz.neumimto.NtRpgPlugin;
+import cz.neumimto.configuration.PluginConfig;
+import cz.neumimto.ioc.Inject;
 import cz.neumimto.ioc.PostProcess;
 import cz.neumimto.ioc.Singleton;
 import cz.neumimto.utils.Utils;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +34,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.text.Collator;
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Created by NeumimTo on 28.12.2014.
@@ -39,7 +44,16 @@ import java.util.*;
 @Singleton
 public class PlayerPropertyService {
 
+    @Inject
+    private Logger logger;
+
     public static short LAST_ID = 0;
+    public static final Supplier<Short> getAndIncrement = () -> {
+        short a = LAST_ID;
+        LAST_ID++;
+        return a;
+    };
+
     private Map<String, Short> idMap = new HashMap<>();
     private Map<Integer, Float> defaults = new HashMap<>();
     private List<PropertyContainer> containerList = new ArrayList<>();
@@ -49,7 +63,10 @@ public class PlayerPropertyService {
 
     }
 
+
     public void registerProperty(String name, short id) {
+        if (PluginConfig.DEBUG)
+            logger.info("Found property "+ name +"; assigned id: "+ id );
         idMap.put(name, id);
     }
 
@@ -77,11 +94,13 @@ public class PlayerPropertyService {
         return containerList;
     }
 
-    @PostProcess(priority = 200)
+    @PostProcess(priority = 2000)
     public void dump() {
         Path path = Paths.get(NtRpgPlugin.workingDir + File.separator + "properties_dump.info");
         String s = "";
         List<String> l = new ArrayList<>(idMap.keySet());
+        if (PluginConfig.DEBUG)
+            logger.info(" - found " + l.size() + " Properties");
         Collections.sort(l, Collator.getInstance());
         for (String s1 : l) {
             s += s1 + Utils.LineSeparator;

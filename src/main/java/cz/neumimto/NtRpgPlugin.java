@@ -18,10 +18,14 @@
 
 package cz.neumimto;
 
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import cz.neumimto.configuration.ConfigMapper;
+import cz.neumimto.configuration.Settings;
 import cz.neumimto.ioc.IoC;
+import cz.neumimto.persistance.PlayerDao;
 import cz.neumimto.utils.FileUtils;
+import djxy.api.MinecraftGuiService;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Listener;
@@ -38,7 +42,9 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 import java.util.jar.JarFile;
 
 /**
@@ -65,7 +71,12 @@ public class NtRpgPlugin {
         Game game = event.getGame();
         ioc.registerInterfaceImplementation(Game.class, game);
         ioc.registerInterfaceImplementation(Logger.class, logger);
-
+        Optional<MinecraftGuiService> provide = game.getServiceManager().provide(MinecraftGuiService.class);
+        if (provide.isPresent()) {
+            ioc.registerInterfaceImplementation(MinecraftGuiService.class, provide.get());
+        } else {
+            Settings.ENABLED_GUI = false;
+        }
         ioc.registerDependency(this);
 
         try {
@@ -118,8 +129,6 @@ public class NtRpgPlugin {
         GlobalScope = ioc.build(GlobalScope.class);
         rl.loadExternalJars();
         ioc.postProcess();
-        ;
-
         double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
         logger.info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
     }

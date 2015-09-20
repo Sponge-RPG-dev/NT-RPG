@@ -64,7 +64,7 @@ public class PluginConfig {
     public static boolean CAN_REFUND_SKILL = true;
 
     @ConfigValue
-    public static String JJS_ARGS = "-ot -strict";
+    public static String JJS_ARGS = "--optimistic-types=true";
 
     @ConfigValue
     public static long MANA_REGENERATION_RATE = 1000;

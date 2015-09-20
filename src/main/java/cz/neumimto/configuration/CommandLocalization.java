@@ -21,7 +21,7 @@ package cz.neumimto.configuration;
 /**
  * Created by NeumimTo on 11.2.2015.
  */
-@ConfigurationContainer(path = "{WorkingDir}", filename = "CommandLocaliuation.conf")
+@ConfigurationContainer(path = "{WorkingDir}", filename = "CommandLocalization.conf")
 public class CommandLocalization {
 
 

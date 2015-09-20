@@ -58,9 +58,6 @@ public class ResourceLoader {
     private static IoC ioc;
 
     @Inject
-    private LoggingService loggingService;
-
-    @Inject
     private SkillService skillService;
 
     @Inject
@@ -116,13 +113,14 @@ public class ResourceLoader {
         logger.info("Loading jarfile " + file.getName());
         Enumeration<JarEntry> entries = file.entries();
         JarEntry next = null;
+
         ResourceClassLoader cl = new ResourceClassLoader((URLClassLoader) this.getClass().getClassLoader());
         while (entries.hasMoreElements()) {
             next = entries.nextElement();
             if (next.isDirectory() || !next.getName().endsWith(".class")) {
                 continue;
             }
-            if (main && !next.getName().startsWith("src/main/java/neumimto"))
+            if (main && !next.getName().startsWith("cz/neumimto"))
                 continue;
             if (next.getName().lastIndexOf(INNERCLASS_SEPARATOR) > 1)
                 continue;
@@ -147,41 +145,45 @@ public class ResourceLoader {
         if (Modifier.isAbstract(clazz.getModifiers())) {
             return;
         }
-        if (clazz.isEnum())
-            return;
         if (PluginConfig.DEBUG)
-            logger.debug(" - Checking if theres something to load in a class " + clazz.getName());
+            logger.info(" - Checking if theres something to load in a class " + clazz.getName());
         //Properties
         Object container = null;
         if (clazz.isAnnotationPresent(Singleton.class)) {
             container = ioc.build(clazz);
         }
         if (clazz.isAnnotationPresent(ListenerClass.class)) {
-            logger.debug("Registering listener" + clazz.getName());
+            logger.info("Registering listener" + clazz.getName());
             container = ioc.build(clazz);
             ioc.build(Game.class).getEventManager().registerListeners(ioc.build(NtRpgPlugin.class), container);
         }
         if (clazz.isAnnotationPresent(Command.class)) {
             container = ioc.build(clazz);
-            logger.debug("registering command class" + clazz.getName());
+            if (PluginConfig.DEBUG)
+                logger.info("registering command class" + clazz.getName());
             commandService.registerCommand((CommandBase) container);
         }
         if (clazz.isAnnotationPresent(Skill.class)) {
             container = ioc.build(clazz);
-            logger.debug("registering skill " + clazz.getName());
+            if (PluginConfig.DEBUG)
+                logger.info("registering skill " + clazz.getName());
             skillService.addSkill((ISkill) container);
         }
         if (clazz.isAnnotationPresent(ConfigurationContainer.class)) {
             configMapper.loadClass(clazz);
+            if (PluginConfig.DEBUG)
+                logger.info("Found configuration container class", clazz.getName());
         }
         if (clazz.isAnnotationPresent(PropertyContainer.class)) {
+            if (PluginConfig.DEBUG)
+                logger.info("Found Property container class" + clazz.getName());
             if (container == null)
                 container = newInstance(clazz, clazz);
             for (Field f : container.getClass().getDeclaredFields()) {
                 if (f.isAnnotationPresent(Property.class)) {
                     Property p = f.getAnnotation(Property.class);
                     try {
-                        f.setShort(null, PlayerPropertyService.LAST_ID);
+                        f.setShort(null, PlayerPropertyService.getAndIncrement.get());
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                         continue;
@@ -197,7 +199,6 @@ public class ResourceLoader {
                     if (p.default_() != 0f) {
                         playerPropertyService.registerDefaultValue(playerPropertyService.LAST_ID, p.default_());
                     }
-                    playerPropertyService.LAST_ID = (short) (playerPropertyService.LAST_ID + 1);
                 }
             }
 

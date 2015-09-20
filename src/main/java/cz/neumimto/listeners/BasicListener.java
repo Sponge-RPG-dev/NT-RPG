@@ -20,12 +20,12 @@ package cz.neumimto.listeners;
 
 
 import com.google.common.base.Optional;
-import cz.neumimto.LoggingService;
 import cz.neumimto.Weapon;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.damage.DamageService;
 import cz.neumimto.damage.ISkillDamageSource;
 import cz.neumimto.effects.EffectService;
+import cz.neumimto.effects.EffectSource;
 import cz.neumimto.effects.IEffect;
 import cz.neumimto.effects.IGlobalEffect;
 import cz.neumimto.events.character.CharacterCombatEvent;
@@ -51,13 +51,13 @@ import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource
 import org.spongepowered.api.event.entity.ChangeEntityEquipmentEvent;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
+import org.spongepowered.api.event.entity.InteractEntityEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.user.BanUserEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.ItemStackTransaction;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
 
@@ -74,9 +74,6 @@ public class BasicListener {
     private Game game;
 
     @Inject
-    private LoggingService logger;
-
-    @Inject
     private InventoryService inventoryService;
 
     @Inject
@@ -86,14 +83,9 @@ public class BasicListener {
     private DamageService damageService;
 
     @Listener
-    public void onPlayerLogin(ClientConnectionEvent.Login event) {
-        UUID id = event.getProfile().getUniqueId();
-        characterService.putInLoadQueue(id);
-    }
-
-    @Listener
     public void onPlayerJoin(ClientConnectionEvent.Join event) {
-
+        UUID id = event.getTargetEntity().getUniqueId();
+        characterService.putInLoadQueue(id);
     }
 
     @Listener
@@ -102,14 +94,13 @@ public class BasicListener {
         IActiveCharacter character = characterService.removeCachedWrapper(player.getUniqueId());
         if (!character.isStub()) {
             characterService.putInSaveQueue(character.getCharacterBase());
-            for (IEffect effect : character.getEffects()) {
-                effectService.purgeEffect(effect);
-            }
+            character.getEffects().stream().forEach(effectService::purgeEffect);
+            characterService.putInSaveQueue(character.getCharacterBase());
+            /*Always reset the persistent properties back to vanilla values in a case
+             some dummy decides to remove my awesome plugin :C */
+            //HP
+            Utils.resetPlayerToDefault(player);
         }
-        /*Always reset the persistent properties back to vanilla values in a case
-         some dummy decides to remove my awesome plugin :C */
-        //HP
-        Utils.resetPlayerToDefault(player);
     }
 
     @Listener
@@ -126,7 +117,12 @@ public class BasicListener {
         Entity targetEntity = event.getTargetEntity();
         if (targetEntity.getType() == EntityTypes.PLAYER) {
             IActiveCharacter character = characterService.getCharacter(targetEntity.getUniqueId());
-            character.getEffects().stream().forEach(iEffect -> effectService.removeEffect(iEffect,character));
+            if (character.isStub())
+                return;
+            character.getEffects().stream().filter
+                    (iEffect1 -> iEffect1.getEffectSource() == EffectSource.TEMP)
+                    .filter(IEffect::requiresRegister)
+                    .forEach(iEffect -> effectService.removeEffect(iEffect,character));
         }
     }
 
@@ -153,6 +149,11 @@ public class BasicListener {
                 }
             }
         }
+    }
+
+    @Listener
+    public void onRightClick(InteractEntityEvent.Secondary event) {
+
     }
 
     @Listener(order = Order.BEFORE_POST, ignoreCancelled = false)

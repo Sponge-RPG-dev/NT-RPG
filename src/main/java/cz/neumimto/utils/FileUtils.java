@@ -71,8 +71,6 @@ public class FileUtils {
         return path;
     }
 
-    public static void closeStream(Closeable closeable) {
-    }
 }
 
 

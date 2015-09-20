@@ -15,7 +15,7 @@ var PluginConfig = Java.type("cz.neumimto.configuration.PluginConfig");
 var Effect = Java.type("cz.neumimto.effects.EffectBase");
 /* sponge */
 var Texts = Java.type("org.spongepowered.api.text.Texts");
-var VelocityData = Java.type("org.spongepowered.api.data.manipulator.entity.VelocityData");
+var Keys = Java.type("org.spongepowered.api.data.key.Keys");
 /* libs */
 var Vector3d = Java.type("com.flowpowered.math.vector.Vector3d");
 var Optional = Java.type("com.google.common.base.Optional");

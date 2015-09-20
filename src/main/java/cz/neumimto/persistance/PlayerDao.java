@@ -45,9 +45,10 @@ public class PlayerDao {
      * @return
      */
     public List<CharacterBase> getPlayersCharacters(UUID uuid) {
-        Query query = manager.createQuery("SELECT a FROM CharacterBase a WHERE a.uuid=:id order by a.updated");
+        Query query = manager.createQuery("SELECT a FROM CharacterBase a WHERE a.uuid=:id");
         query.setParameter("id", uuid);
         List resultList = query.getResultList();
+        System.out.println(resultList.size());
         return resultList;
     }
 
@@ -77,11 +78,5 @@ public class PlayerDao {
         Query query = manager.createQuery("SELECT COUNT(c.id) FROM CharacterBase c WHERE c.uuid=:id");
         query.setParameter("id", uuid);
         return (int) query.getSingleResult();
-    }
-
-    private void flush() {
-        manager.getTransaction().begin();
-        manager.flush();
-        manager.getTransaction().commit();
     }
 }

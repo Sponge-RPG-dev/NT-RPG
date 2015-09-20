@@ -26,6 +26,7 @@ import cz.neumimto.ioc.IoC;
 import cz.neumimto.ioc.PostProcess;
 import cz.neumimto.ioc.Singleton;
 import cz.neumimto.skills.SkillService;
+import cz.neumimto.utils.FileUtils;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.slf4j.Logger;
 
@@ -42,40 +43,37 @@ import java.nio.file.Paths;
 @Singleton
 public class JSLoader {
     private static ScriptEngine engine;
-    private static File scripts_root = new File(NtRpgPlugin.workingDir + "/scripts");
+    private static Path scripts_root = Paths.get(NtRpgPlugin.workingDir + "/scripts");
 
     @Inject
     private Logger logger;
-
-    @Inject
-    private SkillService skillService;
 
     @Inject
     private IoC ioc;
 
     @PostProcess(priority = 2)
     public void loadSkills() {
-        scripts_root.mkdirs();
-        NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
-        if (PluginConfig.DEBUG) {
-            engine = factory.getScriptEngine(PluginConfig.JJS_ARGS + "d=gen_classes");
-        } else {
-            engine = factory.getScriptEngine(PluginConfig.JJS_ARGS);
-        }
-        Path p = Paths.get(scripts_root.toURI());
         try {
-            Files.createDirectories(p);
-        } catch (IOException e) {
-            e.printStackTrace();
+            Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
+        } catch (ClassNotFoundException e) {
+            logger.info("Nashorn libraries have not been found on the classpath. Use either JDK(1.8u40+) or put nashorn.jar into the mods folder.");
+            return;
         }
+        FileUtils.createDirectoryIfNotExists(scripts_root);
+        if (PluginConfig.DEBUG) {
+            PluginConfig.JJS_ARGS += " d=gen_classes";
+        }
+        NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
+        engine = factory.getScriptEngine(PluginConfig.JJS_ARGS.split(" "));
+
         Path path = Paths.get(scripts_root + File.separator + "Main.js");
+
         if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
             try (InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("Main.js")) {
                 Files.copy(resourceAsStream, path);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
         try (InputStreamReader rs = new InputStreamReader(new FileInputStream(path.toFile()))) {
             Bindings bindings = new SimpleBindings();

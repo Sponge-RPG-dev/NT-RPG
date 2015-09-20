@@ -19,7 +19,6 @@
 package cz.neumimto.players;
 
 import cz.neumimto.GroupService;
-import cz.neumimto.LoggingService;
 import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.Weapon;
 import cz.neumimto.configuration.PluginConfig;
@@ -43,6 +42,7 @@ import cz.neumimto.players.properties.DefaultProperties;
 import cz.neumimto.players.properties.PlayerPropertyService;
 import cz.neumimto.skills.*;
 import cz.neumimto.utils.Utils;
+import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
@@ -70,9 +70,6 @@ public class CharacterService {
     private PlayerDao playerDao;
 
     @Inject
-    private LoggingService logger;
-
-    @Inject
     private InventoryService inventoryService;
 
     @Inject
@@ -81,8 +78,12 @@ public class CharacterService {
     @Inject
     private PlayerPropertyService playerPropertyService;
 
+    @Inject
+    private Logger logger;
+
     private Map<UUID, NPlayer> playerWrappers = new ConcurrentHashMap<>();
     private Map<UUID, IActiveCharacter> characters = new HashMap<>();
+
 
     @Inject
     private EffectService effectService;
@@ -108,7 +109,6 @@ public class CharacterService {
         EventCharacterArmorPostUpdate event = new EventCharacterArmorPostUpdate(character, allowedArmor);
         game.getEventManager().post(event);
     }
-
 
     public void characterCreateState(Player player, boolean first) {
         if (first) {

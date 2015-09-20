@@ -41,10 +41,7 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -65,9 +62,9 @@ public class GroupDao {
     @Inject
     SkillService skillService;
 
-    private Map<String, Race> races = new ConcurrentHashMap<>();
-    private Map<String, NClass> classes = new ConcurrentHashMap<>();
-    private Map<String, Guild> guilds = new ConcurrentHashMap<>();
+    private Map<String, Race> races = new HashMap<>();
+    private Map<String, NClass> classes = new HashMap<>();
+    private Map<String, Guild> guilds = new HashMap<>();
 
     public Map<String, Race> getRaces() {
         return races;

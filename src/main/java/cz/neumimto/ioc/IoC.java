@@ -163,21 +163,20 @@ public class IoC {
 
     static SortedSet<Map.Entry<Object, Set<Method>>> entriesSortedByValues(Map<Object, Set<Method>> map) {
         SortedSet<Map.Entry<Object, Set<Method>>> sortedEntries = new TreeSet<Map.Entry<Object, Set<Method>>>(
-                new Comparator<Map.Entry<Object, Set<Method>>>() {
-                    @Override
-                    public int compare(Map.Entry<Object, Set<Method>> o1, Map.Entry<Object, Set<Method>> o2) {
-                        int res = 0;
-                        for (Method method : o1.getValue()) {
-                            int a = method.getAnnotation(PostProcess.class).priority();
-                            for (Method method1 : o2.getValue()) {
-                                res = a - method1.getAnnotation(PostProcess.class).priority();
-                                if (res == -1)
-                                    return res;
-                            }
-                        }
-                        return res != 0 ? res : 1;
+                (o1, o2) -> {
+                    int res = 0;
+                    int first = 0;
+                    int second = 0;
+                    for (Method method : o1.getValue()) {
+                        first = method.getAnnotation(PostProcess.class).priority();
+                        break;
                     }
-
+                    for (Method method : o2.getValue()) {
+                        second = method.getAnnotation(PostProcess.class).priority();
+                        break;
+                    }
+                    res = first - second;
+                    return res != 0 ? res : 1;
                 });
         sortedEntries.addAll(map.entrySet());
         return sortedEntries;
