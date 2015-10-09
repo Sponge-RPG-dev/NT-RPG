@@ -47,9 +47,12 @@ public abstract class SkillShot extends ActiveSkill {
         Vector3d direction = new Vector3d(x, y, z);
 
         Entity e = getProjectile(character, info, direction);
+        cache(getProjectileProperties(character,info,e));
 
         return null;
     }
+
+    protected abstract ProjectileProperties getProjectileProperties(IActiveCharacter character, ExtendedSkillInfo info, Entity e);
 
     protected abstract Entity getProjectile(IActiveCharacter character, ExtendedSkillInfo info, Vector3d direction);
 }

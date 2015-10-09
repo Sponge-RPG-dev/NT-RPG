@@ -27,7 +27,7 @@ import java.util.Set;
  * Created by NeumimTo on 9.8.2015.
  */
 
-public class StartingPoint extends PassiveSkill {
+public final class StartingPoint extends PassiveSkill {
     public static String name = "StartingPoint";
     private static SkillSettings skillSettings = new SkillSettings();
     private static String desc = "";
@@ -59,6 +59,11 @@ public class StartingPoint extends PassiveSkill {
 
     @Override
     public void skillRefund(IActiveCharacter IActiveCharacter) {
+
+    }
+
+    @Override
+    public void applyEffect(ExtendedSkillInfo info, IActiveCharacter character) {
 
     }
 

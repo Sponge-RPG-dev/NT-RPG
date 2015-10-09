@@ -18,7 +18,7 @@
 
 package cz.neumimto.listeners;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.events.character.PlayerDataPreloadComplete;
 import cz.neumimto.events.SkillPrepareEvent;

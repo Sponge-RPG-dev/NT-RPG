@@ -52,22 +52,23 @@ public class JSLoader {
     private IoC ioc;
 
     @PostProcess(priority = 2)
-    public void loadSkills() {
+    public void initEngine() {
         try {
             Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
+            FileUtils.createDirectoryIfNotExists(scripts_root);
+            if (PluginConfig.DEBUG) {
+                PluginConfig.JJS_ARGS += " d=gen_classes";
+            }
+            NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
+            engine = factory.getScriptEngine(PluginConfig.JJS_ARGS.split(" "));
         } catch (ClassNotFoundException e) {
-            logger.info("Nashorn libraries have not been found on the classpath. Use either JDK(1.8u40+) or put nashorn.jar into the mods folder.");
-            return;
+            engine = new ScriptEngineManager().getEngineByName("nashorn");
         }
-        FileUtils.createDirectoryIfNotExists(scripts_root);
-        if (PluginConfig.DEBUG) {
-            PluginConfig.JJS_ARGS += " d=gen_classes";
-        }
-        NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
-        engine = factory.getScriptEngine(PluginConfig.JJS_ARGS.split(" "));
+        loadSkills();
+    }
 
+    public void loadSkills() {
         Path path = Paths.get(scripts_root + File.separator + "Main.js");
-
         if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
             try (InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("Main.js")) {
                 Files.copy(resourceAsStream, path);
@@ -86,6 +87,5 @@ public class JSLoader {
             e.printStackTrace();
         }
     }
-
 }
 

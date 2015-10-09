@@ -18,8 +18,6 @@
 
 package cz.neumimto.listeners;
 
-
-import com.google.common.base.Optional;
 import cz.neumimto.Weapon;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.damage.DamageService;
@@ -59,6 +57,7 @@ import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.ItemStackTransaction;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -95,7 +94,6 @@ public class BasicListener {
         if (!character.isStub()) {
             characterService.putInSaveQueue(character.getCharacterBase());
             character.getEffects().stream().forEach(effectService::purgeEffect);
-            characterService.putInSaveQueue(character.getCharacterBase());
             /*Always reset the persistent properties back to vanilla values in a case
              some dummy decides to remove my awesome plugin :C */
             //HP
@@ -157,42 +155,40 @@ public class BasicListener {
     }
 
     @Listener(order = Order.BEFORE_POST, ignoreCancelled = false)
-    public void onPreDamage(DamageEntityEvent event) {
-        final Cause cause = event.getCause();
+    public void onAttack(InteractEntityEvent.Attack event) {
         if (event.getBaseDamage() <= 0) {
-            //todo cancell
+            event.setCancelled(true);
             return;
         }
+        if (event.getTargetEntity().getType() == EntityTypes.PLAYER) {
+            IActiveCharacter character = characterService.getCharacter(event.getTargetEntity().getUniqueId());
+            event.setCancelled(true);
+                return;
+        }
+    }
+
+    @Listener
+    public void onPreDamage(DamageEntityEvent event) {
+        final Cause cause = event.getCause();
         Optional<EntityDamageSource> first = cause.first(EntityDamageSource.class);
         event.getOriginalDamages().clear();
         if (first.isPresent()) {
             Entity targetEntity = event.getTargetEntity();
             EntityDamageSource entityDamageSource = first.get();
             Entity source = entityDamageSource.getSource();
-
             if (source.getType() == EntityTypes.PLAYER) {
                 Player player = (Player) source;
-                IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-                if (character.isStub() && !PluginConfig.ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS) {
-                    //todo cancell
-                    return;
-                }
+                IActiveCharacter character = characterService.getCharacter(source.getUniqueId());
                 Optional<ItemStack> itemInHand = player.getItemInHand();
                 if (itemInHand.isPresent()) {
                     double damage = character.getWeaponDamage();
                     if (targetEntity.getType() == EntityTypes.PLAYER) {
                         IActiveCharacter tcharacter = characterService.getCharacter(targetEntity.getUniqueId());
                         double armor = character.getArmorValue();
-                        final double damagefactor = damageService.DamageArmorReductionFactor.apply(damage,armor);
+                        final double damagefactor = damageService.DamageArmorReductionFactor.apply(damage, armor);
                         CharacterCombatEvent ce = new CharacterCombatEvent(character,tcharacter,damage,damagefactor);
-                        game.getEventManager().post(ce);
-                        if (ce.isCancelled()) {
-                            //todo cancell
-                            return;
-                        }
                         event.setBaseDamage(ce.getDamage());
                         event.setDamage(DamageModifierBuilder.builder().cause(Cause.empty()).type(DamageModifierTypes.ARMOR).build(), input -> input*ce.getDamagefactor());
-
                     }
                 }
 

@@ -36,4 +36,23 @@ public abstract class PassiveSkill extends AbstractSkill {
         character.sendMessage(Localization.CANT_USE_PASSIVE_SKILL);
         return SkillResult.FAIL;
     }
+
+    private void update(IActiveCharacter IActiveCharacter) {
+        ExtendedSkillInfo skill = IActiveCharacter.getSkill(getName());
+        applyEffect(skill,IActiveCharacter);
+    }
+
+    @Override
+    public void skillLearn(IActiveCharacter IActiveCharacter) {
+        super.skillLearn(IActiveCharacter);
+        update(IActiveCharacter);
+    }
+
+    @Override
+    public void skillRefund(IActiveCharacter IActiveCharacter) {
+        super.skillRefund(IActiveCharacter);
+        update(IActiveCharacter);
+    }
+
+    public abstract void applyEffect(ExtendedSkillInfo info,IActiveCharacter character);
 }

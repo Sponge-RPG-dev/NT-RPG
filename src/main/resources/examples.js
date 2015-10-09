@@ -6,13 +6,31 @@ var SkillSpeed =new (Java.extend(ActiveSkill, {
         var SkillSpeedSettings = new SkillSettings();
         SkillSpeedSettings.addNode(SkillNodes.COOLDOWN, 8000, -500);
         SkillSpeedSettings.addNode(SkillNodes.MANACOST, 350, -10);
+        SkillSpeedSettings.addNode(SkillNodes.DURATION, 5000, 1000);
+        SkillSpeedSettings.addNode(SkillNodes.AMOUNT, 0.05, 0.06);
         s.setSettings(SkillSpeedSettings);
     },
     cast: function (character, extendedSkillInfo) {
-        character.sendMessage("You've used skill speed");
+        var duration = getLevelNode(extendedSkillInfo, SkillNodes.DURATION);
+        var amount = getLevelNode(extendedSkillInfo, SkillNodes.AMOUNT);
+        var speedEffect = new SpeedBoost(character,duration,amount);
+        GlobalScope.effectService.addEffect(SpeedBoost, character);
         return SkillResult.OK;
     }
 }));
+var SkillBloodMagic =new (Java.extend(PassiveSkill, {
+    init: function() {
+        var s = java.super(SkillBloodMagic);
+        s.setName("BloodMagic");
+        s.setDescription("All skills will require life instead of mana");
+        var SkillBloodMagicSettings = new SkillSettings();
+        SkillBloodMagicSettings.addNode();
+        s.setSettings(SkillBloodMagicSettings);
+    },
+    applyEffect: function (character, extendedSkillInfo) {
+        GlobalScope.effectService.addEffect(new BloodMagicEffect(character))
+    }
+}))
 var SuperJump = new (Java.extend(ActiveSkill, {
     init: function () {
         var s = Java.super(SuperJump);
@@ -61,9 +79,8 @@ var Heal = new (Java.extend(ActiveSkill, {
         }).submit(GlobalScope.plugin);
         return SkillResult.OK;
     }
-
 }));
-
+var 
 registerSkill(Heal);
 registerSkill(SuperJump);
 registerSkill(SkillSpeed);

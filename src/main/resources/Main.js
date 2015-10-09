@@ -1,4 +1,4 @@
-var imports = new JavaImporter(java.util,java.nio.file);
+var imports = new JavaImporter(java.util,java.nio.file, cz.neumimto.effects.common);
 /*java */
 var HashSet = Java.type('java.util.HashSet');
 var File = Java.type("java.io.File");

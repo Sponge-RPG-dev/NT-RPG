@@ -57,9 +57,6 @@ public abstract class AbstractSkill implements ISkill {
     @Inject
     protected CharacterService characterService;
 
-    @Inject
-    protected GroupService groupService;
-
     @Override
     public String getName() {
         return name;
@@ -102,7 +99,7 @@ public abstract class AbstractSkill implements ISkill {
     @Override
     public void onCharacterInit(IActiveCharacter c, int level) {
         if (PluginConfig.SKILLGAIN_MESSAGES_AFTER_LOGIN) {
-            c.sendMessage("You've gained skill" + getName());
+            c.sendMessage("You've gained skill" + getName() + " level: " + level);
         }
     }
 

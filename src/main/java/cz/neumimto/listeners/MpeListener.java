@@ -18,7 +18,6 @@
 
 package cz.neumimto.listeners;
 
-import com.google.common.base.Optional;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.events.character.PlayerDataPreloadComplete;
 import cz.neumimto.events.SkillPrepareEvent;
@@ -45,7 +44,7 @@ public class MpeListener {
 
     @Listener
     public void onPlayerDataPreloadComplete(PlayerDataPreloadComplete event) {
-        Optional<Player> retardedOptional = game.getServer().getPlayer(event.getPlayer());
+        java.util.Optional<Player> retardedOptional = game.getServer().getPlayer(event.getPlayer());
         if (retardedOptional.isPresent()) {
             Player player = retardedOptional.get();
             if (event.getCharacterBases().isEmpty() && PluginConfig.CREATE_FIRST_CHAR_AFTER_LOGIN) {

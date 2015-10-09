@@ -18,7 +18,6 @@
 
 package cz.neumimto.commands;
 
-import com.google.common.base.Optional;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.command.CommandCallable;
@@ -29,13 +28,14 @@ import org.spongepowered.api.util.command.CommandSource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 
 public abstract class CommandBase implements CommandCallable {
 
     protected String permission = "*";
-    protected Optional<Text> shortDescription = Optional.absent();
-    protected Optional<Text> help = Optional.absent();
+    protected Optional<Text> shortDescription = Optional.empty();
+    protected Optional<Text> help = Optional.empty();
     protected Text usage = Texts.of("");
     protected List<String> alias = new ArrayList();
 
@@ -91,8 +91,11 @@ public abstract class CommandBase implements CommandCallable {
         return help;
     }
 
+
     @Override
     public Text getUsage(CommandSource commandSource) {
         return usage;
     }
+
+
 }

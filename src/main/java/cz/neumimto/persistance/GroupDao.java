@@ -18,7 +18,6 @@
 
 package cz.neumimto.persistance;
 
-import com.google.common.base.Optional;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigValue;

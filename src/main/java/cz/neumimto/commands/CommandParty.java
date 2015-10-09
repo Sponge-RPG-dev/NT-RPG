@@ -18,7 +18,6 @@
 
 package cz.neumimto.commands;
 
-import com.google.common.base.Optional;
 import cz.neumimto.configuration.CommandLocalization;
 import cz.neumimto.configuration.CommandPermissions;
 import cz.neumimto.ioc.Command;
@@ -31,6 +30,8 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
+
+import java.util.Optional;
 
 /**
  * Created NeumimTo ja on 2.9.2015.

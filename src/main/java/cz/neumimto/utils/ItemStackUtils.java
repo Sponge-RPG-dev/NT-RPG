@@ -18,8 +18,6 @@
 
 package cz.neumimto.utils;
 
-import com.google.common.base.*;
-import com.google.common.base.Optional;
 import com.typesafe.config.Config;
 import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.Weapon;
@@ -31,8 +29,6 @@ import cz.neumimto.skills.SkillInfo;
 import cz.neumimto.skills.SkillItemIcon;
 import cz.neumimto.skills.SkillSettings;
 import cz.neumimto.skills.SkillTree;
-import org.junit.Test;
-import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;

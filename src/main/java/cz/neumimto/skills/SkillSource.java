@@ -27,4 +27,5 @@ public interface SkillSource {
     public IReservable getMana();
 
     public void setMana(IReservable mana);
+
 }

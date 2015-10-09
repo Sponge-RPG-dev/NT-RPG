@@ -18,7 +18,6 @@
 
 package cz.neumimto.commands;
 
-import com.google.common.base.Optional;
 import cz.neumimto.GroupService;
 import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.configuration.CommandLocalization;
@@ -42,10 +41,7 @@ import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 23.7.2015.

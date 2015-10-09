@@ -44,7 +44,7 @@ public class SkillTreeDao {
     @Inject
     SkillService skillService;
 
-    public Map<String, ? extends SkillTree> getAll() {
+    public Map<String, SkillTree> getAll() {
         Path dir = ResourceLoader.skilltreeDir.toPath();
         Map<String, SkillTree> map = new HashMap<>();
         try (DirectoryStream<Path> paths = Files.newDirectoryStream(dir, "*.conf")) {

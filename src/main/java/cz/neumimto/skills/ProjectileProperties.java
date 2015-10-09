@@ -30,7 +30,7 @@ import java.util.function.BiConsumer;
 /**
  * Created by NeumimTo on 15.1.2015.
  */
-public abstract class ProjectileProperties {
+public class ProjectileProperties {
     public static Map<UUID, ProjectileProperties> cache = new HashMap<>();
     protected Projectile t;
     private double damage;
