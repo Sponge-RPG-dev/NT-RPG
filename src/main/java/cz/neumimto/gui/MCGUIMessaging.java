@@ -26,7 +26,6 @@ import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.skills.SkillInfo;
 import cz.neumimto.skills.SkillTree;
-import djxy.api.MinecraftGuiService;
 import djxy.models.component.Component;
 import djxy.models.component.ComponentAttribute;
 import djxy.models.component.ComponentType;
@@ -38,14 +37,7 @@ import java.util.Map;
 /**
  * Created by NeumimTo on 6.8.2015.
  */
-@Singleton
 public class MCGUIMessaging implements IPlayerMessage {
-
-    @Inject
-    private MinecraftGuiService mcGuiService;
-
-    @Inject
-    private NComponentManager componentManager;
 
     @Inject
     private GuiService guiService;
@@ -73,6 +65,11 @@ public class MCGUIMessaging implements IPlayerMessage {
 
     @Override
     public void moveSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, Map<String, Integer> learnedSkill, SkillInfo center) {
+
+
+        NComponentManager componentManager = null;
+
+
         Component panel = new Component(componentManager.root);
         panel.setId("SkilltreeMenu");
         panel.setType(ComponentType.PANEL);

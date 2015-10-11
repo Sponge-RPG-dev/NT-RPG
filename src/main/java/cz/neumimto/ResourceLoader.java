@@ -31,6 +31,8 @@ import cz.neumimto.players.properties.Property;
 import cz.neumimto.players.properties.PropertyContainer;
 import cz.neumimto.skills.ISkill;
 import cz.neumimto.skills.SkillService;
+import cz.neumimto.utils.FileUtils;
+import cz.neumimto.utils.Utils;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 
@@ -42,6 +44,7 @@ import java.net.URLClassLoader;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -75,7 +78,6 @@ public class ResourceLoader {
     @Inject
     private CommandService commandService;
 
-    @Inject
     private ConfigMapper configMapper;
 
     static {
@@ -93,7 +95,8 @@ public class ResourceLoader {
     }
 
     public ResourceLoader() {
-
+        ConfigMapper.init("NtRPG", Paths.get(NtRpgPlugin.workingDir));
+        configMapper = ConfigMapper.get("NtRPG");
     }
 
     public void loadExternalJars() {
@@ -134,6 +137,7 @@ public class ResourceLoader {
                 continue;
             }
             loadClass(clazz);
+
         }
         logger.info("Finished loading of jarfile " + file.getName());
     }

@@ -16,8 +16,9 @@
  *     
  */
 
-package cz.neumimto.events;
+package cz.neumimto.events.skills;
 
+import cz.neumimto.events.CancellableEvent;
 import cz.neumimto.players.IActiveCharacter;
 
 /**

@@ -30,6 +30,7 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GamePostInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.plugin.PluginContainer;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
@@ -71,9 +72,9 @@ public class NtRpgPlugin {
         Game game = event.getGame();
         ioc.registerInterfaceImplementation(Game.class, game);
         ioc.registerInterfaceImplementation(Logger.class, logger);
-        Optional<MinecraftGuiService> provide = game.getServiceManager().provide(MinecraftGuiService.class);
-        if (provide.isPresent()) {
-            ioc.registerInterfaceImplementation(MinecraftGuiService.class, provide.get());
+        Optional<PluginContainer> gui = game.getPluginManager().getPlugin("MinecraftGUIServer");
+        if (gui.isPresent()) {
+            ioc.registerInterfaceImplementation(MinecraftGuiService.class, game.getServiceManager().provide(MinecraftGuiService.class).get());
         } else {
             Settings.ENABLED_GUI = false;
         }

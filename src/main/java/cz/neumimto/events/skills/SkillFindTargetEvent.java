@@ -1,5 +1,4 @@
-/*    
- *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
+/*  Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -13,31 +12,46 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
  */
+package cz.neumimto.events.skills;
 
-package cz.neumimto.events;
-
+import cz.neumimto.events.CancellableEvent;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.skills.ISkill;
+import org.spongepowered.api.entity.living.Living;
 
-/**
- * Created by NeumimTo on 26.7.2015.
- */
-public class SkillLearnEvent extends CancellableEvent {
-    IActiveCharacter character;
-    ISkill skill;
+public class SkillFindTargetEvent extends CancellableEvent {
+    private IActiveCharacter character;
+    private Living target;
+    private ISkill skill;
 
-    public SkillLearnEvent(IActiveCharacter character, ISkill skill) {
+    public SkillFindTargetEvent(IActiveCharacter character, Living target, ISkill targetted) {
         this.character = character;
-        this.skill = skill;
+        this.target = target;
+        this.skill = targetted;
     }
 
     public IActiveCharacter getCharacter() {
         return character;
     }
 
+    public void setCharacter(IActiveCharacter character) {
+        this.character = character;
+    }
+
+    public Living getTarget() {
+        return target;
+    }
+
+    public void setTarget(Living target) {
+        this.target = target;
+    }
+
     public ISkill getSkill() {
         return skill;
+    }
+
+    public void setSkill(ISkill skill) {
+        this.skill = skill;
     }
 }

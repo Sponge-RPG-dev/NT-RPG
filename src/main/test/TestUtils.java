@@ -13,7 +13,7 @@ import static org.mockito.Mockito.*;
  */
 public class TestUtils {
 
-    public IActiveCharacter buildCharacter(Player player, CharacterBase characterBase) {
+    public static IActiveCharacter buildCharacter(Player player, CharacterBase characterBase) {
         ActiveCharacter character = new ActiveCharacter(player,characterBase);
         return character;
     }

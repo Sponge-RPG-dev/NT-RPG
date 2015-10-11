@@ -16,7 +16,7 @@
 
 package cz.neumimto.skills;
 
-import cz.neumimto.events.SkillFindTargetEvent;
+import cz.neumimto.events.skills.SkillFindTargetEvent;
 import cz.neumimto.ioc.Inject;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.utils.Utils;

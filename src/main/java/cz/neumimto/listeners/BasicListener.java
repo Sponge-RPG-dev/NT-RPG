@@ -84,7 +84,7 @@ public class BasicListener {
     @Listener
     public void onPlayerJoin(ClientConnectionEvent.Join event) {
         UUID id = event.getTargetEntity().getUniqueId();
-        characterService.putInLoadQueue(id);
+        characterService.loadPlayerData(id);
     }
 
     @Listener
@@ -149,22 +149,13 @@ public class BasicListener {
         }
     }
 
-    @Listener
-    public void onRightClick(InteractEntityEvent.Secondary event) {
-
-    }
-
     @Listener(order = Order.BEFORE_POST, ignoreCancelled = false)
     public void onAttack(InteractEntityEvent.Attack event) {
         if (event.getBaseDamage() <= 0) {
             event.setCancelled(true);
             return;
         }
-        if (event.getTargetEntity().getType() == EntityTypes.PLAYER) {
-            IActiveCharacter character = characterService.getCharacter(event.getTargetEntity().getUniqueId());
-            event.setCancelled(true);
-                return;
-        }
+        System.out.println(1);
     }
 
     @Listener

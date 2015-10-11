@@ -21,7 +21,6 @@ package cz.neumimto.listeners;
 import java.util.Optional;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.events.character.PlayerDataPreloadComplete;
-import cz.neumimto.events.SkillPrepareEvent;
 import cz.neumimto.gui.Gui;
 import cz.neumimto.ioc.Inject;
 import cz.neumimto.ioc.ListenerClass;
@@ -59,6 +58,7 @@ public class RpgListener {
                 }
             }
         }
+
     }
 
 

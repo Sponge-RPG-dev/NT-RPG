@@ -93,6 +93,7 @@ public class EffectService {
         }
     }
 
+    //just for better readability
     private Consumer<IEffect> removeExisting = (e) -> {
         if (effectSet.contains(e)) effectSet.remove(e);
     };

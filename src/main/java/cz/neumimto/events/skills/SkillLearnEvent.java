@@ -16,25 +16,29 @@
  *     
  */
 
-package cz.neumimto;
+package cz.neumimto.events.skills;
 
-import cz.neumimto.configuration.PluginConfig;
-import cz.neumimto.ioc.Inject;
-import cz.neumimto.ioc.Singleton;
-import org.slf4j.Logger;
+import cz.neumimto.events.CancellableEvent;
+import cz.neumimto.players.IActiveCharacter;
+import cz.neumimto.skills.ISkill;
 
 /**
- * Created by NeumimTo on 20.7.2015.
+ * Created by NeumimTo on 26.7.2015.
  */
-@Singleton
-public class LoggingService {
+public class SkillLearnEvent extends CancellableEvent {
+    IActiveCharacter character;
+    ISkill skill;
 
+    public SkillLearnEvent(IActiveCharacter character, ISkill skill) {
+        this.character = character;
+        this.skill = skill;
+    }
 
-    @Inject
-    private Logger logger;
+    public IActiveCharacter getCharacter() {
+        return character;
+    }
 
-    public void debug(String msg) {
-        if (PluginConfig.DEBUG)
-            logger.info(msg);
+    public ISkill getSkill() {
+        return skill;
     }
 }

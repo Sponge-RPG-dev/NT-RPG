@@ -20,6 +20,7 @@ package cz.neumimto.configuration;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import cz.neumimto.ioc.Singleton;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -34,6 +35,7 @@ import java.security.ProtectionDomain;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Singleton
 public class ConfigMapper {
     private static class CMPair {
         protected Method parse;
@@ -247,9 +249,7 @@ public class ConfigMapper {
                 map.put(entry.getKey(), entry.getValue());
             }
             return map;
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
+        } catch (IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
             e.printStackTrace();

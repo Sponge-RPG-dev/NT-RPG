@@ -38,11 +38,11 @@ public class Gui {
 
     public static IPlayerMessage vanilla;
 
-    public static IPlayerMessage mod;
+  /*  public static IPlayerMessage mod;*/
 
     static {
         vanilla = IoC.get().build(VanilaMessaging.class);
-        mod = IoC.get().build(MCGUIMessaging.class);
+       /* mod = IoC.get().build(MCGUIMessaging.class);*/
     }
 
     public static boolean isUsingClientSideGui(Player player) {
@@ -50,14 +50,14 @@ public class Gui {
     }
 
     public static IPlayerMessage getMessageTypeOf(IActiveCharacter player) {
-        if (player.isUsingGuiMod())
-            return mod;
+       /* if (player.isUsingGuiMod())
+            return mod;*/
         return vanilla;
     }
 
     public static IPlayerMessage getMessageTypeOf(Player player) {
-        if (isUsingClientSideGui(player))
-            return mod;
+   /*     if (isUsingClientSideGui(player))
+            return mod;*/
         return vanilla;
     }
 

@@ -23,13 +23,20 @@ import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.Weapon;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.effects.EffectService;
+import cz.neumimto.effects.EffectSource;
 import cz.neumimto.effects.IGlobalEffect;
+import cz.neumimto.effects.common.def.CombatEffect;
 import cz.neumimto.effects.common.def.ManaRegeneration;
 import cz.neumimto.events.*;
+import cz.neumimto.events.character.CharacterWeaponUpdateEvent;
 import cz.neumimto.events.character.EventCharacterArmorPostUpdate;
 import cz.neumimto.events.character.PlayerDataPreloadComplete;
 import cz.neumimto.events.character.WeaponEquipEvent;
 import cz.neumimto.events.party.PartyInviteEvent;
+import cz.neumimto.events.skills.SkillHealEvent;
+import cz.neumimto.events.skills.SkillLearnEvent;
+import cz.neumimto.events.skills.SkillRefundEvent;
+import cz.neumimto.events.skills.SkillUpgradeEvent;
 import cz.neumimto.inventory.InventoryService;
 import cz.neumimto.ioc.Inject;
 import cz.neumimto.ioc.Singleton;
@@ -89,19 +96,27 @@ public class CharacterService {
     private EffectService effectService;
 
     /**
-     * Creates a dummy character for a player until player chooses new one
+     *
      *
      * @param id
      */
-    public void putInLoadQueue(UUID id) {
+    public void loadPlayerData(UUID id) {
         characters.put(id, buildDummyChar(id));
-        game.getScheduler().createTaskBuilder().delay(0).name("PlayerDataTaskLoad-" + id).async().execute(() -> {
+        game.getScheduler().createTaskBuilder().name("PlayerDataLoad-" + id).async().execute(() -> {
             final List<CharacterBase> playerCharacters = playerDao.getPlayersCharacters(id);
-            game.getScheduler().createTaskBuilder().delay(0).name("Callback-PlayerDataTaskLoad" + id).execute(() -> {
+            game.getScheduler().createTaskBuilder().name("Callback-PlayerDataLoad" + id).execute(() -> {
+                updateArmorRestrictions(buildDummyChar(id));
                 PlayerDataPreloadComplete event = new PlayerDataPreloadComplete(id, playerCharacters);
                 game.getEventManager().post(event);
+
             }).submit(plugin);
         }).submit(plugin);
+    }
+
+    public void updateWeaponRestrictions(IActiveCharacter character) {
+        Map<ItemType, Double> allowedArmor = character.updateItemRestrictions().getAllowedWeapons();
+        CharacterWeaponUpdateEvent event = new CharacterWeaponUpdateEvent(character, allowedArmor);
+        game.getEventManager().post(event);
     }
 
     public void updateArmorRestrictions(IActiveCharacter character) {
@@ -114,7 +129,6 @@ public class CharacterService {
         if (first) {
             setActiveCharacter(player.getUniqueId(), buildDummyChar(player.getUniqueId()));
         }
-
     }
 
     /**
@@ -183,7 +197,6 @@ public class CharacterService {
      * @param character
      */
     public void createParty(ActiveCharacter character) {
-        UUID id = character.getPlayer().getUniqueId();
         CancellableEvent event = new PartyCreateEvent(character);
         game.getEventManager().post(event);
         if (!event.isCancelled()) {
@@ -205,7 +218,7 @@ public class CharacterService {
     /**
      * @param party
      * @param character
-     * @return
+     * @return 1 - if player is already in party, 2 player has not been invited
      */
     public int partyJoin(Party party, ActiveCharacter character) {
         if (party.getPlayers().contains(character)) {
@@ -214,6 +227,7 @@ public class CharacterService {
         if (party.getInvites().contains(character.getPlayer().getUniqueId())) {
             party.getInvites().remove(character.getPlayer().getUniqueId());
             party.addPlayer(character);
+            return 0;
         }
         return 2;
     }
@@ -224,7 +238,7 @@ public class CharacterService {
      * @param party
      * @param character
      * @return 1 - if character is already in the party
-     * 0 - ok
+     *         0 - ok
      */
     public int inviteToParty(Party party, ActiveCharacter character) {
         if (party.getPlayers().contains(character)) {
@@ -240,6 +254,7 @@ public class CharacterService {
 
     private void initActiveCharacter(IActiveCharacter character) {
         effectService.addEffect(new ManaRegeneration(character), character);
+        effectService.addEffect(new CombatEffect(character), character);
     }
 
     /**
@@ -257,15 +272,24 @@ public class CharacterService {
     public void updatePlayerGroups(IActiveCharacter character, NClass nClass, int slot, Race race, Guild guild) {
         if (character.isStub())
             return;
-        if (nClass != null)
+        if (nClass != null) {
             character.setClass(nClass, slot);
-        if (race != null)
+        }
+        if (race != null) {
             character.setRace(race);
+            character.getEffects().stream().filter(e -> e.getEffectSource() == EffectSource.RACE)
+                    .forEach(e -> effectService.removeEffect(e,character));
+        }
         if (guild != null) {
             character.setGuild(guild);
+            character.getEffects().stream().filter(e -> e.getEffectSource() == EffectSource.RACE)
+                    .forEach(e -> effectService.removeEffect(e,character));
+
         }
         putInSaveQueue(character.getCharacterBase());
         updateArmorRestrictions(character);
+        updateWalkSpeed(character);
+
         updateMaxHealth(character);
         updateMaxMana(character);
     }
@@ -502,7 +526,7 @@ public class CharacterService {
      * @return 1 if character has no skillpoints,
      * 2 if character has not learned the skill yet
      * 3 if skill requires higher level. The formula is MinPlayerLevel + skillLevel > characterlevel
-     * (this restricts abusing where player might rush certain skills in a skilltree and spending all skillpoints on a single skill).
+     * (this restricts abusing when player might rush certain skills in a skilltree and spending all skillpoints on a single skill).
      * 4 if skill is on max level
      * 5 - if event is cancelled
      * 0 - ok

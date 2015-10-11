@@ -18,12 +18,20 @@
 
 package cz.neumimto.ioc;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Created by NeumimTo on 29.6.2015.
  */
 @Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
 public @interface Inject {
+    InjectPolicy value() default InjectPolicy.NORMAL;
+
+    enum InjectPolicy {
+        NORMAL,ONLY_IF_PROVIDED;
+    }
 }

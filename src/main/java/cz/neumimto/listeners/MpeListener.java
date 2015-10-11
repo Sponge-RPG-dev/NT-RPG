@@ -20,7 +20,7 @@ package cz.neumimto.listeners;
 
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.events.character.PlayerDataPreloadComplete;
-import cz.neumimto.events.SkillPrepareEvent;
+import cz.neumimto.events.skills.SkillPrepareEvent;
 import cz.neumimto.gui.Gui;
 import cz.neumimto.ioc.Inject;
 import cz.neumimto.ioc.ListenerClass;

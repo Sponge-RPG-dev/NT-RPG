@@ -44,11 +44,12 @@ import java.util.Properties;
 import java.util.stream.Stream;
 
 /**
- * Created by ja on 1.9.2015.
+ * Created by NeumimTo on 1.9.2015.
  */
 @Singleton
 public class GuiService {
 
+    @Inject
     private Game game;
 
     @Inject
