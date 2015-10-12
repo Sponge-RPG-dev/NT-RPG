@@ -1,9 +1,12 @@
+import cz.neumimto.ClassGenerator;
 import cz.neumimto.ResourceLoader;
+import cz.neumimto.effects.IGlobalEffect;
 import cz.neumimto.ioc.IoC;
 import cz.neumimto.persistance.GroupDao;
 import cz.neumimto.persistance.SkillTreeDao;
 import cz.neumimto.skills.SkillService;
 import cz.neumimto.skills.SkillTree;
+import javassist.CannotCompileException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +26,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 import java.io.File;
 import java.util.HashMap;
 
-public class PersistanceTest {
+public class Tests {
 
     @Test
     public void testConfig() {
@@ -36,6 +39,20 @@ public class PersistanceTest {
         Assert.assertTrue(ResourceLoader.guildsDir.listFiles().length == dao.getGuilds().size());
     }
 
+    @Test
+    public void testEffectClassGenerator() {
+        ClassGenerator classGenerator = new ClassGenerator();
+        EffectTest effectTest = new EffectTest();
+        IGlobalEffect eff = null;
+        try {
+            eff = classGenerator.generateGlobalEffect(EffectTest.class);
+            Assert.assertTrue(eff != null);
+            classGenerator.injectGlobalEffectField(effectTest,eff);
+        } catch (CannotCompileException | IllegalAccessException | InstantiationException e) {
+            e.printStackTrace();
+        }
+        Assert.assertTrue(effectTest.global == eff);
+    }
 
 
 }

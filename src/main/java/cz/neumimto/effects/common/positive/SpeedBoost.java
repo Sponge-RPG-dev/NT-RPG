@@ -18,17 +18,34 @@
 
 package cz.neumimto.effects.common.positive;
 
+import cz.neumimto.ClassGenerator;
 import cz.neumimto.configuration.Localization;
 import cz.neumimto.effects.EffectBase;
+import cz.neumimto.effects.IGlobalEffect;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.players.properties.DefaultProperties;
 
 /**
  * Created by NeumimTo on 23.7.2015.
  */
+
+/**
+ *  An example class how to use Classgenerator.
+ *
+ *  The annotation will generate according global effect class at runtime.
+ *  id - field name of unique identifier (in most cases its name), the field must be static and public
+ *  inject - If set to true the class loader tries to inject public static field which is assingable from IGlobalEffect.
+ *  Main behavior of global effects is that their are accessible via effectservice.getGlobalEffect(stringId) inject option is
+ *  here only if someone would like to keep direct field reference to the global effect object.
+ *
+ *  The class, which inherits from IEffect(or its implementations such as effect base) must contain a constructor - IEffectConsumer, long duration, int level.
+ */
+@ClassGenerator.Generate(id = "name",inject = true)
 public class SpeedBoost extends EffectBase {
 
     public static final String name = "Speedboost";
+
+    public static IGlobalEffect<SpeedBoost> global;
 
     @Override
     public String getName() {
