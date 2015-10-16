@@ -24,6 +24,7 @@ import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.configuration.ConfigurationContainer;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.effects.EffectService;
+import cz.neumimto.effects.IEffect;
 import cz.neumimto.effects.IGlobalEffect;
 import cz.neumimto.ioc.*;
 import cz.neumimto.players.properties.PlayerPropertyService;
@@ -33,6 +34,7 @@ import cz.neumimto.skills.ISkill;
 import cz.neumimto.skills.SkillService;
 import cz.neumimto.utils.FileUtils;
 import cz.neumimto.utils.Utils;
+import javassist.CannotCompileException;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 
@@ -77,6 +79,9 @@ public class ResourceLoader {
 
     @Inject
     private CommandService commandService;
+
+    @Inject
+    private ClassGenerator classGenerator;
 
     private ConfigMapper configMapper;
 
@@ -136,14 +141,18 @@ public class ResourceLoader {
                 e.printStackTrace();
                 continue;
             }
-            loadClass(clazz);
+            try {
+                loadClass(clazz);
+            } catch (IllegalAccessException | CannotCompileException | InstantiationException e) {
+                e.printStackTrace();
+            }
 
         }
         logger.info("Finished loading of jarfile " + file.getName());
     }
 
 
-    public void loadClass(Class<?> clazz) {
+    public void loadClass(Class<?> clazz) throws IllegalAccessException, CannotCompileException, InstantiationException {
         if (clazz.isInterface())
             return;
         if (Modifier.isAbstract(clazz.getModifiers())) {
@@ -208,6 +217,15 @@ public class ResourceLoader {
 
         }
         //Effects
+        if (IEffect.class.isAssignableFrom(clazz)) {
+            ClassGenerator.Generate a = clazz.getAnnotation(ClassGenerator.Generate.class);
+            if (a != null) {
+                Class<? extends IEffect> c = (Class<? extends IEffect>) clazz;
+                IGlobalEffect iGlobalEffect = classGenerator.generateGlobalEffect(c);
+                classGenerator.injectGlobalEffectField(c,iGlobalEffect);
+                effectService.registerGlobalEffect(iGlobalEffect);
+            }
+        }
         if (IGlobalEffect.class.isAssignableFrom(clazz)) {
             IGlobalEffect i = newInstance(IGlobalEffect.class, clazz);
             effectService.registerGlobalEffect(i);

@@ -1,5 +1,6 @@
 package cz.neumimto;
 
+import com.google.inject.Singleton;
 import cz.neumimto.effects.IEffect;
 import cz.neumimto.effects.IGlobalEffect;
 import javassist.CannotCompileException;
@@ -22,6 +23,7 @@ import java.util.stream.Stream;
 /**
  * Created by fs on 12.10.15.
  */
+@cz.neumimto.ioc.Singleton
 public class ClassGenerator {
 
     @Retention(RetentionPolicy.RUNTIME)
@@ -50,10 +52,10 @@ public class ClassGenerator {
         return eff;
     }
 
-    public <T extends IEffect> void injectGlobalEffectField(T t, IGlobalEffect<T> toInject) {
-        Generate g = t.getClass().getAnnotation(Generate.class);
+    public <T extends IEffect> void injectGlobalEffectField(Class<T> t, IGlobalEffect<T> toInject) {
+        Generate g = t.getAnnotation(Generate.class);
         if (g.inject()) {
-            Stream.of(t.getClass().getFields())
+            Stream.of(t.getFields())
                     .filter(f -> f.getType().isAssignableFrom(IGlobalEffect.class) && Modifier.isStatic(f.getModifiers()))
                     .forEach(f -> {
                         try {
