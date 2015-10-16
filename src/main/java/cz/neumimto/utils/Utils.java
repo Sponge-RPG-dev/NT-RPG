@@ -65,31 +65,14 @@ public class Utils {
     }
 
     public static Set<Entity> getNearbyEntities(Location l, int radius) {
-        int chunkRadius = radius < 16 ? 1 : (radius - (radius % 16)) / 16;
-        Set<Entity> radiusEntities = new HashSet<>();
-        double squared = Math.pow(radius, 2);
-
-        for (int chX = 0 - chunkRadius; chX <= chunkRadius; chX++) {
-            for (int chZ = 0 - chunkRadius; chZ <= chunkRadius; chZ++) {
-                int x = (int) l.getX(), y = (int) l.getY(), z = (int) l.getZ();
-                for (Entity e : new Location(l.getExtent(), x + (chX * 16), y, z + (chZ * 16)).getExtent().getEntities()) {
-                    if (getDistanceSquared(e.getLocation(), l) <= squared && e.getLocation().getBlock() != l.getBlock())
-                        radiusEntities.add(e);
-                }
+        double s = Math.pow(radius, 2);
+        HashSet<Entity> ee = new HashSet<>();
+        for (Entity e : l.getExtent().getEntities()) {
+            if (e.getLocation().getPosition().distanceSquared(l.getX(),l.getY(),l.getZ()) <= s) {
+                ee.add(e);
             }
         }
-        return radiusEntities;
-    }
-
-    public static double getDistanceSquared(Location origin, Location target) {
-        double dx = origin.getX() - target.getX();
-        double dy = origin.getY() - target.getY();
-        double dz = origin.getZ() - target.getZ();
-        return dx * dx + dy * dy + dz * dz;
-    }
-
-    public static boolean canDamage(Player player, Living entity) {
-        return true;
+        return ee;
     }
 
     public static Living getTargettedEntity(IActiveCharacter character, double range) {
