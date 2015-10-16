@@ -78,13 +78,11 @@ public interface IActiveCharacter extends IEffectConsumer {
 
     double getExperiencs();
 
-    void addExperiences(float exp);
+    void addExperiences(double exp, ExperienceSource source);
 
     Player getPlayer();
 
     void setPlayer(Player pl);
-
-    void onRightClickBlock(int slotId);
 
     void resetRightClicks();
 

@@ -25,6 +25,7 @@ import cz.neumimto.ResourceLoader;
 import cz.neumimto.ioc.Inject;
 import cz.neumimto.ioc.PostProcess;
 import cz.neumimto.ioc.Singleton;
+import cz.neumimto.players.ExperienceSource;
 import cz.neumimto.players.groups.Guild;
 import cz.neumimto.players.groups.NClass;
 import cz.neumimto.players.groups.PlayerGroup;
@@ -106,6 +107,14 @@ public class GroupDao {
                     skillTree = SkillTree.Default;
                 }
                 nClass.setSkillTree(skillTree);
+                List<String> experienceSources = c.getStringList("ExperienceSources");
+                HashSet<ExperienceSource> objects = new HashSet<>();
+                experienceSources.stream().forEach(a -> objects.add(ExperienceSource.valueOf(a)));
+                nClass.setExperienceSources(objects);
+                int maxLevel = c.getInt("MaxLevel");
+                double first = c.getDouble("ExpFirstLevel");
+                double last = c.getDouble("ExpLastLevel");
+                initLevelCurve(nClass,maxLevel,first,last);
                 getClasses().put(nClass.getName().toLowerCase(), nClass);
             });
         } catch (IOException e) {
@@ -169,4 +178,17 @@ public class GroupDao {
         group.setPermissions(new HashSet<>(permissions));
     }
 
+
+    private void initLevelCurve(NClass nClass, int maxlevel, double expFirstLevel, double expForLastLevel) {
+        double factora = Math.log(expForLastLevel / expFirstLevel) / (maxlevel - 1);
+        double factorb = expFirstLevel / (Math.exp(factora) - 1.0);
+        double[] levels = new double[maxlevel];
+        for (int i = 1; i <= maxlevel; i++)
+        {
+            double old_xp = Math.round(factorb * Math.exp(factora * (i - 1)));
+            double new_xp = Math.round(factorb * Math.exp(factora * i));
+            levels[i-1] = new_xp - old_xp;
+        }
+        nClass.setLevels(levels);
+    }
 }

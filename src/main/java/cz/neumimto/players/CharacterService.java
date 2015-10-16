@@ -751,4 +751,16 @@ public class CharacterService {
     public boolean canUseItemType(IActiveCharacter character, ItemType type) {
         return character.canUse(type);
     }
+
+    public int addExperiences(IActiveCharacter character, double exp, ExperienceSource source) {
+        Set<ExtendedNClass> classes = character.getClasses();
+        for (ExtendedNClass aClass : classes) {
+            NClass nClass = aClass.getnClass();
+            int maxlevel = nClass.getLevels().length-1;
+            if (aClass.getLevel() > maxlevel)
+                return 1;
+            //todo
+        }
+        return 0;
+    }
 }

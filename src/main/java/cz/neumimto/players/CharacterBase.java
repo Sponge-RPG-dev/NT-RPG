@@ -20,6 +20,7 @@ package cz.neumimto.players;
 
 import cz.neumimto.TimestampEntity;
 import cz.neumimto.persistance.converters.UUID2String;
+import org.spongepowered.api.world.Location;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -84,6 +85,11 @@ public class CharacterBase extends TimestampEntity {
     @MapKeyColumn(name = "class")
     @CollectionTable(joinColumns = @JoinColumn(name = "CharacterBase_id"))
     private Map<String, Double> classes = new HashMap<>();
+
+    private int X;
+    private int Y;
+    private int Z;
+    private String world;
 
     public short getAttributePoints() {
         return attributePoints;
@@ -231,5 +237,37 @@ public class CharacterBase extends TimestampEntity {
 
     public void setVersion(long version) {
         this.version = version;
+    }
+
+    public int getX() {
+        return X;
+    }
+
+    public void setX(int x) {
+        X = x;
+    }
+
+    public int getY() {
+        return Y;
+    }
+
+    public void setY(int y) {
+        Y = y;
+    }
+
+    public int getZ() {
+        return Z;
+    }
+
+    public void setZ(int z) {
+        Z = z;
+    }
+
+    public String getWorld() {
+        return world;
+    }
+
+    public void setWorld(String world) {
+        this.world = world;
     }
 }

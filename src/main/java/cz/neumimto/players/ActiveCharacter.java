@@ -18,6 +18,7 @@
 
 package cz.neumimto.players;
 
+import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.Weapon;
 import cz.neumimto.effects.EffectSource;
 import cz.neumimto.effects.IEffect;
@@ -32,12 +33,14 @@ import cz.neumimto.skills.ExtendedSkillInfo;
 import cz.neumimto.skills.ISkill;
 import cz.neumimto.skills.SkillInfo;
 import cz.neumimto.skills.StartingPoint;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
 import org.spongepowered.api.potion.PotionEffect;
+import org.spongepowered.api.potion.PotionEffectBuilder;
 import org.spongepowered.api.potion.PotionEffectType;
 import org.spongepowered.api.service.permission.SubjectData;
 import org.spongepowered.api.text.Texts;
@@ -62,7 +65,7 @@ public class ActiveCharacter implements IActiveCharacter {
     private transient Set<ItemType> allowedArmorIds = new HashSet<>();
     private transient Map<ItemType, Double> allowedWeapons = new HashMap<>();
     private transient Map<EquipmentTypeWorn, Weapon> equipedArmor = new HashMap<>();
-    private transient Party party;
+    private transient Party party = new Party(this);
     private Map<String, ExtendedSkillInfo> skills = new HashMap<>();
     private Guild guild = Guild.Default;
     private Race race = Race.Default;
@@ -200,7 +203,9 @@ public class ActiveCharacter implements IActiveCharacter {
 
     @Override
     public void addPotionEffect(PotionEffect e) {
-
+        List<PotionEffect> potionEffects = pl.get(Keys.POTION_EFFECTS).get();
+        potionEffects.add(e);
+        pl.offer(Keys.POTION_EFFECTS,potionEffects);
     }
 
     @Override
@@ -214,20 +219,27 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
-    public void addPotionEffect(PotionEffectType p, int amplifier, long duration, boolean partciles) {
-      /*  PotionEffect potionEffect = potionEffectBuilder.potionType(p).amplifier(amplifier).duration((int) (duration / 20)).particles(partciles).build();
-        potionEffectBuilder.reset();
-        potionEffectData.addPotionEffect(potionEffect,true);*/
+    public void addPotionEffect(PotionEffectType p, int amplifier, long duration, boolean particles) {
+        PotionEffectBuilder potionEffectBuilder = NtRpgPlugin.GlobalScope.game.getRegistry().createPotionEffectBuilder();
+        PotionEffect e = potionEffectBuilder.amplifier(amplifier).duration((int) (duration/1000*20)).particles(particles).build();
+        addPotionEffect(e);
     }
 
 
     @Override
     public void removePotionEffect(PotionEffectType type) {
-
+        List<PotionEffect> potionEffects = pl.get(Keys.POTION_EFFECTS).get();
+        potionEffects.removeIf(potionEffect -> potionEffect.getType() == type);
+        pl.offer(Keys.POTION_EFFECTS, potionEffects);
     }
 
     @Override
     public boolean hasPotionEffect(PotionEffectType type) {
+        List<PotionEffect> potionEffects = pl.get(Keys.POTION_EFFECTS).get();
+        for (PotionEffect potionEffect : potionEffects) {
+            if (potionEffect.getType() == type)
+                return true;
+        }
         return false;
     }
 
@@ -237,8 +249,17 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
-    public void addExperiences(float exp) {
-
+    public void addExperiences(double exp, ExperienceSource source) {
+        for (ExtendedNClass nClass : classes) {
+            if (nClass.getnClass().hasExperienceSource(source)) {
+                Double nClass1 = getCharacterBase().getClasses().get(nClass.getnClass().getName());
+                if (nClass1 == null) {
+                    getCharacterBase().getClasses().put(nClass.getnClass().getName(),exp);
+                } else {
+                    getCharacterBase().getClasses().put(nClass.getnClass().getName(), exp + nClass1);
+                }
+            }
+        }
     }
 
     @Override
@@ -249,11 +270,6 @@ public class ActiveCharacter implements IActiveCharacter {
     @Override
     public void setPlayer(Player pl) {
         this.pl = pl;
-    }
-
-    @Override
-    public void onRightClickBlock(int slotId) {
-        //todo lets see how will work mc 1.9
     }
 
     @Override
@@ -496,7 +512,7 @@ public class ActiveCharacter implements IActiveCharacter {
 
     @Override
     public int getLevel() {
-        return 0;
+        return getCharacterBase().getLevel();
     }
 
     @Override

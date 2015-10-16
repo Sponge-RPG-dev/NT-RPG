@@ -195,7 +195,7 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public void addExperiences(float exp) {
+    public void addExperiences(double exp, ExperienceSource source)  {
 
     }
 
@@ -206,11 +206,6 @@ public class PreloadCharacter implements IActiveCharacter {
 
     @Override
     public void setPlayer(Player pl) {
-
-    }
-
-    @Override
-    public void onRightClickBlock(int slotId) {
 
     }
 
@@ -433,7 +428,7 @@ public class PreloadCharacter implements IActiveCharacter {
 
     @Override
     public Party getParty() {
-        return null;
+        return new Party(this);
     }
 
     @Override
