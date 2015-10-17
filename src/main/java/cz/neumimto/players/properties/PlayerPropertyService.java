@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -90,10 +91,6 @@ public class PlayerPropertyService {
         return defaults;
     }
 
-    public List<PropertyContainer> getContainerList() {
-        return containerList;
-    }
-
     @PostProcess(priority = 2000)
     public void dump() {
         Path path = Paths.get(NtRpgPlugin.workingDir + File.separator + "properties_dump.info");
@@ -109,6 +106,31 @@ public class PlayerPropertyService {
             Files.write(path, s.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void process(Class container) {
+        for (Field f : container.getDeclaredFields()) {
+            if (f.isAnnotationPresent(Property.class)) {
+                Property p = f.getAnnotation(Property.class);
+                try {
+                    f.setShort(null, PlayerPropertyService.getAndIncrement.get());
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                    continue;
+                }
+                if (!p.name().trim().equalsIgnoreCase("")) {
+                    try {
+                        registerProperty(p.name(), f.getShort(null));
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                        continue;
+                    }
+                }
+                if (p.default_() != 0f) {
+                    registerDefaultValue(LAST_ID, p.default_());
+                }
+            }
         }
     }
 }

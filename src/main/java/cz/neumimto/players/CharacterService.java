@@ -454,7 +454,7 @@ public class CharacterService {
         if (list.size() >= PluginConfig.PLAYER_MAX_CHARS) {
             return 1;
         }
-        if (list.stream().anyMatch(c -> c.getName().equals(uniqueId))) {
+        if (list.stream().anyMatch(c -> c.getUuid().equals(uniqueId))) {
             return 2;
         }
         return 0;

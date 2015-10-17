@@ -190,31 +190,7 @@ public class ResourceLoader {
         if (clazz.isAnnotationPresent(PropertyContainer.class)) {
             if (PluginConfig.DEBUG)
                 logger.info("Found Property container class" + clazz.getName());
-            if (container == null)
-                container = newInstance(clazz, clazz);
-            for (Field f : container.getClass().getDeclaredFields()) {
-                if (f.isAnnotationPresent(Property.class)) {
-                    Property p = f.getAnnotation(Property.class);
-                    try {
-                        f.setShort(null, PlayerPropertyService.getAndIncrement.get());
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                        continue;
-                    }
-                    if (!p.name().trim().equalsIgnoreCase("")) {
-                        try {
-                            playerPropertyService.registerProperty(p.name(), f.getShort(null));
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                            continue;
-                        }
-                    }
-                    if (p.default_() != 0f) {
-                        playerPropertyService.registerDefaultValue(playerPropertyService.LAST_ID, p.default_());
-                    }
-                }
-            }
-
+            playerPropertyService.process(clazz);
         }
         //Effects
         if (IEffect.class.isAssignableFrom(clazz)) {

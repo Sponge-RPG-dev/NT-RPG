@@ -4,6 +4,9 @@ import cz.neumimto.effects.IGlobalEffect;
 import cz.neumimto.ioc.IoC;
 import cz.neumimto.persistance.GroupDao;
 import cz.neumimto.persistance.SkillTreeDao;
+import cz.neumimto.players.ActiveCharacter;
+import cz.neumimto.players.properties.DefaultProperties;
+import cz.neumimto.players.properties.PlayerPropertyService;
 import cz.neumimto.skills.SkillService;
 import cz.neumimto.skills.SkillTree;
 import javassist.CannotCompileException;
@@ -13,6 +16,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
+import org.slf4j.helpers.SubstituteLogger;
 import org.spongepowered.api.Game;
 
 import static org.mockito.BDDMockito.given;
@@ -26,6 +30,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.stream.Stream;
 
 public class Tests {
 
@@ -51,6 +56,16 @@ public class Tests {
         Assert.assertTrue(ResourceLoader.guildsDir.listFiles().length == dao.getGuilds().size());
         Assert.assertTrue(dao.getClasses().get("test").getLevels().length == 99);
     }
+
+    @Test
+    public void testPropertyprocessor() {
+        IoC ioC = IoC.get();
+        ioC.registerInterfaceImplementation(Logger.class,new SubstituteLogger("test"));
+        PlayerPropertyService service = ioC.build(PlayerPropertyService.class);
+        service.process(DefaultProperties.class);
+        Assert.assertTrue(DefaultProperties.class.getFields().length == service.LAST_ID);
+    }
+
 
     @Test
     public void testEffectClassGenerator() {
