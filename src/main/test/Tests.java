@@ -24,19 +24,32 @@ import static org.mockito.Mockito.never;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 
 public class Tests {
 
     @Test
-    public void testConfig() {
+    public void testConfig() throws NoSuchFieldException, IllegalAccessException {
         ResourceLoader.raceDir = new File("./src/main/test/testfiles/races");
         ResourceLoader.guildsDir = new File("./src/main/test/testfiles/guilds");
+        ResourceLoader.classDir = new File("./src/main/test/testfiles/classes");
         GroupDao dao = new GroupDao();
         dao.loadGuilds();
         dao.loadRaces();
+
+        SkillService sk = mock(SkillService.class);
+        when(sk.getSkillTrees()).thenReturn(new HashMap<String, SkillTree>() {{
+            put("test",SkillTree.Default);
+        }
+        });
+        Field f = dao.getClass().getDeclaredField("skillService");
+        f.setAccessible(true);
+        f.set(dao,sk);
+        dao.loadNClasses();
         Assert.assertTrue(ResourceLoader.raceDir.listFiles().length == dao.getRaces().size());
         Assert.assertTrue(ResourceLoader.guildsDir.listFiles().length == dao.getGuilds().size());
+        Assert.assertTrue(dao.getClasses().get("test").getLevels().length == 99);
     }
 
     @Test
@@ -47,7 +60,7 @@ public class Tests {
         try {
             eff = classGenerator.generateGlobalEffect(EffectTest.class);
             Assert.assertTrue(eff != null);
-            classGenerator.injectGlobalEffectField(effectTest,eff);
+            classGenerator.injectGlobalEffectField(EffectTest.class,eff);
         } catch (CannotCompileException | IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
         }

@@ -10,6 +10,7 @@ import cz.neumimto.effects.IGlobalEffect;
 public class EffectTest extends EffectBase {
 
     public static IGlobalEffect<EffectTest> global = null;
+
     public static String name = "testeffect";
     public EffectTest(IEffectConsumer c, long duration, int level) {
 
