@@ -103,5 +103,4 @@ public class Tests {
         }
         Assert.assertTrue(effectTest.global == eff);
     }
-
 }
