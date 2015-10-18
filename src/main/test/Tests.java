@@ -68,7 +68,6 @@ public class Tests {
         Assert.assertTrue(k == service.LAST_ID);
     }
 
-
     @Test
     public void testEffectClassGenerator() {
         ClassGenerator classGenerator = new ClassGenerator();
