@@ -183,4 +183,8 @@ public interface IActiveCharacter extends IEffectConsumer {
     DamageType getDamageType();
 
     void setDamageType(DamageType damageType);
+
+    void setCharacterProperties(float[] arr);
+
+    void setCharacterLevelProperties(float[] arr);
 }

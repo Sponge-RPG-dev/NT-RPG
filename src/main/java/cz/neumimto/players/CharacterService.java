@@ -375,11 +375,8 @@ public class CharacterService {
         if (d != null) {
             activeCharacter.getPrimaryClass().setExperiences(d);
         }
-        Map<Integer, Float> defaults = playerPropertyService.getDefaults();
-        for (Map.Entry<Integer, Float> integerFloatEntry : defaults.entrySet()) {
-            activeCharacter.setCharacterProperty(integerFloatEntry.getKey(), integerFloatEntry.getValue());
-        }
-        game.getScheduler().createTaskBuilder().delay(0).async().name("FetchCharBaseDataAsync-" + player.getUniqueId())
+        playerPropertyService.setupDefaults(activeCharacter);
+        game.getScheduler().createTaskBuilder().async().name("FetchCharBaseDataAsync-" + player.getUniqueId())
                 .execute(() -> {
                     resolveSkillsCds(characterBase, activeCharacter);
                     game.getScheduler().createTaskBuilder().name("FetchCharBaseDataCallback-" + player.getUniqueId()).execute(() -> initSkills(activeCharacter)).submit(plugin);

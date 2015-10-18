@@ -63,6 +63,22 @@ public class NtRpgPlugin {
     public static GlobalScope GlobalScope;
 
 
+    private EntityManager setupEntityManager(Path p) {
+        Properties properties = new Properties();
+        try (FileInputStream stream = new FileInputStream(p.toFile())) {
+            properties.load(stream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            Class.forName(properties.getProperty("hibernate.connection.driver_class"));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        logger.info("Creating EntityManager");
+        return Persistence.createEntityManagerFactory("ntrpg", properties).createEntityManager();
+    }
+
     @Listener
     public void onPluginLoad(GamePostInitializationEvent event) {
         long start = System.nanoTime();
@@ -96,7 +112,6 @@ public class NtRpgPlugin {
         }
 
         path = Paths.get(workingDir + File.separator + "database.properties");
-        System.out.print("asd");
         if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
             InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("database.properties");
             try {
@@ -109,20 +124,7 @@ public class NtRpgPlugin {
         }
         Path p = Paths.get(workingDir + File.separator + "database.properties");
         FileUtils.createFileIfNotExists(p);
-
-        Properties properties = new Properties();
-        try (FileInputStream stream = new FileInputStream(p.toFile())) {
-            properties.load(stream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            Class.forName(properties.getProperty("hibernate.connection.driver_class"));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        logger.info("Creating EntityManager");
-        EntityManager em = Persistence.createEntityManagerFactory("ntrpg", properties).createEntityManager();
+        EntityManager em = setupEntityManager(p);
         ioc.registerInterfaceImplementation(EntityManager.class, em);
         ioc.get(IoC.class, ioc);
         ResourceLoader rl = ioc.build(ResourceLoader.class);

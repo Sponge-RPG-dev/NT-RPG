@@ -23,6 +23,7 @@ import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.ioc.Inject;
 import cz.neumimto.ioc.PostProcess;
 import cz.neumimto.ioc.Singleton;
+import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.utils.Utils;
 import org.slf4j.Logger;
 
@@ -50,15 +51,16 @@ public class PlayerPropertyService {
 
     public static short LAST_ID = 0;
     public static final Supplier<Short> getAndIncrement = () -> {
-        short a = LAST_ID;
+        short t = new Short(LAST_ID);
         LAST_ID++;
-        return a;
+        return t;
     };
 
     private Map<String, Short> idMap = new HashMap<>();
     private Map<Integer, Float> defaults = new HashMap<>();
     private List<PropertyContainer> containerList = new ArrayList<>();
     private Map<String, Short> persistant = new HashMap<>();
+    private float arr;
 
     public PlayerPropertyService() {
 
@@ -67,7 +69,7 @@ public class PlayerPropertyService {
 
     public void registerProperty(String name, short id) {
         if (PluginConfig.DEBUG)
-            logger.info("Found property "+ name +"; assigned id: "+ id );
+            logger.info("Found property " + name + "; assigned id: " + id);
         idMap.put(name, id);
     }
 
@@ -109,26 +111,35 @@ public class PlayerPropertyService {
         }
     }
 
-    public void process(Class container) {
+    public void setupDefaults(IActiveCharacter character) {
+        if (character.isStub())
+            return;
+        float[] arr = new float[LAST_ID];
+        Map<Integer, Float> defaults = getDefaults();
+        for (Map.Entry<Integer, Float> integerFloatEntry : defaults.entrySet()) {
+            arr[integerFloatEntry.getKey()] = integerFloatEntry.getValue();
+        }
+        character.setCharacterProperties(arr);
+        character.setCharacterLevelProperties(new float[LAST_ID]);
+    }
+
+    public void process(Class<?> container) {
+        short value;
         for (Field f : container.getDeclaredFields()) {
             if (f.isAnnotationPresent(Property.class)) {
                 Property p = f.getAnnotation(Property.class);
+                value = PlayerPropertyService.getAndIncrement.get();
                 try {
-                    f.setShort(null, PlayerPropertyService.getAndIncrement.get());
+                    f.setShort(null, value);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                     continue;
                 }
                 if (!p.name().trim().equalsIgnoreCase("")) {
-                    try {
-                        registerProperty(p.name(), f.getShort(null));
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                        continue;
-                    }
+                    registerProperty(p.name(), value);
                 }
                 if (p.default_() != 0f) {
-                    registerDefaultValue(LAST_ID, p.default_());
+                    registerDefaultValue(value, p.default_());
                 }
             }
         }

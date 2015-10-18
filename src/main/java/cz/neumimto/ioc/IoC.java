@@ -19,7 +19,6 @@
 package cz.neumimto.ioc;
 
 
-import cz.neumimto.configuration.PluginConfig;
 import org.slf4j.Logger;
 
 import java.lang.reflect.Field;
@@ -88,16 +87,16 @@ public class IoC {
         if (postProcess.containsKey(o))
             return;
         if (logger != null)
-        logger.debug("Looking for methods annotated with @PostProcess in a class " + cl.getName());
+            logger.debug("Looking for methods annotated with @PostProcess in a class " + cl.getName());
         Set<Method> set = new HashSet<>();
         Class superClass = cl.getSuperclass();
         findAnnotatedMethods(cl, o, set);
         if (logger != null)
-        logger.debug(set.size() + " methods found");
+            logger.debug(set.size() + " methods found");
         postProcess.put(o, set);
         if (superClass != Object.class) {
             if (logger != null)
-            logger.debug("   - Processing superclass " + superClass.getName());
+                logger.debug("   - Processing superclass " + superClass.getName());
             findAnnotatedMethods(cl, o);
         }
     }
@@ -112,20 +111,20 @@ public class IoC {
 
     private void injectFields(Object o, Class cl) {
         if (logger != null)
-        logger.debug("Looking for fields annotated with @Inject in a class" + cl.getName());
+            logger.debug("Looking for fields annotated with @Inject in a class" + cl.getName());
         for (Field f : cl.getDeclaredFields()) {
             if (f.isAnnotationPresent(Inject.class)) {
                 f.setAccessible(true);
                 Class fieldtype = f.getType();
                 if (logger != null)
-                logger.debug("  - Found field " + f.getName() + ", type of " + fieldtype.getName());
+                    logger.debug("  - Found field " + f.getName() + ", type of " + fieldtype.getName());
                 Object instance = build(fieldtype);
                 try {
                     if (logger != null)
-                    logger.debug(" - injecting field " + f.getName() + " in " + cl.getName());
+                        logger.debug(" - injecting field " + f.getName() + " in " + cl.getName());
                     f.set(o, instance);
                     if (logger != null)
-                    logger.debug(" - ok");
+                        logger.debug(" - ok");
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
@@ -134,11 +133,11 @@ public class IoC {
         Class superClass = cl.getSuperclass();
         if (superClass != Object.class) {
             if (logger != null)
-            logger.debug("   - Processing superclass " + superClass.getName());
+                logger.debug("   - Processing superclass " + superClass.getName());
             injectFields(o, superClass);
         }
         if (logger != null)
-        logger.debug("  - Finished " + cl.getName());
+            logger.debug("  - Finished " + cl.getName());
     }
 
 
@@ -150,7 +149,7 @@ public class IoC {
     public void postProcess() {
         long i = postProcess.values().stream().filter(m -> m.size() >= 1).count();
         if (logger != null)
-        logger.debug("Invoking postprocess methods found in" + i + "classes");
+            logger.debug("Invoking postprocess methods found in" + i + "classes");
         i = 0;
         int j = 0;
         for (Map.Entry<Object, Set<Method>> entry : entriesSortedByValues(postProcess)) {
@@ -169,7 +168,7 @@ public class IoC {
             }
         }
         if (logger != null)
-        logger.debug(" - Invoked: " + i + " methods, Failed: " + j + " are they accessible and argumentless?");
+            logger.debug(" - Invoked: " + i + " methods, Failed: " + j + " are they accessible and argumentless?");
         postProcess.clear();
     }
 

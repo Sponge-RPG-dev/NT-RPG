@@ -65,7 +65,7 @@ public class ActiveCharacter implements IActiveCharacter {
     private transient Set<ItemType> allowedArmorIds = new HashSet<>();
     private transient Map<ItemType, Double> allowedWeapons = new HashMap<>();
     private transient Map<EquipmentTypeWorn, Weapon> equipedArmor = new HashMap<>();
-    private transient Party party = new Party(this);
+    private transient Party party;
     private Map<String, ExtendedSkillInfo> skills = new HashMap<>();
     private Guild guild = Guild.Default;
     private Race race = Race.Default;
@@ -83,7 +83,6 @@ public class ActiveCharacter implements IActiveCharacter {
 
     public ActiveCharacter(Player pl, CharacterBase base) {
         this.pl = pl;
-        characterProperties = new float[PlayerPropertyService.LAST_ID];
         characterPropertiesLevel = new float[PlayerPropertyService.LAST_ID];
         ExtendedNClass cl = new ExtendedNClass();
         cl.setPrimary(true);
@@ -124,6 +123,16 @@ public class ActiveCharacter implements IActiveCharacter {
     @Override
     public void setCharacterProperty(int index, float value) {
         characterProperties[index] = value;
+    }
+
+    @Override
+    public void setCharacterProperties(float[] arr) {
+        characterProperties = arr;
+    }
+
+    @Override
+    public void setCharacterLevelProperties(float[] arr) {
+
     }
 
     @Override
@@ -332,6 +341,15 @@ public class ActiveCharacter implements IActiveCharacter {
         primary = new ExtendedNClass();
         primary.setnClass(nclass);
         primary.setPrimary(true);
+        Double aDouble = getCharacterBase().getClasses().get(nclass.getName());
+        if (aDouble == null) {
+            primary.setExperiences(0D);
+            primary.setLevel(0);
+            getCharacterBase().getClasses().put(nclass.getName(),0D);
+        } else {
+            primary.setLevel(getCharacterBase().getLevel());
+            primary.setExperiences(aDouble);
+        }
         base.setPrimaryClass(nclass.getName());
         fixPropertyValues(nclass.getPropBonus(), 1);
         fixPropertyLevelValues(getPrimaryClass().getnClass().getPropLevelBonus(), 1);
@@ -625,7 +643,7 @@ public class ActiveCharacter implements IActiveCharacter {
 
     @Override
     public int hashCode() {
-        return pl.getUniqueId().hashCode() * 37;
+        return getPlayer().getUniqueId().hashCode() * 37;
     }
 
     @Override

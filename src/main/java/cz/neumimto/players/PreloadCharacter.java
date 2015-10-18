@@ -137,6 +137,16 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
+    public void setCharacterProperties(float[] arr) {
+
+    }
+
+    @Override
+    public void setCharacterLevelProperties(float[] arr) {
+
+    }
+
+    @Override
     public float getCharacterProperty(int index) {
         if (index == DefaultProperties.walk_speed) { //lets player move around even without character
             return 0.2f;

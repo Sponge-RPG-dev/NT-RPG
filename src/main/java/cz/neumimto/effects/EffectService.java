@@ -117,7 +117,7 @@ public class EffectService {
     @PostProcess(priority = 1000)
     public void run() {
         game.getScheduler().createTaskBuilder().name("EffectTask")
-                .delay(10L).interval(TICK_PERIOD, TimeUnit.MILLISECONDS)
+                .delay(10L, TimeUnit.MILLISECONDS).interval(TICK_PERIOD, TimeUnit.MILLISECONDS)
                 .execute(() -> {
                     pendingRemovals.stream().forEach(removeExisting);
                     pendingRemovals.clear();

@@ -42,11 +42,4 @@ public class InventoryListener {
     @Inject
     private Game game;
 
-    @Listener
-    public void onInventoryClick(InteractInventoryEvent.Click event) {
-        Inventory targetInventory = event.getTargetInventory();
-
-    }
-
-
 }
