@@ -114,6 +114,7 @@ public class EffectService {
         }
     };
 
+    //Lets assume that average mc server has 50-60, branch prediction is not worth esp with java
     @PostProcess(priority = 1000)
     public void run() {
         game.getScheduler().createTaskBuilder().name("EffectTask")

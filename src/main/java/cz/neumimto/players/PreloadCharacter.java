@@ -147,6 +147,11 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
+    public void updateLastKnownLocation(int x, int y, int z, String name) {
+
+    }
+
+    @Override
     public float getCharacterProperty(int index) {
         if (index == DefaultProperties.walk_speed) { //lets player move around even without character
             return 0.2f;

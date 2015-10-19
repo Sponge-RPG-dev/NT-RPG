@@ -26,6 +26,7 @@ public class PluginConfig {
 
     @ConfigValue
     public static long COMBAT_TIME = 20000L;
+
     @ConfigValue
     public static boolean CREATE_FIRST_CHAR_AFTER_LOGIN = true;
 
@@ -66,9 +67,11 @@ public class PluginConfig {
     public static boolean CAN_REFUND_SKILL = true;
 
     @ConfigValue
+    @Comment(content = {"Works only, if the server is using jdk, for passing these arguments with jre use -D flag"})
     public static String JJS_ARGS = "--optimistic-types=true";
 
     @ConfigValue
+    @Comment(content = {"Time period in milliseconds"})
     public static long MANA_REGENERATION_RATE = 1000;
 
     @ConfigValue
@@ -76,4 +79,7 @@ public class PluginConfig {
 
     @ConfigValue
     public static boolean ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS = true;
+
+    @ConfigValue
+    public static boolean TELEPORT_PLAYER_TO_LAST_CHAR_LOCATION = true;
 }

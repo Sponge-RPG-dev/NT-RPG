@@ -136,6 +136,16 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
+    public void updateLastKnownLocation(int x, int y, int z, String name) {
+        getCharacterBase().setX(x);
+        getCharacterBase().setY(y);
+        getCharacterBase().setZ(z);
+        getCharacterBase().setWorld(name);
+    }
+
+
+
+    @Override
     public void setCharacterLevelProperty(int index, float value) {
         characterPropertiesLevel[index] = value;
     }

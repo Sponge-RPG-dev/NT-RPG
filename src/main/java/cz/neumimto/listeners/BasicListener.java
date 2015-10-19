@@ -30,6 +30,7 @@ import cz.neumimto.events.character.CharacterCombatEvent;
 import cz.neumimto.inventory.InventoryService;
 import cz.neumimto.ioc.Inject;
 import cz.neumimto.ioc.ListenerClass;
+import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.CharacterService;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.skills.ISkill;
@@ -55,6 +56,9 @@ import org.spongepowered.api.event.user.BanUserEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.ItemStackTransaction;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
+import org.spongepowered.api.world.extent.Extent;
 
 import java.util.Map;
 import java.util.Optional;
@@ -82,9 +86,25 @@ public class BasicListener {
     private DamageService damageService;
 
     @Listener
-    public void onPlayerJoin(ClientConnectionEvent.Join event) {
-        UUID id = event.getTargetEntity().getUniqueId();
+    public void onPlayerJoin(ClientConnectionEvent.Auth event) {
+        if (event.isCancelled())
+            return;
+        UUID id = event.getProfile().getUniqueId();
         characterService.loadPlayerData(id);
+    }
+
+    @Listener
+    public void onPlayerLogin(ClientConnectionEvent.Join event)  {
+        IActiveCharacter character = characterService.getCharacter(event.getTargetEntity().getUniqueId());
+        if (PluginConfig.TELEPORT_PLAYER_TO_LAST_CHAR_LOCATION && !character.isStub()) {
+            CharacterBase characterBase = character.getCharacterBase();
+            Optional<World> world = game.getServer().getWorld(characterBase.getWorld());
+            if (!world.isPresent())
+                return;
+            World w = world.get();
+            Location<World> loc = new Location<World>(w,characterBase.getX(),characterBase.getY(),characterBase.getZ());
+            event.getTargetEntity().setLocationSafely(loc);
+        }
     }
 
     @Listener
@@ -92,6 +112,9 @@ public class BasicListener {
         Player player = event.getTargetEntity();
         IActiveCharacter character = characterService.removeCachedWrapper(player.getUniqueId());
         if (!character.isStub()) {
+            Location loc = player.getLocation();
+            World ex = (World)loc.getExtent();
+            character.updateLastKnownLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockY(),ex.getName());
             characterService.putInSaveQueue(character.getCharacterBase());
             character.getEffects().stream().forEach(effectService::purgeEffect);
             /*Always reset the persistent properties back to vanilla values in a case
@@ -117,9 +140,8 @@ public class BasicListener {
             IActiveCharacter character = characterService.getCharacter(targetEntity.getUniqueId());
             if (character.isStub())
                 return;
-            character.getEffects().stream().filter
-                    (iEffect1 -> iEffect1.getEffectSource() == EffectSource.TEMP)
-                    .filter(IEffect::requiresRegister)
+            character.getEffects().stream()
+                    .filter(iEffect1 -> iEffect1.getEffectSource() == EffectSource.TEMP && iEffect1.requiresRegister())
                     .forEach(iEffect -> effectService.removeEffect(iEffect,character));
         }
     }
@@ -155,7 +177,6 @@ public class BasicListener {
             event.setCancelled(true);
             return;
         }
-        System.out.println(1);
     }
 
     @Listener

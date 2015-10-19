@@ -25,6 +25,10 @@ import cz.neumimto.effects.common.positive.DamageBonus;
 /**
  * Created by NeumimTo on 6.8.2015.
  */
+
+/**
+ * An example class how to manually create global effect
+ */
 public class DamageBonusGlobal implements IGlobalEffect<DamageBonus> {
     public DamageBonusGlobal() {
     }

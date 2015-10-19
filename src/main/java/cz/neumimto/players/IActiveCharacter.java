@@ -187,4 +187,6 @@ public interface IActiveCharacter extends IEffectConsumer {
     void setCharacterProperties(float[] arr);
 
     void setCharacterLevelProperties(float[] arr);
+
+    void updateLastKnownLocation(int x, int y, int z, String name);
 }

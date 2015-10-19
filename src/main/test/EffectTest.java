@@ -17,6 +17,13 @@ public class EffectTest extends EffectBase {
     }
 
     public EffectTest() {
+        setPeriod(100);
+        setDuration(50000);
+    }
 
+    public long l;
+    @Override
+    public void onTick() {
+        l++;
     }
 }

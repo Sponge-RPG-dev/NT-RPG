@@ -20,7 +20,6 @@ package cz.neumimto.players;
 
 import cz.neumimto.TimestampEntity;
 import cz.neumimto.persistance.converters.UUID2String;
-import org.spongepowered.api.world.Location;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -34,14 +33,17 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 @Entity
+@Table(name = "CharacterBase",
+        indexes = {@Index(columnList = "uuid")})
 public class CharacterBase extends TimestampEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    //todo locking
     @Version
-    private long version; //todo locking
+    private long version;
 
     @Convert(converter = UUID2String.class)
     private UUID uuid;
@@ -80,15 +82,17 @@ public class CharacterBase extends TimestampEntity {
     @CollectionTable(name = "skills", joinColumns = @JoinColumn(name = "CharacterBase_id"))
     private Map<String, Integer> skills = new ConcurrentHashMap<>();
 
-
     @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyColumn(name = "class")
     @CollectionTable(joinColumns = @JoinColumn(name = "CharacterBase_id"))
     private Map<String, Double> classes = new HashMap<>();
 
     private int X;
+
     private int Y;
+
     private int Z;
+
     private String world;
 
     public short getAttributePoints() {
@@ -270,4 +274,5 @@ public class CharacterBase extends TimestampEntity {
     public void setWorld(String world) {
         this.world = world;
     }
+
 }
