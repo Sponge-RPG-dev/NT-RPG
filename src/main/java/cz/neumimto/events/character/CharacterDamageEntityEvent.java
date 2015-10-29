@@ -20,7 +20,6 @@ package cz.neumimto.events.character;
 
 import cz.neumimto.players.IActiveCharacter;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.util.event.callback.CallbackList;
 
 /**
  * Created by NeumimTo on 13.3.2015.
@@ -28,14 +27,6 @@ import org.spongepowered.api.util.event.callback.CallbackList;
 public class CharacterDamageEntityEvent extends CharacterEvent {
     private Player damaged;
     private double damage;
-
-
-    public static CallbackList list = new CallbackList();
-
-    @Override
-    public CallbackList getCallbacks() {
-        return list;
-    }
 
     public CharacterDamageEntityEvent(IActiveCharacter IActiveCharacter, Player damaged, double amount) {
         super(IActiveCharacter);

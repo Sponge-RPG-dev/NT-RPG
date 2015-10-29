@@ -21,7 +21,6 @@ package cz.neumimto.events.character;
 import cz.neumimto.players.IActiveCharacter;
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.util.event.callback.CallbackList;
 
 import java.util.Set;
 
@@ -45,8 +44,4 @@ public class EventCharacterArmorPostUpdate implements Event {
         return armor;
     }
 
-    @Override
-    public CallbackList getCallbacks() {
-        return new CallbackList();
-    }
 }

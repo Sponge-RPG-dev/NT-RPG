@@ -37,6 +37,7 @@ import cz.neumimto.skills.ISkill;
 import cz.neumimto.utils.ItemStackUtils;
 import cz.neumimto.utils.Utils;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
@@ -55,7 +56,6 @@ import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.user.BanUserEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
-import org.spongepowered.api.item.inventory.ItemStackTransaction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.Extent;
@@ -151,8 +151,8 @@ public class BasicListener {
         Player player = event.getTargetEntity();
         if (event.getItemStack().isPresent()) {
             IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-            ItemStackTransaction itemStackTransaction = event.getItemStack().get();
-            ItemStackSnapshot finalSnapshot = itemStackTransaction.getFinalSnapshot();
+            Transaction<ItemStackSnapshot> itemStackSnapshotTransaction = event.getItemStack().get();
+            ItemStackSnapshot finalSnapshot = itemStackSnapshotTransaction.getFinal();
             if (ItemStackUtils.isWeapon(finalSnapshot.getType())) {
                 if (characterService.canUseItemType(character, finalSnapshot.getType())) {
                     //remove old
@@ -172,11 +172,8 @@ public class BasicListener {
     }
 
     @Listener(order = Order.BEFORE_POST, ignoreCancelled = false)
-    public void onAttack(InteractEntityEvent.Attack event) {
-        if (event.getBaseDamage() <= 0) {
-            event.setCancelled(true);
-            return;
-        }
+    public void onAttack(InteractEntityEvent.Primary event) {
+
     }
 
     @Listener

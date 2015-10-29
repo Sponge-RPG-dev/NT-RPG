@@ -20,6 +20,8 @@ package cz.neumimto;
 
 import cz.neumimto.commands.CommandBase;
 import cz.neumimto.commands.CommandService;
+import cz.neumimto.configuration.ConfigMapper;
+import cz.neumimto.configuration.ConfigurationContainer;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.effects.EffectService;
 import cz.neumimto.effects.IEffect;

@@ -19,6 +19,7 @@
 package cz.neumimto;
 
 import com.google.inject.Inject;
+import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.configuration.Settings;
 import cz.neumimto.ioc.IoC;
 import cz.neumimto.utils.FileUtils;
