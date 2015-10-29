@@ -19,10 +19,8 @@
 package cz.neumimto;
 
 import com.google.inject.Inject;
-import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.configuration.Settings;
 import cz.neumimto.ioc.IoC;
-import cz.neumimto.persistance.PlayerDao;
 import cz.neumimto.utils.FileUtils;
 import djxy.api.MinecraftGuiService;
 import org.slf4j.Logger;
@@ -42,10 +40,8 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.UUID;
 import java.util.jar.JarFile;
 
 /**

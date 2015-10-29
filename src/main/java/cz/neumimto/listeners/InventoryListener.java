@@ -23,9 +23,7 @@ import cz.neumimto.ioc.Inject;
 import cz.neumimto.ioc.ListenerClass;
 import cz.neumimto.players.CharacterService;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.inventory.InteractInventoryEvent;
-import org.spongepowered.api.item.inventory.Inventory;
+
 
 /**
  * Created by NeumimTo on 22.7.2015.

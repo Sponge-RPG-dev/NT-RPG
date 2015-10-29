@@ -185,9 +185,9 @@ public class GroupDao {
         double[] levels = new double[maxlevel];
         for (int i = 1; i <= maxlevel; i++)
         {
-            double old_xp = Math.round(factorb * Math.exp(factora * (i - 1)));
-            double new_xp = Math.round(factorb * Math.exp(factora * i));
-            levels[i-1] = new_xp - old_xp;
+            double oldxp = Math.round(factorb * Math.exp(factora * (i - 1)));
+            double newxp = Math.round(factorb * Math.exp(factora * i));
+            levels[i-1] = newxp - oldxp;
         }
         nClass.setLevels(levels);
     }

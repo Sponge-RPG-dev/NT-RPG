@@ -20,27 +20,21 @@ package cz.neumimto;
 
 import cz.neumimto.commands.CommandBase;
 import cz.neumimto.commands.CommandService;
-import cz.neumimto.configuration.ConfigMapper;
-import cz.neumimto.configuration.ConfigurationContainer;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.effects.EffectService;
 import cz.neumimto.effects.IEffect;
 import cz.neumimto.effects.IGlobalEffect;
 import cz.neumimto.ioc.*;
 import cz.neumimto.players.properties.PlayerPropertyService;
-import cz.neumimto.players.properties.Property;
 import cz.neumimto.players.properties.PropertyContainer;
 import cz.neumimto.skills.ISkill;
 import cz.neumimto.skills.SkillService;
-import cz.neumimto.utils.FileUtils;
-import cz.neumimto.utils.Utils;
 import javassist.CannotCompileException;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.URLClassLoader;
 import java.nio.file.DirectoryStream;
