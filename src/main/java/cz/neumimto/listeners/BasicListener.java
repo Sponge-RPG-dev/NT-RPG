@@ -18,18 +18,17 @@
 
 package cz.neumimto.listeners;
 
+import cz.neumimto.ResourceLoader;
 import cz.neumimto.Weapon;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.damage.DamageService;
 import cz.neumimto.damage.ISkillDamageSource;
 import cz.neumimto.effects.EffectService;
 import cz.neumimto.effects.EffectSource;
-import cz.neumimto.effects.IEffect;
 import cz.neumimto.effects.IGlobalEffect;
 import cz.neumimto.events.character.CharacterCombatEvent;
 import cz.neumimto.inventory.InventoryService;
-import cz.neumimto.ioc.Inject;
-import cz.neumimto.ioc.ListenerClass;
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.CharacterService;
 import cz.neumimto.players.IActiveCharacter;
@@ -44,7 +43,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.entity.damage.DamageModifierBuilder;
+import org.spongepowered.api.event.cause.entity.damage.DamageModifier;
 import org.spongepowered.api.event.cause.entity.damage.DamageModifierTypes;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
@@ -58,7 +57,6 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
-import org.spongepowered.api.world.extent.Extent;
 
 import java.util.Map;
 import java.util.Optional;
@@ -67,7 +65,7 @@ import java.util.UUID;
 /**
  * Created by NeumimTo on 12.2.2015.
  */
-@ListenerClass
+@ResourceLoader.ListenerClass
 public class BasicListener {
 
     @Inject
@@ -197,7 +195,7 @@ public class BasicListener {
                         final double damagefactor = damageService.DamageArmorReductionFactor.apply(damage, armor);
                         CharacterCombatEvent ce = new CharacterCombatEvent(character,tcharacter,damage,damagefactor);
                         event.setBaseDamage(ce.getDamage());
-                        event.setDamage(DamageModifierBuilder.builder().cause(Cause.empty()).type(DamageModifierTypes.ARMOR).build(), input -> input*ce.getDamagefactor());
+                        event.setDamage(DamageModifier.builder().cause(Cause.empty()).type(DamageModifierTypes.ARMOR).build(), input -> input*ce.getDamagefactor());
                     }
                 }
 
@@ -219,7 +217,7 @@ public class BasicListener {
             if (event.getTargetEntity().getType() == EntityTypes.PLAYER) {
                 IActiveCharacter targetchar = characterService.getCharacter(event.getTargetEntity().getUniqueId());
                 double target_resistence = damageService.getCharacterResistance(targetchar,type);
-                event.setDamage(DamageModifierBuilder.builder().cause(Cause.empty()).type(DamageModifierTypes.MAGIC).build(), input -> input*target_resistence);
+                event.setDamage(DamageModifier.builder().cause(Cause.empty()).type(DamageModifierTypes.MAGIC).build(), input -> input*target_resistence);
             }
         }
     }

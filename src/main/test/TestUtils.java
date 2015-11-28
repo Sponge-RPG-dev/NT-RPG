@@ -1,6 +1,6 @@
 
 import cz.neumimto.NtRpgPlugin;
-import cz.neumimto.ioc.IoC;
+import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.players.ActiveCharacter;
 import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.ExtendedNClass;

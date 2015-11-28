@@ -21,7 +21,6 @@ package cz.neumimto.players.parties;
 import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.players.IActiveCharacter;
 import org.spongepowered.api.scoreboard.Team;
-import org.spongepowered.api.scoreboard.TeamBuilder;
 import org.spongepowered.api.text.format.TextColors;
 
 import java.util.Collections;
@@ -41,7 +40,8 @@ public class Party {
     public Party(IActiveCharacter leader) {
         this.leader = leader;
         addPlayer(leader);
-        TeamBuilder tb = NtRpgPlugin.GlobalScope.game.getRegistry().createTeamBuilder();
+
+        Team.Builder tb = Team.builder();
         team = tb.allowFriendlyFire(false).canSeeFriendlyInvisibles(true).color(TextColors.GREEN).build();
     }
 

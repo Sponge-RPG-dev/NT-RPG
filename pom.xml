@@ -25,42 +25,22 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.github.NeumimTo</groupId>
+            <artifactId>NTCore</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.github.djxy</groupId>
             <artifactId>MinecraftGUI-Plugin</artifactId>
             <version>v1.1.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.NeumimTo</groupId>
-            <artifactId>HoconConfigMapper</artifactId>
-            <version>177c025eb8</version>
-        </dependency>
-        <dependency>
             <groupId>org.spongepowered</groupId>
             <artifactId>spongeapi</artifactId>
             <version>2.1-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>4.3.10.Final</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>9.1-901-1.jdbc4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.1-api</artifactId>
-            <version>1.0.0.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-c3p0</artifactId>
-            <version>5.0.2.Final</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

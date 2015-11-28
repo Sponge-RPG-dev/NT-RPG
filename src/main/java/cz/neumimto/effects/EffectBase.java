@@ -36,7 +36,7 @@ public class EffectBase implements IEffect {
     private int level;
     private Set<PotionEffect> potions = new HashSet<>();
     private IEffectConsumer consumer;
-    private EffectSource effectSource = EffectSource.TEMP;
+    private IEffectSource effectSource = EffectSource.TEMP;
     private long duration = -1;
     private long period = -1;
     private long lastTickTime;
@@ -112,12 +112,12 @@ public class EffectBase implements IEffect {
     }
 
     @Override
-    public EffectSource getEffectSource() {
+    public IEffectSource getEffectSource() {
         return effectSource;
     }
 
     @Override
-    public void setEffectSource(EffectSource effectSource) {
+    public void setEffectSource(IEffectSource effectSource) {
         this.effectSource = effectSource;
     }
 

@@ -19,6 +19,7 @@
 package cz.neumimto.players;
 
 import cz.neumimto.Weapon;
+import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.configuration.Settings;
 import cz.neumimto.effects.IEffect;
 import cz.neumimto.players.groups.Guild;
@@ -61,6 +62,15 @@ public class PreloadCharacter implements IActiveCharacter {
 
     }
 
+    @Override
+    public boolean isInvulnerable() {
+        return PluginConfig.ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS;
+    }
+
+    @Override
+    public void setInvulnerable(boolean b) {
+
+    }
     @Override
     public Map<EquipmentTypeWorn, Weapon> getEquipedArmor() {
         return Collections.EMPTY_MAP;

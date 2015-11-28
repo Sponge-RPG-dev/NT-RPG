@@ -20,9 +20,9 @@ package cz.neumimto.players.properties;
 
 import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.configuration.PluginConfig;
-import cz.neumimto.ioc.Inject;
-import cz.neumimto.ioc.PostProcess;
-import cz.neumimto.ioc.Singleton;
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.PostProcess;
+import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.utils.Utils;
 import org.slf4j.Logger;
@@ -36,7 +36,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.text.Collator;
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**

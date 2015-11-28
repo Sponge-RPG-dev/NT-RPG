@@ -18,8 +18,8 @@
 
 package cz.neumimto.commands;
 
-import cz.neumimto.ioc.Command;
-import cz.neumimto.ioc.Inject;
+import cz.neumimto.ResourceLoader;
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.players.CharacterService;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.skills.*;
@@ -30,7 +30,7 @@ import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
 
 
-@Command
+@ResourceLoader.Command
 public class CommandAdmin extends CommandBase {
 
     @Inject

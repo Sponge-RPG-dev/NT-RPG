@@ -18,26 +18,16 @@
 
 package cz.neumimto.gui;
 
-import com.google.common.base.Optional;
 import cz.neumimto.NtRpgPlugin;
-import cz.neumimto.ioc.Inject;
-import cz.neumimto.ioc.IoC;
-import cz.neumimto.ioc.PostProcess;
-import cz.neumimto.ioc.Singleton;
-import cz.neumimto.utils.FileUtils;
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.Singleton;
 import djxy.api.MinecraftGuiService;
-import djxy.controllers.CSSFactory;
-import djxy.controllers.ComponentFactory;
-import djxy.controllers.ResourceFactory;
 import djxy.models.ComponentManager;
 import djxy.models.Form;
 import djxy.models.component.Component;
 import djxy.models.resource.Resource;
 import org.spongepowered.api.Game;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 /**

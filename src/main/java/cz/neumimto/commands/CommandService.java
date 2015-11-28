@@ -19,8 +19,8 @@
 package cz.neumimto.commands;
 
 import cz.neumimto.NtRpgPlugin;
-import cz.neumimto.ioc.Inject;
-import cz.neumimto.ioc.Singleton;
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.Singleton;
 import org.spongepowered.api.Game;
 
 /**

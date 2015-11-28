@@ -18,9 +18,9 @@
 
 package cz.neumimto;
 
-import cz.neumimto.ioc.Inject;
-import cz.neumimto.ioc.PostProcess;
-import cz.neumimto.ioc.Singleton;
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.PostProcess;
+import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.persistance.GroupDao;
 import cz.neumimto.players.groups.Guild;
 import cz.neumimto.players.groups.NClass;

@@ -18,7 +18,7 @@
 
 package cz.neumimto.players;
 
-import cz.neumimto.ioc.Singleton;
+import cz.neumimto.core.ioc.Singleton;
 
 /**
  * Created by NeumimTo on 10.7.2015.

@@ -22,9 +22,9 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigValue;
 import cz.neumimto.ResourceLoader;
-import cz.neumimto.ioc.Inject;
-import cz.neumimto.ioc.PostProcess;
-import cz.neumimto.ioc.Singleton;
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.PostProcess;
+import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.players.ExperienceSource;
 import cz.neumimto.players.groups.Guild;
 import cz.neumimto.players.groups.NClass;
@@ -42,7 +42,6 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by NeumimTo on 10.7.2015.

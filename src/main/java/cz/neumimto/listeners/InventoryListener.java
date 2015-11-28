@@ -18,9 +18,10 @@
 
 package cz.neumimto.listeners;
 
+import cz.neumimto.ResourceLoader;
+import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.inventory.InventoryService;
-import cz.neumimto.ioc.Inject;
-import cz.neumimto.ioc.ListenerClass;
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.players.CharacterService;
 import org.spongepowered.api.Game;
 
@@ -28,7 +29,7 @@ import org.spongepowered.api.Game;
 /**
  * Created by NeumimTo on 22.7.2015.
  */
-@ListenerClass
+@ResourceLoader.ListenerClass
 public class InventoryListener {
 
     @Inject

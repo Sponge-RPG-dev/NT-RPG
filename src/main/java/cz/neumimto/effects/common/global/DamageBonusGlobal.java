@@ -34,7 +34,7 @@ public class DamageBonusGlobal implements IGlobalEffect<DamageBonus> {
     }
 
     @Override
-    public DamageBonus construct(IEffectConsumer consumer, long duration, int level) {
+    public DamageBonus construct(IEffectConsumer consumer, long duration, float level) {
         return new DamageBonus(consumer, duration, level);
     }
 

@@ -19,12 +19,12 @@
 package cz.neumimto.commands;
 
 import cz.neumimto.GroupService;
+import cz.neumimto.ResourceLoader;
 import cz.neumimto.configuration.CommandLocalization;
 import cz.neumimto.configuration.CommandPermissions;
 import cz.neumimto.configuration.Localization;
 import cz.neumimto.configuration.PluginConfig;
-import cz.neumimto.ioc.Command;
-import cz.neumimto.ioc.Inject;
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.players.CharacterService;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.players.groups.NClass;
@@ -40,7 +40,7 @@ import org.spongepowered.api.util.command.CommandSource;
 /**
  * Created by NeumimTo on 22.7.2015.
  */
-@Command
+@ResourceLoader.Command
 public class ChooseGroups extends CommandBase {
 
     @Inject

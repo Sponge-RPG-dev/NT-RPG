@@ -19,29 +19,22 @@
 package cz.neumimto.gui;
 
 import cz.neumimto.NtRpgPlugin;
-import cz.neumimto.ioc.Inject;
-import cz.neumimto.ioc.PostProcess;
-import cz.neumimto.ioc.Singleton;
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.PostProcess;
+import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.skills.SkillService;
 import cz.neumimto.utils.FileUtils;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.event.SpongeEventFactory;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.entity.DamageEntityEvent;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.stream.Stream;
 
 /**
  * Created by NeumimTo on 1.9.2015.

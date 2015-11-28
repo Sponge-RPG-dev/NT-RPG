@@ -19,7 +19,7 @@
 package cz.neumimto.skills;
 
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.ioc.Inject;
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.players.IActiveCharacter;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.Entity;

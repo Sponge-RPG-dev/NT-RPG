@@ -20,8 +20,7 @@ package cz.neumimto.gui;
 
 import cz.neumimto.effects.EffectStatusType;
 import cz.neumimto.effects.IEffect;
-import cz.neumimto.ioc.Inject;
-import cz.neumimto.ioc.Singleton;
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.skills.SkillInfo;

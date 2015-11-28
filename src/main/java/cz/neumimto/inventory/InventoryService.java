@@ -18,13 +18,12 @@
 
 package cz.neumimto.inventory;
 
-import cz.neumimto.ioc.Inject;
-import cz.neumimto.ioc.Singleton;
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.players.CharacterService;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.ItemStackBuilder;
 import org.spongepowered.api.item.inventory.type.GridInventory;
 
 import java.util.HashMap;
@@ -48,7 +47,7 @@ public class InventoryService {
     private Map<UUID, InventoryMenu> inventoryMenus = new HashMap<>();
 
     public ItemStack getHelpItem(List<String> lore, ItemType type) {
-        ItemStackBuilder builder = game.getRegistry().createItemBuilder();
+        ItemStack.Builder builder = ItemStack.builder();
         builder.quantity(1).itemType(type);
         return builder.build();
     }

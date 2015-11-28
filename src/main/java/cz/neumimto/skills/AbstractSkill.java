@@ -18,10 +18,9 @@
 
 package cz.neumimto.skills;
 
-import cz.neumimto.GroupService;
 import cz.neumimto.configuration.Localization;
 import cz.neumimto.configuration.PluginConfig;
-import cz.neumimto.ioc.Inject;
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.players.CharacterService;
 import cz.neumimto.players.IActiveCharacter;
 import org.spongepowered.api.Game;

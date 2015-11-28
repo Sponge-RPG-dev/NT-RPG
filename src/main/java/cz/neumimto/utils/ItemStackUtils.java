@@ -37,12 +37,12 @@ import org.spongepowered.api.data.value.mutable.ListValue;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.ItemStackBuilder;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 
+import javax.transaction.NotSupportedException;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
@@ -151,7 +151,7 @@ public class ItemStackUtils {
         c.getStringList(LORE).stream().forEach(s -> stringList.add(Texts.of(s)));
         Optional<ItemType> asd = globalScope.game.getRegistry().getType(ItemType.class, type);
         if (asd.isPresent()) {
-            ItemStack item = GlobalScope.game.getRegistry().createItemBuilder().itemType(asd.get()).build();
+            ItemStack item = ItemStack.builder().itemType(asd.get()).build();
             item.setQuantity(amount);
             item.offer(Keys.ITEM_LORE,stringList);
             item.offer(Keys.DISPLAY_NAME,Texts.of(name));
@@ -207,19 +207,34 @@ public class ItemStackUtils {
         return i == null ? 0 : i;
     }
 
+
     public static DisplayNameData setDisplayName(Text name) {
-        final DisplayNameData itemName = NtRpgPlugin.GlobalScope.game.getRegistry().getManipulatorRegistry().getBuilder(DisplayNameData.class).get().create();
+        try {
+            throw new NotSupportedException("setDisplayName(Text)");
+        } catch (NotSupportedException e) {
+            e.printStackTrace();
+        }
+        /*final DisplayNameData itemName = NtRpgPlugin.GlobalScope.game.getRegistry().getManipulatorRegistry().getBuilder(DisplayNameData.class).get().create();
         itemName.set(Keys.DISPLAY_NAME, name);
         return itemName;
+        */
+        return null;
     }
 
     public static LoreData setLore(Text... texts) {
+        try {
+            throw new NotSupportedException("setLore(Text[])");
+        } catch (NotSupportedException e) {
+            e.printStackTrace();
+        }
+        /*
         Game game = NtRpgPlugin.GlobalScope.game;
         final LoreData loreData = game.getRegistry().getManipulatorRegistry().getBuilder(LoreData.class).get().create();
         final ListValue<Text> locallore = loreData.lore();
         for (Text t : texts)
             locallore.add(t);
-        return loreData;
+        return loreData;*/
+        return null;
     }
 
     public static ItemStack skillToItemStack(SkillItemIcon icon, NClass nClass, CharacterBase character) {
@@ -232,7 +247,7 @@ public class ItemStackUtils {
             skillnamecolor = TextColors.RED;
         }
         Game game = NtRpgPlugin.GlobalScope.game;
-        final LoreData loreData = game.getRegistry().getManipulatorRegistry().getBuilder(LoreData.class).get().create();
+        final LoreData loreData = null; //game.getRegistry().getManipulatorRegistry().getBuilder(LoreData.class).get().create();
         final ListValue<Text> locallore = loreData.lore();
         SkillTree skillTree = nClass.getSkillTree();
         SkillInfo skillInfo = skillTree.getSkills().get(icon.skillName);
@@ -277,11 +292,11 @@ public class ItemStackUtils {
             locallore.add(Texts.of(icon.skill.getLore()));
         }
 
-        final DisplayNameData itemName = game.getRegistry().getManipulatorRegistry().getBuilder(DisplayNameData.class).get().create();
+        final DisplayNameData itemName = null;//game.getRegistry().getManipulatorRegistry().getBuilder(DisplayNameData.class).get().create();
         itemName.set(Keys.DISPLAY_NAME, Texts.of(skillnamecolor, icon.skillName));
         // Set up the lore data.
 
-        ItemStackBuilder i = game.getRegistry().createItemBuilder();
+        ItemStack.Builder i = ItemStack.builder();
         return i.itemType(icon.itemType).itemData(itemName).itemData(loreData).quantity(level).build();
     }
     /**

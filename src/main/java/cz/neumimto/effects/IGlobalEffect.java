@@ -23,7 +23,7 @@ package cz.neumimto.effects;
  */
 public interface IGlobalEffect<T extends IEffect> {
 
-    T construct(IEffectConsumer consumer, long duration, int level);
+    T construct(IEffectConsumer consumer, long duration, float level);
 
     String getName();
 

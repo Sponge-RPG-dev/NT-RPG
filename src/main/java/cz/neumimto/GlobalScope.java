@@ -19,8 +19,8 @@
 package cz.neumimto;
 
 import cz.neumimto.effects.EffectService;
-import cz.neumimto.ioc.Inject;
-import cz.neumimto.ioc.Singleton;
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.players.CharacterService;
 import cz.neumimto.players.properties.PlayerPropertyService;
 import cz.neumimto.skills.SkillService;

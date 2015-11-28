@@ -19,11 +19,12 @@
 package cz.neumimto.listeners;
 
 import java.util.Optional;
+
+import cz.neumimto.ResourceLoader;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.events.character.PlayerDataPreloadComplete;
 import cz.neumimto.gui.Gui;
-import cz.neumimto.ioc.Inject;
-import cz.neumimto.ioc.ListenerClass;
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.players.CharacterService;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
@@ -33,7 +34,7 @@ import org.spongepowered.api.event.Listener;
 /**
  * Created by NeumimTo on 12.2.2015.
  */
-@ListenerClass
+@ResourceLoader.ListenerClass
 public class RpgListener {
 
     @Inject

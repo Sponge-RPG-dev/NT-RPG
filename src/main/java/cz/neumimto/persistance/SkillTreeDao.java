@@ -23,8 +23,8 @@ import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigObject;
 import com.typesafe.config.ConfigValue;
 import cz.neumimto.ResourceLoader;
-import cz.neumimto.ioc.Inject;
-import cz.neumimto.ioc.Singleton;
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.skills.*;
 import cz.neumimto.utils.Utils;
 

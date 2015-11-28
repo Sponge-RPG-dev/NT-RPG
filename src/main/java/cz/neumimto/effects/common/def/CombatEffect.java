@@ -11,6 +11,7 @@ import java.lang.ref.WeakReference;
 /**
  * Created by NeumimTo on 10.10.2015.
  */
+
 public class CombatEffect extends EffectBase {
 
     private IActiveCharacter character;

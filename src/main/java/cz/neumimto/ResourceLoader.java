@@ -26,7 +26,7 @@ import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.effects.EffectService;
 import cz.neumimto.effects.IEffect;
 import cz.neumimto.effects.IGlobalEffect;
-import cz.neumimto.ioc.*;
+import cz.neumimto.core.ioc.*;
 import cz.neumimto.players.properties.PlayerPropertyService;
 import cz.neumimto.players.properties.PropertyContainer;
 import cz.neumimto.skills.ISkill;
@@ -37,6 +37,9 @@ import org.spongepowered.api.Game;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Modifier;
 import java.net.URLClassLoader;
 import java.nio.file.DirectoryStream;
@@ -52,6 +55,16 @@ import java.util.jar.JarFile;
  */
 @Singleton
 public class ResourceLoader {
+
+    @Retention(RetentionPolicy.RUNTIME)
+    public static @interface ListenerClass {};
+
+    @Retention(RetentionPolicy.RUNTIME)
+    public static @interface Skill {};
+
+    @Retention(RetentionPolicy.RUNTIME)
+    public static @interface Command {};
+
     private final static String INNERCLASS_SEPARATOR = "$";
 
     //TODO use nio instead of io

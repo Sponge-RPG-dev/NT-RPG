@@ -45,9 +45,9 @@ public interface IEffect {
 
     boolean requiresRegister();
 
-    EffectSource getEffectSource();
+    IEffectSource getEffectSource();
 
-    void setEffectSource(EffectSource effectSource);
+    void setEffectSource(IEffectSource effectSource);
 
     long getPeriod();
 

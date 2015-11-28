@@ -82,4 +82,6 @@ public class PluginConfig {
 
     @ConfigValue
     public static boolean TELEPORT_PLAYER_TO_LAST_CHAR_LOCATION = true;
+
+    public static java.lang.String RW_LORE_COLOR;
 }

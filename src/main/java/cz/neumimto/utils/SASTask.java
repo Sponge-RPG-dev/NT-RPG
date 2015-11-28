@@ -20,7 +20,7 @@ package cz.neumimto.utils;
 
 
 import org.spongepowered.api.Game;
-import org.spongepowered.api.service.scheduler.TaskBuilder;
+import org.spongepowered.api.service.scheduler.Task;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -42,11 +42,12 @@ public class SASTask<T, U> {
         return this;
     }
 
-    public void start(T t, Game game, Object plugin) {
-        TaskBuilder taskBuilder = game.getScheduler().createTaskBuilder();
+    public void start(T t, Object plugin) {
+
+        Task.Builder taskBuilder = Task.builder();
         taskBuilder.async().execute(() -> {
             U u1 = function.apply(t);
-            game.getScheduler().createTaskBuilder().execute(() -> consumer.accept(u1)).submit(plugin);
+            Task.builder().execute(() -> consumer.accept(u1)).submit(plugin);
         }).submit(plugin);
 
     }

@@ -189,4 +189,8 @@ public interface IActiveCharacter extends IEffectConsumer {
     void setCharacterLevelProperties(float[] arr);
 
     void updateLastKnownLocation(int x, int y, int z, String name);
+
+    boolean isInvulnerable();
+
+    void setInvulnerable(boolean b);
 }

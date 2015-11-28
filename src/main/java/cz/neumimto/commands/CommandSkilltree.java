@@ -19,10 +19,10 @@
 package cz.neumimto.commands;
 
 import cz.neumimto.GroupService;
+import cz.neumimto.ResourceLoader;
 import cz.neumimto.configuration.Localization;
 import cz.neumimto.gui.Gui;
-import cz.neumimto.ioc.Command;
-import cz.neumimto.ioc.Inject;
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.players.CharacterService;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.players.groups.NClass;
@@ -37,7 +37,7 @@ import org.spongepowered.api.util.command.CommandSource;
 /**
  * Created by ja on 31.8.2015.
  */
-@Command
+@ResourceLoader.Command
 public class CommandSkilltree extends CommandBase {
     @Inject
     private GroupService groupService;

@@ -20,7 +20,7 @@ package cz.neumimto.skills;
 
 import cz.neumimto.configuration.Localization;
 import cz.neumimto.effects.EffectService;
-import cz.neumimto.ioc.Inject;
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.players.IActiveCharacter;
 
 /**

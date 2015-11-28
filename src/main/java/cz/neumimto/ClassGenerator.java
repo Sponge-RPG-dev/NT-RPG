@@ -1,29 +1,21 @@
 package cz.neumimto;
 
-import com.google.inject.Singleton;
 import cz.neumimto.effects.IEffect;
 import cz.neumimto.effects.IGlobalEffect;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
-import javassist.bytecode.MethodInfo;
 
-import javax.tools.JavaCompiler;
-import javax.tools.ToolProvider;
-import java.io.File;
-import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Modifier;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.stream.Stream;
 
 /**
  * Created by fs on 12.10.15.
  */
-@cz.neumimto.ioc.Singleton
+@cz.neumimto.core.ioc.Singleton
 public class ClassGenerator {
 
     @Retention(RetentionPolicy.RUNTIME)

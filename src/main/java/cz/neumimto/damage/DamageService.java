@@ -18,33 +18,22 @@
 
 package cz.neumimto.damage;
 
-import cz.neumimto.ioc.Inject;
-import cz.neumimto.ioc.PostProcess;
-import cz.neumimto.ioc.Singleton;
+import cz.neumimto.core.ioc.PostProcess;
+import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.players.properties.DefaultProperties;
 import cz.neumimto.skills.ISkill;
 import cz.neumimto.skills.NDamageType;
 import cz.neumimto.utils.ItemStackUtils;
-import org.hibernate.cfg.annotations.reflection.XMLContext;
-import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.Living;
-import org.spongepowered.api.event.SpongeEventFactory;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.entity.damage.DamageModifierBuilder;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
-import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
-import org.spongepowered.api.event.cause.entity.damage.source.DamageSourceBuilder;
-import org.spongepowered.api.event.cause.entity.damage.source.DamageSources;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
-import java.util.function.DoubleBinaryOperator;
 
 /**
  * Created by NeumimTo on 4.8.15.

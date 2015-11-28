@@ -20,13 +20,13 @@ package cz.neumimto.commands;
 
 import cz.neumimto.GroupService;
 import cz.neumimto.NtRpgPlugin;
+import cz.neumimto.ResourceLoader;
 import cz.neumimto.configuration.CommandLocalization;
 import cz.neumimto.configuration.CommandPermissions;
 import cz.neumimto.configuration.Localization;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.gui.Gui;
-import cz.neumimto.ioc.Command;
-import cz.neumimto.ioc.Inject;
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.CharacterService;
 import cz.neumimto.players.IActiveCharacter;
@@ -44,7 +44,7 @@ import org.spongepowered.api.util.command.CommandSource;
 /**
  * Created by NeumimTo on 23.7.2015.
  */
-@Command
+@ResourceLoader.Command
 public class CommandCreate extends CommandBase {
 
     @Inject

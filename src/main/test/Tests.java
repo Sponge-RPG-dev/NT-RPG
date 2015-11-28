@@ -1,7 +1,7 @@
 import cz.neumimto.ClassGenerator;
 import cz.neumimto.ResourceLoader;
 import cz.neumimto.effects.IGlobalEffect;
-import cz.neumimto.ioc.IoC;
+import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.persistance.GroupDao;
 import cz.neumimto.players.properties.DefaultProperties;
 import cz.neumimto.players.properties.PlayerPropertyService;

@@ -40,7 +40,6 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
 import org.spongepowered.api.potion.PotionEffect;
-import org.spongepowered.api.potion.PotionEffectBuilder;
 import org.spongepowered.api.potion.PotionEffectType;
 import org.spongepowered.api.service.permission.SubjectData;
 import org.spongepowered.api.text.Texts;
@@ -57,6 +56,7 @@ import java.util.*;
 public class ActiveCharacter implements IActiveCharacter {
     private transient float[] characterProperties;
     private transient float[] characterPropertiesLevel;
+    private transient boolean invulnerable;
     private IReservable mana = new Mana(this);
     private Health health = new Health(this);
     private transient Player pl;
@@ -143,6 +143,15 @@ public class ActiveCharacter implements IActiveCharacter {
         getCharacterBase().setWorld(name);
     }
 
+    @Override
+    public boolean isInvulnerable() {
+        return invulnerable;
+    }
+
+    @Override
+    public void setInvulnerable(boolean b) {
+        this.invulnerable = b;
+    }
 
 
     @Override
@@ -239,7 +248,7 @@ public class ActiveCharacter implements IActiveCharacter {
 
     @Override
     public void addPotionEffect(PotionEffectType p, int amplifier, long duration, boolean particles) {
-        PotionEffectBuilder potionEffectBuilder = NtRpgPlugin.GlobalScope.game.getRegistry().createPotionEffectBuilder();
+        PotionEffect.Builder potionEffectBuilder = PotionEffect.builder();
         PotionEffect e = potionEffectBuilder.amplifier(amplifier).duration((int) (duration/1000*20)).particles(particles).build();
         addPotionEffect(e);
     }

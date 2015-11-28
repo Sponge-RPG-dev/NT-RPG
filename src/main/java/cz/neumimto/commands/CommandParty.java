@@ -18,10 +18,10 @@
 
 package cz.neumimto.commands;
 
+import cz.neumimto.ResourceLoader;
 import cz.neumimto.configuration.CommandLocalization;
 import cz.neumimto.configuration.CommandPermissions;
-import cz.neumimto.ioc.Command;
-import cz.neumimto.ioc.Inject;
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.players.CharacterService;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.players.parties.PartyService;
@@ -36,7 +36,7 @@ import java.util.Optional;
 /**
  * Created NeumimTo ja on 2.9.2015.
  */
-@Command
+@ResourceLoader.Command
 public class CommandParty extends CommandBase {
 
     @Inject

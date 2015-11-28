@@ -23,8 +23,8 @@ import cz.neumimto.events.party.PartyInviteEvent;
 import cz.neumimto.events.party.PartyJoinEvent;
 import cz.neumimto.events.party.PartyLeaveEvent;
 import cz.neumimto.gui.Gui;
-import cz.neumimto.ioc.Inject;
-import cz.neumimto.ioc.Singleton;
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.players.IActiveCharacter;
 import org.spongepowered.api.Game;
 

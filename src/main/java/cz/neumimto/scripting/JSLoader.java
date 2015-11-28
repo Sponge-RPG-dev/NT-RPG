@@ -21,11 +21,10 @@ package cz.neumimto.scripting;
 import cz.neumimto.GlobalScope;
 import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.configuration.PluginConfig;
-import cz.neumimto.ioc.Inject;
-import cz.neumimto.ioc.IoC;
-import cz.neumimto.ioc.PostProcess;
-import cz.neumimto.ioc.Singleton;
-import cz.neumimto.skills.SkillService;
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.core.ioc.PostProcess;
+import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.utils.FileUtils;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.slf4j.Logger;
@@ -78,7 +77,7 @@ public class JSLoader {
         }
         try (InputStreamReader rs = new InputStreamReader(new FileInputStream(path.toFile()))) {
             Bindings bindings = new SimpleBindings();
-            bindings.put("logger", ioc.logger);
+            bindings.put("logger", ioc.build(Logger.class));
             bindings.put("ioc", ioc);
             bindings.put("GlobalScope", ioc.build(GlobalScope.class));
             engine.setBindings(bindings, ScriptContext.ENGINE_SCOPE);

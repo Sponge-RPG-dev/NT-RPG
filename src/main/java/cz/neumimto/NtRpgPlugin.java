@@ -21,7 +21,7 @@ package cz.neumimto;
 import com.google.inject.Inject;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.configuration.Settings;
-import cz.neumimto.ioc.IoC;
+import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.utils.FileUtils;
 import djxy.api.MinecraftGuiService;
 import org.slf4j.Logger;
@@ -59,32 +59,11 @@ public class NtRpgPlugin {
 
     public static GlobalScope GlobalScope;
 
-
-    private EntityManager setupEntityManager(Path p) {
-        Properties properties = new Properties();
-        try (FileInputStream stream = new FileInputStream(p.toFile())) {
-            properties.load(stream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            Class.forName(properties.getProperty("hibernate.connection.driver_class"));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        logger.info("Creating EntityManager");
-        return Persistence.createEntityManagerFactory("ntrpg", properties).createEntityManager();
-    }
-
     @Listener
     public void onPluginLoad(GamePostInitializationEvent event) {
         long start = System.nanoTime();
         IoC ioc = IoC.get();
-
-        ioc.logger = logger;
         Game game = event.getGame();
-        ioc.registerInterfaceImplementation(Game.class, game);
-        ioc.registerInterfaceImplementation(Logger.class, logger);
         Optional<PluginContainer> gui = game.getPluginManager().getPlugin("MinecraftGUIServer");
         if (gui.isPresent()) {
             ioc.registerInterfaceImplementation(MinecraftGuiService.class, game.getServiceManager().provide(MinecraftGuiService.class).get());
@@ -101,28 +80,13 @@ public class NtRpgPlugin {
         }
         Path path = Paths.get(workingDir);
         ConfigMapper.init("NtRpg", path);
+
         ioc.registerDependency(ConfigMapper.get("NtRpg"));
         try {
             Files.createDirectories(path);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        path = Paths.get(workingDir + File.separator + "database.properties");
-        if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
-            InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("database.properties");
-            try {
-                Files.copy(resourceAsStream, path);
-                logger.warn("File \"database.properties\" has been copied into a mods-folder/NtRpg, Configure it and start the server again.");
-                game.getServer().shutdown();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        Path p = Paths.get(workingDir + File.separator + "database.properties");
-        FileUtils.createFileIfNotExists(p);
-        EntityManager em = setupEntityManager(p);
-        ioc.registerInterfaceImplementation(EntityManager.class, em);
         ioc.get(IoC.class, ioc);
         ResourceLoader rl = ioc.build(ResourceLoader.class);
         rl.loadJarFile(pluginjar, true);

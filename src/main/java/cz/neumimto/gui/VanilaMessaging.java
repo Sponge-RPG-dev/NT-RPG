@@ -22,8 +22,8 @@ import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.configuration.Localization;
 import cz.neumimto.effects.EffectStatusType;
 import cz.neumimto.effects.IEffect;
-import cz.neumimto.ioc.Inject;
-import cz.neumimto.ioc.Singleton;
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.skills.SkillInfo;
@@ -34,10 +34,8 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.data.manipulator.mutable.item.LoreData;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.Inventories;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.ItemStackBuilder;
-import org.spongepowered.api.item.inventory.custom.CustomInventoryBuilder;
+import org.spongepowered.api.item.inventory.type.Inventory2D;
 import org.spongepowered.api.service.pagination.PaginationBuilder;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
@@ -85,13 +83,12 @@ public class VanilaMessaging implements IPlayerMessage {
         game.getScheduler().createTaskBuilder().async().execute(new Runnable() {
             @Override
             public void run() {
-                ItemStackBuilder itemBuilder = game.getRegistry().createItemBuilder();
+                ItemStack.Builder itemBuilder = ItemStack.builder();
                 Map<String, SkillInfo> values = skillTree.getSkills();
                 Set<SkillInfo> conflicts = center.getConflicts();
                 Set<SkillInfo> hardDepends = center.getHardDepends();
                 Set<SkillInfo> softDepends = center.getSoftDepends();
-
-                CustomInventoryBuilder customInventoryBuilder = Inventories.customInventoryBuilder();
+                //TODO inventory
             }
         }).submit(NtRpgPlugin.GlobalScope.plugin);
     }
@@ -103,7 +100,7 @@ public class VanilaMessaging implements IPlayerMessage {
 
     @Override
     public void invokeCharacterMenu(Player player, List<CharacterBase> characterBases) {
-        ItemStackBuilder b = game.getRegistry().createItemBuilder();
+        ItemStack.Builder b = ItemStack.builder();
         List<ItemStack> list = new ArrayList<>();
         for (CharacterBase characterBase : characterBases) {
             LoreData loreData = ItemStackUtils.setLore(Texts.of("Level: " + characterBase.getLevel())
@@ -117,7 +114,6 @@ public class VanilaMessaging implements IPlayerMessage {
                     .quantity(characterBase.getLevel()).build());
             b.reset();
         }
-        CustomInventoryBuilder customInventoryBuilder = Inventories.customInventoryBuilder();
         //todo
     }
 

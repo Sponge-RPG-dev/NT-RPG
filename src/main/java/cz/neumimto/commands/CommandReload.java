@@ -18,9 +18,9 @@
 
 package cz.neumimto.commands;
 
+import cz.neumimto.ResourceLoader;
 import cz.neumimto.configuration.PluginConfig;
-import cz.neumimto.ioc.Command;
-import cz.neumimto.ioc.Inject;
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.scripting.JSLoader;
 import cz.neumimto.skills.SkillService;
 import org.spongepowered.api.text.Texts;
@@ -31,7 +31,7 @@ import org.spongepowered.api.util.command.CommandSource;
 /**
  * Created by NeumimTo on 2.8.2015.
  */
-@Command
+@ResourceLoader.Command
 public class CommandReload extends CommandBase {
 
     @Inject

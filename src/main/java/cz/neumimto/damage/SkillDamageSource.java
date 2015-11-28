@@ -69,7 +69,7 @@ public class SkillDamageSource implements ISkillDamageSource {
     }
 
     @Override
-    public DamageType getDamageType() {
+    public DamageType getType() {
         return damageType;
     }
 
@@ -84,23 +84,23 @@ public class SkillDamageSource implements ISkillDamageSource {
     }
 
     @Override
-    public boolean isDifficultyScaled() {
+    public boolean isScaledByDifficulty() {
         return false;
     }
 
     @Override
-    public boolean isExplosion() {
+    public boolean isExplosive() {
         return isExplosion;
-    }
-
-
-    public boolean isStarvationBased() {
-        return isStarvationBased;
     }
 
 
     @Override
     public boolean isMagic() {
         return isMagic;
+    }
+
+    @Override
+    public boolean doesAffectCreative() {
+        return false;
     }
 }

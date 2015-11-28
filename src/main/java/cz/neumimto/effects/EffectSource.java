@@ -21,10 +21,11 @@ package cz.neumimto.effects;
 /**
  * Created by NeumimTo on 17.2.2015.
  */
-public enum EffectSource {
+public enum EffectSource implements IEffectSource {
     DEFAULT(false),
     RACE(false),
     GUILD(false),
+    ITEM(true),
     PASSIVE_SKILL(false),
     TEMP(true);
 
@@ -34,7 +35,7 @@ public enum EffectSource {
         this.clearOnDeath = clearOnDeath;
     }
 
-    public boolean isClearOnDeath() {
+    public boolean isClearedOnDeath() {
         return clearOnDeath;
     }
 }

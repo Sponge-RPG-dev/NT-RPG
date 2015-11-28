@@ -20,9 +20,9 @@ package cz.neumimto.effects;
 
 
 import cz.neumimto.NtRpgPlugin;
-import cz.neumimto.ioc.Inject;
-import cz.neumimto.ioc.PostProcess;
-import cz.neumimto.ioc.Singleton;
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.PostProcess;
+import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.players.IActiveCharacter;
 import org.spongepowered.api.Game;
 
