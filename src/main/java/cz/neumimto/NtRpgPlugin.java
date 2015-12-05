@@ -48,7 +48,7 @@ import java.util.jar.JarFile;
 /**
  * Created by NeumimTo on 29.4.2015.
  */
-@Plugin(id = "NtRpg", name = "NtRpg", dependencies = "after:MinecraftGUIServer")
+@Plugin(id = "NtRpg", name = "NtRpg", dependencies = "after:MinecraftGUIServer;after:NTCORE")
 public class NtRpgPlugin {
     public static String workingDir;
     public static JarFile pluginjar;

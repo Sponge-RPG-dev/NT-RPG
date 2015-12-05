@@ -55,7 +55,7 @@ public class RWService {
         if (!hasEmptySocket(lore))
             return lore;
         String s = Texts.toPlain(lore.get(1));
-        s = s.replaceFirst("\\{@\\}",rune.getName()+" ");
+        s = s.replaceFirst(socket.pattern(),rune.getName()+" ");
         lore.set(1,Texts.of(s));
         return lore;
     }
