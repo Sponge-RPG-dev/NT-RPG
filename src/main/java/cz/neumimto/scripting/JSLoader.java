@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 
 import javax.script.*;
 import java.io.*;
+import java.lang.management.ManagementFactory;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -52,16 +53,21 @@ public class JSLoader {
 
     @PostProcess(priority = 2)
     public void initEngine() {
+        FileUtils.createDirectoryIfNotExists(scripts_root);
         try {
             Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
-            FileUtils.createDirectoryIfNotExists(scripts_root);
             if (PluginConfig.DEBUG) {
                 PluginConfig.JJS_ARGS += " d=gen_classes";
             }
             NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
             engine = factory.getScriptEngine(PluginConfig.JJS_ARGS.split(" "));
         } catch (ClassNotFoundException e) {
-            engine = new ScriptEngineManager().getEngineByName("nashorn");
+            engine = new ScriptEngineManager(null).getEngineByName("nashorn");
+        }
+        if (engine == null) {
+            System.out.println("It was unable to initialize nashorn engine. " +
+                    "If the problem occurs make sure you are using oracle java virtual machine");
+            return;
         }
         loadSkills();
     }

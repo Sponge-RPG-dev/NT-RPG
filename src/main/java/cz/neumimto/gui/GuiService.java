@@ -50,7 +50,7 @@ public class GuiService {
 
     private Map<String, String> skillIconsUrls = new HashMap<>();
 
-    @PostProcess(priority = 350)
+    //@PostProcess(priority = 350)
     public void createStubSkillIcons() {
         Properties properties = new Properties();
         Path prop = Paths.get(NtRpgPlugin.workingDir + "/skillicons.properties");

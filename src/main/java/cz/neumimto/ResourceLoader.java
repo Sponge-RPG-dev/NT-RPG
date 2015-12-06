@@ -201,16 +201,6 @@ public class ResourceLoader {
                 logger.info("Found Property container class" + clazz.getName());
             playerPropertyService.process(clazz);
         }
-        if (IEffect.class.isAssignableFrom(clazz) && clazz.isAnnotationPresent(ClassGenerator.Generate.class)) {
-            try {
-                Class<IEffect> cls = (Class<IEffect>) clazz;
-                IGlobalEffect eff = classGenerator.generateGlobalEffect(cls);
-                effectService.registerGlobalEffect(eff);
-                classGenerator.injectGlobalEffectField(cls, eff);
-            } catch (CannotCompileException | IllegalAccessException | InstantiationException e) {
-                e.printStackTrace();
-            }
-        }
         //Effects
         if (IEffect.class.isAssignableFrom(clazz)) {
             ClassGenerator.Generate a = clazz.getAnnotation(ClassGenerator.Generate.class);

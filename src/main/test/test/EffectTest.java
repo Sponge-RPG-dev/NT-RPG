@@ -4,9 +4,6 @@ import cz.neumimto.effects.EffectBase;
 import cz.neumimto.effects.IEffectConsumer;
 import cz.neumimto.effects.IGlobalEffect;
 
-/**
- * Created by fs on 12.10.15.
- */
 @ClassGenerator.Generate(id = "name", inject = true)
 public class EffectTest extends EffectBase {
 

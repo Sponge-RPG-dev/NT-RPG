@@ -56,7 +56,7 @@ import java.util.Set;
 public class VanilaMessaging implements IPlayerMessage {
 
     @Inject
-    Game game;
+    private Game game;
 
     @Override
     public boolean isClientSideGui() {

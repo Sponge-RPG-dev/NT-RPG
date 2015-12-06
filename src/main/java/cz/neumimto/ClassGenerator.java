@@ -150,7 +150,7 @@ public class ClassGenerator implements Opcodes {
     private Class loadClass(String className, byte[] b) {
         Class clazz = null;
         try {
-            ClassLoader loader = ClassLoader.getSystemClassLoader();
+            ClassLoader loader = getClass().getClassLoader();
             Class cls = Class.forName("java.lang.ClassLoader");
             java.lang.reflect.Method method = cls.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class);
 

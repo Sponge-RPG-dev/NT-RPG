@@ -2,6 +2,7 @@ import cz.neumimto.ClassGenerator;
 import cz.neumimto.ResourceLoader;
 import cz.neumimto.effects.IGlobalEffect;
 import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.effects.common.positive.SpeedBoost;
 import cz.neumimto.persistance.GroupDao;
 import cz.neumimto.players.properties.DefaultProperties;
 import cz.neumimto.players.properties.PlayerPropertyService;
@@ -66,15 +67,14 @@ public class Tests {
     @Test
     public void testEffectClassGenerator() {
         ClassGenerator classGenerator = new ClassGenerator();
-
         IGlobalEffect eff = null;
         try {
-            eff = classGenerator.generateGlobalEffect(EffectTest.class);
+            eff = classGenerator.generateGlobalEffect(SpeedBoost.class);
             Assert.assertTrue(eff != null);
-            classGenerator.injectGlobalEffectField(EffectTest.class, eff);
+            classGenerator.injectGlobalEffectField(SpeedBoost.class, eff);
         } catch (CannotCompileException | IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
         }
-        Assert.assertTrue(EffectTest.global == eff);
+        Assert.assertTrue(SpeedBoost.global == eff);
     }
 }

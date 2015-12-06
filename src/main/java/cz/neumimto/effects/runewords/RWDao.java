@@ -7,6 +7,7 @@ import cz.neumimto.core.ioc.Singleton;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 
 /**
@@ -20,6 +21,8 @@ public class RWDao {
         if (!p.exists()) {
             try {
                 p.createNewFile();
+                Files.write(p.toPath(),"Runes:{}".getBytes());
+                return Collections.emptySet();
             } catch (IOException e) {
                 e.printStackTrace();
             }
