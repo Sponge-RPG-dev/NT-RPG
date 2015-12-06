@@ -19,8 +19,8 @@
 package cz.neumimto.utils;
 
 
-import org.spongepowered.api.Game;
-import org.spongepowered.api.service.scheduler.Task;
+
+import org.spongepowered.api.scheduler.Task;
 
 import java.util.function.Consumer;
 import java.util.function.Function;

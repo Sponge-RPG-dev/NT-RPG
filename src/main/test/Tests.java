@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.slf4j.Logger;
 import org.slf4j.helpers.SubstituteLogger;
+import test.EffectTest;
 
 import javax.persistence.EntityManager;
 import java.io.File;
@@ -51,12 +52,6 @@ public class Tests {
         Assert.assertTrue(dao.getClasses().get("test").getLevels().length == 99);
     }
 
-    @Test
-    public void testHibernateConnection() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        EntityManager em = TestUtils.buildEntityManager();
-        Assert.assertTrue(em != null);
-        Assert.assertTrue(em.isOpen());
-    }
 
     @Test
     public void testPropertyprocessor() {
@@ -71,7 +66,7 @@ public class Tests {
     @Test
     public void testEffectClassGenerator() {
         ClassGenerator classGenerator = new ClassGenerator();
-        EffectTest effectTest = new EffectTest();
+
         IGlobalEffect eff = null;
         try {
             eff = classGenerator.generateGlobalEffect(EffectTest.class);
@@ -80,6 +75,6 @@ public class Tests {
         } catch (CannotCompileException | IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
         }
-        Assert.assertTrue(effectTest.global == eff);
+        Assert.assertTrue(EffectTest.global == eff);
     }
 }

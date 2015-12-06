@@ -1,3 +1,4 @@
+package test;
 import cz.neumimto.ClassGenerator;
 import cz.neumimto.effects.EffectBase;
 import cz.neumimto.effects.IEffectConsumer;
@@ -12,7 +13,8 @@ public class EffectTest extends EffectBase {
     public static IGlobalEffect<EffectTest> global = null;
 
     public static String name = "testeffect";
-    public EffectTest(IEffectConsumer c, long duration, int level) {
+
+    public EffectTest(IEffectConsumer c, long duration, float level) {
 
     }
 

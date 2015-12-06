@@ -195,7 +195,7 @@ public class BasicListener {
                         final double damagefactor = damageService.DamageArmorReductionFactor.apply(damage, armor);
                         CharacterCombatEvent ce = new CharacterCombatEvent(character,tcharacter,damage,damagefactor);
                         event.setBaseDamage(ce.getDamage());
-                        event.setDamage(DamageModifier.builder().cause(Cause.empty()).type(DamageModifierTypes.ARMOR).build(), input -> input*ce.getDamagefactor());
+                        event.setDamage(DamageModifier.builder().cause(Cause.of()).type(DamageModifierTypes.ARMOR).build(), input -> input*ce.getDamagefactor());
                     }
                 }
 
@@ -217,7 +217,7 @@ public class BasicListener {
             if (event.getTargetEntity().getType() == EntityTypes.PLAYER) {
                 IActiveCharacter targetchar = characterService.getCharacter(event.getTargetEntity().getUniqueId());
                 double target_resistence = damageService.getCharacterResistance(targetchar,type);
-                event.setDamage(DamageModifier.builder().cause(Cause.empty()).type(DamageModifierTypes.MAGIC).build(), input -> input*target_resistence);
+                event.setDamage(DamageModifier.builder().cause(Cause.of()).type(DamageModifierTypes.MAGIC).build(), input -> input*target_resistence);
             }
         }
     }

@@ -22,6 +22,15 @@ import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.CommandCallable;
+import org.spongepowered.api.command.CommandManager;
+import org.spongepowered.api.command.source.CommandBlockSource;
+import org.spongepowered.api.data.DataContainer;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
+import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
+
+import java.util.Optional;
 
 /**
  * Created by NeumimTo on 22.7.2015.
@@ -30,13 +39,10 @@ import org.spongepowered.api.Game;
 public class CommandService {
 
     @Inject
-    private Game game;
-
-    @Inject
     private NtRpgPlugin plugin;
 
     public void registerCommand(CommandBase commandCallable) {
-        game.getCommandDispatcher().register(plugin, commandCallable, commandCallable.getAliases());
+        Sponge.getCommandDispatcher().register(plugin, commandCallable, commandCallable.getAliases());
     }
 
 

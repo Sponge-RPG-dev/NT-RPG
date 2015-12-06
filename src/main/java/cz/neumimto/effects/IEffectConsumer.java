@@ -18,8 +18,8 @@
 
 package cz.neumimto.effects;
 
-import org.spongepowered.api.potion.PotionEffect;
-import org.spongepowered.api.potion.PotionEffectType;
+import org.spongepowered.api.effect.potion.PotionEffect;
+import org.spongepowered.api.effect.potion.PotionEffectType;
 
 import java.util.Collection;
 

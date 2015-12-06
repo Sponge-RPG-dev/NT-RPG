@@ -23,10 +23,10 @@ import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.scripting.JSLoader;
 import cz.neumimto.skills.SkillService;
+import org.spongepowered.api.command.CommandException;
+import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.util.command.CommandException;
-import org.spongepowered.api.util.command.CommandResult;
-import org.spongepowered.api.util.command.CommandSource;
 
 /**
  * Created by NeumimTo on 2.8.2015.

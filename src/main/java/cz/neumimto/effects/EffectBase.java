@@ -21,7 +21,7 @@ package cz.neumimto.effects;
 import cz.neumimto.GlobalScope;
 import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.utils.UUIDs;
-import org.spongepowered.api.potion.PotionEffect;
+import org.spongepowered.api.effect.potion.PotionEffect;
 
 import java.util.HashSet;
 import java.util.Set;

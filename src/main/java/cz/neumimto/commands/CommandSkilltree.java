@@ -28,11 +28,11 @@ import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.players.groups.NClass;
 import cz.neumimto.skills.SkillInfo;
 import cz.neumimto.skills.StartingPoint;
+import org.spongepowered.api.command.CommandException;
+import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.util.command.CommandException;
-import org.spongepowered.api.util.command.CommandResult;
-import org.spongepowered.api.util.command.CommandSource;
 
 /**
  * Created by ja on 31.8.2015.

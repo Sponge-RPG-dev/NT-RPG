@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.helpers.SubstituteLogger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.service.event.EventManager;
+import org.spongepowered.api.event.EventManager;
 
 import javax.persistence.EntityManager;
 
@@ -84,9 +84,7 @@ public class TestUtils {
 
     public static IoC setupIocEnviromentTest() {
         IoC c = IoC.get();
-        c.logger = mock(Logger.class);
         c.registerInterfaceImplementation(Game.class, game);
-        c.registerInterfaceImplementation(Logger.class, c.logger);
         c.registerInterfaceImplementation(EntityManager.class, getEntityManager());
 
         return c;

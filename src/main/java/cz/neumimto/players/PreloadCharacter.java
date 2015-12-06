@@ -29,14 +29,14 @@ import cz.neumimto.players.parties.Party;
 import cz.neumimto.players.properties.DefaultProperties;
 import cz.neumimto.skills.ExtendedSkillInfo;
 import cz.neumimto.skills.ISkill;
+import org.spongepowered.api.effect.potion.PotionEffect;
+import org.spongepowered.api.effect.potion.PotionEffectType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
-import org.spongepowered.api.potion.PotionEffect;
-import org.spongepowered.api.potion.PotionEffectType;
 
 import java.util.*;
 

@@ -19,6 +19,7 @@
 package cz.neumimto.players.parties;
 
 import cz.neumimto.NtRpgPlugin;
+import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.players.IActiveCharacter;
 import org.spongepowered.api.scoreboard.Team;
 import org.spongepowered.api.text.format.TextColors;
@@ -40,7 +41,6 @@ public class Party {
     public Party(IActiveCharacter leader) {
         this.leader = leader;
         addPlayer(leader);
-
         Team.Builder tb = Team.builder();
         team = tb.allowFriendlyFire(false).canSeeFriendlyInvisibles(true).color(TextColors.GREEN).build();
     }

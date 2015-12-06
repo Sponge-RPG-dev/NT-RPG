@@ -217,6 +217,9 @@ public class ResourceLoader {
             if (a != null) {
                 Class<? extends IEffect> c = (Class<? extends IEffect>) clazz;
                 IGlobalEffect iGlobalEffect = classGenerator.generateGlobalEffect(c);
+                if (iGlobalEffect == null) {
+                    return;
+                }
                 classGenerator.injectGlobalEffectField(c,iGlobalEffect);
                 effectService.registerGlobalEffect(iGlobalEffect);
             }
