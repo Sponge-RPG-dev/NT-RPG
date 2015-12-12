@@ -15,7 +15,6 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *     
  */
-
 package cz.neumimto.players;
 
 import cz.neumimto.GroupService;
@@ -344,7 +343,7 @@ public class CharacterService {
      */
     public void removePlayerData(UUID uniqueId) {
         removeCachedWrapper(uniqueId);
-        playerDao.deleteData(uniqueId, (i) -> logger.debug(" DELETED " + i + " CHARACTERS OF " + uniqueId));
+        playerDao.deleteData(uniqueId);
     }
 
     /**

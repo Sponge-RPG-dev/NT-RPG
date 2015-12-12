@@ -18,24 +18,25 @@
 
 package cz.neumimto.persistance;
 
+import cz.neumimto.core.dao.genericDao.GenericDao;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.players.CharacterBase;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 /**
  * Created by NeumimTo on 9.7.2015.
  */
 @Singleton
-public class PlayerDao {
-
-    @Inject
-    private EntityManager manager;
+public class PlayerDao extends GenericDao<CharacterBase> {
 
 
     /**
@@ -45,38 +46,70 @@ public class PlayerDao {
      * @return
      */
     public List<CharacterBase> getPlayersCharacters(UUID uuid) {
-        Query query = manager.createQuery("SELECT a FROM CharacterBase a WHERE a.uuid=:id");
+        Session session = factory.openSession();
+        Query query = session.createQuery("SELECT a FROM CharacterBase a WHERE a.uuid=:id");
         query.setParameter("id", uuid);
-        List resultList = query.getResultList();
-        System.out.println(resultList.size());
-        return resultList;
+        List list = query.list();
+        session.close();
+        return list;
     }
 
-    public void update(CharacterBase characterBase) {
-        manager.getTransaction().begin();
-        manager.merge(characterBase);
-        manager.getTransaction().commit();
+    public CharacterBase getLastPlayed(UUID uuid) {
+        Session session = factory.openSession();
+        List r = session.createCriteria(CharacterBase.class)
+                .add(Restrictions.eq("uuid", uuid.toString()))
+                .addOrder(Order.desc("updated"))
+                .list();
+        session.close();
+
+        if (r.size() == 0)
+            return null;
+        return (CharacterBase) r.get(0);
     }
 
-    public void save(CharacterBase characterBase) {
-        manager.getTransaction().begin();
-        manager.persist(characterBase);
-        manager.getTransaction().commit();
-    }
-
-
-    public void deleteData(UUID uniqueId, Consumer<Integer> consumer) {
-        manager.getTransaction().begin();
-        Query q = manager.createQuery("DELETE FROM CharacterBase a WHERE a.uuid=:id");
-        q.setParameter("id", uniqueId.toString());
-        int i = q.executeUpdate();
-        manager.getTransaction().commit();
-        consumer.accept(i);
+    public CharacterBase getCharacter(UUID player, String name) {
+        Session s = factory.openSession();
+        s.beginTransaction();
+        Query query = s.createQuery("SELECT a FROM CharacterBase a WHERE a.uuid=:uuid and a.name=:name");
+        query.setParameter("uuid", player);
+        query.setParameter("name", name);
+        List<CharacterBase> list = query.list();
+        s.close();
+        if (list.size() == 0)
+            return null;
+        return list.get(0);
     }
 
     public int getCharacterCount(UUID uuid) {
-        Query query = manager.createQuery("SELECT COUNT(c.id) FROM CharacterBase c WHERE c.uuid=:id");
+        Session s = factory.openSession();
+        s.beginTransaction();
+        Query query = null;
+        query = s.createQuery("SELECT COUNT(c.id) FROM CharacterBase c WHERE c.uuid=:id");
         query.setParameter("id", uuid);
-        return (int) query.getSingleResult();
+        int i = query.getFirstResult();
+        s.close();
+        return i;
+    }
+
+    /**
+     *
+     * @param uniqueId
+     * @return rows updated
+     */
+    public int deleteData(UUID uniqueId) {
+        Session session = factory.openSession();
+        Transaction transaction = session.beginTransaction();
+        int i = -1;
+        try {
+            Query query = session.createQuery("DELETE FROM CharacterBase where uuid=:uuid");
+            query.setParameter("uid", uniqueId);
+            i = query.executeUpdate();
+            transaction.commit();
+        } catch (Throwable t) {
+            transaction.rollback();
+        } finally {
+            session.close();
+        }
+        return i;
     }
 }

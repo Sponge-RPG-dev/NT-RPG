@@ -36,6 +36,7 @@ import cz.neumimto.skills.ISkill;
 import cz.neumimto.utils.ItemStackUtils;
 import cz.neumimto.utils.Utils;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
@@ -169,16 +170,15 @@ public class BasicListener {
         }
     }
 
-    @Listener(order = Order.BEFORE_POST, ignoreCancelled = false)
+    @Listener(order = Order.BEFORE_POST)
     public void onAttack(InteractEntityEvent.Primary event) {
-
+        event.getGame();
     }
 
     @Listener
     public void onPreDamage(DamageEntityEvent event) {
         final Cause cause = event.getCause();
         Optional<EntityDamageSource> first = cause.first(EntityDamageSource.class);
-        event.getOriginalDamages().clear();
         if (first.isPresent()) {
             Entity targetEntity = event.getTargetEntity();
             EntityDamageSource entityDamageSource = first.get();
@@ -194,6 +194,7 @@ public class BasicListener {
                         double armor = character.getArmorValue();
                         final double damagefactor = damageService.DamageArmorReductionFactor.apply(damage, armor);
                         CharacterCombatEvent ce = new CharacterCombatEvent(character,tcharacter,damage,damagefactor);
+
                         event.setBaseDamage(ce.getDamage());
                         event.setDamage(DamageModifier.builder().cause(Cause.of()).type(DamageModifierTypes.ARMOR).build(), input -> input*ce.getDamagefactor());
                     }

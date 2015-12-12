@@ -21,7 +21,9 @@ package cz.neumimto;
 import com.google.inject.Inject;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.configuration.Settings;
+import cz.neumimto.core.FindPersistenceContextEvent;
 import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.players.CharacterBase;
 import cz.neumimto.utils.FileUtils;
 import djxy.api.MinecraftGuiService;
 import org.slf4j.Logger;
@@ -59,6 +61,12 @@ public class NtRpgPlugin {
     public Logger logger;
 
     public static GlobalScope GlobalScope;
+
+
+    @Listener
+    public void registerEntities(FindPersistenceContextEvent event) {
+        event.getClasses().add(CharacterBase.class);
+    }
 
     @Listener
     public void onPluginLoad(GamePostInitializationEvent event) {
