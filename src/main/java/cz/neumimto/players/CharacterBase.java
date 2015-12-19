@@ -70,13 +70,13 @@ public class CharacterBase extends TimestampEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastReset;
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyColumn(name = "skill", length = 32)
     @Column(name = "expire_time")
     @CollectionTable(name = "cooldowns", joinColumns = @JoinColumn(name = "CharacterBase_id"))
     private Map<String, Long> cooldowns = new ConcurrentHashMap<>();
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyColumn(name = "skill", length = 32)
     @Column(name = "level")
     @CollectionTable(name = "skills", joinColumns = @JoinColumn(name = "CharacterBase_id"))
@@ -111,7 +111,7 @@ public class CharacterBase extends TimestampEntity {
         this.skillPoints = skillPoints;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

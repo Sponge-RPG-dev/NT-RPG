@@ -83,6 +83,7 @@ public class ActiveCharacter implements IActiveCharacter {
 
     public ActiveCharacter(Player pl, CharacterBase base) {
         this.pl = pl;
+        characterProperties = new float[PlayerPropertyService.LAST_ID];
         characterPropertiesLevel = new float[PlayerPropertyService.LAST_ID];
         ExtendedNClass cl = new ExtendedNClass();
         cl.setPrimary(true);

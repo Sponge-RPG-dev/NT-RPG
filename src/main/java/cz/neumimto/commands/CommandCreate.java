@@ -91,7 +91,7 @@ public class CommandCreate extends CommandBase {
                         characterBase.setLevel(1);
                         characterBase.setSkillPoints(PluginConfig.SKILLPOINTS_ON_START);
                         characterBase.setAttributePoints(PluginConfig.ATTRIBUTEPOINTS_ON_START);
-                        characterService.save(characterBase);
+                        characterService.createAndUpdate(characterBase);
                         IActiveCharacter character = characterService.buildActiveCharacterAsynchronously(player, characterBase);
                         characterService.setActiveCharacterSynchronously(player.getUniqueId(), character);
                         commandSource.sendMessage(Texts.of(CommandLocalization.CHARACTER_CREATED.replaceAll("%1", characterBase.getName())));
@@ -111,6 +111,8 @@ public class CommandCreate extends CommandBase {
                 character.setParty(party);
                 Gui.sendMessage(character, Localization.PARTY_CREATED);
             }
+        } else {
+            commandSource.sendMessage(Texts.of("This command can't be executed from console."));
         }
         return CommandResult.success();
     }

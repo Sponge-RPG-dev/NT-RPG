@@ -31,10 +31,12 @@ import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * Created by NeumimTo on 9.7.2015.
  */
+//todo catch exceptions and rollback tracksactions
 @Singleton
 public class PlayerDao extends GenericDao<CharacterBase> {
 
@@ -111,5 +113,26 @@ public class PlayerDao extends GenericDao<CharacterBase> {
             session.close();
         }
         return i;
+    }
+
+    public void attachAndDo(CharacterBase base,Consumer<CharacterBase> c) {
+        //entity is now in detached state session.contains is not needed would return false every time
+        Session session = factory.openSession();
+        session.update(base);
+        c.accept(base);
+        session.close();
+    }
+
+    public void createAndUpdate(CharacterBase base) {
+        System.out.print("asdadsasdasdadsasd");
+        Session session = factory.openSession();
+        Transaction tx = null;
+        tx = session.beginTransaction();
+        System.out.println(base.getId());
+        session.saveOrUpdate(base);
+        session.flush();
+        tx.commit();
+        session.close();
+        System.out.println(base.getId());
     }
 }

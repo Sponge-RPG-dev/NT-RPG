@@ -58,6 +58,10 @@ public class CommandParty extends CommandBase {
     @Override
     public CommandResult process(CommandSource commandSource, String s) throws CommandException {
         String[] args = s.split(" ");
+        if (args.length == 0) {
+            commandSource.sendMessage(getUsage(commandSource));
+            return CommandResult.empty();
+        }
         if (commandSource instanceof Player) {
             final Player player = (Player) commandSource;
             if (args[0].equalsIgnoreCase("kick")) {

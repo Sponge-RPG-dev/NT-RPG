@@ -28,6 +28,7 @@ import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Texts;
 
 
 @ResourceLoader.Command
@@ -43,7 +44,7 @@ public class CommandAdmin extends CommandBase {
     private Logger logger;
 
     public CommandAdmin() {
-        setDescription("Bypass many plugin restrictions, allows you to force execute skill, set character properties..., bad use of this command may breaks plugin mechanics or cause exceptions.");
+        setDescription("Bypasses many plugin restrictions, allows you to force execute skill, set character properties..., bad use of this command may breaks plugin mechanics or cause exceptions.");
         setPermission("ntrpg.superadmin");
         setUsage("nadmin");
         addAlias("nadmin");
@@ -54,15 +55,19 @@ public class CommandAdmin extends CommandBase {
         String[] a = s.split(" ");
         if (a[0].equalsIgnoreCase("use")) {
             if (!(commandSource instanceof Player)) {
-                logger.debug("Can't be executed from console");
+                logger.warn("Can't be executed from console");
                 return CommandResult.empty();
             }
             if (a[1].equalsIgnoreCase("skill")) {
+                if (a.length < 2) {
+                     commandSource.sendMessage(Texts.of("/nadmin use skill {skillname} [level]"));
+                    return CommandResult.empty();
+                }
                 ISkill skill = skillService.getSkill(a[2]);
                 SkillSettings defaultSkillSettings = skill.getDefaultSkillSettings();
                 IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
                 if (character.isStub())
-                    throw new RuntimeException("Character is required even for admin.");
+                    throw new RuntimeException("Character is required even for an admin.");
                 int level = 1;
                 if (a.length == 4)
                     level = Integer.parseInt(a[3]);

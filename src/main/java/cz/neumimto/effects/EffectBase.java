@@ -65,7 +65,7 @@ public class EffectBase implements IEffect {
 
     @Override
     public boolean requiresRegister() {
-        return duration >= 0 && period >= 0;
+        return duration >= 0 || period >= 0;
     }
 
     @Override

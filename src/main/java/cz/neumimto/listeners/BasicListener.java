@@ -25,6 +25,7 @@ import cz.neumimto.damage.DamageService;
 import cz.neumimto.damage.ISkillDamageSource;
 import cz.neumimto.effects.EffectService;
 import cz.neumimto.effects.EffectSource;
+import cz.neumimto.effects.IEffect;
 import cz.neumimto.effects.IGlobalEffect;
 import cz.neumimto.events.character.CharacterCombatEvent;
 import cz.neumimto.inventory.InventoryService;
@@ -115,7 +116,7 @@ public class BasicListener {
             World ex = (World)loc.getExtent();
             character.updateLastKnownLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockY(),ex.getName());
             characterService.putInSaveQueue(character.getCharacterBase());
-            character.getEffects().stream().forEach(effectService::purgeEffect);
+            effectService.removeAllEffects(character);
             /*Always reset the persistent properties back to vanilla values in a case
              some dummy decides to remove my awesome plugin :C */
             //HP
@@ -172,7 +173,7 @@ public class BasicListener {
 
     @Listener(order = Order.BEFORE_POST)
     public void onAttack(InteractEntityEvent.Primary event) {
-        event.getGame();
+
     }
 
     @Listener
@@ -196,7 +197,7 @@ public class BasicListener {
                         CharacterCombatEvent ce = new CharacterCombatEvent(character,tcharacter,damage,damagefactor);
 
                         event.setBaseDamage(ce.getDamage());
-                        event.setDamage(DamageModifier.builder().cause(Cause.of()).type(DamageModifierTypes.ARMOR).build(), input -> input*ce.getDamagefactor());
+                        event.setDamage(DamageModifier.builder().cause(Cause.ofNullable(null)).type(DamageModifierTypes.ARMOR).build(), input -> input*ce.getDamagefactor());
                     }
                 }
 
@@ -218,7 +219,7 @@ public class BasicListener {
             if (event.getTargetEntity().getType() == EntityTypes.PLAYER) {
                 IActiveCharacter targetchar = characterService.getCharacter(event.getTargetEntity().getUniqueId());
                 double target_resistence = damageService.getCharacterResistance(targetchar,type);
-                event.setDamage(DamageModifier.builder().cause(Cause.of()).type(DamageModifierTypes.MAGIC).build(), input -> input*target_resistence);
+                event.setDamage(DamageModifier.builder().cause(Cause.ofNullable(null)).type(DamageModifierTypes.MAGIC).build(), input -> input*target_resistence);
             }
         }
     }

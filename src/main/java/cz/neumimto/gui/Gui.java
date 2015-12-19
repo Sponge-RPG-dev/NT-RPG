@@ -93,4 +93,7 @@ public class Gui {
         getMessageTypeOf(player).moveSkillTreeMenu(player, skillTree, learnedSkill, center);
     }
 
+    public static void showCharacterInfo(IActiveCharacter player, IActiveCharacter character) {
+        getMessageTypeOf(player).sendPlayerInfo(player,character);
+    }
 }

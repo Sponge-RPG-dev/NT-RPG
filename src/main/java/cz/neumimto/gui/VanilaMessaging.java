@@ -148,4 +148,9 @@ public class VanilaMessaging implements IPlayerMessage {
                 " \\u00A7bG: " + character.getGuild().getName() +
                 " \\u00A7cC: " + character.getPrimaryClass().getnClass().getName();
     }
+
+    @Override
+    public void sendPlayerInfo(IActiveCharacter character, IActiveCharacter target) {
+        character.sendMessage(getDetailedCharInfo(target));
+    }
 }

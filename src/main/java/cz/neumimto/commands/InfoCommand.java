@@ -25,8 +25,10 @@ import cz.neumimto.configuration.CommandLocalization;
 import cz.neumimto.configuration.CommandPermissions;
 import cz.neumimto.configuration.Localization;
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.gui.Gui;
 import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.CharacterService;
+import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.players.groups.PlayerGroup;
 import cz.neumimto.players.groups.Race;
 import org.spongepowered.api.Game;
@@ -72,6 +74,10 @@ public class InfoCommand extends CommandBase {
     @Override
     public CommandResult process(CommandSource commandSource, String s) throws CommandException {
         final String[] args = s.split(" ");
+        if (args.length == 0) {
+            commandSource.sendMessage(getUsage(commandSource));
+            return CommandResult.empty();
+        }
         if (args[0].equalsIgnoreCase("player")) {
             if (args.length != 2) {
                 commandSource.sendMessage(Texts.of(getUsage(commandSource)));
@@ -92,11 +98,20 @@ public class InfoCommand extends CommandBase {
         } else if (args[0].equalsIgnoreCase("guilds")) {
             printGuildList(commandSource, "guild");
         } else if (args[0].equalsIgnoreCase("character")) {
+            if (!(commandSource instanceof Player)) {
+                if (args.length != 2) {
+                    Player player = (Player) commandSource;
+                    IActiveCharacter target = characterService.getCharacter(player.getUniqueId());
+                    Gui.showCharacterInfo(target, target);
+                }
+            }
+        } else if (args[0].equalsIgnoreCase("runes")) {
 
         }
         return CommandResult.success();
     }
 
+    //TODO create inventory menus
     private void printGuildList(CommandSource commandSource, String nextcmd) {
         Collection<? extends PlayerGroup> group = groupService.getGuilds();
         printList(commandSource, group, nextcmd);

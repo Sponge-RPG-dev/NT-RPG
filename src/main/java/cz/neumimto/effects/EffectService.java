@@ -45,11 +45,11 @@ public class EffectService {
     @Inject
     private NtRpgPlugin plugin;
 
-    public static final long TICK_PERIOD = 100L;
+    public static final long TICK_PERIOD = 150L;
     private Set<IEffect> effectSet = new HashSet<>();
     private Set<IEffect> pendingAdditions = new HashSet<>();
     private Set<IEffect> pendingRemovals = new HashSet<>();
-    private static final long enchantment_duration = -1;
+    private static final long unlimited_duration = -1;
     private Map<String, IGlobalEffect> globalEffects = new HashMap<>();
 
     /**
@@ -58,9 +58,7 @@ public class EffectService {
      * @param effect
      */
     public void runEffect(IEffect effect) {
-        effect.onApply();
-        if (effect.requiresRegister())
-            pendingAdditions.add(effect);
+        pendingAdditions.add(effect);
     }
 
     /**
@@ -70,8 +68,9 @@ public class EffectService {
      */
     public void stopEffect(IEffect effect) {
         effect.onRemove();
-        if (effect.requiresRegister())
-            pendingRemovals.remove(effect);
+        if (effect.requiresRegister()) {
+            pendingRemovals.add(effect);
+        }
     }
 
 
@@ -87,44 +86,49 @@ public class EffectService {
                 pendingRemovals.remove(effect);
                 pendingAdditions.remove(effect);
                 effectSet.remove(effect);
+                IEffectConsumer consumer = effect.getConsumer();
+                if (consumer != null) {
+                    consumer.removeEffect(effect.getClass());
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
     }
 
-    //just for better readability
-    private Consumer<IEffect> removeExisting = (e) -> {
-        if (effectSet.contains(e)) effectSet.remove(e);
-    };
-    private Consumer<IEffect> addPendings = (e) -> {
-        if (effectSet.contains(e)) {
-            stackEffect(e);
-        } else {
-            effectSet.add(e);
-        }
-    };
-    private Consumer<IEffect> effectTick = (e) -> {
-        final long serverTime = System.currentTimeMillis();
-        if (e.getExpireTime() <= serverTime) {
-            stopEffect(e);
-        }
-        if (e.getPeriod() + e.getLastTickTime() <= serverTime) {
-            tickEffect(e);
-        }
-    };
-
-    //Lets assume that average mc server has 50-60, branch prediction is not worth esp with java
     @PostProcess(priority = 1000)
     public void run() {
         game.getScheduler().createTaskBuilder().name("EffectTask")
                 .delay(10L, TimeUnit.MILLISECONDS).interval(TICK_PERIOD, TimeUnit.MILLISECONDS)
                 .execute(() -> {
-                    pendingRemovals.stream().forEach(removeExisting);
+                    for (IEffect pendingRemoval : pendingRemovals) {
+                        if (effectSet.contains(pendingRemoval)) {
+                            effectSet.remove(pendingRemoval);
+                            IEffectConsumer consumer = pendingRemoval.getConsumer();
+                            if (consumer != null) {
+                                consumer.removeEffect(pendingRemoval.getClass());
+                            }
+                        }
+                    }
                     pendingRemovals.clear();
-                    pendingAdditions.stream().forEach(addPendings);
+                    long l = System.currentTimeMillis();
+                    for (IEffect e : effectSet) {
+                        if (e.getDuration() == unlimited_duration) {
+                            continue;
+                        }
+                        if (e.getPeriod() + e.getLastTickTime() <= l) {
+                            tickEffect(e,l);
+                        }
+
+                        if (e.getExpireTime() <= l) {
+                            stopEffect(e);
+                        }
+                    }
+
+                    for (IEffect pendingAddition : pendingAdditions) {
+                        effectSet.add(pendingAddition);
+                    }
                     pendingAdditions.clear();
-                    effectSet.stream().forEach(effectTick);
                 }).submit(plugin);
     }
 
@@ -133,9 +137,10 @@ public class EffectService {
      *
      * @param effect
      */
-    public void tickEffect(IEffect effect) {
+    public void tickEffect(IEffect effect, long time) {
         effect.onTick();
         effect.tickCountIncrement();
+        effect.setLastTickTime(time);
     }
 
     /**
@@ -161,6 +166,7 @@ public class EffectService {
         IEffect eff = consumer.getEffect(iEffect.getClass());
         if (eff == null) {
             consumer.addEffect(iEffect);
+            iEffect.onApply();
             if (iEffect.requiresRegister())
                 runEffect(iEffect);
         } else if (eff.isStackable()) {
@@ -183,6 +189,7 @@ public class EffectService {
      */
     public void removeEffect(IEffect iEffect, IEffectConsumer consumer) {
         removeEffect(iEffect.getClass(), consumer);
+        effectSet.remove(iEffect);
     }
 
     /**
@@ -237,7 +244,7 @@ public class EffectService {
      * @param level
      */
     public void applyGlobalEffectAsEnchantment(IGlobalEffect effect, IEffectConsumer consumer, int level) {
-        IEffect construct = effect.construct(consumer, enchantment_duration, level);
+        IEffect construct = effect.construct(consumer, unlimited_duration, level);
         addEffect(construct, consumer);
     }
 
@@ -264,6 +271,14 @@ public class EffectService {
                 effect.onStack(effect.getLevel());
             }
         });
+    }
+
+    public boolean isGlobalEffect(String s) {
+        return globalEffects.containsKey(s);
+    }
+
+    public void removeAllEffects(IActiveCharacter character) {
+        pendingRemovals.addAll(character.getEffects());
     }
 }
 

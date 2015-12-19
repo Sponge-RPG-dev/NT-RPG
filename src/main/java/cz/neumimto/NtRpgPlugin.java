@@ -28,6 +28,7 @@ import cz.neumimto.utils.FileUtils;
 import djxy.api.MinecraftGuiService;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GamePostInitializationEvent;
@@ -72,7 +73,7 @@ public class NtRpgPlugin {
     public void onPluginLoad(GamePostInitializationEvent event) {
         long start = System.nanoTime();
         IoC ioc = IoC.get();
-        Game game = event.getGame();
+        Game game = Sponge.getGame();
         Optional<PluginContainer> gui = game.getPluginManager().getPlugin("MinecraftGUIServer");
         if (gui.isPresent()) {
             ioc.registerInterfaceImplementation(MinecraftGuiService.class, game.getServiceManager().provide(MinecraftGuiService.class).get());

@@ -55,6 +55,11 @@ public class CommandSkilltree extends CommandBase {
             String[] args = s.split(" ");
             NClass nClass = null;
             SkillInfo skillInfo = null;
+            Player player = (Player) commandSource;
+            IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+            if (character.isStub()) {
+                player.sendMessage(Texts.of(Localization.CHARACTER_IS_REQUIRED));
+            }
             for (int i = 0; i < args.length - 1; i++) {
                 if (args[i].equalsIgnoreCase("class")) {
                     nClass = groupService.getNClass(args[i + 1]);
@@ -71,11 +76,7 @@ public class CommandSkilltree extends CommandBase {
                     }
                 }
             }
-            Player player = (Player) commandSource;
-            IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-            if (character.isStub()) {
-                player.sendMessage(Texts.of(Localization.CHARACTER_IS_REQUIRED));
-            }
+            //todo
             if (nClass == null) {
                 nClass = character.getPrimaryClass().getnClass();
             }

@@ -32,7 +32,7 @@ public abstract class TimestampEntity {
     public Date updated;
 
     @PrePersist
-    protected void onCreate() {
+    public void onCreate() {
         updated = created = new Date();
     }
 
@@ -42,7 +42,7 @@ public abstract class TimestampEntity {
     private Date created;
 
     @PreUpdate
-    protected void onUpdate() {
+    public void onUpdate() {
         updated = new Date();
     }
 }

@@ -50,4 +50,6 @@ public interface IPlayerMessage {
     void sendManaStatus(IActiveCharacter character, float currentMana, float maxMana, float reserved);
 
     void sendPlayerInfo(IActiveCharacter character, List<CharacterBase> target);
+
+    void sendPlayerInfo(IActiveCharacter character, IActiveCharacter target);
 }

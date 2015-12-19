@@ -21,6 +21,7 @@ import cz.neumimto.GroupService;
 import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.Weapon;
 import cz.neumimto.configuration.PluginConfig;
+import cz.neumimto.effects.EffectBase;
 import cz.neumimto.effects.EffectService;
 import cz.neumimto.effects.EffectSource;
 import cz.neumimto.effects.IGlobalEffect;
@@ -48,14 +49,18 @@ import cz.neumimto.players.properties.DefaultProperties;
 import cz.neumimto.players.properties.PlayerPropertyService;
 import cz.neumimto.skills.*;
 import cz.neumimto.utils.Utils;
+import org.hibernate.Hibernate;
+import org.jboss.logging.annotations.Param;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
 
+import javax.persistence.QueryHint;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -153,9 +158,14 @@ public class CharacterService {
      * @param base
      */
     public void save(CharacterBase base) {
-        playerDao.update(base);
+        base.onUpdate();
+        playerDao.merge(base,base.getId());
     }
 
+    public void createAndUpdate(CharacterBase base) {
+        base.onCreate();
+        playerDao.createAndUpdate(base);
+    }
 
     public NPlayer getPlayerWrapper(UUID uuid) {
         return playerWrappers.get(uuid);
@@ -387,6 +397,7 @@ public class CharacterService {
         activeCharacter.getSkills().values().stream().forEach(e -> e.getSkill().onCharacterInit(activeCharacter, e.getLevel()));
     }
 
+
     private void resolveSkillsCds(CharacterBase characterBase, IActiveCharacter character) {
         Map<String, Long> cooldowns = characterBase.getCooldowns();
         Map<String, Integer> skills = characterBase.getSkills();
@@ -408,6 +419,7 @@ public class CharacterService {
                 character.addSkill(info.getSkill().getName(), info);
             }
         }
+        characterBase.getSkills().size();
     }
 
     /**

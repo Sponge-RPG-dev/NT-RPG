@@ -32,6 +32,7 @@ import org.spongepowered.api.world.Location;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Created by NeumimTo on 25.7.2015.
@@ -96,5 +97,12 @@ public class Utils {
         player.offer(Keys.HEALTH, 20d);
         //player walkspeed
         //player.offer(Keys.WALK_SPEED,0.2d);
+    }
+
+    /**
+     * Inline negation of method references
+     */
+    public static <T> Predicate<T> not(Predicate<T> t) {
+        return t.negate();
     }
 }

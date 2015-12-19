@@ -20,6 +20,7 @@ package cz.neumimto.events;
 
 import org.spongepowered.api.event.Cancellable;
 import org.spongepowered.api.event.Event;
+import org.spongepowered.api.event.cause.Cause;
 
 
 /**
@@ -40,4 +41,8 @@ public class CancellableEvent implements Cancellable, Event {
         cancelled = b;
     }
 
+    @Override
+    public Cause getCause() {
+        return null;
+    }
 }

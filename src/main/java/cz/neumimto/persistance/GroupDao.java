@@ -113,7 +113,7 @@ public class GroupDao {
                 int maxLevel = c.getInt("MaxLevel");
                 double first = c.getDouble("ExpFirstLevel");
                 double last = c.getDouble("ExpLastLevel");
-                initLevelCurve(nClass,maxLevel,first,last);
+                initLevelCurve(nClass, maxLevel, first, last);
                 getClasses().put(nClass.getName().toLowerCase(), nClass);
             });
         } catch (IOException e) {
@@ -182,11 +182,10 @@ public class GroupDao {
         double factora = Math.log(expForLastLevel / expFirstLevel) / (maxlevel - 1);
         double factorb = expFirstLevel / (Math.exp(factora) - 1.0);
         double[] levels = new double[maxlevel];
-        for (int i = 1; i <= maxlevel; i++)
-        {
+        for (int i = 1; i <= maxlevel; i++) {
             double oldxp = Math.round(factorb * Math.exp(factora * (i - 1)));
             double newxp = Math.round(factorb * Math.exp(factora * i));
-            levels[i-1] = newxp - oldxp;
+            levels[i - 1] = newxp - oldxp;
         }
         nClass.setLevels(levels);
     }

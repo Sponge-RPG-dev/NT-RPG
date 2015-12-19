@@ -20,6 +20,7 @@ package cz.neumimto.events.character;
 
 import cz.neumimto.players.IActiveCharacter;
 import org.spongepowered.api.event.Event;
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.item.ItemType;
 
 import java.util.Set;
@@ -30,7 +31,7 @@ import java.util.Set;
 public class EventCharacterArmorPostUpdate implements Event {
     IActiveCharacter character;
     Set<ItemType> armor;
-
+    private Cause cause = null;
     public EventCharacterArmorPostUpdate(IActiveCharacter character, Set<ItemType> allowedArmor) {
         this.character = character;
         this.armor = allowedArmor;
@@ -44,4 +45,12 @@ public class EventCharacterArmorPostUpdate implements Event {
         return armor;
     }
 
+    @Override
+    public Cause getCause() {
+        return cause;
+    }
+
+    public void setCause(Cause cause) {
+        this.cause = cause;
+    }
 }

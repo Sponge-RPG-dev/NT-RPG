@@ -91,4 +91,18 @@ public class GroupService {
         registerNClass(NClass.Default);
         registerRace(Race.Default);
     }
+
+    public boolean existsGuild(String s) {
+        return groupDao.getGuilds().containsKey(s.toLowerCase());
+    }
+
+    public boolean existsClass(String s) {
+        return groupDao.getClasses().containsKey(s.toLowerCase());
+    }
+
+    public boolean existsRace(String s) {
+        return groupDao.getRaces().containsKey(s.toLowerCase());
+    }
+
+
 }
