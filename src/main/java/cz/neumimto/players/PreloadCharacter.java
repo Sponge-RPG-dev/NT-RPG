@@ -18,6 +18,7 @@
 
 package cz.neumimto.players;
 
+import cz.neumimto.IEntityType;
 import cz.neumimto.Weapon;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.configuration.Settings;
@@ -27,11 +28,13 @@ import cz.neumimto.players.groups.NClass;
 import cz.neumimto.players.groups.Race;
 import cz.neumimto.players.parties.Party;
 import cz.neumimto.players.properties.DefaultProperties;
+import cz.neumimto.players.properties.PlayerPropertyService;
 import cz.neumimto.skills.ExtendedSkillInfo;
 import cz.neumimto.skills.ISkill;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectType;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.block.CollideBlockEvent;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.item.ItemType;
@@ -46,9 +49,8 @@ import java.util.*;
 public class PreloadCharacter implements IActiveCharacter {
 
     IReservable mana = new Mana(this);
-    static float[] characterProperties = new float[Settings.CHARACTER_PROPERTIES];
+    static float[] characterProperties = new float[PlayerPropertyService.LAST_ID];
     UUID uuid;
-    long time = System.currentTimeMillis();
     Health health = new HealthStub(this);
     private boolean isusinggui;
 
@@ -63,6 +65,11 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
+    public float[] getCharacterLevelProperties() {
+        return characterProperties;
+    }
+
+    @Override
     public boolean isInvulnerable() {
         return PluginConfig.ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS;
     }
@@ -71,6 +78,8 @@ public class PreloadCharacter implements IActiveCharacter {
     public void setInvulnerable(boolean b) {
 
     }
+
+
     @Override
     public Map<EquipmentTypeWorn, Weapon> getEquipedArmor() {
         return Collections.EMPTY_MAP;
@@ -159,6 +168,11 @@ public class PreloadCharacter implements IActiveCharacter {
     @Override
     public void updateLastKnownLocation(int x, int y, int z, String name) {
 
+    }
+
+    @Override
+    public Map<Class<? extends IEffect>, IEffect> getEffectMap() {
+        return Collections.emptyMap();
     }
 
     @Override
@@ -504,5 +518,20 @@ public class PreloadCharacter implements IActiveCharacter {
     @Override
     public boolean isPartyLeader() {
         return false;
+    }
+
+    @Override
+    public double getHp() {
+        return health.getValue();
+    }
+
+    @Override
+    public void setHp(double d) {
+        health.setValue(d);
+    }
+
+    @Override
+    public Player getEntity() {
+        return null;
     }
 }

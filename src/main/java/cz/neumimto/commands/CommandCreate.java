@@ -76,7 +76,7 @@ public class CommandCreate extends CommandBase {
             if (args[0].equalsIgnoreCase("character")) {
                 game.getScheduler().createTaskBuilder().async().execute(() -> {
                     Player player = (Player) commandSource;
-                    int i = characterService.canCreateNewCharacter(player.getUniqueId());
+                    int i = characterService.canCreateNewCharacter(player.getUniqueId(),args[1]);
                     if (i == 1) {
                         commandSource.sendMessage(Texts.of(Localization.REACHED_CHARACTER_LIMIT));
                     } else if (i == 2) {
@@ -93,7 +93,9 @@ public class CommandCreate extends CommandBase {
                         characterBase.setAttributePoints(PluginConfig.ATTRIBUTEPOINTS_ON_START);
                         characterService.createAndUpdate(characterBase);
                         IActiveCharacter character = characterService.buildActiveCharacterAsynchronously(player, characterBase);
-                        characterService.setActiveCharacterSynchronously(player.getUniqueId(), character);
+                        if (args.length == 3) {
+                            characterService.setActiveCharacterSynchronously(player.getUniqueId(), character);
+                        }
                         commandSource.sendMessage(Texts.of(CommandLocalization.CHARACTER_CREATED.replaceAll("%1", characterBase.getName())));
                     }
                 }).submit(plugin);

@@ -21,10 +21,7 @@ import cz.neumimto.GroupService;
 import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.Weapon;
 import cz.neumimto.configuration.PluginConfig;
-import cz.neumimto.effects.EffectBase;
-import cz.neumimto.effects.EffectService;
-import cz.neumimto.effects.EffectSource;
-import cz.neumimto.effects.IGlobalEffect;
+import cz.neumimto.effects.*;
 import cz.neumimto.effects.common.def.CombatEffect;
 import cz.neumimto.effects.common.def.ManaRegeneration;
 import cz.neumimto.events.*;
@@ -49,18 +46,14 @@ import cz.neumimto.players.properties.DefaultProperties;
 import cz.neumimto.players.properties.PlayerPropertyService;
 import cz.neumimto.skills.*;
 import cz.neumimto.utils.Utils;
-import org.hibernate.Hibernate;
-import org.jboss.logging.annotations.Param;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
 
-import javax.persistence.QueryHint;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -191,11 +184,10 @@ public class CharacterService {
         if (activeCharacter == null) {
             characters.put(uuid, character);
         } else {
-            characters.remove(uuid);
-            if (character != null) {
-                characters.put(uuid, character);
-                initActiveCharacter(character);
-            }
+            deleteCharacterReferences(character);
+            characters.put(uuid, character);
+            initActiveCharacter(character);
+
         }
         return character;
     }
@@ -274,7 +266,7 @@ public class CharacterService {
      *
      * @param character
      * @param nClass
-     * @param slot      defines primary/Secondary/... class
+     * @param slot defines primary/Secondary/... class
      * @param race
      * @param guild
      */
@@ -324,7 +316,6 @@ public class CharacterService {
      * @param character
      */
     public void updateMaxHealth(IActiveCharacter character) {
-        Health health = character.getHealth();
         float max_health = character.getCharacterProperty(DefaultProperties.max_health) - character.getCharacterProperty(DefaultProperties.reserved_health);
         float actreserved = character.getCharacterProperty(DefaultProperties.reserved_health);
         float reserved = character.getCharacterProperty(DefaultProperties.reserved_health_multiplier);
@@ -337,12 +328,22 @@ public class CharacterService {
 
 
     public IActiveCharacter removeCachedWrapper(UUID uuid) {
-        playerWrappers.remove(uuid);
         return removeCachedCharacter(uuid);
     }
 
     public IActiveCharacter removeCachedCharacter(UUID uuid) {
-        return characters.remove(uuid);
+        return deleteCharacterReferences(characters.remove(uuid));
+    }
+
+    protected IActiveCharacter deleteCharacterReferences(IActiveCharacter character) {
+        Collection<IEffect> effects = character.getEffects();
+        for (IEffect effect : effects) {
+            effectService.stopEffect(effect);
+        }
+        if (character.hasParty())
+            character.getParty().removePlayer(character);
+        character.setParty(null);
+        return character;
     }
 
     /**
@@ -384,13 +385,45 @@ public class CharacterService {
         if (d != null) {
             activeCharacter.getPrimaryClass().setExperiences(d);
         }
-        playerPropertyService.setupDefaults(activeCharacter);
+        //TODO move to async? move to async!
+        //recalculateProperties(activeCharacter);
+
+
         game.getScheduler().createTaskBuilder().async().name("FetchCharBaseDataAsync-" + player.getUniqueId())
                 .execute(() -> {
+                    recalculateProperties(activeCharacter);
                     resolveSkillsCds(characterBase, activeCharacter);
                     game.getScheduler().createTaskBuilder().name("FetchCharBaseDataCallback-" + player.getUniqueId()).execute(() -> initSkills(activeCharacter)).submit(plugin);
                 }).submit(plugin);
         return activeCharacter;
+    }
+
+    public void recalculateProperties(IActiveCharacter character) {
+        //playerPropertyService.setupDefaults(character);
+        Map<Integer, Float> defaults = playerPropertyService.getDefaults();
+        float[] arr = character.getCharacterProperties();
+        float[] lvl = character.getCharacterLevelProperties();
+        float val = 0;
+        for (int i = 0; i < arr.length; i++) {
+            if (character.getPrimaryClass().getnClass().getPropBonus().containsKey(i)) {
+                val += character.getPrimaryClass().getnClass().getPropBonus().get(i);
+            }
+            if (character.getRace().getPropBonus().containsKey(i)) {
+                val += character.getRace().getPropLevelBonus().get(i);
+            }
+            if (val == 0 && defaults.containsKey(i)) {
+                val = defaults.get(i);
+            }
+            arr[i] = val;
+            val = 0;
+            if (character.getPrimaryClass().getnClass().getPropLevelBonus().containsKey(i)) {
+                val += character.getPrimaryClass().getnClass().getPropLevelBonus().get(i);
+            }
+            if (character.getRace().getPropLevelBonus().containsKey(i)) {
+                val += character.getRace().getPropLevelBonus().get(i);
+            }
+            lvl[i] = val;
+        }
     }
 
     private void initSkills(ActiveCharacter activeCharacter) {
@@ -439,6 +472,7 @@ public class CharacterService {
         if (d != null) {
             activeCharacter.getPrimaryClass().setExperiences(d);
         }
+        recalculateProperties(activeCharacter);
         resolveSkillsCds(characterBase, activeCharacter);
         game.getScheduler().createTaskBuilder().name("FetchCharBaseDataCallback-" + player.getUniqueId()).execute(() -> {
             Map<Integer, Float> defaults = playerPropertyService.getDefaults();
@@ -456,13 +490,13 @@ public class CharacterService {
      * 2 - if player has character with same name
      * 0 - ok
      */
-    public int canCreateNewCharacter(UUID uniqueId) {
+    public int canCreateNewCharacter(UUID uniqueId, String name) {
         //todo use db query
         List<CharacterBase> list = getPlayersCharacters(uniqueId);
         if (list.size() >= PluginConfig.PLAYER_MAX_CHARS) {
             return 1;
         }
-        if (list.stream().anyMatch(c -> c.getUuid().equals(uniqueId))) {
+        if (list.stream().anyMatch(c -> c.getName().equalsIgnoreCase(name))) {
             return 2;
         }
         return 0;

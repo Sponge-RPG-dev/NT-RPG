@@ -25,6 +25,8 @@ import cz.neumimto.configuration.CommandPermissions;
 import cz.neumimto.configuration.Localization;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.players.ActiveCharacter;
+import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.CharacterService;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.players.groups.NClass;
@@ -35,13 +37,13 @@ import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Texts;;
+import org.spongepowered.api.text.Texts;;import java.util.List;
 
 /**
  * Created by NeumimTo on 22.7.2015.
  */
 @ResourceLoader.Command
-public class ChooseGroups extends CommandBase {
+public class CommandChoose extends CommandBase {
 
     @Inject
     private CharacterService characterService;
@@ -52,7 +54,7 @@ public class ChooseGroups extends CommandBase {
     @Inject
     private SkillService skillService;
 
-    public ChooseGroups() {
+    public CommandChoose() {
         setUsage(CommandLocalization.COMMAND_CHOOSEGROUP_USAGE);
         setDescription(CommandLocalization.COMMAND_CHOOSE_DESC);
         setPermission(CommandPermissions.COMMAND_CHOOSE_ACCESS);
@@ -86,6 +88,7 @@ public class ChooseGroups extends CommandBase {
                     return CommandResult.empty();
                 }
                 characterService.updatePlayerGroups(character, nClass, i, null, null);
+                player.sendMessage(Texts.of(Localization.PLAYER_CHOOSED_CLASS.replaceAll("%1",nClass.getName())));
                 return CommandResult.success();
             }
             commandSource.sendMessage(Texts.of(Localization.NO_PERMISSIONS));
@@ -108,6 +111,8 @@ public class ChooseGroups extends CommandBase {
                     }
                     player.sendMessage(Texts.of(Localization.PLAYER_CANT_CHANGE_RACE));
                 }
+                player.sendMessage(Texts.of(Localization.PLAYER_CHOOSED_RACE.replaceAll("%1",r.getName())));
+
             }
         } else if (args[0].equalsIgnoreCase("skill")) {
             IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
@@ -137,6 +142,20 @@ public class ChooseGroups extends CommandBase {
                     int i = characterService.refundSkill(character, skill, clazz);
                 }
             }
+        } else if (args[0].equalsIgnoreCase("character")) {
+            if (args.length != 2) {
+                commandSource.sendMessage(getUsage(commandSource));
+                return CommandResult.success();
+            }
+            List<CharacterBase> playersCharacters = characterService.getPlayersCharacters(player.getUniqueId());
+            for (CharacterBase playersCharacter : playersCharacters) {
+                if (playersCharacter.getName().equalsIgnoreCase(args[1])) {
+                    ActiveCharacter character = characterService.buildActiveCharacter(player, playersCharacter);
+                    characterService.setActiveCharacter(player.getUniqueId(),character);
+                    return CommandResult.success();
+                }
+            }
+            player.sendMessage(Texts.of(Localization.NON_EXISTING_CHARACTER));
         } else {
             commandSource.sendMessage(getUsage(commandSource));
         }

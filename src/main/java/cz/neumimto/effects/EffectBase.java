@@ -19,6 +19,7 @@
 package cz.neumimto.effects;
 
 import cz.neumimto.GlobalScope;
+import cz.neumimto.IEntity;
 import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.utils.UUIDs;
 import org.spongepowered.api.effect.potion.PotionEffect;

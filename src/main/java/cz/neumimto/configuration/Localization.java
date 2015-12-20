@@ -129,4 +129,13 @@ public class Localization {
 
     @ConfigValue
     public static String PARTY_MSG_ON_PLAYER_JOIN = "%1 has joined your party";
+
+    @ConfigValue
+    public static String NON_EXISTING_CHARACTER = "Selected character does not exist";
+
+    @ConfigValue
+    public static String PLAYER_CHOOSED_CLASS = "You've chosen class %1";
+
+    @ConfigValue
+    public static String PLAYER_CHOOSED_RACE = "You've chosen race 1%";
 }

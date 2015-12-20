@@ -28,7 +28,9 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Projectile;
+import org.spongepowered.api.util.blockray.BlockRay;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -76,8 +78,11 @@ public class Utils {
         return ee;
     }
 
-    public static Living getTargettedEntity(IActiveCharacter character, double range) {
-        throw new NotImplementedException("Utils.getTargettedEntity - not implemented yet");
+    public static Living getTargettedEntity(IActiveCharacter character, int range) {
+        Player player = character.getPlayer();
+        Set<Entity> nearbyEntities = getNearbyEntities(player.getLocation(), range);
+        BlockRay.BlockRayBuilder<World> from = BlockRay.from(character.getPlayer());
+        return null;
     }
 
     public static void hideProjectile(Projectile projectile) {
@@ -104,5 +109,10 @@ public class Utils {
      */
     public static <T> Predicate<T> not(Predicate<T> t) {
         return t.negate();
+    }
+
+
+    public static boolean isLivingEntity(Entity entity) {
+        return entity.get(Keys.HEALTH).isPresent();
     }
 }

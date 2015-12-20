@@ -113,13 +113,15 @@ public class PlayerPropertyService {
     public void setupDefaults(IActiveCharacter character) {
         if (character.isStub())
             return;
-        float[] arr = new float[LAST_ID];
+        float[] arr = character.getCharacterProperties();
         Map<Integer, Float> defaults = getDefaults();
-        for (Map.Entry<Integer, Float> integerFloatEntry : defaults.entrySet()) {
-            arr[integerFloatEntry.getKey()] = integerFloatEntry.getValue();
+        for (int i = 0; i < arr.length; i++) {
+            if (defaults.containsKey(i)) {
+                arr[i] = defaults.get(i);
+            } else {
+                arr[i] = 0;
+            }
         }
-        character.setCharacterProperties(arr);
-        character.setCharacterLevelProperties(new float[LAST_ID]);
     }
 
     public void process(Class<?> container) {
@@ -142,5 +144,12 @@ public class PlayerPropertyService {
                 }
             }
         }
+    }
+
+    public float getDefault(Integer key) {
+        Float f = defaults.get(key);
+        if (f == null)
+            return 0;
+        return f;
     }
 }

@@ -86,6 +86,7 @@ public class JSLoader {
             bindings.put("logger", ioc.build(Logger.class));
             bindings.put("ioc", ioc);
             bindings.put("GlobalScope", ioc.build(GlobalScope.class));
+
             engine.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
             engine.eval(rs);
         } catch (ScriptException | IOException e) {

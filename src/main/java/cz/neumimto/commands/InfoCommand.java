@@ -107,6 +107,13 @@ public class InfoCommand extends CommandBase {
             }
         } else if (args[0].equalsIgnoreCase("runes")) {
 
+        } else if (args[0].equalsIgnoreCase("stats")) {
+            Player player = (Player) commandSource;
+            IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+            String q = "HP: "+character.getHealth().getValue()+"/"+character.getHealth().getMaxValue()+"/"+character.getHealth().getRegen();
+            player.sendMessage(Texts.of(q));
+            q = "Mana: "+character.getMana().getValue()+"/"+character.getMana().getMaxValue()+"/"+character.getMana().getRegen();
+            player.sendMessage(Texts.of(q));
         }
         return CommandResult.success();
     }

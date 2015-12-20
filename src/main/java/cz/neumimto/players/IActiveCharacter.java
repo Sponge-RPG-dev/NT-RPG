@@ -18,7 +18,10 @@
 
 package cz.neumimto.players;
 
+import cz.neumimto.IEntity;
+import cz.neumimto.IEntityType;
 import cz.neumimto.Weapon;
+import cz.neumimto.effects.IEffect;
 import cz.neumimto.effects.IEffectConsumer;
 import cz.neumimto.players.groups.Guild;
 import cz.neumimto.players.groups.NClass;
@@ -38,7 +41,7 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 23.7.2015.
  */
-public interface IActiveCharacter extends IEffectConsumer {
+public interface IActiveCharacter extends IEntity<Player> {
 
     Party getParty();
 
@@ -193,4 +196,27 @@ public interface IActiveCharacter extends IEffectConsumer {
     boolean isInvulnerable();
 
     void setInvulnerable(boolean b);
+
+
+    @Override
+    double getHp();
+
+    @Override
+    void setHp(double d);
+
+    @Override
+    default IEntityType getType() {
+        return IEntityType.CHARACTER;
+    }
+
+    @Override
+    Player getEntity();
+
+    @Override
+    Map<Class<? extends IEffect>, IEffect> getEffectMap();
+
+    @Override
+    void sendMessage(String message);
+
+    float[] getCharacterLevelProperties();
 }

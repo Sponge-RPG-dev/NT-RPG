@@ -18,16 +18,21 @@
 
 package cz.neumimto.damage;
 
+import cz.neumimto.IEntityType;
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.entities.EntityService;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.players.properties.DefaultProperties;
 import cz.neumimto.skills.ISkill;
 import cz.neumimto.skills.NDamageType;
 import cz.neumimto.utils.ItemStackUtils;
+import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 
@@ -41,9 +46,13 @@ import java.util.function.BiFunction;
 @Singleton
 public class DamageService {
 
+    @Inject
+    public EntityService entityService;
+
     public BiFunction<Double,Double,Double> DamageArmorReductionFactor = (damage,armor) -> armor/(armor+10*damage);
 
     private Map<ItemType, Short> map = new HashMap<>();
+
 
     public double getCharacterItemDamage(IActiveCharacter character, ItemType type) {
         if (character.isStub())
@@ -67,7 +76,7 @@ public class DamageService {
     }
 
     public void recalculateCharacterWeaponDamage(IActiveCharacter character) {
-        double damage = getCharacterItemDamage(character, character.getMainHand().getItemType());
+        double damage = getCharacterItemDamage(character, character.getPlayer().getItemInHand().get().getItem());
         damage += character.getMainHand().getDamage() + character.getOffHand().getDamage();
         character.setWeaponDamage(damage);
     }
@@ -91,11 +100,6 @@ public class DamageService {
             return 0;
         return 20;
     }
-
-    public void skillDamage(IActiveCharacter caster,double damage,ISkill skill, Living entity) {
-        Living l;
-    }
-
 
     public double getCharacterBonusDamage(IActiveCharacter character, DamageType source) {
         if (source == DamageTypes.ATTACK)
@@ -135,6 +139,24 @@ public class DamageService {
         map.put(ItemTypes.WOODEN_HOE, DefaultProperties.wooden_hoe_bonus_damage);
 
         map.put(ItemTypes.BOW, DefaultProperties.bow_meele_bonus_damage);
+    }
+
+
+    public double getSkillDamage(IActiveCharacter caster, DamageType source) {
+        if (caster.hasPreferedDamageType())
+            source = caster.getDamageType();
+        if (source == DamageTypes.ATTACK)
+            return caster.getCharacterProperty(DefaultProperties.physical_damage_bonus_mult);
+        if (source == DamageTypes.FIRE)
+            return caster.getCharacterProperty(DefaultProperties.fire_damage_bonus_mult);
+        if (source == DamageTypes.MAGIC)
+            return caster.getCharacterProperty(DefaultProperties.magic_damage_bonus_mult);
+        if (source == NDamageType.LIGHTNING)
+            return caster.getCharacterProperty(DefaultProperties.lightning_damage_bonus_mult);
+        if (source == NDamageType.ICE)
+            return caster.getCharacterProperty(DefaultProperties.ice_damage_bonus_mult);
+
+        return 0;
     }
 
 

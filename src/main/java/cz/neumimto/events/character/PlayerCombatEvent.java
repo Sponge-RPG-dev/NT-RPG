@@ -19,13 +19,13 @@ package cz.neumimto.events.character;
 
 import cz.neumimto.players.IActiveCharacter;
 
-public class CharacterCombatEvent extends CharacterEvent {
+public class PlayerCombatEvent extends CharacterEvent {
 
     private final IActiveCharacter target;
     private double damage;
     private double damagefactor;
 
-    public CharacterCombatEvent(IActiveCharacter IActiveCharacter, IActiveCharacter target, double damage, double damagefactor) {
+    public PlayerCombatEvent(IActiveCharacter IActiveCharacter, IActiveCharacter target, double damage, double damagefactor) {
         super(IActiveCharacter);
         this.target = target;
         this.damage = damage;

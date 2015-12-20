@@ -18,36 +18,88 @@
 
 package cz.neumimto.effects;
 
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectType;
+import org.spongepowered.api.entity.living.Living;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by NeumimTo on 17.1.2015.
  */
-public interface IEffectConsumer {
-    Collection<IEffect> getEffects();
+public interface IEffectConsumer<T extends Living> {
+    T getEntity();
 
-    IEffect getEffect(Class<? extends IEffect> cl);
+    Map<Class<? extends IEffect>,IEffect> getEffectMap();
 
-    boolean hasEffect(Class<? extends IEffect> cl);
+    default Collection<IEffect> getEffects() {
+        return getEffectMap().values();
+    }
 
-    void addEffect(IEffect effect);
+    default IEffect getEffect(Class<? extends IEffect> cl) {
+        return getEffectMap().get(cl);
+    }
 
-    void removeEffect(Class<? extends IEffect> cl);
+    default boolean hasEffect(Class<? extends IEffect> cl) {
+        return getEffectMap().containsKey(cl);
+    }
 
-    void addPotionEffect(PotionEffectType p, int amplifier, long duration);
+    default void addEffect(IEffect effect) {
+        getEffectMap().put(effect.getClass(),effect);
+    }
 
-    void addPotionEffect(PotionEffectType p, int amplifier, long duration, boolean partciles);
+    default void removeEffect(Class<? extends IEffect> cl) {
+        getEffectMap().remove(cl);
+    }
 
-    void removePotionEffect(PotionEffectType type);
 
-    boolean hasPotionEffect(PotionEffectType type);
+    default void removeAllTempEffects() {
+        for (Map.Entry<Class<? extends IEffect>, IEffect> entry : getEffectMap().entrySet()) {
+            IEffect effect = entry.getValue();
+            if (effect.getEffectSource() == EffectSource.TEMP) {
+                removeEffect(entry.getKey());
+            }
+        }
+    }
 
-    void removeAllTempEffects();
 
-    void addPotionEffect(PotionEffect e);
+    default void addPotionEffect(PotionEffectType p, int amplifier, long duration) {
+        PotionEffect build = PotionEffect.builder().potionType(p).amplifier(amplifier).duration((int) duration).build();
+        List<PotionEffect> potionEffects = getEntity().get(Keys.POTION_EFFECTS).get();
+        potionEffects.add(build);
+        getEntity().offer(Keys.POTION_EFFECTS,potionEffects);
+    }
+
+    default void addPotionEffect(PotionEffectType p, int amplifier, long duration, boolean partciles) {
+        PotionEffect build = PotionEffect.builder().particles(partciles).potionType(p).amplifier(amplifier).duration((int) duration).build();
+        addPotionEffect(build);
+    }
+
+    default void removePotionEffect(PotionEffectType type) {
+        List<PotionEffect> potionEffects = getEntity().get(Keys.POTION_EFFECTS).get();
+        List l = potionEffects.stream().filter(p -> p.getType() != type).collect(Collectors.toList());
+        getEntity().offer(Keys.POTION_EFFECTS,l);
+    }
+
+    default boolean hasPotionEffect(PotionEffectType type) {
+        List<PotionEffect> potionEffects = getEntity().get(Keys.POTION_EFFECTS).get();
+        for (PotionEffect potionEffect : potionEffects) {
+            if (potionEffect.getType() == type) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    default void addPotionEffect(PotionEffect e) {
+        List<PotionEffect> potionEffects = getEntity().get(Keys.POTION_EFFECTS).get();
+        potionEffects.add(e);
+        getEntity().offer(Keys.POTION_EFFECTS,potionEffects);
+    }
 
     void sendMessage(String message);
 }

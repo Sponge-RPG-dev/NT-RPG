@@ -79,13 +79,12 @@ public class CommandAdmin extends CommandBase {
                     extendedSkillInfo.setSkillInfo(skillInfo);
                     extendedSkillInfo.setSkill(skill);
                     ActiveSkill askill = (ActiveSkill) skill;
-                    long start = System.nanoTime();
                     askill.cast(character, extendedSkillInfo);
-                    long end = System.nanoTime();
-                    character.sendMessage("Executing the skill took: " + (end - start) + " ns");
                 }
             }
         } else if (a[0].equalsIgnoreCase("set")) {
+
+        } else if (a[0].equalsIgnoreCase("delete")) {
 
         }
         return CommandResult.success();

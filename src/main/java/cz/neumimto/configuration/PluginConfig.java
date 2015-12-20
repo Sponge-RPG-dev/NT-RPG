@@ -24,6 +24,10 @@ package cz.neumimto.configuration;
 @ConfigurationContainer(path = "{WorkingDir}", filename = "Settings.conf")
 public class PluginConfig {
 
+    @Comment(content = {"If you want to use another plugin, which handles mob's hp and damage set this value to false"})
+    @ConfigValue
+    public static boolean OVERRIDE_MOBS = true;
+
     @ConfigValue
     public static long COMBAT_TIME = 20000L;
 

@@ -18,6 +18,8 @@
 
 package cz.neumimto.players;
 
+import cz.neumimto.GlobalScope;
+import cz.neumimto.IEntityType;
 import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.Weapon;
 import cz.neumimto.effects.EffectSource;
@@ -127,6 +129,11 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
+    public float[] getCharacterLevelProperties() {
+        return characterPropertiesLevel;
+    }
+
+    @Override
     public void setCharacterProperties(float[] arr) {
         characterProperties = arr;
     }
@@ -205,24 +212,20 @@ public class ActiveCharacter implements IActiveCharacter {
         this.health = health;
     }
 
+
     @Override
-    public Collection<IEffect> getEffects() {
-        return effects.values();
+    public double getHp() {
+        return getHealth().getValue();
     }
 
     @Override
-    public IEffect getEffect(Class<? extends IEffect> cl) {
-        return effects.get(cl);
+    public void setHp(double d) {
+        setHealth((float)d);
     }
 
     @Override
-    public boolean hasEffect(Class<? extends IEffect> cl) {
-        return effects.containsKey(cl);
-    }
-
-    @Override
-    public void addEffect(IEffect effect) {
-        effects.put(effect.getClass(), effect);
+    public Player getEntity() {
+        return getPlayer();
     }
 
     @Override
@@ -230,46 +233,10 @@ public class ActiveCharacter implements IActiveCharacter {
         return equipedArmor;
     }
 
-    @Override
-    public void addPotionEffect(PotionEffect e) {
-        List<PotionEffect> potionEffects = pl.get(Keys.POTION_EFFECTS).get();
-        potionEffects.add(e);
-        pl.offer(Keys.POTION_EFFECTS,potionEffects);
-    }
 
     @Override
-    public void removeEffect(Class<? extends IEffect> cl) {
-        effects.remove(cl);
-    }
-
-    @Override
-    public void addPotionEffect(PotionEffectType p, int amplifier, long duration) {
-        addPotionEffect(p, amplifier, duration, false);
-    }
-
-    @Override
-    public void addPotionEffect(PotionEffectType p, int amplifier, long duration, boolean particles) {
-        PotionEffect.Builder potionEffectBuilder = PotionEffect.builder();
-        PotionEffect e = potionEffectBuilder.amplifier(amplifier).duration((int) (duration/1000*20)).particles(particles).build();
-        addPotionEffect(e);
-    }
-
-
-    @Override
-    public void removePotionEffect(PotionEffectType type) {
-        List<PotionEffect> potionEffects = pl.get(Keys.POTION_EFFECTS).get();
-        potionEffects.removeIf(potionEffect -> potionEffect.getType() == type);
-        pl.offer(Keys.POTION_EFFECTS, potionEffects);
-    }
-
-    @Override
-    public boolean hasPotionEffect(PotionEffectType type) {
-        List<PotionEffect> potionEffects = pl.get(Keys.POTION_EFFECTS).get();
-        for (PotionEffect potionEffect : potionEffects) {
-            if (potionEffect.getType() == type)
-                return true;
-        }
-        return false;
+    public Map<Class<? extends IEffect>, IEffect> getEffectMap() {
+        return effects;
     }
 
     @Override
@@ -328,18 +295,6 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
 
-    private void fixPropertyValues(Map<Integer, Float> map, int mult) {
-        for (Map.Entry<Integer, Float> s : map.entrySet()) {
-            setCharacterProperty(s.getKey(), getCharacterProperty(s.getKey()) + s.getValue() * -1);
-        }
-    }
-
-    private void fixPropertyLevelValues(Map<Integer, Float> map, int mult) {
-        for (Map.Entry<Integer, Float> s : map.entrySet()) {
-            setCharacterLevelProperty(s.getKey(), getCharacterProperty(s.getKey()) + s.getValue() * -1);
-        }
-    }
-
     @Override
     public ExtendedNClass getPrimaryClass() {
         return primary;
@@ -352,8 +307,8 @@ public class ActiveCharacter implements IActiveCharacter {
 
     public void setClass(NClass nclass, int slot) {
         if (primary != null) {
-            fixPropertyValues(getPrimaryClass().getnClass().getPropBonus(), -1);
-            fixPropertyLevelValues(getPrimaryClass().getnClass().getPropLevelBonus(), -1);
+      //      fixPropertyValues(getPrimaryClass().getnClass().getPropBonus(), -1);
+      //      fixPropertyLevelValues(getPrimaryClass().getnClass().getPropLevelBonus(), -1);
             skills.clear();
         }
         if (slot > 0)
@@ -371,8 +326,8 @@ public class ActiveCharacter implements IActiveCharacter {
             primary.setExperiences(aDouble);
         }
         base.setPrimaryClass(nclass.getName());
-        fixPropertyValues(nclass.getPropBonus(), 1);
-        fixPropertyLevelValues(getPrimaryClass().getnClass().getPropLevelBonus(), 1);
+     //   fixPropertyValues(nclass.getPropBonus(), 1);
+      //  fixPropertyLevelValues(getPrimaryClass().getnClass().getPropLevelBonus(), 1);
         SkillInfo skillInfo = nclass.getSkillTree().getSkills().get(StartingPoint.name);
         if (skillInfo != null) {
             ExtendedSkillInfo info = new ExtendedSkillInfo();
@@ -380,6 +335,7 @@ public class ActiveCharacter implements IActiveCharacter {
             info.setSkill(null);
             info.setSkillInfo(skillInfo);
         }
+        updateItemRestrictions();
     }
 
     @Override
@@ -436,15 +392,6 @@ public class ActiveCharacter implements IActiveCharacter {
         return getAllowedWeapons().containsKey(weaponItemType);
     }
 
-    @Override
-    public void removeAllTempEffects() {
-        for (Map.Entry<Class<? extends IEffect>, IEffect> entry : effects.entrySet()) {
-            IEffect effect = entry.getValue();
-            if (effect.getEffectSource() == EffectSource.TEMP) {
-                removeEffect(entry.getKey());
-            }
-        }
-    }
 
     @Override
     public Map<ItemType, Double> getAllowedWeapons() {
@@ -464,11 +411,11 @@ public class ActiveCharacter implements IActiveCharacter {
     @Override
     public void setRace(Race race) {
         if (this.race != Race.Default) {
-            fixPropertyValues(this.race.getPropBonus(), -1);
+ //           fixPropertyValues(this.race.getPropBonus(), -1);
             removePermissions(race.getPermissions());
         }
         this.race = race;
-        fixPropertyValues(race.getPropBonus(), 1);
+  //      fixPropertyValues(race.getPropBonus(), 1);
         addPermissions(race.getPermissions());
     }
 
@@ -480,11 +427,11 @@ public class ActiveCharacter implements IActiveCharacter {
     @Override
     public void setGuild(Guild guild) {
         if (this.guild != Guild.Default) {
-            fixPropertyValues(this.guild.getPropBonus(), -1);
+    //        fixPropertyValues(this.guild.getPropBonus(), -1);
             removePermissions(guild.getPermissions());
         }
         this.guild = guild;
-        fixPropertyValues(guild.getPropBonus(), 1);
+    //    fixPropertyValues(guild.getPropBonus(), 1);
         addPermissions(guild.getPermissions());
     }
 
@@ -586,6 +533,7 @@ public class ActiveCharacter implements IActiveCharacter {
         weaponDamage = damage;
     }
 
+    //TODO cache weapon damage on entityeuqipmentevent once its implemented
     @Override
     public double getWeaponDamage() {
         return weaponDamage;
