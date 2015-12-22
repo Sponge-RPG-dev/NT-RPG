@@ -53,25 +53,26 @@ public class SkillTreeDao {
                 SkillTree skillTree = new SkillTree();
                 skillTree.setDescription(config.getString("Description"));
                 skillTree.setId(config.getString("Name"));
+                skillTree.getSkills().put(StartingPoint.name,StartingPoint.SKILL_DATA);
                 Config sub = config.getObject("Skills").toConfig();
                 for (Map.Entry<String, ConfigValue> entry : sub.root().entrySet()) {
-                    SkillInfo info = getSkillInfo(entry.getKey(), skillTree);
+                    SkillData info = getSkillInfo(entry.getKey(), skillTree);
                     ISkill skill = skillService.getSkill(info.getSkillName());
 
                     ConfigObject value = (ConfigObject) entry.getValue();
                     Config c = value.toConfig();
                     info.setMinPlayerLevel(c.getInt("MinPlayerLevel"));
-                    info.setMinPlayerLevel(c.getInt("MaxSkillLevel"));
+                    info.setMaxSkillLevel(c.getInt("MaxSkillLevel"));
                     for (String conflicts : c.getStringList("Conflicts")) {
                         info.getConflicts().add(getSkillInfo(conflicts, skillTree));
                     }
                     for (String conflicts : c.getStringList("SoftDepends")) {
-                        SkillInfo i = getSkillInfo(conflicts, skillTree);
+                        SkillData i = getSkillInfo(conflicts, skillTree);
                         info.getSoftDepends().add(i);
                         i.getDepending().add(info);
                     }
                     for (String conflicts : c.getStringList("HardDepends")) {
-                        SkillInfo i = getSkillInfo(conflicts, skillTree);
+                        SkillData i = getSkillInfo(conflicts, skillTree);
                         info.getHardDepends().add(i);
                         i.getDepending().add(info);
                     }
@@ -95,9 +96,10 @@ public class SkillTreeDao {
                             skillSettings.addObjectNode(e.getKey(), val);
                         }
                     }
+                    addRequiredIfMissing(skillSettings);
                     info.setSkillSettings(skillSettings);
                     skillTree.getSkills().put(info.getSkillName(), info);
-                    map.put(info.getSkillName().toLowerCase(), skillTree);
+                    map.put(skillTree.getId(), skillTree);
                 }
             });
         } catch (IOException e) {
@@ -106,10 +108,25 @@ public class SkillTreeDao {
         return map;
     }
 
-    private SkillInfo getSkillInfo(String name, SkillTree tree) {
-        SkillInfo info = tree.getSkills().get(name);
+    private void addRequiredIfMissing(SkillSettings skillSettings) {
+        Map.Entry<String, Float> q = skillSettings.getFloatNodeEntry(SkillNode.HPCOST.name());
+        if (q == null) {
+            skillSettings.addNode(SkillNode.HPCOST,0,0);
+        }
+        q = skillSettings.getFloatNodeEntry(SkillNode.MANACOST.name());
+        if (q == null) {
+            skillSettings.addNode(SkillNode.MANACOST,0,0);
+        }
+        q = skillSettings.getFloatNodeEntry(SkillNode.COOLDOWN.name());
+        if (q == null) {
+            skillSettings.addNode(SkillNode.COOLDOWN,0,0);
+        }
+    }
+
+    private SkillData getSkillInfo(String name, SkillTree tree) {
+        SkillData info = tree.getSkills().get(name);
         if (info == null) {
-            info = new SkillInfo(name);
+            info = new SkillData(name);
             tree.getSkills().put(name, info);
         }
         return info;

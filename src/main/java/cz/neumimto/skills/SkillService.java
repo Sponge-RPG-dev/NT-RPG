@@ -89,29 +89,30 @@ public class SkillService {
         return skillTrees;
     }
 
-    public int executeSkill(IActiveCharacter character, ExtendedSkillInfo esi) {
+    public SkillResult executeSkill(IActiveCharacter character, ExtendedSkillInfo esi) {
         int level = esi.getLevel();
         if (level < 0)
-            return 1;
+            //this should never happen
+            return SkillResult.WRONG_DATA;
         if (character.hasCooldown(esi.getSkill().getName()))
-            return 2;
-        SkillInfo skillInfo = esi.getSkillInfo();
-        SkillSettings skillSettings = skillInfo.getSkillSettings();
+            return SkillResult.ON_COOLDOWN;
+        SkillData skillData = esi.getSkillData();
+        SkillSettings skillSettings = skillData.getSkillSettings();
         float requiredMana = skillSettings.getLevelNodeValue(SkillNode.MANACOST, level);
         float requiredHp = skillSettings.getLevelNodeValue(SkillNode.HPCOST, level);
         SkillPrepareEvent event = new SkillPrepareEvent(character, requiredHp, requiredMana);
         game.getEventManager().post(event);
         if (event.isCancelled())
-            return 3;
+            return SkillResult.FAIL;
         double hpcost = event.getRequiredHp() * character.getCharacterProperty(DefaultProperties.health_cost_reduce);
         double manacost = event.getRequiredMana() * character.getCharacterProperty(DefaultProperties.mana_cost_reduce);
         //todo float staminacost =
         if (character.getHealth().getValue() < hpcost) {
-            if (character.getMana().getValue() < (manacost)) {
+            if (character.getMana().getValue() <= (manacost)) {
                 long cooldown = (long) (System.currentTimeMillis() + (skillSettings.getLevelNodeValue(SkillNode.COOLDOWN, level) * character.getCharacterProperty(DefaultProperties.cooldown_reduce)));
                 SkillResult result = esi.getSkill().onPreUse(character);
                 if (result == SkillResult.CANCELLED)
-                    return 6;
+                    return SkillResult.CANCELLED;
                 if (result == SkillResult.OK) {
                     SkillPostUsageEvent eventt = new SkillPostUsageEvent(character, hpcost, manacost, cooldown);
                     game.getEventManager().post(eventt);
@@ -124,16 +125,16 @@ public class SkillService {
                             character.getHealth().setValue(newval);
                             character.getMana().setValue(character.getMana().getValue() - event.getRequiredMana());
                             if (cooldown <= System.currentTimeMillis()) {
-                                character.getCharacterBase().getCooldowns().put(skillInfo.getSkillName(), cooldown);
+                                character.getCharacterBase().getCooldowns().put(skillData.getSkillName(), cooldown);
                             }
-                            return 0;
+                            return SkillResult.OK;
                         }
                     }
                 }
             }
-            return 4;
+            return SkillResult.NO_MANA;
         }
-        return 5;
+        return SkillResult.NO_HP;
     }
 
 
@@ -155,25 +156,30 @@ public class SkillService {
 
     public void createSkillsDefaults() {
         Path path = Paths.get(NtRpgPlugin.workingDir + "/skills-nodelist.conf");
-        if (!Files.exists(path)) {
-            try {
-                Path file = Files.createFile(path);
-                StringBuilder builder = new StringBuilder();
-                FileWriter fileWritter = new FileWriter(path.toFile(), true);
-                BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
-                for (ISkill skill : skills.values()) {
-                    builder.append(skill.getName()).append(": { ").append(Utils.LineSeparator);
-                    for (Map.Entry<String, Float> entry : skill.getDefaultSkillSettings().getNodes().entrySet()) {
-                        builder.append(Utils.Tab).append(entry.getKey()).append(" : ").append(entry.getValue()).append(Utils.LineSeparator);
-                    }
-                    builder.append(" }");
-                    bufferWritter.write(builder.toString());
-                    bufferWritter.flush();
-                }
-                bufferWritter.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+        try {
+            if (Files.exists(path)) {
+                Files.delete(path);
             }
+            Files.createFile(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        StringBuilder builder = new StringBuilder();
+
+        try (FileWriter fileWriter = new FileWriter(path.toFile());
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+            for (ISkill skill : skills.values()) {
+                builder.append(skill.getName()).append(": { ").append(Utils.LineSeparator);
+                for (Map.Entry<String, Float> entry : skill.getDefaultSkillSettings().getNodes().entrySet()) {
+                    builder.append(Utils.Tab).append(entry.getKey()).append(" : ").append(entry.getValue()).append(Utils.LineSeparator);
+                }
+                builder.append(" },").append(Utils.LineSeparator);
+                bufferedWriter.write(builder.toString());
+                bufferedWriter.flush();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 }

@@ -25,7 +25,7 @@ package cz.neumimto.configuration;
 public class CommandPermissions {
 
     @ConfigValue
-    public static String COMMAND_CHOOSE_CLASS = "*";
+    public static String CANT_CHOOSE_CLASS = ".";
     @ConfigValue
     public static String CHOOSEGROUP_ALIAS = "choose";
 
@@ -36,7 +36,7 @@ public class CommandPermissions {
     public static String COMMANDINFO_PERMS = "*";
 
     @ConfigValue
-    public static String COMMANDINFO_ALIAS = "info";
+    public static String COMMANDINFO_ALIAS = "show";
 
     @ConfigValue
     public static String CHARACTER_INFO_ALIAS = "character";
@@ -45,7 +45,7 @@ public class CommandPermissions {
     public static String COMMAND_CREATE_ALIAS = "create";
 
     @ConfigValue
-    public static String COMMAND_CHOOSE_RACE = "*";
+    public static String CANT_CHOOSE_RACE = ".";
 
     @ConfigValue
     public static String CHARACTER_EXECUTE_SKILL_PERMISSION = "*";

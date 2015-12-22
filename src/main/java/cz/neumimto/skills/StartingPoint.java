@@ -28,10 +28,10 @@ import java.util.Set;
  */
 
 public final class StartingPoint extends PassiveSkill {
-    public static String name = "StartingPoint";
+    public static final String name = "StartingPoint";
     private static SkillSettings skillSettings = new SkillSettings();
-    private static String desc = "";
-
+    public static final SkillData SKILL_DATA = new SkillData(name);
+    
     @Override
     public boolean showsToPlayers() {
         return false;
@@ -43,8 +43,8 @@ public final class StartingPoint extends PassiveSkill {
     }
 
     @Override
-    public void setName(String name) {
-
+    public String getDescription() {
+        return "";
     }
 
     @Override
@@ -78,11 +78,6 @@ public final class StartingPoint extends PassiveSkill {
     }
 
     @Override
-    public void init() {
-
-    }
-
-    @Override
     public SkillSettings getSettings() {
         return getDefaultSkillSettings();
     }
@@ -92,15 +87,6 @@ public final class StartingPoint extends PassiveSkill {
 
     }
 
-    @Override
-    public String getDescription() {
-        return desc;
-    }
-
-    @Override
-    public void setDescription(String description) {
-
-    }
 
     @Override
     public Set<SkillType> getSkillTypes() {

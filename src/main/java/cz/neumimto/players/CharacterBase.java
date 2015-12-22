@@ -42,7 +42,7 @@ public class CharacterBase extends TimestampEntity {
     private Long id;
 
     //todo locking
-    @Version
+    // @Version
     private long version;
 
     @Convert(converter = UUID2String.class)

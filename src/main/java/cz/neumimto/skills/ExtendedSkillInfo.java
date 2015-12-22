@@ -23,11 +23,11 @@ package cz.neumimto.skills;
  */
 public class ExtendedSkillInfo {
     public static ExtendedSkillInfo Empty = new ExtendedSkillInfo() {{
-        setSkillInfo(SkillInfo.EMPTY);
+        setSkillData(SkillData.EMPTY);
     }};
     ISkill skill;
     int level;
-    SkillInfo skillInfo;
+    SkillData skillData;
 
     public ISkill getSkill() {
         return skill;
@@ -45,11 +45,11 @@ public class ExtendedSkillInfo {
         this.level = level;
     }
 
-    public SkillInfo getSkillInfo() {
-        return skillInfo;
+    public SkillData getSkillData() {
+        return skillData;
     }
 
-    public void setSkillInfo(SkillInfo skillInfo) {
-        this.skillInfo = skillInfo;
+    public void setSkillData(SkillData skillData) {
+        this.skillData = skillData;
     }
 }

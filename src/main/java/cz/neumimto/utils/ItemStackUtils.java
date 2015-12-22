@@ -25,17 +25,12 @@ import cz.neumimto.configuration.Localization;
 import cz.neumimto.effects.IGlobalEffect;
 import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.groups.NClass;
-import cz.neumimto.skills.SkillInfo;
+import cz.neumimto.skills.SkillData;
 import cz.neumimto.skills.SkillItemIcon;
 import cz.neumimto.skills.SkillSettings;
 import cz.neumimto.skills.SkillTree;
-import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.data.*;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.manipulator.DataManipulator;
-import org.spongepowered.api.data.manipulator.DataManipulatorBuilder;
-import org.spongepowered.api.data.manipulator.immutable.item.ImmutableLoreData;
 import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
 import org.spongepowered.api.data.manipulator.mutable.item.LoreData;
 import org.spongepowered.api.data.value.mutable.ListValue;
@@ -45,7 +40,6 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.util.persistence.DataBuilder;
 
 import javax.transaction.NotSupportedException;
 import java.util.*;
@@ -243,40 +237,40 @@ public class ItemStackUtils {
         final LoreData loreData = Sponge.getGame().getDataManager().getManipulatorBuilder(LoreData.class).get().create();
         final ListValue<Text> locallore = loreData.lore();
         SkillTree skillTree = nClass.getSkillTree();
-        SkillInfo skillInfo = skillTree.getSkills().get(icon.skillName);
+        SkillData skillData = skillTree.getSkills().get(icon.skillName);
         //skilltree settings info
         locallore.add(Texts.of(icon.skill.getDescription()));
         locallore.add(Texts.of(""));
-        locallore.add(Texts.of(Localization.LORESECTION_MAX_SKILL_LEVEL + ": " + skillInfo.getMaxSkillLevel()));
-        locallore.add(Texts.of(Localization.LORESECTION_MAX_PLAYER_LEVEL + ": " + skillInfo.getMinPlayerLevel()));
+        locallore.add(Texts.of(Localization.LORESECTION_MAX_SKILL_LEVEL + ": " + skillData.getMaxSkillLevel()));
+        locallore.add(Texts.of(Localization.LORESECTION_MAX_PLAYER_LEVEL + ": " + skillData.getMinPlayerLevel()));
         //skillsettings
         locallore.add(Texts.of(Localization.SKILL_SETTINGS_LORESECTION_NAME));
-        SkillSettings skillSettings = skillInfo.getSkillSettings();
+        SkillSettings skillSettings = skillData.getSkillSettings();
         final int roundprecision = 1;
         skillSettings.getNodes().keySet().stream()
                 .filter(s -> !s.endsWith(SkillSettings.bonus))
                 .forEach(n -> {
                     locallore.add(Texts.of(
-                            "- " + n + ": " + Utils.round(skillInfo.getSkillSettings().getNodeValue(n), roundprecision)
-                                    + " | " + Utils.round(skillInfo.getSkillSettings().getLevelNodeValue(n, level), roundprecision)
-                                    + " | " + Utils.round(skillInfo.getSkillSettings().getNodeValue(n + SkillSettings.bonus), roundprecision)));
+                            "- " + n + ": " + Utils.round(skillData.getSkillSettings().getNodeValue(n), roundprecision)
+                                    + " | " + Utils.round(skillData.getSkillSettings().getLevelNodeValue(n, level), roundprecision)
+                                    + " | " + Utils.round(skillData.getSkillSettings().getNodeValue(n + SkillSettings.bonus), roundprecision)));
 
                 });
         //skill dependencies
         locallore.add(Texts.of(""));
-        String strlist = skillInfo.getConflicts()
+        String strlist = skillData.getConflicts()
                 .stream()
-                .map(SkillInfo::getSkillName)
+                .map(SkillData::getSkillName)
                 .collect(Collectors.joining(", "));
         locallore.add(Texts.of(Localization.LORESECTION_CONFCLICTS + ": " + strlist));
-        strlist = skillInfo.getSoftDepends()
+        strlist = skillData.getSoftDepends()
                 .stream()
-                .map(SkillInfo::getSkillName)
+                .map(SkillData::getSkillName)
                 .collect(Collectors.joining(", "));
         locallore.add(Texts.of(Localization.LORESECTION_SOFT_DEPENDS + ": " + strlist));
-        strlist = skillInfo.getHardDepends()
+        strlist = skillData.getHardDepends()
                 .stream()
-                .map(SkillInfo::getSkillName)
+                .map(SkillData::getSkillName)
                 .collect(Collectors.joining(", "));
         locallore.add(Texts.of(Localization.LORESECTION_HARD_DEPENDS + ": " + strlist));
         //skill lore

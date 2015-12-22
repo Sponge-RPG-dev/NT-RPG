@@ -48,9 +48,6 @@ public class RpgListener {
         Optional<Player> retardedOptional = game.getServer().getPlayer(event.getPlayer());
         if (retardedOptional.isPresent()) {
             Player player = retardedOptional.get();
-            if (event.getCharacterBases().isEmpty() && PluginConfig.CREATE_FIRST_CHAR_AFTER_LOGIN) {
-                characterService.characterCreateState(player, true);
-            }
             if (!event.getCharacterBases().isEmpty()) {
                 if (PluginConfig.PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR || event.getCharacterBases().size() == 1) {
                     characterService.setActiveCharacter(event.getPlayer(), characterService.buildActiveCharacter(player, event.getCharacterBases().get(0)));

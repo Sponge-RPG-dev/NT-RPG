@@ -22,7 +22,7 @@ import cz.neumimto.effects.EffectStatusType;
 import cz.neumimto.effects.IEffect;
 import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.IActiveCharacter;
-import cz.neumimto.skills.SkillInfo;
+import cz.neumimto.skills.SkillData;
 import cz.neumimto.skills.SkillTree;
 import org.spongepowered.api.entity.living.player.Player;
 
@@ -41,7 +41,7 @@ public interface IPlayerMessage {
 
     void openSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, Map<String, Integer> learnedSkills);
 
-    void moveSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, Map<String, Integer> learnedSkill, SkillInfo center);
+    void moveSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, Map<String, Integer> learnedSkill, SkillData center);
 
     public void sendEffectStatus(IActiveCharacter player, EffectStatusType type, IEffect effect);
 

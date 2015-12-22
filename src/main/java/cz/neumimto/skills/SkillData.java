@@ -24,20 +24,20 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 14.2.2015.
  */
-public class SkillInfo {
-    public static SkillInfo EMPTY = new SkillInfo("Empty") {{
+public class SkillData {
+    public static SkillData EMPTY = new SkillData("Empty") {{
         setSkillSettings(new SkillSettings());
     }};
     private final String skill;
     private SkillSettings skillSettings;
     private int minPlayerLevel;
     private int maxSkillLevel;
-    private Set<SkillInfo> softDepends = new HashSet<>();
-    private Set<SkillInfo> hardDepends = new HashSet<>();
-    private Set<SkillInfo> conflicts = new HashSet<>();
-    private Set<SkillInfo> depending = new HashSet<>();
+    private Set<SkillData> softDepends = new HashSet<>();
+    private Set<SkillData> hardDepends = new HashSet<>();
+    private Set<SkillData> conflicts = new HashSet<>();
+    private Set<SkillData> depending = new HashSet<>();
 
-    public SkillInfo(String skill) {
+    public SkillData(String skill) {
         this.skill = skill;
 
     }
@@ -46,8 +46,8 @@ public class SkillInfo {
         return skill;
     }
 
-    public boolean conflictsWith(SkillInfo skillInfo) {
-        return getConflicts().contains(skillInfo.getSkillName());
+    public boolean conflictsWith(SkillData skillData) {
+        return getConflicts().contains(skillData.getSkillName());
     }
 
     public SkillSettings getSkillSettings() {
@@ -74,31 +74,31 @@ public class SkillInfo {
         this.maxSkillLevel = maxSkillLevel;
     }
 
-    public Set<SkillInfo> getSoftDepends() {
+    public Set<SkillData> getSoftDepends() {
         return softDepends;
     }
 
-    public Set<SkillInfo> getHardDepends() {
+    public Set<SkillData> getHardDepends() {
         return hardDepends;
     }
 
-    public Set<SkillInfo> getConflicts() {
+    public Set<SkillData> getConflicts() {
         return conflicts;
     }
 
-    public void setSoftDepends(Set<SkillInfo> softDepends) {
+    public void setSoftDepends(Set<SkillData> softDepends) {
         this.softDepends = softDepends;
     }
 
-    public void setHardDepends(Set<SkillInfo> hardDepends) {
+    public void setHardDepends(Set<SkillData> hardDepends) {
         this.hardDepends = hardDepends;
     }
 
-    public void setConflicts(Set<SkillInfo> conflicts) {
+    public void setConflicts(Set<SkillData> conflicts) {
         this.conflicts = conflicts;
     }
 
-    public Set<SkillInfo> getDepending() {
+    public Set<SkillData> getDepending() {
         return depending;
     }
 }

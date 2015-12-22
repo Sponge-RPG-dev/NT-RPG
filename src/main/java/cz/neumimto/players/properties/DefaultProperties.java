@@ -45,11 +45,8 @@ public class DefaultProperties {
     @Property(name = "reserved_health_mult", default_ = 1)
     public static short reserved_health_multiplier;
 
-    @Property(default_ = 0.2f, name = "walk_speed")
+    @Property(default_ = (float)PlayerPropertyService.WALKING_SPEED, name = "walk_speed")
     public static short walk_speed;
-
-    @Property(default_ = 0, name = "walk_speed_bonus")
-    public static short walk_speed_bonus;
 
     @Property(name = "experiences")
     public static short experiences;

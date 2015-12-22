@@ -20,10 +20,13 @@ package cz.neumimto;
 
 import com.google.inject.Inject;
 import cz.neumimto.configuration.ConfigMapper;
+import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.configuration.Settings;
 import cz.neumimto.core.FindPersistenceContextEvent;
 import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.listeners.DebugListener;
 import cz.neumimto.players.CharacterBase;
+import cz.neumimto.scripting.JSLoader;
 import cz.neumimto.utils.FileUtils;
 import djxy.api.MinecraftGuiService;
 import org.slf4j.Logger;
@@ -37,6 +40,7 @@ import org.spongepowered.api.plugin.PluginContainer;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.script.ScriptEngineManager;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -103,7 +107,11 @@ public class NtRpgPlugin {
         GlobalScope = ioc.build(GlobalScope.class);
         rl.loadExternalJars();
         ioc.postProcess();
+        if (PluginConfig.DEBUG) {
+            Sponge.getEventManager().registerListeners(this, ioc.build(DebugListener.class));
+        }
         double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
         logger.info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
+
     }
 }

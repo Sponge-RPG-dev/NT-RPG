@@ -19,6 +19,7 @@
 package cz.neumimto.commands;
 
 import cz.neumimto.GroupService;
+import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.ResourceLoader;
 import cz.neumimto.configuration.CommandLocalization;
 import cz.neumimto.configuration.CommandPermissions;
@@ -33,6 +34,7 @@ import cz.neumimto.players.groups.NClass;
 import cz.neumimto.players.groups.Race;
 import cz.neumimto.skills.ISkill;
 import cz.neumimto.skills.SkillService;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -54,6 +56,9 @@ public class CommandChoose extends CommandBase {
     @Inject
     private SkillService skillService;
 
+    @Inject
+    private NtRpgPlugin plugin;
+
     public CommandChoose() {
         setUsage(CommandLocalization.COMMAND_CHOOSEGROUP_USAGE);
         setDescription(CommandLocalization.COMMAND_CHOOSE_DESC);
@@ -69,7 +74,7 @@ public class CommandChoose extends CommandBase {
         }
         Player player = (Player) commandSource;
         if (args[0].equalsIgnoreCase("class")) {
-            if (commandSource.hasPermission(CommandPermissions.COMMAND_CHOOSE_CLASS)) {
+           if (!commandSource.hasPermission(CommandPermissions.CANT_CHOOSE_CLASS)) {
                 NClass nClass = groupService.getNClass(args[1].toLowerCase());
                 if (nClass == NClass.Default) {
                     player.sendMessage(Texts.of(Localization.NON_EXISTING_GROUP));
@@ -88,12 +93,12 @@ public class CommandChoose extends CommandBase {
                     return CommandResult.empty();
                 }
                 characterService.updatePlayerGroups(character, nClass, i, null, null);
-                player.sendMessage(Texts.of(Localization.PLAYER_CHOOSED_CLASS.replaceAll("%1",nClass.getName())));
+                player.sendMessage(Texts.of(Localization.PLAYER_CHOOSED_CLASS.replaceAll("%1", nClass.getName())));
                 return CommandResult.success();
-            }
-            commandSource.sendMessage(Texts.of(Localization.NO_PERMISSIONS));
+           }
+           commandSource.sendMessage(Texts.of(Localization.NO_PERMISSIONS));
         } else if (args[0].equalsIgnoreCase("race")) {
-            if (commandSource.hasPermission(CommandPermissions.COMMAND_CHOOSE_RACE)) {
+            if (!commandSource.hasPermission(CommandPermissions.CANT_CHOOSE_RACE)) {
                 IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
                 if (character.isStub()) {
                     player.sendMessage(Texts.of(Localization.CHARACTER_IS_REQUIRED));
@@ -107,12 +112,11 @@ public class CommandChoose extends CommandBase {
                 if (character.getRace() == Race.Default || (character.getRace() != Race.Default && PluginConfig.PLAYER_CAN_CHANGE_RACE)) {
                     if (PluginConfig.PLAYER_CAN_CHANGE_RACE) {
                         characterService.updatePlayerGroups(character, null, 0, r, null);
+                        player.sendMessage(Texts.of(Localization.PLAYER_CHOOSED_RACE.replaceAll("%1", r.getName())));
                         return CommandResult.success();
                     }
                     player.sendMessage(Texts.of(Localization.PLAYER_CANT_CHANGE_RACE));
                 }
-                player.sendMessage(Texts.of(Localization.PLAYER_CHOOSED_RACE.replaceAll("%1",r.getName())));
-
             }
         } else if (args[0].equalsIgnoreCase("skill")) {
             IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
@@ -124,7 +128,7 @@ public class CommandChoose extends CommandBase {
             ISkill skill = skillService.getSkill(args[2]);
             NClass clazz = null;
             if (args.length == 4) {
-
+                //todo skilltreecommand.class
             } else {
                 clazz = character.getPrimaryClass().getnClass();
             }
@@ -135,7 +139,7 @@ public class CommandChoose extends CommandBase {
             if (a.equalsIgnoreCase("upgrade")) {
                 int i = characterService.upgradeSkill(character, skill);
                 return CommandResult.success();
-            } else if (a.equalsIgnoreCase("take")) {
+            } else if (a.equalsIgnoreCase("learn")) {
                 int i = characterService.characterLearnskill(character, skill, character.getPrimaryClass().getnClass().getSkillTree());
             } else if (a.equalsIgnoreCase("refund")) {
                 if (PluginConfig.CAN_REFUND_SKILL) {
@@ -147,18 +151,27 @@ public class CommandChoose extends CommandBase {
                 commandSource.sendMessage(getUsage(commandSource));
                 return CommandResult.success();
             }
-            List<CharacterBase> playersCharacters = characterService.getPlayersCharacters(player.getUniqueId());
-            for (CharacterBase playersCharacter : playersCharacters) {
-                if (playersCharacter.getName().equalsIgnoreCase(args[1])) {
-                    ActiveCharacter character = characterService.buildActiveCharacter(player, playersCharacter);
-                    characterService.setActiveCharacter(player.getUniqueId(),character);
-                    return CommandResult.success();
-                }
+            IActiveCharacter current = characterService.getCharacter(player.getUniqueId());
+            if (current.getName().equalsIgnoreCase(args[1])) {
+                player.sendMessage(Texts.of(Localization.ALREADY_CUURENT_CHARACTER));
+                return CommandResult.empty();
             }
-            player.sendMessage(Texts.of(Localization.NON_EXISTING_CHARACTER));
-        } else {
-            commandSource.sendMessage(getUsage(commandSource));
+            Sponge.getScheduler().createTaskBuilder().async().name("GetCharacterList-" + player.getUniqueId())
+                    .execute(() -> {
+                        List<CharacterBase> playersCharacters = characterService.getPlayersCharacters(player.getUniqueId());
+                        for (CharacterBase playersCharacter : playersCharacters) {
+                            if (playersCharacter.getName().equalsIgnoreCase(args[1])) {
+                                ActiveCharacter character = characterService.buildActiveCharacterAsynchronously(player, playersCharacter);
+                                Sponge.getScheduler().createTaskBuilder().name("SetCharacterCallback"+player.getUniqueId())
+                                        .execute(() -> characterService.setActiveCharacter(player.getUniqueId(), character))
+                                        .submit(plugin);
+                            }
+                        }
+                        player.sendMessage(Texts.of(Localization.NON_EXISTING_CHARACTER));
+                    }).submit(plugin);
+            return CommandResult.success();
         }
+        commandSource.sendMessage(getUsage(commandSource));
         return CommandResult.success();
     }
 }

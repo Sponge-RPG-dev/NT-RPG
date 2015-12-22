@@ -23,7 +23,7 @@ import cz.neumimto.effects.IEffect;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.IActiveCharacter;
-import cz.neumimto.skills.SkillInfo;
+import cz.neumimto.skills.SkillData;
 import cz.neumimto.skills.SkillTree;
 import org.spongepowered.api.entity.living.player.Player;
 
@@ -89,7 +89,7 @@ public class Gui {
         getMessageTypeOf(character).sendPlayerInfo(character, target);
     }
 
-    public static void moveSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, Map<String, Integer> learnedSkill, SkillInfo center) {
+    public static void moveSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, Map<String, Integer> learnedSkill, SkillData center) {
         getMessageTypeOf(player).moveSkillTreeMenu(player, skillTree, learnedSkill, center);
     }
 

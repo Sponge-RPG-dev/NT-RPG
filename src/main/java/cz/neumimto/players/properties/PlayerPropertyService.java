@@ -48,6 +48,8 @@ public class PlayerPropertyService {
     @Inject
     private Logger logger;
 
+    public static final double WALKING_SPEED = 0.1d;
+
     public static short LAST_ID = 0;
     public static final Supplier<Short> getAndIncrement = () -> {
         short t = new Short(LAST_ID);
@@ -57,14 +59,7 @@ public class PlayerPropertyService {
 
     private Map<String, Short> idMap = new HashMap<>();
     private Map<Integer, Float> defaults = new HashMap<>();
-    private List<PropertyContainer> containerList = new ArrayList<>();
     private Map<String, Short> persistant = new HashMap<>();
-    private float arr;
-
-    public PlayerPropertyService() {
-
-    }
-
 
     public void registerProperty(String name, short id) {
         if (PluginConfig.DEBUG)
@@ -110,7 +105,7 @@ public class PlayerPropertyService {
         }
     }
 
-    public void setupDefaults(IActiveCharacter character) {
+    public void setupDefaultProperties(IActiveCharacter character) {
         if (character.isStub())
             return;
         float[] arr = character.getCharacterProperties();

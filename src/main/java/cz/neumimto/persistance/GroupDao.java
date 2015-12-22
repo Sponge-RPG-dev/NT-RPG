@@ -93,7 +93,7 @@ public class GroupDao {
         }
     }
 
-    @PostProcess(priority = 400)
+    @PostProcess(priority = 500)
     public void loadNClasses() {
         Path path = ResourceLoader.classDir.toPath();
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, "*.conf")) {

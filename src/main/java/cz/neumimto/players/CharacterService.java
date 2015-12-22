@@ -48,6 +48,7 @@ import cz.neumimto.skills.*;
 import cz.neumimto.utils.Utils;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
@@ -93,21 +94,34 @@ public class CharacterService {
     private EffectService effectService;
 
     /**
-     *
-     *
      * @param id
      */
     public void loadPlayerData(UUID id) {
-        characters.put(id, buildDummyChar(id));
+        IActiveCharacter put = characters.put(id, buildDummyChar(id));
         game.getScheduler().createTaskBuilder().name("PlayerDataLoad-" + id).async().execute(() -> {
             final List<CharacterBase> playerCharacters = playerDao.getPlayersCharacters(id);
             game.getScheduler().createTaskBuilder().name("Callback-PlayerDataLoad" + id).execute(() -> {
-                updateArmorRestrictions(buildDummyChar(id));
                 PlayerDataPreloadComplete event = new PlayerDataPreloadComplete(id, playerCharacters);
                 game.getEventManager().post(event);
 
             }).submit(plugin);
         }).submit(plugin);
+    }
+
+    public boolean assignPlayerToCharacter(Player pl) {
+        if (pl == null) {
+            return false;
+        }
+        if (!characters.containsKey(pl.getUniqueId())) {
+            return false;
+        }
+        IActiveCharacter character = characters.get(pl.getUniqueId());
+        if (character.isStub())
+            return false;
+        if (character.getPlayer() != null)
+            return true;
+        character.setPlayer(pl);
+        return true;
     }
 
     public void updateWeaponRestrictions(IActiveCharacter character) {
@@ -122,11 +136,6 @@ public class CharacterService {
         game.getEventManager().post(event);
     }
 
-    public void characterCreateState(Player player, boolean first) {
-        if (first) {
-            setActiveCharacter(player.getUniqueId(), buildDummyChar(player.getUniqueId()));
-        }
-    }
 
     /**
      * Gets list of player's characters
@@ -152,7 +161,7 @@ public class CharacterService {
      */
     public void save(CharacterBase base) {
         base.onUpdate();
-        playerDao.merge(base,base.getId());
+        playerDao.merge(base, base.getId());
     }
 
     public void createAndUpdate(CharacterBase base) {
@@ -239,7 +248,7 @@ public class CharacterService {
      * @param party
      * @param character
      * @return 1 - if character is already in the party
-     *         0 - ok
+     * 0 - ok
      */
     public int inviteToParty(Party party, ActiveCharacter character) {
         if (party.getPlayers().contains(character)) {
@@ -266,7 +275,7 @@ public class CharacterService {
      *
      * @param character
      * @param nClass
-     * @param slot defines primary/Secondary/... class
+     * @param slot      defines primary/Secondary/... class
      * @param race
      * @param guild
      */
@@ -279,18 +288,19 @@ public class CharacterService {
         if (race != null) {
             character.setRace(race);
             character.getEffects().stream().filter(e -> e.getEffectSource() == EffectSource.RACE)
-                    .forEach(e -> effectService.removeEffect(e,character));
+                    .forEach(e -> effectService.removeEffect(e, character));
         }
         if (guild != null) {
             character.setGuild(guild);
-            character.getEffects().stream().filter(e -> e.getEffectSource() == EffectSource.RACE)
-                    .forEach(e -> effectService.removeEffect(e,character));
+            character.getEffects().stream().filter(e -> e.getEffectSource() == EffectSource.GUILD)
+                    .forEach(e -> effectService.removeEffect(e, character));
 
         }
         putInSaveQueue(character.getCharacterBase());
+        recalculateProperties(character);
         updateArmorRestrictions(character);
+        updateWeaponRestrictions(character);
         updateWalkSpeed(character);
-
         updateMaxHealth(character);
         updateMaxMana(character);
     }
@@ -387,19 +397,30 @@ public class CharacterService {
         }
         //TODO move to async? move to async!
         //recalculateProperties(activeCharacter);
+        recalculateProperties(activeCharacter);
+        resolveSkillsCds(characterBase, activeCharacter);
 
 
         game.getScheduler().createTaskBuilder().async().name("FetchCharBaseDataAsync-" + player.getUniqueId())
                 .execute(() -> {
-                    recalculateProperties(activeCharacter);
-                    resolveSkillsCds(characterBase, activeCharacter);
-                    game.getScheduler().createTaskBuilder().name("FetchCharBaseDataCallback-" + player.getUniqueId()).execute(() -> initSkills(activeCharacter)).submit(plugin);
+                    initSkills(activeCharacter);
+                    game.getScheduler().createTaskBuilder().name("FetchCharBaseDataCallback-" + player.getUniqueId())
+                            .execute(updateAll(activeCharacter)).submit(plugin);
                 }).submit(plugin);
         return activeCharacter;
     }
 
+    private Runnable updateAll(final ActiveCharacter activeCharacter) {
+        return () -> {
+            updateArmorRestrictions(activeCharacter);
+            updateWeaponRestrictions(activeCharacter);
+            updateWalkSpeed(activeCharacter);
+            updateMaxHealth(activeCharacter);
+            updateMaxMana(activeCharacter);
+        };
+    }
+
     public void recalculateProperties(IActiveCharacter character) {
-        //playerPropertyService.setupDefaults(character);
         Map<Integer, Float> defaults = playerPropertyService.getDefaults();
         float[] arr = character.getCharacterProperties();
         float[] lvl = character.getCharacterLevelProperties();
@@ -409,7 +430,7 @@ public class CharacterService {
                 val += character.getPrimaryClass().getnClass().getPropBonus().get(i);
             }
             if (character.getRace().getPropBonus().containsKey(i)) {
-                val += character.getRace().getPropLevelBonus().get(i);
+                val += character.getRace().getPropBonus().get(i);
             }
             if (val == 0 && defaults.containsKey(i)) {
                 val = defaults.get(i);
@@ -427,32 +448,39 @@ public class CharacterService {
     }
 
     private void initSkills(ActiveCharacter activeCharacter) {
-        activeCharacter.getSkills().values().stream().forEach(e -> e.getSkill().onCharacterInit(activeCharacter, e.getLevel()));
+        for (ExtendedSkillInfo extendedSkillInfo : activeCharacter.getSkills().values()) {
+            extendedSkillInfo.getSkill().onCharacterInit(activeCharacter,extendedSkillInfo.getLevel());
+        }
     }
 
 
     private void resolveSkillsCds(CharacterBase characterBase, IActiveCharacter character) {
+        //todo fetch lazy
         Map<String, Long> cooldowns = characterBase.getCooldowns();
         Map<String, Integer> skills = characterBase.getSkills();
+
         long l = System.currentTimeMillis();
         Iterator<Map.Entry<String, Long>> iterator = cooldowns.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, Long> next = iterator.next();
             if (next.getValue() <= l) ;
-            iterator.remove();
+                iterator.remove();
         }
         for (Map.Entry<String, Integer> stringIntegerEntry : skills.entrySet()) {
             ExtendedSkillInfo info = new ExtendedSkillInfo();
             ISkill skill = skillService.getSkill(stringIntegerEntry.getKey());
             if (skill != null) {
                 info.setLevel(stringIntegerEntry.getValue());
-                //this should be threadsafe, skilltrees are created only once, during the plugin startup0
-                SkillInfo info1 = character.getPrimaryClass().getnClass().getSkillTree().getSkills().get(skill.getName());
-                info.setSkillInfo(info1);
-                character.addSkill(info.getSkill().getName(), info);
+                info.setSkill(skill);
+                SkillData info1 = character.getPrimaryClass().getnClass().getSkillTree().getSkills().get(skill.getName());
+                if (info1 != null) {
+
+                    info.setSkillData(info1);
+                    character.addSkill(info.getSkill().getName(), info);
+                }
             }
         }
-        characterBase.getSkills().size();
+
     }
 
     /**
@@ -474,13 +502,10 @@ public class CharacterService {
         }
         recalculateProperties(activeCharacter);
         resolveSkillsCds(characterBase, activeCharacter);
-        game.getScheduler().createTaskBuilder().name("FetchCharBaseDataCallback-" + player.getUniqueId()).execute(() -> {
-            Map<Integer, Float> defaults = playerPropertyService.getDefaults();
-            for (Map.Entry<Integer, Float> integerFloatEntry : defaults.entrySet()) {
-                activeCharacter.setCharacterProperty(integerFloatEntry.getKey(), integerFloatEntry.getValue());
-            }
-            initSkills(activeCharacter);
-        }).submit(plugin);
+        initSkills(activeCharacter);
+        game.getScheduler().createTaskBuilder().name("FetchCharBaseDataCallback-" + player.getUniqueId())
+                .execute(updateAll(activeCharacter)
+        ).submit(plugin);
         return activeCharacter;
     }
 
@@ -580,10 +605,10 @@ public class CharacterService {
         ExtendedSkillInfo extendedSkillInfo = character.getSkillInfo(skill);
         if (extendedSkillInfo == null)
             return 2;
-        if (extendedSkillInfo.getLevel() + extendedSkillInfo.getSkillInfo().getMinPlayerLevel() > character.getLevel()) {
+        if (extendedSkillInfo.getLevel() + extendedSkillInfo.getSkillData().getMinPlayerLevel() > character.getLevel()) {
             return 3;
         }
-        if (extendedSkillInfo.getLevel() + 1 > extendedSkillInfo.getSkillInfo().getMaxSkillLevel()) {
+        if (extendedSkillInfo.getLevel() + 1 > extendedSkillInfo.getSkillData().getMaxSkillLevel()) {
             return 4;
         }
         SkillUpgradeEvent event = new SkillUpgradeEvent(character, skill, extendedSkillInfo.getLevel() + 1);
@@ -594,6 +619,7 @@ public class CharacterService {
         short s = character.getCharacterBase().getSkillPoints();
         character.getCharacterBase().setSkillPoints((short) (s - 1));
         character.getCharacterBase().setUsedSkillPoints((short) (s + 1));
+        character.getCharacterBase().getSkills().put(extendedSkillInfo.getSkill().getName(),extendedSkillInfo.getLevel());
         putInSaveQueue(character.getCharacterBase());
         skill.skillUpgrade(character, event.getLevel());
         return 0;
@@ -611,29 +637,34 @@ public class CharacterService {
      * 0 - ok;
      */
     public int characterLearnskill(IActiveCharacter character, ISkill skill, SkillTree skillTree) {
-        if (character.getSkillPoints() <= 0) {
+        if (character.getSkillPoints() < 1) {
             return 1;
         }
-        SkillInfo info = skillTree.getSkills().get(skill.getName());
-        if (character.getLevel() < info.getMinPlayerLevel()) {
+        SkillData info = skillTree.getSkills().get(skill.getName());
+        if (info == null) {
+            return 7;
+        }
+        if (character.getLevel() <= info.getMinPlayerLevel()) {
             return 2;
         }
-        for (SkillInfo skillInfo : info.getHardDepends()) {
-            if (!character.hasSkill(skillInfo.getSkillName())) {
+        for (SkillData skillData : info.getHardDepends()) {
+            if (skillData.getSkillName() == StartingPoint.name)
+                break;
+            if (!character.hasSkill(skillData.getSkillName())) {
                 return 4;
             }
         }
-        boolean hasSkill = false;
-        for (SkillInfo skillInfo : info.getSoftDepends()) {
-            if (character.hasSkill(skillInfo.getSkillName())) {
+        boolean hasSkill = info.getSoftDepends().isEmpty();
+        for (SkillData skillData : info.getSoftDepends()) {
+            if (character.hasSkill(skillData.getSkillName())) {
                 hasSkill = true;
                 break;
             }
         }
         if (!hasSkill)
             return 5;
-        for (SkillInfo skillInfo : info.getConflicts()) {
-            if (character.hasSkill(skillInfo.getSkillName()))
+        for (SkillData skillData : info.getConflicts()) {
+            if (character.hasSkill(skillData.getSkillName()))
                 return 6;
         }
         SkillLearnEvent event = new SkillLearnEvent(character, skill);
@@ -646,15 +677,16 @@ public class CharacterService {
         character.getCharacterBase().setSkillPoints((short) (s - 1));
         character.getCharacterBase().setUsedSkillPoints((short) (s + 1));
 
-        skill.skillLearn(character);
+
 
         ExtendedSkillInfo einfo = new ExtendedSkillInfo();
         einfo.setLevel(1);
         einfo.setSkill(skill);
-        einfo.setSkillInfo(skillTree.getSkills().get(skill.getName()));
+        einfo.setSkillData(skillTree.getSkills().get(skill.getName()));
         character.addSkill(skill.getName().toLowerCase(), einfo);
-
+        character.getCharacterBase().getSkills().put(skill.getName(),einfo.getLevel());
         putInSaveQueue(character.getCharacterBase());
+        skill.skillLearn(character);
         return 0;
     }
 
@@ -672,8 +704,8 @@ public class CharacterService {
         if (skillInfo == null)
             return 1;
         SkillTree skillTree = nClass.getSkillTree();
-        SkillInfo info = skillTree.getSkills().get(skill.getName());
-        for (SkillInfo info1 : info.getDepending()) {
+        SkillData info = skillTree.getSkills().get(skill.getName());
+        for (SkillData info1 : info.getDepending()) {
             ExtendedSkillInfo e = character.getSkill(info1.getSkillName());
             if (e != null)
                 return 2;
@@ -738,7 +770,7 @@ public class CharacterService {
      */
     public void updateWalkSpeed(IActiveCharacter character) {
         double speed = character.getCharacterProperty(DefaultProperties.walk_speed);
-        //character.getPlayer().offer(Keys.WALK_SPEED, speed);
+        character.getPlayer().offer(Keys.WALKING_SPEED, speed);
     }
 
     /**
@@ -798,7 +830,7 @@ public class CharacterService {
         Set<ExtendedNClass> classes = character.getClasses();
         for (ExtendedNClass aClass : classes) {
             NClass nClass = aClass.getnClass();
-            int maxlevel = nClass.getLevels().length-1;
+            int maxlevel = nClass.getLevels().length - 1;
             if (aClass.getLevel() > maxlevel)
                 return 1;
             //todo

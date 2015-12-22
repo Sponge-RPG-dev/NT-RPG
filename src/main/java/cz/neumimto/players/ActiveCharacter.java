@@ -18,11 +18,7 @@
 
 package cz.neumimto.players;
 
-import cz.neumimto.GlobalScope;
-import cz.neumimto.IEntityType;
-import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.Weapon;
-import cz.neumimto.effects.EffectSource;
 import cz.neumimto.effects.IEffect;
 import cz.neumimto.players.groups.Guild;
 import cz.neumimto.players.groups.NClass;
@@ -33,11 +29,8 @@ import cz.neumimto.players.properties.DefaultProperties;
 import cz.neumimto.players.properties.PlayerPropertyService;
 import cz.neumimto.skills.ExtendedSkillInfo;
 import cz.neumimto.skills.ISkill;
-import cz.neumimto.skills.SkillInfo;
+import cz.neumimto.skills.SkillData;
 import cz.neumimto.skills.StartingPoint;
-import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.effect.potion.PotionEffect;
-import org.spongepowered.api.effect.potion.PotionEffectType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.item.ItemType;
@@ -328,12 +321,12 @@ public class ActiveCharacter implements IActiveCharacter {
         base.setPrimaryClass(nclass.getName());
      //   fixPropertyValues(nclass.getPropBonus(), 1);
       //  fixPropertyLevelValues(getPrimaryClass().getnClass().getPropLevelBonus(), 1);
-        SkillInfo skillInfo = nclass.getSkillTree().getSkills().get(StartingPoint.name);
-        if (skillInfo != null) {
+        SkillData skillData = nclass.getSkillTree().getSkills().get(StartingPoint.name);
+        if (skillData != null) {
             ExtendedSkillInfo info = new ExtendedSkillInfo();
             info.setLevel(0);
             info.setSkill(null);
-            info.setSkillInfo(skillInfo);
+            info.setSkillData(skillData);
         }
         updateItemRestrictions();
     }
@@ -411,11 +404,10 @@ public class ActiveCharacter implements IActiveCharacter {
     @Override
     public void setRace(Race race) {
         if (this.race != Race.Default) {
- //           fixPropertyValues(this.race.getPropBonus(), -1);
             removePermissions(race.getPermissions());
         }
         this.race = race;
-  //      fixPropertyValues(race.getPropBonus(), 1);
+        getCharacterBase().setRace(race.getName());
         addPermissions(race.getPermissions());
     }
 

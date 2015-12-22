@@ -20,18 +20,24 @@ package cz.neumimto.scripting;
 
 import cz.neumimto.GlobalScope;
 import cz.neumimto.NtRpgPlugin;
+import cz.neumimto.ResourceClassLoader;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.skills.ActiveSkill;
 import cz.neumimto.utils.FileUtils;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.slf4j.Logger;
+import org.spongepowered.api.plugin.PluginManager;
+
 
 import javax.script.*;
 import java.io.*;
 import java.lang.management.ManagementFactory;
+import java.net.MalformedURLException;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -42,7 +48,7 @@ import java.nio.file.Paths;
  */
 @Singleton
 public class JSLoader {
-    private static ScriptEngine engine;
+    public static ScriptEngine engine;
     private static Path scripts_root = Paths.get(NtRpgPlugin.workingDir + "/scripts");
 
     @Inject
@@ -54,21 +60,7 @@ public class JSLoader {
     @PostProcess(priority = 2)
     public void initEngine() {
         FileUtils.createDirectoryIfNotExists(scripts_root);
-        try {
-            Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
-            if (PluginConfig.DEBUG) {
-                PluginConfig.JJS_ARGS += " d=gen_classes";
-            }
-            NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
-            engine = factory.getScriptEngine(PluginConfig.JJS_ARGS.split(" "));
-        } catch (ClassNotFoundException e) {
-            engine = new ScriptEngineManager(null).getEngineByName("nashorn");
-        }
-        if (engine == null) {
-            System.out.println("It was unable to initialize nashorn engine. " +
-                    "If the problem occurs make sure you are using oracle java virtual machine");
-            return;
-        }
+        engine= new NashornScriptEngineFactory().getScriptEngine();
         loadSkills();
     }
 
@@ -86,7 +78,6 @@ public class JSLoader {
             bindings.put("logger", ioc.build(Logger.class));
             bindings.put("ioc", ioc);
             bindings.put("GlobalScope", ioc.build(GlobalScope.class));
-
             engine.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
             engine.eval(rs);
         } catch (ScriptException | IOException e) {

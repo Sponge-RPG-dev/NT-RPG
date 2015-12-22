@@ -58,7 +58,9 @@ public class DamageService {
         if (character.isStub())
             return 1;
         double base = character.getBaseWeaponDamage(type) + character.getCharacterProperty(DefaultProperties.weapon_damage_bonus);
-        base += character.getCharacterProperty(map.get(type));
+        if (map.containsKey(type)) {
+            base += character.getCharacterProperty(map.get(type));
+        } else return 1;
         if (ItemStackUtils.isSword(type)) {
             base *= character.getCharacterProperty(DefaultProperties.swords_damage_mult);
         } else if (ItemStackUtils.isAxe(type)) {
@@ -76,9 +78,13 @@ public class DamageService {
     }
 
     public void recalculateCharacterWeaponDamage(IActiveCharacter character) {
-        double damage = getCharacterItemDamage(character, character.getPlayer().getItemInHand().get().getItem());
-        damage += character.getMainHand().getDamage() + character.getOffHand().getDamage();
-        character.setWeaponDamage(damage);
+        if (character.getPlayer().getItemInHand().isPresent()) {
+            double damage = getCharacterItemDamage(character, character.getPlayer().getItemInHand().get().getItem());
+            damage += character.getMainHand().getDamage() + character.getOffHand().getDamage();
+            character.setWeaponDamage(damage);
+        } else {
+            //character.setWeaponDamage(DefaultProperties.unarmed);
+        }
     }
 
     public double getCharacterResistance(IActiveCharacter character, DamageType source) {
@@ -139,6 +145,8 @@ public class DamageService {
         map.put(ItemTypes.WOODEN_HOE, DefaultProperties.wooden_hoe_bonus_damage);
 
         map.put(ItemTypes.BOW, DefaultProperties.bow_meele_bonus_damage);
+
+
     }
 
 

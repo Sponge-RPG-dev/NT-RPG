@@ -26,7 +26,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.IActiveCharacter;
-import cz.neumimto.skills.SkillInfo;
+import cz.neumimto.skills.SkillData;
 import cz.neumimto.skills.SkillTree;
 import cz.neumimto.skills.StartingPoint;
 import cz.neumimto.utils.ItemStackUtils;
@@ -35,7 +35,6 @@ import org.spongepowered.api.data.manipulator.mutable.item.LoreData;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.type.Inventory2D;
 import org.spongepowered.api.service.pagination.PaginationBuilder;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
@@ -79,15 +78,15 @@ public class VanilaMessaging implements IPlayerMessage {
     }
 
     @Override
-    public void moveSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, Map<String, Integer> learnedSkill, SkillInfo center) {
+    public void moveSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, Map<String, Integer> learnedSkill, SkillData center) {
         game.getScheduler().createTaskBuilder().async().execute(new Runnable() {
             @Override
             public void run() {
                 ItemStack.Builder itemBuilder = ItemStack.builder();
-                Map<String, SkillInfo> values = skillTree.getSkills();
-                Set<SkillInfo> conflicts = center.getConflicts();
-                Set<SkillInfo> hardDepends = center.getHardDepends();
-                Set<SkillInfo> softDepends = center.getSoftDepends();
+                Map<String, SkillData> values = skillTree.getSkills();
+                Set<SkillData> conflicts = center.getConflicts();
+                Set<SkillData> hardDepends = center.getHardDepends();
+                Set<SkillData> softDepends = center.getSoftDepends();
                 //TODO inventory
             }
         }).submit(NtRpgPlugin.GlobalScope.plugin);

@@ -24,6 +24,9 @@ import cz.neumimto.effects.EffectBase;
 import cz.neumimto.effects.IGlobalEffect;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.players.properties.DefaultProperties;
+import org.spongepowered.api.data.key.Key;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.entity.living.player.Player;
 
 /**
  * Created by NeumimTo on 23.7.2015.

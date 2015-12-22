@@ -89,4 +89,7 @@ public class PluginConfig {
 
     @ConfigValue
     public static String RW_LORE_COLOR;
+
+    @ConfigValue
+    public static double HEALTH_SCALE = 2;
 }

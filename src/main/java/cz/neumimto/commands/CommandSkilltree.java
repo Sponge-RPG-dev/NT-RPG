@@ -26,7 +26,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.players.CharacterService;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.players.groups.NClass;
-import cz.neumimto.skills.SkillInfo;
+import cz.neumimto.skills.SkillData;
 import cz.neumimto.skills.StartingPoint;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -54,7 +54,7 @@ public class CommandSkilltree extends CommandBase {
         if (commandSource instanceof Player) {
             String[] args = s.split(" ");
             NClass nClass = null;
-            SkillInfo skillInfo = null;
+            SkillData skillData = null;
             Player player = (Player) commandSource;
             IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
             if (character.isStub()) {
@@ -68,8 +68,8 @@ public class CommandSkilltree extends CommandBase {
                         return CommandResult.empty();
                     }
                     if (args[i].equalsIgnoreCase("skill")) {
-                        skillInfo = nClass.getSkillTree().getSkills().get(args[i + 1]);
-                        if (skillInfo == SkillInfo.EMPTY) {
+                        skillData = nClass.getSkillTree().getSkills().get(args[i + 1]);
+                        if (skillData == SkillData.EMPTY) {
                             commandSource.sendMessage(Texts.of(Localization.SKILL_DOES_NOT_EXIST));
                             return CommandResult.empty();
                         }
@@ -80,10 +80,10 @@ public class CommandSkilltree extends CommandBase {
             if (nClass == null) {
                 nClass = character.getPrimaryClass().getnClass();
             }
-            if (skillInfo == null) {
-                skillInfo = nClass.getSkillTree().getSkills().get(StartingPoint.name);
+            if (skillData == null) {
+                skillData = nClass.getSkillTree().getSkills().get(StartingPoint.name);
             }
-            Gui.moveSkillTreeMenu(character, nClass.getSkillTree(), character.getCharacterBase().getSkills(), skillInfo);
+            Gui.moveSkillTreeMenu(character, nClass.getSkillTree(), character.getCharacterBase().getSkills(), skillData);
             return CommandResult.success();
         }
         return CommandResult.empty();

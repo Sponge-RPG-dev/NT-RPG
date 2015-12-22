@@ -30,11 +30,11 @@ public class SkillTree {
         setDescription("No skill tree");
     }};
     private String id;
-    private Map<String, SkillInfo> skills = new HashMap<>();
+    private Map<String, SkillData> skills = new HashMap<>();
     private String description;
 
 
-    public Map<String, SkillInfo> getSkills() {
+    public Map<String, SkillData> getSkills() {
         return skills;
     }
 

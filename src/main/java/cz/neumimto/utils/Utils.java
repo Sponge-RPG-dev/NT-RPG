@@ -18,21 +18,27 @@
 
 package cz.neumimto.utils;
 
+import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.GlobalScope;
 import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.players.IActiveCharacter;
-import org.apache.commons.lang3.NotImplementedException;
+import cz.neumimto.players.properties.PlayerPropertyService;
+import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.manipulator.mutable.entity.HealthData;
 import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.util.blockray.BlockRay;
+import org.spongepowered.api.util.blockray.BlockRayHit;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -71,22 +77,70 @@ public class Utils {
         double s = Math.pow(radius, 2);
         HashSet<Entity> ee = new HashSet<>();
         for (Entity e : l.getExtent().getEntities()) {
-            if (e.getLocation().getPosition().distanceSquared(l.getX(),l.getY(),l.getZ()) <= s) {
+            if (e.getLocation().getPosition().distanceSquared(l.getX(), l.getY(), l.getZ()) <= s) {
                 ee.add(e);
             }
         }
         return ee;
     }
 
+    public static Optional<Entity> spawnProjectile(World world, EntityType type, Location location) {
+        return world.createEntity(type, location.getPosition());
+    }
+
+    public static Vector3d getVelocity(Entity entity, int mult) {
+        double yaw = ((entity.getRotation().getX() + 90) % 360);
+        double pitch = ((entity.getRotation().getY()) * -1);
+        double a = Math.cos(Math.toRadians(pitch));
+        double b = Math.cos(Math.toRadians(yaw));
+        double c = Math.sin(Math.toRadians(pitch));
+        double d = Math.sin(Math.toRadians(yaw));
+        return new Vector3d((mult * a) * b, mult * c, (mult * a) * d);
+    }
+
+    public static Vector3d getVelocity(Entity entity, double mult) {
+        double yaw = ((entity.getRotation().getX() + 90) % 360);
+        double pitch = ((entity.getRotation().getY()) * -1);
+        double a = Math.cos(Math.toRadians(pitch));
+        double b = Math.cos(Math.toRadians(yaw));
+        double c = Math.sin(Math.toRadians(pitch));
+        double d = Math.sin(Math.toRadians(yaw));
+        return new Vector3d((mult * a) * b, mult * c, (mult * a) * d);
+    }
+
+    public static Set<BlockType> transparentBlocks = new HashSet<>();
+
+    public static boolean isTransparent(BlockType e) {
+        return true;
+    }
+
     public static Living getTargettedEntity(IActiveCharacter character, int range) {
         Player player = character.getPlayer();
         Set<Entity> nearbyEntities = getNearbyEntities(player.getLocation(), range);
-        BlockRay.BlockRayBuilder<World> from = BlockRay.from(character.getPlayer());
+        Iterator<BlockRayHit<World>> iterator = BlockRay.from(character.getPlayer()).blockLimit(range).iterator();
+        while (iterator.hasNext()) {
+            BlockRayHit<World> next = iterator.next();
+            if (!isTransparent(next.getLocation().getBlockType())) {
+                return null;
+            }
+            int blockX = next.getBlockX();
+            int blockY = next.getBlockY();
+            int blockZ = next.getBlockZ();
+            for (Entity n : nearbyEntities) {
+                if (isLivingEntity(n)) {
+                    if (n.getLocation().getBlockX() == blockX
+                            && n.getLocation().getBlockZ() == blockZ
+                            && n.getLocation().getBlockY() == blockY) {
+                        return (Living)n;
+                    }
+                }
+            }
+        }
         return null;
     }
 
     public static void hideProjectile(Projectile projectile) {
-        projectile.offer(Keys.INVISIBLE,true);
+        projectile.offer(Keys.INVISIBLE, true);
     }
 
     public static String newLine(String s) {
@@ -95,13 +149,13 @@ public class Utils {
 
     /**
      * Resets stats of vanilla player object back to default state, Resets max hp, speed
+     *
      * @param player
      */
     public static void resetPlayerToDefault(Player player) {
         player.offer(Keys.MAX_HEALTH, 20d);
         player.offer(Keys.HEALTH, 20d);
-        //player walkspeed
-        //player.offer(Keys.WALK_SPEED,0.2d);
+        player.offer(Keys.WALKING_SPEED, PlayerPropertyService.WALKING_SPEED);
     }
 
     /**
@@ -115,4 +169,5 @@ public class Utils {
     public static boolean isLivingEntity(Entity entity) {
         return entity.get(Keys.HEALTH).isPresent();
     }
+
 }

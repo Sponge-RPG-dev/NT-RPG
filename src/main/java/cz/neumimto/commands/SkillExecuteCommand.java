@@ -27,6 +27,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.players.CharacterService;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.skills.ExtendedSkillInfo;
+import cz.neumimto.skills.SkillResult;
 import cz.neumimto.skills.SkillService;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -59,13 +60,13 @@ public class SkillExecuteCommand extends CommandBase {
             commandSource.sendMessage(Texts.of(Localization.CHARACTER_IS_REQUIRED));
             return CommandResult.empty();
         }
-        String[] a = s.split(" ");
-        ExtendedSkillInfo info = character.getSkillInfo(a[0]);
+
+        ExtendedSkillInfo info = character.getSkillInfo(s);
         if (info == ExtendedSkillInfo.Empty || info == null) {
             commandSource.sendMessage(Texts.of(Localization.CHARACTER_DOES_NOT_HAVE_SKILL));
         }
-        int i = skillService.executeSkill(character, info);
-        if (i == 2) {
+        SkillResult sk = skillService.executeSkill(character, info);
+        if (sk == SkillResult.ON_COOLDOWN) {
             Gui.sendMessage(character, Localization.ON_COOLDOWN);
         }
         return CommandResult.empty();

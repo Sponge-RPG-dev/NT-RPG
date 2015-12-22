@@ -131,7 +131,7 @@ public class ResourceLoader {
         Enumeration<JarEntry> entries = file.entries();
         JarEntry next = null;
 
-        ResourceClassLoader cl = new ResourceClassLoader((URLClassLoader) this.getClass().getClassLoader());
+        ResourceClassLoader cl = new ResourceClassLoader((URLClassLoader) NtRpgPlugin.class.getClassLoader());
         while (entries.hasMoreElements()) {
             next = entries.nextElement();
             if (next.isDirectory() || !next.getName().endsWith(".class")) {

@@ -59,11 +59,13 @@ import org.spongepowered.api.event.entity.ChangeEntityEquipmentEvent;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.entity.InteractEntityEvent;
+import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.user.BanUserEvent;
 import org.spongepowered.api.event.world.chunk.UnloadChunkEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
+import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -95,6 +97,7 @@ public class BasicListener {
     @Inject
     private EntityService entityService;
 
+
     @Listener
     public void onPlayerJoin(ClientConnectionEvent.Auth event) {
         if (event.isCancelled())
@@ -106,15 +109,7 @@ public class BasicListener {
     @Listener
     public void onPlayerLogin(ClientConnectionEvent.Join event) {
         IActiveCharacter character = characterService.getCharacter(event.getTargetEntity().getUniqueId());
-        if (PluginConfig.TELEPORT_PLAYER_TO_LAST_CHAR_LOCATION && !character.isStub()) {
-            CharacterBase characterBase = character.getCharacterBase();
-            Optional<World> world = game.getServer().getWorld(characterBase.getWorld());
-            if (!world.isPresent())
-                return;
-            World w = world.get();
-            Location<World> loc = new Location<World>(w, characterBase.getX(), characterBase.getY(), characterBase.getZ());
-            event.getTargetEntity().setLocationSafely(loc);
-        }
+        characterService.assignPlayerToCharacter(event.getTargetEntity());
     }
 
     @Listener
@@ -129,7 +124,6 @@ public class BasicListener {
             effectService.removeAllEffects(character);
             /*Always reset the persistent properties back to vanilla values in a case
              some dummy decides to remove my awesome plugin :C */
-            //HP
             Utils.resetPlayerToDefault(player);
         }
     }
@@ -141,6 +135,10 @@ public class BasicListener {
                 characterService.removePlayerData(event.getTargetUser().getUniqueId());
             }
         }
+    }
+
+    public void onEntitySpawn(RespawnPlayerEvent event) {
+
     }
 
     @Listener
@@ -210,12 +208,19 @@ public class BasicListener {
         }
     }
 /*
+//TODO fix memoryleak
     @Listener
     public void onChunkDespawn(UnloadChunkEvent event) {
 
         entityService.remove(event.getTargetChunk().getEntities(Utils::isLivingEntity));
     }
 */
+    @Listener
+    public void onPlayerRespawn(RespawnPlayerEvent event) {
+        Player player = event.getTargetEntity();
+        player.offer(Keys.HEALTH_SCALE,PluginConfig.HEALTH_SCALE);
+    }
+
     @Listener
     public void onPreDamage(DamageEntityEvent event) {
         final Cause cause = event.getCause();
@@ -275,4 +280,5 @@ public class BasicListener {
             }
         }
     }
+
 }

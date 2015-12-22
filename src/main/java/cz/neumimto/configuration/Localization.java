@@ -68,7 +68,7 @@ public class Localization {
     public static String NON_EXISTING_GROUP = "This group does not exists";
 
     @ConfigValue
-    public static String NO_PERMISSIONS = "You dont can't do that";
+    public static String NO_PERMISSIONS = "You can't do that";
 
     @ConfigValue
     public static String CHARACTER_IS_REQUIRED = "You need to create a character for this action";
@@ -138,4 +138,7 @@ public class Localization {
 
     @ConfigValue
     public static String PLAYER_CHOOSED_RACE = "You've chosen race 1%";
+
+    @ConfigValue
+    public static String ALREADY_CUURENT_CHARACTER = "This character has been already activated";
 }

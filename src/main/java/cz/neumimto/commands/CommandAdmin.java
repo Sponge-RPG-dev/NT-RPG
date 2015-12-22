@@ -74,9 +74,9 @@ public class CommandAdmin extends CommandBase {
                 if (skill instanceof ActiveSkill) {
                     ExtendedSkillInfo extendedSkillInfo = new ExtendedSkillInfo();
                     extendedSkillInfo.setLevel(level);
-                    SkillInfo skillInfo = new SkillInfo(skill.getName());
-                    skillInfo.setSkillSettings(defaultSkillSettings);
-                    extendedSkillInfo.setSkillInfo(skillInfo);
+                    SkillData skillData = new SkillData(skill.getName());
+                    skillData.setSkillSettings(defaultSkillSettings);
+                    extendedSkillInfo.setSkillData(skillData);
                     extendedSkillInfo.setSkill(skill);
                     ActiveSkill askill = (ActiveSkill) skill;
                     askill.cast(character, extendedSkillInfo);
