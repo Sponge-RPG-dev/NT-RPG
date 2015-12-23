@@ -2,8 +2,10 @@ package cz.neumimto.entities;
 
 import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.utils.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.EntityType;
+import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.entity.living.Living;
 
 import java.io.*;
@@ -65,10 +67,10 @@ public class MobSettingsDao {
                 e.printStackTrace();
             }
             try (FileOutputStream stream = new FileOutputStream(properties)){
-                types.stream().filter(e -> Living.class.isAssignableFrom(e.getEntityClass())).forEach(a -> {
+                types.stream().filter(e -> Living.class.isAssignableFrom(e.getEntityClass())).filter(e -> !Human.class.isAssignableFrom(e.getEntityClass())).forEach(a -> {
                     try {
 
-                        stream.write((a.getName()+" : 10 \n").getBytes());
+                        stream.write((a.getName()+" : 10"+ Utils.LineSeparator).getBytes());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

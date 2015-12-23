@@ -331,7 +331,7 @@ public class PreloadCharacter implements IActiveCharacter {
 
     @Override
     public Guild getGuild() {
-        return Guild.Default;
+        return null;
     }
 
     @Override

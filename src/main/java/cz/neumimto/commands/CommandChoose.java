@@ -60,7 +60,7 @@ public class CommandChoose extends CommandBase {
     private NtRpgPlugin plugin;
 
     public CommandChoose() {
-        setUsage(CommandLocalization.COMMAND_CHOOSEGROUP_USAGE);
+        setUsage(CommandLocalization.COMMAND_CHOOSE_USAGE);
         setDescription(CommandLocalization.COMMAND_CHOOSE_DESC);
         setPermission(CommandPermissions.COMMAND_CHOOSE_ACCESS);
         addAlias(CommandPermissions.CHOOSEGROUP_ALIAS);

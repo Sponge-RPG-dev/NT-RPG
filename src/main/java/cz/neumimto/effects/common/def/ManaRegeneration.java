@@ -34,7 +34,7 @@ import cz.neumimto.players.properties.DefaultProperties;
 public class ManaRegeneration extends EffectBase {
 
     IActiveCharacter character;
-    private static final String apply = "Your mana is regenerating.";
+    private static final String apply = "You've gained mana reneneration.";
     private static final String remove = "You've lost mana regenartion.";
     public static final String name = "DefaultRegen";
 

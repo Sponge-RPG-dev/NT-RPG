@@ -18,33 +18,47 @@
 
 package cz.neumimto.skills;
 
+import cz.neumimto.IEntity;
+import cz.neumimto.entities.IMob;
 import cz.neumimto.players.IActiveCharacter;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.projectile.Projectile;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * Created by NeumimTo on 15.1.2015.
  */
 public class ProjectileProperties {
-    public static Map<UUID, ProjectileProperties> cache = new HashMap<>();
+    public static Map<UUID, ProjectileProperties> cache = new LinkedHashMap<UUID, ProjectileProperties>() {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<UUID, ProjectileProperties> entry) {
+            return entry.getValue().lifetime > System.currentTimeMillis();
+        }
+    };
     protected Projectile t;
     private double damage;
-    private Living damager;
-    public BiConsumer<Living, IActiveCharacter> consumer;
+    private long lifetime;
+    private IEntity caster;
+    public BiConsumer<IEntity,IEntity> consumer;
 
-    public ProjectileProperties(Projectile t, Living damager) {
+    public ProjectileProperties(Projectile t, IEntity caster) {
         this.t = t;
-        this.damager = damager;
         cache.put(t.getUniqueId(), this);
+        lifetime = System.currentTimeMillis()+5000;
+        this.caster = caster;
     }
 
-    public void onHit(BiConsumer<Living, IActiveCharacter> consumer) {
+    public void onHit(BiConsumer<IEntity,IEntity> consumer) {
         this.consumer = consumer;
+    }
+
+    public void process(IEntity target) {
+        consumer.accept(caster,target);
     }
 
     public double getDamage() {

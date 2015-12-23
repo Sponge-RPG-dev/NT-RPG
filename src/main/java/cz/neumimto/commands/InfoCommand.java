@@ -97,7 +97,9 @@ public class InfoCommand extends CommandBase {
         } else if (args[0].equalsIgnoreCase("races")) {
             printRaceList(commandSource, "race");
         } else if (args[0].equalsIgnoreCase("guilds")) {
-            printGuildList(commandSource, "guild");
+
+        } else if (args[0].equalsIgnoreCase("classes")){
+
         } else if (args[0].equalsIgnoreCase("character")) {
             if (!(commandSource instanceof Player)) {
                 if (args.length != 2) {
@@ -111,10 +113,17 @@ public class InfoCommand extends CommandBase {
         } else if (args[0].equalsIgnoreCase("stats")) {
             Player player = (Player) commandSource;
             IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-            String q = "HP: "+character.getHealth().getValue()+"/"+character.getHealth().getMaxValue()+"/"+character.getHealth().getRegen();
-            player.sendMessage(Texts.of(q));
-            q = "Mana: "+character.getMana().getValue()+"/"+character.getMana().getMaxValue()+"/"+character.getMana().getRegen();
-            player.sendMessage(Texts.of(q));
+            if (!character.isStub()) {
+                String q = "HP: "+character.getHealth().getValue()+"/"+character.getHealth().getMaxValue()+"/"+character.getHealth().getRegen();
+                player.sendMessage(Texts.of(q));
+                q = "Mana: "+character.getMana().getValue()+"/"+character.getMana().getMaxValue()+"/"+character.getMana().getRegen();
+                player.sendMessage(Texts.of(q));
+            } else {
+                player.sendMessage(Texts.of(Localization.CHARACTER_IS_REQUIRED));
+
+            }
+        } else {
+            commandSource.sendMessage(getUsage(commandSource));
         }
         return CommandResult.success();
     }

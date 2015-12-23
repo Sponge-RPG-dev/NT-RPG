@@ -113,7 +113,7 @@ public class TestUtils {
         characterBase.setCanResetskills(true);
         characterBase.getClasses().put("test",5000D);
         characterBase.setRace("test");
-        characterBase.setGuild("test");
+        //characterBase.setGuild("test");
         characterBase.setLastReset(new Date(System.currentTimeMillis()));
         characterBase.getSkills().put("test",9);
         characterBase.setName("testChar");

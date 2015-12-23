@@ -111,7 +111,6 @@ public class BasicListener {
     public void onPlayerLogin(ClientConnectionEvent.Join event) {
         IActiveCharacter character = characterService.getCharacter(event.getTargetEntity().getUniqueId());
         characterService.assignPlayerToCharacter(event.getTargetEntity());
-        event.getTargetEntity().sendMessage(Texts.of(Localization.CURRENT_CHARACTER.replaceAll("%1",character.getName())));
     }
 
     @Listener
@@ -253,7 +252,7 @@ public class BasicListener {
                     newdamage *= damageService.getCharacterBonusDamage(character, entityDamageSource.getType());
                 } else {
                     if (!PluginConfig.OVERRIDE_MOBS) {
-                        newdamage = entityService.getMobDamage(entity.getType());
+                        newdamage = entityService.getMobDamage(source.getType());
                     }
                 }
                 //defende

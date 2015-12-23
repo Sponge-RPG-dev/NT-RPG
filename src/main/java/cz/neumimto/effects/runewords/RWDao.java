@@ -33,13 +33,13 @@ public class RWDao {
     public Set<RuneWordTemplate> getAllRws(File p) {
        Set<RuneWordTemplate> s = new HashSet<>();
         Config config = ConfigFactory.parseFile(p);
-        final String root = "Runewords";
+        final String root = "RuneWords";
         ConfigObject rws = config.getObject(root);
         Config c = rws.toConfig();
         for (String a : rws.keySet()) {
             RuneWordTemplate rw = new RuneWordTemplate();
             String name = config.getString(root+"."+a+".Name");
-            int minlevel = config.getInt(root + "." + a + ".Minlevel");
+            int minlevel = config.getInt(root + "." + a + ".MinLevel");
             List<String> restricted = config.getStringList(root + "." + a + ".RestrictedClasses");
             List<String> effects = config.getStringList(root+"."+a+".Effects");
             Map<String,Float> map = new HashMap<>();

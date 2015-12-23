@@ -40,10 +40,10 @@ import java.util.Set;
 //TODO put guilds in a second level cache; configure ehcache in nt core
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Guild {
-    public static Guild Default = new Guild() {{
+    public static Guild Default = new Guild();
+    static {
         Default.name = "None";
-    }};
-
+    }
     public Guild() {
 
     }

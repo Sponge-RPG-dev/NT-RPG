@@ -62,8 +62,8 @@ public class ActiveCharacter implements IActiveCharacter {
     private transient Map<EquipmentTypeWorn, Weapon> equipedArmor = new HashMap<>();
     private transient Party party;
     private Map<String, ExtendedSkillInfo> skills = new HashMap<>();
-    private Guild guild = Guild.Default;
     private Race race = Race.Default;
+    private Guild guild;
     private transient Set<ExtendedNClass> classes = new HashSet<>();
     private transient ExtendedNClass primary;
     private transient Weapon mainHand = Weapon.EmptyHand;
@@ -418,13 +418,13 @@ public class ActiveCharacter implements IActiveCharacter {
 
     @Override
     public void setGuild(Guild guild) {
-        if (this.guild != Guild.Default) {
-    //        fixPropertyValues(this.guild.getPropBonus(), -1);
-    //        removePermissions(guild.getPermissions());
+       if (this.guild != Guild.Default) {
+      //     fixPropertyValues(this.guild.getPropBonus(), -1);
+     //       removePermissions(guild.getPermissions());
         }
         this.guild = guild;
-    //    fixPropertyValues(guild.getPropBonus(), 1);
-    //    addPermissions(guild.getPermissions());
+      //  fixPropertyValues(guild.getPropBonus(), 1);
+     //   addPermissions(guild.getPermissions());*/
     }
 
     public void addPermissions(Collection<String> perms) {

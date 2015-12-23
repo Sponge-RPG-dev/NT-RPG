@@ -20,6 +20,7 @@ package cz.neumimto.players;
 import cz.neumimto.GroupService;
 import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.Weapon;
+import cz.neumimto.configuration.Localization;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.effects.*;
 import cz.neumimto.effects.common.def.CombatEffect;
@@ -52,6 +53,7 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
+import org.spongepowered.api.text.Texts;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -263,6 +265,8 @@ public class CharacterService {
     }
 
     private void initActiveCharacter(IActiveCharacter character) {
+        character.getPlayer().sendMessage(Texts.of(Localization.CURRENT_CHARACTER.replaceAll("%1",character.getName())));
+
         effectService.addEffect(new ManaRegeneration(character), character);
         effectService.addEffect(new CombatEffect(character), character);
     }

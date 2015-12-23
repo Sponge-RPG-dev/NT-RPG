@@ -43,9 +43,11 @@ public class EntityService {
             entityHashMap.put(id.getUniqueId(),iEntity);
             if (!PluginConfig.OVERRIDE_MOBS) {
                 id.offer(Keys.MAX_HEALTH,entityHealth.get(id.getType()));
+                id.offer(Keys.HEALTH,entityHealth.get(id.getType()));
             }
         }
         return iEntity;
+
     }
 
     public void remove(UUID e) {
@@ -60,19 +62,20 @@ public class EntityService {
         }
     }
 
-    public double getMobDamage(IEntityType type) {
+    public double getMobDamage(EntityType type) {
         return entityDamages.get(type);
     }
 
-    public double getMobHealth(IEntityType type) {
+    public double getMobHealth(EntityType type) {
         return entityHealth.get(type);
     }
 
     @PostProcess(priority = 10)
     public void load() {
-             this.entityDamages.putAll(dao.getDamages());
-            this.entityHealth.putAll(dao.getHealth());
-            this.entityExperiences.putAll(dao.getExperiences());
+
+       this.entityDamages.putAll(dao.getDamages());
+       this.entityHealth.putAll(dao.getHealth());
+       this.entityExperiences.putAll(dao.getExperiences());
 
     }
 

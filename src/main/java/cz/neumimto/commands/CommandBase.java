@@ -18,6 +18,7 @@
 
 package cz.neumimto.commands;
 
+import cz.neumimto.configuration.CommandLocalization;
 import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -83,7 +84,7 @@ public abstract class CommandBase implements CommandCallable {
 
     @Override
     public Optional<? extends Text> getShortDescription(CommandSource commandSource) {
-        return shortDescription;
+        return Optional.of(Texts.of(CommandLocalization.COMMAND_CHOOSE_DESC));
     }
 
     @Override

@@ -31,7 +31,7 @@ import cz.neumimto.players.Mana;
  */
 public class BloodMagicEffect extends EffectBase {
 
-    public static String name = "BloodMagic Effect";
+    public static String name = "BloodMagic_Effect";
 
 
     @Override

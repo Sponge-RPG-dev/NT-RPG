@@ -24,17 +24,16 @@ package cz.neumimto.configuration;
 @ConfigurationContainer(path = "{WorkingDir}", filename = "CommandLocalization.conf")
 public class CommandLocalization {
 
-    @ConfigValue(name = "playerinfo.help")
+    @ConfigValue
     public static String PLAYERINFO_HELP = "Shows info about player";
 
-    @ConfigValue(name = "playerinfo.desc")
+    @ConfigValue
     public static String PLAYERINFO_DESC = "Shows info about player";
 
-    @ConfigValue(name = "choosegroup.usage")
+    @ConfigValue
     public static String COMMAND_CHOOSEGROUP_USAGE =  "/choose {class|race} [name]";
 
-
-    @ConfigValue(name = "playerinfo.usage")
+    @ConfigValue
     public static String PLAYERINFO_USAGE = "/info {character|player|race(s)|guild(s)|class(es)|runes} [name]";
 
     @ConfigValue
@@ -53,8 +52,11 @@ public class CommandLocalization {
     public static String COMMAND_SKILL_DESC = "Executes a skill";
 
     @ConfigValue
-    public static String COMMAND_PARTY_USAGE = "/nparty {leave,leader,kick,invite} [name]";
+    public static String COMMAND_PARTY_USAGE = "/nparty {leave|leader|kick|invite} [name]";
 
     @ConfigValue
     public static String COMMAND_PARTY_DESCRIPTION = "manages party";
+
+    @ConfigValue
+    public static String COMMAND_CHOOSE_USAGE = "/choose {class [name]|race [name]|skill [upgrade|learn|refund]|character [name]}";
 }

@@ -20,11 +20,12 @@ package cz.neumimto.utils;
 
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.GlobalScope;
+import cz.neumimto.IEntity;
 import cz.neumimto.NtRpgPlugin;
+import cz.neumimto.entities.IMob;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.players.properties.PlayerPropertyService;
 import org.spongepowered.api.block.BlockType;
-import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityType;
@@ -36,10 +37,7 @@ import org.spongepowered.api.util.blockray.BlockRayHit;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
@@ -84,13 +82,15 @@ public class Utils {
         return ee;
     }
 
-    public static Optional<Entity> spawnProjectile(World world, EntityType type, Location location) {
-        return world.createEntity(type, location.getPosition());
+
+    public static Optional<Entity> spawnProjectile(IEntity caster, EntityType type) {
+        World world = caster.getEntity().getWorld();
+        return world.createEntity(type, getFacingVector(caster.getEntity(),1));
     }
 
-    public static Vector3d getVelocity(Entity entity, int mult) {
-        double yaw = ((entity.getRotation().getX() + 90) % 360);
-        double pitch = ((entity.getRotation().getY()) * -1);
+    public static Vector3d getFacingVector(Entity entity, int mult) {
+        double yaw = (entity.getRotation().getX() + 90) % 360;
+        double pitch = (entity.getRotation().getY()) * -1;
         double a = Math.cos(Math.toRadians(pitch));
         double b = Math.cos(Math.toRadians(yaw));
         double c = Math.sin(Math.toRadians(pitch));
@@ -98,14 +98,14 @@ public class Utils {
         return new Vector3d((mult * a) * b, mult * c, (mult * a) * d);
     }
 
-    public static Vector3d getVelocity(Entity entity, double mult) {
-        double yaw = ((entity.getRotation().getX() + 90) % 360);
-        double pitch = ((entity.getRotation().getY()) * -1);
+    public static Vector3d getFacingVector(Entity entity) {
+        double yaw = (entity.getRotation().getX() + 90) % 360;
+        double pitch = (entity.getRotation().getY()) * -1;
         double a = Math.cos(Math.toRadians(pitch));
         double b = Math.cos(Math.toRadians(yaw));
         double c = Math.sin(Math.toRadians(pitch));
         double d = Math.sin(Math.toRadians(yaw));
-        return new Vector3d((mult * a) * b, mult * c, (mult * a) * d);
+        return new Vector3d(a * b, c, a * d);
     }
 
     public static Set<BlockType> transparentBlocks = new HashSet<>();
@@ -131,7 +131,7 @@ public class Utils {
                     if (n.getLocation().getBlockX() == blockX
                             && n.getLocation().getBlockZ() == blockZ
                             && n.getLocation().getBlockY() == blockY) {
-                        return (Living)n;
+                        return (Living) n;
                     }
                 }
             }

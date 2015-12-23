@@ -38,10 +38,12 @@ import org.spongepowered.api.entity.living.player.Player;
  *  The annotation will generate according global effect class at runtime.
  *  id - field name of unique identifier (in most cases its name), the field must be static and public
  *  inject - If set to true the class loader tries to inject public static field which is assingable from IGlobalEffect.
- *  Main behavior of global effects is that their are accessible via effectservice.getGlobalEffect(stringId) inject option is
+ *  Main behavior of global effects is that they are accessible via effectservice.getGlobalEffect(stringId) inject option is
  *  here only if someone would like to keep direct field reference to the global effect object.
  *
  *  The class, which inherits from IEffect(or its implementations such as effect base) must contain a constructor - IEffectConsumer, long duration, int level.
+ *
+ *  Global effects can work as item enchantments (todo), and be accessible from commands
  */
 @ClassGenerator.Generate(id = "name",inject = true)
 public class SpeedBoost extends EffectBase {
