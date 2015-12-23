@@ -28,7 +28,6 @@ import cz.neumimto.listeners.DebugListener;
 import cz.neumimto.players.CharacterBase;
 import cz.neumimto.scripting.JSLoader;
 import cz.neumimto.utils.FileUtils;
-import djxy.api.MinecraftGuiService;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
@@ -80,7 +79,7 @@ public class NtRpgPlugin {
         Game game = Sponge.getGame();
         Optional<PluginContainer> gui = game.getPluginManager().getPlugin("MinecraftGUIServer");
         if (gui.isPresent()) {
-            ioc.registerInterfaceImplementation(MinecraftGuiService.class, game.getServiceManager().provide(MinecraftGuiService.class).get());
+            //ioc.registerInterfaceImplementation(MinecraftGuiService.class, game.getServiceManager().provide(MinecraftGuiService.class).get());
         } else {
             Settings.ENABLED_GUI = false;
         }
