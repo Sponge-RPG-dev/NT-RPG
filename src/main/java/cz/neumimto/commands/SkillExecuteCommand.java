@@ -66,8 +66,24 @@ public class SkillExecuteCommand extends CommandBase {
             commandSource.sendMessage(Texts.of(Localization.CHARACTER_DOES_NOT_HAVE_SKILL));
         }
         SkillResult sk = skillService.executeSkill(character, info);
+        switch (sk) {
+            case ON_COOLDOWN:
+                Gui.sendMessage(character, Localization.ON_COOLDOWN);
+                break;
+            case NO_MANA:
+                Gui.sendMessage(character, Localization.NO_MANA);
+                break;
+            case NO_HP:
+                Gui.sendMessage(character, Localization.NO_HP);
+                break;
+            case CASTER_SILENCED:
+                Gui.sendMessage(character, Localization.PLAYER_IS_SILENCED);
+                break;
+            case NO_TARGET:
+                Gui.sendMessage(character, Localization.NO_TARGET);
+        }
         if (sk == SkillResult.ON_COOLDOWN) {
-            Gui.sendMessage(character, Localization.ON_COOLDOWN);
+
         }
         return CommandResult.empty();
     }

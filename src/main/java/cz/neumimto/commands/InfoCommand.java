@@ -29,6 +29,7 @@ import cz.neumimto.gui.Gui;
 import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.CharacterService;
 import cz.neumimto.players.IActiveCharacter;
+import cz.neumimto.players.groups.Guild;
 import cz.neumimto.players.groups.PlayerGroup;
 import cz.neumimto.players.groups.Race;
 import org.spongepowered.api.Game;
@@ -120,8 +121,7 @@ public class InfoCommand extends CommandBase {
 
     //TODO create inventory menus
     private void printGuildList(CommandSource commandSource, String nextcmd) {
-        Collection<? extends PlayerGroup> group = groupService.getGuilds();
-        printList(commandSource, group, nextcmd);
+
     }
 
     private void printList(CommandSource commandSource, Collection<? extends PlayerGroup> group, String nextcmd) {
@@ -183,7 +183,7 @@ public class InfoCommand extends CommandBase {
     }
 
     private String getSmallInfo(CharacterBase character) {
-        return TextColors.GOLD + "L: " + character.getLevel() + ", C:" + character.getPrimaryClass() + ", R: " + character.getRace() + ", G: " + character.getGuild();
+        return TextColors.GOLD + "L: " + character.getLevel() + ", C:" + character.getPrimaryClass() + ", R: " + character.getRace() + ", G: " + character.getGuildid();
     }
 
 

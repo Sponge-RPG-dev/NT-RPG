@@ -87,7 +87,7 @@ public class GroupService {
 
     @PostProcess
     public void registerPlaceholders() {
-        registerGuild(Guild.Default);
+
         registerNClass(NClass.Default);
         registerRace(Race.Default);
     }

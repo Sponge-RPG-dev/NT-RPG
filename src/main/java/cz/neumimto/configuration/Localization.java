@@ -26,6 +26,11 @@ public class Localization {
 
 
     @ConfigValue
+    public static final String NO_MANA = "Not enough mana";
+    @ConfigValue
+    public static final String NO_HP = "Not enough hp";
+
+    @ConfigValue
     public static String SKILL_UPGRADED_BROADCAST = "%1 has upgraded skill %2";
 
     @ConfigValue
@@ -141,4 +146,10 @@ public class Localization {
 
     @ConfigValue
     public static String ALREADY_CUURENT_CHARACTER = "This character has been already activated";
+
+    @ConfigValue
+    public static String NO_TARGET = "No target";
+
+    @ConfigValue
+    public static String CURRENT_CHARACTER = "Selected character: %1";
 }

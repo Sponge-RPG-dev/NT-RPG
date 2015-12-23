@@ -388,7 +388,7 @@ public class CharacterService {
     public ActiveCharacter buildActiveCharacter(Player player, CharacterBase characterBase) {
         ActiveCharacter activeCharacter = new ActiveCharacter(player, characterBase);
         activeCharacter.setRace(groupService.getRace(characterBase.getRace()));
-        activeCharacter.setGuild(groupService.getGuild(characterBase.getGuild()));
+        //activeCharacter.setGuild(groupService.getGuild(characterBase.getGuild()));
         activeCharacter.setPrimaryClass(groupService.getNClass(characterBase.getPrimaryClass()));
         String s = activeCharacter.getPrimaryClass().getnClass().getName();
         Double d = characterBase.getClasses().get(s);
@@ -493,7 +493,7 @@ public class CharacterService {
     public ActiveCharacter buildActiveCharacterAsynchronously(Player player, CharacterBase characterBase) {
         ActiveCharacter activeCharacter = new ActiveCharacter(player, characterBase);
         activeCharacter.setRace(groupService.getRace(characterBase.getRace()));
-        activeCharacter.setGuild(groupService.getGuild(characterBase.getGuild()));
+       // activeCharacter.setGuild(groupService.getGuild(characterBase.getGuild()));
         activeCharacter.setPrimaryClass(groupService.getNClass(characterBase.getPrimaryClass()));
         String s = activeCharacter.getPrimaryClass().getnClass().getName();
         Double d = characterBase.getClasses().get(s);

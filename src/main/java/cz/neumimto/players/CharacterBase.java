@@ -48,6 +48,7 @@ public class CharacterBase extends TimestampEntity {
     @Convert(converter = UUID2String.class)
     private UUID uuid;
 
+    @Column(length = 40)
     private String name;
 
     private String info;
@@ -64,7 +65,13 @@ public class CharacterBase extends TimestampEntity {
 
     private boolean canResetskills;
 
-    private String race, guild, primaryClass;
+    private String race, primaryClass;
+
+    //TODO ehcache!
+    private int guildid;
+
+    @Column(length = 16)
+    private String lastKnownPlayerName;
 
     @Column(name = "last_reset_time")
     @Temporal(TemporalType.TIMESTAMP)
@@ -155,12 +162,20 @@ public class CharacterBase extends TimestampEntity {
         this.race = race;
     }
 
-    public String getGuild() {
-        return guild;
+    public int getGuildid() {
+        return guildid;
     }
 
-    public void setGuild(String guild) {
-        this.guild = guild;
+    public void setGuildid(int guildid) {
+        this.guildid = guildid;
+    }
+
+    public String getLastKnownPlayerName() {
+        return lastKnownPlayerName;
+    }
+
+    public void setLastKnownPlayerName(String lastKnownPlayerName) {
+        this.lastKnownPlayerName = lastKnownPlayerName;
     }
 
     public Map<String, Double> getClasses() {

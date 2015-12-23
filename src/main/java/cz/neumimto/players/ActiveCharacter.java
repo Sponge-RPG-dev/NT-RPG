@@ -360,12 +360,12 @@ public class ActiveCharacter implements IActiveCharacter {
     public IActiveCharacter updateItemRestrictions() {
         allowedWeapons.clear();
         allowedWeapons.putAll(getRace().getWeapons());
-        mergeWeapons(getGuild());
+     //   mergeWeapons(getGuild());
         mergeWeapons(getPrimaryClass().getnClass());
         mergeWeapons(getRace());
         allowedArmorIds.clear();
         allowedArmorIds.addAll(getRace().getAllowedArmor());
-        allowedArmorIds.addAll(getGuild().getAllowedArmor());
+     //   allowedArmorIds.addAll(getGuild().getAllowedArmor());
         allowedArmorIds.addAll(getPrimaryClass().getnClass().getAllowedArmor());
         return this;
     }
@@ -420,11 +420,11 @@ public class ActiveCharacter implements IActiveCharacter {
     public void setGuild(Guild guild) {
         if (this.guild != Guild.Default) {
     //        fixPropertyValues(this.guild.getPropBonus(), -1);
-            removePermissions(guild.getPermissions());
+    //        removePermissions(guild.getPermissions());
         }
         this.guild = guild;
     //    fixPropertyValues(guild.getPropBonus(), 1);
-        addPermissions(guild.getPermissions());
+    //    addPermissions(guild.getPermissions());
     }
 
     public void addPermissions(Collection<String> perms) {

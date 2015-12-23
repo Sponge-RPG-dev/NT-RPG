@@ -41,6 +41,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.TextBuilder;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.TextActions;
+import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 
 import java.util.ArrayList;
@@ -104,7 +105,7 @@ public class VanilaMessaging implements IPlayerMessage {
         for (CharacterBase characterBase : characterBases) {
             LoreData loreData = ItemStackUtils.setLore(Texts.of("Level: " + characterBase.getLevel())
                     , Texts.of("Primary class: " + characterBase.getPrimaryClass())
-                    , Texts.of("Guild: " + characterBase.getGuild())
+                    , Texts.of("Guild: " + characterBase.getGuildid()) //todo
                     , Texts.of("Race: " + characterBase.getRace())
                     , Texts.of("Last time played: " + characterBase.updated.toString()));
             list.add(b.itemType(ItemTypes.BOOK)
@@ -141,11 +142,14 @@ public class VanilaMessaging implements IPlayerMessage {
         builder.sendTo(character.getPlayer());
     }
 
+
     private String getDetailedCharInfo(IActiveCharacter character) {
-        return "\\u00A76L: " + character.getLevel() +
-                " \\u00A7aR: " + character.getRace().getName() +
-                " \\u00A7bG: " + character.getGuild().getName() +
-                " \\u00A7cC: " + character.getPrimaryClass().getnClass().getName();
+        Text text = Texts.builder("Level").color(TextColors.YELLOW).append(
+                    Texts.builder("Race").color(TextColors.RED).append(
+                    Texts.builder("Guild").color(TextColors.AQUA).append(
+                    Texts.builder("Class").color(TextColors.GOLD).build()
+                    ).build()).build()).build();
+        return text.toString();
     }
 
     @Override

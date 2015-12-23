@@ -78,7 +78,7 @@ public class DamageService {
     }
 
     public void recalculateCharacterWeaponDamage(IActiveCharacter character) {
-        if (character.getPlayer().getItemInHand().isPresent()) {
+        if (!character.isStub() && character.getPlayer().getItemInHand().isPresent()) {
             double damage = getCharacterItemDamage(character, character.getPlayer().getItemInHand().get().getItem());
             damage += character.getMainHand().getDamage() + character.getOffHand().getDamage();
             character.setWeaponDamage(damage);

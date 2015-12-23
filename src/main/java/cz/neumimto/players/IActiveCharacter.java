@@ -57,9 +57,9 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     void setCharacterProperty(int index, float value);
 
-    public void setCharacterLevelProperty(int index, float value);
+    void setCharacterLevelProperty(int index, float value);
 
-    public float getCharacterPropertyWithoutLevel(int index);
+    float getCharacterPropertyWithoutLevel(int index);
 
     double getMaxMana();
 

@@ -18,22 +18,68 @@
 
 package cz.neumimto.players.groups;
 
+import cz.neumimto.players.IActiveCharacter;
+import cz.neumimto.players.properties.DefaultProperties;
 import cz.neumimto.skills.ISkill;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cache;
 
+import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Created by NeumimTo on 27.12.2014.
  */
-public class Guild extends PlayerGroup {
-    public static Guild Default = new Guild("None");
+@Table(name = "Guilds",
+        indexes = {@Index(columnList = "id")})
+@Entity
+//TODO put guilds in a second level cache; configure ehcache in nt core
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+public class Guild {
+    public static Guild Default = new Guild() {{
+        Default.name = "None";
+    }};
 
-    private Set<ISkill> skills = new HashSet<>();
+    public Guild() {
 
-    public Guild(String name) {
-        super(name);
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    private String name;
+
+    private Long leaderId;
+
+
+    private Set<IActiveCharacter> memebers = new HashSet<>();
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Long getLeaderId() {
+        return leaderId;
+    }
+
+    public void setLeaderId(Long leaderId) {
+        this.leaderId = leaderId;
+    }
+
+    public Set<IActiveCharacter> getMemebers() {
+        return memebers;
+    }
+
+    public void setMemebers(Set<IActiveCharacter> memebers) {
+        this.memebers = memebers;
+    }
 }

@@ -84,9 +84,9 @@ public class GroupDao {
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, "*.conf")) {
             stream.forEach(p -> {
                 Config c = ConfigFactory.parseFile(p.toFile());
-                Guild guild = new Guild(c.getString("Name"));
-                loadPlayerGroup(c, guild);
-                getGuilds().put(guild.getName().toLowerCase(), guild);
+           //     Guild guild = new Guild(c.getString("Name"));
+           //     loadPlayerGroup(c, guild);
+           //     getGuilds().put(guild.getName().toLowerCase(), guild);
             });
         } catch (IOException e) {
             e.printStackTrace();

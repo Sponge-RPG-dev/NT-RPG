@@ -84,7 +84,6 @@ public class CommandCreate extends CommandBase {
                     } else if (i == 0) {
                         CharacterBase characterBase = new CharacterBase();
                         characterBase.setName(args[1]);
-                        characterBase.setGuild(Guild.Default.getName());
                         characterBase.setRace(Race.Default.getName());
                         characterBase.setPrimaryClass(NClass.Default.getName());
                         characterBase.setUuid(player.getUniqueId());
@@ -112,6 +111,10 @@ public class CommandCreate extends CommandBase {
                 Party party = new Party(character);
                 character.setParty(party);
                 Gui.sendMessage(character, Localization.PARTY_CREATED);
+            } else if (args[0].equalsIgnoreCase("guild")) {
+                String name = args[1];
+                Guild guild = new Guild();
+                guild.setName(name);
             }
         } else {
             commandSource.sendMessage(Texts.of("This command can't be executed from console."));

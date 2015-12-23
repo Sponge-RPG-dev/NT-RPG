@@ -97,7 +97,7 @@ public class PreloadCharacter implements IActiveCharacter {
 
     @Override
     public String getName() {
-        return "PreloadChar";
+        return "None";
     }
 
     @Override

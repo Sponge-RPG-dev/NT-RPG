@@ -22,6 +22,7 @@ import cz.neumimto.IEntity;
 import cz.neumimto.IEntityType;
 import cz.neumimto.ResourceLoader;
 import cz.neumimto.Weapon;
+import cz.neumimto.configuration.Localization;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.damage.DamageService;
 import cz.neumimto.damage.ISkillDamageSource;
@@ -110,6 +111,7 @@ public class BasicListener {
     public void onPlayerLogin(ClientConnectionEvent.Join event) {
         IActiveCharacter character = characterService.getCharacter(event.getTargetEntity().getUniqueId());
         characterService.assignPlayerToCharacter(event.getTargetEntity());
+        event.getTargetEntity().sendMessage(Texts.of(Localization.CURRENT_CHARACTER.replaceAll("%1",character.getName())));
     }
 
     @Listener
@@ -137,8 +139,9 @@ public class BasicListener {
         }
     }
 
-    public void onEntitySpawn(RespawnPlayerEvent event) {
-
+    @Listener
+    public void onEntitySpawn(DestructEntityEvent event) {
+        Entity targetEntity = event.getTargetEntity();
     }
 
     @Listener
@@ -148,9 +151,16 @@ public class BasicListener {
             IActiveCharacter character = characterService.getCharacter(targetEntity.getUniqueId());
             if (character.isStub())
                 return;
+            //todo death penalization
             character.getEffects().stream()
                     .filter(iEffect1 -> iEffect1.getEffectSource() == EffectSource.TEMP && iEffect1.requiresRegister())
                     .forEach(iEffect -> effectService.removeEffect(iEffect, character));
+        } else if (Utils.isLivingEntity(targetEntity)) {
+            entityService.remove(targetEntity.getUniqueId());
+            double exp = entityService.getExperiences(targetEntity.getType());
+            //todo share in party
+            Cause cause = event.getCause();
+            cause = null;
         }
     }
 
@@ -218,7 +228,6 @@ public class BasicListener {
     @Listener
     public void onPlayerRespawn(RespawnPlayerEvent event) {
         Player player = event.getTargetEntity();
-        player.offer(Keys.HEALTH_SCALE,PluginConfig.HEALTH_SCALE);
     }
 
     @Listener

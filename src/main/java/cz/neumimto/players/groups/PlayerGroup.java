@@ -21,6 +21,7 @@ package cz.neumimto.players.groups;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 
+import javax.persistence.MappedSuperclass;
 import java.util.*;
 
 /**

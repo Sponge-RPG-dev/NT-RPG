@@ -70,10 +70,13 @@ public class EntityService {
 
     @PostProcess(priority = 10)
     public void load() {
-        if (!PluginConfig.OVERRIDE_MOBS) {
-            this.entityDamages.putAll(dao.getDamages());
+             this.entityDamages.putAll(dao.getDamages());
             this.entityHealth.putAll(dao.getHealth());
             this.entityExperiences.putAll(dao.getExperiences());
-        }
+
+    }
+
+    public double getExperiences(EntityType type) {
+        return entityExperiences.get(type);
     }
 }
