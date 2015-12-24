@@ -26,9 +26,9 @@ public class Localization {
 
 
     @ConfigValue
-    public static final String NO_MANA = "Not enough mana";
+    public static String NO_MANA = "Not enough mana";
     @ConfigValue
-    public static final String NO_HP = "Not enough hp";
+    public static String NO_HP = "Not enough hp";
 
     @ConfigValue
     public static String SKILL_UPGRADED_BROADCAST = "%1 has upgraded skill %2";

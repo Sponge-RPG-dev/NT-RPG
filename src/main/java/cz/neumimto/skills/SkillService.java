@@ -174,7 +174,7 @@ public class SkillService {
                 for (Map.Entry<String, Float> entry : skill.getDefaultSkillSettings().getNodes().entrySet()) {
                     builder.append(Utils.Tab).append(entry.getKey()).append(" : ").append(entry.getValue()).append(Utils.LineSeparator);
                 }
-                builder.append(" },").append(Utils.LineSeparator);
+                builder.append(Utils.Tab).append(" },").append(Utils.LineSeparator);
                 bufferedWriter.write(builder.toString());
                 bufferedWriter.flush();
             }
