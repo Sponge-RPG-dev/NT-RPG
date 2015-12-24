@@ -84,28 +84,11 @@ public class Utils {
 
 
     public static Optional<Entity> spawnProjectile(IEntity caster, EntityType type) {
-        World world = caster.getEntity().getWorld();
-        return world.createEntity(type, getFacingVector(caster.getEntity(),1));
+        return Optional.empty(); //todo
     }
 
-    public static Vector3d getFacingVector(Entity entity, int mult) {
-        double yaw = (entity.getRotation().getX() + 90) % 360;
-        double pitch = (entity.getRotation().getY()) * -1;
-        double a = Math.cos(Math.toRadians(pitch));
-        double b = Math.cos(Math.toRadians(yaw));
-        double c = Math.sin(Math.toRadians(pitch));
-        double d = Math.sin(Math.toRadians(yaw));
-        return new Vector3d((mult * a) * b, mult * c, (mult * a) * d);
-    }
-
-    public static Vector3d getFacingVector(Entity entity) {
-        double yaw = (entity.getRotation().getX() + 90) % 360;
-        double pitch = (entity.getRotation().getY()) * -1;
-        double a = Math.cos(Math.toRadians(pitch));
-        double b = Math.cos(Math.toRadians(yaw));
-        double c = Math.sin(Math.toRadians(pitch));
-        double d = Math.sin(Math.toRadians(yaw));
-        return new Vector3d(a * b, c, a * d);
+    public static Optional<Entity> spawnInvisibleProjectile(IEntity caster, EntityType type) {
+        return Optional.empty();
     }
 
     public static Set<BlockType> transparentBlocks = new HashSet<>();

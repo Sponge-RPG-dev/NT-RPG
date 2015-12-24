@@ -58,7 +58,7 @@ import java.util.jar.JarFile;
 @Plugin(id = "NtRpg", name = "NtRpg", dependencies = "after:MinecraftGUIServer;after:NTCORE")
 public class NtRpgPlugin {
     public static String workingDir;
-    public static JarFile pluginjar;
+    public static File pluginjar;
     private static String configPath = File.separator + "mods" + File.separator + "NtRpg";
 
     @Inject

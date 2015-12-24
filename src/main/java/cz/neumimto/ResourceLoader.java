@@ -41,6 +41,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
 import java.net.URLClassLoader;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -115,23 +116,32 @@ public class ResourceLoader {
 
     public void loadExternalJars() {
         Path dir = addonDir.toPath();
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, "*.{jar|zip}")) {
-            for (Path entry : stream) {
-                loadJarFile(new JarFile(entry.toFile()), false);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        for (File f : dir.toFile().listFiles()) {
+            loadJarFile(f,false);
         }
     }
 
-    public void loadJarFile(JarFile file, boolean main) {
-        if (file == null)
+    public void loadJarFile(File f, boolean main) {
+        if (f == null)
             return;
+        JarFile file = null;
+        try {
+            file = new JarFile(f);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         logger.info("Loading jarfile " + file.getName());
         Enumeration<JarEntry> entries = file.entries();
         JarEntry next = null;
 
         ResourceClassLoader cl = new ResourceClassLoader((URLClassLoader) NtRpgPlugin.class.getClassLoader());
+        if (!main) {
+            try {
+                cl.addURL(f.toURI().toURL());
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
         while (entries.hasMoreElements()) {
             next = entries.nextElement();
             if (next.isDirectory() || !next.getName().endsWith(".class")) {

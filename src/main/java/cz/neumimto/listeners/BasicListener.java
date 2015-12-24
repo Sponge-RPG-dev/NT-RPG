@@ -61,6 +61,7 @@ import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.entity.InteractEntityEvent;
 import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
+import org.spongepowered.api.event.entity.projectile.TargetProjectileEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.user.BanUserEvent;
 import org.spongepowered.api.event.world.chunk.UnloadChunkEvent;
@@ -287,6 +288,11 @@ public class BasicListener {
                 }
             }
         }
+    }
+
+    @Listener(order = Order.BEFORE_POST)
+    public void onProjectileHit(TargetProjectileEvent event) {
+        event.getTargetEntity();
     }
 
 }

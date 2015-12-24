@@ -42,10 +42,10 @@ public class FileUtils {
         return str;
     }
 
-    public static JarFile getPluginJar() {
+    public static File getPluginJar() {
         try {
             String s = getJarContainingFolder(NtRpgPlugin.class);
-            return new JarFile(s);
+            return new File(s);
         } catch (Exception e) {
             System.out.print(e.getMessage());
         }

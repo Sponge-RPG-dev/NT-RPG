@@ -20,24 +20,16 @@ package cz.neumimto.scripting;
 
 import cz.neumimto.GlobalScope;
 import cz.neumimto.NtRpgPlugin;
-import cz.neumimto.ResourceClassLoader;
-import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.skills.ActiveSkill;
 import cz.neumimto.utils.FileUtils;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.slf4j.Logger;
-import org.spongepowered.api.plugin.PluginManager;
-
 
 import javax.script.*;
 import java.io.*;
-import java.lang.management.ManagementFactory;
-import java.net.MalformedURLException;
-import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -59,9 +51,14 @@ public class JSLoader {
 
     @PostProcess(priority = 2)
     public void initEngine() {
-        FileUtils.createDirectoryIfNotExists(scripts_root);
-        engine= new NashornScriptEngineFactory().getScriptEngine();
-        loadSkills();
+        try {
+            Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
+            FileUtils.createDirectoryIfNotExists(scripts_root);
+            engine = new NashornScriptEngineFactory().getScriptEngine();
+            loadSkills();
+        } catch (ClassNotFoundException e) {
+            System.out.println("Nashorn was not loaded. To enable javascript support place nashorn.jar into your mods folder");
+        }
     }
 
     public void loadSkills() {
