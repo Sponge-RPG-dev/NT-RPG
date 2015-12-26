@@ -32,7 +32,7 @@ public class EntityService {
     @Inject
     private MobSettingsDao dao;
 
-    public IEntity get(Living id) {
+    public IEntity get(Entity id) {
         if (id.getType() == EntityTypes.PLAYER) {
             return service.getCharacter(id.getUniqueId());
         }

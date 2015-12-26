@@ -23,6 +23,9 @@ import cz.neumimto.NtRpgPlugin;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -37,20 +40,26 @@ public class FileUtils {
 
     public static String getJarContainingFolder(Class aclass) throws Exception {
         CodeSource codeSource = aclass.getProtectionDomain().getCodeSource();
-        File jarFile = null;
         String str = codeSource.getLocation().toURI().toString().split("!")[0].substring(10);
         return str;
     }
 
-    public static File getPluginJar() {
-        try {
-            String s = getJarContainingFolder(NtRpgPlugin.class);
-            return new File(s);
-        } catch (Exception e) {
-            System.out.print(e.getMessage());
+    public static URL getPluginUrl() {
+        URL clsUrl = NtRpgPlugin.class.getResource(NtRpgPlugin.class.getSimpleName() + ".class");
+        if (clsUrl != null) {
+            try {
+                URLConnection conn = clsUrl.openConnection();
+                if (conn instanceof JarURLConnection) {
+                    JarURLConnection connection = (JarURLConnection) conn;
+                    return connection.getJarFileURL();
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         return null;
     }
+
 
     public static void createFileIfNotExists(Path path) {
         if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS))

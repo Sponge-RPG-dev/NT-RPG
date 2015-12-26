@@ -18,6 +18,7 @@
 
 package cz.neumimto;
 
+import cz.neumimto.damage.DamageService;
 import cz.neumimto.effects.EffectService;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
@@ -52,5 +53,8 @@ public class GlobalScope {
 
     @Inject
     public Game game;
+
+    @Inject
+    public DamageService damageService;
 
 }

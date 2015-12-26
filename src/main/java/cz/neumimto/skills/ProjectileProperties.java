@@ -27,6 +27,7 @@ import org.spongepowered.api.entity.projectile.Projectile;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.WeakHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -34,22 +35,24 @@ import java.util.function.Consumer;
  * Created by NeumimTo on 15.1.2015.
  */
 public class ProjectileProperties {
-    public static Map<UUID, ProjectileProperties> cache = new LinkedHashMap<UUID, ProjectileProperties>() {
+    /*public static Map<UUID, ProjectileProperties> cache = new LinkedHashMap<UUID, ProjectileProperties>() {
         @Override
         protected boolean removeEldestEntry(Map.Entry<UUID, ProjectileProperties> entry) {
             return entry.getValue().lifetime > System.currentTimeMillis();
         }
-    };
-    protected Projectile t;
+    };*/
+
+    public static Map<Projectile,ProjectileProperties> cache = new WeakHashMap<>();
+    //protected Projectile t;
     private double damage;
-    private long lifetime;
+   // private long lifetime;
     private IEntity caster;
     public BiConsumer<IEntity,IEntity> consumer;
 
     public ProjectileProperties(Projectile t, IEntity caster) {
-        this.t = t;
-        cache.put(t.getUniqueId(), this);
-        lifetime = System.currentTimeMillis()+5000;
+      //  this.t = t;
+        cache.put(t, this);
+     //   lifetime = System.currentTimeMillis()+5000;
         this.caster = caster;
     }
 
@@ -67,10 +70,6 @@ public class ProjectileProperties {
 
     public void setDamage(double damage) {
         this.damage = damage;
-    }
-
-    public Projectile getProjectile() {
-        return t;
     }
 
 }

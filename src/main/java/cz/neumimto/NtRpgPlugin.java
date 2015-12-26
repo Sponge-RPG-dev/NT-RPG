@@ -26,6 +26,7 @@ import cz.neumimto.core.FindPersistenceContextEvent;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.listeners.DebugListener;
 import cz.neumimto.players.CharacterBase;
+import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.scripting.JSLoader;
 import cz.neumimto.utils.FileUtils;
 import org.slf4j.Logger;
@@ -44,6 +45,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -87,13 +90,14 @@ public class NtRpgPlugin {
 
         try {
             workingDir = new File(".").getCanonicalPath() + configPath;
-            pluginjar = FileUtils.getPluginJar();
-        } catch (IOException e) {
+            URL url = FileUtils.getPluginUrl();
+            pluginjar = new File(url.toURI());
+        } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
         Path path = Paths.get(workingDir);
         ConfigMapper.init("NtRpg", path);
-
+        File dir = new File("./mods");
         ioc.registerDependency(ConfigMapper.get("NtRpg"));
         try {
             Files.createDirectories(path);

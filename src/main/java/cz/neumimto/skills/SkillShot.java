@@ -23,6 +23,9 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.players.IActiveCharacter;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.projectile.Projectile;
+
+import java.util.Optional;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
@@ -37,22 +40,15 @@ public abstract class SkillShot extends ActiveSkill {
 
     @Override
     public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info) {
-        Vector3d eyeloc = character.getPlayer().getRotation();
-        double pitch = eyeloc.getX();
-        double yaw = eyeloc.getY();
-
-        double x = sin(pitch) * cos(yaw);
-        double y = sin(pitch) * sin(yaw);
-        double z = cos(pitch);
-        Vector3d direction = new Vector3d(x, y, z);
-
-        Entity e = getProjectile(character, info, direction);
-        cache(getProjectileProperties(character,info,e));
-
-        return null;
+        Optional<Projectile> projectile = character.getPlayer().launchProjectile(getProjectile(character, info));
+        if (projectile.isPresent()) {
+            ProjectileProperties projectileProperties = getProjectileProperties(character,info,projectile.get());
+            return SkillResult.OK;
+        }
+        return SkillResult.CANCELLED;
     }
 
-    protected abstract ProjectileProperties getProjectileProperties(IActiveCharacter character, ExtendedSkillInfo info, Entity e);
+    protected abstract ProjectileProperties getProjectileProperties(IActiveCharacter character, ExtendedSkillInfo info, Projectile projectile);
 
-    protected abstract Entity getProjectile(IActiveCharacter character, ExtendedSkillInfo info, Vector3d direction);
+    protected abstract Class<Projectile> getProjectile(IActiveCharacter character, ExtendedSkillInfo info);
 }

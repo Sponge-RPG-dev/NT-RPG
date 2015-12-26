@@ -39,6 +39,7 @@ import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.CharacterService;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.skills.ISkill;
+import cz.neumimto.skills.ProjectileProperties;
 import cz.neumimto.utils.ItemStackUtils;
 import cz.neumimto.utils.Utils;
 import org.spongepowered.api.Game;
@@ -49,6 +50,7 @@ import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Creature;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.cause.Cause;
@@ -56,6 +58,7 @@ import org.spongepowered.api.event.cause.entity.damage.DamageModifier;
 import org.spongepowered.api.event.cause.entity.damage.DamageModifierTypes;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
+import org.spongepowered.api.event.cause.entity.damage.source.IndirectEntityDamageSource;
 import org.spongepowered.api.event.entity.ChangeEntityEquipmentEvent;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
@@ -189,11 +192,30 @@ public class BasicListener {
         }
     }
 
+
+
     @Listener(order = Order.BEFORE_POST)
     public void onAttack(InteractEntityEvent.Primary event) {
         if (event.isCancelled())
             return;
-        if (event.getTargetEntity().getType() == EntityTypes.PLAYER) {
+        if (!Utils.isLivingEntity(event.getTargetEntity()))
+            return;
+        IEntity entity = entityService.get(event.getTargetEntity());
+        Optional<IndirectEntityDamageSource> q = event.getCause().first(IndirectEntityDamageSource.class);
+        if (q.isPresent()) {
+            IndirectEntityDamageSource indirectEntityDamageSource = q.get();
+            if (indirectEntityDamageSource.getIndirectSource() instanceof Projectile) {
+
+                Projectile projectile = (Projectile) indirectEntityDamageSource.getIndirectSource();
+                IEntity shooter = entityService.get((Entity)projectile.getShooter());
+                ProjectileProperties projectileProperties = ProjectileProperties.cache.get(projectile);
+                if (projectileProperties != null) {
+                    projectileProperties.consumer.accept(shooter,entity);
+                    ProjectileProperties.cache.remove(projectile);
+                }
+            }
+        }
+        if (entity.getType() == IEntityType.CHARACTER) {
             IActiveCharacter target = characterService.getCharacter(event.getTargetEntity().getUniqueId());
             if (target.isStub() && !PluginConfig.ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS) {
                 event.setCancelled(true);

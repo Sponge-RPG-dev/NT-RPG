@@ -117,10 +117,6 @@ public abstract class AbstractSkill implements ISkill {
         this.settings = settings;
     }
 
-    protected void cache(ProjectileProperties projectileProperties) {
-        ProjectileProperties.cache.put(projectileProperties.getProjectile().getUniqueId(), projectileProperties);
-    }
-
     public String getDescription() {
         return description;
     }
