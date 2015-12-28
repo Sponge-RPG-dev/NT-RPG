@@ -30,8 +30,13 @@ public class ExtendedNClass {
     }};
     private NClass nClass;
     private double experiences;
+    private double experiencesFromLevel;
     private boolean isPrimary;
     private int level;
+
+    public boolean takesExp() {
+        return experiences <= nClass.getTotalExp();
+    }
 
     public NClass getnClass() {
         return nClass;
@@ -63,5 +68,13 @@ public class ExtendedNClass {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public double getExperiencesFromLevel() {
+        return experiencesFromLevel;
+    }
+
+    public void setExperiencesFromLevel(double experiencesFromLevel) {
+        this.experiencesFromLevel = experiencesFromLevel;
     }
 }

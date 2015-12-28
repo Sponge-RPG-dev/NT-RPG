@@ -87,7 +87,6 @@ public class CommandCreate extends CommandBase {
                         characterBase.setRace(Race.Default.getName());
                         characterBase.setPrimaryClass(NClass.Default.getName());
                         characterBase.setUuid(player.getUniqueId());
-                        characterBase.setLevel(1);
                         characterBase.setSkillPoints(PluginConfig.SKILLPOINTS_ON_START);
                         characterBase.setAttributePoints(PluginConfig.ATTRIBUTEPOINTS_ON_START);
                         characterService.createAndUpdate(characterBase);

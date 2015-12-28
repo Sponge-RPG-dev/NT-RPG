@@ -21,6 +21,7 @@ package cz.neumimto.gui;
 import cz.neumimto.effects.EffectStatusType;
 import cz.neumimto.effects.IEffect;
 import cz.neumimto.players.CharacterBase;
+import cz.neumimto.players.ExtendedNClass;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.skills.SkillData;
 import cz.neumimto.skills.SkillTree;
@@ -35,15 +36,15 @@ import java.util.Map;
 public interface IPlayerMessage {
     boolean isClientSideGui();
 
-    public void sendMessage(IActiveCharacter player, String message);
+    void sendMessage(IActiveCharacter player, String message);
 
-    public void sendCooldownMessage(IActiveCharacter player, String message, long cooldown);
+    void sendCooldownMessage(IActiveCharacter player, String message, long cooldown);
 
     void openSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, Map<String, Integer> learnedSkills);
 
     void moveSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, Map<String, Integer> learnedSkill, SkillData center);
 
-    public void sendEffectStatus(IActiveCharacter player, EffectStatusType type, IEffect effect);
+    void sendEffectStatus(IActiveCharacter player, EffectStatusType type, IEffect effect);
 
     void invokeCharacterMenu(Player player, List<CharacterBase> characterBases);
 
@@ -52,4 +53,10 @@ public interface IPlayerMessage {
     void sendPlayerInfo(IActiveCharacter character, List<CharacterBase> target);
 
     void sendPlayerInfo(IActiveCharacter character, IActiveCharacter target);
+
+    void showExpChange(IActiveCharacter character,String classname,double expchange);
+
+    void showLevelChange(IActiveCharacter character, ExtendedNClass clazz, int level);
+
+    void sendStatus(IActiveCharacter character);
 }

@@ -84,9 +84,9 @@ public class GroupDao {
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, "*.conf")) {
             stream.forEach(p -> {
                 Config c = ConfigFactory.parseFile(p.toFile());
-           //     Guild guild = new Guild(c.getString("Name"));
-           //     loadPlayerGroup(c, guild);
-           //     getGuilds().put(guild.getName().toLowerCase(), guild);
+                //     Guild guild = new Guild(c.getString("Name"));
+                //     loadPlayerGroup(c, guild);
+                //     getGuilds().put(guild.getName().toLowerCase(), guild);
             });
         } catch (IOException e) {
             e.printStackTrace();
@@ -110,6 +110,8 @@ public class GroupDao {
                 HashSet<ExperienceSource> objects = new HashSet<>();
                 experienceSources.stream().forEach(a -> objects.add(ExperienceSource.valueOf(a)));
                 nClass.setExperienceSources(objects);
+                nClass.setSkillpointsperlevel(c.getInt("SkillPointsPerLevel"));
+                nClass.setAttributepointsperlevel(c.getInt("AttributePointsPerLevel"));
                 int maxLevel = c.getInt("MaxLevel");
                 double first = c.getDouble("ExpFirstLevel");
                 double last = c.getDouble("ExpLastLevel");
@@ -182,11 +184,14 @@ public class GroupDao {
         double factora = Math.log(expForLastLevel / expFirstLevel) / (maxlevel - 1);
         double factorb = expFirstLevel / (Math.exp(factora) - 1.0);
         double[] levels = new double[maxlevel];
+        double k = 0;
         for (int i = 1; i <= maxlevel; i++) {
             double oldxp = Math.round(factorb * Math.exp(factora * (i - 1)));
             double newxp = Math.round(factorb * Math.exp(factora * i));
             levels[i - 1] = newxp - oldxp;
+            k += levels[i - 1];
         }
         nClass.setLevels(levels);
+        nClass.setTotalExp(k);
     }
 }

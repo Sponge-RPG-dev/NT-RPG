@@ -124,7 +124,6 @@ public class PlayerDao extends GenericDao<CharacterBase> {
     }
 
     public void createAndUpdate(CharacterBase base) {
-        System.out.print("asdadsasdasdadsasd");
         Session session = factory.openSession();
         Transaction tx = null;
         tx = session.beginTransaction();

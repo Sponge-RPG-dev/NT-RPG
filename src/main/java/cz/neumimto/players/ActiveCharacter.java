@@ -234,7 +234,7 @@ public class ActiveCharacter implements IActiveCharacter {
 
     @Override
     public double getExperiencs() {
-        return getCharacterProperty(DefaultProperties.experiences);
+        return getPrimaryClass().getExperiences();
     }
 
     @Override
@@ -306,16 +306,18 @@ public class ActiveCharacter implements IActiveCharacter {
         }
         if (slot > 0)
             throw new NotImplementedException();
+        classes.clear();
         primary = new ExtendedNClass();
         primary.setnClass(nclass);
         primary.setPrimary(true);
+        classes.add(primary);
         Double aDouble = getCharacterBase().getClasses().get(nclass.getName());
         if (aDouble == null) {
             primary.setExperiences(0D);
             primary.setLevel(0);
             getCharacterBase().getClasses().put(nclass.getName(),0D);
         } else {
-            primary.setLevel(getCharacterBase().getLevel());
+            //  primary.setLevel(getCharacterBase().getLevel());
             primary.setExperiences(aDouble);
         }
         base.setPrimaryClass(nclass.getName());
@@ -489,7 +491,7 @@ public class ActiveCharacter implements IActiveCharacter {
 
     @Override
     public int getLevel() {
-        return getCharacterBase().getLevel();
+        return getPrimaryClass().getLevel();
     }
 
     @Override

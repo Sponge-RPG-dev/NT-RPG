@@ -37,6 +37,7 @@ import cz.neumimto.inventory.InventoryService;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.CharacterService;
+import cz.neumimto.players.ExperienceSource;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.skills.ISkill;
 import cz.neumimto.skills.ProjectileProperties;
@@ -124,6 +125,7 @@ public class BasicListener {
         if (!character.isStub()) {
             Location loc = player.getLocation();
             World ex = (World) loc.getExtent();
+            character.getCharacterBase().setLastKnownPlayerName(event.getTargetEntity().getName());
             character.updateLastKnownLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockY(), ex.getName());
             characterService.putInSaveQueue(character.getCharacterBase());
             effectService.removeAllEffects(character);
@@ -148,7 +150,7 @@ public class BasicListener {
     }
 
     @Listener
-    public void onEntityDestruct(DestructEntityEvent event) {
+    public void onEntityDestruct(DestructEntityEvent.Death event) {
         Entity targetEntity = event.getTargetEntity();
         if (targetEntity.getType() == EntityTypes.PLAYER) {
             IActiveCharacter character = characterService.getCharacter(targetEntity.getUniqueId());
@@ -158,12 +160,15 @@ public class BasicListener {
             character.getEffects().stream()
                     .filter(iEffect1 -> iEffect1.getEffectSource() == EffectSource.TEMP && iEffect1.requiresRegister())
                     .forEach(iEffect -> effectService.removeEffect(iEffect, character));
-        } else if (Utils.isLivingEntity(targetEntity)) {
-            entityService.remove(targetEntity.getUniqueId());
-            double exp = entityService.getExperiences(targetEntity.getType());
-            //todo share in party
-            Cause cause = event.getCause();
-            cause = null;
+        } else {
+            Optional<Player> first = event.getCause().first(Player.class);
+            if (first.isPresent()) {
+                entityService.remove(targetEntity.getUniqueId());
+                double exp = entityService.getExperiences(targetEntity.getType());
+                //todo share in party
+                IActiveCharacter character = characterService.getCharacter(first.get().getUniqueId());
+                characterService.addExperiences(character,exp, ExperienceSource.PVE);
+            }
         }
     }
 
@@ -201,20 +206,6 @@ public class BasicListener {
         if (!Utils.isLivingEntity(event.getTargetEntity()))
             return;
         IEntity entity = entityService.get(event.getTargetEntity());
-        Optional<IndirectEntityDamageSource> q = event.getCause().first(IndirectEntityDamageSource.class);
-        if (q.isPresent()) {
-            IndirectEntityDamageSource indirectEntityDamageSource = q.get();
-            if (indirectEntityDamageSource.getIndirectSource() instanceof Projectile) {
-
-                Projectile projectile = (Projectile) indirectEntityDamageSource.getIndirectSource();
-                IEntity shooter = entityService.get((Entity)projectile.getShooter());
-                ProjectileProperties projectileProperties = ProjectileProperties.cache.get(projectile);
-                if (projectileProperties != null) {
-                    projectileProperties.consumer.accept(shooter,entity);
-                    ProjectileProperties.cache.remove(projectile);
-                }
-            }
-        }
         if (entity.getType() == IEntityType.CHARACTER) {
             IActiveCharacter target = characterService.getCharacter(event.getTargetEntity().getUniqueId());
             if (target.isStub() && !PluginConfig.ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS) {
@@ -239,14 +230,16 @@ public class BasicListener {
                 entityService.remove(event.getTargetEntity().getUniqueId());
         }
     }
+
 /*
-//TODO fix memoryleak
+//TODO
     @Listener
     public void onChunkDespawn(UnloadChunkEvent event) {
 
         entityService.remove(event.getTargetChunk().getEntities(Utils::isLivingEntity));
     }
 */
+
     @Listener
     public void onPlayerRespawn(RespawnPlayerEvent event) {
         Player player = event.getTargetEntity();
@@ -257,7 +250,6 @@ public class BasicListener {
         final Cause cause = event.getCause();
         Optional<EntityDamageSource> first = cause.first(EntityDamageSource.class);
         if (first.isPresent()) {
-
             Entity targetEntity = event.getTargetEntity();
             EntityDamageSource entityDamageSource = first.get();
             Entity source = entityDamageSource.getSource();
@@ -290,7 +282,20 @@ public class BasicListener {
                 }*/
                 event.setBaseDamage(newdamage);
             }
-
+            Optional<IndirectEntityDamageSource> q = event.getCause().first(IndirectEntityDamageSource.class);
+            if (q.isPresent()) {
+                IndirectEntityDamageSource indirectEntityDamageSource = q.get();
+                if (indirectEntityDamageSource.getSource() instanceof Projectile) {
+                    Projectile projectile = (Projectile) indirectEntityDamageSource.getSource();
+                    IEntity shooter = entityService.get((Entity)projectile.getShooter());
+                    IEntity target = entityService.get(targetEntity);
+                    ProjectileProperties projectileProperties = ProjectileProperties.cache.get(projectile);
+                    if (projectileProperties != null) {
+                        ProjectileProperties.cache.remove(projectile);
+                        projectileProperties.consumer.accept(shooter,target);
+                    }
+                }
+            }
             Optional<ISkillDamageSource> skilldamage = cause.first(ISkillDamageSource.class);
             if (skilldamage.isPresent()) {
                 ISkillDamageSource iSkillDamageSource = skilldamage.get();
@@ -311,10 +316,4 @@ public class BasicListener {
             }
         }
     }
-
-    @Listener(order = Order.BEFORE_POST)
-    public void onProjectileHit(TargetProjectileEvent event) {
-        event.getTargetEntity();
-    }
-
 }

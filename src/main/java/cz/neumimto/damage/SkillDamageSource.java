@@ -18,17 +18,26 @@ package cz.neumimto.damage;
 
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.skills.ISkill;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
+import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
+import org.spongepowered.api.event.cause.entity.damage.source.DamageSources;
+import org.spongepowered.api.event.cause.entity.damage.source.common.AbstractDamageSource;
+import org.spongepowered.api.event.cause.entity.damage.source.common.AbstractDamageSourceBuilder;
 
-public class SkillDamageSource implements ISkillDamageSource {
+public class SkillDamageSource extends AbstractDamageSource {
     private ISkill skill;
     private IActiveCharacter caster;
     private DamageType damageType = DamageTypes.ATTACK;
-    private boolean isBypassingArmor;
-    private boolean isExplosion;
-    private boolean isStarvationBased;
-    private boolean isMagic;
+
+    public SkillDamageSource(AbstractDamageSourceBuilder builder) {
+        super(builder);
+    }
+
+    public SkillDamageSource() {
+        this(new SkillDamageSourceBuilder());
+    }
 
     public void setSkill(ISkill skill) {
         this.skill = skill;
@@ -42,28 +51,10 @@ public class SkillDamageSource implements ISkillDamageSource {
         this.damageType = damageType;
     }
 
-    public void setBypassingArmor(boolean bypassingArmor) {
-        isBypassingArmor = bypassingArmor;
-    }
-
-    public void setExplosion(boolean explosion) {
-        isExplosion = explosion;
-    }
-
-    public void setStarvationBased(boolean starvationBased) {
-        isStarvationBased = starvationBased;
-    }
-
-    public void setMagic(boolean magic) {
-        isMagic = magic;
-    }
-
-    @Override
     public ISkill getSkill() {
         return skill;
     }
 
-    @Override
     public IActiveCharacter getCaster() {
         return caster;
     }
@@ -73,30 +64,10 @@ public class SkillDamageSource implements ISkillDamageSource {
         return damageType;
     }
 
-    @Override
-    public boolean isAbsolute() {
-        return false;
-    }
-
-    @Override
-    public boolean isBypassingArmor() {
-        return isBypassingArmor;
-    }
 
     @Override
     public boolean isScaledByDifficulty() {
         return false;
-    }
-
-    @Override
-    public boolean isExplosive() {
-        return isExplosion;
-    }
-
-
-    @Override
-    public boolean isMagic() {
-        return isMagic;
     }
 
     @Override

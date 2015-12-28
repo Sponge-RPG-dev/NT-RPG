@@ -3,6 +3,7 @@ package cz.neumimto.entities;
 import cz.neumimto.effects.IEffect;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.Creature;
+import org.spongepowered.api.entity.living.Living;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +14,7 @@ import java.util.Map;
 public class NEntity implements IMob {
 
     private double experiences;
-    private Creature entity;
+    private Living entity;
     private Map<Class<? extends IEffect>,IEffect> effectSet = new HashMap<>();
 
     protected NEntity(Creature l) {
@@ -35,6 +36,7 @@ public class NEntity implements IMob {
     }
 
     @Override
+
     public double getHp() {
         return entity.get(Keys.HEALTH).get();
     }
@@ -45,7 +47,7 @@ public class NEntity implements IMob {
     }
 
     @Override
-    public void attach(Creature creature) {
+    public void attach(Living creature) {
         this.entity = creature;
     }
 
@@ -60,7 +62,7 @@ public class NEntity implements IMob {
     }
 
     @Override
-    public Creature getEntity() {
+    public Living getEntity() {
         return entity;
     }
 

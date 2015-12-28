@@ -92,4 +92,10 @@ public class PluginConfig {
 
     @ConfigValue
     public static double HEALTH_SCALE = 2;
+
+    @ConfigValue
+    public static int ATTRIBUTEPOINTS_PER_LEVEL;
+
+    @ConfigValue
+    public static int SKILLPOINTS_PER_LEVEL;
 }

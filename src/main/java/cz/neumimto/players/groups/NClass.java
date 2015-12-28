@@ -33,7 +33,9 @@ public class NClass extends PlayerGroup {
 
     private SkillTree skillTree = new SkillTree();
 
+    private int skillpointsperlevel, attributepointsperlevel;
     private double[] levels;
+    private double totalExp;
 
     public NClass(String name) {
         super(name);
@@ -63,5 +65,29 @@ public class NClass extends PlayerGroup {
 
     public void setExperienceSources(HashSet<ExperienceSource> experienceSources) {
         this.experienceSourceSet = experienceSources;
+    }
+
+    public double getTotalExp() {
+        return totalExp;
+    }
+
+    public void setTotalExp(double totalExp) {
+        this.totalExp = totalExp;
+    }
+
+    public int getAttributepointsperlevel() {
+        return attributepointsperlevel;
+    }
+
+    public void setAttributepointsperlevel(int attributepointsperlevel) {
+        this.attributepointsperlevel = attributepointsperlevel;
+    }
+
+    public int getSkillpointsperlevel() {
+        return skillpointsperlevel;
+    }
+
+    public void setSkillpointsperlevel(int skillpointsperlevel) {
+        this.skillpointsperlevel = skillpointsperlevel;
     }
 }

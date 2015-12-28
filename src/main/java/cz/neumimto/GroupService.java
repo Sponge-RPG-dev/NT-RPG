@@ -105,4 +105,7 @@ public class GroupService {
     }
 
 
+    public Collection<NClass> getClasses() {
+        return groupDao.getClasses().values();
+    }
 }

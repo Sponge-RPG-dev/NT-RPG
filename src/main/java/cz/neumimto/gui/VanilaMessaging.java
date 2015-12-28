@@ -25,16 +25,20 @@ import cz.neumimto.effects.IEffect;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.players.CharacterBase;
+import cz.neumimto.players.ExtendedNClass;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.skills.SkillData;
 import cz.neumimto.skills.SkillTree;
 import cz.neumimto.skills.StartingPoint;
 import cz.neumimto.utils.ItemStackUtils;
+import cz.neumimto.utils.Utils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.manipulator.mutable.item.LoreData;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.scoreboard.Scoreboard;
+import org.spongepowered.api.scoreboard.displayslot.DisplaySlots;
 import org.spongepowered.api.service.pagination.PaginationBuilder;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
@@ -102,18 +106,6 @@ public class VanilaMessaging implements IPlayerMessage {
     public void invokeCharacterMenu(Player player, List<CharacterBase> characterBases) {
         ItemStack.Builder b = ItemStack.builder();
         List<ItemStack> list = new ArrayList<>();
-        for (CharacterBase characterBase : characterBases) {
-            LoreData loreData = ItemStackUtils.setLore(Texts.of("Level: " + characterBase.getLevel())
-                    , Texts.of("Primary class: " + characterBase.getPrimaryClass())
-                    , Texts.of("Guild: " + characterBase.getGuildid()) //todo
-                    , Texts.of("Race: " + characterBase.getRace())
-                    , Texts.of("Last time played: " + characterBase.updated.toString()));
-            list.add(b.itemType(ItemTypes.BOOK)
-                    .itemData(ItemStackUtils.setDisplayName(Texts.of(characterBase.getName())))
-                    .itemData(loreData)
-                    .quantity(characterBase.getLevel()).build());
-            b.reset();
-        }
         //todo
     }
 
@@ -155,5 +147,40 @@ public class VanilaMessaging implements IPlayerMessage {
     @Override
     public void sendPlayerInfo(IActiveCharacter character, IActiveCharacter target) {
         character.sendMessage(getDetailedCharInfo(target));
+    }
+
+    @Override
+    public void showExpChange(IActiveCharacter character,String classname,double expchange) {
+        Player player = character.getPlayer();
+        player.sendMessage(Texts.of(classname+" expchange: +" + expchange));
+    }
+
+    @Override
+    public void showLevelChange(IActiveCharacter character, ExtendedNClass clazz, int level) {
+        Player player = character.getPlayer();
+        player.sendMessage(Texts.of("Level up: "+clazz.getnClass().getName()+ " - " + level));
+    }
+
+    @Override
+    public void sendStatus(IActiveCharacter character) {
+        Player player = character.getPlayer();
+        String q = "HP: "+character.getHealth().getValue()+"/"+character.getHealth().getMaxValue()+"/"+character.getHealth().getRegen();
+        player.sendMessage(Texts.of(q));
+        q = "Mana: "+character.getMana().getValue()+"/"+character.getMana().getMaxValue()+"/"+character.getMana().getRegen();
+        player.sendMessage(Texts.of(q));
+        q = "Attribute points: " + character.getAttributePoints() + "\n";
+        q += "Skill points: " + character.getSkillPoints();
+        player.sendMessage(Texts.of(q));
+        player.sendMessage(Texts.of("------------"));
+        q = "Allocated attribute points: " + character.getCharacterBase().getUsedAttributePoints() + "\n";
+        q += "Allocated skill points: " + character.getCharacterBase().getUsedSkillPoints();
+        player.sendMessage(Texts.of(q));
+        q = "Class: " + character.getPrimaryClass().getnClass().getName() + ", Level: " + character.getLevel();
+        player.sendMessage(Texts.of(q));
+        q = "Progress- Total:" + character.getPrimaryClass().getExperiences()+"/"+character.getPrimaryClass().getnClass().getTotalExp();
+        character.sendMessage(q);
+        q = "          Level: " + character.getPrimaryClass().getExperiencesFromLevel()+"/"+character.getPrimaryClass().getnClass().getLevels()[character.getPrimaryClass().getLevel()];
+        character.sendMessage(q);
+
     }
 }

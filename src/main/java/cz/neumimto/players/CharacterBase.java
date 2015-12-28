@@ -53,8 +53,6 @@ public class CharacterBase extends TimestampEntity {
 
     private String info;
 
-    private int level;
-
     protected short attributePoints;
 
     protected short skillPoints;
@@ -140,14 +138,6 @@ public class CharacterBase extends TimestampEntity {
 
     public void setInfo(String info) {
         this.info = info;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
     }
 
     public void setId(Long id) {

@@ -35,6 +35,7 @@ import cz.neumimto.events.skills.SkillHealEvent;
 import cz.neumimto.events.skills.SkillLearnEvent;
 import cz.neumimto.events.skills.SkillRefundEvent;
 import cz.neumimto.events.skills.SkillUpgradeEvent;
+import cz.neumimto.gui.Gui;
 import cz.neumimto.inventory.InventoryService;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
@@ -99,7 +100,7 @@ public class CharacterService {
      * @param id
      */
     public void loadPlayerData(UUID id) {
-        IActiveCharacter put = characters.put(id, buildDummyChar(id));
+        characters.put(id, buildDummyChar(id));
         game.getScheduler().createTaskBuilder().name("PlayerDataLoad-" + id).async().execute(() -> {
             final List<CharacterBase> playerCharacters = playerDao.getPlayersCharacters(id);
             game.getScheduler().createTaskBuilder().name("Callback-PlayerDataLoad" + id).execute(() -> {
@@ -265,8 +266,7 @@ public class CharacterService {
     }
 
     private void initActiveCharacter(IActiveCharacter character) {
-        character.getPlayer().sendMessage(Texts.of(Localization.CURRENT_CHARACTER.replaceAll("%1",character.getName())));
-
+        character.getPlayer().sendMessage(Texts.of(Localization.CURRENT_CHARACTER.replaceAll("%1", character.getName())));
         effectService.addEffect(new ManaRegeneration(character), character);
         effectService.addEffect(new CombatEffect(character), character);
     }
@@ -408,6 +408,11 @@ public class CharacterService {
         game.getScheduler().createTaskBuilder().async().name("FetchCharBaseDataAsync-" + player.getUniqueId())
                 .execute(() -> {
                     initSkills(activeCharacter);
+                    //todo all classes, for now only primary
+                    Double exp = characterBase.getClasses().get(characterBase.getPrimaryClass());
+                    if (exp != null) {
+                        addExperiences(activeCharacter, exp, activeCharacter.getPrimaryClass(), true);
+                    }
                     game.getScheduler().createTaskBuilder().name("FetchCharBaseDataCallback-" + player.getUniqueId())
                             .execute(updateAll(activeCharacter)).submit(plugin);
                 }).submit(plugin);
@@ -453,7 +458,7 @@ public class CharacterService {
 
     private void initSkills(ActiveCharacter activeCharacter) {
         for (ExtendedSkillInfo extendedSkillInfo : activeCharacter.getSkills().values()) {
-            extendedSkillInfo.getSkill().onCharacterInit(activeCharacter,extendedSkillInfo.getLevel());
+            extendedSkillInfo.getSkill().onCharacterInit(activeCharacter, extendedSkillInfo.getLevel());
         }
     }
 
@@ -468,7 +473,7 @@ public class CharacterService {
         while (iterator.hasNext()) {
             Map.Entry<String, Long> next = iterator.next();
             if (next.getValue() <= l) ;
-                iterator.remove();
+            iterator.remove();
         }
         for (Map.Entry<String, Integer> stringIntegerEntry : skills.entrySet()) {
             ExtendedSkillInfo info = new ExtendedSkillInfo();
@@ -487,6 +492,8 @@ public class CharacterService {
 
     }
 
+    //todo merge
+
     /**
      * Due to fetchtype Lazy is [u]recommended[/u] to run this method only from async thread.
      *
@@ -497,7 +504,7 @@ public class CharacterService {
     public ActiveCharacter buildActiveCharacterAsynchronously(Player player, CharacterBase characterBase) {
         ActiveCharacter activeCharacter = new ActiveCharacter(player, characterBase);
         activeCharacter.setRace(groupService.getRace(characterBase.getRace()));
-       // activeCharacter.setGuild(groupService.getGuild(characterBase.getGuild()));
+        // activeCharacter.setGuild(groupService.getGuild(characterBase.getGuild()));
         activeCharacter.setPrimaryClass(groupService.getNClass(characterBase.getPrimaryClass()));
         String s = activeCharacter.getPrimaryClass().getnClass().getName();
         Double d = characterBase.getClasses().get(s);
@@ -507,9 +514,13 @@ public class CharacterService {
         recalculateProperties(activeCharacter);
         resolveSkillsCds(characterBase, activeCharacter);
         initSkills(activeCharacter);
+        Double exp = characterBase.getClasses().get(characterBase.getPrimaryClass());
+        if (exp != null) {
+            addExperiences(activeCharacter, exp, activeCharacter.getPrimaryClass(), true);
+        }
         game.getScheduler().createTaskBuilder().name("FetchCharBaseDataCallback-" + player.getUniqueId())
                 .execute(updateAll(activeCharacter)
-        ).submit(plugin);
+                ).submit(plugin);
         return activeCharacter;
     }
 
@@ -623,7 +634,7 @@ public class CharacterService {
         short s = character.getCharacterBase().getSkillPoints();
         character.getCharacterBase().setSkillPoints((short) (s - 1));
         character.getCharacterBase().setUsedSkillPoints((short) (s + 1));
-        character.getCharacterBase().getSkills().put(extendedSkillInfo.getSkill().getName(),extendedSkillInfo.getLevel());
+        character.getCharacterBase().getSkills().put(extendedSkillInfo.getSkill().getName(), extendedSkillInfo.getLevel());
         putInSaveQueue(character.getCharacterBase());
         skill.skillUpgrade(character, event.getLevel());
         return 0;
@@ -682,13 +693,12 @@ public class CharacterService {
         character.getCharacterBase().setUsedSkillPoints((short) (s + 1));
 
 
-
         ExtendedSkillInfo einfo = new ExtendedSkillInfo();
         einfo.setLevel(1);
         einfo.setSkill(skill);
         einfo.setSkillData(skillTree.getSkills().get(skill.getName()));
         character.addSkill(skill.getName().toLowerCase(), einfo);
-        character.getCharacterBase().getSkills().put(skill.getName(),einfo.getLevel());
+        character.getCharacterBase().getSkills().put(skill.getName(), einfo.getLevel());
         putInSaveQueue(character.getCharacterBase());
         skill.skillLearn(character);
         return 0;
@@ -784,10 +794,10 @@ public class CharacterService {
      * @param skillpoint     - skillpoints to be added
      * @param attributepoint - attribute points to be added
      */
-    public void characterAddPoints(IActiveCharacter character, short skillpoint, short attributepoint) {
+    public void characterAddPoints(IActiveCharacter character, int skillpoint, int attributepoint) {
         character.setSkillPoints((short) (character.getSkillPoints() + skillpoint));
         character.setAttributePoints((short) (character.getAttributePoints() + attributepoint));
-        putInSaveQueue(character.getCharacterBase());
+        Gui.sendMessage(character, Localization.CHARACTER_GAINED_POINTS.replaceAll("%1", skillpoint + "").replaceAll("%2", "" + attributepoint));
     }
 
     public int equipWeapon(IActiveCharacter character, Weapon weapon, boolean isOffhand) {
@@ -830,15 +840,75 @@ public class CharacterService {
         return character.canUse(type);
     }
 
-    public int addExperiences(IActiveCharacter character, double exp, ExperienceSource source) {
+    public void addExperiences(IActiveCharacter character, double exp, ExperienceSource source) {
         Set<ExtendedNClass> classes = character.getClasses();
         for (ExtendedNClass aClass : classes) {
             NClass nClass = aClass.getnClass();
-            int maxlevel = nClass.getLevels().length - 1;
-            if (aClass.getLevel() > maxlevel)
-                return 1;
-            //todo
+            if (nClass.hasExperienceSource(source)) {
+                int maxlevel = nClass.getLevels().length - 1;
+                if (aClass.getLevel() > maxlevel)
+                   continue;
+                addExperiences(character, exp, aClass, false);
+
+            }
         }
-        return 0;
     }
+
+    public void addExperiences(IActiveCharacter character, double exp, ExtendedNClass aClass, boolean onlyinit) {
+        if (aClass == ExtendedNClass.Default || !aClass.takesExp()) {
+            return;
+        }
+        double total = aClass.getExperiences();
+        double lvlexp = aClass.getExperiencesFromLevel();
+        int level = aClass.getLevel();
+
+        if (!onlyinit)
+            exp = exp * character.getCharacterProperty(DefaultProperties.experiences_mult);
+
+        double[] levels = aClass.getnClass().getLevels();
+        if (levels == null)
+            return;
+        double levellimit = levels[level];
+
+        double newcurrentexp = lvlexp + exp;
+        while (newcurrentexp > levellimit) {
+            level++;
+            if (!onlyinit) {
+                Gui.showLevelChange(character, aClass, level);
+
+                CharacterGainedLevelEvent event = new CharacterGainedLevelEvent(character, aClass, level, aClass.getnClass().getSkillpointsperlevel(), aClass.getnClass().getAttributepointsperlevel());
+                game.getEventManager().post(event);
+                event.getaClass().setLevel(event.getLevel());
+                characterAddPoints(character, event.getSkillpointsPerLevel(), event.getAttributepointsPerLevel());
+            }
+
+            aClass.setExperiencesFromLevel(0);
+            if (!aClass.takesExp()) {
+                break;
+            }
+            if (level > levels.length-1) {
+                break;
+            }
+            levellimit = levels[level];
+            newcurrentexp -= levellimit;
+        }
+        if (!onlyinit) {
+            aClass.setExperiences(total + exp);
+            aClass.setExperiencesFromLevel(aClass.getExperiencesFromLevel() + exp);
+        } else {
+            aClass.setExperiencesFromLevel(newcurrentexp);
+        }
+        aClass.setLevel(level);
+
+        Map<String, Double> cls = character.getCharacterBase().getClasses();
+        cls.put(aClass.getnClass().getName(), total);
+        if (onlyinit) {
+            //todo msg
+        } else {
+            Gui.showExpChange(character, aClass.getnClass().getName(), exp);
+        }
+
+    }
+
 }
+

@@ -18,6 +18,8 @@
 
 package cz.neumimto.configuration;
 
+import java.util.Collections;
+
 /**
  * Created by NeumimTo on 31.1.2015.
  */
@@ -152,4 +154,7 @@ public class Localization {
 
     @ConfigValue
     public static String CURRENT_CHARACTER = "Selected character: %1";
+
+    @ConfigValue
+    public static String CHARACTER_GAINED_POINTS = "You've gained %1 skillpoints and 2% attribute points";
 }

@@ -99,7 +99,7 @@ public class InfoCommand extends CommandBase {
         } else if (args[0].equalsIgnoreCase("guilds")) {
 
         } else if (args[0].equalsIgnoreCase("classes")){
-
+            printClassList(commandSource);
         } else if (args[0].equalsIgnoreCase("character")) {
             if (!(commandSource instanceof Player)) {
                 if (args.length != 2) {
@@ -114,10 +114,7 @@ public class InfoCommand extends CommandBase {
             Player player = (Player) commandSource;
             IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
             if (!character.isStub()) {
-                String q = "HP: "+character.getHealth().getValue()+"/"+character.getHealth().getMaxValue()+"/"+character.getHealth().getRegen();
-                player.sendMessage(Texts.of(q));
-                q = "Mana: "+character.getMana().getValue()+"/"+character.getMana().getMaxValue()+"/"+character.getMana().getRegen();
-                player.sendMessage(Texts.of(q));
+                Gui.sendStatus(character);
             } else {
                 player.sendMessage(Texts.of(Localization.CHARACTER_IS_REQUIRED));
 
@@ -126,6 +123,10 @@ public class InfoCommand extends CommandBase {
             commandSource.sendMessage(getUsage(commandSource));
         }
         return CommandResult.success();
+    }
+
+    private void printClassList(CommandSource commandSource) {
+        printList(commandSource,groupService.getClasses(),"");
     }
 
     //TODO create inventory menus
@@ -192,7 +193,7 @@ public class InfoCommand extends CommandBase {
     }
 
     private String getSmallInfo(CharacterBase character) {
-        return TextColors.GOLD + "L: " + character.getLevel() + ", C:" + character.getPrimaryClass() + ", R: " + character.getRace() + ", G: " + character.getGuildid();
+        return TextColors.GOLD + ", C:" + character.getPrimaryClass() + ", R: " + character.getRace() + ", G: " + character.getGuildid();
     }
 
 

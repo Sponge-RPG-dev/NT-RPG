@@ -100,23 +100,14 @@ public class Utils {
     public static Living getTargettedEntity(IActiveCharacter character, int range) {
         Player player = character.getPlayer();
         Set<Entity> nearbyEntities = getNearbyEntities(player.getLocation(), range);
-        Iterator<BlockRayHit<World>> iterator = BlockRay.from(character.getPlayer()).blockLimit(range).iterator();
-        while (iterator.hasNext()) {
-            BlockRayHit<World> next = iterator.next();
-            if (!isTransparent(next.getLocation().getBlockType())) {
+        Optional<BlockRayHit<World>> h = BlockRay.from(player).blockLimit(range).filter(BlockRay.onlyAirFilter()).build().end();
+        if (h.isPresent()) {
+            Vector3d lookPos = h.get().getBlockPosition().toDouble();
+            Collection<Entity> entities = player.getWorld().getEntities(entity -> entity != player && entity.getLocation().getPosition().distanceSquared(lookPos) < 2 && isLivingEntity(entity));
+            if (entities.isEmpty())
                 return null;
-            }
-            int blockX = next.getBlockX();
-            int blockY = next.getBlockY();
-            int blockZ = next.getBlockZ();
-            for (Entity n : nearbyEntities) {
-                if (isLivingEntity(n)) {
-                    if (n.getLocation().getBlockX() == blockX
-                            && n.getLocation().getBlockZ() == blockZ
-                            && n.getLocation().getBlockY() == blockY) {
-                        return (Living) n;
-                    }
-                }
+            for (Entity e : entities) {
+                return (Living) e;
             }
         }
         return null;

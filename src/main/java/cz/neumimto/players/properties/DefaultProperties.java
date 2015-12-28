@@ -48,9 +48,6 @@ public class DefaultProperties {
     @Property(default_ = (float)PlayerPropertyService.WALKING_SPEED, name = "walk_speed")
     public static short walk_speed;
 
-    @Property(name = "experiences")
-    public static short experiences;
-
     @Property(name = "experience_mult", default_ = 1)
     public static short experiences_mult;
 

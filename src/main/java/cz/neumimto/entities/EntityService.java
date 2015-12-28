@@ -40,6 +40,7 @@ public class EntityService {
         if (iEntity == null) {
             iEntity = new NEntity();
             iEntity.setExperiences(-1);
+            iEntity.attach((Living) id);
             entityHashMap.put(id.getUniqueId(),iEntity);
             if (!PluginConfig.OVERRIDE_MOBS) {
                 id.offer(Keys.MAX_HEALTH,entityHealth.get(id.getType()));

@@ -74,7 +74,7 @@ public class CommandChoose extends CommandBase {
         }
         Player player = (Player) commandSource;
         if (args[0].equalsIgnoreCase("class")) {
-           if (!commandSource.hasPermission(CommandPermissions.CANT_CHOOSE_CLASS)) {
+      //     if (!commandSource.hasPermission(CommandPermissions.CANT_CHOOSE_CLASS)) {
                 NClass nClass = groupService.getNClass(args[1].toLowerCase());
                 if (nClass == NClass.Default) {
                     player.sendMessage(Texts.of(Localization.NON_EXISTING_GROUP));
@@ -95,10 +95,10 @@ public class CommandChoose extends CommandBase {
                 characterService.updatePlayerGroups(character, nClass, i, null, null);
                 player.sendMessage(Texts.of(Localization.PLAYER_CHOOSED_CLASS.replaceAll("%1", nClass.getName())));
                 return CommandResult.success();
-           }
-           commandSource.sendMessage(Texts.of(Localization.NO_PERMISSIONS));
+        //   }
+        //   commandSource.sendMessage(Texts.of(Localization.NO_PERMISSIONS));
         } else if (args[0].equalsIgnoreCase("race")) {
-            if (!commandSource.hasPermission(CommandPermissions.CANT_CHOOSE_RACE)) {
+        //    if (!commandSource.hasPermission(CommandPermissions.CANT_CHOOSE_RACE)) {
                 IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
                 if (character.isStub()) {
                     player.sendMessage(Texts.of(Localization.CHARACTER_IS_REQUIRED));
@@ -117,7 +117,7 @@ public class CommandChoose extends CommandBase {
                     }
                     player.sendMessage(Texts.of(Localization.PLAYER_CANT_CHANGE_RACE));
                 }
-            }
+          //  }
         } else if (args[0].equalsIgnoreCase("skill")) {
             IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
             if (character.isStub()) {
