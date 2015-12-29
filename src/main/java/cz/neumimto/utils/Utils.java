@@ -140,6 +140,11 @@ public class Utils {
     }
 
 
+    //todo
+    public static boolean canDamage(IActiveCharacter character, Living l) {
+        return true;
+    }
+
     public static boolean isLivingEntity(Entity entity) {
         return entity.get(Keys.HEALTH).isPresent();
     }
