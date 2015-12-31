@@ -18,7 +18,8 @@
 
 package cz.neumimto.players;
 
-import cz.neumimto.Weapon;
+import cz.neumimto.inventory.HotbarObject;
+import cz.neumimto.inventory.Weapon;
 import cz.neumimto.effects.IEffect;
 import cz.neumimto.players.groups.Guild;
 import cz.neumimto.players.groups.NClass;
@@ -75,6 +76,7 @@ public class ActiveCharacter implements IActiveCharacter {
     private transient double weaponDamage;
     private transient double armorvalue;
     private transient DamageType preferedDamageType = null;
+    private transient HotbarObject[] hotbar = new HotbarObject[9];
 
     public ActiveCharacter(Player pl, CharacterBase base) {
         this.pl = pl;
@@ -86,6 +88,16 @@ public class ActiveCharacter implements IActiveCharacter {
         cl.setExperiences(0);
         this.base = base;
         classes.add(cl);
+    }
+
+    @Override
+    public HotbarObject[] getHotbar() {
+        return hotbar;
+    }
+
+    @Override
+    public void setHotbarSlot(int i, HotbarObject o) {
+        hotbar[i] = o;
     }
 
     public boolean isSilenced() {

@@ -19,7 +19,7 @@ package cz.neumimto.players;
 
 import cz.neumimto.GroupService;
 import cz.neumimto.NtRpgPlugin;
-import cz.neumimto.Weapon;
+import cz.neumimto.inventory.Weapon;
 import cz.neumimto.configuration.Localization;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.effects.*;

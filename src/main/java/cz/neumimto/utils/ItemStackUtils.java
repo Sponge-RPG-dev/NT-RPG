@@ -20,28 +20,35 @@ package cz.neumimto.utils;
 
 import com.typesafe.config.Config;
 import cz.neumimto.NtRpgPlugin;
-import cz.neumimto.Weapon;
+import cz.neumimto.inventory.Weapon;
 import cz.neumimto.configuration.Localization;
 import cz.neumimto.effects.IGlobalEffect;
 import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.groups.NClass;
-import cz.neumimto.skills.SkillData;
-import cz.neumimto.skills.SkillItemIcon;
-import cz.neumimto.skills.SkillSettings;
-import cz.neumimto.skills.SkillTree;
+import cz.neumimto.skills.*;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.DataContainer;
+import org.spongepowered.api.data.DataHolder;
+import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.manipulator.immutable.item.ImmutableEnchantmentData;
 import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
+import org.spongepowered.api.data.manipulator.mutable.item.EnchantmentData;
 import org.spongepowered.api.data.manipulator.mutable.item.LoreData;
+import org.spongepowered.api.data.merge.MergeFunction;
+import org.spongepowered.api.data.meta.ItemEnchantment;
+import org.spongepowered.api.data.value.BaseValue;
+import org.spongepowered.api.data.value.immutable.ImmutableValue;
 import org.spongepowered.api.data.value.mutable.ListValue;
 import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 
-import javax.transaction.NotSupportedException;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
@@ -108,8 +115,6 @@ public class ItemStackUtils {
         addAll(pickaxes);
         addAll(hoes);
     }};
-
-
 
     public static boolean isSword(ItemType type) {
         return swords.contains(type);
@@ -207,22 +212,9 @@ public class ItemStackUtils {
 
 
     public static DisplayNameData setDisplayName(Text name) {
-        try {
-            throw new NotSupportedException("setDisplayName(Text)");
-        } catch (NotSupportedException e) {
-            e.printStackTrace();
-        }
         final DisplayNameData itemName = Sponge.getGame().getDataManager().getManipulatorBuilder(DisplayNameData.class).get().create();
         itemName.set(Keys.DISPLAY_NAME, name);
         return itemName;
-    }
-
-    public static LoreData setLore(Text... texts) {
-        final LoreData loreData = Sponge.getGame().getDataManager().getManipulatorBuilder(LoreData.class).get().create();
-        final ListValue<Text> locallore = loreData.lore();
-        for (Text t : texts)
-            locallore.add(t);
-        return loreData;
     }
 
     public static ItemStack skillToItemStack(SkillItemIcon icon, NClass nClass, CharacterBase character) {
@@ -312,7 +304,7 @@ public class ItemStackUtils {
         Map<IGlobalEffect, Integer> map = new HashMap<>();
         texts.stream().filter(t -> t.getFormat().getColor() == TextColors.AQUA).forEach(t -> {
             String eff = Texts.toPlain(t).substring(3).toLowerCase();
-            String[] arr = eff.split(":");
+            String[] arr = eff.split(": ");
             int level = Integer.parseInt(arr[1]);
             IGlobalEffect effect = globalScope.effectService.getGlobalEffect(arr[0]);
             if (effect != null) {
@@ -322,18 +314,30 @@ public class ItemStackUtils {
         return map;
     }
 
-    /**
-     * Creates Weapon object from itemstack
-     * @param itemStack
-     * @return
-     */
-    public static Weapon itemStackToWeapon(ItemStack itemStack) {
-        if (itemStack == null)
-            return Weapon.EmptyHand;
-        Map<IGlobalEffect, Integer> itemEffects = getItemEffects(itemStack);
-        Weapon weapon = new Weapon(itemStack.getItem());
-        weapon.setEffects(itemEffects);
-        return weapon;
+    public static List<Text> addItemEffect(ItemStack itemStack, IGlobalEffect globalEffect, int level) {
+        Optional<List<Text>> texts = itemStack.get(Keys.ITEM_LORE);
+        List<Text> lore = null;
+        if (texts.isPresent()) {
+            lore = texts.get();
+        } else {
+            lore = new ArrayList<>();
+        }
+        lore.add(Texts.of(TextColors.AQUA,globalEffect.getName()+":" + level));
+        return lore;
     }
+
+    public static Set<ItemType> consumables = new HashSet<ItemType>() {{
+        addAll(Arrays.asList(APPLE,
+                GOLDEN_APPLE,
+                BAKED_POTATO,
+                CARROT, POTION, BREAD, POTATO,
+                POISONOUS_POTATO, ROTTEN_FLESH, PORKCHOP, COOKED_BEEF, COOKED_CHICKEN, COOKED_MUTTON,
+                COOKIE, COOKED_RABBIT, COOKED_FISH, FISH, CHICKEN,MELON));
+    }};
+
+    public static boolean isConsumable(ItemType type) {
+        return consumables.contains(type);
+    }
+
 
 }

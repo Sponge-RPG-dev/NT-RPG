@@ -34,12 +34,18 @@ import cz.neumimto.players.groups.NClass;
 import cz.neumimto.players.groups.Race;
 import cz.neumimto.skills.ISkill;
 import cz.neumimto.skills.SkillService;
+import cz.neumimto.utils.ItemStackUtils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Texts;;import java.util.List;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
+import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.chat.ChatType;
+import org.spongepowered.api.text.chat.ChatTypes;;import java.util.List;
 
 /**
  * Created by NeumimTo on 22.7.2015.
@@ -144,6 +150,17 @@ public class CommandChoose extends CommandBase {
             } else if (a.equalsIgnoreCase("refund")) {
                 if (PluginConfig.CAN_REFUND_SKILL) {
                     int i = characterService.refundSkill(character, skill, clazz);
+                }
+            } else if(a.equalsIgnoreCase("bind")) {
+                if (character.hasSkill(skill.getName())) {
+                    ItemStack is = ItemStackUtils.createSkillBind(skill);
+                    if (!player.getItemInHand().isPresent()) {
+                        player.setItemInHand(is);
+                    } else {
+                        player.sendMessage(Texts.of(Localization.EMPTY_HAND_REQUIRED));
+                    }
+                } else {
+                    character.sendMessage(Localization.NO_ACCESS_TO_SKILL);
                 }
             }
         } else if (args[0].equalsIgnoreCase("character")) {

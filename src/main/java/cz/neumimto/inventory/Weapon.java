@@ -16,10 +16,13 @@
  *     
  */
 
-package cz.neumimto;
+package cz.neumimto.inventory;
 
+import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.effects.IGlobalEffect;
+import cz.neumimto.players.IActiveCharacter;
 import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.inventory.entity.Hotbar;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +30,7 @@ import java.util.Map;
 /**
  * Created by NeumimTo on 31.1.2015.
  */
-public class Weapon {
+public class Weapon extends HotbarObject {
 
     public static Weapon EmptyHand = new Weapon(null);
 
@@ -35,8 +38,7 @@ public class Weapon {
     protected boolean isShield;
     private final ItemType itemType;
     private Map<IGlobalEffect, Integer> effects = new HashMap<>();
-    private byte slot;
-
+    boolean current;
 
     public Weapon(ItemType itemType) {
         this.itemType = itemType;
@@ -44,14 +46,6 @@ public class Weapon {
 
     public ItemType getItemType() {
         return itemType;
-    }
-
-    public byte getSlot() {
-        return slot;
-    }
-
-    public void setSlot(byte slot) {
-        this.slot = slot;
     }
 
     public void setDamage(float f) {
@@ -80,5 +74,17 @@ public class Weapon {
 
     public void setEffects(Map<IGlobalEffect, Integer> effects) {
         this.effects = effects;
+    }
+
+    @Override
+    public void onRightClick(IActiveCharacter character) {
+        if (!current)
+            NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character,this);
+    }
+
+    @Override
+    public void onLeftClick(IActiveCharacter character) {
+        if (!current)
+            NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character,this);
     }
 }

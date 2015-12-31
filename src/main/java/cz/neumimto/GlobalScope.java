@@ -22,6 +22,7 @@ import cz.neumimto.damage.DamageService;
 import cz.neumimto.effects.EffectService;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.inventory.InventoryService;
 import cz.neumimto.players.CharacterService;
 import cz.neumimto.players.properties.PlayerPropertyService;
 import cz.neumimto.skills.SkillService;
@@ -57,4 +58,6 @@ public class GlobalScope {
     @Inject
     public DamageService damageService;
 
+    @Inject
+    public InventoryService inventorySerivce;
 }

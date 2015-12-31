@@ -20,9 +20,9 @@ package cz.neumimto.players;
 
 import cz.neumimto.IEntity;
 import cz.neumimto.IEntityType;
-import cz.neumimto.Weapon;
+import cz.neumimto.inventory.HotbarObject;
+import cz.neumimto.inventory.Weapon;
 import cz.neumimto.effects.IEffect;
-import cz.neumimto.effects.IEffectConsumer;
 import cz.neumimto.players.groups.Guild;
 import cz.neumimto.players.groups.NClass;
 import cz.neumimto.players.groups.Race;
@@ -197,6 +197,9 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     void setInvulnerable(boolean b);
 
+    HotbarObject[] getHotbar();
+
+    void setHotbarSlot(int i,HotbarObject o);
 
     @Override
     double getHp();

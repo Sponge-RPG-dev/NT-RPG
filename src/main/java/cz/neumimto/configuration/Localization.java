@@ -18,6 +18,8 @@
 
 package cz.neumimto.configuration;
 
+import org.spongepowered.api.text.selector.Selector;
+
 import java.util.Collections;
 
 /**
@@ -157,4 +159,24 @@ public class Localization {
 
     @ConfigValue
     public static String CHARACTER_GAINED_POINTS = "You've gained %1 skillpoints and 2% attribute points";
+
+    @ConfigValue
+    public static String NON_EXISTING_GLOBAL_EFFECT = "The effect with given name does not exists";
+
+    @ConfigValue
+    public static String NO_ITEM_IN_HAND = "An item in hand is required for this action";
+
+    @ConfigValue
+    public static String NO_ACCESS_TO_SKILL = "You dont have access to this skill.";
+
+    @ConfigValue
+    public static String CAST_SKILL_ON_RIGHTLICK = "Casts skill %1 on rightclick";
+
+    @ConfigValue
+    public static String EMPTY_HAND_REQUIRED = "An empty hand is required";
+
+    @ConfigValue
+    public static String CAST_SKILl_ON_LEFTCLICK = "Casts skill %2 on rightclick";
+    @ConfigValue
+    public static String ITEM_SKILLBIND_FOOTER = "For casting bounded skills you must have access to the skills via command /skill ";
 }

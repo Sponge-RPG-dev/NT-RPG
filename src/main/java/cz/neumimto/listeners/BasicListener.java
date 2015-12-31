@@ -21,8 +21,7 @@ package cz.neumimto.listeners;
 import cz.neumimto.IEntity;
 import cz.neumimto.IEntityType;
 import cz.neumimto.ResourceLoader;
-import cz.neumimto.Weapon;
-import cz.neumimto.configuration.Localization;
+import cz.neumimto.inventory.Weapon;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.damage.DamageService;
 import cz.neumimto.damage.ISkillDamageSource;
@@ -30,25 +29,21 @@ import cz.neumimto.effects.EffectService;
 import cz.neumimto.effects.EffectSource;
 import cz.neumimto.effects.IGlobalEffect;
 import cz.neumimto.entities.EntityService;
-import cz.neumimto.entities.IMob;
-import cz.neumimto.entities.NEntity;
-import cz.neumimto.events.character.PlayerCombatEvent;
 import cz.neumimto.inventory.InventoryService;
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.CharacterService;
 import cz.neumimto.players.ExperienceSource;
 import cz.neumimto.players.IActiveCharacter;
+import cz.neumimto.skills.ExtendedSkillInfo;
 import cz.neumimto.skills.ISkill;
 import cz.neumimto.skills.ProjectileProperties;
+import cz.neumimto.skills.SkillService;
 import cz.neumimto.utils.ItemStackUtils;
 import cz.neumimto.utils.Utils;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
-import org.spongepowered.api.entity.living.Creature;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Projectile;
@@ -60,24 +55,22 @@ import org.spongepowered.api.event.cause.entity.damage.DamageModifierTypes;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.cause.entity.damage.source.IndirectEntityDamageSource;
-import org.spongepowered.api.event.entity.ChangeEntityEquipmentEvent;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.entity.InteractEntityEvent;
 import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
-import org.spongepowered.api.event.entity.projectile.TargetProjectileEvent;
+import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.user.BanUserEvent;
-import org.spongepowered.api.event.world.chunk.UnloadChunkEvent;
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 12.2.2015.
@@ -103,6 +96,8 @@ public class BasicListener {
     @Inject
     private EntityService entityService;
 
+    @Inject
+    private SkillService skillService;
 
     @Listener
     public void onPlayerJoin(ClientConnectionEvent.Auth event) {
@@ -161,40 +156,59 @@ public class BasicListener {
                     .filter(iEffect1 -> iEffect1.getEffectSource() == EffectSource.TEMP && iEffect1.requiresRegister())
                     .forEach(iEffect -> effectService.removeEffect(iEffect, character));
         } else {
-            Optional<Player> first = event.getCause().first(Player.class);
+            Optional<EntityDamageSource> first = event.getCause().first(EntityDamageSource.class);
             if (first.isPresent()) {
+                EntityDamageSource entityDamageSource = first.get();
                 entityService.remove(targetEntity.getUniqueId());
                 double exp = entityService.getExperiences(targetEntity.getType());
                 //todo share in party
-                IActiveCharacter character = characterService.getCharacter(first.get().getUniqueId());
-                characterService.addExperiences(character,exp, ExperienceSource.PVE);
+                IEntity source = entityService.get(entityDamageSource.getSource());
+                if (source.getType() == IEntityType.CHARACTER) {
+                    IActiveCharacter character = characterService.getCharacter(first.get().getSource().getUniqueId());
+                    characterService.addExperiences(character, exp, ExperienceSource.PVE);
+                }
             }
         }
     }
 
     @Listener
-    public void onItemChange(ChangeEntityEquipmentEvent.TargetPlayer event) {
-        Player player = event.getTargetEntity();
-        if (event.getItemStack().isPresent()) {
-            IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-            Transaction<ItemStackSnapshot> itemStackSnapshotTransaction = event.getItemStack().get();
-            ItemStackSnapshot finalSnapshot = itemStackSnapshotTransaction.getFinal();
-            if (ItemStackUtils.isWeapon(finalSnapshot.getType())) {
-                if (characterService.canUseItemType(character, finalSnapshot.getType())) {
-                    //remove old
-                    Weapon weapon = character.getMainHand();
-                    if (weapon != Weapon.EmptyHand) {
-                        Map<IGlobalEffect, Integer> effects = weapon.getEffects();
-                        effectService.removeGlobalEffectsAsEnchantments(effects, character);
-                    }
-                    //add new
-                    weapon = ItemStackUtils.itemStackToWeapon(finalSnapshot.createStack());
-                    character.setMainHand(weapon);
-                    effectService.applyGlobalEffectsAsEnchantments(weapon.getEffects(), character);
-                    damageService.recalculateCharacterWeaponDamage(character);
-                }
+    public void onItemPickup(ChangeInventoryEvent.Pickup event) {
+        Optional<Player> first = event.getCause().first(Player.class);
+        if (first.isPresent()) {
+            for (SlotTransaction slotTransaction : event.getTransactions()) {
+                System.out.print(slotTransaction.getSlot());
             }
         }
+    }
+
+    @Listener
+    public void onItemEquip(ChangeInventoryEvent.Transfer event) {
+        Optional<Player> first = event.getCause().first(Player.class);
+        if (first.isPresent()) {
+            for (SlotTransaction slotTransaction : event.getTransactions()) {
+                System.out.print(slotTransaction.getSlot());
+            }
+        }
+    }
+
+    @Listener
+    public void onItemEquip(ChangeInventoryEvent.Held event) {
+        Optional<Player> first = event.getCause().first(Player.class);
+        if (first.isPresent()) {
+            for (SlotTransaction slotTransaction : event.getTransactions()) {
+                System.out.print("HELD" + slotTransaction.getSlot());
+            }
+        }
+    }
+
+    @Listener
+    public void onItemChange(ChangeInventoryEvent.Held event) {
+        List<SlotTransaction> transactions = event.getTransactions();
+        Optional<Player> first = event.getCause().first(Player.class);
+        if (first.isPresent()) {
+
+        }
+
     }
 
 
@@ -206,19 +220,45 @@ public class BasicListener {
         if (!Utils.isLivingEntity(event.getTargetEntity()))
             return;
         IEntity entity = entityService.get(event.getTargetEntity());
+        Optional<Player> first = event.getCause().first(Player.class);
+        if (first.isPresent()) {
+            IActiveCharacter character = characterService.getCharacter(first.get().getUniqueId());
+            if (character.isStub())
+                return;
+            //todo
+            int activeHotbarslot = 8;
+            character.getHotbar()[activeHotbarslot].onLeftClick(character);
+        }
         if (entity.getType() == IEntityType.CHARACTER) {
             IActiveCharacter target = characterService.getCharacter(event.getTargetEntity().getUniqueId());
             if (target.isStub() && !PluginConfig.ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS) {
                 event.setCancelled(true);
                 return;
             }
-            Optional<Player> first = event.getCause().first(Player.class);
             if (first.isPresent()) {
                 Player player = first.get();
                 IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
                 if (character.getParty() == target.getParty() && !character.getParty().isFriendlyfire()) {
                     event.setCancelled(true);
                 }
+            }
+        }
+    }
+
+    @Listener
+    public void onRightClick(InteractEntityEvent.Secondary event) {
+        Optional<Player> first = event.getCause().first(Player.class);
+        if (first.isPresent()) {
+            Player pl = first.get();
+            Optional<ItemStack> itemInHand = pl.getItemInHand();
+            if (itemInHand.isPresent()) {
+                ItemStack itemStack = itemInHand.get();
+                IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());
+                if (character.isStub())
+                    return;
+                //todo
+                int activeHotbarslot = 8;
+                character.getHotbar()[activeHotbarslot].onRightClick(character);
             }
         }
     }
@@ -232,10 +272,8 @@ public class BasicListener {
     }
 
 /*
-//TODO
     @Listener
     public void onChunkDespawn(UnloadChunkEvent event) {
-
         entityService.remove(event.getTargetChunk().getEntities(Utils::isLivingEntity));
     }
 */

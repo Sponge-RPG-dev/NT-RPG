@@ -19,16 +19,28 @@
 package cz.neumimto.commands;
 
 import cz.neumimto.ResourceLoader;
+import cz.neumimto.configuration.Localization;
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.effects.EffectService;
+import cz.neumimto.effects.IGlobalEffect;
 import cz.neumimto.players.CharacterService;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.skills.*;
+import cz.neumimto.utils.ItemStackUtils;
 import org.slf4j.Logger;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 
 @ResourceLoader.Command
@@ -36,6 +48,9 @@ public class CommandAdmin extends CommandBase {
 
     @Inject
     private SkillService skillService;
+
+    @Inject
+    private EffectService effectService;
 
     @Inject
     private CharacterService characterService;
@@ -86,6 +101,27 @@ public class CommandAdmin extends CommandBase {
 
         } else if (a[0].equalsIgnoreCase("delete")) {
 
+        } else if (a[0].equalsIgnoreCase("enchantment")) {
+            if (a[1].equalsIgnoreCase("add")) {
+                String name = a[2];
+                IGlobalEffect globalEffect = effectService.getGlobalEffect(name);
+                if (globalEffect == null) {
+                    commandSource.sendMessage(Texts.of(Localization.NON_EXISTING_GLOBAL_EFFECT));
+                } else {
+                    Player pl = (Player) commandSource;
+                    if (pl.getItemInHand().isPresent()) {
+                        ItemStack itemStack = pl.getItemInHand().get();
+                        List<Text> texts = ItemStackUtils.addItemEffect(itemStack, globalEffect, Integer.parseInt(a[3]));
+                        itemStack.offer(Keys.ITEM_LORE, texts);
+                        pl.setItemInHand(itemStack);
+                        pl.sendMessage(Texts.of("Enchantment " + globalEffect.getName()+"added"));
+                    } else {
+                        pl.sendMessage(Texts.of(Localization.NO_ITEM_IN_HAND));
+                    }
+                }
+            } else if (a[1].equalsIgnoreCase("remove")) {
+
+            }
         }
         return CommandResult.success();
     }
