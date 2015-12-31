@@ -31,6 +31,7 @@ public class Localization {
 
     @ConfigValue
     public static String NO_MANA = "Not enough mana";
+
     @ConfigValue
     public static String NO_HP = "Not enough hp";
 
@@ -177,6 +178,10 @@ public class Localization {
 
     @ConfigValue
     public static String CAST_SKILl_ON_LEFTCLICK = "Casts skill %2 on rightclick";
+
     @ConfigValue
     public static String ITEM_SKILLBIND_FOOTER = "For casting bounded skills you must have access to the skills via command /skill ";
+
+    @ConfigValue
+    public static String RUNE = "Rune";
 }

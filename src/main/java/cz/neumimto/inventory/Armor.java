@@ -26,10 +26,7 @@ import org.spongepowered.api.item.ItemType;
  */
 public class Armor extends Weapon {
 
-    public Armor(IActiveCharacter character, ItemType type) {
-        super(character, type);
-        isShield = false;
-        damage = 0;
+    public Armor(ItemType itemType) {
+        super(itemType);
     }
-
 }

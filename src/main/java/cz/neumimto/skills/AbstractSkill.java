@@ -61,6 +61,10 @@ public abstract class AbstractSkill implements ISkill {
         return name;
     }
 
+    public void setLore(String lore) {
+        this.lore = lore;
+    }
+
     @Override
     public void setName(String name) {
         this.name = name;

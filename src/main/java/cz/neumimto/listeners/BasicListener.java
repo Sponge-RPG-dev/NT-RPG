@@ -181,36 +181,6 @@ public class BasicListener {
         }
     }
 
-    @Listener
-    public void onItemEquip(ChangeInventoryEvent.Transfer event) {
-        Optional<Player> first = event.getCause().first(Player.class);
-        if (first.isPresent()) {
-            for (SlotTransaction slotTransaction : event.getTransactions()) {
-                System.out.print(slotTransaction.getSlot());
-            }
-        }
-    }
-
-    @Listener
-    public void onItemEquip(ChangeInventoryEvent.Held event) {
-        Optional<Player> first = event.getCause().first(Player.class);
-        if (first.isPresent()) {
-            for (SlotTransaction slotTransaction : event.getTransactions()) {
-                System.out.print("HELD" + slotTransaction.getSlot());
-            }
-        }
-    }
-
-    @Listener
-    public void onItemChange(ChangeInventoryEvent.Held event) {
-        List<SlotTransaction> transactions = event.getTransactions();
-        Optional<Player> first = event.getCause().first(Player.class);
-        if (first.isPresent()) {
-
-        }
-
-    }
-
 
 
     @Listener(order = Order.BEFORE_POST)

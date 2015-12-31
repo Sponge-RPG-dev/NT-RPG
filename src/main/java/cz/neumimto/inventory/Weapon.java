@@ -22,8 +22,10 @@ import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.effects.IGlobalEffect;
 import cz.neumimto.players.IActiveCharacter;
 import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,6 +41,7 @@ public class Weapon extends HotbarObject {
     private final ItemType itemType;
     private Map<IGlobalEffect, Integer> effects = new HashMap<>();
     boolean current;
+    private WeakReference<ItemStack> itemStack;
 
     public Weapon(ItemType itemType) {
         this.itemType = itemType;
@@ -86,5 +89,13 @@ public class Weapon extends HotbarObject {
     public void onLeftClick(IActiveCharacter character) {
         if (!current)
             NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character,this);
+    }
+
+    public ItemStack getItemStack() {
+        return itemStack.get();
+    }
+
+    public void setItemStack(ItemStack i ){
+        itemStack = new WeakReference<ItemStack>(i);
     }
 }

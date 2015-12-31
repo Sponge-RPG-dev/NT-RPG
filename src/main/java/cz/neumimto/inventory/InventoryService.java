@@ -157,8 +157,6 @@ public class InventoryService {
         return skill;
     }
 
-    private static Text ItemBindFirstLoreLineLine = Texts.of(TextColors.RED, "▒▒▒▒▒▒▒▒▒");
-
     //todo is it possible to attach persistent custom data to an itemstacks except lore?
     public void createHotbarSkill(ItemStack is, ISkill right, ISkill left) {
         Optional<List<Text>> texts = is.get(Keys.ITEM_LORE);
@@ -169,23 +167,31 @@ public class InventoryService {
             lore = new ArrayList<>();
         }
         is.offer(Keys.DISPLAY_NAME, Texts.of(TextColors.GOLD, TextStyles.ITALIC, left != null ? left.getName() + " «" : "", right != null ? "» " +right.getName() : ""));
-        lore.add(ItemBindFirstLoreLineLine);
         if (right != null) {
-            lore.add(Texts.of(Localization.CAST_SKILL_ON_RIGHTLICK.replaceAll("%1", right.getName())));
-            if (right.getDescription() != null)
-                lore.add(Texts.of("* " + right.getDescription()));
-            if (right.getLore() != null)
-                lore.add(Texts.of(TextStyles.ITALIC,"* " + right.getLore()));
-        }
+            lore.add(Texts.of(TextColors.YELLOW,Localization.CAST_SKILL_ON_RIGHTLICK.replaceAll("%1", right.getName())));
+            makeDesc(right,lore);
+       }
         if (left != null) {
-            lore.add(Texts.of(Localization.CAST_SKILL_ON_RIGHTLICK.replaceAll("%1", left.getName())));
-            if (left.getDescription() != null)
-                lore.add(Texts.of("* " + left.getDescription()));
-            if (left.getLore() != null)
-                lore.add(Texts.of(TextStyles.ITALIC,"* " + left.getLore()));
+            lore.add(Texts.of(TextColors.YELLOW,Localization.CAST_SKILL_ON_RIGHTLICK.replaceAll("%1", left.getName())));
+            makeDesc(left,lore);
         }
-        lore.add(Texts.of(TextColors.GRAY, Localization.ITEM_SKILLBIND_FOOTER));
+        for (String a : Localization.ITEM_SKILLBIND_FOOTER.split("\n"))  {
+            lore.add(Texts.of(TextColors.GRAY, a));
+        }
         is.offer(Keys.ITEM_LORE, lore);
+    }
+
+    private void makeDesc(ISkill skill, List<Text> lore) {
+        if (skill.getDescription() != null) {
+            for (String s : skill.getDescription().split("\n")) {
+                lore.add(Texts.of(TextColors.GRAY, "* " + s));
+            }
+        }
+        if (skill.getLore() != null) {
+            for (String s : skill.getDescription().split("\n")) {
+                lore.add(Texts.of(TextColors.GREEN, TextStyles.ITALIC, "* " + skill.getLore()));
+            }
+        }
     }
 
     public void onRightClick(IActiveCharacter character, int slot) {
@@ -202,6 +208,10 @@ public class InventoryService {
         }
     }
 
+    public void changeEquipedWeapon(IActiveCharacter character, Weapon weapon) {
+        changeEquipedWeapon(character,weapon.getItemStack());
+    }
+    //todo
     public void changeEquipedWeapon(IActiveCharacter character, ItemStack weapon) {
         //old
         Weapon mainHand = character.getMainHand();
@@ -210,7 +220,7 @@ public class InventoryService {
         //new
         Weapon weapon1 = buildHotbarWeapon(character, weapon);
         effectService.applyGlobalEffectsAsEnchantments(weapon1.getEffects(),character);
-
+        weapon1.setItemStack(weapon);
         int slot = mainHand.getSlot();
         character.setHotbarSlot(slot, weapon1);
 

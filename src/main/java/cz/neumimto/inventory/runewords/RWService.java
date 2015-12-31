@@ -1,16 +1,24 @@
-package cz.neumimto.effects.runewords;
+package cz.neumimto.inventory.runewords;
 
 import cz.neumimto.GroupService;
 import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.Pair;
+import cz.neumimto.configuration.Localization;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.effects.EffectService;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.utils.ItemStackUtils;
+import cz.neumimto.utils.XORShiftRnd;
 import org.slf4j.Logger;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.format.TextColors;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +29,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static cz.neumimto.utils.Utils.not;
 
@@ -47,7 +54,7 @@ public class RWService {
     private Map<String,Rune> runes = new HashMap<>();
     private final Pattern socket = Pattern.compile("\\{@\\}");
     private final Path file = Paths.get(NtRpgPlugin.workingDir,"Runes.conf");
-
+    private List<ItemType> allowedRuneItemTypes = new ArrayList<>();
 
 
     @PostProcess(priority = 8000)
@@ -68,7 +75,12 @@ public class RWService {
         for (RuneWordTemplate runeWord : dao.getAllRws(p)) {
             runewords.put(runeWord.getName().toLowerCase(),getRuneword(runeWord));
         }
-
+        for (String s : PluginConfig.ALLOWED_RUNES_ITEMTYPES) {
+            Optional<ItemType> type = Sponge.getGame().getRegistry().getType(ItemType.class, s);
+            if (type.isPresent()) {
+                allowedRuneItemTypes.add(type.get());
+            }
+        }
     }
 
     protected RuneWord getRuneword(RuneWordTemplate template) {
@@ -140,4 +152,40 @@ public class RWService {
         return runes.get(rune.toLowerCase());
     }
 
+    public Map<String, Rune> getRunes() {
+        return runes;
+    }
+
+    public ItemStack toItemStack(Rune r) {
+        XORShiftRnd rnd = new XORShiftRnd();
+        int i = rnd.nextInt(allowedRuneItemTypes.size()-1);
+        ItemType type = allowedRuneItemTypes.get(i);
+        ItemStack.Builder builder = ItemStack.builder();
+        ItemStack stack = builder.quantity(1).itemType(type).build();
+        stack.offer(Keys.DISPLAY_NAME,Texts.of(TextColors.GOLD, r.getName()));
+        stack.offer(Keys.ITEM_LORE,Arrays.asList(Texts.of(TextColors.DARK_PURPLE, Localization.RUNE)));
+        return stack;
+    }
+
+    public Rune getRune(ItemStack i) {
+        Rune r = null;
+        Optional<Text> text = i.get(Keys.DISPLAY_NAME);
+        if (text.isPresent()) {
+            Text text1 = text.get();
+            if (text1.getColor() == TextColors.GOLD) {
+                Optional<List<Text>> texts = i.get(Keys.ITEM_LORE);
+                if (texts.isPresent()) {
+                    List<Text> lore = texts.get();
+                    if (lore.size() > 0) {
+                        Text line = lore.get(0);
+                        if (line.getColor() == TextColors.DARK_PURPLE) {
+                            String s = Texts.toPlain(line);
+                            r = getRune(s);
+                        }
+                    }
+                }
+            }
+        }
+        return r;
+    }
 }

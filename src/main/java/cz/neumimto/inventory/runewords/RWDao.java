@@ -1,14 +1,9 @@
-package cz.neumimto.effects.runewords;
+package cz.neumimto.inventory.runewords;
 
 import com.typesafe.config.*;
-import cz.neumimto.NtRpgPlugin;
-import cz.neumimto.Pair;
-import cz.neumimto.configuration.*;
 import cz.neumimto.core.ioc.Singleton;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.*;
 
 /**

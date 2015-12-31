@@ -23,10 +23,13 @@ import cz.neumimto.configuration.Localization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.EffectService;
 import cz.neumimto.effects.IGlobalEffect;
+import cz.neumimto.inventory.runewords.RWService;
+import cz.neumimto.inventory.runewords.Rune;
 import cz.neumimto.players.CharacterService;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.skills.*;
 import cz.neumimto.utils.ItemStackUtils;
+import cz.neumimto.utils.XORShiftRnd;
 import org.slf4j.Logger;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -57,6 +60,9 @@ public class CommandAdmin extends CommandBase {
 
     @Inject
     private Logger logger;
+
+    @Inject
+    private RWService runewordService;
 
     public CommandAdmin() {
         setDescription("Bypasses many plugin restrictions, allows you to force execute skill, set character properties..., bad use of this command may breaks plugin mechanics or cause exceptions.");
@@ -114,13 +120,20 @@ public class CommandAdmin extends CommandBase {
                         List<Text> texts = ItemStackUtils.addItemEffect(itemStack, globalEffect, Integer.parseInt(a[3]));
                         itemStack.offer(Keys.ITEM_LORE, texts);
                         pl.setItemInHand(itemStack);
-                        pl.sendMessage(Texts.of("Enchantment " + globalEffect.getName()+"added"));
+                        pl.sendMessage(Texts.of("Enchantment " + globalEffect.getName()+" added"));
                     } else {
                         pl.sendMessage(Texts.of(Localization.NO_ITEM_IN_HAND));
                     }
                 }
             } else if (a[1].equalsIgnoreCase("remove")) {
 
+            }
+        } else if (a[0].equalsIgnoreCase("rune")) {
+            Rune r = runewordService.getRune(a[1]);
+            if (r != null) {
+                Player pl = (Player) commandSource;
+                ItemStack is = runewordService.toItemStack(r);
+                pl.setItemInHand(is);
             }
         }
         return CommandResult.success();

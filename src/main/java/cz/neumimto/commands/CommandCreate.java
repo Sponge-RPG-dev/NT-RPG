@@ -27,6 +27,7 @@ import cz.neumimto.configuration.Localization;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.gui.Gui;
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.inventory.InventoryService;
 import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.CharacterService;
 import cz.neumimto.players.IActiveCharacter;
@@ -34,11 +35,15 @@ import cz.neumimto.players.groups.Guild;
 import cz.neumimto.players.groups.NClass;
 import cz.neumimto.players.groups.Race;
 import cz.neumimto.players.parties.Party;
+import cz.neumimto.skills.ExtendedSkillInfo;
+import cz.neumimto.skills.ISkill;
+import cz.neumimto.skills.SkillService;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Texts;
 
 /**
@@ -59,6 +64,13 @@ public class CommandCreate extends CommandBase {
     @Inject
     GroupService groupService;
 
+
+    @Inject
+    private InventoryService inventoryService;
+
+    @Inject
+    private SkillService skillService;
+
     public CommandCreate() {
         addAlias(CommandPermissions.COMMAND_CREATE_ALIAS);
         setUsage(CommandLocalization.COMMAND_CREATE_USAGE);
@@ -69,14 +81,10 @@ public class CommandCreate extends CommandBase {
     public CommandResult process(CommandSource commandSource, String s) throws CommandException {
         if (commandSource instanceof Player) {
             String[] args = s.split(" ");
-            if (args.length != 2) {
-                commandSource.sendMessage(Texts.of(getUsage(commandSource)));
-                return CommandResult.empty();
-            }
             if (args[0].equalsIgnoreCase("character")) {
                 game.getScheduler().createTaskBuilder().async().execute(() -> {
                     Player player = (Player) commandSource;
-                    int i = characterService.canCreateNewCharacter(player.getUniqueId(),args[1]);
+                    int i = characterService.canCreateNewCharacter(player.getUniqueId(), args[1]);
                     if (i == 1) {
                         commandSource.sendMessage(Texts.of(Localization.REACHED_CHARACTER_LIMIT));
                     } else if (i == 2) {
@@ -114,6 +122,28 @@ public class CommandCreate extends CommandBase {
                 String name = args[1];
                 Guild guild = new Guild();
                 guild.setName(name);
+            } else if (args[0].equalsIgnoreCase("bind")) {
+                IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
+                if (args.length <= 2) {
+                    character.sendMessage("/create bind [r {skillname}] [l {skillname}]");
+                    return CommandResult.empty();
+                }
+                if (!character.getPlayer().getItemInHand().isPresent()) {
+                    ISkill r = null;
+                    ISkill l = null;
+                    for (int i = 1; i < args.length; i += 2) {
+                        if (args[i].equalsIgnoreCase("r")) {
+                            r = skillService.getSkill(args[i + 1]);
+                        } else if (args[i].equalsIgnoreCase("l")) {
+                            l = skillService.getSkill(args[i + 1]);
+                        }
+                    }
+                    ItemStack i = ItemStack.of(InventoryService.ITEM_SKILL_BIND, 1);
+                    inventoryService.createHotbarSkill(i,r,l);
+                    character.getPlayer().setItemInHand(i);
+                } else {
+                    character.getPlayer().sendMessage(Texts.of(Localization.EMPTY_HAND_REQUIRED));
+                }
             }
         } else {
             commandSource.sendMessage(Texts.of("This command can't be executed from console."));
