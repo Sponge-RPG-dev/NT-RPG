@@ -22,7 +22,6 @@ import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.GlobalScope;
 import cz.neumimto.IEntity;
 import cz.neumimto.NtRpgPlugin;
-import cz.neumimto.entities.IMob;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.players.properties.PlayerPropertyService;
 import org.spongepowered.api.block.BlockType;
@@ -32,13 +31,15 @@ import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Projectile;
-import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.util.blockray.BlockRay;
 import org.spongepowered.api.util.blockray.BlockRayHit;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 
 /**
@@ -147,7 +148,13 @@ public class Utils {
     }
 
     public static boolean isLivingEntity(Entity entity) {
-        return entity.get(Keys.HEALTH).isPresent();
+        if (entity.isRemoved())
+            return false;
+        Optional<Double> aDouble = entity.get(Keys.HEALTH);
+        if (aDouble.isPresent()) {
+            return aDouble.get() > 0;
+        }
+        return false;
     }
 
 

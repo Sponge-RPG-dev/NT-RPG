@@ -18,40 +18,31 @@
 
 package cz.neumimto.gui;
 
+import cz.neumimto.GroupService;
 import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.configuration.Localization;
-import cz.neumimto.effects.EffectStatusType;
-import cz.neumimto.effects.IEffect;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.effects.EffectStatusType;
+import cz.neumimto.effects.IEffect;
 import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.ExtendedNClass;
 import cz.neumimto.players.IActiveCharacter;
+import cz.neumimto.players.groups.NClass;
 import cz.neumimto.skills.SkillData;
 import cz.neumimto.skills.SkillTree;
 import cz.neumimto.skills.StartingPoint;
-import cz.neumimto.utils.ItemStackUtils;
-import cz.neumimto.utils.Utils;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.data.manipulator.mutable.item.LoreData;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.scoreboard.Scoreboard;
-import org.spongepowered.api.scoreboard.displayslot.DisplaySlots;
 import org.spongepowered.api.service.pagination.PaginationBuilder;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.TextBuilder;
-import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.text.action.TextActions;
-import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 6.8.2015.
@@ -61,6 +52,10 @@ public class VanilaMessaging implements IPlayerMessage {
 
     @Inject
     private Game game;
+
+    @Inject
+    private GroupService groupService;
+
 
     @Override
     public boolean isClientSideGui() {
@@ -111,11 +106,11 @@ public class VanilaMessaging implements IPlayerMessage {
 
     @Override
     public void sendManaStatus(IActiveCharacter character, float currentMana, float maxMana, float reserved) {
-        TextBuilder.Literal b = Texts.builder("Mana: " + currentMana).color(TextColors.BLUE);
+        Text.Builder b = Text.builder("Mana: " + currentMana).color(TextColors.BLUE);
         if (reserved != 0) {
-            b.append(Texts.builder(" / " + (maxMana - reserved)).color(TextColors.DARK_RED).build());
+            b.append(Text.builder(" / " + (maxMana - reserved)).color(TextColors.DARK_RED).build());
         }
-        b.append(Texts.builder(" | " + maxMana).color(TextColors.GRAY).build());
+        b.append(Text.builder(" | " + maxMana).color(TextColors.GRAY).build());
         character.getPlayer().sendMessage(b.build());
     }
 
@@ -123,23 +118,20 @@ public class VanilaMessaging implements IPlayerMessage {
     public void sendPlayerInfo(IActiveCharacter character, List<CharacterBase> target) {
         PaginationService paginationService = game.getServiceManager().provide(PaginationService.class).get();
         PaginationBuilder builder = paginationService.builder();
-        builder.title(Texts.builder("=====================").color(TextColors.GREEN).build());
+        builder.title(Text.builder("=====================").color(TextColors.GREEN).build());
         for (CharacterBase characterBase : target) {
-            Text.Literal build = Texts.builder(character.getName() + "   ")
-                    .onClick(TextActions.runCommand("/info character " + characterBase.getName()))
-                    .onHover(TextActions.showText(Texts.builder(getDetailedCharInfo(character)).build())).build();
-            builder.contents(build);
+
         }
-        builder.footer(Texts.builder("====================").color(TextColors.GREEN).build());
+        builder.footer(Text.builder("====================").color(TextColors.GREEN).build());
         builder.sendTo(character.getPlayer());
     }
 
 
     private String getDetailedCharInfo(IActiveCharacter character) {
-        Text text = Texts.builder("Level").color(TextColors.YELLOW).append(
-                    Texts.builder("Race").color(TextColors.RED).append(
-                    Texts.builder("Guild").color(TextColors.AQUA).append(
-                    Texts.builder("Class").color(TextColors.GOLD).build()
+        Text text = Text.builder("Level").color(TextColors.YELLOW).append(
+                    Text.builder("Race").color(TextColors.RED).append(
+                    Text.builder("Guild").color(TextColors.AQUA).append(
+                    Text.builder("Class").color(TextColors.GOLD).build()
                     ).build()).build()).build();
         return text.toString();
     }
@@ -152,35 +144,54 @@ public class VanilaMessaging implements IPlayerMessage {
     @Override
     public void showExpChange(IActiveCharacter character,String classname,double expchange) {
         Player player = character.getPlayer();
-        player.sendMessage(Texts.of(classname+" expchange: +" + expchange));
+        player.sendMessage(Text.of(classname+" expchange: +" + expchange));
     }
 
     @Override
     public void showLevelChange(IActiveCharacter character, ExtendedNClass clazz, int level) {
         Player player = character.getPlayer();
-        player.sendMessage(Texts.of("Level up: "+clazz.getnClass().getName()+ " - " + level));
+        player.sendMessage(Text.of("Level up: "+clazz.getnClass().getName()+ " - " + level));
     }
 
     @Override
     public void sendStatus(IActiveCharacter character) {
         Player player = character.getPlayer();
         String q = "HP: "+character.getHealth().getValue()+"/"+character.getHealth().getMaxValue()+"/"+character.getHealth().getRegen();
-        player.sendMessage(Texts.of(q));
+        player.sendMessage(Text.of(q));
         q = "Mana: "+character.getMana().getValue()+"/"+character.getMana().getMaxValue()+"/"+character.getMana().getRegen();
-        player.sendMessage(Texts.of(q));
+        player.sendMessage(Text.of(q));
         q = "Attribute points: " + character.getAttributePoints() + "\n";
         q += "Skill points: " + character.getSkillPoints();
-        player.sendMessage(Texts.of(q));
-        player.sendMessage(Texts.of("------------"));
+        player.sendMessage(Text.of(q));
+        player.sendMessage(Text.of("------------"));
         q = "Allocated attribute points: " + character.getCharacterBase().getUsedAttributePoints() + "\n";
         q += "Allocated skill points: " + character.getCharacterBase().getUsedSkillPoints();
-        player.sendMessage(Texts.of(q));
+        player.sendMessage(Text.of(q));
         q = "Class: " + character.getPrimaryClass().getnClass().getName() + ", Level: " + character.getLevel();
-        player.sendMessage(Texts.of(q));
+        player.sendMessage(Text.of(q));
         q = "Progress- Total:" + character.getPrimaryClass().getExperiences()+"/"+character.getPrimaryClass().getnClass().getTotalExp();
         character.sendMessage(q);
         q = "          Level: " + character.getPrimaryClass().getExperiencesFromLevel()+"/"+character.getPrimaryClass().getnClass().getLevels()[character.getPrimaryClass().getLevel()];
         character.sendMessage(q);
 
+    }
+
+    @Override
+    public void showAvalaibleClasses(IActiveCharacter character) {
+        Collection<NClass> classes = groupService.getClasses();
+        List<ItemStack> list = new ArrayList<>();
+        for (NClass aClass : classes) {
+            ItemStack a = ItemStack.of(aClass.getItemType(), 1);
+            a.offer(Keys.DISPLAY_NAME,Text.of(TextColors.GREEN, TextStyles.BOLD,""));
+            List<Text> lore = new ArrayList<>();
+            double[] levels = aClass.getLevels();
+            if (levels != null) {
+                lore.add(Text.of(TextColors.RED, "Max Level/Total exp: "+levels.length+"/"+aClass.getTotalExp()));
+            }
+            lore.add(Text.of(TextColors.GREEN, aClass.getDescription()));
+            lore.add(Text.of(TextColors.DARK_GRAY,Localization.CLASS_INVENTORYMENU_FOOTER));
+            a.offer(Keys.ITEM_LORE, lore);
+            list.add(a);
+        }
     }
 }

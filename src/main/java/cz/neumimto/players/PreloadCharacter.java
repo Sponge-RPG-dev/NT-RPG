@@ -58,6 +58,22 @@ public class PreloadCharacter implements IActiveCharacter {
         mana.setMaxValue(0);
     }
 
+
+    @Override
+    public boolean isSocketing() {
+        return false;
+    }
+
+    @Override
+    public void setCurrentRune(String is) {
+
+    }
+
+    @Override
+    public String getCurrentRune() {
+        throw new UnsupportedOperationException();
+    }
+
     @Override
     public void setCharacterLevelProperty(int index, float value) {
 

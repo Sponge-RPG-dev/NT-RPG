@@ -36,6 +36,7 @@ import cz.neumimto.skills.SkillTree;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.ItemTypes;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -175,6 +176,14 @@ public class GroupDao {
             } else logger.warn("Defined invalid itemtype  " + m.getKey() + " in " + group.getName());
 
         }
+        Optional<ItemType> menuIcon = game.getRegistry().getType(ItemType.class, c.getString("MenuIcon"));
+        if (menuIcon.isPresent()) {
+            group.setItemType(menuIcon.get());
+        } else {
+            group.setItemType(ItemTypes.STONE);
+        }
+
+        group.setDescription(c.getString("Description"));
         List<String> permissions = c.getStringList("Permissions");
         group.setPermissions(new HashSet<>(permissions));
     }

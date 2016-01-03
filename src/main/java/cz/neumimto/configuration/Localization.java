@@ -18,10 +18,6 @@
 
 package cz.neumimto.configuration;
 
-import org.spongepowered.api.text.selector.Selector;
-
-import java.util.Collections;
-
 /**
  * Created by NeumimTo on 31.1.2015.
  */
@@ -177,11 +173,43 @@ public class Localization {
     public static String EMPTY_HAND_REQUIRED = "An empty hand is required";
 
     @ConfigValue
-    public static String CAST_SKILl_ON_LEFTCLICK = "Casts skill %2 on rightclick";
+    public static String CAST_SKILl_ON_LEFTCLICK = "Casts skill %1 on rightclick";
 
     @ConfigValue
-    public static String ITEM_SKILLBIND_FOOTER = "For casting bounded skills you must have access to the skills via command /skill ";
+    public static String ITEM_SKILLBIND_FOOTER = "For casting bounded skills you must have access to the skills via command /skill";
 
     @ConfigValue
     public static String RUNE = "Rune";
+
+    @ConfigValue
+    public static String NO_SKILLPOINTS = "You dont have any skillpoints.";
+
+    @ConfigValue
+    public static String NOT_LEARNED_SKILL = "You have to learn the skill first before spending skillpoints";
+
+    @ConfigValue
+    public static String SKILL_REQUIRES_HIGHER_LEVEL = "Upgrading the skill %1 requires at least level %2";
+
+    @ConfigValue
+    public static String SKILL_IS_ON_MAX_LEVEL = "The skill %1 is on its maximal level.";
+
+    @ConfigValue
+    public static String SKILL_NOT_IN_A_TREE = "The skill %1 is not accessible from your skill tree" ;
+
+    @ConfigValue
+    public static String MISSING_SKILL_DEPENDENCIES = "The skill %1 requires [%2] and at least one of [%3]";
+
+    @ConfigValue
+    public static String SKILL_ALREADY_LEARNED = "You've already learned this skill";
+
+    @ConfigValue
+    public static String SKILLBIND = "Bind";
+
+    @ConfigValue
+    public static String RUNE_FOOTER = "Can be inserted into socketed items";
+    @ConfigValue
+    public static String SOCKET = "Socketed Item";
+
+    @ConfigValue
+    public static String CLASS_INVENTORYMENU_FOOTER = "Rightclick for more info, Leftclick for skilltree";
 }

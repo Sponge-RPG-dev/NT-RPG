@@ -201,6 +201,12 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     void setHotbarSlot(int i,HotbarObject o);
 
+    boolean isSocketing();
+
+    void setCurrentRune(String is);
+
+    String getCurrentRune();
+
     @Override
     double getHp();
 

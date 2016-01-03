@@ -25,8 +25,8 @@ import cz.neumimto.configuration.CommandLocalization;
 import cz.neumimto.configuration.CommandPermissions;
 import cz.neumimto.configuration.Localization;
 import cz.neumimto.configuration.PluginConfig;
-import cz.neumimto.gui.Gui;
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.gui.Gui;
 import cz.neumimto.inventory.InventoryService;
 import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.CharacterService;
@@ -35,7 +35,6 @@ import cz.neumimto.players.groups.Guild;
 import cz.neumimto.players.groups.NClass;
 import cz.neumimto.players.groups.Race;
 import cz.neumimto.players.parties.Party;
-import cz.neumimto.skills.ExtendedSkillInfo;
 import cz.neumimto.skills.ISkill;
 import cz.neumimto.skills.SkillService;
 import org.spongepowered.api.Game;
@@ -44,7 +43,7 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 
 /**
  * Created by NeumimTo on 23.7.2015.
@@ -86,9 +85,9 @@ public class CommandCreate extends CommandBase {
                     Player player = (Player) commandSource;
                     int i = characterService.canCreateNewCharacter(player.getUniqueId(), args[1]);
                     if (i == 1) {
-                        commandSource.sendMessage(Texts.of(Localization.REACHED_CHARACTER_LIMIT));
+                        commandSource.sendMessage(Text.of(Localization.REACHED_CHARACTER_LIMIT));
                     } else if (i == 2) {
-                        commandSource.sendMessage(Texts.of(Localization.CHARACTER_EXISTS));
+                        commandSource.sendMessage(Text.of(Localization.CHARACTER_EXISTS));
                     } else if (i == 0) {
                         CharacterBase characterBase = new CharacterBase();
                         characterBase.setName(args[1]);
@@ -102,7 +101,7 @@ public class CommandCreate extends CommandBase {
                         if (args.length == 3) {
                             characterService.setActiveCharacterSynchronously(player.getUniqueId(), character);
                         }
-                        commandSource.sendMessage(Texts.of(CommandLocalization.CHARACTER_CREATED.replaceAll("%1", characterBase.getName())));
+                        commandSource.sendMessage(Text.of(CommandLocalization.CHARACTER_CREATED.replaceAll("%1", characterBase.getName())));
                     }
                 }).submit(plugin);
             } else if (args[0].equalsIgnoreCase("party")) {
@@ -142,11 +141,11 @@ public class CommandCreate extends CommandBase {
                     inventoryService.createHotbarSkill(i,r,l);
                     character.getPlayer().setItemInHand(i);
                 } else {
-                    character.getPlayer().sendMessage(Texts.of(Localization.EMPTY_HAND_REQUIRED));
+                    character.getPlayer().sendMessage(Text.of(Localization.EMPTY_HAND_REQUIRED));
                 }
             }
         } else {
-            commandSource.sendMessage(Texts.of("This command can't be executed from console."));
+            commandSource.sendMessage(Text.of("This command can't be executed from console."));
         }
         return CommandResult.success();
     }

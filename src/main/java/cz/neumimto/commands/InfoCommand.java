@@ -29,7 +29,6 @@ import cz.neumimto.gui.Gui;
 import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.CharacterService;
 import cz.neumimto.players.IActiveCharacter;
-import cz.neumimto.players.groups.Guild;
 import cz.neumimto.players.groups.PlayerGroup;
 import cz.neumimto.players.groups.Race;
 import org.spongepowered.api.Game;
@@ -39,8 +38,6 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.TextBuilder;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 
@@ -81,7 +78,7 @@ public class InfoCommand extends CommandBase {
         }
         if (args[0].equalsIgnoreCase("player")) {
             if (args.length != 2) {
-                commandSource.sendMessage(Texts.of(getUsage(commandSource)));
+                commandSource.sendMessage(Text.of(getUsage(commandSource)));
                 return CommandResult.success();
             }
             Optional<Player> o = game.getServer().getPlayer(args[1]);
@@ -90,7 +87,7 @@ public class InfoCommand extends CommandBase {
                 printPlayerInfo(commandSource, args, player);
                 return CommandResult.success();
             } else {
-                commandSource.sendMessage(Texts.of(Localization.PLAYER_IS_OFFLINE_MSG));
+                commandSource.sendMessage(Text.of(Localization.PLAYER_IS_OFFLINE_MSG));
             }
         } else if (args[0].equalsIgnoreCase("race")) {
             printRaceInfor(commandSource, args);
@@ -98,8 +95,9 @@ public class InfoCommand extends CommandBase {
             printRaceList(commandSource, "race");
         } else if (args[0].equalsIgnoreCase("guilds")) {
 
-        } else if (args[0].equalsIgnoreCase("classes")){
-            printClassList(commandSource);
+        } else if (args[0].equalsIgnoreCase("classes")) {
+            IActiveCharacter character = characterService.getCharacter(((Player)commandSource).getUniqueId());
+            Gui.showAvalaibleClasses(character);
         } else if (args[0].equalsIgnoreCase("character")) {
             if (!(commandSource instanceof Player)) {
                 if (args.length != 2) {
@@ -116,7 +114,7 @@ public class InfoCommand extends CommandBase {
             if (!character.isStub()) {
                 Gui.sendStatus(character);
             } else {
-                player.sendMessage(Texts.of(Localization.CHARACTER_IS_REQUIRED));
+                player.sendMessage(Text.of(Localization.CHARACTER_IS_REQUIRED));
 
             }
         } else {
@@ -125,8 +123,8 @@ public class InfoCommand extends CommandBase {
         return CommandResult.success();
     }
 
-    private void printClassList(CommandSource commandSource) {
-        printList(commandSource,groupService.getClasses(),"");
+    private void printClassList(IActiveCharacter character) {
+
     }
 
     //TODO create inventory menus
@@ -135,20 +133,20 @@ public class InfoCommand extends CommandBase {
     }
 
     private void printList(CommandSource commandSource, Collection<? extends PlayerGroup> group, String nextcmd) {
-        TextBuilder builder = Texts.builder();
+        Text.Builder builder = Text.builder();
         List<Text> texts = new ArrayList<>();
         for (PlayerGroup g : group) {
             if (!g.showsInMenu()) {
                 continue;
             }
-            texts.add(builder.append(Texts.of(g.getName() + ", "))
-                    .onHover(TextActions.showText(Texts.of("Get more info on click")))
-                    .onClick(TextActions.runCommand(Texts.of("/" + getAliases().get(0)) + " race " + g.getName()))
+            texts.add(builder.append(Text.of(g.getName() + ", "))
+                    .onHover(TextActions.showText(Text.of("Get more info on click")))
+                    .onClick(TextActions.runCommand(Text.of("/" + getAliases().get(0)) + " race " + g.getName()))
                     .build());
 
             builder.removeAll();
         }
-        commandSource.sendMessage(Texts.join(texts));
+        commandSource.sendMessage(Text.join(texts));
     }
 
     private void printRaceList(CommandSource commandSource, String nextcmd) {
@@ -159,18 +157,18 @@ public class InfoCommand extends CommandBase {
     private void printRaceInfor(CommandSource commandSource, String[] args) {
         Race race = groupService.getRace(args[1]);
         if (race == Race.Default) {
-            commandSource.sendMessage(Texts.of(Localization.NON_EXISTING_GROUP));
+            commandSource.sendMessage(Text.of(Localization.NON_EXISTING_GROUP));
             return;
         }
-        Text text = Texts.of();
-        TextBuilder builder = text.builder().append(Texts.of("Name : " + race.getName()))
-                .append(Texts.of("Weapons :    "));
+        Text text = Text.of();
+        Text.Builder builder = text.builder().append(Text.of("Name : " + race.getName()))
+                .append(Text.of("Weapons :    "));
         for (Map.Entry<ItemType, Double> e : race.getWeapons().entrySet()) {
-            builder.append(Texts.of(e.getValue())).append(Texts.of(", "));
+            builder.append(Text.of(e.getValue())).append(Text.of(", "));
         }
-        builder.append(Texts.of("Armor  :    "));
+        builder.append(Text.of("Armor  :    "));
         for (ItemType s : race.getAllowedArmor()) {
-            builder.append(Texts.of(s.toString()));
+            builder.append(Text.of(s.toString()));
         }
         commandSource.sendMessage(builder.build());
     }
@@ -179,13 +177,13 @@ public class InfoCommand extends CommandBase {
         game.getScheduler().createTaskBuilder().async().execute(() -> {
             List<CharacterBase> characters = characterService.getPlayersCharacters(player.getUniqueId());
             if (characters.isEmpty()) {
-                commandSource.sendMessage(Texts.of("Player has no characters"));
+                commandSource.sendMessage(Text.of("Player has no characters"));
                 return;
             }
             for (CharacterBase character : characters) {
-                Text build = Texts.builder()
-                        .append(Texts.of(character.getName()))
-                        .onHover(TextActions.showText(Texts.of(getSmallInfo(character))))
+                Text build = Text.builder()
+                        .append(Text.of(character.getName()))
+                        .onHover(TextActions.showText(Text.of(getSmallInfo(character))))
                         .build();
                 commandSource.sendMessage(build);
             }

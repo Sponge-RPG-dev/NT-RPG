@@ -23,13 +23,13 @@ import cz.neumimto.configuration.Localization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.EffectService;
 import cz.neumimto.effects.IGlobalEffect;
+import cz.neumimto.inventory.InventoryService;
 import cz.neumimto.inventory.runewords.RWService;
 import cz.neumimto.inventory.runewords.Rune;
 import cz.neumimto.players.CharacterService;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.skills.*;
 import cz.neumimto.utils.ItemStackUtils;
-import cz.neumimto.utils.XORShiftRnd;
 import org.slf4j.Logger;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -38,10 +38,7 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,6 +61,9 @@ public class CommandAdmin extends CommandBase {
     @Inject
     private RWService runewordService;
 
+    @Inject
+    private InventoryService inventoryService;
+
     public CommandAdmin() {
         setDescription("Bypasses many plugin restrictions, allows you to force execute skill, set character properties..., bad use of this command may breaks plugin mechanics or cause exceptions.");
         setPermission("ntrpg.superadmin");
@@ -81,7 +81,7 @@ public class CommandAdmin extends CommandBase {
             }
             if (a[1].equalsIgnoreCase("skill")) {
                 if (a.length < 2) {
-                     commandSource.sendMessage(Texts.of("/nadmin use skill {skillname} [level]"));
+                     commandSource.sendMessage(Text.of("/nadmin use skill {skillname} [level]"));
                     return CommandResult.empty();
                 }
                 ISkill skill = skillService.getSkill(a[2]);
@@ -112,7 +112,7 @@ public class CommandAdmin extends CommandBase {
                 String name = a[2];
                 IGlobalEffect globalEffect = effectService.getGlobalEffect(name);
                 if (globalEffect == null) {
-                    commandSource.sendMessage(Texts.of(Localization.NON_EXISTING_GLOBAL_EFFECT));
+                    commandSource.sendMessage(Text.of(Localization.NON_EXISTING_GLOBAL_EFFECT));
                 } else {
                     Player pl = (Player) commandSource;
                     if (pl.getItemInHand().isPresent()) {
@@ -120,13 +120,20 @@ public class CommandAdmin extends CommandBase {
                         List<Text> texts = ItemStackUtils.addItemEffect(itemStack, globalEffect, Integer.parseInt(a[3]));
                         itemStack.offer(Keys.ITEM_LORE, texts);
                         pl.setItemInHand(itemStack);
-                        pl.sendMessage(Texts.of("Enchantment " + globalEffect.getName()+" added"));
+                        pl.sendMessage(Text.of("Enchantment " + globalEffect.getName()+" added"));
                     } else {
-                        pl.sendMessage(Texts.of(Localization.NO_ITEM_IN_HAND));
+                        pl.sendMessage(Text.of(Localization.NO_ITEM_IN_HAND));
                     }
                 }
             } else if (a[1].equalsIgnoreCase("remove")) {
 
+            }
+        } else if (a[0].equalsIgnoreCase("socket")) {
+            Player pl = (Player) commandSource;
+            Optional<ItemStack> itemInHand = pl.getItemInHand();
+            if (itemInHand.isPresent()) {
+                ItemStack itemStack = runewordService.createSockets(itemInHand.get(),Integer.parseInt(a[1]));
+                pl.setItemInHand(itemStack);
             }
         } else if (a[0].equalsIgnoreCase("rune")) {
             Rune r = runewordService.getRune(a[1]);
@@ -135,6 +142,8 @@ public class CommandAdmin extends CommandBase {
                 ItemStack is = runewordService.toItemStack(r);
                 pl.setItemInHand(is);
             }
+        } else if (a[0].equalsIgnoreCase("charm")) {
+
         }
         return CommandResult.success();
     }

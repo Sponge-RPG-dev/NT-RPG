@@ -20,32 +20,23 @@ package cz.neumimto.utils;
 
 import com.typesafe.config.Config;
 import cz.neumimto.NtRpgPlugin;
-import cz.neumimto.inventory.Weapon;
 import cz.neumimto.configuration.Localization;
 import cz.neumimto.effects.IGlobalEffect;
+import cz.neumimto.inventory.InventoryService;
 import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.groups.NClass;
-import cz.neumimto.skills.*;
+import cz.neumimto.skills.SkillData;
+import cz.neumimto.skills.SkillItemIcon;
+import cz.neumimto.skills.SkillSettings;
+import cz.neumimto.skills.SkillTree;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.data.DataContainer;
-import org.spongepowered.api.data.DataHolder;
-import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.manipulator.immutable.item.ImmutableEnchantmentData;
 import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
-import org.spongepowered.api.data.manipulator.mutable.item.EnchantmentData;
 import org.spongepowered.api.data.manipulator.mutable.item.LoreData;
-import org.spongepowered.api.data.merge.MergeFunction;
-import org.spongepowered.api.data.meta.ItemEnchantment;
-import org.spongepowered.api.data.value.BaseValue;
-import org.spongepowered.api.data.value.immutable.ImmutableValue;
 import org.spongepowered.api.data.value.mutable.ListValue;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 
@@ -151,13 +142,13 @@ public class ItemStackUtils {
         int damage = c.getInt(DAMAGE);
         String name = c.getString(DISPLAY_NAME);
         List<Text> stringList = new ArrayList<>();
-        c.getStringList(LORE).stream().forEach(s -> stringList.add(Texts.of(s)));
+        c.getStringList(LORE).stream().forEach(s -> stringList.add(Text.of(s)));
         Optional<ItemType> asd = globalScope.game.getRegistry().getType(ItemType.class, type);
         if (asd.isPresent()) {
             ItemStack item = ItemStack.builder().itemType(asd.get()).build();
             item.setQuantity(amount);
             item.offer(Keys.ITEM_LORE,stringList);
-            item.offer(Keys.DISPLAY_NAME,Texts.of(name));
+            item.offer(Keys.DISPLAY_NAME,Text.of(name));
             item.offer(Keys.ITEM_DURABILITY,damage);
             return item;
         }
@@ -172,23 +163,27 @@ public class ItemStackUtils {
         s += formatedConfig.apply(ID,itemStack.getItem().getId());
         s += formatedConfig.apply(QUANTITY, String.valueOf(itemStack.getQuantity()));
         s += formatedConfig.apply(DAMAGE, String.valueOf(itemStack.get(Keys.ITEM_DURABILITY).get()));
-        s += formatedConfig.apply(DISPLAY_NAME, Texts.toPlain(itemStack.get(Keys.DISPLAY_NAME).get()));
+        s += formatedConfig.apply(DISPLAY_NAME, itemStack.get(Keys.DISPLAY_NAME).get().toPlain());
         s += "}";
         return s;
     }
 
-    public static String itemStackToString(ItemStack item) {
-        StringBuilder builder = new StringBuilder();
-        createProperty(builder, ID, item.getItem().getId());
-        createProperty(builder, QUANTITY, item.getQuantity());
-        createProperty(builder, DISPLAY_NAME, item.get(Keys.DISPLAY_NAME).get());
-        return builder.toString();
+    public static boolean isItemSkillBind(ItemStack is) {
+        if (is.getItem() != InventoryService.ITEM_SKILL_BIND) {
+            return false;
+        }
+        Optional<List<Text>> texts = is.get(Keys.ITEM_LORE);
+        if (texts.isPresent()) {
+            List<Text> a = texts.get();
+            if (a.size() > 1) {
+                Text text = a.get(0);
+                if (text.toPlain().equalsIgnoreCase(Localization.SKILLBIND)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
-
-    public static ItemStack StringToItemStack(String str) {
-        return null;
-    }
-
 
     private static void createProperty(StringBuilder builder, String value, String key) {
         if (key != null)
@@ -231,48 +226,48 @@ public class ItemStackUtils {
         SkillTree skillTree = nClass.getSkillTree();
         SkillData skillData = skillTree.getSkills().get(icon.skillName);
         //skilltree settings info
-        locallore.add(Texts.of(icon.skill.getDescription()));
-        locallore.add(Texts.of(""));
-        locallore.add(Texts.of(Localization.LORESECTION_MAX_SKILL_LEVEL + ": " + skillData.getMaxSkillLevel()));
-        locallore.add(Texts.of(Localization.LORESECTION_MAX_PLAYER_LEVEL + ": " + skillData.getMinPlayerLevel()));
+        locallore.add(Text.of(icon.skill.getDescription()));
+        locallore.add(Text.of(""));
+        locallore.add(Text.of(Localization.LORESECTION_MAX_SKILL_LEVEL + ": " + skillData.getMaxSkillLevel()));
+        locallore.add(Text.of(Localization.LORESECTION_MAX_PLAYER_LEVEL + ": " + skillData.getMinPlayerLevel()));
         //skillsettings
-        locallore.add(Texts.of(Localization.SKILL_SETTINGS_LORESECTION_NAME));
+        locallore.add(Text.of(Localization.SKILL_SETTINGS_LORESECTION_NAME));
         SkillSettings skillSettings = skillData.getSkillSettings();
         final int roundprecision = 1;
         skillSettings.getNodes().keySet().stream()
                 .filter(s -> !s.endsWith(SkillSettings.bonus))
                 .forEach(n -> {
-                    locallore.add(Texts.of(
+                    locallore.add(Text.of(
                             "- " + n + ": " + Utils.round(skillData.getSkillSettings().getNodeValue(n), roundprecision)
                                     + " | " + Utils.round(skillData.getSkillSettings().getLevelNodeValue(n, level), roundprecision)
                                     + " | " + Utils.round(skillData.getSkillSettings().getNodeValue(n + SkillSettings.bonus), roundprecision)));
 
                 });
         //skill dependencies
-        locallore.add(Texts.of(""));
+        locallore.add(Text.of(""));
         String strlist = skillData.getConflicts()
                 .stream()
                 .map(SkillData::getSkillName)
                 .collect(Collectors.joining(", "));
-        locallore.add(Texts.of(Localization.LORESECTION_CONFCLICTS + ": " + strlist));
+        locallore.add(Text.of(Localization.LORESECTION_CONFCLICTS + ": " + strlist));
         strlist = skillData.getSoftDepends()
                 .stream()
                 .map(SkillData::getSkillName)
                 .collect(Collectors.joining(", "));
-        locallore.add(Texts.of(Localization.LORESECTION_SOFT_DEPENDS + ": " + strlist));
+        locallore.add(Text.of(Localization.LORESECTION_SOFT_DEPENDS + ": " + strlist));
         strlist = skillData.getHardDepends()
                 .stream()
                 .map(SkillData::getSkillName)
                 .collect(Collectors.joining(", "));
-        locallore.add(Texts.of(Localization.LORESECTION_HARD_DEPENDS + ": " + strlist));
+        locallore.add(Text.of(Localization.LORESECTION_HARD_DEPENDS + ": " + strlist));
         //skill lore
         if (icon.skill.getLore() != null) {
-            locallore.add(Texts.of(""));
-            locallore.add(Texts.of(icon.skill.getLore()));
+            locallore.add(Text.of(""));
+            locallore.add(Text.of(icon.skill.getLore()));
         }
 
         final DisplayNameData itemName = Sponge.getGame().getDataManager().getManipulatorBuilder(DisplayNameData.class).get().create();
-        itemName.set(Keys.DISPLAY_NAME, Texts.of(skillnamecolor, icon.skillName));
+        itemName.set(Keys.DISPLAY_NAME, Text.of(skillnamecolor, icon.skillName));
         // Set up the lore data.
 
         ItemStack.Builder i = ItemStack.builder();
@@ -291,8 +286,11 @@ public class ItemStackUtils {
      * @return
      */
     public static Map<IGlobalEffect, Integer> getItemEffects(ItemStack is) {
-        List<Text> texts = is.get(Keys.ITEM_LORE).get();
-        return getItemEffects(texts);
+        Optional<List<Text>> texts = is.get(Keys.ITEM_LORE);
+        if (texts.isPresent()) {
+            return getItemEffects(texts.get());
+        }
+        return Collections.emptyMap();
     }
 
     /**
@@ -303,7 +301,7 @@ public class ItemStackUtils {
     public static Map<IGlobalEffect, Integer> getItemEffects(List<Text> texts) {
         Map<IGlobalEffect, Integer> map = new HashMap<>();
         texts.stream().filter(t -> t.getFormat().getColor() == TextColors.AQUA).forEach(t -> {
-            String eff = Texts.toPlain(t).substring(3).toLowerCase();
+            String eff = t.toPlain().substring(3).toLowerCase();
             String[] arr = eff.split(": ");
             int level = Integer.parseInt(arr[1]);
             IGlobalEffect effect = globalScope.effectService.getGlobalEffect(arr[0]);
@@ -322,7 +320,7 @@ public class ItemStackUtils {
         } else {
             lore = new ArrayList<>();
         }
-        lore.add(Texts.of(TextColors.AQUA,globalEffect.getName()+":" + level));
+        lore.add(Text.of(TextColors.AQUA,globalEffect.getName()+":" + level));
         return lore;
     }
 
@@ -340,4 +338,22 @@ public class ItemStackUtils {
     }
 
 
+    public static boolean isItemRune(ItemStack is) {
+        Optional<List<Text>> texts = is.get(Keys.ITEM_LORE);
+        if (texts.isPresent()) {
+            List<Text> a = texts.get();
+            if (a.size() >= 1) {
+                Text text = a.get(0);
+                String s = text.toPlain();
+                if (s.equalsIgnoreCase(Localization.RUNE)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean hasSockets(ItemStack itemStack) {
+        return globalScope.runewordService.getSocketCount(itemStack.get(Keys.ITEM_LORE).get()) > 0;
+    }
 }

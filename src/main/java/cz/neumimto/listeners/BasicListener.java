@@ -21,25 +21,20 @@ package cz.neumimto.listeners;
 import cz.neumimto.IEntity;
 import cz.neumimto.IEntityType;
 import cz.neumimto.ResourceLoader;
-import cz.neumimto.inventory.Weapon;
 import cz.neumimto.configuration.PluginConfig;
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.damage.DamageService;
 import cz.neumimto.damage.ISkillDamageSource;
 import cz.neumimto.effects.EffectService;
-import cz.neumimto.effects.EffectSource;
-import cz.neumimto.effects.IGlobalEffect;
 import cz.neumimto.entities.EntityService;
 import cz.neumimto.inventory.InventoryService;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.players.CharacterService;
-import cz.neumimto.players.ExperienceSource;
 import cz.neumimto.players.IActiveCharacter;
-import cz.neumimto.skills.ExtendedSkillInfo;
 import cz.neumimto.skills.ISkill;
 import cz.neumimto.skills.ProjectileProperties;
 import cz.neumimto.skills.SkillService;
-import cz.neumimto.utils.ItemStackUtils;
 import cz.neumimto.utils.Utils;
+import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
@@ -49,6 +44,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
+import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.entity.damage.DamageModifier;
 import org.spongepowered.api.event.cause.entity.damage.DamageModifierTypes;
@@ -56,21 +52,11 @@ import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.cause.entity.damage.source.IndirectEntityDamageSource;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
-import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.entity.InteractEntityEvent;
-import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
-import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
-import org.spongepowered.api.event.network.ClientConnectionEvent;
-import org.spongepowered.api.event.user.BanUserEvent;
-import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.ItemStackSnapshot;
-import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
+import org.spongepowered.api.item.inventory.entity.Hotbar;
 
-import java.util.*;
+import java.util.Optional;
 
 /**
  * Created by NeumimTo on 12.2.2015.
@@ -99,106 +85,23 @@ public class BasicListener {
     @Inject
     private SkillService skillService;
 
-    @Listener
-    public void onPlayerJoin(ClientConnectionEvent.Auth event) {
-        if (event.isCancelled())
-            return;
-        UUID id = event.getProfile().getUniqueId();
-        characterService.loadPlayerData(id);
-    }
-
-    @Listener
-    public void onPlayerLogin(ClientConnectionEvent.Join event) {
-        IActiveCharacter character = characterService.getCharacter(event.getTargetEntity().getUniqueId());
-        characterService.assignPlayerToCharacter(event.getTargetEntity());
-    }
-
-    @Listener
-    public void onPlayerQuit(ClientConnectionEvent.Disconnect event) {
-        Player player = event.getTargetEntity();
-        IActiveCharacter character = characterService.removeCachedWrapper(player.getUniqueId());
-        if (!character.isStub()) {
-            Location loc = player.getLocation();
-            World ex = (World) loc.getExtent();
-            character.getCharacterBase().setLastKnownPlayerName(event.getTargetEntity().getName());
-            character.updateLastKnownLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockY(), ex.getName());
-            characterService.putInSaveQueue(character.getCharacterBase());
-            effectService.removeAllEffects(character);
-            /*Always reset the persistent properties back to vanilla values in a case
-             some dummy decides to remove my awesome plugin :C */
-            Utils.resetPlayerToDefault(player);
-        }
-    }
-
-    @Listener
-    public void onUserBan(BanUserEvent event) {
-        if (PluginConfig.REMOVE_PLAYERDATA_AFTER_PERMABAN) {
-            if (!event.getBan().getExpirationDate().isPresent()) {
-                characterService.removePlayerData(event.getTargetUser().getUniqueId());
-            }
-        }
-    }
-
-    @Listener
-    public void onEntitySpawn(DestructEntityEvent event) {
-        Entity targetEntity = event.getTargetEntity();
-    }
-
-    @Listener
-    public void onEntityDestruct(DestructEntityEvent.Death event) {
-        Entity targetEntity = event.getTargetEntity();
-        if (targetEntity.getType() == EntityTypes.PLAYER) {
-            IActiveCharacter character = characterService.getCharacter(targetEntity.getUniqueId());
-            if (character.isStub())
-                return;
-            //todo death penalization
-            character.getEffects().stream()
-                    .filter(iEffect1 -> iEffect1.getEffectSource() == EffectSource.TEMP && iEffect1.requiresRegister())
-                    .forEach(iEffect -> effectService.removeEffect(iEffect, character));
-        } else {
-            Optional<EntityDamageSource> first = event.getCause().first(EntityDamageSource.class);
-            if (first.isPresent()) {
-                EntityDamageSource entityDamageSource = first.get();
-                entityService.remove(targetEntity.getUniqueId());
-                double exp = entityService.getExperiences(targetEntity.getType());
-                //todo share in party
-                IEntity source = entityService.get(entityDamageSource.getSource());
-                if (source.getType() == IEntityType.CHARACTER) {
-                    IActiveCharacter character = characterService.getCharacter(first.get().getSource().getUniqueId());
-                    characterService.addExperiences(character, exp, ExperienceSource.PVE);
-                }
-            }
-        }
-    }
-
-    @Listener
-    public void onItemPickup(ChangeInventoryEvent.Pickup event) {
-        Optional<Player> first = event.getCause().first(Player.class);
-        if (first.isPresent()) {
-            for (SlotTransaction slotTransaction : event.getTransactions()) {
-                System.out.print(slotTransaction.getSlot());
-            }
-        }
-    }
-
-
-
     @Listener(order = Order.BEFORE_POST)
     public void onAttack(InteractEntityEvent.Primary event) {
         if (event.isCancelled())
             return;
         if (!Utils.isLivingEntity(event.getTargetEntity()))
             return;
-        IEntity entity = entityService.get(event.getTargetEntity());
         Optional<Player> first = event.getCause().first(Player.class);
+        IActiveCharacter character = null;
         if (first.isPresent()) {
-            IActiveCharacter character = characterService.getCharacter(first.get().getUniqueId());
+            character = characterService.getCharacter(first.get().getUniqueId());
             if (character.isStub())
                 return;
-            //todo
-            int activeHotbarslot = 8;
-            character.getHotbar()[activeHotbarslot].onLeftClick(character);
+            inventoryService.onLeftClick(character,0);
         }
+
+        IEntity entity = entityService.get(event.getTargetEntity());
+
         if (entity.getType() == IEntityType.CHARACTER) {
             IActiveCharacter target = characterService.getCharacter(event.getTargetEntity().getUniqueId());
             if (target.isStub() && !PluginConfig.ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS) {
@@ -206,14 +109,17 @@ public class BasicListener {
                 return;
             }
             if (first.isPresent()) {
-                Player player = first.get();
-                IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
                 if (character.getParty() == target.getParty() && !character.getParty().isFriendlyfire()) {
                     event.setCancelled(true);
                 }
             }
         }
+
+
     }
+
+    @Inject
+    Logger logger;
 
     @Listener
     public void onRightClick(InteractEntityEvent.Secondary event) {
@@ -226,18 +132,34 @@ public class BasicListener {
                 IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());
                 if (character.isStub())
                     return;
-                //todo
-                int activeHotbarslot = 8;
-                character.getHotbar()[activeHotbarslot].onRightClick(character);
+                inventoryService.onRightClick(character,0);
             }
         }
     }
 
     @Listener
-    public void onEntityDespawn(DestructEntityEvent event) {
-        if (event.getTargetEntity().get(Keys.HEALTH).isPresent()) {
-            if (event.getTargetEntity() != EntityTypes.PLAYER)
-                entityService.remove(event.getTargetEntity().getUniqueId());
+    public void onBlockClick(InteractBlockEvent.Primary event) {
+        Optional<Player> first = event.getCause().first(Player.class);
+        if (first.isPresent()) {
+            Player pl = first.get();
+            IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());
+            if (character.isStub())
+                return;
+            Hotbar h = pl.getInventory().query(Hotbar.class);
+            inventoryService.onLeftClick(character,h.getSelectedSlotIndex());
+        }
+    }
+
+    @Listener
+    public void onBlockRightClick(InteractBlockEvent.Secondary event) {
+        Optional<Player> first = event.getCause().first(Player.class);
+        if (first.isPresent()) {
+            Player pl = first.get();
+            IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());
+            if (character.isStub())
+                return;
+            Hotbar h = pl.getInventory().query(Hotbar.class);
+            inventoryService.onRightClick(character,h.getSelectedSlotIndex());
         }
     }
 
@@ -248,10 +170,6 @@ public class BasicListener {
     }
 */
 
-    @Listener
-    public void onPlayerRespawn(RespawnPlayerEvent event) {
-        Player player = event.getTargetEntity();
-    }
 
     @Listener
     public void onPreDamage(DamageEntityEvent event) {
@@ -295,12 +213,12 @@ public class BasicListener {
                 IndirectEntityDamageSource indirectEntityDamageSource = q.get();
                 if (indirectEntityDamageSource.getSource() instanceof Projectile) {
                     Projectile projectile = (Projectile) indirectEntityDamageSource.getSource();
-                    IEntity shooter = entityService.get((Entity)projectile.getShooter());
+                    IEntity shooter = entityService.get((Entity) projectile.getShooter());
                     IEntity target = entityService.get(targetEntity);
                     ProjectileProperties projectileProperties = ProjectileProperties.cache.get(projectile);
                     if (projectileProperties != null) {
                         ProjectileProperties.cache.remove(projectile);
-                        projectileProperties.consumer.accept(shooter,target);
+                        projectileProperties.consumer.accept(shooter, target);
                     }
                 }
             }

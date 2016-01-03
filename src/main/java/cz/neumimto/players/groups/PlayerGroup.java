@@ -21,7 +21,6 @@ package cz.neumimto.players.groups;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 
-import javax.persistence.MappedSuperclass;
 import java.util.*;
 
 /**
@@ -38,6 +37,8 @@ public class PlayerGroup {
     private Map<ItemType, Double> weapons = new HashMap<>();
     private Set<String> permissions = Collections.synchronizedSet(new HashSet<>());
     private Map<Integer, Float> propLevelBonus = new HashMap<>();
+    private ItemType itemType;
+    private String description;
 
     public PlayerGroup(String name) {
         this.name = name;
@@ -113,5 +114,21 @@ public class PlayerGroup {
 
     public Map<Integer, Float> getPropLevelBonus() {
         return propLevelBonus;
+    }
+
+    public ItemType getItemType() {
+        return itemType;
+    }
+
+    public void setItemType(ItemType itemType) {
+        this.itemType = itemType;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

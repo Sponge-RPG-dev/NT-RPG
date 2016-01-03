@@ -5,6 +5,7 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.Creature;
 import org.spongepowered.api.entity.living.Living;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,7 +15,7 @@ import java.util.Map;
 public class NEntity implements IMob {
 
     private double experiences;
-    private Living entity;
+    private WeakReference<Living> entity;
     private Map<Class<? extends IEffect>,IEffect> effectSet = new HashMap<>();
 
     protected NEntity(Creature l) {
@@ -38,17 +39,17 @@ public class NEntity implements IMob {
     @Override
 
     public double getHp() {
-        return entity.get(Keys.HEALTH).get();
+        return entity.get().get(Keys.HEALTH).get();
     }
 
     @Override
     public void setHp(double d) {
-        entity.offer(Keys.HEALTH,d);
+        entity.get().offer(Keys.HEALTH,d);
     }
 
     @Override
     public void attach(Living creature) {
-        this.entity = creature;
+        this.entity = new WeakReference(creature);
     }
 
     @Override
@@ -63,7 +64,7 @@ public class NEntity implements IMob {
 
     @Override
     public Living getEntity() {
-        return entity;
+        return entity.get();
     }
 
     @Override
