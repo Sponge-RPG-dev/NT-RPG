@@ -89,6 +89,13 @@ public class SkillService {
         return skillTrees;
     }
 
+    public SkillResult executeSkill(IActiveCharacter character, ISkill skill) {
+        if (character.hasSkill(skill.getName())) {
+            executeSkill(character,character.getSkillInfo(skill));
+        }
+        return SkillResult.WRONG_DATA;
+    }
+
     public SkillResult executeSkill(IActiveCharacter character, ExtendedSkillInfo esi) {
         int level = esi.getLevel();
         if (level < 0)

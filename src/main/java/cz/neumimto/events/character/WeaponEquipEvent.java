@@ -18,7 +18,7 @@
 
 package cz.neumimto.events.character;
 
-import cz.neumimto.Weapon;
+import cz.neumimto.inventory.Weapon;
 import cz.neumimto.events.CancellableEvent;
 import cz.neumimto.players.IActiveCharacter;
 

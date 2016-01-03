@@ -26,7 +26,7 @@ import cz.neumimto.players.IActiveCharacter;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 
 import java.net.URL;
 import java.util.HashSet;
@@ -61,6 +61,10 @@ public abstract class AbstractSkill implements ISkill {
         return name;
     }
 
+    public void setLore(String lore) {
+        this.lore = lore;
+    }
+
     @Override
     public void setName(String name) {
         this.name = name;
@@ -69,7 +73,7 @@ public abstract class AbstractSkill implements ISkill {
     @Override
     public void skillLearn(IActiveCharacter IActiveCharacter) {
         if (PluginConfig.PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE) {
-            Text t = Texts.of(Localization.PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE.replace("%1", IActiveCharacter.getName()).replace("%2", getName()));
+            Text t = Text.of(Localization.PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE.replace("%1", IActiveCharacter.getName()).replace("%2", getName()));
             game.getServer().getOnlinePlayers().stream().forEach(p -> p.sendMessage(t));
         }
     }
@@ -77,7 +81,7 @@ public abstract class AbstractSkill implements ISkill {
     @Override
     public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
         if (PluginConfig.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE) {
-            Text t = Texts.of(Localization.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE.replace("%1", IActiveCharacter.getName()).replace("%2", getName()).replace("%3", level + ""));
+            Text t = Text.of(Localization.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE.replace("%1", IActiveCharacter.getName()).replace("%2", getName()).replace("%3", level + ""));
             game.getServer().getOnlinePlayers().stream().forEach(p -> p.sendMessage(t));
         }
     }
@@ -85,7 +89,7 @@ public abstract class AbstractSkill implements ISkill {
     @Override
     public void skillRefund(IActiveCharacter IActiveCharacter) {
         if (PluginConfig.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE) {
-            Text t = Texts.of(Localization.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE.replace("%1", IActiveCharacter.getName()).replace("%2", getName()));
+            Text t = Text.of(Localization.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE.replace("%1", IActiveCharacter.getName()).replace("%2", getName()));
             game.getServer().getOnlinePlayers().stream().forEach(p -> p.sendMessage(t));
         }
     }

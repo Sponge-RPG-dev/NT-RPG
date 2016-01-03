@@ -18,10 +18,9 @@
 
 package cz.neumimto.players;
 
-import cz.neumimto.IEntityType;
-import cz.neumimto.Weapon;
+import cz.neumimto.inventory.HotbarObject;
+import cz.neumimto.inventory.Weapon;
 import cz.neumimto.configuration.PluginConfig;
-import cz.neumimto.configuration.Settings;
 import cz.neumimto.effects.IEffect;
 import cz.neumimto.players.groups.Guild;
 import cz.neumimto.players.groups.NClass;
@@ -34,7 +33,6 @@ import cz.neumimto.skills.ISkill;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectType;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.block.CollideBlockEvent;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.item.ItemType;
@@ -53,10 +51,27 @@ public class PreloadCharacter implements IActiveCharacter {
     UUID uuid;
     Health health = new HealthStub(this);
     private boolean isusinggui;
+    private static HotbarObject[] objects = new HotbarObject[9];
 
     public PreloadCharacter(UUID uuid) {
         this.uuid = uuid;
         mana.setMaxValue(0);
+    }
+
+
+    @Override
+    public boolean isSocketing() {
+        return false;
+    }
+
+    @Override
+    public void setCurrentRune(String is) {
+
+    }
+
+    @Override
+    public String getCurrentRune() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -76,6 +91,16 @@ public class PreloadCharacter implements IActiveCharacter {
 
     @Override
     public void setInvulnerable(boolean b) {
+
+    }
+
+    @Override
+    public HotbarObject[] getHotbar() {
+        return objects;
+    }
+
+    @Override
+    public void setHotbarSlot(int i, HotbarObject o) {
 
     }
 

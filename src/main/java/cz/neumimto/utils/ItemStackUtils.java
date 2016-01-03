@@ -20,9 +20,9 @@ package cz.neumimto.utils;
 
 import com.typesafe.config.Config;
 import cz.neumimto.NtRpgPlugin;
-import cz.neumimto.Weapon;
 import cz.neumimto.configuration.Localization;
 import cz.neumimto.effects.IGlobalEffect;
+import cz.neumimto.inventory.InventoryService;
 import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.groups.NClass;
 import cz.neumimto.skills.SkillData;
@@ -37,11 +37,9 @@ import org.spongepowered.api.data.value.mutable.ListValue;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 
-import javax.transaction.NotSupportedException;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
@@ -109,8 +107,6 @@ public class ItemStackUtils {
         addAll(hoes);
     }};
 
-
-
     public static boolean isSword(ItemType type) {
         return swords.contains(type);
     }
@@ -146,13 +142,13 @@ public class ItemStackUtils {
         int damage = c.getInt(DAMAGE);
         String name = c.getString(DISPLAY_NAME);
         List<Text> stringList = new ArrayList<>();
-        c.getStringList(LORE).stream().forEach(s -> stringList.add(Texts.of(s)));
+        c.getStringList(LORE).stream().forEach(s -> stringList.add(Text.of(s)));
         Optional<ItemType> asd = globalScope.game.getRegistry().getType(ItemType.class, type);
         if (asd.isPresent()) {
             ItemStack item = ItemStack.builder().itemType(asd.get()).build();
             item.setQuantity(amount);
             item.offer(Keys.ITEM_LORE,stringList);
-            item.offer(Keys.DISPLAY_NAME,Texts.of(name));
+            item.offer(Keys.DISPLAY_NAME,Text.of(name));
             item.offer(Keys.ITEM_DURABILITY,damage);
             return item;
         }
@@ -167,23 +163,27 @@ public class ItemStackUtils {
         s += formatedConfig.apply(ID,itemStack.getItem().getId());
         s += formatedConfig.apply(QUANTITY, String.valueOf(itemStack.getQuantity()));
         s += formatedConfig.apply(DAMAGE, String.valueOf(itemStack.get(Keys.ITEM_DURABILITY).get()));
-        s += formatedConfig.apply(DISPLAY_NAME, Texts.toPlain(itemStack.get(Keys.DISPLAY_NAME).get()));
+        s += formatedConfig.apply(DISPLAY_NAME, itemStack.get(Keys.DISPLAY_NAME).get().toPlain());
         s += "}";
         return s;
     }
 
-    public static String itemStackToString(ItemStack item) {
-        StringBuilder builder = new StringBuilder();
-        createProperty(builder, ID, item.getItem().getId());
-        createProperty(builder, QUANTITY, item.getQuantity());
-        createProperty(builder, DISPLAY_NAME, item.get(Keys.DISPLAY_NAME).get());
-        return builder.toString();
+    public static boolean isItemSkillBind(ItemStack is) {
+        if (is.getItem() != InventoryService.ITEM_SKILL_BIND) {
+            return false;
+        }
+        Optional<List<Text>> texts = is.get(Keys.ITEM_LORE);
+        if (texts.isPresent()) {
+            List<Text> a = texts.get();
+            if (a.size() > 1) {
+                Text text = a.get(0);
+                if (text.toPlain().equalsIgnoreCase(Localization.SKILLBIND)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
-
-    public static ItemStack StringToItemStack(String str) {
-        return null;
-    }
-
 
     private static void createProperty(StringBuilder builder, String value, String key) {
         if (key != null)
@@ -207,22 +207,9 @@ public class ItemStackUtils {
 
 
     public static DisplayNameData setDisplayName(Text name) {
-        try {
-            throw new NotSupportedException("setDisplayName(Text)");
-        } catch (NotSupportedException e) {
-            e.printStackTrace();
-        }
         final DisplayNameData itemName = Sponge.getGame().getDataManager().getManipulatorBuilder(DisplayNameData.class).get().create();
         itemName.set(Keys.DISPLAY_NAME, name);
         return itemName;
-    }
-
-    public static LoreData setLore(Text... texts) {
-        final LoreData loreData = Sponge.getGame().getDataManager().getManipulatorBuilder(LoreData.class).get().create();
-        final ListValue<Text> locallore = loreData.lore();
-        for (Text t : texts)
-            locallore.add(t);
-        return loreData;
     }
 
     public static ItemStack skillToItemStack(SkillItemIcon icon, NClass nClass, CharacterBase character) {
@@ -239,48 +226,48 @@ public class ItemStackUtils {
         SkillTree skillTree = nClass.getSkillTree();
         SkillData skillData = skillTree.getSkills().get(icon.skillName);
         //skilltree settings info
-        locallore.add(Texts.of(icon.skill.getDescription()));
-        locallore.add(Texts.of(""));
-        locallore.add(Texts.of(Localization.LORESECTION_MAX_SKILL_LEVEL + ": " + skillData.getMaxSkillLevel()));
-        locallore.add(Texts.of(Localization.LORESECTION_MAX_PLAYER_LEVEL + ": " + skillData.getMinPlayerLevel()));
+        locallore.add(Text.of(icon.skill.getDescription()));
+        locallore.add(Text.of(""));
+        locallore.add(Text.of(Localization.LORESECTION_MAX_SKILL_LEVEL + ": " + skillData.getMaxSkillLevel()));
+        locallore.add(Text.of(Localization.LORESECTION_MAX_PLAYER_LEVEL + ": " + skillData.getMinPlayerLevel()));
         //skillsettings
-        locallore.add(Texts.of(Localization.SKILL_SETTINGS_LORESECTION_NAME));
+        locallore.add(Text.of(Localization.SKILL_SETTINGS_LORESECTION_NAME));
         SkillSettings skillSettings = skillData.getSkillSettings();
         final int roundprecision = 1;
         skillSettings.getNodes().keySet().stream()
                 .filter(s -> !s.endsWith(SkillSettings.bonus))
                 .forEach(n -> {
-                    locallore.add(Texts.of(
+                    locallore.add(Text.of(
                             "- " + n + ": " + Utils.round(skillData.getSkillSettings().getNodeValue(n), roundprecision)
                                     + " | " + Utils.round(skillData.getSkillSettings().getLevelNodeValue(n, level), roundprecision)
                                     + " | " + Utils.round(skillData.getSkillSettings().getNodeValue(n + SkillSettings.bonus), roundprecision)));
 
                 });
         //skill dependencies
-        locallore.add(Texts.of(""));
+        locallore.add(Text.of(""));
         String strlist = skillData.getConflicts()
                 .stream()
                 .map(SkillData::getSkillName)
                 .collect(Collectors.joining(", "));
-        locallore.add(Texts.of(Localization.LORESECTION_CONFCLICTS + ": " + strlist));
+        locallore.add(Text.of(Localization.LORESECTION_CONFCLICTS + ": " + strlist));
         strlist = skillData.getSoftDepends()
                 .stream()
                 .map(SkillData::getSkillName)
                 .collect(Collectors.joining(", "));
-        locallore.add(Texts.of(Localization.LORESECTION_SOFT_DEPENDS + ": " + strlist));
+        locallore.add(Text.of(Localization.LORESECTION_SOFT_DEPENDS + ": " + strlist));
         strlist = skillData.getHardDepends()
                 .stream()
                 .map(SkillData::getSkillName)
                 .collect(Collectors.joining(", "));
-        locallore.add(Texts.of(Localization.LORESECTION_HARD_DEPENDS + ": " + strlist));
+        locallore.add(Text.of(Localization.LORESECTION_HARD_DEPENDS + ": " + strlist));
         //skill lore
         if (icon.skill.getLore() != null) {
-            locallore.add(Texts.of(""));
-            locallore.add(Texts.of(icon.skill.getLore()));
+            locallore.add(Text.of(""));
+            locallore.add(Text.of(icon.skill.getLore()));
         }
 
         final DisplayNameData itemName = Sponge.getGame().getDataManager().getManipulatorBuilder(DisplayNameData.class).get().create();
-        itemName.set(Keys.DISPLAY_NAME, Texts.of(skillnamecolor, icon.skillName));
+        itemName.set(Keys.DISPLAY_NAME, Text.of(skillnamecolor, icon.skillName));
         // Set up the lore data.
 
         ItemStack.Builder i = ItemStack.builder();
@@ -299,8 +286,11 @@ public class ItemStackUtils {
      * @return
      */
     public static Map<IGlobalEffect, Integer> getItemEffects(ItemStack is) {
-        List<Text> texts = is.get(Keys.ITEM_LORE).get();
-        return getItemEffects(texts);
+        Optional<List<Text>> texts = is.get(Keys.ITEM_LORE);
+        if (texts.isPresent()) {
+            return getItemEffects(texts.get());
+        }
+        return Collections.emptyMap();
     }
 
     /**
@@ -311,8 +301,8 @@ public class ItemStackUtils {
     public static Map<IGlobalEffect, Integer> getItemEffects(List<Text> texts) {
         Map<IGlobalEffect, Integer> map = new HashMap<>();
         texts.stream().filter(t -> t.getFormat().getColor() == TextColors.AQUA).forEach(t -> {
-            String eff = Texts.toPlain(t).substring(3).toLowerCase();
-            String[] arr = eff.split(":");
+            String eff = t.toPlain().substring(3).toLowerCase();
+            String[] arr = eff.split(": ");
             int level = Integer.parseInt(arr[1]);
             IGlobalEffect effect = globalScope.effectService.getGlobalEffect(arr[0]);
             if (effect != null) {
@@ -322,18 +312,48 @@ public class ItemStackUtils {
         return map;
     }
 
-    /**
-     * Creates Weapon object from itemstack
-     * @param itemStack
-     * @return
-     */
-    public static Weapon itemStackToWeapon(ItemStack itemStack) {
-        if (itemStack == null)
-            return Weapon.EmptyHand;
-        Map<IGlobalEffect, Integer> itemEffects = getItemEffects(itemStack);
-        Weapon weapon = new Weapon(itemStack.getItem());
-        weapon.setEffects(itemEffects);
-        return weapon;
+    public static List<Text> addItemEffect(ItemStack itemStack, IGlobalEffect globalEffect, int level) {
+        Optional<List<Text>> texts = itemStack.get(Keys.ITEM_LORE);
+        List<Text> lore = null;
+        if (texts.isPresent()) {
+            lore = texts.get();
+        } else {
+            lore = new ArrayList<>();
+        }
+        lore.add(Text.of(TextColors.AQUA,globalEffect.getName()+":" + level));
+        return lore;
     }
 
+    public static Set<ItemType> consumables = new HashSet<ItemType>() {{
+        addAll(Arrays.asList(APPLE,
+                GOLDEN_APPLE,
+                BAKED_POTATO,
+                CARROT, POTION, BREAD, POTATO,
+                POISONOUS_POTATO, ROTTEN_FLESH, PORKCHOP, COOKED_BEEF, COOKED_CHICKEN, COOKED_MUTTON,
+                COOKIE, COOKED_RABBIT, COOKED_FISH, FISH, CHICKEN,MELON));
+    }};
+
+    public static boolean isConsumable(ItemType type) {
+        return consumables.contains(type);
+    }
+
+
+    public static boolean isItemRune(ItemStack is) {
+        Optional<List<Text>> texts = is.get(Keys.ITEM_LORE);
+        if (texts.isPresent()) {
+            List<Text> a = texts.get();
+            if (a.size() >= 1) {
+                Text text = a.get(0);
+                String s = text.toPlain();
+                if (s.equalsIgnoreCase(Localization.RUNE)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean hasSockets(ItemStack itemStack) {
+        return globalScope.runewordService.getSocketCount(itemStack.get(Keys.ITEM_LORE).get()) > 0;
+    }
 }

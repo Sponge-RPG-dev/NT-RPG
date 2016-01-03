@@ -16,8 +16,9 @@
  *     
  */
 
-package cz.neumimto;
+package cz.neumimto.inventory;
 
+import cz.neumimto.players.IActiveCharacter;
 import org.spongepowered.api.item.ItemType;
 
 /**
@@ -27,8 +28,5 @@ public class Armor extends Weapon {
 
     public Armor(ItemType itemType) {
         super(itemType);
-        isShield = false;
-        damage = 0;
     }
-
 }

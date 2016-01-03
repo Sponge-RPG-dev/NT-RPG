@@ -24,7 +24,6 @@ import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,7 +36,7 @@ public abstract class CommandBase implements CommandCallable {
     protected String permission = "*";
     protected Optional<Text> shortDescription = Optional.empty();
     protected Optional<Text> help = Optional.empty();
-    protected Text usage = Texts.of("");
+    protected Text usage = Text.of("");
     protected List<String> alias = new ArrayList();
 
     public List<String> getAliases() {
@@ -51,15 +50,15 @@ public abstract class CommandBase implements CommandCallable {
 
     protected void setDescription(String string) {
         /* Ty for epic wrapers use... */
-        shortDescription = Optional.of(Texts.of(string));
+        shortDescription = Optional.of(Text.of(string));
     }
 
     protected void setHelp(String string) {
-        help = Optional.of(Texts.of(string));
+        help = Optional.of(Text.of(string));
     }
 
     protected void setUsage(String string) {
-        usage = Texts.of(string);
+        usage = Text.of(string);
     }
 
     protected void addAlias(String string) {
@@ -84,7 +83,7 @@ public abstract class CommandBase implements CommandCallable {
 
     @Override
     public Optional<? extends Text> getShortDescription(CommandSource commandSource) {
-        return Optional.of(Texts.of(CommandLocalization.COMMAND_CHOOSE_DESC));
+        return Optional.of(Text.of(CommandLocalization.COMMAND_CHOOSE_DESC));
     }
 
     @Override

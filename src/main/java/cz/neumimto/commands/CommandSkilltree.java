@@ -32,7 +32,7 @@ import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 
 /**
  * Created by ja on 31.8.2015.
@@ -58,19 +58,19 @@ public class CommandSkilltree extends CommandBase {
             Player player = (Player) commandSource;
             IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
             if (character.isStub()) {
-                player.sendMessage(Texts.of(Localization.CHARACTER_IS_REQUIRED));
+                player.sendMessage(Text.of(Localization.CHARACTER_IS_REQUIRED));
             }
             for (int i = 0; i < args.length - 1; i++) {
                 if (args[i].equalsIgnoreCase("class")) {
                     nClass = groupService.getNClass(args[i + 1]);
                     if (nClass == NClass.Default) {
-                        commandSource.sendMessage(Texts.of(Localization.NON_EXISTING_GROUP));
+                        commandSource.sendMessage(Text.of(Localization.NON_EXISTING_GROUP));
                         return CommandResult.empty();
                     }
                     if (args[i].equalsIgnoreCase("skill")) {
                         skillData = nClass.getSkillTree().getSkills().get(args[i + 1]);
                         if (skillData == SkillData.EMPTY) {
-                            commandSource.sendMessage(Texts.of(Localization.SKILL_DOES_NOT_EXIST));
+                            commandSource.sendMessage(Text.of(Localization.SKILL_DOES_NOT_EXIST));
                             return CommandResult.empty();
                         }
                     }

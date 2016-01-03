@@ -1,4 +1,4 @@
-package cz.neumimto.effects.runewords;
+package cz.neumimto.inventory.runewords;
 
 import java.util.List;
 import java.util.Map;

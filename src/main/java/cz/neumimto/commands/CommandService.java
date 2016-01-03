@@ -21,16 +21,11 @@ package cz.neumimto.commands;
 import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
-import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCallable;
-import org.spongepowered.api.command.CommandManager;
-import org.spongepowered.api.command.source.CommandBlockSource;
-import org.spongepowered.api.data.DataContainer;
-import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
-import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 
-import java.util.Optional;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 /**
  * Created by NeumimTo on 22.7.2015.
@@ -42,7 +37,16 @@ public class CommandService {
     private NtRpgPlugin plugin;
 
     public void registerCommand(CommandBase commandCallable) {
-        Sponge.getCommandDispatcher().register(plugin, commandCallable, commandCallable.getAliases());
+        try {
+            Sponge.getCommandManager().register(plugin, commandCallable, commandCallable.getAliases());
+        } catch (NoSuchMethodError e) {
+            try {
+                Object o = Sponge.class.getDeclaredMethod("getCommandDispatcher").invoke(null);
+                o.getClass().getDeclaredMethod("register",Object.class,CommandCallable.class,List.class).invoke(o,plugin, commandCallable, commandCallable.getAliases());
+            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e1) {
+                e1.printStackTrace();
+            }
+        }
     }
 
 

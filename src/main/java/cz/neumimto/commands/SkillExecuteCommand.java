@@ -22,8 +22,8 @@ import cz.neumimto.ResourceLoader;
 import cz.neumimto.configuration.CommandLocalization;
 import cz.neumimto.configuration.CommandPermissions;
 import cz.neumimto.configuration.Localization;
-import cz.neumimto.gui.Gui;
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.gui.Gui;
 import cz.neumimto.players.CharacterService;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.skills.ExtendedSkillInfo;
@@ -33,7 +33,8 @@ import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
+
 
 /**
  * Created by NeumimTo on 23.7.2015.
@@ -57,13 +58,13 @@ public class SkillExecuteCommand extends CommandBase {
     public CommandResult process(CommandSource commandSource, String s) throws CommandException {
         IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
         if (character.isStub()) {
-            commandSource.sendMessage(Texts.of(Localization.CHARACTER_IS_REQUIRED));
+            commandSource.sendMessage(Text.of(Localization.CHARACTER_IS_REQUIRED));
             return CommandResult.empty();
         }
 
         ExtendedSkillInfo info = character.getSkillInfo(s);
         if (info == ExtendedSkillInfo.Empty || info == null) {
-            commandSource.sendMessage(Texts.of(Localization.CHARACTER_DOES_NOT_HAVE_SKILL));
+            commandSource.sendMessage(Text.of(Localization.CHARACTER_DOES_NOT_HAVE_SKILL));
         }
         SkillResult sk = skillService.executeSkill(character, info);
         switch (sk) {
@@ -81,9 +82,6 @@ public class SkillExecuteCommand extends CommandBase {
                 break;
             case NO_TARGET:
                 Gui.sendMessage(character, Localization.NO_TARGET);
-        }
-        if (sk == SkillResult.ON_COOLDOWN) {
-
         }
         return CommandResult.empty();
     }

@@ -59,4 +59,6 @@ public interface IPlayerMessage {
     void showLevelChange(IActiveCharacter character, ExtendedNClass clazz, int level);
 
     void sendStatus(IActiveCharacter character);
+
+    void showAvalaibleClasses(IActiveCharacter character);
 }

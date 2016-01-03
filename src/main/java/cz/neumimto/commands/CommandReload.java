@@ -26,7 +26,7 @@ import cz.neumimto.skills.SkillService;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 
 /**
  * Created by NeumimTo on 2.8.2015.
@@ -50,7 +50,7 @@ public class CommandReload extends CommandBase {
     @Override
     public CommandResult process(CommandSource commandSource, String s) throws CommandException {
         if (!PluginConfig.DEBUG) {
-            commandSource.sendMessage(Texts.of("Reloading is allowed only in debug mode"));
+            commandSource.sendMessage(Text.of("Reloading is allowed only in debug mode"));
             return CommandResult.success();
         }
         String[] str = s.split(" ");

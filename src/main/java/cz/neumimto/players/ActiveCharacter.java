@@ -18,8 +18,9 @@
 
 package cz.neumimto.players;
 
-import cz.neumimto.Weapon;
 import cz.neumimto.effects.IEffect;
+import cz.neumimto.inventory.HotbarObject;
+import cz.neumimto.inventory.Weapon;
 import cz.neumimto.players.groups.Guild;
 import cz.neumimto.players.groups.NClass;
 import cz.neumimto.players.groups.PlayerGroup;
@@ -37,7 +38,7 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
 import org.spongepowered.api.service.permission.SubjectData;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Tristate;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -75,7 +76,8 @@ public class ActiveCharacter implements IActiveCharacter {
     private transient double weaponDamage;
     private transient double armorvalue;
     private transient DamageType preferedDamageType = null;
-
+    private transient HotbarObject[] hotbar = new HotbarObject[9];
+    private transient String socketing;
     public ActiveCharacter(Player pl, CharacterBase base) {
         this.pl = pl;
         characterProperties = new float[PlayerPropertyService.LAST_ID];
@@ -86,6 +88,32 @@ public class ActiveCharacter implements IActiveCharacter {
         cl.setExperiences(0);
         this.base = base;
         classes.add(cl);
+    }
+
+
+    @Override
+    public boolean isSocketing() {
+        return socketing == null;
+    }
+
+    @Override
+    public void setCurrentRune(String is) {
+        socketing = is;
+    }
+
+    @Override
+    public String getCurrentRune() {
+        return socketing;
+    }
+
+    @Override
+    public HotbarObject[] getHotbar() {
+        return hotbar;
+    }
+
+    @Override
+    public void setHotbarSlot(int i, HotbarObject o) {
+        hotbar[i] = o;
     }
 
     public boolean isSilenced() {
@@ -450,7 +478,7 @@ public class ActiveCharacter implements IActiveCharacter {
 
     @Override
     public void sendMessage(String message) {
-        pl.sendMessage(Texts.of(message));
+        pl.sendMessage(Text.of(message));
     }
 
     @Override

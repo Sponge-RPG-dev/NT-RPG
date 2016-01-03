@@ -1,8 +1,4 @@
-package cz.neumimto.effects.runewords;
-
-import cz.neumimto.effects.IGlobalEffect;
-
-import java.util.Set;
+package cz.neumimto.inventory.runewords;
 
 /**
  * Created by NeumimTo on 29.10.2015.
@@ -18,7 +14,7 @@ public class Rune {
         return name;
     }
 
-    public void setName(String name) {
+    protected void setName(String name) {
         this.name = name;
     }
 

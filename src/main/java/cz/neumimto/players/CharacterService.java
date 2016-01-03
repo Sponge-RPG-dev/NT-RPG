@@ -19,13 +19,19 @@ package cz.neumimto.players;
 
 import cz.neumimto.GroupService;
 import cz.neumimto.NtRpgPlugin;
-import cz.neumimto.Weapon;
+import cz.neumimto.Pair;
 import cz.neumimto.configuration.Localization;
 import cz.neumimto.configuration.PluginConfig;
-import cz.neumimto.effects.*;
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.effects.EffectService;
+import cz.neumimto.effects.EffectSource;
+import cz.neumimto.effects.IEffect;
+import cz.neumimto.effects.IGlobalEffect;
 import cz.neumimto.effects.common.def.CombatEffect;
 import cz.neumimto.effects.common.def.ManaRegeneration;
-import cz.neumimto.events.*;
+import cz.neumimto.events.CancellableEvent;
+import cz.neumimto.events.CharacterGainedLevelEvent;
 import cz.neumimto.events.character.CharacterWeaponUpdateEvent;
 import cz.neumimto.events.character.EventCharacterArmorPostUpdate;
 import cz.neumimto.events.character.PlayerDataPreloadComplete;
@@ -37,8 +43,7 @@ import cz.neumimto.events.skills.SkillRefundEvent;
 import cz.neumimto.events.skills.SkillUpgradeEvent;
 import cz.neumimto.gui.Gui;
 import cz.neumimto.inventory.InventoryService;
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.inventory.Weapon;
 import cz.neumimto.persistance.PlayerDao;
 import cz.neumimto.players.groups.Guild;
 import cz.neumimto.players.groups.NClass;
@@ -47,6 +52,7 @@ import cz.neumimto.players.parties.Party;
 import cz.neumimto.players.properties.DefaultProperties;
 import cz.neumimto.players.properties.PlayerPropertyService;
 import cz.neumimto.skills.*;
+import cz.neumimto.utils.SkillTreeActionResult;
 import cz.neumimto.utils.Utils;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
@@ -54,7 +60,7 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -266,9 +272,11 @@ public class CharacterService {
     }
 
     private void initActiveCharacter(IActiveCharacter character) {
-        character.getPlayer().sendMessage(Texts.of(Localization.CURRENT_CHARACTER.replaceAll("%1", character.getName())));
+        character.getPlayer().sendMessage(Text.of(Localization.CURRENT_CHARACTER.replaceAll("%1", character.getName())));
         effectService.addEffect(new ManaRegeneration(character), character);
         effectService.addEffect(new CombatEffect(character), character);
+
+        inventoryService.initializeHotbar(character);
     }
 
     /**
@@ -356,6 +364,7 @@ public class CharacterService {
         }
         if (character.hasParty())
             character.getParty().removePlayer(character);
+        character.setParty(null);
         character.setParty(null);
         return character;
     }
@@ -613,31 +622,48 @@ public class CharacterService {
      * 5 - if event is cancelled
      * 0 - ok
      */
-    public int upgradeSkill(IActiveCharacter character, ISkill skill) {
+    public Pair<SkillTreeActionResult,SkillTreeActionResult.Data> upgradeSkill(IActiveCharacter character, ISkill skill) {
+        Pair p = new Pair();
+
         if (character.getSkillPoints() <= 0) {
-            return 1;
+            p.key = SkillTreeActionResult.NO_SKILLPOINTS;
+            p.value = new SkillTreeActionResult.Data(skill.getName());
+            return p;
         }
         ExtendedSkillInfo extendedSkillInfo = character.getSkillInfo(skill);
-        if (extendedSkillInfo == null)
-            return 2;
-        if (extendedSkillInfo.getLevel() + extendedSkillInfo.getSkillData().getMinPlayerLevel() > character.getLevel()) {
-            return 3;
+        if (extendedSkillInfo == null) {
+            p.key = SkillTreeActionResult.NOT_LEARNED_SKILL;
+            p.value = new SkillTreeActionResult.Data(skill.getName());
+            return p;
+        }
+        int minlevel = extendedSkillInfo.getLevel() + extendedSkillInfo.getSkillData().getMinPlayerLevel();
+        if ( minlevel > character.getLevel()) {
+            p.key = SkillTreeActionResult.SKILL_REQUIRES_HIGHER_LEVEL;
+            p.value = new SkillTreeActionResult.Data(skill.getName(),minlevel+"");
+            return p;
         }
         if (extendedSkillInfo.getLevel() + 1 > extendedSkillInfo.getSkillData().getMaxSkillLevel()) {
-            return 4;
+            p.key = SkillTreeActionResult.SKILL_ON_MAX_LEVEL;
+            p.value = new SkillTreeActionResult.Data(skill.getName(),extendedSkillInfo.getLevel()+"");
+            return p;
         }
         SkillUpgradeEvent event = new SkillUpgradeEvent(character, skill, extendedSkillInfo.getLevel() + 1);
         game.getEventManager().post(event);
-        if (event.isCancelled())
-            return 5;
+        if (event.isCancelled()) {
+            p.key = SkillTreeActionResult.UNKNOWN;
+            p.value = new SkillTreeActionResult.Data("");
+            return p;
+        }
         extendedSkillInfo.setLevel(event.getLevel());
         short s = character.getCharacterBase().getSkillPoints();
         character.getCharacterBase().setSkillPoints((short) (s - 1));
         character.getCharacterBase().setUsedSkillPoints((short) (s + 1));
-        character.getCharacterBase().getSkills().put(extendedSkillInfo.getSkill().getName(), extendedSkillInfo.getLevel());
+        character.getCharacterBase().getSkills().put(extendedSkillInfo.getSkill().getName(), event.getLevel());
         putInSaveQueue(character.getCharacterBase());
         skill.skillUpgrade(character, event.getLevel());
-        return 0;
+        p.key = SkillTreeActionResult.UPGRADED;
+        p.value = new SkillTreeActionResult.Data(skill.getName(),event.getLevel()+"");
+        return p;
     }
 
     /**
@@ -651,22 +677,30 @@ public class CharacterService {
      * 3 - event SkillLearnEvent is cancelled
      * 0 - ok;
      */
-    public int characterLearnskill(IActiveCharacter character, ISkill skill, SkillTree skillTree) {
+    public Pair<SkillTreeActionResult,SkillTreeActionResult.Data> characterLearnskill(IActiveCharacter character, ISkill skill, SkillTree skillTree) {
+        Pair p = new Pair();
         if (character.getSkillPoints() < 1) {
-            return 1;
+            p.key = SkillTreeActionResult.NO_SKILLPOINTS;
+            p.value = new SkillTreeActionResult.Data(skill.getName());
+            return p;
         }
         SkillData info = skillTree.getSkills().get(skill.getName());
         if (info == null) {
-            return 7;
+            p.key = SkillTreeActionResult.SKILL_IS_NOT_IN_A_TREE;
+            p.value = new SkillTreeActionResult.Data(skill.getName());
+            return p;
         }
-        if (character.getLevel() <= info.getMinPlayerLevel()) {
-            return 2;
+        if (character.getLevel() < info.getMinPlayerLevel()) {
+            p.key = SkillTreeActionResult.SKILL_REQUIRES_HIGHER_LEVEL;
+            p.value = new SkillTreeActionResult.Data(skill.getName(),info.getMinPlayerLevel()+"");
+            return p;
         }
         for (SkillData skillData : info.getHardDepends()) {
-            if (skillData.getSkillName() == StartingPoint.name)
-                break;
             if (!character.hasSkill(skillData.getSkillName())) {
-                return 4;
+                p.key = SkillTreeActionResult.DOES_NOT_MATCH_CHAIN;
+                //todo
+                p.value = new SkillTreeActionResult.Data(skill.getName(),info.getMinPlayerLevel()+"");
+                return p;
             }
         }
         boolean hasSkill = info.getSoftDepends().isEmpty();
@@ -676,16 +710,26 @@ public class CharacterService {
                 break;
             }
         }
-        if (!hasSkill)
-            return 5;
+        if (!hasSkill) {
+            p.key = SkillTreeActionResult.DOES_NOT_MATCH_CHAIN;
+            //todo
+            p.value = new SkillTreeActionResult.Data(skill.getName(),info.getMinPlayerLevel()+"");
+            return p;
+        }
         for (SkillData skillData : info.getConflicts()) {
-            if (character.hasSkill(skillData.getSkillName()))
-                return 6;
+            if (character.hasSkill(skillData.getSkillName())) {
+                p.key = SkillTreeActionResult.ALREADY_LEARNED;
+
+                p.value = new SkillTreeActionResult.Data(skill.getName(), info.getMinPlayerLevel() + "");
+                return p;
+            }
         }
         SkillLearnEvent event = new SkillLearnEvent(character, skill);
         game.getEventManager().post(event);
         if (event.isCancelled()) {
-            return 3;
+            p.key = SkillTreeActionResult.UNKNOWN;
+            p.value = new SkillTreeActionResult.Data("");
+            return p;
         }
 
         short s = character.getCharacterBase().getSkillPoints();
@@ -701,7 +745,9 @@ public class CharacterService {
         character.getCharacterBase().getSkills().put(skill.getName(), einfo.getLevel());
         putInSaveQueue(character.getCharacterBase());
         skill.skillLearn(character);
-        return 0;
+        p.key = SkillTreeActionResult.LEARNED;
+        p.value = new SkillTreeActionResult.Data(skill.getName());
+        return p;
     }
 
     /**

@@ -18,6 +18,9 @@
 
 package cz.neumimto.configuration;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by NeumimTo on 26.12.2014.
  */
@@ -98,4 +101,9 @@ public class PluginConfig {
 
     @ConfigValue
     public static int SKILLPOINTS_PER_LEVEL;
+
+    @ConfigValue
+    public static Set<String> ALLOWED_RUNES_ITEMTYPES = new HashSet<String>() {{
+        add("minecraft:nether_star");
+    }};
 }

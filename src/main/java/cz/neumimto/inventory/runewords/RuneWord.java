@@ -1,10 +1,9 @@
-package cz.neumimto.effects.runewords;
+package cz.neumimto.inventory.runewords;
 
 import cz.neumimto.effects.IGlobalEffect;
 import cz.neumimto.players.groups.NClass;
 import org.spongepowered.api.item.ItemType;
 
-import javax.naming.ldap.HasControls;
 import java.util.*;
 
 /**

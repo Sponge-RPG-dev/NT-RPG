@@ -18,9 +18,9 @@
 
 package cz.neumimto.gui;
 
+import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.effects.EffectStatusType;
 import cz.neumimto.effects.IEffect;
-import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.ExtendedNClass;
 import cz.neumimto.players.IActiveCharacter;
@@ -108,5 +108,9 @@ public class Gui {
 
     public static void sendStatus(IActiveCharacter character) {
         getMessageTypeOf(character).sendStatus(character);
+    }
+
+    public static void showAvalaibleClasses(IActiveCharacter character) {
+        getMessageTypeOf(character).showAvalaibleClasses(character);
     }
 }
