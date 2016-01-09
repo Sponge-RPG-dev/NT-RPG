@@ -23,9 +23,7 @@ import cz.neumimto.effects.IGlobalEffect;
 import cz.neumimto.players.IActiveCharacter;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.entity.Hotbar;
 
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,11 +38,13 @@ public class Weapon extends HotbarObject {
     protected boolean isShield;
     private final ItemType itemType;
     private Map<IGlobalEffect, Integer> effects = new HashMap<>();
-    boolean current;
-    private WeakReference<ItemStack> itemStack;
+    protected boolean current;
+    private ItemStack itemStack;
+
 
     public Weapon(ItemType itemType) {
         this.itemType = itemType;
+        type = HotbarObjectTypes.WEAPON;
     }
 
     public ItemType getItemType() {
@@ -89,13 +89,16 @@ public class Weapon extends HotbarObject {
     public void onLeftClick(IActiveCharacter character) {
         if (!current)
             NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character,this);
+        else if (character.isSocketing()) {
+            NtRpgPlugin.GlobalScope.inventorySerivce.insertRune(character);
+        }
     }
 
     public ItemStack getItemStack() {
-        return itemStack.get();
+        return itemStack;
     }
 
     public void setItemStack(ItemStack i ){
-        itemStack = new WeakReference<ItemStack>(i);
+        itemStack = i;
     }
 }

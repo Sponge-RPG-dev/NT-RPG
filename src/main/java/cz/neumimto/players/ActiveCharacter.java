@@ -77,7 +77,7 @@ public class ActiveCharacter implements IActiveCharacter {
     private transient double armorvalue;
     private transient DamageType preferedDamageType = null;
     private transient HotbarObject[] hotbar = new HotbarObject[9];
-    private transient String socketing;
+    private transient int socketing;
     public ActiveCharacter(Player pl, CharacterBase base) {
         this.pl = pl;
         characterProperties = new float[PlayerPropertyService.LAST_ID];
@@ -92,17 +92,12 @@ public class ActiveCharacter implements IActiveCharacter {
 
 
     @Override
-    public boolean isSocketing() {
-        return socketing == null;
-    }
-
-    @Override
-    public void setCurrentRune(String is) {
+    public void setCurrentRune(int is) {
         socketing = is;
     }
 
     @Override
-    public String getCurrentRune() {
+    public int getCurrentRune() {
         return socketing;
     }
 

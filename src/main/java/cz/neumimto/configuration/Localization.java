@@ -212,4 +212,7 @@ public class Localization {
 
     @ConfigValue
     public static String CLASS_INVENTORYMENU_FOOTER = "Rightclick for more info, Leftclick for skilltree";
+
+    @ConfigValue
+    public static String UNKNOWN_RUNE_NAME = "You can work with unknown types of runes. The rune has been probably removed";
 }

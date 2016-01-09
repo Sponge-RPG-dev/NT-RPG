@@ -65,12 +65,12 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public void setCurrentRune(String is) {
+    public void setCurrentRune(int is) {
 
     }
 
     @Override
-    public String getCurrentRune() {
+    public int getCurrentRune() {
         throw new UnsupportedOperationException();
     }
 

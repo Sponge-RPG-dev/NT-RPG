@@ -166,27 +166,6 @@ public class RWService {
         return stack;
     }
 
-    public Rune getRune(ItemStack i) {
-        Rune r = null;
-        Optional<Text> text = i.get(Keys.DISPLAY_NAME);
-        if (text.isPresent()) {
-            Text text1 = text.get();
-            if (text1.getColor() == TextColors.GOLD) {
-                Optional<List<Text>> texts = i.get(Keys.ITEM_LORE);
-                if (texts.isPresent()) {
-                    List<Text> lore = texts.get();
-                    if (lore.size() > 0) {
-                        Text line = lore.get(0);
-                        if (line.getColor() == TextColors.DARK_PURPLE) {
-                            String s = line.toPlain();
-                            r = getRune(s);
-                        }
-                    }
-                }
-            }
-        }
-        return r;
-    }
 
     public ItemStack createSockets(ItemStack itemStack, int i) {
         List<Text> arr = new ArrayList<>();
