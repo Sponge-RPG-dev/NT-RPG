@@ -179,6 +179,7 @@ public class InventoryService {
         for (String a : Localization.ITEM_SKILLBIND_FOOTER.split(":n")) {
             lore.add(Text.of(TextColors.DARK_GRAY, a));
         }
+        ItemStackUtils.createEnchantmentGlow(is);
         is.offer(Keys.ITEM_LORE, lore);
     }
 
@@ -238,6 +239,7 @@ public class InventoryService {
                 character.setCurrentRune(itemStack.get(Keys.DISPLAY_NAME).get().toPlain());
                 Hotbar hotbar = character.getPlayer().getInventory().query(Hotbar.class);
                 character.setHotbarSlot(hotbar.getSelectedSlotIndex(), HotbarObject.EMPTYHAND_OR_CONSUMABLE);
+                ItemStackUtils.createEnchantmentGlow(itemStack);
                 character.getPlayer().setItemInHand(null);
             }
         }

@@ -32,6 +32,7 @@ import cz.neumimto.skills.SkillTree;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
+import org.spongepowered.api.data.manipulator.mutable.item.EnchantmentData;
 import org.spongepowered.api.data.manipulator.mutable.item.LoreData;
 import org.spongepowered.api.data.value.mutable.ListValue;
 import org.spongepowered.api.item.ItemType;
@@ -355,5 +356,13 @@ public class ItemStackUtils {
 
     public static boolean hasSockets(ItemStack itemStack) {
         return globalScope.runewordService.getSocketCount(itemStack.get(Keys.ITEM_LORE).get()) > 0;
+    }
+
+    /**
+     * https://github.com/SpongePowered/SpongeForge/issues/470
+     * @param itemStack
+     */
+    public static void createEnchantmentGlow(ItemStack itemStack) {
+        itemStack.offer(Sponge.getDataManager().getManipulatorBuilder(EnchantmentData.class).get().create());
     }
 }
