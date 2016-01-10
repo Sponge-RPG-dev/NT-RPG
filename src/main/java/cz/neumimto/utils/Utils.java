@@ -24,6 +24,7 @@ import cz.neumimto.IEntity;
 import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.players.properties.PlayerPropertyService;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
@@ -31,6 +32,7 @@ import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Projectile;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.blockray.BlockRay;
 import org.spongepowered.api.util.blockray.BlockRayHit;
 import org.spongepowered.api.world.Location;
@@ -105,7 +107,7 @@ public class Utils {
         Optional<BlockRayHit<World>> h = BlockRay.from(player).blockLimit(range).filter(BlockRay.onlyAirFilter()).build().end();
         if (h.isPresent()) {
             Vector3d lookPos = h.get().getBlockPosition().toDouble();
-            Collection<Entity> entities = player.getWorld().getEntities(entity -> entity != player && entity.getLocation().getPosition().distanceSquared(lookPos) < 2 && isLivingEntity(entity));
+            Collection<Entity> entities = player.getWorld().getEntities(entity -> entity != player && entity.getLocation().getPosition().distanceSquared(lookPos) < 4 && isLivingEntity(entity));
             if (entities.isEmpty())
                 return null;
             for (Entity e : entities) {
@@ -157,5 +159,14 @@ public class Utils {
         return false;
     }
 
+    public static void broadcastMessage(Text message, Player source, int radius) {
+        double s = Math.pow(radius, 2);
+        Collection<Player> onlinePlayers = Sponge.getServer().getOnlinePlayers();
+        for (Player onlinePlayer : onlinePlayers) {
+            if (onlinePlayer.getLocation().getPosition().distanceSquared(source.getLocation().getPosition()) <= s) {
+                onlinePlayer.sendMessage(message);
+            }
+        }
+    }
 
 }

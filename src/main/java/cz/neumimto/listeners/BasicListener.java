@@ -34,12 +34,10 @@ import cz.neumimto.skills.ISkill;
 import cz.neumimto.skills.ProjectileProperties;
 import cz.neumimto.skills.SkillService;
 import cz.neumimto.utils.Utils;
-import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
-import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.event.Listener;
@@ -114,12 +112,7 @@ public class BasicListener {
                 }
             }
         }
-
-
     }
-
-    @Inject
-    Logger logger;
 
     @Listener
     public void onRightClick(InteractEntityEvent.Secondary event) {
@@ -180,8 +173,9 @@ public class BasicListener {
             EntityDamageSource entityDamageSource = first.get();
             Entity source = entityDamageSource.getSource();
             if (source.get(Keys.HEALTH).isPresent()) {
+                targetEntity.offer(Keys.INVULNERABILITY_TICKS,0);
                 //attacker
-                IEntity entity = entityService.get((Living) source);
+                IEntity entity = entityService.get(source);
                 double newdamage = 0;
                 if (entity.getType() == IEntityType.CHARACTER) {
                     IActiveCharacter character = (IActiveCharacter) entity;

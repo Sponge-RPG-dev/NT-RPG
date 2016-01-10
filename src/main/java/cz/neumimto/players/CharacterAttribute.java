@@ -30,5 +30,5 @@ public interface CharacterAttribute {
 
     String getDescription();
 
-    void recalculateCharacterStats();
+
 }

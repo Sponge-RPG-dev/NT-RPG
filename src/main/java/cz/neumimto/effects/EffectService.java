@@ -44,7 +44,7 @@ public class EffectService {
     @Inject
     private NtRpgPlugin plugin;
 
-    public static final long TICK_PERIOD = 150L;
+    public static final long TICK_PERIOD = 250L;
     private Set<IEffect> effectSet = new HashSet<>();
     private Set<IEffect> pendingAdditions = new HashSet<>();
     private Set<IEffect> pendingRemovals = new HashSet<>();
@@ -112,11 +112,13 @@ public class EffectService {
                     pendingRemovals.clear();
                     long l = System.currentTimeMillis();
                     for (IEffect e : effectSet) {
-                        if (e.getDuration() == unlimited_duration) {
-                            continue;
-                        }
+
                         if (e.getPeriod() + e.getLastTickTime() <= l) {
                             tickEffect(e,l);
+                        }
+
+                        if (e.getDuration() == unlimited_duration) {
+                            continue;
                         }
 
                         if (e.getExpireTime() <= l) {

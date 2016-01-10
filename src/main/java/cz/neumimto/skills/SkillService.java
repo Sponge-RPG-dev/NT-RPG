@@ -26,6 +26,7 @@ import cz.neumimto.events.skills.SkillPrepareEvent;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.gui.Gui;
 import cz.neumimto.persistance.SkillTreeDao;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.players.properties.DefaultProperties;
@@ -91,7 +92,7 @@ public class SkillService {
 
     public SkillResult executeSkill(IActiveCharacter character, ISkill skill) {
         if (character.hasSkill(skill.getName())) {
-            executeSkill(character,character.getSkillInfo(skill));
+            return executeSkill(character,character.getSkillInfo(skill));
         }
         return SkillResult.WRONG_DATA;
     }
@@ -101,8 +102,12 @@ public class SkillService {
         if (level < 0)
             //this should never happen
             return SkillResult.WRONG_DATA;
-        if (character.hasCooldown(esi.getSkill().getName()))
+        Long aLong = character.getCooldowns().get(esi.getSkill().getName());
+        long servertime = System.currentTimeMillis();
+        if (aLong != null && aLong > servertime) {
+            Gui.sendCooldownMessage(character,esi.getSkill().getName(),aLong-servertime);
             return SkillResult.ON_COOLDOWN;
+        }
         SkillData skillData = esi.getSkillData();
         SkillSettings skillSettings = skillData.getSkillSettings();
         float requiredMana = skillSettings.getLevelNodeValue(SkillNode.MANACOST, level);
@@ -114,8 +119,8 @@ public class SkillService {
         double hpcost = event.getRequiredHp() * character.getCharacterProperty(DefaultProperties.health_cost_reduce);
         double manacost = event.getRequiredMana() * character.getCharacterProperty(DefaultProperties.mana_cost_reduce);
         //todo float staminacost =
-        if (character.getHealth().getValue() < hpcost) {
-            if (character.getMana().getValue() <= (manacost)) {
+        if (character.getHealth().getValue() > hpcost) {
+            if (character.getMana().getValue() >= manacost) {
                 long cooldown = (long) (System.currentTimeMillis() + (skillSettings.getLevelNodeValue(SkillNode.COOLDOWN, level) * character.getCharacterProperty(DefaultProperties.cooldown_reduce)));
                 SkillResult result = esi.getSkill().onPreUse(character);
                 if (result == SkillResult.CANCELLED)
@@ -126,14 +131,13 @@ public class SkillService {
                     if (!event.isCancelled()) {
                         double newval = character.getHealth().getValue() - eventt.getHpcost();
                         if (newval <= 0) {
-                            //todo kill the player
+                            //todo kill the player ?
                             HealthData healthData = character.getPlayer().getHealthData();
                         } else {
                             character.getHealth().setValue(newval);
                             character.getMana().setValue(character.getMana().getValue() - event.getRequiredMana());
-                            if (cooldown <= System.currentTimeMillis()) {
-                                character.getCharacterBase().getCooldowns().put(skillData.getSkillName(), cooldown);
-                            }
+                            character.getCharacterBase().getCooldowns().put(skillData.getSkillName(), cooldown);
+                            Gui.sendManaStatus(character,character.getMana().getValue(),character.getMaxMana(),character.getMana().getReservedAmount());
                             return SkillResult.OK;
                         }
                     }

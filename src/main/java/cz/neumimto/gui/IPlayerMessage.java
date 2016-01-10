@@ -48,7 +48,7 @@ public interface IPlayerMessage {
 
     void invokeCharacterMenu(Player player, List<CharacterBase> characterBases);
 
-    void sendManaStatus(IActiveCharacter character, float currentMana, float maxMana, float reserved);
+    void sendManaStatus(IActiveCharacter character, double currentMana, double maxMana, double reserved);
 
     void sendPlayerInfo(IActiveCharacter character, List<CharacterBase> target);
 

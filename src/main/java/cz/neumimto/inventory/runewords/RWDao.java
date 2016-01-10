@@ -19,7 +19,7 @@ public class RWDao {
         for (String a : runes.keySet()) {
             Rune r = new Rune();
             r.setName(a);
-            //TODO
+            r.setSpawnchance(0);
             s.add(r);
         }
         return s;
@@ -36,6 +36,8 @@ public class RWDao {
             String name = config.getString(root+"."+a+".Name");
             int minlevel = config.getInt(root + "." + a + ".MinLevel");
             List<String> restricted = config.getStringList(root + "." + a + ".RestrictedClasses");
+            List<String> allowedItems = config.getStringList(root + "." + a + ".AllowedItems");
+            rw.setAllowedItems(allowedItems);
             List<String> effects = config.getStringList(root+"."+a+".Effects");
             Map<String,Float> map = new HashMap<>();
             effects.stream().map(q -> q.split(":")).forEach(d -> map.put(d[0],Float.parseFloat(d[1])));

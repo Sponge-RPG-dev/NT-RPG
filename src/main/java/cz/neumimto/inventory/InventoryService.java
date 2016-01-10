@@ -24,6 +24,7 @@ import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.damage.DamageService;
 import cz.neumimto.effects.EffectService;
 import cz.neumimto.effects.IGlobalEffect;
+import cz.neumimto.gui.Gui;
 import cz.neumimto.inventory.runewords.RWService;
 import cz.neumimto.inventory.runewords.Rune;
 import cz.neumimto.players.CharacterService;
@@ -36,11 +37,13 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.EmptyInventory;
+import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
+import org.spongepowered.api.item.inventory.property.SlotIndex;
+import org.spongepowered.api.item.inventory.type.CarriedInventory;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
@@ -102,6 +105,8 @@ public class InventoryService {
             Optional<ItemStack> stack = s.peek();
             if (stack.isPresent()) {
                 HotbarObject hotbarObject = getHotbarObject(character, stack.get());
+                if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE)
+                    hotbarObject.setSlot(i);
                 character.setHotbarSlot(i, hotbarObject);
             }
             i++;
@@ -128,33 +133,47 @@ public class InventoryService {
         return HotbarObject.EMPTYHAND_OR_CONSUMABLE;
     }
 
+    private HotbarRune buildHotbarRune(ItemStack is) {
+        HotbarRune rune = new HotbarRune();
+        Optional<Text> text = is.get(Keys.DISPLAY_NAME);
+        if (text.isPresent()) {
+            String s = text.get().toPlain();
+            Rune rune1 = rwService.getRune(s);
+            rune.r = rune1;
+        }
+        return rune;
+    }
+
     private Weapon buildHotbarWeapon(IActiveCharacter character, ItemStack is) {
         Map<IGlobalEffect, Integer> itemEffects = ItemStackUtils.getItemEffects(is);
         Weapon w = new Weapon(is.getItem());
+        w.setItemStack(is);
         w.setEffects(itemEffects);
 
         return w;
     }
 
     protected HotbarSkill buildHotbarSkill(IActiveCharacter character, ItemStack is) {
-        HotbarSkill skill = null;
+        HotbarSkill skill = new HotbarSkill();
         Optional<Text> text = is.get(Keys.DISPLAY_NAME);
         if (text.isPresent()) {
-            Text text1 = text.get();
-            if (text1.getColor() == TextColors.GOLD && text1.getStyle() == TextStyles.ITALIC) {
-                skill = new HotbarSkill();
-                String s = text1.toPlain();
-                String[] split = s.split("-");
-                for (String s1 : split) {
-                    if (s1.endsWith("«")) {
-                        skill.left_skill = skillService.getSkill(s1.substring(0, s1.length() - 2));
-                    } else if (s1.startsWith("»")) {
-                        skill.right_skill = skillService.getSkill(s1.substring(0, s1.length() - 2));
-                    }
+            String s = text.get().toPlain();
+            String[] split = s.split("-");
+            for (String s1 : split) {
+                if (s1.isEmpty())
+                    continue;
+                if (s1.endsWith("«")) {
+                    String substring = s1.substring(0, s1.length() - 2);
+                    ISkill skill1 = skillService.getSkill(substring);
+                    skill.left_skill = skill1;
+                } else if (s1.startsWith("»")) {
+                    String substring = s1.substring(2);
+                    ISkill skill1 = skillService.getSkill(substring);
+                    skill.right_skill = skill1;
                 }
             }
         }
-        return skill;
+    return skill;
     }
 
     public void createHotbarSkill(ItemStack is, ISkill right, ISkill left) {
@@ -179,6 +198,7 @@ public class InventoryService {
         for (String a : Localization.ITEM_SKILLBIND_FOOTER.split(":n")) {
             lore.add(Text.of(TextColors.DARK_GRAY, a));
         }
+        ItemStackUtils.createEnchantmentGlow(is);
         is.offer(Keys.ITEM_LORE, lore);
     }
 
@@ -218,6 +238,7 @@ public class InventoryService {
     public void changeEquipedWeapon(IActiveCharacter character, ItemStack weapon) {
         //old
         Weapon mainHand = character.getMainHand();
+        mainHand.current = false;
         effectService.removeGlobalEffectsAsEnchantments(mainHand.getEffects(), character);
 
         //new
@@ -226,40 +247,63 @@ public class InventoryService {
         weapon1.setItemStack(weapon);
         int slot = mainHand.getSlot();
         character.setHotbarSlot(slot, weapon1);
-
+        weapon1.current = true;
         damageService.recalculateCharacterWeaponDamage(character);
     }
 
     public void startSocketing(IActiveCharacter character) {
         Optional<ItemStack> itemInHand = character.getPlayer().getItemInHand();
         if (itemInHand.isPresent()) {
-            ItemStack itemStack = itemInHand.get();
-            if (ItemStackUtils.isItemRune(itemStack)) {
-                character.setCurrentRune(itemStack.get(Keys.DISPLAY_NAME).get().toPlain());
-                Hotbar hotbar = character.getPlayer().getInventory().query(Hotbar.class);
-                character.setHotbarSlot(hotbar.getSelectedSlotIndex(), HotbarObject.EMPTYHAND_OR_CONSUMABLE);
-                character.getPlayer().setItemInHand(null);
+            Hotbar h = character.getPlayer().getInventory().query(Hotbar.class);
+            int selectedSlotIndex = h.getSelectedSlotIndex();
+            HotbarObject o = character.getHotbar()[selectedSlotIndex];
+            if (o.getType() == HotbarObjectTypes.RUNE) {
+                character.setCurrentRune(selectedSlotIndex);
             }
         }
     }
 
     public void insertRune(IActiveCharacter character) {
+        if (!character.isSocketing())
+            return;
         Optional<ItemStack> itemInHand = character.getPlayer().getItemInHand();
         if (itemInHand.isPresent()) {
             ItemStack itemStack = itemInHand.get();
             if (ItemStackUtils.hasSockets(itemStack)) {
-                itemStack = rwService.insertRune(itemStack, character.getCurrentRune());
-                character.getPlayer().setItemInHand(itemStack);
-                return;
+                HotbarObject hotbarObject = character.getHotbar()[character.getCurrentRune()];
+                if (hotbarObject == HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
+                    character.setCurrentRune(-1);
+                    return;
+                }
+                if (hotbarObject.type == HotbarObjectTypes.RUNE) {
+                    HotbarRune r = (HotbarRune) hotbarObject;
+                    String name = null;
+                    Inventory slot = character.getPlayer().getInventory().query(Hotbar.class).query(new SlotIndex(character.getCurrentRune()));
+                    ItemStack runeitem = null;
+                    if (!slot.peek().isPresent()) {
+                        return;
+                    }
+                    runeitem = slot.peek().get();
+                    if (runeitem.get(Keys.DISPLAY_NAME).isPresent()) {
+                       name = runeitem.get(Keys.DISPLAY_NAME).get().toPlain();
+                    }
+                    r.r = rwService.getRune(name);
+                    if (r.r == null) {
+                        Gui.sendMessage(character, Localization.UNKNOWN_RUNE_NAME);
+                        character.setCurrentRune(-1);
+                        return;
+                    }
+                    ItemStack i = rwService.insertRune(itemStack, r.getRune().getName());
+                    CarriedInventory<? extends Carrier> inventory = character.getPlayer().getInventory();
+                    Inventory query = inventory.query(Hotbar.class).query(new SlotIndex(character.getCurrentRune()));
+                    query.clear();
+                    character.getPlayer().setItemInHand(i);
+                    if (!rwService.hasEmptySocket(i.get(Keys.ITEM_LORE).get())) {
+                        i = rwService.findRuneword(i);
+                        character.getPlayer().setItemInHand(i);
+                    }
+                }
             }
         }
-        Rune r = rwService.getRune(character.getCurrentRune());
-        if (r != null) {
-            ItemStack is = rwService.toItemStack(r);
-            Inventory query = character.getPlayer().getInventory().query(EmptyInventory.class);
-            Inventory first = query.first();
-            first.set(is);
-        }
-
     }
 }

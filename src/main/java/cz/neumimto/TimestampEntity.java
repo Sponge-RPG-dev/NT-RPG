@@ -18,8 +18,10 @@
 
 package cz.neumimto;
 
-import javax.persistence.*;
-import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 
 /**
  * Created by NeumimTo on 24.7.2015.
@@ -28,21 +30,19 @@ import java.util.Date;
 public abstract class TimestampEntity {
 
     @Column(name = "updated")
-    @Temporal(TemporalType.TIMESTAMP)
-    public Date updated;
+    public Long updated;
 
     @PrePersist
     public void onCreate() {
-        updated = created = new Date();
+        updated = created = System.currentTimeMillis();
     }
 
 
     @Column(name = "created")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date created;
+    private Long created;
 
     @PreUpdate
     public void onUpdate() {
-        updated = new Date();
+        updated = System.currentTimeMillis();
     }
 }

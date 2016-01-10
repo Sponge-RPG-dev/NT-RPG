@@ -105,7 +105,7 @@ public class VanilaMessaging implements IPlayerMessage {
     }
 
     @Override
-    public void sendManaStatus(IActiveCharacter character, float currentMana, float maxMana, float reserved) {
+    public void sendManaStatus(IActiveCharacter character, double currentMana, double maxMana, double reserved) {
         Text.Builder b = Text.builder("Mana: " + currentMana).color(TextColors.BLUE);
         if (reserved != 0) {
             b.append(Text.builder(" / " + (maxMana - reserved)).color(TextColors.DARK_RED).build());

@@ -39,24 +39,21 @@ public class Gui {
 
     public static IPlayerMessage vanilla;
 
-  /*  public static IPlayerMessage mod;*/
+    public static IPlayerMessage mod;
 
     static {
         vanilla = IoC.get().build(VanilaMessaging.class);
-       /* mod = IoC.get().build(MCGUIMessaging.class);*/
-    }
-
-    public static boolean isUsingClientSideGui(Player player) {
-        return false;
     }
 
     public static IPlayerMessage getMessageTypeOf(IActiveCharacter player) {
-       /* if (player.isUsingGuiMod())
-            return mod;*/
+       if (player.isUsingGuiMod())
+            return mod;
         return vanilla;
     }
 
     public static IPlayerMessage getMessageTypeOf(Player player) {
+        if (mod == null)
+            return vanilla;
    /*     if (isUsingClientSideGui(player))
             return mod;*/
         return vanilla;
@@ -82,7 +79,7 @@ public class Gui {
         getMessageTypeOf(player).invokeCharacterMenu(player, characterBases);
     }
 
-    public static void sendManaStatus(IActiveCharacter character, float currentMana, float maxMana, float reserved) {
+    public static void sendManaStatus(IActiveCharacter character, double currentMana, double maxMana, double reserved) {
         getMessageTypeOf(character).sendManaStatus(character, currentMana, maxMana, reserved);
     }
 
