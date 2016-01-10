@@ -136,7 +136,7 @@ public class SkillService {
                         } else {
                             character.getHealth().setValue(newval);
                             character.getMana().setValue(character.getMana().getValue() - event.getRequiredMana());
-                            character.getCharacterBase().getCooldowns().put(skillData.getSkillName(), cooldown);
+                            character.getCooldowns().put(skillData.getSkillName(),cooldown);
                             Gui.sendManaStatus(character,character.getMana().getValue(),character.getMaxMana(),character.getMana().getReservedAmount());
                             return SkillResult.OK;
                         }

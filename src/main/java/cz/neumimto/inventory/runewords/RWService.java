@@ -202,7 +202,6 @@ public class RWService {
             Text text = t.get(1);
             String s = text.toPlain();
             for (RuneWord rw : runewords.values()) {
-
                 String collect = rw.getRunes().stream().map(r -> r.getName()).collect(Collectors.joining());
                 if (s.equalsIgnoreCase(collect)) {
                     return reBuildRuneword(i,rw);
@@ -213,6 +212,13 @@ public class RWService {
     }
 
     public ItemStack reBuildRuneword(ItemStack i, RuneWord rw) {
+        if (rw == null) {
+            if (PluginConfig.AUTOREMOVE_NONEXISTING_RUNEWORDS) {
+                i.offer(Keys.DISPLAY_NAME,Text.of(i.getItem().getName()));
+                i.offer(Keys.ITEM_LORE,Collections.<Text>emptyList());
+                return i;
+            }
+        }
         i.offer(Keys.DISPLAY_NAME,Text.of(TextColors.GOLD,rw.getName()));
         List<Text> l = new ArrayList<>();
         l.add(Text.of(TextColors.BLUE,Localization.RUNEWORD));

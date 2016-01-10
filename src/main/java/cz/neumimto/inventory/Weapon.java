@@ -83,15 +83,16 @@ public class Weapon extends HotbarObject {
     public void onRightClick(IActiveCharacter character) {
         if (!current)
             NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character,this);
+        else if (character.isSocketing()) {
+            NtRpgPlugin.GlobalScope.inventorySerivce.insertRune(character);
+        }
     }
 
     @Override
     public void onLeftClick(IActiveCharacter character) {
         if (!current)
             NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character,this);
-        else if (character.isSocketing()) {
-            NtRpgPlugin.GlobalScope.inventorySerivce.insertRune(character);
-        }
+
     }
 
     public ItemStack getItemStack() {

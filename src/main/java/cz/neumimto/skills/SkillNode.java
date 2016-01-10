@@ -29,7 +29,10 @@ public enum SkillNode {
     COOLDOWN("cooldown"),
     VELOCITY("velocity"),
     HPCOST("hpcost"),
-    PROJECTILE_TYPE("projectile-type"), RANGE("range"), DURATION("duration"), AMOUNT("amount");
+    PROJECTILE_TYPE("projectile-type"),
+    RANGE("range"),
+    DURATION("duration"),
+    AMOUNT("amount");
 
     private final String str;
 

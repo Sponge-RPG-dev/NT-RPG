@@ -106,4 +106,7 @@ public class PluginConfig {
     public static Set<String> ALLOWED_RUNES_ITEMTYPES = new HashSet<String>() {{
         add("minecraft:nether_star");
     }};
+
+    @ConfigValue
+    public static boolean AUTOREMOVE_NONEXISTING_RUNEWORDS = false;
 }

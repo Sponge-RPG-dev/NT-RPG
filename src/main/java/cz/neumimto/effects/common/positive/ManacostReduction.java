@@ -9,7 +9,7 @@ import cz.neumimto.players.IActiveCharacter;
  */
 @ClassGenerator.Generate(id = "name", inject = false)
 public class ManacostReduction extends EffectBase {
-    public static String name = "Manacost_reduction";
+    public static String name = "Manacost Reduction";
 
     public ManacostReduction(IActiveCharacter character, long duration) {
         super(name,character);

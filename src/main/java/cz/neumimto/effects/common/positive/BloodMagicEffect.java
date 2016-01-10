@@ -18,6 +18,7 @@
 
 package cz.neumimto.effects.common.positive;
 
+import cz.neumimto.ClassGenerator;
 import cz.neumimto.effects.EffectBase;
 import cz.neumimto.effects.EffectStatusType;
 import cz.neumimto.effects.common.def.ManaRegeneration;
@@ -29,9 +30,10 @@ import cz.neumimto.players.Mana;
 /**
  * Created by ja on 4.9.2015.
  */
+@ClassGenerator.Generate(id = "name")
 public class BloodMagicEffect extends EffectBase {
 
-    public static String name = "BloodMagic_Effect";
+    public static String name = "BloodMagic";
 
 
     @Override

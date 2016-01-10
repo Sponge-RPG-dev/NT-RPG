@@ -53,7 +53,7 @@ public class SkillTreeDao {
                 SkillTree skillTree = new SkillTree();
                 skillTree.setDescription(config.getString("Description"));
                 skillTree.setId(config.getString("Name"));
-                skillTree.getSkills().put(StartingPoint.name,StartingPoint.SKILL_DATA);
+                skillTree.getSkills().put(StartingPoint.name, StartingPoint.SKILL_DATA);
                 Config sub = config.getObject("Skills").toConfig();
                 for (Map.Entry<String, ConfigValue> entry : sub.root().entrySet()) {
                     SkillData info = getSkillInfo(entry.getKey(), skillTree);
@@ -84,14 +84,14 @@ public class SkillTreeDao {
                         }
                         String val = e.getValue().render();
                         if (Utils.isNumeric(val)) {
-                            if (skill.getDefaultSkillSettings().hasNode(e.getKey())) {
-                                float norm = Float.parseFloat(val);
-                                Map.Entry<String, Float> q = skill.getDefaultSkillSettings().getFloatNodeEntry(e.getKey());
-                                Map.Entry<String, Float> w = skill.getDefaultSkillSettings().getFloatNodeEntry(e.getKey() + SkillSettings.bonus);
-                                skillSettings.addNode(q.getKey(), norm);
-                                float bon = Float.parseFloat(settings.getString(w.getKey()));
-                                skillSettings.addNode(w.getKey(), bon);
-                            }
+                            float norm = Float.parseFloat(val);
+                            String name = e.getKey();
+                            Float aFloat = null;
+                            skillSettings.addNode(name, norm);
+                            name = name+SkillSettings.bonus;
+                            //todo if not exists set to 0;
+                            float bon = Float.parseFloat(settings.getString(name));
+                            skillSettings.addNode(name, bon);
                         } else {
                             skillSettings.addObjectNode(e.getKey(), val);
                         }
@@ -111,15 +111,15 @@ public class SkillTreeDao {
     private void addRequiredIfMissing(SkillSettings skillSettings) {
         Map.Entry<String, Float> q = skillSettings.getFloatNodeEntry(SkillNode.HPCOST.name());
         if (q == null) {
-            skillSettings.addNode(SkillNode.HPCOST,0,0);
+            skillSettings.addNode(SkillNode.HPCOST, 0, 0);
         }
         q = skillSettings.getFloatNodeEntry(SkillNode.MANACOST.name());
         if (q == null) {
-            skillSettings.addNode(SkillNode.MANACOST,0,0);
+            skillSettings.addNode(SkillNode.MANACOST, 0, 0);
         }
         q = skillSettings.getFloatNodeEntry(SkillNode.COOLDOWN.name());
         if (q == null) {
-            skillSettings.addNode(SkillNode.COOLDOWN,0,0);
+            skillSettings.addNode(SkillNode.COOLDOWN, 0, 0);
         }
     }
 
