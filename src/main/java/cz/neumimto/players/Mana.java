@@ -18,6 +18,8 @@
 
 package cz.neumimto.players;
 
+import cz.neumimto.players.properties.DefaultProperties;
+
 import static cz.neumimto.players.properties.DefaultProperties.*;
 
 /**
@@ -59,7 +61,7 @@ public class Mana implements IReservable {
     public void setValue(double f) {
         if (activeCharacter.getMana().getMaxValue() < f)
             f = activeCharacter.getMana().getMaxValue();
-        activeCharacter.getMana().setValue(f);
+        activeCharacter.setCharacterProperty(DefaultProperties.mana, (float) f);
     }
 
     @Override

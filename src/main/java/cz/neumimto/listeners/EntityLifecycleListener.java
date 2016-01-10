@@ -126,7 +126,11 @@ public class EntityLifecycleListener {
         } else {
             Optional<EntityDamageSource> first = event.getCause().first(EntityDamageSource.class);
             if (first.isPresent()) {
+
                 EntityDamageSource entityDamageSource = first.get();
+                if (!Utils.isLivingEntity(entityDamageSource.getSource())) {
+                    return;
+                }
                 double exp = entityService.getExperiences(targetEntity.getType());
                 //todo share in party
                 IEntity source = entityService.get(entityDamageSource.getSource());

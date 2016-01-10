@@ -77,6 +77,7 @@ public class ManaRegeneration extends EffectBase {
         }
         NtRpgPlugin.GlobalScope.game.getEventManager().post(event);
         event.getCharacter().getMana().setValue(event.getNewVal());
+        Gui.sendManaStatus(character,current,max,character.getMana().getReservedAmount());
     }
 
     @Override

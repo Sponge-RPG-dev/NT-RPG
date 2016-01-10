@@ -37,10 +37,13 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
+import org.spongepowered.api.item.inventory.property.SlotIndex;
+import org.spongepowered.api.item.inventory.type.CarriedInventory;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
@@ -274,13 +277,31 @@ public class InventoryService {
                 }
                 if (hotbarObject.type == HotbarObjectTypes.RUNE) {
                     HotbarRune r = (HotbarRune) hotbarObject;
-                    if (r.r == null) {
-                        Gui.sendMessage(character, Localization.UNKNOWN_RUNE_NAME);
+                    String name = null;
+                    Inventory slot = character.getPlayer().getInventory().query(Hotbar.class).query(new SlotIndex(character.getCurrentRune()));
+                    ItemStack runeitem = null;
+                    if (!slot.peek().isPresent()) {
                         return;
                     }
-                    //TODO fire events
+                    runeitem = slot.peek().get();
+                    if (runeitem.get(Keys.DISPLAY_NAME).isPresent()) {
+                       name = runeitem.get(Keys.DISPLAY_NAME).get().toPlain();
+                    }
+                    r.r = rwService.getRune(name);
+                    if (r.r == null) {
+                        Gui.sendMessage(character, Localization.UNKNOWN_RUNE_NAME);
+                        character.setCurrentRune(-1);
+                        return;
+                    }
                     ItemStack i = rwService.insertRune(itemStack, r.getRune().getName());
+                    CarriedInventory<? extends Carrier> inventory = character.getPlayer().getInventory();
+                    Inventory query = inventory.query(Hotbar.class).query(new SlotIndex(character.getCurrentRune()));
+                    query.clear();
                     character.getPlayer().setItemInHand(i);
+                    if (!rwService.hasEmptySocket(i.get(Keys.ITEM_LORE).get())) {
+                        i = rwService.findRuneword(i);
+                        character.getPlayer().setItemInHand(i);
+                    }
                 }
             }
         }

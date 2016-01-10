@@ -325,6 +325,18 @@ public class ItemStackUtils {
         return lore;
     }
 
+    public static List<Text> addItemEffect(ItemStack itemStack, IGlobalEffect globalEffect, float level) {
+        Optional<List<Text>> texts = itemStack.get(Keys.ITEM_LORE);
+        List<Text> lore = null;
+        if (texts.isPresent()) {
+            lore = texts.get();
+        } else {
+            lore = new ArrayList<>();
+        }
+        lore.add(Text.of(TextColors.AQUA,globalEffect.getName()+":" + level));
+        return lore;
+    }
+
     public static Set<ItemType> consumables = new HashSet<ItemType>() {{
         addAll(Arrays.asList(APPLE,
                 GOLDEN_APPLE,

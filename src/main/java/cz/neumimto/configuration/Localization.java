@@ -215,4 +215,13 @@ public class Localization {
 
     @ConfigValue
     public static String UNKNOWN_RUNE_NAME = "You can work with unknown types of runes. The rune has been probably removed";
+
+    @ConfigValue
+    public static String RUNEWORD = "Runeword";
+
+    @ConfigValue
+    public static String RESTRICTED_CLASSES = "Restricted classes";
+
+    @ConfigValue
+    public static String MIN_LEVEL = "Min. level";
 }

@@ -173,6 +173,7 @@ public class BasicListener {
             EntityDamageSource entityDamageSource = first.get();
             Entity source = entityDamageSource.getSource();
             if (source.get(Keys.HEALTH).isPresent()) {
+                targetEntity.offer(Keys.INVULNERABILITY_TICKS,0);
                 //attacker
                 IEntity entity = entityService.get(source);
                 double newdamage = 0;

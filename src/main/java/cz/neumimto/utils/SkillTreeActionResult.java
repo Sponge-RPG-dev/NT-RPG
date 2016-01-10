@@ -46,6 +46,5 @@ public enum SkillTreeActionResult {
             }
             return t;
         }
-
     }
 }

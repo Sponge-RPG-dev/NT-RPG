@@ -9,7 +9,9 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.effects.EffectService;
+import cz.neumimto.effects.IGlobalEffect;
 import cz.neumimto.inventory.InventoryService;
+import cz.neumimto.utils.ItemStackUtils;
 import cz.neumimto.utils.XORShiftRnd;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
@@ -88,7 +90,8 @@ public class RWService {
         RuneWord rw = new RuneWord();
         rw.setName(template.getName());
         rw.setRunes(template.getRunes().stream()./*filter(this::existsRune).*/map(this::getRune).collect(Collectors.toList()));
-        rw.setMinLevel(rw.getMinLevel());
+        rw.setMinLevel(template.getMinLevel());
+        rw.setAllowedItems(template.getAllowedItems());
         rw.setEffects(template.getEffects().entrySet().stream()
                 .filter(l -> effectService.isGlobalEffect(l.getKey()))
                 .map(a -> new Pair<>(effectService.getGlobalEffect(a.getKey()), a.getValue()))
@@ -187,8 +190,49 @@ public class RWService {
         Text text = t.get(1);
         String s = text.toPlain();
         String s1 = s.replaceFirst("\\{@\\}", currentRune);
-        t.set(1,Text.of(s1));
+        t.set(1,Text.of(TextColors.RED,s1));
         itemStack.offer(Keys.ITEM_LORE,t);
         return itemStack;
+    }
+
+    public ItemStack findRuneword(ItemStack i) {
+        Optional<List<Text>> texts = i.get(Keys.ITEM_LORE);
+        if (texts.isPresent()) {
+            List<Text> t = texts.get();
+            Text text = t.get(1);
+            String s = text.toPlain();
+            for (RuneWord rw : runewords.values()) {
+
+                String collect = rw.getRunes().stream().map(r -> r.getName()).collect(Collectors.joining());
+                if (s.equalsIgnoreCase(collect)) {
+                    return reBuildRuneword(i,rw);
+                }
+            }
+        }
+        return i;
+    }
+
+    public ItemStack reBuildRuneword(ItemStack i, RuneWord rw) {
+        i.offer(Keys.DISPLAY_NAME,Text.of(TextColors.GOLD,rw.getName()));
+        List<Text> l = new ArrayList<>();
+        l.add(Text.of(TextColors.BLUE,Localization.RUNEWORD));
+        l.add(Text.of(TextColors.RED,i.get(Keys.ITEM_LORE).get().get(1).toPlain()));
+        Map<IGlobalEffect, Float> effects = rw.getEffects();
+        if (!rw.getRestrictedClasses().isEmpty()) {
+            l.add(Text.of(TextColors.RED,Localization.RESTRICTED_CLASSES));
+            l.add(Text.of(TextColors.GRAY,"- "+rw.getRestrictedClasses().stream().map(a -> a.getName()).collect(Collectors.joining(" "))));
+        }
+        if (rw.getMinLevel() > 1) {
+            l.add(Text.of(TextColors.GRAY,Localization.MIN_LEVEL + ": " + rw.getMinLevel()));
+        }
+        i.offer(Keys.ITEM_LORE,l);
+        //todo refactor
+        for (Map.Entry<IGlobalEffect, Float> entry : effects.entrySet()) {
+            IGlobalEffect key = entry.getKey();
+            Float value = entry.getValue();
+            l = ItemStackUtils.addItemEffect(i,key,value);
+        }
+        i.offer(Keys.ITEM_LORE,l);
+        return i;
     }
 }

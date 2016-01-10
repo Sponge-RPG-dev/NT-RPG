@@ -13,6 +13,7 @@ public final class RuneWordTemplate {
     private List<String> restrictedClasses;
     private List<String> runes;
     private Map<String, Float> effects;
+    private List<String> allowedItems;
 
     protected RuneWordTemplate() {
 
@@ -57,5 +58,13 @@ public final class RuneWordTemplate {
 
     public Map<String, Float> getEffects() {
         return effects;
+    }
+
+    public void setAllowedItems(List<String> allowedItems) {
+        this.allowedItems = allowedItems;
+    }
+
+    public List<String> getAllowedItems() {
+        return allowedItems;
     }
 }

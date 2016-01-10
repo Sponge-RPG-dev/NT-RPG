@@ -1,8 +1,6 @@
 package cz.neumimto.utils;
 
-/**
- * Created by NeumimTo on 29.12.2015.
- */
+
 public class XORShiftRnd {
 
     private long l;
@@ -16,10 +14,7 @@ public class XORShiftRnd {
     }
 
     public int nextInt(int max) {
-        l ^= (l << 21);
-        l ^= (l >>> 35);
-        l ^= (l << 4);
-        int out = (int) l % max;
+        int out = nextInt() % max;
         return (out < 0) ? -out : out;
     }
 
