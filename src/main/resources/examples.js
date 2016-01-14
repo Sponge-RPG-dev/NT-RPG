@@ -84,3 +84,15 @@ var
 registerSkill(Heal);
 registerSkill(SuperJump);
 registerSkill(SkillSpeed);
+
+
+var Strength = new (Java.extend(CharacterAttribute));
+Strength.setName("Strength");
+Strength.setDescription("Some desc");
+//Each point of stregth increases axe damage by 1.25
+Strength.getAffectsProperties().put(DefaultProperties.diamond_axe_bonus_damage,1.25f);
+Strength.getAffectsProperties().put(DefaultProperties.golden_axe_bonus_damage,1.25f);
+Strength.getAffectsProperties().put(DefaultProperties.iron_axe_bonus_damage,1.25f);
+Strength.getAffectsProperties().put(DefaultProperties.wooden_axe_bonus_damage,1.25f);
+//register the object into game
+GlobalScope.playerPropertyService.registerAttribute(Strength);

@@ -49,7 +49,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by NeumimTo on 1.1.2015.
  */
 @Singleton
-@ThreadSafe
 public class SkillService {
 
     @Inject
@@ -187,8 +186,8 @@ public class SkillService {
                 }
                 builder.append(Utils.Tab).append(" },").append(Utils.LineSeparator);
                 bufferedWriter.write(builder.toString());
-                bufferedWriter.flush();
             }
+            bufferedWriter.flush();
         } catch (IOException ex) {
             ex.printStackTrace();
         }

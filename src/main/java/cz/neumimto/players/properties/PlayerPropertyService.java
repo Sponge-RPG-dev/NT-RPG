@@ -24,6 +24,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.players.IActiveCharacter;
+import cz.neumimto.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.utils.Utils;
 import org.slf4j.Logger;
 
@@ -60,6 +61,7 @@ public class PlayerPropertyService {
     private Map<String, Short> idMap = new HashMap<>();
     private Map<Integer, Float> defaults = new HashMap<>();
     private Map<String, Short> persistant = new HashMap<>();
+    private Map<String, ICharacterAttribute> attributes = new HashMap<>();
 
     public void registerProperty(String name, short id) {
         if (PluginConfig.DEBUG)
@@ -85,6 +87,10 @@ public class PlayerPropertyService {
 
     public Map<Integer, Float> getDefaults() {
         return defaults;
+    }
+
+    public void registerAttribute(ICharacterAttribute attribute) {
+        attributes.put(attribute.getName().toLowerCase(),attribute);
     }
 
     @PostProcess(priority = 2000)
