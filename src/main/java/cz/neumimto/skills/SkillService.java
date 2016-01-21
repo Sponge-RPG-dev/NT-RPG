@@ -21,11 +21,11 @@ package cz.neumimto.skills;
 import cz.neumimto.GroupService;
 import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.configuration.PluginConfig;
-import cz.neumimto.events.skills.SkillPostUsageEvent;
-import cz.neumimto.events.skills.SkillPrepareEvent;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.events.skills.SkillPostUsageEvent;
+import cz.neumimto.events.skills.SkillPrepareEvent;
 import cz.neumimto.gui.Gui;
 import cz.neumimto.persistance.SkillTreeDao;
 import cz.neumimto.players.IActiveCharacter;
@@ -35,7 +35,6 @@ import cz.neumimto.utils.Utils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.manipulator.mutable.entity.HealthData;
 
-import javax.annotation.concurrent.ThreadSafe;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -54,21 +53,21 @@ public class SkillService {
     @Inject
     private SkillTreeDao skillTreeDao;
 
-    @Inject
-    private GroupService groupService;
+            @Inject
+            private GroupService groupService;
 
-    @Inject
-    private JSLoader jsLoader;
+            @Inject
+            private JSLoader jsLoader;
 
-    @Inject
-    private Game game;
+            @Inject
+            private Game game;
 
-    private Map<String, ISkill> skills = new ConcurrentHashMap<>();
+            private Map<String, ISkill> skills = new ConcurrentHashMap<>();
 
-    private Map<String, SkillTree> skillTrees = new ConcurrentHashMap<>();
+            private Map<String, SkillTree> skillTrees = new ConcurrentHashMap<>();
 
-    public void addSkill(ISkill ISkill) {
-        if (!PluginConfig.DEBUG) {
+        public void addSkill(ISkill ISkill) {
+            if (!PluginConfig.DEBUG) {
             if (skills.containsKey(ISkill.getName().toLowerCase()))
                 throw new RuntimeException("Skill " + ISkill.getName() + " already exists");
         }
@@ -104,7 +103,7 @@ public class SkillService {
         Long aLong = character.getCooldowns().get(esi.getSkill().getName());
         long servertime = System.currentTimeMillis();
         if (aLong != null && aLong > servertime) {
-            Gui.sendCooldownMessage(character,esi.getSkill().getName(),aLong-servertime);
+            Gui.sendCooldownMessage(character,esi.getSkill().getName(),((aLong-servertime)/1000.0));
             return SkillResult.ON_COOLDOWN;
         }
         SkillData skillData = esi.getSkillData();
@@ -120,12 +119,12 @@ public class SkillService {
         //todo float staminacost =
         if (character.getHealth().getValue() > hpcost) {
             if (character.getMana().getValue() >= manacost) {
-                long cooldown = (long) (System.currentTimeMillis() + (skillSettings.getLevelNodeValue(SkillNode.COOLDOWN, level) * character.getCharacterProperty(DefaultProperties.cooldown_reduce)));
                 SkillResult result = esi.getSkill().onPreUse(character);
                 if (result == SkillResult.CANCELLED)
                     return SkillResult.CANCELLED;
                 if (result == SkillResult.OK) {
-                    SkillPostUsageEvent eventt = new SkillPostUsageEvent(character, hpcost, manacost, cooldown);
+                    float newCd = skillSettings.getLevelNodeValue(SkillNode.COOLDOWN,esi.getLevel());
+                    SkillPostUsageEvent eventt = new SkillPostUsageEvent(character, hpcost, manacost, newCd);
                     game.getEventManager().post(eventt);
                     if (!event.isCancelled()) {
                         double newval = character.getHealth().getValue() - eventt.getHpcost();
@@ -134,8 +133,10 @@ public class SkillService {
                             HealthData healthData = character.getPlayer().getHealthData();
                         } else {
                             character.getHealth().setValue(newval);
+                            newCd = eventt.getCooldown()*character.getCharacterProperty(DefaultProperties.cooldown_reduce);
                             character.getMana().setValue(character.getMana().getValue() - event.getRequiredMana());
-                            character.getCooldowns().put(skillData.getSkillName(),cooldown);
+                            long cd = (long) newCd;
+                            character.getCooldowns().put(esi.getSkill().getName(), cd+servertime);
                             Gui.sendManaStatus(character,character.getMana().getValue(),character.getMaxMana(),character.getMana().getReservedAmount());
                             return SkillResult.OK;
                         }

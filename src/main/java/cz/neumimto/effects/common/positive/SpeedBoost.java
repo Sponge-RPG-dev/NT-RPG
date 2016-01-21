@@ -40,7 +40,7 @@ import cz.neumimto.players.properties.DefaultProperties;
  *
  *  The class, which inherits from IEffect(or its implementations such as effect base) must contain a constructor - IEffectConsumer, long duration, int level.
  *
- *  Global effects can work as item enchantments (todo), and be accessible from commands
+ *  Global effects can work as item enchantments, and be accessible from commands
  */
 @ClassGenerator.Generate(id = "name",inject = true)
 public class SpeedBoost extends EffectBase {

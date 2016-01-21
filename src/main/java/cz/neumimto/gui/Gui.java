@@ -63,7 +63,7 @@ public class Gui {
         getMessageTypeOf(player).sendMessage(player, message);
     }
 
-    public static void sendCooldownMessage(IActiveCharacter player, String skillname, long cooldown) {
+    public static void sendCooldownMessage(IActiveCharacter player, String skillname, double cooldown) {
         getMessageTypeOf(player).sendCooldownMessage(player, skillname, cooldown);
     }
 

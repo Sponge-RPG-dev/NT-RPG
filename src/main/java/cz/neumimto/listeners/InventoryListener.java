@@ -28,7 +28,6 @@ import cz.neumimto.players.IActiveCharacter;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
 import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
@@ -37,6 +36,7 @@ import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,10 +73,11 @@ public class InventoryListener {
             for (SlotTransaction transaction : transactions) {
                 Collection<SlotIndex> properties = transaction.getSlot().getProperties(SlotIndex.class);
                 for (SlotIndex property : properties) {
-                    int value = property.getValue();
+                    Integer value = property.getValue();
+                    System.out.println(value);
                 }
             }
-            */
+*/
         }
     }
 
@@ -87,12 +88,6 @@ public class InventoryListener {
             IActiveCharacter character = characterService.getCharacter(first.get().getUniqueId());
             inventoryService.initializeHotbar(character);
         }
-    }
-
-    @Listener
-    public void onRespawn(RespawnPlayerEvent event) {
-        IActiveCharacter character = characterService.getCharacter(event.getTargetEntity().getUniqueId());
-        inventoryService.initializeHotbar(character);
     }
 
     @Listener
@@ -107,16 +102,18 @@ public class InventoryListener {
             for (SlotTransaction slotTransaction : event.getTransactions()) {
                 Inventory i = slotTransaction.getSlot();
                 if (i.parent() instanceof Hotbar) {
-                    SlotIndex query = i.query(SlotIndex.class);
-                    Integer value = query.getValue();
-                    inventoryService.initializeHotbar(character,value);
+                    Collection<SlotIndex> properties = slotTransaction.getSlot().getProperties(SlotIndex.class);
+                    for (SlotIndex property : properties) {
+                        Integer value = property.getValue();
+
+                    }
                 }
             }
         }
     }
 
     @Listener
-    public void onItemDrop(DropItemEvent.Pre event) {
+    public void onItemDrop(DropItemEvent event) {
         Optional<Player> first = event.getCause().first(Player.class);
         if (first.isPresent()) {
             Player player = first.get();
@@ -128,7 +125,7 @@ public class InventoryListener {
             if (hotbarObject == HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
                 return;
             }
-
+            hotbarObject.onUnEquip(character);
 
         }
     }

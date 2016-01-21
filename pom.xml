@@ -6,7 +6,7 @@
 
     <groupId>cz.neumimto</groupId>
     <artifactId>NtRpg</artifactId>
-    <version>0.0.8</version>
+    <version>0.0.9</version>
 
     <properties>
         <timestamp>${maven.build.timestamp}</timestamp>
