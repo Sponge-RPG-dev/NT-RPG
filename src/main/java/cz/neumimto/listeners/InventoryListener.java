@@ -69,7 +69,7 @@ public class InventoryListener {
             if (!character.isStub()) {
                 inventoryService.initializeHotbar(character);
             }
-            /*
+
             for (SlotTransaction transaction : transactions) {
                 Collection<SlotIndex> properties = transaction.getSlot().getProperties(SlotIndex.class);
                 for (SlotIndex property : properties) {
@@ -77,7 +77,7 @@ public class InventoryListener {
                     System.out.println(value);
                 }
             }
-*/
+
         }
     }
 

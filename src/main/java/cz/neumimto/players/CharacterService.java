@@ -202,8 +202,9 @@ public class CharacterService {
         if (activeCharacter == null) {
             characters.put(uuid, character);
         } else {
-            deleteCharacterReferences(character);
+            deleteCharacterReferences(activeCharacter);
             characters.put(uuid, character);
+            character.setUsingGuiMod(activeCharacter.isUsingGuiMod());
             initActiveCharacter(character);
 
         }
