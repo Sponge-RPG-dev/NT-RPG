@@ -25,9 +25,7 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by NeumimTo on 31.1.2015.
@@ -92,14 +90,6 @@ public class Weapon extends HotbarObject {
 
     public void setRuneword(boolean runeword) {
         isRuneword = runeword;
-    }
-
-    public Set<ItemRestriction> getRestriction() {
-        return restriction;
-    }
-
-    public void setRestriction(Set<ItemRestriction> restriction) {
-        this.restriction = restriction;
     }
 
     @Override
