@@ -170,13 +170,11 @@ public class InventoryService {
             } else if (text.getColor() == LEVEL_COLOR) {
                 w.setLevel(ItemStackUtils.getItemLevel(text));
             } else if (text.getColor() == RESTRICTIONS) {
-                w.addRestriction(ItemStackUtils.getRestrictions(text));
+
             }
         }
         w.setEffects(map);
         Map<IGlobalEffect, Integer> itemEffects = ItemStackUtils.getItemEffects(is);
-        Weapon w = new Weapon(is.getItem());
-        w.setItemStack(is);
         w.setEffects(itemEffects);
 
         w.onEquip(is,character);
