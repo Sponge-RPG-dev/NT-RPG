@@ -25,6 +25,7 @@ public class HotbarRune extends HotbarObject {
         onRightClick(character);
     }
 
+
     public Rune getRune() {
         return r;
     }

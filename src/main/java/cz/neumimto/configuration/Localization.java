@@ -224,4 +224,10 @@ public class Localization {
 
     @ConfigValue
     public static String MIN_LEVEL = "Min. level";
+
+    @ConfigValue
+    public static String CHARM_INFO = "Keep in your hotbar to gain bonus";
+
+    @ConfigValue
+    public static String CHARM = "Charm";
 }

@@ -24,9 +24,6 @@ import cz.neumimto.effects.EffectBase;
 import cz.neumimto.effects.IGlobalEffect;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.players.properties.DefaultProperties;
-import org.spongepowered.api.data.key.Key;
-import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.entity.living.player.Player;
 
 /**
  * Created by NeumimTo on 23.7.2015.
@@ -43,12 +40,12 @@ import org.spongepowered.api.entity.living.player.Player;
  *
  *  The class, which inherits from IEffect(or its implementations such as effect base) must contain a constructor - IEffectConsumer, long duration, int level.
  *
- *  Global effects can work as item enchantments (todo), and be accessible from commands
+ *  Global effects can work as item enchantments, and be accessible from commands
  */
 @ClassGenerator.Generate(id = "name",inject = true)
 public class SpeedBoost extends EffectBase {
 
-    public static final String name = "Speedboost";
+    public static final String name = "Speed";
 
     public static IGlobalEffect<SpeedBoost> global;
 

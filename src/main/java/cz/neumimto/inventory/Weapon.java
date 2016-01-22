@@ -25,7 +25,9 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by NeumimTo on 31.1.2015.
@@ -40,7 +42,8 @@ public class Weapon extends HotbarObject {
     private Map<IGlobalEffect, Integer> effects = new HashMap<>();
     protected boolean current;
     private ItemStack itemStack;
-
+    private boolean isRuneword;
+    private int level;
 
     public Weapon(ItemType itemType) {
         this.itemType = itemType;
@@ -79,19 +82,40 @@ public class Weapon extends HotbarObject {
         this.effects = effects;
     }
 
+    public void setCurrent(boolean current) {
+        this.current = current;
+    }
+
+    public boolean isRuneword() {
+        return isRuneword;
+    }
+
+    public void setRuneword(boolean runeword) {
+        isRuneword = runeword;
+    }
+
+    public Set<ItemRestriction> getRestriction() {
+        return restriction;
+    }
+
+    public void setRestriction(Set<ItemRestriction> restriction) {
+        this.restriction = restriction;
+    }
+
     @Override
     public void onRightClick(IActiveCharacter character) {
         if (!current)
             NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character,this);
+        else if (character.isSocketing()) {
+            NtRpgPlugin.GlobalScope.inventorySerivce.insertRune(character);
+        }
     }
 
     @Override
     public void onLeftClick(IActiveCharacter character) {
         if (!current)
             NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character,this);
-        else if (character.isSocketing()) {
-            NtRpgPlugin.GlobalScope.inventorySerivce.insertRune(character);
-        }
+
     }
 
     public ItemStack getItemStack() {
@@ -100,5 +124,13 @@ public class Weapon extends HotbarObject {
 
     public void setItemStack(ItemStack i ){
         itemStack = i;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getLevel() {
+        return level;
     }
 }

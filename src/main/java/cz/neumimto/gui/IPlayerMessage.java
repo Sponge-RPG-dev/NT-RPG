@@ -38,7 +38,7 @@ public interface IPlayerMessage {
 
     void sendMessage(IActiveCharacter player, String message);
 
-    void sendCooldownMessage(IActiveCharacter player, String message, long cooldown);
+    void sendCooldownMessage(IActiveCharacter player, String message, double cooldown);
 
     void openSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, Map<String, Integer> learnedSkills);
 

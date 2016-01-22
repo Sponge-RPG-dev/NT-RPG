@@ -79,8 +79,11 @@ public class InventoryService {
     private Map<UUID, InventoryMenu> inventoryMenus = new HashMap<>();
 
     public static ItemType ITEM_SKILL_BIND = ItemTypes.BLAZE_POWDER;
-    public static TextColor LORE_FIRSTLINE = TextColors.BLUE;
+    public static TextColor LORE_FIRSTLINE = TextColors.AQUA;
     public static TextColor SOCKET_COLOR = TextColors.GRAY;
+    public static TextColor ENCHANTMENT_COLOR = TextColors.BLUE;
+    public static TextColor LEVEL_COLOR = TextColors.YELLOW;
+    public static TextColor RESTRICTIONS = TextColors.LIGHT_PURPLE;
 
     public ItemStack getHelpItem(List<String> lore, ItemType type) {
         ItemStack.Builder builder = ItemStack.builder();
@@ -127,10 +130,19 @@ public class InventoryService {
         if (ItemStackUtils.isWeapon(is.getItem())) {
             return buildHotbarWeapon(character, is);
         }
+        if (ItemStackUtils.isCharm(is)) {
+            return buildCharm(character,is);
+        }
         if (ItemStackUtils.isItemRune(is)) {
             return new HotbarRune();
         }
         return HotbarObject.EMPTYHAND_OR_CONSUMABLE;
+    }
+
+    private Charm buildCharm(IActiveCharacter character, ItemStack is) {
+        Charm charm = new Charm();
+        charm.onEquip(is,character);
+        return charm;
     }
 
     private HotbarRune buildHotbarRune(ItemStack is) {
@@ -145,11 +157,29 @@ public class InventoryService {
     }
 
     private Weapon buildHotbarWeapon(IActiveCharacter character, ItemStack is) {
+        Weapon w = new Weapon(is.getItem());
+        Optional<List<Text>> a = is.get(Keys.ITEM_LORE);
+        if (!a.isPresent()) {
+            return w;
+        }
+        List<Text> texts = a.get();
+        Map<IGlobalEffect, Integer> map = new HashMap<>();
+        for (Text text : texts) {
+            if (text.getColor() == ENCHANTMENT_COLOR) {
+                ItemStackUtils.findItemEffect(text,map);
+            } else if (text.getColor() == LEVEL_COLOR) {
+                w.setLevel(ItemStackUtils.getItemLevel(text));
+            } else if (text.getColor() == RESTRICTIONS) {
+                w.addRestriction(ItemStackUtils.getRestrictions(text));
+            }
+        }
+        w.setEffects(map);
         Map<IGlobalEffect, Integer> itemEffects = ItemStackUtils.getItemEffects(is);
         Weapon w = new Weapon(is.getItem());
         w.setItemStack(is);
         w.setEffects(itemEffects);
 
+        w.onEquip(is,character);
         return w;
     }
 
@@ -173,7 +203,7 @@ public class InventoryService {
                 }
             }
         }
-    return skill;
+        return skill;
     }
 
     public void createHotbarSkill(ItemStack is, ISkill right, ISkill left) {
@@ -306,4 +336,5 @@ public class InventoryService {
             }
         }
     }
+
 }

@@ -43,6 +43,8 @@ import org.spongepowered.api.text.format.TextColors;
 
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static org.spongepowered.api.item.ItemTypes.*;
@@ -301,16 +303,20 @@ public class ItemStackUtils {
      */
     public static Map<IGlobalEffect, Integer> getItemEffects(List<Text> texts) {
         Map<IGlobalEffect, Integer> map = new HashMap<>();
-        texts.stream().filter(t -> t.getFormat().getColor() == TextColors.AQUA).forEach(t -> {
-            String eff = t.toPlain().substring(3).toLowerCase();
-            String[] arr = eff.split(": ");
-            int level = Integer.parseInt(arr[1]);
-            IGlobalEffect effect = globalScope.effectService.getGlobalEffect(arr[0]);
-            if (effect != null) {
-                map.put(effect, level);
-            }
+        texts.stream().filter(t -> t.getFormat().getColor() == TextColors.BLUE).forEach(t -> {
+            findItemEffect(t,map);
         });
         return map;
+    }
+
+    public static void findItemEffect(Text text,Map<IGlobalEffect,Integer> map) {
+        String eff = text.toPlain().substring(3).toLowerCase();
+        String[] arr = eff.split(": ");
+        int level = Integer.parseInt(arr[1]);
+        IGlobalEffect effect = globalScope.effectService.getGlobalEffect(arr[0]);
+        if (effect != null) {
+            map.put(effect, level);
+        }
     }
 
     public static List<Text> addItemEffect(ItemStack itemStack, IGlobalEffect globalEffect, int level) {
@@ -376,5 +382,36 @@ public class ItemStackUtils {
      */
     public static void createEnchantmentGlow(ItemStack itemStack) {
         itemStack.offer(Sponge.getDataManager().getManipulatorBuilder(EnchantmentData.class).get().create());
+    }
+
+    public static boolean isCharm(ItemStack is) {
+        Optional<List<Text>> texts = is.get(Keys.ITEM_LORE);
+        if (texts.isPresent()) {
+            List<Text> texts1 = texts.get();
+            if (texts1.size() > 1) {
+                String s = texts1.get(1).toPlain();
+                if (s.equalsIgnoreCase(Localization.CHARM)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static int getItemLevel(Text text) {
+        String s = text.toPlain();
+        String[] split = s.split(":");
+        if (split.length > 1) {
+            return Integer.parseInt(split[1]);
+        }
+        return 0;
+    }
+
+    private static Pattern pattern = Pattern.compile("\\((.*?)\\)");
+    public static Set<String> getRestrictions(Text text) {
+        Set<String> str = new HashSet<>();
+        Matcher m = pattern.matcher(text.toPlain());
+
+        return str;
     }
 }

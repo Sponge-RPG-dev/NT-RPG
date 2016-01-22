@@ -1,6 +1,8 @@
 package cz.neumimto.inventory;
 
+import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.players.IActiveCharacter;
+import org.spongepowered.api.item.inventory.ItemStack;
 
 /**
  * Created by NeumimTo on 31.12.2015.
@@ -27,4 +29,16 @@ public abstract class HotbarObject {
     public abstract void onRightClick(IActiveCharacter character);
 
     public abstract void onLeftClick(IActiveCharacter character);
+
+    public void onEquip(ItemStack is, IActiveCharacter character) {
+        if (PluginConfig.DEBUG) {
+            character.sendMessage("Equiped "+is.getItem().getName());
+        }
+    }
+
+    public void onUnEquip(IActiveCharacter character) {
+        if (PluginConfig.DEBUG) {
+            character.sendMessage("Unequiped item");
+        }
+    }
 }

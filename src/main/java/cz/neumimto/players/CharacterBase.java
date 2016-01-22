@@ -75,22 +75,29 @@ public class CharacterBase extends TimestampEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastReset;
 
+    //todo lazy
     @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyColumn(name = "skill", length = 32)
     @Column(name = "expire_time")
-    @CollectionTable(name = "cooldowns", joinColumns = @JoinColumn(name = "CharacterBase_id"))
+    @CollectionTable(name = "cooldowns", joinColumns = @JoinColumn(name = "CharacterBase_id",referencedColumnName = "id"))
     private Map<String, Long> cooldowns = new ConcurrentHashMap<>();
 
+    //todo lazy
     @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyColumn(name = "skill", length = 32)
     @Column(name = "level")
-    @CollectionTable(name = "skills", joinColumns = @JoinColumn(name = "CharacterBase_id"))
-    private Map<String, Integer> skills = new ConcurrentHashMap<>();
+    @CollectionTable(name = "skills", joinColumns = @JoinColumn(name = "CharacterBase_id", referencedColumnName = "id"))
+    private Map<String, Integer> skills = new HashMap<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyColumn(name = "class")
-    @CollectionTable(joinColumns = @JoinColumn(name = "CharacterBase_id"))
+    @CollectionTable(joinColumns = @JoinColumn(name = "CharacterBase_id", referencedColumnName="id"))
     private Map<String, Double> classes = new HashMap<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @MapKeyColumn(name = "attribute")
+    @CollectionTable(joinColumns = @JoinColumn(name = "CharacterBase_id", referencedColumnName="id"))
+    private Map<String, Integer> attributes = new HashMap<>();
 
     private int X;
 
@@ -234,6 +241,14 @@ public class CharacterBase extends TimestampEntity {
 
     public Date getLastReset() {
         return lastReset;
+    }
+
+    public Map<String, Integer> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(Map<String, Integer> attributes) {
+        this.attributes = attributes;
     }
 
     public void setLastReset(Date lastReset) {

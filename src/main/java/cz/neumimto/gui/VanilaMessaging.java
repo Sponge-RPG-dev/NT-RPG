@@ -68,8 +68,8 @@ public class VanilaMessaging implements IPlayerMessage {
     }
 
     @Override
-    public void sendCooldownMessage(IActiveCharacter player, String message, long cooldown) {
-        sendMessage(player, Localization.ON_COOLDOWN.replaceAll("%1", message).replace("%2", String.valueOf(1000 * (cooldown / 100))));
+    public void sendCooldownMessage(IActiveCharacter player, String message, double cooldown) {
+        sendMessage(player, Localization.ON_COOLDOWN.replaceAll("%1", message).replace("%2", String.valueOf(cooldown)));
     }
 
     @Override

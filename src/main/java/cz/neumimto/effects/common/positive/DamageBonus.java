@@ -18,7 +18,6 @@
 
 package cz.neumimto.effects.common.positive;
 
-import cz.neumimto.IEntity;
 import cz.neumimto.effects.EffectBase;
 import cz.neumimto.effects.IEffectConsumer;
 import cz.neumimto.players.IActiveCharacter;
@@ -29,7 +28,7 @@ import cz.neumimto.players.properties.DefaultProperties;
  */
 public class DamageBonus extends EffectBase {
 
-    public static final String name = "BonusDamage";
+    public static final String name = "Bonus Damage";
     float bonusDamage;
 
     public DamageBonus(IEffectConsumer consumer, long duration, float bonusDamage) {

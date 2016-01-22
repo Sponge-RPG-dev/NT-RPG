@@ -28,9 +28,9 @@ public class SkillPostUsageEvent extends CancellableEvent {
     private IActiveCharacter character;
     private double hpcost;
     private double manacost;
-    private long cooldown;
+    private float cooldown;
 
-    public SkillPostUsageEvent(IActiveCharacter character, double hpcost, double manacost, long cooldown) {
+    public SkillPostUsageEvent(IActiveCharacter character, double hpcost, double manacost, float cooldown) {
         this.character = character;
         this.hpcost = hpcost;
         this.manacost = manacost;
@@ -62,7 +62,7 @@ public class SkillPostUsageEvent extends CancellableEvent {
         this.manacost = manacost;
     }
 
-    public long getCooldown() {
+    public float getCooldown() {
         return cooldown;
     }
 

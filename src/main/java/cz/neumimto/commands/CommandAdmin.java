@@ -110,6 +110,7 @@ public class CommandAdmin extends CommandBase {
         } else if (a[0].equalsIgnoreCase("enchantment")) {
             if (a[1].equalsIgnoreCase("add")) {
                 String name = a[2];
+                name = name.replaceAll("_"," ");
                 IGlobalEffect globalEffect = effectService.getGlobalEffect(name);
                 if (globalEffect == null) {
                     commandSource.sendMessage(Text.of(Localization.NON_EXISTING_GLOBAL_EFFECT));
@@ -143,7 +144,6 @@ public class CommandAdmin extends CommandBase {
                 pl.setItemInHand(is);
             }
         } else if (a[0].equalsIgnoreCase("charm")) {
-
 
         }
         return CommandResult.success();

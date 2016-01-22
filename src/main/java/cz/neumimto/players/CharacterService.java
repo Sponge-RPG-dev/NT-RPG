@@ -202,8 +202,9 @@ public class CharacterService {
         if (activeCharacter == null) {
             characters.put(uuid, character);
         } else {
-            deleteCharacterReferences(character);
+            deleteCharacterReferences(activeCharacter);
             characters.put(uuid, character);
+            character.setUsingGuiMod(activeCharacter.isUsingGuiMod());
             initActiveCharacter(character);
 
         }
@@ -273,10 +274,15 @@ public class CharacterService {
 
     private void initActiveCharacter(IActiveCharacter character) {
         character.getPlayer().sendMessage(Text.of(Localization.CURRENT_CHARACTER.replaceAll("%1", character.getName())));
-        effectService.addEffect(new ManaRegeneration(character), character);
-        effectService.addEffect(new CombatEffect(character), character);
+
+        addDefaultEffects(character);
 
         inventoryService.initializeHotbar(character);
+    }
+
+    public void addDefaultEffects(IActiveCharacter character) {
+        effectService.addEffect(new ManaRegeneration(character), character);
+        effectService.addEffect(new CombatEffect(character), character);
     }
 
     /**

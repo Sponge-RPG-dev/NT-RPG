@@ -5,6 +5,7 @@ import cz.neumimto.IEntityType;
 import cz.neumimto.ResourceLoader;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.damage.SkillDamageSource;
 import cz.neumimto.effects.EffectService;
 import cz.neumimto.effects.IEffect;
 import cz.neumimto.entities.EntityService;
@@ -13,11 +14,11 @@ import cz.neumimto.players.CharacterService;
 import cz.neumimto.players.ExperienceSource;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.utils.Utils;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
@@ -26,9 +27,7 @@ import org.spongepowered.api.event.user.BanUserEvent;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 3.1.2016.
@@ -55,7 +54,11 @@ public class EntityLifecycleListener {
 
     @Listener
     public void onPlayerRespawn(RespawnPlayerEvent event) {
-        //todo
+        IActiveCharacter character = characterService.getCharacter(event.getTargetEntity().getUniqueId());
+        if (character.isStub())
+            return;
+        character.getMana().setValue(0);
+        characterService.addDefaultEffects(character);
     }
 
     @Listener
@@ -91,39 +94,21 @@ public class EntityLifecycleListener {
     }
 
 
-    @Listener(order = Order.LAST)
+    @Listener
     public void onEntityDespawn(DestructEntityEvent event) {
         Entity targetEntity = event.getTargetEntity();
         if (targetEntity.getType() == EntityTypes.PLAYER) {
             IActiveCharacter character = characterService.getCharacter(targetEntity.getUniqueId());
             if (character.isStub())
                 return;
-
-        } else {
-            if (Utils.isLivingEntity(event.getTargetEntity())) {
-                IMob mob = (IMob) entityService.get(event.getTargetEntity());
-                Collection<IEffect> values = mob.getEffectMap().values();
-                for (IEffect value : values) {
-                    effectService.stopEffect(value);
-                }
-                mob.detach();
-                entityService.remove(event.getTargetEntity().getUniqueId());
-                System.out.println("Clearing references of" + mob);
+            for (IEffect effect : character.getEffects()) {
+                effectService.stopEffect(effect);
             }
-        }
-    }
-
-    @Listener(order = Order.BEFORE_POST)
-    public void onEntityDestruct(DestructEntityEvent.Death event) {
-        Entity targetEntity = event.getTargetEntity();
-        if (targetEntity.getType() == EntityTypes.PLAYER) {
-            IActiveCharacter character = characterService.getCharacter(targetEntity.getUniqueId());
-            if (character.isStub())
-                return;
-            //todo pvp exp
-            character.getEffects().stream().forEach(iEffect -> effectService.removeEffect(iEffect, character));
-
         } else {
+            if (!event.getTargetEntity().get(Keys.HEALTH).isPresent()) {
+                return;
+            }
+
             Optional<EntityDamageSource> first = event.getCause().first(EntityDamageSource.class);
             if (first.isPresent()) {
 
@@ -139,6 +124,22 @@ public class EntityLifecycleListener {
                     characterService.addExperiences(character, exp, ExperienceSource.PVE);
                 }
             }
+            Optional<SkillDamageSource> sds = event.getCause().first(SkillDamageSource.class);
+            if (sds.isPresent()) {
+
+                SkillDamageSource source = sds.get();
+                IActiveCharacter caster = source.getCaster();
+                double exp = entityService.getExperiences(event.getTargetEntity().getType());
+                characterService.addExperiences(caster, exp, ExperienceSource.PVE);
+            }
+            IMob mob = (IMob) entityService.get(event.getTargetEntity());
+            Collection<IEffect> values = mob.getEffectMap().values();
+            for (IEffect value : values) {
+                effectService.stopEffect(value);
+            }
+            mob.detach();
+            entityService.remove(event.getTargetEntity().getUniqueId());
         }
     }
 }
+

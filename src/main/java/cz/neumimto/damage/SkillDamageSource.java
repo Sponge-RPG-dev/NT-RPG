@@ -17,6 +17,7 @@
  */
 package cz.neumimto.damage;
 
+import cz.neumimto.IEntity;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.skills.ISkill;
 import org.spongepowered.api.event.cause.entity.damage.source.common.AbstractDamageSource;
@@ -28,12 +29,13 @@ public class SkillDamageSource extends AbstractDamageSource implements ISkillDam
 
     private ISkill skill;
     private IActiveCharacter caster;
-
+    private IEntity target;
 
     public SkillDamageSource(SkillDamageSourceBuilder builder) {
         super(builder);
         this.skill = builder.getSkill();
         this.caster = builder.getCaster();
+        this.target = builder.getTarget();
     }
 
     @Override
