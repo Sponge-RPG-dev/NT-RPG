@@ -18,17 +18,14 @@
 
 package cz.neumimto.skills;
 
-import com.flowpowered.math.vector.Vector3d;
+import cz.neumimto.IEntity;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.players.IActiveCharacter;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.projectile.Projectile;
 
 import java.util.Optional;
-
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
+import java.util.function.BiConsumer;
 
 /**
  * Created by NeumimTo on 12.3.2015.
@@ -38,11 +35,14 @@ public abstract class SkillShot extends ActiveSkill {
     @Inject
     private Game game;
 
+
+
     @Override
     public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info) {
         Optional<Projectile> projectile = character.getPlayer().launchProjectile(getProjectile(character, info));
         if (projectile.isPresent()) {
             ProjectileProperties projectileProperties = getProjectileProperties(character,info,projectile.get());
+            projectileProperties.onHit(getHitConsumer());
             return SkillResult.OK;
         }
         return SkillResult.CANCELLED;
@@ -51,4 +51,7 @@ public abstract class SkillShot extends ActiveSkill {
     protected abstract ProjectileProperties getProjectileProperties(IActiveCharacter character, ExtendedSkillInfo info, Projectile projectile);
 
     protected abstract Class<Projectile> getProjectile(IActiveCharacter character, ExtendedSkillInfo info);
+
+    protected abstract BiConsumer<IEntity,IEntity> getHitConsumer();
+
 }

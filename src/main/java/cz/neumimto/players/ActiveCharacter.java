@@ -291,22 +291,22 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
-    public short getSkillPoints() {
+    public int getSkillPoints() {
         return base.getSkillPoints();
     }
 
     @Override
-    public void setSkillPoints(short skillPoints) {
+    public void setSkillPoints(int skillPoints) {
         this.base.setSkillPoints(skillPoints);
     }
 
     @Override
-    public short getAttributePoints() {
+    public int getAttributePoints() {
         return base.getAttributePoints();
     }
 
     @Override
-    public void setAttributePoints(short attributePoints) {
+    public void setAttributePoints(int attributePoints) {
         this.base.setAttributePoints(attributePoints);
     }
 

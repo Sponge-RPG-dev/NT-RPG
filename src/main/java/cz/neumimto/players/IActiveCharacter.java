@@ -89,13 +89,13 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     void resetRightClicks();
 
-    short getSkillPoints();
+    int getSkillPoints();
 
-    void setSkillPoints(short skillPoints);
+    void setSkillPoints(int skillPoints);
 
-    short getAttributePoints();
+    int getAttributePoints();
 
-    void setAttributePoints(short attributePoints);
+    void setAttributePoints(int attributePoints);
 
     ExtendedNClass getPrimaryClass();
 

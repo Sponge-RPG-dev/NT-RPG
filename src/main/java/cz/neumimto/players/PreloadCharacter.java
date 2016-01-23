@@ -279,22 +279,22 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public short getSkillPoints() {
+    public int getSkillPoints() {
         return 0;
     }
 
     @Override
-    public void setSkillPoints(short skillPoints) {
+    public void setSkillPoints(int skillPoints) {
 
     }
 
     @Override
-    public short getAttributePoints() {
+    public int getAttributePoints() {
         return 0;
     }
 
     @Override
-    public void setAttributePoints(short attributePoints) {
+    public void setAttributePoints(int attributePoints) {
 
     }
 

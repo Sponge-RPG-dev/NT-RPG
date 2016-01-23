@@ -23,10 +23,12 @@ import cz.neumimto.commands.CommandService;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.configuration.ConfigurationContainer;
 import cz.neumimto.configuration.PluginConfig;
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.effects.EffectService;
 import cz.neumimto.effects.IEffect;
 import cz.neumimto.effects.IGlobalEffect;
-import cz.neumimto.core.ioc.*;
 import cz.neumimto.players.properties.PlayerPropertyService;
 import cz.neumimto.players.properties.PropertyContainer;
 import cz.neumimto.skills.ISkill;
@@ -34,21 +36,14 @@ import cz.neumimto.skills.SkillService;
 import javassist.CannotCompileException;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.Sponge;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Enumeration;
@@ -188,7 +183,8 @@ public class ResourceLoader {
             ioc.build(clazz);
         }
         if (clazz.isAnnotationPresent(ListenerClass.class)) {
-            logger.info("Registering listener" + clazz.getName());
+            if (PluginConfig.DEBUG)
+                logger.info("Registering listener" + clazz.getName());
             container = ioc.build(clazz);
             ioc.build(Game.class).getEventManager().registerListeners(ioc.build(NtRpgPlugin.class), container);
         }

@@ -230,4 +230,10 @@ public class Localization {
 
     @ConfigValue
     public static String CHARM = "Charm";
+
+    @ConfigValue
+    public static String RACE_AND_CLASS_CONFLICT = "Race %1 can't become 2%";
+
+    @ConfigValue
+    public static String ARGUMENT_MUST_BE_POSITIVE_INT;
 }

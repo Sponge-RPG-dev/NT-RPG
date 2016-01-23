@@ -53,13 +53,13 @@ public class CharacterBase extends TimestampEntity {
 
     private String info;
 
-    protected short attributePoints;
+    protected int attributePoints;
 
-    protected short skillPoints;
+    protected int skillPoints;
 
-    private short usedAttributePoints;
+    private int usedAttributePoints;
 
-    private short usedSkillPoints;
+    private int usedSkillPoints;
 
     private boolean canResetskills;
 
@@ -107,19 +107,19 @@ public class CharacterBase extends TimestampEntity {
 
     private String world;
 
-    public short getAttributePoints() {
+    public int getAttributePoints() {
         return attributePoints;
     }
 
-    public void setAttributePoints(short attributePoints) {
+    public void setAttributePoints(int attributePoints) {
         this.attributePoints = attributePoints;
     }
 
-    public short getSkillPoints() {
+    public int getSkillPoints() {
         return skillPoints;
     }
 
-    public void setSkillPoints(short skillPoints) {
+    public void setSkillPoints(int skillPoints) {
         this.skillPoints = skillPoints;
     }
 
@@ -207,19 +207,19 @@ public class CharacterBase extends TimestampEntity {
         this.skills = skills;
     }
 
-    public short getUsedAttributePoints() {
+    public int getUsedAttributePoints() {
         return usedAttributePoints;
     }
 
-    public void setUsedAttributePoints(short usedAttributePoints) {
+    public void setUsedAttributePoints(int usedAttributePoints) {
         this.usedAttributePoints = usedAttributePoints;
     }
 
-    public short getUsedSkillPoints() {
+    public int getUsedSkillPoints() {
         return usedSkillPoints;
     }
 
-    public void setUsedSkillPoints(short usedSkillPoints) {
+    public void setUsedSkillPoints(int usedSkillPoints) {
         this.usedSkillPoints = usedSkillPoints;
     }
 
