@@ -109,6 +109,10 @@ public class CommandChoose extends CommandBase {
                 player.sendMessage(Text.of(Localization.CHARACTER_IS_REQUIRED));
                 return CommandResult.empty();
             }
+            if (character.getRace() == Race.Default) {
+                player.sendMessage(Text.of(Localization.RACE_IS_REQUIRED));
+                return CommandResult.empty();
+            }
             if (!character.getRace().getAllowedClasses().contains(nClass)) {
                 player.sendMessage(Text.of(Localization.RACE_AND_CLASS_CONFLICT
                         .replaceAll("%1",character.getRace().getName()).replaceAll("%2",nClass.getName())));
@@ -189,11 +193,6 @@ public class CommandChoose extends CommandBase {
             }
             ICharacterAttribute attribute = playerPropertyService.getAttribute(args[1]);
             IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
-            characterService.addAttribute(character,attribute,i);
-            characterService.updateMaxHealth(character);
-            characterService.updateMaxHealth(character);
-            characterService.updateWalkSpeed(character);
-            damageService.recalculateCharacterWeaponDamage(character);
 
         } else if (args[0].equalsIgnoreCase("character")) {
             if (args.length != 2) {

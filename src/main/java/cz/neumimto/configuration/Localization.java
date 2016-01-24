@@ -235,5 +235,6 @@ public class Localization {
     public static String RACE_AND_CLASS_CONFLICT = "Race %1 can't become 2%";
 
     @ConfigValue
-    public static String ARGUMENT_MUST_BE_POSITIVE_INT;
+    public static String ARGUMENT_MUST_BE_POSITIVE_INT = "Argument must be positive integer";
+    public static String RACE_IS_REQUIRED = "You have to choose character's race.";
 }

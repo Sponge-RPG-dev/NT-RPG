@@ -116,6 +116,7 @@ public class InventoryListener {
     public void onItemDrop(DropItemEvent event) {
         Optional<Player> first = event.getCause().first(Player.class);
         if (first.isPresent()) {
+
             Player player = first.get();
             Hotbar hotbar = player.getInventory().query(Hotbar.class);
             IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
@@ -125,6 +126,7 @@ public class InventoryListener {
             if (hotbarObject == HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
                 return;
             }
+
             hotbarObject.onUnEquip(character);
 
         }
