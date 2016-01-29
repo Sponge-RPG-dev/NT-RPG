@@ -1,4 +1,4 @@
-var imports = new JavaImporter(java.util,java.nio.file, cz.neumimto.effects.common);
+var imports = new JavaImporter(java.util,java.nio.file);
 /*java */
 var HashSet = Java.type('java.util.HashSet');
 var File = Java.type("java.io.File");
@@ -11,10 +11,12 @@ var ActiveSkill = Java.type("cz.neumimto.skills.ActiveSkill");
 var SkillResult =  Java.type("cz.neumimto.skills.SkillResult");
 var AbstractSkill = Java.type("cz.neumimto.skills.AbstractSkill");
 var GlobalEffect = Java.type("cz.neumimto.effects.IGlobalEffect");
+var EffectBase = Java.type("cz.neumimto.effects.EffectBase");
 var PluginConfig = Java.type("cz.neumimto.configuration.PluginConfig");
 var Effect = Java.type("cz.neumimto.effects.EffectBase");
+var SpeedBoost = Java.type("cz.neumimto.effects.common.positive.SpeedBoost");
 /* sponge */
-var Texts = Java.type("org.spongepowered.api.text.Texts");
+var Texts = Java.type("org.spongepowered.api.text.Text");
 var Keys = Java.type("org.spongepowered.api.data.key.Keys");
 /* libs */
 var Vector3d = Java.type("com.flowpowered.math.vector.Vector3d");
@@ -26,7 +28,6 @@ function registerSkill(obj) {
         if (typeof obj.init == 'function') {
             obj.init();
         }
-        print("registering javascript skill " + obj.getName());
         GlobalScope.skillService.addSkill(obj);
     }
 }
@@ -55,7 +56,6 @@ with (imports) {
     stream.forEach(function(p) {
         var name = p.toFile().absolutePath;
         if (!name.endsWith("Main.js")) {
-            print("loading "+ name);
             load(name);
         }
     });
