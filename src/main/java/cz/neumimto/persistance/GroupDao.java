@@ -44,7 +44,6 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Created by NeumimTo on 10.7.2015.
@@ -96,7 +95,7 @@ public class GroupDao {
         }
     }
 
-    @PostProcess(priority = 400)
+    @PostProcess(priority = 399)
     public void loadNClasses() {
         Path path = ResourceLoader.classDir.toPath();
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, "*.conf")) {
@@ -134,11 +133,15 @@ public class GroupDao {
                 Config c = ConfigFactory.parseFile(p.toFile());
                 Race race = new Race(c.getString("Name"));
                 loadPlayerGroup(c, race);
-                race.setAllowedClasses(c.getStringList("AllowedRaces").stream()
-                        .map(s ->
-                                getClasses().containsValue(s.toLowerCase()) ?
-                                        getClasses().get(s.toLowerCase()) : NClass.Default )
-                        .collect(Collectors.toSet()));
+                Set<NClass> set = new HashSet<>();
+                for (String a : c.getStringList("AllowedClasses")) {
+                    NClass nClass = getClasses().get(a.toLowerCase());
+                    if (nClass == null) {
+                        nClass = NClass.Default;
+                    }
+                    set.add(nClass);
+                }
+                race.setAllowedClasses(set);
                 getRaces().put(race.getName().toLowerCase(), race);
             });
         } catch (IOException e) {

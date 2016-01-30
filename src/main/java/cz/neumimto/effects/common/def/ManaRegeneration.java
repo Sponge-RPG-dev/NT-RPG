@@ -62,15 +62,14 @@ public class ManaRegeneration extends EffectBase {
     public void onTick() {
         double current = character.getMana().getValue();
         double max = character.getMana().getMaxValue();
-        if (current > max)
+        if (current >= max)
             return;
         double regen = character.getMana().getRegen()
                 + character.getCharacterProperty(DefaultProperties.mana_regen_mult) * character.getLevel();
         current += regen;
         ManaRegainEvent event = new ManaRegainEvent(character);
-        if (current > max) {
+        if (current >= max) {
             event.setNewVal(max);
-            event.setAmount(max - current);
         } else {
             event.setNewVal(current);
             event.setAmount(regen);

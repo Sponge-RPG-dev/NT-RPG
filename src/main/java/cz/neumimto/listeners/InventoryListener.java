@@ -118,6 +118,7 @@ public class InventoryListener {
         if (first.isPresent()) {
 
             Player player = first.get();
+
             Hotbar hotbar = player.getInventory().query(Hotbar.class);
             IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
             if (character.isStub())
@@ -128,7 +129,7 @@ public class InventoryListener {
             }
 
             hotbarObject.onUnEquip(character);
-
+            inventoryService.initializeHotbar( character,hotbar.getSelectedSlotIndex());
         }
     }
 }

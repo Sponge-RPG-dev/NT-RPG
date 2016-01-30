@@ -32,7 +32,7 @@ public class Race extends PlayerGroup {
 
     public static Race Default = new Race("None");
     private List<ISkill> skills = new ArrayList<>();
-    private Set<NClass> allowedRaces = new HashSet<>();
+    private Set<NClass> allowedClasses = new HashSet<>();
 
     public Race(String name) {
         super(name);
@@ -44,10 +44,10 @@ public class Race extends PlayerGroup {
 
 
     public void setAllowedClasses(Set<NClass> allowedRaces) {
-        this.allowedRaces = allowedRaces;
+        this.allowedClasses = allowedRaces;
     }
 
     public Set<NClass> getAllowedClasses() {
-        return allowedRaces;
+        return allowedClasses;
     }
 }
