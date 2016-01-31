@@ -61,4 +61,6 @@ public interface IPlayerMessage {
     void sendStatus(IActiveCharacter character);
 
     void showAvalaibleClasses(IActiveCharacter character);
+
+    void invokerDefaultMenu(IActiveCharacter character);
 }

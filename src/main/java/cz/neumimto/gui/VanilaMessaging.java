@@ -63,6 +63,11 @@ public class VanilaMessaging implements IPlayerMessage {
     }
 
     @Override
+    public void invokerDefaultMenu(IActiveCharacter character) {
+        sendMessage(character,"Not supported");
+    }
+
+    @Override
     public void sendMessage(IActiveCharacter player, String message) {
         player.sendMessage(message);
     }

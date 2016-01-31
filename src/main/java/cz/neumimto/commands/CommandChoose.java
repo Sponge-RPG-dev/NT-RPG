@@ -28,6 +28,7 @@ import cz.neumimto.configuration.Localization;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.damage.DamageService;
+import cz.neumimto.gui.Gui;
 import cz.neumimto.players.ActiveCharacter;
 import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.CharacterService;
@@ -89,7 +90,9 @@ public class CommandChoose extends CommandBase {
             return CommandResult.success();
         }
         Player player = (Player) commandSource;
-        if (args[0].equalsIgnoreCase("class")) {
+        if (args.length == 0) {
+            Gui.invokeDefaultMenu(characterService.getCharacter(player.getUniqueId()));
+        } else if (args[0].equalsIgnoreCase("class")) {
             //     if (!commandSource.hasPermission(CommandPermissions.CANT_CHOOSE_CLASS)) {
             NClass nClass = groupService.getNClass(args[1].toLowerCase());
             if (nClass == NClass.Default) {
