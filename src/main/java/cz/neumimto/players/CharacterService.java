@@ -210,8 +210,8 @@ public class CharacterService {
             characters.put(uuid, character);
         } else {
             deleteCharacterReferences(activeCharacter);
-            characters.put(uuid, character);
             character.setUsingGuiMod(activeCharacter.isUsingGuiMod());
+            characters.put(uuid, character);
             initActiveCharacter(character);
 
         }
