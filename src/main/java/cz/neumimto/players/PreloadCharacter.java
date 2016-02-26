@@ -85,6 +85,11 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
+    public Map<String, Integer> getTransientAttributes() {
+        return null;
+    }
+
+    @Override
     public boolean isInvulnerable() {
         return PluginConfig.ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS;
     }
@@ -296,6 +301,11 @@ public class PreloadCharacter implements IActiveCharacter {
     @Override
     public void setAttributePoints(int attributePoints) {
 
+    }
+
+    @Override
+    public Integer getAttributeValue(String name) {
+        return 0;
     }
 
     @Override

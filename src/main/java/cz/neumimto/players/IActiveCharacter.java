@@ -20,13 +20,14 @@ package cz.neumimto.players;
 
 import cz.neumimto.IEntity;
 import cz.neumimto.IEntityType;
+import cz.neumimto.effects.IEffect;
 import cz.neumimto.inventory.HotbarObject;
 import cz.neumimto.inventory.Weapon;
-import cz.neumimto.effects.IEffect;
 import cz.neumimto.players.groups.Guild;
 import cz.neumimto.players.groups.NClass;
 import cz.neumimto.players.groups.Race;
 import cz.neumimto.players.parties.Party;
+import cz.neumimto.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.skills.ExtendedSkillInfo;
 import cz.neumimto.skills.ISkill;
 import org.spongepowered.api.entity.living.player.Player;
@@ -96,6 +97,12 @@ public interface IActiveCharacter extends IEntity<Player> {
     int getAttributePoints();
 
     void setAttributePoints(int attributePoints);
+
+    Integer getAttributeValue(String name);
+
+    default Integer getAttributeValue(ICharacterAttribute attribute) {
+        return getAttributeValue(attribute.getName());
+    }
 
     ExtendedNClass getPrimaryClass();
 
@@ -230,4 +237,6 @@ public interface IActiveCharacter extends IEntity<Player> {
     void sendMessage(String message);
 
     float[] getCharacterLevelProperties();
+
+    Map<String,Integer> getTransientAttributes();
 }

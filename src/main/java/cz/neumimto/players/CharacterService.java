@@ -1002,7 +1002,7 @@ public class CharacterService {
             return 1;
         }
         CharacterEvent event = new CharacterAttributeChange(character, i);
-        boolean b = game.getEventManager().post(event);
+        game.getEventManager().post(event);
         if (event.isCancelled()) {
             return 1;
         }
@@ -1010,12 +1010,20 @@ public class CharacterService {
         attributes.put(attribute.getName().toLowerCase(), character.getCharacterBase().getAttributes().get(attribute.getName().toLowerCase()) + i);
         character.getCharacterBase().setAttributePoints(attributePoints - i);
         assignAttribute(character,attribute,i);
-        putInSaveQueue(character.getCharacterBase());
         return 0;
     }
 
     public void addAttribute(IActiveCharacter character, ICharacterAttribute attribute) {
         addAttribute(character, attribute, 1);
+    }
+
+    public void addTemporalAttribute(IActiveCharacter character,ICharacterAttribute attribute, int amount) {
+        Integer att = character.getTransientAttributes().get(attribute.getName());
+        if (att == null) {
+            character.getTransientAttributes().put(attribute.getName(),amount);
+        } else {
+            character.getTransientAttributes().put(attribute.getName(),att+amount);
+        }
     }
 }
 

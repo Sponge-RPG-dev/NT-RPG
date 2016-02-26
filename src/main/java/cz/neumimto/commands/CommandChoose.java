@@ -183,7 +183,7 @@ public class CommandChoose extends CommandBase {
                 commandSource.sendMessage(getUsage(commandSource));
                 return CommandResult.empty();
             }
-            int i = 0;
+            int i;
             if (Utils.isNumeric(args[2])) {
                 i = Integer.parseInt(args[2]);
                 if (i <= 0) {
@@ -196,6 +196,8 @@ public class CommandChoose extends CommandBase {
             }
             ICharacterAttribute attribute = playerPropertyService.getAttribute(args[1]);
             IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
+            characterService.addAttribute(character,attribute,i);
+            characterService.putInSaveQueue(character.getCharacterBase());
 
         } else if (args[0].equalsIgnoreCase("character")) {
             if (args.length != 2) {

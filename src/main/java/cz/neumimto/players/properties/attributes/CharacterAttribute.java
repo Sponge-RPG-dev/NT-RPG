@@ -17,7 +17,6 @@ public abstract class CharacterAttribute implements ICharacterAttribute {
     private String desc;
     private ItemType item = ItemTypes.STONE;
     private int maxval;
-    private int maxvalue;
 
     @Override
     public String getName() {
@@ -61,6 +60,6 @@ public abstract class CharacterAttribute implements ICharacterAttribute {
 
     @Override
     public int getMaxValue() {
-        return maxvalue;
+        return maxval;
     }
 }
