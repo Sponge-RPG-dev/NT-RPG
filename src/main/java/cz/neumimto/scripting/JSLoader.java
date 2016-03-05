@@ -27,7 +27,6 @@ import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.utils.FileUtils;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.slf4j.Logger;
-import org.spongepowered.api.event.Event;
 
 import javax.script.*;
 import java.io.*;
@@ -35,7 +34,6 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Set;
 
 /**
  * Created by NeumimTo on 13.3.2015.
@@ -85,10 +83,5 @@ public class JSLoader {
         }
     }
 
-    public <T extends Event> void enableJSEvents(Set<Class<? extends Event>> map) {
-
-
-
-    }
 }
 
