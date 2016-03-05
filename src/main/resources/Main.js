@@ -23,6 +23,8 @@ var Vector3d = Java.type("com.flowpowered.math.vector.Vector3d");
 var Optional = Java.type("com.google.common.base.Optional");
 /* https://wiki.openjdk.java.net/display/Nashorn/Nashorn+extensions */
 
+var events = new HashSet();
+
 function registerSkill(obj) {
     if (obj instanceof AbstractSkill) {
         if (typeof obj.init == 'function') {
@@ -59,4 +61,7 @@ with (imports) {
             load(name);
         }
     });
+}
+if (!events.isEmpty()) {
+    IoC.build(cz.neumimto.scripting.JSLoader).
 }
