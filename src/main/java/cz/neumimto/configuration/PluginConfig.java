@@ -109,4 +109,5 @@ public class PluginConfig {
 
     @ConfigValue
     public static boolean AUTOREMOVE_NONEXISTING_RUNEWORDS = false;
+
 }
