@@ -93,7 +93,7 @@ public class JSLoader {
         }
     }
 
-    public void a(Set<Class<? extends Event>> set) {
+    public void generateDynamicListener(Set<Class<? extends Event>> set) {
         Class<?> c = classGenerator.generateDynamicListener(set);
         try {
             resourceLoader.loadClass(c);

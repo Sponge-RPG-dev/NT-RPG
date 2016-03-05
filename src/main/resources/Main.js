@@ -63,5 +63,5 @@ with (imports) {
     });
 }
 if (!events.isEmpty()) {
-    IoC.build(cz.neumimto.scripting.JSLoader).
+    IoC.build(cz.neumimto.scripting.JSLoader).generateDynamicListener(events);
 }
