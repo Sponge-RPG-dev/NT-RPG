@@ -4,6 +4,7 @@ var HashSet = Java.type('java.util.HashSet');
 var File = Java.type("java.io.File");
 var TimeUnit = Java.type("java.util.concurrent.TimeUnit")
 var Runnable = Java.type("java.lang.Runnable");
+var Consumer = Java.type("java.util.function.Consumer")
 /*plugin */
 var SkillSettings = Java.type("cz.neumimto.skills.SkillSettings");
 var SkillNodes = Java.type("cz.neumimto.skills.SkillNode");

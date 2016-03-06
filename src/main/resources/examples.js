@@ -96,3 +96,15 @@ Strength.getAffectsProperties().put(DefaultProperties.iron_axe_bonus_damage,1.25
 Strength.getAffectsProperties().put(DefaultProperties.wooden_axe_bonus_damage,1.25f);
 //register the object into game
 GlobalScope.playerPropertyService.registerAttribute(Strength);
+
+
+
+events.add(Java.type("org.spongepowered.api.event.entity.DamageEntityEvent"));
+
+//todo
+var o = ioc.get().build(DynamicListener.static);
+o.damageEntityEvents.add(new Consumer() {
+    accept: function(event) {
+         //do stuff
+    }
+});
