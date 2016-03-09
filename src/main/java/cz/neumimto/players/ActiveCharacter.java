@@ -78,6 +78,7 @@ public class ActiveCharacter implements IActiveCharacter {
     private transient DamageType preferedDamageType = null;
     private transient HotbarObject[] hotbar = new HotbarObject[9];
     private transient int socketing;
+    private transient Map<String,Integer> transientAttributes = new HashMap<>();
     public ActiveCharacter(Player pl, CharacterBase base) {
         this.pl = pl;
         characterProperties = new float[PlayerPropertyService.LAST_ID];
@@ -291,25 +292,34 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
-    public short getSkillPoints() {
+    public int getSkillPoints() {
         return base.getSkillPoints();
     }
 
     @Override
-    public void setSkillPoints(short skillPoints) {
+    public void setSkillPoints(int skillPoints) {
         this.base.setSkillPoints(skillPoints);
     }
 
     @Override
-    public short getAttributePoints() {
+    public int getAttributePoints() {
         return base.getAttributePoints();
     }
 
     @Override
-    public void setAttributePoints(short attributePoints) {
+    public void setAttributePoints(int attributePoints) {
         this.base.setAttributePoints(attributePoints);
     }
 
+    @Override
+    public Map<String, Integer> getTransientAttributes() {
+        return transientAttributes;
+    }
+
+    @Override
+    public Integer getAttributeValue(String name) {
+        return base.getAttributes().get(name) + getTransientAttributes().get(name);
+    }
 
     @Override
     public ExtendedNClass getPrimaryClass() {

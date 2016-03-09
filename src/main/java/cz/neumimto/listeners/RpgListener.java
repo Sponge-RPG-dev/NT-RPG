@@ -18,17 +18,19 @@
 
 package cz.neumimto.listeners;
 
-import java.util.Optional;
-
 import cz.neumimto.ResourceLoader;
 import cz.neumimto.configuration.PluginConfig;
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.events.PlayerGuiModInitEvent;
 import cz.neumimto.events.character.PlayerDataPreloadComplete;
 import cz.neumimto.gui.Gui;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.players.CharacterService;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+
+import java.util.Optional;
+import java.util.UUID;
 
 
 /**
@@ -56,5 +58,11 @@ public class RpgListener {
                 }
             }
         }
+    }
+
+    @Listener
+    public void onGuiInit(PlayerGuiModInitEvent event) {
+        UUID uuid = event.getUuid();
+        characterService.getCharacter(uuid).setUsingGuiMod(true);
     }
 }

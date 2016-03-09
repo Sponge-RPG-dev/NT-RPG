@@ -90,9 +90,21 @@ var Strength = new (Java.extend(CharacterAttribute));
 Strength.setName("Strength");
 Strength.setDescription("Some desc");
 //Each point of stregth increases axe damage by 1.25
-Strength.getAffectsProperties().put(DefaultProperties.diamond_axe_bonus_damage,1.25f);
-Strength.getAffectsProperties().put(DefaultProperties.golden_axe_bonus_damage,1.25f);
-Strength.getAffectsProperties().put(DefaultProperties.iron_axe_bonus_damage,1.25f);
-Strength.getAffectsProperties().put(DefaultProperties.wooden_axe_bonus_damage,1.25f);
+Strength.getAffectsProperties().put(DefaultProperties.diamond_axe_bonus_damage,1.25);
+Strength.getAffectsProperties().put(DefaultProperties.golden_axe_bonus_damage,1.25);
+Strength.getAffectsProperties().put(DefaultProperties.iron_axe_bonus_damage,1.25);
+Strength.getAffectsProperties().put(DefaultProperties.wooden_axe_bonus_damage,1.25);
 //register the object into game
 GlobalScope.playerPropertyService.registerAttribute(Strength);
+
+
+
+events.add(Java.type("org.spongepowered.api.event.entity.DamageEntityEvent"));
+
+//todo
+var o = ioc.get().build(DynamicListener.static);
+o.damageEntityEvents.add(new Consumer() {
+    accept: function(event) {
+         //do stuff
+    }
+});

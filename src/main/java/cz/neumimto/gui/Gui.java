@@ -110,4 +110,8 @@ public class Gui {
     public static void showAvalaibleClasses(IActiveCharacter character) {
         getMessageTypeOf(character).showAvalaibleClasses(character);
     }
+
+    public static void invokeDefaultMenu(IActiveCharacter character) {
+        getMessageTypeOf(character).invokerDefaultMenu(character);
+    }
 }

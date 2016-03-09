@@ -1,9 +1,10 @@
-var imports = new JavaImporter(java.util,java.nio.file, cz.neumimto.effects.common);
+var imports = new JavaImporter(java.util,java.nio.file);
 /*java */
 var HashSet = Java.type('java.util.HashSet');
 var File = Java.type("java.io.File");
 var TimeUnit = Java.type("java.util.concurrent.TimeUnit")
 var Runnable = Java.type("java.lang.Runnable");
+var Consumer = Java.type("java.util.function.Consumer")
 /*plugin */
 var SkillSettings = Java.type("cz.neumimto.skills.SkillSettings");
 var SkillNodes = Java.type("cz.neumimto.skills.SkillNode");
@@ -11,22 +12,25 @@ var ActiveSkill = Java.type("cz.neumimto.skills.ActiveSkill");
 var SkillResult =  Java.type("cz.neumimto.skills.SkillResult");
 var AbstractSkill = Java.type("cz.neumimto.skills.AbstractSkill");
 var GlobalEffect = Java.type("cz.neumimto.effects.IGlobalEffect");
+var EffectBase = Java.type("cz.neumimto.effects.EffectBase");
 var PluginConfig = Java.type("cz.neumimto.configuration.PluginConfig");
 var Effect = Java.type("cz.neumimto.effects.EffectBase");
+var SpeedBoost = Java.type("cz.neumimto.effects.common.positive.SpeedBoost");
 /* sponge */
-var Texts = Java.type("org.spongepowered.api.text.Texts");
+var Texts = Java.type("org.spongepowered.api.text.Text");
 var Keys = Java.type("org.spongepowered.api.data.key.Keys");
 /* libs */
 var Vector3d = Java.type("com.flowpowered.math.vector.Vector3d");
 var Optional = Java.type("com.google.common.base.Optional");
 /* https://wiki.openjdk.java.net/display/Nashorn/Nashorn+extensions */
 
+var events = new HashSet();
+
 function registerSkill(obj) {
     if (obj instanceof AbstractSkill) {
         if (typeof obj.init == 'function') {
             obj.init();
         }
-        print("registering javascript skill " + obj.getName());
         GlobalScope.skillService.addSkill(obj);
     }
 }
@@ -55,8 +59,10 @@ with (imports) {
     stream.forEach(function(p) {
         var name = p.toFile().absolutePath;
         if (!name.endsWith("Main.js")) {
-            print("loading "+ name);
             load(name);
         }
     });
+}
+if (!events.isEmpty()) {
+    IoC.build(cz.neumimto.scripting.JSLoader).generateDynamicListener(events);
 }

@@ -42,6 +42,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
+import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.entity.damage.DamageModifier;
@@ -128,6 +129,10 @@ public class BasicListener {
                 inventoryService.onRightClick(character,0);
             }
         }
+    }
+
+    public void onBlockMined(ChangeBlockEvent.Break event) {
+
     }
 
     @Listener
@@ -231,7 +236,7 @@ public class BasicListener {
                 if (event.getTargetEntity().getType() == EntityTypes.PLAYER) {
                     IActiveCharacter targetchar = characterService.getCharacter(event.getTargetEntity().getUniqueId());
                     double target_resistence = damageService.getCharacterResistance(targetchar, type);
-                    event.setDamage(DamageModifier.builder().cause(Cause.ofNullable(null)).type(DamageModifierTypes.MAGIC).build(), input -> input * target_resistence);
+                    event.setDamage(DamageModifier.builder().type(DamageModifierTypes.MAGIC).build(), input -> input * target_resistence);
                 }
             }
         }

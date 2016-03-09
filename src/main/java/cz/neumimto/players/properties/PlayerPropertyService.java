@@ -93,6 +93,10 @@ public class PlayerPropertyService {
         attributes.put(attribute.getName().toLowerCase(),attribute);
     }
 
+    public ICharacterAttribute getAttribute(String name) {
+        return attributes.get(name.toLowerCase());
+    }
+
     @PostProcess(priority = 2000)
     public void dump() {
         Path path = Paths.get(NtRpgPlugin.workingDir + File.separator + "properties_dump.info");

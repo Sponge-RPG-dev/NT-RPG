@@ -18,6 +18,7 @@
 
 package cz.neumimto.players.groups;
 
+import cz.neumimto.players.properties.attributes.ICharacterAttribute;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 
@@ -39,7 +40,7 @@ public class PlayerGroup {
     private Map<Integer, Float> propLevelBonus = new HashMap<>();
     private ItemType itemType;
     private String description;
-
+    private Map<ICharacterAttribute,Integer> startingAttributes = new HashMap<>();
     public PlayerGroup(String name) {
         this.name = name;
         if (name.toLowerCase().equalsIgnoreCase("none")) {
@@ -130,5 +131,13 @@ public class PlayerGroup {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Map<ICharacterAttribute, Integer> getStartingAttributes() {
+        return startingAttributes;
+    }
+
+    public void setStartingAttributes(Map<ICharacterAttribute, Integer> startingAttributes) {
+        this.startingAttributes = startingAttributes;
     }
 }

@@ -27,15 +27,20 @@ import cz.neumimto.configuration.CommandPermissions;
 import cz.neumimto.configuration.Localization;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.damage.DamageService;
+import cz.neumimto.gui.Gui;
 import cz.neumimto.players.ActiveCharacter;
 import cz.neumimto.players.CharacterBase;
 import cz.neumimto.players.CharacterService;
 import cz.neumimto.players.IActiveCharacter;
 import cz.neumimto.players.groups.NClass;
 import cz.neumimto.players.groups.Race;
+import cz.neumimto.players.properties.PlayerPropertyService;
+import cz.neumimto.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.skills.ISkill;
 import cz.neumimto.skills.SkillService;
 import cz.neumimto.utils.SkillTreeActionResult;
+import cz.neumimto.utils.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -65,6 +70,12 @@ public class CommandChoose extends CommandBase {
     @Inject
     private NtRpgPlugin plugin;
 
+    @Inject
+    private DamageService damageService;
+
+    @Inject
+    private PlayerPropertyService playerPropertyService;
+
     public CommandChoose() {
         setUsage(CommandLocalization.COMMAND_CHOOSE_USAGE);
         setDescription(CommandLocalization.COMMAND_CHOOSE_DESC);
@@ -79,7 +90,9 @@ public class CommandChoose extends CommandBase {
             return CommandResult.success();
         }
         Player player = (Player) commandSource;
-        if (args[0].equalsIgnoreCase("class")) {
+        if (args.length == 0) {
+            Gui.invokeDefaultMenu(characterService.getCharacter(player.getUniqueId()));
+        } else if (args[0].equalsIgnoreCase("class")) {
             //     if (!commandSource.hasPermission(CommandPermissions.CANT_CHOOSE_CLASS)) {
             NClass nClass = groupService.getNClass(args[1].toLowerCase());
             if (nClass == NClass.Default) {
@@ -93,9 +106,19 @@ public class CommandChoose extends CommandBase {
             if (i < 0) {
                 i = 0;
             }
+
             IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
             if (character.isStub()) {
                 player.sendMessage(Text.of(Localization.CHARACTER_IS_REQUIRED));
+                return CommandResult.empty();
+            }
+            if (character.getRace() == Race.Default) {
+                player.sendMessage(Text.of(Localization.RACE_IS_REQUIRED));
+                return CommandResult.empty();
+            }
+            if (!character.getRace().getAllowedClasses().contains(nClass)) {
+                player.sendMessage(Text.of(Localization.RACE_AND_CLASS_CONFLICT
+                        .replaceAll("%1",character.getRace().getName()).replaceAll("%2",nClass.getName())));
                 return CommandResult.empty();
             }
             characterService.updatePlayerGroups(character, nClass, i, null, null);
@@ -155,6 +178,27 @@ public class CommandChoose extends CommandBase {
                     int i = characterService.refundSkill(character, skill, clazz);
                 }
             }
+        } else if (args[0].equalsIgnoreCase("attribute")) {
+            if (args.length != 3) {
+                commandSource.sendMessage(getUsage(commandSource));
+                return CommandResult.empty();
+            }
+            int i;
+            if (Utils.isNumeric(args[2])) {
+                i = Integer.parseInt(args[2]);
+                if (i <= 0) {
+                    commandSource.sendMessage(Text.of(Localization.ARGUMENT_MUST_BE_POSITIVE_INT));
+                    return CommandResult.empty();
+                }
+            } else {
+                commandSource.sendMessage(Text.of(Localization.ARGUMENT_MUST_BE_POSITIVE_INT));
+                return CommandResult.empty();
+            }
+            ICharacterAttribute attribute = playerPropertyService.getAttribute(args[1]);
+            IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
+            characterService.addAttribute(character,attribute,i);
+            characterService.putInSaveQueue(character.getCharacterBase());
+
         } else if (args[0].equalsIgnoreCase("character")) {
             if (args.length != 2) {
                 commandSource.sendMessage(getUsage(commandSource));

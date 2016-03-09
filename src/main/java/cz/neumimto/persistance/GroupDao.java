@@ -31,6 +31,7 @@ import cz.neumimto.players.groups.NClass;
 import cz.neumimto.players.groups.PlayerGroup;
 import cz.neumimto.players.groups.Race;
 import cz.neumimto.players.properties.PlayerPropertyService;
+import cz.neumimto.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.skills.SkillService;
 import cz.neumimto.skills.SkillTree;
 import org.slf4j.Logger;
@@ -94,7 +95,7 @@ public class GroupDao {
         }
     }
 
-    @PostProcess(priority = 500)
+    @PostProcess(priority = 399)
     public void loadNClasses() {
         Path path = ResourceLoader.classDir.toPath();
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, "*.conf")) {
@@ -124,7 +125,7 @@ public class GroupDao {
         }
     }
 
-    @PostProcess(priority = 400)
+    @PostProcess(priority = 450)
     public void loadRaces() {
         Path path = ResourceLoader.raceDir.toPath();
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, "*.conf")) {
@@ -132,6 +133,15 @@ public class GroupDao {
                 Config c = ConfigFactory.parseFile(p.toFile());
                 Race race = new Race(c.getString("Name"));
                 loadPlayerGroup(c, race);
+                Set<NClass> set = new HashSet<>();
+                for (String a : c.getStringList("AllowedClasses")) {
+                    NClass nClass = getClasses().get(a.toLowerCase());
+                    if (nClass == null) {
+                        nClass = NClass.Default;
+                    }
+                    set.add(nClass);
+                }
+                race.setAllowedClasses(set);
                 getRaces().put(race.getName().toLowerCase(), race);
             });
         } catch (IOException e) {
@@ -175,6 +185,14 @@ public class GroupDao {
                 group.getWeapons().put(type.get(), Double.parseDouble(m.getValue().render()));
             } else logger.warn("Defined invalid itemtype  " + m.getKey() + " in " + group.getName());
 
+        }
+        prop = c.getConfig("Attributes");
+        set = prop.entrySet();
+        for (Map.Entry<String, ConfigValue> entry : set) {
+            String attribute = entry.getKey();
+            int i = Integer.parseInt(entry.getValue().render());
+            ICharacterAttribute attribute1 = propertyService.getAttribute(attribute);
+            group.getStartingAttributes().put(attribute1,i);
         }
         Optional<ItemType> menuIcon = game.getRegistry().getType(ItemType.class, c.getString("MenuIcon"));
         if (menuIcon.isPresent()) {

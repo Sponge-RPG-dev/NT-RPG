@@ -21,7 +21,9 @@ package cz.neumimto.players.groups;
 import cz.neumimto.skills.ISkill;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by NeumimTo on 27.12.2014.
@@ -30,6 +32,7 @@ public class Race extends PlayerGroup {
 
     public static Race Default = new Race("None");
     private List<ISkill> skills = new ArrayList<>();
+    private Set<NClass> allowedClasses = new HashSet<>();
 
     public Race(String name) {
         super(name);
@@ -40,4 +43,11 @@ public class Race extends PlayerGroup {
     }
 
 
+    public void setAllowedClasses(Set<NClass> allowedRaces) {
+        this.allowedClasses = allowedRaces;
+    }
+
+    public Set<NClass> getAllowedClasses() {
+        return allowedClasses;
+    }
 }

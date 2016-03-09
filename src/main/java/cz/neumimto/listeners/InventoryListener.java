@@ -77,13 +77,13 @@ public class InventoryListener {
                     System.out.println(value);
                 }
             }
-
         }
     }
 
     @Listener
     public void onInventoryClose(InteractInventoryEvent.Close event) {
         Optional<Player> first = event.getCause().first(Player.class);
+        System.out.println(event);
         if (first.isPresent()) {
             IActiveCharacter character = characterService.getCharacter(first.get().getUniqueId());
             inventoryService.initializeHotbar(character);
@@ -92,6 +92,7 @@ public class InventoryListener {
 
     @Listener
     public void onItemPickup(ChangeInventoryEvent.Pickup event) {
+        System.out.println(event);
         Optional<Player> first = event.getCause().first(Player.class);
         if (first.isPresent()) {
             Player player = first.get();
@@ -116,7 +117,9 @@ public class InventoryListener {
     public void onItemDrop(DropItemEvent event) {
         Optional<Player> first = event.getCause().first(Player.class);
         if (first.isPresent()) {
+
             Player player = first.get();
+
             Hotbar hotbar = player.getInventory().query(Hotbar.class);
             IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
             if (character.isStub())
@@ -125,8 +128,9 @@ public class InventoryListener {
             if (hotbarObject == HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
                 return;
             }
-            hotbarObject.onUnEquip(character);
 
+            hotbarObject.onUnEquip(character);
+            inventoryService.initializeHotbar( character,hotbar.getSelectedSlotIndex());
         }
     }
 }

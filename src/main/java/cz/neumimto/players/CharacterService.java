@@ -24,6 +24,7 @@ import cz.neumimto.configuration.Localization;
 import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.damage.DamageService;
 import cz.neumimto.effects.EffectService;
 import cz.neumimto.effects.EffectSource;
 import cz.neumimto.effects.IEffect;
@@ -31,6 +32,8 @@ import cz.neumimto.effects.IGlobalEffect;
 import cz.neumimto.effects.common.def.CombatEffect;
 import cz.neumimto.effects.common.def.ManaRegeneration;
 import cz.neumimto.events.CancellableEvent;
+import cz.neumimto.events.CharacterAttributeChange;
+import cz.neumimto.events.CharacterEvent;
 import cz.neumimto.events.CharacterGainedLevelEvent;
 import cz.neumimto.events.character.CharacterWeaponUpdateEvent;
 import cz.neumimto.events.character.EventCharacterArmorPostUpdate;
@@ -51,6 +54,7 @@ import cz.neumimto.players.groups.Race;
 import cz.neumimto.players.parties.Party;
 import cz.neumimto.players.properties.DefaultProperties;
 import cz.neumimto.players.properties.PlayerPropertyService;
+import cz.neumimto.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.skills.*;
 import cz.neumimto.utils.SkillTreeActionResult;
 import cz.neumimto.utils.Utils;
@@ -91,6 +95,9 @@ public class CharacterService {
 
     @Inject
     private PlayerPropertyService playerPropertyService;
+
+    @Inject
+    private DamageService damageService;
 
     @Inject
     private Logger logger;
@@ -203,8 +210,8 @@ public class CharacterService {
             characters.put(uuid, character);
         } else {
             deleteCharacterReferences(activeCharacter);
-            characters.put(uuid, character);
             character.setUsingGuiMod(activeCharacter.isUsingGuiMod());
+            characters.put(uuid, character);
             initActiveCharacter(character);
 
         }
@@ -274,11 +281,23 @@ public class CharacterService {
 
     private void initActiveCharacter(IActiveCharacter character) {
         character.getPlayer().sendMessage(Text.of(Localization.CURRENT_CHARACTER.replaceAll("%1", character.getName())));
-
         addDefaultEffects(character);
+        for (Map.Entry<String, Integer> entry : character.getCharacterBase().getAttributes().entrySet()) {
+            ICharacterAttribute attribute = playerPropertyService.getAttribute(entry.getKey());
+            if (attribute != null) {
+                assignAttribute(character,attribute,entry.getValue());
+            }
+        }
+
+        updateMaxHealth(character);
+        updateMaxHealth(character);
+        updateWalkSpeed(character);
+        damageService.recalculateCharacterWeaponDamage(character);
+
 
         inventoryService.initializeHotbar(character);
     }
+
 
     public void addDefaultEffects(IActiveCharacter character) {
         effectService.addEffect(new ManaRegeneration(character), character);
@@ -434,7 +453,7 @@ public class CharacterService {
         return activeCharacter;
     }
 
-    private Runnable updateAll(final ActiveCharacter activeCharacter) {
+    private Runnable updateAll(final IActiveCharacter activeCharacter) {
         return () -> {
             updateArmorRestrictions(activeCharacter);
             updateWeaponRestrictions(activeCharacter);
@@ -628,7 +647,7 @@ public class CharacterService {
      * 5 - if event is cancelled
      * 0 - ok
      */
-    public Pair<SkillTreeActionResult,SkillTreeActionResult.Data> upgradeSkill(IActiveCharacter character, ISkill skill) {
+    public Pair<SkillTreeActionResult, SkillTreeActionResult.Data> upgradeSkill(IActiveCharacter character, ISkill skill) {
         Pair p = new Pair();
 
         if (character.getSkillPoints() <= 0) {
@@ -643,14 +662,14 @@ public class CharacterService {
             return p;
         }
         int minlevel = extendedSkillInfo.getLevel() + extendedSkillInfo.getSkillData().getMinPlayerLevel();
-        if ( minlevel > character.getLevel()) {
+        if (minlevel > character.getLevel()) {
             p.key = SkillTreeActionResult.SKILL_REQUIRES_HIGHER_LEVEL;
-            p.value = new SkillTreeActionResult.Data(skill.getName(),minlevel+"");
+            p.value = new SkillTreeActionResult.Data(skill.getName(), minlevel + "");
             return p;
         }
         if (extendedSkillInfo.getLevel() + 1 > extendedSkillInfo.getSkillData().getMaxSkillLevel()) {
             p.key = SkillTreeActionResult.SKILL_ON_MAX_LEVEL;
-            p.value = new SkillTreeActionResult.Data(skill.getName(),extendedSkillInfo.getLevel()+"");
+            p.value = new SkillTreeActionResult.Data(skill.getName(), extendedSkillInfo.getLevel() + "");
             return p;
         }
         SkillUpgradeEvent event = new SkillUpgradeEvent(character, skill, extendedSkillInfo.getLevel() + 1);
@@ -661,14 +680,14 @@ public class CharacterService {
             return p;
         }
         extendedSkillInfo.setLevel(event.getLevel());
-        short s = character.getCharacterBase().getSkillPoints();
+        int s = character.getCharacterBase().getSkillPoints();
         character.getCharacterBase().setSkillPoints((short) (s - 1));
         character.getCharacterBase().setUsedSkillPoints((short) (s + 1));
         character.getCharacterBase().getSkills().put(extendedSkillInfo.getSkill().getName(), event.getLevel());
         putInSaveQueue(character.getCharacterBase());
         skill.skillUpgrade(character, event.getLevel());
         p.key = SkillTreeActionResult.UPGRADED;
-        p.value = new SkillTreeActionResult.Data(skill.getName(),event.getLevel()+"");
+        p.value = new SkillTreeActionResult.Data(skill.getName(), event.getLevel() + "");
         return p;
     }
 
@@ -683,7 +702,7 @@ public class CharacterService {
      * 3 - event SkillLearnEvent is cancelled
      * 0 - ok;
      */
-    public Pair<SkillTreeActionResult,SkillTreeActionResult.Data> characterLearnskill(IActiveCharacter character, ISkill skill, SkillTree skillTree) {
+    public Pair<SkillTreeActionResult, SkillTreeActionResult.Data> characterLearnskill(IActiveCharacter character, ISkill skill, SkillTree skillTree) {
         Pair p = new Pair();
         if (character.getSkillPoints() < 1) {
             p.key = SkillTreeActionResult.NO_SKILLPOINTS;
@@ -698,14 +717,14 @@ public class CharacterService {
         }
         if (character.getLevel() < info.getMinPlayerLevel()) {
             p.key = SkillTreeActionResult.SKILL_REQUIRES_HIGHER_LEVEL;
-            p.value = new SkillTreeActionResult.Data(skill.getName(),info.getMinPlayerLevel()+"");
+            p.value = new SkillTreeActionResult.Data(skill.getName(), info.getMinPlayerLevel() + "");
             return p;
         }
         for (SkillData skillData : info.getHardDepends()) {
             if (!character.hasSkill(skillData.getSkillName())) {
                 p.key = SkillTreeActionResult.DOES_NOT_MATCH_CHAIN;
                 //todo
-                p.value = new SkillTreeActionResult.Data(skill.getName(),info.getMinPlayerLevel()+"");
+                p.value = new SkillTreeActionResult.Data(skill.getName(), info.getMinPlayerLevel() + "");
                 return p;
             }
         }
@@ -719,7 +738,7 @@ public class CharacterService {
         if (!hasSkill) {
             p.key = SkillTreeActionResult.DOES_NOT_MATCH_CHAIN;
             //todo
-            p.value = new SkillTreeActionResult.Data(skill.getName(),info.getMinPlayerLevel()+"");
+            p.value = new SkillTreeActionResult.Data(skill.getName(), info.getMinPlayerLevel() + "");
             return p;
         }
         for (SkillData skillData : info.getConflicts()) {
@@ -738,7 +757,7 @@ public class CharacterService {
             return p;
         }
 
-        short s = character.getCharacterBase().getSkillPoints();
+        int s = character.getCharacterBase().getSkillPoints();
         character.getCharacterBase().setSkillPoints((short) (s - 1));
         character.getCharacterBase().setUsedSkillPoints((short) (s + 1));
 
@@ -783,7 +802,7 @@ public class CharacterService {
         }
         int level = skillInfo.getLevel();
         skill.skillRefund(character);
-        short skillPoints = character.getCharacterBase().getSkillPoints();
+        int skillPoints = character.getCharacterBase().getSkillPoints();
         character.getCharacterBase().setSkillPoints((short) (skillPoints + level));
         character.getCharacterBase().setUsedSkillPoints((short) (skillPoints - level));
         putInSaveQueue(character.getCharacterBase());
@@ -806,7 +825,7 @@ public class CharacterService {
             characterBase.getSkills().clear();
             character.getRemoveAllSkills();
             characterBase.getCooldowns().clear();
-            short usedSkillPoints = characterBase.getUsedSkillPoints();
+            int usedSkillPoints = characterBase.getUsedSkillPoints();
             characterBase.setUsedAttributePoints((short) 0);
             characterBase.setSkillPoints((short) (characterBase.getSkillPoints() + usedSkillPoints));
             putInSaveQueue(characterBase);
@@ -899,7 +918,7 @@ public class CharacterService {
             if (nClass.hasExperienceSource(source)) {
                 int maxlevel = nClass.getLevels().length - 1;
                 if (aClass.getLevel() > maxlevel)
-                   continue;
+                    continue;
                 addExperiences(character, exp, aClass, false);
 
             }
@@ -938,7 +957,7 @@ public class CharacterService {
             if (!aClass.takesExp()) {
                 break;
             }
-            if (level > levels.length-1) {
+            if (level > levels.length - 1) {
                 break;
             }
             levellimit = levels[level];
@@ -955,12 +974,56 @@ public class CharacterService {
         Map<String, Double> cls = character.getCharacterBase().getClasses();
         cls.put(aClass.getnClass().getName(), total);
         if (onlyinit) {
-            //todo msg
+            //todo no msg
         } else {
             Gui.showExpChange(character, aClass.getnClass().getName(), exp);
         }
 
     }
 
+
+    public void assignAttribute(IActiveCharacter character,ICharacterAttribute attribute,int levels) {
+        Map<Integer, Float> integerFloatMap = attribute.affectsProperties();
+        for (Map.Entry<Integer, Float> entry : integerFloatMap.entrySet()) {
+            character.getCharacterProperties()[entry.getKey()] = character
+                    .getCharacterProperties()[entry.getKey()] + entry.getValue()*levels;
+        }
+    }
+
+    /**
+     * @param character
+     * @param attribute
+     * @param i
+     * @return
+     */
+    public int addAttribute(IActiveCharacter character, ICharacterAttribute attribute, int i) {
+        int attributePoints = character.getCharacterBase().getAttributePoints();
+        if (attributePoints - i <= 0) {
+            return 1;
+        }
+        CharacterEvent event = new CharacterAttributeChange(character, i);
+        game.getEventManager().post(event);
+        if (event.isCancelled()) {
+            return 1;
+        }
+        Map<String, Integer> attributes = character.getCharacterBase().getAttributes();
+        attributes.put(attribute.getName().toLowerCase(), character.getCharacterBase().getAttributes().get(attribute.getName().toLowerCase()) + i);
+        character.getCharacterBase().setAttributePoints(attributePoints - i);
+        assignAttribute(character,attribute,i);
+        return 0;
+    }
+
+    public void addAttribute(IActiveCharacter character, ICharacterAttribute attribute) {
+        addAttribute(character, attribute, 1);
+    }
+
+    public void addTemporalAttribute(IActiveCharacter character,ICharacterAttribute attribute, int amount) {
+        Integer att = character.getTransientAttributes().get(attribute.getName());
+        if (att == null) {
+            character.getTransientAttributes().put(attribute.getName(),amount);
+        } else {
+            character.getTransientAttributes().put(attribute.getName(),att+amount);
+        }
+    }
 }
 

@@ -91,9 +91,6 @@ public class Utils {
         return Optional.empty(); //todo
     }
 
-    public static Optional<Entity> spawnInvisibleProjectile(IEntity caster, EntityType type) {
-        return Optional.empty();
-    }
 
     public static Set<BlockType> transparentBlocks = new HashSet<>();
 
@@ -103,7 +100,6 @@ public class Utils {
 
     public static Living getTargettedEntity(IActiveCharacter character, int range) {
         Player player = character.getPlayer();
-        Set<Entity> nearbyEntities = getNearbyEntities(player.getLocation(), range);
         Optional<BlockRayHit<World>> h = BlockRay.from(player).blockLimit(range).filter(BlockRay.onlyAirFilter()).build().end();
         if (h.isPresent()) {
             Vector3d lookPos = h.get().getBlockPosition().toDouble();

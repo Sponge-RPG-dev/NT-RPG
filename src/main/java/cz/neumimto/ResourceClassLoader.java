@@ -18,8 +18,6 @@
 
 package cz.neumimto;
 
-import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
-
 import java.net.URL;
 import java.net.URLClassLoader;
 
