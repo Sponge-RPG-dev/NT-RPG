@@ -2,6 +2,7 @@ package cz.neumimto.events;
 
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
 
 import java.util.UUID;
 
@@ -26,7 +27,7 @@ public class PlayerGuiModInitEvent implements Event {
 
     @Override
     public Cause getCause() {
-        return Cause.ofNullable(null);
+        return Cause.source(uuid).build();
     }
 
 }

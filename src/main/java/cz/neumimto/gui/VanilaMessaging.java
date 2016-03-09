@@ -36,7 +36,7 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.service.pagination.PaginationBuilder;
+import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
@@ -122,7 +122,7 @@ public class VanilaMessaging implements IPlayerMessage {
     @Override
     public void sendPlayerInfo(IActiveCharacter character, List<CharacterBase> target) {
         PaginationService paginationService = game.getServiceManager().provide(PaginationService.class).get();
-        PaginationBuilder builder = paginationService.builder();
+        PaginationList.Builder builder = paginationService.builder();
         builder.title(Text.builder("=====================").color(TextColors.GREEN).build());
         for (CharacterBase characterBase : target) {
 

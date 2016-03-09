@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.spongepowered</groupId>
             <artifactId>spongeapi</artifactId>
-            <version>LATEST</version>
+            <version>4.0.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

@@ -35,6 +35,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GamePostInitializationEvent;
+import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 
@@ -58,7 +59,8 @@ import java.util.jar.JarFile;
 /**
  * Created by NeumimTo on 29.4.2015.
  */
-@Plugin(id = "NtRpg", name = "NtRpg", dependencies = "after:MinecraftGUIServer;after:NTCORE")
+@Plugin(id = "ntrpg", name = "NtRPG", dependencies = {@Dependency(id = "MinecraftGuiServer", optional = true),
+                                                       @Dependency(id = "NTCORE")})
 public class NtRpgPlugin {
     public static String workingDir;
     public static File pluginjar;

@@ -236,7 +236,7 @@ public class BasicListener {
                 if (event.getTargetEntity().getType() == EntityTypes.PLAYER) {
                     IActiveCharacter targetchar = characterService.getCharacter(event.getTargetEntity().getUniqueId());
                     double target_resistence = damageService.getCharacterResistance(targetchar, type);
-                    event.setDamage(DamageModifier.builder().cause(Cause.ofNullable(null)).type(DamageModifierTypes.MAGIC).build(), input -> input * target_resistence);
+                    event.setDamage(DamageModifier.builder().type(DamageModifierTypes.MAGIC).build(), input -> input * target_resistence);
                 }
             }
         }
