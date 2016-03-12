@@ -2,9 +2,9 @@ var imports = new JavaImporter(java.util,java.nio.file);
 /*java */
 var HashSet = Java.type('java.util.HashSet');
 var File = Java.type("java.io.File");
-var TimeUnit = Java.type("java.util.concurrent.TimeUnit")
+var TimeUnit = Java.type("java.util.concurrent.TimeUnit");
 var Runnable = Java.type("java.lang.Runnable");
-var Consumer = Java.type("java.util.function.Consumer")
+var Consumer = Java.type("java.util.function.Consumer");
 /*plugin */
 var SkillSettings = Java.type("cz.neumimto.skills.SkillSettings");
 var SkillNodes = Java.type("cz.neumimto.skills.SkillNode");
@@ -54,6 +54,7 @@ function defineCharacterProperty(name,def) {
 function getLevelNode(extendedSkillInfo,node) {
     return extendedSkillInfo.getSkillInfo().getSkillSettings().getLevelNodeValue(node,extendedSkillInfo.getLevel());
 }
+
 with (imports) {
     var stream = Files.newDirectoryStream(new File("./mods/NtRpg/scripts").toPath(),"*.js");
     stream.forEach(function(p) {
@@ -63,6 +64,7 @@ with (imports) {
         }
     });
 }
+
 if (!events.isEmpty()) {
     IoC.build(cz.neumimto.scripting.JSLoader).generateDynamicListener(events);
 }

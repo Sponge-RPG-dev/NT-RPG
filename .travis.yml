@@ -1,0 +1,16 @@
+deploy:
+  provider: releases
+  api_key: $apikey
+  skip_cleanup: true
+  file_glob: true
+  file: "/home/travis/build/NeumimTo/NT-RPG/target/NTRpg-*-shaded.jar"
+  on:
+    branch: master
+language: java
+jdk:
+  - oraclejdk8
+after_success:
+  - git config --global user.name "Travis CI"
+  - export GIT_TAG=build-$TRAVIS_BRANCH-$(date -u "+%Y-%m-%d-%H-%M-%S")-$TRAVIS_BUILD_NUMBER
+  - git tag $GIT_TAG -a -m "Generated tag from TravisCI build $TRAVIS_BUILD_NUMBER"
+  - git push origin $GIT_TAG
