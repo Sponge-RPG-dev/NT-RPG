@@ -26,35 +26,24 @@ import cz.neumimto.core.FindPersistenceContextEvent;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.listeners.DebugListener;
 import cz.neumimto.players.CharacterBase;
-import cz.neumimto.players.IActiveCharacter;
-import cz.neumimto.scripting.JSLoader;
 import cz.neumimto.utils.FileUtils;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GamePostInitializationEvent;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
-import javax.script.ScriptEngineManager;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
-import java.util.Properties;
-import java.util.jar.JarFile;
 
 /**
  * Created by NeumimTo on 29.4.2015.
