@@ -1,7 +1,7 @@
 deploy:
   provider: releases
   api_key: $apikey
-  skip_cleanup: trueg
+  skip_cleanup: true
   file_glob: true
   file: "/home/travis/build/NeumimTo/NT-RPG/target/NTRpg-*-shaded.jar"
   on:
