@@ -3,7 +3,7 @@ deploy:
   api_key: $apikey
   skip_cleanup: true
   file_glob: true
-  file: "/home/travis/build/NeumimTo/NT-RPG/target/NTRpg-*-shaded.jar"
+  file: "/home/travis/build/NeumimTo/NT-RPG/target/NtRpg-*-shaded.jar"
   on:
     branch: master
 language: java
