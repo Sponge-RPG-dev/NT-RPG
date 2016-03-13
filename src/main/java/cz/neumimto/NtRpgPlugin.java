@@ -49,7 +49,7 @@ import java.util.Optional;
  * Created by NeumimTo on 29.4.2015.
  */
 @Plugin(id = "ntrpg", name = "NtRPG", dependencies = {@Dependency(id = "MinecraftGuiServer", optional = true),
-                                                       @Dependency(id = "NTCORE")})
+                                                       @Dependency(id = "ntcore")})
 public class NtRpgPlugin {
     public static String workingDir;
     public static File pluginjar;
