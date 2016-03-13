@@ -3,13 +3,17 @@ package cz.neumimto;
 import cz.neumimto.effects.IEffect;
 import cz.neumimto.effects.IGlobalEffect;
 import javassist.CannotCompileException;
+import jdk.internal.dynalink.beans.StaticClass;
 import org.objectweb.asm.*;
+import org.objectweb.asm.Type;
 import org.spongepowered.api.event.Event;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
@@ -149,11 +153,26 @@ public class ClassGenerator implements Opcodes {
         return o;
     }
 
-    public Class generateDynamicListener(Set<Class<? extends Event>> map) {
-        Class o = null;
+    public Object generateDynamicListener(Map<StaticClass, Set<Consumer<? extends Event>>> map) {
+        Object o = null;
         try {
             byte[] b = generateDynamicListenerbc(map);
             o = loadClass("cz.neumimto.listeners.DynamicListener",b);
+            Class<?> listener = Class.forName("cz.neumimto.listeners.DynamicListener");
+            o=listener.newInstance();
+            for (Field field : listener.getDeclaredFields()) {
+                if (Set.class.isAssignableFrom(field.getType())) {
+                    Set s = (Set) field.get(o);
+                    ParameterizedType paramtype = (ParameterizedType) field.getGenericType();
+                    ParameterizedType type = (ParameterizedType) paramtype.getActualTypeArguments()[0];
+                    Class<? extends Event> event = (Class<? extends Event>) type.getActualTypeArguments()[0];
+                    map.entrySet().stream()
+                            .filter(m -> m.getKey().getRepresentedClass() == event)
+                            .forEach(a -> s.addAll(a.getValue()));
+                 }
+            }
+            Method[] methods = listener.getMethods();
+            int length = methods.length;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -196,7 +215,7 @@ public class ClassGenerator implements Opcodes {
         }
     }
 
-    private byte[] generateDynamicListenerbc(Set<Class<? extends Event>> set) throws Exception {
+    private byte[] generateDynamicListenerbc(Map<StaticClass, Set<Consumer<? extends Event>>> set) throws Exception {
 
         ClassWriter cw = new ClassWriter(0);
         FieldVisitor fv;
@@ -213,10 +232,9 @@ public class ClassGenerator implements Opcodes {
         }
         cw.visitInnerClass("cz/neumimto/ResourceLoader$ListenerClass", "cz/neumimto/ResourceLoader", "ListenerClass", ACC_PUBLIC + ACC_STATIC + ACC_ANNOTATION + ACC_ABSTRACT + ACC_INTERFACE);
 
-        for (Class<? extends Event> e : set) {
-            String name = e.getSimpleName().substring(0, 1).toLowerCase() + e.getSimpleName().substring(1) + "s";
-                                                                                        //not generic not neede here
-            fv = cw.visitField(ACC_PRIVATE, name, "Ljava/util/Set;", "Ljava/util/Set<Ljava/util/function/Consumer<L"+toPath(e)+";>;>;",null);
+        for (StaticClass e : set.keySet()) {
+            String name = e.getRepresentedClass().getSimpleName().substring(0, 1).toLowerCase() + e.getRepresentedClass().getSimpleName().substring(1) + "s";
+            fv = cw.visitField(ACC_PUBLIC, name, "Ljava/util/Set;", "Ljava/util/Set<Ljava/util/function/Consumer<L"+toPath(e.getRepresentedClass())+";>;>;",null);
             fv.visitEnd();
         }
         int i = 19;
@@ -228,7 +246,8 @@ public class ClassGenerator implements Opcodes {
             mv.visitLineNumber(17, l0);
             mv.visitVarInsn(ALOAD, 0);
             mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
-            for (Class<? extends Event> e : set) {
+            for (StaticClass a : set.keySet()) {
+                Class e = a.getRepresentedClass();
                 Label l1 = new Label();
                 mv.visitLabel(l1);
                 mv.visitLineNumber(i, l1);
@@ -248,7 +267,8 @@ public class ClassGenerator implements Opcodes {
             mv.visitEnd();
         }
         {
-            for (Class<? extends Event> e : set) {
+            for (StaticClass a : set.keySet()) {
+                Class e = a.getRepresentedClass();
                 String name = "on"+ e.getSimpleName();
                 String name1 = e.getSimpleName().substring(0, 1).toLowerCase() + e.getSimpleName().substring(1) + "s";
                 mv = cw.visitMethod(ACC_PUBLIC, name, "(L"+toPath(e)+";)V", null, null);

@@ -53,21 +53,29 @@ public class SkillService {
     @Inject
     private SkillTreeDao skillTreeDao;
 
-            @Inject
-            private GroupService groupService;
+    @Inject
+    private GroupService groupService;
 
-            @Inject
-            private JSLoader jsLoader;
+    @Inject
+    private JSLoader jsLoader;
 
-            @Inject
-            private Game game;
+    @Inject
+    private Game game;
 
-            private Map<String, ISkill> skills = new ConcurrentHashMap<>();
+    private Map<String, ISkill> skills = new ConcurrentHashMap<>();
 
-            private Map<String, SkillTree> skillTrees = new ConcurrentHashMap<>();
+    private Map<String, SkillTree> skillTrees = new ConcurrentHashMap<>();
 
-        public void addSkill(ISkill ISkill) {
-            if (!PluginConfig.DEBUG) {
+    public void addSkill(ISkill ISkill) {
+        if (ISkill.getName() == null) {
+            String simpleName = ISkill.getClass().getSimpleName();
+            if (simpleName.startsWith("Skill")) {
+                simpleName = simpleName.substring(5,simpleName.length());
+            }
+            ISkill.setName(simpleName);
+        }
+        if (!PluginConfig.DEBUG) {
+
             if (skills.containsKey(ISkill.getName().toLowerCase()))
                 throw new RuntimeException("Skill " + ISkill.getName() + " already exists");
         }
@@ -90,7 +98,7 @@ public class SkillService {
 
     public SkillResult executeSkill(IActiveCharacter character, ISkill skill) {
         if (character.hasSkill(skill.getName())) {
-            return executeSkill(character,character.getSkillInfo(skill));
+            return executeSkill(character, character.getSkillInfo(skill));
         }
         return SkillResult.WRONG_DATA;
     }
@@ -103,7 +111,7 @@ public class SkillService {
         Long aLong = character.getCooldowns().get(esi.getSkill().getName());
         long servertime = System.currentTimeMillis();
         if (aLong != null && aLong > servertime) {
-            Gui.sendCooldownMessage(character,esi.getSkill().getName(),((aLong-servertime)/1000.0));
+            Gui.sendCooldownMessage(character, esi.getSkill().getName(), ((aLong - servertime) / 1000.0));
             return SkillResult.ON_COOLDOWN;
         }
         SkillData skillData = esi.getSkillData();
@@ -123,7 +131,7 @@ public class SkillService {
                 if (result == SkillResult.CANCELLED)
                     return SkillResult.CANCELLED;
                 if (result == SkillResult.OK) {
-                    float newCd = skillSettings.getLevelNodeValue(SkillNode.COOLDOWN,esi.getLevel());
+                    float newCd = skillSettings.getLevelNodeValue(SkillNode.COOLDOWN, esi.getLevel());
                     SkillPostUsageEvent eventt = new SkillPostUsageEvent(character, hpcost, manacost, newCd);
                     game.getEventManager().post(eventt);
                     if (!event.isCancelled()) {
@@ -133,11 +141,11 @@ public class SkillService {
                             HealthData healthData = character.getPlayer().getHealthData();
                         } else {
                             character.getHealth().setValue(newval);
-                            newCd = eventt.getCooldown()*character.getCharacterProperty(DefaultProperties.cooldown_reduce);
+                            newCd = eventt.getCooldown() * character.getCharacterProperty(DefaultProperties.cooldown_reduce);
                             character.getMana().setValue(character.getMana().getValue() - event.getRequiredMana());
                             long cd = (long) newCd;
-                            character.getCooldowns().put(esi.getSkill().getName(), cd+servertime);
-                            Gui.sendManaStatus(character,character.getMana().getValue(),character.getMaxMana(),character.getMana().getReservedAmount());
+                            character.getCooldowns().put(esi.getSkill().getName(), cd + servertime);
+                            Gui.sendManaStatus(character, character.getMana().getValue(), character.getMaxMana(), character.getMana().getReservedAmount());
                             return SkillResult.OK;
                         }
                     }
@@ -179,7 +187,7 @@ public class SkillService {
         StringBuilder builder = new StringBuilder();
 
         try (FileWriter fileWriter = new FileWriter(path.toFile());
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
             for (ISkill skill : skills.values()) {
                 builder.append(skill.getName()).append(": { ").append(Utils.LineSeparator);
                 for (Map.Entry<String, Float> entry : skill.getDefaultSkillSettings().getNodes().entrySet()) {

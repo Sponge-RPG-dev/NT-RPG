@@ -1,6 +1,7 @@
 var imports = new JavaImporter(java.util,java.nio.file);
 /*java */
 var HashSet = Java.type('java.util.HashSet');
+var HashMap = Java.type('java.util.HashMap')
 var File = Java.type("java.io.File");
 var TimeUnit = Java.type("java.util.concurrent.TimeUnit");
 var Runnable = Java.type("java.lang.Runnable");
@@ -24,7 +25,7 @@ var Vector3d = Java.type("com.flowpowered.math.vector.Vector3d");
 var Optional = Java.type("com.google.common.base.Optional");
 /* https://wiki.openjdk.java.net/display/Nashorn/Nashorn+extensions */
 
-var events = new HashSet();
+var events = new HashMap();
 
 function registerSkill(obj) {
     if (obj instanceof AbstractSkill) {
@@ -54,7 +55,14 @@ function defineCharacterProperty(name,def) {
 function getLevelNode(extendedSkillInfo,node) {
     return extendedSkillInfo.getSkillInfo().getSkillSettings().getLevelNodeValue(node,extendedSkillInfo.getLevel());
 }
-
+function registerEventListener(eventclass,consumer) {
+    var cls = events.get(eventclass)
+    if (cls == null) {
+        cls = new HashSet();
+        events.put(eventclass,new HashSet());
+    }
+    cls.add(consumer);
+}
 with (imports) {
     var stream = Files.newDirectoryStream(new File("./mods/NtRpg/scripts").toPath(),"*.js");
     stream.forEach(function(p) {

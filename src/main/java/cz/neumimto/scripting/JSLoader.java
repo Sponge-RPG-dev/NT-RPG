@@ -27,9 +27,10 @@ import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.utils.FileUtils;
-import javassist.CannotCompileException;
+import jdk.internal.dynalink.beans.StaticClass;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.slf4j.Logger;
+import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Event;
 
 import javax.script.*;
@@ -38,7 +39,9 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * Created by NeumimTo on 13.3.2015.
@@ -88,18 +91,15 @@ public class JSLoader {
             bindings.put("GlobalScope", ioc.build(GlobalScope.class));
             engine.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
             engine.eval(rs);
+
         } catch (ScriptException | IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void generateDynamicListener(Set<Class<? extends Event>> set) {
-        Class<?> c = classGenerator.generateDynamicListener(set);
-        try {
-            resourceLoader.loadClass(c);
-        } catch (IllegalAccessException | CannotCompileException | InstantiationException e) {
-            e.printStackTrace();
-        }
+    public void generateDynamicListener(Map<StaticClass,Set<Consumer<? extends Event>>> set) {
+        Object o = classGenerator.generateDynamicListener(set);
+        ioc.build(Game.class).getEventManager().registerListeners(ioc.build(NtRpgPlugin.class), o);
     }
 
 }

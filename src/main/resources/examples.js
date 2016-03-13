@@ -98,13 +98,8 @@ Strength.getAffectsProperties().put(DefaultProperties.wooden_axe_bonus_damage,1.
 GlobalScope.playerPropertyService.registerAttribute(Strength);
 
 
-
-events.add(Java.type("org.spongepowered.api.event.entity.DamageEntityEvent"));
-
-//todo
-var o = ioc.get().build(DynamicListener.static);
-o.damageEntityEvents.add(new Consumer() {
+registerEventListener(Java.type('org.spongepowered.api.event.entity.DamageEntityEvent'), new (Java.exeted(Consumer() {
     accept: function(event) {
-         //do stuff
+        System.out.println(event);
     }
-});
+}));
