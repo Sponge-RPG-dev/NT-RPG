@@ -33,7 +33,6 @@ public class PluginConfig {
 
     @ConfigValue
     public static long COMBAT_TIME = 20000L;
-
     @ConfigValue
     public static boolean CREATE_FIRST_CHAR_AFTER_LOGIN = true;
 

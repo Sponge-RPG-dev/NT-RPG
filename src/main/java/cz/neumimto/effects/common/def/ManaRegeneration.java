@@ -20,6 +20,7 @@ package cz.neumimto.effects.common.def;
 
 import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.configuration.PluginConfig;
+import cz.neumimto.effects.CoreEffectTypes;
 import cz.neumimto.effects.EffectBase;
 import cz.neumimto.effects.EffectSource;
 import cz.neumimto.effects.EffectStatusType;
@@ -45,6 +46,7 @@ public class ManaRegeneration extends EffectBase {
         setApplyMessage(apply);
         setExpireMessage(remove);
         setDuration(-1);
+        effectTypes.add(CoreEffectTypes.MANA_REGEN);
     }
 
 

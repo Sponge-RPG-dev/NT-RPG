@@ -18,8 +18,6 @@
 
 package cz.neumimto;
 
-import cz.neumimto.effects.IGlobalEffect;
-
 /**
  * Created by NeumimTo on 12.3.2015.
  */

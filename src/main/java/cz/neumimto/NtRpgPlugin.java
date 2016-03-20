@@ -88,7 +88,6 @@ public class NtRpgPlugin {
         }
         Path path = Paths.get(workingDir);
         ConfigMapper.init("NtRpg", path);
-        File dir = new File("./mods");
         ioc.registerDependency(ConfigMapper.get("NtRpg"));
         try {
             Files.createDirectories(path);

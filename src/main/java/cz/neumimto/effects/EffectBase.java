@@ -19,7 +19,6 @@
 package cz.neumimto.effects;
 
 import cz.neumimto.GlobalScope;
-import cz.neumimto.IEntity;
 import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.utils.UUIDs;
 import org.spongepowered.api.effect.potion.PotionEffect;
@@ -47,7 +46,7 @@ public class EffectBase implements IEffect {
     private String applyMessage;
     private String expireMessage;
     private UUID uuid;
-
+    protected Set<EffectType> effectTypes = new HashSet<>();
     public EffectBase(String name, IEffectConsumer consumer) {
         this();
         this.name = name;
@@ -237,5 +236,10 @@ public class EffectBase implements IEffect {
 
     public static GlobalScope getGlobalScope() {
         return NtRpgPlugin.GlobalScope;
+    }
+
+    @Override
+    public Set<EffectType> getEffectTypes() {
+        return effectTypes;
     }
 }

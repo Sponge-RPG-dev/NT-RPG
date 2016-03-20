@@ -21,6 +21,7 @@ package cz.neumimto.effects;
 import cz.neumimto.GlobalScope;
 import cz.neumimto.NtRpgPlugin;
 
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -87,4 +88,5 @@ public interface IEffect {
         return NtRpgPlugin.GlobalScope;
     }
 
+    Set<EffectType> getEffectTypes();
 }

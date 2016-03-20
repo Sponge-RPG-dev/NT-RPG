@@ -171,8 +171,6 @@ public class ClassGenerator implements Opcodes {
                             .forEach(a -> s.addAll(a.getValue()));
                  }
             }
-            Method[] methods = listener.getMethods();
-            int length = methods.length;
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -96,7 +96,8 @@ public class BasicListener {
             character = characterService.getCharacter(first.get().getUniqueId());
             if (character.isStub())
                 return;
-            inventoryService.onLeftClick(character,0);
+            Hotbar query = first.get().getInventory().query(Hotbar.class);
+            inventoryService.onLeftClick(character,query.getSelectedSlotIndex());
         }
 
         IEntity entity = entityService.get(event.getTargetEntity());

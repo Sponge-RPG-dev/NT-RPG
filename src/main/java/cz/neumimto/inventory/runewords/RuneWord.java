@@ -16,8 +16,7 @@ public class RuneWord {
     private int minLevel;
     private Set<NClass> restrictedClasses = new HashSet<>();
     private Map<IGlobalEffect,Float> effects = new HashMap<>();
-    private Set<ItemType> requiredItemType = new HashSet<>();
-    private List<String> allowedItems;
+    private Set<ItemType> allowedItems = new HashSet<>();
 
     public String getName() {
         return name;
@@ -59,11 +58,11 @@ public class RuneWord {
         this.effects = effects;
     }
 
-    public void setAllowedItems(List<String> allowedItems) {
+    public void setAllowedItems(Set<ItemType> allowedItems) {
         this.allowedItems = allowedItems;
     }
 
-    public List<String> getAllowedItems() {
+    public Set<ItemType> getAllowedItems() {
         return allowedItems;
     }
 }

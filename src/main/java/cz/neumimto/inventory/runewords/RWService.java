@@ -14,6 +14,7 @@ import cz.neumimto.inventory.InventoryService;
 import cz.neumimto.utils.ItemStackUtils;
 import cz.neumimto.utils.XORShiftRnd;
 import org.slf4j.Logger;
+import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.item.ItemType;
@@ -47,6 +48,9 @@ public class RWService {
 
     @Inject
     private Logger logger;
+
+    @Inject
+    private Game game;
 
     @Inject
     private GroupService groupService;
@@ -91,7 +95,9 @@ public class RWService {
         rw.setName(template.getName());
         rw.setRunes(template.getRunes().stream()./*filter(this::existsRune).*/map(this::getRune).collect(Collectors.toList()));
         rw.setMinLevel(template.getMinLevel());
-        rw.setAllowedItems(template.getAllowedItems());
+        Set<ItemType> types = new HashSet<>();
+        template.getAllowedItems().stream().forEach(a -> types.add(game.getRegistry().getType(ItemType.class,a).get()));
+        rw.setAllowedItems(types);
         rw.setEffects(template.getEffects().entrySet().stream()
                 .filter(l -> effectService.isGlobalEffect(l.getKey()))
                 .map(a -> new Pair<>(effectService.getGlobalEffect(a.getKey()), a.getValue()))
@@ -204,7 +210,9 @@ public class RWService {
             for (RuneWord rw : runewords.values()) {
                 String collect = rw.getRunes().stream().map(r -> r.getName()).collect(Collectors.joining());
                 if (s.equalsIgnoreCase(collect)) {
-                    return reBuildRuneword(i,rw);
+                    if (rw.getAllowedItems().contains(i.getItem())) {
+                        return reBuildRuneword(i,rw);
+                    }
                 }
             }
         }
@@ -219,6 +227,7 @@ public class RWService {
                 return i;
             }
         }
+
         i.offer(Keys.DISPLAY_NAME,Text.of(TextColors.GOLD,rw.getName()));
         List<Text> l = new ArrayList<>();
         l.add(Text.of(TextColors.BLUE,Localization.RUNEWORD));

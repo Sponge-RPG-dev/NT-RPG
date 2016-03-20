@@ -80,7 +80,6 @@ var Heal = new (Java.extend(ActiveSkill, {
         return SkillResult.OK;
     }
 }));
-var 
 registerSkill(Heal);
 registerSkill(SuperJump);
 registerSkill(SkillSpeed);
