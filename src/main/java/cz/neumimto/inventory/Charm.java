@@ -44,4 +44,12 @@ public class Charm extends HotbarObject {
         if (effects != null)
             NtRpgPlugin.GlobalScope.effectService.removeGlobalEffectsAsEnchantments(effects,character);
     }
+
+    public Map<IGlobalEffect, Integer> getEffects() {
+        return effects;
+    }
+
+    public void setEffects(Map<IGlobalEffect, Integer> effects) {
+        this.effects = effects;
+    }
 }

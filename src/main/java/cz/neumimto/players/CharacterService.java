@@ -1010,6 +1010,7 @@ public class CharacterService {
         attributes.put(attribute.getName().toLowerCase(), character.getCharacterBase().getAttributes().get(attribute.getName().toLowerCase()) + i);
         character.getCharacterBase().setAttributePoints(attributePoints - i);
         assignAttribute(character,attribute,i);
+        recalculateProperties(character);
         return 0;
     }
 

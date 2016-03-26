@@ -118,6 +118,7 @@ public class InventoryService {
 
     public void initializeHotbar(IActiveCharacter character, int slot) {
         Player player = character.getPlayer();
+        //todo
     }
 
 
@@ -141,6 +142,7 @@ public class InventoryService {
 
     private Charm buildCharm(IActiveCharacter character, ItemStack is) {
         Charm charm = new Charm();
+        charm.setEffects(ItemStackUtils.getItemEffects(is));
         charm.onEquip(is,character);
         return charm;
     }

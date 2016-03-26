@@ -83,7 +83,7 @@ var Heal = new (Java.extend(ActiveSkill, {
 registerSkill(Heal);
 registerSkill(SuperJump);
 registerSkill(SkillSpeed);
-
+registerSkill(SkillBloodMagic);
 
 var Strength = new (Java.extend(CharacterAttribute));
 Strength.setName("Strength");
@@ -96,9 +96,25 @@ Strength.getAffectsProperties().put(DefaultProperties.wooden_axe_bonus_damage,1.
 //register the object into game
 GlobalScope.playerPropertyService.registerAttribute(Strength);
 
+var Inteligence = new (Java.extend(CharacterAttribute));
+Inteligence.setName("Inteligence");
+Inteligence.setDescription("Int desc");
+Inteligence.getAffectsProperties().put(DefaultProperties.max_mana,20.0);
+Inteligence.getAffectsProperties().put(DefaultProperties.mana_regen,1.12);
+GlobalScope.playerPropertyService.registerAttribute(Inteligence);
 
-registerEventListener(Java.type('org.spongepowered.api.event.entity.DamageEntityEvent'), new (Java.exeted(Consumer() {
+var Agility = new (Java.extend(CharacterAttribute));
+Agility.setName("Agility");
+Agility.setDescription("Agi desc");
+/* be careful with maximum walk speed, entities with high walk speed values may cause lag or map damage
+Walk speed values around 4-5 may result in an unplayable gameplay, players wont be simply able to control their character.
+ */
+Agility.getAffectsProperties().put(DefaultProperties.walk_speed,0.0075);
+
+GlobalScope.playerPropertyService.registerAttribute(Agility);
+
+registerEventListener(Java.type('org.spongepowered.api.event.entity.DamageEntityEvent'), new (Java.extend(Consumer, {
     accept: function(event) {
-        System.out.println(event);
+        System.out.println("Im Javascript event handler");
     }
-}));
+})));

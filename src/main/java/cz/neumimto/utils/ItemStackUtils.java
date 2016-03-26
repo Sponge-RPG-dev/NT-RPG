@@ -21,6 +21,7 @@ package cz.neumimto.utils;
 import com.typesafe.config.Config;
 import cz.neumimto.NtRpgPlugin;
 import cz.neumimto.configuration.Localization;
+import cz.neumimto.configuration.PluginConfig;
 import cz.neumimto.effects.IGlobalEffect;
 import cz.neumimto.inventory.InventoryService;
 import cz.neumimto.players.CharacterBase;
