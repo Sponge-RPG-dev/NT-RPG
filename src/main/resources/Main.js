@@ -7,16 +7,16 @@ var TimeUnit = Java.type("java.util.concurrent.TimeUnit");
 var Runnable = Java.type("java.lang.Runnable");
 var Consumer = Java.type("java.util.function.Consumer");
 /*plugin */
-var SkillSettings = Java.type("cz.neumimto.skills.SkillSettings");
-var SkillNodes = Java.type("cz.neumimto.skills.SkillNode");
-var ActiveSkill = Java.type("cz.neumimto.skills.ActiveSkill");
-var SkillResult =  Java.type("cz.neumimto.skills.SkillResult");
-var AbstractSkill = Java.type("cz.neumimto.skills.AbstractSkill");
-var GlobalEffect = Java.type("cz.neumimto.effects.IGlobalEffect");
-var EffectBase = Java.type("cz.neumimto.effects.EffectBase");
-var PluginConfig = Java.type("cz.neumimto.configuration.PluginConfig");
-var Effect = Java.type("cz.neumimto.effects.EffectBase");
-var SpeedBoost = Java.type("cz.neumimto.effects.common.positive.SpeedBoost");
+var SkillSettings = Java.type("cz.neumimto.rpg.skills.SkillSettings");
+var SkillNodes = Java.type("cz.neumimto.rpg.skills.SkillNode");
+var ActiveSkill = Java.type("cz.neumimto.rpg.skills.ActiveSkill");
+var SkillResult =  Java.type("cz.neumimto.rpg.skills.SkillResult");
+var AbstractSkill = Java.type("cz.neumimto.rpg.skills.AbstractSkill");
+var GlobalEffect = Java.type("cz.neumimto.rpg.effects.IGlobalEffect");
+var EffectBase = Java.type("cz.neumimto.rpg.effects.EffectBase");
+var PluginConfig = Java.type("cz.neumimto.rpg.configuration.PluginConfig");
+var Effect = Java.type("cz.neumimto.rpg.effects.EffectBase");
+var SpeedBoost = Java.type("cz.neumimto.rpg.effects.common.positive.SpeedBoost");
 /* sponge */
 var Texts = Java.type("org.spongepowered.api.text.Text");
 var Keys = Java.type("org.spongepowered.api.data.key.Keys");
