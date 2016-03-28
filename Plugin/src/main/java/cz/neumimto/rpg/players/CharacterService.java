@@ -292,10 +292,11 @@ public class CharacterService {
         updateMaxHealth(character);
         updateMaxHealth(character);
         updateWalkSpeed(character);
+
         damageService.recalculateCharacterWeaponDamage(character);
 
-
         inventoryService.initializeHotbar(character);
+
     }
 
 

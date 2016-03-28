@@ -52,7 +52,7 @@ var SuperJump = new (Java.extend(ActiveSkill, {
             newVector.add(0,i,0);
             velocityData.setVelocity(newVector);
             character.getPlayer().offer(VelocityData);
-            character.sendMessage("You've used skill SuperJump")
+            character.sendMessage("You've used skill SuperJump");
             return SkillResult.OK;
         }
         return SkillResult.CANCELLED;

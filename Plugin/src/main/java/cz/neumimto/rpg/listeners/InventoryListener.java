@@ -65,7 +65,7 @@ public class InventoryListener {
         if (first.isPresent()) {
             List<SlotTransaction> transactions = event.getTransactions();
             IActiveCharacter character = characterService.getCharacter(first.get().getUniqueId());
-            //until other events will be fully implemented this is only way how to work with hotbar
+            //todo until other events will be fully implemented this is only way how to work with hotbar
             if (!character.isStub()) {
                 inventoryService.initializeHotbar(character);
             }

@@ -121,7 +121,14 @@ public class InventoryService {
                 }
                 if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE)
                     hotbarObject.setSlot(i);
+                HotbarObject[] hotbar = character.getHotbar();
+                if (hotbar[i] != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
+                    hotbar[i].onEquip(itemStack, character);
+                }
                 character.setHotbarSlot(i, hotbarObject);
+                if (hotbar[i] != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
+                    hotbar[i].onEquip(itemStack, character);
+                }
             }
             i++;
         }
@@ -154,7 +161,6 @@ public class InventoryService {
     private Charm buildCharm(IActiveCharacter character, ItemStack is) {
         Charm charm = new Charm();
         charm.setEffects(ItemStackUtils.getItemEffects(is));
-        charm.onEquip(is,character);
         return charm;
     }
 
@@ -189,8 +195,6 @@ public class InventoryService {
         w.setEffects(map);
         Map<IGlobalEffect, Integer> itemEffects = ItemStackUtils.getItemEffects(is);
         w.setEffects(itemEffects);
-
-        w.onEquip(is,character);
         return w;
     }
 

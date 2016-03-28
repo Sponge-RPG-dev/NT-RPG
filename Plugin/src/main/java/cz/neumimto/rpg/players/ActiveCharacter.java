@@ -19,7 +19,9 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.inventory.Charm;
 import cz.neumimto.rpg.inventory.HotbarObject;
+import cz.neumimto.rpg.inventory.HotbarObjectTypes;
 import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.players.groups.Guild;
 import cz.neumimto.rpg.players.groups.NClass;
