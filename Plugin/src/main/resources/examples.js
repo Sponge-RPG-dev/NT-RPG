@@ -118,3 +118,23 @@ registerEventListener(Java.type('org.spongepowered.api.event.entity.DamageEntity
         System.out.println("Im Javascript event handler");
     }
 })));
+var MiningEffect = Java.extend(EffectBase,{
+    getName: function () {
+        return "MiningEffect"
+    }
+
+});
+var Mining = new (Java.extend(PassiveSkill, {
+    init: function() {
+        var s = Java.super(Mining);
+        s.setName("Mining");
+        s.setDescription("Chance to get more resources from minerals");
+        var HealSettings = new SkillSettings();
+        HealSettings.addNode("chance", 0.5, 0.5);
+        HealSettings.addNode("bonus-amount", 1, 0.19);
+        s.setSettings(HealSettings);
+    },
+    applyEffect: function (character, extendedSkillInfo) {
+        GlobalScope.effectService.addEffect(new MiningEffect(character))
+    }
+}));

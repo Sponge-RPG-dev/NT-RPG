@@ -32,7 +32,7 @@ public class ClassGenerator implements Opcodes {
     public ClassGenerator() {
     }
 
-    private String packagee = "cz/neumimto/asm/effects/";
+    private String packagee = "cz/neumimto/rpg/asm/effects/";
 
     private String getCannonicalGlobalName(Class cl) {
         return packagee + "Global" + cl.getSimpleName();
@@ -47,7 +47,7 @@ public class ClassGenerator implements Opcodes {
         FieldVisitor fv;
         MethodVisitor mv;
 
-        cw.visit(52, ACC_PUBLIC + ACC_SUPER, getCannonicalGlobalName(cls), "Ljava/lang/Object;Lcz/neumimto/effects/IGlobalEffect<L" + toPath(cls) + ";>;", "java/lang/Object", new String[]{"cz/neumimto/effects/IGlobalEffect"});
+        cw.visit(52, ACC_PUBLIC + ACC_SUPER, getCannonicalGlobalName(cls), "Ljava/lang/Object;Lcz/neumimto/rpg/effects/IGlobalEffect<L" + toPath(cls) + ";>;", "java/lang/Object", new String[]{"cz/neumimto/effects/IGlobalEffect"});
         {
             mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
             mv.visitCode();
@@ -67,7 +67,7 @@ public class ClassGenerator implements Opcodes {
             mv.visitEnd();
         }
         {
-            mv = cw.visitMethod(ACC_PUBLIC, "construct", "(Lcz/neumimto/effects/IEffectConsumer;JF)L" + toPath(cls) + ";", null, null);
+            mv = cw.visitMethod(ACC_PUBLIC, "construct", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JF)L" + toPath(cls) + ";", null, null);
             mv.visitCode();
             Label l0 = new Label();
             mv.visitLabel(l0);
@@ -77,12 +77,12 @@ public class ClassGenerator implements Opcodes {
             mv.visitVarInsn(ALOAD, 1);
             mv.visitVarInsn(LLOAD, 2);
             mv.visitVarInsn(FLOAD, 4);
-            mv.visitMethodInsn(INVOKESPECIAL, toPath(cls), "<init>", "(Lcz/neumimto/effects/IEffectConsumer;JF)V", false);
+            mv.visitMethodInsn(INVOKESPECIAL, toPath(cls), "<init>", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JF)V", false);
             mv.visitInsn(ARETURN);
             Label l1 = new Label();
             mv.visitLabel(l1);
             mv.visitLocalVariable("this", "L" + getCannonicalGlobalName(cls) + ";", null, l0, l1, 0);
-            mv.visitLocalVariable("consumer", "Lcz/neumimto/effects/IEffectConsumer;", null, l0, l1, 1);
+            mv.visitLocalVariable("consumer", "Lcz/neumimto/rpg/effects/IEffectConsumer;", null, l0, l1, 1);
             mv.visitLocalVariable("duration", "J", null, l0, l1, 2);
             mv.visitLocalVariable("level", "F", null, l0, l1, 4);
             mv.visitMaxs(6, 5);
@@ -117,7 +117,7 @@ public class ClassGenerator implements Opcodes {
             mv.visitEnd();
         }
         {
-            mv = cw.visitMethod(ACC_PUBLIC + ACC_BRIDGE + ACC_SYNTHETIC, "construct", "(Lcz/neumimto/effects/IEffectConsumer;JF)Lcz/neumimto/effects/IEffect;", null, null);
+            mv = cw.visitMethod(ACC_PUBLIC + ACC_BRIDGE + ACC_SYNTHETIC, "construct", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JF)Lcz/neumimto/effects/IEffect;", null, null);
             mv.visitCode();
             Label l0 = new Label();
             mv.visitLabel(l0);
@@ -126,7 +126,7 @@ public class ClassGenerator implements Opcodes {
             mv.visitVarInsn(ALOAD, 1);
             mv.visitVarInsn(LLOAD, 2);
             mv.visitVarInsn(FLOAD, 4);
-            mv.visitMethodInsn(INVOKEVIRTUAL, getCannonicalGlobalName(cls), "construct", "(Lcz/neumimto/effects/IEffectConsumer;JF)L"+toPath(cls)+";", false);
+            mv.visitMethodInsn(INVOKEVIRTUAL, getCannonicalGlobalName(cls), "construct", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JF)L"+toPath(cls)+";", false);
             mv.visitInsn(ARETURN);
             Label l1 = new Label();
             mv.visitLabel(l1);
@@ -157,8 +157,8 @@ public class ClassGenerator implements Opcodes {
         Object o = null;
         try {
             byte[] b = generateDynamicListenerbc(map);
-            o = loadClass("cz.neumimto.listeners.DynamicListener",b);
-            Class<?> listener = Class.forName("cz.neumimto.listeners.DynamicListener");
+            o = loadClass("cz.neumimto.rpg.listeners.DynamicListener",b);
+            Class<?> listener = Class.forName("cz.neumimto.rpg.listeners.DynamicListener");
             o=listener.newInstance();
             for (Field field : listener.getDeclaredFields()) {
                 if (Set.class.isAssignableFrom(field.getType())) {
@@ -220,15 +220,15 @@ public class ClassGenerator implements Opcodes {
         MethodVisitor mv;
         AnnotationVisitor av0;
 
-        cw.visit(52, ACC_PUBLIC + ACC_SUPER, "cz/neumimto/listeners/DynamicListener", null, "java/lang/Object", null);
+        cw.visit(52, ACC_PUBLIC + ACC_SUPER, "cz/neumimto/rpg/listeners/DynamicListener", null, "java/lang/Object", null);
 
         cw.visitSource("DynamicListener.java", null);
 
         {
-            av0 = cw.visitAnnotation("Lcz/neumimto/ResourceLoader$ListenerClass;", true);
+            av0 = cw.visitAnnotation("Lcz/neumimto/rpg/ResourceLoader$ListenerClass;", true);
             av0.visitEnd();
         }
-        cw.visitInnerClass("cz/neumimto/ResourceLoader$ListenerClass", "cz/neumimto/ResourceLoader", "ListenerClass", ACC_PUBLIC + ACC_STATIC + ACC_ANNOTATION + ACC_ABSTRACT + ACC_INTERFACE);
+        cw.visitInnerClass("cz/neumimto/ResourceLoader$ListenerClass", "cz/neumimto/rpg/ResourceLoader", "ListenerClass", ACC_PUBLIC + ACC_STATIC + ACC_ANNOTATION + ACC_ABSTRACT + ACC_INTERFACE);
 
         for (StaticClass e : set.keySet()) {
             String name = e.getRepresentedClass().getSimpleName().substring(0, 1).toLowerCase() + e.getRepresentedClass().getSimpleName().substring(1) + "s";
@@ -255,12 +255,12 @@ public class ClassGenerator implements Opcodes {
                 mv.visitInsn(DUP);
                 mv.visitMethodInsn(INVOKESPECIAL, "java/util/HashSet", "<init>", "()V", false);
                 String name = e.getSimpleName().substring(0, 1).toLowerCase() + e.getSimpleName().substring(1) + "s";
-                mv.visitFieldInsn(PUTFIELD, "cz/neumimto/listeners/DynamicListener", name, "Ljava/util/Set;");
+                mv.visitFieldInsn(PUTFIELD, "cz/neumimto/rpg/listeners/DynamicListener", name, "Ljava/util/Set;");
             }
             mv.visitInsn(RETURN);
             Label l3 = new Label();
             mv.visitLabel(l3);
-            mv.visitLocalVariable("this", "Lcz/neumimto/listeners/DynamicListener;", null, l0, l3, 0);
+            mv.visitLocalVariable("this", "Lcz/neumimto/rpg/listeners/DynamicListener;", null, l0, l3, 0);
             mv.visitMaxs(3, 1);
             mv.visitEnd();
         }
