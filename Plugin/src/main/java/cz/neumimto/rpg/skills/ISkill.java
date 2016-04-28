@@ -21,7 +21,6 @@ package cz.neumimto.rpg.skills;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 
-import java.net.URL;
 import java.util.Set;
 
 /**
@@ -63,9 +62,9 @@ public interface ISkill {
 
     SkillItemIcon getIcon();
 
-    URL getIconURL();
+    String getIconURL();
 
-    void setIconURL(URL url);
+    void setIconURL(String url);
 
     DamageType getDamageType();
 

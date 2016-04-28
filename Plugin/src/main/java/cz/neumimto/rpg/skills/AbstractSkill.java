@@ -18,16 +18,15 @@
 
 package cz.neumimto.rpg.skills;
 
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.core.ioc.Inject;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.text.Text;
 
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -41,7 +40,7 @@ public abstract class AbstractSkill implements ISkill {
     protected SkillSettings settings;
     private Set<SkillType> skillTypes = new HashSet<>();
     protected SkillItemIcon icon;
-    protected URL url;
+    protected String url;
     private String lore;
     private DamageType damagetype;
 
@@ -144,12 +143,12 @@ public abstract class AbstractSkill implements ISkill {
     }
 
     @Override
-    public URL getIconURL() {
+    public String getIconURL() {
         return url;
     }
 
     @Override
-    public void setIconURL(URL url) {
+    public void setIconURL(String url) {
         this.url = url;
     }
 

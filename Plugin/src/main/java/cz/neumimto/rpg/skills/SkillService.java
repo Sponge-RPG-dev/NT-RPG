@@ -35,13 +35,12 @@ import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.manipulator.mutable.entity.HealthData;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -161,6 +160,22 @@ public class SkillService {
     public void load() {
         skillTrees.putAll(skillTreeDao.getAll());
         createSkillsDefaults();
+
+    }
+
+    public void initIcons() {
+        Properties properties = new Properties();
+        try (FileInputStream stream = new FileInputStream(new File(NtRpgPlugin.workingDir,"Icons.properties"))) {
+            properties.load(stream);
+            for (Map.Entry<Object, Object> l : properties.entrySet()) {
+                String skillname = (String) l.getKey();
+                String url = (String) l.getValue();
+
+                getSkill(skillname).setIconURL(url);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void deleteConfFile() {

@@ -127,6 +127,7 @@ public class SkillTreeDao {
         SkillData info = tree.getSkills().get(name);
         if (info == null) {
             info = new SkillData(name);
+            info.setSkill(skillService.getSkill(name));
             tree.getSkills().put(name, info);
         }
         return info;

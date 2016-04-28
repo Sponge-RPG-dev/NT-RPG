@@ -11,6 +11,7 @@
     <modules>
         <module>Plugin</module>
         <module>Skills</module>
+        <module>NT-RPG-WEBGUI</module>
     </modules>
 
     <properties>

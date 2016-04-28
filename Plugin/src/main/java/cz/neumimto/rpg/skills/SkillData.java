@@ -36,10 +36,17 @@ public class SkillData {
     private Set<SkillData> hardDepends = new HashSet<>();
     private Set<SkillData> conflicts = new HashSet<>();
     private Set<SkillData> depending = new HashSet<>();
-
+    private ISkill iskill;
     public SkillData(String skill) {
         this.skill = skill;
+    }
 
+    public ISkill getSkill() {
+        return iskill;
+    }
+
+    public void setSkill(ISkill skill) {
+        this.iskill = skill;
     }
 
     public String getSkillName() {
