@@ -50,7 +50,7 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 29.4.2015.
  */
-@Plugin(id = "cz.neumimto.rpg", version = "1.0.0", name = "NtRPG", dependencies = {@Dependency(id = "MinecraftGuiServer", optional = true),
+@Plugin(id = "cz.neumimto.rpg", version = "1.0.0", name = "NT-Rpg", dependencies = {@Dependency(id = "MinecraftGuiServer", optional = true),
                                                        @Dependency(id = "cz.neumimto.core")})
 public class NtRpgPlugin {
     public static String workingDir;
