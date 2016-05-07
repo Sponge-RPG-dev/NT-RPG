@@ -45,10 +45,10 @@ public class DamageService {
     @Inject
     public EntityService entityService;
 
-    public BiFunction<Double,Double,Double> DamageArmorReductionFactor = (damage,armor) -> armor/(armor+10*damage);
+    public BiFunction<Double, Double, Double> DamageArmorReductionFactor = (damage, armor) -> armor / (armor + 10 * damage);
 
     private Map<ItemType, Short> map = new HashMap<>();
-    private Map<ProjectileType,Short> projectiles = new HashMap<>();
+    private Map<ProjectileType, Short> projectiles = new HashMap<>();
 
     public double getCharacterItemDamage(IActiveCharacter character, ItemType type) {
         if (character.isStub())

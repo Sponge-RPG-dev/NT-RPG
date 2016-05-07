@@ -25,12 +25,14 @@ public interface ISkillDamageSource extends DamageSource {
 
     /**
      * Returns the skill which caused damage
+     *
      * @return
      */
     ISkill getSkill();
 
     /**
      * Returns the character, which casted the skill
+     *
      * @return
      */
     IActiveCharacter getCaster();

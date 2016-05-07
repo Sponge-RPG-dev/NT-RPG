@@ -19,13 +19,10 @@
 package cz.neumimto.rpg.players.groups;
 
 import cz.neumimto.rpg.players.IActiveCharacter;
-import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,23 +36,22 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Guild {
     public static Guild Default = new Guild();
+
     static {
         Default.name = "None";
-    }
-    public Guild() {
-
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
-
     private Long leaderId;
-
-
     private Set<IActiveCharacter> memebers = new HashSet<>();
+
+
+    public Guild() {
+
+    }
 
     public String getName() {
         return name;

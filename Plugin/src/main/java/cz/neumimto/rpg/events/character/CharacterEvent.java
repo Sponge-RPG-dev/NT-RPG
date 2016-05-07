@@ -18,8 +18,8 @@
 
 package cz.neumimto.rpg.events.character;
 
-import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.events.CancellableEvent;
+import cz.neumimto.rpg.players.IActiveCharacter;
 
 /**
  * Created by NeumimTo on 13.3.2015.

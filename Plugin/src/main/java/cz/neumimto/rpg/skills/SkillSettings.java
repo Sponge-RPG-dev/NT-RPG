@@ -25,10 +25,9 @@ import java.util.Map;
  * Created by NeumimTo on 14.2.2015.
  */
 public class SkillSettings {
+    public static final String bonus = "_levelbonus";
     private Map<String, Float> settingsMap = new HashMap<>();
     private Map<String, String> objMap = new HashMap<>();
-    public static final String bonus = "_levelbonus";
-
 
     public void addNode(SkillNode n, float val, float levelbonux) {
         addNode(n.toString(), val, levelbonux);

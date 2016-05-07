@@ -1,18 +1,18 @@
 package cz.neumimto.rpg.listeners;
 
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.IEntity;
-import cz.neumimto.rpg.configuration.PluginConfig;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.players.ExperienceSource;
-import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.SkillDamageSource;
+import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.IMob;
 import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.players.ExperienceSource;
+import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
@@ -27,7 +27,9 @@ import org.spongepowered.api.event.user.BanUserEvent;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Created by NeumimTo on 3.1.2016.

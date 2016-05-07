@@ -36,26 +36,26 @@ public class ProjectileProperties {
         }
     };*/
 
-    public static Map<Projectile,ProjectileProperties> cache = new WeakHashMap<>();
+    public static Map<Projectile, ProjectileProperties> cache = new WeakHashMap<>();
+    public BiConsumer<IEntity, IEntity> consumer;
     //protected Projectile t;
     private double damage;
-   // private long lifetime;
+    // private long lifetime;
     private IEntity caster;
-    public BiConsumer<IEntity,IEntity> consumer;
 
     public ProjectileProperties(Projectile t, IEntity caster) {
-      //  this.t = t;
+        //  this.t = t;
         cache.put(t, this);
-     //   lifetime = System.currentTimeMillis()+5000;
+        //   lifetime = System.currentTimeMillis()+5000;
         this.caster = caster;
     }
 
-    public void onHit(BiConsumer<IEntity,IEntity> consumer) {
+    public void onHit(BiConsumer<IEntity, IEntity> consumer) {
         this.consumer = consumer;
     }
 
     public void process(IEntity target) {
-        consumer.accept(caster,target);
+        consumer.accept(caster, target);
     }
 
     public double getDamage() {

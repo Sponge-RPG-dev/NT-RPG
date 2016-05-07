@@ -1,6 +1,5 @@
-
-import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.ExtendedNClass;
@@ -8,8 +7,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.NClass;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PlayerPropertyService;
-import org.slf4j.Logger;
-import org.slf4j.helpers.SubstituteLogger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.EventManager;
@@ -29,11 +26,9 @@ import static org.mockito.Mockito.*;
  */
 public class TestUtils {
 
-    private static EntityManager em;
-
     public static UUID uuid1 = UUID.randomUUID();
     public static UUID uuid2 = UUID.randomUUID();
-
+    private static EntityManager em;
     private static Game game;
 
     static {
@@ -41,7 +36,7 @@ public class TestUtils {
     }
 
     public static IActiveCharacter buildCharacter(Player player, CharacterBase characterBase) {
-        ActiveCharacter character = new ActiveCharacter(player,characterBase);
+        ActiveCharacter character = new ActiveCharacter(player, characterBase);
         return character;
     }
 
@@ -105,11 +100,11 @@ public class TestUtils {
         characterBase.setAttributePoints((short) 10);
         characterBase.setSkillPoints((short) 10);
         characterBase.setCanResetskills(true);
-        characterBase.getClasses().put("test",5000D);
+        characterBase.getClasses().put("test", 5000D);
         characterBase.setRace("test");
         //characterBase.setGuild("attributes");
         characterBase.setLastReset(new Date(System.currentTimeMillis()));
-        characterBase.getSkills().put("test",9);
+        characterBase.getSkills().put("test", 9);
         characterBase.setName("testChar");
         return characterBase;
     }

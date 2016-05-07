@@ -36,6 +36,7 @@ public class NClass extends PlayerGroup {
     private int skillpointsperlevel, attributepointsperlevel;
     private double[] levels;
     private double totalExp;
+    private Set<ExperienceSource> experienceSourceSet = new HashSet<>();
 
     public NClass(String name) {
         super(name);
@@ -48,8 +49,6 @@ public class NClass extends PlayerGroup {
     public void setSkillTree(SkillTree skillTree) {
         this.skillTree = skillTree;
     }
-
-    private Set<ExperienceSource> experienceSourceSet = new HashSet<>();
 
     public boolean hasExperienceSource(ExperienceSource source) {
         return experienceSourceSet.contains(source);

@@ -18,15 +18,15 @@
 
 package cz.neumimto.rpg.skills;
 
-import cz.neumimto.rpg.configuration.PluginConfig;
-import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.GroupService;
-import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.GroupService;
+import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.events.skills.SkillPostUsageEvent;
 import cz.neumimto.rpg.events.skills.SkillPrepareEvent;
+import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.persistance.SkillTreeDao;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
@@ -69,7 +69,7 @@ public class SkillService {
         if (ISkill.getName() == null) {
             String simpleName = ISkill.getClass().getSimpleName();
             if (simpleName.startsWith("Skill")) {
-                simpleName = simpleName.substring(5,simpleName.length());
+                simpleName = simpleName.substring(5, simpleName.length());
             }
             ISkill.setName(simpleName);
         }
@@ -165,7 +165,7 @@ public class SkillService {
 
     public void initIcons() {
         Properties properties = new Properties();
-        File f = new File(NtRpgPlugin.workingDir,"Icons.properties");
+        File f = new File(NtRpgPlugin.workingDir, "Icons.properties");
         if (!f.exists()) {
             try {
                 f.createNewFile();

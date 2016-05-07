@@ -13,7 +13,7 @@ public interface ICharacterAttribute {
 
     void setName(String name);
 
-    Map<Integer,Float> affectsProperties();
+    Map<Integer, Float> affectsProperties();
 
     String getDescription();
 
@@ -23,9 +23,9 @@ public interface ICharacterAttribute {
 
     void setItemRepresentation(ItemType itemType);
 
-    void setMaxValue(int value);
-
     int getMaxValue();
+
+    void setMaxValue(int value);
 
     default boolean hasLimit() {
         return getMaxValue() > 0;

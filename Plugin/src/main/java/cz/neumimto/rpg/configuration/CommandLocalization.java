@@ -34,7 +34,7 @@ public class CommandLocalization {
     public static String PLAYERINFO_DESC = "Shows info about player";
 
     @ConfigValue
-    public static String COMMAND_CHOOSEGROUP_USAGE =  "/choose {class|race} [name]";
+    public static String COMMAND_CHOOSEGROUP_USAGE = "/choose {class|race} [name]";
 
     @ConfigValue
     public static String PLAYERINFO_USAGE = "/info {character|player|race(s)|guild(s)|class(es)|runes} [name]";

@@ -37,6 +37,7 @@ public class SkillData {
     private Set<SkillData> conflicts = new HashSet<>();
     private Set<SkillData> depending = new HashSet<>();
     private ISkill iskill;
+
     public SkillData(String skill) {
         this.skill = skill;
     }
@@ -85,20 +86,20 @@ public class SkillData {
         return softDepends;
     }
 
-    public Set<SkillData> getHardDepends() {
-        return hardDepends;
-    }
-
-    public Set<SkillData> getConflicts() {
-        return conflicts;
-    }
-
     public void setSoftDepends(Set<SkillData> softDepends) {
         this.softDepends = softDepends;
     }
 
+    public Set<SkillData> getHardDepends() {
+        return hardDepends;
+    }
+
     public void setHardDepends(Set<SkillData> hardDepends) {
         this.hardDepends = hardDepends;
+    }
+
+    public Set<SkillData> getConflicts() {
+        return conflicts;
     }
 
     public void setConflicts(Set<SkillData> conflicts) {

@@ -19,7 +19,6 @@
 package cz.neumimto.rpg.utils;
 
 
-
 import org.spongepowered.api.scheduler.Task;
 
 import java.util.function.Consumer;

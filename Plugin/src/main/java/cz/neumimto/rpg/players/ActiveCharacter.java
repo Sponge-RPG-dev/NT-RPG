@@ -19,9 +19,7 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.inventory.Charm;
 import cz.neumimto.rpg.inventory.HotbarObject;
-import cz.neumimto.rpg.inventory.HotbarObjectTypes;
 import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.players.groups.Guild;
 import cz.neumimto.rpg.players.groups.NClass;
@@ -80,7 +78,8 @@ public class ActiveCharacter implements IActiveCharacter {
     private transient DamageType preferedDamageType = null;
     private transient HotbarObject[] hotbar = new HotbarObject[9];
     private transient int socketing;
-    private transient Map<String,Integer> transientAttributes = new HashMap<>();
+    private transient Map<String, Integer> transientAttributes = new HashMap<>();
+
     public ActiveCharacter(Player pl, CharacterBase base) {
         this.pl = pl;
         characterProperties = new float[PlayerPropertyService.LAST_ID];
@@ -93,15 +92,14 @@ public class ActiveCharacter implements IActiveCharacter {
         classes.add(cl);
     }
 
+    @Override
+    public int getCurrentRune() {
+        return socketing;
+    }
 
     @Override
     public void setCurrentRune(int is) {
         socketing = is;
-    }
-
-    @Override
-    public int getCurrentRune() {
-        return socketing;
     }
 
     @Override
@@ -138,6 +136,11 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
+    public void setCharacterProperties(float[] arr) {
+        characterProperties = arr;
+    }
+
+    @Override
     public float getCharacterProperty(int index) {
         return characterProperties[index] + characterPropertiesLevel[index] * getPrimaryClass().getLevel();
     }
@@ -150,11 +153,6 @@ public class ActiveCharacter implements IActiveCharacter {
     @Override
     public float[] getCharacterLevelProperties() {
         return characterPropertiesLevel;
-    }
-
-    @Override
-    public void setCharacterProperties(float[] arr) {
-        characterProperties = arr;
     }
 
     @Override
@@ -239,7 +237,7 @@ public class ActiveCharacter implements IActiveCharacter {
 
     @Override
     public void setHp(double d) {
-        setHealth((float)d);
+        setHealth((float) d);
     }
 
     @Override
@@ -269,7 +267,7 @@ public class ActiveCharacter implements IActiveCharacter {
             if (nClass.getnClass().hasExperienceSource(source)) {
                 Double nClass1 = getCharacterBase().getClasses().get(nClass.getnClass().getName());
                 if (nClass1 == null) {
-                    getCharacterBase().getClasses().put(nClass.getnClass().getName(),exp);
+                    getCharacterBase().getClasses().put(nClass.getnClass().getName(), exp);
                 } else {
                     getCharacterBase().getClasses().put(nClass.getnClass().getName(), exp + nClass1);
                 }
@@ -335,8 +333,8 @@ public class ActiveCharacter implements IActiveCharacter {
 
     public void setClass(NClass nclass, int slot) {
         if (primary != null) {
-      //      fixPropertyValues(getPrimaryClass().getnClass().getPropBonus(), -1);
-      //      fixPropertyLevelValues(getPrimaryClass().getnClass().getPropLevelBonus(), -1);
+            //      fixPropertyValues(getPrimaryClass().getnClass().getPropBonus(), -1);
+            //      fixPropertyLevelValues(getPrimaryClass().getnClass().getPropLevelBonus(), -1);
             skills.clear();
         }
         if (slot > 0)
@@ -350,14 +348,14 @@ public class ActiveCharacter implements IActiveCharacter {
         if (aDouble == null) {
             primary.setExperiences(0D);
             primary.setLevel(0);
-            getCharacterBase().getClasses().put(nclass.getName(),0D);
+            getCharacterBase().getClasses().put(nclass.getName(), 0D);
         } else {
             //  primary.setLevel(getCharacterBase().getLevel());
             primary.setExperiences(aDouble);
         }
         base.setPrimaryClass(nclass.getName());
-     //   fixPropertyValues(nclass.getPropBonus(), 1);
-      //  fixPropertyLevelValues(getPrimaryClass().getnClass().getPropLevelBonus(), 1);
+        //   fixPropertyValues(nclass.getPropBonus(), 1);
+        //  fixPropertyLevelValues(getPrimaryClass().getnClass().getPropLevelBonus(), 1);
         SkillData skillData = nclass.getSkillTree().getSkills().get(StartingPoint.name);
         if (skillData != null) {
             ExtendedSkillInfo info = new ExtendedSkillInfo();
@@ -397,12 +395,12 @@ public class ActiveCharacter implements IActiveCharacter {
     public IActiveCharacter updateItemRestrictions() {
         allowedWeapons.clear();
         allowedWeapons.putAll(getRace().getWeapons());
-     //   mergeWeapons(getGuild());
+        //   mergeWeapons(getGuild());
         mergeWeapons(getPrimaryClass().getnClass());
         mergeWeapons(getRace());
         allowedArmorIds.clear();
         allowedArmorIds.addAll(getRace().getAllowedArmor());
-     //   allowedArmorIds.addAll(getGuild().getAllowedArmor());
+        //   allowedArmorIds.addAll(getGuild().getAllowedArmor());
         allowedArmorIds.addAll(getPrimaryClass().getnClass().getAllowedArmor());
         return this;
     }
@@ -455,13 +453,13 @@ public class ActiveCharacter implements IActiveCharacter {
 
     @Override
     public void setGuild(Guild guild) {
-       if (this.guild != Guild.Default) {
-      //     fixPropertyValues(this.guild.getPropBonus(), -1);
-     //       removePermissions(guild.getPermissions());
+        if (this.guild != Guild.Default) {
+            //     fixPropertyValues(this.guild.getPropBonus(), -1);
+            //       removePermissions(guild.getPermissions());
         }
         this.guild = guild;
-      //  fixPropertyValues(guild.getPropBonus(), 1);
-     //   addPermissions(guild.getPermissions());*/
+        //  fixPropertyValues(guild.getPropBonus(), 1);
+        //   addPermissions(guild.getPermissions());*/
     }
 
     public void addPermissions(Collection<String> perms) {
@@ -557,11 +555,6 @@ public class ActiveCharacter implements IActiveCharacter {
         return (character.hasParty() && hasParty() && character.getParty() == character.getParty());
     }
 
-    @Override
-    public void setWeaponDamage(double damage) {
-        weaponDamage = damage;
-    }
-
     //TODO cache weapon damage on entityeuqipmentevent once its implemented
     @Override
     public double getWeaponDamage() {
@@ -569,13 +562,18 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
-    public void setArmorValue(double value) {
-        armorvalue = value;
+    public void setWeaponDamage(double damage) {
+        weaponDamage = damage;
     }
 
     @Override
     public double getArmorValue() {
         return armorvalue;
+    }
+
+    @Override
+    public void setArmorValue(double value) {
+        armorvalue = value;
     }
 
     @Override
@@ -609,13 +607,13 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
-    public void setPendingPartyInvite(Party party) {
-        pendingPartyInvite = new WeakReference<Party>(party);
+    public Party getPendingPartyInvite() {
+        return pendingPartyInvite.get();
     }
 
     @Override
-    public Party getPendingPartyInvite() {
-        return pendingPartyInvite.get();
+    public void setPendingPartyInvite(Party party) {
+        pendingPartyInvite = new WeakReference<Party>(party);
     }
 
     @Override

@@ -18,29 +18,29 @@
 
 package cz.neumimto.rpg.commands;
 
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.Pair;
+import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.CommandLocalization;
+import cz.neumimto.rpg.configuration.CommandPermissions;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
+import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.players.ActiveCharacter;
+import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.groups.NClass;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.PlayerPropertyService;
+import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.utils.SkillTreeActionResult;
 import cz.neumimto.rpg.utils.Utils;
-import cz.neumimto.rpg.GroupService;
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.configuration.CommandPermissions;
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.rpg.damage.DamageService;
-import cz.neumimto.rpg.players.ActiveCharacter;
-import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.groups.NClass;
-import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -118,7 +118,7 @@ public class CommandChoose extends CommandBase {
             }
             if (!character.getRace().getAllowedClasses().contains(nClass)) {
                 player.sendMessage(Text.of(Localization.RACE_AND_CLASS_CONFLICT
-                        .replaceAll("%1",character.getRace().getName()).replaceAll("%2",nClass.getName())));
+                        .replaceAll("%1", character.getRace().getName()).replaceAll("%2", nClass.getName())));
                 return CommandResult.empty();
             }
             characterService.updatePlayerGroups(character, nClass, i, null, null);
@@ -196,7 +196,7 @@ public class CommandChoose extends CommandBase {
             }
             ICharacterAttribute attribute = playerPropertyService.getAttribute(args[1]);
             IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
-            characterService.addAttribute(character,attribute,i);
+            characterService.addAttribute(character, attribute, i);
             characterService.putInSaveQueue(character.getCharacterBase());
 
         } else if (args[0].equalsIgnoreCase("character")) {

@@ -20,7 +20,7 @@ public class Silence extends EffectBase {
     }
 
     public Silence(IEffectConsumer consumer, long duration, float c) {
-        this(consumer,duration);
+        this(consumer, duration);
     }
 
     @Override

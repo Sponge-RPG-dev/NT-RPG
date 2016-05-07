@@ -54,12 +54,12 @@ public abstract class CharacterAttribute implements ICharacterAttribute {
     }
 
     @Override
-    public void setMaxValue(int value) {
-        this.maxval = value;
+    public int getMaxValue() {
+        return maxval;
     }
 
     @Override
-    public int getMaxValue() {
-        return maxval;
+    public void setMaxValue(int value) {
+        this.maxval = value;
     }
 }

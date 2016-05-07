@@ -19,12 +19,12 @@
 package cz.neumimto.rpg.gui;
 
 import cz.neumimto.core.ioc.IoC;
-import cz.neumimto.rpg.players.ExtendedNClass;
-import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillTree;
 import org.spongepowered.api.entity.living.player.Player;
 
@@ -46,7 +46,7 @@ public class Gui {
     }
 
     public static IPlayerMessage getMessageTypeOf(IActiveCharacter player) {
-       if (player.isUsingGuiMod())
+        if (player.isUsingGuiMod())
             return mod;
         return vanilla;
     }
@@ -92,15 +92,15 @@ public class Gui {
     }
 
     public static void showCharacterInfo(IActiveCharacter player, IActiveCharacter character) {
-        getMessageTypeOf(player).sendPlayerInfo(player,character);
+        getMessageTypeOf(player).sendPlayerInfo(player, character);
     }
 
-    public static void showExpChange(IActiveCharacter character,String classname,double expchange) {
-        getMessageTypeOf(character).showExpChange(character,classname,expchange);
+    public static void showExpChange(IActiveCharacter character, String classname, double expchange) {
+        getMessageTypeOf(character).showExpChange(character, classname, expchange);
     }
 
     public static void showLevelChange(IActiveCharacter character, ExtendedNClass aClass, int level) {
-        getMessageTypeOf(character).showLevelChange(character,aClass,level);
+        getMessageTypeOf(character).showLevelChange(character, aClass, level);
     }
 
     public static void sendStatus(IActiveCharacter character) {

@@ -40,7 +40,8 @@ public class PlayerGroup {
     private Map<Integer, Float> propLevelBonus = new HashMap<>();
     private ItemType itemType;
     private String description;
-    private Map<ICharacterAttribute,Integer> startingAttributes = new HashMap<>();
+    private Map<ICharacterAttribute, Integer> startingAttributes = new HashMap<>();
+
     public PlayerGroup(String name) {
         this.name = name;
         if (name.toLowerCase().equalsIgnoreCase("none")) {
@@ -80,11 +81,6 @@ public class PlayerGroup {
         return showsInMenu;
     }
 
-    public void setShowsInMenu(boolean showsInMenu) {
-        this.showsInMenu = showsInMenu;
-    }
-
-
     public Map<Integer, Float> getPropBonus() {
         return propBonus;
     }
@@ -95,6 +91,10 @@ public class PlayerGroup {
 
     public boolean isShowsInMenu() {
         return showsInMenu;
+    }
+
+    public void setShowsInMenu(boolean showsInMenu) {
+        this.showsInMenu = showsInMenu;
     }
 
     public Set<ItemType> getAllowedArmor() {

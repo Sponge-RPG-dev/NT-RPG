@@ -38,9 +38,13 @@ public abstract class AbstractSkill implements ISkill {
     protected String name;
     protected String description;
     protected SkillSettings settings;
-    private Set<SkillType> skillTypes = new HashSet<>();
     protected SkillItemIcon icon;
     protected String url;
+    @Inject
+    protected Game game;
+    @Inject
+    protected CharacterService characterService;
+    private Set<SkillType> skillTypes = new HashSet<>();
     private String lore;
     private DamageType damagetype;
 
@@ -48,19 +52,9 @@ public abstract class AbstractSkill implements ISkill {
         icon = new SkillItemIcon(this);
     }
 
-    @Inject
-    protected Game game;
-
-    @Inject
-    protected CharacterService characterService;
-
     @Override
     public String getName() {
         return name;
-    }
-
-    public void setLore(String lore) {
-        this.lore = lore;
     }
 
     @Override
@@ -155,6 +149,10 @@ public abstract class AbstractSkill implements ISkill {
     @Override
     public String getLore() {
         return lore;
+    }
+
+    public void setLore(String lore) {
+        this.lore = lore;
     }
 
     @Override

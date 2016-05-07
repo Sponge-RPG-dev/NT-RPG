@@ -27,7 +27,6 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -93,7 +92,6 @@ public class PlayerDao extends GenericDao<CharacterBase> {
     }
 
     /**
-     *
      * @param uniqueId
      * @return rows updated
      */
@@ -114,7 +112,7 @@ public class PlayerDao extends GenericDao<CharacterBase> {
         return i;
     }
 
-    public void attachAndDo(CharacterBase base,Consumer<CharacterBase> c) {
+    public void attachAndDo(CharacterBase base, Consumer<CharacterBase> c) {
         //entity is now in detached state session.contains is not needed would return false every time
         Session session = factory.openSession();
         session.update(base);

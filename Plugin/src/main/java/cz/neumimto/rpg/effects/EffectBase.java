@@ -31,6 +31,7 @@ import java.util.UUID;
  * Created by NeumimTo.
  */
 public class EffectBase implements IEffect {
+    protected Set<EffectType> effectTypes = new HashSet<>();
     private boolean stackable = false;
     private String name;
     private int level;
@@ -46,7 +47,7 @@ public class EffectBase implements IEffect {
     private String applyMessage;
     private String expireMessage;
     private UUID uuid;
-    protected Set<EffectType> effectTypes = new HashSet<>();
+
     public EffectBase(String name, IEffectConsumer consumer) {
         this();
         this.name = name;
@@ -58,9 +59,8 @@ public class EffectBase implements IEffect {
         uuid = UUIDs.random();
     }
 
-    public void setConsumer(IEffectConsumer consumer) {
-        if (consumer != null)
-            this.consumer = consumer;
+    public static GlobalScope getGlobalScope() {
+        return NtRpgPlugin.GlobalScope;
     }
 
     @Override
@@ -111,6 +111,11 @@ public class EffectBase implements IEffect {
         return consumer;
     }
 
+    public void setConsumer(IEffectConsumer consumer) {
+        if (consumer != null)
+            this.consumer = consumer;
+    }
+
     @Override
     public IEffectSource getEffectSource() {
         return effectSource;
@@ -128,6 +133,10 @@ public class EffectBase implements IEffect {
     @Override
     public long getExpireTime() {
         return timeCreated + duration;
+    }
+
+    protected void setExpireTime(long expireTime) {
+        this.expireTime = expireTime;
     }
 
     @Override
@@ -181,10 +190,6 @@ public class EffectBase implements IEffect {
         this.lastTickTime = lastTickTime;
     }
 
-    protected void setExpireTime(long expireTime) {
-        this.expireTime = expireTime;
-    }
-
     @Override
     public void onTick() {
 
@@ -213,7 +218,6 @@ public class EffectBase implements IEffect {
         return uuid.hashCode();
     }
 
-
     @Override
     public String getExpireMessage() {
         return expireMessage;
@@ -232,10 +236,6 @@ public class EffectBase implements IEffect {
     @Override
     public void setApplyMessage(String applyMessage) {
         this.applyMessage = applyMessage;
-    }
-
-    public static GlobalScope getGlobalScope() {
-        return NtRpgPlugin.GlobalScope;
     }
 
     @Override

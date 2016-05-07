@@ -18,22 +18,22 @@
 
 package cz.neumimto.rpg.listeners;
 
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.IEntityType;
+import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.damage.ISkillDamageSource;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.ProjectileProperties;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.utils.Utils;
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.players.CharacterService;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
@@ -97,7 +97,7 @@ public class BasicListener {
             if (character.isStub())
                 return;
             Hotbar query = first.get().getInventory().query(Hotbar.class);
-            inventoryService.onLeftClick(character,query.getSelectedSlotIndex());
+            inventoryService.onLeftClick(character, query.getSelectedSlotIndex());
         }
 
         IEntity entity = entityService.get(event.getTargetEntity());
@@ -127,7 +127,7 @@ public class BasicListener {
                 IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());
                 if (character.isStub())
                     return;
-                inventoryService.onRightClick(character,0);
+                inventoryService.onRightClick(character, 0);
             }
         }
     }
@@ -145,7 +145,7 @@ public class BasicListener {
             if (character.isStub())
                 return;
             Hotbar h = pl.getInventory().query(Hotbar.class);
-            inventoryService.onLeftClick(character,h.getSelectedSlotIndex());
+            inventoryService.onLeftClick(character, h.getSelectedSlotIndex());
         }
     }
 
@@ -158,7 +158,7 @@ public class BasicListener {
             if (character.isStub())
                 return;
             Hotbar h = pl.getInventory().query(Hotbar.class);
-            inventoryService.onRightClick(character,h.getSelectedSlotIndex());
+            inventoryService.onRightClick(character, h.getSelectedSlotIndex());
         }
     }
 
@@ -179,7 +179,7 @@ public class BasicListener {
             EntityDamageSource entityDamageSource = first.get();
             Entity source = entityDamageSource.getSource();
             if (source.get(Keys.HEALTH).isPresent()) {
-                targetEntity.offer(Keys.INVULNERABILITY_TICKS,0);
+                targetEntity.offer(Keys.INVULNERABILITY_TICKS, 0);
                 //attacker
                 IEntity entity = entityService.get(source);
                 double newdamage = 0;

@@ -18,34 +18,31 @@
 
 package cz.neumimto.rpg;
 
+import cz.neumimto.configuration.ConfigMapper;
+import cz.neumimto.configuration.ConfigurationContainer;
 import cz.neumimto.core.PluginCore;
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.commands.CommandBase;
+import cz.neumimto.rpg.commands.CommandService;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.players.properties.PlayerPropertyService;
 import cz.neumimto.rpg.players.properties.PropertyContainer;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.commands.CommandService;
-import cz.neumimto.configuration.ConfigMapper;
-import cz.neumimto.configuration.ConfigurationContainer;
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.IoC;
-import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.effects.IGlobalEffect;
 import javassist.CannotCompileException;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Modifier;
-import java.net.MalformedURLException;
-import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Enumeration;
@@ -58,43 +55,16 @@ import java.util.jar.JarFile;
 @Singleton
 public class ResourceLoader {
 
-    @Retention(RetentionPolicy.RUNTIME)
-    public static @interface ListenerClass {};
-
-    @Retention(RetentionPolicy.RUNTIME)
-    public static @interface Skill {};
-
-    @Retention(RetentionPolicy.RUNTIME)
-    public static @interface Command {};
-
     private final static String INNERCLASS_SEPARATOR = "$";
 
+    ;
     //TODO use nio instead of io
     public static File classDir, raceDir, guildsDir, addonDir, skilltreeDir;
+
+    ;
     private static IoC ioc;
 
-    @Inject
-    private SkillService skillService;
-
-    @Inject
-    private GroupService groupService;
-
-    @Inject
-    private EffectService effectService;
-
-    @Inject
-    private PlayerPropertyService playerPropertyService;
-
-    @Inject
-    private Logger logger;
-
-    @Inject
-    private CommandService commandService;
-
-    private ConfigMapper configMapper;
-
-    @Inject
-    private ClassGenerator classGenerator;
+    ;
 
     static {
         classDir = new File(NtRpgPlugin.workingDir + File.separator + "classes");
@@ -110,15 +80,41 @@ public class ResourceLoader {
         ioc = IoC.get();
     }
 
+    @Inject
+    private SkillService skillService;
+    @Inject
+    private GroupService groupService;
+    @Inject
+    private EffectService effectService;
+    @Inject
+    private PlayerPropertyService playerPropertyService;
+    @Inject
+    private Logger logger;
+    @Inject
+    private CommandService commandService;
+    private ConfigMapper configMapper;
+    @Inject
+    private ClassGenerator classGenerator;
+
     public ResourceLoader() {
         ConfigMapper.init("NtRPG", Paths.get(NtRpgPlugin.workingDir));
         configMapper = ConfigMapper.get("NtRPG");
     }
 
+    private static <T> T newInstance(Class<T> excepted, Class<?> clazz) {
+        T t = null;
+        try {
+            t = (T) clazz.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return t;
+    }
+
     public void loadExternalJars() {
         Path dir = addonDir.toPath();
         for (File f : dir.toFile().listFiles()) {
-            loadJarFile(f,false);
+            loadJarFile(f, false);
         }
     }
 
@@ -135,7 +131,7 @@ public class ResourceLoader {
         Enumeration<JarEntry> entries = file.entries();
         JarEntry next = null;
 
-         if (!main) {
+        if (!main) {
             PluginCore.loadJarFile(f);
         }
         while (entries.hasMoreElements()) {
@@ -171,7 +167,6 @@ public class ResourceLoader {
         }
         logger.info("Finished loading of jarfile " + file.getName());
     }
-
 
     public void loadClass(Class<?> clazz) throws IllegalAccessException, CannotCompileException, InstantiationException {
         if (clazz.isInterface())
@@ -223,7 +218,7 @@ public class ResourceLoader {
                 if (iGlobalEffect == null) {
                     return;
                 }
-                classGenerator.injectGlobalEffectField(c,iGlobalEffect);
+                classGenerator.injectGlobalEffectField(c, iGlobalEffect);
                 effectService.registerGlobalEffect(iGlobalEffect);
             }
         }
@@ -234,14 +229,17 @@ public class ResourceLoader {
 
     }
 
-    private static <T> T newInstance(Class<T> excepted, Class<?> clazz) {
-        T t = null;
-        try {
-            t = (T) clazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return t;
+    @Retention(RetentionPolicy.RUNTIME)
+    public static @interface ListenerClass {
+    }
+
+
+    @Retention(RetentionPolicy.RUNTIME)
+    public static @interface Skill {
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    public static @interface Command {
     }
 
 

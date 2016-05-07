@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 public interface IEffectConsumer<T extends Living> {
     T getEntity();
 
-    Map<Class<? extends IEffect>,IEffect> getEffectMap();
+    Map<Class<? extends IEffect>, IEffect> getEffectMap();
 
     default Collection<IEffect> getEffects() {
         return getEffectMap().values();
@@ -49,7 +49,7 @@ public interface IEffectConsumer<T extends Living> {
     }
 
     default void addEffect(IEffect effect) {
-        getEffectMap().put(effect.getClass(),effect);
+        getEffectMap().put(effect.getClass(), effect);
     }
 
     default void removeEffect(Class<? extends IEffect> cl) {
@@ -71,7 +71,7 @@ public interface IEffectConsumer<T extends Living> {
         PotionEffect build = PotionEffect.builder().potionType(p).amplifier(amplifier).duration((int) duration).build();
         List<PotionEffect> potionEffects = getEntity().get(Keys.POTION_EFFECTS).get();
         potionEffects.add(build);
-        getEntity().offer(Keys.POTION_EFFECTS,potionEffects);
+        getEntity().offer(Keys.POTION_EFFECTS, potionEffects);
     }
 
     default void addPotionEffect(PotionEffectType p, int amplifier, long duration, boolean partciles) {
@@ -82,7 +82,7 @@ public interface IEffectConsumer<T extends Living> {
     default void removePotionEffect(PotionEffectType type) {
         List<PotionEffect> potionEffects = getEntity().get(Keys.POTION_EFFECTS).get();
         List l = potionEffects.stream().filter(p -> p.getType() != type).collect(Collectors.toList());
-        getEntity().offer(Keys.POTION_EFFECTS,l);
+        getEntity().offer(Keys.POTION_EFFECTS, l);
     }
 
     default boolean hasPotionEffect(PotionEffectType type) {
@@ -98,7 +98,7 @@ public interface IEffectConsumer<T extends Living> {
     default void addPotionEffect(PotionEffect e) {
         List<PotionEffect> potionEffects = getEntity().get(Keys.POTION_EFFECTS).get();
         potionEffects.add(e);
-        getEntity().offer(Keys.POTION_EFFECTS,potionEffects);
+        getEntity().offer(Keys.POTION_EFFECTS, potionEffects);
     }
 
     void sendMessage(String message);

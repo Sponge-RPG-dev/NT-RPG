@@ -18,11 +18,11 @@
 
 package cz.neumimto.rpg.gui;
 
-import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.utils.FileUtils;
-import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.utils.FileUtils;
 import org.spongepowered.api.Game;
 
 import javax.imageio.ImageIO;
@@ -61,7 +61,7 @@ public class GuiService {
         }
         Path outputdir = Paths.get(NtRpgPlugin.workingDir + "/icons/skills");
         FileUtils.createDirectoryIfNotExists(outputdir);
-        try(final PrintWriter p = new PrintWriter(new BufferedWriter(new FileWriter(prop.toFile(), true)))) {
+        try (final PrintWriter p = new PrintWriter(new BufferedWriter(new FileWriter(prop.toFile(), true)))) {
             skillService.getSkills().values().stream().forEach(skill -> {
                 if (!properties.containsKey(skill.getName())) {
                     BufferedImage img = createImageFromText(skill.getName());
@@ -73,7 +73,7 @@ public class GuiService {
                     }
                     String uri = file.toPath().toUri().toString();
                     properties.put(skill.getName(), uri);
-                    p.println(skill.getName()+"="+uri);
+                    p.println(skill.getName() + "=" + uri);
                 }
             });
         } catch (IOException ex) {

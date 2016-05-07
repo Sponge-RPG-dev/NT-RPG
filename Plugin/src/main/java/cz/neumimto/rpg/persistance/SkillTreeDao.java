@@ -22,11 +22,11 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigObject;
 import com.typesafe.config.ConfigValue;
-import cz.neumimto.rpg.skills.*;
-import cz.neumimto.rpg.utils.Utils;
-import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.utils.Utils;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -88,7 +88,7 @@ public class SkillTreeDao {
                             String name = e.getKey();
                             Float aFloat = null;
                             skillSettings.addNode(name, norm);
-                            name = name+SkillSettings.bonus;
+                            name = name + SkillSettings.bonus;
                             //todo if not exists set to 0;
                             float bon = Float.parseFloat(settings.getString(name));
                             skillSettings.addNode(name, bon);

@@ -29,9 +29,9 @@ import java.util.Set;
 
 public final class StartingPoint extends PassiveSkill {
     public static final String name = "StartingPoint";
-    private static SkillSettings skillSettings = new SkillSettings();
     public static final SkillData SKILL_DATA = new SkillData(name);
-    
+    private static SkillSettings skillSettings = new SkillSettings();
+
     @Override
     public boolean showsToPlayers() {
         return false;

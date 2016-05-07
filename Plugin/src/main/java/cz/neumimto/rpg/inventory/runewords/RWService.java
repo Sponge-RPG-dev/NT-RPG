@@ -1,19 +1,19 @@
 package cz.neumimto.rpg.inventory.runewords;
 
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.PostProcess;
+import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.utils.Utils;
-import cz.neumimto.rpg.utils.XORShiftRnd;
-import cz.neumimto.rpg.GroupService;
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.PostProcess;
-import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.utils.ItemStackUtils;
+import cz.neumimto.rpg.utils.Utils;
+import cz.neumimto.rpg.utils.XORShiftRnd;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
@@ -39,25 +39,20 @@ import java.util.stream.Collectors;
 @Singleton
 public class RWService {
 
-    @Inject
-    private RWDao dao;
-
-    @Inject
-    private EffectService effectService;
-
-    @Inject
-    private Logger logger;
-
-    @Inject
-    private Game game;
-
-    @Inject
-    private GroupService groupService;
-
-    private Map<String, RuneWord> runewords = new HashMap();
-    private Map<String, Rune> runes = new HashMap<>();
     private final Pattern socket = Pattern.compile("\\{@\\}");
     private final Path file = Paths.get(NtRpgPlugin.workingDir, "Runes.conf");
+    @Inject
+    private RWDao dao;
+    @Inject
+    private EffectService effectService;
+    @Inject
+    private Logger logger;
+    @Inject
+    private Game game;
+    @Inject
+    private GroupService groupService;
+    private Map<String, RuneWord> runewords = new HashMap();
+    private Map<String, Rune> runes = new HashMap<>();
     private List<ItemType> allowedRuneItemTypes = new ArrayList<>();
 
 
@@ -96,14 +91,14 @@ public class RWService {
         rw.setMinLevel(template.getMinLevel());
         Set<ItemType> types = new HashSet<>();
         template.getAllowedItems().stream().forEach(a -> {
-            Optional<ItemType> type = game.getRegistry().getType(ItemType.class, a);
-            if (type.isPresent()) {
-                ItemType itemType = type.get();
-                types.add(itemType);
-            } else {
-                logger.warn("Unknown item type - " +a);
-            }
-        }
+                    Optional<ItemType> type = game.getRegistry().getType(ItemType.class, a);
+                    if (type.isPresent()) {
+                        ItemType itemType = type.get();
+                        types.add(itemType);
+                    } else {
+                        logger.warn("Unknown item type - " + a);
+                    }
+                }
         );
         rw.setAllowedItems(types);
         rw.setEffects(template.getEffects().entrySet().stream()
@@ -204,8 +199,8 @@ public class RWService {
         Text text = t.get(1);
         String s = text.toPlain();
         String s1 = s.replaceFirst("\\{@\\}", currentRune);
-        t.set(1,Text.of(TextColors.RED,s1));
-        itemStack.offer(Keys.ITEM_LORE,t);
+        t.set(1, Text.of(TextColors.RED, s1));
+        itemStack.offer(Keys.ITEM_LORE, t);
         return itemStack;
     }
 
@@ -219,7 +214,7 @@ public class RWService {
                 String collect = rw.getRunes().stream().map(r -> r.getName()).collect(Collectors.joining());
                 if (s.equalsIgnoreCase(collect)) {
                     if (rw.getAllowedItems().contains(i.getItem())) {
-                        return reBuildRuneword(i,rw);
+                        return reBuildRuneword(i, rw);
                     }
                 }
             }
@@ -230,32 +225,32 @@ public class RWService {
     public ItemStack reBuildRuneword(ItemStack i, RuneWord rw) {
         if (rw == null) {
             if (PluginConfig.AUTOREMOVE_NONEXISTING_RUNEWORDS) {
-                i.offer(Keys.DISPLAY_NAME,Text.of(i.getItem().getName()));
-                i.offer(Keys.ITEM_LORE,Collections.<Text>emptyList());
+                i.offer(Keys.DISPLAY_NAME, Text.of(i.getItem().getName()));
+                i.offer(Keys.ITEM_LORE, Collections.<Text>emptyList());
                 return i;
             }
         }
 
-        i.offer(Keys.DISPLAY_NAME,Text.of(TextColors.GOLD,rw.getName()));
+        i.offer(Keys.DISPLAY_NAME, Text.of(TextColors.GOLD, rw.getName()));
         List<Text> l = new ArrayList<>();
-        l.add(Text.of(TextColors.BLUE,Localization.RUNEWORD));
-        l.add(Text.of(TextColors.RED,i.get(Keys.ITEM_LORE).get().get(1).toPlain()));
+        l.add(Text.of(TextColors.BLUE, Localization.RUNEWORD));
+        l.add(Text.of(TextColors.RED, i.get(Keys.ITEM_LORE).get().get(1).toPlain()));
         Map<IGlobalEffect, Float> effects = rw.getEffects();
         if (!rw.getRestrictedClasses().isEmpty()) {
-            l.add(Text.of(TextColors.RED,Localization.RESTRICTED_CLASSES));
-            l.add(Text.of(TextColors.GRAY,"- "+rw.getRestrictedClasses().stream().map(a -> a.getName()).collect(Collectors.joining(" "))));
+            l.add(Text.of(TextColors.RED, Localization.RESTRICTED_CLASSES));
+            l.add(Text.of(TextColors.GRAY, "- " + rw.getRestrictedClasses().stream().map(a -> a.getName()).collect(Collectors.joining(" "))));
         }
         if (rw.getMinLevel() > 1) {
-            l.add(Text.of(TextColors.GRAY,Localization.MIN_LEVEL + ": " + rw.getMinLevel()));
+            l.add(Text.of(TextColors.GRAY, Localization.MIN_LEVEL + ": " + rw.getMinLevel()));
         }
-        i.offer(Keys.ITEM_LORE,l);
+        i.offer(Keys.ITEM_LORE, l);
         //todo refactor
         for (Map.Entry<IGlobalEffect, Float> entry : effects.entrySet()) {
             IGlobalEffect key = entry.getKey();
             Float value = entry.getValue();
-            l = ItemStackUtils.addItemEffect(i,key,value);
+            l = ItemStackUtils.addItemEffect(i, key, value);
         }
-        i.offer(Keys.ITEM_LORE,l);
+        i.offer(Keys.ITEM_LORE, l);
         return i;
     }
 }

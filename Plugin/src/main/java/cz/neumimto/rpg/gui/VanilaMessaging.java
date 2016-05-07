@@ -18,15 +18,15 @@
 
 package cz.neumimto.rpg.gui;
 
-import cz.neumimto.rpg.players.ExtendedNClass;
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localization;
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.NClass;
 import cz.neumimto.rpg.skills.SkillData;
@@ -134,10 +134,10 @@ public class VanilaMessaging implements IPlayerMessage {
 
     private String getDetailedCharInfo(IActiveCharacter character) {
         Text text = Text.builder("Level").color(TextColors.YELLOW).append(
-                    Text.builder("Race").color(TextColors.RED).append(
-                    Text.builder("Guild").color(TextColors.AQUA).append(
-                    Text.builder("Class").color(TextColors.GOLD).build()
-                    ).build()).build()).build();
+                Text.builder("Race").color(TextColors.RED).append(
+                        Text.builder("Guild").color(TextColors.AQUA).append(
+                                Text.builder("Class").color(TextColors.GOLD).build()
+                        ).build()).build()).build();
         return text.toString();
     }
 
@@ -147,23 +147,23 @@ public class VanilaMessaging implements IPlayerMessage {
     }
 
     @Override
-    public void showExpChange(IActiveCharacter character,String classname,double expchange) {
+    public void showExpChange(IActiveCharacter character, String classname, double expchange) {
         Player player = character.getPlayer();
-        player.sendMessage(Text.of(classname+" expchange: +" + expchange));
+        player.sendMessage(Text.of(classname + " expchange: +" + expchange));
     }
 
     @Override
     public void showLevelChange(IActiveCharacter character, ExtendedNClass clazz, int level) {
         Player player = character.getPlayer();
-        player.sendMessage(Text.of("Level up: "+clazz.getnClass().getName()+ " - " + level));
+        player.sendMessage(Text.of("Level up: " + clazz.getnClass().getName() + " - " + level));
     }
 
     @Override
     public void sendStatus(IActiveCharacter character) {
         Player player = character.getPlayer();
-        String q = "HP: "+character.getHealth().getValue()+"/"+character.getHealth().getMaxValue()+"/"+character.getHealth().getRegen();
+        String q = "HP: " + character.getHealth().getValue() + "/" + character.getHealth().getMaxValue() + "/" + character.getHealth().getRegen();
         player.sendMessage(Text.of(q));
-        q = "Mana: "+character.getMana().getValue()+"/"+character.getMana().getMaxValue()+"/"+character.getMana().getRegen();
+        q = "Mana: " + character.getMana().getValue() + "/" + character.getMana().getMaxValue() + "/" + character.getMana().getRegen();
         player.sendMessage(Text.of(q));
         q = "Attribute points: " + character.getAttributePoints() + "\n";
         q += "Skill points: " + character.getSkillPoints();
@@ -180,9 +180,9 @@ public class VanilaMessaging implements IPlayerMessage {
         player.sendMessage(Text.of(q));
         q = "Class: " + character.getPrimaryClass().getnClass().getName() + ", Level: " + character.getLevel();
         player.sendMessage(Text.of(q));
-        q = "Progress- Total:" + character.getPrimaryClass().getExperiences()+"/"+character.getPrimaryClass().getnClass().getTotalExp();
+        q = "Progress- Total:" + character.getPrimaryClass().getExperiences() + "/" + character.getPrimaryClass().getnClass().getTotalExp();
         character.sendMessage(q);
-        q = "          Level: " + character.getPrimaryClass().getExperiencesFromLevel()+"/"+character.getPrimaryClass().getnClass().getLevels()[character.getPrimaryClass().getLevel()];
+        q = "          Level: " + character.getPrimaryClass().getExperiencesFromLevel() + "/" + character.getPrimaryClass().getnClass().getLevels()[character.getPrimaryClass().getLevel()];
         character.sendMessage(q);
 
     }
@@ -193,14 +193,14 @@ public class VanilaMessaging implements IPlayerMessage {
         List<ItemStack> list = new ArrayList<>();
         for (NClass aClass : classes) {
             ItemStack a = ItemStack.of(aClass.getItemType(), 1);
-            a.offer(Keys.DISPLAY_NAME,Text.of(TextColors.GREEN, TextStyles.BOLD,""));
+            a.offer(Keys.DISPLAY_NAME, Text.of(TextColors.GREEN, TextStyles.BOLD, ""));
             List<Text> lore = new ArrayList<>();
             double[] levels = aClass.getLevels();
             if (levels != null) {
-                lore.add(Text.of(TextColors.RED, "Max Level/Total exp: "+levels.length+"/"+aClass.getTotalExp()));
+                lore.add(Text.of(TextColors.RED, "Max Level/Total exp: " + levels.length + "/" + aClass.getTotalExp()));
             }
             lore.add(Text.of(TextColors.GREEN, aClass.getDescription()));
-            lore.add(Text.of(TextColors.DARK_GRAY,Localization.CLASS_INVENTORYMENU_FOOTER));
+            lore.add(Text.of(TextColors.DARK_GRAY, Localization.CLASS_INVENTORYMENU_FOOTER));
             a.offer(Keys.ITEM_LORE, lore);
             list.add(a);
         }

@@ -18,12 +18,12 @@
 
 package cz.neumimto.rpg.gui;
 
-import cz.neumimto.rpg.players.ExtendedNClass;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.players.ExtendedNClass;
+import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillTree;
 import org.spongepowered.api.entity.living.player.Player;
 
@@ -54,7 +54,7 @@ public interface IPlayerMessage {
 
     void sendPlayerInfo(IActiveCharacter character, IActiveCharacter target);
 
-    void showExpChange(IActiveCharacter character,String classname,double expchange);
+    void showExpChange(IActiveCharacter character, String classname, double expchange);
 
     void showLevelChange(IActiveCharacter character, ExtendedNClass clazz, int level);
 

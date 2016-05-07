@@ -18,9 +18,9 @@
 
 package cz.neumimto.rpg.skills;
 
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.core.ioc.Inject;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.projectile.Projectile;
 
@@ -36,12 +36,11 @@ public abstract class SkillShot extends ActiveSkill {
     private Game game;
 
 
-
     @Override
     public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info) {
         Optional<Projectile> projectile = character.getPlayer().launchProjectile(getProjectile(character, info));
         if (projectile.isPresent()) {
-            ProjectileProperties projectileProperties = getProjectileProperties(character,info,projectile.get());
+            ProjectileProperties projectileProperties = getProjectileProperties(character, info, projectile.get());
             projectileProperties.onHit(getHitConsumer());
             return SkillResult.OK;
         }
@@ -52,6 +51,6 @@ public abstract class SkillShot extends ActiveSkill {
 
     protected abstract Class<Projectile> getProjectile(IActiveCharacter character, ExtendedSkillInfo info);
 
-    protected abstract BiConsumer<IEntity,IEntity> getHitConsumer();
+    protected abstract BiConsumer<IEntity, IEntity> getHitConsumer();
 
 }

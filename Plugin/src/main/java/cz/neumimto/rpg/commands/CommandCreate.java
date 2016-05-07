@@ -18,25 +18,25 @@
 
 package cz.neumimto.rpg.commands;
 
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.CommandLocalization;
+import cz.neumimto.rpg.configuration.CommandPermissions;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.Guild;
+import cz.neumimto.rpg.players.groups.NClass;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.GroupService;
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.configuration.CommandPermissions;
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.groups.NClass;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -138,7 +138,7 @@ public class CommandCreate extends CommandBase {
                         }
                     }
                     ItemStack i = ItemStack.of(InventoryService.ITEM_SKILL_BIND, 1);
-                    inventoryService.createHotbarSkill(i,r,l);
+                    inventoryService.createHotbarSkill(i, r, l);
                     character.getPlayer().setItemInHand(i);
                 } else {
                     character.getPlayer().sendMessage(Text.of(Localization.EMPTY_HAND_REQUIRED));

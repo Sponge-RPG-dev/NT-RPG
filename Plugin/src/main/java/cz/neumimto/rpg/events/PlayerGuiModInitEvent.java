@@ -2,7 +2,6 @@ package cz.neumimto.rpg.events;
 
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 
 import java.util.UUID;
 

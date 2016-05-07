@@ -18,9 +18,9 @@
 
 package cz.neumimto.rpg.commands;
 
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.Localization;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.InventoryService;
@@ -81,7 +81,7 @@ public class CommandAdmin extends CommandBase {
             }
             if (a[1].equalsIgnoreCase("skill")) {
                 if (a.length < 2) {
-                     commandSource.sendMessage(Text.of("/nadmin use skill {skillname} [level]"));
+                    commandSource.sendMessage(Text.of("/nadmin use skill {skillname} [level]"));
                     return CommandResult.empty();
                 }
                 ISkill skill = skillService.getSkill(a[2]);
@@ -110,7 +110,7 @@ public class CommandAdmin extends CommandBase {
         } else if (a[0].equalsIgnoreCase("enchantment")) {
             if (a[1].equalsIgnoreCase("add")) {
                 String name = a[2];
-                name = name.replaceAll("_"," ");
+                name = name.replaceAll("_", " ");
                 IGlobalEffect globalEffect = effectService.getGlobalEffect(name);
                 if (globalEffect == null) {
                     commandSource.sendMessage(Text.of(Localization.NON_EXISTING_GLOBAL_EFFECT));
@@ -121,7 +121,7 @@ public class CommandAdmin extends CommandBase {
                         List<Text> texts = ItemStackUtils.addItemEffect(itemStack, globalEffect, Integer.parseInt(a[3]));
                         itemStack.offer(Keys.ITEM_LORE, texts);
                         pl.setItemInHand(itemStack);
-                        pl.sendMessage(Text.of("Enchantment " + globalEffect.getName()+" added"));
+                        pl.sendMessage(Text.of("Enchantment " + globalEffect.getName() + " added"));
                     } else {
                         pl.sendMessage(Text.of(Localization.NO_ITEM_IN_HAND));
                     }
@@ -133,7 +133,7 @@ public class CommandAdmin extends CommandBase {
             Player pl = (Player) commandSource;
             Optional<ItemStack> itemInHand = pl.getItemInHand();
             if (itemInHand.isPresent()) {
-                ItemStack itemStack = runewordService.createSockets(itemInHand.get(),Integer.parseInt(a[1]));
+                ItemStack itemStack = runewordService.createSockets(itemInHand.get(), Integer.parseInt(a[1]));
                 pl.setItemInHand(itemStack);
             }
         } else if (a[0].equalsIgnoreCase("rune")) {

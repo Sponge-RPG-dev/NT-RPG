@@ -22,13 +22,13 @@ import com.typesafe.config.Config;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localization;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillItemIcon;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.groups.NClass;
+import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillItemIcon;
+import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.SkillTree;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
@@ -47,7 +47,6 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.world.World;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -61,13 +60,6 @@ import static org.spongepowered.api.item.ItemTypes.*;
  * Created by NeumimTo on 27.3.2015.
  */
 public class ItemStackUtils {
-    protected static String ID = "id";
-    protected static String QUANTITY = "quantity";
-    protected static String DAMAGE = "damage";
-    protected static String DISPLAY_NAME = "name";
-    protected static String LORE = "lore";
-    protected static GlobalScope globalScope = NtRpgPlugin.GlobalScope;
-
     /*If you want to add custom type of sword/axe/armor... via mod or resourcepack(remodeled potatoes) put them into these collections */
     public static Set<ItemType> swords = new HashSet<ItemType>() {{
         add(DIAMOND_SWORD);
@@ -76,7 +68,6 @@ public class ItemStackUtils {
         add(STONE_SWORD);
         add(WOODEN_SWORD);
     }};
-
     public static Set<ItemType> axes = new HashSet<ItemType>() {{
         add(DIAMOND_AXE);
         add(GOLDEN_AXE);
@@ -84,7 +75,6 @@ public class ItemStackUtils {
         add(STONE_AXE);
         add(WOODEN_AXE);
     }};
-
     public static Set<ItemType> pickaxes = new HashSet<ItemType>() {{
         add(DIAMOND_PICKAXE);
         add(GOLDEN_PICKAXE);
@@ -92,7 +82,6 @@ public class ItemStackUtils {
         add(STONE_PICKAXE);
         add(WOODEN_PICKAXE);
     }};
-
     public static Set<ItemType> hoes = new HashSet<ItemType>() {{
         add(DIAMOND_HOE);
         add(GOLDEN_HOE);
@@ -100,16 +89,13 @@ public class ItemStackUtils {
         add(STONE_HOE);
         add(WOODEN_HOE);
     }};
-
     public static Set<ItemType> bows = new HashSet<ItemType>() {{
         add(BOW);
     }};
-
     public static Set<ItemType> staffs = new HashSet<ItemType>() {{
         add(BLAZE_ROD);
         add(STICK);
     }};
-
     public static Set<ItemType> weapons = new HashSet<ItemType>() {{
         addAll(swords);
         addAll(axes);
@@ -117,6 +103,22 @@ public class ItemStackUtils {
         addAll(pickaxes);
         addAll(hoes);
     }};
+    public static Set<ItemType> consumables = new HashSet<ItemType>() {{
+        addAll(Arrays.asList(APPLE,
+                GOLDEN_APPLE,
+                BAKED_POTATO,
+                CARROT, POTION, BREAD, POTATO,
+                POISONOUS_POTATO, ROTTEN_FLESH, PORKCHOP, COOKED_BEEF, COOKED_CHICKEN, COOKED_MUTTON,
+                COOKIE, COOKED_RABBIT, COOKED_FISH, FISH, CHICKEN, MELON));
+    }};
+    protected static String ID = "id";
+    protected static String QUANTITY = "quantity";
+    protected static String DAMAGE = "damage";
+    protected static String DISPLAY_NAME = "name";
+    protected static String LORE = "lore";
+    protected static GlobalScope globalScope = NtRpgPlugin.GlobalScope;
+    private static BiFunction<String, String, String> formatedConfig = (k, v) -> Utils.newLine(k + ": " + v + ";");
+    private static Pattern pattern = Pattern.compile("\\((.*?)\\)");
 
     public static boolean isSword(ItemType type) {
         return swords.contains(type);
@@ -142,7 +144,6 @@ public class ItemStackUtils {
         return weapons.contains(type);
     }
 
-
     public static boolean isStaff(ItemType type) {
         return staffs.contains(type);
     }
@@ -158,20 +159,18 @@ public class ItemStackUtils {
         if (asd.isPresent()) {
             ItemStack item = ItemStack.builder().itemType(asd.get()).build();
             item.setQuantity(amount);
-            item.offer(Keys.ITEM_LORE,stringList);
-            item.offer(Keys.DISPLAY_NAME,Text.of(name));
-            item.offer(Keys.ITEM_DURABILITY,damage);
+            item.offer(Keys.ITEM_LORE, stringList);
+            item.offer(Keys.DISPLAY_NAME, Text.of(name));
+            item.offer(Keys.ITEM_DURABILITY, damage);
             return item;
         }
         throw new RuntimeException("Non existing item type " + type);
     }
 
-    private static BiFunction<String,String,String> formatedConfig = (k,v) -> Utils.newLine(k+": "+v+";");
-
     public static String itemStackToFormatedConfig(ItemStack itemStack) {
 
-        String s = "{"+Utils.LineSeparator;
-        s += formatedConfig.apply(ID,itemStack.getItem().getId());
+        String s = "{" + Utils.LineSeparator;
+        s += formatedConfig.apply(ID, itemStack.getItem().getId());
         s += formatedConfig.apply(QUANTITY, String.valueOf(itemStack.getQuantity()));
         s += formatedConfig.apply(DAMAGE, String.valueOf(itemStack.get(Keys.ITEM_DURABILITY).get()));
         s += formatedConfig.apply(DISPLAY_NAME, itemStack.get(Keys.DISPLAY_NAME).get().toPlain());
@@ -210,12 +209,15 @@ public class ItemStackUtils {
         createProperty(b, value, String.valueOf(key));
     }
 
-
     private static Integer getLevel(String s, Map<String, Integer> levels) {
         Integer i = levels.get(s);
         return i == null ? 0 : i;
     }
-
+    /**
+     * Returns a collection global effects and its levels from itemlore
+     * @param is
+     * @return
+     */
 
     public static DisplayNameData setDisplayName(Text name) {
         final DisplayNameData itemName = Sponge.getGame().getDataManager().getManipulatorBuilder(DisplayNameData.class).get().create();
@@ -284,11 +286,6 @@ public class ItemStackUtils {
         ItemStack.Builder i = ItemStack.builder();
         return i.itemType(icon.itemType).itemData(itemName).itemData(loreData).quantity(level).build();
     }
-    /**
-     * Returns a collection global effects and its levels from itemlore
-     * @param is
-     * @return
-     */
 
     /**
      * Returns a collection of global ffects and its levels from itemlore
@@ -306,18 +303,19 @@ public class ItemStackUtils {
 
     /**
      * Builds a effect map from item lore.
+     *
      * @param texts
      * @return Map<Effect,Level>
      */
     public static Map<IGlobalEffect, Integer> getItemEffects(List<Text> texts) {
         Map<IGlobalEffect, Integer> map = new HashMap<>();
         texts.stream().filter(t -> t.getFormat().getColor() == TextColors.BLUE).forEach(t -> {
-            findItemEffect(t,map);
+            findItemEffect(t, map);
         });
         return map;
     }
 
-    public static void findItemEffect(Text text,Map<IGlobalEffect,Integer> map) {
+    public static void findItemEffect(Text text, Map<IGlobalEffect, Integer> map) {
         String eff = text.toPlain().substring(3).toLowerCase();
         String[] arr = eff.split(": ");
         int level = Integer.parseInt(arr[1]);
@@ -335,7 +333,7 @@ public class ItemStackUtils {
         } else {
             lore = new ArrayList<>();
         }
-        lore.add(Text.of(TextColors.AQUA,globalEffect.getName()+":" + level));
+        lore.add(Text.of(TextColors.AQUA, globalEffect.getName() + ":" + level));
         return lore;
     }
 
@@ -347,23 +345,13 @@ public class ItemStackUtils {
         } else {
             lore = new ArrayList<>();
         }
-        lore.add(Text.of(TextColors.AQUA,globalEffect.getName()+":" + level));
+        lore.add(Text.of(TextColors.AQUA, globalEffect.getName() + ":" + level));
         return lore;
     }
-
-    public static Set<ItemType> consumables = new HashSet<ItemType>() {{
-        addAll(Arrays.asList(APPLE,
-                GOLDEN_APPLE,
-                BAKED_POTATO,
-                CARROT, POTION, BREAD, POTATO,
-                POISONOUS_POTATO, ROTTEN_FLESH, PORKCHOP, COOKED_BEEF, COOKED_CHICKEN, COOKED_MUTTON,
-                COOKIE, COOKED_RABBIT, COOKED_FISH, FISH, CHICKEN,MELON));
-    }};
 
     public static boolean isConsumable(ItemType type) {
         return consumables.contains(type);
     }
-
 
     public static boolean isItemRune(ItemStack is) {
         Optional<List<Text>> texts = is.get(Keys.ITEM_LORE);
@@ -386,6 +374,7 @@ public class ItemStackUtils {
 
     /**
      * https://github.com/SpongePowered/SpongeForge/issues/470
+     *
      * @param itemStack
      */
     public static void createEnchantmentGlow(ItemStack itemStack) {
@@ -415,7 +404,6 @@ public class ItemStackUtils {
         return 0;
     }
 
-    private static Pattern pattern = Pattern.compile("\\((.*?)\\)");
     public static Set<String> getRestrictions(Text text) {
         Set<String> str = new HashSet<>();
         Matcher m = pattern.matcher(text.toPlain());
@@ -425,10 +413,10 @@ public class ItemStackUtils {
 
     public static void dropItem(Player player, ItemStack itemStack) {
         Optional<Entity> optional = player.getLocation().getExtent().createEntity(EntityTypes.ITEM, player.getLocation().getPosition());
-        if(optional.isPresent()) {
+        if (optional.isPresent()) {
             Item item = (Item) optional.get();
             item.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
-            player.getLocation().getExtent().spawnEntity(item, Cause.of(NamedCause.of("player",player)));
+            player.getLocation().getExtent().spawnEntity(item, Cause.of(NamedCause.of("player", player)));
         }
     }
 }

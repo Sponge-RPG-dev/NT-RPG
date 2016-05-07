@@ -2,10 +2,10 @@ package cz.neumimto.rpg.inventory;
 
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.ItemStackUtils;
-import cz.neumimto.rpg.effects.IGlobalEffect;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.Map;
@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class Charm extends HotbarObject {
 
-    private Map<IGlobalEffect,Integer> effects;
+    private Map<IGlobalEffect, Integer> effects;
 
     public Charm() {
         type = HotbarObjectTypes.CHARM;
@@ -36,13 +36,13 @@ public class Charm extends HotbarObject {
         if (effects == null) {
             effects = ItemStackUtils.getItemEffects(is);
         }
-        NtRpgPlugin.GlobalScope.effectService.applyGlobalEffectsAsEnchantments(effects,character);
+        NtRpgPlugin.GlobalScope.effectService.applyGlobalEffectsAsEnchantments(effects, character);
     }
 
     @Override
     public void onUnEquip(IActiveCharacter character) {
         if (effects != null)
-            NtRpgPlugin.GlobalScope.effectService.removeGlobalEffectsAsEnchantments(effects,character);
+            NtRpgPlugin.GlobalScope.effectService.removeGlobalEffectsAsEnchantments(effects, character);
     }
 
     public Map<IGlobalEffect, Integer> getEffects() {

@@ -18,9 +18,9 @@
 
 package cz.neumimto.rpg.commands;
 
-import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.NtRpgPlugin;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCallable;
 
@@ -42,7 +42,7 @@ public class CommandService {
         } catch (NoSuchMethodError e) {
             try {
                 Object o = Sponge.class.getDeclaredMethod("getCommandDispatcher").invoke(null);
-                o.getClass().getDeclaredMethod("register",Object.class,CommandCallable.class,List.class).invoke(o,plugin, commandCallable, commandCallable.getAliases());
+                o.getClass().getDeclaredMethod("register", Object.class, CommandCallable.class, List.class).invoke(o, plugin, commandCallable, commandCallable.getAliases());
             } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e1) {
                 e1.printStackTrace();
             }

@@ -18,8 +18,8 @@
 
 package cz.neumimto.rpg.events.character;
 
-import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.events.CancellableEvent;
+import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.players.IActiveCharacter;
 
 /**

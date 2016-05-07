@@ -18,6 +18,8 @@
 
 package cz.neumimto.rpg.inventory;
 
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectService;
@@ -30,8 +32,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.utils.ItemStackUtils;
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.Singleton;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
@@ -58,32 +58,25 @@ import java.util.*;
 public class InventoryService {
 
 
-    @Inject
-    private SkillService skillService;
-
-    @Inject
-    private Game game;
-
-    @Inject
-    private CharacterService characterService;
-
-    @Inject
-    private EffectService effectService;
-
-    @Inject
-    private DamageService damageService;
-
-    @Inject
-    private RWService rwService;
-
-    private Map<UUID, InventoryMenu> inventoryMenus = new HashMap<>();
-
     public static ItemType ITEM_SKILL_BIND = ItemTypes.BLAZE_POWDER;
     public static TextColor LORE_FIRSTLINE = TextColors.AQUA;
     public static TextColor SOCKET_COLOR = TextColors.GRAY;
     public static TextColor ENCHANTMENT_COLOR = TextColors.BLUE;
     public static TextColor LEVEL_COLOR = TextColors.YELLOW;
     public static TextColor RESTRICTIONS = TextColors.LIGHT_PURPLE;
+    @Inject
+    private SkillService skillService;
+    @Inject
+    private Game game;
+    @Inject
+    private CharacterService characterService;
+    @Inject
+    private EffectService effectService;
+    @Inject
+    private DamageService damageService;
+    @Inject
+    private RWService rwService;
+    private Map<UUID, InventoryMenu> inventoryMenus = new HashMap<>();
 
     public ItemStack getHelpItem(List<String> lore, ItemType type) {
         ItemStack.Builder builder = ItemStack.builder();
@@ -111,7 +104,7 @@ public class InventoryService {
                 HotbarObject hotbarObject = null;
                 if (ItemStackUtils.isWeapon(itemStack.getItem())) {
                     if (character.getAllowedWeapons().containsKey(itemStack.getItem())) {
-                        hotbarObject = buildHotbarWeapon(character,itemStack);
+                        hotbarObject = buildHotbarWeapon(character, itemStack);
                     } else {
                         inventory.clear();
                         ItemStackUtils.dropItem(character.getPlayer(), itemStack);
@@ -147,7 +140,7 @@ public class InventoryService {
             return buildHotbarSkill(character, is);
         }
         if (ItemStackUtils.isCharm(is)) {
-            return buildCharm(character,is);
+            return buildCharm(character, is);
         }
         if (ItemStackUtils.isItemRune(is)) {
             return new HotbarRune();
@@ -185,7 +178,7 @@ public class InventoryService {
         Map<IGlobalEffect, Integer> map = new HashMap<>();
         for (Text text : texts) {
             if (text.getColor() == ENCHANTMENT_COLOR) {
-                ItemStackUtils.findItemEffect(text,map);
+                ItemStackUtils.findItemEffect(text, map);
             } else if (text.getColor() == LEVEL_COLOR) {
                 w.setLevel(ItemStackUtils.getItemLevel(text));
             } else if (text.getColor() == RESTRICTIONS) {
@@ -330,7 +323,7 @@ public class InventoryService {
                     }
                     runeitem = slot.peek().get();
                     if (runeitem.get(Keys.DISPLAY_NAME).isPresent()) {
-                       name = runeitem.get(Keys.DISPLAY_NAME).get().toPlain();
+                        name = runeitem.get(Keys.DISPLAY_NAME).get().toPlain();
                     }
                     r.r = rwService.getRune(name);
                     if (r.r == null) {

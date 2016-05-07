@@ -197,7 +197,7 @@ public class Localization {
     public static String SKILL_IS_ON_MAX_LEVEL = "The skill %1 is on its maximal level.";
 
     @ConfigValue
-    public static String SKILL_NOT_IN_A_TREE = "The skill %1 is not accessible from your skill tree" ;
+    public static String SKILL_NOT_IN_A_TREE = "The skill %1 is not accessible from your skill tree";
 
     @ConfigValue
     public static String MISSING_SKILL_DEPENDENCIES = "The skill %1 requires [%2] and at least one of [%3]";

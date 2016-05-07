@@ -10,9 +10,8 @@ import org.spongepowered.api.item.inventory.ItemStack;
 public abstract class HotbarObject {
 
     public static HotbarObject EMPTYHAND_OR_CONSUMABLE = null;
-
-    private int slot;
     protected IHotbarObjectType type;
+    private int slot;
 
     public int getSlot() {
         return slot;
@@ -32,7 +31,7 @@ public abstract class HotbarObject {
 
     public void onEquip(ItemStack is, IActiveCharacter character) {
         if (PluginConfig.DEBUG) {
-            character.sendMessage("Equiped "+is.getItem().getName());
+            character.sendMessage("Equiped " + is.getItem().getName());
         }
     }
 

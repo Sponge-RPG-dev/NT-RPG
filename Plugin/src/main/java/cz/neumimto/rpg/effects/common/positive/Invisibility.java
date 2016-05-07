@@ -21,18 +21,18 @@ public class Invisibility extends EffectBase {
     }
 
     public Invisibility(IEffectConsumer consumer, long duration, float level) {
-        this(consumer,duration);
+        this(consumer, duration);
     }
 
     @Override
     public void onApply() {
         Living entity = getConsumer().getEntity();
-        entity.offer(Keys.INVISIBLE,true);
+        entity.offer(Keys.INVISIBLE, true);
     }
 
     @Override
     public void onRemove() {
         Living entity = getConsumer().getEntity();
-        entity.offer(Keys.INVISIBLE,false);
+        entity.offer(Keys.INVISIBLE, false);
     }
 }

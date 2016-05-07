@@ -18,13 +18,13 @@
 
 package cz.neumimto.rpg.listeners;
 
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.inventory.HotbarObject;
+import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.rpg.inventory.InventoryService;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -130,7 +130,7 @@ public class InventoryListener {
             }
 
             hotbarObject.onUnEquip(character);
-            inventoryService.initializeHotbar( character,hotbar.getSelectedSlotIndex());
+            inventoryService.initializeHotbar(character, hotbar.getSelectedSlotIndex());
         }
     }
 }

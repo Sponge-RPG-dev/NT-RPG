@@ -21,18 +21,18 @@ package cz.neumimto.rpg.persistance;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigValue;
-import cz.neumimto.rpg.players.ExperienceSource;
-import cz.neumimto.rpg.players.groups.Race;
-import cz.neumimto.rpg.players.properties.PlayerPropertyService;
-import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.groups.Guild;
 import cz.neumimto.rpg.players.groups.NClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
+import cz.neumimto.rpg.players.groups.Race;
+import cz.neumimto.rpg.players.properties.PlayerPropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
+import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.SkillTree;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
@@ -192,7 +192,7 @@ public class GroupDao {
             String attribute = entry.getKey();
             int i = Integer.parseInt(entry.getValue().render());
             ICharacterAttribute attribute1 = propertyService.getAttribute(attribute);
-            group.getStartingAttributes().put(attribute1,i);
+            group.getStartingAttributes().put(attribute1, i);
         }
         Optional<ItemType> menuIcon = game.getRegistry().getType(ItemType.class, c.getString("MenuIcon"));
         if (menuIcon.isPresent()) {

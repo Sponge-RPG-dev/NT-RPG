@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.effects.common.def;
 
 import cz.neumimto.rpg.configuration.PluginConfig;
+import cz.neumimto.rpg.effects.CoreEffectTypes;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.effects.CoreEffectTypes;
 
 import java.lang.ref.WeakReference;
 
@@ -13,10 +13,11 @@ import java.lang.ref.WeakReference;
 
 public class CombatEffect extends EffectBase {
 
+    public static final String name = "CombatTimer";
     private IActiveCharacter character;
     private WeakReference<IActiveCharacter> opponent;
     private long initiation;
-    public static final String name = "CombatTimer";
+
     public CombatEffect(IActiveCharacter consumer) {
         super(name, consumer);
         this.character = consumer;

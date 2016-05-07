@@ -1,10 +1,10 @@
 package cz.neumimto.rpg.entities;
 
-import cz.neumimto.rpg.IEntity;
-import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.IEntity;
+import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.CharacterService;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
@@ -12,7 +12,10 @@ import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by NeumimTo on 19.12.2015.
@@ -20,7 +23,7 @@ import java.util.*;
 @Singleton
 public class EntityService {
 
-    private HashMap<UUID,IMob> entityHashMap = new HashMap<>();
+    private HashMap<UUID, IMob> entityHashMap = new HashMap<>();
     private Map<EntityType, Double> entityDamages = new HashMap<>();
     private Map<EntityType, Double> entityHealth = new HashMap<>();
     private Map<EntityType, Double> entityExperiences = new HashMap<>();
@@ -40,10 +43,10 @@ public class EntityService {
             iEntity = new NEntity();
             iEntity.setExperiences(-1);
             iEntity.attach((Living) id);
-            entityHashMap.put(id.getUniqueId(),iEntity);
+            entityHashMap.put(id.getUniqueId(), iEntity);
             if (!PluginConfig.OVERRIDE_MOBS) {
-                id.offer(Keys.MAX_HEALTH,entityHealth.get(id.getType()));
-                id.offer(Keys.HEALTH,entityHealth.get(id.getType()));
+                id.offer(Keys.MAX_HEALTH, entityHealth.get(id.getType()));
+                id.offer(Keys.HEALTH, entityHealth.get(id.getType()));
             }
         }
         return iEntity;
@@ -73,9 +76,9 @@ public class EntityService {
     @PostProcess(priority = 10)
     public void load() {
 
-       this.entityDamages.putAll(dao.getDamages());
-       this.entityHealth.putAll(dao.getHealth());
-       this.entityExperiences.putAll(dao.getExperiences());
+        this.entityDamages.putAll(dao.getDamages());
+        this.entityHealth.putAll(dao.getHealth());
+        this.entityExperiences.putAll(dao.getExperiences());
 
     }
 

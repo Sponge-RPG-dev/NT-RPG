@@ -18,11 +18,11 @@
 
 package cz.neumimto.rpg.players.properties;
 
-import cz.neumimto.rpg.configuration.PluginConfig;
-import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.utils.Utils;
@@ -46,18 +46,15 @@ import java.util.function.Supplier;
 @Singleton
 public class PlayerPropertyService {
 
-    @Inject
-    private Logger logger;
-
     public static final double WALKING_SPEED = 0.1d;
-
     public static short LAST_ID = 0;
     public static final Supplier<Short> getAndIncrement = () -> {
         short t = new Short(LAST_ID);
         LAST_ID++;
         return t;
     };
-
+    @Inject
+    private Logger logger;
     private Map<String, Short> idMap = new HashMap<>();
     private Map<Integer, Float> defaults = new HashMap<>();
     private Map<String, Short> persistant = new HashMap<>();
@@ -90,7 +87,7 @@ public class PlayerPropertyService {
     }
 
     public void registerAttribute(ICharacterAttribute attribute) {
-        attributes.put(attribute.getName().toLowerCase(),attribute);
+        attributes.put(attribute.getName().toLowerCase(), attribute);
     }
 
     public ICharacterAttribute getAttribute(String name) {

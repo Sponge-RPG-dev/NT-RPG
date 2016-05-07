@@ -18,51 +18,49 @@
 
 package cz.neumimto.rpg.effects.common.positive;
 
+import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
-import cz.neumimto.rpg.ClassGenerator;
-import cz.neumimto.rpg.effects.IGlobalEffect;
 
 /**
  * Created by NeumimTo on 23.7.2015.
  */
 
 /**
- *  An example class how to use Classgenerator.
- *
- *  The annotation will generate according global effect class at runtime.
- *  id - field name of unique identifier (in most cases its name), the field must be static and public
- *  inject - If set to true the class loader tries to inject public static field which is assingable from IGlobalEffect.
- *  Main behavior of global effects is that they are accessible via effectservice.getGlobalEffect(stringId) inject option is
- *  here only if someone would like to keep direct field reference to the global effect object.
- *
- *  The class, which inherits from IEffect(or its implementations such as effect base) must contain a constructor - IEffectConsumer, long duration, int level.
- *
- *  Global effects can work as item enchantments, and be accessible from commands
+ * An example class how to use Classgenerator.
+ * <p>
+ * The annotation will generate according global effect class at runtime.
+ * id - field name of unique identifier (in most cases its name), the field must be static and public
+ * inject - If set to true the class loader tries to inject public static field which is assingable from IGlobalEffect.
+ * Main behavior of global effects is that they are accessible via effectservice.getGlobalEffect(stringId) inject option is
+ * here only if someone would like to keep direct field reference to the global effect object.
+ * <p>
+ * The class, which inherits from IEffect(or its implementations such as effect base) must contain a constructor - IEffectConsumer, long duration, int level.
+ * <p>
+ * Global effects can work as item enchantments, and be accessible from commands
  */
-@ClassGenerator.Generate(id = "name",inject = true)
+@ClassGenerator.Generate(id = "name", inject = true)
 public class SpeedBoost extends EffectBase {
 
     public static final String name = "Speed";
 
     public static IGlobalEffect<SpeedBoost> global;
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
     private float speedbonus;
     private IActiveCharacter character;
-
     public SpeedBoost(IActiveCharacter consumer, long duration, float speedbonus) {
         super(name, consumer);
         setDuration(duration);
         this.speedbonus = speedbonus;
         character = consumer;
 
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     @Override

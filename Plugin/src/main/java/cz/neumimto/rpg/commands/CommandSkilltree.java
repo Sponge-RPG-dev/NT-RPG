@@ -18,11 +18,11 @@
 
 package cz.neumimto.rpg.commands;
 
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.NClass;

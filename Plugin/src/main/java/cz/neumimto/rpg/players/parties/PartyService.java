@@ -18,14 +18,14 @@
 
 package cz.neumimto.rpg.players.parties;
 
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.events.party.PartyInviteEvent;
 import cz.neumimto.rpg.events.party.PartyJoinEvent;
+import cz.neumimto.rpg.events.party.PartyLeaveEvent;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.events.party.PartyLeaveEvent;
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.Singleton;
 import org.spongepowered.api.Game;
 
 /**

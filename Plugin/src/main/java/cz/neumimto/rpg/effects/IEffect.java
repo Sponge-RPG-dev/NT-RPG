@@ -28,6 +28,10 @@ import java.util.UUID;
  * Created by NeumimTo on 17.1.2015.
  */
 public interface IEffect {
+    static GlobalScope getGlobalScope() {
+        return NtRpgPlugin.GlobalScope;
+    }
+
     String getName();
 
     void onApply();
@@ -80,13 +84,9 @@ public interface IEffect {
 
     void setApplyMessage(String applyMessage);
 
-    void setConsumer(IEffectConsumer consumer);
-
     IEffectConsumer getConsumer();
 
-    static GlobalScope getGlobalScope() {
-        return NtRpgPlugin.GlobalScope;
-    }
+    void setConsumer(IEffectConsumer consumer);
 
     Set<EffectType> getEffectTypes();
 }

@@ -1,4 +1,4 @@
-var imports = new JavaImporter(java.util,java.nio.file);
+var imports = new JavaImporter(java.util, java.nio.file);
 /*java */
 var HashSet = Java.type('java.util.HashSet');
 var HashMap = Java.type('java.util.HashMap');
@@ -10,7 +10,7 @@ var Consumer = Java.type("java.util.function.Consumer");
 var SkillSettings = Java.type("cz.neumimto.rpg.skills.SkillSettings");
 var SkillNodes = Java.type("cz.neumimto.rpg.skills.SkillNode");
 var ActiveSkill = Java.type("cz.neumimto.rpg.skills.ActiveSkill");
-var SkillResult =  Java.type("cz.neumimto.rpg.skills.SkillResult");
+var SkillResult = Java.type("cz.neumimto.rpg.skills.SkillResult");
 var AbstractSkill = Java.type("cz.neumimto.rpg.skills.AbstractSkill");
 var GlobalEffect = Java.type("cz.neumimto.rpg.effects.IGlobalEffect");
 var EffectBase = Java.type("cz.neumimto.rpg.effects.EffectBase");
@@ -40,32 +40,32 @@ function registerGlobalEffect(obj) {
         GlobalScope.effectService.registerGlobalEffect(obj);
     }
 }
-function defineCharacterProperty(name,def) {
+function defineCharacterProperty(name, def) {
     var lastid = playerPropertyService.LAST_ID;
     lastid++;
     if (name !== null) {
-        playerPropertyService.registerProperty(name,lastid);
+        playerPropertyService.registerProperty(name, lastid);
     }
     if (def !== null) {
-        playerPropertyService.registerDefaultValue(lastid,def);
+        playerPropertyService.registerDefaultValue(lastid, def);
     }
     playerPropertyService.LAST_ID = lastid;
     return lastid;
 }
-function getLevelNode(extendedSkillInfo,node) {
-    return extendedSkillInfo.getSkillInfo().getSkillSettings().getLevelNodeValue(node,extendedSkillInfo.getLevel());
+function getLevelNode(extendedSkillInfo, node) {
+    return extendedSkillInfo.getSkillInfo().getSkillSettings().getLevelNodeValue(node, extendedSkillInfo.getLevel());
 }
-function registerEventListener(eventclass,consumer) {
+function registerEventListener(eventclass, consumer) {
     var cls = events.get(eventclass);
     if (cls == null) {
         cls = new HashSet();
-        events.put(eventclass,new HashSet());
+        events.put(eventclass, new HashSet());
     }
     cls.add(consumer);
 }
 with (imports) {
-    var stream = Files.newDirectoryStream(new File("./mods/NtRpg/scripts").toPath(),"*.js");
-    stream.forEach(function(p) {
+    var stream = Files.newDirectoryStream(new File("./mods/NtRpg/scripts").toPath(), "*.js");
+    stream.forEach(function (p) {
         var name = p.toFile().absolutePath;
         if (!name.endsWith("Main.js")) {
             load(name);

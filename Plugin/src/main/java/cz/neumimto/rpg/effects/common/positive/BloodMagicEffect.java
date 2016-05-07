@@ -34,24 +34,21 @@ import cz.neumimto.rpg.players.Mana;
 public class BloodMagicEffect extends EffectBase {
 
     public static String name = "BloodMagic";
-
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
     private static String apply = "You have gained " + name;
     private static String expire = "You have lost " + name;
     private IActiveCharacter consumer;
-
     public BloodMagicEffect(IActiveCharacter consumer) {
-        super(name,consumer);
+        super(name, consumer);
         setConsumer(consumer);
         setApplyMessage(apply);
         setExpireMessage(expire);
         setConsumer(consumer);
         setDuration(-1);
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     @Override

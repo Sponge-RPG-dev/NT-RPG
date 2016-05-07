@@ -50,10 +50,6 @@ public class InventoryMenu {
         return this;
     }
 
-    private class ItemIndex {
-        int x, y, index;
-    }
-
     public InventoryMenuConsumer getConsumer(int x, int y) {
         for (ItemIndex index : itemloc) {
             if (index.x == x && index.y == y) {
@@ -63,6 +59,10 @@ public class InventoryMenu {
             }
         }
         return InventoryMenuConsumer.EMPTY;
+    }
+
+    private class ItemIndex {
+        int x, y, index;
     }
 
 }

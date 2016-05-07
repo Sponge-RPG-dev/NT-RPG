@@ -43,10 +43,10 @@ public class DebugListener {
             EntityDamageSource entityDamageSource = first.get();
             Entity source = entityDamageSource.getSource();
             if (source.getType() == EntityTypes.PLAYER) {
-                ((Player)source).sendMessage(Text.of(">> " + event.getFinalDamage()));
+                ((Player) source).sendMessage(Text.of(">> " + event.getFinalDamage()));
             }
             if (targetEntity.getType() == EntityTypes.PLAYER) {
-                ((Player)targetEntity).sendMessage(Text.of("<< " + event.getFinalDamage()));
+                ((Player) targetEntity).sendMessage(Text.of("<< " + event.getFinalDamage()));
             }
         }
     }

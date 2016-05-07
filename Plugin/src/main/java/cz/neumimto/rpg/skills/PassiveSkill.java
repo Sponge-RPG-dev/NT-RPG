@@ -18,10 +18,10 @@
 
 package cz.neumimto.rpg.skills;
 
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.core.ioc.Inject;
 
 /**
  * Created by NeumimTo on 6.8.2015.
@@ -39,7 +39,7 @@ public abstract class PassiveSkill extends AbstractSkill {
 
     private void update(IActiveCharacter IActiveCharacter) {
         ExtendedSkillInfo skill = IActiveCharacter.getSkill(getName());
-        applyEffect(skill,IActiveCharacter);
+        applyEffect(skill, IActiveCharacter);
     }
 
     @Override
@@ -54,5 +54,5 @@ public abstract class PassiveSkill extends AbstractSkill {
         update(IActiveCharacter);
     }
 
-    public abstract void applyEffect(ExtendedSkillInfo info,IActiveCharacter character);
+    public abstract void applyEffect(ExtendedSkillInfo info, IActiveCharacter character);
 }

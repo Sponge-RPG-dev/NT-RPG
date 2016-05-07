@@ -1,4 +1,5 @@
 package test;
+
 import cz.neumimto.ClassGenerator;
 import cz.neumimto.effects.EffectBase;
 import cz.neumimto.effects.IEffectConsumer;
@@ -10,6 +11,7 @@ public class EffectTest extends EffectBase {
     public static IGlobalEffect<EffectTest> global = null;
 
     public static String name = "testeffect";
+    public long l;
 
     public EffectTest(IEffectConsumer c, long duration, float level) {
 
@@ -20,7 +22,6 @@ public class EffectTest extends EffectBase {
         setDuration(50000);
     }
 
-    public long l;
     @Override
     public void onTick() {
         l++;

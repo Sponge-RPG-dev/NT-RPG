@@ -5,12 +5,13 @@ import cz.neumimto.rpg.effects.IGlobalEffect;
 import javassist.CannotCompileException;
 import jdk.internal.dynalink.beans.StaticClass;
 import org.objectweb.asm.*;
-import org.objectweb.asm.Type;
 import org.spongepowered.api.event.Event;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -22,17 +23,10 @@ import java.util.stream.Stream;
 @cz.neumimto.core.ioc.Singleton
 public class ClassGenerator implements Opcodes {
 
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface Generate {
-        String id();
-
-        boolean inject() default false;
-    }
+    private String packagee = "cz/neumimto/rpg/asm/effects/";
 
     public ClassGenerator() {
     }
-
-    private String packagee = "cz/neumimto/rpg/asm/effects/";
 
     private String getCannonicalGlobalName(Class cl) {
         return packagee + "Global" + cl.getSimpleName();
@@ -126,7 +120,7 @@ public class ClassGenerator implements Opcodes {
             mv.visitVarInsn(ALOAD, 1);
             mv.visitVarInsn(LLOAD, 2);
             mv.visitVarInsn(FLOAD, 4);
-            mv.visitMethodInsn(INVOKEVIRTUAL, getCannonicalGlobalName(cls), "construct", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JF)L"+toPath(cls)+";", false);
+            mv.visitMethodInsn(INVOKEVIRTUAL, getCannonicalGlobalName(cls), "construct", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JF)L" + toPath(cls) + ";", false);
             mv.visitInsn(ARETURN);
             Label l1 = new Label();
             mv.visitLabel(l1);
@@ -145,9 +139,9 @@ public class ClassGenerator implements Opcodes {
         try {
             id = (String) cls.getDeclaredField(annotation.id()).get(null);
         } catch (NoSuchFieldException e) {
-            System.out.println("Could not generate a class from " + cls.getName() +  " make sure id  value of @Generate matches if field name. The field must be public static and type of String");
+            System.out.println("Could not generate a class from " + cls.getName() + " make sure id  value of @Generate matches if field name. The field must be public static and type of String");
         }
-        byte[] b = generateEffectClass(cls,id);
+        byte[] b = generateEffectClass(cls, id);
         Class c = loadClass(getCannonicalGlobalName(cls).replaceAll("/", "."), b);
         IGlobalEffect o = (IGlobalEffect) c.newInstance();
         return o;
@@ -157,9 +151,9 @@ public class ClassGenerator implements Opcodes {
         Object o = null;
         try {
             byte[] b = generateDynamicListenerbc(map);
-            o = loadClass("cz.neumimto.rpg.listeners.DynamicListener",b);
+            o = loadClass("cz.neumimto.rpg.listeners.DynamicListener", b);
             Class<?> listener = Class.forName("cz.neumimto.rpg.listeners.DynamicListener");
-            o=listener.newInstance();
+            o = listener.newInstance();
             for (Field field : listener.getDeclaredFields()) {
                 if (Set.class.isAssignableFrom(field.getType())) {
                     Set s = (Set) field.get(o);
@@ -169,7 +163,7 @@ public class ClassGenerator implements Opcodes {
                     map.entrySet().stream()
                             .filter(m -> m.getKey().getRepresentedClass() == event)
                             .forEach(a -> s.addAll(a.getValue()));
-                 }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -196,7 +190,6 @@ public class ClassGenerator implements Opcodes {
         }
         return clazz;
     }
-
 
     public <T extends IEffect> void injectGlobalEffectField(Class<T> t, IGlobalEffect<T> toInject) {
         Generate g = t.getAnnotation(Generate.class);
@@ -232,7 +225,7 @@ public class ClassGenerator implements Opcodes {
 
         for (StaticClass e : set.keySet()) {
             String name = e.getRepresentedClass().getSimpleName().substring(0, 1).toLowerCase() + e.getRepresentedClass().getSimpleName().substring(1) + "s";
-            fv = cw.visitField(ACC_PUBLIC, name, "Ljava/util/Set;", "Ljava/util/Set<Ljava/util/function/Consumer<L"+toPath(e.getRepresentedClass())+";>;>;",null);
+            fv = cw.visitField(ACC_PUBLIC, name, "Ljava/util/Set;", "Ljava/util/Set<Ljava/util/function/Consumer<L" + toPath(e.getRepresentedClass()) + ";>;>;", null);
             fv.visitEnd();
         }
         int i = 19;
@@ -267,9 +260,9 @@ public class ClassGenerator implements Opcodes {
         {
             for (StaticClass a : set.keySet()) {
                 Class e = a.getRepresentedClass();
-                String name = "on"+ e.getSimpleName();
+                String name = "on" + e.getSimpleName();
                 String name1 = e.getSimpleName().substring(0, 1).toLowerCase() + e.getSimpleName().substring(1) + "s";
-                mv = cw.visitMethod(ACC_PUBLIC, name, "(L"+toPath(e)+";)V", null, null);
+                mv = cw.visitMethod(ACC_PUBLIC, name, "(L" + toPath(e) + ";)V", null, null);
                 {
                     av0 = mv.visitAnnotation("Lorg/spongepowered/api/event/Listener;", true);
                     av0.visitEnum("order", "Lorg/spongepowered/api/event/Order;", "BEFORE_POST");
@@ -277,7 +270,7 @@ public class ClassGenerator implements Opcodes {
                     mv.visitCode();
                     Label l0 = new Label();
                     mv.visitLabel(l0);
-                    i+=3;
+                    i += 3;
                     mv.visitLineNumber(i, l0);
                     mv.visitVarInsn(ALOAD, 0);
                     mv.visitFieldInsn(GETFIELD, "cz/neumimto/listeners/DynamicListener", name1, "Ljava/util/Set;");
@@ -313,17 +306,24 @@ public class ClassGenerator implements Opcodes {
                     mv.visitInsn(RETURN);
                     Label l5 = new Label();
                     mv.visitLabel(l5);
-                    mv.visitLocalVariable("it", "Ljava/util/function/Consumer;", "Ljava/util/function/Consumer<L"+toPath(e)+";>;", l3, l4, 3);
+                    mv.visitLocalVariable("it", "Ljava/util/function/Consumer;", "Ljava/util/function/Consumer<L" + toPath(e) + ";>;", l3, l4, 3);
                     mv.visitLocalVariable("this", "Lcz/neumimto/listeners/DynamicListener;", null, l0, l5, 0);
-                    mv.visitLocalVariable("event", "L"+toPath(e)+";", null, l0, l5, 1);
+                    mv.visitLocalVariable("event", "L" + toPath(e) + ";", null, l0, l5, 1);
                     mv.visitMaxs(2, 4);
                     mv.visitEnd();
                 }
-                }
             }
+        }
 
         cw.visitEnd();
 
         return cw.toByteArray();
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface Generate {
+        String id();
+
+        boolean inject() default false;
     }
 }

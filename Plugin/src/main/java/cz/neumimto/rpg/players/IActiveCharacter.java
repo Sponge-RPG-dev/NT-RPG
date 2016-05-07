@@ -19,17 +19,17 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.IEntity;
-import cz.neumimto.rpg.inventory.Weapon;
-import cz.neumimto.rpg.players.groups.Race;
-import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.inventory.HotbarObject;
+import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.players.groups.Guild;
 import cz.neumimto.rpg.players.groups.NClass;
+import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.ISkill;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.item.ItemType;
@@ -53,6 +53,8 @@ public interface IActiveCharacter extends IEntity<Player> {
     boolean isStub();
 
     float[] getCharacterProperties();
+
+    void setCharacterProperties(float[] arr);
 
     float getCharacterProperty(int index);
 
@@ -166,9 +168,9 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     boolean isPartyLeader();
 
-    void setPendingPartyInvite(Party party);
-
     Party getPendingPartyInvite();
+
+    void setPendingPartyInvite(Party party);
 
     Weapon getMainHand();
 
@@ -180,23 +182,19 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     boolean canUse(ItemType weaponItemType);
 
-    void setWeaponDamage(double damage);
-
     double getWeaponDamage();
 
-    void setArmorValue(double value);
+    void setWeaponDamage(double damage);
 
     double getArmorValue();
+
+    void setArmorValue(double value);
 
     boolean hasPreferedDamageType();
 
     DamageType getDamageType();
 
     void setDamageType(DamageType damageType);
-
-    void setCharacterProperties(float[] arr);
-
-    void setCharacterLevelProperties(float[] arr);
 
     void updateLastKnownLocation(int x, int y, int z, String name);
 
@@ -206,15 +204,15 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     HotbarObject[] getHotbar();
 
-    void setHotbarSlot(int i,HotbarObject o);
+    void setHotbarSlot(int i, HotbarObject o);
 
     default boolean isSocketing() {
         return getCurrentRune() > 0;
     }
 
-    void setCurrentRune(int slot);
-
     int getCurrentRune();
+
+    void setCurrentRune(int slot);
 
     @Override
     double getHp();
@@ -238,5 +236,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     float[] getCharacterLevelProperties();
 
-    Map<String,Integer> getTransientAttributes();
+    void setCharacterLevelProperties(float[] arr);
+
+    Map<String, Integer> getTransientAttributes();
 }

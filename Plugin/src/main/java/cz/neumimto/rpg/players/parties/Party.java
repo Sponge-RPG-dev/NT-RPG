@@ -52,6 +52,10 @@ public class Party {
         return leader;
     }
 
+    public void setLeader(IActiveCharacter leader) {
+        this.leader = leader;
+    }
+
     public void removePlayer(IActiveCharacter character) {
         players.remove(character);
         team.removeMember(character.getPlayer().getTeamRepresentation());
@@ -63,10 +67,6 @@ public class Party {
 
     public void setPlayers(Set<IActiveCharacter> players) {
         this.players = players;
-    }
-
-    public void setLeader(IActiveCharacter leader) {
-        this.leader = leader;
     }
 
     public Set<UUID> getInvites() {

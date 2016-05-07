@@ -37,26 +37,19 @@ import java.util.concurrent.ConcurrentHashMap;
         indexes = {@Index(columnList = "uuid")})
 public class CharacterBase extends TimestampEntity {
 
+    protected int attributePoints;
+    protected int skillPoints;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     //todo locking
     // @Version
     private long version;
-
     @Convert(converter = UUID2String.class)
     private UUID uuid;
-
     @Column(length = 40)
     private String name;
-
     private String info;
-
-    protected int attributePoints;
-
-    protected int skillPoints;
-
     private int usedAttributePoints;
 
     private int usedSkillPoints;
@@ -79,7 +72,7 @@ public class CharacterBase extends TimestampEntity {
     @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyColumn(name = "skill", length = 32)
     @Column(name = "expire_time")
-    @CollectionTable(name = "cooldowns", joinColumns = @JoinColumn(name = "CharacterBase_id",referencedColumnName = "id"))
+    @CollectionTable(name = "cooldowns", joinColumns = @JoinColumn(name = "CharacterBase_id", referencedColumnName = "id"))
     private Map<String, Long> cooldowns = new ConcurrentHashMap<>();
 
     //todo lazy
@@ -91,12 +84,12 @@ public class CharacterBase extends TimestampEntity {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyColumn(name = "class")
-    @CollectionTable(joinColumns = @JoinColumn(name = "CharacterBase_id", referencedColumnName="id"))
+    @CollectionTable(joinColumns = @JoinColumn(name = "CharacterBase_id", referencedColumnName = "id"))
     private Map<String, Double> classes = new HashMap<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyColumn(name = "attribute")
-    @CollectionTable(joinColumns = @JoinColumn(name = "CharacterBase_id", referencedColumnName="id"))
+    @CollectionTable(joinColumns = @JoinColumn(name = "CharacterBase_id", referencedColumnName = "id"))
     private Map<String, Integer> attributes = new HashMap<>();
 
     private int X;
@@ -127,6 +120,10 @@ public class CharacterBase extends TimestampEntity {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void setId(long id) {
         this.id = id;
     }
@@ -145,10 +142,6 @@ public class CharacterBase extends TimestampEntity {
 
     public void setInfo(String info) {
         this.info = info;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getRace() {
@@ -243,16 +236,16 @@ public class CharacterBase extends TimestampEntity {
         return lastReset;
     }
 
+    public void setLastReset(Date lastReset) {
+        this.lastReset = lastReset;
+    }
+
     public Map<String, Integer> getAttributes() {
         return attributes;
     }
 
     public void setAttributes(Map<String, Integer> attributes) {
         this.attributes = attributes;
-    }
-
-    public void setLastReset(Date lastReset) {
-        this.lastReset = lastReset;
     }
 
     public long getVersion() {

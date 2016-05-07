@@ -8,6 +8,8 @@ import org.spongepowered.api.entity.living.Living;
  */
 public interface IEntity<T extends Living> extends IEffectConsumer<T> {
     double getHp();
+
     void setHp(double d);
+
     IEntityType getType();
 }

@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
 @RunWith(PowerMockRunner.class)
 public class Tests {
 
-   // @Test
+    // @Test
     public void testConfig() throws NoSuchFieldException, IllegalAccessException {
         ResourceLoader.raceDir = new File("./src/main/test/testfiles/races");
         ResourceLoader.guildsDir = new File("./src/main/test/testfiles/guilds");
@@ -93,9 +93,9 @@ public class Tests {
             HashMap map = (HashMap) engine.get("events");
             Object o = classGenerator.generateDynamicListener(map);
             DamageEntityEvent mock = mock(DamageEntityEvent.class);
-            o.getClass().getMethod("onDamageEntityEvent", DamageEntityEvent.class).invoke(o,mock);
+            o.getClass().getMethod("onDamageEntityEvent", DamageEntityEvent.class).invoke(o, mock);
             DisplaceEntityEvent mock2 = mock(DisplaceEntityEvent.class);
-            o.getClass().getMethod("onDisplaceEntityEvent", DisplaceEntityEvent.class).invoke(o,mock2);
+            o.getClass().getMethod("onDisplaceEntityEvent", DisplaceEntityEvent.class).invoke(o, mock2);
         } catch (ScriptException | IOException e) {
             e.printStackTrace();
         }

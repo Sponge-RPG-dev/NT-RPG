@@ -1,8 +1,6 @@
 package cz.neumimto.rpg.utils;
 
-import static java.lang.Math.abs;
-import static java.lang.Math.ceil;
-import static java.lang.Math.min;
+import static java.lang.Math.*;
 
 /**
  * Created by NeumimTo on 14.03.2016.

@@ -35,14 +35,14 @@ public class HotbarSkill extends HotbarObject {
     @Override
     public void onRightClick(IActiveCharacter character) {
         if (right_skill != null) {
-            NtRpgPlugin.GlobalScope.skillService.executeSkill(character,right_skill);
+            NtRpgPlugin.GlobalScope.skillService.executeSkill(character, right_skill);
         }
     }
 
     @Override
     public void onLeftClick(IActiveCharacter character) {
         if (left_skill != null) {
-            NtRpgPlugin.GlobalScope.skillService.executeSkill(character,left_skill);
+            NtRpgPlugin.GlobalScope.skillService.executeSkill(character, left_skill);
         }
     }
 }

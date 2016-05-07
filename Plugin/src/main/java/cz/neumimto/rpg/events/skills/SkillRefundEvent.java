@@ -18,9 +18,9 @@
 
 package cz.neumimto.rpg.events.skills;
 
-import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.events.CancellableEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.skills.ISkill;
 
 /**
  * Created by NeumimTo on 27.7.2015.

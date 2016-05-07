@@ -32,6 +32,7 @@ public class EventCharacterArmorPostUpdate implements Event {
     IActiveCharacter character;
     Set<ItemType> armor;
     private Cause cause = null;
+
     public EventCharacterArmorPostUpdate(IActiveCharacter character, Set<ItemType> allowedArmor) {
         this.character = character;
         this.armor = allowedArmor;

@@ -20,13 +20,13 @@ package cz.neumimto.rpg;
 
 import com.google.inject.Inject;
 import cz.neumimto.configuration.ConfigMapper;
-import cz.neumimto.rpg.configuration.PluginConfig;
-import cz.neumimto.rpg.utils.FileUtils;
-import cz.neumimto.rpg.configuration.Settings;
 import cz.neumimto.core.FindPersistenceContextEvent;
 import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.rpg.configuration.PluginConfig;
+import cz.neumimto.rpg.configuration.Settings;
 import cz.neumimto.rpg.listeners.DebugListener;
 import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.utils.FileUtils;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
@@ -38,30 +38,25 @@ import org.spongepowered.api.plugin.PluginContainer;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Created by NeumimTo on 29.4.2015.
  */
 @Plugin(id = "cz.neumimto.rpg", version = "1.0.0", name = "NT-Rpg", dependencies = {@Dependency(id = "MinecraftGuiServer", optional = true),
-                                                       @Dependency(id = "cz.neumimto.core")})
+        @Dependency(id = "cz.neumimto.core")})
 public class NtRpgPlugin {
     public static String workingDir;
     public static File pluginjar;
+    public static GlobalScope GlobalScope;
     private static String configPath = File.separator + "mods" + File.separator + "NtRpg";
-
     @Inject
     public Logger logger;
-
-    public static GlobalScope GlobalScope;
-
 
     @Listener
     public void registerEntities(FindPersistenceContextEvent event) {

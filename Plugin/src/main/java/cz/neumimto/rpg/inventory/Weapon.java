@@ -33,12 +33,11 @@ import java.util.Map;
 public class Weapon extends HotbarObject {
 
     public static Weapon EmptyHand = new Weapon(null);
-
+    private final ItemType itemType;
     protected double damage;
     protected boolean isShield;
-    private final ItemType itemType;
-    private Map<IGlobalEffect, Integer> effects = new HashMap<>();
     protected boolean current;
+    private Map<IGlobalEffect, Integer> effects = new HashMap<>();
     private ItemStack itemStack;
     private boolean isRuneword;
     private int level;
@@ -95,7 +94,7 @@ public class Weapon extends HotbarObject {
     @Override
     public void onRightClick(IActiveCharacter character) {
         if (!current)
-            NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character,this);
+            NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character, this);
         else if (character.isSocketing()) {
             NtRpgPlugin.GlobalScope.inventorySerivce.insertRune(character);
         }
@@ -104,7 +103,7 @@ public class Weapon extends HotbarObject {
     @Override
     public void onLeftClick(IActiveCharacter character) {
         if (!current)
-            NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character,this);
+            NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character, this);
 
     }
 
@@ -112,15 +111,15 @@ public class Weapon extends HotbarObject {
         return itemStack;
     }
 
-    public void setItemStack(ItemStack i ){
+    public void setItemStack(ItemStack i) {
         itemStack = i;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
     }
 
     public int getLevel() {
         return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 }

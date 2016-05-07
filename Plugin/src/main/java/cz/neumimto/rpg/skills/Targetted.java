@@ -16,10 +16,10 @@
 
 package cz.neumimto.rpg.skills;
 
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.events.skills.SkillFindTargetEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.Utils;
-import cz.neumimto.core.ioc.Inject;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.Living;
 
@@ -30,15 +30,15 @@ public abstract class Targetted extends ActiveSkill implements ITargetted {
 
     @Override
     public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info) {
-        int range = (int)info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNode.RANGE,info.getLevel());
-        Living l = Utils.getTargettedEntity(character,range);
+        int range = (int) info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNode.RANGE, info.getLevel());
+        Living l = Utils.getTargettedEntity(character, range);
         if (l != null) {
-            SkillFindTargetEvent event = new SkillFindTargetEvent(character,l,this);
+            SkillFindTargetEvent event = new SkillFindTargetEvent(character, l, this);
             game.getEventManager().post(event);
             if (event.isCancelled()) {
                 return SkillResult.CANCELLED;
             }
-            castOn(event.getTarget(),event.getCharacter(),info);
+            castOn(event.getTarget(), event.getCharacter(), info);
         }
         return SkillResult.NO_TARGET;
     }

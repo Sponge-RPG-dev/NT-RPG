@@ -30,9 +30,9 @@ public interface ISkill {
 
     String getName();
 
-    void init();
-
     void setName(String name);
+
+    void init();
 
     void skillLearn(IActiveCharacter character);
 
@@ -54,9 +54,9 @@ public interface ISkill {
 
     String getDescription();
 
-    String getLore();
-
     void setDescription(String description);
+
+    String getLore();
 
     boolean showsToPlayers();
 

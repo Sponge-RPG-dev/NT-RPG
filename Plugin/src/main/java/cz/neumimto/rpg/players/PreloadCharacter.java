@@ -19,17 +19,17 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.configuration.PluginConfig;
+import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.players.groups.Guild;
+import cz.neumimto.rpg.players.groups.NClass;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PlayerPropertyService;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.inventory.HotbarObject;
-import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.players.groups.NClass;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectType;
 import org.spongepowered.api.entity.living.player.Player;
@@ -46,12 +46,12 @@ import java.util.*;
  */
 public class PreloadCharacter implements IActiveCharacter {
 
-    IReservable mana = new Mana(this);
     static float[] characterProperties = new float[PlayerPropertyService.LAST_ID];
+    private static HotbarObject[] objects = new HotbarObject[9];
+    IReservable mana = new Mana(this);
     UUID uuid;
     Health health = new HealthStub(this);
     private boolean isusinggui;
-    private static HotbarObject[] objects = new HotbarObject[9];
 
     public PreloadCharacter(UUID uuid) {
         this.uuid = uuid;
@@ -65,13 +65,13 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public void setCurrentRune(int is) {
-
+    public int getCurrentRune() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public int getCurrentRune() {
-        throw new UnsupportedOperationException();
+    public void setCurrentRune(int is) {
+
     }
 
     @Override
@@ -82,6 +82,11 @@ public class PreloadCharacter implements IActiveCharacter {
     @Override
     public float[] getCharacterLevelProperties() {
         return characterProperties;
+    }
+
+    @Override
+    public void setCharacterLevelProperties(float[] arr) {
+
     }
 
     @Override
@@ -108,7 +113,6 @@ public class PreloadCharacter implements IActiveCharacter {
     public void setHotbarSlot(int i, HotbarObject o) {
 
     }
-
 
     @Override
     public Map<EquipmentTypeWorn, Weapon> getEquipedArmor() {
@@ -146,13 +150,13 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public boolean canUse(ItemType weaponItemType) {
-        return false;
+    public void setCharacterProperties(float[] arr) {
+
     }
 
     @Override
-    public void setWeaponDamage(double damage) {
-
+    public boolean canUse(ItemType weaponItemType) {
+        return false;
     }
 
     @Override
@@ -161,13 +165,18 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public void setArmorValue(double value) {
+    public void setWeaponDamage(double damage) {
 
     }
 
     @Override
     public double getArmorValue() {
         return 0;
+    }
+
+    @Override
+    public void setArmorValue(double value) {
+
     }
 
     @Override
@@ -182,16 +191,6 @@ public class PreloadCharacter implements IActiveCharacter {
 
     @Override
     public void setDamageType(DamageType damageType) {
-
-    }
-
-    @Override
-    public void setCharacterProperties(float[] arr) {
-
-    }
-
-    @Override
-    public void setCharacterLevelProperties(float[] arr) {
 
     }
 
@@ -264,7 +263,7 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public void addExperiences(double exp, ExperienceSource source)  {
+    public void addExperiences(double exp, ExperienceSource source) {
 
     }
 
@@ -511,13 +510,13 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public void setPendingPartyInvite(Party party) {
-
+    public Party getPendingPartyInvite() {
+        return null;
     }
 
     @Override
-    public Party getPendingPartyInvite() {
-        return null;
+    public void setPendingPartyInvite(Party party) {
+
     }
 
     @Override

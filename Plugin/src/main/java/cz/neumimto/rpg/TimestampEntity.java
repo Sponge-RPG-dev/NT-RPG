@@ -31,15 +31,13 @@ public abstract class TimestampEntity {
 
     @Column(name = "updated")
     public Long updated;
+    @Column(name = "created")
+    private Long created;
 
     @PrePersist
     public void onCreate() {
         updated = created = System.currentTimeMillis();
     }
-
-
-    @Column(name = "created")
-    private Long created;
 
     @PreUpdate
     public void onUpdate() {

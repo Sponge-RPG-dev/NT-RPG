@@ -45,7 +45,7 @@ public class DefaultProperties {
     @Property(name = "reserved_health_mult", default_ = 1)
     public static short reserved_health_multiplier;
 
-    @Property(default_ = (float)PlayerPropertyService.WALKING_SPEED, name = "walk_speed")
+    @Property(default_ = (float) PlayerPropertyService.WALKING_SPEED, name = "walk_speed")
     public static short walk_speed;
 
     @Property(name = "experience_mult", default_ = 1)
@@ -162,10 +162,10 @@ public class DefaultProperties {
     @Property(name = "ice_damage_protection_mult", default_ = 1)
     public static short ice_damage_protection_mult;
 
-    @Property(name = "physical_damaga_bonus_mult",default_ = 1)
+    @Property(name = "physical_damaga_bonus_mult", default_ = 1)
     public static short physical_damage_bonus_mult;
 
-    @Property(name = "ice_damage_bonus_mult",default_ = 1)
+    @Property(name = "ice_damage_bonus_mult", default_ = 1)
     public static short ice_damage_bonus_mult;
 
     @Property(name = "staffs_damage_mult", default_ = 1)

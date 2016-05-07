@@ -19,11 +19,11 @@
 package cz.neumimto.rpg.utils;
 
 import com.flowpowered.math.vector.Vector3d;
+import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.PlayerPropertyService;
-import cz.neumimto.rpg.GlobalScope;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.data.key.Keys;
@@ -49,9 +49,10 @@ import java.util.function.Predicate;
  */
 public class Utils {
 
-    private static GlobalScope globalScope = NtRpgPlugin.GlobalScope;
     public static String LineSeparator = System.getProperty("line.separator");
     public static String Tab = "\t";
+    public static Set<BlockType> transparentBlocks = new HashSet<>();
+    private static GlobalScope globalScope = NtRpgPlugin.GlobalScope;
 
     public static double getPercentage(double n, double total) {
         return (n / total) * 100;
@@ -86,13 +87,9 @@ public class Utils {
         return ee;
     }
 
-
     public static Optional<Entity> spawnProjectile(IEntity caster, EntityType type) {
         return Optional.empty(); //todo
     }
-
-
-    public static Set<BlockType> transparentBlocks = new HashSet<>();
 
     public static boolean isTransparent(BlockType e) {
         return true;

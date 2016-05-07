@@ -18,11 +18,11 @@
 
 package cz.neumimto.rpg.commands;
 
-import cz.neumimto.rpg.configuration.PluginConfig;
-import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.scripting.JSLoader;
+import cz.neumimto.rpg.skills.SkillService;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;

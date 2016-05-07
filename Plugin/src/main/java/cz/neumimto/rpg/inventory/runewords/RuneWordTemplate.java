@@ -19,52 +19,51 @@ public final class RuneWordTemplate {
 
     }
 
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getName() {
         return name;
     }
 
-    public void setMinLevel(int minLevel) {
-        this.minLevel = minLevel;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getMinLevel() {
         return minLevel;
     }
 
-    public void setRestrictedClasses(List<String> restrictedClasses) {
-        this.restrictedClasses = restrictedClasses;
+    public void setMinLevel(int minLevel) {
+        this.minLevel = minLevel;
     }
 
     public List<String> getRestrictedClasses() {
         return restrictedClasses;
     }
 
-    public void setRunes(List<String> runes) {
-        this.runes = runes;
+    public void setRestrictedClasses(List<String> restrictedClasses) {
+        this.restrictedClasses = restrictedClasses;
     }
 
     public List<String> getRunes() {
         return runes;
     }
 
-    public void setEffects(Map<String, Float> effects) {
-        this.effects = effects;
+    public void setRunes(List<String> runes) {
+        this.runes = runes;
     }
 
     public Map<String, Float> getEffects() {
         return effects;
     }
 
-    public void setAllowedItems(List<String> allowedItems) {
-        this.allowedItems = allowedItems;
+    public void setEffects(Map<String, Float> effects) {
+        this.effects = effects;
     }
 
     public List<String> getAllowedItems() {
         return allowedItems;
+    }
+
+    public void setAllowedItems(List<String> allowedItems) {
+        this.allowedItems = allowedItems;
     }
 }

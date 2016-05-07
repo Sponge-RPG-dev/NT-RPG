@@ -17,6 +17,9 @@
  */
 package cz.neumimto.rpg.players;
 
+import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.configuration.Localization;
@@ -25,12 +28,16 @@ import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.EffectSource;
 import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.effects.common.def.ManaRegeneration;
+import cz.neumimto.rpg.events.CancellableEvent;
+import cz.neumimto.rpg.events.CharacterAttributeChange;
 import cz.neumimto.rpg.events.CharacterEvent;
 import cz.neumimto.rpg.events.CharacterGainedLevelEvent;
 import cz.neumimto.rpg.events.character.CharacterWeaponUpdateEvent;
 import cz.neumimto.rpg.events.character.EventCharacterArmorPostUpdate;
+import cz.neumimto.rpg.events.character.PlayerDataPreloadComplete;
 import cz.neumimto.rpg.events.character.WeaponEquipEvent;
 import cz.neumimto.rpg.events.party.PartyInviteEvent;
 import cz.neumimto.rpg.events.skills.SkillHealEvent;
@@ -38,6 +45,7 @@ import cz.neumimto.rpg.events.skills.SkillLearnEvent;
 import cz.neumimto.rpg.events.skills.SkillRefundEvent;
 import cz.neumimto.rpg.events.skills.SkillUpgradeEvent;
 import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.persistance.PlayerDao;
 import cz.neumimto.rpg.players.groups.Guild;
@@ -46,18 +54,10 @@ import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PlayerPropertyService;
+import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.utils.SkillTreeActionResult;
 import cz.neumimto.rpg.utils.Utils;
-import cz.neumimto.rpg.GroupService;
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.effects.IGlobalEffect;
-import cz.neumimto.rpg.events.CancellableEvent;
-import cz.neumimto.rpg.events.CharacterAttributeChange;
-import cz.neumimto.rpg.events.character.PlayerDataPreloadComplete;
-import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
@@ -285,7 +285,7 @@ public class CharacterService {
         for (Map.Entry<String, Integer> entry : character.getCharacterBase().getAttributes().entrySet()) {
             ICharacterAttribute attribute = playerPropertyService.getAttribute(entry.getKey());
             if (attribute != null) {
-                assignAttribute(character,attribute,entry.getValue());
+                assignAttribute(character, attribute, entry.getValue());
             }
         }
 
@@ -983,11 +983,11 @@ public class CharacterService {
     }
 
 
-    public void assignAttribute(IActiveCharacter character,ICharacterAttribute attribute,int levels) {
+    public void assignAttribute(IActiveCharacter character, ICharacterAttribute attribute, int levels) {
         Map<Integer, Float> integerFloatMap = attribute.affectsProperties();
         for (Map.Entry<Integer, Float> entry : integerFloatMap.entrySet()) {
             character.getCharacterProperties()[entry.getKey()] = character
-                    .getCharacterProperties()[entry.getKey()] + entry.getValue()*levels;
+                    .getCharacterProperties()[entry.getKey()] + entry.getValue() * levels;
         }
     }
 
@@ -1010,7 +1010,7 @@ public class CharacterService {
         Map<String, Integer> attributes = character.getCharacterBase().getAttributes();
         attributes.put(attribute.getName().toLowerCase(), character.getCharacterBase().getAttributes().get(attribute.getName().toLowerCase()) + i);
         character.getCharacterBase().setAttributePoints(attributePoints - i);
-        assignAttribute(character,attribute,i);
+        assignAttribute(character, attribute, i);
         recalculateProperties(character);
         return 0;
     }
@@ -1019,12 +1019,12 @@ public class CharacterService {
         addAttribute(character, attribute, 1);
     }
 
-    public void addTemporalAttribute(IActiveCharacter character,ICharacterAttribute attribute, int amount) {
+    public void addTemporalAttribute(IActiveCharacter character, ICharacterAttribute attribute, int amount) {
         Integer att = character.getTransientAttributes().get(attribute.getName());
         if (att == null) {
-            character.getTransientAttributes().put(attribute.getName(),amount);
+            character.getTransientAttributes().put(attribute.getName(), amount);
         } else {
-            character.getTransientAttributes().put(attribute.getName(),att+amount);
+            character.getTransientAttributes().put(attribute.getName(), att + amount);
         }
     }
 }

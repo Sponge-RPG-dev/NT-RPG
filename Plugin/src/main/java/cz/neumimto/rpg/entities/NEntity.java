@@ -16,7 +16,7 @@ public class NEntity implements IMob {
 
     private double experiences;
     private WeakReference<Living> entity;
-    private Map<Class<? extends IEffect>,IEffect> effectSet = new HashMap<>();
+    private Map<Class<? extends IEffect>, IEffect> effectSet = new HashMap<>();
 
     protected NEntity(Creature l) {
         attach(l);
@@ -33,7 +33,7 @@ public class NEntity implements IMob {
 
     @Override
     public void setExperiences(double exp) {
-        this.experiences= exp;
+        this.experiences = exp;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class NEntity implements IMob {
 
     @Override
     public void setHp(double d) {
-        entity.get().offer(Keys.HEALTH,d);
+        entity.get().offer(Keys.HEALTH, d);
     }
 
     @Override

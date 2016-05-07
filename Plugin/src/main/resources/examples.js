@@ -1,5 +1,5 @@
-var SkillSpeed =new (Java.extend(ActiveSkill, {
-    init: function() {
+var SkillSpeed = new (Java.extend(ActiveSkill, {
+    init: function () {
         var s = Java.super(SkillSpeed);
         s.setName("Speed");
         s.setDescription("For a duration boosts player's speed");
@@ -13,13 +13,13 @@ var SkillSpeed =new (Java.extend(ActiveSkill, {
     cast: function (character, extendedSkillInfo) {
         var duration = getLevelNode(extendedSkillInfo, SkillNodes.DURATION);
         var amount = getLevelNode(extendedSkillInfo, SkillNodes.AMOUNT);
-        var speedEffect = new SpeedBoost(character,duration,amount);
+        var speedEffect = new SpeedBoost(character, duration, amount);
         GlobalScope.effectService.addEffect(speedEffect, character);
         return SkillResult.OK;
     }
 }));
-var SkillBloodMagic =new (Java.extend(PassiveSkill, {
-    init: function() {
+var SkillBloodMagic = new (Java.extend(PassiveSkill, {
+    init: function () {
         var s = java.super(SkillBloodMagic);
         s.setName("BloodMagic");
         s.setDescription("All skills will require life instead of mana");
@@ -42,14 +42,14 @@ var SuperJump = new (Java.extend(ActiveSkill, {
         SkillSpeedSettings.addNode("velocity", 30, 10);
         s.setSettings(SkillSpeedSettings);
     },
-    cast: function(character, extendedSkillInfo) {
+    cast: function (character, extendedSkillInfo) {
         var optional = character.getPlayer().getData(VelocityData.class);
         if (optional.isPresent()) {
             var VelocityData = velocityData.get();
             var vector = velocityData.getVelocity();
             var newVector = new Vector3d(vector);
-            var i = getLevelNode(extendedSkillInfo,"velocity");
-            newVector.add(0,i,0);
+            var i = getLevelNode(extendedSkillInfo, "velocity");
+            newVector.add(0, i, 0);
             velocityData.setVelocity(newVector);
             character.getPlayer().offer(VelocityData);
             character.sendMessage("You've used skill SuperJump");
@@ -59,23 +59,23 @@ var SuperJump = new (Java.extend(ActiveSkill, {
     }
 }));
 var Heal = new (Java.extend(ActiveSkill, {
-    init: function() {
+    init: function () {
         var s = Java.super(Heal);
         s.setName("Heal");
         s.setDescription("After a delay heals the caster");
         var HealSettings = new SkillSettings();
         HealSettings.addNode(SkillNodes.COOLDOWN, 80000, -300);
         HealSettings.addNode("delay", 3500, -100);
-        HealSettings.addNode(SkillNodes.MANACOST,150,20);
-        HealSettings.addNode("healed-amount",1,1);
-        HealSettings.addNode("default-regen-mult",1,0.2);
+        HealSettings.addNode(SkillNodes.MANACOST, 150, 20);
+        HealSettings.addNode("healed-amount", 1, 1);
+        HealSettings.addNode("default-regen-mult", 1, 0.2);
         s.setSettings(HealSettings);
     },
-    cast: function(character, extendedSkillInfo) {
-        GlobalScope.game.getScheduler().getTaskBuilder().delay(getLevelNode(extendedSkillInfo,"delay"), TimeUnit.MILLISECONDS).name("healtask").execute(function() {
-            var healedamount = getLevelNode(extendedSkillInfo, "healed-amount") * getLevelNode(extendedSkillInfo,"default-regen-mult");
+    cast: function (character, extendedSkillInfo) {
+        GlobalScope.game.getScheduler().getTaskBuilder().delay(getLevelNode(extendedSkillInfo, "delay"), TimeUnit.MILLISECONDS).name("healtask").execute(function () {
+            var healedamount = getLevelNode(extendedSkillInfo, "healed-amount") * getLevelNode(extendedSkillInfo, "default-regen-mult");
             healedamount = GlobalScope.characterService.healCharacter(character, healedamount);
-            character.sendMessage("You have been healed for "+ healedamount);
+            character.sendMessage("You have been healed for " + healedamount);
         }).submit(GlobalScope.plugin);
         return SkillResult.OK;
     }
@@ -89,44 +89,44 @@ var Strength = new (Java.extend(CharacterAttribute));
 Strength.setName("Strength");
 Strength.setDescription("Some desc");
 //Each point of stregth increases axe damage by 1.25
-Strength.getAffectsProperties().put(DefaultProperties.diamond_axe_bonus_damage,1.25);
-Strength.getAffectsProperties().put(DefaultProperties.golden_axe_bonus_damage,1.25);
-Strength.getAffectsProperties().put(DefaultProperties.iron_axe_bonus_damage,1.25);
-Strength.getAffectsProperties().put(DefaultProperties.wooden_axe_bonus_damage,1.25);
+Strength.getAffectsProperties().put(DefaultProperties.diamond_axe_bonus_damage, 1.25);
+Strength.getAffectsProperties().put(DefaultProperties.golden_axe_bonus_damage, 1.25);
+Strength.getAffectsProperties().put(DefaultProperties.iron_axe_bonus_damage, 1.25);
+Strength.getAffectsProperties().put(DefaultProperties.wooden_axe_bonus_damage, 1.25);
 //register the object into game
 GlobalScope.playerPropertyService.registerAttribute(Strength);
 
 var Inteligence = new (Java.extend(CharacterAttribute));
 Inteligence.setName("Inteligence");
 Inteligence.setDescription("Int desc");
-Inteligence.getAffectsProperties().put(DefaultProperties.max_mana,20.0);
-Inteligence.getAffectsProperties().put(DefaultProperties.mana_regen,1.12);
+Inteligence.getAffectsProperties().put(DefaultProperties.max_mana, 20.0);
+Inteligence.getAffectsProperties().put(DefaultProperties.mana_regen, 1.12);
 GlobalScope.playerPropertyService.registerAttribute(Inteligence);
 
 var Agility = new (Java.extend(CharacterAttribute));
 Agility.setName("Agility");
 Agility.setDescription("Agi desc");
 /* be careful with maximum walk speed, entities with high walk speed values may cause lag or map damage
-Walk speed values around 4-5 may result in an unplayable gameplay, players wont be simply able to control their character.
+ Walk speed values around 4-5 may result in an unplayable gameplay, players wont be simply able to control their character.
  */
-Agility.getAffectsProperties().put(DefaultProperties.walk_speed,0.0075);
+Agility.getAffectsProperties().put(DefaultProperties.walk_speed, 0.0075);
 
 GlobalScope.playerPropertyService.registerAttribute(Agility);
 
 registerEventListener(Java.type('org.spongepowered.api.event.entity.DamageEntityEvent'), new (Java.extend(Consumer, {
-    accept: function(event) {
+    accept: function (event) {
         System.out.println("Im Javascript event handler");
     }
 })));
 
-var MiningEffect = Java.extend(EffectBase,{
+var MiningEffect = Java.extend(EffectBase, {
     getName: function () {
         return "MiningEffect"
     }
 
 });
 var Mining = new (Java.extend(PassiveSkill, {
-    init: function() {
+    init: function () {
         var s = Java.super(Mining);
         s.setName("Mining");
         s.setDescription("Chance to get more resources from minerals");

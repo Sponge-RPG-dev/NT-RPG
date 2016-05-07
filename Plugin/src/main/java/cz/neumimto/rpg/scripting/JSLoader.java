@@ -18,15 +18,15 @@
 
 package cz.neumimto.rpg.scripting;
 
-import cz.neumimto.rpg.GlobalScope;
-import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.utils.FileUtils;
-import cz.neumimto.rpg.ClassGenerator;
-import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.ClassGenerator;
+import cz.neumimto.rpg.GlobalScope;
+import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.utils.FileUtils;
 import jdk.internal.dynalink.beans.StaticClass;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.slf4j.Logger;
@@ -97,7 +97,7 @@ public class JSLoader {
         }
     }
 
-    public void generateDynamicListener(Map<StaticClass,Set<Consumer<? extends Event>>> set) {
+    public void generateDynamicListener(Map<StaticClass, Set<Consumer<? extends Event>>> set) {
         Object o = classGenerator.generateDynamicListener(set);
         ioc.build(Game.class).getEventManager().registerListeners(ioc.build(NtRpgPlugin.class), o);
     }

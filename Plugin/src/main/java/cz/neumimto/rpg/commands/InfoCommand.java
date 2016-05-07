@@ -18,13 +18,13 @@
 
 package cz.neumimto.rpg.commands;
 
-import cz.neumimto.rpg.configuration.CommandLocalization;
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.configuration.CommandPermissions;
 import cz.neumimto.rpg.configuration.Localization;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.CharacterService;
@@ -96,7 +96,7 @@ public class InfoCommand extends CommandBase {
         } else if (args[0].equalsIgnoreCase("guilds")) {
 
         } else if (args[0].equalsIgnoreCase("classes")) {
-            IActiveCharacter character = characterService.getCharacter(((Player)commandSource).getUniqueId());
+            IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
             Gui.showAvalaibleClasses(character);
         } else if (args[0].equalsIgnoreCase("character")) {
             if (!(commandSource instanceof Player)) {

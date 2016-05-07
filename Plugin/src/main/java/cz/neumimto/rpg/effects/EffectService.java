@@ -19,10 +19,10 @@
 package cz.neumimto.rpg.effects;
 
 
-import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Game;
 
@@ -38,17 +38,15 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class EffectService {
 
+    public static final long TICK_PERIOD = 250L;
+    private static final long unlimited_duration = -1;
     @Inject
     private Game game;
-
     @Inject
     private NtRpgPlugin plugin;
-
-    public static final long TICK_PERIOD = 250L;
     private Set<IEffect> effectSet = new HashSet<>();
     private Set<IEffect> pendingAdditions = new HashSet<>();
     private Set<IEffect> pendingRemovals = new HashSet<>();
-    private static final long unlimited_duration = -1;
     private Map<String, IGlobalEffect> globalEffects = new HashMap<>();
 
     /**
@@ -114,7 +112,7 @@ public class EffectService {
                     for (IEffect e : effectSet) {
 
                         if (e.getPeriod() + e.getLastTickTime() <= l) {
-                            tickEffect(e,l);
+                            tickEffect(e, l);
                         }
 
                         if (e.getDuration() == unlimited_duration) {
@@ -263,7 +261,7 @@ public class EffectService {
 
 
     public void removeGlobalEffectsAsEnchantments(Map<IGlobalEffect, Integer> itemEffects, IActiveCharacter character) {
-        itemEffects.forEach((e,l) -> {
+        itemEffects.forEach((e, l) -> {
             IEffect effect = character.getEffect(e.asEffectClass());
             if (effect.getLevel() - l <= 0) {
                 character.removeEffect(e.asEffectClass());

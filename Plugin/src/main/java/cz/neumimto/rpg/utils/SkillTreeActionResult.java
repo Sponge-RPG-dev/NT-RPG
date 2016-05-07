@@ -41,7 +41,7 @@ public enum SkillTreeActionResult {
             int i = 1;
             while (iterator.hasNext()) {
                 String next = iterator.next();
-                t = t.replaceAll("%"+i,next);
+                t = t.replaceAll("%" + i, next);
                 i++;
             }
             return t;

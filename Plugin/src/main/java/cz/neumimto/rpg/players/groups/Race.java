@@ -42,12 +42,11 @@ public class Race extends PlayerGroup {
         return skills;
     }
 
+    public Set<NClass> getAllowedClasses() {
+        return allowedClasses;
+    }
 
     public void setAllowedClasses(Set<NClass> allowedRaces) {
         this.allowedClasses = allowedRaces;
-    }
-
-    public Set<NClass> getAllowedClasses() {
-        return allowedClasses;
     }
 }

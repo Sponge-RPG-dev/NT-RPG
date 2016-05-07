@@ -52,11 +52,11 @@ public class SkillDamageSourceBuilder extends AbstractDamageSourceBuilder<SkillD
         return new SkillDamageSource(this);
     }
 
-    public void setTarget(IEntity target) {
-        this.target = target;
-    }
-
     public IEntity getTarget() {
         return target;
+    }
+
+    public void setTarget(IEntity target) {
+        this.target = target;
     }
 }
