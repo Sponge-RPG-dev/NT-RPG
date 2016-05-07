@@ -98,11 +98,9 @@ public class NtRpgPlugin {
         }
         ioc.get(IoC.class, ioc);
         ResourceLoader rl = ioc.build(ResourceLoader.class);
-       // fixRetardness();
         rl.loadJarFile(pluginjar, true);
         GlobalScope = ioc.build(GlobalScope.class);
         rl.loadExternalJars();
-       // fixRetardness();
         ioc.postProcess();
         if (PluginConfig.DEBUG) {
             Sponge.getEventManager().registerListeners(this, ioc.build(DebugListener.class));
@@ -110,25 +108,6 @@ public class NtRpgPlugin {
         double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
         logger.info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
 
-    }
-//https://github.com/Mojang/LegacyLauncher/blob/master/src/main/java/net/minecraft/launchwrapper/LaunchClassLoader.java
-    private void fixRetardness() {
-        try {
-            ClassLoader classLoader = NtRpgPlugin.class.getClassLoader();
-            Field transformerExceptions = classLoader.getClass().getDeclaredField("transformerExceptions");
-            transformerExceptions.setAccessible(true);
-            Object o = transformerExceptions.get(classLoader);
-            Set<String> set = (Set<String>) o;
-
-            if (set.contains("javax.")) {
-                set.remove("javax.");
-            } else {
-                set.add("javax.");
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 
