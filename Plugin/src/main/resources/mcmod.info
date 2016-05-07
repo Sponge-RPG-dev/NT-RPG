@@ -1,0 +1,16 @@
+[
+{
+  "modid": "cz.neumimto.rpg",
+  "name": "NT-Rpg",
+  "description": "RPG plugin for sponge",
+  "version": "",
+  "credits": "Created by NeumimTo",
+  "mcversion": "",
+  "url": "",
+  "updateUrl": "",
+  "authors": [ "NeumimTo" ],
+  "parent":"",
+  "screenshots": [],
+  "dependencies": []
+}
+]

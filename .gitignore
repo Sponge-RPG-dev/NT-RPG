@@ -10,7 +10,6 @@
 /out/
 .idea_modules/
 
-
 # Package Files #
 *.jar
 *.war
