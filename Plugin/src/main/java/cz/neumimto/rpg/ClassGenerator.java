@@ -47,7 +47,7 @@ public class ClassGenerator implements Opcodes {
         FieldVisitor fv;
         MethodVisitor mv;
 
-        cw.visit(52, ACC_PUBLIC + ACC_SUPER, getCannonicalGlobalName(cls), "Ljava/lang/Object;Lcz/neumimto/rpg/effects/IGlobalEffect<L" + toPath(cls) + ";>;", "java/lang/Object", new String[]{"cz/neumimto/effects/IGlobalEffect"});
+        cw.visit(52, ACC_PUBLIC + ACC_SUPER, getCannonicalGlobalName(cls), "Ljava/lang/Object;Lcz/neumimto/rpg/effects/IGlobalEffect<L" + toPath(cls) + ";>;", "java/lang/Object", new String[]{"cz/neumimto/rpg/effects/IGlobalEffect"});
         {
             mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
             mv.visitCode();
@@ -117,7 +117,7 @@ public class ClassGenerator implements Opcodes {
             mv.visitEnd();
         }
         {
-            mv = cw.visitMethod(ACC_PUBLIC + ACC_BRIDGE + ACC_SYNTHETIC, "construct", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JF)Lcz/neumimto/effects/IEffect;", null, null);
+            mv = cw.visitMethod(ACC_PUBLIC + ACC_BRIDGE + ACC_SYNTHETIC, "construct", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JF)Lcz/neumimto/rpg/effects/IEffect;", null, null);
             mv.visitCode();
             Label l0 = new Label();
             mv.visitLabel(l0);

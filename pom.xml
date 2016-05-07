@@ -22,6 +22,9 @@
         <repository>
             <id>sponge-repo</id>
             <url>http://repo.spongepowered.org/maven/</url>
+            <snapshots>
+               <enabled>true</enabled>
+            </snapshots>
         </repository>
         <repository>
             <id>jitpack.io</id>
@@ -34,13 +37,13 @@
             <dependency>
                 <groupId>com.github.NeumimTo</groupId>
                 <artifactId>NTCore</artifactId>
-                <version>3762f23</version>
+                <version>f000d9633b</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.spongepowered</groupId>
                 <artifactId>spongeapi</artifactId>
-                <version>LATEST</version>
+                <version>5.0.0-20160504.030150-18</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>

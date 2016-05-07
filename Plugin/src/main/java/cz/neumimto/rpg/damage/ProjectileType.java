@@ -38,7 +38,7 @@ public enum ProjectileType {
     CUSTOM; //mods
 
     public static ProjectileType fromEntityType(EntityType type) {
-        if (type == EntityTypes.ARROW)
+        if (type == EntityTypes.TIPPED_ARROW || type == EntityTypes.SPECTRAL_ARROW)
             return ARROW;
         if (type == EntityTypes.EGG)
             return EGG;

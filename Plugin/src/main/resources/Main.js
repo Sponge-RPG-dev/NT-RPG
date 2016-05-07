@@ -1,7 +1,7 @@
 var imports = new JavaImporter(java.util,java.nio.file);
 /*java */
 var HashSet = Java.type('java.util.HashSet');
-var HashMap = Java.type('java.util.HashMap')
+var HashMap = Java.type('java.util.HashMap');
 var File = Java.type("java.io.File");
 var TimeUnit = Java.type("java.util.concurrent.TimeUnit");
 var Runnable = Java.type("java.lang.Runnable");
@@ -56,7 +56,7 @@ function getLevelNode(extendedSkillInfo,node) {
     return extendedSkillInfo.getSkillInfo().getSkillSettings().getLevelNodeValue(node,extendedSkillInfo.getLevel());
 }
 function registerEventListener(eventclass,consumer) {
-    var cls = events.get(eventclass)
+    var cls = events.get(eventclass);
     if (cls == null) {
         cls = new HashSet();
         events.put(eventclass,new HashSet());

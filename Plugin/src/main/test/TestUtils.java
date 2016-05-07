@@ -1,13 +1,13 @@
 
-import cz.neumimto.NtRpgPlugin;
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.core.ioc.IoC;
-import cz.neumimto.players.ActiveCharacter;
-import cz.neumimto.players.CharacterBase;
-import cz.neumimto.players.ExtendedNClass;
-import cz.neumimto.players.IActiveCharacter;
-import cz.neumimto.players.groups.NClass;
-import cz.neumimto.players.properties.DefaultProperties;
-import cz.neumimto.players.properties.PlayerPropertyService;
+import cz.neumimto.rpg.players.ActiveCharacter;
+import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.players.ExtendedNClass;
+import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.groups.NClass;
+import cz.neumimto.rpg.players.properties.DefaultProperties;
+import cz.neumimto.rpg.players.properties.PlayerPropertyService;
 import org.slf4j.Logger;
 import org.slf4j.helpers.SubstituteLogger;
 import org.spongepowered.api.Game;
@@ -35,7 +35,6 @@ public class TestUtils {
     public static UUID uuid2 = UUID.randomUUID();
 
     private static Game game;
-    private static Logger logger;
 
     static {
         game = buildGameImpl();
@@ -48,7 +47,6 @@ public class TestUtils {
 
     public static EntityManager buildEntityManager() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         NtRpgPlugin pl = new NtRpgPlugin();
-        pl.logger = new SubstituteLogger("test");
         Method method = pl.getClass().getDeclaredMethod("setupEntityManager", Path.class);
         method.setAccessible(true);
         EntityManager em = (EntityManager) method.invoke(pl, Paths.get("./src/main/resources/database.properties"));

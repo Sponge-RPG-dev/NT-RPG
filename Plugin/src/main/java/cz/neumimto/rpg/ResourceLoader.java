@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg;
 
+import cz.neumimto.core.PluginCore;
 import cz.neumimto.rpg.commands.CommandBase;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
@@ -36,6 +37,7 @@ import cz.neumimto.rpg.effects.IGlobalEffect;
 import javassist.CannotCompileException;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -132,13 +134,9 @@ public class ResourceLoader {
         logger.info("Loading jarfile " + file.getName());
         Enumeration<JarEntry> entries = file.entries();
         JarEntry next = null;
-       ResourceClassLoader cl = new ResourceClassLoader((URLClassLoader) NtRpgPlugin.class.getClassLoader());
-        if (!main) {
-            try {
-                cl.addURL(f.toURI().toURL());
-            } catch (MalformedURLException  e) {
-                e.printStackTrace();
-            }
+
+         if (!main) {
+            PluginCore.loadJarFile(f);
         }
         while (entries.hasMoreElements()) {
             next = entries.nextElement();
@@ -147,13 +145,19 @@ public class ResourceLoader {
             }
             if (main && !next.getName().startsWith("cz/neumimto"))
                 continue;
+            //todo place this into each modules
+            if (next.getName().startsWith("org")
+                    || next.getName().startsWith("spark")
+                    || next.getName().startsWith("javax")) {
+                continue;
+            }
             if (next.getName().lastIndexOf(INNERCLASS_SEPARATOR) > 1)
                 continue;
             String className = next.getName().substring(0, next.getName().length() - 6);
             className = className.replace('/', '.');
             Class<?> clazz = null;
             try {
-                clazz = cl.loadClass(className);
+                clazz = PluginCore.getClassLoader().loadClass(className);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
                 continue;

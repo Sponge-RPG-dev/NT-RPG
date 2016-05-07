@@ -14,7 +14,7 @@ var SkillSpeed =new (Java.extend(ActiveSkill, {
         var duration = getLevelNode(extendedSkillInfo, SkillNodes.DURATION);
         var amount = getLevelNode(extendedSkillInfo, SkillNodes.AMOUNT);
         var speedEffect = new SpeedBoost(character,duration,amount);
-        GlobalScope.effectService.addEffect(SpeedBoost, character);
+        GlobalScope.effectService.addEffect(speedEffect, character);
         return SkillResult.OK;
     }
 }));
@@ -118,6 +118,7 @@ registerEventListener(Java.type('org.spongepowered.api.event.entity.DamageEntity
         System.out.println("Im Javascript event handler");
     }
 })));
+
 var MiningEffect = Java.extend(EffectBase,{
     getName: function () {
         return "MiningEffect"

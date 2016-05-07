@@ -165,7 +165,15 @@ public class SkillService {
 
     public void initIcons() {
         Properties properties = new Properties();
-        try (FileInputStream stream = new FileInputStream(new File(NtRpgPlugin.workingDir,"Icons.properties"))) {
+        File f = new File(NtRpgPlugin.workingDir,"Icons.properties");
+        if (!f.exists()) {
+            try {
+                f.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try (FileInputStream stream = new FileInputStream(f)) {
             properties.load(stream);
             for (Map.Entry<Object, Object> l : properties.entrySet()) {
                 String skillname = (String) l.getKey();

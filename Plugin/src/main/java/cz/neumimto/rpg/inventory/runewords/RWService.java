@@ -95,7 +95,16 @@ public class RWService {
         rw.setRunes(template.getRunes().stream()./*filter(this::existsRune).*/map(this::getRune).collect(Collectors.toList()));
         rw.setMinLevel(template.getMinLevel());
         Set<ItemType> types = new HashSet<>();
-        template.getAllowedItems().stream().forEach(a -> types.add(game.getRegistry().getType(ItemType.class,a).get()));
+        template.getAllowedItems().stream().forEach(a -> {
+            Optional<ItemType> type = game.getRegistry().getType(ItemType.class, a);
+            if (type.isPresent()) {
+                ItemType itemType = type.get();
+                types.add(itemType);
+            } else {
+                logger.warn("Unknown item type - " +a);
+            }
+        }
+        );
         rw.setAllowedItems(types);
         rw.setEffects(template.getEffects().entrySet().stream()
                 .filter(l -> effectService.isGlobalEffect(l.getKey()))

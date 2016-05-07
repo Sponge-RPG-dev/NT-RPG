@@ -38,18 +38,20 @@ import org.spongepowered.api.plugin.PluginContainer;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Created by NeumimTo on 29.4.2015.
  */
-@Plugin(id = "cz.neumimto.rpg", name = "NtRPG", dependencies = {@Dependency(id = "MinecraftGuiServer", optional = true),
-                                                       @Dependency(id = "ntcore")})
+@Plugin(id = "cz.neumimto.rpg", version = "1.0.0", name = "NtRPG", dependencies = {@Dependency(id = "MinecraftGuiServer", optional = true),
+                                                       @Dependency(id = "cz.neumimto.core")})
 public class NtRpgPlugin {
     public static String workingDir;
     public static File pluginjar;
@@ -96,9 +98,11 @@ public class NtRpgPlugin {
         }
         ioc.get(IoC.class, ioc);
         ResourceLoader rl = ioc.build(ResourceLoader.class);
+       // fixRetardness();
         rl.loadJarFile(pluginjar, true);
         GlobalScope = ioc.build(GlobalScope.class);
         rl.loadExternalJars();
+       // fixRetardness();
         ioc.postProcess();
         if (PluginConfig.DEBUG) {
             Sponge.getEventManager().registerListeners(this, ioc.build(DebugListener.class));
@@ -107,4 +111,25 @@ public class NtRpgPlugin {
         logger.info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
 
     }
+//https://github.com/Mojang/LegacyLauncher/blob/master/src/main/java/net/minecraft/launchwrapper/LaunchClassLoader.java
+    private void fixRetardness() {
+        try {
+            ClassLoader classLoader = NtRpgPlugin.class.getClassLoader();
+            Field transformerExceptions = classLoader.getClass().getDeclaredField("transformerExceptions");
+            transformerExceptions.setAccessible(true);
+            Object o = transformerExceptions.get(classLoader);
+            Set<String> set = (Set<String>) o;
+
+            if (set.contains("javax.")) {
+                set.remove("javax.");
+            } else {
+                set.add("javax.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
