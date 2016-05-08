@@ -93,43 +93,58 @@ public class InventoryService {
             inventoryMenus.put(uuid, menu);
     }
 
+    public void changeEquipmentInHand(IActiveCharacter character,int from, int to,ItemStack newitem) {
+        HotbarObject hotbarObject = character.getHotbar()[from];
+        if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE && hotbarObject.getType() == HotbarObjectTypes.WEAPON) {
+            hotbarObject.onUnEquip(character);
+        }
+        HotbarObject a = character.getHotbar()[to];
+        if (a != HotbarObject.EMPTYHAND_OR_CONSUMABLE && a.getType() == HotbarObjectTypes.WEAPON) {
+            a.onEquip(newitem,character);
+        }
+    }
 
     public void initializeHotbar(IActiveCharacter character) {
         int i = 0;
         for (Inventory inventory : character.getPlayer().getInventory().query(Hotbar.class)) {
-            Slot s = (Slot) inventory;
-            Optional<ItemStack> stack = s.peek();
-            if (stack.isPresent()) {
-                ItemStack itemStack = stack.get();
-                HotbarObject hotbarObject = null;
-                if (ItemStackUtils.isWeapon(itemStack.getItem())) {
-                    if (character.getAllowedWeapons().containsKey(itemStack.getItem())) {
-                        hotbarObject = buildHotbarWeapon(character, itemStack);
-                    } else {
-                        inventory.clear();
-                        ItemStackUtils.dropItem(character.getPlayer(), itemStack);
-                    }
-                } else {
-                    hotbarObject = getHotbarObject(character, itemStack);
-                }
-                if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE)
-                    hotbarObject.setSlot(i);
-                HotbarObject[] hotbar = character.getHotbar();
-                if (hotbar[i] != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
-                    hotbar[i].onEquip(itemStack, character);
-                }
-                character.setHotbarSlot(i, hotbarObject);
-                if (hotbar[i] != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
-                    hotbar[i].onEquip(itemStack, character);
-                }
-            }
+            initializeHotbar(character,i);
             i++;
         }
     }
 
     public void initializeHotbar(IActiveCharacter character, int slot) {
         Player player = character.getPlayer();
-        //todo
+        Hotbar query = player.getInventory().query(Hotbar.class);
+        int selectedSlotIndex = query.getSelectedSlotIndex();
+        Optional<Slot> slot1 = query.getSlot(new SlotIndex(slot));
+        if (slot1.isPresent()) {
+            Slot s = slot1.get();
+            Optional<ItemStack> peek = s.peek();
+            if (!peek.isPresent()) {
+                if (character.getHotbar()[slot] != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
+                    HotbarObject hotbarObject = character.getHotbar()[slot];
+                    hotbarObject.onUnEquip(character);
+                    character.getHotbar()[slot] = HotbarObject.EMPTYHAND_OR_CONSUMABLE;
+                }
+            } else {
+                if (character.getHotbar()[slot]!=HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
+                    character.getHotbar()[slot].onUnEquip(character);
+                }
+                ItemStack i = peek.get();
+                HotbarObject hotbarObject = getHotbarObject(character, i);
+                if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
+                    character.getHotbar()[slot] = hotbarObject;
+                    if (hotbarObject.getType() == HotbarObjectTypes.CHARM) {
+                        hotbarObject.onEquip(i,character);
+                    }
+                    if (hotbarObject.getType() == HotbarObjectTypes.WEAPON && slot == selectedSlotIndex) {
+                        hotbarObject.onEquip(i,character);
+                    }
+                } else {
+                    character.getHotbar()[slot] = HotbarObject.EMPTYHAND_OR_CONSUMABLE;
+                }
+            }
+        }
     }
 
 

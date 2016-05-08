@@ -9,15 +9,14 @@ import com.google.gson.stream.JsonWriter;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.NClass;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.skills.SkillTree;
+import cz.neumimto.rpg.skills.*;
+import cz.neumito.rpg.rest.model.SkillDataRequestBean;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
@@ -42,6 +41,9 @@ public class RestService {
 
     @Inject
     private SkillService skillService;
+
+    @Inject
+    private GroupService groupService;
 
     private Thread t;
 
@@ -82,6 +84,9 @@ public class RestService {
             jsonWriter.name("skills");
             jsonWriter.beginArray();
             for (SkillData skillData : values) {
+                if (skillData.getSkillName().equalsIgnoreCase(StartingPoint.name)) {
+                    continue;
+                }
                 jsonWriter.beginObject();
 
                 jsonWriter.name("skill").value(skillData.getSkillName());
@@ -197,6 +202,38 @@ public class RestService {
             l.await();
             return response.body();
         });
+        Spark.post("/updateSkills/:player",(request,response) -> {
+            CountDownLatch l = new CountDownLatch(1);
+            String player = request.params(":player");
+
+            return response.body();
+        });
+        Spark.get("/getTree/:class", (request, response) -> {
+            String params = request.params(":class");
+            CountDownLatch l = new CountDownLatch(1);
+            NClass nClass = groupService.getNClass(params);
+            if (nClass == null) {
+                //// TODO:
+            } else {
+                response.body(toJson(nClass.getSkillTree()));
+            }
+            return response.body();
+        });
+        Spark.post("/getSkillSetting",(request, response) -> {
+            SkillDataRequestBean s = gson.fromJson(request.body(), SkillDataRequestBean.class);
+            final NClass nClass = groupService.getNClass(s.getClassname());
+            final String skill = s.getSkill().toLowerCase();
+            final CountDownLatch l = new CountDownLatch(1);
+
+            Sponge.getScheduler().createTaskBuilder().execute(() ->{
+                SkillData skillData = nClass.getSkillTree().getSkills().get(skill);
+                //todo cache
+                l.countDown();
+            }).submit(plugin);
+            l.await();
+            return response.body();
+        });
+
     };
 
     private void getCharacterData(String player, Consumer<CharacterData> data) {
@@ -220,6 +257,7 @@ public class RestService {
             }
         }).submit(plugin);
     }
+
 
     public String getToken() {
         StringBuilder token = new StringBuilder(8);

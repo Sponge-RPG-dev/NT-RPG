@@ -1,4 +1,4 @@
-package cz.neumito.rpg.rest;
+package cz.neumito.rpg.rest.model;
 
 import java.util.HashMap;
 import java.util.Map;
