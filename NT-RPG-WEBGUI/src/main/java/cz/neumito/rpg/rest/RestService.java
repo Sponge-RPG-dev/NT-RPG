@@ -266,13 +266,13 @@ public class RestService {
         }
         return token.toString();
     }
-
+    private static final int TOKEN_LIFETIME = 7200000;
     private void cleanupTokenCache() {
         Iterator<Map.Entry<String, Token>> iterator = tokens.entrySet().iterator();
         while (iterator.hasNext()) {
             long l = System.currentTimeMillis();
             Map.Entry<String, Token> next = iterator.next();
-            if (next.getValue().time + 7200000 <= l ) {
+            if (next.getValue().time + TOKEN_LIFETIME <= l ) {
                 iterator.remove();
             }
         }

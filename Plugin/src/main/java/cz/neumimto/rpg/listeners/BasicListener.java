@@ -37,6 +37,7 @@ import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Projectile;
@@ -52,6 +53,7 @@ import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource
 import org.spongepowered.api.event.cause.entity.damage.source.IndirectEntityDamageSource;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.InteractEntityEvent;
+import org.spongepowered.api.event.entity.SpawnEntityEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 
@@ -130,10 +132,6 @@ public class BasicListener {
                 inventoryService.onRightClick(character, 0);
             }
         }
-    }
-
-    public void onBlockMined(ChangeBlockEvent.Break event) {
-
     }
 
     @Listener
@@ -240,6 +238,17 @@ public class BasicListener {
                     event.setDamage(DamageModifier.builder().type(DamageModifierTypes.MAGIC).build(), input -> input * target_resistence);
                 }
             }
+        }
+    }
+
+    @Listener
+    public void onRespawn(SpawnEntityEvent event) {
+        Entity type = event.getEntities().get(0);
+        if (type.getType() == EntityTypes.PLAYER) {
+            IActiveCharacter character = characterService.getCharacter(type.getUniqueId());
+            if (character.isStub())
+                return;
+            characterService.respawnCharacter(character);
         }
     }
 }

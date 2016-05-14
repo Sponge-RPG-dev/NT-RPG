@@ -105,10 +105,11 @@ public class InventoryService {
     }
 
     public void initializeHotbar(IActiveCharacter character) {
-        int i = 0;
-        for (Inventory inventory : character.getPlayer().getInventory().query(Hotbar.class)) {
+        if (character.isStub())
+            return;
+        int size = character.getPlayer().getInventory().query(Hotbar.class).size();
+        for (int i = 0; i<size; i++) {
             initializeHotbar(character,i);
-            i++;
         }
     }
 

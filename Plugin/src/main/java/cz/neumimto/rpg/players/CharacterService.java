@@ -25,10 +25,7 @@ import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.EffectSource;
-import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.effects.common.def.ManaRegeneration;
 import cz.neumimto.rpg.events.CancellableEvent;
@@ -279,7 +276,7 @@ public class CharacterService {
         return 1;
     }
 
-    private void initActiveCharacter(IActiveCharacter character) {
+    public void initActiveCharacter(IActiveCharacter character) {
         character.getPlayer().sendMessage(Text.of(Localization.CURRENT_CHARACTER.replaceAll("%1", character.getName())));
         addDefaultEffects(character);
         for (Map.Entry<String, Integer> entry : character.getCharacterBase().getAttributes().entrySet()) {
@@ -1026,6 +1023,16 @@ public class CharacterService {
         } else {
             character.getTransientAttributes().put(attribute.getName(), att + amount);
         }
+    }
+
+    public void respawnCharacter(IActiveCharacter character) {
+        for (IEffect iEffect : character.getEffects()) {
+            if (iEffect.getEffectSource().isClearedOnDeath()) {
+                effectService.removeEffect(iEffect,character);
+            }
+        }
+        inventoryService.initializeHotbar(character);
+        updateAll(character).run();
     }
 }
 
