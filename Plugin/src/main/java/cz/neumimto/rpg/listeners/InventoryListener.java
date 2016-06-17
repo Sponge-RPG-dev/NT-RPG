@@ -59,7 +59,7 @@ public class InventoryListener {
     @Inject
     private Game game;
 
-    @Listener
+//    @Listener
     public void onMouseScroll(ChangeInventoryEvent.Held event) {
         Optional<Player> first = event.getCause().first(Player.class);
         if (first.isPresent()) {
@@ -90,8 +90,10 @@ public class InventoryListener {
     }
 
     @Listener
+    public void onDualWield()
+
+    @Listener
     public void onItemPickup(ChangeInventoryEvent.Pickup event) {
-        System.out.println(event);
         Optional<Player> first = event.getCause().first(Player.class);
         if (first.isPresent()) {
             Player player = first.get();

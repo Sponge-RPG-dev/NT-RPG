@@ -24,7 +24,10 @@ import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -70,7 +73,7 @@ public abstract class CommandBase implements CommandCallable {
     }
 
     @Override
-    public List<String> getSuggestions(CommandSource commandSource, String s) throws CommandException {
+    public List<String> getSuggestions(CommandSource source, String arguments, @Nullable Location<World> targetPosition) throws CommandException {
         return Collections.emptyList();
     }
 
@@ -82,12 +85,12 @@ public abstract class CommandBase implements CommandCallable {
     }
 
     @Override
-    public Optional<? extends Text> getShortDescription(CommandSource commandSource) {
+    public Optional<Text> getShortDescription(CommandSource commandSource) {
         return Optional.of(Text.of(CommandLocalization.COMMAND_CHOOSE_DESC));
     }
 
     @Override
-    public Optional<? extends Text> getHelp(CommandSource commandSource) {
+    public Optional<Text> getHelp(CommandSource commandSource) {
         return help;
     }
 

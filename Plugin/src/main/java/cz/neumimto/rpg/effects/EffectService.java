@@ -273,7 +273,7 @@ public class EffectService {
     }
 
     public boolean isGlobalEffect(String s) {
-        return globalEffects.containsKey(s);
+        return globalEffects.containsKey(s.toLowerCase());
     }
 
     public void removeAllEffects(IActiveCharacter character) {

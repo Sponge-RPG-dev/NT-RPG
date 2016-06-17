@@ -31,13 +31,13 @@ public abstract class HotbarObject {
 
     public void onEquip(ItemStack is, IActiveCharacter character) {
         if (PluginConfig.DEBUG) {
-            character.sendMessage("Equiped " + is.getItem().getName());
+            character.sendMessage("Equiped slot " + slot);
         }
     }
 
     public void onUnEquip(IActiveCharacter character) {
         if (PluginConfig.DEBUG) {
-            character.sendMessage("Unequiped item");
+            character.sendMessage("Unequiped slot " + slot);
         }
     }
 }

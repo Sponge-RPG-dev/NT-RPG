@@ -56,7 +56,7 @@ public class RWService {
     private List<ItemType> allowedRuneItemTypes = new ArrayList<>();
 
 
-    @PostProcess(priority = 8000)
+    @PostProcess(priority = 10000)
     public void load() {
         File p = file.toFile();
         if (!p.exists()) {
@@ -120,6 +120,10 @@ public class RWService {
         if (!s.startsWith(PluginConfig.RW_LORE_COLOR) || s.length() < 3)
             return null;
         return runewords.get(s.substring(2));
+    }
+
+    public RuneWord getRuneword(String name) {
+        return runewords.get(name);
     }
 
     public List<Text> addRune(List<Text> lore, Rune rune) {
@@ -227,28 +231,28 @@ public class RWService {
             if (PluginConfig.AUTOREMOVE_NONEXISTING_RUNEWORDS) {
                 i.offer(Keys.DISPLAY_NAME, Text.of(i.getItem().getName()));
                 i.offer(Keys.ITEM_LORE, Collections.<Text>emptyList());
-                return i;
             }
+            return i;
         }
 
         i.offer(Keys.DISPLAY_NAME, Text.of(TextColors.GOLD, rw.getName()));
         List<Text> l = new ArrayList<>();
         l.add(Text.of(TextColors.BLUE, Localization.RUNEWORD));
         l.add(Text.of(TextColors.RED, i.get(Keys.ITEM_LORE).get().get(1).toPlain()));
+
         Map<IGlobalEffect, Float> effects = rw.getEffects();
         if (!rw.getRestrictedClasses().isEmpty()) {
             l.add(Text.of(TextColors.RED, Localization.RESTRICTED_CLASSES));
-            l.add(Text.of(TextColors.GRAY, "- " + rw.getRestrictedClasses().stream().map(a -> a.getName()).collect(Collectors.joining(" "))));
+            l.add(Text.of(TextColors.GRAY, "- " + rw.getRestrictedClasses().stream().map(a -> a.getName()).collect(Collectors.joining(", "))));
         }
         if (rw.getMinLevel() > 1) {
             l.add(Text.of(TextColors.GRAY, Localization.MIN_LEVEL + ": " + rw.getMinLevel()));
         }
-        i.offer(Keys.ITEM_LORE, l);
-        //todo refactor
+
         for (Map.Entry<IGlobalEffect, Float> entry : effects.entrySet()) {
             IGlobalEffect key = entry.getKey();
             Float value = entry.getValue();
-            l = ItemStackUtils.addItemEffect(i, key, value);
+            l.add(Text.of(TextColors.AQUA, key.getName() + ": " + value));
         }
         i.offer(Keys.ITEM_LORE, l);
         return i;

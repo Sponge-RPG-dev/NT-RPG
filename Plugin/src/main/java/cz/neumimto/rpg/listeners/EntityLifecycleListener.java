@@ -10,6 +10,7 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.IMob;
+import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -46,6 +47,9 @@ public class EntityLifecycleListener {
     @Inject
     private EntityService entityService;
 
+    @Inject
+    private InventoryService inventoryService;
+
     @Listener
     public void onPlayerJoin(ClientConnectionEvent.Auth event) {
         if (event.isCancelled())
@@ -61,11 +65,13 @@ public class EntityLifecycleListener {
             return;
         character.getMana().setValue(0);
         characterService.addDefaultEffects(character);
+        characterService.updateMaxHealth(character);
+        inventoryService.cancelSocketing(character);
     }
 
     @Listener
     public void onPlayerLogin(ClientConnectionEvent.Join event) {
-        IActiveCharacter character = characterService.getCharacter(event.getTargetEntity().getUniqueId());
+      //  IActiveCharacter character = characterService.getCharacter(event.getTargetEntity().getUniqueId());
         characterService.assignPlayerToCharacter(event.getTargetEntity());
     }
 

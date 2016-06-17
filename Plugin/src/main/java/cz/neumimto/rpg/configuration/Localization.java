@@ -30,7 +30,6 @@ public class Localization {
 
     @ConfigValue
     public static String NO_MANA = "Not enough mana";
-
     @ConfigValue
     public static String NO_HP = "Not enough hp";
 
@@ -210,9 +209,9 @@ public class Localization {
 
     @ConfigValue
     public static String RUNE_FOOTER = "Can be inserted into socketed items";
+
     @ConfigValue
     public static String SOCKET = "Socketed Item";
-
     @ConfigValue
     public static String CLASS_INVENTORYMENU_FOOTER = "Rightclick for more info, Leftclick for skilltree";
 
@@ -242,4 +241,10 @@ public class Localization {
 
     @ConfigValue
     public static String RACE_IS_REQUIRED = "You have to choose character's race.";
+
+    @ConfigValue
+    public static String SOCKET_HELP = "Interact with weapon to imbue the rune";
+
+    @ConfigValue
+    public static String SOCKET_CANCELLED = "Socketing cancelled";
 }

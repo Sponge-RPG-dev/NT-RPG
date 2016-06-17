@@ -36,6 +36,7 @@ import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
@@ -123,7 +124,7 @@ public class BasicListener {
         Optional<Player> first = event.getCause().first(Player.class);
         if (first.isPresent()) {
             Player pl = first.get();
-            Optional<ItemStack> itemInHand = pl.getItemInHand();
+            Optional<ItemStack> itemInHand = pl.getItemInHand(HandTypes.MAIN_HAND);
             if (itemInHand.isPresent()) {
                 ItemStack itemStack = itemInHand.get();
                 IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());

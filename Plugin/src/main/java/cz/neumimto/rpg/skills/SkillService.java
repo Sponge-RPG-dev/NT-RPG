@@ -107,6 +107,7 @@ public class SkillService {
         if (level < 0)
             //this should never happen
             return SkillResult.WRONG_DATA;
+        level += character.getCharacterProperty(DefaultProperties.all_skills_bonus);
         Long aLong = character.getCooldowns().get(esi.getSkill().getName());
         long servertime = System.currentTimeMillis();
         if (aLong != null && aLong > servertime) {
@@ -130,7 +131,7 @@ public class SkillService {
                 if (result == SkillResult.CANCELLED)
                     return SkillResult.CANCELLED;
                 if (result == SkillResult.OK) {
-                    float newCd = skillSettings.getLevelNodeValue(SkillNode.COOLDOWN, esi.getLevel());
+                    float newCd = skillSettings.getLevelNodeValue(SkillNode.COOLDOWN, level);
                     SkillPostUsageEvent eventt = new SkillPostUsageEvent(character, hpcost, manacost, newCd);
                     game.getEventManager().post(eventt);
                     if (!event.isCancelled()) {

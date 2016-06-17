@@ -333,7 +333,7 @@ public class ItemStackUtils {
         } else {
             lore = new ArrayList<>();
         }
-        lore.add(Text.of(TextColors.AQUA, globalEffect.getName() + ":" + level));
+        lore.add(Text.of(TextColors.AQUA, globalEffect.getName() + ": " + level));
         return lore;
     }
 
@@ -345,7 +345,7 @@ public class ItemStackUtils {
         } else {
             lore = new ArrayList<>();
         }
-        lore.add(Text.of(TextColors.AQUA, globalEffect.getName() + ":" + level));
+        lore.add(Text.of(TextColors.AQUA, globalEffect.getName() + ": " + level));
         return lore;
     }
 
