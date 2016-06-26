@@ -18,14 +18,14 @@
 
 package cz.neumimto.rpg.inventory;
 
-import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.inventory.ItemStack;
 
 /**
- * Created by ja on 4.9.2015.
+ * Created by NeumimTo on 4.9.2015.
  */
 public class Armor extends Weapon {
 
-    public Armor(ItemType itemType) {
-        super(itemType);
+    public Armor(ItemStack itemStack) {
+        super(itemStack);
     }
 }

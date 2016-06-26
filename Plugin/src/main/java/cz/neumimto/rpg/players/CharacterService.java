@@ -26,6 +26,7 @@ import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.effects.common.def.ManaRegeneration;
 import cz.neumimto.rpg.events.CancellableEvent;
@@ -300,6 +301,7 @@ public class CharacterService {
     public void addDefaultEffects(IActiveCharacter character) {
         effectService.addEffect(new ManaRegeneration(character), character);
         effectService.addEffect(new CombatEffect(character), character);
+        effectService.addEffect(new BossBarExpNotifier(character),character);
     }
 
     /**

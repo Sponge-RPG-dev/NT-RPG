@@ -25,6 +25,7 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -33,6 +34,10 @@ import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillTree;
 import cz.neumimto.rpg.skills.StartingPoint;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.boss.BossBar;
+import org.spongepowered.api.boss.BossBarColor;
+import org.spongepowered.api.boss.BossBarColors;
+import org.spongepowered.api.boss.ServerBossBar;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -149,7 +154,12 @@ public class VanilaMessaging implements IPlayerMessage {
     @Override
     public void showExpChange(IActiveCharacter character, String classname, double expchange) {
         Player player = character.getPlayer();
-        player.sendMessage(Text.of(classname + " expchange: +" + expchange));
+        IEffect effect = character.getEffect(BossBarExpNotifier.class);
+        if (effect != null) {
+            BossBarExpNotifier bossbar = (BossBarExpNotifier) effect;
+            bossbar.setLevel(character.getPrimaryClass().getLevel());
+            bossbar.notifyExpChange(classname, expchange);
+        }
     }
 
     @Override
@@ -184,7 +194,6 @@ public class VanilaMessaging implements IPlayerMessage {
         character.sendMessage(q);
         q = "          Level: " + character.getPrimaryClass().getExperiencesFromLevel() + "/" + character.getPrimaryClass().getnClass().getLevels()[character.getPrimaryClass().getLevel()];
         character.sendMessage(q);
-
     }
 
     @Override

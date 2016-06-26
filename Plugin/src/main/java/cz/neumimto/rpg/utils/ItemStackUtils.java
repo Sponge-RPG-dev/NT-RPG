@@ -24,6 +24,7 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.ItemRestriction;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.groups.NClass;
 import cz.neumimto.rpg.skills.SkillData;
@@ -31,6 +32,7 @@ import cz.neumimto.rpg.skills.SkillItemIcon;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.SkillTree;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.trait.IntegerTrait;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
 import org.spongepowered.api.data.manipulator.mutable.item.EnchantmentData;
@@ -42,6 +44,7 @@ import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
@@ -111,6 +114,9 @@ public class ItemStackUtils {
                 POISONOUS_POTATO, ROTTEN_FLESH, PORKCHOP, COOKED_BEEF, COOKED_CHICKEN, COOKED_MUTTON,
                 COOKIE, COOKED_RABBIT, COOKED_FISH, FISH, CHICKEN, MELON));
     }};
+
+    public static Map<String, ItemRestriction> restrictionMap = new HashMap<>();
+
     protected static String ID = "id";
     protected static String QUANTITY = "quantity";
     protected static String DAMAGE = "damage";
@@ -418,5 +424,10 @@ public class ItemStackUtils {
             item.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
             player.getLocation().getExtent().spawnEntity(item, Cause.of(NamedCause.of("player", player)));
         }
+    }
+
+    static {
+        restrictionMap.put("L", ItemRestriction.Level);
+        restrictionMap.put("G", ItemRestriction.Group);
     }
 }

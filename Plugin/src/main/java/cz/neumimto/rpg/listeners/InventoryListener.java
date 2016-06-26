@@ -26,7 +26,9 @@ import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
@@ -59,12 +61,14 @@ public class InventoryListener {
     @Inject
     private Game game;
 
-//    @Listener
+    @Listener
     public void onMouseScroll(ChangeInventoryEvent.Held event) {
         Optional<Player> first = event.getCause().first(Player.class);
         if (first.isPresent()) {
             List<SlotTransaction> transactions = event.getTransactions();
             IActiveCharacter character = characterService.getCharacter(first.get().getUniqueId());
+            if (character.isStub())
+                return;
             //todo until other events will be fully implemented this is only way how to work with hotbar
             if (!character.isStub()) {
                 inventoryService.initializeHotbar(character);
@@ -85,12 +89,11 @@ public class InventoryListener {
         Optional<Player> first = event.getCause().first(Player.class);
         if (first.isPresent()) {
             IActiveCharacter character = characterService.getCharacter(first.get().getUniqueId());
+            if (character.getPlayer().get(Keys.GAME_MODE).get()== GameModes.CREATIVE)
+                return;
             inventoryService.initializeHotbar(character);
         }
     }
-
-    @Listener
-    public void onDualWield()
 
     @Listener
     public void onItemPickup(ChangeInventoryEvent.Pickup event) {
@@ -98,6 +101,8 @@ public class InventoryListener {
         if (first.isPresent()) {
             Player player = first.get();
             IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+            if (character.getPlayer().get(Keys.GAME_MODE).get()== GameModes.CREATIVE)
+                return;
             if (character.isStub()) {
                 return;
             }
@@ -123,6 +128,8 @@ public class InventoryListener {
 
 
             IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+            if (character.getPlayer().get(Keys.GAME_MODE).get() == GameModes.CREATIVE)
+                return;
             if (character.isStub())
                 return;
             Hotbar hotbar = player.getInventory().query(Hotbar.class);

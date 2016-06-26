@@ -19,7 +19,7 @@ public class PseudoRandomDistribution {
 
     private int pmt = 0;
 
-    public double getPropability(double c) {
+    public double getProbability(double c) {
         pmt++;
         return c * pmt;
     }
@@ -53,7 +53,7 @@ public class PseudoRandomDistribution {
     }
 
     private double p(double C) {
-        double i = 0;
+        double i;
         double j = 0;
         double sum = 0;
         int f = (int) ceil(1 / C);

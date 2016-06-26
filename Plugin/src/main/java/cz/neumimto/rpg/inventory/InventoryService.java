@@ -36,6 +36,8 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
+import org.spongepowered.api.event.item.inventory.TargetContainerEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Carrier;
@@ -65,6 +67,8 @@ public class InventoryService {
     public static TextColor ENCHANTMENT_COLOR = TextColors.BLUE;
     public static TextColor LEVEL_COLOR = TextColors.YELLOW;
     public static TextColor RESTRICTIONS = TextColors.LIGHT_PURPLE;
+
+
 
     @Inject
     private SkillService skillService;
@@ -141,13 +145,13 @@ public class InventoryService {
                 }
                 ItemStack i = peek.get();
                 HotbarObject hotbarObject = getHotbarObject(character, i);
-                hotbarObject.setSlot(slot);
+
                 if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
+                    hotbarObject.setSlot(slot);
                     character.getHotbar()[slot] = hotbarObject;
                     if (hotbarObject.getType() == HotbarObjectTypes.CHARM) {
                         hotbarObject.onEquip(i,character);
-                    }
-                    if (hotbarObject.getType() == HotbarObjectTypes.WEAPON && slot == selectedSlotIndex) {
+                    } else if (hotbarObject.getType() == HotbarObjectTypes.WEAPON && slot == selectedSlotIndex) {
                         hotbarObject.onEquip(i,character);
                     }
 
@@ -196,7 +200,7 @@ public class InventoryService {
     }
 
     public Weapon buildHotbarWeapon(IActiveCharacter character, ItemStack is) {
-        Weapon w = new Weapon(is.getItem());
+        Weapon w = new Weapon(is);
         Optional<List<Text>> a = is.get(Keys.ITEM_LORE);
         if (!a.isPresent()) {
             return w;
@@ -381,4 +385,6 @@ public class InventoryService {
         character.setCurrentRune(-1);
 
     }
+
+
 }
