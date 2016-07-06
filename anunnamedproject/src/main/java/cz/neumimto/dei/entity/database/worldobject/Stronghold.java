@@ -20,6 +20,7 @@ import java.util.Set;
 @Table(name = "dei_strongholds")
 public class Stronghold implements IHasClaims<StrongholdClaim> {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "stronghold_id")
