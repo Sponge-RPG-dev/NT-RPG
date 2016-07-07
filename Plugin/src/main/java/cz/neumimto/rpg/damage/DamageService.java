@@ -26,6 +26,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.skills.NDamageType;
 import cz.neumimto.rpg.utils.ItemStackUtils;
+import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
@@ -74,8 +75,8 @@ public class DamageService {
     }
 
     public void recalculateCharacterWeaponDamage(IActiveCharacter character) {
-        if (!character.isStub() && character.getPlayer().getItemInHand().isPresent()) {
-            double damage = getCharacterItemDamage(character, character.getPlayer().getItemInHand().get().getItem());
+        if (!character.isStub() && character.getPlayer().getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
+            double damage = getCharacterItemDamage(character, character.getPlayer().getItemInHand(HandTypes.MAIN_HAND).get().getItem());
             damage += character.getMainHand().getDamage() + character.getOffHand().getDamage();
             character.setWeaponDamage(damage);
         } else {
