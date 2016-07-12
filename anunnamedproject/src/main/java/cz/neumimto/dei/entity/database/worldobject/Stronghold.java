@@ -1,17 +1,16 @@
 package cz.neumimto.dei.entity.database.worldobject;
 
-import cz.neumimto.dei.UpKeep;
 import cz.neumimto.dei.entity.IHasClaims;
-import cz.neumimto.dei.entity.database.area.ClaimedArea;
-import cz.neumimto.dei.entity.database.area.ConquestPoint;
+import cz.neumimto.dei.entity.database.structure.ConquestPoint;
 import cz.neumimto.dei.entity.database.area.StrongholdClaim;
 import cz.neumimto.dei.entity.database.utils.UpKeep2String;
-import cz.neumimto.dei.entity.database.worldobject.Nation;
 import cz.neumimto.dei.serivce.ClaimedAreaType;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by NeumimTo on 5.7.2016.
@@ -31,6 +30,16 @@ public class Stronghold implements IHasClaims<StrongholdClaim> {
 
     private long lastTimeAttacked;
 
+    private long lastTimeConquered;
+
+    private int minimumSizeRaidParty = -1;
+
+    private int maximumSizeRaidParty = -1;
+
+    private int minimumPlayersInNationRequiredForAttacking = -1;
+
+    private int maximumSizeDefenders = -1;
+
     @Convert(converter = UpKeep2String.class)
     private String upkeep;
 
@@ -41,6 +50,9 @@ public class Stronghold implements IHasClaims<StrongholdClaim> {
 
     @OneToMany(cascade=CascadeType.ALL, mappedBy="stronghold",fetch = FetchType.EAGER)
     private List<ConquestPoint> conquestPoints;
+
+    @Transient
+    private Set<UUID> defenders = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -103,5 +115,61 @@ public class Stronghold implements IHasClaims<StrongholdClaim> {
 
     public void setUpkeepCron(String upkeepCron) {
         this.upkeepCron = upkeepCron;
+    }
+
+    public Nation getNation() {
+        return nation;
+    }
+
+    public void setNation(Nation nation) {
+        this.nation = nation;
+    }
+
+    public long getLastTimeConquered() {
+        return lastTimeConquered;
+    }
+
+    public void setLastTimeConquered(long lastTimeConquered) {
+        this.lastTimeConquered = lastTimeConquered;
+    }
+
+    public int getMinimumSizeRaidParty() {
+        return minimumSizeRaidParty;
+    }
+
+    public void setMinimumSizeRaidParty(int minimumSizeRaidParty) {
+        this.minimumSizeRaidParty = minimumSizeRaidParty;
+    }
+
+    public int getMaximumSizeRaidParty() {
+        return maximumSizeRaidParty;
+    }
+
+    public void setMaximumSizeRaidParty(int maximumSizeRaidParty) {
+        this.maximumSizeRaidParty = maximumSizeRaidParty;
+    }
+
+    public int getMinimumPlayersInNationRequiredForAttacking() {
+        return minimumPlayersInNationRequiredForAttacking;
+    }
+
+    public void setMinimumPlayersInNationRequiredForAttacking(int minimumPlayersInNationRequiredForAttacking) {
+        this.minimumPlayersInNationRequiredForAttacking = minimumPlayersInNationRequiredForAttacking;
+    }
+
+    public int getMaximumSizeDefenders() {
+        return maximumSizeDefenders;
+    }
+
+    public void setMaximumSizeDefenders(int maximumSizeDefenders) {
+        this.maximumSizeDefenders = maximumSizeDefenders;
+    }
+
+    public Set<UUID> getDefenders() {
+        return defenders;
+    }
+
+    public void setDefenders(Set<UUID> defenders) {
+        this.defenders = defenders;
     }
 }

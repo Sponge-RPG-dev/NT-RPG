@@ -44,6 +44,7 @@ public class Town implements IHasClaims<TownClaim> {
             name="nation_blockpallete",
             joinColumns=@JoinColumn(name="nation_id")
     )
+
     @OrderColumn(name = "index_id")
     @Convert(converter = BlockType2String.class)
     private Set<BlockType> blockPalette;

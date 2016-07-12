@@ -1,5 +1,6 @@
 package cz.neumimto.dei.entity.database.area;
 
+import cz.neumimto.dei.entity.AreaType;
 import cz.neumimto.dei.entity.database.worldobject.Town;
 
 import javax.persistence.*;
@@ -10,24 +11,14 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "dei_claims")
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@PrimaryKeyJoinColumn
 public class TownClaim extends ClaimedArea<Town> {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "tclaim_id")
-    private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
     private Town town;
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public TownClaim() {
+        setAreaType(AreaType.TOWN);
     }
 
     @Override

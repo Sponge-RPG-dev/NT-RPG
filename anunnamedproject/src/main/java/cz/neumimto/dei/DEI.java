@@ -15,9 +15,13 @@ import java.util.stream.Collectors;
 /**
  * Created by ja on 5.7.2016.
  */
-@Plugin(id = "cz.neumimto.rpg", version = "1.0.0", name = "NT-Rpg", dependencies = {@Dependency(id = "MinecraftGuiServer", optional = true),
-        @Dependency(id = "cz.neumimto.core")})
+@Plugin(id = "cz.neumimto.dei",
+        version = "1.0.0",
+        name = "NT-dei",
+        dependencies = {@Dependency(id = "cz.neumimto.core")})
 public class DEI {
+
+    private Thread jobRunner;
 
     @Listener
     public void onFindPersistentContext(FindPersistenceContextEvent event) throws IOException {
@@ -43,5 +47,9 @@ public class DEI {
                         e.printStackTrace();
                     }
                 });
+        jobRunner = new Thread(this::startScheduler);
+        jobRunner.start();
     }
+
+
 }

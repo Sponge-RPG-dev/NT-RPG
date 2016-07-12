@@ -8,10 +8,15 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import javax.persistence.*;
 
 /**
- * Created by NeumimTO on 5.7.2016.
+ * Created by NeumimTo on 5.7.2016.
  */
 @MappedSuperclass
+@Inheritance(strategy = InheritanceType.JOINED)
 public class ClaimedArea<T extends IHasClaims> {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private int x;
 
@@ -23,7 +28,8 @@ public class ClaimedArea<T extends IHasClaims> {
     @JoinColumn(name="perms_id")
     private AreaPermissions areaPermissions;
 
-    @Transient
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private AreaType areaType;
 
     public ClaimedArea() {
@@ -83,10 +89,7 @@ public class ClaimedArea<T extends IHasClaims> {
         if (o == null || getClass() != o.getClass()) return false;
 
         ClaimedArea that = (ClaimedArea) o;
-
-        if (x != that.x) return false;
-        if (z != that.z) return false;
-        return world.equalsIgnoreCase(that.world);
+        return x == that.x && z == that.z && world.equalsIgnoreCase(that.world);
     }
 
     public AreaType getAreaType() {
@@ -111,5 +114,13 @@ public class ClaimedArea<T extends IHasClaims> {
 
     public void setParent(T parent) {
         throw new NotImplementedException();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

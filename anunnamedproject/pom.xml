@@ -65,5 +65,24 @@
             <version>2.4.6</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.spongepowered</groupId>
+            <artifactId>spongevanilla</artifactId>
+            <version>LATEST</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.minecraft</groupId>
+                    <artifactId>launchwrapper</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>it.sauronsoftware.cron4j</groupId>
+            <artifactId>cron4j</artifactId>
+            <version>2.2.5</version>
+        </dependency>
+
+
     </dependencies>
 </project>
