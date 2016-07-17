@@ -3,10 +3,12 @@ package cz.neumimto.dei;
 import com.google.common.reflect.ClassPath;
 import cz.neumimto.core.FindPersistenceContextEvent;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameAboutToStartServerEvent;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.text.Text;
 
 import javax.persistence.Entity;
 import java.io.IOException;
@@ -49,7 +51,19 @@ public class DEI {
                 });
         jobRunner = new Thread(this::startScheduler);
         jobRunner.start();
+
+
+        CommandSpec myCommandSpec = CommandSpec.builder()
+                .description(Text.of("Hello World Command"))
+                .permission("myplugin.command.helloworld")
+
+                .executor(new HelloWorldCommand())
+                .build();
+
+        Sponge.getCommandManager().register(plugin, myCommandSpec, "helloworld", "hello", "test");
     }
 
+    public void startScheduler() {
 
+    }
 }

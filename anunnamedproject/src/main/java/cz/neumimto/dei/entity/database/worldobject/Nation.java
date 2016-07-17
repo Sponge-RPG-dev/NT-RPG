@@ -1,7 +1,9 @@
 package cz.neumimto.dei.entity.database.worldobject;
 
 import cz.neumimto.dei.entity.database.player.Citizen;
+import cz.neumimto.dei.entity.database.utils.BlockType2String;
 import cz.neumimto.dei.entity.database.utils.ItemType2String;
+import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.item.ItemType;
 
 import javax.persistence.*;
@@ -30,13 +32,13 @@ public class Nation  {
     @JoinColumn(name="leader_id")
     private Citizen leader;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-            name="nation_blockpallete",
-            joinColumns=@JoinColumn(name="nation_id")
-    )
-    @OrderColumn(name = "index_id")
-    @Convert(converter = ItemType2String.class)
+    @ElementCollection
+    @CollectionTable( name = "dei_nation_blockpallete",
+            joinColumns = @JoinColumn( name = "nation_id" ) )
+    @Column(name = "items" )
+    @OrderColumn(name = "item")
+    @Enumerated(EnumType.STRING)
+    @Convert(converter = ItemType2String.class )
     private Set<ItemType> blockPalette;
 
     @OneToOne(cascade=CascadeType.ALL)
@@ -54,8 +56,6 @@ public class Nation  {
     @OrderColumn(name = "index_id")
     private List<String> permissions;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy="nation")
-    private List<Stronghold> conqueredstrongholds;
 
     public long started;
 

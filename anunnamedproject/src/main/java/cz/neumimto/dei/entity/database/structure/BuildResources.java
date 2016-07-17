@@ -13,5 +13,5 @@ public class BuildResources {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private
+
 }

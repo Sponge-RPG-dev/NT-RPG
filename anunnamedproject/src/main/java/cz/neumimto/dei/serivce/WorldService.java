@@ -7,7 +7,6 @@ import cz.neumimto.dei.entity.IHasClaims;
 import cz.neumimto.dei.entity.dao.TownDAO;
 import cz.neumimto.dei.entity.dao.WorldDao;
 import cz.neumimto.dei.entity.database.area.ClaimedArea;
-import cz.neumimto.dei.entity.database.area.StrongholdClaim;
 import cz.neumimto.dei.entity.database.area.TownClaim;
 import cz.neumimto.dei.entity.database.player.Citizen;
 import cz.neumimto.dei.entity.database.worldobject.Town;

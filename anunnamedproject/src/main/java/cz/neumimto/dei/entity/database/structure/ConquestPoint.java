@@ -1,12 +1,10 @@
 package cz.neumimto.dei.entity.database.structure;
 
-import cz.neumimto.dei.entity.database.worldobject.Stronghold;
+import cz.neumimto.dei.entity.database.worldobject.Town;
 import cz.neumimto.dei.exceptions.WorldNotExistsException;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
-import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.manipulator.mutable.ColoredData;
 import org.spongepowered.api.util.Color;
 import org.spongepowered.api.world.World;
 
@@ -33,7 +31,8 @@ public class ConquestPoint {
     private String world;
 
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    private Stronghold stronghold;
+    @JoinColumn(name = "town_id")
+    private Town town;
 
     public Long getId() {
         return id;
@@ -91,7 +90,7 @@ public class ConquestPoint {
         if (world.isPresent()) {
             World world1 = world.get();
             BlockSnapshot snapshot = world1.createSnapshot(x,y,z);
-            //todo
+
 
         }
         throw new WorldNotExistsException(this.world);

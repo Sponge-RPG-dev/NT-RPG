@@ -6,6 +6,7 @@ import cz.neumimto.dei.entity.database.player.Citizen;
 import cz.neumimto.dei.entity.database.area.ClaimedArea;
 import cz.neumimto.dei.entity.database.utils.AreaPermissions;
 import cz.neumimto.dei.entity.database.utils.BlockType2String;
+import cz.neumimto.dei.entity.database.utils.TownType;
 import cz.neumimto.dei.serivce.ClaimedAreaType;
 import org.spongepowered.api.block.BlockType;
 
@@ -35,18 +36,19 @@ public class Town implements IHasClaims<TownClaim> {
 
     private String title;
 
+    @Enumerated(EnumType.STRING)
+    private TownType townType;
+
     @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="leader_citizen_id")
     private Citizen leader;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-            name="nation_blockpallete",
-            joinColumns=@JoinColumn(name="nation_id")
-    )
-
-    @OrderColumn(name = "index_id")
-    @Convert(converter = BlockType2String.class)
+    @ElementCollection
+    @CollectionTable( name = "user_team",
+            joinColumns = @JoinColumn( name = "nation_id" ) )
+    @Column( name = "team_name" )
+    @Enumerated(EnumType.STRING)
+    @Convert( converter = BlockType2String.class )
     private Set<BlockType> blockPalette;
 
     @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "town")

@@ -2,8 +2,6 @@ package cz.neumimto.dei.entity.dao;
 
 import cz.neumimto.core.dao.genericDao.GenericDao;
 
-import cz.neumimto.dei.entity.database.area.ClaimedArea;
-import cz.neumimto.dei.entity.database.area.StrongholdClaim;
 import cz.neumimto.dei.entity.database.area.TownClaim;
 import org.hibernate.Query;
 import org.hibernate.Session;
