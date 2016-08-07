@@ -1038,7 +1038,6 @@ public class CharacterService {
         }
         inventoryService.initializeHotbar(character);
         updateAll(character).run();
-
     }
 }
 

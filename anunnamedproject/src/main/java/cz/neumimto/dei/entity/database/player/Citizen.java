@@ -36,10 +36,6 @@ public class Citizen {
 
     private String nationSuffix;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "nation_id")
-    private Nation lastNation;
-
     private long lastNationChangeTime;
 
     private boolean npc;
@@ -85,14 +81,6 @@ public class Citizen {
 
     public void setTownSuffix(String townSuffix) {
         this.townSuffix = townSuffix;
-    }
-
-    public Nation getLastNation() {
-        return lastNation;
-    }
-
-    public void setLastNation(Nation lastNation) {
-        this.lastNation = lastNation;
     }
 
     public long getLastNationChangeTime() {

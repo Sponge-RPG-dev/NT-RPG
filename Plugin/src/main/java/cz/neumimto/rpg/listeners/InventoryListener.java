@@ -42,6 +42,7 @@ import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -80,22 +81,20 @@ public class InventoryListener {
                 Integer value = property.getValue();
             }
         }
-
     }
 
     @Listener
-    public void onInventoryClose(InteractInventoryEvent.Close event) {
-        Optional<Player> first = event.getCause().first(Player.class);
-        if (first.isPresent()) {
-            IActiveCharacter character = characterService.getCharacter(first.get().getUniqueId());
-            if (character.getPlayer().get(Keys.GAME_MODE).get() == GameModes.CREATIVE)
-                return;
-            inventoryService.initializeHotbar(character);
-        }
+    public void onInventoryClose(InteractInventoryEvent.Close event, @First(typeFilter = {Player.class}) Player player) {
+        IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+        if (character.getPlayer().get(Keys.GAME_MODE).get() == GameModes.CREATIVE)
+            return;
+        inventoryService.initializeHotbar(character);
+
     }
 
     @Listener
     public void onItemPickup(ChangeInventoryEvent.Pickup event, @First(typeFilter = {Player.class}) Player player) {
+
         IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
         if (character.getPlayer().get(Keys.GAME_MODE).get() == GameModes.CREATIVE)
             return;
@@ -105,20 +104,18 @@ public class InventoryListener {
         for (SlotTransaction slotTransaction : event.getTransactions()) {
             Inventory i = slotTransaction.getSlot();
             if (i.parent() instanceof Hotbar) {
-                Slot slot = slotTransaction.getSlot();
-
                 Collection<SlotIndex> properties = slotTransaction.getSlot().getProperties(SlotIndex.class);
                 for (SlotIndex property : properties) {
                     Integer value = property.getValue();
 
+                    }
                 }
             }
         }
-
     }
 
     @Listener
-    public void onItemDrop(DropItemEvent event, @First(typeFilter = {Player.class}) Player player ) {
+    public void onItemDrop(DropItemEvent event, @First(typeFilter = {Player.class}) Player player) {
         IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
         if (character.getPlayer().get(Keys.GAME_MODE).get() == GameModes.CREATIVE)
             return;
