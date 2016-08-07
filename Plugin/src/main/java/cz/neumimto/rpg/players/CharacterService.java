@@ -1028,13 +1028,17 @@ public class CharacterService {
     }
 
     public void respawnCharacter(IActiveCharacter character) {
-        for (IEffect iEffect : character.getEffects()) {
-            if (iEffect.getEffectSource().isClearedOnDeath()) {
-                effectService.removeEffect(iEffect,character);
+        Iterator<IEffect> iterator = character.getEffects().iterator();
+        IEffect next;
+        while (iterator.hasNext()) {
+            next = iterator.next();
+            if (next.getEffectSource().isClearedOnDeath()) {
+                effectService.removeEffect(next,character);
             }
         }
         inventoryService.initializeHotbar(character);
         updateAll(character).run();
+
     }
 }
 

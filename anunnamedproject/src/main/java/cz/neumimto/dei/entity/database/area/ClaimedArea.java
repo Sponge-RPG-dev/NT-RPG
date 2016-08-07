@@ -70,10 +70,6 @@ public class ClaimedArea<T extends IHasClaims> {
         this.world = world;
     }
 
-    public static ClaimedArea of(int x, int z) {
-        return new ClaimedArea(x,z);
-    }
-
     public static ClaimedArea of(int x, int z,String world) {
         return new ClaimedArea(x,z,world);
     }

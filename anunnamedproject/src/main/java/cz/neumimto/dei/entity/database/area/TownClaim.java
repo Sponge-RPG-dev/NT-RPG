@@ -15,6 +15,7 @@ import javax.persistence.*;
 public class TownClaim extends ClaimedArea<Town> {
 
     @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "town_id")
     private Town town;
 
     public TownClaim() {

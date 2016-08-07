@@ -5,6 +5,7 @@ import cz.neumimto.core.dao.genericDao.GenericDao;
 import cz.neumimto.dei.entity.database.area.TownClaim;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.spongepowered.api.event.Event;
 
 import java.util.List;
 
@@ -23,12 +24,7 @@ public class WorldDao extends GenericDao {
         return list;
     }
 
-    public List<StrongholdClaim> loadStrongholdClaims(String world) {
-        Session session = factory.openSession();
-        Query query = session.createQuery("from StrongholdClaim tc where tc.world=:world");
-        query.setParameter("world",world);
-        List list = query.list();
-        session.close();
-        return list;
+    public List<TownClaim> loadStrongholdClaims(String world) {
+        return null;
     }
 }

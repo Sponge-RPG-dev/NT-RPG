@@ -24,7 +24,8 @@ public class Blueprint {
     private int level;
 
     @Access(AccessType.PROPERTY)
-    private Set<BuildResources> buildResources = new HashSet<>();
+
+    private Set<ItemStackResource> buildResources = new HashSet<>();
 
     private Set<Reward> rewardSet = new HashSet<>();
 
@@ -52,7 +53,7 @@ public class Blueprint {
         this.level = level;
     }
 
-    public void setBuildResources(Set<BuildResources> buildResources) {
+    public void setBuildResources(Set<ItemStackResource> buildResources) {
         this.buildResources = buildResources;
     }
 

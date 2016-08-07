@@ -14,5 +14,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Command {
     String permission();
-    String description() default "{$classname}";
+    String description() default "${classname}";
 }
