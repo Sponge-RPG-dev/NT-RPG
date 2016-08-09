@@ -11,6 +11,7 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import cz.neumimto.rpg.utils.Utils;
 import cz.neumimto.rpg.utils.XORShiftRnd;
@@ -90,16 +91,6 @@ public class RWService {
         rw.setRunes(template.getRunes().stream()./*filter(this::existsRune).*/map(this::getRune).collect(Collectors.toList()));
         rw.setMinLevel(template.getMinLevel());
         Set<ItemType> types = new HashSet<>();
-        template.getAllowedItems().stream().forEach(a -> {
-                    Optional<ItemType> type = game.getRegistry().getType(ItemType.class, a);
-                    if (type.isPresent()) {
-                        ItemType itemType = type.get();
-                        types.add(itemType);
-                    } else {
-                        logger.warn("Unknown item type - " + a);
-                    }
-                }
-        );
         rw.setAllowedItems(types);
         rw.setEffects(template.getEffects().entrySet().stream()
                 .filter(l -> effectService.isGlobalEffect(l.getKey()))
@@ -243,7 +234,7 @@ public class RWService {
         Map<IGlobalEffect, Float> effects = rw.getEffects();
         if (!rw.getRestrictedClasses().isEmpty()) {
             l.add(Text.of(TextColors.RED, Localization.RESTRICTED_CLASSES));
-            l.add(Text.of(TextColors.GRAY, "- " + rw.getRestrictedClasses().stream().map(a -> a.getName()).collect(Collectors.joining(", "))));
+            l.add(Text.of(TextColors.GRAY, "- " + rw.getRestrictedClasses().stream().map(PlayerGroup::getName).collect(Collectors.joining(", "))));
         }
         if (rw.getMinLevel() > 1) {
             l.add(Text.of(TextColors.GRAY, Localization.MIN_LEVEL + ": " + rw.getMinLevel()));
@@ -257,4 +248,31 @@ public class RWService {
         i.offer(Keys.ITEM_LORE, l);
         return i;
     }
+
+
+    public boolean canBeInserted(RuneWordTemplate template, ItemStack itemStack) {
+        List<String> allowedItems = template.getAllowedItems();
+        ItemType i = itemStack.getItem();
+        if (allowedItems.contains(itemStack.toString())) {
+            return true;
+        }
+        if (ItemStackUtils.isSword(i)) {
+            for (String allowedItem : allowedItems) {
+                if (allowedItem.startsWith("any")) {
+                    String[] split = allowedItem.split(" ");
+                    if (split.length == 1) {
+                        return true;
+                    }
+                    if (split.length == 2) {
+                        ItemStackUtils.checkType(i,split[1]);
+                    } else {
+                        ItemStackUtils.checkTypeAndMaterial(i,split[2],split[1]);
+                    }
+
+                }
+            }
+        }
+        return false;
+    }
+
 }
