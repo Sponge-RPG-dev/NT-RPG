@@ -80,9 +80,5 @@ public class WorldService {
         for (TownClaim object : objects) {
             claimedAreaMap.put(object,object);
         }
-        List<StrongholdClaim> sclams = worldDao.loadStrongholdClaims(world);
-        for (StrongholdClaim sclam : sclams) {
-            claimedAreaMap.put(sclam,sclam);
-        }
     }
 }

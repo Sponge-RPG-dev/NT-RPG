@@ -20,6 +20,7 @@ package cz.neumimto.rpg.players.groups;
 
 import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.skills.SkillTree;
+import org.spongepowered.api.util.Color;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -37,6 +38,8 @@ public class NClass extends PlayerGroup {
     private double[] levels;
     private double totalExp;
     private Set<ExperienceSource> experienceSourceSet = new HashSet<>();
+
+    private Color chatColor;
 
     public NClass(String name) {
         super(name);
@@ -88,5 +91,13 @@ public class NClass extends PlayerGroup {
 
     public void setSkillpointsperlevel(int skillpointsperlevel) {
         this.skillpointsperlevel = skillpointsperlevel;
+    }
+
+    public Color getChatColor() {
+        return chatColor;
+    }
+
+    public void setChatColor(Color chatColor) {
+        this.chatColor = chatColor;
     }
 }

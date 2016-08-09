@@ -12,4 +12,5 @@ public interface IEntity<T extends Living> extends IEffectConsumer<T> {
     void setHp(double d);
 
     IEntityType getType();
+
 }

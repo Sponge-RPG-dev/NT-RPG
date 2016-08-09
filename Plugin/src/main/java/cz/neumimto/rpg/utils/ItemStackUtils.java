@@ -154,36 +154,6 @@ public class ItemStackUtils {
         return staffs.contains(type);
     }
 
-    public static ItemStack fromConfig(Config c) {
-        String type = c.getString(ID);
-        int amount = c.getInt(QUANTITY);
-        int damage = c.getInt(DAMAGE);
-        String name = c.getString(DISPLAY_NAME);
-        List<Text> stringList = new ArrayList<>();
-        c.getStringList(LORE).stream().forEach(s -> stringList.add(Text.of(s)));
-        Optional<ItemType> asd = globalScope.game.getRegistry().getType(ItemType.class, type);
-        if (asd.isPresent()) {
-            ItemStack item = ItemStack.builder().itemType(asd.get()).build();
-            item.setQuantity(amount);
-            item.offer(Keys.ITEM_LORE, stringList);
-            item.offer(Keys.DISPLAY_NAME, Text.of(name));
-            item.offer(Keys.ITEM_DURABILITY, damage);
-            return item;
-        }
-        throw new RuntimeException("Non existing item type " + type);
-    }
-
-    public static String itemStackToFormatedConfig(ItemStack itemStack) {
-
-        String s = "{" + Utils.LineSeparator;
-        s += formatedConfig.apply(ID, itemStack.getItem().getId());
-        s += formatedConfig.apply(QUANTITY, String.valueOf(itemStack.getQuantity()));
-        s += formatedConfig.apply(DAMAGE, String.valueOf(itemStack.get(Keys.ITEM_DURABILITY).get()));
-        s += formatedConfig.apply(DISPLAY_NAME, itemStack.get(Keys.DISPLAY_NAME).get().toPlain());
-        s += "}";
-        return s;
-    }
-
     public static boolean isItemSkillBind(ItemStack is) {
         if (is.getItem() != InventoryService.ITEM_SKILL_BIND) {
             return false;
@@ -429,5 +399,28 @@ public class ItemStackUtils {
     static {
         restrictionMap.put("L", ItemRestriction.Level);
         restrictionMap.put("G", ItemRestriction.Group);
+    }
+
+    public static void checkTypeAndMaterial(ItemType i, String item, String material) {
+
+    }
+
+    public static boolean checkType(ItemType i, String item) {
+        if (item.equalsIgnoreCase("sword")){
+            return swords.contains(i);
+        }
+        if (item.equalsIgnoreCase("axe")){
+            return axes.contains(i);
+        }
+        if (item.equalsIgnoreCase("pickaxe")) {
+            return pickaxes.contains(i);
+        }
+        if (item.equalsIgnoreCase("hoe")){
+            return hoes.contains(i);
+        }
+        if (item.equalsIgnoreCase("staff")) {
+            return staffs.contains(i);
+        }
+        return false;
     }
 }
