@@ -14,9 +14,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by ja on 5.7.2016.
@@ -36,10 +34,14 @@ public class WorldService {
     @Inject
     private WorldDao worldDao;
 
-    Map<ClaimedArea, ClaimedArea> claimedAreaMap = new HashMap<>();
+    Map<String,WorldManager> enabledWorlds = new HashMap<>();
 
     public ClaimedArea getClaimedArea(Location<World> location) {
-        return claimedAreaMap.get(ClaimedArea.of(location.getChunkPosition().getX(),location.getChunkPosition().getZ(),location.getExtent().getName()));
+        WorldManager worldManager = enabledWorlds.get(location.getExtent().getName());
+        if (worldManager == null) {
+            return null;
+        }
+        return worldManager.getClaimedArea(DChunk.get(location));
     }
 
     public void handleChunkChange(Citizen citizen, ClaimedArea nextArea) {
@@ -77,8 +79,13 @@ public class WorldService {
 
     public void loadClaimedChunks(String world) {
         List<TownClaim> objects = worldDao.loadWorldTowns(world);
+        WorldManager worldManager = enabledWorlds.get(world);
         for (TownClaim object : objects) {
-            claimedAreaMap.put(object,object);
+            worldManager.addClaim(object);
         }
+    }
+
+    public boolean isWorldEnabled(World world) {
+        return enabledWorlds.containsKey(world.getName());
     }
 }

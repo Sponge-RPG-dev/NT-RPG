@@ -81,7 +81,9 @@
             };
 
             function createToken() {
-                $.get(serverurl + "/createToken/" + playername, function (a, b) {
+                $.ajax({
+                    url:serverurl + "/createToken/" + playername,
+                    dataType: 'jsonp'
                 });
             };
 

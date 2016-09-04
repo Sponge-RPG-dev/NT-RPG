@@ -34,7 +34,7 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 31.1.2015.
  */
-public class Weapon extends HotbarObject {
+public class Weapon extends Charm {
 
     public static Weapon EmptyHand = new Weapon(null);
     protected double damage;

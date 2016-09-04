@@ -188,7 +188,6 @@ public class EffectService {
      */
     public void removeEffect(IEffect iEffect, IEffectConsumer consumer) {
         removeEffect(iEffect.getClass(), consumer);
-        effectSet.remove(iEffect);
     }
 
     /**

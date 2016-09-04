@@ -388,12 +388,11 @@ public class ItemStackUtils {
     }
 
     public static void dropItem(Player player, ItemStack itemStack) {
-        Optional<Entity> optional = player.getLocation().getExtent().createEntity(EntityTypes.ITEM, player.getLocation().getPosition());
-        if (optional.isPresent()) {
-            Item item = (Item) optional.get();
+        Entity optional = player.getLocation().getExtent().createEntity(EntityTypes.ITEM, player.getLocation().getPosition());
+        Item item = (Item) optional;
             item.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
             player.getLocation().getExtent().spawnEntity(item, Cause.of(NamedCause.of("player", player)));
-        }
+
     }
 
     static {

@@ -105,17 +105,6 @@ public class InventoryService {
             inventoryMenus.put(uuid, menu);
     }
 
-    public void changeEquipmentInHand(IActiveCharacter character,int from, int to,ItemStack newitem) {
-        HotbarObject hotbarObject = character.getHotbar()[from];
-        if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE && hotbarObject.getType() == HotbarObjectTypes.WEAPON) {
-            hotbarObject.onUnEquip(character);
-        }
-        HotbarObject a = character.getHotbar()[to];
-        if (a != HotbarObject.EMPTYHAND_OR_CONSUMABLE && a.getType() == HotbarObjectTypes.WEAPON) {
-            a.onEquip(newitem,character);
-        }
-    }
-
     public void initializeHotbar(IActiveCharacter character) {
         if (character.isStub())
             return;
@@ -304,7 +293,7 @@ public class InventoryService {
         changeEquipedWeapon(character, weapon.getItemStack());
     }
 
-    //todo
+
     protected void changeEquipedWeapon(IActiveCharacter character, ItemStack weapon) {
         //old
         Weapon mainHand = character.getMainHand();

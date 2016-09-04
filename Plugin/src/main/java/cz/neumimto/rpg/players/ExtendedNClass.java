@@ -24,10 +24,19 @@ import cz.neumimto.rpg.players.groups.NClass;
  * Created by NeumimTo on 28.7.2015.
  */
 public class ExtendedNClass {
-    public static ExtendedNClass Default = new ExtendedNClass() {{
-        setnClass(NClass.Default);
-        setPrimary(true);
-    }};
+    public static ExtendedNClass Default;
+
+    static {
+        Default = new ExtendedNClass() {
+            @Override
+            public boolean takesExp() {
+                return false;
+            }
+        };
+        Default.setnClass(NClass.Default);
+        Default.setPrimary(true);
+    }
+
     private NClass nClass;
     private double experiences;
     private double experiencesFromLevel;

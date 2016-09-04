@@ -45,6 +45,7 @@ public class BossBarExpNotifier extends EffectBase {
                         .visible(false)
                         .playEndBossMusic(false)
                         .darkenSky(false)
+                        .name(Text.of("bossbarexp"))
                         .overlay(BossBarOverlays.NOTCHED_10)
                         .color(BossBarColors.BLUE)
                         .createFog(false)
@@ -55,8 +56,8 @@ public class BossBarExpNotifier extends EffectBase {
             }
             ExtendedNClass extendedNClass = first.get();
 
-            serverBossBar.setName(Text.of("lvl"+extendedNClass.getLevel()+" "+classname+" +" + exps + "  " + extendedNClass.getExperiencesFromLevel()+"/"+extendedNClass.getnClass().getLevels()[extendedNClass.getLevel()-1]));
-            serverBossBar.setPercent((float) Utils.getPercentage(extendedNClass.getExperiencesFromLevel(),extendedNClass.getnClass().getLevels()[extendedNClass.getLevel()-1]));
+            serverBossBar.setName(Text.of(Utils.capitalizeFirst(classname)+" Level: "+extendedNClass.getLevel()+" +" + exps + "  " + extendedNClass.getExperiencesFromLevel()+"/"+extendedNClass.getnClass().getLevels()[extendedNClass.getLevel()]));
+            serverBossBar.setPercent((float) Utils.getPercentage(extendedNClass.getExperiencesFromLevel(),extendedNClass.getnClass().getLevels()[extendedNClass.getLevel()])/100);
             serverBossBar.setVisible(true);
             setLastTickTime(System.currentTimeMillis());
         }

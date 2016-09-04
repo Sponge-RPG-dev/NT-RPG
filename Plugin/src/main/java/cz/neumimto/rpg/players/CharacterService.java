@@ -926,7 +926,7 @@ public class CharacterService {
     }
 
     public void addExperiences(IActiveCharacter character, double exp, ExtendedNClass aClass, boolean onlyinit) {
-        if (aClass == ExtendedNClass.Default || !aClass.takesExp()) {
+        if (!aClass.takesExp()) {
             return;
         }
         double total = aClass.getExperiences();
@@ -942,6 +942,8 @@ public class CharacterService {
         double levellimit = levels[level];
 
         double newcurrentexp = lvlexp + exp;
+        //100 = 60 + 40
+        //100 > 75
         while (newcurrentexp > levellimit) {
             level++;
             if (!onlyinit) {
@@ -952,7 +954,6 @@ public class CharacterService {
                 event.getaClass().setLevel(event.getLevel());
                 characterAddPoints(character, event.getSkillpointsPerLevel(), event.getAttributepointsPerLevel());
             }
-
             aClass.setExperiencesFromLevel(0);
             if (!aClass.takesExp()) {
                 break;
@@ -960,9 +961,11 @@ public class CharacterService {
             if (level > levels.length - 1) {
                 break;
             }
+            newcurrentexp = newcurrentexp-levellimit;
             levellimit = levels[level];
-            newcurrentexp -= levellimit;
+
         }
+
         if (!onlyinit) {
             aClass.setExperiences(total + exp);
             aClass.setExperiencesFromLevel(aClass.getExperiencesFromLevel() + exp);
@@ -976,7 +979,7 @@ public class CharacterService {
         if (onlyinit) {
             //todo no msg
         } else {
-            Gui.showExpChange(character, aClass.getnClass().getName(), exp);
+            Gui.showExpChange(character, aClass.getnClass().getName(), newcurrentexp);
         }
 
     }
@@ -1028,12 +1031,14 @@ public class CharacterService {
     }
 
     public void respawnCharacter(IActiveCharacter character) {
+        Iterator<Map.Entry<Class<? extends IEffect>, IEffect>> iterator1 = character.getEffectMap().entrySet().iterator();
+
         Iterator<IEffect> iterator = character.getEffects().iterator();
-        IEffect next;
         while (iterator.hasNext()) {
-            next = iterator.next();
+           IEffect next = iterator.next();
             if (next.getEffectSource().isClearedOnDeath()) {
-                effectService.removeEffect(next,character);
+                effectService.stopEffect(next);
+                iterator.remove();
             }
         }
         inventoryService.initializeHotbar(character);

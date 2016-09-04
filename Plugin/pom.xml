@@ -32,6 +32,17 @@
     </repositories>
     <dependencies>
         <dependency>
+            <groupId>org.spongepowered</groupId>
+            <artifactId>spongevanilla</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>launchwrapper</artifactId>
+                    <groupId>net.minecraft</groupId>
+                </exclusion>
+            </exclusions>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.github.NeumimTo</groupId>
             <artifactId>NTCore</artifactId>
         </dependency>

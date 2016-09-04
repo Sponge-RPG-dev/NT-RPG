@@ -28,10 +28,12 @@ import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import org.slf4j.Logger;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -44,6 +46,7 @@ import org.spongepowered.api.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @ResourceLoader.Command
@@ -177,6 +180,19 @@ public class CommandAdmin extends CommandBase {
                 ItemStack itemStack = itemInHand.get();
                 ItemStack itemStack1 = runewordService.reBuildRuneword(itemStack, runeword);
                 p.setItemInHand(HandTypes.MAIN_HAND,itemStack1);
+            }
+        } else if (a[0].equalsIgnoreCase("exp")) {
+            if (a[1].equalsIgnoreCase("add")) {
+                Optional<Player> player = Sponge.getServer().getPlayer(a[2]);
+                if (player.isPresent()) {
+                    IActiveCharacter character = characterService.getCharacter(player.get().getUniqueId());
+                    Set<ExtendedNClass> classes = character.getClasses();
+                    for (ExtendedNClass aClass : classes) {
+                        if (aClass.getnClass().getName().equalsIgnoreCase(a[3])) {
+                            characterService.addExperiences(character,Double.valueOf(a[4]),aClass,false);
+                        }
+                    }
+                }
             }
         }
         return CommandResult.success();

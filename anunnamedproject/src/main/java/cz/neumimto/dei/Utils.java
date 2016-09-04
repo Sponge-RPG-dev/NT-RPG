@@ -8,7 +8,6 @@ import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataManager;
 import org.spongepowered.api.data.DataSerializable;
 import org.spongepowered.api.data.DataView;
-import org.spongepowered.api.data.translator.ConfigurateTranslator;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.io.BufferedReader;
@@ -42,16 +41,17 @@ public class Utils {
 
     public static String serializeToJson(DataContainer container)  {
         try {
-            return toJson(ConfigurateTranslator.instance().translateData(container));
+            return toJson(Sponge.getDataManager().getTranslator(ConfigurationNode.class).get().translate(container));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static <T extends DataSerializable> T deSerializeJson(String json, Class<T> type) throws IOException {
-        DataView target = ConfigurateTranslator.instance().translateFrom(GsonConfigurationLoader.builder().setSource(() -> new BufferedReader(new StringReader(json))).build().load());
+        DataContainer translate = Sponge.getDataManager().getTranslator(String.class).get().translate(json);
+
+        //DataView target = ConfigurateTranslator.instance().translateFrom(GsonConfigurationLoader.builder().setSource(() -> new BufferedReader(new StringReader(json))).build().load());
         DataManager manager = Sponge.getGame().getDataManager();
-        Optional<T> deserialize = manager.deserialize(type, target);//I think this may be outdated by now, but the concept is still the same
-        return deserialize.orElse(null);
+        return manager.deserialize(type,translate).orElse(null);
     }
 }

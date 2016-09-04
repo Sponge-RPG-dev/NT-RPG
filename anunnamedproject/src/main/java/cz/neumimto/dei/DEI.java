@@ -57,10 +57,10 @@ public class DEI {
                 .description(Text.of("Hello World Command"))
                 .permission("myplugin.command.helloworld")
 
-                .executor(new HelloWorldCommand())
+                //.executor()
                 .build();
 
-        Sponge.getCommandManager().register(plugin, myCommandSpec, "helloworld", "hello", "test");
+        //Sponge.getCommandManager().register(plugin, myCommandSpec, "helloworld", "hello", "test");
     }
 
     public void startScheduler() {
