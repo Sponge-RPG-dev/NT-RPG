@@ -11,6 +11,7 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import cz.neumimto.rpg.utils.Utils;
 import cz.neumimto.rpg.utils.XORShiftRnd;
@@ -56,7 +57,7 @@ public class RWService {
     private List<ItemType> allowedRuneItemTypes = new ArrayList<>();
 
 
-    @PostProcess(priority = 8000)
+    @PostProcess(priority = 10000)
     public void load() {
         File p = file.toFile();
         if (!p.exists()) {
@@ -90,16 +91,6 @@ public class RWService {
         rw.setRunes(template.getRunes().stream()./*filter(this::existsRune).*/map(this::getRune).collect(Collectors.toList()));
         rw.setMinLevel(template.getMinLevel());
         Set<ItemType> types = new HashSet<>();
-        template.getAllowedItems().stream().forEach(a -> {
-                    Optional<ItemType> type = game.getRegistry().getType(ItemType.class, a);
-                    if (type.isPresent()) {
-                        ItemType itemType = type.get();
-                        types.add(itemType);
-                    } else {
-                        logger.warn("Unknown item type - " + a);
-                    }
-                }
-        );
         rw.setAllowedItems(types);
         rw.setEffects(template.getEffects().entrySet().stream()
                 .filter(l -> effectService.isGlobalEffect(l.getKey()))
@@ -120,6 +111,10 @@ public class RWService {
         if (!s.startsWith(PluginConfig.RW_LORE_COLOR) || s.length() < 3)
             return null;
         return runewords.get(s.substring(2));
+    }
+
+    public RuneWord getRuneword(String name) {
+        return runewords.get(name);
     }
 
     public List<Text> addRune(List<Text> lore, Rune rune) {
@@ -227,30 +222,57 @@ public class RWService {
             if (PluginConfig.AUTOREMOVE_NONEXISTING_RUNEWORDS) {
                 i.offer(Keys.DISPLAY_NAME, Text.of(i.getItem().getName()));
                 i.offer(Keys.ITEM_LORE, Collections.<Text>emptyList());
-                return i;
             }
+            return i;
         }
 
         i.offer(Keys.DISPLAY_NAME, Text.of(TextColors.GOLD, rw.getName()));
         List<Text> l = new ArrayList<>();
         l.add(Text.of(TextColors.BLUE, Localization.RUNEWORD));
         l.add(Text.of(TextColors.RED, i.get(Keys.ITEM_LORE).get().get(1).toPlain()));
+
         Map<IGlobalEffect, Float> effects = rw.getEffects();
         if (!rw.getRestrictedClasses().isEmpty()) {
             l.add(Text.of(TextColors.RED, Localization.RESTRICTED_CLASSES));
-            l.add(Text.of(TextColors.GRAY, "- " + rw.getRestrictedClasses().stream().map(a -> a.getName()).collect(Collectors.joining(" "))));
+            l.add(Text.of(TextColors.GRAY, "- " + rw.getRestrictedClasses().stream().map(PlayerGroup::getName).collect(Collectors.joining(", "))));
         }
         if (rw.getMinLevel() > 1) {
             l.add(Text.of(TextColors.GRAY, Localization.MIN_LEVEL + ": " + rw.getMinLevel()));
         }
-        i.offer(Keys.ITEM_LORE, l);
-        //todo refactor
+
         for (Map.Entry<IGlobalEffect, Float> entry : effects.entrySet()) {
             IGlobalEffect key = entry.getKey();
             Float value = entry.getValue();
-            l = ItemStackUtils.addItemEffect(i, key, value);
+            l.add(Text.of(TextColors.AQUA, key.getName() + ": " + value));
         }
         i.offer(Keys.ITEM_LORE, l);
         return i;
     }
+
+
+    public boolean canBeInserted(RuneWordTemplate template, ItemStack itemStack) {
+        List<String> allowedItems = template.getAllowedItems();
+        ItemType i = itemStack.getItem();
+        if (allowedItems.contains(itemStack.toString())) {
+            return true;
+        }
+        if (ItemStackUtils.isSword(i)) {
+            for (String allowedItem : allowedItems) {
+                if (allowedItem.startsWith("any")) {
+                    String[] split = allowedItem.split(" ");
+                    if (split.length == 1) {
+                        return true;
+                    }
+                    if (split.length == 2) {
+                        ItemStackUtils.checkType(i,split[1]);
+                    } else {
+                        ItemStackUtils.checkTypeAndMaterial(i,split[2],split[1]);
+                    }
+
+                }
+            }
+        }
+        return false;
+    }
+
 }

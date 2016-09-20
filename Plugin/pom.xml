@@ -14,7 +14,7 @@
 
     <artifactId>NT-RPG</artifactId>
     <groupId>cz.neumimto.rpg</groupId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 
     <properties>
         <timestamp>${maven.build.timestamp}</timestamp>
@@ -31,6 +31,17 @@
         </repository>
     </repositories>
     <dependencies>
+        <dependency>
+            <groupId>org.spongepowered</groupId>
+            <artifactId>spongevanilla</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>launchwrapper</artifactId>
+                    <groupId>net.minecraft</groupId>
+                </exclusion>
+            </exclusions>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>com.github.NeumimTo</groupId>
             <artifactId>NTCore</artifactId>

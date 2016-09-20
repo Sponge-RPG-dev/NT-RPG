@@ -170,4 +170,7 @@ public class DefaultProperties {
 
     @Property(name = "staffs_damage_mult", default_ = 1)
     public static short staffs_damage_mult;
+
+    @Property
+    public static short all_skills_bonus;
 }

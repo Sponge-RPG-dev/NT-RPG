@@ -188,7 +188,6 @@ public class EffectService {
      */
     public void removeEffect(IEffect iEffect, IEffectConsumer consumer) {
         removeEffect(iEffect.getClass(), consumer);
-        effectSet.remove(iEffect);
     }
 
     /**
@@ -273,7 +272,7 @@ public class EffectService {
     }
 
     public boolean isGlobalEffect(String s) {
-        return globalEffects.containsKey(s);
+        return globalEffects.containsKey(s.toLowerCase());
     }
 
     public void removeAllEffects(IActiveCharacter character) {

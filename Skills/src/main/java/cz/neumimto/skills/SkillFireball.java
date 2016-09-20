@@ -43,12 +43,11 @@ public class SkillFireball extends ActiveSkill {
     public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info) {
         Player p = character.getPlayer();
         World world = p.getWorld();
-        Optional<Entity> optional = world.createEntity(EntityTypes.SNOWBALL,p.getLocation().getPosition().add(cos((p.getRotation().getX() - 90) % 360) * 0.2,1.8, sin((p.getRotation().getX() - 90) % 360) * 0.2));
+        Entity optional = world.createEntity(EntityTypes.SNOWBALL,p.getLocation().getPosition().add(cos((p.getRotation().getX() - 90) % 360) * 0.2,1.8, sin((p.getRotation().getX() - 90) % 360) * 0.2));
 
-        if (optional.isPresent()) {
             Vector3d rotation = p.getRotation();
             Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();
-            Snowball sb = (Snowball) optional.get();
+            Snowball sb = (Snowball) optional;
             sb.offer(Keys.VELOCITY, direction.mul(settings.getLevelNodeValue(SkillNode.VELOCITY, info.getLevel())));
             sb.setShooter(p);
             world.spawnEntity(sb, Cause.of(NamedCause.of("player",character.getPlayer())));
@@ -63,7 +62,6 @@ public class SkillFireball extends ActiveSkill {
                 target.getEntity().damage(projectileProperties.getDamage(), build.build());
             });
             return SkillResult.OK;
-        }
-        return SkillResult.CANCELLED;
+
     }
 }

@@ -24,6 +24,7 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.ItemRestriction;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.groups.NClass;
 import cz.neumimto.rpg.skills.SkillData;
@@ -31,6 +32,7 @@ import cz.neumimto.rpg.skills.SkillItemIcon;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.SkillTree;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.trait.IntegerTrait;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
 import org.spongepowered.api.data.manipulator.mutable.item.EnchantmentData;
@@ -42,6 +44,7 @@ import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
@@ -111,6 +114,9 @@ public class ItemStackUtils {
                 POISONOUS_POTATO, ROTTEN_FLESH, PORKCHOP, COOKED_BEEF, COOKED_CHICKEN, COOKED_MUTTON,
                 COOKIE, COOKED_RABBIT, COOKED_FISH, FISH, CHICKEN, MELON));
     }};
+
+    public static Map<String, ItemRestriction> restrictionMap = new HashMap<>();
+
     protected static String ID = "id";
     protected static String QUANTITY = "quantity";
     protected static String DAMAGE = "damage";
@@ -146,36 +152,6 @@ public class ItemStackUtils {
 
     public static boolean isStaff(ItemType type) {
         return staffs.contains(type);
-    }
-
-    public static ItemStack fromConfig(Config c) {
-        String type = c.getString(ID);
-        int amount = c.getInt(QUANTITY);
-        int damage = c.getInt(DAMAGE);
-        String name = c.getString(DISPLAY_NAME);
-        List<Text> stringList = new ArrayList<>();
-        c.getStringList(LORE).stream().forEach(s -> stringList.add(Text.of(s)));
-        Optional<ItemType> asd = globalScope.game.getRegistry().getType(ItemType.class, type);
-        if (asd.isPresent()) {
-            ItemStack item = ItemStack.builder().itemType(asd.get()).build();
-            item.setQuantity(amount);
-            item.offer(Keys.ITEM_LORE, stringList);
-            item.offer(Keys.DISPLAY_NAME, Text.of(name));
-            item.offer(Keys.ITEM_DURABILITY, damage);
-            return item;
-        }
-        throw new RuntimeException("Non existing item type " + type);
-    }
-
-    public static String itemStackToFormatedConfig(ItemStack itemStack) {
-
-        String s = "{" + Utils.LineSeparator;
-        s += formatedConfig.apply(ID, itemStack.getItem().getId());
-        s += formatedConfig.apply(QUANTITY, String.valueOf(itemStack.getQuantity()));
-        s += formatedConfig.apply(DAMAGE, String.valueOf(itemStack.get(Keys.ITEM_DURABILITY).get()));
-        s += formatedConfig.apply(DISPLAY_NAME, itemStack.get(Keys.DISPLAY_NAME).get().toPlain());
-        s += "}";
-        return s;
     }
 
     public static boolean isItemSkillBind(ItemStack is) {
@@ -333,7 +309,7 @@ public class ItemStackUtils {
         } else {
             lore = new ArrayList<>();
         }
-        lore.add(Text.of(TextColors.AQUA, globalEffect.getName() + ":" + level));
+        lore.add(Text.of(TextColors.AQUA, globalEffect.getName() + ": " + level));
         return lore;
     }
 
@@ -345,7 +321,7 @@ public class ItemStackUtils {
         } else {
             lore = new ArrayList<>();
         }
-        lore.add(Text.of(TextColors.AQUA, globalEffect.getName() + ":" + level));
+        lore.add(Text.of(TextColors.AQUA, globalEffect.getName() + ": " + level));
         return lore;
     }
 
@@ -412,11 +388,38 @@ public class ItemStackUtils {
     }
 
     public static void dropItem(Player player, ItemStack itemStack) {
-        Optional<Entity> optional = player.getLocation().getExtent().createEntity(EntityTypes.ITEM, player.getLocation().getPosition());
-        if (optional.isPresent()) {
-            Item item = (Item) optional.get();
+        Entity optional = player.getLocation().getExtent().createEntity(EntityTypes.ITEM, player.getLocation().getPosition());
+        Item item = (Item) optional;
             item.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
             player.getLocation().getExtent().spawnEntity(item, Cause.of(NamedCause.of("player", player)));
+
+    }
+
+    static {
+        restrictionMap.put("L", ItemRestriction.Level);
+        restrictionMap.put("G", ItemRestriction.Group);
+    }
+
+    public static void checkTypeAndMaterial(ItemType i, String item, String material) {
+
+    }
+
+    public static boolean checkType(ItemType i, String item) {
+        if (item.equalsIgnoreCase("sword")){
+            return swords.contains(i);
         }
+        if (item.equalsIgnoreCase("axe")){
+            return axes.contains(i);
+        }
+        if (item.equalsIgnoreCase("pickaxe")) {
+            return pickaxes.contains(i);
+        }
+        if (item.equalsIgnoreCase("hoe")){
+            return hoes.contains(i);
+        }
+        if (item.equalsIgnoreCase("staff")) {
+            return staffs.contains(i);
+        }
+        return false;
     }
 }

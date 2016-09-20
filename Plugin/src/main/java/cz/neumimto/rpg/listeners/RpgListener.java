@@ -28,6 +28,7 @@ import cz.neumimto.rpg.players.CharacterService;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.filter.cause.First;
 
 import java.util.Optional;
 import java.util.UUID;

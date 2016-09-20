@@ -25,10 +25,8 @@ import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.EffectSource;
-import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.effects.common.def.ManaRegeneration;
 import cz.neumimto.rpg.events.CancellableEvent;
@@ -279,7 +277,7 @@ public class CharacterService {
         return 1;
     }
 
-    private void initActiveCharacter(IActiveCharacter character) {
+    public void initActiveCharacter(IActiveCharacter character) {
         character.getPlayer().sendMessage(Text.of(Localization.CURRENT_CHARACTER.replaceAll("%1", character.getName())));
         addDefaultEffects(character);
         for (Map.Entry<String, Integer> entry : character.getCharacterBase().getAttributes().entrySet()) {
@@ -303,6 +301,7 @@ public class CharacterService {
     public void addDefaultEffects(IActiveCharacter character) {
         effectService.addEffect(new ManaRegeneration(character), character);
         effectService.addEffect(new CombatEffect(character), character);
+        effectService.addEffect(new BossBarExpNotifier(character),character);
     }
 
     /**
@@ -927,7 +926,7 @@ public class CharacterService {
     }
 
     public void addExperiences(IActiveCharacter character, double exp, ExtendedNClass aClass, boolean onlyinit) {
-        if (aClass == ExtendedNClass.Default || !aClass.takesExp()) {
+        if (!aClass.takesExp()) {
             return;
         }
         double total = aClass.getExperiences();
@@ -943,6 +942,8 @@ public class CharacterService {
         double levellimit = levels[level];
 
         double newcurrentexp = lvlexp + exp;
+        //100 = 60 + 40
+        //100 > 75
         while (newcurrentexp > levellimit) {
             level++;
             if (!onlyinit) {
@@ -953,7 +954,6 @@ public class CharacterService {
                 event.getaClass().setLevel(event.getLevel());
                 characterAddPoints(character, event.getSkillpointsPerLevel(), event.getAttributepointsPerLevel());
             }
-
             aClass.setExperiencesFromLevel(0);
             if (!aClass.takesExp()) {
                 break;
@@ -961,9 +961,11 @@ public class CharacterService {
             if (level > levels.length - 1) {
                 break;
             }
+            newcurrentexp = newcurrentexp-levellimit;
             levellimit = levels[level];
-            newcurrentexp -= levellimit;
+
         }
+
         if (!onlyinit) {
             aClass.setExperiences(total + exp);
             aClass.setExperiencesFromLevel(aClass.getExperiencesFromLevel() + exp);
@@ -977,7 +979,7 @@ public class CharacterService {
         if (onlyinit) {
             //todo no msg
         } else {
-            Gui.showExpChange(character, aClass.getnClass().getName(), exp);
+            Gui.showExpChange(character, aClass.getnClass().getName(), newcurrentexp);
         }
 
     }
@@ -1026,6 +1028,21 @@ public class CharacterService {
         } else {
             character.getTransientAttributes().put(attribute.getName(), att + amount);
         }
+    }
+
+    public void respawnCharacter(IActiveCharacter character) {
+        Iterator<Map.Entry<Class<? extends IEffect>, IEffect>> iterator1 = character.getEffectMap().entrySet().iterator();
+
+        Iterator<IEffect> iterator = character.getEffects().iterator();
+        while (iterator.hasNext()) {
+           IEffect next = iterator.next();
+            if (next.getEffectSource().isClearedOnDeath()) {
+                effectService.stopEffect(next);
+                iterator.remove();
+            }
+        }
+        inventoryService.initializeHotbar(character);
+        updateAll(character).run();
     }
 }
 

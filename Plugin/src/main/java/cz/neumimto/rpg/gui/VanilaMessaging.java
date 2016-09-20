@@ -23,9 +23,12 @@ import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.NClass;
@@ -33,9 +36,20 @@ import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillTree;
 import cz.neumimto.rpg.skills.StartingPoint;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.boss.BossBar;
+import org.spongepowered.api.boss.BossBarColor;
+import org.spongepowered.api.boss.BossBarColors;
+import org.spongepowered.api.boss.ServerBossBar;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.custom.CustomInventory;
+import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
@@ -56,6 +70,8 @@ public class VanilaMessaging implements IPlayerMessage {
     @Inject
     private GroupService groupService;
 
+    @Inject
+    private EffectService effectService;
 
     @Override
     public boolean isClientSideGui() {
@@ -149,7 +165,14 @@ public class VanilaMessaging implements IPlayerMessage {
     @Override
     public void showExpChange(IActiveCharacter character, String classname, double expchange) {
         Player player = character.getPlayer();
-        player.sendMessage(Text.of(classname + " expchange: +" + expchange));
+        IEffect effect = character.getEffect(BossBarExpNotifier.class);
+        if (effect == null) {
+            effect = new BossBarExpNotifier(character);
+            effectService.addEffect(effect,character);
+        }
+        BossBarExpNotifier bossbar = (BossBarExpNotifier) effect;
+        bossbar.setLevel(character.getPrimaryClass().getLevel());
+        bossbar.notifyExpChange(classname, expchange);
     }
 
     @Override
@@ -184,7 +207,6 @@ public class VanilaMessaging implements IPlayerMessage {
         character.sendMessage(q);
         q = "          Level: " + character.getPrimaryClass().getExperiencesFromLevel() + "/" + character.getPrimaryClass().getnClass().getLevels()[character.getPrimaryClass().getLevel()];
         character.sendMessage(q);
-
     }
 
     @Override
@@ -192,7 +214,11 @@ public class VanilaMessaging implements IPlayerMessage {
         Collection<NClass> classes = groupService.getClasses();
         List<ItemStack> list = new ArrayList<>();
         for (NClass aClass : classes) {
-            ItemStack a = ItemStack.of(aClass.getItemType(), 1);
+            ItemType type = aClass.getItemType();
+            if (type == null) {
+                type = ItemTypes.DIAMOND_SWORD;
+            }
+            ItemStack a = ItemStack.of(type, 1);
             a.offer(Keys.DISPLAY_NAME, Text.of(TextColors.GREEN, TextStyles.BOLD, ""));
             List<Text> lore = new ArrayList<>();
             double[] levels = aClass.getLevels();
@@ -204,5 +230,12 @@ public class VanilaMessaging implements IPlayerMessage {
             a.offer(Keys.ITEM_LORE, lore);
             list.add(a);
         }
+        CustomInventory.Builder builder = CustomInventory.builder();
+
+        builder.size(8);
+        CustomInventory build = builder.build();
+
+        build.set(new SlotIndex(1),ItemStack.of(ItemTypes.SHIELD,1));
+        character.getPlayer().openInventory(build, Cause.of(NamedCause.of("asd",character)));
     }
 }

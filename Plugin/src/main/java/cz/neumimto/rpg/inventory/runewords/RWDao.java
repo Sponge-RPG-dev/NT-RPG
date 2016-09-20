@@ -3,6 +3,7 @@ package cz.neumimto.rpg.inventory.runewords;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigObject;
+import com.typesafe.config.ConfigValue;
 import cz.neumimto.core.ioc.Singleton;
 
 import java.io.File;
@@ -40,9 +41,13 @@ public class RWDao {
             List<String> restricted = config.getStringList(root + "." + a + ".RestrictedClasses");
             List<String> allowedItems = config.getStringList(root + "." + a + ".AllowedItems");
             rw.setAllowedItems(allowedItems);
-            List<String> effects = config.getStringList(root + "." + a + ".Effects");
+            ConfigObject object = config.getObject(root + "." + a + ".Effects");
             Map<String, Float> map = new HashMap<>();
-            effects.stream().map(q -> q.split(":")).forEach(d -> map.put(d[0], Float.parseFloat(d[1])));
+            for (String s1 : object.keySet()) {
+                ConfigValue configValue = object.get(s1);
+                float v = Float.parseFloat(configValue.render());
+                map.put(s1,v);
+            }
             List<String> runes = config.getStringList(root + "." + a + ".Runes");
             rw.setName(name);
             rw.setMinLevel(minlevel);

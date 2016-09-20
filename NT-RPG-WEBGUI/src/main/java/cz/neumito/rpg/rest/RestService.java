@@ -161,8 +161,8 @@ public class RestService {
     }
     Runnable r = () -> {
         //todo config
-        Spark.port(9080);
-        Spark.threadPool(5);
+        Spark.port(WebserverConfig.WEBSERVER_PORT);
+        Spark.threadPool(WebserverConfig.WEBSERVER_THREADPOOL);
         Spark.get("/getSkeleton/:player",(request, response) -> {
             String player = request.params(":player");
             CountDownLatch countDownLatch = new CountDownLatch(1);
@@ -170,13 +170,17 @@ public class RestService {
                 response.body(s);
                 countDownLatch.countDown();
             });
-            countDownLatch.await();
+            try {
+                countDownLatch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             return response.body();
         });
         Spark.get("/createToken/:player", (request, response) -> {
             String player = request.params(":player");
             createToken(player,request.ip());
-            return "{'status':'requested'}";
+            return "{\"status\":\"requested\"}";
         });
         Spark.get("/getSkills/:player", (request, response) -> {
             CountDownLatch latch = new CountDownLatch(1);
@@ -186,7 +190,11 @@ public class RestService {
                 response.body(json);
                 latch.countDown();
             });
-            latch.await();
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             return response.body();
         });
         Spark.post("/getCharacter/:player",(request, response) -> {
@@ -199,7 +207,11 @@ public class RestService {
                     l.countDown();
                 });
             }
-            l.await();
+            try {
+                l.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             return response.body();
         });
         Spark.post("/updateSkills/:player",(request,response) -> {
@@ -230,7 +242,11 @@ public class RestService {
                 //todo cache
                 l.countDown();
             }).submit(plugin);
-            l.await();
+            try {
+                l.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             return response.body();
         });
 
@@ -267,25 +283,26 @@ public class RestService {
         return token.toString();
     }
 
+    private static final int TOKEN_LIFETIME = 7200000;
+
     private void cleanupTokenCache() {
         Iterator<Map.Entry<String, Token>> iterator = tokens.entrySet().iterator();
+        long l = System.currentTimeMillis();
         while (iterator.hasNext()) {
-            long l = System.currentTimeMillis();
             Map.Entry<String, Token> next = iterator.next();
-            if (next.getValue().time + 7200000 <= l ) {
+            if (next.getValue().time + TOKEN_LIFETIME <= l ) {
                 iterator.remove();
             }
         }
     }
 
     private void createToken(String player, String ip) {
-        cleanupTokenCache();
         final Token token = new Token(getToken());
         Sponge.getScheduler().createTaskBuilder().execute(() -> {
             Optional<Player> player1 = Sponge.getGame().getServer().getPlayer(player);
             if (player1.isPresent()) {
                 tokens.put(player1.get().getName().toLowerCase(),token);
-                player1.get().sendMessage(Text.of(String.format("Requested token from ip ,%s ",ip)));
+                player1.get().sendMessage(Text.of(String.format("Requested token from IP ,%s ",ip)));
                 player1.get().sendMessage(Text.of(String.format("Token: %s ",token)));
             }
         }).submit(plugin);

@@ -41,6 +41,7 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
@@ -127,7 +128,7 @@ public class CommandCreate extends CommandBase {
                     character.sendMessage("/create bind [r {skillname}] [l {skillname}]");
                     return CommandResult.empty();
                 }
-                if (!character.getPlayer().getItemInHand().isPresent()) {
+                if (!character.getPlayer().getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
                     ISkill r = null;
                     ISkill l = null;
                     for (int i = 1; i < args.length; i += 2) {
@@ -139,7 +140,7 @@ public class CommandCreate extends CommandBase {
                     }
                     ItemStack i = ItemStack.of(InventoryService.ITEM_SKILL_BIND, 1);
                     inventoryService.createHotbarSkill(i, r, l);
-                    character.getPlayer().setItemInHand(i);
+                    character.getPlayer().setItemInHand(HandTypes.MAIN_HAND,i);
                 } else {
                     character.getPlayer().sendMessage(Text.of(Localization.EMPTY_HAND_REQUIRED));
                 }

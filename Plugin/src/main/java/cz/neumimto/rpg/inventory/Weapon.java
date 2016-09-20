@@ -22,33 +22,40 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.scoreboard.objective.Objective;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by NeumimTo on 31.1.2015.
  */
-public class Weapon extends HotbarObject {
+public class Weapon extends Charm {
 
     public static Weapon EmptyHand = new Weapon(null);
-    private final ItemType itemType;
     protected double damage;
-    protected boolean isShield;
     protected boolean current;
     private Map<IGlobalEffect, Integer> effects = new HashMap<>();
     private ItemStack itemStack;
     private boolean isRuneword;
     private int level;
+    private Map<ItemRestriction,Object> restrictionSet = new HashMap<>();
 
-    public Weapon(ItemType itemType) {
-        this.itemType = itemType;
+    public Weapon(ItemStack itemStack) {
+        this.itemStack = itemStack;
         type = HotbarObjectTypes.WEAPON;
     }
 
+    public Map<ItemRestriction,Object> getRestrictions() {
+        return restrictionSet;
+    }
+
     public ItemType getItemType() {
-        return itemType;
+        return itemStack.getItem();
     }
 
     public void setDamage(float f) {
@@ -64,11 +71,7 @@ public class Weapon extends HotbarObject {
     }
 
     public boolean isShield() {
-        return isShield;
-    }
-
-    public void setShield(boolean shield) {
-        isShield = shield;
+        return itemStack.getItem() == ItemTypes.SHIELD;
     }
 
     public Map<IGlobalEffect, Integer> getEffects() {
@@ -93,18 +96,20 @@ public class Weapon extends HotbarObject {
 
     @Override
     public void onRightClick(IActiveCharacter character) {
-        if (!current)
-            NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character, this);
-        else if (character.isSocketing()) {
+        if (character.isSocketing()) {
             NtRpgPlugin.GlobalScope.inventorySerivce.insertRune(character);
+        } else if (!current) {
+            NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character, this);
         }
     }
 
     @Override
     public void onLeftClick(IActiveCharacter character) {
-        if (!current)
+        if (character.isSocketing()) {
+            NtRpgPlugin.GlobalScope.inventorySerivce.cancelSocketing(character);
+        } else if (!current) {
             NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character, this);
-
+        }
     }
 
     public ItemStack getItemStack() {

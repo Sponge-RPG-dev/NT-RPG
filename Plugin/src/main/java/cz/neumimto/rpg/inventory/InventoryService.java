@@ -34,7 +34,10 @@ import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
+import org.spongepowered.api.event.item.inventory.TargetContainerEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Carrier;
@@ -64,18 +67,27 @@ public class InventoryService {
     public static TextColor ENCHANTMENT_COLOR = TextColors.BLUE;
     public static TextColor LEVEL_COLOR = TextColors.YELLOW;
     public static TextColor RESTRICTIONS = TextColors.LIGHT_PURPLE;
+
+
+
     @Inject
     private SkillService skillService;
+
     @Inject
     private Game game;
+
     @Inject
     private CharacterService characterService;
+
     @Inject
     private EffectService effectService;
+
     @Inject
     private DamageService damageService;
+
     @Inject
     private RWService rwService;
+
     private Map<UUID, InventoryMenu> inventoryMenus = new HashMap<>();
 
     public ItemStack getHelpItem(List<String> lore, ItemType type) {
@@ -93,22 +105,12 @@ public class InventoryService {
             inventoryMenus.put(uuid, menu);
     }
 
-    public void changeEquipmentInHand(IActiveCharacter character,int from, int to,ItemStack newitem) {
-        HotbarObject hotbarObject = character.getHotbar()[from];
-        if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE && hotbarObject.getType() == HotbarObjectTypes.WEAPON) {
-            hotbarObject.onUnEquip(character);
-        }
-        HotbarObject a = character.getHotbar()[to];
-        if (a != HotbarObject.EMPTYHAND_OR_CONSUMABLE && a.getType() == HotbarObjectTypes.WEAPON) {
-            a.onEquip(newitem,character);
-        }
-    }
-
     public void initializeHotbar(IActiveCharacter character) {
-        int i = 0;
-        for (Inventory inventory : character.getPlayer().getInventory().query(Hotbar.class)) {
+        if (character.isStub())
+            return;
+        int size = character.getPlayer().getInventory().query(Hotbar.class).size();
+        for (int i = 0; i<size; i++) {
             initializeHotbar(character,i);
-            i++;
         }
     }
 
@@ -132,14 +134,16 @@ public class InventoryService {
                 }
                 ItemStack i = peek.get();
                 HotbarObject hotbarObject = getHotbarObject(character, i);
+
                 if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
+                    hotbarObject.setSlot(slot);
                     character.getHotbar()[slot] = hotbarObject;
                     if (hotbarObject.getType() == HotbarObjectTypes.CHARM) {
                         hotbarObject.onEquip(i,character);
-                    }
-                    if (hotbarObject.getType() == HotbarObjectTypes.WEAPON && slot == selectedSlotIndex) {
+                    } else if (hotbarObject.getType() == HotbarObjectTypes.WEAPON && slot == selectedSlotIndex) {
                         hotbarObject.onEquip(i,character);
                     }
+
                 } else {
                     character.getHotbar()[slot] = HotbarObject.EMPTYHAND_OR_CONSUMABLE;
                 }
@@ -169,6 +173,7 @@ public class InventoryService {
     private Charm buildCharm(IActiveCharacter character, ItemStack is) {
         Charm charm = new Charm();
         charm.setEffects(ItemStackUtils.getItemEffects(is));
+
         return charm;
     }
 
@@ -183,12 +188,13 @@ public class InventoryService {
         return rune;
     }
 
-    private Weapon buildHotbarWeapon(IActiveCharacter character, ItemStack is) {
-        Weapon w = new Weapon(is.getItem());
+    public Weapon buildHotbarWeapon(IActiveCharacter character, ItemStack is) {
+        Weapon w = new Weapon(is);
         Optional<List<Text>> a = is.get(Keys.ITEM_LORE);
         if (!a.isPresent()) {
             return w;
         }
+        w.setItemStack(is);
         List<Text> texts = a.get();
         Map<IGlobalEffect, Integer> map = new HashMap<>();
         for (Text text : texts) {
@@ -206,7 +212,7 @@ public class InventoryService {
         return w;
     }
 
-    protected HotbarSkill buildHotbarSkill(IActiveCharacter character, ItemStack is) {
+    public HotbarSkill buildHotbarSkill(IActiveCharacter character, ItemStack is) {
         HotbarSkill skill = new HotbarSkill();
         Optional<Text> text = is.get(Keys.DISPLAY_NAME);
         if (text.isPresent()) {
@@ -283,12 +289,12 @@ public class InventoryService {
         }
     }
 
-    public void changeEquipedWeapon(IActiveCharacter character, Weapon weapon) {
+    protected void changeEquipedWeapon(IActiveCharacter character, Weapon weapon) {
         changeEquipedWeapon(character, weapon.getItemStack());
     }
 
-    //todo
-    public void changeEquipedWeapon(IActiveCharacter character, ItemStack weapon) {
+
+    protected void changeEquipedWeapon(IActiveCharacter character, ItemStack weapon) {
         //old
         Weapon mainHand = character.getMainHand();
         mainHand.current = false;
@@ -297,21 +303,22 @@ public class InventoryService {
         //new
         Weapon weapon1 = buildHotbarWeapon(character, weapon);
         effectService.applyGlobalEffectsAsEnchantments(weapon1.getEffects(), character);
-        weapon1.setItemStack(weapon);
-        int slot = mainHand.getSlot();
+
+        int slot = ((Hotbar) character.getPlayer().getInventory().query(Hotbar.class)).getSelectedSlotIndex();
         character.setHotbarSlot(slot, weapon1);
         weapon1.current = true;
         damageService.recalculateCharacterWeaponDamage(character);
     }
 
     public void startSocketing(IActiveCharacter character) {
-        Optional<ItemStack> itemInHand = character.getPlayer().getItemInHand();
+        Optional<ItemStack> itemInHand = character.getPlayer().getItemInHand(HandTypes.MAIN_HAND);
         if (itemInHand.isPresent()) {
             Hotbar h = character.getPlayer().getInventory().query(Hotbar.class);
             int selectedSlotIndex = h.getSelectedSlotIndex();
             HotbarObject o = character.getHotbar()[selectedSlotIndex];
             if (o.getType() == HotbarObjectTypes.RUNE) {
                 character.setCurrentRune(selectedSlotIndex);
+                Gui.sendMessage(character,Localization.SOCKET_HELP);
             }
         }
     }
@@ -319,7 +326,7 @@ public class InventoryService {
     public void insertRune(IActiveCharacter character) {
         if (!character.isSocketing())
             return;
-        Optional<ItemStack> itemInHand = character.getPlayer().getItemInHand();
+        Optional<ItemStack> itemInHand = character.getPlayer().getItemInHand(HandTypes.MAIN_HAND);
         if (itemInHand.isPresent()) {
             ItemStack itemStack = itemInHand.get();
             if (ItemStackUtils.hasSockets(itemStack)) {
@@ -350,14 +357,22 @@ public class InventoryService {
                     CarriedInventory<? extends Carrier> inventory = character.getPlayer().getInventory();
                     Inventory query = inventory.query(Hotbar.class).query(new SlotIndex(character.getCurrentRune()));
                     query.clear();
-                    character.getPlayer().setItemInHand(i);
+                    character.getPlayer().setItemInHand(HandTypes.MAIN_HAND,i);
                     if (!rwService.hasEmptySocket(i.get(Keys.ITEM_LORE).get())) {
                         i = rwService.findRuneword(i);
-                        character.getPlayer().setItemInHand(i);
+                        character.getPlayer().setItemInHand(HandTypes.MAIN_HAND,i);
                     }
                 }
             }
         }
+    }
+
+    public void cancelSocketing(IActiveCharacter character) {
+        if (character.isSocketing()) {
+            Gui.sendMessage(character, Localization.SOCKET_CANCELLED);
+        }
+        character.setCurrentRune(-1);
+
     }
 
 }

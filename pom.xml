@@ -12,6 +12,7 @@
         <module>Plugin</module>
         <module>Skills</module>
         <module>NT-RPG-WEBGUI</module>
+        <module>anunnamedproject</module>
     </modules>
 
     <properties>
@@ -35,6 +36,12 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.spongepowered</groupId>
+                <artifactId>spongevanilla</artifactId>
+                <version>1.10.2-5.0.0-BETA-112</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
                 <groupId>com.github.NeumimTo</groupId>
                 <artifactId>NTCore</artifactId>
                 <version>f000d9633b</version>
@@ -43,7 +50,7 @@
             <dependency>
                 <groupId>org.spongepowered</groupId>
                 <artifactId>spongeapi</artifactId>
-                <version>5.0.0-20160504.030150-18</version>
+                <version>5.0.0-20160827.211701-103</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
