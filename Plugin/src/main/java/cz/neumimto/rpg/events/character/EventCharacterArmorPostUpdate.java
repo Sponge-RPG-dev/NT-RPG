@@ -21,6 +21,7 @@ package cz.neumimto.rpg.events.character;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.impl.AbstractEvent;
 import org.spongepowered.api.item.ItemType;
 
 import java.util.Set;
@@ -28,7 +29,7 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 25.7.2015.
  */
-public class EventCharacterArmorPostUpdate implements Event {
+public class EventCharacterArmorPostUpdate extends AbstractEvent {
     IActiveCharacter character;
     Set<ItemType> armor;
     private Cause cause = null;

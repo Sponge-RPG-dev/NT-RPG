@@ -21,12 +21,13 @@ package cz.neumimto.rpg.events;
 import org.spongepowered.api.event.Cancellable;
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.impl.AbstractEvent;
 
 
 /**
  * Created by NeumimTo on 12.2.2015.
  */
-public class CancellableEvent implements Cancellable, Event {
+public class CancellableEvent extends AbstractEvent implements Cancellable {
 
     public boolean cancelled;
 

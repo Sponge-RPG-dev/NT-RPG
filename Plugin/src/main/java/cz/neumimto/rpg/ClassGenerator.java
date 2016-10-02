@@ -6,6 +6,7 @@ import javassist.CannotCompileException;
 import jdk.internal.dynalink.beans.StaticClass;
 import org.objectweb.asm.*;
 import org.spongepowered.api.event.Event;
+import org.spongepowered.api.event.item.inventory.DropItemEvent;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

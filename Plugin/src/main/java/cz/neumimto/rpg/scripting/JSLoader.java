@@ -71,7 +71,7 @@ public class JSLoader {
             engine = new NashornScriptEngineFactory().getScriptEngine();
             loadSkills();
         } catch (ClassNotFoundException e) {
-            System.out.println("Nashorn was not loaded. To enable javascript support place nashorn.jar into your mods folder");
+            System.out.println("Nashorn was not loaded. To enable javascript support place nashorn.jar into your config/nt-core folder");
         }
     }
 

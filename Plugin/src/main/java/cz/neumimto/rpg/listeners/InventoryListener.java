@@ -100,7 +100,7 @@ public class InventoryListener {
 
     @Listener
     @Exclude(DropItemEvent.Pre.class)
-    public void onItemDrop(DropItemEvent event, @First(typeFilter = {Player.class}) Player player) {
+    public void onItemDrop(DropItemEvent.Dispense event, @First(typeFilter = {Player.class}) Player player) {
         IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
         if (character.getPlayer().get(Keys.GAME_MODE).get() == GameModes.CREATIVE)
             return;

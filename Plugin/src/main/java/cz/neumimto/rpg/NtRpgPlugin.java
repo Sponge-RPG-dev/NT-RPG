@@ -30,6 +30,7 @@ import cz.neumimto.rpg.utils.FileUtils;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GamePostInitializationEvent;
 import org.spongepowered.api.plugin.Dependency;
@@ -48,13 +49,20 @@ import java.util.Optional;
 /**
  * Created by NeumimTo on 29.4.2015.
  */
-@Plugin(id = "cz.neumimto.rpg", version = "1.0.0", name = "NT-Rpg", dependencies = {@Dependency(id = "MinecraftGuiServer", optional = true),
-        @Dependency(id = "cz.neumimto.core")})
+@Plugin(id = "nt-rpg", version = "1.0.0", name = "NT-Rpg", dependencies = {
+        @Dependency(id = "MinecraftGuiServer", optional = true),
+        @Dependency(id = "nt-core", version = "1.5",optional = false)
+})
 public class NtRpgPlugin {
     public static String workingDir;
     public static File pluginjar;
     public static GlobalScope GlobalScope;
-    private static String configPath = File.separator + "mods" + File.separator + "NtRpg";
+
+    @Inject
+    @ConfigDir(sharedRoot = false)
+    private Path config;
+
+
     @Inject
     public Logger logger;
 
@@ -77,10 +85,10 @@ public class NtRpgPlugin {
         ioc.registerDependency(this);
 
         try {
-            workingDir = new File(".").getCanonicalPath() + configPath;
+            workingDir = config.toString();
             URL url = FileUtils.getPluginUrl();
             pluginjar = new File(url.toURI());
-        } catch (IOException | URISyntaxException e) {
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
         Path path = Paths.get(workingDir);
