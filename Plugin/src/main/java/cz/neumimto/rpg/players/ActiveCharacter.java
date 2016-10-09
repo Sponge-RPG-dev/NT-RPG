@@ -18,9 +18,12 @@
 
 package cz.neumimto.rpg.players;
 
+import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.Weapon;
+import cz.neumimto.rpg.persistance.model.CharacterClass;
+import cz.neumimto.rpg.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.players.groups.Guild;
 import cz.neumimto.rpg.players.groups.NClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
@@ -40,7 +43,6 @@ import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
 import org.spongepowered.api.service.permission.SubjectData;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Tristate;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
@@ -265,11 +267,10 @@ public class ActiveCharacter implements IActiveCharacter {
     public void addExperiences(double exp, ExperienceSource source) {
         for (ExtendedNClass nClass : classes) {
             if (nClass.getnClass().hasExperienceSource(source)) {
-                Double nClass1 = getCharacterBase().getClasses().get(nClass.getnClass().getName());
+                CharacterClass c = getCharacterBase().getCharacterClass(nClass.getnClass());
+                Double nClass1 = c.getExperiences() == null ? 0 : c.getExperiences();
                 if (nClass1 == null) {
-                    getCharacterBase().getClasses().put(nClass.getnClass().getName(), exp);
-                } else {
-                    getCharacterBase().getClasses().put(nClass.getnClass().getName(), exp + nClass1);
+                    c.setExperiences(exp);
                 }
             }
         }
@@ -289,16 +290,6 @@ public class ActiveCharacter implements IActiveCharacter {
     public void resetRightClicks() {
         click.setTimes(0);
         click.setLastTime(0);
-    }
-
-    @Override
-    public int getSkillPoints() {
-        return base.getSkillPoints();
-    }
-
-    @Override
-    public void setSkillPoints(int skillPoints) {
-        this.base.setSkillPoints(skillPoints);
     }
 
     @Override
@@ -337,18 +328,26 @@ public class ActiveCharacter implements IActiveCharacter {
             //      fixPropertyLevelValues(getPrimaryClass().getnClass().getPropLevelBonus(), -1);
             skills.clear();
         }
-        if (slot > 0)
-            throw new NotImplementedException();
+
         classes.clear();
         primary = new ExtendedNClass();
         primary.setnClass(nclass);
         primary.setPrimary(true);
         classes.add(primary);
-        Double aDouble = getCharacterBase().getClasses().get(nclass.getName());
+        CharacterClass cc = getCharacterBase().getCharacterClass(nclass);
+        if (cc == null) {
+            cc = new CharacterClass();
+            cc.setCharacterBase(getCharacterBase());
+        }
+        Double aDouble = cc.getExperiences();
         if (aDouble == null) {
             primary.setExperiences(0D);
             primary.setLevel(0);
-            getCharacterBase().getClasses().put(nclass.getName(), 0D);
+            if (slot == 0) {
+                cc.setSkillPoints(PluginConfig.SKILLPOINTS_ON_START);
+            }
+            cc.setExperiences(0D);
+            getCharacterBase().getCharacterClasses().add(cc);
         } else {
             //  primary.setLevel(getCharacterBase().getLevel());
             primary.setExperiences(aDouble);
@@ -368,12 +367,12 @@ public class ActiveCharacter implements IActiveCharacter {
 
     @Override
     public Map<String, Long> getCooldowns() {
-        return getCharacterBase().getCooldowns();
+        return getCharacterBase().getCharacterCooldowns();
     }
 
     @Override
     public boolean hasCooldown(String thing) {
-        return getCharacterBase().getCooldowns().containsKey(thing);
+        return getCharacterBase().getCharacterCooldowns().containsKey(thing);
     }
 
     private void mergeWeapons(PlayerGroup g) {
@@ -503,7 +502,7 @@ public class ActiveCharacter implements IActiveCharacter {
 
     @Override
     public void getRemoveAllSkills() {
-        getCharacterBase().getSkills().clear();
+        getCharacterBase().getCharacterSkills().clear();
         skills.clear();
     }
 

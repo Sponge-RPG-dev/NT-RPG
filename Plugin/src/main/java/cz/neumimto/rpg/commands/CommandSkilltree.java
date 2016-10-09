@@ -83,7 +83,7 @@ public class CommandSkilltree extends CommandBase {
             if (skillData == null) {
                 skillData = nClass.getSkillTree().getSkills().get(StartingPoint.name);
             }
-            Gui.moveSkillTreeMenu(character, nClass.getSkillTree(), character.getCharacterBase().getSkills(), skillData);
+
             return CommandResult.success();
         }
         return CommandResult.empty();

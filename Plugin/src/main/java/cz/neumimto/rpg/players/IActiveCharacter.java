@@ -92,10 +92,6 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     void resetRightClicks();
 
-    int getSkillPoints();
-
-    void setSkillPoints(int skillPoints);
-
     int getAttributePoints();
 
     void setAttributePoints(int attributePoints);

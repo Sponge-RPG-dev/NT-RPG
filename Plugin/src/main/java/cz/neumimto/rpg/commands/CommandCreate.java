@@ -38,12 +38,15 @@ import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.service.pagination.PaginationList;
+import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
 
 /**
@@ -95,7 +98,6 @@ public class CommandCreate extends CommandBase {
                         characterBase.setRace(Race.Default.getName());
                         characterBase.setPrimaryClass(NClass.Default.getName());
                         characterBase.setUuid(player.getUniqueId());
-                        characterBase.setSkillPoints(PluginConfig.SKILLPOINTS_ON_START);
                         characterBase.setAttributePoints(PluginConfig.ATTRIBUTEPOINTS_ON_START);
                         characterService.createAndUpdate(characterBase);
                         IActiveCharacter character = characterService.buildActiveCharacterAsynchronously(player, characterBase);
@@ -103,6 +105,8 @@ public class CommandCreate extends CommandBase {
                             characterService.setActiveCharacterSynchronously(player.getUniqueId(), character);
                         }
                         commandSource.sendMessage(Text.of(CommandLocalization.CHARACTER_CREATED.replaceAll("%1", characterBase.getName())));
+
+                        Gui.sendListOfCharacters(character,characterBase);
                     }
                 }).submit(plugin);
             } else if (args[0].equalsIgnoreCase("party")) {

@@ -40,7 +40,7 @@ public class Town implements IHasClaims<TownClaim> {
     private TownType townType;
 
     @OneToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name="leader_citizen_id")
+    @JoinColumn(name="citizenId")
     private Citizen leader;
 
     @ElementCollection

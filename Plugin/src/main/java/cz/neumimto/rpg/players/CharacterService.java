@@ -20,6 +20,7 @@ package cz.neumimto.rpg.players;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
+import cz.neumimto.rpg.MissingConfigurationException;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.configuration.Localization;
@@ -46,6 +47,9 @@ import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.persistance.PlayerDao;
+import cz.neumimto.rpg.persistance.model.CharacterClass;
+import cz.neumimto.rpg.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.players.groups.Guild;
 import cz.neumimto.rpg.players.groups.NClass;
 import cz.neumimto.rpg.players.groups.Race;
@@ -280,10 +284,11 @@ public class CharacterService {
     public void initActiveCharacter(IActiveCharacter character) {
         character.getPlayer().sendMessage(Text.of(Localization.CURRENT_CHARACTER.replaceAll("%1", character.getName())));
         addDefaultEffects(character);
-        for (Map.Entry<String, Integer> entry : character.getCharacterBase().getAttributes().entrySet()) {
-            ICharacterAttribute attribute = playerPropertyService.getAttribute(entry.getKey());
+        Set<BaseCharacterAttribute> baseCharacterAttribute = character.getCharacterBase().getBaseCharacterAttribute();
+        for (BaseCharacterAttribute at : baseCharacterAttribute) {
+            ICharacterAttribute attribute = playerPropertyService.getAttribute(at.getName());
             if (attribute != null) {
-                assignAttribute(character, attribute, entry.getValue());
+                assignAttribute(character, attribute, character.getLevel());
             }
         }
 
@@ -429,7 +434,7 @@ public class CharacterService {
         //activeCharacter.setGuild(groupService.getGuild(characterBase.getGuild()));
         activeCharacter.setPrimaryClass(groupService.getNClass(characterBase.getPrimaryClass()));
         String s = activeCharacter.getPrimaryClass().getnClass().getName();
-        Double d = characterBase.getClasses().get(s);
+        Double d = characterBase.getCharacterClass(activeCharacter.getPrimaryClass().getnClass()).getExperiences();
         if (d != null) {
             activeCharacter.getPrimaryClass().setExperiences(d);
         }
@@ -443,7 +448,14 @@ public class CharacterService {
                 .execute(() -> {
                     initSkills(activeCharacter);
                     //todo all classes, for now only primary
-                    Double exp = characterBase.getClasses().get(characterBase.getPrimaryClass());
+                    Set<CharacterClass> characterClasses = characterBase.getCharacterClasses();
+                    Double exp = null;
+                    Optional<CharacterClass> first = characterClasses.stream()
+                            .filter(a -> a.getName().equalsIgnoreCase(characterBase.getPrimaryClass()))
+                            .findFirst();
+                    if (first.isPresent()) {
+                        first.get().getExperiences();
+                    }
                     if (exp != null) {
                         addExperiences(activeCharacter, exp, activeCharacter.getPrimaryClass(), true);
                     }
@@ -498,9 +510,13 @@ public class CharacterService {
 
 
     private void resolveSkillsCds(CharacterBase characterBase, IActiveCharacter character) {
-        //todo fetch lazy
-        Map<String, Long> cooldowns = characterBase.getCooldowns();
-        Map<String, Integer> skills = characterBase.getSkills();
+        character.getCooldowns();
+
+
+        Map<String, Integer> skills = new HashMap<>();
+        Set<CharacterSkill> characterSkills = characterBase.getCharacterSkills();
+        characterSkills.stream().forEach(characterSkill -> skills.put(characterSkill.getName(),characterSkill.getLevel()));
+        Map<String, Long> cooldowns = characterBase.getCharacterCooldowns();
 
         long l = System.currentTimeMillis();
         Iterator<Map.Entry<String, Long>> iterator = cooldowns.entrySet().iterator();
@@ -509,6 +525,7 @@ public class CharacterService {
             if (next.getValue() <= l) ;
             iterator.remove();
         }
+        characterBase.getCharacterCooldowns().clear();
         for (Map.Entry<String, Integer> stringIntegerEntry : skills.entrySet()) {
             ExtendedSkillInfo info = new ExtendedSkillInfo();
             ISkill skill = skillService.getSkill(stringIntegerEntry.getKey());
@@ -529,33 +546,40 @@ public class CharacterService {
     //todo merge
 
     /**
-     * Due to fetchtype Lazy is [u]recommended[/u] to run this method only from async thread.
-     *
      * @param player
      * @param characterBase
      * @return
      */
     public ActiveCharacter buildActiveCharacterAsynchronously(Player player, CharacterBase characterBase) {
+        playerDao.fetchCharacterBase(characterBase);
         ActiveCharacter activeCharacter = new ActiveCharacter(player, characterBase);
         activeCharacter.setRace(groupService.getRace(characterBase.getRace()));
         // activeCharacter.setGuild(groupService.getGuild(characterBase.getGuild()));
         activeCharacter.setPrimaryClass(groupService.getNClass(characterBase.getPrimaryClass()));
         String s = activeCharacter.getPrimaryClass().getnClass().getName();
-        Double d = characterBase.getClasses().get(s);
-        if (d != null) {
-            activeCharacter.getPrimaryClass().setExperiences(d);
-        }
-        recalculateProperties(activeCharacter);
-        resolveSkillsCds(characterBase, activeCharacter);
-        initSkills(activeCharacter);
-        Double exp = characterBase.getClasses().get(characterBase.getPrimaryClass());
-        if (exp != null) {
-            addExperiences(activeCharacter, exp, activeCharacter.getPrimaryClass(), true);
+        Optional<CharacterClass> first = characterBase.getCharacterClasses()
+                .stream()
+                .filter(a -> s.equalsIgnoreCase(a.getName()))
+                .findFirst();
+        if (first.isPresent()) {
+            CharacterClass cc = first.get();
+            Double d = cc.getExperiences();
+            if (d != null) {
+                activeCharacter.getPrimaryClass().setExperiences(d);
+            }
+            recalculateProperties(activeCharacter);
+            resolveSkillsCds(characterBase, activeCharacter);
+            initSkills(activeCharacter);
+            Double exp = d;
+            if (exp != null) {
+                addExperiences(activeCharacter, exp, activeCharacter.getPrimaryClass(), true);
+            }
         }
         game.getScheduler().createTaskBuilder().name("FetchCharBaseDataCallback-" + player.getUniqueId())
-                .execute(updateAll(activeCharacter)
-                ).submit(plugin);
+                 .execute(updateAll(activeCharacter)
+        ).submit(plugin);
         return activeCharacter;
+
     }
 
     /**
@@ -650,7 +674,19 @@ public class CharacterService {
     public Pair<SkillTreeActionResult, SkillTreeActionResult.Data> upgradeSkill(IActiveCharacter character, ISkill skill) {
         Pair p = new Pair();
 
-        if (character.getSkillPoints() <= 0) {
+        CharacterClass cc = null;
+        Set<ExtendedNClass> classes = character.getClasses();
+
+        for (ExtendedNClass aClass : classes) {
+            Map<String, SkillData> skills = aClass.getnClass().getSkillTree().getSkills();
+            if (skills.containsValue(skill)) {
+                cc = character.getCharacterBase().getCharacterClass(aClass.getnClass());
+                break;
+            }
+        }
+
+
+        if (cc.getSkillPoints() < 1) {
             p.key = SkillTreeActionResult.NO_SKILLPOINTS;
             p.value = new SkillTreeActionResult.Data(skill.getName());
             return p;
@@ -680,10 +716,11 @@ public class CharacterService {
             return p;
         }
         extendedSkillInfo.setLevel(event.getLevel());
-        int s = character.getCharacterBase().getSkillPoints();
-        character.getCharacterBase().setSkillPoints((short) (s - 1));
-        character.getCharacterBase().setUsedSkillPoints((short) (s + 1));
-        character.getCharacterBase().getSkills().put(extendedSkillInfo.getSkill().getName(), event.getLevel());
+        int s = cc.getSkillPoints();
+        cc.setSkillPoints(s - 1);
+        cc.setUsedSkillPoints(s + 1);
+        CharacterSkill characterSkill = character.getCharacterBase().getCharacterSkill(skill);
+        characterSkill.setLevel(extendedSkillInfo.getLevel());
         putInSaveQueue(character.getCharacterBase());
         skill.skillUpgrade(character, event.getLevel());
         p.key = SkillTreeActionResult.UPGRADED;
@@ -694,17 +731,29 @@ public class CharacterService {
     /**
      * @param character
      * @param skill
-     * @return 1 - if the player has no avalaible skill points
-     * 2 - if the player is below required level
-     * 4 - if the player has none of required skills in the chain
-     * 5 - if the player has none of (soft)required skills in the chain
-     * 6 - if the player already has the skill
-     * 3 - event SkillLearnEvent is cancelled
-     * 0 - ok;
      */
     public Pair<SkillTreeActionResult, SkillTreeActionResult.Data> characterLearnskill(IActiveCharacter character, ISkill skill, SkillTree skillTree) {
-        Pair p = new Pair();
-        if (character.getSkillPoints() < 1) {
+        Pair<SkillTreeActionResult,SkillTreeActionResult.Data> p = new Pair();
+
+        ExtendedNClass nClass = null;
+        for (ExtendedNClass extendedNClass : character.getClasses()) {
+            if (extendedNClass.getnClass().getSkillTree() == skillTree) {
+                nClass = extendedNClass;
+                break;
+            }
+        }
+
+        if (nClass == null) {
+            p.key = SkillTreeActionResult.NO_ACCESS_TO_SKILL;
+            return p;
+        }
+        int avalaibleSkillpoints = 0;
+        CharacterClass clazz = character.getCharacterBase().getCharacterClass(nClass.getnClass());
+        if (clazz == null) {
+            throw new MissingConfigurationException("Class="+nClass.getnClass().getName()+". Renamed?");
+        }
+
+        if (avalaibleSkillpoints < 1) {
             p.key = SkillTreeActionResult.NO_SKILLPOINTS;
             p.value = new SkillTreeActionResult.Data(skill.getName());
             return p;
@@ -757,17 +806,23 @@ public class CharacterService {
             return p;
         }
 
-        int s = character.getCharacterBase().getSkillPoints();
-        character.getCharacterBase().setSkillPoints((short) (s - 1));
-        character.getCharacterBase().setUsedSkillPoints((short) (s + 1));
 
+        clazz.setSkillPoints(avalaibleSkillpoints - 1);
+        clazz.setUsedSkillPoints(avalaibleSkillpoints + 1);
 
         ExtendedSkillInfo einfo = new ExtendedSkillInfo();
         einfo.setLevel(1);
         einfo.setSkill(skill);
         einfo.setSkillData(skillTree.getSkills().get(skill.getName()));
         character.addSkill(skill.getName().toLowerCase(), einfo);
-        character.getCharacterBase().getSkills().put(skill.getName(), einfo.getLevel());
+
+        CharacterSkill skill1 = new CharacterSkill();
+        skill1.setLevel(1);
+        skill1.setCharacterBase(character.getCharacterBase());
+        skill1.setFromClass(clazz);
+        skill1.setName(skill.getName());
+        character.getCharacterBase().getCharacterSkills().add(skill1);
+
         putInSaveQueue(character.getCharacterBase());
         skill.skillLearn(character);
         p.key = SkillTreeActionResult.LEARNED;
@@ -802,9 +857,10 @@ public class CharacterService {
         }
         int level = skillInfo.getLevel();
         skill.skillRefund(character);
-        int skillPoints = character.getCharacterBase().getSkillPoints();
-        character.getCharacterBase().setSkillPoints((short) (skillPoints + level));
-        character.getCharacterBase().setUsedSkillPoints((short) (skillPoints - level));
+        CharacterClass cc = character.getCharacterBase().getCharacterClass(nClass);
+        int skillPoints = cc.getSkillPoints();
+        cc.setSkillPoints(skillPoints + level);
+        cc.setUsedSkillPoints(skillPoints - level);
         putInSaveQueue(character.getCharacterBase());
         return 0;
     }
@@ -822,12 +878,16 @@ public class CharacterService {
         if (characterBase.isCanResetskills() || force) {
             characterBase.setCanResetskills(false);
             characterBase.setLastReset(new Date(System.currentTimeMillis()));
-            characterBase.getSkills().clear();
+            characterBase.getCharacterSkills().clear();
             character.getRemoveAllSkills();
-            characterBase.getCooldowns().clear();
-            int usedSkillPoints = characterBase.getUsedSkillPoints();
-            characterBase.setUsedAttributePoints((short) 0);
-            characterBase.setSkillPoints((short) (characterBase.getSkillPoints() + usedSkillPoints));
+            characterBase.getCharacterCooldowns().clear();
+            Set<CharacterClass> characterClasses = character.getCharacterBase().getCharacterClasses();
+            character.getCharacterBase().getCharacterSkills().clear();
+            for (CharacterClass characterClass : characterClasses) {
+                int usedSkillPoints = characterClass.getUsedSkillPoints();
+                characterClass.setSkillPoints(characterClass.getSkillPoints() + usedSkillPoints);
+            }
+
             putInSaveQueue(characterBase);
             return 0;
         }
@@ -865,10 +925,12 @@ public class CharacterService {
      * @param skillpoint     - skillpoints to be added
      * @param attributepoint - attribute points to be added
      */
-    public void characterAddPoints(IActiveCharacter character, int skillpoint, int attributepoint) {
-        character.setSkillPoints((short) (character.getSkillPoints() + skillpoint));
-        character.setAttributePoints((short) (character.getAttributePoints() + attributepoint));
+    public void characterAddPoints(IActiveCharacter character,NClass clazz, int skillpoint, int attributepoint) {
+        CharacterClass cc = character.getCharacterBase().getCharacterClass(clazz);
+        cc.setSkillPoints(cc.getSkillPoints() + skillpoint);
+        character.setAttributePoints(character.getAttributePoints() + attributepoint);
         Gui.sendMessage(character, Localization.CHARACTER_GAINED_POINTS.replaceAll("%1", skillpoint + "").replaceAll("%2", "" + attributepoint));
+        putInSaveQueue(character.getCharacterBase());
     }
 
     public int equipWeapon(IActiveCharacter character, Weapon weapon, boolean isOffhand) {
@@ -942,8 +1004,7 @@ public class CharacterService {
         double levellimit = levels[level];
 
         double newcurrentexp = lvlexp + exp;
-        //100 = 60 + 40
-        //100 > 75
+
         while (newcurrentexp > levellimit) {
             level++;
             if (!onlyinit) {
@@ -952,7 +1013,7 @@ public class CharacterService {
                 CharacterGainedLevelEvent event = new CharacterGainedLevelEvent(character, aClass, level, aClass.getnClass().getSkillpointsperlevel(), aClass.getnClass().getAttributepointsperlevel());
                 game.getEventManager().post(event);
                 event.getaClass().setLevel(event.getLevel());
-                characterAddPoints(character, event.getSkillpointsPerLevel(), event.getAttributepointsPerLevel());
+                characterAddPoints(character,aClass.getnClass(), event.getSkillpointsPerLevel(), event.getAttributepointsPerLevel());
             }
             aClass.setExperiencesFromLevel(0);
             if (!aClass.takesExp()) {
@@ -969,19 +1030,17 @@ public class CharacterService {
         if (!onlyinit) {
             aClass.setExperiences(total + exp);
             aClass.setExperiencesFromLevel(aClass.getExperiencesFromLevel() + exp);
+            for (CharacterClass characterClass : character.getCharacterBase().getCharacterClasses()) {
+                if (characterClass.getName().equalsIgnoreCase(aClass.getnClass().getName())) {
+                    characterClass.setExperiences(total + exp);
+                    break;
+                }
+            }
         } else {
             aClass.setExperiencesFromLevel(newcurrentexp);
-        }
-        aClass.setLevel(level);
-
-        Map<String, Double> cls = character.getCharacterBase().getClasses();
-        cls.put(aClass.getnClass().getName(), total);
-        if (onlyinit) {
-            //todo no msg
-        } else {
             Gui.showExpChange(character, aClass.getnClass().getName(), newcurrentexp);
         }
-
+        aClass.setLevel(level);
     }
 
 
@@ -1009,8 +1068,12 @@ public class CharacterService {
         if (event.isCancelled()) {
             return 1;
         }
-        Map<String, Integer> attributes = character.getCharacterBase().getAttributes();
-        attributes.put(attribute.getName().toLowerCase(), character.getCharacterBase().getAttributes().get(attribute.getName().toLowerCase()) + i);
+        Set<BaseCharacterAttribute> ap = character.getCharacterBase().getBaseCharacterAttribute();
+        for (BaseCharacterAttribute a : ap) {
+            if (a.getName().equalsIgnoreCase(attribute.getName())) {
+                a.setLevel(a.getLevel() + i);
+            }
+        }
         character.getCharacterBase().setAttributePoints(attributePoints - i);
         assignAttribute(character, attribute, i);
         recalculateProperties(character);

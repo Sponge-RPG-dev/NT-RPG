@@ -55,8 +55,7 @@ public class TestGson {
         CharacterData data = new CharacterData();
         data.setCharname("Nicitel");
         data.setLevel(89);
-        data.setSkillpoints(9);
-        data.setClassname("Mage");
+        data.setClassname("fda");
         System.out.println(new Gson().toJson(data));
     }
 

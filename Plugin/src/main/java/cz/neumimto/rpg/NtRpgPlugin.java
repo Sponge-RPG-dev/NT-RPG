@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg;
 
+import com.google.common.reflect.ClassPath;
 import com.google.inject.Inject;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.FindPersistenceContextEvent;
@@ -25,6 +26,9 @@ import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.configuration.Settings;
 import cz.neumimto.rpg.listeners.DebugListener;
+import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
+import cz.neumimto.rpg.persistance.model.CharacterClass;
+import cz.neumimto.rpg.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.utils.FileUtils;
 import org.slf4j.Logger;
@@ -69,6 +73,9 @@ public class NtRpgPlugin {
     @Listener
     public void registerEntities(FindPersistenceContextEvent event) {
         event.getClasses().add(CharacterBase.class);
+        event.getClasses().add(BaseCharacterAttribute.class);
+        event.getClasses().add(CharacterSkill.class);
+        event.getClasses().add(CharacterClass.class);
     }
 
     @Listener

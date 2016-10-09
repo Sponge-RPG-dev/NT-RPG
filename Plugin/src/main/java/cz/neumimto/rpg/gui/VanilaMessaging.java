@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.gui;
 
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
@@ -27,34 +28,36 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
+import cz.neumimto.rpg.persistance.DirectAccessDao;
+import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.NClass;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillTree;
 import cz.neumimto.rpg.skills.StartingPoint;
+import cz.neumimto.rpg.utils.Utils;
+import cz.neumimto.rpg.utils.model.CharacterListModel;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.boss.BossBar;
-import org.spongepowered.api.boss.BossBarColor;
-import org.spongepowered.api.boss.BossBarColors;
-import org.spongepowered.api.boss.ServerBossBar;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.custom.CustomInventory;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.ClickAction;
+import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
+import org.spongepowered.api.util.Color;
 
 import java.util.*;
 
@@ -72,6 +75,9 @@ public class VanilaMessaging implements IPlayerMessage {
 
     @Inject
     private EffectService effectService;
+
+    @Inject
+    private NtRpgPlugin plugin;
 
     @Override
     public boolean isClientSideGui() {
@@ -183,30 +189,31 @@ public class VanilaMessaging implements IPlayerMessage {
 
     @Override
     public void sendStatus(IActiveCharacter character) {
-        Player player = character.getPlayer();
-        String q = "HP: " + character.getHealth().getValue() + "/" + character.getHealth().getMaxValue() + "/" + character.getHealth().getRegen();
-        player.sendMessage(Text.of(q));
-        q = "Mana: " + character.getMana().getValue() + "/" + character.getMana().getMaxValue() + "/" + character.getMana().getRegen();
-        player.sendMessage(Text.of(q));
-        q = "Attribute points: " + character.getAttributePoints() + "\n";
-        q += "Skill points: " + character.getSkillPoints();
-        player.sendMessage(Text.of(q));
-        player.sendMessage(Text.of("------------"));
-        q = "Allocated attribute points: " + character.getCharacterBase().getUsedAttributePoints() + "\n";
-        q += "Allocated skill points: " + character.getCharacterBase().getUsedSkillPoints();
-        player.sendMessage(Text.of("------------"));
-        Map<String, Integer> attributes = character.getCharacterBase().getAttributes();
-        for (Map.Entry<String, Integer> a : attributes.entrySet()) {
-            character.sendMessage(a.getKey() + ": " + a.getValue());
+        CharacterBase base = character.getCharacterBase();
+
+        PaginationService paginationService = Sponge.getServiceManager().provide(PaginationService.class).get();
+        PaginationList.Builder builder = paginationService.builder();
+        builder.title(Text.of(character.getName(),Color.YELLOW));
+        builder.padding(Text.of("═",Color.GRAY));
+
+        List<Text> content = new ArrayList<>();
+        Set<CharacterClass> characterClasses = base.getCharacterClasses();
+        for (CharacterClass cc : characterClasses) {
+            Text t = Text.builder().append(Text.of(Utils.capitalizeFirst(cc.getName()),Color.GREEN))
+                                    .append(Text.of(" - ",TextColors.GRAY))
+                                    .append(Text.of(cc.getSkillPoints(),TextColors.BLUE))
+                                    .append(Text.of(String.format("(%s)",cc.getUsedSkillPoints()),TextColors.GRAY))
+
+                    .toText();
+            content.add(t);
         }
-        player.sendMessage(Text.of("------------"));
-        player.sendMessage(Text.of(q));
-        q = "Class: " + character.getPrimaryClass().getnClass().getName() + ", Level: " + character.getLevel();
-        player.sendMessage(Text.of(q));
-        q = "Progress- Total:" + character.getPrimaryClass().getExperiences() + "/" + character.getPrimaryClass().getnClass().getTotalExp();
-        character.sendMessage(q);
-        q = "          Level: " + character.getPrimaryClass().getExperiencesFromLevel() + "/" + character.getPrimaryClass().getnClass().getLevels()[character.getPrimaryClass().getLevel()];
-        character.sendMessage(q);
+        content.add(Text.builder().append(Text.of("Attribute points: ",TextColors.GREEN))
+                                .append(Text.of(character.getCharacterBase().getAttributePoints(),TextColors.AQUA))
+                                .append(Text.of(String.format("(%s)",character.getCharacterBase().getUsedAttributePoints(),TextColors.GRAY))).toText());
+        Player player = character.getPlayer();
+
+        builder.contents(content);
+        builder.sendTo(character.getPlayer());
     }
 
     @Override
@@ -237,5 +244,48 @@ public class VanilaMessaging implements IPlayerMessage {
 
         build.set(new SlotIndex(1),ItemStack.of(ItemTypes.SHIELD,1));
         character.getPlayer().openInventory(build, Cause.of(NamedCause.of("asd",character)));
+    }
+
+    @Override
+    public void sendListOfCharacters(final IActiveCharacter player, CharacterBase currentlyCreated) {
+        PaginationService paginationService = Sponge.getServiceManager().provide(PaginationService.class).get();
+        PaginationList.Builder builder = paginationService.builder();
+        Sponge.getScheduler().createTaskBuilder().async().execute(() -> {
+            DirectAccessDao build = IoC.get().build(DirectAccessDao.class);
+            String query = "create new cz.neumimto.rpg.utils.model.CharacterListModel(" +
+                    "c.name,d.name,d.experiences)" +
+                    "from CharacterBase c left join c.characterClasses d " +
+                    "where c.uuid = :id and d.name = c.primaryClass order by c.updated desc";
+            Map map = new HashMap<>();
+            map.put("id", player.getCharacterBase().getUuid());
+            List<CharacterListModel> list = build.findList(CharacterListModel.class, query, map);
+            List<Text> content = new ArrayList<Text>();
+            builder.linesPerPage(5);
+            builder.padding(Text.of("=",TextColors.GRAY));
+
+            String current = player.getName();
+            list.stream().forEach(a -> {
+                Text.Builder b = Text.builder(" -")
+                        .color(TextColors.GRAY);
+                if (!a.getCharacterName().equals(current)) {
+                    b.append(Text.builder(" [").color(TextColors.GRAY).build())
+                     .append(Text.builder("SELECT").color(TextColors.GREEN).onClick(TextActions.runCommand("choose character " + a.getCharacterName())).build())
+                     .append(Text.builder("] ").color(TextColors.GRAY).build());
+                } else {
+                    b.append(Text.builder(" [").color(TextColors.GRAY).build())
+                     .append(Text.builder("*").color(TextColors.RED).build())
+                     .append(Text.builder("] ").color(TextColors.GRAY).build());
+                }
+                b.append(Text.builder(a.getCharacterName()).color(TextColors.GOLD).build())
+                        .toText());
+            });
+            builder.title(Text.of("Title"))
+                    .contents(Text.of("Item 1"),
+                            Text.of("Item 2"),
+                            Text.of("Item 3"))
+                    .padding(Text.of("=", Color.GRAY));
+            builder.sendTo();
+
+        }).submit(plugin);
     }
 }

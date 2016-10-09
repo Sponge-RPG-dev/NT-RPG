@@ -26,12 +26,18 @@ import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.Utils;
+import org.hibernate.annotations.Filter;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
+import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.EntityType;
+import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.entity.spawn.EntitySpawnCause;
 import org.spongepowered.api.event.filter.Getter;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.type.Exclude;
@@ -73,7 +79,7 @@ public class InventoryListener {
     @Listener
     public void onInventoryClose(InteractInventoryEvent.Close event, @First(typeFilter = {Player.class}) Player player) {
         IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-        if (character.getPlayer().get(Keys.GAME_MODE).get() == GameModes.CREATIVE)
+        if (player.get(Keys.GAME_MODE).get() == GameModes.CREATIVE)
             return;
         inventoryService.initializeHotbar(character);
 
@@ -83,11 +89,12 @@ public class InventoryListener {
     public void onItemPickup(ChangeInventoryEvent.Pickup event, @First(typeFilter = {Player.class}) Player player) {
 
         IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-        if (character.getPlayer().get(Keys.GAME_MODE).get() == GameModes.CREATIVE)
-            return;
         if (character.isStub()) {
             return;
         }
+        if (player.get(Keys.GAME_MODE).get() == GameModes.CREATIVE)
+            return;
+
         for (SlotTransaction slotTransaction : event.getTransactions()) {
             Slot i = slotTransaction.getSlot();
             int index = ((SlotAdapter)i).getOrdinal();
@@ -99,14 +106,21 @@ public class InventoryListener {
 
 
     @Listener
-    @Exclude(DropItemEvent.Pre.class)
-    public void onItemDrop(DropItemEvent.Dispense event, @First(typeFilter = {Player.class}) Player player) {
-        IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+    public void onItemDrop(DropItemEvent event, @First(typeFilter = {EntitySpawnCause.class}) EntitySpawnCause esc) {
+        Entity entity = esc.getEntity();
+        Cause cause = event.getCause();
+        if (entity.getType() != EntityTypes.PLAYER)
+            return;
+        IActiveCharacter character = characterService.getCharacter(entity.getUniqueId());
         if (character.getPlayer().get(Keys.GAME_MODE).get() == GameModes.CREATIVE)
             return;
         if (character.isStub())
             return;
-        Hotbar hotbar = player.getInventory().query(Hotbar.class);
+        if (!character.getPlayer().getOpenInventory().isPresent()) {
+            return;
+        }
+
+        Hotbar hotbar = character.getPlayer().getInventory().query(Hotbar.class);
         HotbarObject hotbarObject = character.getHotbar()[hotbar.getSelectedSlotIndex()];
         if (hotbarObject == HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
             return;

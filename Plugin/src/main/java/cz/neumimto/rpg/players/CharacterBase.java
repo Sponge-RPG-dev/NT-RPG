@@ -19,40 +19,45 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.TimestampEntity;
+import cz.neumimto.rpg.persistance.converters.MapSL2Json;
 import cz.neumimto.rpg.persistance.converters.UUID2String;
+import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
+import cz.neumimto.rpg.persistance.model.CharacterClass;
+import cz.neumimto.rpg.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.players.groups.NClass;
+import cz.neumimto.rpg.skills.ISkill;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 27.1.2015.
  */
 
 @Entity
-@Table(name = "CharacterBase",
+@Table(name = "rpg_character_base",
         indexes = {@Index(columnList = "uuid")})
 public class CharacterBase extends TimestampEntity {
 
-    protected int attributePoints;
-    protected int skillPoints;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "character_id")
+    private Long characterId;
     //todo locking
-    // @Version
+    //@Version
     private long version;
+
     @Convert(converter = UUID2String.class)
     private UUID uuid;
+
     @Column(length = 40)
     private String name;
+
     private String info;
+
     private int usedAttributePoints;
 
-    private int usedSkillPoints;
+    protected int attributePoints;
 
     private boolean canResetskills;
 
@@ -68,29 +73,22 @@ public class CharacterBase extends TimestampEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastReset;
 
-    //todo lazy
-    @ElementCollection(fetch = FetchType.EAGER)
-    @MapKeyColumn(name = "skill", length = 32)
-    @Column(name = "expire_time")
-    @CollectionTable(name = "cooldowns", joinColumns = @JoinColumn(name = "CharacterBase_id", referencedColumnName = "id"))
-    private Map<String, Long> cooldowns = new ConcurrentHashMap<>();
+    @Column(columnDefinition="TEXT")
+    @Convert(converter = MapSL2Json.class)
+    private Map<String,Long> characterCooldowns;
 
-    //todo lazy
-    @ElementCollection(fetch = FetchType.EAGER)
-    @MapKeyColumn(name = "skill", length = 32)
-    @Column(name = "level")
-    @CollectionTable(name = "skills", joinColumns = @JoinColumn(name = "CharacterBase_id", referencedColumnName = "id"))
-    private Map<String, Integer> skills = new HashMap<>();
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "characterBase")
+    private Set<CharacterSkill> characterSkills = new HashSet<>();
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @MapKeyColumn(name = "class")
-    @CollectionTable(joinColumns = @JoinColumn(name = "CharacterBase_id", referencedColumnName = "id"))
-    private Map<String, Double> classes = new HashMap<>();
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "characterBase")
+    private Set<CharacterClass> characterClasses = new HashSet<>();
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @MapKeyColumn(name = "attribute")
-    @CollectionTable(joinColumns = @JoinColumn(name = "CharacterBase_id", referencedColumnName = "id"))
-    private Map<String, Integer> attributes = new HashMap<>();
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "characterBase")
+    @Access(AccessType.FIELD)
+    private Set<BaseCharacterAttribute> baseCharacterAttribute = new HashSet<>();
+
+    @Transient
+    private Map<String,Integer> cachedAttributes = new HashMap<>();
 
     private int X;
 
@@ -100,32 +98,16 @@ public class CharacterBase extends TimestampEntity {
 
     private String world;
 
-    public int getAttributePoints() {
-        return attributePoints;
-    }
-
-    public void setAttributePoints(int attributePoints) {
-        this.attributePoints = attributePoints;
-    }
-
-    public int getSkillPoints() {
-        return skillPoints;
-    }
-
-    public void setSkillPoints(int skillPoints) {
-        this.skillPoints = skillPoints;
+    public Map<String,Integer> getAttributes() {
+        return cachedAttributes;
     }
 
     public Long getId() {
-        return id;
+        return characterId;
     }
 
     public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+        this.characterId = id;
     }
 
     public String getName() {
@@ -168,14 +150,6 @@ public class CharacterBase extends TimestampEntity {
         this.lastKnownPlayerName = lastKnownPlayerName;
     }
 
-    public Map<String, Double> getClasses() {
-        return classes;
-    }
-
-    public void setClasses(Map<String, Double> classes) {
-        this.classes = classes;
-    }
-
     public UUID getUuid() {
         return uuid;
     }
@@ -184,36 +158,12 @@ public class CharacterBase extends TimestampEntity {
         this.uuid = uuid;
     }
 
-    public Map<String, Long> getCooldowns() {
-        return cooldowns;
-    }
-
-    public void setCooldowns(Map<String, Long> cooldowns) {
-        this.cooldowns = cooldowns;
-    }
-
-    public Map<String, Integer> getSkills() {
-        return skills;
-    }
-
-    public void setSkills(Map<String, Integer> skills) {
-        this.skills = skills;
-    }
-
     public int getUsedAttributePoints() {
         return usedAttributePoints;
     }
 
     public void setUsedAttributePoints(int usedAttributePoints) {
         this.usedAttributePoints = usedAttributePoints;
-    }
-
-    public int getUsedSkillPoints() {
-        return usedSkillPoints;
-    }
-
-    public void setUsedSkillPoints(int usedSkillPoints) {
-        this.usedSkillPoints = usedSkillPoints;
     }
 
     public boolean isCanResetskills() {
@@ -240,13 +190,6 @@ public class CharacterBase extends TimestampEntity {
         this.lastReset = lastReset;
     }
 
-    public Map<String, Integer> getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(Map<String, Integer> attributes) {
-        this.attributes = attributes;
-    }
 
     public long getVersion() {
         return version;
@@ -288,4 +231,65 @@ public class CharacterBase extends TimestampEntity {
         this.world = world;
     }
 
+
+    public int getAttributePoints() {
+        return attributePoints;
+    }
+
+    public void setAttributePoints(int attributePoints) {
+        this.attributePoints = attributePoints;
+    }
+
+    public Map<String,Long> getCharacterCooldowns() {
+        return characterCooldowns;
+    }
+
+    public void setCharacterCooldowns(Map<String,Long> characterCooldowns) {
+        this.characterCooldowns = characterCooldowns;
+    }
+
+    public Set<CharacterSkill> getCharacterSkills() {
+        return characterSkills;
+    }
+
+    public void setCharacterSkills(Set<CharacterSkill> characterSkills) {
+        this.characterSkills = characterSkills;
+    }
+
+    public Set<CharacterClass> getCharacterClasses() {
+        return characterClasses;
+    }
+
+    public void setCharacterClasses(Set<CharacterClass> characterClasses) {
+        this.characterClasses = characterClasses;
+    }
+
+    public Set<BaseCharacterAttribute> getBaseCharacterAttribute() {
+        return baseCharacterAttribute;
+    }
+
+    public void setBaseCharacterAttribute(Set<BaseCharacterAttribute> baseCharacterAttribute) {
+        this.baseCharacterAttribute = baseCharacterAttribute;
+        for (BaseCharacterAttribute attribute : baseCharacterAttribute) {
+            cachedAttributes.put(attribute.getName(),attribute.getLevel());
+        }
+    }
+
+    public CharacterClass getCharacterClass(NClass nClass) {
+        for (CharacterClass characterClass : characterClasses) {
+            if (characterClass.getName().equalsIgnoreCase(nClass.getName())) {
+                return characterClass;
+            }
+        }
+        return null;
+    }
+
+    public CharacterSkill getCharacterSkill(ISkill skill) {
+        for (CharacterSkill characterSkill : characterSkills) {
+            if (characterSkill.getName().equalsIgnoreCase(skill.getName())) {
+                return characterSkill;
+            }
+        }
+        return null;
+    }
 }

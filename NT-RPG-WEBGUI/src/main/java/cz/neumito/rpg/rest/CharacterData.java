@@ -7,7 +7,6 @@ public class CharacterData {
 
     private int level;
     private String charname;
-    private int skillpoints;
     private String classname;
     public CharacterData() {
     }
@@ -20,7 +19,6 @@ public class CharacterData {
         }
         CharacterData data = new CharacterData();
         data.level = character.getLevel();
-        data.skillpoints = character.getSkillPoints();
         data.charname = character.getName();
         data.classname = character.getPrimaryClass().getnClass().getName();
         return data;
@@ -42,13 +40,6 @@ public class CharacterData {
         this.charname = charname;
     }
 
-    public int getSkillpoints() {
-        return skillpoints;
-    }
-
-    public void setSkillpoints(int skillpoints) {
-        this.skillpoints = skillpoints;
-    }
 
     public String getClassname() {
         return classname;

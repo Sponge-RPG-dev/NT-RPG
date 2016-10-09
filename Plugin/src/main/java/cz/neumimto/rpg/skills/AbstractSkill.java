@@ -164,4 +164,16 @@ public abstract class AbstractSkill implements ISkill {
     public void setDamageType(DamageType type) {
         damagetype = type;
     }
+
+    /* Skills are singletons */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 }

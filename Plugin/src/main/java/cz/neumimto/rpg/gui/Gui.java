@@ -114,4 +114,8 @@ public class Gui {
     public static void invokeDefaultMenu(IActiveCharacter character) {
         getMessageTypeOf(character).invokerDefaultMenu(character);
     }
+
+    public static void sendListOfCharacters(IActiveCharacter player, CharacterBase currentlyCreated) {
+        getMessageTypeOf(player).sendListOfCharacters(player,currentlyCreated);
+    }
 }

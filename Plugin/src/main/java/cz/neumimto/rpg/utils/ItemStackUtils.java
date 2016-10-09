@@ -189,78 +189,11 @@ public class ItemStackUtils {
         Integer i = levels.get(s);
         return i == null ? 0 : i;
     }
-    /**
-     * Returns a collection global effects and its levels from itemlore
-     * @param is
-     * @return
-     */
 
     public static DisplayNameData setDisplayName(Text name) {
         final DisplayNameData itemName = Sponge.getGame().getDataManager().getManipulatorBuilder(DisplayNameData.class).get().create();
         itemName.set(Keys.DISPLAY_NAME, name);
         return itemName;
-    }
-
-    public static ItemStack skillToItemStack(SkillItemIcon icon, NClass nClass, CharacterBase character) {
-        Map<String, Integer> skills = character.getSkills();
-        final Integer level = getLevel(icon.skillName, skills);
-        TextColor skillnamecolor = null;
-        if (level == 0) {
-            skillnamecolor = TextColors.GREEN;
-        } else {
-            skillnamecolor = TextColors.RED;
-        }
-        final LoreData loreData = Sponge.getGame().getDataManager().getManipulatorBuilder(LoreData.class).get().create();
-        final ListValue<Text> locallore = loreData.lore();
-        SkillTree skillTree = nClass.getSkillTree();
-        SkillData skillData = skillTree.getSkills().get(icon.skillName);
-        //skilltree settings info
-        locallore.add(Text.of(icon.skill.getDescription()));
-        locallore.add(Text.of(""));
-        locallore.add(Text.of(Localization.LORESECTION_MAX_SKILL_LEVEL + ": " + skillData.getMaxSkillLevel()));
-        locallore.add(Text.of(Localization.LORESECTION_MAX_PLAYER_LEVEL + ": " + skillData.getMinPlayerLevel()));
-        //skillsettings
-        locallore.add(Text.of(Localization.SKILL_SETTINGS_LORESECTION_NAME));
-        SkillSettings skillSettings = skillData.getSkillSettings();
-        final int roundprecision = 1;
-        skillSettings.getNodes().keySet().stream()
-                .filter(s -> !s.endsWith(SkillSettings.bonus))
-                .forEach(n -> {
-                    locallore.add(Text.of(
-                            "- " + n + ": " + Utils.round(skillData.getSkillSettings().getNodeValue(n), roundprecision)
-                                    + " | " + Utils.round(skillData.getSkillSettings().getLevelNodeValue(n, level), roundprecision)
-                                    + " | " + Utils.round(skillData.getSkillSettings().getNodeValue(n + SkillSettings.bonus), roundprecision)));
-
-                });
-        //skill dependencies
-        locallore.add(Text.of(""));
-        String strlist = skillData.getConflicts()
-                .stream()
-                .map(SkillData::getSkillName)
-                .collect(Collectors.joining(", "));
-        locallore.add(Text.of(Localization.LORESECTION_CONFCLICTS + ": " + strlist));
-        strlist = skillData.getSoftDepends()
-                .stream()
-                .map(SkillData::getSkillName)
-                .collect(Collectors.joining(", "));
-        locallore.add(Text.of(Localization.LORESECTION_SOFT_DEPENDS + ": " + strlist));
-        strlist = skillData.getHardDepends()
-                .stream()
-                .map(SkillData::getSkillName)
-                .collect(Collectors.joining(", "));
-        locallore.add(Text.of(Localization.LORESECTION_HARD_DEPENDS + ": " + strlist));
-        //skill lore
-        if (icon.skill.getLore() != null) {
-            locallore.add(Text.of(""));
-            locallore.add(Text.of(icon.skill.getLore()));
-        }
-
-        final DisplayNameData itemName = Sponge.getGame().getDataManager().getManipulatorBuilder(DisplayNameData.class).get().create();
-        itemName.set(Keys.DISPLAY_NAME, Text.of(skillnamecolor, icon.skillName));
-        // Set up the lore data.
-
-        ItemStack.Builder i = ItemStack.builder();
-        return i.itemType(icon.itemType).itemData(itemName).itemData(loreData).quantity(level).build();
     }
 
     /**

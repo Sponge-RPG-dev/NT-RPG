@@ -54,6 +54,16 @@ public class PlayerDao extends GenericDao<CharacterBase> {
         return list;
     }
 
+    public void fetchCharacterBase(CharacterBase base) {
+        Session session = factory.openSession();
+        session.merge(base);
+        base.getCharacterSkills();
+        base.getCharacterClasses();
+        base.getBaseCharacterAttribute();
+        base.getCharacterSkills();
+        session.close();
+    }
+
     public CharacterBase getLastPlayed(UUID uuid) {
         Session session = factory.openSession();
         List r = session.createCriteria(CharacterBase.class)

@@ -29,10 +29,13 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.utils.FileUtils;
 import jdk.internal.dynalink.beans.StaticClass;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
+import org.omg.CosNaming.BindingHelper;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Event;
 
+import javax.naming.Binding;
 import javax.script.*;
 import java.io.*;
 import java.nio.file.Files;
@@ -84,22 +87,48 @@ public class JSLoader {
                 e.printStackTrace();
             }
         }
+
         try (InputStreamReader rs = new InputStreamReader(new FileInputStream(path.toFile()))) {
             Bindings bindings = new SimpleBindings();
-            bindings.put("logger", ioc.build(Logger.class));
-            bindings.put("ioc", ioc);
+            bindings.put("IoC", ioc);
+            bindings.put("Bindings", new BindingsHelper(engine));
+            bindings.put("Folder",scripts_root.toString());
             bindings.put("GlobalScope", ioc.build(GlobalScope.class));
-            engine.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
+            engine.setBindings(bindings,ScriptContext.ENGINE_SCOPE);
             engine.eval(rs);
-
         } catch (ScriptException | IOException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     public void generateDynamicListener(Map<StaticClass, Set<Consumer<? extends Event>>> set) {
         Object o = classGenerator.generateDynamicListener(set);
         ioc.build(Game.class).getEventManager().registerListeners(ioc.build(NtRpgPlugin.class), o);
+    }
+
+
+    public static class BindingsHelper {
+
+        private ScriptEngine scriptEngine;
+
+        public BindingsHelper(ScriptEngine scriptEngine) {
+            this.scriptEngine = scriptEngine;
+        }
+
+        public ScriptEngine getScriptEngine() {
+            return scriptEngine;
+        }
+
+        public Set<Map.Entry<String, Object>> getEngineScopeKeys() {
+            return scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE).entrySet();
+        }
+
+        public Bindings getGlobalScopeKeys() {
+            return (Bindings) scriptEngine.getBindings(ScriptContext.GLOBAL_SCOPE).entrySet();
+        }
     }
 
 }

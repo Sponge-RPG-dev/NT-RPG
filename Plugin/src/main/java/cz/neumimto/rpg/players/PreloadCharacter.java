@@ -30,6 +30,7 @@ import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PlayerPropertyService;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectType;
 import org.spongepowered.api.entity.living.player.Player;
@@ -52,6 +53,7 @@ public class PreloadCharacter implements IActiveCharacter {
     UUID uuid;
     Health health = new HealthStub(this);
     private boolean isusinggui;
+    private Player player;
 
     public PreloadCharacter(UUID uuid) {
         this.uuid = uuid;
@@ -269,7 +271,15 @@ public class PreloadCharacter implements IActiveCharacter {
 
     @Override
     public Player getPlayer() {
-        return null;
+        if (this.player == null) {
+            Optional<Player> player = Sponge.getServer().getPlayer(uuid);
+            if (player.isPresent()) {
+                this.player = player.get();
+            } else {
+                throw new PlayerNotInGameException(String.format("Player object with uuid=%s has not been constructed yet. Calling PreloadCharacter.getPlayer in a wrong state"),this);
+            }
+        }
+        return this.player;
     }
 
     @Override
@@ -279,16 +289,6 @@ public class PreloadCharacter implements IActiveCharacter {
 
     @Override
     public void resetRightClicks() {
-
-    }
-
-    @Override
-    public int getSkillPoints() {
-        return 0;
-    }
-
-    @Override
-    public void setSkillPoints(int skillPoints) {
 
     }
 
