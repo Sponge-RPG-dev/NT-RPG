@@ -31,9 +31,10 @@ import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.persistance.DirectAccessDao;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.groups.NClass;
+import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillTree;
 import cz.neumimto.rpg.skills.StartingPoint;
@@ -53,7 +54,6 @@ import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.action.ClickAction;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
@@ -184,7 +184,7 @@ public class VanilaMessaging implements IPlayerMessage {
     @Override
     public void showLevelChange(IActiveCharacter character, ExtendedNClass clazz, int level) {
         Player player = character.getPlayer();
-        player.sendMessage(Text.of("Level up: " + clazz.getnClass().getName() + " - " + level));
+        player.sendMessage(Text.of("Level up: " + clazz.getConfigClass().getName() + " - " + level));
     }
 
     @Override
@@ -218,9 +218,9 @@ public class VanilaMessaging implements IPlayerMessage {
 
     @Override
     public void showAvalaibleClasses(IActiveCharacter character) {
-        Collection<NClass> classes = groupService.getClasses();
+        Collection<ConfigClass> classes = groupService.getClasses();
         List<ItemStack> list = new ArrayList<>();
-        for (NClass aClass : classes) {
+        for (ConfigClass aClass : classes) {
             ItemType type = aClass.getItemType();
             if (type == null) {
                 type = ItemTypes.DIAMOND_SWORD;
@@ -253,7 +253,7 @@ public class VanilaMessaging implements IPlayerMessage {
         Sponge.getScheduler().createTaskBuilder().async().execute(() -> {
             DirectAccessDao build = IoC.get().build(DirectAccessDao.class);
             String query = "create new cz.neumimto.rpg.utils.model.CharacterListModel(" +
-                    "c.name,d.name,d.experiences)" +
+                    "c.name,d.name,d.experiences) " +
                     "from CharacterBase c left join c.characterClasses d " +
                     "where c.uuid = :id and d.name = c.primaryClass order by c.updated desc";
             Map map = new HashMap<>();
@@ -261,30 +261,32 @@ public class VanilaMessaging implements IPlayerMessage {
             List<CharacterListModel> list = build.findList(CharacterListModel.class, query, map);
             List<Text> content = new ArrayList<Text>();
             builder.linesPerPage(5);
-            builder.padding(Text.of("=",TextColors.GRAY));
+            builder.padding(Text.of("=",TextColors.DARK_GRAY));
 
             String current = player.getName();
             list.stream().forEach(a -> {
                 Text.Builder b = Text.builder(" -")
                         .color(TextColors.GRAY);
                 if (!a.getCharacterName().equals(current)) {
-                    b.append(Text.builder(" [").color(TextColors.GRAY).build())
+                    b.append(Text.builder(" [").color(TextColors.DARK_GRAY).build())
                      .append(Text.builder("SELECT").color(TextColors.GREEN).onClick(TextActions.runCommand("choose character " + a.getCharacterName())).build())
-                     .append(Text.builder("] ").color(TextColors.GRAY).build());
+                     .append(Text.builder("] - ").color(TextColors.DARK_GRAY).build());
                 } else {
-                    b.append(Text.builder(" [").color(TextColors.GRAY).build())
+                    b.append(Text.builder(" [").color(TextColors.DARK_GRAY).build())
                      .append(Text.builder("*").color(TextColors.RED).build())
-                     .append(Text.builder("] ").color(TextColors.GRAY).build());
+                     .append(Text.builder("] - ").color(TextColors.DARK_GRAY).build());
                 }
-                b.append(Text.builder(a.getCharacterName()).color(TextColors.GOLD).build())
-                        .toText());
+                b.append(Text.builder(a.getCharacterName()).color(TextColors.GRAY).append(Text.of(" ")).build());
+                b.append(Text.builder(a.getPrimaryClassName()).color(TextColors.AQUA).append(Text.of(" ")).build());
+            b.append(Text.builder(IoC.get().build(Experience.class).));
+                content.add(b.build());
             });
-            builder.title(Text.of("Title"))
+            builder.title(Text.of("Characters",TextColors.WHITE))
                     .contents(Text.of("Item 1"),
                             Text.of("Item 2"),
                             Text.of("Item 3"))
                     .padding(Text.of("=", Color.GRAY));
-            builder.sendTo();
+            builder.sendTo(player.getEntity());
 
         }).submit(plugin);
     }

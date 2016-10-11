@@ -28,9 +28,9 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 27.12.2014.
  */
-public class NClass extends PlayerGroup {
+public class ConfigClass extends PlayerGroup {
 
-    public static NClass Default = new NClass("None");
+    public static ConfigClass Default = new ConfigClass("None");
 
     private SkillTree skillTree = new SkillTree();
 
@@ -41,7 +41,7 @@ public class NClass extends PlayerGroup {
 
     private Color chatColor;
 
-    public NClass(String name) {
+    public ConfigClass(String name) {
         super(name);
     }
 

@@ -20,7 +20,7 @@ public class CharacterData {
         CharacterData data = new CharacterData();
         data.level = character.getLevel();
         data.charname = character.getName();
-        data.classname = character.getPrimaryClass().getnClass().getName();
+        data.classname = character.getPrimaryClass().getConfigClass().getName();
         return data;
     }
 

@@ -14,7 +14,7 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.groups.NClass;
+import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.skills.*;
 import cz.neumito.rpg.rest.model.SkillDataRequestBean;
 import org.spongepowered.api.Sponge;
@@ -64,8 +64,8 @@ public class RestService {
                 UUID uniqueId = player1.get().getUniqueId();
                 IActiveCharacter character = characterService.getCharacter(uniqueId);
                 ExtendedNClass primaryClass = character.getPrimaryClass();
-                NClass nClass = primaryClass.getnClass();
-                SkillTree skillTree = nClass.getSkillTree();
+                ConfigClass configClass = primaryClass.getConfigClass();
+                SkillTree skillTree = configClass.getSkillTree();
                 String nodes = toJson(skillTree);
                 Sponge.getScheduler().createTaskBuilder().async().execute(()-> consumer.accept(nodes)).submit(plugin);
             }
@@ -223,22 +223,22 @@ public class RestService {
         Spark.get("/getTree/:class", (request, response) -> {
             String params = request.params(":class");
             CountDownLatch l = new CountDownLatch(1);
-            NClass nClass = groupService.getNClass(params);
-            if (nClass == null) {
+            ConfigClass configClass = groupService.getNClass(params);
+            if (configClass == null) {
                 //// TODO:
             } else {
-                response.body(toJson(nClass.getSkillTree()));
+                response.body(toJson(configClass.getSkillTree()));
             }
             return response.body();
         });
         Spark.post("/getSkillSetting",(request, response) -> {
             SkillDataRequestBean s = gson.fromJson(request.body(), SkillDataRequestBean.class);
-            final NClass nClass = groupService.getNClass(s.getClassname());
+            final ConfigClass configClass = groupService.getNClass(s.getClassname());
             final String skill = s.getSkill().toLowerCase();
             final CountDownLatch l = new CountDownLatch(1);
 
             Sponge.getScheduler().createTaskBuilder().execute(() ->{
-                SkillData skillData = nClass.getSkillTree().getSkills().get(skill);
+                SkillData skillData = configClass.getSkillTree().getSkills().get(skill);
                 //todo cache
                 l.countDown();
             }).submit(plugin);

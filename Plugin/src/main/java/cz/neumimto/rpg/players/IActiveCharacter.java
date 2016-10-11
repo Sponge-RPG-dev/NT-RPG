@@ -23,8 +23,8 @@ import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.Weapon;
+import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
-import cz.neumimto.rpg.players.groups.NClass;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
@@ -104,7 +104,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     ExtendedNClass getPrimaryClass();
 
-    void setPrimaryClass(NClass clazz);
+    void setPrimaryClass(ConfigClass clazz);
 
     Map<String, Long> getCooldowns();
 
@@ -120,7 +120,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     Set<ExtendedNClass> getClasses();
 
-    NClass getNClass(int index);
+    ConfigClass getNClass(int index);
 
     Race getRace();
 
@@ -132,7 +132,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     CharacterBase getCharacterBase();
 
-    void setClass(NClass nclass, int slot);
+    void setClass(ConfigClass nclass, int slot);
 
     public IActiveCharacter updateItemRestrictions();
 

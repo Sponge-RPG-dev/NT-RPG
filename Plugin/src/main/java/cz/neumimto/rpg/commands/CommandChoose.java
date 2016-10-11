@@ -33,7 +33,7 @@ import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.groups.NClass;
+import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.PlayerPropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
@@ -94,8 +94,8 @@ public class CommandChoose extends CommandBase {
             Gui.invokeDefaultMenu(characterService.getCharacter(player.getUniqueId()));
         } else if (args[0].equalsIgnoreCase("class")) {
             //     if (!commandSource.hasPermission(CommandPermissions.CANT_CHOOSE_CLASS)) {
-            NClass nClass = groupService.getNClass(args[1].toLowerCase());
-            if (nClass == NClass.Default) {
+            ConfigClass configClass = groupService.getNClass(args[1].toLowerCase());
+            if (configClass == ConfigClass.Default) {
                 player.sendMessage(Text.of(Localization.NON_EXISTING_GROUP));
                 return CommandResult.empty();
             }
@@ -116,13 +116,13 @@ public class CommandChoose extends CommandBase {
                 player.sendMessage(Text.of(Localization.RACE_IS_REQUIRED));
                 return CommandResult.empty();
             }
-            if (!character.getRace().getAllowedClasses().contains(nClass)) {
+            if (!character.getRace().getAllowedClasses().contains(configClass)) {
                 player.sendMessage(Text.of(Localization.RACE_AND_CLASS_CONFLICT
-                        .replaceAll("%1", character.getRace().getName()).replaceAll("%2", nClass.getName())));
+                        .replaceAll("%1", character.getRace().getName()).replaceAll("%2", configClass.getName())));
                 return CommandResult.empty();
             }
-            characterService.updatePlayerGroups(character, nClass, i, null, null);
-            player.sendMessage(Text.of(Localization.PLAYER_CHOOSED_CLASS.replaceAll("%1", nClass.getName())));
+            characterService.updatePlayerGroups(character, configClass, i, null, null);
+            player.sendMessage(Text.of(Localization.PLAYER_CHOOSED_CLASS.replaceAll("%1", configClass.getName())));
             return CommandResult.success();
             //   }
             //   commandSource.sendMessage(Texts.of(Localization.NO_PERMISSIONS));
@@ -155,11 +155,11 @@ public class CommandChoose extends CommandBase {
             }
             final String a = args[1];
             ISkill skill = skillService.getSkill(args[2]);
-            NClass clazz = null;
+            ConfigClass clazz = null;
             if (args.length == 4) {
                 //todo skilltreecommand.class
             } else {
-                clazz = character.getPrimaryClass().getnClass();
+                clazz = character.getPrimaryClass().getConfigClass();
             }
             if (skill == null) {
                 commandSource.sendMessage(Text.of(Localization.SKILL_DOES_NOT_EXIST));
@@ -171,7 +171,7 @@ public class CommandChoose extends CommandBase {
                 player.sendMessage(Text.of(data.value.bind(data.key.message)));
                 return CommandResult.success();
             } else if (a.equalsIgnoreCase("learn")) {
-                Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data = characterService.characterLearnskill(character, skill, character.getPrimaryClass().getnClass().getSkillTree());
+                Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data = characterService.characterLearnskill(character, skill, character.getPrimaryClass().getConfigClass().getSkillTree());
                 player.sendMessage(Text.of(data.value.bind(data.key.message)));
             } else if (a.equalsIgnoreCase("refund")) {
                 if (PluginConfig.CAN_REFUND_SKILL) {

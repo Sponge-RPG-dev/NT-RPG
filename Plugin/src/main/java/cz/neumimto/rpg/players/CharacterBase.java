@@ -24,7 +24,7 @@ import cz.neumimto.rpg.persistance.converters.UUID2String;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.players.groups.NClass;
+import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.skills.ISkill;
 
 import javax.persistence.*;
@@ -275,9 +275,9 @@ public class CharacterBase extends TimestampEntity {
         }
     }
 
-    public CharacterClass getCharacterClass(NClass nClass) {
+    public CharacterClass getCharacterClass(ConfigClass configClass) {
         for (CharacterClass characterClass : characterClasses) {
-            if (characterClass.getName().equalsIgnoreCase(nClass.getName())) {
+            if (characterClass.getName().equalsIgnoreCase(configClass.getName())) {
                 return characterClass;
             }
         }

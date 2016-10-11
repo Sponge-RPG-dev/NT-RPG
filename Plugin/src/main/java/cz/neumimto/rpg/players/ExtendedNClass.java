@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.players;
 
-import cz.neumimto.rpg.players.groups.NClass;
+import cz.neumimto.rpg.players.groups.ConfigClass;
 
 /**
  * Created by NeumimTo on 28.7.2015.
@@ -33,26 +33,26 @@ public class ExtendedNClass {
                 return false;
             }
         };
-        Default.setnClass(NClass.Default);
+        Default.setConfigClass(ConfigClass.Default);
         Default.setPrimary(true);
     }
 
-    private NClass nClass;
+    private ConfigClass configClass;
     private double experiences;
     private double experiencesFromLevel;
     private boolean isPrimary;
     private int level;
 
     public boolean takesExp() {
-        return experiences <= nClass.getTotalExp();
+        return experiences <= configClass.getTotalExp();
     }
 
-    public NClass getnClass() {
-        return nClass;
+    public ConfigClass getConfigClass() {
+        return configClass;
     }
 
-    public void setnClass(NClass nClass) {
-        this.nClass = nClass;
+    public void setConfigClass(ConfigClass configClass) {
+        this.configClass = configClass;
     }
 
     public double getExperiences() {

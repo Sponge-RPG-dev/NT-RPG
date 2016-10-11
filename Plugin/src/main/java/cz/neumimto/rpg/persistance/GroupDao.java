@@ -27,7 +27,7 @@ import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.groups.Guild;
-import cz.neumimto.rpg.players.groups.NClass;
+import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.PlayerPropertyService;
@@ -64,14 +64,14 @@ public class GroupDao {
     SkillService skillService;
 
     private Map<String, Race> races = new HashMap<>();
-    private Map<String, NClass> classes = new HashMap<>();
+    private Map<String, ConfigClass> classes = new HashMap<>();
     private Map<String, Guild> guilds = new HashMap<>();
 
     public Map<String, Race> getRaces() {
         return races;
     }
 
-    public Map<String, NClass> getClasses() {
+    public Map<String, ConfigClass> getClasses() {
         return classes;
     }
 
@@ -101,24 +101,24 @@ public class GroupDao {
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, "*.conf")) {
             stream.forEach(p -> {
                 Config c = ConfigFactory.parseFile(p.toFile());
-                NClass nClass = new NClass(c.getString("Name"));
-                loadPlayerGroup(c, nClass);
+                ConfigClass configClass = new ConfigClass(c.getString("Name"));
+                loadPlayerGroup(c, configClass);
                 SkillTree skillTree = skillService.getSkillTrees().get(c.getString("SkillTree"));
                 if (skillTree == null) {
                     skillTree = SkillTree.Default;
                 }
-                nClass.setSkillTree(skillTree);
+                configClass.setSkillTree(skillTree);
                 List<String> experienceSources = c.getStringList("ExperienceSources");
                 HashSet<ExperienceSource> objects = new HashSet<>();
                 experienceSources.stream().forEach(a -> objects.add(ExperienceSource.valueOf(a)));
-                nClass.setExperienceSources(objects);
-                nClass.setSkillpointsperlevel(c.getInt("SkillPointsPerLevel"));
-                nClass.setAttributepointsperlevel(c.getInt("AttributePointsPerLevel"));
+                configClass.setExperienceSources(objects);
+                configClass.setSkillpointsperlevel(c.getInt("SkillPointsPerLevel"));
+                configClass.setAttributepointsperlevel(c.getInt("AttributePointsPerLevel"));
                 int maxLevel = c.getInt("MaxLevel");
                 double first = c.getDouble("ExpFirstLevel");
                 double last = c.getDouble("ExpLastLevel");
-                initLevelCurve(nClass, maxLevel, first, last);
-                getClasses().put(nClass.getName().toLowerCase(), nClass);
+                initLevelCurve(configClass, maxLevel, first, last);
+                getClasses().put(configClass.getName().toLowerCase(), configClass);
             });
         } catch (IOException e) {
             e.printStackTrace();
@@ -133,13 +133,13 @@ public class GroupDao {
                 Config c = ConfigFactory.parseFile(p.toFile());
                 Race race = new Race(c.getString("Name"));
                 loadPlayerGroup(c, race);
-                Set<NClass> set = new HashSet<>();
+                Set<ConfigClass> set = new HashSet<>();
                 for (String a : c.getStringList("AllowedClasses")) {
-                    NClass nClass = getClasses().get(a.toLowerCase());
-                    if (nClass == null) {
-                        nClass = NClass.Default;
+                    ConfigClass configClass = getClasses().get(a.toLowerCase());
+                    if (configClass == null) {
+                        configClass = ConfigClass.Default;
                     }
-                    set.add(nClass);
+                    set.add(configClass);
                 }
                 race.setAllowedClasses(set);
                 getRaces().put(race.getName().toLowerCase(), race);
@@ -207,7 +207,7 @@ public class GroupDao {
     }
 
 
-    private void initLevelCurve(NClass nClass, int maxlevel, double expFirstLevel, double expForLastLevel) {
+    private void initLevelCurve(ConfigClass configClass, int maxlevel, double expFirstLevel, double expForLastLevel) {
         double factora = Math.log(expForLastLevel / expFirstLevel) / (maxlevel - 1);
         double factorb = expFirstLevel / (Math.exp(factora) - 1.0);
         double[] levels = new double[maxlevel];
@@ -218,7 +218,7 @@ public class GroupDao {
             levels[i - 1] = newxp - oldxp;
             k += levels[i - 1];
         }
-        nClass.setLevels(levels);
-        nClass.setTotalExp(k);
+        configClass.setLevels(levels);
+        configClass.setTotalExp(k);
     }
 }

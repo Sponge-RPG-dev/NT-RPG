@@ -22,10 +22,9 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.Localization;
-import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.groups.NClass;
+import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.StartingPoint;
 import org.spongepowered.api.command.CommandException;
@@ -53,7 +52,7 @@ public class CommandSkilltree extends CommandBase {
     public CommandResult process(CommandSource commandSource, String s) throws CommandException {
         if (commandSource instanceof Player) {
             String[] args = s.split(" ");
-            NClass nClass = null;
+            ConfigClass configClass = null;
             SkillData skillData = null;
             Player player = (Player) commandSource;
             IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
@@ -62,13 +61,13 @@ public class CommandSkilltree extends CommandBase {
             }
             for (int i = 0; i < args.length - 1; i++) {
                 if (args[i].equalsIgnoreCase("class")) {
-                    nClass = groupService.getNClass(args[i + 1]);
-                    if (nClass == NClass.Default) {
+                    configClass = groupService.getNClass(args[i + 1]);
+                    if (configClass == ConfigClass.Default) {
                         commandSource.sendMessage(Text.of(Localization.NON_EXISTING_GROUP));
                         return CommandResult.empty();
                     }
                     if (args[i].equalsIgnoreCase("skill")) {
-                        skillData = nClass.getSkillTree().getSkills().get(args[i + 1]);
+                        skillData = configClass.getSkillTree().getSkills().get(args[i + 1]);
                         if (skillData == SkillData.EMPTY) {
                             commandSource.sendMessage(Text.of(Localization.SKILL_DOES_NOT_EXIST));
                             return CommandResult.empty();
@@ -77,11 +76,11 @@ public class CommandSkilltree extends CommandBase {
                 }
             }
             //todo
-            if (nClass == null) {
-                nClass = character.getPrimaryClass().getnClass();
+            if (configClass == null) {
+                configClass = character.getPrimaryClass().getConfigClass();
             }
             if (skillData == null) {
-                skillData = nClass.getSkillTree().getSkills().get(StartingPoint.name);
+                skillData = configClass.getSkillTree().getSkills().get(StartingPoint.name);
             }
 
             return CommandResult.success();

@@ -23,9 +23,8 @@ import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
-import cz.neumimto.rpg.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
-import cz.neumimto.rpg.players.groups.NClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
@@ -88,7 +87,7 @@ public class ActiveCharacter implements IActiveCharacter {
         characterPropertiesLevel = new float[PlayerPropertyService.LAST_ID];
         ExtendedNClass cl = new ExtendedNClass();
         cl.setPrimary(true);
-        cl.setnClass(NClass.Default);
+        cl.setConfigClass(ConfigClass.Default);
         cl.setExperiences(0);
         this.base = base;
         classes.add(cl);
@@ -266,8 +265,8 @@ public class ActiveCharacter implements IActiveCharacter {
     @Override
     public void addExperiences(double exp, ExperienceSource source) {
         for (ExtendedNClass nClass : classes) {
-            if (nClass.getnClass().hasExperienceSource(source)) {
-                CharacterClass c = getCharacterBase().getCharacterClass(nClass.getnClass());
+            if (nClass.getConfigClass().hasExperienceSource(source)) {
+                CharacterClass c = getCharacterBase().getCharacterClass(nClass.getConfigClass());
                 Double nClass1 = c.getExperiences() == null ? 0 : c.getExperiences();
                 if (nClass1 == null) {
                     c.setExperiences(exp);
@@ -318,20 +317,20 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
-    public void setPrimaryClass(NClass clazz) {
+    public void setPrimaryClass(ConfigClass clazz) {
         setClass(clazz, 0);
     }
 
-    public void setClass(NClass nclass, int slot) {
+    public void setClass(ConfigClass nclass, int slot) {
         if (primary != null) {
-            //      fixPropertyValues(getPrimaryClass().getnClass().getPropBonus(), -1);
-            //      fixPropertyLevelValues(getPrimaryClass().getnClass().getPropLevelBonus(), -1);
+            //      fixPropertyValues(getPrimaryClass().getConfigClass().getPropBonus(), -1);
+            //      fixPropertyLevelValues(getPrimaryClass().getConfigClass().getPropLevelBonus(), -1);
             skills.clear();
         }
 
         classes.clear();
         primary = new ExtendedNClass();
-        primary.setnClass(nclass);
+        primary.setConfigClass(nclass);
         primary.setPrimary(true);
         classes.add(primary);
         CharacterClass cc = getCharacterBase().getCharacterClass(nclass);
@@ -354,7 +353,7 @@ public class ActiveCharacter implements IActiveCharacter {
         }
         base.setPrimaryClass(nclass.getName());
         //   fixPropertyValues(nclass.getPropBonus(), 1);
-        //  fixPropertyLevelValues(getPrimaryClass().getnClass().getPropLevelBonus(), 1);
+        //  fixPropertyLevelValues(getPrimaryClass().getConfigClass().getPropLevelBonus(), 1);
         SkillData skillData = nclass.getSkillTree().getSkills().get(StartingPoint.name);
         if (skillData != null) {
             ExtendedSkillInfo info = new ExtendedSkillInfo();
@@ -395,12 +394,12 @@ public class ActiveCharacter implements IActiveCharacter {
         allowedWeapons.clear();
         allowedWeapons.putAll(getRace().getWeapons());
         //   mergeWeapons(getGuild());
-        mergeWeapons(getPrimaryClass().getnClass());
+        mergeWeapons(getPrimaryClass().getConfigClass());
         mergeWeapons(getRace());
         allowedArmorIds.clear();
         allowedArmorIds.addAll(getRace().getAllowedArmor());
         //   allowedArmorIds.addAll(getGuild().getAllowedArmor());
-        allowedArmorIds.addAll(getPrimaryClass().getnClass().getAllowedArmor());
+        allowedArmorIds.addAll(getPrimaryClass().getConfigClass().getAllowedArmor());
         return this;
     }
 
@@ -527,8 +526,8 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
-    public NClass getNClass(int index) {
-        return getPrimaryClass().getnClass();
+    public ConfigClass getNClass(int index) {
+        return getPrimaryClass().getConfigClass();
     }
 
     @Override

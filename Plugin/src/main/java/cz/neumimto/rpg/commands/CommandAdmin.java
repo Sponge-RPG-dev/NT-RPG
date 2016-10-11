@@ -188,7 +188,7 @@ public class CommandAdmin extends CommandBase {
                     IActiveCharacter character = characterService.getCharacter(player.get().getUniqueId());
                     Set<ExtendedNClass> classes = character.getClasses();
                     for (ExtendedNClass aClass : classes) {
-                        if (aClass.getnClass().getName().equalsIgnoreCase(a[3])) {
+                        if (aClass.getConfigClass().getName().equalsIgnoreCase(a[3])) {
                             characterService.addExperiences(character,Double.valueOf(a[4]),aClass,false);
                         }
                     }

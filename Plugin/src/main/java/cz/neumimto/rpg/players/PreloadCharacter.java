@@ -22,8 +22,8 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.Weapon;
+import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
-import cz.neumimto.rpg.players.groups.NClass;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
@@ -313,7 +313,7 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public void setPrimaryClass(NClass clazz) {
+    public void setPrimaryClass(ConfigClass clazz) {
 
     }
 
@@ -349,8 +349,8 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public NClass getNClass(int index) {
-        return NClass.Default;
+    public ConfigClass getNClass(int index) {
+        return ConfigClass.Default;
     }
 
     @Override
@@ -384,7 +384,7 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public void setClass(NClass nclass, int slot) {
+    public void setClass(ConfigClass nclass, int slot) {
 
     }
 

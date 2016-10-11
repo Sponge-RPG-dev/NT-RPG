@@ -31,22 +31,19 @@ import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
-import cz.neumimto.rpg.players.groups.NClass;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.service.pagination.PaginationList;
-import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
 
 /**
@@ -96,7 +93,7 @@ public class CommandCreate extends CommandBase {
                         CharacterBase characterBase = new CharacterBase();
                         characterBase.setName(args[1]);
                         characterBase.setRace(Race.Default.getName());
-                        characterBase.setPrimaryClass(NClass.Default.getName());
+                        characterBase.setPrimaryClass(ConfigClass.Default.getName());
                         characterBase.setUuid(player.getUniqueId());
                         characterBase.setAttributePoints(PluginConfig.ATTRIBUTEPOINTS_ON_START);
                         characterService.createAndUpdate(characterBase);

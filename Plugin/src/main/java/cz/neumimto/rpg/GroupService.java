@@ -22,8 +22,8 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.persistance.GroupDao;
+import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
-import cz.neumimto.rpg.players.groups.NClass;
 import cz.neumimto.rpg.players.groups.Race;
 
 import java.util.Collection;
@@ -65,15 +65,15 @@ public class GroupService {
         groupDao.getRaces().put(g.getName().toLowerCase(), g);
     }
 
-    public NClass getNClass(String name) {
+    public ConfigClass getNClass(String name) {
         name = name.toLowerCase();
         if (!groupDao.getClasses().containsKey(name)) {
-            return NClass.Default;
+            return ConfigClass.Default;
         }
         return groupDao.getClasses().get(name.toLowerCase());
     }
 
-    public void registerNClass(NClass g) {
+    public void registerClass(ConfigClass g) {
         groupDao.getClasses().put(g.getName().toLowerCase(), g);
     }
 
@@ -88,7 +88,7 @@ public class GroupService {
     @PostProcess
     public void registerPlaceholders() {
 
-        registerNClass(NClass.Default);
+        registerClass(ConfigClass.Default);
         registerRace(Race.Default);
     }
 
@@ -105,7 +105,7 @@ public class GroupService {
     }
 
 
-    public Collection<NClass> getClasses() {
+    public Collection<ConfigClass> getClasses() {
         return groupDao.getClasses().values();
     }
 }

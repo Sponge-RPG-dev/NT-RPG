@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.inventory.runewords;
 
 import cz.neumimto.rpg.effects.IGlobalEffect;
-import cz.neumimto.rpg.players.groups.NClass;
+import cz.neumimto.rpg.players.groups.ConfigClass;
 import org.spongepowered.api.item.ItemType;
 
 import java.util.*;
@@ -14,7 +14,7 @@ public class RuneWord {
     private String name;
     private List<Rune> runes = new ArrayList<>();
     private int minLevel;
-    private Set<NClass> restrictedClasses = new HashSet<>();
+    private Set<ConfigClass> restrictedClasses = new HashSet<>();
     private Map<IGlobalEffect, Float> effects = new HashMap<>();
     private Set<ItemType> allowedItems = new HashSet<>();
 
@@ -42,11 +42,11 @@ public class RuneWord {
         this.minLevel = minLevel;
     }
 
-    public Set<NClass> getRestrictedClasses() {
+    public Set<ConfigClass> getRestrictedClasses() {
         return restrictedClasses;
     }
 
-    public void setRestrictedClasses(Set<NClass> restrictedClasses) {
+    public void setRestrictedClasses(Set<ConfigClass> restrictedClasses) {
         this.restrictedClasses = restrictedClasses;
     }
 
