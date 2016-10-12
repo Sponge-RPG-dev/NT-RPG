@@ -235,4 +235,8 @@ public interface IActiveCharacter extends IEntity<Player> {
     void setCharacterLevelProperties(float[] arr);
 
     Map<String, Integer> getTransientAttributes();
+
+    void setOpenInventory(boolean b);
+
+    boolean hasOpenInventory();
 }

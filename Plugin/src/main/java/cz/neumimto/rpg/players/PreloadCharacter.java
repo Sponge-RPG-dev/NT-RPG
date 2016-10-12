@@ -566,6 +566,16 @@ public class PreloadCharacter implements IActiveCharacter {
 
     @Override
     public Player getEntity() {
-        return null;
+        return getPlayer();
+    }
+
+    @Override
+    public void setOpenInventory(boolean b) {
+
+    }
+
+    @Override
+    public boolean hasOpenInventory() {
+        return false;
     }
 }

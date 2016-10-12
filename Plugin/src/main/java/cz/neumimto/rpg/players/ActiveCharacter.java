@@ -80,6 +80,7 @@ public class ActiveCharacter implements IActiveCharacter {
     private transient HotbarObject[] hotbar = new HotbarObject[9];
     private transient int socketing;
     private transient Map<String, Integer> transientAttributes = new HashMap<>();
+    private transient boolean openedinv = false;
 
     public ActiveCharacter(Player pl, CharacterBase base) {
         this.pl = pl;
@@ -632,6 +633,16 @@ public class ActiveCharacter implements IActiveCharacter {
     @Override
     public void setOffHand(Weapon offHand) {
         this.offHand = offHand;
+    }
+
+    @Override
+    public void setOpenInventory(boolean b) {
+        this.openedinv = b;
+    }
+
+    @Override
+    public boolean hasOpenInventory() {
+        return openedinv;
     }
 
     @Override

@@ -110,13 +110,14 @@ public class GroupDao {
                 configClass.setSkillTree(skillTree);
                 List<String> experienceSources = c.getStringList("ExperienceSources");
                 HashSet<ExperienceSource> objects = new HashSet<>();
-                experienceSources.stream().forEach(a -> objects.add(ExperienceSource.valueOf(a)));
+                experienceSources.forEach(a -> objects.add(ExperienceSource.valueOf(a)));
                 configClass.setExperienceSources(objects);
                 configClass.setSkillpointsperlevel(c.getInt("SkillPointsPerLevel"));
                 configClass.setAttributepointsperlevel(c.getInt("AttributePointsPerLevel"));
                 int maxLevel = c.getInt("MaxLevel");
                 double first = c.getDouble("ExpFirstLevel");
                 double last = c.getDouble("ExpLastLevel");
+
                 initLevelCurve(configClass, maxLevel, first, last);
                 getClasses().put(configClass.getName().toLowerCase(), configClass);
             });
@@ -207,7 +208,7 @@ public class GroupDao {
     }
 
 
-    private void initLevelCurve(ConfigClass configClass, int maxlevel, double expFirstLevel, double expForLastLevel) {
+    public void initLevelCurve(ConfigClass configClass, int maxlevel, double expFirstLevel, double expForLastLevel) {
         double factora = Math.log(expForLastLevel / expFirstLevel) / (maxlevel - 1);
         double factorb = expFirstLevel / (Math.exp(factora) - 1.0);
         double[] levels = new double[maxlevel];

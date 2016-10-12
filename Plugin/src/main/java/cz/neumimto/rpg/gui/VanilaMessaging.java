@@ -58,6 +58,7 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
+import org.spongepowered.asm.mixin.injection.Group;
 
 import java.util.*;
 
@@ -260,31 +261,34 @@ public class VanilaMessaging implements IPlayerMessage {
             map.put("id", player.getCharacterBase().getUuid());
             List<CharacterListModel> list = build.findList(CharacterListModel.class, query, map);
             List<Text> content = new ArrayList<Text>();
+
             builder.linesPerPage(5);
             builder.padding(Text.of("=",TextColors.DARK_GRAY));
-
+            GroupService s = IoC.get().build(GroupService.class);
             String current = player.getName();
-            list.stream().forEach(a -> {
+            list.forEach(a -> {
                 Text.Builder b = Text.builder(" -")
                         .color(TextColors.GRAY);
                 if (!a.getCharacterName().equals(current)) {
                     b.append(Text.builder(" [").color(TextColors.DARK_GRAY).build())
-                     .append(Text.builder("SELECT").color(TextColors.GREEN).onClick(TextActions.runCommand("choose character " + a.getCharacterName())).build())
-                     .append(Text.builder("] - ").color(TextColors.DARK_GRAY).build());
+                            .append(Text.builder("SELECT").color(TextColors.GREEN).onClick(TextActions.runCommand("choose character " + a.getCharacterName())).build())
+                            .append(Text.builder("] - ").color(TextColors.DARK_GRAY).build());
                 } else {
                     b.append(Text.builder(" [").color(TextColors.DARK_GRAY).build())
-                     .append(Text.builder("*").color(TextColors.RED).build())
-                     .append(Text.builder("] - ").color(TextColors.DARK_GRAY).build());
+                            .append(Text.builder("*").color(TextColors.RED).build())
+                            .append(Text.builder("] - ").color(TextColors.DARK_GRAY).build());
                 }
                 b.append(Text.builder(a.getCharacterName()).color(TextColors.GRAY).append(Text.of(" ")).build());
                 b.append(Text.builder(a.getPrimaryClassName()).color(TextColors.AQUA).append(Text.of(" ")).build());
-            b.append(Text.builder(IoC.get().build(Experience.class).));
+                ConfigClass cc = s.getNClass(a.getPrimaryClassName());
+                int level = s.getLevel(cc, a.getPrimaryClassExp());
+                int m = cc.getMaxLevel();
+                b.append(Text.builder("Level: ").color(TextColors.DARK_GRAY).append(
+                        Text.builder(level+"").color(level == m ? TextColors.RED : TextColors.DARK_PURPLE).build()).build());
                 content.add(b.build());
             });
             builder.title(Text.of("Characters",TextColors.WHITE))
-                    .contents(Text.of("Item 1"),
-                            Text.of("Item 2"),
-                            Text.of("Item 3"))
+                    .contents(content)
                     .padding(Text.of("=", Color.GRAY));
             builder.sendTo(player.getEntity());
 

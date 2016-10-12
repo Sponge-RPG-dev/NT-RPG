@@ -85,6 +85,24 @@ public class InventoryListener {
 
     }
 
+    /* Tempoar */
+    @Listener
+    public void onInventoryOpen(InteractInventoryEvent.Close event, @First(typeFilter = {Player.class}) Player player) {
+        IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+        if (!character.isStub()) {
+            character.setOpenInventory(false);
+        }
+    }
+
+    @Listener
+    public void onInventoryOpen(InteractInventoryEvent.Open event, @First(typeFilter = {Player.class}) Player player) {
+        IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+        if (!character.isStub()) {
+            character.setOpenInventory(true);
+        }
+    }
+
+
     @Listener
     public void onItemPickup(ChangeInventoryEvent.Pickup event, @First(typeFilter = {Player.class}) Player player) {
 
@@ -116,7 +134,7 @@ public class InventoryListener {
             return;
         if (character.isStub())
             return;
-        if (!character.getPlayer().getOpenInventory().isPresent()) {
+        if (character.hasOpenInventory()) {
             return;
         }
 

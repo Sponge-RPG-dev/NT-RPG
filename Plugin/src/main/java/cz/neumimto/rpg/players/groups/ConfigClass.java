@@ -100,4 +100,12 @@ public class ConfigClass extends PlayerGroup {
     public void setChatColor(Color chatColor) {
         this.chatColor = chatColor;
     }
+
+    public double getFirstLevelExp() {
+        return levels[1];
+    }
+
+    public int getMaxLevel() {
+        return levels.length -1;
+    }
 }

@@ -108,4 +108,16 @@ public class GroupService {
     public Collection<ConfigClass> getClasses() {
         return groupDao.getClasses().values();
     }
+
+    public int getLevel(ConfigClass configClass, double experiendec) {
+        double l = 0;
+        int k = 1;
+        for (double v : configClass.getLevels()) {
+        if (l <  experiendec) {
+                return k;
+            }
+            k+=v;
+        }
+        return k;
+    }
 }
