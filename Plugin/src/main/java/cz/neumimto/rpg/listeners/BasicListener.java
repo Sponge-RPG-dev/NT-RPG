@@ -55,6 +55,7 @@ import org.spongepowered.api.event.cause.entity.damage.source.IndirectEntityDama
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.InteractEntityEvent;
 import org.spongepowered.api.event.entity.SpawnEntityEvent;
+import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 
@@ -246,8 +247,8 @@ public class BasicListener {
     }
 
     @Listener
-    public void onRespawn(SpawnEntityEvent event) {
-        Entity type = event.getEntities().get(0);
+    public void onRespawn(RespawnPlayerEvent event) {
+        Entity type = event.getTargetEntity();
         if (type.getType() == EntityTypes.PLAYER) {
             IActiveCharacter character = characterService.getCharacter(type.getUniqueId());
             if (character.isStub())

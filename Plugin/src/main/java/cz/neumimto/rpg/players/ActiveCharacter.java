@@ -46,6 +46,7 @@ import org.spongepowered.api.util.Tristate;
 import java.lang.ref.WeakReference;
 import java.util.*;
 
+
 /**
  * Created by NeumimTo on 26.12.2014.
  */
@@ -338,6 +339,7 @@ public class ActiveCharacter implements IActiveCharacter {
         if (cc == null) {
             cc = new CharacterClass();
             cc.setCharacterBase(getCharacterBase());
+            cc.setName(ConfigClass.Default.getName());
         }
         Double aDouble = cc.getExperiences();
         if (aDouble == null) {
@@ -643,6 +645,16 @@ public class ActiveCharacter implements IActiveCharacter {
     @Override
     public boolean hasOpenInventory() {
         return openedinv;
+    }
+
+    @Override
+    public MessageType getPreferedMessageType() {
+        return getCharacterBase().getMessageType();
+    }
+
+    @Override
+    public void setPreferedMessageType(MessageType type) {
+        this.getCharacterBase().setMessageType(type);
     }
 
     @Override

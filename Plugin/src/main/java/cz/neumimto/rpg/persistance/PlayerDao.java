@@ -21,11 +21,13 @@ package cz.neumimto.rpg.persistance;
 import cz.neumimto.core.dao.genericDao.GenericDao;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.players.CharacterBase;
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.jpa.HibernatePersistenceProvider;
 
 import java.util.List;
 import java.util.UUID;
@@ -54,14 +56,17 @@ public class PlayerDao extends GenericDao<CharacterBase> {
         return list;
     }
 
-    public void fetchCharacterBase(CharacterBase base) {
+    public CharacterBase fetchCharacterBase(CharacterBase base) {
         Session session = factory.openSession();
-        session.merge(base);
-        base.getCharacterSkills();
-        base.getCharacterClasses();
-        base.getBaseCharacterAttribute();
-        base.getCharacterSkills();
+        CharacterBase cb = (CharacterBase) session.merge(base);
+        session.beginTransaction();
+        cb.getCharacterSkills();
+        cb.getCharacterClasses();
+        cb.getBaseCharacterAttribute();
+        cb.getCharacterSkills();
+        session.getTransaction().commit();
         session.close();
+        return cb;
     }
 
     public CharacterBase getLastPlayed(UUID uuid) {

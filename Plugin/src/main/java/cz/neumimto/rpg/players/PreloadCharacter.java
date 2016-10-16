@@ -578,4 +578,14 @@ public class PreloadCharacter implements IActiveCharacter {
     public boolean hasOpenInventory() {
         return false;
     }
+
+    @Override
+    public MessageType getPreferedMessageType() {
+        return MessageType.CHAT;
+    }
+
+    @Override
+    public void setPreferedMessageType(MessageType type) {
+
+    }
 }

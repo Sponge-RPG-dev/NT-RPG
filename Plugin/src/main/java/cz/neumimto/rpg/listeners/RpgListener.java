@@ -19,13 +19,16 @@
 package cz.neumimto.rpg.listeners;
 
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.events.PlayerGuiModInitEvent;
 import cz.neumimto.rpg.events.character.PlayerDataPreloadComplete;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.filter.cause.First;
@@ -46,6 +49,9 @@ public class RpgListener {
     @Inject
     private Game game;
 
+    @Inject
+    private NtRpgPlugin plugin;
+
     @Listener
     public void onPlayerDataPreloadComplete(PlayerDataPreloadComplete event) {
         Optional<Player> retardedOptional = game.getServer().getPlayer(event.getPlayer());
@@ -53,7 +59,12 @@ public class RpgListener {
             Player player = retardedOptional.get();
             if (!event.getCharacterBases().isEmpty()) {
                 if (PluginConfig.PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR || event.getCharacterBases().size() == 1) {
-                    characterService.setActiveCharacter(event.getPlayer(), characterService.buildActiveCharacter(player, event.getCharacterBases().get(0)));
+                    Sponge.getScheduler().createTaskBuilder().async().execute(()-> {
+                        final IActiveCharacter character = characterService.buildActiveCharacterAsynchronously(player, event.getCharacterBases().get(0));
+                        Sponge.getScheduler().createTaskBuilder().execute(() -> {
+                            characterService.setActiveCharacter(event.getPlayer(), character);
+                        }).submit(plugin);
+                    }).submit(plugin);
                 } else {
                     Gui.invokeCharacterMenu(player, event.getCharacterBases());
                 }

@@ -75,7 +75,7 @@ public class CharacterBase extends TimestampEntity {
 
     @Column(columnDefinition="TEXT")
     @Convert(converter = MapSL2Json.class)
-    private Map<String,Long> characterCooldowns;
+    private Map<String,Long> characterCooldowns = new HashMap<>();
 
     @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "characterBase")
     private Set<CharacterSkill> characterSkills = new HashSet<>();
@@ -97,6 +97,9 @@ public class CharacterBase extends TimestampEntity {
     private int Z;
 
     private String world;
+
+    @Enumerated(EnumType.STRING)
+    private MessageType messageType;
 
     public Map<String,Integer> getAttributes() {
         return cachedAttributes;
@@ -231,7 +234,6 @@ public class CharacterBase extends TimestampEntity {
         this.world = world;
     }
 
-
     public int getAttributePoints() {
         return attributePoints;
     }
@@ -277,7 +279,7 @@ public class CharacterBase extends TimestampEntity {
 
     public CharacterClass getCharacterClass(ConfigClass configClass) {
         for (CharacterClass characterClass : characterClasses) {
-            if (characterClass.getName().equalsIgnoreCase(configClass.getName())) {
+            if (configClass.getName().equalsIgnoreCase(characterClass.getName())) {
                 return characterClass;
             }
         }
@@ -291,5 +293,14 @@ public class CharacterBase extends TimestampEntity {
             }
         }
         return null;
+    }
+
+
+    public MessageType getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(MessageType messageType) {
+        this.messageType = messageType;
     }
 }

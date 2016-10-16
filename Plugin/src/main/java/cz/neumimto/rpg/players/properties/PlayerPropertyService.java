@@ -55,6 +55,7 @@ public class PlayerPropertyService {
     };
     @Inject
     private Logger logger;
+
     private Map<String, Short> idMap = new HashMap<>();
     private Map<Integer, Float> defaults = new HashMap<>();
     private Map<String, Short> persistant = new HashMap<>();

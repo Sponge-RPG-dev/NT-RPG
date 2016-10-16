@@ -152,7 +152,7 @@ public class GroupDao {
 
 
     private void loadPlayerGroup(Config c, PlayerGroup group) {
-        group.setShowsInMenu(c.getBoolean("Wildcart"));
+        group.setShowsInMenu(c.getBoolean("Wildcard"));
         group.setChatPrefix(c.getString("Chat.prefix"));
         group.setChatSufix(c.getString("Chat.suffix"));
         Config prop = c.getConfig("BonusProperties");

@@ -220,31 +220,7 @@ public class VanilaMessaging implements IPlayerMessage {
     @Override
     public void showAvalaibleClasses(IActiveCharacter character) {
         Collection<ConfigClass> classes = groupService.getClasses();
-        List<ItemStack> list = new ArrayList<>();
-        for (ConfigClass aClass : classes) {
-            ItemType type = aClass.getItemType();
-            if (type == null) {
-                type = ItemTypes.DIAMOND_SWORD;
-            }
-            ItemStack a = ItemStack.of(type, 1);
-            a.offer(Keys.DISPLAY_NAME, Text.of(TextColors.GREEN, TextStyles.BOLD, ""));
-            List<Text> lore = new ArrayList<>();
-            double[] levels = aClass.getLevels();
-            if (levels != null) {
-                lore.add(Text.of(TextColors.RED, "Max Level/Total exp: " + levels.length + "/" + aClass.getTotalExp()));
-            }
-            lore.add(Text.of(TextColors.GREEN, aClass.getDescription()));
-            lore.add(Text.of(TextColors.DARK_GRAY, Localization.CLASS_INVENTORYMENU_FOOTER));
-            a.offer(Keys.ITEM_LORE, lore);
-            list.add(a);
-        }
-        CustomInventory.Builder builder = CustomInventory.builder();
 
-        builder.size(8);
-        CustomInventory build = builder.build();
-
-        build.set(new SlotIndex(1),ItemStack.of(ItemTypes.SHIELD,1));
-        character.getPlayer().openInventory(build, Cause.of(NamedCause.of("asd",character)));
     }
 
     @Override
@@ -253,7 +229,7 @@ public class VanilaMessaging implements IPlayerMessage {
         PaginationList.Builder builder = paginationService.builder();
         Sponge.getScheduler().createTaskBuilder().async().execute(() -> {
             DirectAccessDao build = IoC.get().build(DirectAccessDao.class);
-            String query = "create new cz.neumimto.rpg.utils.model.CharacterListModel(" +
+            String query = "select new cz.neumimto.rpg.utils.model.CharacterListModel(" +
                     "c.name,d.name,d.experiences) " +
                     "from CharacterBase c left join c.characterClasses d " +
                     "where c.uuid = :id and d.name = c.primaryClass order by c.updated desc";
@@ -281,7 +257,7 @@ public class VanilaMessaging implements IPlayerMessage {
                 b.append(Text.builder(a.getCharacterName()).color(TextColors.GRAY).append(Text.of(" ")).build());
                 b.append(Text.builder(a.getPrimaryClassName()).color(TextColors.AQUA).append(Text.of(" ")).build());
                 ConfigClass cc = s.getNClass(a.getPrimaryClassName());
-                int level = s.getLevel(cc, a.getPrimaryClassExp());
+                int level = 0;//s.getLevel(cc, a.getPrimaryClassExp());
                 int m = cc.getMaxLevel();
                 b.append(Text.builder("Level: ").color(TextColors.DARK_GRAY).append(
                         Text.builder(level+"").color(level == m ? TextColors.RED : TextColors.DARK_PURPLE).build()).build());

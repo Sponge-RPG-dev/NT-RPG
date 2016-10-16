@@ -18,12 +18,15 @@
 
 package cz.neumimto.rpg.players.groups;
 
+import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -43,10 +46,14 @@ public class Guild {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long guildId;
+
     private String name;
+
     private Long leaderId;
-    private Set<IActiveCharacter> memebers = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "characterId")
+    private List<CharacterBase> memebers;
 
 
     public Guild() {
@@ -69,11 +76,11 @@ public class Guild {
         this.leaderId = leaderId;
     }
 
-    public Set<IActiveCharacter> getMemebers() {
+    public List<CharacterBase> getMemebers() {
         return memebers;
     }
 
-    public void setMemebers(Set<IActiveCharacter> memebers) {
+    public void setMemebers(List<CharacterBase> memebers) {
         this.memebers = memebers;
     }
 }

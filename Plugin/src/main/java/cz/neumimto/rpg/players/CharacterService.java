@@ -420,51 +420,6 @@ public class CharacterService {
         return new PreloadCharacter(uuid);
     }
 
-    /**
-     * Creates active character from character base
-     * Runs async task, which fetch cooldowns and skills;
-     *
-     * @param player
-     * @param characterBase
-     * @return
-     */
-    public ActiveCharacter buildActiveCharacter(Player player, CharacterBase characterBase) {
-        ActiveCharacter activeCharacter = new ActiveCharacter(player, characterBase);
-        activeCharacter.setRace(groupService.getRace(characterBase.getRace()));
-        //activeCharacter.setGuild(groupService.getGuild(characterBase.getGuild()));
-        activeCharacter.setPrimaryClass(groupService.getNClass(characterBase.getPrimaryClass()));
-        String s = activeCharacter.getPrimaryClass().getConfigClass().getName();
-        Double d = characterBase.getCharacterClass(activeCharacter.getPrimaryClass().getConfigClass()).getExperiences();
-        if (d != null) {
-            activeCharacter.getPrimaryClass().setExperiences(d);
-        }
-        //TODO move to async? move to async!
-        //recalculateProperties(activeCharacter);
-        recalculateProperties(activeCharacter);
-        resolveSkillsCds(characterBase, activeCharacter);
-
-
-        game.getScheduler().createTaskBuilder().async().name("FetchCharBaseDataAsync-" + player.getUniqueId())
-                .execute(() -> {
-                    initSkills(activeCharacter);
-                    //todo all classes, for now only primary
-                    Set<CharacterClass> characterClasses = characterBase.getCharacterClasses();
-                    Double exp = null;
-                    Optional<CharacterClass> first = characterClasses.stream()
-                            .filter(a -> a.getName().equalsIgnoreCase(characterBase.getPrimaryClass()))
-                            .findFirst();
-                    if (first.isPresent()) {
-                        first.get().getExperiences();
-                    }
-                    if (exp != null) {
-                        addExperiences(activeCharacter, exp, activeCharacter.getPrimaryClass(), true);
-                    }
-                    game.getScheduler().createTaskBuilder().name("FetchCharBaseDataCallback-" + player.getUniqueId())
-                            .execute(updateAll(activeCharacter)).submit(plugin);
-                }).submit(plugin);
-        return activeCharacter;
-    }
-
     private Runnable updateAll(final IActiveCharacter activeCharacter) {
         return () -> {
             updateArmorRestrictions(activeCharacter);
@@ -551,7 +506,7 @@ public class CharacterService {
      * @return
      */
     public ActiveCharacter buildActiveCharacterAsynchronously(Player player, CharacterBase characterBase) {
-        playerDao.fetchCharacterBase(characterBase);
+        characterBase = playerDao.fetchCharacterBase(characterBase);
         ActiveCharacter activeCharacter = new ActiveCharacter(player, characterBase);
         activeCharacter.setRace(groupService.getRace(characterBase.getRace()));
         // activeCharacter.setGuild(groupService.getGuild(characterBase.getGuild()));

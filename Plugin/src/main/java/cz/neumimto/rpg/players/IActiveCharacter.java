@@ -36,6 +36,7 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
 
+import java.awt.*;
 import java.util.Map;
 import java.util.Set;
 
@@ -239,4 +240,8 @@ public interface IActiveCharacter extends IEntity<Player> {
     void setOpenInventory(boolean b);
 
     boolean hasOpenInventory();
+
+    MessageType getPreferedMessageType();
+
+    void setPreferedMessageType(MessageType type);
 }
