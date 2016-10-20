@@ -237,11 +237,12 @@ public class VanilaMessaging implements IPlayerMessage {
             map.put("id", player.getCharacterBase().getUuid());
             List<CharacterListModel> list = build.findList(CharacterListModel.class, query, map);
             List<Text> content = new ArrayList<Text>();
-
+            
             builder.linesPerPage(5);
             builder.padding(Text.of("=",TextColors.DARK_GRAY));
             GroupService s = IoC.get().build(GroupService.class);
             String current = player.getName();
+            -
             list.forEach(a -> {
                 Text.Builder b = Text.builder(" -")
                         .color(TextColors.GRAY);
