@@ -51,7 +51,7 @@ public class SkillSettings {
     }
 
     public boolean hasNode(ISkillNode node) {
-        return hasNode(node.name());
+        return hasNode(node.value());
     }
 
     public void addNode(String s, float val) {
@@ -63,7 +63,7 @@ public class SkillSettings {
     }
 
     public String getObjectNode(ISkillNode k) {
-        return getObjectNode(k.name());
+        return getObjectNode(k.value());
     }
 
     public String getObjectNode(String k) {

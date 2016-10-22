@@ -16,4 +16,11 @@ public class SkillModifier {
     public SkillModifierData getValueOf(SkillModifierType t) {
         throw new NotImplementedException();
     }
+
+
+    public static SkillModifier fromCommandArgs(String[] args) {
+        SkillModifier mod = new SkillModifier();
+        //todo
+        return null;
+    }
 }

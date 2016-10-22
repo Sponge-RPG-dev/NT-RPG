@@ -55,7 +55,7 @@ import java.util.Optional;
  */
 @Plugin(id = "nt-rpg", version = "1.0.0", name = "NT-Rpg", dependencies = {
         @Dependency(id = "MinecraftGuiServer", optional = true),
-        @Dependency(id = "nt-core", version = "1.5",optional = false)
+        @Dependency(id = "nt-core", version = "1.7",optional = false)
 })
 public class NtRpgPlugin {
     public static String workingDir;

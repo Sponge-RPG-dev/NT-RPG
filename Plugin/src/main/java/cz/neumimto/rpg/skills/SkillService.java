@@ -116,8 +116,8 @@ public class SkillService {
         }
         SkillData skillData = esi.getSkillData();
         SkillSettings skillSettings = skillData.getSkillSettings();
-        float requiredMana = skillSettings.getLevelNodeValue(ISkillNode.MANACOST, level);
-        float requiredHp = skillSettings.getLevelNodeValue(ISkillNode.HPCOST, level);
+        float requiredMana = skillSettings.getLevelNodeValue(SkillNodes.MANACOST, level);
+        float requiredHp = skillSettings.getLevelNodeValue(SkillNodes.HPCOST, level);
         SkillPrepareEvent event = new SkillPrepareEvent(character, requiredHp, requiredMana);
         game.getEventManager().post(event);
         if (event.isCancelled())
@@ -131,7 +131,7 @@ public class SkillService {
                 if (result == SkillResult.CANCELLED)
                     return SkillResult.CANCELLED;
                 if (result == SkillResult.OK) {
-                    float newCd = skillSettings.getLevelNodeValue(ISkillNode.COOLDOWN, level);
+                    float newCd = skillSettings.getLevelNodeValue(SkillNodes.COOLDOWN, level);
                     SkillPostUsageEvent eventt = new SkillPostUsageEvent(character, hpcost, manacost, newCd);
                     game.getEventManager().post(eventt);
                     if (!event.isCancelled()) {

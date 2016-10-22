@@ -24,6 +24,7 @@ package cz.neumimto.rpg.skills;
 public interface ISkillNode {
 
 
-    public String stringValue();
+    public String value();
 
+    SkillModifierProcessor duplicityProcessor();
 }

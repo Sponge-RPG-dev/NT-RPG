@@ -29,8 +29,8 @@ public abstract class Targetted extends ActiveSkill implements ITargetted {
     private Game game;
 
     @Override
-    public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info) {
-        int range = (int) info.getSkillData().getSkillSettings().getLevelNodeValue(ISkillNode.RANGE, info.getLevel());
+    public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info,SkillModifier modifier) {
+        int range = (int) info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.RANGE, info.getLevel());
         Living l = Utils.getTargettedEntity(character, range);
         if (l != null) {
             SkillFindTargetEvent event = new SkillFindTargetEvent(character, l, this);

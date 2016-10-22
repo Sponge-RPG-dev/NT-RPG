@@ -1,6 +1,8 @@
 package cz.neumimto.rpg.persistance.model;
 
+import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.players.groups.ConfigClass;
 
 import javax.persistence.*;
 
@@ -14,7 +16,7 @@ public class CharacterClass {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long classId;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "characterId")
     private CharacterBase characterBase;
 
@@ -89,4 +91,6 @@ public class CharacterClass {
     public int hashCode() {
         return classId != null ? classId.hashCode() : 775701;
     }
+
+
 }

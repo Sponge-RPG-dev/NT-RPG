@@ -113,4 +113,8 @@ public class PluginConfig {
     @ConfigValue
     public static boolean AUTOREMOVE_NONEXISTING_RUNEWORDS = false;
 
+    @ConfigValue
+    @Comment(content = {"Enables passing arguments to skills", "eg.: /skill Fireball arg1 arg2"})
+    public static boolean SKILL_COMMAND_ARGUMENTS = false;
+
 }

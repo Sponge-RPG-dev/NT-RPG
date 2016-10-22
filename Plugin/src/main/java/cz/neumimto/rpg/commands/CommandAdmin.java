@@ -106,7 +106,7 @@ public class CommandAdmin extends CommandBase {
                     extendedSkillInfo.setSkillData(skillData);
                     extendedSkillInfo.setSkill(skill);
                     ActiveSkill askill = (ActiveSkill) skill;
-                    askill.cast(character, extendedSkillInfo);
+                    askill.cast(character, extendedSkillInfo, null);
                 }
             }
         } else if (a[0].equalsIgnoreCase("set")) {

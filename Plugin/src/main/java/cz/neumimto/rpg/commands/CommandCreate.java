@@ -22,12 +22,10 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.configuration.CommandLocalization;
-import cz.neumimto.rpg.configuration.CommandPermissions;
-import cz.neumimto.rpg.configuration.Localization;
-import cz.neumimto.rpg.configuration.PluginConfig;
+import cz.neumimto.rpg.configuration.*;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -44,6 +42,7 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.text.Text;
 
 /**
@@ -94,16 +93,19 @@ public class CommandCreate extends CommandBase {
                         characterBase.setName(args[1]);
                         characterBase.setRace(Race.Default.getName());
                         characterBase.setPrimaryClass(ConfigClass.Default.getName());
+                        CharacterClass characterClass = new CharacterClass();
+                        characterClass.setName(ConfigClass.Default.getName());
+                        characterClass.setExperiences(0D);
+                        characterClass.setCharacterBase(characterBase);
+                        characterBase.setAttributePoints(PluginConfig.ATTRIBUTEPOINTS_ON_START);
+                        characterBase.getCharacterClasses().add(characterClass);
                         characterBase.setUuid(player.getUniqueId());
                         characterBase.setAttributePoints(PluginConfig.ATTRIBUTEPOINTS_ON_START);
                         characterService.createAndUpdate(characterBase);
-                        IActiveCharacter character = characterService.buildActiveCharacterAsynchronously(player, characterBase);
-                        if (args.length == 3) {
-                            characterService.setActiveCharacterSynchronously(player.getUniqueId(), character);
-                        }
+
                         commandSource.sendMessage(Text.of(CommandLocalization.CHARACTER_CREATED.replaceAll("%1", characterBase.getName())));
 
-                        Gui.sendListOfCharacters(character,characterBase);
+                        Gui.sendListOfCharacters(characterService.getCharacter(player.getUniqueId()),characterBase);
                     }
                 }).submit(plugin);
             } else if (args[0].equalsIgnoreCase("party")) {

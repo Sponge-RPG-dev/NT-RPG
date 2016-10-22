@@ -232,23 +232,22 @@ public class VanilaMessaging implements IPlayerMessage {
             String query = "select new cz.neumimto.rpg.utils.model.CharacterListModel(" +
                     "c.name,d.name,d.experiences) " +
                     "from CharacterBase c left join c.characterClasses d " +
-                    "where c.uuid = :id and d.name = c.primaryClass order by c.updated desc";
+                    "where c.uuid = :id order by c.updated desc";
             Map map = new HashMap<>();
-            map.put("id", player.getCharacterBase().getUuid());
+            map.put("id", player.getPlayer().getUniqueId());
             List<CharacterListModel> list = build.findList(CharacterListModel.class, query, map);
             List<Text> content = new ArrayList<Text>();
-            
-            builder.linesPerPage(5);
-            builder.padding(Text.of("=",TextColors.DARK_GRAY));
+            builder.linesPerPage(10);
+            builder.padding(Text.of("=", TextColors.DARK_GRAY));
             GroupService s = IoC.get().build(GroupService.class);
             String current = player.getName();
-            -
+
             list.forEach(a -> {
                 Text.Builder b = Text.builder(" -")
                         .color(TextColors.GRAY);
-                if (!a.getCharacterName().equals(current)) {
+                if (!a.getCharacterName().equalsIgnoreCase(current)) {
                     b.append(Text.builder(" [").color(TextColors.DARK_GRAY).build())
-                            .append(Text.builder("SELECT").color(TextColors.GREEN).onClick(TextActions.runCommand("choose character " + a.getCharacterName())).build())
+                            .append(Text.builder("SELECT").color(TextColors.GREEN).onClick(TextActions.runCommand("/choose character " + a.getCharacterName())).build())
                             .append(Text.builder("] - ").color(TextColors.DARK_GRAY).build());
                 } else {
                     b.append(Text.builder(" [").color(TextColors.DARK_GRAY).build())
@@ -258,15 +257,18 @@ public class VanilaMessaging implements IPlayerMessage {
                 b.append(Text.builder(a.getCharacterName()).color(TextColors.GRAY).append(Text.of(" ")).build());
                 b.append(Text.builder(a.getPrimaryClassName()).color(TextColors.AQUA).append(Text.of(" ")).build());
                 ConfigClass cc = s.getNClass(a.getPrimaryClassName());
-                int level = 0;//s.getLevel(cc, a.getPrimaryClassExp());
-                int m = cc.getMaxLevel();
+                int level = 0;
+                int m = 0;
+                if (cc != ConfigClass.Default) {
+                    level = s.getLevel(cc, a.getPrimaryClassExp());
+                    m = cc.getMaxLevel();
+                }
                 b.append(Text.builder("Level: ").color(TextColors.DARK_GRAY).append(
                         Text.builder(level+"").color(level == m ? TextColors.RED : TextColors.DARK_PURPLE).build()).build());
                 content.add(b.build());
             });
             builder.title(Text.of("Characters",TextColors.WHITE))
-                    .contents(content)
-                    .padding(Text.of("=", Color.GRAY));
+                    .contents(content);
             builder.sendTo(player.getEntity());
 
         }).submit(plugin);

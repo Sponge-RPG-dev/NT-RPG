@@ -36,7 +36,7 @@ import java.util.function.Consumer;
 /**
  * Created by NeumimTo on 9.7.2015.
  */
-//todo catch exceptions and rollback tracksactions
+//todo catch exceptions and rollback transactions
 @Singleton
 public class PlayerDao extends GenericDao<CharacterBase> {
 
@@ -116,7 +116,7 @@ public class PlayerDao extends GenericDao<CharacterBase> {
         int i = -1;
         try {
             Query query = session.createQuery("DELETE FROM CharacterBase where uuid=:uuid");
-            query.setParameter("uid", uniqueId);
+            query.setParameter("uuid", uniqueId);
             i = query.executeUpdate();
             transaction.commit();
         } catch (Throwable t) {
@@ -127,23 +127,14 @@ public class PlayerDao extends GenericDao<CharacterBase> {
         return i;
     }
 
-    public void attachAndDo(CharacterBase base, Consumer<CharacterBase> c) {
-        //entity is now in detached state session.contains is not needed would return false every time
-        Session session = factory.openSession();
-        session.update(base);
-        c.accept(base);
-        session.close();
-    }
 
     public void createAndUpdate(CharacterBase base) {
         Session session = factory.openSession();
         Transaction tx = null;
         tx = session.beginTransaction();
-        System.out.println(base.getId());
         session.saveOrUpdate(base);
         session.flush();
         tx.commit();
         session.close();
-        System.out.println(base.getId());
     }
 }

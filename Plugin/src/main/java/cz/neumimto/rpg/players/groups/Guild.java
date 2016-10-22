@@ -31,12 +31,12 @@ import java.util.Set;
 
 /**
  * Created by NeumimTo on 27.12.2014.
- */
+ *//*
 @Table(name = "Guilds",
         indexes = {@Index(columnList = "id")})
 @Entity
 //TODO put guilds in a second level cache; configure ehcache in nt core
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)*/
 public class Guild {
     public static Guild Default = new Guild();
 
