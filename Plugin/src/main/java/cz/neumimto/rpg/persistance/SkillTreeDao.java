@@ -109,17 +109,17 @@ public class SkillTreeDao {
     }
 
     private void addRequiredIfMissing(SkillSettings skillSettings) {
-        Map.Entry<String, Float> q = skillSettings.getFloatNodeEntry(SkillNode.HPCOST.name());
+        Map.Entry<String, Float> q = skillSettings.getFloatNodeEntry(SkillNodes.HPCOST.name());
         if (q == null) {
-            skillSettings.addNode(SkillNode.HPCOST, 0, 0);
+            skillSettings.addNode(SkillNodes.HPCOST, 0, 0);
         }
-        q = skillSettings.getFloatNodeEntry(SkillNode.MANACOST.name());
+        q = skillSettings.getFloatNodeEntry(SkillNodes.MANACOST.name());
         if (q == null) {
-            skillSettings.addNode(SkillNode.MANACOST, 0, 0);
+            skillSettings.addNode(SkillNodes.MANACOST, 0, 0);
         }
-        q = skillSettings.getFloatNodeEntry(SkillNode.COOLDOWN.name());
+        q = skillSettings.getFloatNodeEntry(SkillNodes.COOLDOWN.name());
         if (q == null) {
-            skillSettings.addNode(SkillNode.COOLDOWN, 0, 0);
+            skillSettings.addNode(SkillNodes.COOLDOWN, 0, 0);
         }
     }
 

@@ -21,15 +21,15 @@ public class SkillInvisibility extends ActiveSkill {
         setName("Invisibility");
         setDamageType(null);
         SkillSettings settings = new SkillSettings();
-        settings.addNode(SkillNode.DURATION, 10, 10);
+        settings.addNode(SkillNodes.DURATION, 10, 10);
         setSettings(settings);
         getSkillTypes().add(SkillType.CANT_CAST_WHILE_SILENCED);
 
     }
 
     @Override
-    public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info) {
-        long duration = (long) settings.getLevelNodeValue(SkillNode.DURATION,info.getLevel());
+    public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info,SkillModifier skillModifier) {
+        long duration = (long) settings.getLevelNodeValue(SkillNodes.DURATION,info.getLevel());
         Invisibility invisibility = new Invisibility(character, duration);
         effectService.addEffect(invisibility,character);
         return SkillResult.OK;

@@ -29,7 +29,7 @@ public class SkillSettings {
     private Map<String, Float> settingsMap = new HashMap<>();
     private Map<String, String> objMap = new HashMap<>();
 
-    public void addNode(SkillNode n, float val, float levelbonux) {
+    public void addNode(ISkillNode n, float val, float levelbonux) {
         addNode(n.toString(), val, levelbonux);
     }
 
@@ -50,7 +50,7 @@ public class SkillSettings {
         return null;
     }
 
-    public boolean hasNode(SkillNode node) {
+    public boolean hasNode(ISkillNode node) {
         return hasNode(node.name());
     }
 
@@ -62,7 +62,7 @@ public class SkillSettings {
         objMap.put(k.toLowerCase(), v);
     }
 
-    public String getObjectNode(SkillNode k) {
+    public String getObjectNode(ISkillNode k) {
         return getObjectNode(k.name());
     }
 
@@ -71,7 +71,7 @@ public class SkillSettings {
     }
 
 
-    public float getNodeValue(SkillNode n) {
+    public float getNodeValue(ISkillNode n) {
         return getNodeValue(n.toString());
     }
 
@@ -79,7 +79,7 @@ public class SkillSettings {
         return settingsMap.get(s);
     }
 
-    public float getLevelNodeValue(SkillNode n, int level) {
+    public float getLevelNodeValue(ISkillNode n, int level) {
         return getLevelNodeValue(n.toString(), level);
     }
 

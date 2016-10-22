@@ -22,16 +22,16 @@ public class SkillSpeed extends ActiveSkill {
         setDamageType(null);
         setDescription(SkillLocalization.SKILL_SPEED_DESC);
         SkillSettings settings = new SkillSettings();
-        settings.addNode(SkillNode.DURATION, 1000, 1500);
-        settings.addNode(SkillNode.AMOUNT, 0.1f, 0.05f);
+        settings.addNode(SkillNodes.DURATION, 1000, 1500);
+        settings.addNode(SkillNodes.AMOUNT, 0.1f, 0.05f);
         setSettings(settings);
         getSkillTypes().add(SkillType.CANT_CAST_WHILE_SILENCED);
     }
 
     @Override
-    public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info) {
-        long duration = (long) super.settings.getLevelNodeValue(SkillNode.DURATION,info.getLevel());
-        float amount = super.settings.getLevelNodeValue(SkillNode.AMOUNT,info.getLevel());
+    public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info,SkillModifier skillModifier) {
+        long duration = (long) super.settings.getLevelNodeValue(SkillNodes.DURATION,info.getLevel());
+        float amount = super.settings.getLevelNodeValue(SkillNodes.AMOUNT,info.getLevel());
         SpeedBoost sb = new SpeedBoost(character,duration,amount);
         effectService.addEffect(sb,character);
         return SkillResult.OK;

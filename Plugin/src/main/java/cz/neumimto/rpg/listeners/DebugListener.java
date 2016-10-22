@@ -17,27 +17,35 @@
  */
 package cz.neumimto.rpg.listeners;
 
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.entity.living.monster.Monster;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
+import org.spongepowered.api.event.entity.SpawnEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.event.filter.type.Exclude;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.world.Chunk;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * Created by NeumimTo on 22.12.2015.
  */
 public class DebugListener {
 
+
     @Listener(order = Order.LAST)
     public void debug(DamageEntityEvent event, @First(typeFilter = EntityDamageSource.class) EntityDamageSource entityDamageSource) {
         Entity targetEntity = event.getTargetEntity();
+
         Entity source = entityDamageSource.getSource();
         if (source.getType() == EntityTypes.PLAYER) {
             ((Player) source).sendMessage(Text.of(">> " + event.getFinalDamage()));
@@ -45,6 +53,5 @@ public class DebugListener {
         if (targetEntity.getType() == EntityTypes.PLAYER) {
             ((Player) targetEntity).sendMessage(Text.of("<< " + event.getFinalDamage()));
         }
-
     }
 }

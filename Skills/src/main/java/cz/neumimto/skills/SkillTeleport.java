@@ -24,13 +24,13 @@ public class SkillTeleport extends ActiveSkill {
     public SkillTeleport() {
         setName("Teleport");
         SkillSettings settings = new SkillSettings();
-        settings.addNode(SkillNode.RANGE, 20, 20);
+        settings.addNode(SkillNodes.RANGE, 20, 20);
         super.settings = settings;
         super.setDescription(SkillLocalization.SKILL_TELEPORT_DESC);
     }
 
     @Override
-    public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo extendedSkillInfo) {
+    public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo extendedSkillInfo, SkillModifier skillModifier) {
         Player player = character.getPlayer();
         Optional<BlockRayHit<World>> optHit = BlockRay.from(player).filter(BlockRay.onlyAirFilter()).build().end();
         if (optHit.isPresent()) {

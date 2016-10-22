@@ -21,16 +21,16 @@ public class SkillJump extends ActiveSkill {
         setDamageType(null);
         setDescription(SkillLocalization.SKILL_JUMP_DESC);
         SkillSettings skillSettings = new SkillSettings();
-        skillSettings.addNode(SkillNode.VELOCITY, 2,2);
+        skillSettings.addNode(SkillNodes.VELOCITY, 2,2);
         settings = skillSettings;
     }
 
 
     @Override
-    public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info) {
+    public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info,SkillModifier skillModifier) {
         Vector3d rotation = character.getEntity().getRotation();
         Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();
-        Vector3d velocity = direction.add(0,1,0).mul(settings.getLevelNodeValue(SkillNode.VELOCITY, info.getLevel()));
+        Vector3d velocity = direction.add(0,1,0).mul(settings.getLevelNodeValue(SkillNodes.VELOCITY, info.getLevel()));
         character.getEntity().offer(Keys.VELOCITY,velocity);
         return SkillResult.OK;
     }

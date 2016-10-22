@@ -22,16 +22,16 @@ public class SkillMegabolt extends ActiveSkill {
         setName("Megabolt");
         setDamageType(NDamageType.LIGHTNING);
         SkillSettings settings = new SkillSettings();
-        settings.addNode(SkillNode.DAMAGE,10,10);
-        settings.addNode(SkillNode.RADIUS, 30, 30);
+        settings.addNode(SkillNodes.DAMAGE,10,10);
+        settings.addNode(SkillNodes.RADIUS, 30, 30);
         super.settings = settings;
     }
 
     @Override
-    public SkillResult cast(IActiveCharacter iActiveCharacter, ExtendedSkillInfo extendedSkillInfo) {
-        int r = (int) settings.getLevelNodeValue(SkillNode.RADIUS,extendedSkillInfo.getLevel());
+    public SkillResult cast(IActiveCharacter iActiveCharacter, ExtendedSkillInfo extendedSkillInfo,SkillModifier skillModifier) {
+        int r = (int) settings.getLevelNodeValue(SkillNodes.RADIUS,extendedSkillInfo.getLevel());
         Set<Entity> nearbyEntities = Utils.getNearbyEntities(iActiveCharacter.getPlayer().getLocation(), r);
-        float damage = settings.getLevelNodeValue(SkillNode.DAMAGE,extendedSkillInfo.getLevel());
+        float damage = settings.getLevelNodeValue(SkillNodes.DAMAGE,extendedSkillInfo.getLevel());
         SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
         builder.setSkill(this);
         builder.setCaster(iActiveCharacter);

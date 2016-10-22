@@ -27,20 +27,20 @@ public class SkillLightning extends ActiveSkill {
         setDescription(SkillLocalization.SKILL_LIGHTNING_DESC);
         setDamageType(NDamageType.LIGHTNING);
         SkillSettings skillSettings = new SkillSettings();
-        skillSettings.addNode(SkillNode.DAMAGE, 10, 20);
-        skillSettings.addNode(SkillNode.RANGE,10 ,10);
+        skillSettings.addNode(SkillNodes.DAMAGE, 10, 20);
+        skillSettings.addNode(SkillNodes.RANGE,10 ,10);
         super.settings = skillSettings;
     }
 
     @Override
-    public SkillResult cast(IActiveCharacter iActiveCharacter, ExtendedSkillInfo extendedSkillInfo) {
-        int range = (int) settings.getLevelNodeValue(SkillNode.RANGE,extendedSkillInfo.getLevel());
+    public SkillResult cast(IActiveCharacter iActiveCharacter, ExtendedSkillInfo extendedSkillInfo,SkillModifier skillModifier) {
+        int range = (int) settings.getLevelNodeValue(SkillNodes.RANGE,extendedSkillInfo.getLevel());
         Living l = Utils.getTargettedEntity(iActiveCharacter,range);
         if (l == null)
             return SkillResult.NO_TARGET;
         IEntity e = entityService.get(l);
         if (e != null) {
-            float damage = settings.getLevelNodeValue(SkillNode.DAMAGE,extendedSkillInfo.getLevel());
+            float damage = settings.getLevelNodeValue(SkillNodes.DAMAGE,extendedSkillInfo.getLevel());
             SkillDamageSourceBuilder build = new SkillDamageSourceBuilder();
             build.setSkill(this);
             build.setCaster(iActiveCharacter);

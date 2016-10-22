@@ -17,8 +17,6 @@ import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.world.World;
 
-import java.util.Optional;
-
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
@@ -34,13 +32,13 @@ public class SkillFireball extends ActiveSkill {
         setDamageType(DamageTypes.FIRE);
         setDescription(SkillLocalization.SKILL_FIREBALL_DESC);
         SkillSettings skillSettings = new SkillSettings();
-        skillSettings.addNode(SkillNode.DAMAGE, 10, 10);
-        skillSettings.addNode(SkillNode.VELOCITY, 1.5f, .5f);
+        skillSettings.addNode(SkillNodes.DAMAGE, 10, 10);
+        skillSettings.addNode(SkillNodes.VELOCITY, 1.5f, .5f);
         settings = skillSettings;
     }
 
     @Override
-    public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info) {
+    public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info,SkillModifier skillModifier) {
         Player p = character.getPlayer();
         World world = p.getWorld();
         Entity optional = world.createEntity(EntityTypes.SNOWBALL,p.getLocation().getPosition().add(cos((p.getRotation().getX() - 90) % 360) * 0.2,1.8, sin((p.getRotation().getX() - 90) % 360) * 0.2));
@@ -48,12 +46,12 @@ public class SkillFireball extends ActiveSkill {
             Vector3d rotation = p.getRotation();
             Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();
             Snowball sb = (Snowball) optional;
-            sb.offer(Keys.VELOCITY, direction.mul(settings.getLevelNodeValue(SkillNode.VELOCITY, info.getLevel())));
+            sb.offer(Keys.VELOCITY, direction.mul(settings.getLevelNodeValue(SkillNodes.VELOCITY, info.getLevel())));
             sb.setShooter(p);
             world.spawnEntity(sb, Cause.of(NamedCause.of("player",character.getPlayer())));
             sb.offer(Keys.FIRE_TICKS, 999);
             ProjectileProperties projectileProperties = new ProjectileProperties(sb, character);
-            projectileProperties.setDamage(settings.getLevelNodeValue(SkillNode.DAMAGE, info.getLevel()));
+            projectileProperties.setDamage(settings.getLevelNodeValue(SkillNodes.DAMAGE, info.getLevel()));
             SkillDamageSourceBuilder build = new SkillDamageSourceBuilder();
             build.setSkill(this);
             build.setCaster(character);

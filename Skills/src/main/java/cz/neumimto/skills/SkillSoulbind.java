@@ -32,9 +32,9 @@ public class SkillSoulbind extends ActiveSkill {
 
     public SkillSoulbind() {
         SkillSettings settings = new SkillSettings();
-        settings.addNode(SkillNode.DURATION,1000f,10f);
-        settings.addNode(SkillNode.COOLDOWN,1000f,10f);
-        settings.addNode(SkillNode.RANGE,10f,1f);
+        settings.addNode(SkillNodes.DURATION,1000f,10f);
+        settings.addNode(SkillNodes.COOLDOWN,1000f,10f);
+        settings.addNode(SkillNodes.RANGE,10f,1f);
         setLore(SkillLocalization.SKILL_SOULBIND_LORE);
         super.settings = settings;
         setName("Soulbind");
@@ -42,14 +42,14 @@ public class SkillSoulbind extends ActiveSkill {
     }
 
     @Override
-    public SkillResult cast(IActiveCharacter iActiveCharacter, ExtendedSkillInfo extendedSkillInfo) {
-        float range = extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(SkillNode.RANGE,extendedSkillInfo.getLevel());
+    public SkillResult cast(IActiveCharacter iActiveCharacter, ExtendedSkillInfo extendedSkillInfo,SkillModifier skillModifier) {
+        float range = extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.RANGE,extendedSkillInfo.getLevel());
         Living targettedEntity = Utils.getTargettedEntity(iActiveCharacter, (int) range);
         if (targettedEntity != null && targettedEntity == EntityTypes.PLAYER) {
             IActiveCharacter character = characterService.getCharacter(targettedEntity.getUniqueId());
             if (iActiveCharacter.getParty().getPlayers().contains(character)) {
                 SoulBindEffect effect = new SoulBindEffect(iActiveCharacter,character);
-                effect.setDuration((long) extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(SkillNode.DURATION,extendedSkillInfo.getLevel()));
+                effect.setDuration((long) extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.DURATION,extendedSkillInfo.getLevel()));
                 effectService.addEffect(effect,iActiveCharacter);
                 effectService.addEffect(effect,character);
             }

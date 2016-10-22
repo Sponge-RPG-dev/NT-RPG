@@ -27,9 +27,9 @@ public class BrainSap extends ActiveSkill {
 
     public BrainSap() {
         SkillSettings settings = new SkillSettings();
-        settings.addNode(SkillNode.COOLDOWN,1000f,10f);
-        settings.addNode(SkillNode.RANGE,10f,1f);
-        settings.addNode(SkillNode.DAMAGE,10f,10f);
+        settings.addNode(SkillNodes.COOLDOWN,1000f,10f);
+        settings.addNode(SkillNodes.RANGE,10f,1f);
+        settings.addNode(SkillNodes.DAMAGE,10f,10f);
         setLore(SkillLocalization.SKILL_BRAINSAP_LORE);
         super.settings = settings;
         setName("Soulbind");
@@ -37,8 +37,8 @@ public class BrainSap extends ActiveSkill {
     }
 
     @Override
-    public SkillResult cast(IActiveCharacter iActiveCharacter, ExtendedSkillInfo extendedSkillInfo) {
-        float range = extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(SkillNode.RANGE,extendedSkillInfo.getLevel());
+    public SkillResult cast(IActiveCharacter iActiveCharacter, ExtendedSkillInfo extendedSkillInfo, SkillModifier skillModifier) {
+        float range = extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.RANGE,extendedSkillInfo.getLevel());
         Living targettedEntity = Utils.getTargettedEntity(iActiveCharacter, (int) range);
         if (targettedEntity != null) {
             SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
@@ -46,7 +46,7 @@ public class BrainSap extends ActiveSkill {
             builder.setCaster(iActiveCharacter);
             SkillDamageSource s = builder.build();
             IEntity entity = entityService.get(targettedEntity);
-            float damage = extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(SkillNode.DAMAGE,extendedSkillInfo.getLevel());
+            float damage = extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.DAMAGE,extendedSkillInfo.getLevel());
             entity.getEntity().damage(damage,s);
             return SkillResult.OK;
         }
