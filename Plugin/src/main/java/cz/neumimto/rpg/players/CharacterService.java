@@ -18,6 +18,7 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.MissingConfigurationException;
@@ -46,6 +47,7 @@ import cz.neumimto.rpg.events.skills.SkillUpgradeEvent;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.Weapon;
+import cz.neumimto.rpg.persistance.DirectAccessDao;
 import cz.neumimto.rpg.persistance.PlayerDao;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;

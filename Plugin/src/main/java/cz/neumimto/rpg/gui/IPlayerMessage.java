@@ -23,6 +23,7 @@ import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillTree;
 import org.spongepowered.api.entity.living.player.Player;
@@ -65,4 +66,6 @@ public interface IPlayerMessage {
     void invokerDefaultMenu(IActiveCharacter character);
 
     void sendListOfCharacters(IActiveCharacter player, CharacterBase currentlyCreated);
+
+    void showClassInfo(IActiveCharacter character, ConfigClass cc);
 }

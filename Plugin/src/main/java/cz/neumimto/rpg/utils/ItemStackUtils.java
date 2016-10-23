@@ -45,6 +45,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.spongepowered.api.item.ItemTypes.*;
+import static org.spongepowered.api.item.ItemTypes.LEATHER_HELMET;
 
 /**
  * Created by NeumimTo on 27.3.2015.
@@ -102,6 +103,22 @@ public class ItemStackUtils {
                 COOKIE, COOKED_RABBIT, COOKED_FISH, FISH, CHICKEN, MELON));
     }};
 
+    public static Set<ItemType> boots = new HashSet<ItemType>() {{
+        addAll(Arrays.asList(DIAMOND_BOOTS,GOLDEN_BOOTS,IRON_BOOTS,CHAINMAIL_BOOTS,LEATHER_BOOTS));
+    }};
+
+    public static Set<ItemType> chestplates = new HashSet<ItemType>() {{
+        addAll(Arrays.asList(DIAMOND_CHESTPLATE,GOLDEN_CHESTPLATE,IRON_CHESTPLATE,CHAINMAIL_CHESTPLATE,LEATHER_CHESTPLATE));
+    }};
+
+    public static Set<ItemType> leggings = new HashSet<ItemType>() {{
+        addAll(Arrays.asList(DIAMOND_LEGGINGS,GOLDEN_LEGGINGS,IRON_LEGGINGS,CHAINMAIL_LEGGINGS,LEATHER_LEGGINGS));
+    }};
+
+    public static Set<ItemType> helmet = new HashSet<ItemType>() {{
+        addAll(Arrays.asList(DIAMOND_HELMET,GOLDEN_HELMET,IRON_HELMET,CHAINMAIL_HELMET,LEATHER_HELMET));
+    }};
+
     public static Map<String, ItemRestriction> restrictionMap = new HashMap<>();
 
     protected static String ID = "id";
@@ -139,6 +156,22 @@ public class ItemStackUtils {
 
     public static boolean isStaff(ItemType type) {
         return staffs.contains(type);
+    }
+
+    public static boolean isHelmet(ItemType type) {
+        return helmet.contains(type);
+    }
+
+    public static boolean isChestplate(ItemType type) {
+        return chestplates.contains(type);
+    }
+
+    public static boolean isLeggings(ItemType type) {
+        return leggings.contains(type);
+    }
+
+    public static boolean isBoots(ItemType type) {
+        return boots.contains(type);
     }
 
     public static boolean isItemSkillBind(ItemStack is) {

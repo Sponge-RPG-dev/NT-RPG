@@ -23,6 +23,8 @@ import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.commands.CommandChoose;
+import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.EffectStatusType;
@@ -31,26 +33,21 @@ import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.persistance.DirectAccessDao;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
+import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillTree;
 import cz.neumimto.rpg.skills.StartingPoint;
+import cz.neumimto.rpg.utils.ItemStackUtils;
 import cz.neumimto.rpg.utils.Utils;
 import cz.neumimto.rpg.utils.model.CharacterListModel;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.custom.CustomInventory;
-import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
@@ -58,7 +55,6 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
-import org.spongepowered.asm.mixin.injection.Group;
 
 import java.util.*;
 
@@ -175,7 +171,7 @@ public class VanilaMessaging implements IPlayerMessage {
         IEffect effect = character.getEffect(BossBarExpNotifier.class);
         if (effect == null) {
             effect = new BossBarExpNotifier(character);
-            effectService.addEffect(effect,character);
+            effectService.addEffect(effect, character);
         }
         BossBarExpNotifier bossbar = (BossBarExpNotifier) effect;
         bossbar.setLevel(character.getPrimaryClass().getLevel());
@@ -194,23 +190,23 @@ public class VanilaMessaging implements IPlayerMessage {
 
         PaginationService paginationService = Sponge.getServiceManager().provide(PaginationService.class).get();
         PaginationList.Builder builder = paginationService.builder();
-        builder.title(Text.of(character.getName(),Color.YELLOW));
-        builder.padding(Text.of("═",Color.GRAY));
+        builder.title(Text.of(character.getName(), Color.YELLOW));
+        builder.padding(Text.of("═", Color.GRAY));
 
         List<Text> content = new ArrayList<>();
         Set<CharacterClass> characterClasses = base.getCharacterClasses();
         for (CharacterClass cc : characterClasses) {
-            Text t = Text.builder().append(Text.of(Utils.capitalizeFirst(cc.getName()),Color.GREEN))
-                                    .append(Text.of(" - ",TextColors.GRAY))
-                                    .append(Text.of(cc.getSkillPoints(),TextColors.BLUE))
-                                    .append(Text.of(String.format("(%s)",cc.getUsedSkillPoints()),TextColors.GRAY))
+            Text t = Text.builder().append(Text.of(Utils.capitalizeFirst(cc.getName()), Color.GREEN))
+                    .append(Text.of(" - ", TextColors.GRAY))
+                    .append(Text.of(cc.getSkillPoints(), TextColors.BLUE))
+                    .append(Text.of(String.format("(%s)", cc.getUsedSkillPoints()), TextColors.GRAY))
 
                     .toText();
             content.add(t);
         }
-        content.add(Text.builder().append(Text.of("Attribute points: ",TextColors.GREEN))
-                                .append(Text.of(character.getCharacterBase().getAttributePoints(),TextColors.AQUA))
-                                .append(Text.of(String.format("(%s)",character.getCharacterBase().getUsedAttributePoints(),TextColors.GRAY))).toText());
+        content.add(Text.builder().append(Text.of("Attribute points: ", TextColors.GREEN))
+                .append(Text.of(character.getCharacterBase().getAttributePoints(), TextColors.AQUA))
+                .append(Text.of(String.format("(%s)", character.getCharacterBase().getUsedAttributePoints(), TextColors.GRAY))).toText());
         Player player = character.getPlayer();
 
         builder.contents(content);
@@ -219,8 +215,99 @@ public class VanilaMessaging implements IPlayerMessage {
 
     @Override
     public void showAvalaibleClasses(IActiveCharacter character) {
-        Collection<ConfigClass> classes = groupService.getClasses();
+        final Collection<ConfigClass> classes = groupService.getClasses();
+        PaginationService paginationService = Sponge.getServiceManager().provide(PaginationService.class).get();
+        final PaginationList.Builder builder = paginationService.builder();
+        Sponge.getScheduler().createTaskBuilder().async().execute(() -> {
 
+            builder.padding(Text.of("=", TextColors.DARK_GRAY));
+            builder.header(Text.of("=", TextColors.DARK_GRAY));
+            builder.linesPerPage(10);
+            List<Text> texts = new ArrayList<>();
+
+            String next = IoC.get().build(InfoCommand.class).getAliases().iterator().next();
+
+            classes.stream().filter(PlayerGroup::isShowsInMenu).forEach(cc -> {
+                String name = cc.getName();
+                Text t = Text.builder().append(
+                        Text.builder(" [").color(TextColors.DARK_GRAY)
+                                .append(Text.builder("DETAILS").color(TextColors.GREEN).onClick(TextActions.runCommand("/" + next + " class " + name)).build())
+                                .append(Text.builder("] - ").color(TextColors.DARK_GRAY).build())
+                                .append(Text.builder(name).color(TextColors.DARK_RED)
+                                        .onHover(TextActions.showText(Text.of(cc.getDescription(), TextColors.GRAY, TextStyles.UNDERLINE))).build()
+                                ).build()).build();
+
+                texts.add(t);
+            });
+            builder.contents(texts);
+            builder.sendTo(character.getPlayer());
+
+        }).submit(plugin);
+    }
+
+    @Override
+    public void showClassInfo(IActiveCharacter character, ConfigClass cc) {
+
+        PaginationService paginationService = Sponge.getServiceManager().provide(PaginationService.class).get();
+        final PaginationList.Builder builder = paginationService.builder();
+        Sponge.getScheduler().createTaskBuilder().async().execute(() -> {
+            List<Text> content = new ArrayList<Text>();
+            builder.linesPerPage(16);
+            builder.padding(Text.builder("=").color(TextColors.DARK_GRAY).build());
+            builder.title(Text.of("Class Details"));
+            int attributepointsperlevel = cc.getAttributepointsperlevel();
+            String name = cc.getName();
+            double[] levels = cc.getLevels();
+            int maxLevel = cc.getMaxLevel();
+            double totalExp = cc.getTotalExp();
+            Set<ItemType> allowedArmor = cc.getAllowedArmor();
+            Map<ItemType, Double> weapons = cc.getWeapons();
+
+            builder.header(Text.of(name));
+
+            content.add(Text.builder().color(TextColors.GREEN).append(Text.of(Localization.ATTRIBUTE_POINTS_PER_LEVEL + ": ", TextColors.GREEN))
+                    .append(Text.of(attributepointsperlevel,TextColors.YELLOW)).build());
+
+            content.add(Text.builder().color(TextColors.GREEN).append(Text.of(Localization.MAX_LEVEL + ": "))
+                    .append(Text.of(maxLevel,TextColors.YELLOW)).build());
+
+            content.add(Text.builder().color(TextColors.GREEN).append(Text.of(Localization.TOTAL_EXP + ": ", TextColors.GREEN))
+                    .append(Text.builder(totalExp+"").color(TextColors.YELLOW).build()).build());
+
+            content.add(Text.builder().color(TextColors.GREEN).append(Text.of(Localization.ALLOWED_ARMOR + ":", TextColors.GREEN)).build());
+
+            Text.Builder helmets = Text.builder().color(TextColors.YELLOW);
+            Text.Builder chestplates = Text.builder().color(TextColors.YELLOW);
+            Text.Builder leggings = Text.builder().color(TextColors.YELLOW);
+            Text.Builder boots = Text.builder().color(TextColors.YELLOW);
+
+            for (ItemType type : allowedArmor) {
+                if (ItemStackUtils.isHelmet(type)) {
+                    helmets.append(Text.of(" " + type.getName()));
+                } else if (ItemStackUtils.isChestplate(type)) {
+                    chestplates.append(Text.of(" " + type.getName()));
+                } else if (ItemStackUtils.isLeggings(type)) {
+                    leggings.append(Text.of(" " + type.getName()));
+                } else if (ItemStackUtils.isBoots(type)) {
+                    boots.append(Text.of(" " + type.getName()));
+                }
+            }
+
+
+            content.add(Text.builder().color(TextColors.GREEN).append(Text.of(Localization.HELMETS + ":", TextColors.GREEN))
+                    .append(helmets.build()).build());
+            content.add(Text.builder().color(TextColors.GREEN).append(Text.of(Localization.CHESTPLATES + ":", TextColors.GREEN))
+                    .append(chestplates.build()).build());
+            content.add(Text.builder().color(TextColors.GREEN).append(Text.of(Localization.LEGGINGS + ":", TextColors.GREEN))
+                    .append(leggings.build()).build());
+            content.add(Text.builder().color(TextColors.GREEN).append(Text.of(Localization.BOOTS + ":", TextColors.GREEN))
+                    .append(boots.build()).build());
+
+            //todo weapons + levels
+
+            builder.contents(content);
+            builder.sendTo(character.getPlayer());
+        }).submit(plugin);
     }
 
     @Override
@@ -238,16 +325,17 @@ public class VanilaMessaging implements IPlayerMessage {
             List<CharacterListModel> list = build.findList(CharacterListModel.class, query, map);
             List<Text> content = new ArrayList<Text>();
             builder.linesPerPage(10);
-            builder.padding(Text.of("=", TextColors.DARK_GRAY));
+            builder.padding(Text.builder("=").color(TextColors.DARK_GRAY).build());
             GroupService s = IoC.get().build(GroupService.class);
             String current = player.getName();
-
+            CommandChoose build1 = IoC.get().build(CommandChoose.class);
+            String s1 = build1.getAliases().get(0);
             list.forEach(a -> {
                 Text.Builder b = Text.builder(" -")
                         .color(TextColors.GRAY);
                 if (!a.getCharacterName().equalsIgnoreCase(current)) {
                     b.append(Text.builder(" [").color(TextColors.DARK_GRAY).build())
-                            .append(Text.builder("SELECT").color(TextColors.GREEN).onClick(TextActions.runCommand("/choose character " + a.getCharacterName())).build())
+                            .append(Text.builder("SELECT").color(TextColors.GREEN).onClick(TextActions.runCommand("/" + s1 + " character " + a.getCharacterName())).build())
                             .append(Text.builder("] - ").color(TextColors.DARK_GRAY).build());
                 } else {
                     b.append(Text.builder(" [").color(TextColors.DARK_GRAY).build())
@@ -264,10 +352,10 @@ public class VanilaMessaging implements IPlayerMessage {
                     m = cc.getMaxLevel();
                 }
                 b.append(Text.builder("Level: ").color(TextColors.DARK_GRAY).append(
-                        Text.builder(level+"").color(level == m ? TextColors.RED : TextColors.DARK_PURPLE).build()).build());
+                        Text.builder(level + "").color(level == m ? TextColors.RED : TextColors.DARK_PURPLE).build()).build());
                 content.add(b.build());
             });
-            builder.title(Text.of("Characters",TextColors.WHITE))
+            builder.title(Text.of("Characters", TextColors.WHITE))
                     .contents(content);
             builder.sendTo(player.getEntity());
 

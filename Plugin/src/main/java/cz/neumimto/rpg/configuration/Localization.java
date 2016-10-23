@@ -27,7 +27,6 @@ import cz.neumimto.configuration.ConfigurationContainer;
 @ConfigurationContainer(path = "{WorkingDir}", filename = "Localization.conf")
 public class Localization {
 
-
     @ConfigValue
     public static String NO_MANA = "Not enough mana";
     @ConfigValue
@@ -247,4 +246,29 @@ public class Localization {
 
     @ConfigValue
     public static String SOCKET_CANCELLED = "Socketing cancelled";
+
+    @ConfigValue
+    public static String MAX_LEVEL = "Max. Level";
+
+    @ConfigValue
+    public static String HELMETS = "Helmets";
+
+    @ConfigValue
+    public static String CHESTPLATES = "Chestplates";
+
+    @ConfigValue
+    public static String LEGGINGS = "Leggings";
+
+    @ConfigValue
+    public static String BOOTS = "Boots";
+
+    @ConfigValue
+    public static String ALLOWED_ARMOR = "Armor";
+
+    @ConfigValue
+    public static String ATTRIBUTE_POINTS_PER_LEVEL = "APPL";
+
+    @ConfigValue
+    public static String TOTAL_EXP = "Total exp. amount";
+
 }

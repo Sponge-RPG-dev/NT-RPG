@@ -29,6 +29,7 @@ import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import org.spongepowered.api.Game;
@@ -95,6 +96,10 @@ public class InfoCommand extends CommandBase {
             printRaceList(commandSource, "race");
         } else if (args[0].equalsIgnoreCase("guilds")) {
 
+        } else if (args[0].equalsIgnoreCase("class")) {
+            IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
+            ConfigClass cc = groupService.getNClass(args[1]);
+            Gui.showClassInfo(character,cc);
         } else if (args[0].equalsIgnoreCase("classes")) {
             IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
             Gui.showAvalaibleClasses(character);
@@ -104,6 +109,14 @@ public class InfoCommand extends CommandBase {
                     Player player = (Player) commandSource;
                     IActiveCharacter target = characterService.getCharacter(player.getUniqueId());
                     Gui.showCharacterInfo(target, target);
+                }
+            }
+        } else if (args[0].equalsIgnoreCase("characters")) {
+            if (!(commandSource instanceof Player)) {
+                if (args.length != 2) {
+                    Player player = (Player) commandSource;
+                    IActiveCharacter target = characterService.getCharacter(player.getUniqueId());
+                    Gui.sendListOfCharacters(target, target.getCharacterBase());
                 }
             }
         } else if (args[0].equalsIgnoreCase("runes")) {

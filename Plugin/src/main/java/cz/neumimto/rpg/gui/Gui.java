@@ -24,6 +24,7 @@ import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillTree;
 import org.spongepowered.api.entity.living.player.Player;
@@ -117,5 +118,9 @@ public class Gui {
 
     public static void sendListOfCharacters(IActiveCharacter player, CharacterBase currentlyCreated) {
         getMessageTypeOf(player).sendListOfCharacters(player,currentlyCreated);
+    }
+
+    public static void showClassInfo(IActiveCharacter character, ConfigClass cc) {
+        getMessageTypeOf(character).showClassInfo(character,cc);
     }
 }
