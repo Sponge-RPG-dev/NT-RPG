@@ -68,8 +68,8 @@ public class Gui {
         getMessageTypeOf(player).sendCooldownMessage(player, skillname, cooldown);
     }
 
-    public static void openSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, ConcurrentHashMap<String, Integer> learnedSkills) {
-        getMessageTypeOf(player).openSkillTreeMenu(player, skillTree, learnedSkills);
+    public static void openSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, SkillData center) {
+        getMessageTypeOf(player).openSkillTreeMenu(player, skillTree, center);
     }
 
     public static void sendEffectStatus(IActiveCharacter player, EffectStatusType type, IEffect effect) {

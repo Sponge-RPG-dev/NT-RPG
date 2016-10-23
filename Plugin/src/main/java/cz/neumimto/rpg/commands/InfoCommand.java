@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.commands;
 
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
@@ -26,12 +27,17 @@ import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.configuration.CommandPermissions;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.persistance.SkillTreeDao;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
+import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.skills.SkillTree;
+import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -55,6 +61,9 @@ public class InfoCommand extends CommandBase {
 
     @Inject
     private CharacterService characterService;
+
+    @Inject
+    private SkillService skillService;
 
     @Inject
     private NtRpgPlugin plugin;
@@ -130,6 +139,15 @@ public class InfoCommand extends CommandBase {
                 player.sendMessage(Text.of(Localization.CHARACTER_IS_REQUIRED));
 
             }
+        } else if (args[0].equalsIgnoreCase("skilltree")) {
+            String skillname = args[1];
+            SkillTree skillTree = skillService.getSkillTrees().get(skillname);
+
+            SkillData skillData = skillTree.getSkills().get(args[2]);
+            Gui.openSkillTreeMenu(characterService.getCharacter(((Player)commandSource).getUniqueId()),skillTree,skillData);
+
+
+
         } else {
             commandSource.sendMessage(getUsage(commandSource));
         }

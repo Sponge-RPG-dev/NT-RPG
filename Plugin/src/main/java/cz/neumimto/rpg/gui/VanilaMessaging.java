@@ -97,23 +97,15 @@ public class VanilaMessaging implements IPlayerMessage {
     }
 
     @Override
-    public void openSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, Map<String, Integer> learnedSkills) {
-        moveSkillTreeMenu(player, skillTree, learnedSkills, skillTree.getSkills().get(StartingPoint.name));
+    public void openSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, SkillData skillData) {
+        Sponge.getScheduler().createTaskBuilder().async().execute(() -> {
+
+        }).submit(plugin);
     }
 
     @Override
     public void moveSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, Map<String, Integer> learnedSkill, SkillData center) {
-        game.getScheduler().createTaskBuilder().async().execute(new Runnable() {
-            @Override
-            public void run() {
-                ItemStack.Builder itemBuilder = ItemStack.builder();
-                Map<String, SkillData> values = skillTree.getSkills();
-                Set<SkillData> conflicts = center.getConflicts();
-                Set<SkillData> hardDepends = center.getHardDepends();
-                Set<SkillData> softDepends = center.getSoftDepends();
-                //TODO inventory
-            }
-        }).submit(NtRpgPlugin.GlobalScope.plugin);
+
     }
 
     @Override
@@ -275,6 +267,15 @@ public class VanilaMessaging implements IPlayerMessage {
                     .append(Text.builder(totalExp+"").color(TextColors.YELLOW).build()).build());
 
             content.add(Text.builder().color(TextColors.GREEN).append(Text.of(Localization.ALLOWED_ARMOR + ":", TextColors.GREEN)).build());
+
+            SkillTree tree = cc.getSkillTree();
+            if (tree != null) {
+                String next = IoC.get().build(InfoCommand.class).getAliases().iterator().next();
+                content.add(Text.builder(" [").color(TextColors.DARK_GRAY)
+                    .append(Text.builder("DETAIL").color(TextColors.GREEN).onClick(TextActions.runCommand("/" + next + " skilltree " + cc.getSkillTree().getId())).build())
+                    .append(Text.builder("] - ").color(TextColors.DARK_GRAY).build())
+                    .append(Text.of(tree.getDescription())).build());
+            }
 
             Text.Builder helmets = Text.builder().color(TextColors.YELLOW);
             Text.Builder chestplates = Text.builder().color(TextColors.YELLOW);
