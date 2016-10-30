@@ -4,6 +4,7 @@ import cz.neumimto.rpg.effects.CoreEffectTypes;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.boss.BossBarColors;
 import org.spongepowered.api.boss.BossBarOverlays;
@@ -34,8 +35,8 @@ public class BossBarExpNotifier extends EffectBase {
         setDuration(-1);
     }
 
-    public void notifyExpChange(String classnamee, double exps) {
-        final String classname = classnamee.toLowerCase();
+    public void notifyExpChange(String clazz, double exps) {
+        final String classname = clazz.toLowerCase();
         Optional<ExtendedNClass> first = character.getClasses().stream().filter(a -> a.getConfigClass().getName().equalsIgnoreCase(classname)).findFirst();
         if (first.isPresent()) {
             ServerBossBar serverBossBar = bossBarMap.get(classname);
@@ -78,6 +79,13 @@ public class BossBarExpNotifier extends EffectBase {
                 bossBar.removePlayer(player);
 
         }
+    }
+
+    @Override
+    public void setDuration(long l) {
+        if (l >= 0)
+            throw new IllegalArgumentException();
+        super.setDuration(l);
     }
 }
 

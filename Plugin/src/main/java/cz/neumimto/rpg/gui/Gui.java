@@ -25,13 +25,13 @@ import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
+import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillTree;
 import org.spongepowered.api.entity.living.player.Player;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by NeumimTo on 12.2.2015.
@@ -122,5 +122,17 @@ public class Gui {
 
     public static void showClassInfo(IActiveCharacter character, ConfigClass cc) {
         getMessageTypeOf(character).showClassInfo(character,cc);
+    }
+
+    public static void sendListOfRunes(IActiveCharacter character) {
+        getMessageTypeOf(character).sendListOfRunes(character);
+    }
+
+    public static void sendRaceInfo(IActiveCharacter target, Race race) {
+        getMessageTypeOf(target).sendRaceInfo(target, race);
+    }
+
+    public static void sendRaceList(IActiveCharacter target) {
+        getMessageTypeOf(target).sendListOfRaces(target);
     }
 }

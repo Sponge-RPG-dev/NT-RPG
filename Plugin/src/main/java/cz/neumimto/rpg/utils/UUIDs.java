@@ -30,7 +30,8 @@ public class UUIDs {
     * using it for crypthography
     * */
     public static UUID random() {
-        ThreadLocalRandom current = ThreadLocalRandom.current();
-        return new UUID(current.nextLong(), current.nextLong());
+        XORShiftRnd r = new XORShiftRnd();
+            System.out.println("x");
+        return new UUID(r.nextLong(), r.nextLong());
     }
 }

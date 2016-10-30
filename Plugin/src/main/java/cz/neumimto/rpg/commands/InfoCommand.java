@@ -100,9 +100,18 @@ public class InfoCommand extends CommandBase {
                 commandSource.sendMessage(Text.of(Localization.PLAYER_IS_OFFLINE_MSG));
             }
         } else if (args[0].equalsIgnoreCase("race")) {
-            printRaceInfor(commandSource, args);
+            Player player = (Player) commandSource;
+            IActiveCharacter target = characterService.getCharacter(player.getUniqueId());
+            if (args.length == 1) {
+                Gui.sendRaceInfo(target,target.getRace());
+            } else {
+                Gui.sendRaceList(target);
+            }
+
         } else if (args[0].equalsIgnoreCase("races")) {
-            printRaceList(commandSource, "race");
+            Player player = (Player) commandSource;
+            IActiveCharacter target = characterService.getCharacter(player.getUniqueId());
+            Gui.sendRaceList(target);
         } else if (args[0].equalsIgnoreCase("guilds")) {
 
         } else if (args[0].equalsIgnoreCase("class")) {
@@ -129,7 +138,10 @@ public class InfoCommand extends CommandBase {
                 }
             }
         } else if (args[0].equalsIgnoreCase("runes")) {
-
+            Player player = (Player) commandSource;
+            if (player.hasPermission("ntrpg.runes.showlist")) {
+                Gui.sendListOfRunes(characterService.getCharacter(player.getUniqueId()));
+            }
         } else if (args[0].equalsIgnoreCase("stats")) {
             Player player = (Player) commandSource;
             IActiveCharacter character = characterService.getCharacter(player.getUniqueId());

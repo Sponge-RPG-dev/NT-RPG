@@ -30,13 +30,14 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
+import cz.neumimto.rpg.inventory.runewords.RWService;
+import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.persistance.DirectAccessDao;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.groups.ConfigClass;
-import cz.neumimto.rpg.players.groups.PlayerGroup;
+import cz.neumimto.rpg.players.groups.*;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillTree;
 import cz.neumimto.rpg.skills.StartingPoint;
@@ -75,6 +76,9 @@ public class VanilaMessaging implements IPlayerMessage {
 
     @Inject
     private NtRpgPlugin plugin;
+
+    @Inject
+    private RWService rwService;
 
     @Override
     public boolean isClientSideGui() {
@@ -162,7 +166,8 @@ public class VanilaMessaging implements IPlayerMessage {
         Player player = character.getPlayer();
         IEffect effect = character.getEffect(BossBarExpNotifier.class);
         if (effect == null) {
-            effect = new BossBarExpNotifier(character);
+            BossBarExpNotifier bossBarExpNotifier = new BossBarExpNotifier(character);
+            effect = bossBarExpNotifier;
             effectService.addEffect(effect, character);
         }
         BossBarExpNotifier bossbar = (BossBarExpNotifier) effect;
@@ -362,4 +367,48 @@ public class VanilaMessaging implements IPlayerMessage {
 
         }).submit(plugin);
     }
+
+    @Override
+    public void sendListOfRunes(IActiveCharacter character) {
+        PaginationService paginationService = Sponge.getServiceManager().provide(PaginationService.class).get();
+        PaginationList.Builder builder = paginationService.builder();
+
+        List<Text> content = new ArrayList<>();
+        List<Rune> r = new ArrayList<>(rwService.getRunes().values());
+        Collections.sort(r,(o1, o2) -> (int)(o1.getSpawnchance() - o2.getSpawnchance()));
+        for (Rune rune : r) {
+            content.add(Text.builder(rune.getName()).color(TextColors.GREEN).append(Text.builder(" - ").color(TextColors.WHITE).build()).append(rune.getLore()).color(TextColors.DARK_PURPLE).build());
+        }
+        builder.contents(content);
+        builder.linesPerPage(10);
+        builder.padding(Text.builder("=").color(TextColors.DARK_GRAY).build());
+        builder.sendTo(character.getPlayer());
+
+
+    }
+
+    @Override
+    public void sendListOfRaces(IActiveCharacter target) {
+        PaginationService paginationService = Sponge.getServiceManager().provide(PaginationService.class).get();
+        PaginationList.Builder builder = paginationService.builder();
+        List<Text> content = new ArrayList<>();
+        String s1 = IoC.get().build(InfoCommand.class).getAliases().iterator().next();
+
+        for (Race race : groupService.getRaces()) {
+            Text t = Text.builder().append(Text.builder(" [").color(TextColors.DARK_GRAY).build())
+                    .append(Text.builder("DETAILS")
+                            .color(TextColors.GREEN)
+                            .onClick(TextActions.runCommand("/" + s1 + " race " + s1)).build())
+                    .append(Text.builder("] - ").color(TextColors.DARK_GRAY).build())
+                    .append(Text.builder(race.getName()+" ").color(TextColors.RED).build())
+                    .append(Text.builder(race.getDescription()).color(TextColors.DARK_PURPLE).build()).build();
+            content.add(t);
+        }
+        builder.contents(content);
+        builder.linesPerPage(10);
+        builder.padding(Text.builder("=").color(TextColors.DARK_GRAY).build());
+        builder.sendTo(target.getPlayer());
+    }
+
+
 }

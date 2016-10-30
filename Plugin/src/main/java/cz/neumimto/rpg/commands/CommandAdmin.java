@@ -20,7 +20,9 @@ package cz.neumimto.rpg.commands;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.TestAction;
 import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.InventoryService;
@@ -43,6 +45,8 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -193,6 +197,19 @@ public class CommandAdmin extends CommandBase {
                         }
                     }
                 }
+            }
+        } else if (a[0].equalsIgnoreCase("test.action")) {
+            if (PluginConfig.DEBUG) {
+                Player player = (Player) commandSource;
+                String methodcall = a[1];
+                try {
+                    Method method = TestAction.class.getClass().getMethod(methodcall, IActiveCharacter.class);
+                    method.invoke(null,characterService.getCharacter(player.getUniqueId()));
+                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                throw new IllegalStateException("Only awalaible in debug mode");
             }
         }
         return CommandResult.success();
