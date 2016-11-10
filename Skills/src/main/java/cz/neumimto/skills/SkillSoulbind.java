@@ -27,6 +27,8 @@ import java.util.UUID;
 @ResourceLoader.ListenerClass
 public class SkillSoulbind extends ActiveSkill {
 
+    public static final String name = "Soulbind";
+
     @Inject
     private EffectService effectService;
 
@@ -37,7 +39,7 @@ public class SkillSoulbind extends ActiveSkill {
         settings.addNode(SkillNodes.RANGE,10f,1f);
         setLore(SkillLocalization.SKILL_SOULBIND_LORE);
         super.settings = settings;
-        setName("Soulbind");
+        setName(name);
         setDescription(SkillLocalization.SKILL_SOULBIND_DESC);
     }
 
@@ -65,7 +67,7 @@ public class SkillSoulbind extends ActiveSkill {
         if (event.getTargetEntity().getType() == EntityTypes.PLAYER) {
             UUID id = event.getTargetEntity().getUniqueId();
             IActiveCharacter character = characterService.getCharacter(id);
-            IEffect effectBase = character.getEffect(SoulBindEffect.class);
+            IEffect effectBase = character.getEffect(name);
             if (effectBase != null && !event.getCause().first(SoulBindEffect.class).isPresent()) {
                 event.setBaseDamage(event.getBaseDamage()*.5);
                 SoulBindEffect effect = (SoulBindEffect) effectBase;

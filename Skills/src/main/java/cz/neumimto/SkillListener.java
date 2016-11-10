@@ -33,7 +33,7 @@ public class SkillListener {
             Player player = first.get();
             IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
             if (!character.isStub()) {
-                IEffect effect = character.getEffect(LifeAfterKillEffect.class);
+                IEffect effect = character.getEffect(LifeAfterKillEffect.name);
                 if (effect != null) {
                     LifeAfterKillEffect e = (LifeAfterKillEffect) effect;
                     characterService.healCharacter(character,e.getHealedAmount());
@@ -46,7 +46,7 @@ public class SkillListener {
     public void onDamage(CharacterDamageEntityEvent event) {
         IActiveCharacter character = characterService.getCharacter(event.getDamaged().getUniqueId());
         if (!character.isStub()) {
-            IEffect effect = character.getEffect(DamageToMana.class);
+            IEffect effect = character.getEffect(DamageToMana.name);
             if (effect != null) {
                 DamageToMana damageToMana = (DamageToMana) effect;
                 double value = damageToMana.getValue();

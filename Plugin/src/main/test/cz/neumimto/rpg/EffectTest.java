@@ -1,9 +1,9 @@
-package test;
+package cz.neumimto.rpg;
 
-import cz.neumimto.ClassGenerator;
-import cz.neumimto.effects.EffectBase;
-import cz.neumimto.effects.IEffectConsumer;
-import cz.neumimto.effects.IGlobalEffect;
+
+import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.IGlobalEffect;
 
 @ClassGenerator.Generate(id = "name", inject = true)
 public class EffectTest extends EffectBase {

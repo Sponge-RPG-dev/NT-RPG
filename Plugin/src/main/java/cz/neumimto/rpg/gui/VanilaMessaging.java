@@ -56,6 +56,7 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
+import org.spongepowered.api.world.World;
 
 import java.util.*;
 
@@ -164,7 +165,7 @@ public class VanilaMessaging implements IPlayerMessage {
     @Override
     public void showExpChange(IActiveCharacter character, String classname, double expchange) {
         Player player = character.getPlayer();
-        IEffect effect = character.getEffect(BossBarExpNotifier.class);
+        IEffect effect = character.getEffect(BossBarExpNotifier.name);
         if (effect == null) {
             BossBarExpNotifier bossBarExpNotifier = new BossBarExpNotifier(character);
             effect = bossBarExpNotifier;
@@ -410,5 +411,8 @@ public class VanilaMessaging implements IPlayerMessage {
         builder.sendTo(target.getPlayer());
     }
 
+    @Override
+    public void sendRaceInfo(IActiveCharacter target, Race race) {
 
+    }
 }

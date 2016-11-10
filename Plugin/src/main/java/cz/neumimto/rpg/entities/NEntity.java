@@ -68,7 +68,7 @@ public class NEntity implements IMob {
     }
 
     @Override
-    public Map<Class<? extends IEffect>, IEffect> getEffectMap() {
+    public Map<String, IEffect> getEffectMap() {
         return effectSet;
     }
 

@@ -255,7 +255,7 @@ public class ActiveCharacter implements IActiveCharacter {
 
 
     @Override
-    public Map<Class<? extends IEffect>, IEffect> getEffectMap() {
+    public Map<String, IEffect> getEffectMap() {
         return effects;
     }
 

@@ -85,7 +85,7 @@ public class EffectService {
                 effectSet.remove(effect);
                 IEffectConsumer consumer = effect.getConsumer();
                 if (consumer != null) {
-                    consumer.removeEffect(effect.getClass());
+                    consumer.removeEffect(effect);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -103,7 +103,7 @@ public class EffectService {
                             effectSet.remove(pendingRemoval);
                             IEffectConsumer consumer = pendingRemoval.getConsumer();
                             if (consumer != null) {
-                                consumer.removeEffect(pendingRemoval.getClass());
+                                consumer.removeEffect(pendingRemoval);
                             }
                         }
                     }
@@ -162,7 +162,7 @@ public class EffectService {
      * @param consumer
      */
     public void addEffect(IEffect iEffect, IEffectConsumer consumer) {
-        IEffect eff = consumer.getEffect(iEffect.getClass());
+        IEffect eff = consumer.getEffect(iEffect.getClass().getName());
         if (eff == null) {
             consumer.addEffect(iEffect);
             iEffect.onApply();
@@ -173,7 +173,7 @@ public class EffectService {
         } else {
             if (eff.getLevel() >= iEffect.getLevel()) {
                 if (iEffect.requiresRegister()) {
-                    consumer.removeEffect(eff.getClass());
+                    consumer.removeEffect(eff.getClass().getName());
                 }
                 consumer.addEffect(iEffect);
             }
@@ -187,7 +187,7 @@ public class EffectService {
      * @param consumer
      */
     public void removeEffect(IEffect iEffect, IEffectConsumer consumer) {
-        removeEffect(iEffect.getClass(), consumer);
+        removeEffect(iEffect, consumer);
     }
 
     /**
@@ -196,7 +196,7 @@ public class EffectService {
      * @param iEffect
      * @param consumer
      */
-    public void removeEffect(Class<? extends IEffect> iEffect, IEffectConsumer consumer) {
+    public void removeEffect(String iEffect, IEffectConsumer consumer) {
         IEffect effect = consumer.getEffect(iEffect);
         if (effect != null) {
             consumer.removeEffect(iEffect);
@@ -261,9 +261,9 @@ public class EffectService {
 
     public void removeGlobalEffectsAsEnchantments(Map<IGlobalEffect, Integer> itemEffects, IActiveCharacter character) {
         itemEffects.forEach((e, l) -> {
-            IEffect effect = character.getEffect(e.asEffectClass());
+            IEffect effect = character.getEffect(e.getName());
             if (effect.getLevel() - l <= 0) {
-                character.removeEffect(e.asEffectClass());
+                character.removeEffect(e.getName());
             } else {
                 effect.setLevel(effect.getLevel() - l);
                 effect.onStack(effect.getLevel());

@@ -36,7 +36,6 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
 
-import java.awt.*;
 import java.util.Map;
 import java.util.Set;
 
@@ -226,7 +225,7 @@ public interface IActiveCharacter extends IEntity<Player> {
     Player getEntity();
 
     @Override
-    Map<Class<? extends IEffect>, IEffect> getEffectMap();
+    Map<String, IEffect> getEffectMap();
 
     @Override
     void sendMessage(String message);
