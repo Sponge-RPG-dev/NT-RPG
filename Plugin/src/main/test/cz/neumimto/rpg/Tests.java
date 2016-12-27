@@ -1,3 +1,5 @@
+package cz.neumimto.rpg;
+
 import cz.neumimto.ClassGenerator;
 import cz.neumimto.ResourceLoader;
 import cz.neumimto.core.ioc.IoC;

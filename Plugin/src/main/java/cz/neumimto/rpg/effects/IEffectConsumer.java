@@ -34,31 +34,34 @@ import java.util.stream.Collectors;
 public interface IEffectConsumer<T extends Living> {
     T getEntity();
 
-    Map<Class<? extends IEffect>, IEffect> getEffectMap();
+    Map<String, IEffect> getEffectMap();
 
     default Collection<IEffect> getEffects() {
         return getEffectMap().values();
     }
 
-    default IEffect getEffect(Class<? extends IEffect> cl) {
+    default IEffect getEffect(String cl) {
         return getEffectMap().get(cl);
     }
 
-    default boolean hasEffect(Class<? extends IEffect> cl) {
+    default boolean hasEffect(String cl) {
         return getEffectMap().containsKey(cl);
     }
 
     default void addEffect(IEffect effect) {
-        getEffectMap().put(effect.getClass(), effect);
+        getEffectMap().put(effect.getName(), effect);
     }
 
-    default void removeEffect(Class<? extends IEffect> cl) {
+    default void removeEffect(String cl) {
         getEffectMap().remove(cl);
     }
 
+    default void removeEffect(IEffect cl) {
+        getEffectMap().remove(cl.getName());
+    }
 
     default void removeAllTempEffects() {
-        for (Map.Entry<Class<? extends IEffect>, IEffect> entry : getEffectMap().entrySet()) {
+        for (Map.Entry<String, IEffect> entry : getEffectMap().entrySet()) {
             IEffect effect = entry.getValue();
             if (effect.getEffectSource() == EffectSource.TEMP) {
                 removeEffect(entry.getKey());
