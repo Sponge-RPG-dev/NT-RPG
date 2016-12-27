@@ -24,6 +24,7 @@ import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.persistance.GroupDao;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
+import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 
 import java.util.Collection;
@@ -119,5 +120,13 @@ public class GroupService {
             k+=v;
         }
         return k;
+    }
+
+    public PlayerGroup getByName(String arg) {
+        if (existsClass(arg))
+            return getNClass(arg);
+        if (existsRace(arg))
+            return getRace(arg);
+        return null;
     }
 }

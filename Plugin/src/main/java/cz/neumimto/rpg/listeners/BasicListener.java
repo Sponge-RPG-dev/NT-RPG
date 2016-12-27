@@ -253,7 +253,7 @@ public class BasicListener {
             IActiveCharacter character = characterService.getCharacter(type.getUniqueId());
             if (character.isStub())
                 return;
-            characterService.respawnCharacter(character);
+            characterService.respawnCharacter(character, event.getTargetEntity());
         }
     }
 }

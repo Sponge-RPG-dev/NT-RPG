@@ -18,13 +18,13 @@
 
 package cz.neumimto.rpg;
 
-import com.google.common.reflect.ClassPath;
 import com.google.inject.Inject;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.FindPersistenceContextEvent;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.configuration.Settings;
+import cz.neumimto.rpg.inventory.data.InventoryItemMenuData;
 import cz.neumimto.rpg.listeners.DebugListener;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
@@ -37,6 +37,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GamePostInitializationEvent;
+import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
@@ -69,6 +70,14 @@ public class NtRpgPlugin {
 
     @Inject
     public Logger logger;
+
+
+    @Listener
+    public void preinit(GamePreInitializationEvent e) {
+        Sponge.getDataManager().register(InventoryItemMenuData.class,
+                InventoryItemMenuData.Immutable.class,
+                new InventoryItemMenuData.Builder());
+    }
 
     @Listener
     public void registerEntities(FindPersistenceContextEvent event) {

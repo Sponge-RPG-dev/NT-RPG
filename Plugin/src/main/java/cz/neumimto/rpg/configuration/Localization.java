@@ -271,4 +271,22 @@ public class Localization {
     @ConfigValue
     public static String TOTAL_EXP = "Total exp. amount";
 
+    @ConfigValue
+    public static String WEAPONS = "Weapons";
+
+    @ConfigValue
+    public static String ARMOR = "Armor";
+
+    @ConfigValue
+    public static String WEAPONS_MENU_HELP = "Displays list of allowed weapons and damage values";
+
+    @ConfigValue
+    public static String ARMOR_MENU_HELP = "Displays list of allowed armor";
+
+    @ConfigValue
+    public static String ATTRIBUTES = "Attributes";
+
+    @ConfigValue
+    public static String BACK = "Back";
+
 }

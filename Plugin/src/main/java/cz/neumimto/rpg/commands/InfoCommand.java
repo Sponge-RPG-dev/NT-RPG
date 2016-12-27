@@ -102,7 +102,7 @@ public class InfoCommand extends CommandBase {
         } else if (args[0].equalsIgnoreCase("race")) {
             Player player = (Player) commandSource;
             IActiveCharacter target = characterService.getCharacter(player.getUniqueId());
-            if (args.length == 1) {
+            if (args.length == 2) {
                 Gui.sendRaceInfo(target,target.getRace());
             } else {
                 Gui.sendRaceList(target);
@@ -114,6 +114,20 @@ public class InfoCommand extends CommandBase {
             Gui.sendRaceList(target);
         } else if (args[0].equalsIgnoreCase("guilds")) {
 
+        } else if (args[0].equalsIgnoreCase("armor")) {
+            PlayerGroup g = groupService.getByName(args[1]);
+            if (g == null) {
+                return CommandResult.empty();
+            }
+            Player player = (Player) commandSource;
+            Gui.displayGroupArmor(g, player);
+        } else if (args[0].equalsIgnoreCase("weapons")) {
+            PlayerGroup g = groupService.getByName(args[1]);
+            if (g == null) {
+                return CommandResult.empty();
+            }
+            Player player = (Player) commandSource;
+            Gui.displayGroupWeapon(g, player);
         } else if (args[0].equalsIgnoreCase("class")) {
             IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
             ConfigClass cc = groupService.getNClass(args[1]);

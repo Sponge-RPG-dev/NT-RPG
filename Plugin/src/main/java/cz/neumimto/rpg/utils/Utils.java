@@ -97,7 +97,7 @@ public class Utils {
 
     public static Living getTargettedEntity(IActiveCharacter character, int range) {
         Player player = character.getPlayer();
-        Optional<BlockRayHit<World>> h = BlockRay.from(player).blockLimit(range).filter(BlockRay.onlyAirFilter()).build().end();
+        Optional<BlockRayHit<World>> h = BlockRay.from(player).distanceLimit(range).skipFilter(BlockRay.onlyAirFilter()).build().end();
         if (h.isPresent()) {
             Vector3d lookPos = h.get().getBlockPosition().toDouble();
             Collection<Entity> entities = player.getWorld().getEntities(entity -> entity != player && entity.getLocation().getPosition().distanceSquared(lookPos) < 4 && isLivingEntity(entity));

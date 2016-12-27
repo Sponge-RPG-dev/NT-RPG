@@ -203,7 +203,7 @@ public class InventoryService {
             } else if (text.getColor() == LEVEL_COLOR) {
                 w.setLevel(ItemStackUtils.getItemLevel(text));
             } else if (text.getColor() == RESTRICTIONS) {
-
+                //todo
             }
         }
         w.setEffects(map);

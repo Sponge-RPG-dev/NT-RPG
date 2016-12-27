@@ -23,6 +23,7 @@ import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.commands.CommandChoose;
 import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.Localization;
@@ -30,6 +31,9 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
+import cz.neumimto.rpg.inventory.InventoryMenu;
+import cz.neumimto.rpg.inventory.data.InventoryItemMenuData;
+import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.persistance.DirectAccessDao;
@@ -37,32 +41,51 @@ import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.groups.*;
+import cz.neumimto.rpg.players.groups.ConfigClass;
+import cz.neumimto.rpg.players.groups.PlayerGroup;
+import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillTree;
-import cz.neumimto.rpg.skills.StartingPoint;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import cz.neumimto.rpg.utils.Utils;
 import cz.neumimto.rpg.utils.model.CharacterListModel;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.Transaction;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.*;
+import org.spongepowered.api.item.inventory.property.InventoryDimension;
+import org.spongepowered.api.item.inventory.property.InventoryTitle;
+import org.spongepowered.api.item.inventory.property.SlotPos;
+import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
+import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.service.pagination.PaginationService;
+import org.spongepowered.api.text.LiteralText;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
+import org.spongepowered.common.item.inventory.custom.CustomContainer;
+import org.spongepowered.common.item.inventory.custom.CustomInventory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by NeumimTo on 6.8.2015.
  */
 @Singleton
+@ResourceLoader.ListenerClass
 public class VanilaMessaging implements IPlayerMessage {
 
     @Inject
@@ -138,11 +161,21 @@ public class VanilaMessaging implements IPlayerMessage {
     public void sendPlayerInfo(IActiveCharacter character, List<CharacterBase> target) {
         PaginationService paginationService = game.getServiceManager().provide(PaginationService.class).get();
         PaginationList.Builder builder = paginationService.builder();
-        builder.title(Text.builder("=====================").color(TextColors.GREEN).build());
+        builder.padding(Text.builder("=").color(TextColors.GREEN).build());
+        List<Text> content = new ArrayList<>();
         for (CharacterBase characterBase : target) {
-
+            String name = characterBase.getName();
+            int level = character.getPrimaryClass().getLevel();
+            String name1 = character.getRace().getName();
+            Text.Builder b = Text.builder();
+            b.append(Text.builder(" [").color(TextColors.DARK_GRAY).build())
+                    .append(Text.builder("SELECT").color(TextColors.GREEN).onClick(TextActions.runCommand("/" + "show" + " character " + name)).build())
+                    .append(Text.builder("] - ").color(TextColors.DARK_GRAY).build());
+            b.append(Text.of(name)).append(Text.builder(" ").build()).append(Text.of(level));
+            b.append(Text.of(name1));
+            content.add(b.build());
         }
-        builder.footer(Text.builder("====================").color(TextColors.GREEN).build());
+        builder.contents(content);
         builder.sendTo(character.getPlayer());
     }
 
@@ -163,11 +196,9 @@ public class VanilaMessaging implements IPlayerMessage {
 
     @Override
     public void showExpChange(IActiveCharacter character, String classname, double expchange) {
-        Player player = character.getPlayer();
         IEffect effect = character.getEffect(BossBarExpNotifier.class);
         if (effect == null) {
-            BossBarExpNotifier bossBarExpNotifier = new BossBarExpNotifier(character);
-            effect = bossBarExpNotifier;
+            effect = new BossBarExpNotifier(character);
             effectService.addEffect(effect, character);
         }
         BossBarExpNotifier bossbar = (BossBarExpNotifier) effect;
@@ -389,26 +420,166 @@ public class VanilaMessaging implements IPlayerMessage {
 
     @Override
     public void sendListOfRaces(IActiveCharacter target) {
-        PaginationService paginationService = Sponge.getServiceManager().provide(PaginationService.class).get();
-        PaginationList.Builder builder = paginationService.builder();
-        List<Text> content = new ArrayList<>();
         String s1 = IoC.get().build(InfoCommand.class).getAliases().iterator().next();
-
+        Inventory i = Inventory.builder().of(InventoryArchetypes.CHEST).build(plugin);
+        int x = 0;
         for (Race race : groupService.getRaces()) {
-            Text t = Text.builder().append(Text.builder(" [").color(TextColors.DARK_GRAY).build())
-                    .append(Text.builder("DETAILS")
-                            .color(TextColors.GREEN)
-                            .onClick(TextActions.runCommand("/" + s1 + " race " + s1)).build())
-                    .append(Text.builder("] - ").color(TextColors.DARK_GRAY).build())
-                    .append(Text.builder(race.getName()+" ").color(TextColors.RED).build())
-                    .append(Text.builder(race.getDescription()).color(TextColors.DARK_PURPLE).build()).build();
-            content.add(t);
+            if (race == Race.Default) {
+                continue;
+            }
+            if (!race.isShowsInMenu() && !target.getPlayer().hasPermission("ntrpg.showsEverything")) {
+                continue;
+            }
+            ItemStack s = ItemStack.of(race.getItemType(),1);
+            s.offer(Keys.DISPLAY_NAME, Text.of(race.getName(), TextColors.DARK_PURPLE));
+            s.offer(Keys.ITEM_LORE, getItemLore(race.getDescription()));
+            s.offer(new InventoryItemMenuData(s1 + " race " + race.getName()));
+            i.offer(s);
         }
-        builder.contents(content);
-        builder.linesPerPage(10);
-        builder.padding(Text.builder("=").color(TextColors.DARK_GRAY).build());
-        builder.sendTo(target.getPlayer());
+        target.getPlayer().openInventory(i, Cause.of(NamedCause.source("ntrpg-itemmenu")));
     }
 
+    @Override
+    public void displayGroupArmor(PlayerGroup g, Player target) {
+        Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
+        List<List<ItemType>> rows = new ArrayList<>(5);
+        for (int ki = 0;ki <=5; ki++) {
+            rows.add(new ArrayList<>());
+        }
+        for (ItemType type : g.getAllowedArmor()) {
+            if (ItemStackUtils.isHelmet(type)) {
+                rows.get(0).add(type);
+            } else if (ItemStackUtils.isChestplate(type)) {
+                rows.get(1).add(type);
+            } else if (ItemStackUtils.isLeggings(type)) {
+                rows.get(2).add(type);
+            } else if (ItemStackUtils.isBoots(type)) {
+                rows.get(3).add(type);
+            } else {
+                rows.get(4).add(type);
+            }
+        }
+        ItemStack of = ItemStack.of(ItemTypes.PAPER, 1);
+        String l = "class";
+        if (g instanceof Race) {
+            l = "race";
+        }
+        of.offer(Keys.DISPLAY_NAME, Text.of(Localization.BACK, TextColors.WHITE));
+        of.offer(new InventoryItemMenuData("show "+ l + " " + g.getName()));
+        i.query(new SlotPos(0,0)).offer(of);
 
+        int x = 2;
+        int y = 0;
+        for (List<ItemType> row : rows) {
+            y = 0;
+            for (ItemType type : row) {
+                i.query(new SlotPos(x,y)).offer(ItemStack.of(type, 1));
+                y++;
+            }
+            x++;
+        }
+    }
+
+    @Override
+    public void displayGroupWeapon(PlayerGroup g, Player target) {
+        Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
+        List<List<ItemType>> rows = new ArrayList<>(5);
+        for (int ki = 0;ki <=5; ki++) {
+            rows.add(new ArrayList<>());
+        }
+
+        ItemStack of = ItemStack.of(ItemTypes.PAPER, 1);
+        String l = "class";
+        if (g instanceof Race) {
+            l = "race";
+        }
+        of.offer(Keys.DISPLAY_NAME, Text.of(Localization.BACK, TextColors.WHITE));
+        of.offer(new InventoryItemMenuData("show "+ l + " " + g.getName()));
+        i.query(new SlotPos(0,0)).offer(of);
+
+        g.getWeapons().entrySet().stream().sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new)).forEach((type, aDouble) -> {
+            ItemStack q = ItemStack.of(type, 1);
+            q.offer(Keys.ITEM_LORE, Collections.singletonList(Text.of(TextColors.DARK_RED, TextStyles.BOLD, aDouble.toString())));
+            i.offer(q);
+        });
+    }
+
+    @Override
+    public void sendRaceInfo(IActiveCharacter target, Race race) {
+        Inventory i = createPlayerGroupView(race);
+        target.getPlayer().openInventory(i, Cause.of(NamedCause.of("ntrpg", plugin)));
+    }
+
+    @Listener
+    public void onOptionSelect(ClickInventoryEvent event, @First(typeFilter = Player.class) Player player ) {
+        //todo fix
+        if (event.getTargetInventory().getClass().getSimpleName().toLowerCase().contains("custom")) {
+            List<SlotTransaction> transactions = event.getTransactions();
+            player.closeInventory(Cause.of(NamedCause.of("player", player)));
+            if (transactions.size() == 1) {
+                SlotTransaction t = transactions.get(0);
+                Optional<String> s = t.getOriginal().get(NKeys.ANY_STRING);
+                if (s.isPresent()) {
+                    Sponge.getCommandManager().process(player, s.get());
+                }
+            } else {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    public Inventory createPlayerGroupView(PlayerGroup group) {
+        Inventory.Builder builder = Inventory.builder();
+        Inventory i = builder.of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
+        i.query(new SlotPos(3,3)).offer(createWeaponCommand(group));
+        i.query(new SlotPos(3,4)).offer(createArmorCommand(group));
+        i.query(new SlotPos(4,3)).offer(createAttributesCommand(group));
+        i.query(new SlotPos(0,0)).offer(createDescriptionItem(group.getDescription()));
+        return i;
+    }
+
+    private ItemStack createAttributesCommand(PlayerGroup group) {
+        ItemStack i = ItemStack.of(ItemTypes.BOOK, 1);
+        i.offer(Keys.DISPLAY_NAME, Text.of(Localization.ATTRIBUTES, TextColors.DARK_RED));
+        i.offer(new InventoryItemMenuData("show attributes " + group.getName()));
+        return i;
+    }
+
+    private ItemStack createDescriptionItem(String description) {
+        ItemStack i = ItemStack.of(ItemTypes.PAPER, 1);
+        i.offer(Keys.DISPLAY_NAME, Text.of(""));
+        i.offer(Keys.ITEM_LORE, Arrays.asList(Text.of(description,TextColors.GRAY)));
+        return i;
+    }
+
+    private ItemStack createArmorCommand(PlayerGroup group) {
+        ItemStack i = ItemStack.of(ItemTypes.DIAMOND_SWORD, 1);
+
+        i.offer(Keys.DISPLAY_NAME, Text.of(Localization.WEAPONS, TextColors.DARK_RED));
+        i.offer(Keys.ITEM_LORE, Arrays.asList(Text.of(Localization.WEAPONS_MENU_HELP,TextColors.GRAY)));
+        i.offer(new InventoryItemMenuData("show armor " + group.getName()));
+        return i;
+    }
+
+    private ItemStack createWeaponCommand(PlayerGroup group) {
+        ItemStack i = ItemStack.of(ItemTypes.DIAMOND_CHESTPLATE, 1);
+
+        i.offer(Keys.DISPLAY_NAME, Text.of(Localization.ARMOR, TextColors.DARK_RED));
+        i.offer(Keys.ITEM_LORE, Arrays.asList(Text.of(Localization.ARMOR_MENU_HELP,TextColors.GRAY)));
+        i.offer(new InventoryItemMenuData("show weapons " + group.getName()));
+        return i;
+    }
+
+    public List<Text> getItemLore(String s) {
+        String[] a = s.split("\\n");
+        List<Text> t = new ArrayList<>();
+        for (String s1 : a) {
+            t.add(Text.builder(s1).color(TextColors.GOLD).style(TextStyles.ITALIC).build());
+        }
+        return t;
+    }
 }

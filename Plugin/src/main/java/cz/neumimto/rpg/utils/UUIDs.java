@@ -31,7 +31,6 @@ public class UUIDs {
     * */
     public static UUID random() {
         XORShiftRnd r = new XORShiftRnd();
-            System.out.println("x");
         return new UUID(r.nextLong(), r.nextLong());
     }
 }

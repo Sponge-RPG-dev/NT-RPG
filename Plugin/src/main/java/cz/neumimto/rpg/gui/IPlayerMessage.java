@@ -24,6 +24,7 @@ import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
+import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillTree;
@@ -75,4 +76,8 @@ public interface IPlayerMessage {
     void sendListOfRaces(IActiveCharacter target);
 
     void sendRaceInfo(IActiveCharacter target, Race race);
+
+    void displayGroupArmor(PlayerGroup g, Player target);
+
+    void displayGroupWeapon(PlayerGroup g, Player target);
 }

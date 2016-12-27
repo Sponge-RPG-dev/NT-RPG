@@ -128,6 +128,8 @@ public class CharacterService {
         }).submit(plugin);
     }
 
+
+
     public boolean assignPlayerToCharacter(Player pl) {
         if (pl == null) {
             return false;
@@ -138,8 +140,6 @@ public class CharacterService {
         IActiveCharacter character = characters.get(pl.getUniqueId());
         if (character.isStub())
             return false;
-        if (character.getPlayer() != null)
-            return true;
         character.setPlayer(pl);
         return true;
     }
@@ -1052,16 +1052,27 @@ public class CharacterService {
         }
     }
 
-    public void respawnCharacter(IActiveCharacter character) {
+	/**
+     *
+     * sponge is creating new player object each time a player is (re)spawned @link https://github.com/SpongePowered/SpongeCommon/commit/384180f372fa233bcfc110a7385f43df2a85ef76
+     * character object is heavy, lets do not recreate its instance just reasign player and effects
+     */
+    public void respawnCharacter(IActiveCharacter character, Player pl) {
         Iterator<Map.Entry<Class<? extends IEffect>, IEffect>> iterator1 = character.getEffectMap().entrySet().iterator();
 
         Iterator<IEffect> iterator = character.getEffects().iterator();
+        Set<IEffect> a = new HashSet<>();
         while (iterator.hasNext()) {
            IEffect next = iterator.next();
-            if (next.getEffectSource().isClearedOnDeath()) {
-                effectService.stopEffect(next);
-                iterator.remove();
+            if (!next.getEffectSource().isClearedOnDeath()) {
+                a.add(next);
             }
+            effectService.stopEffect(next);
+            iterator.remove();
+        }
+        assignPlayerToCharacter(pl);
+        for (IEffect effect : a) {
+            effectService.addEffect(effect, character);
         }
         inventoryService.initializeHotbar(character);
         updateAll(character).run();

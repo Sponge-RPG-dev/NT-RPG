@@ -38,8 +38,7 @@
             <dependency>
                 <groupId>org.spongepowered</groupId>
                 <artifactId>spongevanilla</artifactId>
-                <version>1.10.2-5.0.0-BETA-112</version>
-                <scope>provided</scope>
+                <version>1.11-6.0.0-BETA-190</version>
             </dependency>
             <dependency>
                 <groupId>com.github.NeumimTo</groupId>
@@ -50,7 +49,7 @@
             <dependency>
                 <groupId>org.spongepowered</groupId>
                 <artifactId>spongeapi</artifactId>
-                <version>5.0.0-20160827.211701-103</version>
+                <version>6.0.0-20161223.142907-29</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>

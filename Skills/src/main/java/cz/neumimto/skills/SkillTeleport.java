@@ -32,7 +32,7 @@ public class SkillTeleport extends ActiveSkill {
     @Override
     public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo extendedSkillInfo, SkillModifier skillModifier) {
         Player player = character.getPlayer();
-        Optional<BlockRayHit<World>> optHit = BlockRay.from(player).filter(BlockRay.onlyAirFilter()).build().end();
+        Optional<BlockRayHit<World>> optHit = BlockRay.from(player).skipFilter(BlockRay.onlyAirFilter()).build().end();
         if (optHit.isPresent()) {
             Vector3d lookPos = optHit.get().getBlockPosition().toDouble();
             Location worldLocation = new Location<World>(player.getWorld(), lookPos);

@@ -35,6 +35,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
@@ -374,5 +375,19 @@ public class ItemStackUtils {
             return staffs.contains(i);
         }
         return false;
+    }
+
+    public static ItemStack createHelpItem(String description, String name) {
+        String[] split = description.split("\n");
+        List<Text> descr = new ArrayList<>();
+        for (String s : split) {
+            descr.add(Text.of(s,TextColors.WHITE));
+        }
+        return ItemStack.builder().itemType(ItemTypes.PAPER)
+                .quantity(1)
+                .keyValue(Keys.ITEM_LORE, descr)
+                .keyValue(Keys.DISPLAY_NAME, Text.of(name))
+                .build();
+
     }
 }
