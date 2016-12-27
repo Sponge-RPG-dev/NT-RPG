@@ -196,7 +196,7 @@ public class VanilaMessaging implements IPlayerMessage {
 
     @Override
     public void showExpChange(IActiveCharacter character, String classname, double expchange) {
-        IEffect effect = character.getEffect(BossBarExpNotifier.class);
+        IEffect effect = character.getEffect(BossBarExpNotifier.name);
         if (effect == null) {
             effect = new BossBarExpNotifier(character);
             effectService.addEffect(effect, character);
@@ -532,7 +532,7 @@ public class VanilaMessaging implements IPlayerMessage {
         }
     }
 
-    public Inventory createPlayerGroupView(PlayerGroup group) {
+    private Inventory createPlayerGroupView(PlayerGroup group) {
         Inventory.Builder builder = Inventory.builder();
         Inventory i = builder.of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
         i.query(new SlotPos(3,3)).offer(createWeaponCommand(group));
