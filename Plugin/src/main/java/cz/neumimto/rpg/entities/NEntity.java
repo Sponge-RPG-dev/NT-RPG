@@ -16,7 +16,7 @@ public class NEntity implements IMob {
 
     private double experiences;
     private WeakReference<Living> entity;
-    private Map<Class<? extends IEffect>, IEffect> effectSet = new HashMap<>();
+    private Map<String, IEffect> effectSet = new HashMap<>();
 
     protected NEntity(Creature l) {
         attach(l);

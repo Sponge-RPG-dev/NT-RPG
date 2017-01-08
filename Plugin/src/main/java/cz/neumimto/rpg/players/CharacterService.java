@@ -904,7 +904,7 @@ public class CharacterService {
         if (event.isCancelled())
             return 2;
         Set<IGlobalEffect> effects = event.getLastItem().getEffects().keySet();
-        effects.stream().forEach(g -> effectService.removeEffect(g.asEffectClass(), character));
+        effects.stream().forEach(g -> effectService.removeEffect(g.getName(), character));
         Map<IGlobalEffect, Integer> toadd = event.getNewItem().getEffects();
         effectService.applyGlobalEffectsAsEnchantments(toadd, character);
         return 0;
@@ -916,7 +916,7 @@ public class CharacterService {
         }*/
         Weapon armor1 = character.getEquipedArmor().get(type);
         if (armor1 != null) {
-            armor1.getEffects().keySet().forEach(g -> effectService.removeEffect(g.asEffectClass(), character));
+            armor1.getEffects().keySet().forEach(g -> effectService.removeEffect(g.getName(), character));
             character.getEquipedArmor().remove(type);
         }
         if (armor != null) {
@@ -1058,7 +1058,7 @@ public class CharacterService {
      * character object is heavy, lets do not recreate its instance just reasign player and effects
      */
     public void respawnCharacter(IActiveCharacter character, Player pl) {
-        Iterator<Map.Entry<Class<? extends IEffect>, IEffect>> iterator1 = character.getEffectMap().entrySet().iterator();
+        Iterator<Map.Entry<String, IEffect>> iterator1 = character.getEffectMap().entrySet().iterator();
 
         Iterator<IEffect> iterator = character.getEffects().iterator();
         Set<IEffect> a = new HashSet<>();

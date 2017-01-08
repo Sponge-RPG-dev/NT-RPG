@@ -80,4 +80,8 @@ public interface IPlayerMessage {
     void displayGroupArmor(PlayerGroup g, Player target);
 
     void displayGroupWeapon(PlayerGroup g, Player target);
+
+    void sendClassInfo(IActiveCharacter target, ConfigClass configClass);
+
+    void displayAttributes(Player target, PlayerGroup group);
 }

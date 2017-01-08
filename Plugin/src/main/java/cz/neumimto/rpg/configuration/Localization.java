@@ -289,4 +289,6 @@ public class Localization {
     @ConfigValue
     public static String BACK = "Back";
 
+    @ConfigValue
+    public static String INITIAL_VALUE = "Attributes at start";
 }

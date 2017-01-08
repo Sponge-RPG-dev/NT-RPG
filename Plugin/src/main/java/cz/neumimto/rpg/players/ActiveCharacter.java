@@ -58,7 +58,7 @@ public class ActiveCharacter implements IActiveCharacter {
     private IReservable mana = new Mana(this);
     private Health health = new Health(this);
     private transient Player pl;
-    private transient Map<Class<? extends IEffect>, IEffect> effects = new HashMap<>();
+    private transient Map<String, IEffect> effects = new HashMap<>();
     private transient Click click = new Click();
     private transient Set<ItemType> allowedArmorIds = new HashSet<>();
     private transient Map<ItemType, Double> allowedWeapons = new HashMap<>();

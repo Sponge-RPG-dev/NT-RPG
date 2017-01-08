@@ -62,7 +62,7 @@ public class NtRpgPlugin {
     public static String workingDir;
     public static File pluginjar;
     public static GlobalScope GlobalScope;
-
+    public static final String namedCause = "ntrpg";
     @Inject
     @ConfigDir(sharedRoot = false)
     private Path config;

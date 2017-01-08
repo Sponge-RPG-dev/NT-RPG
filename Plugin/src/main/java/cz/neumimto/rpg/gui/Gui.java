@@ -145,4 +145,7 @@ public class Gui {
         getMessageTypeOf(target).displayGroupWeapon(g, target);
     }
 
+    public static void displayInitialAttributes(PlayerGroup g, Player target) {
+        getMessageTypeOf(target).displayAttributes(target, g);
+    }
 }

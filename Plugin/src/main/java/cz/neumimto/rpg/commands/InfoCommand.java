@@ -102,8 +102,17 @@ public class InfoCommand extends CommandBase {
         } else if (args[0].equalsIgnoreCase("race")) {
             Player player = (Player) commandSource;
             IActiveCharacter target = characterService.getCharacter(player.getUniqueId());
-            if (args.length == 2) {
-                Gui.sendRaceInfo(target,target.getRace());
+            if (args.length == 1) {
+                if (target.getRace() == Race.Default) {
+                    return CommandResult.empty();
+                }
+                Gui.sendRaceInfo(target, target.getRace());
+            } else if (args.length == 2) {
+                String a = args[1];
+                Race race = groupService.getRace(a);
+                if (race == null)
+                    return CommandResult.empty();
+                Gui.sendRaceInfo(target, race);
             } else {
                 Gui.sendRaceList(target);
             }
@@ -115,12 +124,16 @@ public class InfoCommand extends CommandBase {
         } else if (args[0].equalsIgnoreCase("guilds")) {
 
         } else if (args[0].equalsIgnoreCase("armor")) {
-            PlayerGroup g = groupService.getByName(args[1]);
-            if (g == null) {
-                return CommandResult.empty();
+            if (args.length == 1) {
+                //todo show accessible
+            } else {
+                PlayerGroup g = groupService.getByName(args[1]);
+                if (g == null) {
+                    return CommandResult.empty();
+                }
+                Player player = (Player) commandSource;
+                Gui.displayGroupArmor(g, player);
             }
-            Player player = (Player) commandSource;
-            Gui.displayGroupArmor(g, player);
         } else if (args[0].equalsIgnoreCase("weapons")) {
             PlayerGroup g = groupService.getByName(args[1]);
             if (g == null) {
@@ -130,8 +143,16 @@ public class InfoCommand extends CommandBase {
             Gui.displayGroupWeapon(g, player);
         } else if (args[0].equalsIgnoreCase("class")) {
             IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
-            ConfigClass cc = groupService.getNClass(args[1]);
-            Gui.showClassInfo(character,cc);
+            if (args.length == 1) {
+                ConfigClass nClass = character.getNClass(0);
+                if (nClass == ConfigClass.Default) {
+                    return CommandResult.empty();
+                }
+                Gui.showClassInfo(character, nClass);
+            } else {
+                ConfigClass cc = groupService.getNClass(args[1]);
+                Gui.showClassInfo(character, cc);
+            }
         } else if (args[0].equalsIgnoreCase("classes")) {
             IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
             Gui.showAvalaibleClasses(character);
@@ -156,6 +177,17 @@ public class InfoCommand extends CommandBase {
             if (player.hasPermission("ntrpg.runes.showlist")) {
                 Gui.sendListOfRunes(characterService.getCharacter(player.getUniqueId()));
             }
+        } else if (args[0].equalsIgnoreCase("runewords")) {
+            Player player = (Player) commandSource;
+            if (player.hasPermission("ntrpg.runewords.showlist")) {
+                //todo
+            }
+        } else if (args[0].equalsIgnoreCase("attributes-initial")) {
+            PlayerGroup byName = groupService.getByName(args[1]);
+            if (byName == null) {
+                return CommandResult.empty();
+            }
+            Gui.displayInitialAttributes(byName, (Player) commandSource);
         } else if (args[0].equalsIgnoreCase("stats")) {
             Player player = (Player) commandSource;
             IActiveCharacter character = characterService.getCharacter(player.getUniqueId());

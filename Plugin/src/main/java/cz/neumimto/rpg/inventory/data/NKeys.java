@@ -17,4 +17,12 @@ public class NKeys {
 			"n:any_string",
 			"Any String"
 	);
+
+
+	public static Key<Value<Boolean>> MENU_INVENTORY = KeyFactory.makeSingleKey(TypeToken.of(Boolean.class),
+			new TypeToken<Value<Boolean>>(){},
+			DataQuery.of('.', "n.menuinventory"),
+			"n:menu_inventory",
+			"Inventory menu"
+	);
 }
