@@ -10,6 +10,7 @@ import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.events.RebuildRunewordEvent;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.utils.ItemStackUtils;
@@ -42,16 +43,22 @@ public class RWService {
 
     private final Pattern socket = Pattern.compile("\\{@\\}");
     private final Path file = Paths.get(NtRpgPlugin.workingDir, "Runes.conf");
+
     @Inject
     private RWDao dao;
+
     @Inject
     private EffectService effectService;
+
     @Inject
     private Logger logger;
+
     @Inject
     private Game game;
+
     @Inject
     private GroupService groupService;
+
     private Map<String, RuneWord> runewords = new HashMap();
     private Map<String, Rune> runes = new HashMap<>();
     private List<ItemType> allowedRuneItemTypes = new ArrayList<>();
@@ -206,7 +213,7 @@ public class RWService {
             Text text = t.get(1);
             String s = text.toPlain();
             for (RuneWord rw : runewords.values()) {
-                String collect = rw.getRunes().stream().map(r -> r.getName()).collect(Collectors.joining());
+                String collect = rw.getRunes().stream().map(Rune::getName).collect(Collectors.joining());
                 if (s.equalsIgnoreCase(collect)) {
                     if (rw.getAllowedItems().contains(i.getItem())) {
                         return reBuildRuneword(i, rw);
@@ -245,7 +252,10 @@ public class RWService {
             Float value = entry.getValue();
             l.add(Text.of(TextColors.AQUA, key.getName() + ": " + value));
         }
-        i.offer(Keys.ITEM_LORE, l);
+        RebuildRunewordEvent event = new RebuildRunewordEvent(rw,l,i);
+        Sponge.getEventManager().post(event);
+        i = event.getItemStack();
+        i.offer(Keys.ITEM_LORE, event.getLore());
         return i;
     }
 
