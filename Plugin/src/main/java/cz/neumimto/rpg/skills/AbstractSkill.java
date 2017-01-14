@@ -174,6 +174,6 @@ public abstract class AbstractSkill implements ISkill {
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        return name.hashCode() * 77;
     }
 }

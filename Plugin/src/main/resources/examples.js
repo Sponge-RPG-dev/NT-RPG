@@ -42,15 +42,14 @@ var SuperJump = new (Java.extend(ActiveSkill, {
         s.setSettings(SkillSpeedSettings);
     },
     cast: function (character, extendedSkillInfo) {
-        var optional = character.getPlayer().getData(VelocityData.class);
+        var optional = character.getPlayer().get(Keys.VELOCITY);
         if (optional.isPresent()) {
-            var VelocityData = velocityData.get();
-            var vector = velocityData.getVelocity();
-            var newVector = new Vector3d(vector);
+            var VelocityData = optional.get();
+            var newVector = new Vector3d();
             var i = getLevelNode(extendedSkillInfo, "velocity");
-            newVector.add(0, i, 0);
-            velocityData.setVelocity(newVector);
-            character.getPlayer().offer(VelocityData);
+            newVector["add(float, float, float)"](0, i, 0);
+
+            character.getPlayer().setVelocity(newVector);
             character.sendMessage("You've used skill SuperJump");
             return SkillResult.OK;
         }
@@ -93,14 +92,14 @@ Strength.affectsProperties().put(DefaultProperties.golden_axe_bonus_damage, 1.25
 Strength.affectsProperties().put(DefaultProperties.iron_axe_bonus_damage, 1.25);
 Strength.affectsProperties().put(DefaultProperties.wooden_axe_bonus_damage, 1.25);
 //register the object into game
-GlobalScope.playerPropertyService.registerAttribute(Strength);
+registerAttribute(Strength);
 
 var Inteligence = new (Java.extend(CharacterAttribute, {}));
 Inteligence.setName("Inteligence");
 Inteligence.setDescription("Int desc");
 Inteligence.affectsProperties().put(DefaultProperties.max_mana, 20.0);
 Inteligence.affectsProperties().put(DefaultProperties.mana_regen, 1.12);
-GlobalScope.playerPropertyService.registerAttribute(Inteligence);
+registerAttribute(Inteligence);
 
 var Agility = new (Java.extend(CharacterAttribute, {}));
 Agility.setName("Agility");
@@ -110,11 +109,11 @@ Agility.setDescription("Agi desc");
  */
 Agility.affectsProperties().put(DefaultProperties.walk_speed, 0.0075);
 
-GlobalScope.playerPropertyService.registerAttribute(Agility);
+registerAttribute(Agility);
 
 registerEventListener(Java.type('org.spongepowered.api.event.entity.DamageEntityEvent'), new (Java.extend(Consumer, {
     accept: function (event) {
-        System.out.println("Im Javascript event handler");
+        log("Im Javascript event handler");
     }
 })));
 

@@ -71,14 +71,18 @@ public class JSLoader {
         try {
             Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
             FileUtils.createDirectoryIfNotExists(scripts_root);
-            engine = new NashornScriptEngineFactory().getScriptEngine();
-            loadSkills();
+            load();
+            reloadGlobalEffects();
+            reloadSkills();
+            reloadAttributes();
+            generateListener();
         } catch (ClassNotFoundException e) {
             System.out.println("Nashorn was not loaded. To enable javascript support place nashorn.jar into your config/nt-core folder");
         }
     }
 
-    public void loadSkills() {
+    public void load() {
+        engine = new NashornScriptEngineFactory().getScriptEngine();
         Path path = Paths.get(scripts_root + File.separator + "Main.js");
         if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
             try (InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("Main.js")) {
@@ -96,6 +100,7 @@ public class JSLoader {
             bindings.put("GlobalScope", ioc.build(GlobalScope.class));
             engine.setBindings(bindings,ScriptContext.ENGINE_SCOPE);
             engine.eval(rs);
+
         } catch (ScriptException | IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -109,6 +114,49 @@ public class JSLoader {
         ioc.build(Game.class).getEventManager().registerListeners(ioc.build(NtRpgPlugin.class), o);
     }
 
+    public void reloadSkills() {
+        Invocable invocable = (Invocable) engine;
+        try {
+            invocable.invokeFunction("registerSkills");
+        } catch (ScriptException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void reloadGlobalEffects() {
+        Invocable invocable = (Invocable) engine;
+        try {
+            invocable.invokeFunction("registerGlobalEffects");
+        } catch (ScriptException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void reloadAttributes() {
+        Invocable invocable = (Invocable) engine;
+        try {
+            invocable.invokeFunction("registerAttributes");
+        } catch (ScriptException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void generateListener() {
+        Invocable invocable = (Invocable) engine;
+        try {
+            invocable.invokeFunction("generateListener");
+        } catch (ScriptException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static class BindingsHelper {
 

@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.commands;
 
+import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.TestAction;
@@ -32,6 +33,7 @@ import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import org.slf4j.Logger;
@@ -40,6 +42,7 @@ import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.manipulator.mutable.entity.VelocityData;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -51,6 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 
 @ResourceLoader.Command
@@ -73,6 +77,9 @@ public class CommandAdmin extends CommandBase {
 
     @Inject
     private InventoryService inventoryService;
+
+    @Inject
+    private JSLoader jsLoader;
 
     public CommandAdmin() {
         setDescription("Bypasses many plugin restrictions, allows you to force execute skill, set character properties..., bad use of this command may breaks plugin mechanics or cause exceptions.");
@@ -103,6 +110,10 @@ public class CommandAdmin extends CommandBase {
                 if (a.length == 4)
                     level = Integer.parseInt(a[3]);
                 if (skill instanceof ActiveSkill) {
+                    Long l = System.nanoTime();
+                    Vector3d vector3d = character.getPlayer().get(Keys.VELOCITY).get();
+                    vector3d.add(0,8,0);
+                    character.getPlayer().offer(Keys.VELOCITY, vector3d);
                     ExtendedSkillInfo extendedSkillInfo = new ExtendedSkillInfo();
                     extendedSkillInfo.setLevel(level);
                     SkillData skillData = new SkillData(skill.getName());
@@ -111,6 +122,8 @@ public class CommandAdmin extends CommandBase {
                     extendedSkillInfo.setSkill(skill);
                     ActiveSkill askill = (ActiveSkill) skill;
                     askill.cast(character, extendedSkillInfo, null);
+                    Long e = System.nanoTime();
+                    character.sendMessage("Exec Time: " + TimeUnit.MILLISECONDS.convert(e-l, TimeUnit.NANOSECONDS));;
                 }
             }
         } else if (a[0].equalsIgnoreCase("set")) {
@@ -210,6 +223,28 @@ public class CommandAdmin extends CommandBase {
                 }
             } else {
                 throw new IllegalStateException("Only awalaible in debug mode");
+            }
+        } else if (a[0].equalsIgnoreCase("reloadjs")) {
+            if (!PluginConfig.DEBUG) {
+                commandSource.sendMessage(Text.of("Reloading is allowed only in debug mode"));
+                return CommandResult.success();
+            }
+            jsLoader.load();
+
+            int i = 1;
+            String q = null;
+            while (i < a.length) {
+                q = a[i];
+                if (q.equalsIgnoreCase("skills") | q.equalsIgnoreCase("s")) {
+                    jsLoader.reloadSkills();
+                }
+                if (q.equalsIgnoreCase("attributes") | q.equalsIgnoreCase("a")) {
+                    jsLoader.reloadAttributes();
+                }
+                if (q.equalsIgnoreCase("globaleffects") | q.equalsIgnoreCase("g")) {
+                    jsLoader.reloadGlobalEffects();
+                }
+                i++;
             }
         }
         return CommandResult.success();

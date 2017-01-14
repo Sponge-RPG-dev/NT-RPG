@@ -1,6 +1,8 @@
 var imports = new JavaImporter(java.util, java.nio.file);
+var console = Java.type("java.lang.System").out;
 /*java */
 var HashSet = Java.type('java.util.HashSet');
+var ArrayList = Java.type('java.util.ArrayList');
 var HashMap = Java.type('java.util.HashMap');
 var File = Java.type("java.io.File");
 var TimeUnit = Java.type("java.util.concurrent.TimeUnit");
@@ -31,20 +33,26 @@ var Optional = Java.type("com.google.common.base.Optional");
 /* https://wiki.openjdk.java.net/display/Nashorn/Nashorn+extensions */
 
 var events = new HashMap();
+var skills = new ArrayList();
+var globalEffects = new ArrayList();
+var attributes = new ArrayList();
+
+function log(obj) {
+    console.println(obj);
+}
 
 function registerSkill(obj) {
-    if (obj instanceof AbstractSkill) {
-        if (typeof obj.init == 'function') {
-            obj.init();
-        }
-        GlobalScope.skillService.addSkill(obj);
-    }
+    skills.add(obj);
 }
+
 function registerGlobalEffect(obj) {
-    if (obj instanceof GlobalEffect) {
-        GlobalScope.effectService.registerGlobalEffect(obj);
-    }
+    globalEffects.add(obj);
 }
+
+function registerAttribute(obj) {
+    attributes.add(obj);
+}
+
 function defineCharacterProperty(name, def) {
     var lastid = playerPropertyService.LAST_ID;
     lastid++;
@@ -57,9 +65,11 @@ function defineCharacterProperty(name, def) {
     playerPropertyService.LAST_ID = lastid;
     return lastid;
 }
+
 function getLevelNode(extendedSkillInfo, node) {
-    return extendedSkillInfo.getSkillInfo().getSkillSettings().getLevelNodeValue(node, extendedSkillInfo.getLevel());
+    return extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node, extendedSkillInfo.getLevel());
 }
+
 function registerEventListener(eventclass, consumer) {
     var cls = events.get(eventclass);
     if (cls == null) {
@@ -78,7 +88,40 @@ with (imports) {
     });
 }
 
-if (!events.isEmpty()) {
-    IoC.build(JSLoader.class).generateDynamicListener(events);
+function registerAttributes() {
+    log("registerAttributes, " + attributes.size())
+    for (obj in attributes) {
+        if (obj instanceof CharacterAttribute) {
+            GlobalScope.playerPropertyService.registerAttribute(obj);
+        }
+    }
 }
-events.clear();
+
+function registerSkills() {
+    log("registerSkills, " + skills.size())
+
+
+    for (obj in skills) {
+        var s = skills.get(obj);
+        s.init();
+        GlobalScope.skillService.addSkill(s);
+    }
+}
+
+
+function registerGlobalEffects() {
+    log("registerGlobalEffects, " + globalEffects.size())
+    for (obj in globalEffects) {
+        if (obj instanceof GlobalEffect) {
+            GlobalScope.effectService.registerGlobalEffect(obj);
+        }
+    }
+}
+
+function generateListener() {
+    log("generateListener")
+    if (!events.isEmpty()) {
+        IoC.build(JSLoader.class).generateDynamicListener(events);
+    }
+    events.clear();
+}
