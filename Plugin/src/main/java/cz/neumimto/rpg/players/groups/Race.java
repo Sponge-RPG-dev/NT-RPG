@@ -30,7 +30,7 @@ import java.util.Set;
  */
 public class Race extends PlayerGroup {
 
-    public static Race Default = new Race("None");
+    public static Race Default = new Race("RNone");
     private List<ISkill> skills = new ArrayList<>();
     private Set<ConfigClass> allowedClasses = new HashSet<>();
 

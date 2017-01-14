@@ -30,7 +30,7 @@ import java.util.Set;
  */
 public class ConfigClass extends PlayerGroup {
 
-    public static ConfigClass Default = new ConfigClass("None");
+    public static ConfigClass Default = new ConfigClass("CNone");
 
     private SkillTree skillTree = new SkillTree();
 

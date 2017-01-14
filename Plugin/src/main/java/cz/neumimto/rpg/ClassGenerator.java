@@ -274,7 +274,7 @@ public class ClassGenerator implements Opcodes {
                     i += 3;
                     mv.visitLineNumber(i, l0);
                     mv.visitVarInsn(ALOAD, 0);
-                    mv.visitFieldInsn(GETFIELD, "cz/neumimto/listeners/DynamicListener", name1, "Ljava/util/Set;");
+                    mv.visitFieldInsn(GETFIELD, "cz/neumimto/rpg/listeners/DynamicListener", name1, "Ljava/util/Set;");
                     mv.visitMethodInsn(INVOKEINTERFACE, "java/util/Set", "iterator", "()Ljava/util/Iterator;", true);
                     mv.visitVarInsn(ASTORE, 2);
                     Label l1 = new Label();
@@ -308,7 +308,7 @@ public class ClassGenerator implements Opcodes {
                     Label l5 = new Label();
                     mv.visitLabel(l5);
                     mv.visitLocalVariable("it", "Ljava/util/function/Consumer;", "Ljava/util/function/Consumer<L" + toPath(e) + ";>;", l3, l4, 3);
-                    mv.visitLocalVariable("this", "Lcz/neumimto/listeners/DynamicListener;", null, l0, l5, 0);
+                    mv.visitLocalVariable("this", "Lcz/neumimto/rpg/listeners/DynamicListener;", null, l0, l5, 0);
                     mv.visitLocalVariable("event", "L" + toPath(e) + ";", null, l0, l5, 1);
                     mv.visitMaxs(2, 4);
                     mv.visitEnd();

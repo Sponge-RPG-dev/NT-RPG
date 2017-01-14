@@ -20,11 +20,10 @@ var SkillSpeed = new (Java.extend(ActiveSkill, {
 }));
 var SkillBloodMagic = new (Java.extend(PassiveSkill, {
     init: function () {
-        var s = java.super(SkillBloodMagic);
+        var s = Java.super(SkillBloodMagic);
         s.setName("BloodMagic");
         s.setDescription("All skills will require life instead of mana");
         var SkillBloodMagicSettings = new SkillSettings();
-        SkillBloodMagicSettings.addNode();
         s.setSettings(SkillBloodMagicSettings);
     },
     applyEffect: function (character, extendedSkillInfo) {
@@ -85,31 +84,31 @@ registerSkill(SuperJump);
 registerSkill(SkillSpeed);
 registerSkill(SkillBloodMagic);
 
-var Strength = new (Java.extend(CharacterAttribute));
+var Strength = new (Java.extend(CharacterAttribute, {}));
 Strength.setName("Strength");
 Strength.setDescription("Some desc");
 //Each point of stregth increases axe damage by 1.25
-Strength.getAffectsProperties().put(DefaultProperties.diamond_axe_bonus_damage, 1.25);
-Strength.getAffectsProperties().put(DefaultProperties.golden_axe_bonus_damage, 1.25);
-Strength.getAffectsProperties().put(DefaultProperties.iron_axe_bonus_damage, 1.25);
-Strength.getAffectsProperties().put(DefaultProperties.wooden_axe_bonus_damage, 1.25);
+Strength.affectsProperties().put(DefaultProperties.diamond_axe_bonus_damage, 1.25);
+Strength.affectsProperties().put(DefaultProperties.golden_axe_bonus_damage, 1.25);
+Strength.affectsProperties().put(DefaultProperties.iron_axe_bonus_damage, 1.25);
+Strength.affectsProperties().put(DefaultProperties.wooden_axe_bonus_damage, 1.25);
 //register the object into game
 GlobalScope.playerPropertyService.registerAttribute(Strength);
 
-var Inteligence = new (Java.extend(CharacterAttribute));
+var Inteligence = new (Java.extend(CharacterAttribute, {}));
 Inteligence.setName("Inteligence");
 Inteligence.setDescription("Int desc");
-Inteligence.getAffectsProperties().put(DefaultProperties.max_mana, 20.0);
-Inteligence.getAffectsProperties().put(DefaultProperties.mana_regen, 1.12);
+Inteligence.affectsProperties().put(DefaultProperties.max_mana, 20.0);
+Inteligence.affectsProperties().put(DefaultProperties.mana_regen, 1.12);
 GlobalScope.playerPropertyService.registerAttribute(Inteligence);
 
-var Agility = new (Java.extend(CharacterAttribute));
+var Agility = new (Java.extend(CharacterAttribute, {}));
 Agility.setName("Agility");
 Agility.setDescription("Agi desc");
 /* be careful with maximum walk speed, entities with high walk speed values may cause lag or map damage
  Walk speed values around 4-5 may result in an unplayable gameplay, players wont be simply able to control their character.
  */
-Agility.getAffectsProperties().put(DefaultProperties.walk_speed, 0.0075);
+Agility.affectsProperties().put(DefaultProperties.walk_speed, 0.0075);
 
 GlobalScope.playerPropertyService.registerAttribute(Agility);
 

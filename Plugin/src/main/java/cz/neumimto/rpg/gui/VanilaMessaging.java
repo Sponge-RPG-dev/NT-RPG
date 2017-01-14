@@ -27,6 +27,7 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.commands.CommandChoose;
 import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffect;
@@ -427,10 +428,11 @@ public class VanilaMessaging implements IPlayerMessage {
 	@Override
 	public void sendRaceInfo(IActiveCharacter target, Race race) {
 		Inventory i = createPlayerGroupView(race);
-		if (target.getRace() == null || target.getRace() == Race.Default) {
+		if ((target.getRace() == null || target.getRace() == Race.Default) || PluginConfig.PLAYER_CAN_CHANGE_RACE) {
 			ItemStack of = ItemStack.of(ItemTypes.DIAMOND, 1);
 			of.offer(new InventoryItemMenuData("choose race " + race.getName()));
-			i.query(new SlotPos(8,8)).offer(of);
+			of.offer(Keys.DISPLAY_NAME, Text.of(Localization.CONFIRM));
+			i.query(new SlotPos(8,0)).offer(of);
 		}
 		target.getPlayer().openInventory(i, Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
 	}

@@ -291,4 +291,7 @@ public class Localization {
 
     @ConfigValue
     public static String INITIAL_VALUE = "Attributes at start";
+
+    @ConfigValue
+    public static String CONFIRM = "Confirm";
 }

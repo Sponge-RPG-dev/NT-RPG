@@ -2,9 +2,11 @@ package cz.neumimto.rpg.gui;
 
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.inventory.data.InventoryItemMenuData;
 import cz.neumimto.rpg.inventory.data.NKeys;
+import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import org.spongepowered.api.data.key.Keys;
@@ -48,7 +50,8 @@ public class GuiHelper {
 		ItemStack i = ItemStack.of(ItemTypes.BOOK, 1);
 		i.offer(NKeys.MENU_INVENTORY, true);
 		i.offer(Keys.DISPLAY_NAME, Text.of(Localization.ATTRIBUTES, TextColors.DARK_RED));
-		i.offer(new InventoryItemMenuData("show attributes " + group.getName()));
+		String cc = IoC.get().build(InfoCommand.class).getAliases().iterator().next();
+		i.offer(new InventoryItemMenuData(cc+" attributes-initial " + group.getName()));
 		return i;
 	}
 
@@ -94,7 +97,8 @@ public class GuiHelper {
 			l = "race";
 		}
 		of.offer(Keys.DISPLAY_NAME, Text.of(Localization.BACK, TextColors.WHITE));
-		of.offer(new InventoryItemMenuData("show " + l + " " + g.getName()));
+		String c = IoC.get().build(InfoCommand.class).getAliases().get(0);
+		of.offer(new InventoryItemMenuData(c + " " + l + " " + g.getName()));
 		return of;
 	}
 
