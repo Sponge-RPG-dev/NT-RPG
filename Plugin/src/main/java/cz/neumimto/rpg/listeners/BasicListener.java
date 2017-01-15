@@ -188,10 +188,6 @@ public class BasicListener {
                 double newdamage = 0;
                 if (entity.getType() == IEntityType.CHARACTER) {
                     IActiveCharacter character = (IActiveCharacter) entity;
-                    //TODO move this into EntityEquipmentEvent once its implemented!
-                    //its inefficient to recalculate damage every time player attacks someone
-                    damageService.recalculateCharacterWeaponDamage(character);
-                    //
                     newdamage = character.getWeaponDamage();
                     newdamage *= damageService.getCharacterBonusDamage(character, entityDamageSource.getType());
                 } else {

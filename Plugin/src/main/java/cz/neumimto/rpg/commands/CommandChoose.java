@@ -29,10 +29,7 @@ import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.players.ActiveCharacter;
-import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.*;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.PlayerPropertyService;
@@ -120,6 +117,9 @@ public class CommandChoose extends CommandBase {
                 player.sendMessage(Text.of(Localization.RACE_AND_CLASS_CONFLICT
                         .replaceAll("%1", character.getRace().getName()).replaceAll("%2", configClass.getName())));
                 return CommandResult.empty();
+            }
+            if (character.getClasses().contains(ExtendedNClass.Default)) {
+                character.getClasses().remove(ExtendedNClass.Default);
             }
             characterService.updatePlayerGroups(character, configClass, i, null, null);
             player.sendMessage(Text.of(Localization.PLAYER_CHOOSED_CLASS.replaceAll("%1", configClass.getName())));

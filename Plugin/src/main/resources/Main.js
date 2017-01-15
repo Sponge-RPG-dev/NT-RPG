@@ -91,8 +91,9 @@ with (imports) {
 function registerAttributes() {
     log("registerAttributes, " + attributes.size())
     for (obj in attributes) {
-        if (obj instanceof CharacterAttribute) {
-            GlobalScope.playerPropertyService.registerAttribute(obj);
+        var a = attributes.get(obj);
+        if (a instanceof CharacterAttribute) {
+            GlobalScope.playerPropertyService.registerAttribute(a);
         }
     }
 }
@@ -112,8 +113,9 @@ function registerSkills() {
 function registerGlobalEffects() {
     log("registerGlobalEffects, " + globalEffects.size())
     for (obj in globalEffects) {
-        if (obj instanceof GlobalEffect) {
-            GlobalScope.effectService.registerGlobalEffect(obj);
+        var g = globalEffects.get(obj);
+        if (g instanceof GlobalEffect) {
+            GlobalScope.effectService.registerGlobalEffect(g);
         }
     }
 }

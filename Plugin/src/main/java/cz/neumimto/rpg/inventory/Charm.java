@@ -33,6 +33,7 @@ public class Charm extends HotbarObject {
 
     @Override
     public void onEquip(ItemStack is, IActiveCharacter character) {
+        super.onEquip(is, character);
         if (effects == null) {
             effects = ItemStackUtils.getItemEffects(is);
         }

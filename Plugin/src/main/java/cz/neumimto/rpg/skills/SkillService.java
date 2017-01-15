@@ -34,7 +34,6 @@ import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.manipulator.mutable.entity.HealthData;
-import org.spongepowered.api.entity.living.player.Player;
 
 import java.io.*;
 import java.nio.file.Files;

@@ -939,7 +939,6 @@ public class CharacterService {
                 if (aClass.getLevel() > maxlevel)
                     continue;
                 addExperiences(character, exp, aClass, false);
-
             }
         }
     }
@@ -987,18 +986,18 @@ public class CharacterService {
         }
 
         if (!onlyinit) {
-            aClass.setExperiences(total + exp);
-            aClass.setExperiencesFromLevel(aClass.getExperiencesFromLevel() + exp);
+            aClass.setExperiences(newcurrentexp);
+            aClass.setExperiencesFromLevel(newcurrentexp);
             for (CharacterClass characterClass : character.getCharacterBase().getCharacterClasses()) {
                 if (characterClass.getName().equalsIgnoreCase(aClass.getConfigClass().getName())) {
-                    characterClass.setExperiences(total + exp);
+                    characterClass.setExperiences(newcurrentexp);
                     break;
                 }
             }
         } else {
             aClass.setExperiencesFromLevel(newcurrentexp);
-            Gui.showExpChange(character, aClass.getConfigClass().getName(), newcurrentexp);
         }
+	    Gui.showExpChange(character, aClass.getConfigClass().getName(), exp);
         aClass.setLevel(level);
     }
 

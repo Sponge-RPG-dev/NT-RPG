@@ -127,6 +127,7 @@ public class EntityLifecycleListener {
                 double exp = entityService.getExperiences(targetEntity.getType());
                 //todo share in party
                 IEntity source = entityService.get(entityDamageSource.getSource());
+
                 if (source.getType() == IEntityType.CHARACTER) {
                     IActiveCharacter character = (IActiveCharacter) source;
                     characterService.addExperiences(character, exp, ExperienceSource.PVE);

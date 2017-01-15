@@ -38,6 +38,7 @@ import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.entity.spawn.EntitySpawnCause;
+import org.spongepowered.api.event.entity.ChangeEntityEquipmentEvent;
 import org.spongepowered.api.event.filter.Getter;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.type.Exclude;
@@ -92,6 +93,7 @@ public class InventoryListener {
         if (!character.isStub()) {
             character.setOpenInventory(false);
         }
+
     }
 
     @Listener
@@ -117,7 +119,7 @@ public class InventoryListener {
             Slot i = slotTransaction.getSlot();
             int index = ((SlotAdapter)i).getOrdinal();
             if (Utils.isHotbar(index)) {
-                inventoryService.initializeHotbar(character,index);
+                inventoryService.initializeHotbar(character,index, slotTransaction.getFinal().createStack());
             }
         }
     }

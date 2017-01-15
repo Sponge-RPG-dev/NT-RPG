@@ -330,16 +330,19 @@ public class ActiveCharacter implements IActiveCharacter {
             skills.clear();
         }
 
-        classes.clear();
-        primary = new ExtendedNClass();
-        primary.setConfigClass(nclass);
-        primary.setPrimary(true);
-        classes.add(primary);
+        //classes.clear();
+
+        if (slot == 0) {
+            primary = new ExtendedNClass();
+            primary.setConfigClass(nclass);
+            primary.setPrimary(true);
+            classes.add(primary);
+        }
         CharacterClass cc = getCharacterBase().getCharacterClass(nclass);
         if (cc == null) {
             cc = new CharacterClass();
             cc.setCharacterBase(getCharacterBase());
-            cc.setName(ConfigClass.Default.getName());
+            cc.setName(nclass.getName());
         }
         Double aDouble = cc.getExperiences();
         if (aDouble == null) {
