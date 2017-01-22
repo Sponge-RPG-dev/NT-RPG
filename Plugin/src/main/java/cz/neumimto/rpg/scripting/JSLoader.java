@@ -26,6 +26,7 @@ import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.utils.FileUtils;
 import jdk.internal.dynalink.beans.StaticClass;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
@@ -82,7 +83,12 @@ public class JSLoader {
     }
 
     public void load() {
-        engine = new NashornScriptEngineFactory().getScriptEngine();
+        NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
+        if (PluginConfig.DEBUG) {
+            engine = factory.getScriptEngine("--optimistic-types=true", "-d=tmp");
+        } else {
+            engine = factory.getScriptEngine("--optimistic-types=true");
+        }
         Path path = Paths.get(scripts_root + File.separator + "Main.js");
         if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
             try (InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("Main.js")) {

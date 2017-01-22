@@ -49,6 +49,7 @@ public class EntityService {
                 id.offer(Keys.HEALTH, entityHealth.get(id.getType()));
             }
         }
+
         return iEntity;
 
     }

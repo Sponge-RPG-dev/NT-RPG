@@ -22,6 +22,8 @@ import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.utils.UUIDs;
 import org.spongepowered.api.effect.potion.PotionEffect;
+import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.event.entity.DamageEntityEvent;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -207,7 +209,6 @@ public class EffectBase implements IEffect {
         if (!(o instanceof EffectBase)) return false;
 
         EffectBase that = (EffectBase) o;
-
         if (uuid != null ? !uuid.equals(that.uuid) : that.uuid != null) return false;
 
         return true;

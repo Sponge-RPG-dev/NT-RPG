@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.utils;
 
+import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.IEntity;
@@ -27,6 +28,7 @@ import cz.neumimto.rpg.players.properties.PlayerPropertyService;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.property.entity.EyeLocationProperty;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.Living;
@@ -37,11 +39,13 @@ import org.spongepowered.api.util.blockray.BlockRay;
 import org.spongepowered.api.util.blockray.BlockRayHit;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
+import org.spongepowered.api.world.extent.EntityUniverse;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
@@ -53,6 +57,32 @@ public class Utils {
     public static String Tab = "\t";
     public static Set<BlockType> transparentBlocks = new HashSet<>();
     private static GlobalScope globalScope = NtRpgPlugin.GlobalScope;
+
+    public static void applyOnNearbyPartyMembers(IActiveCharacter character,int distance, Consumer<IActiveCharacter> c) {
+        double k = Math.pow(distance, 2);
+        for (IActiveCharacter iActiveCharacter : character.getParty().getPlayers()) {
+            if (iActiveCharacter.getPlayer().getLocation().getPosition()
+                    .distanceSquared(character.getPlayer().getLocation().getPosition()) <= k) {
+                c.accept(iActiveCharacter);
+            }
+        }
+    }
+
+    public static void applyOnNearby(IActiveCharacter character, int distance, Consumer<Entity> e) {
+        character.getPlayer().getWorld()
+                .getIntersectingEntities(character.getPlayer(), distance, hit -> hit.getEntity() != character.getPlayer())
+                .stream().map(EntityUniverse.EntityHit::getEntity)
+                .filter(Utils::isLivingEntity)
+                .forEach(e);
+    }
+
+    public static void applyOnNearbyAndSelf(IActiveCharacter character, int distance, Consumer<Entity> e) {
+        character.getPlayer().getWorld()
+                .getIntersectingEntities(character.getPlayer(), distance)
+                .stream().map(EntityUniverse.EntityHit::getEntity)
+                .filter(Utils::isLivingEntity)
+                .forEach(e);
+    }
 
     public static double getPercentage(double n, double total) {
         return (n / total) * 100;
@@ -97,6 +127,20 @@ public class Utils {
 
     public static Living getTargettedEntity(IActiveCharacter character, int range) {
         Player player = character.getPlayer();
+
+        Vector3d r = player.getRotation();
+        Vector3d dir = Quaterniond.fromAxesAnglesDeg(r.getX(), -r.getY(), r.getZ()).getDirection();
+        Vector3d vec3d = player.getProperty(EyeLocationProperty.class).get().getValue();
+        Optional<EntityUniverse.EntityHit> e = player.getWorld().getIntersectingEntities(vec3d, dir, range, entityHit -> isLivingEntity(entityHit.getEntity()))
+                .stream().reduce((a, b) -> a.getDistance() < b.getDistance() ? a : b);
+
+        if (e.isPresent()) {
+            Optional<BlockRayHit<World>> end = BlockRay.from(player).to(e.get().getIntersection()).skipFilter(BlockRay.onlyAirFilter()).build().end();
+            if (!end.isPresent()) {
+                return (Living) e.get().getEntity();
+            }
+        }
+        /*
         Optional<BlockRayHit<World>> h = BlockRay.from(player).distanceLimit(range).skipFilter(BlockRay.onlyAirFilter()).build().end();
         if (h.isPresent()) {
             Vector3d lookPos = h.get().getBlockPosition().toDouble();
@@ -107,8 +151,11 @@ public class Utils {
                 return (Living) e;
             }
         }
+        return null;*/
         return null;
     }
+
+
 
     public static void hideProjectile(Projectile projectile) {
         projectile.offer(Keys.INVISIBLE, true);
