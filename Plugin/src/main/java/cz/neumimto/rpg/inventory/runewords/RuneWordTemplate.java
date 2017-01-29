@@ -11,6 +11,7 @@ public final class RuneWordTemplate {
     private String name;
     private int minLevel;
     private List<String> restrictedClasses;
+    private List<String> allowedClasses;
     private List<String> runes;
     private Map<String, Float> effects;
     private List<String> allowedItems;
@@ -65,5 +66,13 @@ public final class RuneWordTemplate {
 
     public void setAllowedItems(List<String> allowedItems) {
         this.allowedItems = allowedItems;
+    }
+
+    public List<String> getAllowedClasses() {
+        return allowedClasses;
+    }
+
+    public void setAllowedClasses(List<String> allowedClasses) {
+        this.allowedClasses = allowedClasses;
     }
 }

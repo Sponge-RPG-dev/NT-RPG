@@ -12,6 +12,9 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.events.RebuildRunewordEvent;
 import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.players.ExtendedNClass;
+import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import cz.neumimto.rpg.utils.Utils;
@@ -104,6 +107,9 @@ public class RWService {
                 .map(a -> new Pair<>(effectService.getGlobalEffect(a.getKey()), a.getValue()))
                 .collect(HashMap::new, (map, a) -> map.put(a.key, a.value), HashMap::putAll)); //wtf i just did?
         rw.setRestrictedClasses(template.getRestrictedClasses().stream()
+                .filter(groupService::existsClass)
+                .map(groupService::getNClass).collect(Collectors.toSet()));
+        rw.setAllowedClasses(template.getAllowedClasses().stream()
                 .filter(groupService::existsClass)
                 .map(groupService::getNClass).collect(Collectors.toSet()));
         return rw;
@@ -216,7 +222,13 @@ public class RWService {
                 String collect = rw.getRunes().stream().map(Rune::getName).collect(Collectors.joining());
                 if (s.equalsIgnoreCase(collect)) {
                     if (rw.getAllowedItems().contains(i.getItem())) {
-                        return reBuildRuneword(i, rw);
+                        if (rw.getAllowedItems().isEmpty()) {
+                            return reBuildRuneword(i, rw);
+                        } else {
+                            if (rw.getAllowedItems().contains(i.getItem())) {
+                                return reBuildRuneword(i, rw);
+                            }
+                        }
                     }
                 }
             }
@@ -240,8 +252,12 @@ public class RWService {
 
         Map<IGlobalEffect, Float> effects = rw.getEffects();
         if (!rw.getRestrictedClasses().isEmpty()) {
-            l.add(Text.of(TextColors.RED, Localization.RESTRICTED_CLASSES));
+            l.add(Text.of(TextColors.DARK_RED, Localization.RESTRICTED_CLASSES));
             l.add(Text.of(TextColors.GRAY, "- " + rw.getRestrictedClasses().stream().map(PlayerGroup::getName).collect(Collectors.joining(", "))));
+        }
+        if (!rw.getRestrictedClasses().isEmpty()) {
+            l.add(Text.of(TextColors.RED, Localization.ALLOWED_CLASSES));
+            l.add(Text.of(TextColors.GRAY, "- " + rw.getAllowedClasses().stream().map(PlayerGroup::getName).collect(Collectors.joining(", "))));
         }
         if (rw.getMinLevel() > 1) {
             l.add(Text.of(TextColors.GRAY, Localization.MIN_LEVEL + ": " + rw.getMinLevel()));
@@ -266,23 +282,51 @@ public class RWService {
         if (allowedItems.contains(itemStack.toString())) {
             return true;
         }
-        if (ItemStackUtils.isSword(i)) {
-            for (String allowedItem : allowedItems) {
-                if (allowedItem.startsWith("any")) {
-                    String[] split = allowedItem.split(" ");
-                    if (split.length == 1) {
-                        return true;
-                    }
-                    if (split.length == 2) {
-                        ItemStackUtils.checkType(i,split[1]);
-                    } else {
-                        ItemStackUtils.checkTypeAndMaterial(i,split[2],split[1]);
-                    }
-
+        for (String allowedItem : allowedItems) {
+            if (allowedItem.startsWith("any")) {
+                String[] split = allowedItem.split(" ");
+                if (split.length == 1) {
+                    return true;
                 }
+                if (split.length == 2) {
+                    return ItemStackUtils.checkType(i,split[1]);
+                }
+
             }
         }
+
         return false;
     }
 
+    public boolean canUse(RuneWord rw, IActiveCharacter character) {
+        if (character.isStub())
+            return false;
+        if (rw.getMinLevel() > character.getPrimaryClass().getLevel()) {
+            return false;
+        }
+        if (!rw.getRestrictedClasses().isEmpty()) {
+            for (ConfigClass configClass : rw.getRestrictedClasses()) {
+                for (ExtendedNClass nClass : character.getClasses()) {
+                    if (nClass.getConfigClass() == configClass) {
+                        return false;
+                    }
+                }
+            }
+        }
+        if (!rw.getAllowedClasses().isEmpty()) {
+            boolean k = false;
+            for (ConfigClass configClass : rw.getAllowedClasses()) {
+                for (ExtendedNClass nClass : character.getClasses()) {
+                    if (nClass.getConfigClass() == configClass) {
+                        k = true;
+                        break;
+                    }
+                }
+            }
+            if (!k) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

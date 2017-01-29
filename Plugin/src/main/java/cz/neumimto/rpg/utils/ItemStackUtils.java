@@ -44,6 +44,7 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import static org.spongepowered.api.item.ItemTypes.*;
 import static org.spongepowered.api.item.ItemTypes.LEATHER_HELMET;
@@ -352,10 +353,6 @@ public class ItemStackUtils {
     static {
         restrictionMap.put("L", ItemRestriction.Level);
         restrictionMap.put("G", ItemRestriction.Group);
-    }
-
-    public static void checkTypeAndMaterial(ItemType i, String item, String material) {
-
     }
 
     public static boolean checkType(ItemType i, String item) {

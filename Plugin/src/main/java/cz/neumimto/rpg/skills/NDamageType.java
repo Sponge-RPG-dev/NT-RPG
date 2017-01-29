@@ -42,6 +42,17 @@ public class NDamageType {
             return "ice";
         }
     };
+    public static DamageType DAMAGE_CHECK = new DamageType() {
+        @Override
+        public String getId() {
+            return "ntrpg:damagecheck";
+        }
+
+        @Override
+        public String getName() {
+            return "damagecheck";
+        }
+    };
     public static DamageType PHYSICAL = DamageTypes.ATTACK;
     public static DamageType MAGICAL = DamageTypes.MAGIC;
 }

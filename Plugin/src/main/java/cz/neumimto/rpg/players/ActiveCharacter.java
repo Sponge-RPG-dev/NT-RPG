@@ -551,7 +551,7 @@ public class ActiveCharacter implements IActiveCharacter {
 
     @Override
     public boolean hasParty() {
-        return getParty() != null;
+        return getParty() != null && getParty().getPlayers().size() > 1;
     }
 
     @Override

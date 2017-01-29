@@ -21,6 +21,7 @@ package cz.neumimto.rpg.players.parties;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.events.party.PartyInviteEvent;
 import cz.neumimto.rpg.events.party.PartyJoinEvent;
 import cz.neumimto.rpg.events.party.PartyLeaveEvent;
@@ -72,6 +73,7 @@ public class PartyService {
             Gui.sendMessage(character, Localization.ALREADY_IN_PARTY);
             return;
         }
+
         if (party.getInvites().contains(character.getPlayer().getUniqueId()))
             party.getInvites().remove(character.getPlayer().getUniqueId());
         String msg = Localization.PARTY_MSG_ON_PLAYER_JOIN.replaceAll("%1", character.getPlayer().getName());

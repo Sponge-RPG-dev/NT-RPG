@@ -224,6 +224,9 @@ public class Localization {
     public static String RESTRICTED_CLASSES = "Restricted classes";
 
     @ConfigValue
+    public static String ALLOWED_CLASSES = "Allowed classes";
+
+    @ConfigValue
     public static String MIN_LEVEL = "Min. level";
 
     @ConfigValue
