@@ -11,10 +11,11 @@
     <modules>
         <module>Plugin</module>
         <module>Skills</module>
-      <!-- Do not build those yet
+
         <module>NT-RPG-WEBGUI</module>
-        <module>anunnamedproject</module>
-        -->
+        <!-- Do not build those yet
+  <module>anunnamedproject</module>
+  -->
     </modules>
 
     <properties>

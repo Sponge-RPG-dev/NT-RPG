@@ -42,7 +42,7 @@
             // var tree =  {"skills":[{"skill":"skill3","image":"url3","soft":["skill2"],"hard":["skill1"],"conflicts":[]},{"skill":"skill1","image":"url","soft":[],"hard":[],"conflicts":[]},{"skill":"skill2","image":"url2","soft":[],"hard":[],"conflicts":[]}]};
             // var skills  =  {"skill1":{"level":10},"skill2":{"level":10}};
             function getSkills() {
-                $.get(serverurl + "/getSkills/" + playername, function (data, status) {
+                $.post(serverurl + "/getSkills/" + playername).done( function (data) {
                     skills = data;
                 });
             }
@@ -75,21 +75,18 @@
             }
 
             function getSkeleton() {
-                $.get(serverurl + "/getSkeleton/" + playername, function (data, status) {
+                $.post(serverurl + "/getSkeleton/" + playername, token, function (data, status) {
                     tree = data;
                 });
             };
 
             function createToken() {
-                $.ajax({
-                    url:serverurl + "/createToken/" + playername,
-                    dataType: 'jsonp'
+                $.get(serverurl + "/createToken/" + playername).done( function (data) {
+                    token = data;
                 });
-            };
-
-            // {"level":89,"charname":"Nicitel","skillpoints":9,"classname":"Mage"}
+            }
             function getPlayerData() {
-                $.post(serverurl + "/getCharacter/" + playername, function (data, status) {
+                $.post(serverurl + "/getCharacter/" + playername,token).done( function (data) {
                     player = data;
                 });
             };
@@ -128,7 +125,7 @@
                 $("#container").empty();
                 $("#container").append("<div id='inf'></div>");
                 $("#container").append("<div id='cy'></div>");
-                $("#inf").append("Character: " + player.charname + " level: " + player.level + " Skillpoints: " + player.skillpoints + " Class:" + player.classname);
+         //       $("#inf").append("Character: " + player.charname + " level: " + player.level + " Skillpoints: " + player.skillpoints + " Class:" + player.classname);
             }
 
             function genTree(data) {
@@ -196,6 +193,8 @@
             $("#tokenbtn").click(function () {
 
                 token = $("#token").val();
+                playername = $("#user").val();
+                serverurl = $("#host").val();
                 getSkeleton();
                 getSkills();
                 //todo optional
@@ -212,9 +211,9 @@
     <div id="login">
         <form method="GET" action="#">
             <label>Host :</label>
-            <input type="text" name="host" id="host">
+            <input type="text" name="host" id="host" value="http://">
             <label>User :</label>
-            <input type="text" name="user" id="user">
+            <input type="text" name="user" id="user" >
             <input type="button" name="login" id="loginbtn" value="Get Token">
         </form>
     </div>

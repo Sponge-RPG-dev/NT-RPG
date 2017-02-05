@@ -19,7 +19,9 @@ public enum SkillTreeActionResult {
     DOES_NOT_MATCH_CHAIN(Localization.MISSING_SKILL_DEPENDENCIES),
     ALREADY_LEARNED(Localization.SKILL_ALREADY_LEARNED),
     LEARNED(Localization.SKILL_LEARNED),
-    UNKNOWN(""), NO_ACCESS_TO_SKILL(Localization.NO_ACCESS_TO_SKILL);
+    SKILL_CONFCLITS(Localization.SKILL_CONFLICTS),
+    UNKNOWN(""),
+    NO_ACCESS_TO_SKILL(Localization.NO_ACCESS_TO_SKILL);
     public String message;
 
     SkillTreeActionResult(String a) {

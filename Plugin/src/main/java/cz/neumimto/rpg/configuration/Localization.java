@@ -297,4 +297,7 @@ public class Localization {
 
     @ConfigValue
     public static String CONFIRM = "Confirm";
+
+    @ConfigValue
+    public static String SKILL_CONFLICTS = "Skill %1 conflicts with %2";
 }
