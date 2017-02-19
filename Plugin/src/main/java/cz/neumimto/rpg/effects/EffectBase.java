@@ -22,8 +22,6 @@ import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.utils.UUIDs;
 import org.spongepowered.api.effect.potion.PotionEffect;
-import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.event.entity.DamageEntityEvent;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -95,8 +93,8 @@ public class EffectBase implements IEffect {
     }
 
     @Override
-    public boolean setStackable(boolean b) {
-        return stackable;
+    public void setStackable(boolean b) {
+        this.stackable = b;
     }
 
     @Override

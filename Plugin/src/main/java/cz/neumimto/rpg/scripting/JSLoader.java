@@ -39,6 +39,8 @@ import org.spongepowered.api.event.Event;
 import javax.naming.Binding;
 import javax.script.*;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -72,23 +74,44 @@ public class JSLoader {
         try {
             Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
             FileUtils.createDirectoryIfNotExists(scripts_root);
-            load();
+            loadNashorn();
             reloadGlobalEffects();
             reloadSkills();
             reloadAttributes();
             generateListener();
+            System.out.println("JS resources loaded.");
         } catch (ClassNotFoundException e) {
-            System.out.println("Nashorn was not loaded. To enable javascript support place nashorn.jar into your config/nt-core folder");
+            System.out.println("NashornScriptEngineFactory was not found on a classpath. To be able to run Nashorn with jjs args place nashorn.jar into your config/nt-core folder");
         }
     }
 
     public void load() {
+        ScriptEngineManager m = new ScriptEngineManager(null);
+        throw new RuntimeException("JSLoader.load() not yet implemeted");
+      /*  engine = m.getEngineByName("nashorn");
+        setup();*/
+    }
+
+    public void loadNashorn() {
         NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
         if (PluginConfig.DEBUG) {
-            engine = factory.getScriptEngine("--optimistic-types=true", "-d=tmp");
+
+            //From some reason travis wont build this
+            //engine = factory.getScriptEngine("--optimistic-types=true", "-d=tmp");
+            try {
+                Method getScriptEngine = factory.getClass().getDeclaredMethod("getScriptEngine", String[].class);
+                engine = (ScriptEngine) getScriptEngine.invoke(factory, new Object[] {new String[] {"--optimistic-types=true", "-d=tmp"}});
+            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
         } else {
             engine = factory.getScriptEngine("--optimistic-types=true");
         }
+        setup();
+
+    }
+
+    private void setup() {
         Path path = Paths.get(scripts_root + File.separator + "Main.js");
         if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
             try (InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("Main.js")) {
@@ -107,12 +130,9 @@ public class JSLoader {
             engine.setBindings(bindings,ScriptContext.ENGINE_SCOPE);
             engine.eval(rs);
 
-        } catch (ScriptException | IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public void generateDynamicListener(Map<StaticClass, Set<Consumer<? extends Event>>> set) {

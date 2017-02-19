@@ -128,7 +128,6 @@ public class InventoryListener {
     @Listener
     public void onItemDrop(DropItemEvent event, @First(typeFilter = {EntitySpawnCause.class}) EntitySpawnCause esc) {
         Entity entity = esc.getEntity();
-        Cause cause = event.getCause();
         if (entity.getType() != EntityTypes.PLAYER)
             return;
         IActiveCharacter character = characterService.getCharacter(entity.getUniqueId());
@@ -147,6 +146,5 @@ public class InventoryListener {
         }
         hotbarObject.onUnEquip(character);
         inventoryService.initializeHotbar(character, hotbar.getSelectedSlotIndex());
-
     }
 }

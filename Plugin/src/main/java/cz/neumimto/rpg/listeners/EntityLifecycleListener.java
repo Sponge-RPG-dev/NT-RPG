@@ -56,18 +56,6 @@ public class EntityLifecycleListener {
         UUID id = event.getProfile().getUniqueId();
         characterService.loadPlayerData(id);
     }
-
-    @Listener
-    public void onPlayerRespawn(RespawnPlayerEvent event) {
-        IActiveCharacter character = characterService.getCharacter(event.getTargetEntity().getUniqueId());
-        if (character.isStub())
-            return;
-        character.getMana().setValue(0);
-        characterService.addDefaultEffects(character);
-        characterService.updateMaxHealth(character);
-        inventoryService.cancelSocketing(character);
-    }
-
     @Listener
     public void onPlayerLogin(ClientConnectionEvent.Join event) {
       //  IActiveCharacter character = characterService.getCharacter(event.getTargetEntity().getUniqueId());

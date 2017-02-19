@@ -229,7 +229,7 @@ public class CommandAdmin extends CommandBase {
                 commandSource.sendMessage(Text.of("Reloading is allowed only in debug mode"));
                 return CommandResult.success();
             }
-            jsLoader.load();
+            jsLoader.initEngine();
 
             int i = 1;
             String q = null;

@@ -140,6 +140,7 @@ public class CharacterService {
 		if (character.isStub())
 			return false;
 		character.setPlayer(pl);
+		inventoryService.initializeHotbar(character);
 		return true;
 	}
 
@@ -395,7 +396,6 @@ public class CharacterService {
 		}
 		if (character.hasParty())
 			character.getParty().removePlayer(character);
-		character.setParty(null);
 		character.setParty(null);
 		return character;
 	}
@@ -1076,7 +1076,10 @@ public class CharacterService {
 		for (IEffect effect : a) {
 			effectService.addEffect(effect, character);
 		}
-		inventoryService.initializeHotbar(character);
+		character.getMana().setValue(0);
+		inventoryService.cancelSocketing(character);
+		addDefaultEffects(character);
+		updateMaxHealth(character);
 		updateAll(character).run();
 	}
 }
