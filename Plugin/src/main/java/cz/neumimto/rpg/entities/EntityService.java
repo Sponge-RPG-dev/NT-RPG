@@ -67,11 +67,15 @@ public class EntityService {
     }
 
     public double getMobDamage(EntityType type) {
-        return entityDamages.get(type);
+        Double d = entityDamages.get(type);
+        if (d == null) return 0;
+        return d;
     }
 
     public double getMobHealth(EntityType type) {
-        return entityHealth.get(type);
+        Double d = entityHealth.get(type);
+        if (d == null) return 0;
+        return d;
     }
 
     @PostProcess(priority = 10)
@@ -84,6 +88,8 @@ public class EntityService {
     }
 
     public double getExperiences(EntityType type) {
-        return entityExperiences.get(type);
+        Double d = entityExperiences.get(type);
+        if (d == null) return 0;
+        return d;
     }
 }
