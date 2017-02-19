@@ -91,11 +91,16 @@ public class CommandAdmin extends CommandBase {
     @Override
     public CommandResult process(CommandSource commandSource, String s) throws CommandException {
         String[] a = s.split(" ");
+        if (!(commandSource instanceof Player)) {
+            logger.warn("Can't be executed from console");
+            return CommandResult.empty();
+        }
+        Player player = (Player) commandSource;
+        if (player.hasPermission("ntrpg.superadmin")) {
+            return CommandResult.empty(); //todo testPermission seems to not be called
+        }
         if (a[0].equalsIgnoreCase("use")) {
-            if (!(commandSource instanceof Player)) {
-                logger.warn("Can't be executed from console");
-                return CommandResult.empty();
-            }
+
             if (a[1].equalsIgnoreCase("skill")) {
                 if (a.length < 2) {
                     commandSource.sendMessage(Text.of("/nadmin use skill {skillname} [level]"));
@@ -103,7 +108,7 @@ public class CommandAdmin extends CommandBase {
                 }
                 ISkill skill = skillService.getSkill(a[2]);
                 SkillSettings defaultSkillSettings = skill.getDefaultSkillSettings();
-                IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
+                IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
                 if (character.isStub())
                     throw new RuntimeException("Character is required even for an admin.");
                 int level = 1;
@@ -138,33 +143,30 @@ public class CommandAdmin extends CommandBase {
                 if (globalEffect == null) {
                     commandSource.sendMessage(Text.of(Localization.NON_EXISTING_GLOBAL_EFFECT));
                 } else {
-                    Player pl = (Player) commandSource;
-                    if (pl.getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
-                        ItemStack itemStack = pl.getItemInHand(HandTypes.MAIN_HAND).get();
+                    if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
+                        ItemStack itemStack = player.getItemInHand(HandTypes.MAIN_HAND).get();
                         List<Text> texts = ItemStackUtils.addItemEffect(itemStack, globalEffect, Integer.parseInt(a[3]));
                         itemStack.offer(Keys.ITEM_LORE, texts);
-                        pl.setItemInHand(HandTypes.MAIN_HAND, itemStack);
-                        pl.sendMessage(Text.of("Enchantment " + globalEffect.getName() + " added"));
+                        player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
+                        player.sendMessage(Text.of("Enchantment " + globalEffect.getName() + " added"));
                     } else {
-                        pl.sendMessage(Text.of(Localization.NO_ITEM_IN_HAND));
+                        player.sendMessage(Text.of(Localization.NO_ITEM_IN_HAND));
                     }
                 }
             } else if (a[1].equalsIgnoreCase("remove")) {
 
             }
         } else if (a[0].equalsIgnoreCase("socket")) {
-            Player pl = (Player) commandSource;
-            Optional<ItemStack> itemInHand = pl.getItemInHand(HandTypes.MAIN_HAND);
+            Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
             if (itemInHand.isPresent()) {
                 ItemStack itemStack = runewordService.createSockets(itemInHand.get(), Integer.parseInt(a[1]));
-                pl.setItemInHand(HandTypes.MAIN_HAND,itemStack);
+                player.setItemInHand(HandTypes.MAIN_HAND,itemStack);
             }
         } else if (a[0].equalsIgnoreCase("rune")) {
             Rune r = runewordService.getRune(a[1]);
             if (r != null) {
-                Player pl = (Player) commandSource;
                 ItemStack is = runewordService.toItemStack(r);
-                pl.setItemInHand(HandTypes.MAIN_HAND,is);
+                player.setItemInHand(HandTypes.MAIN_HAND,is);
             }
         } else if (a[0].equalsIgnoreCase("charm")) {
 
@@ -200,9 +202,9 @@ public class CommandAdmin extends CommandBase {
             }
         } else if (a[0].equalsIgnoreCase("exp")) {
             if (a[1].equalsIgnoreCase("add")) {
-                Optional<Player> player = Sponge.getServer().getPlayer(a[2]);
-                if (player.isPresent()) {
-                    IActiveCharacter character = characterService.getCharacter(player.get().getUniqueId());
+                Optional<Player> player2 = Sponge.getServer().getPlayer(a[2]);
+                if (player2.isPresent()) {
+                    IActiveCharacter character = characterService.getCharacter(player2.get().getUniqueId());
                     Set<ExtendedNClass> classes = character.getClasses();
                     for (ExtendedNClass aClass : classes) {
                         if (aClass.getConfigClass().getName().equalsIgnoreCase(a[3])) {
@@ -213,7 +215,6 @@ public class CommandAdmin extends CommandBase {
             }
         } else if (a[0].equalsIgnoreCase("test.action")) {
             if (PluginConfig.DEBUG) {
-                Player player = (Player) commandSource;
                 String methodcall = a[1];
                 try {
                     Method method = TestAction.class.getClass().getMethod(methodcall, IActiveCharacter.class);

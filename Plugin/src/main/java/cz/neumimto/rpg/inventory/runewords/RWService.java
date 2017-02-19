@@ -94,7 +94,6 @@ public class RWService {
     }
 
     protected RuneWord getRuneword(RuneWordTemplate template) {
-        template.getRunes().stream().filter(Utils.not(runes::containsKey)).forEach(e -> logger.warn("Runeword " + template + " is not possible to create, due to missing Rune:" + e));
         template.getEffects().keySet().stream().filter(Utils.not(effectService::isGlobalEffect)).forEach(e -> logger.warn("Runeword " + template + " defined non existing global effect:" + e));
         RuneWord rw = new RuneWord();
         rw.setName(template.getName());
@@ -105,7 +104,7 @@ public class RWService {
         rw.setEffects(template.getEffects().entrySet().stream()
                 .filter(l -> effectService.isGlobalEffect(l.getKey()))
                 .map(a -> new Pair<>(effectService.getGlobalEffect(a.getKey()), a.getValue()))
-                .collect(HashMap::new, (map, a) -> map.put(a.key, a.value), HashMap::putAll)); //wtf i just did?
+                .collect(HashMap::new, (map, a) -> map.put(a.key, a.value), HashMap::putAll));
         rw.setRestrictedClasses(template.getRestrictedClasses().stream()
                 .filter(groupService::existsClass)
                 .map(groupService::getNClass).collect(Collectors.toSet()));
