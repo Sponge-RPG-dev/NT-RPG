@@ -26,21 +26,14 @@ import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.utils.FileUtils;
 import jdk.internal.dynalink.beans.StaticClass;
-import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
-import org.omg.CosNaming.BindingHelper;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Event;
 
-import javax.naming.Binding;
 import javax.script.*;
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -72,43 +65,20 @@ public class JSLoader {
     @PostProcess(priority = 2)
     public void initEngine() {
         try {
-            Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
             FileUtils.createDirectoryIfNotExists(scripts_root);
             loadNashorn();
+            setup();
             reloadGlobalEffects();
             reloadSkills();
             reloadAttributes();
             generateListener();
             System.out.println("JS resources loaded.");
-        } catch (ClassNotFoundException e) {
-            System.out.println("NashornScriptEngineFactory was not found on a classpath. To be able to run Nashorn with jjs args place nashorn.jar into your config/nt-core folder");
+        } catch (Exception e) {
+            logger.error(e.getMessage());
         }
     }
-
-    public void load() {
-        ScriptEngineManager m = new ScriptEngineManager(null);
-        throw new RuntimeException("JSLoader.load() not yet implemeted");
-      /*  engine = m.getEngineByName("nashorn");
-        setup();*/
-    }
-
     public void loadNashorn() {
-        NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
-        if (PluginConfig.DEBUG) {
-
-            //From some reason travis wont build this
-            //engine = factory.getScriptEngine("--optimistic-types=true", "-d=tmp");
-            try {
-                Method getScriptEngine = factory.getClass().getDeclaredMethod("getScriptEngine", String[].class);
-                engine = (ScriptEngine) getScriptEngine.invoke(factory, new Object[] {new String[] {"--optimistic-types=true", "-d=tmp"}});
-            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        } else {
-            engine = factory.getScriptEngine("--optimistic-types=true");
-        }
-        setup();
-
+        engine = new ScriptEngineManager().getEngineByName("nashorn");
     }
 
     private void setup() {
