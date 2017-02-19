@@ -46,7 +46,7 @@ public interface IEffect {
 
     boolean isStackable();
 
-    boolean setStackable(boolean b);
+    void setStackable(boolean b);
 
     boolean requiresRegister();
 

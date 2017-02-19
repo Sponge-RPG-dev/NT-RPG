@@ -14,7 +14,7 @@ public class CharacterSkill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long skillId;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "characterId")
     private CharacterBase characterBase;
 
@@ -66,19 +66,4 @@ public class CharacterSkill {
         this.fromClass = fromClass;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        CharacterSkill that = (CharacterSkill) o;
-
-        return skillId.equals(that.skillId);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return skillId != null ? skillId.hashCode() : 75612;
-    }
 }

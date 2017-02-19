@@ -93,8 +93,8 @@ public class EffectBase implements IEffect {
     }
 
     @Override
-    public boolean setStackable(boolean b) {
-        return stackable;
+    public void setStackable(boolean b) {
+        this.stackable = b;
     }
 
     @Override
@@ -207,7 +207,6 @@ public class EffectBase implements IEffect {
         if (!(o instanceof EffectBase)) return false;
 
         EffectBase that = (EffectBase) o;
-
         if (uuid != null ? !uuid.equals(that.uuid) : that.uuid != null) return false;
 
         return true;

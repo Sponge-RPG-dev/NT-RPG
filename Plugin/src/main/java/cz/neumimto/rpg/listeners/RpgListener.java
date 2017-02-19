@@ -24,6 +24,7 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.events.PlayerGuiModInitEvent;
 import cz.neumimto.rpg.events.character.PlayerDataPreloadComplete;
+import cz.neumimto.rpg.events.party.PartyJoinEvent;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -31,6 +32,7 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.filter.cause.First;
 
 import java.util.Optional;
@@ -76,5 +78,15 @@ public class RpgListener {
     public void onGuiInit(PlayerGuiModInitEvent event) {
         UUID uuid = event.getUuid();
         characterService.getCharacter(uuid).setUsingGuiMod(true);
+    }
+
+
+    @Listener(order = Order.EARLY)
+    public void onPartyJoin(PartyJoinEvent event) {
+        if (PluginConfig.MAX_PARTY_SIZE > -1) {
+            if (event.getParty().getPlayers().size() > PluginConfig.MAX_PARTY_SIZE) {
+                event.setCancelled(true);
+            }
+        }
     }
 }

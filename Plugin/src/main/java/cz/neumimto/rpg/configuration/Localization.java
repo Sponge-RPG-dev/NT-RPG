@@ -224,6 +224,9 @@ public class Localization {
     public static String RESTRICTED_CLASSES = "Restricted classes";
 
     @ConfigValue
+    public static String ALLOWED_CLASSES = "Allowed classes";
+
+    @ConfigValue
     public static String MIN_LEVEL = "Min. level";
 
     @ConfigValue
@@ -294,4 +297,7 @@ public class Localization {
 
     @ConfigValue
     public static String CONFIRM = "Confirm";
+
+    @ConfigValue
+    public static String SKILL_CONFLICTS = "Skill %1 conflicts with %2";
 }

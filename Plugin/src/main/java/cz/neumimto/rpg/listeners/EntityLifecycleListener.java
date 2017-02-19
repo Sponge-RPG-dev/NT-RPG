@@ -25,12 +25,11 @@ import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.user.BanUserEvent;
+import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 3.1.2016.
@@ -57,18 +56,6 @@ public class EntityLifecycleListener {
         UUID id = event.getProfile().getUniqueId();
         characterService.loadPlayerData(id);
     }
-
-    @Listener
-    public void onPlayerRespawn(RespawnPlayerEvent event) {
-        IActiveCharacter character = characterService.getCharacter(event.getTargetEntity().getUniqueId());
-        if (character.isStub())
-            return;
-        character.getMana().setValue(0);
-        characterService.addDefaultEffects(character);
-        characterService.updateMaxHealth(character);
-        inventoryService.cancelSocketing(character);
-    }
-
     @Listener
     public void onPlayerLogin(ClientConnectionEvent.Join event) {
       //  IActiveCharacter character = characterService.getCharacter(event.getTargetEntity().getUniqueId());
@@ -130,7 +117,23 @@ public class EntityLifecycleListener {
 
                 if (source.getType() == IEntityType.CHARACTER) {
                     IActiveCharacter character = (IActiveCharacter) source;
-                    characterService.addExperiences(character, exp, ExperienceSource.PVE);
+                    if (character.hasParty()) {
+                        exp *= PluginConfig.PARTY_EXPERIENCE_MULTIPLIER;
+                        double dist = Math.pow(PluginConfig.PARTY_EXPERIENCE_SHARE_DISTANCE, 2);
+                        Set<IActiveCharacter> set = new HashSet<>();
+                        for (IActiveCharacter member : character.getParty().getPlayers()) {
+                            if (member.getPlayer().getLocation().getPosition()
+                                    .distanceSquared(character.getPlayer().getLocation().getPosition()) <= dist) {
+                                set.add(member);
+                            }
+                        }
+                        exp /= set.size();
+                        for (IActiveCharacter character1 : set) {
+                            characterService.addExperiences(character1, exp, ExperienceSource.PVE);
+                        }
+                    } else {
+                        characterService.addExperiences(character, exp, ExperienceSource.PVE);
+                    }
                 }
             }
             Optional<SkillDamageSource> sds = event.getCause().first(SkillDamageSource.class);

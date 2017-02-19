@@ -39,6 +39,7 @@ public class RWDao {
             String name = config.getString(root + "." + a + ".Name");
             int minlevel = config.getInt(root + "." + a + ".MinLevel");
             List<String> restricted = config.getStringList(root + "." + a + ".RestrictedClasses");
+            List<String> allowed = config.getStringList(root + "." + a + ".AllowedClasses");
             List<String> allowedItems = config.getStringList(root + "." + a + ".AllowedItems");
             rw.setAllowedItems(allowedItems);
             ConfigObject object = config.getObject(root + "." + a + ".Effects");
@@ -52,6 +53,7 @@ public class RWDao {
             rw.setName(name);
             rw.setMinLevel(minlevel);
             rw.setRestrictedClasses(restricted);
+            rw.setAllowedClasses(allowed);
             rw.setRunes(runes);
             rw.setEffects(map);
             s.add(rw);

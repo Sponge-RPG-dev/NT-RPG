@@ -25,6 +25,7 @@ import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.world.World;
 
 import java.util.HashMap;
 import java.util.HashSet;

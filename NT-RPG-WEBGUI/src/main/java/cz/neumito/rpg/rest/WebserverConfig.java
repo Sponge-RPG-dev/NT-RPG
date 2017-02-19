@@ -7,15 +7,13 @@ import cz.neumimto.configuration.ConfigurationContainer;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-@ConfigurationContainer
+@ConfigurationContainer(path = "{WorkingDir}", filename = "WebServer.conf")
 public class WebserverConfig {
 
     @ConfigValue
-    public static int WEBSERVER_PORT;
+    public static int WEBSERVER_PORT = 8080;
 
     @ConfigValue
-    public static int WEBSERVER_THREADPOOL;
+    public static int WEBSERVER_THREADPOOL = 5;
 
-    @ConfigValue
-    public Set<String> BLOCKED_IPS =  Sets.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
-}
+ }

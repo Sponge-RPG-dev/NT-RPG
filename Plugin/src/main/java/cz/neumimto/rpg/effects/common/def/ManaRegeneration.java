@@ -22,7 +22,6 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.CoreEffectTypes;
 import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.EffectSource;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.events.character.ManaRegainEvent;
 import cz.neumimto.rpg.gui.Gui;
@@ -97,18 +96,8 @@ public class ManaRegeneration extends EffectBase {
     }
 
     @Override
-    public boolean setStackable(boolean b) {
-        return false;
-    }
-
-    @Override
     public boolean requiresRegister() {
         return true;
-    }
-
-    @Override
-    public EffectSource getEffectSource() {
-        return EffectSource.DEFAULT;
     }
 
 

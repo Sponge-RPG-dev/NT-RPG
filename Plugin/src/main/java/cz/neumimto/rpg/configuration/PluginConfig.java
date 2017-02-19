@@ -91,6 +91,7 @@ public class PluginConfig {
     public static boolean ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS = true;
 
     @ConfigValue
+    @Comment(content = "Works only if PLAYER_MAX_CHARS > 1.")
     public static boolean TELEPORT_PLAYER_TO_LAST_CHAR_LOCATION = true;
 
     @ConfigValue
@@ -100,9 +101,11 @@ public class PluginConfig {
     public static double HEALTH_SCALE = 2;
 
     @ConfigValue
+    @Comment(content = {"Count of attribute players gain per level"})
     public static int ATTRIBUTEPOINTS_PER_LEVEL;
 
     @ConfigValue
+    @Comment(content = {"Count of skillpoints players gain per level"})
     public static int SKILLPOINTS_PER_LEVEL;
 
     @ConfigValue
@@ -116,5 +119,17 @@ public class PluginConfig {
     @ConfigValue
     @Comment(content = {"Enables passing arguments to skills", "eg.: /skill Fireball arg1 arg2"})
     public static boolean SKILL_COMMAND_ARGUMENTS = false;
+
+    @ConfigValue
+    @Comment(content = {"Multiplier of shared experience gain for players in a party.", "Exp=(MobExp*Mult)/partyplayers in area"})
+    public static double PARTY_EXPERIENCE_MULTIPLIER = 2;
+
+	@ConfigValue
+	public static double PARTY_EXPERIENCE_SHARE_DISTANCE = 25;
+
+	@ConfigValue
+	@Comment(content = {"Value lesser than 0 means there will be no party limit. Additional content can override this value."})
+	public static double MAX_PARTY_SIZE = -68458;
+
 
 }

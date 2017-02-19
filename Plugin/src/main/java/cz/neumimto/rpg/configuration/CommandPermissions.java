@@ -28,8 +28,6 @@ import cz.neumimto.configuration.ConfigurationContainer;
 public class CommandPermissions {
 
     @ConfigValue
-    public static String CANT_CHOOSE_CLASS = ".";
-    @ConfigValue
     public static String CHOOSEGROUP_ALIAS = "choose";
 
     @ConfigValue
@@ -55,4 +53,16 @@ public class CommandPermissions {
 
     @ConfigValue
     public static String COMMAND_PARTY_ALIAS = "party";
+
+    @ConfigValue
+    public static String SELECT_CLASS = "ntrpg.select.class.";
+
+    @ConfigValue
+    public static String SELECT_RACE = "ntrpg.select.race.";
+
+    @ConfigValue
+    public static String ATTRIBUTES = "ntrpg.manage.attributes";
+
+    @ConfigValue
+    public static String PARTY_CREATE = "ntrpg.party.create";
 }

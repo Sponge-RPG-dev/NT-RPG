@@ -56,232 +56,242 @@ import java.util.*;
 @ResourceLoader.Command
 public class InfoCommand extends CommandBase {
 
-    @Inject
-    Game game;
+	@Inject
+	Game game;
 
-    @Inject
-    private CharacterService characterService;
+	@Inject
+	private CharacterService characterService;
 
-    @Inject
-    private SkillService skillService;
+	@Inject
+	private SkillService skillService;
 
-    @Inject
-    private NtRpgPlugin plugin;
+	@Inject
+	private NtRpgPlugin plugin;
 
-    @Inject
-    private GroupService groupService;
+	@Inject
+	private GroupService groupService;
 
-    public InfoCommand() {
-        setHelp(CommandLocalization.PLAYERINFO_HELP);
-        setPermission(CommandPermissions.COMMANDINFO_PERMS);
-        setDescription(CommandLocalization.PLAYERINFO_DESC);
-        setUsage(CommandLocalization.PLAYERINFO_USAGE);
-        addAlias(CommandPermissions.COMMANDINFO_ALIAS);
-    }
+	public InfoCommand() {
+		setHelp(CommandLocalization.PLAYERINFO_HELP);
+		setPermission(CommandPermissions.COMMANDINFO_PERMS);
+		setDescription(CommandLocalization.PLAYERINFO_DESC);
+		setUsage(CommandLocalization.PLAYERINFO_USAGE);
+		addAlias(CommandPermissions.COMMANDINFO_ALIAS);
+	}
 
-    @Override
-    public CommandResult process(CommandSource commandSource, String s) throws CommandException {
-        final String[] args = s.split(" ");
-        if (args.length == 0) {
-            commandSource.sendMessage(getUsage(commandSource));
-            return CommandResult.empty();
-        }
-        if (args[0].equalsIgnoreCase("player")) {
-            if (args.length != 2) {
-                commandSource.sendMessage(Text.of(getUsage(commandSource)));
-                return CommandResult.success();
-            }
-            Optional<Player> o = game.getServer().getPlayer(args[1]);
-            if (o.isPresent()) {
-                Player player = o.get();
-                printPlayerInfo(commandSource, args, player);
-                return CommandResult.success();
-            } else {
-                commandSource.sendMessage(Text.of(Localization.PLAYER_IS_OFFLINE_MSG));
-            }
-        } else if (args[0].equalsIgnoreCase("race")) {
-            Player player = (Player) commandSource;
-            IActiveCharacter target = characterService.getCharacter(player.getUniqueId());
-            if (args.length == 1) {
-                if (target.getRace() == Race.Default) {
-                    return CommandResult.empty();
-                }
-                Gui.sendRaceInfo(target, target.getRace());
-            } else if (args.length == 2) {
-                String a = args[1];
-                Race race = groupService.getRace(a);
-                if (race == null)
-                    return CommandResult.empty();
-                Gui.sendRaceInfo(target, race);
-            } else {
-                Gui.sendRaceList(target);
-            }
+	@Override
+	public CommandResult process(CommandSource commandSource, String s) throws CommandException {
+		final String[] args = s.split(" ");
+		if (args.length == 0) {
+			commandSource.sendMessage(getUsage(commandSource));
+			return CommandResult.empty();
+		}
+		if (args[0].equalsIgnoreCase("player")) {
+			if (args.length != 2) {
+				commandSource.sendMessage(Text.of(getUsage(commandSource)));
+				return CommandResult.success();
+			}
+			Optional<Player> o = game.getServer().getPlayer(args[1]);
+			if (o.isPresent()) {
+				Player player = o.get();
+				if (player != commandSource && !player.hasPermission("list.character.others")) {
+					player.sendMessage(Text.of(Localization.NO_PERMISSIONS));
+					return CommandResult.empty();
+				}
+				printPlayerInfo(commandSource, args, player);
+				return CommandResult.success();
+			} else {
+				commandSource.sendMessage(Text.of(Localization.PLAYER_IS_OFFLINE_MSG));
+			}
+		} else if (args[0].equalsIgnoreCase("race")) {
+			Player player = (Player) commandSource;
+			IActiveCharacter target = characterService.getCharacter(player.getUniqueId());
+			if (args.length == 1) {
+				if (target.getRace() == Race.Default) {
+					return CommandResult.empty();
+				}
+				Gui.sendRaceInfo(target, target.getRace());
+			} else if (args.length == 2) {
+				String a = args[1];
+				Race race = groupService.getRace(a);
+				if (race == null)
+					return CommandResult.empty();
+				if (player.hasPermission("list.races") || player.hasPermission("list.races." + race.getName())) {
+					Gui.sendRaceInfo(target, race);
+				}
+			} else {
+				if (player.hasPermission("list.races")) {
+					Gui.sendRaceList(target);
+				} else {
+					player.sendMessage(Text.of(Localization.NO_PERMISSIONS));
+				}
+			}
 
-        } else if (args[0].equalsIgnoreCase("races")) {
-            Player player = (Player) commandSource;
-            IActiveCharacter target = characterService.getCharacter(player.getUniqueId());
-            Gui.sendRaceList(target);
-        } else if (args[0].equalsIgnoreCase("guilds")) {
+		} else if (args[0].equalsIgnoreCase("races")) {
+			Player player = (Player) commandSource;
+			if (!player.hasPermission("list.races")) {
+				player.sendMessage(Text.of(Localization.NO_PERMISSIONS));
+				return CommandResult.empty();
+			}
+			IActiveCharacter target = characterService.getCharacter(player.getUniqueId());
+			Gui.sendRaceList(target);
+		} else if (args[0].equalsIgnoreCase("guilds")) {
 
-        } else if (args[0].equalsIgnoreCase("armor")) {
-            if (args.length == 1) {
-                //todo show accessible
-            } else {
-                PlayerGroup g = groupService.getByName(args[1]);
-                if (g == null) {
-                    return CommandResult.empty();
-                }
-                Player player = (Player) commandSource;
-                Gui.displayGroupArmor(g, player);
-            }
-        } else if (args[0].equalsIgnoreCase("weapons")) {
-            PlayerGroup g = groupService.getByName(args[1]);
-            if (g == null) {
-                return CommandResult.empty();
-            }
-            Player player = (Player) commandSource;
-            Gui.displayGroupWeapon(g, player);
-        } else if (args[0].equalsIgnoreCase("class")) {
-            IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
-            if (args.length == 1) {
-                ConfigClass nClass = character.getNClass(0);
-                if (nClass == ConfigClass.Default) {
-                    return CommandResult.empty();
-                }
-                Gui.showClassInfo(character, nClass);
-            } else {
-                ConfigClass cc = groupService.getNClass(args[1]);
-                Gui.showClassInfo(character, cc);
-            }
-        } else if (args[0].equalsIgnoreCase("classes")) {
-            IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
-            Gui.showAvalaibleClasses(character);
-        } else if (args[0].equalsIgnoreCase("character")) {
-            if (!(commandSource instanceof Player)) {
-                if (args.length != 2) {
-                    Player player = (Player) commandSource;
-                    IActiveCharacter target = characterService.getCharacter(player.getUniqueId());
-                    Gui.showCharacterInfo(target, target);
-                }
-            }
-        } else if (args[0].equalsIgnoreCase("characters")) {
-            if (!(commandSource instanceof Player)) {
-                if (args.length != 2) {
-                    Player player = (Player) commandSource;
-                    IActiveCharacter target = characterService.getCharacter(player.getUniqueId());
-                    Gui.sendListOfCharacters(target, target.getCharacterBase());
-                }
-            }
-        } else if (args[0].equalsIgnoreCase("runes")) {
-            Player player = (Player) commandSource;
-            if (player.hasPermission("ntrpg.runes.showlist")) {
-                Gui.sendListOfRunes(characterService.getCharacter(player.getUniqueId()));
-            }
-        } else if (args[0].equalsIgnoreCase("runewords")) {
-            Player player = (Player) commandSource;
-            if (player.hasPermission("ntrpg.runewords.showlist")) {
-                //todo
-            }
-        } else if (args[0].equalsIgnoreCase("attributes-initial")) {
-            PlayerGroup byName = groupService.getByName(args[1]);
-            if (byName == null) {
-                return CommandResult.empty();
-            }
-            Gui.displayInitialAttributes(byName, (Player) commandSource);
-        } else if (args[0].equalsIgnoreCase("stats")) {
-            Player player = (Player) commandSource;
-            IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-            if (!character.isStub()) {
-                Gui.sendStatus(character);
-            } else {
-                player.sendMessage(Text.of(Localization.CHARACTER_IS_REQUIRED));
+		} else if (args[0].equalsIgnoreCase("armor")) {
+			if (args.length == 1) {
+				//todo show accessible
+			} else {
+				PlayerGroup g = groupService.getByName(args[1]);
+				if (g == null) {
+					return CommandResult.empty();
+				}
+				Player player = (Player) commandSource;
+				Gui.displayGroupArmor(g, player);
+			}
+		} else if (args[0].equalsIgnoreCase("weapons")) {
+			PlayerGroup g = groupService.getByName(args[1]);
+			if (g == null) {
+				return CommandResult.empty();
+			}
+			Player player = (Player) commandSource;
+			Gui.displayGroupWeapon(g, player);
+		} else if (args[0].equalsIgnoreCase("class")) {
+			IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
+			if (args.length == 1) {
+				ConfigClass nClass = character.getNClass(0);
+				if (nClass == ConfigClass.Default) {
+					return CommandResult.empty();
+				}
+				Gui.showClassInfo(character, nClass);
+			} else {
+				ConfigClass cc = groupService.getNClass(args[1]);
+				Gui.showClassInfo(character, cc);
+			}
+		} else if (args[0].equalsIgnoreCase("classes")) {
+			IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
+			Gui.showAvalaibleClasses(character);
+		} else if (args[0].equalsIgnoreCase("character")) {
+			if (!(commandSource instanceof Player)) {
+				if (args.length != 2) {
+					Player player = (Player) commandSource;
+					IActiveCharacter target = characterService.getCharacter(player.getUniqueId());
+					Gui.showCharacterInfo(target, target);
+				}
+			}
+		} else if (args[0].equalsIgnoreCase("characters")) {
+			if (!(commandSource instanceof Player)) {
+				if (args.length != 2) {
+					Player player = (Player) commandSource;
+					IActiveCharacter target = characterService.getCharacter(player.getUniqueId());
+					Gui.sendListOfCharacters(target, target.getCharacterBase());
+				}
+			}
+		} else if (args[0].equalsIgnoreCase("runes")) {
+			Player player = (Player) commandSource;
+			if (player.hasPermission("ntrpg.runes.showlist")) {
+				Gui.sendListOfRunes(characterService.getCharacter(player.getUniqueId()));
+			}
+		} else if (args[0].equalsIgnoreCase("runewords")) {
+			Player player = (Player) commandSource;
+			if (player.hasPermission("ntrpg.runewords.showlist")) {
+				//todo
+			}
+		} else if (args[0].equalsIgnoreCase("attributes-initial")) {
+			PlayerGroup byName = groupService.getByName(args[1]);
+			if (byName == null) {
+				return CommandResult.empty();
+			}
+			Gui.displayInitialAttributes(byName, (Player) commandSource);
+		} else if (args[0].equalsIgnoreCase("stats")) {
+			Player player = (Player) commandSource;
+			IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+			if (!character.isStub()) {
+				Gui.sendStatus(character);
+			} else {
+				player.sendMessage(Text.of(Localization.CHARACTER_IS_REQUIRED));
 
-            }
-        } else if (args[0].equalsIgnoreCase("skilltree")) {
-            String skillname = args[1];
-            SkillTree skillTree = skillService.getSkillTrees().get(skillname);
+			}
+		} else if (args[0].equalsIgnoreCase("skilltree")) {
+			String skillname = args[1];
+			SkillTree skillTree = skillService.getSkillTrees().get(skillname);
+			SkillData skillData = skillTree.getSkills().get(args[2]);
+			Gui.openSkillTreeMenu(characterService.getCharacter(((Player) commandSource).getUniqueId()), skillTree, skillData);
+		} else {
+			commandSource.sendMessage(getUsage(commandSource));
+		}
+		return CommandResult.success();
+	}
 
-            SkillData skillData = skillTree.getSkills().get(args[2]);
-            Gui.openSkillTreeMenu(characterService.getCharacter(((Player)commandSource).getUniqueId()),skillTree,skillData);
+	private void printClassList(IActiveCharacter character) {
 
+	}
 
+	//TODO create inventory menus
+	private void printGuildList(CommandSource commandSource, String nextcmd) {
 
-        } else {
-            commandSource.sendMessage(getUsage(commandSource));
-        }
-        return CommandResult.success();
-    }
+	}
 
-    private void printClassList(IActiveCharacter character) {
+	private void printList(CommandSource commandSource, Collection<? extends PlayerGroup> group, String nextcmd) {
+		Text.Builder builder = Text.builder();
+		List<Text> texts = new ArrayList<>();
+		for (PlayerGroup g : group) {
+			if (!g.showsInMenu()) {
+				continue;
+			}
+			texts.add(builder.append(Text.of(g.getName() + ", "))
+					.onHover(TextActions.showText(Text.of("Get more info on click")))
+					.onClick(TextActions.runCommand(Text.of("/" + getAliases().get(0)) + " race " + g.getName()))
+					.build());
 
-    }
+			builder.removeAll();
+		}
+		commandSource.sendMessage(Text.join(texts));
+	}
 
-    //TODO create inventory menus
-    private void printGuildList(CommandSource commandSource, String nextcmd) {
+	private void printRaceList(CommandSource commandSource, String nextcmd) {
+		Collection<? extends PlayerGroup> group = groupService.getRaces();
+		printList(commandSource, group, nextcmd);
+	}
 
-    }
+	private void printRaceInfor(CommandSource commandSource, String[] args) {
+		Race race = groupService.getRace(args[1]);
+		if (race == Race.Default) {
+			commandSource.sendMessage(Text.of(Localization.NON_EXISTING_GROUP));
+			return;
+		}
+		Text text = Text.of();
+		Text.Builder builder = text.builder().append(Text.of("Name : " + race.getName()))
+				.append(Text.of("Weapons :    "));
+		for (Map.Entry<ItemType, Double> e : race.getWeapons().entrySet()) {
+			builder.append(Text.of(e.getValue())).append(Text.of(", "));
+		}
+		builder.append(Text.of("Armor  :    "));
+		for (ItemType s : race.getAllowedArmor()) {
+			builder.append(Text.of(s.toString()));
+		}
+		commandSource.sendMessage(builder.build());
+	}
 
-    private void printList(CommandSource commandSource, Collection<? extends PlayerGroup> group, String nextcmd) {
-        Text.Builder builder = Text.builder();
-        List<Text> texts = new ArrayList<>();
-        for (PlayerGroup g : group) {
-            if (!g.showsInMenu()) {
-                continue;
-            }
-            texts.add(builder.append(Text.of(g.getName() + ", "))
-                    .onHover(TextActions.showText(Text.of("Get more info on click")))
-                    .onClick(TextActions.runCommand(Text.of("/" + getAliases().get(0)) + " race " + g.getName()))
-                    .build());
+	private void printPlayerInfo(CommandSource commandSource, String[] args, Player player) {
+		game.getScheduler().createTaskBuilder().async().execute(() -> {
+			List<CharacterBase> characters = characterService.getPlayersCharacters(player.getUniqueId());
+			if (characters.isEmpty()) {
+				commandSource.sendMessage(Text.of("Player has no characters"));
+				return;
+			}
+			for (CharacterBase character : characters) {
+				Text build = Text.builder()
+						.append(Text.of(character.getName()))
+						.onHover(TextActions.showText(Text.of(getSmallInfo(character))))
+						.build();
+				commandSource.sendMessage(build);
+			}
+		}).submit(plugin);
+	}
 
-            builder.removeAll();
-        }
-        commandSource.sendMessage(Text.join(texts));
-    }
-
-    private void printRaceList(CommandSource commandSource, String nextcmd) {
-        Collection<? extends PlayerGroup> group = groupService.getRaces();
-        printList(commandSource, group, nextcmd);
-    }
-
-    private void printRaceInfor(CommandSource commandSource, String[] args) {
-        Race race = groupService.getRace(args[1]);
-        if (race == Race.Default) {
-            commandSource.sendMessage(Text.of(Localization.NON_EXISTING_GROUP));
-            return;
-        }
-        Text text = Text.of();
-        Text.Builder builder = text.builder().append(Text.of("Name : " + race.getName()))
-                .append(Text.of("Weapons :    "));
-        for (Map.Entry<ItemType, Double> e : race.getWeapons().entrySet()) {
-            builder.append(Text.of(e.getValue())).append(Text.of(", "));
-        }
-        builder.append(Text.of("Armor  :    "));
-        for (ItemType s : race.getAllowedArmor()) {
-            builder.append(Text.of(s.toString()));
-        }
-        commandSource.sendMessage(builder.build());
-    }
-
-    private void printPlayerInfo(CommandSource commandSource, String[] args, Player player) {
-        game.getScheduler().createTaskBuilder().async().execute(() -> {
-            List<CharacterBase> characters = characterService.getPlayersCharacters(player.getUniqueId());
-            if (characters.isEmpty()) {
-                commandSource.sendMessage(Text.of("Player has no characters"));
-                return;
-            }
-            for (CharacterBase character : characters) {
-                Text build = Text.builder()
-                        .append(Text.of(character.getName()))
-                        .onHover(TextActions.showText(Text.of(getSmallInfo(character))))
-                        .build();
-                commandSource.sendMessage(build);
-            }
-        }).submit(plugin);
-    }
-
-    private String getSmallInfo(CharacterBase character) {
-        return TextColors.GOLD + ", C:" + character.getPrimaryClass() + ", R: " + character.getRace() + ", G: " + character.getGuildid();
-    }
+	private String getSmallInfo(CharacterBase character) {
+		return TextColors.GOLD + ", C:" + character.getPrimaryClass() + ", R: " + character.getRace() + ", G: " + character.getGuildid();
+	}
 
 
 }

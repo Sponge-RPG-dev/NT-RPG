@@ -23,12 +23,17 @@ import org.spongepowered.api.text.Text;
 import spark.Spark;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+
+import static spark.Spark.staticFileLocation;
 
 @Singleton
 public class RestService {
@@ -50,6 +55,7 @@ public class RestService {
     @Inject
     NtRpgPlugin plugin;
 
+    private static String index;
 
     String charset = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ!@#$";
 
@@ -131,21 +137,6 @@ public class RestService {
         public ExtendedSkillInfo read(JsonReader jsonReader) throws IOException {
             throw new UnsupportedOperationException();
         }
-    }).registerTypeAdapter(Token.class, new TypeAdapter<Token>() {
-        @Override
-        public void write(JsonWriter out, Token value) throws IOException {
-
-        }
-
-        @Override
-        public Token read(JsonReader in) throws IOException {
-            if (in.peek() == JsonToken.NULL) {
-                in.nextNull();
-                return new Token("");
-            }
-            String s = in.nextString();
-            return new Token(s);
-        }
     }).create();
 
     private static Map<String,String> cachedTrees = new HashMap<>();
@@ -163,6 +154,20 @@ public class RestService {
         //todo config
         Spark.port(WebserverConfig.WEBSERVER_PORT);
         Spark.threadPool(WebserverConfig.WEBSERVER_THREADPOOL);
+        try {
+            index = new String(Files.readAllBytes(Paths.get(NtRpgPlugin.workingDir + "/index.html")), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Spark.after((request, response) -> {
+            response.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+            response.header("Access-Control-Allow-Origin", "*");
+            response.header("Access-Control-Allow-Headers", "Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin,");
+        });
+        Spark.get("/", (request, response) -> {
+            response.body(index);
+            return response.body();
+        });
         Spark.get("/getSkeleton/:player",(request, response) -> {
             String player = request.params(":player");
             CountDownLatch countDownLatch = new CountDownLatch(1);
@@ -180,7 +185,7 @@ public class RestService {
         Spark.get("/createToken/:player", (request, response) -> {
             String player = request.params(":player");
             createToken(player,request.ip());
-            return "{\"status\":\"requested\"}";
+            return "{status:\"requested\"}";
         });
         Spark.get("/getSkills/:player", (request, response) -> {
             CountDownLatch latch = new CountDownLatch(1);
@@ -201,11 +206,14 @@ public class RestService {
             CountDownLatch l = new CountDownLatch(1);
             String player = request.params(":player");
             Token token = gson.fromJson(request.body(),Token.class);
-            if (token.equals(tokens.get(player))) {
+            System.out.println(token);
+            if (token.equals(tokens.get(player.toLowerCase()))) {
                 getCharacterData(player,r -> {
                     response.body(gson.toJson(r));
                     l.countDown();
                 });
+            } else {
+                l.countDown();
             }
             try {
                 l.await();
@@ -309,9 +317,11 @@ public class RestService {
     }
 
     public void startServer() {
+        System.out.println("Game thread :" + Thread.currentThread().getName());
         if (t == null || t.isInterrupted()) {
             t = new Thread(r);
             t.start();
+            System.out.println("WebServer thread :" + t.getName());
             return;
         }
         Spark.stop();

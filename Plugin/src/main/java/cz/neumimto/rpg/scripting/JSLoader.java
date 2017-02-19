@@ -28,14 +28,10 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.utils.FileUtils;
 import jdk.internal.dynalink.beans.StaticClass;
-import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
-import org.omg.CosNaming.BindingHelper;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Event;
 
-import javax.naming.Binding;
 import javax.script.*;
 import java.io.*;
 import java.nio.file.Files;
@@ -69,20 +65,23 @@ public class JSLoader {
     @PostProcess(priority = 2)
     public void initEngine() {
         try {
-            Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
             FileUtils.createDirectoryIfNotExists(scripts_root);
-            load();
+            loadNashorn();
+            setup();
             reloadGlobalEffects();
             reloadSkills();
             reloadAttributes();
             generateListener();
-        } catch (ClassNotFoundException e) {
-            System.out.println("Nashorn was not loaded. To enable javascript support place nashorn.jar into your config/nt-core folder");
+            System.out.println("JS resources loaded.");
+        } catch (Exception e) {
+            logger.error(e.getMessage());
         }
     }
+    public void loadNashorn() {
+        engine = new ScriptEngineManager().getEngineByName("nashorn");
+    }
 
-    public void load() {
-        engine = new NashornScriptEngineFactory().getScriptEngine();
+    private void setup() {
         Path path = Paths.get(scripts_root + File.separator + "Main.js");
         if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
             try (InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("Main.js")) {
@@ -101,12 +100,9 @@ public class JSLoader {
             engine.setBindings(bindings,ScriptContext.ENGINE_SCOPE);
             engine.eval(rs);
 
-        } catch (ScriptException | IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public void generateDynamicListener(Map<StaticClass, Set<Consumer<? extends Event>>> set) {

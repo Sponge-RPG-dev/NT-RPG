@@ -109,6 +109,11 @@ public class CommandCreate extends CommandBase {
                     }
                 }).submit(plugin);
             } else if (args[0].equalsIgnoreCase("party")) {
+                if (!commandSource.hasPermission(CommandPermissions.PARTY_CREATE)) {
+                    commandSource.sendMessage(Text.of(Localization.NO_PERMISSIONS));
+                    return CommandResult.empty();
+                }
+
                 IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
                 if (character.isStub()) {
                     Gui.sendMessage(character, Localization.CHARACTER_IS_REQUIRED);

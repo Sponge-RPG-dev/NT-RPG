@@ -22,6 +22,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.configuration.CommandPermissions;
+import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.parties.PartyService;
@@ -91,7 +92,6 @@ public class CommandParty extends CommandBase {
                 IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
                 if (character.getPendingPartyInvite() != null) {
                     partyService.addToParty(character.getPendingPartyInvite(), character);
-                    character.setPendingPartyInvite(null);
                 }
             }
         }

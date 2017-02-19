@@ -27,6 +27,7 @@ import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.Rune;
+import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
@@ -35,7 +36,11 @@ import cz.neumimto.rpg.utils.ItemStackUtils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
+import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 import org.spongepowered.api.event.item.inventory.TargetContainerEvent;
 import org.spongepowered.api.item.ItemType;
@@ -369,7 +374,15 @@ public class InventoryService {
                     character.getPlayer().setItemInHand(HandTypes.MAIN_HAND,i);
                     if (!rwService.hasEmptySocket(i.get(Keys.ITEM_LORE).get())) {
                         i = rwService.findRuneword(i);
-                        character.getPlayer().setItemInHand(HandTypes.MAIN_HAND,i);
+                        RuneWord rw = rwService.getRuneword(i.get(Keys.ITEM_LORE).get());
+                        if (rwService.canUse(rw, character)) {
+                            character.getPlayer().setItemInHand(HandTypes.MAIN_HAND, i);
+                        } else {
+                            character.getPlayer().setItemInHand(HandTypes.MAIN_HAND, null);
+                            Entity entity = character.getPlayer().getLocation().getExtent().createEntity(EntityTypes.ITEM, character.getPlayer().getLocation().getPosition());
+                            entity.offer(Keys.REPRESENTED_ITEM, i.createSnapshot());
+                            character.getPlayer().getWorld().spawnEntity(entity, Cause.of(NamedCause.of("CANNOTHOLDRW", character.getPlayer())));
+                        }
                     }
                 }
             }
