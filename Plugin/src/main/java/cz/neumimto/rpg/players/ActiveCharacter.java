@@ -661,6 +661,16 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
+    public boolean hasClass(PlayerGroup configClass) {
+        for (ExtendedNClass aClass : classes) {
+            if (aClass.getConfigClass() == configClass) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public int hashCode() {
         return getPlayer().getUniqueId().hashCode() * 37;
     }

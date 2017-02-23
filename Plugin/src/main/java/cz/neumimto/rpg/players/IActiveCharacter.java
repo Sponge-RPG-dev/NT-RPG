@@ -25,6 +25,7 @@ import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
+import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
@@ -243,4 +244,6 @@ public interface IActiveCharacter extends IEntity<Player> {
     MessageType getPreferedMessageType();
 
     void setPreferedMessageType(MessageType type);
+
+    boolean hasClass(PlayerGroup configClass);
 }

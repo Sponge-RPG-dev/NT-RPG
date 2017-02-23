@@ -41,8 +41,10 @@ public class ConfigClass extends PlayerGroup {
 
     private Color chatColor;
 
+
     public ConfigClass(String name) {
         super(name);
+        playerGroupType = PlayerGroupType.CLASS;
     }
 
     public SkillTree getSkillTree() {

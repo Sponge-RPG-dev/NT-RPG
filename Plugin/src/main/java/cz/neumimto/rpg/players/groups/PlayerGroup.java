@@ -41,7 +41,7 @@ public class PlayerGroup {
     private ItemType itemType;
     private String description;
     private Map<ICharacterAttribute, Integer> startingAttributes = new HashMap<>();
-
+    protected PlayerGroupType playerGroupType;
     public PlayerGroup(String name) {
         this.name = name;
         if (name.toLowerCase().equalsIgnoreCase("none")) {
@@ -139,5 +139,13 @@ public class PlayerGroup {
 
     public void setStartingAttributes(Map<ICharacterAttribute, Integer> startingAttributes) {
         this.startingAttributes = startingAttributes;
+    }
+
+    public Set<ItemType> getCanCraft() {
+        return canCraft;
+    }
+
+    public PlayerGroupType getPlayerGroupType() {
+        return playerGroupType;
     }
 }
