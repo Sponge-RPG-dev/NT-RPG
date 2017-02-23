@@ -16,6 +16,8 @@ import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
+import cz.neumimto.rpg.players.groups.PlayerGroupType;
+import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import cz.neumimto.rpg.utils.Utils;
 import cz.neumimto.rpg.utils.XORShiftRnd;
@@ -105,10 +107,13 @@ public class RWService {
                 .filter(l -> effectService.isGlobalEffect(l.getKey()))
                 .map(a -> new Pair<>(effectService.getGlobalEffect(a.getKey()), a.getValue()))
                 .collect(HashMap::new, (map, a) -> map.put(a.key, a.value), HashMap::putAll));
-        rw.setRestrictedClasses(template.getRestrictedClasses().stream()
+        rw.setBlockedGroups(template.getRestrictedClasses().stream()
                 .filter(groupService::existsClass)
                 .map(groupService::getNClass).collect(Collectors.toSet()));
-        rw.setAllowedClasses(template.getAllowedClasses().stream()
+        rw.setAllowedGroups(template.getAllowedClasses().stream()
+                .filter(groupService::existsClass)
+                .map(groupService::getNClass).collect(Collectors.toSet()));
+        rw.setRequiredGroups(template.getRequiredGroups().stream()
                 .filter(groupService::existsClass)
                 .map(groupService::getNClass).collect(Collectors.toSet()));
         return rw;
@@ -250,14 +255,6 @@ public class RWService {
         l.add(Text.of(TextColors.RED, i.get(Keys.ITEM_LORE).get().get(1).toPlain()));
 
         Map<IGlobalEffect, Float> effects = rw.getEffects();
-        if (!rw.getRestrictedClasses().isEmpty()) {
-            l.add(Text.of(TextColors.DARK_RED, Localization.RESTRICTED_CLASSES));
-            l.add(Text.of(TextColors.GRAY, "- " + rw.getRestrictedClasses().stream().map(PlayerGroup::getName).collect(Collectors.joining(", "))));
-        }
-        if (!rw.getRestrictedClasses().isEmpty()) {
-            l.add(Text.of(TextColors.RED, Localization.ALLOWED_CLASSES));
-            l.add(Text.of(TextColors.GRAY, "- " + rw.getAllowedClasses().stream().map(PlayerGroup::getName).collect(Collectors.joining(", "))));
-        }
         if (rw.getMinLevel() > 1) {
             l.add(Text.of(TextColors.GRAY, Localization.MIN_LEVEL + ": " + rw.getMinLevel()));
         }
@@ -267,7 +264,7 @@ public class RWService {
             Float value = entry.getValue();
             l.add(Text.of(TextColors.AQUA, key.getName() + ": " + value));
         }
-        RebuildRunewordEvent event = new RebuildRunewordEvent(rw,l,i);
+        RebuildRunewordEvent event = new RebuildRunewordEvent(rw, l, i);
         Sponge.getEventManager().post(event);
         i = event.getItemStack();
         i.offer(Keys.ITEM_LORE, event.getLore());
@@ -288,7 +285,7 @@ public class RWService {
                     return true;
                 }
                 if (split.length == 2) {
-                    return ItemStackUtils.checkType(i,split[1]);
+                    return ItemStackUtils.checkType(i, split[1]);
                 }
 
             }
@@ -303,29 +300,52 @@ public class RWService {
         if (rw.getMinLevel() > character.getPrimaryClass().getLevel()) {
             return false;
         }
-        if (!rw.getRestrictedClasses().isEmpty()) {
-            for (ConfigClass configClass : rw.getRestrictedClasses()) {
-                for (ExtendedNClass nClass : character.getClasses()) {
-                    if (nClass.getConfigClass() == configClass) {
+
+        //none
+        for (PlayerGroup playerGroup : rw.getBlockedGroups()) {
+            switch (playerGroup.getPlayerGroupType()) {
+                case RACE:
+                    if (character.getRace() == playerGroup) {
                         return false;
                     }
-                }
-            }
-        }
-        if (!rw.getAllowedClasses().isEmpty()) {
-            boolean k = false;
-            for (ConfigClass configClass : rw.getAllowedClasses()) {
-                for (ExtendedNClass nClass : character.getClasses()) {
-                    if (nClass.getConfigClass() == configClass) {
-                        k = true;
-                        break;
+                    break;
+                case CLASS:
+                    for (ExtendedNClass extendedNClass : character.getClasses()) {
+                        if (extendedNClass.getConfigClass() == playerGroup) {
+                            return false;
+                        }
                     }
-                }
-            }
-            if (!k) {
-                return false;
+                    break;
             }
         }
+
+        //all
+        for (PlayerGroup playerGroup : rw.getRequiredGroups()) {
+            if (playerGroup.getPlayerGroupType() == PlayerGroupType.RACE) {
+                if (character.getRace() != playerGroup) {
+                    return false;
+                }
+            } else if (playerGroup.getPlayerGroupType() == PlayerGroupType.CLASS) {
+                if (!character.hasClass(playerGroup)) {
+                    return false;
+                }
+            }
+        }
+
+        //at least one
+        for (PlayerGroup playerGroup : rw.getAllowedGroups()) {
+            if (playerGroup.getPlayerGroupType() == PlayerGroupType.RACE) {
+                if (character.getRace() == playerGroup) {
+                    return true;
+                }
+            } else if (playerGroup.getPlayerGroupType() == PlayerGroupType.CLASS) {
+                if (character.hasClass(playerGroup)) {
+                    return true;
+                }
+            }
+        }
+
+        //no restrictions
         return true;
     }
 }
