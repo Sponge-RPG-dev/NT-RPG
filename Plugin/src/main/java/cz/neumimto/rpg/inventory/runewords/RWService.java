@@ -14,10 +14,8 @@ import cz.neumimto.rpg.events.RebuildRunewordEvent;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.PlayerGroupType;
-import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import cz.neumimto.rpg.utils.Utils;
 import cz.neumimto.rpg.utils.XORShiftRnd;
@@ -107,15 +105,21 @@ public class RWService {
                 .filter(l -> effectService.isGlobalEffect(l.getKey()))
                 .map(a -> new Pair<>(effectService.getGlobalEffect(a.getKey()), a.getValue()))
                 .collect(HashMap::new, (map, a) -> map.put(a.key, a.value), HashMap::putAll));
-        rw.setBlockedGroups(template.getRestrictedClasses().stream()
-                .filter(groupService::existsClass)
-                .map(groupService::getNClass).collect(Collectors.toSet()));
-        rw.setAllowedGroups(template.getAllowedClasses().stream()
-                .filter(groupService::existsClass)
-                .map(groupService::getNClass).collect(Collectors.toSet()));
-        rw.setRequiredGroups(template.getRequiredGroups().stream()
-                .filter(groupService::existsClass)
-                .map(groupService::getNClass).collect(Collectors.toSet()));
+        rw.setBlockedGroups(template.getBlockedGroups()
+                .stream()
+                .filter(a -> groupService.getByName(a) != null)
+                .map(groupService::getByName)
+                .collect(Collectors.toSet()));
+        rw.setAllowedGroups(template.getAllowedGroups()
+                .stream()
+                .filter(a -> groupService.getByName(a) != null)
+                .map(groupService::getByName)
+                .collect(Collectors.toSet()));
+        rw.setRequiredGroups(template.getRequiredGroups()
+                .stream()
+                .filter(a -> groupService.getByName(a) != null)
+                .map(groupService::getByName)
+                .collect(Collectors.toSet()));
         return rw;
     }
 

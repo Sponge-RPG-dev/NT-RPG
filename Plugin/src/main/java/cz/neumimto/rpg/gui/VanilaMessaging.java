@@ -26,6 +26,7 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.commands.CommandChoose;
 import cz.neumimto.rpg.commands.InfoCommand;
+import cz.neumimto.rpg.configuration.CommandPermissions;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
@@ -36,6 +37,7 @@ import cz.neumimto.rpg.inventory.data.InventoryItemMenuData;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.Rune;
+import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.persistance.DirectAccessDao;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.CharacterBase;
@@ -103,6 +105,9 @@ public class VanilaMessaging implements IPlayerMessage {
 
 	@Inject
 	private RWService rwService;
+
+	@Inject
+	private InfoCommand infoCommand;
 
 	@Override
 	public boolean isClientSideGui() {
@@ -465,6 +470,17 @@ public class VanilaMessaging implements IPlayerMessage {
 		player.openInventory(i, Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
 	}
 
+	public void displayRuneword(IActiveCharacter character, RuneWord rw, boolean linkToRWList) {
+		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
+		if (linkToRWList) {
+			if (character.getPlayer().hasPermission(CommandPermissions.SHOW_RUNEWORD_LIST)) {
+				IoC.get().build(InfoCommand.class).getAliases().get(0);
+				i.query(new SlotPos(0, 0)).offer(back());
+			}
+		}
+	}
+
+
 	private ItemStack createAttributeItem(ICharacterAttribute key, Integer value) {
 		ItemStack of = ItemStack.of(key.getItemRepresentation(), 1);
 		of.offer(Keys.DISPLAY_NAME, Text.of(TextColors.DARK_RED, key.getName()));
@@ -480,20 +496,13 @@ public class VanilaMessaging implements IPlayerMessage {
 	public void onOptionSelect(ClickInventoryEvent event, @First(typeFilter = Player.class) Player player) {
 		if (event.getTargetInventory().getArchetype() == InventoryArchetypes.CHEST ||
 				event.getTargetInventory().getArchetype() == InventoryArchetypes.DOUBLE_CHEST) {
-		//todo inventory.getPlugin
+
+				//todo inventory.getPlugin event.getTargetInventory().getPlugin()
 				List<SlotTransaction> transactions = event.getTransactions();
 
 				if (transactions.size() == 1) {
 					SlotTransaction t = transactions.get(0);
-					Optional<String> s = t.getOriginal().get(NKeys.ANY_STRING);
-					if (s.isPresent()) {
-						if (event instanceof ClickInventoryEvent.Shift) {
-							event.setCancelled(true);
-							return;
-						}
-						player.closeInventory(Cause.of(NamedCause.of("player", player)));
-						Sponge.getCommandManager().process(player, s.get());
-					} else if (t.getOriginal().get(NKeys.MENU_INVENTORY).isPresent()) {
+					if (t.getOriginal().get(NKeys.MENU_INVENTORY).isPresent()) {
 						event.setCancelled(true);
 					}
 				}
