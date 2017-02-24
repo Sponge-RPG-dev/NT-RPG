@@ -288,6 +288,7 @@ public class InventoryService {
         return lore;
     }
 
+    //todo event
     public void onRightClick(IActiveCharacter character, int slot) {
         HotbarObject hotbarObject = character.getHotbar()[slot];
         if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
@@ -396,5 +397,4 @@ public class InventoryService {
         character.setCurrentRune(-1);
 
     }
-
 }

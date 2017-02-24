@@ -65,4 +65,7 @@ public class CommandPermissions {
 
     @ConfigValue
     public static String PARTY_CREATE = "ntrpg.party.create";
+
+    @ConfigValue
+    public static String SHOW_RUNEWORD_LIST = "ntrpg.runewords.showlist";
 }
