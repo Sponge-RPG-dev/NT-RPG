@@ -21,6 +21,7 @@ package cz.neumimto.rpg.gui;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -147,5 +148,25 @@ public class Gui {
 
     public static void displayInitialAttributes(PlayerGroup g, Player target) {
         getMessageTypeOf(target).displayAttributes(target, g);
+    }
+
+    public static void displayRuneword(IActiveCharacter character, RuneWord rw) {
+        getMessageTypeOf(character).displayRuneword(character, rw, true);
+    }
+
+    public static void displayRunewordBlockedGroups(IActiveCharacter character, RuneWord rw) {
+        getMessageTypeOf(character).displayRunewordBlockedGroups(character, rw);
+    }
+
+    public static void displayRunewordRequiredGroups(IActiveCharacter character, RuneWord rw) {
+        getMessageTypeOf(character).displayRunewordRequiredGroups(character, rw);
+    }
+
+    public static void displayRunewordAllowedGroups(IActiveCharacter character, RuneWord rw) {
+        getMessageTypeOf(character).displayRunewordAllowedGroups(character, rw);
+    }
+
+    public static void displayRunewordAllowedItems(IActiveCharacter character, RuneWord rw) {
+        getMessageTypeOf(character).displayRunewordAllowedItems(character, rw);
     }
 }

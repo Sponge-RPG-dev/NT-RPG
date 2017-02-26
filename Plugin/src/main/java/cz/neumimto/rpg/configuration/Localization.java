@@ -29,6 +29,7 @@ public class Localization {
 
     @ConfigValue
     public static String NO_MANA = "Not enough mana";
+
     @ConfigValue
     public static String NO_HP = "Not enough hp";
 
@@ -211,6 +212,7 @@ public class Localization {
 
     @ConfigValue
     public static String SOCKET = "Socketed Item";
+
     @ConfigValue
     public static String CLASS_INVENTORYMENU_FOOTER = "Rightclick for more info, Leftclick for skilltree";
 
@@ -300,4 +302,34 @@ public class Localization {
 
     @ConfigValue
     public static String SKILL_CONFLICTS = "Skill %1 conflicts with %2";
+
+    @ConfigValue
+    public static String RUNE_LIST = "Runes";
+
+    @ConfigValue
+    public static String RUNEWORD_ITEMS_MENU_TOOLTIP = "List of items, which can be used for crafting %1";
+
+    @ConfigValue
+    public static String RUNEWORD_ITEMS_MENU = "Allowed Items";
+
+    @ConfigValue
+    public static String RUNEWORD_ALLOWED_GROUPS_MENU = "Allowed Races or Classes";
+
+    @ConfigValue
+    public static String RUNEWORD_ALLOWED_GROUPS_MENU_TOOLTIP = "At least one of them character has to have";
+
+    @ConfigValue
+    public static String RUNEWORD_REQUIRED_GROUPS_MENU = "Required Races and Classes";
+
+    @ConfigValue
+    public static String RUNEWORD_REQUIRED_GROUPS_MENU_TOOLTIP = "All of them has to character have";
+
+    @ConfigValue
+    public static String RUNEWORD_BLOCKED_GROUPS_MENU = "Blocked Races and Classes";
+
+    @ConfigValue
+    public static String RUNEWORD_BLOCKED_GROUPS_MENU_TOOLTIP = "Any of them has to character have";
+
+    @ConfigValue
+    public static String RUNEWORD_DETAILS_MENU = "Runeword Details";
 }

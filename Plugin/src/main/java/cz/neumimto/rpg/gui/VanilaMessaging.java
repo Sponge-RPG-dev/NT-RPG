@@ -34,6 +34,7 @@ import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.inventory.data.InventoryItemMenuData;
+import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.Rune;
@@ -45,6 +46,7 @@ import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
+import cz.neumimto.rpg.players.groups.PlayerGroupType;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.SkillData;
@@ -55,6 +57,7 @@ import cz.neumimto.rpg.utils.model.CharacterListModel;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.Cause;
@@ -72,6 +75,7 @@ import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
+import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
@@ -248,7 +252,6 @@ public class VanilaMessaging implements IPlayerMessage {
 	}
 
 
-
 	@Override
 	public void showClassInfo(IActiveCharacter character, ConfigClass cc) {
 
@@ -350,13 +353,13 @@ public class VanilaMessaging implements IPlayerMessage {
 	}
 
 	private ItemStack createItemRepresentingGroup(PlayerGroup p) {
-		String s1 = IoC.get().build(InfoCommand.class).getAliases().iterator().next();
+		String s1 = infoCommand.getAliases().iterator().next();
 		ItemStack s = ItemStack.of(p.getItemType(), 1);
 		s.offer(NKeys.MENU_INVENTORY, true);
 		s.offer(Keys.DISPLAY_NAME, Text.of(p.getName(), TextColors.DARK_PURPLE));
 		s.offer(Keys.ITEM_LORE, getItemLore(p.getDescription()));
 		String l = " race ";
-		if (p instanceof ConfigClass) {
+		if (p.getPlayerGroupType() == PlayerGroupType.CLASS) {
 			l = " class ";
 		}
 		s.offer(new InventoryItemMenuData(s1 + l + p.getName()));
@@ -388,7 +391,7 @@ public class VanilaMessaging implements IPlayerMessage {
 		if (g instanceof Race) {
 			l = "race";
 		}
-		of.offer(NKeys.MENU_INVENTORY, true);
+		of.offer(new MenuInventoryData(true));
 		of.offer(Keys.DISPLAY_NAME, Text.of(Localization.BACK, TextColors.WHITE));
 		of.offer(new InventoryItemMenuData("show " + l + " " + g.getName()));
 		i.query(new SlotPos(0, 0)).offer(of);
@@ -437,7 +440,7 @@ public class VanilaMessaging implements IPlayerMessage {
 			ItemStack of = ItemStack.of(ItemTypes.DIAMOND, 1);
 			of.offer(new InventoryItemMenuData("choose race " + race.getName()));
 			of.offer(Keys.DISPLAY_NAME, Text.of(Localization.CONFIRM));
-			i.query(new SlotPos(8,0)).offer(of);
+			i.query(new SlotPos(8, 0)).offer(of);
 		}
 		target.getPlayer().openInventory(i, Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
 	}
@@ -462,7 +465,7 @@ public class VanilaMessaging implements IPlayerMessage {
 			//somehow format them in square-like structure
 			if (x == 7) {
 				x = 1;
-				y ++;
+				y++;
 			} else {
 				x++;
 			}
@@ -470,16 +473,141 @@ public class VanilaMessaging implements IPlayerMessage {
 		player.openInventory(i, Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
 	}
 
+	@Override
 	public void displayRuneword(IActiveCharacter character, RuneWord rw, boolean linkToRWList) {
 		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
+		String cmd = infoCommand.getAliases().get(0);
 		if (linkToRWList) {
 			if (character.getPlayer().hasPermission(CommandPermissions.SHOW_RUNEWORD_LIST)) {
-				IoC.get().build(InfoCommand.class).getAliases().get(0);
-				i.query(new SlotPos(0, 0)).offer(back());
+				i.query(new SlotPos(0, 0)).offer(back(cmd + " runes", Localization.RUNE_LIST));
 			}
 		}
+
+		List<ItemStack> commands = new ArrayList<>();
+		if (!rw.getAllowedItems().isEmpty()) {
+			ItemStack is = ItemStack.of(ItemTypes.IRON_PICKAXE, 1);
+			is.offer(Keys.DISPLAY_NAME, Text.of(Localization.RUNEWORD_ITEMS_MENU));
+			is.offer(Keys.ITEM_LORE,
+					Collections.singletonList(
+							ItemStackUtils.stringToItemTooltip(Localization.RUNEWORD_ITEMS_MENU_TOOLTIP
+									.replaceAll("%1", rw.getName()))
+					)
+			);
+			is.offer(NKeys.ANY_STRING, cmd + " runeword " + rw.getName() + " allowed-items");
+			is.offer(new InventoryItemMenuData(cmd + " runeword " + rw.getName() + " blocked-groups"));
+			commands.add(is);
+		}
+
+		if (!rw.getAllowedGroups().isEmpty()) {
+			ItemStack is = ItemStack.of(ItemTypes.LEATHER_HELMET, 1);
+			is.offer(Keys.DISPLAY_NAME, Text.of(Localization.RUNEWORD_ALLOWED_GROUPS_MENU));
+			is.offer(Keys.ITEM_LORE,
+					Collections.singletonList(
+							ItemStackUtils.stringToItemTooltip(Localization.RUNEWORD_ALLOWED_GROUPS_MENU_TOOLTIP
+									.replaceAll("%1", rw.getName()))
+					)
+			);
+			is.offer(new InventoryItemMenuData(cmd + " runeword " + rw.getName() + " allowed-groups"));
+			commands.add(is);
+		}
+
+		if (!rw.getRequiredGroups().isEmpty()) {
+			ItemStack is = ItemStack.of(ItemTypes.IRON_HELMET, 1);
+			is.offer(Keys.DISPLAY_NAME, Text.of(Localization.RUNEWORD_REQUIRED_GROUPS_MENU));
+			is.offer(Keys.ITEM_LORE,
+					Collections.singletonList(
+							ItemStackUtils.stringToItemTooltip(Localization.RUNEWORD_REQUIRED_GROUPS_MENU_TOOLTIP
+									.replaceAll("%1", rw.getName()))
+					)
+			);
+			is.offer(new InventoryItemMenuData(cmd + " runeword " + rw.getName() + " required-groups"));
+			commands.add(is);
+		}
+
+		if (!rw.getBlockedGroups().isEmpty()) {
+			ItemStack is = ItemStack.of(ItemTypes.BARRIER, 1);
+			is.offer(Keys.DISPLAY_NAME, Text.of(Localization.RUNEWORD_BLOCKED_GROUPS_MENU));
+			is.offer(Keys.ITEM_LORE,
+					Collections.singletonList(
+							ItemStackUtils.stringToItemTooltip(Localization.RUNEWORD_BLOCKED_GROUPS_MENU_TOOLTIP
+									.replaceAll("%1", rw.getName()))
+					)
+			);
+			is.offer(new MenuInventoryData(true));
+			is.offer(new InventoryItemMenuData(cmd + " runeword " + rw.getName() + " blocked-groups"));
+			commands.add(is);
+		}
+
+		for (int q = 0; q < commands.size(); q++) {
+			i.query(new SlotPos(q + 2, 2)).offer(commands.get(q));
+		}
+
+		character.getPlayer().openInventory(i, Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
 	}
 
+
+	@Override
+	public void displayRunewordBlockedGroups(IActiveCharacter character, RuneWord rw) {
+		character.getPlayer().openInventory(displayGroupRequirements(character, rw, rw.getBlockedGroups()),
+				Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
+	}
+
+	@Override
+	public void displayRunewordRequiredGroups(IActiveCharacter character, RuneWord rw) {
+		character.getPlayer().openInventory(displayGroupRequirements(character, rw, rw.getRequiredGroups()),
+				Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
+	}
+
+	@Override
+	public void displayRunewordAllowedGroups(IActiveCharacter character, RuneWord rw) {
+		character.getPlayer().openInventory(displayGroupRequirements(character, rw, rw.getAllowedGroups()),
+				Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
+	}
+
+	@Override
+	public void displayRunewordAllowedItems(IActiveCharacter character, RuneWord rw) {
+
+	}
+
+	private Inventory displayGroupRequirements(IActiveCharacter character, RuneWord rw, Set<PlayerGroup> groups) {
+		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
+		String cmd = infoCommand.getAliases().get(0);
+		i.query(new SlotPos(0, 0)).offer(back(cmd + " runeword " + rw.getName(), Localization.RUNEWORD_DETAILS_MENU));
+
+		List<ItemStack> list = new ArrayList<>();
+		for (PlayerGroup playerGroup : groups) {
+			list.add(runewordRequirementsToItemStack(character, playerGroup));
+		}
+		int x = 0;
+		int y = 0;
+		for (ItemStack itemStack : list) {
+			i.query(new SlotPos(x, y)).offer(itemStack);
+			if (x == 7) {
+				x = 1;
+				y++;
+			} else {
+				x++;
+			}
+		}
+		return i;
+	}
+
+	private ItemStack runewordRequirementsToItemStack(IActiveCharacter character, PlayerGroup playerGroup) {
+		ItemStack is = createItemRepresentingGroup(playerGroup);
+		TextColor color = hasGroup(character, playerGroup);
+		is.offer(Keys.DISPLAY_NAME, Text.of(color, playerGroup.getName()));
+		return is;
+	}
+
+	private TextColor hasGroup(IActiveCharacter character, PlayerGroup playerGroup) {
+		if (playerGroup.getPlayerGroupType() == PlayerGroupType.RACE) {
+			return character.getRace() == playerGroup ? TextColors.GREEN : TextColors.RED;
+		}
+		if (playerGroup.getPlayerGroupType() == PlayerGroupType.CLASS) {
+			return character.hasClass(playerGroup) ? TextColors.GREEN : TextColors.RED;
+		}
+		return null;
+	}
 
 	private ItemStack createAttributeItem(ICharacterAttribute key, Integer value) {
 		ItemStack of = ItemStack.of(key.getItemRepresentation(), 1);
@@ -496,19 +624,25 @@ public class VanilaMessaging implements IPlayerMessage {
 	public void onOptionSelect(ClickInventoryEvent event, @First(typeFilter = Player.class) Player player) {
 		if (event.getTargetInventory().getArchetype() == InventoryArchetypes.CHEST ||
 				event.getTargetInventory().getArchetype() == InventoryArchetypes.DOUBLE_CHEST) {
+			//todo inventory.getPlugin
+			List<SlotTransaction> transactions = event.getTransactions();
 
-				//todo inventory.getPlugin event.getTargetInventory().getPlugin()
-				List<SlotTransaction> transactions = event.getTransactions();
-
-				if (transactions.size() == 1) {
-					SlotTransaction t = transactions.get(0);
-					if (t.getOriginal().get(NKeys.MENU_INVENTORY).isPresent()) {
+			if (transactions.size() == 1) {
+				SlotTransaction t = transactions.get(0);
+				Optional<String> s = t.getOriginal().get(NKeys.ANY_STRING);
+				if (s.isPresent()) {
+					if (event instanceof ClickInventoryEvent.Shift) {
 						event.setCancelled(true);
+						return;
 					}
+					player.closeInventory(Cause.of(NamedCause.of("player", player)));
+					Sponge.getCommandManager().process(player, s.get());
+				} else if (t.getOriginal().get(NKeys.MENU_INVENTORY).isPresent()) {
+					event.setCancelled(true);
 				}
 			}
+		}
 
 	}
-
 
 }

@@ -135,7 +135,7 @@ public class RWService {
     }
 
     public RuneWord getRuneword(String name) {
-        return runewords.get(name);
+        return runewords.get(name.toLowerCase());
     }
 
     public List<Text> addRune(List<Text> lore, Rune rune) {

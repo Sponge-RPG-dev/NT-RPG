@@ -27,6 +27,8 @@ import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.configuration.CommandPermissions;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.inventory.runewords.RWService;
+import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.persistance.SkillTreeDao;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.CharacterService;
@@ -70,6 +72,9 @@ public class InfoCommand extends CommandBase {
 
 	@Inject
 	private GroupService groupService;
+
+	@Inject
+	private RWService rwService;
 
 	public InfoCommand() {
 		setHelp(CommandLocalization.PLAYERINFO_HELP);
@@ -191,10 +196,28 @@ public class InfoCommand extends CommandBase {
 			if (player.hasPermission("ntrpg.runes.showlist")) {
 				Gui.sendListOfRunes(characterService.getCharacter(player.getUniqueId()));
 			}
-		} else if (args[0].equalsIgnoreCase("runewords")) {
+		} else if (args[0].equalsIgnoreCase("runeword")) {
 			Player player = (Player) commandSource;
-			if (player.hasPermission("ntrpg.runewords.showlist")) {
-				//todo
+			if (args.length == 2) {
+				RuneWord rw = rwService.getRuneword(args[1]);
+				if (rw != null) {
+					Gui.displayRuneword(characterService.getCharacter(player.getUniqueId()), rw);
+				}
+			} else if (args.length == 3) {
+				RuneWord rw = rwService.getRuneword(args[1]);
+				if (rw != null) {
+					IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+					String a = args[2];
+					if (a.equalsIgnoreCase("allowed-items")) {
+						Gui.displayRunewordAllowedItems(character, rw);
+					} else if (a.equalsIgnoreCase("allowed-groups")) {
+						Gui.displayRunewordAllowedGroups(character, rw);
+					} else if (a.equalsIgnoreCase("required-groups")) {
+						Gui.displayRunewordRequiredGroups(character, rw);
+					} else if (a.equalsIgnoreCase("blocked-groups")) {
+						Gui.displayRunewordBlockedGroups(character, rw);
+					}
+				}
 			}
 		} else if (args[0].equalsIgnoreCase("attributes-initial")) {
 			PlayerGroup byName = groupService.getByName(args[1]);
@@ -220,15 +243,6 @@ public class InfoCommand extends CommandBase {
 			commandSource.sendMessage(getUsage(commandSource));
 		}
 		return CommandResult.success();
-	}
-
-	private void printClassList(IActiveCharacter character) {
-
-	}
-
-	//TODO create inventory menus
-	private void printGuildList(CommandSource commandSource, String nextcmd) {
-
 	}
 
 	private void printList(CommandSource commandSource, Collection<? extends PlayerGroup> group, String nextcmd) {
