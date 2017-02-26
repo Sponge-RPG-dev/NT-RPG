@@ -7,7 +7,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 /**
  * Created by NeumimTo on 31.12.2015.
  */
-public abstract class HotbarObject {
+public abstract class HotbarObject extends CustomItem {
 
     public static HotbarObject EMPTYHAND_OR_CONSUMABLE = null;
     protected IHotbarObjectType type;

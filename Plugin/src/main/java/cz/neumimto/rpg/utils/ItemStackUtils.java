@@ -125,6 +125,8 @@ public class ItemStackUtils {
         addAll(Arrays.asList(DIAMOND_HELMET,GOLDEN_HELMET,IRON_HELMET,CHAINMAIL_HELMET,LEATHER_HELMET));
     }};
 
+    public static Set<ItemType> any_armor = new HashSet<>();
+
     public static Map<String, ItemRestriction> restrictionMap = new HashMap<>();
 
     protected static String ID = "id";
@@ -355,6 +357,10 @@ public class ItemStackUtils {
     }
 
     static {
+        any_armor.addAll(helmet);
+        any_armor.addAll(chestplates);
+        any_armor.addAll(leggings);
+        any_armor.addAll(boots);
         restrictionMap.put("L", ItemRestriction.Level);
         restrictionMap.put("G", ItemRestriction.Group);
     }
