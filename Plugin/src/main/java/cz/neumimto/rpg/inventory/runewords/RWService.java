@@ -99,8 +99,14 @@ public class RWService {
         rw.setName(template.getName());
         rw.setRunes(template.getRunes().stream()./*filter(this::existsRune).*/map(this::getRune).collect(Collectors.toList()));
         rw.setMinLevel(template.getMinLevel());
-        Set<ItemType> types = new HashSet<>();
-        rw.setAllowedItems(types);
+
+        rw.setAllowedItems(template.getAllowedItems()
+                .stream()
+                .map(a -> game.getRegistry().getType(ItemType.class, a))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toSet()));
+
         rw.setEffects(template.getEffects().entrySet().stream()
                 .filter(l -> effectService.isGlobalEffect(l.getKey()))
                 .map(a -> new Pair<>(effectService.getGlobalEffect(a.getKey()), a.getValue()))
@@ -351,5 +357,9 @@ public class RWService {
 
         //no restrictions
         return true;
+    }
+
+    public List<ItemType> getAllowedRuneItemTypes() {
+        return allowedRuneItemTypes;
     }
 }
