@@ -24,6 +24,7 @@ import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
+import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
@@ -208,7 +209,7 @@ public class PreloadCharacter implements IActiveCharacter {
 
     @Override
     public float getCharacterProperty(int index) {
-        if (index == DefaultProperties.walk_speed) { //lets player move around even without character
+        if (index == DefaultProperties.walk_speed) { //let player move around even without character
             return 0.2f;
         }
         return 0;
@@ -587,5 +588,10 @@ public class PreloadCharacter implements IActiveCharacter {
     @Override
     public void setPreferedMessageType(MessageType type) {
 
+    }
+
+    @Override
+    public boolean hasClass(PlayerGroup configClass) {
+        return false;
     }
 }

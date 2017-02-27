@@ -68,4 +68,7 @@ public class CommandPermissions {
 
     @ConfigValue
     public static String SHOW_RUNEWORD_LIST = "ntrpg.runewords.showlist";
+
+    @ConfigValue
+    public static String SWOW_RUNEWORD_COMBINATION = "ntrpg.runeword.showcombination";
 }

@@ -5,22 +5,22 @@ import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.DataManipulatorBuilder;
-import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableSingleData;
-import org.spongepowered.api.data.manipulator.mutable.common.AbstractSingleData;
+import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableBooleanData;
+import org.spongepowered.api.data.manipulator.mutable.common.AbstractBooleanData;
 import org.spongepowered.api.data.merge.MergeFunction;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.api.data.persistence.InvalidDataException;
-import org.spongepowered.api.data.value.immutable.ImmutableValue;
 import org.spongepowered.api.data.value.mutable.Value;
 
 import java.util.Optional;
 
-public class MenuInventoryData extends AbstractSingleData<Boolean, MenuInventoryData, MenuInventoryData.Immutable> {
-	public MenuInventoryData() {
-		super(true, NKeys.MENU_INVENTORY);
+public class MenuInventoryData extends AbstractBooleanData<MenuInventoryData, MenuInventoryData.Immutable> {
+	public MenuInventoryData(Boolean b) {
+		super(b, NKeys.MENU_INVENTORY, true);
 	}
+
 	@Override
-	protected Value<?> getValueGetter() {
+	protected Value<Boolean> getValueGetter() {
 		return Sponge.getRegistry().getValueFactory().createValue(NKeys.MENU_INVENTORY, getValue());
 	}
 
@@ -47,12 +47,12 @@ public class MenuInventoryData extends AbstractSingleData<Boolean, MenuInventory
 
 	@Override
 	public MenuInventoryData copy() {
-		return new MenuInventoryData();
+		return new MenuInventoryData(getValue());
 	}
 
 	@Override
 	public Immutable asImmutable() {
-		return new Immutable();
+		return new Immutable(getValue());
 	}
 
 	@Override
@@ -60,19 +60,14 @@ public class MenuInventoryData extends AbstractSingleData<Boolean, MenuInventory
 		return 1;
 	}
 
-	public static class Immutable extends AbstractImmutableSingleData<Boolean, Immutable, MenuInventoryData> {
-		public Immutable() {
-			super(true, NKeys.MENU_INVENTORY);
-		}
-
-		@Override
-		protected ImmutableValue<?> getValueGetter() {
-			return Sponge.getRegistry().getValueFactory().createValue(NKeys.MENU_INVENTORY, getValue()).asImmutable();
+	public static class Immutable extends AbstractImmutableBooleanData<Immutable, MenuInventoryData> {
+		public Immutable(Boolean b) {
+			super(b, NKeys.MENU_INVENTORY, true);
 		}
 
 		@Override
 		public MenuInventoryData asMutable() {
-			return new MenuInventoryData();
+			return new MenuInventoryData(getValue());
 		}
 
 		@Override
@@ -88,7 +83,7 @@ public class MenuInventoryData extends AbstractSingleData<Boolean, MenuInventory
 
 		@Override
 		public MenuInventoryData create() {
-			return new MenuInventoryData();
+			return new MenuInventoryData(true);
 		}
 
 		@Override

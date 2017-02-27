@@ -41,7 +41,6 @@ public class Weapon extends Charm {
     protected boolean current;
     private Map<IGlobalEffect, Integer> effects = new HashMap<>();
     private ItemStack itemStack;
-    private boolean isRuneword;
     private int level;
     private Map<ItemRestriction,Object> restrictionSet = new HashMap<>();
 
@@ -84,14 +83,6 @@ public class Weapon extends Charm {
 
     public void setCurrent(boolean current) {
         this.current = current;
-    }
-
-    public boolean isRuneword() {
-        return isRuneword;
-    }
-
-    public void setRuneword(boolean runeword) {
-        isRuneword = runeword;
     }
 
     @Override

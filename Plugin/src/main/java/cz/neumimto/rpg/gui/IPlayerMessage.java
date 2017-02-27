@@ -20,6 +20,7 @@ package cz.neumimto.rpg.gui;
 
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -84,4 +85,14 @@ public interface IPlayerMessage {
     void sendClassInfo(IActiveCharacter target, ConfigClass configClass);
 
     void displayAttributes(Player target, PlayerGroup group);
+
+    void displayRuneword(IActiveCharacter character, RuneWord rw, boolean linkToRWList);
+
+    void displayRunewordBlockedGroups(IActiveCharacter character, RuneWord rw);
+
+    void displayRunewordRequiredGroups(IActiveCharacter character, RuneWord rw);
+
+    void displayRunewordAllowedGroups(IActiveCharacter character, RuneWord rw);
+
+    void displayRunewordAllowedItems(IActiveCharacter character, RuneWord rw);
 }

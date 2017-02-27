@@ -39,11 +39,15 @@ import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextFormat;
+import org.spongepowered.api.text.format.TextStyles;
+import org.spongepowered.api.util.Color;
 
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.spongepowered.api.item.ItemTypes.*;
@@ -120,6 +124,8 @@ public class ItemStackUtils {
     public static Set<ItemType> helmet = new HashSet<ItemType>() {{
         addAll(Arrays.asList(DIAMOND_HELMET,GOLDEN_HELMET,IRON_HELMET,CHAINMAIL_HELMET,LEATHER_HELMET));
     }};
+
+    public static Set<ItemType> any_armor = new HashSet<>();
 
     public static Map<String, ItemRestriction> restrictionMap = new HashMap<>();
 
@@ -351,6 +357,10 @@ public class ItemStackUtils {
     }
 
     static {
+        any_armor.addAll(helmet);
+        any_armor.addAll(chestplates);
+        any_armor.addAll(leggings);
+        any_armor.addAll(boots);
         restrictionMap.put("L", ItemRestriction.Level);
         restrictionMap.put("G", ItemRestriction.Group);
     }
@@ -386,5 +396,13 @@ public class ItemStackUtils {
                 .keyValue(Keys.DISPLAY_NAME, Text.of(name))
                 .build();
 
+    }
+
+    public static Text stringToItemTooltip(String string) {
+        return Text.of(TextColors.GOLD, TextStyles.ITALIC, string);
+    }
+
+    public static List<Text> stringsToItemTooltip(List<String> string) {
+        return string.stream().map(ItemStackUtils::stringToItemTooltip).collect(Collectors.toList());
     }
 }

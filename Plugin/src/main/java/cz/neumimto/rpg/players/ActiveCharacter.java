@@ -416,7 +416,7 @@ public class ActiveCharacter implements IActiveCharacter {
 
     @Override
     public boolean canWear(ItemStack armor) {
-        return getAllowedArmor().contains(armor.getItem().getId());
+        return getAllowedArmor().contains(armor.getItem());
     }
 
     @Override

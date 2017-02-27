@@ -93,7 +93,7 @@ public class GuiHelper {
 
 	public static ItemStack back(String command, String displayName) {
 		ItemStack of = ItemStack.of(ItemTypes.PAPER, 1);
-		of.offer(Keys.DISPLAY_NAME, Text.of(Localization.BACK, TextColors.WHITE));
+		of.offer(Keys.DISPLAY_NAME, Text.of(displayName, TextColors.WHITE));
 		of.offer(new InventoryItemMenuData(command));
 		return of;
 	}
