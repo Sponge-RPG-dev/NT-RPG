@@ -49,6 +49,7 @@ import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
 import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
@@ -121,7 +122,13 @@ public class InventoryListener {
             Slot i = slotTransaction.getSlot();
             int index = ((SlotAdapter)i).getOrdinal();
             if (Utils.isHotbar(index)) {
-                inventoryService.initializeHotbar(character,index, slotTransaction.getFinal().createStack());
+                ItemStack a = slotTransaction.getFinal().createStack();
+                if (!inventoryService.canUse(a, character)) {
+                    event.setCancelled(true);
+                    return;
+                } else {
+                    inventoryService.initializeHotbar(character, index, a);
+                }
             }
         }
     }

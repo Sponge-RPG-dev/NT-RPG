@@ -267,30 +267,6 @@ public class InfoCommand extends CommandBase {
 		commandSource.sendMessage(Text.join(texts));
 	}
 
-	private void printRaceList(CommandSource commandSource, String nextcmd) {
-		Collection<? extends PlayerGroup> group = groupService.getRaces();
-		printList(commandSource, group, nextcmd);
-	}
-
-	private void printRaceInfor(CommandSource commandSource, String[] args) {
-		Race race = groupService.getRace(args[1]);
-		if (race == Race.Default) {
-			commandSource.sendMessage(Text.of(Localization.NON_EXISTING_GROUP));
-			return;
-		}
-		Text text = Text.of();
-		Text.Builder builder = text.builder().append(Text.of("Name : " + race.getName()))
-				.append(Text.of("Weapons :    "));
-		for (Map.Entry<ItemType, Double> e : race.getWeapons().entrySet()) {
-			builder.append(Text.of(e.getValue())).append(Text.of(", "));
-		}
-		builder.append(Text.of("Armor  :    "));
-		for (ItemType s : race.getAllowedArmor()) {
-			builder.append(Text.of(s.toString()));
-		}
-		commandSource.sendMessage(builder.build());
-	}
-
 	private void printPlayerInfo(CommandSource commandSource, String[] args, Player player) {
 		game.getScheduler().createTaskBuilder().async().execute(() -> {
 			List<CharacterBase> characters = characterService.getPlayersCharacters(player.getUniqueId());

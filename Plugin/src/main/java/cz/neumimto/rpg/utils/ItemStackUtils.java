@@ -18,16 +18,21 @@
 
 package cz.neumimto.rpg.utils;
 
+import com.flowpowered.math.TrigMath;
+import com.flowpowered.math.imaginary.Quaterniond;
+import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.ItemRestriction;
+import cz.neumimto.rpg.skills.SkillNodes;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
 import org.spongepowered.api.data.manipulator.mutable.item.EnchantmentData;
+import org.spongepowered.api.data.type.PickupRules;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.Item;
@@ -50,6 +55,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 import static org.spongepowered.api.item.ItemTypes.*;
 import static org.spongepowered.api.item.ItemTypes.LEATHER_HELMET;
 
@@ -348,11 +355,19 @@ public class ItemStackUtils {
         return str;
     }
 
-    public static void dropItem(Player player, ItemStack itemStack) {
-        Entity optional = player.getLocation().getExtent().createEntity(EntityTypes.ITEM, player.getLocation().getPosition());
+    public static void dropItem(Player p, ItemStack itemStack) {
+        Entity optional = p.getLocation().getExtent()
+                .createEntity(EntityTypes.ITEM, p.getLocation()
+                        .getPosition()
+                        .add(TrigMath.cos((p.getRotation().getX() - 90) % 360) * 0.2,1,
+                             TrigMath.sin((p.getRotation().getX() - 90) % 360) * 0.2));
+        Vector3d rotation = p.getRotation();
+        Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();
         Item item = (Item) optional;
-            item.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
-            player.getLocation().getExtent().spawnEntity(item, Cause.of(NamedCause.of("player", player)));
+        item.offer(Keys.VELOCITY, direction.mul(0.33));
+        item.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
+        item.offer(Keys.PICKUP_DELAY, 75);
+        p.getLocation().getExtent().spawnEntity(item, Cause.of(NamedCause.of("player", p)));
 
     }
 

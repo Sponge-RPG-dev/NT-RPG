@@ -48,6 +48,7 @@ import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.*;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
+import org.spongepowered.api.item.inventory.property.SlotPos;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
@@ -122,9 +123,9 @@ public class InventoryService {
 
     public void initializeHotbar(IActiveCharacter character, int slot, ItemStack toPickup) {
         Player player = character.getPlayer();
-        Hotbar query = player.getInventory().query(Hotbar.class);
-        int selectedSlotIndex = query.getSelectedSlotIndex();
-        Optional<Slot> slot1 = query.getSlot(new SlotIndex(slot));
+        Hotbar hotbar = player.getInventory().query(Hotbar.class);
+        int selectedSlotIndex = hotbar.getSelectedSlotIndex();
+        Optional<Slot> slot1 = hotbar.getSlot(new SlotIndex(slot));
         if (slot1.isPresent()) {
             Slot s = slot1.get();
             Optional<ItemStack> peek = s.peek();
@@ -136,12 +137,6 @@ public class InventoryService {
                     character.getHotbar()[slot] = HotbarObject.EMPTYHAND_OR_CONSUMABLE;
                 }
                 if (toPickup != null) {
-	                if (!canUse(toPickup, character)) {
-		                ItemStackUtils.dropItem(character.getPlayer(), toPickup);
-		                s.poll();
-		                character.getHotbar()[slot] = HotbarObject.EMPTYHAND_OR_CONSUMABLE;
-		                return;
-	                }
 	                HotbarObject o = getHotbarObject(character, toPickup);
                     if (o != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
                         o.onEquip(toPickup, character);
@@ -159,8 +154,8 @@ public class InventoryService {
                     hotbarObject.setSlot(slot);
                     character.getHotbar()[slot] = hotbarObject;
 	                if (!canUse(i, character)) {
-		                ItemStackUtils.dropItem(character.getPlayer(), i);
-		                s.poll();
+                        ItemStack itemStack = slot1.get().poll().get();
+                        ItemStackUtils.dropItem(character.getPlayer(), itemStack);
 		                character.getHotbar()[slot] = HotbarObject.EMPTYHAND_OR_CONSUMABLE;
 		                return;
 	                }
@@ -397,6 +392,8 @@ public class InventoryService {
             }
         }
     }
+
+
 
 	public boolean canUse(ItemStack itemStack, IActiveCharacter character) {
 		if (ItemStackUtils.any_armor.contains(itemStack.getItem())) {
