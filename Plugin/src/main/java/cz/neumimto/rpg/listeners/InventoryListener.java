@@ -36,6 +36,7 @@ import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.action.InteractEvent;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.entity.spawn.EntitySpawnCause;
 import org.spongepowered.api.event.entity.ChangeEntityEquipmentEvent;
@@ -44,9 +45,11 @@ import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.type.Exclude;
 import org.spongepowered.api.event.filter.type.Include;
 import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
 import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
@@ -119,7 +122,13 @@ public class InventoryListener {
             Slot i = slotTransaction.getSlot();
             int index = ((SlotAdapter)i).getOrdinal();
             if (Utils.isHotbar(index)) {
-                inventoryService.initializeHotbar(character,index, slotTransaction.getFinal().createStack());
+                ItemStack a = slotTransaction.getFinal().createStack();
+                if (!inventoryService.canUse(a, character)) {
+                    event.setCancelled(true);
+                    return;
+                } else {
+                    inventoryService.initializeHotbar(character, index, a);
+                }
             }
         }
     }
@@ -147,4 +156,5 @@ public class InventoryListener {
         hotbarObject.onUnEquip(character);
         inventoryService.initializeHotbar(character, hotbar.getSelectedSlotIndex());
     }
+
 }

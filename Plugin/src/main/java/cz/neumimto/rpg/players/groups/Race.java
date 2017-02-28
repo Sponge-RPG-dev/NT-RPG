@@ -36,6 +36,7 @@ public class Race extends PlayerGroup {
 
     public Race(String name) {
         super(name);
+        playerGroupType = PlayerGroupType.RACE;
     }
 
     public List<ISkill> getSkills() {

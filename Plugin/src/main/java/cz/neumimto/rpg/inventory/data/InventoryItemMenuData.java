@@ -16,7 +16,7 @@ import org.spongepowered.api.data.value.mutable.Value;
 import java.util.Optional;
 
 /**
- * Created by ja on 13.11.2016.
+ * Created by NeumiMTo on 13.11.2016.
  */
 public class InventoryItemMenuData extends AbstractSingleData<String, InventoryItemMenuData, InventoryItemMenuData.Immutable> {
 	public InventoryItemMenuData(String s) {

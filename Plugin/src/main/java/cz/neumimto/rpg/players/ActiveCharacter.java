@@ -416,7 +416,7 @@ public class ActiveCharacter implements IActiveCharacter {
 
     @Override
     public boolean canWear(ItemStack armor) {
-        return getAllowedArmor().contains(armor.getItem().getId());
+        return getAllowedArmor().contains(armor.getItem());
     }
 
     @Override
@@ -658,6 +658,16 @@ public class ActiveCharacter implements IActiveCharacter {
     @Override
     public void setPreferedMessageType(MessageType type) {
         this.getCharacterBase().setMessageType(type);
+    }
+
+    @Override
+    public boolean hasClass(PlayerGroup configClass) {
+        for (ExtendedNClass aClass : classes) {
+            if (aClass.getConfigClass() == configClass) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

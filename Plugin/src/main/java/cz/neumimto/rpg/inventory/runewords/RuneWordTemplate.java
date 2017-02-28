@@ -10,8 +10,9 @@ public final class RuneWordTemplate {
 
     private String name;
     private int minLevel;
-    private List<String> restrictedClasses;
-    private List<String> allowedClasses;
+    private List<String> blockedGroups;
+    private List<String> allowedGroups;
+    private List<String> requiredGroups;
     private List<String> runes;
     private Map<String, Float> effects;
     private List<String> allowedItems;
@@ -36,12 +37,12 @@ public final class RuneWordTemplate {
         this.minLevel = minLevel;
     }
 
-    public List<String> getRestrictedClasses() {
-        return restrictedClasses;
+    public List<String> getBlockedGroups() {
+        return blockedGroups;
     }
 
-    public void setRestrictedClasses(List<String> restrictedClasses) {
-        this.restrictedClasses = restrictedClasses;
+    public void setBlockedGroups(List<String> blockedGroups) {
+        this.blockedGroups = blockedGroups;
     }
 
     public List<String> getRunes() {
@@ -68,11 +69,19 @@ public final class RuneWordTemplate {
         this.allowedItems = allowedItems;
     }
 
-    public List<String> getAllowedClasses() {
-        return allowedClasses;
+    public List<String> getAllowedGroups() {
+        return allowedGroups;
     }
 
-    public void setAllowedClasses(List<String> allowedClasses) {
-        this.allowedClasses = allowedClasses;
+    public void setAllowedGroups(List<String> allowedGroups) {
+        this.allowedGroups = allowedGroups;
+    }
+
+    public List<String> getRequiredGroups() {
+        return requiredGroups;
+    }
+
+    public void setRequiredGroups(List<String> requiredGroups) {
+        this.requiredGroups = requiredGroups;
     }
 }

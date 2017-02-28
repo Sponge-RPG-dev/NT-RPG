@@ -18,16 +18,21 @@
 
 package cz.neumimto.rpg.utils;
 
+import com.flowpowered.math.TrigMath;
+import com.flowpowered.math.imaginary.Quaterniond;
+import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.ItemRestriction;
+import cz.neumimto.rpg.skills.SkillNodes;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
 import org.spongepowered.api.data.manipulator.mutable.item.EnchantmentData;
+import org.spongepowered.api.data.type.PickupRules;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.Item;
@@ -39,13 +44,19 @@ import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextFormat;
+import org.spongepowered.api.text.format.TextStyles;
+import org.spongepowered.api.util.Color;
 
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 import static org.spongepowered.api.item.ItemTypes.*;
 import static org.spongepowered.api.item.ItemTypes.LEATHER_HELMET;
 
@@ -120,6 +131,8 @@ public class ItemStackUtils {
     public static Set<ItemType> helmet = new HashSet<ItemType>() {{
         addAll(Arrays.asList(DIAMOND_HELMET,GOLDEN_HELMET,IRON_HELMET,CHAINMAIL_HELMET,LEATHER_HELMET));
     }};
+
+    public static Set<ItemType> any_armor = new HashSet<>();
 
     public static Map<String, ItemRestriction> restrictionMap = new HashMap<>();
 
@@ -342,15 +355,27 @@ public class ItemStackUtils {
         return str;
     }
 
-    public static void dropItem(Player player, ItemStack itemStack) {
-        Entity optional = player.getLocation().getExtent().createEntity(EntityTypes.ITEM, player.getLocation().getPosition());
+    public static void dropItem(Player p, ItemStack itemStack) {
+        Entity optional = p.getLocation().getExtent()
+                .createEntity(EntityTypes.ITEM, p.getLocation()
+                        .getPosition()
+                        .add(TrigMath.cos((p.getRotation().getX() - 90) % 360) * 0.2,1,
+                             TrigMath.sin((p.getRotation().getX() - 90) % 360) * 0.2));
+        Vector3d rotation = p.getRotation();
+        Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();
         Item item = (Item) optional;
-            item.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
-            player.getLocation().getExtent().spawnEntity(item, Cause.of(NamedCause.of("player", player)));
+        item.offer(Keys.VELOCITY, direction.mul(0.33));
+        item.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
+        item.offer(Keys.PICKUP_DELAY, 75);
+        p.getLocation().getExtent().spawnEntity(item, Cause.of(NamedCause.of("player", p)));
 
     }
 
     static {
+        any_armor.addAll(helmet);
+        any_armor.addAll(chestplates);
+        any_armor.addAll(leggings);
+        any_armor.addAll(boots);
         restrictionMap.put("L", ItemRestriction.Level);
         restrictionMap.put("G", ItemRestriction.Group);
     }
@@ -386,5 +411,13 @@ public class ItemStackUtils {
                 .keyValue(Keys.DISPLAY_NAME, Text.of(name))
                 .build();
 
+    }
+
+    public static Text stringToItemTooltip(String string) {
+        return Text.of(TextColors.GOLD, TextStyles.ITALIC, string);
+    }
+
+    public static List<Text> stringsToItemTooltip(List<String> string) {
+        return string.stream().map(ItemStackUtils::stringToItemTooltip).collect(Collectors.toList());
     }
 }

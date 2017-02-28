@@ -2,6 +2,7 @@ package cz.neumimto.rpg.inventory.runewords;
 
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.players.groups.ConfigClass;
+import cz.neumimto.rpg.players.groups.PlayerGroup;
 import org.spongepowered.api.item.ItemType;
 
 import java.util.*;
@@ -14,8 +15,10 @@ public class RuneWord {
     private String name;
     private List<Rune> runes = new ArrayList<>();
     private int minLevel;
-    private Set<ConfigClass> restrictedClasses = new HashSet<>();
-    private Set<ConfigClass> allowedClasses = new HashSet<>();
+    private Set<PlayerGroup> blockedGroups = new HashSet<>();
+    private Set<PlayerGroup> allowedGroups = new HashSet<>();
+    private Set<PlayerGroup> requiredGroups = new HashSet<>();
+
     private Map<IGlobalEffect, Float> effects = new HashMap<>();
     private Set<ItemType> allowedItems = new HashSet<>();
 
@@ -43,20 +46,28 @@ public class RuneWord {
         this.minLevel = minLevel;
     }
 
-    public Set<ConfigClass> getRestrictedClasses() {
-        return restrictedClasses;
+    public Set<PlayerGroup> getBlockedGroups() {
+        return blockedGroups;
     }
 
-    public void setRestrictedClasses(Set<ConfigClass> restrictedClasses) {
-        this.restrictedClasses = restrictedClasses;
+    public void setBlockedGroups(Set<PlayerGroup> blockedGroups) {
+        this.blockedGroups = blockedGroups;
     }
 
-    public Set<ConfigClass> getAllowedClasses() {
-        return allowedClasses;
+    public Set<PlayerGroup> getAllowedGroups() {
+        return allowedGroups;
     }
 
-    public void setAllowedClasses(Set<ConfigClass> allowedClasses) {
-        this.allowedClasses = allowedClasses;
+    public void setAllowedGroups(Set<PlayerGroup> allowedGroups) {
+        this.allowedGroups = allowedGroups;
+    }
+
+    public Set<PlayerGroup> getRequiredGroups() {
+        return requiredGroups;
+    }
+
+    public void setRequiredGroups(Set<PlayerGroup> requiredGroups) {
+        this.requiredGroups = requiredGroups;
     }
 
     public Map<IGlobalEffect, Float> getEffects() {
