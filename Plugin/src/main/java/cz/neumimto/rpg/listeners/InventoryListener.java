@@ -86,6 +86,7 @@ public class InventoryListener {
         if (player.get(Keys.GAME_MODE).get() == GameModes.CREATIVE)
             return;
         inventoryService.initializeHotbar(character);
+        inventoryService.initializeArmorSlots(character);
 
     }
 

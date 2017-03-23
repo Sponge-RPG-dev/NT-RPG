@@ -26,9 +26,12 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.utils.Utils;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
@@ -53,6 +56,7 @@ public class PlayerPropertyService {
         LAST_ID++;
         return t;
     };
+
     @Inject
     private Logger logger;
 
@@ -60,6 +64,8 @@ public class PlayerPropertyService {
     private Map<Integer, Float> defaults = new HashMap<>();
     private Map<String, Short> persistant = new HashMap<>();
     private Map<String, ICharacterAttribute> attributes = new HashMap<>();
+
+    private float[] maxValues;
 
     public void registerProperty(String name, short id) {
         if (PluginConfig.DEBUG)
@@ -111,7 +117,51 @@ public class PlayerPropertyService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
+
+    public void loadMaximalServerPropertyValues() {
+        maxValues = new float[LAST_ID];
+        for (int i = 0; i < maxValues.length; i++) {
+            maxValues[i] = Float.MAX_VALUE;
+        }
+
+
+        Path path = Paths.get(NtRpgPlugin.workingDir, "max_server_property_values.properties");
+        File file = path.toFile();
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        Set<String> missing = new HashSet<>();
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+            Properties properties = new Properties();
+            properties.load(fileInputStream);
+            for (String s : persistant.keySet()) {
+                Object o = properties.get(s);
+                if (o == null) {
+                    missing.add(s);
+                } else {
+                    maxValues[getIdByName(s)] = (float) o;
+                }
+            }
+
+            if (!missing.isEmpty()) {
+                missing.forEach(a -> properties.put(a, Float.MAX_VALUE));
+                FileOutputStream fileOutputStream = FileUtils.openOutputStream(file, false);
+                properties.store(fileOutputStream, null);
+                fileOutputStream.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 
     public void setupDefaultProperties(IActiveCharacter character) {
         if (character.isStub())
@@ -154,5 +204,13 @@ public class PlayerPropertyService {
         if (f == null)
             return 0;
         return f;
+    }
+
+    public float getMaxPropertyValue(int index) {
+        return maxValues[index];
+    }
+
+    public float getMaxPropertyValue(short index) {
+        return maxValues[index];
     }
 }

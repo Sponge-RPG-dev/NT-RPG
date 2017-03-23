@@ -49,7 +49,7 @@ public class DamageBonus extends EffectBase {
     public void onApply() {
         super.onApply();
         IActiveCharacter character = (IActiveCharacter) getConsumer();
-        character.setCharacterProperty(DefaultProperties.weapon_damage_bonus, character.getCharacterProperty(DefaultProperties.weapon_damage_bonus) + getBonusDamage());
+        character.setCharacterProperty(DefaultProperties.weapon_damage_bonus, getGlobalScope().characterService.getCharacterProperty(character, DefaultProperties.weapon_damage_bonus) + getBonusDamage());
         getGlobalScope().damageService.recalculateCharacterWeaponDamage(character);
     }
 
@@ -57,7 +57,7 @@ public class DamageBonus extends EffectBase {
     public void onRemove() {
         super.onRemove();
         IActiveCharacter character = (IActiveCharacter) getConsumer();
-        character.setCharacterProperty(DefaultProperties.weapon_damage_bonus, character.getCharacterProperty(DefaultProperties.weapon_damage_bonus) - getBonusDamage());
+        character.setCharacterProperty(DefaultProperties.weapon_damage_bonus, getGlobalScope().characterService.getCharacterProperty(character, DefaultProperties.weapon_damage_bonus) - getBonusDamage());
         getGlobalScope().damageService.recalculateCharacterWeaponDamage(character);
     }
 }

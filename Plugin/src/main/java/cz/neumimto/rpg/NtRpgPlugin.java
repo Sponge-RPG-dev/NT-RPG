@@ -30,6 +30,7 @@ import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.players.properties.PlayerPropertyService;
 import cz.neumimto.rpg.utils.FileUtils;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
@@ -54,7 +55,7 @@ import java.util.Optional;
 /**
  * Created by NeumimTo on 29.4.2015.
  */
-@Plugin(id = "nt-rpg", version = "1.0.5", name = "NT-Rpg", dependencies = {
+@Plugin(id = "nt-rpg", version = "1.0.6", name = "NT-Rpg", dependencies = {
         @Dependency(id = "MinecraftGuiServer", optional = true),
         @Dependency(id = "nt-core", version = "1.7",optional = false)
 })
@@ -124,6 +125,7 @@ public class NtRpgPlugin {
         if (PluginConfig.DEBUG) {
             Sponge.getEventManager().registerListeners(this, ioc.build(DebugListener.class));
         }
+        IoC.get().build(PlayerPropertyService.class).loadMaximalServerPropertyValues();
         double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
         logger.info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
     }

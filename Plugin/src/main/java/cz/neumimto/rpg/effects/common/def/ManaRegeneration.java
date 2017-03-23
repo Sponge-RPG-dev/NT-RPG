@@ -66,7 +66,7 @@ public class ManaRegeneration extends EffectBase {
         if (current >= max)
             return;
         double regen = character.getMana().getRegen()
-                + character.getCharacterProperty(DefaultProperties.mana_regen_mult) * character.getLevel();
+                + getGlobalScope().characterService.getCharacterProperty(character, DefaultProperties.mana_regen_mult) * character.getLevel();
         current += regen;
         ManaRegainEvent event = new ManaRegainEvent(character);
         if (current >= max) {

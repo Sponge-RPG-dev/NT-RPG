@@ -22,6 +22,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.skills.NDamageType;
@@ -46,6 +47,9 @@ public class DamageService {
     @Inject
     public EntityService entityService;
 
+    @Inject
+    private CharacterService characterService;
+
     public BiFunction<Double, Double, Double> DamageArmorReductionFactor = (damage, armor) -> armor / (armor + 10 * damage);
 
     private Map<ItemType, Short> map = new HashMap<>();
@@ -54,22 +58,22 @@ public class DamageService {
     public double getCharacterItemDamage(IActiveCharacter character, ItemType type) {
         if (character.isStub())
             return 1;
-        double base = character.getBaseWeaponDamage(type) + character.getCharacterProperty(DefaultProperties.weapon_damage_bonus);
+        double base = character.getBaseWeaponDamage(type) + characterService.getCharacterProperty(character, DefaultProperties.weapon_damage_bonus);
         if (map.containsKey(type)) {
-            base += character.getCharacterProperty(map.get(type));
+            base += characterService.getCharacterProperty(character, map.get(type));
         } else return 1;
         if (ItemStackUtils.isSword(type)) {
-            base *= character.getCharacterProperty(DefaultProperties.swords_damage_mult);
+            base *= characterService.getCharacterProperty(character, DefaultProperties.swords_damage_mult);
         } else if (ItemStackUtils.isAxe(type)) {
-            base *= character.getCharacterProperty(DefaultProperties.axes_damage_mult);
+            base *= characterService.getCharacterProperty(character, DefaultProperties.axes_damage_mult);
         } else if (ItemStackUtils.isPickaxe(type)) {
-            base *= character.getCharacterProperty(DefaultProperties.pickaxes_damage_mult);
+            base *= characterService.getCharacterProperty(character, DefaultProperties.pickaxes_damage_mult);
         } else if (ItemStackUtils.isHoe(type)) {
-            base *= character.getCharacterProperty(DefaultProperties.hoes_damage_mult);
+            base *= characterService.getCharacterProperty(character, DefaultProperties.hoes_damage_mult);
         } else if (ItemStackUtils.isBow(type)) {
-            base *= character.getCharacterProperty(DefaultProperties.bows_meele_damage_mult);
+            base *= characterService.getCharacterProperty(character, DefaultProperties.bows_meele_damage_mult);
         } else if (ItemStackUtils.isStaff(type)) {
-            base *= character.getCharacterProperty(DefaultProperties.staffs_damage_mult);
+            base *= characterService.getCharacterProperty(character, DefaultProperties.staffs_damage_mult);
         }
         return base;
     }
@@ -86,15 +90,15 @@ public class DamageService {
 
     public double getCharacterResistance(IActiveCharacter character, DamageType source) {
         if (source == DamageTypes.ATTACK)
-            return character.getCharacterProperty(DefaultProperties.physical_damage_protection_mult);
+            return characterService.getCharacterProperty(character, DefaultProperties.physical_damage_protection_mult);
         if (source == DamageTypes.FIRE)
-            return character.getCharacterProperty(DefaultProperties.fire_damage_protection_mult);
+            return characterService.getCharacterProperty(character, DefaultProperties.fire_damage_protection_mult);
         if (source == DamageTypes.MAGIC)
-            return character.getCharacterProperty(DefaultProperties.magic_damage_protection_mult);
+            return characterService.getCharacterProperty(character, DefaultProperties.magic_damage_protection_mult);
         if (source == NDamageType.LIGHTNING)
-            return character.getCharacterProperty(DefaultProperties.lightning_damage_protection_mult);
+            return characterService.getCharacterProperty(character, DefaultProperties.lightning_damage_protection_mult);
         if (source == NDamageType.ICE)
-            return character.getCharacterProperty(DefaultProperties.ice_damage_protection_mult);
+            return characterService.getCharacterProperty(character, DefaultProperties.ice_damage_protection_mult);
         return 1;
     }
 
@@ -112,15 +116,15 @@ public class DamageService {
 
     public double getCharacterBonusDamage(IActiveCharacter character, DamageType source) {
         if (source == DamageTypes.ATTACK)
-            return character.getCharacterProperty(DefaultProperties.physical_damage_bonus_mult);
+            return characterService.getCharacterProperty(character, DefaultProperties.physical_damage_bonus_mult);
         if (source == DamageTypes.FIRE)
-            return character.getCharacterProperty(DefaultProperties.fire_damage_bonus_mult);
+            return characterService.getCharacterProperty(character, DefaultProperties.fire_damage_bonus_mult);
         if (source == DamageTypes.MAGIC)
-            return character.getCharacterProperty(DefaultProperties.magic_damage_bonus_mult);
+            return characterService.getCharacterProperty(character, DefaultProperties.magic_damage_bonus_mult);
         if (source == NDamageType.LIGHTNING)
-            return character.getCharacterProperty(DefaultProperties.lightning_damage_bonus_mult);
+            return characterService.getCharacterProperty(character, DefaultProperties.lightning_damage_bonus_mult);
         if (source == NDamageType.ICE)
-            return character.getCharacterProperty(DefaultProperties.ice_damage_bonus_mult);
+            return characterService.getCharacterProperty(character, DefaultProperties.ice_damage_bonus_mult);
         return 0;
     }
 

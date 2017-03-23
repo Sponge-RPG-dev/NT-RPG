@@ -41,14 +41,15 @@ import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
-import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
-import org.spongepowered.api.event.item.inventory.TargetContainerEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.*;
+import org.spongepowered.api.item.inventory.Carrier;
+import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
+import org.spongepowered.api.item.inventory.equipment.EquipmentInventory;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
-import org.spongepowered.api.item.inventory.property.SlotPos;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
@@ -168,6 +169,51 @@ public class InventoryService {
                 } else {
                     character.getHotbar()[slot] = HotbarObject.EMPTYHAND_OR_CONSUMABLE;
                 }
+            }
+        }
+    }
+
+    public void initializeArmorSlots(IActiveCharacter character) {
+        Optional<ItemStack> chestplate = character.getPlayer().getChestplate();
+        ItemStack is = null;
+        if (chestplate.isPresent()) {
+            is = chestplate.get();
+            if (!canWear(is, character)) {
+                character.getPlayer().setLeggings(null);
+                ItemStackUtils.dropItem(character.getPlayer(), is);
+            } else {
+
+            }
+        }
+
+        Optional<ItemStack> helmet = character.getPlayer().getHelmet();
+        if (helmet.isPresent()) {
+            is = helmet.get();
+            if (!canWear(is, character)) {
+                character.getPlayer().setHelmet(null);
+                ItemStackUtils.dropItem(character.getPlayer(), is);
+            } else {
+
+            }
+        }
+        Optional<ItemStack> boots = character.getPlayer().getBoots();
+        if (boots.isPresent()) {
+            is = boots.get();
+            if (!canWear(is, character)) {
+                character.getPlayer().setBoots(null);
+                ItemStackUtils.dropItem(character.getPlayer(), is);
+            } else {
+
+            }
+        }
+        Optional<ItemStack> leggings = character.getPlayer().getLeggings();
+        if (leggings.isPresent()) {
+            is = leggings.get();
+            if (!canWear(is, character)) {
+                character.getPlayer().setLeggings(null);
+                ItemStackUtils.dropItem(character.getPlayer(), is);
+            } else {
+
             }
         }
     }
@@ -393,14 +439,38 @@ public class InventoryService {
         }
     }
 
+    public void reinitializePlayerInventory(IActiveCharacter character) {
+        Inventory i = character.getPlayer().getInventory();
+        EquipmentInventory inventory = character.getPlayer().getInventory().query(EquipmentInventory.class);
+        for (Integer integer : character.getSlotsToReinitialize()) {
+            //todo
+        }
+        character.getSlotsToReinitialize().clear();
+    }
 
 
+    public boolean canWear(ItemStack itemStack, IActiveCharacter character) {
+        if (ItemStackUtils.any_armor.contains(itemStack.getItem())) {
+            if (!character.canWear(itemStack)) {
+                return false;
+            }
+        }
+        Optional<List<Text>> lore = itemStack.get(Keys.ITEM_LORE);
+        if (lore.isPresent()) {
+            RuneWord rw = rwService.getRuneword(lore.get());
+            if (rw != null) {
+                if (!rwService.canUse(rw, character)) {
+                    return false;
+                }
+            } else {
+                //todo custom items
+            }
+        }
+        return true;
+    }
+    
 	public boolean canUse(ItemStack itemStack, IActiveCharacter character) {
-		if (ItemStackUtils.any_armor.contains(itemStack.getItem())) {
-			if (!character.canWear(itemStack)) {
-				return false;
-			}
-		} else if (ItemStackUtils.weapons.contains(itemStack.getItem())) {
+		if (ItemStackUtils.weapons.contains(itemStack.getItem())) {
 			if (!character.canUse(itemStack.getItem())) {
 				return false;
 			}
@@ -428,4 +498,7 @@ public class InventoryService {
         character.setCurrentRune(-1);
 
     }
+
+
+
 }

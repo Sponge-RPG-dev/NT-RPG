@@ -357,9 +357,9 @@ public class CharacterService {
 	 */
 	public void updateMaxMana(IActiveCharacter character) {
 		IReservable mana = character.getMana();
-		float max_mana = character.getCharacterProperty(DefaultProperties.max_mana) - character.getCharacterProperty(DefaultProperties.reserved_mana);
-		float actreserved = character.getCharacterProperty(DefaultProperties.reserved_mana);
-		float reserved = character.getCharacterProperty(DefaultProperties.reserved_mana_multiplier);
+		float max_mana = getCharacterProperty(character, DefaultProperties.max_mana) - getCharacterProperty(character, DefaultProperties.reserved_mana);
+		float actreserved = getCharacterProperty(character, DefaultProperties.reserved_mana);
+		float reserved = getCharacterProperty(character, DefaultProperties.reserved_mana_multiplier);
 		float maxval = max_mana - (actreserved * reserved);
 		character.getMana().setMaxValue(maxval);
 	}
@@ -370,9 +370,9 @@ public class CharacterService {
 	 * @param character
 	 */
 	public void updateMaxHealth(IActiveCharacter character) {
-		float max_health = character.getCharacterProperty(DefaultProperties.max_health) - character.getCharacterProperty(DefaultProperties.reserved_health);
-		float actreserved = character.getCharacterProperty(DefaultProperties.reserved_health);
-		float reserved = character.getCharacterProperty(DefaultProperties.reserved_health_multiplier);
+		float max_health = getCharacterProperty(character, DefaultProperties.max_health) - getCharacterProperty(character, DefaultProperties.reserved_health);
+		float actreserved = getCharacterProperty(character, DefaultProperties.reserved_health);
+		float reserved = getCharacterProperty(character, DefaultProperties.reserved_health_multiplier);
 		float maxval = max_health - (actreserved * reserved);
 		if (maxval <= 0) {
 			maxval = 1;
@@ -876,7 +876,7 @@ public class CharacterService {
 	 * @param character
 	 */
 	public void updateWalkSpeed(IActiveCharacter character) {
-		double speed = character.getCharacterProperty(DefaultProperties.walk_speed);
+		double speed = getCharacterProperty(character, DefaultProperties.walk_speed);
 		character.getPlayer().offer(Keys.WALKING_SPEED, speed);
 	}
 
@@ -957,7 +957,7 @@ public class CharacterService {
 		int level = aClass.getLevel();
 
 		if (!onlyinit)
-			exp = exp * character.getCharacterProperty(DefaultProperties.experiences_mult);
+			exp = exp * getCharacterProperty(character, DefaultProperties.experiences_mult);
 		double total = aClass.getExperiences();
 		double lvlexp = aClass.getExperiencesFromLevel();
 		double[] levels = aClass.getConfigClass().getLevels();
@@ -1082,5 +1082,15 @@ public class CharacterService {
 		updateMaxHealth(character);
 		updateAll(character).run();
 	}
+
+	/**
+	 *
+	 * Unlike ActiveCharacter#getProperty this method checks for maximal allowed value, defined in configfile.
+	 * @see PlayerPropertyService#loadMaximalServerPropertyValues()
+	 */
+	public float getCharacterProperty(IActiveCharacter character, int index) {
+		return Math.min(playerPropertyService.getMaxPropertyValue(index), character.getCharacterProperty(index));
+	}
+
 }
 

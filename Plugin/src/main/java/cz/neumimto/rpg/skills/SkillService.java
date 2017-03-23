@@ -28,6 +28,7 @@ import cz.neumimto.rpg.events.skills.SkillPostUsageEvent;
 import cz.neumimto.rpg.events.skills.SkillPrepareEvent;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.persistance.SkillTreeDao;
+import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.scripting.JSLoader;
@@ -60,6 +61,9 @@ public class SkillService {
 
     @Inject
     private Game game;
+
+    @Inject
+    private CharacterService characterService;
 
     private Map<String, ISkill> skills = new ConcurrentHashMap<>();
 
@@ -107,7 +111,7 @@ public class SkillService {
         if (level < 0)
             //this should never happen
             return SkillResult.WRONG_DATA;
-        level += character.getCharacterProperty(DefaultProperties.all_skills_bonus);
+        level += characterService.getCharacterProperty(character, DefaultProperties.all_skills_bonus);
         Long aLong = character.getCooldowns().get(esi.getSkill().getName());
         long servertime = System.currentTimeMillis();
         if (aLong != null && aLong > servertime) {
@@ -122,8 +126,8 @@ public class SkillService {
         game.getEventManager().post(event);
         if (event.isCancelled())
             return SkillResult.FAIL;
-        double hpcost = event.getRequiredHp() * character.getCharacterProperty(DefaultProperties.health_cost_reduce);
-        double manacost = event.getRequiredMana() * character.getCharacterProperty(DefaultProperties.mana_cost_reduce);
+        double hpcost = event.getRequiredHp() * characterService.getCharacterProperty(character, DefaultProperties.health_cost_reduce);
+        double manacost = event.getRequiredMana() * characterService.getCharacterProperty(character, DefaultProperties.mana_cost_reduce);
         //todo float staminacost =
         if (character.getHealth().getValue() > hpcost) {
             if (character.getMana().getValue() >= manacost) {
@@ -141,7 +145,7 @@ public class SkillService {
                             HealthData healthData = character.getPlayer().getHealthData();
                         } else {
                             character.getHealth().setValue(newval);
-                            newCd = eventt.getCooldown() * character.getCharacterProperty(DefaultProperties.cooldown_reduce);
+                            newCd = eventt.getCooldown() * characterService.getCharacterProperty(character, DefaultProperties.cooldown_reduce);
                             character.getMana().setValue(character.getMana().getValue() - event.getRequiredMana());
                             long cd = (long) newCd;
                             character.getCooldowns().put(esi.getSkill().getName(), cd + servertime);

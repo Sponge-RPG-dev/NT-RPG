@@ -18,57 +18,61 @@
 
 package cz.neumimto.rpg.players;
 
+import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 
 /**
  * Created by NeumimTo on 30.12.2014.
  */
 public class Mana implements IReservable {
-    private final IActiveCharacter activeCharacter;
+    private final IActiveCharacter character;
+    private CharacterService characterService;
 
     public Mana(IActiveCharacter activeCharacter) {
-        this.activeCharacter = activeCharacter;
+        this.character = activeCharacter;
+        this.characterService = IoC.get().build(CharacterService.class);
     }
 
     @Override
     public double getMaxValue() {
-        return activeCharacter.getCharacterProperty(DefaultProperties.max_mana);
+        return characterService.getCharacterProperty(character, DefaultProperties.max_mana);
     }
 
     @Override
     public void setMaxValue(double f) {
-        activeCharacter.setCharacterProperty(DefaultProperties.max_mana, (float) f);
+        character.setCharacterProperty(DefaultProperties.max_mana, (float) f);
     }
 
     @Override
     public void setReservedAmnout(float f) {
-        activeCharacter.setCharacterProperty(DefaultProperties.reserved_mana, f);
+        character.setCharacterProperty(DefaultProperties.reserved_mana, f);
     }
 
     @Override
     public double getReservedAmount() {
-        return activeCharacter.getCharacterProperty(DefaultProperties.reserved_mana);
+        return characterService.getCharacterProperty(character, DefaultProperties.reserved_mana);
     }
 
     @Override
     public double getValue() {
-        return activeCharacter.getCharacterProperty(DefaultProperties.mana);
+        return characterService.getCharacterProperty(character, DefaultProperties.mana);
     }
 
     @Override
     public void setValue(double f) {
-        if (activeCharacter.getMana().getMaxValue() < f)
-            f = activeCharacter.getMana().getMaxValue();
-        activeCharacter.setCharacterProperty(DefaultProperties.mana, (float) f);
+        if (character.getMana().getMaxValue() < f)
+            f = character.getMana().getMaxValue();
+        character.setCharacterProperty(DefaultProperties.mana, (float) f);
     }
 
     @Override
     public double getRegen() {
-        return activeCharacter.getCharacterProperty(DefaultProperties.mana_regen);
+        return characterService.getCharacterProperty(character, DefaultProperties.mana_regen);
     }
 
     @Override
     public void setRegen(float f) {
-        activeCharacter.setCharacterProperty(DefaultProperties.mana_regen, f);
+        character.setCharacterProperty(DefaultProperties.mana_regen, f);
     }
 }

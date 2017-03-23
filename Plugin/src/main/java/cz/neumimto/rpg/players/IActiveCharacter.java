@@ -37,6 +37,7 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -246,4 +247,8 @@ public interface IActiveCharacter extends IEntity<Player> {
     void setPreferedMessageType(MessageType type);
 
     boolean hasClass(PlayerGroup configClass);
+
+    List<Integer> getSlotsToReinitialize();
+
+    void setSlotsToReinitialize(List<Integer> slotsToReinitialize);
 }

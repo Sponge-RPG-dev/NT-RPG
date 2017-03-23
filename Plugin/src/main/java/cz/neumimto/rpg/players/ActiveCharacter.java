@@ -82,6 +82,7 @@ public class ActiveCharacter implements IActiveCharacter {
     private transient int socketing;
     private transient Map<String, Integer> transientAttributes = new HashMap<>();
     private transient boolean openedinv = false;
+    private transient List<Integer> slotsToReinitialize;
 
     public ActiveCharacter(Player pl, CharacterBase base) {
         this.pl = pl;
@@ -671,6 +672,16 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
+    public List<Integer> getSlotsToReinitialize() {
+        return slotsToReinitialize;
+    }
+
+    @Override
+    public void setSlotsToReinitialize(List<Integer> slotsToReinitialize) {
+        this.slotsToReinitialize = slotsToReinitialize;
+    }
+
+    @Override
     public int hashCode() {
         return getPlayer().getUniqueId().hashCode() * 37;
     }
@@ -680,7 +691,7 @@ public class ActiveCharacter implements IActiveCharacter {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ActiveCharacter that = (ActiveCharacter) o;
-        if (that.getCharacterBase().getId() == this.getCharacterBase().getId())
+        if (that.getCharacterBase().getId().equals(this.getCharacterBase().getId()))
             return true;
         return false;
     }
