@@ -62,7 +62,6 @@ public class PlayerPropertyService {
 
     private Map<String, Short> idMap = new HashMap<>();
     private Map<Integer, Float> defaults = new HashMap<>();
-    private Map<String, Short> persistant = new HashMap<>();
     private Map<String, ICharacterAttribute> attributes = new HashMap<>();
 
     private float[] maxValues;
@@ -71,10 +70,6 @@ public class PlayerPropertyService {
         if (PluginConfig.DEBUG)
             logger.info("Found property " + name + "; assigned id: " + id);
         idMap.put(name, id);
-    }
-
-    public Map<String, Short> getPersistantProperties() {
-        return persistant;
     }
 
     public int getIdByName(String name) {
@@ -140,17 +135,17 @@ public class PlayerPropertyService {
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
             Properties properties = new Properties();
             properties.load(fileInputStream);
-            for (String s : persistant.keySet()) {
+            for (String s : idMap.keySet()) {
                 Object o = properties.get(s);
                 if (o == null) {
                     missing.add(s);
                 } else {
-                    maxValues[getIdByName(s)] = (float) o;
+                    maxValues[getIdByName(s)] = Float.parseFloat(o.toString());
                 }
             }
 
             if (!missing.isEmpty()) {
-                missing.forEach(a -> properties.put(a, Float.MAX_VALUE));
+                missing.forEach(a -> properties.put(a, "10000"));
                 FileOutputStream fileOutputStream = FileUtils.openOutputStream(file, false);
                 properties.store(fileOutputStream, null);
                 fileOutputStream.close();
@@ -213,4 +208,6 @@ public class PlayerPropertyService {
     public float getMaxPropertyValue(short index) {
         return maxValues[index];
     }
+
+
 }

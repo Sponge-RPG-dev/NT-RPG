@@ -594,4 +594,14 @@ public class PreloadCharacter implements IActiveCharacter {
     public boolean hasClass(PlayerGroup configClass) {
         return false;
     }
+
+    @Override
+    public List<Integer> getSlotsToReinitialize() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void setSlotsToReinitialize(List<Integer> slotsToReinitialize) {
+
+    }
 }

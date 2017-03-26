@@ -1,17 +1,26 @@
 package cz.neumimto.rpg.inventory.data;
 
 import com.google.common.reflect.TypeToken;
+import com.google.gson.internal.Primitives;
+import cz.neumimto.rpg.inventory.items.CustomItem;
 import org.spongepowered.api.data.DataQuery;
+import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.key.KeyFactory;
+import org.spongepowered.api.data.value.mutable.MapValue;
 import org.spongepowered.api.data.value.mutable.Value;
+import org.yaml.snakeyaml.tokens.ValueToken;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by ja on 26.12.2016.
  */
 public class NKeys {
 
-	public static Key<Value<String>> ANY_STRING = KeyFactory.makeSingleKey(TypeToken.of(String.class),
+	public static final Key<Value<String>> ANY_STRING = KeyFactory.makeSingleKey(TypeToken.of(String.class),
 			new TypeToken<Value<String>>(){},
 			DataQuery.of('.', "n.anystring"),
 			"n:any_string",
@@ -19,10 +28,35 @@ public class NKeys {
 	);
 
 
-	public static Key<Value<Boolean>> MENU_INVENTORY = KeyFactory.makeSingleKey(TypeToken.of(Boolean.class),
+	public static final Key<Value<Boolean>> MENU_INVENTORY = KeyFactory.makeSingleKey(TypeToken.of(Boolean.class),
 			new TypeToken<Value<Boolean>>(){},
 			DataQuery.of('.', "n.menuinventory"),
 			"n:menu_inventory",
 			"Inventory menu"
+	);
+
+
+	public static final Key<Value<Integer>> CUSTOM_ITEM_DATA_ITEM_LEVEL = KeyFactory
+			.makeSingleKey(TypeToken.of(Integer.class),
+			new TypeToken<Value<Integer>>(){},
+			DataQuery.of('.', "n.customitemdatalevel"),
+			"n:custom_idem_data_level",
+			"ntrpg custom item level"
+	);
+
+	public static final Key<MapValue<String, Float>> CUSTOM_ITEM_DATA_ENCHANTEMENTS = KeyFactory.makeMapKey(
+			new TypeToken<Map<String, Float>>() { },
+			new TypeToken<MapValue<String, Float>>() { },
+			DataQuery.of('.', "n.customitemdataenchantements"),
+			"n:custom_idem_data_enchantements",
+			"ntrpg custom item enchantements"
+	);
+
+	public static final Key<MapValue<String, Integer>> CUSTOM_ITEM_DATA_RESTRICTIONS = KeyFactory.makeMapKey(
+			new TypeToken<Map<String, Integer>>() { },
+			new TypeToken<MapValue<String, Integer>>() { },
+			DataQuery.of('.', "n.customitemdatarestrictions"),
+			"n:custom_idem_data_restrictions",
+			"ntrpg custom item restrictions"
 	);
 }

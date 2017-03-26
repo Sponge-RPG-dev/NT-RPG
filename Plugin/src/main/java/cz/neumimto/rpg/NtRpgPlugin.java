@@ -24,6 +24,7 @@ import cz.neumimto.core.FindPersistenceContextEvent;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.configuration.Settings;
+import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.inventory.data.InventoryItemMenuData;
 import cz.neumimto.rpg.listeners.DebugListener;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
@@ -60,46 +61,53 @@ import java.util.Optional;
         @Dependency(id = "nt-core", version = "1.7",optional = false)
 })
 public class NtRpgPlugin {
-    public static String workingDir;
-    public static File pluginjar;
-    public static GlobalScope GlobalScope;
-    public static final String namedCause = "ntrpg";
-    @Inject
-    @ConfigDir(sharedRoot = false)
-    private Path config;
+	public static String workingDir;
+	public static File pluginjar;
+	public static GlobalScope GlobalScope;
+	public static final String namedCause = "ntrpg";
+
+	@Inject
+	@ConfigDir(sharedRoot = false)
+	private Path config;
 
 
-    @Inject
-    public Logger logger;
+	@Inject
+	public Logger logger;
 
 
-    @Listener
-    public void preinit(GamePreInitializationEvent e) {
-        Sponge.getDataManager().register(InventoryItemMenuData.class,
-                InventoryItemMenuData.Immutable.class,
-                new InventoryItemMenuData.Builder());
-    }
+	@Listener
+	public void preinit(GamePreInitializationEvent e) {
+		Sponge.getDataManager().register(InventoryItemMenuData.class,
+				InventoryItemMenuData.Immutable.class,
+				new InventoryItemMenuData.Builder());
 
-    @Listener
-    public void registerEntities(FindPersistenceContextEvent event) {
-        event.getClasses().add(CharacterBase.class);
-        event.getClasses().add(BaseCharacterAttribute.class);
-        event.getClasses().add(CharacterSkill.class);
-        event.getClasses().add(CharacterClass.class);
-    }
+		Sponge.getDataManager().register(CustomItemData.class,
+				CustomItemData.Immutable.class,
+				new CustomItemData.Builder());
 
-    @Listener
-    public void onPluginLoad(GamePostInitializationEvent event) {
-        long start = System.nanoTime();
-        IoC ioc = IoC.get();
-        Game game = Sponge.getGame();
-        Optional<PluginContainer> gui = game.getPluginManager().getPlugin("MinecraftGUIServer");
-        if (gui.isPresent()) {
-            //ioc.registerInterfaceImplementation(MinecraftGuiService.class, game.getServiceManager().provide(MinecraftGuiService.class).get());
-        } else {
-            Settings.ENABLED_GUI = false;
-        }
-        ioc.registerDependency(this);
+	}
+
+	@Listener
+	public void registerEntities(FindPersistenceContextEvent event) {
+		event.getClasses().add(CharacterBase.class);
+		event.getClasses().add(BaseCharacterAttribute.class);
+		event.getClasses().add(CharacterSkill.class);
+		event.getClasses().add(CharacterClass.class);
+
+	}
+
+	@Listener
+	public void onPluginLoad(GamePostInitializationEvent event) {
+		long start = System.nanoTime();
+		IoC ioc = IoC.get();
+		Game game = Sponge.getGame();
+		Optional<PluginContainer> gui = game.getPluginManager().getPlugin("MinecraftGUIServer");
+		if (gui.isPresent()) {
+			//ioc.registerInterfaceImplementation(MinecraftGuiService.class, game.getServiceManager().provide(MinecraftGuiService.class).get());
+		} else {
+			Settings.ENABLED_GUI = false;
+		}
+		ioc.registerDependency(this);
 
         try {
             workingDir = config.toString();

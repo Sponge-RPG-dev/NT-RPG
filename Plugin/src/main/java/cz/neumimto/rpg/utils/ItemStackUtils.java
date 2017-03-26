@@ -376,8 +376,6 @@ public class ItemStackUtils {
         any_armor.addAll(chestplates);
         any_armor.addAll(leggings);
         any_armor.addAll(boots);
-        restrictionMap.put("L", ItemRestriction.Level);
-        restrictionMap.put("G", ItemRestriction.Group);
     }
 
     public static boolean checkType(ItemType i, String item) {
