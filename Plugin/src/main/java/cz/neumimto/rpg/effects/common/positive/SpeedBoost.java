@@ -64,11 +64,6 @@ public class SpeedBoost extends EffectBase {
     }
 
     @Override
-    public void onStack(int level) {
-        super.onStack(level);
-    }
-
-    @Override
     public void onApply() {
         super.onApply();
         character.setCharacterProperty(DefaultProperties.walk_speed, getGlobalScope().characterService.getCharacterProperty(character, DefaultProperties.walk_speed) + speedbonus);

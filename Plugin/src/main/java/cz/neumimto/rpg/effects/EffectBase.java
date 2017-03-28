@@ -30,7 +30,7 @@ import java.util.UUID;
 /**
  * Created by NeumimTo.
  */
-public class EffectBase implements IEffect {
+public class EffectBase<T extends IEffect> implements IEffect<T> {
     protected Set<EffectType> effectTypes = new HashSet<>();
     private boolean stackable = false;
     private String name;
@@ -126,6 +126,7 @@ public class EffectBase implements IEffect {
         this.effectSource = effectSource;
     }
 
+    @Override
     public Set<PotionEffect> getPotions() {
         return potions;
     }
@@ -142,13 +143,6 @@ public class EffectBase implements IEffect {
     @Override
     public long getTimeLeft(long currenttime) {
         return timeCreated + duration - currenttime;
-    }
-
-    @Override
-    public void onStack(int level) {
-        for (PotionEffect e : getPotions()) {
-            getConsumer().addPotionEffect(e.getType(), e.getAmplifier(), e.getDuration());
-        }
     }
 
     @Override

@@ -25,6 +25,7 @@ import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
@@ -41,6 +42,7 @@ import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Carrier;
@@ -54,7 +56,9 @@ import org.spongepowered.api.item.inventory.type.CarriedInventory;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyle;
 import org.spongepowered.api.text.format.TextStyles;
+import org.spongepowered.common.item.inventory.custom.CustomContainer;
 
 import java.util.*;
 
@@ -66,13 +70,15 @@ public class InventoryService {
 
 
     public static ItemType ITEM_SKILL_BIND = ItemTypes.BLAZE_POWDER;
+
     public static TextColor LORE_FIRSTLINE = TextColors.AQUA;
     public static TextColor SOCKET_COLOR = TextColors.GRAY;
     public static TextColor ENCHANTMENT_COLOR = TextColors.BLUE;
     public static TextColor LEVEL_COLOR = TextColors.YELLOW;
     public static TextColor RESTRICTIONS = TextColors.LIGHT_PURPLE;
 
-
+	public static TextColor LORE_COLOR = TextColors.GOLD;
+	public static TextStyle LORE_STYLE = TextStyles.ITALIC;
 
     @Inject
     private SkillService skillService;
@@ -179,10 +185,11 @@ public class InventoryService {
         if (chestplate.isPresent()) {
             is = chestplate.get();
             if (!canWear(is, character)) {
-                character.getPlayer().setLeggings(null);
+                character.getPlayer().setChestplate(null);
                 ItemStackUtils.dropItem(character.getPlayer(), is);
             } else {
-
+                Map<IGlobalEffect, Integer> itemEffects = ItemStackUtils.getItemEffects(is);
+                effectService.applyGlobalEffectsAsEnchantments(itemEffects, character);
             }
         }
 
@@ -193,7 +200,8 @@ public class InventoryService {
                 character.getPlayer().setHelmet(null);
                 ItemStackUtils.dropItem(character.getPlayer(), is);
             } else {
-
+                Map<IGlobalEffect, Integer> itemEffects = ItemStackUtils.getItemEffects(is);
+                effectService.applyGlobalEffectsAsEnchantments(itemEffects, character);
             }
         }
         Optional<ItemStack> boots = character.getPlayer().getBoots();
@@ -203,7 +211,8 @@ public class InventoryService {
                 character.getPlayer().setBoots(null);
                 ItemStackUtils.dropItem(character.getPlayer(), is);
             } else {
-
+                Map<IGlobalEffect, Integer> itemEffects = ItemStackUtils.getItemEffects(is);
+                effectService.applyGlobalEffectsAsEnchantments(itemEffects, character);
             }
         }
         Optional<ItemStack> leggings = character.getPlayer().getLeggings();
@@ -213,7 +222,8 @@ public class InventoryService {
                 character.getPlayer().setLeggings(null);
                 ItemStackUtils.dropItem(character.getPlayer(), is);
             } else {
-
+                Map<IGlobalEffect, Integer> itemEffects = ItemStackUtils.getItemEffects(is);
+                effectService.applyGlobalEffectsAsEnchantments(itemEffects, character);
             }
         }
     }
@@ -498,7 +508,6 @@ public class InventoryService {
         character.setCurrentRune(-1);
 
     }
-
 
 
 }

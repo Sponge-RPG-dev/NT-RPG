@@ -12,6 +12,7 @@ public class AllSkillsBonus extends EffectBase{
     public static final String name = "All skills";
     IActiveCharacter character1;
     private int bonus;
+
     public AllSkillsBonus(IActiveCharacter character, long duration, float level) {
         character1 = character;
         setDuration(duration);

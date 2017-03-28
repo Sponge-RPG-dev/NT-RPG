@@ -20,6 +20,7 @@ package cz.neumimto.rpg.effects;
 
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
+import org.spongepowered.api.effect.potion.PotionEffect;
 
 import java.util.Set;
 import java.util.UUID;
@@ -27,7 +28,7 @@ import java.util.UUID;
 /**
  * Created by NeumimTo on 17.1.2015.
  */
-public interface IEffect {
+public interface IEffect<T extends IEffect> {
     static GlobalScope getGlobalScope() {
         return NtRpgPlugin.GlobalScope;
     }
@@ -36,7 +37,11 @@ public interface IEffect {
 
     void onApply();
 
-    void onStack(int level);
+    default void onStack(T effect) {
+        for (PotionEffect e : getPotions()) {
+            getConsumer().addPotionEffect(e.getType(), e.getAmplifier(), e.getDuration());
+        }
+    }
 
     void onRemove();
 
@@ -63,6 +68,8 @@ public interface IEffect {
     void setLastTickTime(long currTime);
 
     void onTick();
+
+    Set<PotionEffect> getPotions();
 
     long getExpireTime();
 

@@ -196,7 +196,8 @@ public class RWService {
         ItemStack.Builder builder = ItemStack.builder();
         ItemStack stack = builder.quantity(1).itemType(type).build();
         stack.offer(Keys.DISPLAY_NAME, Text.of(TextColors.GOLD, r.getName()));
-        stack.offer(Keys.ITEM_LORE, Arrays.asList(Text.of(InventoryService.LORE_FIRSTLINE, Localization.RUNE), Text.of(TextColors.DARK_GRAY, Localization.RUNE_FOOTER)));
+        stack.offer(Keys.ITEM_LORE, Arrays.asList(Text.of(InventoryService.LORE_FIRSTLINE, Localization.RUNE),
+                Text.of(TextColors.DARK_GRAY, Localization.RUNE_FOOTER)));
         return stack;
     }
 

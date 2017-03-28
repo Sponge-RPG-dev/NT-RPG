@@ -32,7 +32,7 @@ public class BrainSap extends ActiveSkill {
         settings.addNode(SkillNodes.DAMAGE,10f,10f);
         setLore(SkillLocalization.SKILL_BRAINSAP_LORE);
         super.settings = settings;
-        setName("Soulbind");
+        setName("BrainSap");
         setDescription(SkillLocalization.SKILL_BRAINSAP_DESC);
     }
 

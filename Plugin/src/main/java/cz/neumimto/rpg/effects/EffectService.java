@@ -25,7 +25,6 @@ import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.world.World;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -150,7 +149,7 @@ public class EffectService {
      */
     public void stackEffect(IEffect effect) {
         effect.setLevel(effect.getLevel() + 1);
-        effect.onStack(effect.getLevel());
+        effect.onStack(effect);
     }
 
     /**
@@ -267,7 +266,7 @@ public class EffectService {
                 character.removeEffect(e.getName());
             } else {
                 effect.setLevel(effect.getLevel() - l);
-                effect.onStack(effect.getLevel());
+                effect.onStack(effect);
             }
         });
     }

@@ -20,6 +20,7 @@ package cz.neumimto.rpg.configuration;
 
 import cz.neumimto.configuration.ConfigValue;
 import cz.neumimto.configuration.ConfigurationContainer;
+import org.spongepowered.api.text.Text;
 
 /**
  * Created by NeumimTo on 31.1.2015.
@@ -332,4 +333,7 @@ public class Localization {
 
     @ConfigValue
     public static String RUNEWORD_DETAILS_MENU = "Runeword Details";
+
+    @ConfigValue
+    public static String NORMAL_RARITY = "Item";
 }

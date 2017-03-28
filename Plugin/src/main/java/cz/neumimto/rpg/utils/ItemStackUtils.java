@@ -25,8 +25,10 @@ import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.inventory.CustomItem;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.ItemRestriction;
+import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.skills.SkillNodes;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
@@ -417,5 +419,55 @@ public class ItemStackUtils {
 
     public static List<Text> stringsToItemTooltip(List<String> string) {
         return string.stream().map(ItemStackUtils::stringToItemTooltip).collect(Collectors.toList());
+    }
+
+    public static CustomItemData getCustomItemData(ItemStack is) {
+        Optional<List<Text>> texts = is.get(Keys.ITEM_LORE);
+        if (texts.isPresent()) {
+            List<Text> texts1 = texts.get();
+            if (texts1.isEmpty()) {
+                return null;
+            }
+
+            Map<String, String> enchantments = new HashMap<>();
+            Map<String, Integer> restrictions = new HashMap<>();
+            int itemLevel = 0;
+            Text type = null;
+            String lore = null;
+            for (Text line : texts1) {
+                if (line.getColor() == InventoryService.ENCHANTMENT_COLOR) {
+                    String s = line.toPlain();
+                    if (s.contains(":")) {
+                        String[] split = s.split(": ");
+                        if (split.length == 1) {
+                            enchantments.put(split[0], null);
+                        } else {
+                            enchantments.put(split[0], split[1]);
+                        }
+                    }
+                } else if (line.getColor() == InventoryService.LEVEL_COLOR) {
+                    String s = line.toPlain();
+                    String[] split = s.split(": ");
+                    itemLevel = Integer.parseInt(split[1]);
+                } else if (line.getColor() == InventoryService.LORE_FIRSTLINE) {
+                    type = line;
+                } else if (line.getColor() == InventoryService.RESTRICTIONS) {
+                    String s = line.toPlain();
+                    if (s.contains(":")) {
+                        String[] split = s.split(": ");
+                        if (split.length == 1) {
+                            restrictions.put(split[0], null);
+                        } else {
+                            restrictions.put(split[0], Integer.parseInt(split[1]));
+                        }
+                    }
+                } else if (line.getColor() == InventoryService.LORE_COLOR) {
+                    lore += line.toPlain();
+                }
+
+            }
+            return new CustomItemData(itemLevel, restrictions, enchantments, type, lore);
+        }
+        return null;
     }
 }
