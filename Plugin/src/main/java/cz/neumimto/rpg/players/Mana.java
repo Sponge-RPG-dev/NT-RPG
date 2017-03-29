@@ -19,7 +19,6 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.core.ioc.IoC;
-import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 
 /**
@@ -41,12 +40,12 @@ public class Mana implements IReservable {
 
     @Override
     public void setMaxValue(double f) {
-        character.setCharacterProperty(DefaultProperties.max_mana, (float) f);
+        character.setProperty(DefaultProperties.max_mana, (float) f);
     }
 
     @Override
     public void setReservedAmnout(float f) {
-        character.setCharacterProperty(DefaultProperties.reserved_mana, f);
+        character.setProperty(DefaultProperties.reserved_mana, f);
     }
 
     @Override
@@ -63,7 +62,7 @@ public class Mana implements IReservable {
     public void setValue(double f) {
         if (character.getMana().getMaxValue() < f)
             f = character.getMana().getMaxValue();
-        character.setCharacterProperty(DefaultProperties.mana, (float) f);
+        character.setProperty(DefaultProperties.mana, (float) f);
     }
 
     @Override
@@ -73,6 +72,6 @@ public class Mana implements IReservable {
 
     @Override
     public void setRegen(float f) {
-        character.setCharacterProperty(DefaultProperties.mana_regen, f);
+        character.setProperty(DefaultProperties.mana_regen, f);
     }
 }

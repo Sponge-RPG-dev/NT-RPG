@@ -17,6 +17,7 @@ public class NEntity implements IMob {
     private double experiences;
     private WeakReference<Living> entity;
     private Map<String, IEffect> effectSet = new HashMap<>();
+    private Map<Integer, Float> properties = new HashMap<>();
 
     protected NEntity(Creature l) {
         attach(l);
@@ -76,4 +77,15 @@ public class NEntity implements IMob {
     public void sendMessage(String message) {
 
     }
+
+    @Override
+    public float getProperty(int propertyName) {
+        return properties.get(propertyName);
+    }
+
+    @Override
+    public void setProperty(int propertyName, float value) {
+        properties.put(propertyName, value);
+    }
+
 }

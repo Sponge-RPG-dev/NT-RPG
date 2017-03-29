@@ -6,6 +6,7 @@ import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.players.properties.PropertyService;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityType;
@@ -33,6 +34,9 @@ public class EntityService {
 
     @Inject
     private MobSettingsDao dao;
+
+    @Inject
+    private PropertyService propertyService;
 
     public IEntity get(Entity id) {
         if (id.getType() == EntityTypes.PLAYER) {
@@ -91,5 +95,18 @@ public class EntityService {
         Double d = entityExperiences.get(type);
         if (d == null) return 0;
         return d;
+    }
+
+    public float getEntityProperty(NEntity entity, Short id) {
+        return entity.getProperty(id);
+    }
+
+    public void setEntityProperty(NEntity nEntity, Short id, Float value) {
+        nEntity.setProperty(id, value);
+    }
+
+    public void addToEntityProperty(NEntity nEntity, Short id, Float value) {
+        Float f = getEntityProperty(nEntity, id);
+        setEntityProperty(nEntity, id, f == null ? value : f + value);
     }
 }

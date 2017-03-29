@@ -28,7 +28,7 @@ import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
-import cz.neumimto.rpg.players.properties.PlayerPropertyService;
+import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
 import org.spongepowered.api.Sponge;
@@ -48,7 +48,7 @@ import java.util.*;
  */
 public class PreloadCharacter implements IActiveCharacter {
 
-    static float[] characterProperties = new float[PlayerPropertyService.LAST_ID];
+    static float[] characterProperties = new float[PropertyService.LAST_ID];
     private static HotbarObject[] objects = new HotbarObject[9];
     IReservable mana = new Mana(this);
     UUID uuid;
@@ -153,7 +153,7 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public void setCharacterProperties(float[] arr) {
+    public void setProperties(float[] arr) {
 
     }
 
@@ -208,7 +208,7 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public float getCharacterProperty(int index) {
+    public float getProperty(int index) {
         if (index == DefaultProperties.walk_speed) { //let player move around even without character
             return 0.2f;
         }
@@ -216,7 +216,7 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public void setCharacterProperty(int index, float value) {
+    public void setProperty(int index, float value) {
 
     }
 

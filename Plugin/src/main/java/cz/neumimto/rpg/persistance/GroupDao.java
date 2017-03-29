@@ -30,7 +30,7 @@ import cz.neumimto.rpg.players.groups.Guild;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
-import cz.neumimto.rpg.players.properties.PlayerPropertyService;
+import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.SkillTree;
@@ -52,7 +52,7 @@ import java.util.*;
 public class GroupDao {
 
     @Inject
-    PlayerPropertyService propertyService;
+    PropertyService propertyService;
 
     @Inject
     Game game;

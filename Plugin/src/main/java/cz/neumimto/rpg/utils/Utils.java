@@ -24,7 +24,7 @@ import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.properties.PlayerPropertyService;
+import cz.neumimto.rpg.players.properties.PropertyService;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.data.key.Keys;
@@ -35,12 +35,7 @@ import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Projectile;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
-import org.spongepowered.api.event.cause.entity.damage.DamageModifier;
-import org.spongepowered.api.event.impl.AbstractDamageEntityEvent;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.util.Tuple;
 import org.spongepowered.api.util.blockray.BlockRay;
 import org.spongepowered.api.util.blockray.BlockRayHit;
 import org.spongepowered.api.world.Location;
@@ -49,7 +44,6 @@ import org.spongepowered.api.world.extent.EntityUniverse;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -177,7 +171,7 @@ public class Utils {
 	public static void resetPlayerToDefault(Player player) {
 		player.offer(Keys.MAX_HEALTH, 20d);
 		player.offer(Keys.HEALTH, 20d);
-		player.offer(Keys.WALKING_SPEED, PlayerPropertyService.WALKING_SPEED);
+		player.offer(Keys.WALKING_SPEED, PropertyService.WALKING_SPEED);
 	}
 
 	/**

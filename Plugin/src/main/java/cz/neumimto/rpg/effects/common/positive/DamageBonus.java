@@ -37,6 +37,10 @@ public class DamageBonus extends EffectBase {
         setBonusDamage(bonusDamage);
     }
 
+    /**
+     *@see cz.neumimto.rpg.effects.IGlobalEffect#construct(IEffectConsumer, long, String)
+     *
+     */
     public DamageBonus(IEffectConsumer consumer, long duration, String bonusDamage) {
         this(consumer, duration, Float.parseFloat(bonusDamage));
     }
@@ -53,7 +57,7 @@ public class DamageBonus extends EffectBase {
     public void onApply() {
         super.onApply();
         IActiveCharacter character = (IActiveCharacter) getConsumer();
-        character.setCharacterProperty(DefaultProperties.weapon_damage_bonus, getGlobalScope().characterService.getCharacterProperty(character, DefaultProperties.weapon_damage_bonus) + getBonusDamage());
+        character.setProperty(DefaultProperties.weapon_damage_bonus, getGlobalScope().characterService.getCharacterProperty(character, DefaultProperties.weapon_damage_bonus) + getBonusDamage());
         getGlobalScope().damageService.recalculateCharacterWeaponDamage(character);
     }
 
@@ -61,7 +65,7 @@ public class DamageBonus extends EffectBase {
     public void onRemove() {
         super.onRemove();
         IActiveCharacter character = (IActiveCharacter) getConsumer();
-        character.setCharacterProperty(DefaultProperties.weapon_damage_bonus, getGlobalScope().characterService.getCharacterProperty(character, DefaultProperties.weapon_damage_bonus) - getBonusDamage());
+        character.setProperty(DefaultProperties.weapon_damage_bonus, getGlobalScope().characterService.getCharacterProperty(character, DefaultProperties.weapon_damage_bonus) - getBonusDamage());
         getGlobalScope().damageService.recalculateCharacterWeaponDamage(character);
     }
 }

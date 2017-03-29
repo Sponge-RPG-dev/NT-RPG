@@ -29,7 +29,7 @@ import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
-import cz.neumimto.rpg.players.properties.PlayerPropertyService;
+import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillData;
@@ -86,8 +86,8 @@ public class ActiveCharacter implements IActiveCharacter {
 
     public ActiveCharacter(Player pl, CharacterBase base) {
         this.pl = pl;
-        characterProperties = new float[PlayerPropertyService.LAST_ID];
-        characterPropertiesLevel = new float[PlayerPropertyService.LAST_ID];
+        characterProperties = new float[PropertyService.LAST_ID];
+        characterPropertiesLevel = new float[PropertyService.LAST_ID];
         ExtendedNClass cl = new ExtendedNClass();
         cl.setPrimary(true);
         cl.setConfigClass(ConfigClass.Default);
@@ -140,17 +140,17 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
-    public void setCharacterProperties(float[] arr) {
+    public void setProperties(float[] arr) {
         characterProperties = arr;
     }
 
     @Override
-    public float getCharacterProperty(int index) {
+    public float getProperty(int index) {
         return characterProperties[index] + characterPropertiesLevel[index] * getPrimaryClass().getLevel();
     }
 
     @Override
-    public void setCharacterProperty(int index, float value) {
+    public void setProperty(int index, float value) {
         characterProperties[index] = value;
     }
 
@@ -195,22 +195,22 @@ public class ActiveCharacter implements IActiveCharacter {
 
     @Override
     public double getMaxMana() {
-        return getCharacterProperty(DefaultProperties.max_mana);
+        return getProperty(DefaultProperties.max_mana);
     }
 
     @Override
     public void setMaxMana(float mana) {
-        setCharacterProperty(DefaultProperties.max_mana, mana);
+        setProperty(DefaultProperties.max_mana, mana);
     }
 
     @Override
     public void setMaxHealth(float maxHealth) {
-        setCharacterProperty(DefaultProperties.max_health, maxHealth);
+        setProperty(DefaultProperties.max_health, maxHealth);
     }
 
     @Override
     public void setHealth(float mana) {
-        setCharacterProperty(DefaultProperties.max_mana, mana);
+        setProperty(DefaultProperties.max_mana, mana);
     }
 
     @Override

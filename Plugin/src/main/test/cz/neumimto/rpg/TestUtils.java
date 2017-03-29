@@ -1,14 +1,13 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.core.ioc.IoC;
-import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
-import cz.neumimto.rpg.players.properties.PlayerPropertyService;
+import cz.neumimto.rpg.players.properties.PropertyService;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.EventManager;
@@ -83,7 +82,7 @@ public class TestUtils {
 
     public static ActiveCharacter buildActiveCharacter(UUID uuid) {
         IoC ioC = setupIocEnviromentTest();
-        PlayerPropertyService p = ioC.build(PlayerPropertyService.class);
+        PropertyService p = ioC.build(PropertyService.class);
         p.process(DefaultProperties.class);
         ActiveCharacter character = mock(ActiveCharacter.class);
         Player player = buildPlayerImpl(uuid);

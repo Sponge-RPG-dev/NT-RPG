@@ -30,7 +30,7 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IGlobalEffect;
-import cz.neumimto.rpg.players.properties.PlayerPropertyService;
+import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.PropertyContainer;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
@@ -87,7 +87,7 @@ public class ResourceLoader {
     @Inject
     private EffectService effectService;
     @Inject
-    private PlayerPropertyService playerPropertyService;
+    private PropertyService propertyService;
     @Inject
     private Logger logger;
     @Inject
@@ -207,7 +207,7 @@ public class ResourceLoader {
         if (clazz.isAnnotationPresent(PropertyContainer.class)) {
             if (PluginConfig.DEBUG)
                 logger.info("Found Property container class" + clazz.getName());
-            playerPropertyService.process(clazz);
+            propertyService.process(clazz);
         }
         //Effects
         if (IEffect.class.isAssignableFrom(clazz)) {

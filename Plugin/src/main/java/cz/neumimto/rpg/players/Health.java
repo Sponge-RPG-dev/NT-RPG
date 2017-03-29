@@ -48,7 +48,7 @@ public class Health implements IReservable {
     //todo implement reserved amounts
     @Override
     public void setReservedAmnout(float f) {
-        activeCharacter.setCharacterProperty(DefaultProperties.reserved_health, f);
+        activeCharacter.setProperty(DefaultProperties.reserved_health, f);
     }
 
     @Override
@@ -73,6 +73,6 @@ public class Health implements IReservable {
 
     @Override
     public void setRegen(float f) {
-        activeCharacter.setCharacterProperty(DefaultProperties.health_regen, f);
+        activeCharacter.setProperty(DefaultProperties.health_regen, f);
     }
 }

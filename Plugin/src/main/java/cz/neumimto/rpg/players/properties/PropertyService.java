@@ -47,7 +47,7 @@ import java.util.function.Supplier;
  */
 
 @Singleton
-public class PlayerPropertyService {
+public class PropertyService {
 
     public static final double WALKING_SPEED = 0.1d;
     public static short LAST_ID = 0;
@@ -61,6 +61,8 @@ public class PlayerPropertyService {
     private Logger logger;
 
     private Map<String, Short> idMap = new HashMap<>();
+    private Map<Short, String> nameMap = new HashMap<>();
+
     private Map<Integer, Float> defaults = new HashMap<>();
     private Map<String, ICharacterAttribute> attributes = new HashMap<>();
 
@@ -70,10 +72,15 @@ public class PlayerPropertyService {
         if (PluginConfig.DEBUG)
             logger.info("Found property " + name + "; assigned id: " + id);
         idMap.put(name, id);
+        nameMap.put(id, name);
     }
 
     public int getIdByName(String name) {
         return idMap.get(name);
+    }
+
+    public String getNameById(Short id) {
+        return nameMap.get(id);
     }
 
     public void registerDefaultValue(int id, float def) {
@@ -177,7 +184,7 @@ public class PlayerPropertyService {
         for (Field f : container.getDeclaredFields()) {
             if (f.isAnnotationPresent(Property.class)) {
                 Property p = f.getAnnotation(Property.class);
-                value = PlayerPropertyService.getAndIncrement.get();
+                value = PropertyService.getAndIncrement.get();
                 try {
                     f.setShort(null, value);
                 } catch (IllegalAccessException e) {

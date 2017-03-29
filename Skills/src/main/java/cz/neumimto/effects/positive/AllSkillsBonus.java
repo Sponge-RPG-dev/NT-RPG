@@ -22,12 +22,12 @@ public class AllSkillsBonus extends EffectBase{
 
     @Override
     public void onApply() {
-        character1.setCharacterProperty(DefaultProperties.all_skills_bonus,character1.getCharacterProperty(DefaultProperties.all_skills_bonus)+bonus);
+        character1.setProperty(DefaultProperties.all_skills_bonus,character1.getProperty(DefaultProperties.all_skills_bonus)+bonus);
     }
 
     @Override
     public void onRemove() {
-        character1.setCharacterProperty(DefaultProperties.all_skills_bonus,character1.getCharacterProperty(DefaultProperties.all_skills_bonus)-bonus);
+        character1.setProperty(DefaultProperties.all_skills_bonus,character1.getProperty(DefaultProperties.all_skills_bonus)-bonus);
     }
 
     @Override

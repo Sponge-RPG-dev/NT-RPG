@@ -161,15 +161,15 @@ public class DamageService {
         if (caster.hasPreferedDamageType())
             source = caster.getDamageType();
         if (source == DamageTypes.ATTACK)
-            return caster.getCharacterProperty(DefaultProperties.physical_damage_bonus_mult);
+            return caster.getProperty(DefaultProperties.physical_damage_bonus_mult);
         if (source == DamageTypes.FIRE)
-            return caster.getCharacterProperty(DefaultProperties.fire_damage_bonus_mult);
+            return caster.getProperty(DefaultProperties.fire_damage_bonus_mult);
         if (source == DamageTypes.MAGIC)
-            return caster.getCharacterProperty(DefaultProperties.magic_damage_bonus_mult);
+            return caster.getProperty(DefaultProperties.magic_damage_bonus_mult);
         if (source == NDamageType.LIGHTNING)
-            return caster.getCharacterProperty(DefaultProperties.lightning_damage_bonus_mult);
+            return caster.getProperty(DefaultProperties.lightning_damage_bonus_mult);
         if (source == NDamageType.ICE)
-            return caster.getCharacterProperty(DefaultProperties.ice_damage_bonus_mult);
+            return caster.getProperty(DefaultProperties.ice_damage_bonus_mult);
 
         return 0;
     }

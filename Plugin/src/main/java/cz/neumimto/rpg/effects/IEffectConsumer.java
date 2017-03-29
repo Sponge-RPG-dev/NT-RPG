@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.effects;
 
+import cz.neumimto.rpg.effects.common.PropertyContainer;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectType;
@@ -31,7 +32,7 @@ import java.util.stream.Collectors;
 /**
  * Created by NeumimTo on 17.1.2015.
  */
-public interface IEffectConsumer<T extends Living> {
+public interface IEffectConsumer<T extends Living> extends PropertyContainer {
     T getEntity();
 
     Map<String, IEffect> getEffectMap();

@@ -25,7 +25,7 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.properties.PlayerPropertyService;
+import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.SkillService;
 import org.spongepowered.api.Game;
 
@@ -45,7 +45,7 @@ public class GlobalScope {
     public GroupService groupService;
 
     @Inject
-    public PlayerPropertyService playerPropertyService;
+    public PropertyService propertyService;
 
     @Inject
     public SkillService skillService;

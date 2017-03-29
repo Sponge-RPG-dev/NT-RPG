@@ -18,7 +18,6 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.MissingConfigurationException;
@@ -47,7 +46,6 @@ import cz.neumimto.rpg.events.skills.SkillUpgradeEvent;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.Weapon;
-import cz.neumimto.rpg.persistance.DirectAccessDao;
 import cz.neumimto.rpg.persistance.PlayerDao;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
@@ -57,7 +55,7 @@ import cz.neumimto.rpg.players.groups.Guild;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
-import cz.neumimto.rpg.players.properties.PlayerPropertyService;
+import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.utils.SkillTreeActionResult;
@@ -98,7 +96,7 @@ public class CharacterService {
 	private GroupService groupService;
 
 	@Inject
-	private PlayerPropertyService playerPropertyService;
+	private PropertyService propertyService;
 
 	@Inject
 	private DamageService damageService;
@@ -288,7 +286,7 @@ public class CharacterService {
 		addDefaultEffects(character);
 		Set<BaseCharacterAttribute> baseCharacterAttribute = character.getCharacterBase().getBaseCharacterAttribute();
 		for (BaseCharacterAttribute at : baseCharacterAttribute) {
-			ICharacterAttribute attribute = playerPropertyService.getAttribute(at.getName());
+			ICharacterAttribute attribute = propertyService.getAttribute(at.getName());
 			if (attribute != null) {
 				assignAttribute(character, attribute, character.getLevel());
 			}
@@ -432,7 +430,7 @@ public class CharacterService {
 	}
 
 	public void recalculateProperties(IActiveCharacter character) {
-		Map<Integer, Float> defaults = playerPropertyService.getDefaults();
+		Map<Integer, Float> defaults = propertyService.getDefaults();
 		float[] arr = character.getCharacterProperties();
 		float[] lvl = character.getCharacterLevelProperties();
 		float val = 0;
@@ -1086,10 +1084,10 @@ public class CharacterService {
 	/**
 	 *
 	 * Unlike ActiveCharacter#getProperty this method checks for maximal allowed value, defined in configfile.
-	 * @see PlayerPropertyService#loadMaximalServerPropertyValues()
+	 * @see PropertyService#loadMaximalServerPropertyValues()
 	 */
 	public float getCharacterProperty(IActiveCharacter character, int index) {
-		return Math.min(playerPropertyService.getMaxPropertyValue(index), character.getCharacterProperty(index));
+		return Math.min(propertyService.getMaxPropertyValue(index), character.getProperty(index));
 	}
 
 }

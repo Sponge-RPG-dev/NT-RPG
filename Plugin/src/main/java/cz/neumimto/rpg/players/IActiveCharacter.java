@@ -56,11 +56,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     float[] getCharacterProperties();
 
-    void setCharacterProperties(float[] arr);
-
-    float getCharacterProperty(int index);
-
-    void setCharacterProperty(int index, float value);
+    void setProperties(float[] arr);
 
     void setCharacterLevelProperty(int index, float value);
 

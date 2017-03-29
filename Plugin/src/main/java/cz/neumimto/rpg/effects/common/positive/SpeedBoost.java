@@ -66,7 +66,7 @@ public class SpeedBoost extends EffectBase {
     @Override
     public void onApply() {
         super.onApply();
-        character.setCharacterProperty(DefaultProperties.walk_speed, getGlobalScope().characterService.getCharacterProperty(character, DefaultProperties.walk_speed) + speedbonus);
+        character.setProperty(DefaultProperties.walk_speed, getGlobalScope().characterService.getCharacterProperty(character, DefaultProperties.walk_speed) + speedbonus);
         getGlobalScope().characterService.updateWalkSpeed(character);
         getConsumer().sendMessage(Localization.SPEED_BOOST_APPLY);
     }
@@ -74,7 +74,7 @@ public class SpeedBoost extends EffectBase {
     @Override
     public void onRemove() {
         super.onRemove();
-        character.setCharacterProperty(DefaultProperties.walk_speed, getGlobalScope().characterService.getCharacterProperty(character, DefaultProperties.walk_speed) - speedbonus);
+        character.setProperty(DefaultProperties.walk_speed, getGlobalScope().characterService.getCharacterProperty(character, DefaultProperties.walk_speed) - speedbonus);
         getGlobalScope().characterService.updateWalkSpeed(character);
         getConsumer().sendMessage(Localization.SPEED_BOOST_EXPIRE);
     }

@@ -2,13 +2,10 @@ package cz.neumimto.effects.negative;
 
 import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
-import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
-import org.spongepowered.api.event.cause.entity.damage.source.DamageSources;
 
 /**
  * Created by ja on 28.3.2017.
@@ -41,14 +38,14 @@ public class LesserFireResistanceEffect extends EffectBase<LesserFireResistanceE
 		onApply();
 	}
 
-
-
 	@Override
 	public void onApply() {
 		if (getConsumer().getEntity().getType() == EntityTypes.PLAYER) {
 			IActiveCharacter character = (IActiveCharacter) getConsumer();
-			float characterProperty = character.getCharacterProperty(DefaultProperties.fire_damage_protection_mult);
-			character.setCharacterProperty(DefaultProperties.fire_damage_protection_mult, characterProperty - percentage);
+			float characterProperty = character.getProperty(DefaultProperties.fire_damage_protection_mult);
+			character.setProperty(DefaultProperties.fire_damage_protection_mult, characterProperty - percentage);
+		} else {
+
 		}
 	}
 
@@ -56,10 +53,13 @@ public class LesserFireResistanceEffect extends EffectBase<LesserFireResistanceE
 	public void onRemove() {
 		if (getConsumer().getEntity().getType() == EntityTypes.PLAYER) {
 			IActiveCharacter character = (IActiveCharacter) getConsumer();
-			float characterProperty = character.getCharacterProperty(DefaultProperties.fire_damage_protection_mult);
-			character.setCharacterProperty(DefaultProperties.fire_damage_protection_mult, characterProperty + percentage);
+			float characterProperty = character.getProperty(DefaultProperties.fire_damage_protection_mult);
+			character.setProperty(DefaultProperties.fire_damage_protection_mult, characterProperty + percentage);
+		} else {
+
 		}
 	}
+
 
 }
 
