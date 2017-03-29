@@ -29,6 +29,7 @@ import cz.neumimto.rpg.inventory.CustomItem;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.ItemRestriction;
 import cz.neumimto.rpg.inventory.data.CustomItemData;
+import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.skills.SkillNodes;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
@@ -239,7 +240,7 @@ public class ItemStackUtils {
      * @param is
      * @return
      */
-    public static Map<IGlobalEffect, Integer> getItemEffects(ItemStack is) {
+    public static Map<IGlobalEffect, String> getItemEffects(ItemStack is) {
         Optional<List<Text>> texts = is.get(Keys.ITEM_LORE);
         if (texts.isPresent()) {
             return getItemEffects(texts.get());
@@ -253,25 +254,26 @@ public class ItemStackUtils {
      * @param texts
      * @return Map<Effect,Level>
      */
-    public static Map<IGlobalEffect, Integer> getItemEffects(List<Text> texts) {
-        Map<IGlobalEffect, Integer> map = new HashMap<>();
-        texts.stream().filter(t -> t.getFormat().getColor() == TextColors.BLUE).forEach(t -> {
-            findItemEffect(t, map);
-        });
+    public static Map<IGlobalEffect, String> getItemEffects(List<Text> texts) {
+        Map<IGlobalEffect, String> map = new HashMap<>();
+        texts.stream().filter(t -> t.getFormat().getColor() == TextColors.BLUE).forEach(t -> findItemEffect(t, map));
         return map;
     }
 
-    public static void findItemEffect(Text text, Map<IGlobalEffect, Integer> map) {
+    public static void findItemEffect(Text text, Map<IGlobalEffect, String> map) {
         String eff = text.toPlain().substring(3).toLowerCase();
         String[] arr = eff.split(": ");
-        int level = Integer.parseInt(arr[1]);
+        String value = null;
+        if (arr.length > 1) {
+            value = arr[1];
+        }
         IGlobalEffect effect = globalScope.effectService.getGlobalEffect(arr[0]);
         if (effect != null) {
-            map.put(effect, level);
+            map.put(effect, value);
         }
     }
 
-    public static List<Text> addItemEffect(ItemStack itemStack, IGlobalEffect globalEffect, int level) {
+    public static List<Text> addItemEffect(ItemStack itemStack, IGlobalEffect globalEffect, String value) {
         Optional<List<Text>> texts = itemStack.get(Keys.ITEM_LORE);
         List<Text> lore = null;
         if (texts.isPresent()) {
@@ -279,7 +281,17 @@ public class ItemStackUtils {
         } else {
             lore = new ArrayList<>();
         }
-        lore.add(Text.of(TextColors.AQUA, globalEffect.getName() + ": " + level));
+        Optional<Map<String, String>> e = itemStack.get(NKeys.CUSTOM_ITEM_DATA_ENCHANTEMENTS);
+        if (e.isPresent()) {
+            Map<String, String> a = e.get();
+            a.put(globalEffect.getName(), value);
+            itemStack.offer(NKeys.CUSTOM_ITEM_DATA_ENCHANTEMENTS, a);
+        } else {
+            CustomItemData data = new CustomItemData();
+            data.enchantements().put(globalEffect.getName(), value);
+            itemStack.offer(data);
+        }
+        lore.add(Text.of(TextColors.AQUA, globalEffect.getName() + ": " + value));
         return lore;
     }
 

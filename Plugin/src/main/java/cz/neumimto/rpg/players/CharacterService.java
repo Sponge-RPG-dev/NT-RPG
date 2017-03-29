@@ -910,7 +910,7 @@ public class CharacterService {
 			return 2;
 		Set<IGlobalEffect> effects = event.getLastItem().getEffects().keySet();
 		effects.stream().forEach(g -> effectService.removeEffect(g.getName(), character));
-		Map<IGlobalEffect, Integer> toadd = event.getNewItem().getEffects();
+		Map<IGlobalEffect, String> toadd = event.getNewItem().getEffects();
 		effectService.applyGlobalEffectsAsEnchantments(toadd, character);
 		return 0;
 	}

@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class Charm extends HotbarObject {
 
-    private Map<IGlobalEffect, Integer> effects;
+    private Map<IGlobalEffect, String> effects;
 
     public Charm() {
         type = HotbarObjectTypes.CHARM;
@@ -46,11 +46,11 @@ public class Charm extends HotbarObject {
             NtRpgPlugin.GlobalScope.effectService.removeGlobalEffectsAsEnchantments(effects, character);
     }
 
-    public Map<IGlobalEffect, Integer> getEffects() {
+    public Map<IGlobalEffect, String> getEffects() {
         return effects;
     }
 
-    public void setEffects(Map<IGlobalEffect, Integer> effects) {
+    public void setEffects(Map<IGlobalEffect, String> effects) {
         this.effects = effects;
     }
 }

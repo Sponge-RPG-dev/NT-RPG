@@ -37,6 +37,10 @@ public class DamageBonus extends EffectBase {
         setBonusDamage(bonusDamage);
     }
 
+    public DamageBonus(IEffectConsumer consumer, long duration, String bonusDamage) {
+        this(consumer, duration, Float.parseFloat(bonusDamage));
+    }
+
     public float getBonusDamage() {
         return bonusDamage;
     }

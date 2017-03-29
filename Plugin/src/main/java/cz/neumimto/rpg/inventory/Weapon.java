@@ -39,7 +39,6 @@ public class Weapon extends Charm {
     public static Weapon EmptyHand = new Weapon(null);
     protected double damage;
     protected boolean current;
-    private Map<IGlobalEffect, Integer> effects = new HashMap<>();
     private ItemStack itemStack;
     private int level;
     private Map<ItemRestriction,Object> restrictionSet = new HashMap<>();
@@ -71,14 +70,6 @@ public class Weapon extends Charm {
 
     public boolean isShield() {
         return itemStack.getItem() == ItemTypes.SHIELD;
-    }
-
-    public Map<IGlobalEffect, Integer> getEffects() {
-        return effects;
-    }
-
-    public void setEffects(Map<IGlobalEffect, Integer> effects) {
-        this.effects = effects;
     }
 
     public void setCurrent(boolean current) {

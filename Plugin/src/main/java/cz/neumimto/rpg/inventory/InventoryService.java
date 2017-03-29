@@ -188,7 +188,7 @@ public class InventoryService {
                 character.getPlayer().setChestplate(null);
                 ItemStackUtils.dropItem(character.getPlayer(), is);
             } else {
-                Map<IGlobalEffect, Integer> itemEffects = ItemStackUtils.getItemEffects(is);
+                Map<IGlobalEffect, String> itemEffects = ItemStackUtils.getItemEffects(is);
                 effectService.applyGlobalEffectsAsEnchantments(itemEffects, character);
             }
         }
@@ -200,7 +200,7 @@ public class InventoryService {
                 character.getPlayer().setHelmet(null);
                 ItemStackUtils.dropItem(character.getPlayer(), is);
             } else {
-                Map<IGlobalEffect, Integer> itemEffects = ItemStackUtils.getItemEffects(is);
+                Map<IGlobalEffect, String> itemEffects = ItemStackUtils.getItemEffects(is);
                 effectService.applyGlobalEffectsAsEnchantments(itemEffects, character);
             }
         }
@@ -211,7 +211,7 @@ public class InventoryService {
                 character.getPlayer().setBoots(null);
                 ItemStackUtils.dropItem(character.getPlayer(), is);
             } else {
-                Map<IGlobalEffect, Integer> itemEffects = ItemStackUtils.getItemEffects(is);
+                Map<IGlobalEffect, String> itemEffects = ItemStackUtils.getItemEffects(is);
                 effectService.applyGlobalEffectsAsEnchantments(itemEffects, character);
             }
         }
@@ -222,7 +222,7 @@ public class InventoryService {
                 character.getPlayer().setLeggings(null);
                 ItemStackUtils.dropItem(character.getPlayer(), is);
             } else {
-                Map<IGlobalEffect, Integer> itemEffects = ItemStackUtils.getItemEffects(is);
+                Map<IGlobalEffect, String> itemEffects = ItemStackUtils.getItemEffects(is);
                 effectService.applyGlobalEffectsAsEnchantments(itemEffects, character);
             }
         }
@@ -272,7 +272,7 @@ public class InventoryService {
         }
         w.setItemStack(is);
         List<Text> texts = a.get();
-        Map<IGlobalEffect, Integer> map = new HashMap<>();
+        Map<IGlobalEffect, String> map = new HashMap<>();
         for (Text text : texts) {
             if (text.getColor() == ENCHANTMENT_COLOR) {
                 ItemStackUtils.findItemEffect(text, map);
@@ -281,7 +281,7 @@ public class InventoryService {
             }
         }
         w.setEffects(map);
-        Map<IGlobalEffect, Integer> itemEffects = ItemStackUtils.getItemEffects(is);
+        Map<IGlobalEffect, String> itemEffects = ItemStackUtils.getItemEffects(is);
         w.setEffects(itemEffects);
         return w;
     }
