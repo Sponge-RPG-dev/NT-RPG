@@ -329,12 +329,12 @@ public class CharacterService {
 		}
 		if (race != null) {
 			character.setRace(race);
-			character.getEffects().stream().filter(e -> e.getEffectSource() == EffectSource.RACE)
+			character.getEffects().stream().filter(e -> e.getEffectSource() == EffectSourceType.RACE)
 					.forEach(e -> effectService.removeEffect(e, character));
 		}
 		if (guild != null) {
 			character.setGuild(guild);
-			character.getEffects().stream().filter(e -> e.getEffectSource() == EffectSource.GUILD)
+			character.getEffects().stream().filter(e -> e.getEffectSource() == EffectSourceType.GUILD)
 					.forEach(e -> effectService.removeEffect(e, character));
 
 		}

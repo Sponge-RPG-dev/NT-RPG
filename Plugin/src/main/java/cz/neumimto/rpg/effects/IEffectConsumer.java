@@ -64,7 +64,7 @@ public interface IEffectConsumer<T extends Living> extends PropertyContainer {
     default void removeAllTempEffects() {
         for (Map.Entry<String, IEffect> entry : getEffectMap().entrySet()) {
             IEffect effect = entry.getValue();
-            if (effect.getEffectSource() == EffectSource.TEMP) {
+            if (effect.getEffectSource() == EffectSourceType.TEMP) {
                 removeEffect(entry.getKey());
             }
         }

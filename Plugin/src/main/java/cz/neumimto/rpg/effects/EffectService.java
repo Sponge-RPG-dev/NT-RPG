@@ -148,7 +148,7 @@ public class EffectService {
      * @param effect
      */
     public void stackEffect(IEffect effect) {
-        effect.setLevel(effect.getLevel() + 1);
+        effect.setStacks(effect.getStacks() + 1);
         effect.onStack(effect);
     }
 
@@ -161,7 +161,7 @@ public class EffectService {
      * @param iEffect
      * @param consumer
      */
-    public void addEffect(IEffect iEffect, IEffectConsumer consumer) {
+    public void addEffect(IEffect iEffect, IEffectConsumer consumer, EffectSourceType effectSourceType) {
         IEffect eff = consumer.getEffect(iEffect.getClass().getName());
         if (eff == null) {
             consumer.addEffect(iEffect);
@@ -171,7 +171,7 @@ public class EffectService {
         } else if (eff.isStackable()) {
             stackEffect(iEffect);
         } else {
-            if (eff.getLevel() >= iEffect.getLevel()) {
+            if (eff.getStacks() >= iEffect.getStacks()) {
                 if (iEffect.requiresRegister()) {
                     consumer.removeEffect(eff.getClass().getName());
                 }
@@ -241,9 +241,9 @@ public class EffectService {
      * @param consumer
      * @param value
      */
-    public void applyGlobalEffectAsEnchantment(IGlobalEffect effect, IEffectConsumer consumer, String value) {
+    public void applyGlobalEffectAsEnchantment(IGlobalEffect effect, IEffectConsumer consumer, String value, EffectSourceType effectSourceType) {
         IEffect construct = effect.construct(consumer, unlimited_duration, value);
-        addEffect(construct, consumer);
+        addEffect(construct, consumer, effectSourceType);
     }
 
     /**
@@ -252,9 +252,9 @@ public class EffectService {
      * @param map
      * @param consumer
      */
-    public void applyGlobalEffectsAsEnchantments(Map<IGlobalEffect, String> map, IEffectConsumer consumer) {
+    public void applyGlobalEffectsAsEnchantments(Map<IGlobalEffect, String> map, IEffectConsumer consumer, EffectSourceType effectSourceType) {
         map.forEach((e, l) ->
-            applyGlobalEffectAsEnchantment(e, consumer, l)
+            applyGlobalEffectAsEnchantment(e, consumer, l, effectSourceType)
         );
     }
 
@@ -262,10 +262,10 @@ public class EffectService {
     public void removeGlobalEffectsAsEnchantments(Map<IGlobalEffect, String> itemEffects, IActiveCharacter character) {
         itemEffects.forEach((e, l) -> {
             IEffect effect = character.getEffect(e.getName());
-            if (effect.getLevel() - 1 <= 0) {
+            if (effect.getStacks() - 1 <= 0) {
                 character.removeEffect(e.getName());
             } else {
-                effect.setLevel(effect.getLevel() + 1);
+                effect.setStacks(effect.getStacks() + 1);
                 effect.onStack(effect);
             }
         });

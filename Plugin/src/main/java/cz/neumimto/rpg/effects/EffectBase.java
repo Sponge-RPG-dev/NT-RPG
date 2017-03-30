@@ -24,20 +24,23 @@ import cz.neumimto.rpg.utils.UUIDs;
 import org.spongepowered.api.effect.potion.PotionEffect;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 /**
  * Created by NeumimTo.
  */
-public class EffectBase<T extends IEffect> implements IEffect<T> {
+public class EffectBase<T extends IEffect, K> implements IEffect<T, K> {
     protected Set<EffectType> effectTypes = new HashSet<>();
     private boolean stackable = false;
     private String name;
     private int level;
     private Set<PotionEffect> potions = new HashSet<>();
     private IEffectConsumer consumer;
-    private IEffectSource effectSource = EffectSource.TEMP;
+
+    private Map<IEffectSource, K> effectSources;
+
     private long duration = -1;
     private long period = -1;
     private long lastTickTime;
@@ -98,12 +101,12 @@ public class EffectBase<T extends IEffect> implements IEffect<T> {
     }
 
     @Override
-    public int getLevel() {
+    public int getStacks() {
         return level;
     }
 
     @Override
-    public void setLevel(int level) {
+    public void setStacks(int level) {
         this.level = level;
     }
 
@@ -117,13 +120,8 @@ public class EffectBase<T extends IEffect> implements IEffect<T> {
     }
 
     @Override
-    public IEffectSource getEffectSource() {
-        return effectSource;
-    }
-
-    @Override
-    public void setEffectSource(IEffectSource effectSource) {
-        this.effectSource = effectSource;
+    public Map<IEffectSource, EffectValue<K> getEffectSources() {
+        return effectSources;
     }
 
     @Override

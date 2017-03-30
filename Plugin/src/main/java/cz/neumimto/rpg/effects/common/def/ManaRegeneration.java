@@ -81,12 +81,12 @@ public class ManaRegeneration extends EffectBase {
     }
 
     @Override
-    public int getLevel() {
+    public int getStacks() {
         return 1;
     }
 
     @Override
-    public void setLevel(int level) {
+    public void setStacks(int level) {
 
     }
 

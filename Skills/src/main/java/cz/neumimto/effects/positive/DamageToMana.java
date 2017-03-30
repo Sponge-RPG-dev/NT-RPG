@@ -14,7 +14,7 @@ public class DamageToMana extends EffectBase {
     public DamageToMana(IActiveCharacter character, long duration, float level) {
 
         this.value = level;
-        setLevel((int) level);
+        setStacks((int) level);
         setStackable(false);
     }
 

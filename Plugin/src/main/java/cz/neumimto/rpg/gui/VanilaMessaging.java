@@ -33,7 +33,6 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
-import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.data.InventoryItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
@@ -58,7 +57,6 @@ import cz.neumimto.rpg.utils.model.CharacterListModel;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.Cause;
@@ -81,7 +79,6 @@ import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
-import cz.neumimto.rpg.gui.GuiHelper.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -214,7 +211,7 @@ public class VanilaMessaging implements IPlayerMessage {
 			effectService.addEffect(effect, character);
 		}
 		BossBarExpNotifier bossbar = (BossBarExpNotifier) effect;
-		bossbar.setLevel(character.getPrimaryClass().getLevel());
+		bossbar.setStacks(character.getPrimaryClass().getLevel());
 		bossbar.notifyExpChange(classname, expchange);
 	}
 

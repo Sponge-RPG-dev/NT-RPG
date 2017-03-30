@@ -355,7 +355,7 @@ public class ActiveCharacter implements IActiveCharacter {
             cc.setExperiences(0D);
             getCharacterBase().getCharacterClasses().add(cc);
         } else {
-            //  primary.setLevel(getCharacterBase().getLevel());
+            //  primary.setStacks(getCharacterBase().getStacks());
             primary.setExperiences(aDouble);
         }
         base.setPrimaryClass(nclass.getName());
