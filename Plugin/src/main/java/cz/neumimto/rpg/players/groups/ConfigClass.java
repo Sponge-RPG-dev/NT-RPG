@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.players.groups;
 
+import cz.neumimto.rpg.effects.EffectSources;
 import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.skills.SkillTree;
 import org.spongepowered.api.util.Color;
@@ -44,7 +45,7 @@ public class ConfigClass extends PlayerGroup {
 
     public ConfigClass(String name) {
         super(name);
-        playerGroupType = PlayerGroupType.CLASS;
+        playerGroupType = EffectSources.CLASS;
     }
 
     public SkillTree getSkillTree() {

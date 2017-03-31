@@ -2,6 +2,8 @@ package cz.neumimto.rpg.inventory;
 
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.effects.EffectSources;
+import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -37,13 +39,14 @@ public class Charm extends HotbarObject {
         if (effects == null) {
             effects = ItemStackUtils.getItemEffects(is);
         }
-        NtRpgPlugin.GlobalScope.effectService.applyGlobalEffectsAsEnchantments(effects, character);
+        NtRpgPlugin.GlobalScope.effectService.applyGlobalEffectsAsEnchantments(effects, character, this);
     }
 
     @Override
     public void onUnEquip(IActiveCharacter character) {
-        if (effects != null)
-            NtRpgPlugin.GlobalScope.effectService.removeGlobalEffectsAsEnchantments(effects, character);
+        if (effects != null) {
+            NtRpgPlugin.GlobalScope.effectService.removeGlobalEffectsAsEnchantments(effects, character, this);
+        }
     }
 
     public Map<IGlobalEffect, String> getEffects() {
@@ -52,5 +55,10 @@ public class Charm extends HotbarObject {
 
     public void setEffects(Map<IGlobalEffect, String> effects) {
         this.effects = effects;
+    }
+
+    @Override
+    public IEffectSource getType() {
+        return EffectSources.CHARM;
     }
 }

@@ -199,7 +199,7 @@ public class BasicListener {
 				}
 				//defende
 		        /*
-                if (targetEntity.getType() == EntityTypes.PLAYER) {
+                if (targetEntity.getHotbarObjectType() == EntityTypes.PLAYER) {
                     IActiveCharacter tcharacter = characterService.getCharacter(targetEntity.getUniqueId());
                     double armor = tcharacter.getArmorValue();
                     final double damagefactor = damageService.DamageArmorReductionFactor.apply(newdamage, armor);

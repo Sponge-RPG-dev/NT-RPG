@@ -6,10 +6,8 @@ import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.inventory.data.InventoryItemMenuData;
 import cz.neumimto.rpg.inventory.data.NKeys;
-import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
-import cz.neumimto.rpg.players.groups.PlayerGroupType;
-import cz.neumimto.rpg.players.groups.Race;
+import cz.neumimto.rpg.players.groups.IEffectSource;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
@@ -101,7 +99,7 @@ public class GuiHelper {
 	public static ItemStack back(PlayerGroup g) {
 		ItemStack of = ItemStack.of(ItemTypes.PAPER, 1);
 		String l = "class";
-		if (g.getPlayerGroupType() == PlayerGroupType.RACE) {
+		if (g.getType() == IEffectSource.RACE) {
 			l = "race";
 		}
 		of.offer(Keys.DISPLAY_NAME, Text.of(Localization.BACK, TextColors.WHITE));

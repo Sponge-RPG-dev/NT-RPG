@@ -15,7 +15,7 @@ import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
-import cz.neumimto.rpg.players.groups.PlayerGroupType;
+import cz.neumimto.rpg.players.groups.IEffectSource;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import cz.neumimto.rpg.utils.Utils;
 import cz.neumimto.rpg.utils.XORShiftRnd;
@@ -314,7 +314,7 @@ public class RWService {
 
         //none
         for (PlayerGroup playerGroup : rw.getBlockedGroups()) {
-            switch (playerGroup.getPlayerGroupType()) {
+            switch (playerGroup.getType()) {
                 case RACE:
                     if (character.getRace() == playerGroup) {
                         return false;
@@ -332,11 +332,11 @@ public class RWService {
 
         //all
         for (PlayerGroup playerGroup : rw.getRequiredGroups()) {
-            if (playerGroup.getPlayerGroupType() == PlayerGroupType.RACE) {
+            if (playerGroup.getType() == IEffectSource.RACE) {
                 if (character.getRace() != playerGroup) {
                     return false;
                 }
-            } else if (playerGroup.getPlayerGroupType() == PlayerGroupType.CLASS) {
+            } else if (playerGroup.getType() == IEffectSource.CLASS) {
                 if (!character.hasClass(playerGroup)) {
                     return false;
                 }
@@ -345,11 +345,11 @@ public class RWService {
 
         //at least one
         for (PlayerGroup playerGroup : rw.getAllowedGroups()) {
-            if (playerGroup.getPlayerGroupType() == PlayerGroupType.RACE) {
+            if (playerGroup.getType() == IEffectSource.RACE) {
                 if (character.getRace() == playerGroup) {
                     return true;
                 }
-            } else if (playerGroup.getPlayerGroupType() == PlayerGroupType.CLASS) {
+            } else if (playerGroup.getType() == IEffectSource.CLASS) {
                 if (character.hasClass(playerGroup)) {
                     return true;
                 }

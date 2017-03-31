@@ -19,6 +19,8 @@
 package cz.neumimto.rpg.inventory;
 
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.effects.EffectSources;
+import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.item.ItemType;
@@ -108,5 +110,10 @@ public class Weapon extends Charm {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    @Override
+    public IEffectSource getType() {
+        return EffectSources.WEAPON;
     }
 }

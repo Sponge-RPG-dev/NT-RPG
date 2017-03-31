@@ -18,6 +18,8 @@
 
 package cz.neumimto.rpg.players.groups;
 
+import cz.neumimto.rpg.effects.IEffectSource;
+import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -27,7 +29,7 @@ import java.util.*;
 /**
  * Created by NeumimTo on 27.12.2014.
  */
-public class PlayerGroup {
+public class PlayerGroup implements IEffectSourceProvider {
     private final String name;
     private String chatPrefix, chatSufix;
     private Map<Integer, Float> propBonus = new HashMap<>();
@@ -41,7 +43,7 @@ public class PlayerGroup {
     private ItemType itemType;
     private String description;
     private Map<ICharacterAttribute, Integer> startingAttributes = new HashMap<>();
-    protected PlayerGroupType playerGroupType;
+    protected cz.neumimto.rpg.effects.IEffectSource playerGroupType;
     public PlayerGroup(String name) {
         this.name = name;
         if (name.toLowerCase().equalsIgnoreCase("none")) {
@@ -145,7 +147,7 @@ public class PlayerGroup {
         return canCraft;
     }
 
-    public PlayerGroupType getPlayerGroupType() {
+    public IEffectSource getType() {
         return playerGroupType;
     }
 }

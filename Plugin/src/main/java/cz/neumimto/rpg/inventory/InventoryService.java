@@ -25,7 +25,6 @@ import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
@@ -42,7 +41,6 @@ import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
-import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Carrier;
@@ -58,7 +56,6 @@ import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyle;
 import org.spongepowered.api.text.format.TextStyles;
-import org.spongepowered.common.item.inventory.custom.CustomContainer;
 
 import java.util.*;
 
@@ -166,9 +163,9 @@ public class InventoryService {
 		                character.getHotbar()[slot] = HotbarObject.EMPTYHAND_OR_CONSUMABLE;
 		                return;
 	                }
-                    if (hotbarObject.getType() == HotbarObjectTypes.CHARM) {
+                    if (hotbarObject.getHotbarObjectType() == HotbarObjectTypes.CHARM) {
                         hotbarObject.onEquip(i,character);
-                    } else if (hotbarObject.getType() == HotbarObjectTypes.WEAPON && slot == selectedSlotIndex) {
+                    } else if (hotbarObject.getHotbarObjectType() == HotbarObjectTypes.WEAPON && slot == selectedSlotIndex) {
                         hotbarObject.onEquip(i,character);
                     }
 
@@ -390,7 +387,7 @@ public class InventoryService {
             Hotbar h = character.getPlayer().getInventory().query(Hotbar.class);
             int selectedSlotIndex = h.getSelectedSlotIndex();
             HotbarObject o = character.getHotbar()[selectedSlotIndex];
-            if (o.getType() == HotbarObjectTypes.RUNE) {
+            if (o.getHotbarObjectType() == HotbarObjectTypes.RUNE) {
                 character.setCurrentRune(selectedSlotIndex);
                 Gui.sendMessage(character,Localization.SOCKET_HELP);
             }

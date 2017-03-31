@@ -1,14 +1,7 @@
 package cz.neumimto.rpg.effects;
 
 /**
- * Created by NeumimTo on 29.10.2015.
+ * Created by NeumimTo on 31.3.17.
  */
-public interface IEffectSource<T, U extends EffectStackingStrategy> {
-
-    EffectSourceType getEffectSourceType();
-
-    T getSource();
-
-    U getEffectStackStrategy();
-
+public interface IEffectSource {
 }

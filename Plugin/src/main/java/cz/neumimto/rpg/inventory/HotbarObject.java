@@ -1,13 +1,14 @@
 package cz.neumimto.rpg.inventory;
 
 import cz.neumimto.rpg.configuration.PluginConfig;
+import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 /**
  * Created by NeumimTo on 31.12.2015.
  */
-public abstract class HotbarObject extends CustomItem {
+public abstract class HotbarObject extends CustomItem implements IEffectSourceProvider {
 
     public static HotbarObject EMPTYHAND_OR_CONSUMABLE = null;
     protected IHotbarObjectType type;
@@ -21,7 +22,7 @@ public abstract class HotbarObject extends CustomItem {
         this.slot = slot;
     }
 
-    public IHotbarObjectType getType() {
+    public IHotbarObjectType getHotbarObjectType() {
         return type;
     }
 

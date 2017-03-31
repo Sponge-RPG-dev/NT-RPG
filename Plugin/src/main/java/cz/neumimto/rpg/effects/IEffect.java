@@ -30,6 +30,7 @@ import java.util.UUID;
  * Created by NeumimTo on 17.1.2015.
  */
 public interface IEffect<T extends IEffect, K> {
+
     static GlobalScope getGlobalScope() {
         return NtRpgPlugin.GlobalScope;
     }
@@ -38,15 +39,13 @@ public interface IEffect<T extends IEffect, K> {
 
     void onApply();
 
-    default void onStack(T effect, IEffectSource effectSource) {
+    default void onStack(T effect, IEffectSourceProvider effectSource) {
         for (PotionEffect e : getPotions()) {
             getConsumer().addPotionEffect(e.getType(), e.getAmplifier(), e.getDuration());
         }
     }
 
-    Map<IEffectSource, EffectValue<K>> getEffectSources();
-
-
+    Map<IEffectSourceProvider, K> getEffectSources();
 
     void onRemove();
 
@@ -59,10 +58,6 @@ public interface IEffect<T extends IEffect, K> {
     void setStackable(boolean b);
 
     boolean requiresRegister();
-
-    IEffectSource getEffectSource();
-
-    void setEffectSource(IEffectSource effectSource);
 
     long getPeriod();
 

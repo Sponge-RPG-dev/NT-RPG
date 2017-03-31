@@ -23,10 +23,7 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.utils.UUIDs;
 import org.spongepowered.api.effect.potion.PotionEffect;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by NeumimTo.
@@ -39,7 +36,7 @@ public class EffectBase<T extends IEffect, K> implements IEffect<T, K> {
     private Set<PotionEffect> potions = new HashSet<>();
     private IEffectConsumer consumer;
 
-    private Map<IEffectSource, K> effectSources;
+    private Map<IEffectSourceProvider, K> effectSources;
 
     private long duration = -1;
     private long period = -1;
@@ -51,15 +48,23 @@ public class EffectBase<T extends IEffect, K> implements IEffect<T, K> {
     private String expireMessage;
     private UUID uuid;
 
-    public EffectBase(String name, IEffectConsumer consumer) {
-        this();
+    public EffectBase(String name, IEffectConsumer consumer, IEffectSourceProvider effectSource, K value) {
+        this(effectSource, value);
         this.name = name;
         this.consumer = consumer;
     }
 
-    public EffectBase() {
+    public EffectBase(String name, IEffectConsumer consumer, K value) {
+        this(EffectSources.SKILL, value);
+        this.name = name;
+        this.consumer = consumer;
+    }
+
+    public EffectBase(IEffectSourceProvider effectSource, K value) {
         timeCreated = System.currentTimeMillis();
         uuid = UUIDs.random();
+        this.effectSources = new HashMap<>();
+        effectSources.put(effectSource, value);
     }
 
     public static GlobalScope getGlobalScope() {
@@ -120,7 +125,7 @@ public class EffectBase<T extends IEffect, K> implements IEffect<T, K> {
     }
 
     @Override
-    public Map<IEffectSource, EffectValue<K> getEffectSources() {
+    public Map<IEffectSourceProvider, K> getEffectSources() {
         return effectSources;
     }
 
@@ -193,23 +198,6 @@ public class EffectBase<T extends IEffect, K> implements IEffect<T, K> {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        if (!(o instanceof EffectBase)) return false;
-
-        EffectBase that = (EffectBase) o;
-        if (uuid != null ? !uuid.equals(that.uuid) : that.uuid != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return uuid.hashCode();
-    }
-
-    @Override
     public String getExpireMessage() {
         return expireMessage;
     }
@@ -233,4 +221,23 @@ public class EffectBase<T extends IEffect, K> implements IEffect<T, K> {
     public Set<EffectType> getEffectTypes() {
         return effectTypes;
     }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        if (!(o instanceof EffectBase)) return false;
+
+        EffectBase that = (EffectBase) o;
+        if (uuid != null ? !uuid.equals(that.uuid) : that.uuid != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return uuid.hashCode();
+    }
+
 }

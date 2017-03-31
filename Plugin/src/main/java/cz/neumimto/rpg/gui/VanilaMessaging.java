@@ -46,7 +46,7 @@ import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
-import cz.neumimto.rpg.players.groups.PlayerGroupType;
+import cz.neumimto.rpg.players.groups.IEffectSource;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.SkillData;
@@ -362,7 +362,7 @@ public class VanilaMessaging implements IPlayerMessage {
 		s.offer(Keys.DISPLAY_NAME, Text.of(p.getName(), TextColors.DARK_PURPLE));
 		s.offer(Keys.ITEM_LORE, getItemLore(p.getDescription()));
 		String l = " race ";
-		if (p.getPlayerGroupType() == PlayerGroupType.CLASS) {
+		if (p.getType() == IEffectSource.CLASS) {
 			l = " class ";
 		}
 		s.offer(new InventoryItemMenuData(s1 + l + p.getName()));
@@ -640,10 +640,10 @@ public class VanilaMessaging implements IPlayerMessage {
 	}
 
 	private TextColor hasGroup(IActiveCharacter character, PlayerGroup playerGroup) {
-		if (playerGroup.getPlayerGroupType() == PlayerGroupType.RACE) {
+		if (playerGroup.getType() == IEffectSource.RACE) {
 			return character.getRace() == playerGroup ? TextColors.GREEN : TextColors.RED;
 		}
-		if (playerGroup.getPlayerGroupType() == PlayerGroupType.CLASS) {
+		if (playerGroup.getType() == IEffectSource.CLASS) {
 			return character.hasClass(playerGroup) ? TextColors.GREEN : TextColors.RED;
 		}
 		return null;
