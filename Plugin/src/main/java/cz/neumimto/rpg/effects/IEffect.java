@@ -22,14 +22,13 @@ import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import org.spongepowered.api.effect.potion.PotionEffect;
 
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 /**
  * Created by NeumimTo on 17.1.2015.
  */
-public interface IEffect<T extends IEffect, K> {
+public interface IEffect {
 
     static GlobalScope getGlobalScope() {
         return NtRpgPlugin.GlobalScope;
@@ -39,13 +38,11 @@ public interface IEffect<T extends IEffect, K> {
 
     void onApply();
 
-    default void onStack(T effect, IEffectSourceProvider effectSource) {
+    default void reApplyPotions() {
         for (PotionEffect e : getPotions()) {
             getConsumer().addPotionEffect(e.getType(), e.getAmplifier(), e.getDuration());
         }
     }
-
-    Map<IEffectSourceProvider, K> getEffectSources();
 
     void onRemove();
 
@@ -96,4 +93,13 @@ public interface IEffect<T extends IEffect, K> {
     void setConsumer(IEffectConsumer consumer);
 
     Set<EffectType> getEffectTypes();
+
+    IEffectSourceProvider getEffectSourceProvider();
+
+
+    default <T extends IEffect> IEffectContainer<T> constructEffectContainer() {
+        return new EffectContainer(this);
+    }
+
+    void setEffectSourceProvider(IEffectSourceProvider effectSourceProvider);
 }

@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.entities;
 
-import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.IEffectContainer;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.Creature;
 import org.spongepowered.api.entity.living.Living;
@@ -16,7 +16,7 @@ public class NEntity implements IMob {
 
     private double experiences;
     private WeakReference<Living> entity;
-    private Map<String, IEffect> effectSet = new HashMap<>();
+    private Map<String, IEffectContainer> effectSet = new HashMap<>();
     private Map<Integer, Float> properties = new HashMap<>();
 
     protected NEntity(Creature l) {
@@ -69,7 +69,7 @@ public class NEntity implements IMob {
     }
 
     @Override
-    public Map<String, IEffect> getEffectMap() {
+    public Map<String, IEffectContainer> getEffectMap() {
         return effectSet;
     }
 

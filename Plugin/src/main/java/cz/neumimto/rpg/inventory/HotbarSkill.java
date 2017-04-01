@@ -1,6 +1,8 @@
 package cz.neumimto.rpg.inventory;
 
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.effects.EffectSourceType;
+import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
 
@@ -44,5 +46,10 @@ public class HotbarSkill extends HotbarObject {
         if (left_skill != null) {
             NtRpgPlugin.GlobalScope.skillService.executeSkill(character, left_skill);
         }
+    }
+
+    @Override
+    public IEffectSource getType() {
+        return EffectSourceType.CHARM;
     }
 }

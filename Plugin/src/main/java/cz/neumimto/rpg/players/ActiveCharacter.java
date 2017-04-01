@@ -20,6 +20,8 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.inventory.Armor;
 import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
@@ -38,6 +40,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
 import org.spongepowered.api.service.permission.SubjectData;
 import org.spongepowered.api.text.Text;
@@ -58,11 +61,10 @@ public class ActiveCharacter implements IActiveCharacter {
     private IReservable mana = new Mana(this);
     private Health health = new Health(this);
     private transient Player pl;
-    private transient Map<String, IEffect> effects = new HashMap<>();
+    private transient Map<String, IEffectContainer<IEffect>> effects = new HashMap<>();
     private transient Click click = new Click();
     private transient Set<ItemType> allowedArmorIds = new HashSet<>();
     private transient Map<ItemType, Double> allowedWeapons = new HashMap<>();
-    private transient Map<EquipmentTypeWorn, Weapon> equipedArmor = new HashMap<>();
     private transient Party party;
     private Map<String, ExtendedSkillInfo> skills = new HashMap<>();
     private Race race = Race.Default;
@@ -83,11 +85,13 @@ public class ActiveCharacter implements IActiveCharacter {
     private transient Map<String, Integer> transientAttributes = new HashMap<>();
     private transient boolean openedinv = false;
     private transient List<Integer> slotsToReinitialize;
+    private transient Map<EquipmentType, Armor> equipedArmor;
 
     public ActiveCharacter(Player pl, CharacterBase base) {
         this.pl = pl;
         characterProperties = new float[PropertyService.LAST_ID];
         characterPropertiesLevel = new float[PropertyService.LAST_ID];
+        equipedArmor = new HashMap<>();
         ExtendedNClass cl = new ExtendedNClass();
         cl.setPrimary(true);
         cl.setConfigClass(ConfigClass.Default);
@@ -250,13 +254,13 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
-    public Map<EquipmentTypeWorn, Weapon> getEquipedArmor() {
+    public Map<EquipmentType, Armor> getEquipedArmor() {
         return equipedArmor;
     }
 
 
     @Override
-    public Map<String, IEffect> getEffectMap() {
+    public Map<String, IEffectContainer<IEffect>> getEffectMap() {
         return effects;
     }
 

@@ -19,7 +19,7 @@
 package cz.neumimto.rpg.commands;
 
 import cz.neumimto.rpg.configuration.CommandLocalization;
-import cz.neumimto.rpg.effects.EffectSources;
+import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import org.spongepowered.api.command.CommandCallable;
@@ -105,6 +105,6 @@ public abstract class CommandBase implements CommandCallable, IEffectSourceProvi
 
     @Override
     public IEffectSource getType() {
-        return EffectSources.COMMAND;
+        return EffectSourceType.COMMAND;
     }
 }

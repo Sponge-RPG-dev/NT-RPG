@@ -23,6 +23,7 @@ import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.runewords.RWService;
@@ -49,6 +50,8 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.equipment.EquipmentInventory;
+import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
+import org.spongepowered.api.item.inventory.equipment.EquipmentTypes;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
 import org.spongepowered.api.text.Text;
@@ -56,6 +59,7 @@ import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyle;
 import org.spongepowered.api.text.format.TextStyles;
+import org.spongepowered.common.data.type.SpongeEquipmentTypeWorn;
 
 import java.util.*;
 
@@ -186,7 +190,16 @@ public class InventoryService {
                 ItemStackUtils.dropItem(character.getPlayer(), is);
             } else {
                 Map<IGlobalEffect, String> itemEffects = ItemStackUtils.getItemEffects(is);
-                effectService.applyGlobalEffectsAsEnchantments(itemEffects, character);
+                Armor armor = new Armor(is, EffectSourceType.CHESTPLATE);
+                armor.setEffects(itemEffects);
+
+                Armor armor1 = character.getEquipedArmor().get(EquipmentTypes.CHESTPLATE);
+                if (armor1 != null) {
+                    effectService.removeGlobalEffectsAsEnchantments(armor1.getEffects(), character, armor1);
+                }
+                character.getEquipedArmor().put(EquipmentTypes.CHESTPLATE, armor);
+                effectService.applyGlobalEffectsAsEnchantments(itemEffects, character, armor);
+
             }
         }
 
@@ -198,7 +211,15 @@ public class InventoryService {
                 ItemStackUtils.dropItem(character.getPlayer(), is);
             } else {
                 Map<IGlobalEffect, String> itemEffects = ItemStackUtils.getItemEffects(is);
-                effectService.applyGlobalEffectsAsEnchantments(itemEffects, character);
+                Armor armor = new Armor(is, EffectSourceType.HELMET);
+                armor.setEffects(itemEffects);
+                Armor armor1 = character.getEquipedArmor().get(EquipmentTypes.HEADWEAR);
+                if (armor1 != null) {
+                    effectService.removeGlobalEffectsAsEnchantments(armor1.getEffects(), character, armor1);
+                }
+                character.getEquipedArmor().put(EquipmentTypes.HEADWEAR, armor );
+                effectService.applyGlobalEffectsAsEnchantments(itemEffects, character, armor);
+
             }
         }
         Optional<ItemStack> boots = character.getPlayer().getBoots();
@@ -209,7 +230,15 @@ public class InventoryService {
                 ItemStackUtils.dropItem(character.getPlayer(), is);
             } else {
                 Map<IGlobalEffect, String> itemEffects = ItemStackUtils.getItemEffects(is);
-                effectService.applyGlobalEffectsAsEnchantments(itemEffects, character);
+
+                Armor armor = new Armor(is, EffectSourceType.BOOTS);
+                armor.setEffects(itemEffects);
+                Armor armor1 = character.getEquipedArmor().get(EquipmentTypes.BOOTS);
+                if (armor1 != null) {
+                    effectService.removeGlobalEffectsAsEnchantments(armor1.getEffects(), character, armor1);
+                }
+                character.getEquipedArmor().put(EquipmentTypes.BOOTS, armor );
+                effectService.applyGlobalEffectsAsEnchantments(itemEffects, character, armor);
             }
         }
         Optional<ItemStack> leggings = character.getPlayer().getLeggings();
@@ -220,7 +249,14 @@ public class InventoryService {
                 ItemStackUtils.dropItem(character.getPlayer(), is);
             } else {
                 Map<IGlobalEffect, String> itemEffects = ItemStackUtils.getItemEffects(is);
-                effectService.applyGlobalEffectsAsEnchantments(itemEffects, character);
+                Armor armor = new Armor(is, EffectSourceType.LEGGINGS);
+                armor.setEffects(itemEffects);
+                Armor armor1 = character.getEquipedArmor().get(EquipmentTypes.LEGGINGS);
+                if (armor1 != null) {
+                    effectService.removeGlobalEffectsAsEnchantments(armor1.getEffects(), character, armor1);
+                }
+                character.getEquipedArmor().put(EquipmentTypes.LEGGINGS, armor );
+                effectService.applyGlobalEffectsAsEnchantments(itemEffects, character, armor);
             }
         }
     }
@@ -368,11 +404,11 @@ public class InventoryService {
         //old
         Weapon mainHand = character.getMainHand();
         mainHand.current = false;
-        effectService.removeGlobalEffectsAsEnchantments(mainHand.getEffects(), character);
+        effectService.removeGlobalEffectsAsEnchantments(mainHand.getEffects(), character, mainHand);
 
         //new
         Weapon weapon1 = buildHotbarWeapon(character, weapon);
-        effectService.applyGlobalEffectsAsEnchantments(weapon1.getEffects(), character);
+        effectService.applyGlobalEffectsAsEnchantments(weapon1.getEffects(), character, weapon1);
 
         int slot = ((Hotbar) character.getPlayer().getInventory().query(Hotbar.class)).getSelectedSlotIndex();
         character.setHotbarSlot(slot, weapon1);

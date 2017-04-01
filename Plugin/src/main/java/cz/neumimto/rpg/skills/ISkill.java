@@ -18,12 +18,11 @@
 
 package cz.neumimto.rpg.skills;
 
-import cz.neumimto.rpg.effects.EffectSources;
-import cz.neumimto.rpg.effects.IEffectSource;
-import cz.neumimto.rpg.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -75,6 +74,6 @@ public interface ISkill extends IEffectSourceProvider {
 
     @Override
     default IEffectSource getType() {
-        return EffectSources.SKILL;
+        return EffectSourceType.SKILL;
     }
 }

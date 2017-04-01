@@ -52,7 +52,7 @@ public class DamageService {
 
     public BiFunction<Double, Double, Double> DamageArmorReductionFactor = (damage, armor) -> armor / (armor + 10 * damage);
 
-    private Map<ItemType, Short> map = new HashMap<>();
+    private Map<ItemType, Integer> map = new HashMap<>();
     private Map<ProjectileType, Short> projectiles = new HashMap<>();
 
     public double getCharacterItemDamage(IActiveCharacter character, ItemType type) {

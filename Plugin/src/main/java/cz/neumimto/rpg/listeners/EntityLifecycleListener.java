@@ -8,6 +8,7 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.IMob;
 import cz.neumimto.rpg.inventory.InventoryService;
@@ -96,8 +97,8 @@ public class EntityLifecycleListener {
             IActiveCharacter character = characterService.getCharacter(targetEntity.getUniqueId());
             if (character.isStub())
                 return;
-            for (IEffect effect : character.getEffects()) {
-                effectService.stopEffect(effect);
+            for (IEffectContainer<IEffect> iEffectIEffectContainer : character.getEffects()) {
+                iEffectIEffectContainer.forEach(a -> effectService.stopEffect(a));
             }
         } else {
             if (!event.getTargetEntity().get(Keys.HEALTH).isPresent()) {

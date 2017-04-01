@@ -2,7 +2,7 @@ package cz.neumimto.rpg.inventory;
 
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localization;
-import cz.neumimto.rpg.effects.EffectSources;
+import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.Gui;
@@ -59,6 +59,6 @@ public class Charm extends HotbarObject {
 
     @Override
     public IEffectSource getType() {
-        return EffectSources.CHARM;
+        return EffectSourceType.CHARM;
     }
 }

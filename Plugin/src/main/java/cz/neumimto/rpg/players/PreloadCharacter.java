@@ -19,7 +19,10 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.configuration.PluginConfig;
+import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.inventory.Armor;
 import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.players.groups.ConfigClass;
@@ -39,6 +42,7 @@ import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
 
 import java.util.*;
@@ -118,7 +122,7 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public Map<EquipmentTypeWorn, Weapon> getEquipedArmor() {
+    public Map<EquipmentType, Armor> getEquipedArmor() {
         return Collections.EMPTY_MAP;
     }
 
@@ -203,7 +207,7 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public Map<String, IEffect> getEffectMap() {
+    public Map<String, IEffectContainer<IEffect>> getEffectMap() {
         return Collections.emptyMap();
     }
 
@@ -390,12 +394,12 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public Collection<IEffect> getEffects() {
+    public Collection<IEffectContainer<IEffect>> getEffects() {
         return Collections.EMPTY_SET;
     }
 
     @Override
-    public IEffect getEffect(String cl) {
+    public EffectContainer<IEffect> getEffect(String cl) {
         return null;
     }
 
@@ -432,11 +436,6 @@ public class PreloadCharacter implements IActiveCharacter {
     @Override
     public boolean hasPotionEffect(PotionEffectType type) {
         return false;
-    }
-
-    @Override
-    public void removeAllTempEffects() {
-
     }
 
     @Override

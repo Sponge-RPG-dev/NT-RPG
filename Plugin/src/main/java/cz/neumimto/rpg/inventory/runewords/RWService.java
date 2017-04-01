@@ -9,13 +9,13 @@ import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.events.RebuildRunewordEvent;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
-import cz.neumimto.rpg.players.groups.IEffectSource;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import cz.neumimto.rpg.utils.Utils;
 import cz.neumimto.rpg.utils.XORShiftRnd;
@@ -314,29 +314,29 @@ public class RWService {
 
         //none
         for (PlayerGroup playerGroup : rw.getBlockedGroups()) {
-            switch (playerGroup.getType()) {
-                case RACE:
-                    if (character.getRace() == playerGroup) {
+
+            if (playerGroup.getType() == EffectSourceType.RACE) {
+
+                if (character.getRace() == playerGroup) {
+                    return false;
+                }
+            } else if (playerGroup.getType() == EffectSourceType.CLASS)
+
+                for (ExtendedNClass extendedNClass : character.getClasses()) {
+                    if (extendedNClass.getConfigClass() == playerGroup) {
                         return false;
                     }
-                    break;
-                case CLASS:
-                    for (ExtendedNClass extendedNClass : character.getClasses()) {
-                        if (extendedNClass.getConfigClass() == playerGroup) {
-                            return false;
-                        }
-                    }
-                    break;
+                }
+
             }
-        }
 
         //all
         for (PlayerGroup playerGroup : rw.getRequiredGroups()) {
-            if (playerGroup.getType() == IEffectSource.RACE) {
+            if (playerGroup.getType() == EffectSourceType.RACE) {
                 if (character.getRace() != playerGroup) {
                     return false;
                 }
-            } else if (playerGroup.getType() == IEffectSource.CLASS) {
+            } else if (playerGroup.getType() == EffectSourceType.CLASS) {
                 if (!character.hasClass(playerGroup)) {
                     return false;
                 }
@@ -345,11 +345,11 @@ public class RWService {
 
         //at least one
         for (PlayerGroup playerGroup : rw.getAllowedGroups()) {
-            if (playerGroup.getType() == IEffectSource.RACE) {
+            if (playerGroup.getType() == EffectSourceType.RACE) {
                 if (character.getRace() == playerGroup) {
                     return true;
                 }
-            } else if (playerGroup.getType() == IEffectSource.CLASS) {
+            } else if (playerGroup.getType() == EffectSourceType.CLASS) {
                 if (character.hasClass(playerGroup)) {
                     return true;
                 }

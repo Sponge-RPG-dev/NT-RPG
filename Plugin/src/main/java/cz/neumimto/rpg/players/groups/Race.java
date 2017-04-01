@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.players.groups;
 
-import cz.neumimto.rpg.effects.EffectSources;
+import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.skills.ISkill;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class Race extends PlayerGroup {
 
     public Race(String name) {
         super(name);
-        playerGroupType = EffectSources.RACE;
+        playerGroupType = EffectSourceType.RACE;
     }
 
     public List<ISkill> getSkills() {

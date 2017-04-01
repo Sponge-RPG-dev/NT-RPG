@@ -1,6 +1,8 @@
 package cz.neumimto.rpg.inventory;
 
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.effects.EffectSourceType;
+import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.players.IActiveCharacter;
 
@@ -32,5 +34,10 @@ public class HotbarRune extends HotbarObject {
 
     public void setRune(Rune r) {
         this.r = r;
+    }
+
+    @Override
+    public IEffectSource getType() {
+        return EffectSourceType.CHARM;
     }
 }

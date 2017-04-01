@@ -21,6 +21,9 @@ package cz.neumimto.rpg.effects;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.utils.UUIDs;
+import org.spongepowered.api.data.DataTransactionResult;
+import org.spongepowered.api.data.key.Key;
+import org.spongepowered.api.data.value.BaseValue;
 import org.spongepowered.api.effect.potion.PotionEffect;
 
 import java.util.*;
@@ -28,16 +31,13 @@ import java.util.*;
 /**
  * Created by NeumimTo.
  */
-public class EffectBase<T extends IEffect, K> implements IEffect<T, K> {
+public class EffectBase implements IEffect {
     protected Set<EffectType> effectTypes = new HashSet<>();
     private boolean stackable = false;
     private String name;
     private int level;
     private Set<PotionEffect> potions = new HashSet<>();
     private IEffectConsumer consumer;
-
-    private Map<IEffectSourceProvider, K> effectSources;
-
     private long duration = -1;
     private long period = -1;
     private long lastTickTime;
@@ -47,24 +47,17 @@ public class EffectBase<T extends IEffect, K> implements IEffect<T, K> {
     private String applyMessage;
     private String expireMessage;
     private UUID uuid;
+    private IEffectSourceProvider effectSourceProvider;
 
-    public EffectBase(String name, IEffectConsumer consumer, IEffectSourceProvider effectSource, K value) {
-        this(effectSource, value);
+    public EffectBase(String name, IEffectConsumer consumer) {
+        this();
         this.name = name;
         this.consumer = consumer;
     }
 
-    public EffectBase(String name, IEffectConsumer consumer, K value) {
-        this(EffectSources.SKILL, value);
-        this.name = name;
-        this.consumer = consumer;
-    }
-
-    public EffectBase(IEffectSourceProvider effectSource, K value) {
+    public EffectBase() {
         timeCreated = System.currentTimeMillis();
         uuid = UUIDs.random();
-        this.effectSources = new HashMap<>();
-        effectSources.put(effectSource, value);
     }
 
     public static GlobalScope getGlobalScope() {
@@ -110,6 +103,7 @@ public class EffectBase<T extends IEffect, K> implements IEffect<T, K> {
         return level;
     }
 
+
     @Override
     public void setStacks(int level) {
         this.level = level;
@@ -122,11 +116,6 @@ public class EffectBase<T extends IEffect, K> implements IEffect<T, K> {
     public void setConsumer(IEffectConsumer consumer) {
         if (consumer != null)
             this.consumer = consumer;
-    }
-
-    @Override
-    public Map<IEffectSourceProvider, K> getEffectSources() {
-        return effectSources;
     }
 
     @Override
@@ -222,6 +211,15 @@ public class EffectBase<T extends IEffect, K> implements IEffect<T, K> {
         return effectTypes;
     }
 
+    @Override
+    public IEffectSourceProvider getEffectSourceProvider() {
+        return effectSourceProvider;
+    }
+
+    @Override
+    public void setEffectSourceProvider(IEffectSourceProvider effectSourceProvider) {
+        this.effectSourceProvider = effectSourceProvider;
+    }
 
     @Override
     public boolean equals(Object o) {

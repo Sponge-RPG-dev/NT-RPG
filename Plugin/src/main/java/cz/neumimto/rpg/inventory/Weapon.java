@@ -19,19 +19,15 @@
 package cz.neumimto.rpg.inventory;
 
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.effects.EffectSources;
+import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
-import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.scoreboard.objective.Objective;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by NeumimTo on 31.1.2015.
@@ -114,6 +110,6 @@ public class Weapon extends Charm {
 
     @Override
     public IEffectSource getType() {
-        return EffectSources.WEAPON;
+        return EffectSourceType.WEAPON;
     }
 }

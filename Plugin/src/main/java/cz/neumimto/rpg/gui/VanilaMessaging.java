@@ -29,9 +29,7 @@ import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.CommandPermissions;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.EffectStatusType;
-import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.inventory.data.InventoryItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
@@ -46,7 +44,6 @@ import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
-import cz.neumimto.rpg.players.groups.IEffectSource;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.SkillData;
@@ -205,14 +202,13 @@ public class VanilaMessaging implements IPlayerMessage {
 
 	@Override
 	public void showExpChange(IActiveCharacter character, String classname, double expchange) {
-		IEffect effect = character.getEffect(BossBarExpNotifier.name);
+		IEffectContainer<BossBarExpNotifier> barExpNotifier = character.getEffect(BossBarExpNotifier.name);
+		BossBarExpNotifier effect = (BossBarExpNotifier) barExpNotifier;
 		if (effect == null) {
 			effect = new BossBarExpNotifier(character);
-			effectService.addEffect(effect, character);
+			effectService.addEffect(effect, character, InternalEffectSourceProvider.INSTANCE);
 		}
-		BossBarExpNotifier bossbar = (BossBarExpNotifier) effect;
-		bossbar.setStacks(character.getPrimaryClass().getLevel());
-		bossbar.notifyExpChange(classname, expchange);
+		effect.notifyExpChange(classname, expchange);
 	}
 
 	@Override
@@ -362,7 +358,7 @@ public class VanilaMessaging implements IPlayerMessage {
 		s.offer(Keys.DISPLAY_NAME, Text.of(p.getName(), TextColors.DARK_PURPLE));
 		s.offer(Keys.ITEM_LORE, getItemLore(p.getDescription()));
 		String l = " race ";
-		if (p.getType() == IEffectSource.CLASS) {
+		if (p.getType() == EffectSourceType.CLASS) {
 			l = " class ";
 		}
 		s.offer(new InventoryItemMenuData(s1 + l + p.getName()));
@@ -640,10 +636,10 @@ public class VanilaMessaging implements IPlayerMessage {
 	}
 
 	private TextColor hasGroup(IActiveCharacter character, PlayerGroup playerGroup) {
-		if (playerGroup.getType() == IEffectSource.RACE) {
+		if (playerGroup.getType() == EffectSourceType.RACE) {
 			return character.getRace() == playerGroup ? TextColors.GREEN : TextColors.RED;
 		}
-		if (playerGroup.getType() == IEffectSource.CLASS) {
+		if (playerGroup.getType() == EffectSourceType.CLASS) {
 			return character.hasClass(playerGroup) ? TextColors.GREEN : TextColors.RED;
 		}
 		return null;

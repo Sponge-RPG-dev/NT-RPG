@@ -33,24 +33,40 @@ import java.util.stream.Collectors;
  * Created by NeumimTo on 17.1.2015.
  */
 public interface IEffectConsumer<T extends Living> extends PropertyContainer {
+
     T getEntity();
 
-    Map<String, IEffect> getEffectMap();
+    Map<String, IEffectContainer<IEffect>> getEffectMap();
 
-    default Collection<IEffect> getEffects() {
+    default Collection<IEffectContainer<IEffect>> getEffects() {
         return getEffectMap().values();
     }
 
-    default IEffect getEffect(String cl) {
-        return getEffectMap().get(cl);
+    default <A extends IEffect> IEffectContainer<A> getEffect(String cl) {
+        return (IEffectContainer<A>) getEffectMap().get(cl);
     }
 
     default boolean hasEffect(String cl) {
         return getEffectMap().containsKey(cl);
     }
 
+
     default void addEffect(IEffect effect) {
-        getEffectMap().put(effect.getName(), effect);
+	    IEffectContainer IEffectContainer1 = getEffectMap().get(effect.getName());
+	    if (IEffectContainer1 == null) {
+		    getEffectMap().put(effect.getName(), new EffectContainer<>(effect));
+	    } else {
+		    IEffectContainer1.getEffects().add(effect);
+	    }
+    }
+
+    default void addEffect(IEffectContainer<IEffect> IEffectContainer) {
+        IEffectContainer<IEffect> effectContainer1 = getEffectMap().get(IEffectContainer.getName());
+        if (effectContainer1 == null) {
+            getEffectMap().put(IEffectContainer.getName(), IEffectContainer);
+        } else {
+            effectContainer1.mergeWith(IEffectContainer);
+        }
     }
 
     default void removeEffect(String cl) {
@@ -59,15 +75,6 @@ public interface IEffectConsumer<T extends Living> extends PropertyContainer {
 
     default void removeEffect(IEffect cl) {
         getEffectMap().remove(cl.getName());
-    }
-
-    default void removeAllTempEffects() {
-        for (Map.Entry<String, IEffect> entry : getEffectMap().entrySet()) {
-            IEffect effect = entry.getValue();
-            if (effect.getEffectSource() == EffectSourceType.TEMP) {
-                removeEffect(entry.getKey());
-            }
-        }
     }
 
 

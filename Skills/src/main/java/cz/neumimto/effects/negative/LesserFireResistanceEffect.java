@@ -8,10 +8,10 @@ import cz.neumimto.rpg.players.properties.DefaultProperties;
 import org.spongepowered.api.entity.EntityTypes;
 
 /**
- * Created by ja on 28.3.2017.
+ * Created by NeumimTo on 28.3.2017.
  */
 @ClassGenerator.Generate(id = "name")
-public class LesserFireResistanceEffect extends EffectBase<LesserFireResistanceEffect> {
+public class LesserFireResistanceEffect extends EffectBase {
 
 	public static final String name = "Decreased fire resistance";
 
@@ -29,13 +29,6 @@ public class LesserFireResistanceEffect extends EffectBase<LesserFireResistanceE
 		setPeriod(1000L);
 		setStackable(true);
 		this.percentage = level;
-	}
-
-	@Override
-	public void onStack(LesserFireResistanceEffect effect) {
-		onRemove();
-		this.percentage += percentage + effect.percentage;
-		onApply();
 	}
 
 	@Override

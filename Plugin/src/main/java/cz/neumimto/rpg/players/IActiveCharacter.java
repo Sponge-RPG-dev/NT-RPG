@@ -20,7 +20,7 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.IEntityType;
-import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.inventory.Armor;
 import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.players.groups.ConfigClass;
@@ -35,6 +35,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
 
 import java.util.List;
@@ -78,7 +79,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     void setHealth(Health health);
 
-    Map<EquipmentTypeWorn, Weapon> getEquipedArmor();
+    Map<EquipmentType, Armor> getEquipedArmor();
 
     double getExperiencs();
 
@@ -222,8 +223,6 @@ public interface IActiveCharacter extends IEntity<Player> {
     @Override
     Player getEntity();
 
-    @Override
-    Map<String, IEffect> getEffectMap();
 
     @Override
     void sendMessage(String message);

@@ -304,9 +304,9 @@ public class CharacterService {
 
 
 	public void addDefaultEffects(IActiveCharacter character) {
-		effectService.addEffect(new ManaRegeneration(character), character);
-		effectService.addEffect(new CombatEffect(character), character);
-		effectService.addEffect(new BossBarExpNotifier(character), character);
+		effectService.addEffect(new ManaRegeneration(character), character, InternalEffectSourceProvider.INSTANCE);
+		effectService.addEffect(new CombatEffect(character), character, InternalEffectSourceProvider.INSTANCE);
+		effectService.addEffect(new BossBarExpNotifier(character), character, InternalEffectSourceProvider.INSTANCE);
 	}
 
 	/**
@@ -329,13 +329,21 @@ public class CharacterService {
 		}
 		if (race != null) {
 			character.setRace(race);
-			character.getEffects().stream().filter(e -> e.getEffectSource() == EffectSourceType.RACE)
-					.forEach(e -> effectService.removeEffect(e, character));
+			character.getEffects()
+					.stream()
+					.map(IEffectContainer::getEffects)
+					.forEach(a -> a.stream()
+							.filter(aa -> aa.getEffectSourceProvider().getType() == EffectSourceType.RACE)
+							.forEach(e -> effectService.removeEffect(e, character)));
 		}
 		if (guild != null) {
 			character.setGuild(guild);
-			character.getEffects().stream().filter(e -> e.getEffectSource() == EffectSourceType.GUILD)
-					.forEach(e -> effectService.removeEffect(e, character));
+			character.getEffects()
+					.stream()
+					.map(IEffectContainer::getEffects)
+					.forEach(a -> a.stream()
+							.filter(aa -> aa.getEffectSourceProvider().getType() == EffectSourceType.GUILD)
+							.forEach(e -> effectService.removeEffect(e, character)));
 
 		}
 		putInSaveQueue(character.getCharacterBase());
@@ -388,10 +396,10 @@ public class CharacterService {
 	}
 
 	protected IActiveCharacter deleteCharacterReferences(IActiveCharacter character) {
-		Collection<IEffect> effects = character.getEffects();
-		for (IEffect effect : effects) {
-			effectService.stopEffect(effect);
-		}
+		Collection<IEffectContainer<IEffect>> effects = character.getEffects();
+		effects.stream()
+				.map(IEffectContainer::getEffects)
+				.forEach(a -> a.stream().forEach(e -> effectService.stopEffect(e)));
 		if (character.hasParty())
 			character.getParty().removePlayer(character);
 		character.setParty(null);
@@ -907,9 +915,9 @@ public class CharacterService {
 		if (event.isCancelled())
 			return 2;
 		Set<IGlobalEffect> effects = event.getLastItem().getEffects().keySet();
-		effects.stream().forEach(g -> effectService.removeEffect(g.getName(), character));
+		effects.stream().forEach(g -> effectService.removeEffect(g.getName(), character, weapon));
 		Map<IGlobalEffect, String> toadd = event.getNewItem().getEffects();
-		effectService.applyGlobalEffectsAsEnchantments(toadd, character);
+		effectService.applyGlobalEffectsAsEnchantments(toadd, character, weapon);
 		return 0;
 	}
 
@@ -919,11 +927,11 @@ public class CharacterService {
         }*/
 		Weapon armor1 = character.getEquipedArmor().get(type);
 		if (armor1 != null) {
-			armor1.getEffects().keySet().forEach(g -> effectService.removeEffect(g.getName(), character));
+			armor1.getEffects().keySet().forEach(g -> effectService.removeEffect(g.getName(), character, armor));
 			character.getEquipedArmor().remove(type);
 		}
 		if (armor != null) {
-			effectService.applyGlobalEffectsAsEnchantments(armor.getEffects(), character);
+			effectService.applyGlobalEffectsAsEnchantments(armor.getEffects(), character, armor);
 		}
 
 		return 0;
@@ -1058,22 +1066,15 @@ public class CharacterService {
 	 * character object is heavy, lets do not recreate its instance just reasign player and effects
 	 */
 	public void respawnCharacter(IActiveCharacter character, Player pl) {
-		Iterator<Map.Entry<String, IEffect>> iterator1 = character.getEffectMap().entrySet().iterator();
-
-		Iterator<IEffect> iterator = character.getEffects().iterator();
+		Iterator<IEffectContainer<IEffect>> iterator = character.getEffects().iterator();
 		Set<IEffect> a = new HashSet<>();
 		while (iterator.hasNext()) {
-			IEffect next = iterator.next();
-			if (!next.getEffectSource().isClearedOnDeath()) {
-				a.add(next);
-			}
-			effectService.stopEffect(next);
+			IEffectContainer<IEffect> next = iterator.next();
+			next.forEach(q -> effectService.stopEffect(q));
 			iterator.remove();
 		}
 		assignPlayerToCharacter(pl);
-		for (IEffect effect : a) {
-			effectService.addEffect(effect, character);
-		}
+
 		character.getMana().setValue(0);
 		inventoryService.cancelSocketing(character);
 		addDefaultEffects(character);
