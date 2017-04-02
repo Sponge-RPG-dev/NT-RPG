@@ -42,11 +42,12 @@ public class DamageBonus extends EffectBase {
     /**
      *@see cz.neumimto.rpg.effects.IGlobalEffect#construct(IEffectConsumer, long, String)
      *
+     */
 
     public DamageBonus(IEffectConsumer consumer, long duration, String bonusDamage) {
         this(consumer, duration, Float.parseFloat(bonusDamage));
     }
-     */
+
 
     public float getBonusDamage() {
         return bonusDamage;

@@ -19,7 +19,7 @@ public class Silence extends EffectBase {
         effectTypes.add(CommonEffectTypes.SILENCE);
     }
 
-    public Silence(IEffectConsumer consumer, long duration, float c) {
+    public Silence(IEffectConsumer consumer, long duration, String c) {
         this(consumer, duration);
     }
 

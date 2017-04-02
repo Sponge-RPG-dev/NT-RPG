@@ -96,9 +96,11 @@ public class CommandAdmin extends CommandBase {
             return CommandResult.empty();
         }
         Player player = (Player) commandSource;
+        /*
         if (player.hasPermission("ntrpg.superadmin")) {
-            return CommandResult.empty(); //todo testPermission seems to not be called
+            return CommandResult.empty();
         }
+        */
         if (a[0].equalsIgnoreCase("use")) {
 
             if (a[1].equalsIgnoreCase("skill")) {
@@ -217,13 +219,16 @@ public class CommandAdmin extends CommandBase {
             if (PluginConfig.DEBUG) {
                 String methodcall = a[1];
                 try {
-                    Method method = TestAction.class.getClass().getMethod(methodcall, IActiveCharacter.class);
-                    method.invoke(null,characterService.getCharacter(player.getUniqueId()));
+                    Object o = TestAction.class.newInstance();
+                    Method method = TestAction.class.getMethod(methodcall, IActiveCharacter.class);
+                    method.invoke(o,characterService.getCharacter(player.getUniqueId()));
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (InstantiationException e) {
                     e.printStackTrace();
                 }
             } else {
-                throw new IllegalStateException("Only awalaible in debug mode");
+                throw new IllegalStateException("Only avalaible in debug mode");
             }
         } else if (a[0].equalsIgnoreCase("reloadjs")) {
             if (!PluginConfig.DEBUG) {

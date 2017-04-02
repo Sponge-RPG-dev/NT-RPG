@@ -9,10 +9,15 @@ import cz.neumimto.rpg.utils.ItemStackUtils;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandType;
 import org.spongepowered.api.data.type.HandTypes;
+import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.common.item.inventory.util.ItemStackUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 

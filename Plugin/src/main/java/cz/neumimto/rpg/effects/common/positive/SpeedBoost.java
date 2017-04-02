@@ -53,13 +53,19 @@ public class SpeedBoost extends EffectBase {
     private float speedbonus;
     private IActiveCharacter character;
 
+
+    public SpeedBoost(IActiveCharacter consumer, long duration, String speedbonus) {
+        this(consumer, duration, Float.parseFloat(speedbonus));
+    }
+
     public SpeedBoost(IActiveCharacter consumer, long duration, float speedbonus) {
         super(name, consumer);
         setDuration(duration);
         this.speedbonus = speedbonus;
         character = consumer;
-
     }
+
+
 
     @Override
     public String getName() {

@@ -37,6 +37,7 @@ public class BloodMagicEffect extends EffectBase {
     private static String apply = "You have gained " + name;
     private static String expire = "You have lost " + name;
     private IActiveCharacter consumer;
+
     public BloodMagicEffect(IActiveCharacter consumer) {
         super(name, consumer);
         setConsumer(consumer);
