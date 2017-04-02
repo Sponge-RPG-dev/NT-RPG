@@ -117,7 +117,7 @@ public class EffectService {
                         }
 
                         if (e.getExpireTime() <= l) {
-                            stopEffect(e);
+	                        removeEffect(e, e.getConsumer());
                         }
                     }
 
@@ -177,6 +177,11 @@ public class EffectService {
     public void removeEffect(IEffect iEffect, IEffectConsumer consumer) {
         IEffectContainer effect = consumer.getEffect(iEffect.getName());
         if (effect != null) {
+            if (effect == iEffect) {
+                consumer.removeEffect(iEffect);
+                stopEffect(iEffect);
+                return;
+            }
             if (effect.getEffects().contains(iEffect)) {
                 effect.getEffects().remove(iEffect);
                 stopEffect(iEffect);
