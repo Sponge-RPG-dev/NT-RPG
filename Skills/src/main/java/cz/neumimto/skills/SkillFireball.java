@@ -46,12 +46,12 @@ public class SkillFireball extends ActiveSkill {
 		Vector3d rotation = p.getRotation();
 		Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();
 		Snowball sb = (Snowball) optional;
-		sb.offer(Keys.VELOCITY, direction.mul(settings.getLevelNodeValue(SkillNodes.VELOCITY, info.getLevel())));
+		sb.offer(Keys.VELOCITY, direction.mul(settings.getLevelNodeValue(SkillNodes.VELOCITY, info.getTotalLevel())));
 		sb.setShooter(p);
 		world.spawnEntity(sb, Cause.of(NamedCause.of("player", character.getPlayer())));
 		sb.offer(Keys.FIRE_TICKS, 999);
 		ProjectileProperties projectileProperties = new ProjectileProperties(sb, character);
-		projectileProperties.setDamage(settings.getLevelNodeValue(SkillNodes.DAMAGE, info.getLevel()));
+		projectileProperties.setDamage(settings.getLevelNodeValue(SkillNodes.DAMAGE, info.getTotalLevel()));
 		SkillDamageSourceBuilder build = new SkillDamageSourceBuilder();
 		build.setSkill(this);
 		build.setCaster(character);

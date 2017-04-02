@@ -38,7 +38,7 @@ public class BrainSap extends ActiveSkill {
 
     @Override
     public SkillResult cast(IActiveCharacter iActiveCharacter, ExtendedSkillInfo extendedSkillInfo, SkillModifier skillModifier) {
-        float range = extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.RANGE,extendedSkillInfo.getLevel());
+        float range = extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.RANGE,extendedSkillInfo.getTotalLevel());
         Living targettedEntity = Utils.getTargettedEntity(iActiveCharacter, (int) range);
         if (targettedEntity != null) {
             SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
@@ -46,7 +46,7 @@ public class BrainSap extends ActiveSkill {
             builder.setCaster(iActiveCharacter);
             SkillDamageSource s = builder.build();
             IEntity entity = entityService.get(targettedEntity);
-            float damage = extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.DAMAGE,extendedSkillInfo.getLevel());
+            float damage = extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.DAMAGE,extendedSkillInfo.getTotalLevel());
             entity.getEntity().damage(damage,s);
             return SkillResult.OK;
         }

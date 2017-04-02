@@ -23,8 +23,7 @@ public class NEntity implements IMob {
         attach(l);
     }
 
-    protected NEntity() {
-
+    NEntity() {
     }
 
     @Override
@@ -50,7 +49,7 @@ public class NEntity implements IMob {
 
     @Override
     public void attach(Living creature) {
-        this.entity = new WeakReference(creature);
+        this.entity = new WeakReference<>(creature);
     }
 
     @Override

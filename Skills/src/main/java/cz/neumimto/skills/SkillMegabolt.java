@@ -29,9 +29,9 @@ public class SkillMegabolt extends ActiveSkill {
 
     @Override
     public SkillResult cast(IActiveCharacter iActiveCharacter, ExtendedSkillInfo extendedSkillInfo,SkillModifier skillModifier) {
-        int r = (int) settings.getLevelNodeValue(SkillNodes.RADIUS,extendedSkillInfo.getLevel());
+        int r = (int) settings.getLevelNodeValue(SkillNodes.RADIUS,extendedSkillInfo.getTotalLevel());
         Set<Entity> nearbyEntities = Utils.getNearbyEntities(iActiveCharacter.getPlayer().getLocation(), r);
-        float damage = settings.getLevelNodeValue(SkillNodes.DAMAGE,extendedSkillInfo.getLevel());
+        float damage = settings.getLevelNodeValue(SkillNodes.DAMAGE,extendedSkillInfo.getTotalLevel());
         SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
         builder.setSkill(this);
         builder.setCaster(iActiveCharacter);
