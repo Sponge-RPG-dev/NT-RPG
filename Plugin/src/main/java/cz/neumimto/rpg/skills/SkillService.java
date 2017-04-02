@@ -107,7 +107,7 @@ public class SkillService {
     }
 
     public SkillResult executeSkill(IActiveCharacter character, ExtendedSkillInfo esi) {
-        int level = esi.getLevel();
+        int level = esi.getTotalLevel();
         if (level < 0)
             //this should never happen
             return SkillResult.WRONG_DATA;

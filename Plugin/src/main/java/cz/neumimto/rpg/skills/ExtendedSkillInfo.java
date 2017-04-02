@@ -25,9 +25,11 @@ public class ExtendedSkillInfo {
     public static ExtendedSkillInfo Empty = new ExtendedSkillInfo() {{
         setSkillData(SkillData.EMPTY);
     }};
-    ISkill skill;
-    int level;
-    SkillData skillData;
+    private ISkill skill;
+    private int level;
+    private SkillData skillData;
+
+    private int bonusLevel;
 
     public ISkill getSkill() {
         return skill;
@@ -51,5 +53,17 @@ public class ExtendedSkillInfo {
 
     public void setSkillData(SkillData skillData) {
         this.skillData = skillData;
+    }
+
+    public int getBonusLevel() {
+        return bonusLevel;
+    }
+
+    public void setBonusLevel(int bonusLevel) {
+        this.bonusLevel = bonusLevel;
+    }
+
+    public int getTotalLevel() {
+        return getBonusLevel() + getLevel();
     }
 }
