@@ -16,7 +16,7 @@ import java.util.*;
 /**
  * Created by NeumimTo on 25.6.2016.
  */
-public class BossBarExpNotifier extends EffectBase implements IEffectContainer<BossBarExpNotifier>{
+public class BossBarExpNotifier extends EffectBase<Object> implements IEffectContainer<Object, BossBarExpNotifier>{
 
     public static final String name = "BossBarExp";
     private IActiveCharacter character;
@@ -87,7 +87,12 @@ public class BossBarExpNotifier extends EffectBase implements IEffectContainer<B
 
     @Override
     public Set<BossBarExpNotifier> getEffects() {
-        return new HashSet<>(Arrays.asList(this));
+        return new HashSet<>(Collections.singletonList(this));
+    }
+
+    @Override
+    public BossBarExpNotifier getStackedValue() {
+        return this;
     }
 }
 

@@ -4,21 +4,24 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 /**
- * Created by ja on 1.4.2017.
+ * Created by NeumimTo on 1.4.2017.
  */
-public interface IEffectContainer<T extends IEffect> {
+public interface IEffectContainer<K, T extends IEffect<K>> {
+
 	Set<T> getEffects();
 
 	String getName();
 
 	boolean isStackable();
 
-	default void mergeWith(IEffectContainer<T> IEffectContainer) {
+	default void mergeWith(IEffectContainer<K, T> IEffectContainer) {
 		getEffects().addAll(IEffectContainer.getEffects());
+		updateStackedValue();
 	}
 
 	default void stackEffect(T t, IEffectSourceProvider effectSourceProvider) {
 		getEffects().add(t);
+		updateStackedValue();
 	}
 
 	default void forEach(Consumer<T> consumer) {
@@ -26,4 +29,17 @@ public interface IEffectContainer<T extends IEffect> {
 			consumer.accept(t);
 		}
 	}
+
+	default void updateStackedValue(){
+		setStackedValue(getEffectStackingStrategy().getDefaultValue());
+		for (T t : getEffects()) {
+			setStackedValue(t.getEffectStackingStrategy().mergeValues(getStackedValue(), t.getValue()));
+		}
+	}
+
+	EffectStackingStrategy<K> getEffectStackingStrategy();
+
+	default K getStackedValue() {return null;}
+
+	default void setStackedValue(K k) {}
 }

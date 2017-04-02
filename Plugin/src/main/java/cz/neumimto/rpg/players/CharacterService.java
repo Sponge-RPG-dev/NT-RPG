@@ -67,6 +67,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.common.text.serializer.xml.Obfuscated;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -396,7 +397,7 @@ public class CharacterService {
 	}
 
 	protected IActiveCharacter deleteCharacterReferences(IActiveCharacter character) {
-		Collection<IEffectContainer<IEffect>> effects = character.getEffects();
+		Collection<IEffectContainer<Object,IEffect<Object>>> effects = character.getEffects();
 		effects.stream()
 				.map(IEffectContainer::getEffects)
 				.forEach(a -> a.stream().forEach(e -> effectService.stopEffect(e)));
@@ -1066,10 +1067,9 @@ public class CharacterService {
 	 * character object is heavy, lets do not recreate its instance just reasign player and effects
 	 */
 	public void respawnCharacter(IActiveCharacter character, Player pl) {
-		Iterator<IEffectContainer<IEffect>> iterator = character.getEffects().iterator();
-		Set<IEffect> a = new HashSet<>();
+		Iterator<IEffectContainer<Object, IEffect<Object>>> iterator = character.getEffects().iterator();
 		while (iterator.hasNext()) {
-			IEffectContainer<IEffect> next = iterator.next();
+			IEffectContainer<Object, IEffect<Object>> next = iterator.next();
 			next.forEach(q -> effectService.stopEffect(q));
 			iterator.remove();
 		}

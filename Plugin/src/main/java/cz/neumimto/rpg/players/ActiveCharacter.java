@@ -61,7 +61,7 @@ public class ActiveCharacter implements IActiveCharacter {
     private IReservable mana = new Mana(this);
     private Health health = new Health(this);
     private transient Player pl;
-    private transient Map<String, IEffectContainer<IEffect>> effects = new HashMap<>();
+    private transient Map<String, IEffectContainer<Object, IEffect<Object>>> effects = new HashMap<>();
     private transient Click click = new Click();
     private transient Set<ItemType> allowedArmorIds = new HashSet<>();
     private transient Map<ItemType, Double> allowedWeapons = new HashMap<>();
@@ -260,7 +260,7 @@ public class ActiveCharacter implements IActiveCharacter {
 
 
     @Override
-    public Map<String, IEffectContainer<IEffect>> getEffectMap() {
+    public Map<String, IEffectContainer<Object, IEffect<Object>>> getEffectMap() {
         return effects;
     }
 

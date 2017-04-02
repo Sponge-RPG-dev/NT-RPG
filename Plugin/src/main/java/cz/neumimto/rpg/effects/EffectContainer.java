@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 1.4.2017.
  */
-public class EffectContainer<T extends IEffect> implements IEffectContainer<T> {
+public class EffectContainer<K, T extends IEffect<K>> implements IEffectContainer<K, T> {
 
 	final Set<T> effects = new HashSet<>();
 
@@ -14,9 +14,14 @@ public class EffectContainer<T extends IEffect> implements IEffectContainer<T> {
 
 	final boolean stackable;
 
+	private K value;
+
+	private EffectStackingStrategy<K> effectStackingStrategy;
+
 	public EffectContainer(T t) {
 		name = t.getName();
 		effects.add(t);
+		effectStackingStrategy = t.getEffectStackingStrategy();
 		this.stackable = t.isStackable();
 	}
 
@@ -35,5 +40,14 @@ public class EffectContainer<T extends IEffect> implements IEffectContainer<T> {
 		return stackable;
 	}
 
+	@Override
+	public EffectStackingStrategy<K> getEffectStackingStrategy() {
+		return effectStackingStrategy;
+	}
+
+	@Override
+	public K getStackedValue() {
+		return value;
+	}
 
 }

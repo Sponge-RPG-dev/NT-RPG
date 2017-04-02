@@ -31,7 +31,7 @@ import java.util.*;
 /**
  * Created by NeumimTo.
  */
-public class EffectBase implements IEffect {
+public class EffectBase<Value> implements IEffect<Value> {
     protected Set<EffectType> effectTypes = new HashSet<>();
     private boolean stackable = false;
     private String name;
@@ -48,6 +48,8 @@ public class EffectBase implements IEffect {
     private String expireMessage;
     private UUID uuid;
     private IEffectSourceProvider effectSourceProvider;
+    private Value value;
+    private EffectStackingStrategy<Value> effectStackingStrategy;
 
     public EffectBase(String name, IEffectConsumer consumer) {
         this();
@@ -94,8 +96,9 @@ public class EffectBase implements IEffect {
     }
 
     @Override
-    public void setStackable(boolean b) {
+    public void setStackable(boolean b, EffectStackingStrategy<Value> stackingStrategy) {
         this.stackable = b;
+	    setEffectStackingStrategy(stackingStrategy);
     }
 
     @Override
@@ -238,4 +241,27 @@ public class EffectBase implements IEffect {
         return uuid.hashCode();
     }
 
+    public void setEffectTypes(Set<EffectType> effectTypes) {
+        this.effectTypes = effectTypes;
+    }
+
+    @Override
+    public void setValue(Value o) {
+        this.value = o;
+    }
+
+    @Override
+    public Value getValue() {
+        return value;
+    }
+
+    @Override
+    public EffectStackingStrategy<Value> getEffectStackingStrategy() {
+        return effectStackingStrategy;
+    }
+
+    @Override
+    public void setEffectStackingStrategy(EffectStackingStrategy<Value> effectStackingStrategy) {
+        this.effectStackingStrategy = effectStackingStrategy;
+    }
 }

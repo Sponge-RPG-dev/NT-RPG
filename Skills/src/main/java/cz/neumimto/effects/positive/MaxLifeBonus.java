@@ -12,7 +12,7 @@ public class MaxLifeBonus extends EffectBase {
 
     public MaxLifeBonus(IActiveCharacter character, long duration, float level) {
 
-        setStackable(false);
+        //todo
     }
 
 }

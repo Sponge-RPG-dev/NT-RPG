@@ -202,7 +202,7 @@ public class VanilaMessaging implements IPlayerMessage {
 
 	@Override
 	public void showExpChange(IActiveCharacter character, String classname, double expchange) {
-		IEffectContainer<BossBarExpNotifier> barExpNotifier = character.getEffect(BossBarExpNotifier.name);
+		IEffectContainer<Object, BossBarExpNotifier> barExpNotifier = character.getEffect(BossBarExpNotifier.name);
 		BossBarExpNotifier effect = (BossBarExpNotifier) barExpNotifier;
 		if (effect == null) {
 			effect = new BossBarExpNotifier(character);

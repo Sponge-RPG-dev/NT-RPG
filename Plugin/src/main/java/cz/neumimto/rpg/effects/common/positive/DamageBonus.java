@@ -18,10 +18,12 @@
 
 package cz.neumimto.rpg.effects.common.positive;
 
+import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
+import org.spongepowered.api.entity.EntityTypes;
 
 /**
  * Created by NeumimTo on 6.8.2015.
@@ -40,10 +42,11 @@ public class DamageBonus extends EffectBase {
     /**
      *@see cz.neumimto.rpg.effects.IGlobalEffect#construct(IEffectConsumer, long, String)
      *
-     */
+
     public DamageBonus(IEffectConsumer consumer, long duration, String bonusDamage) {
         this(consumer, duration, Float.parseFloat(bonusDamage));
     }
+     */
 
     public float getBonusDamage() {
         return bonusDamage;
@@ -55,17 +58,19 @@ public class DamageBonus extends EffectBase {
 
     @Override
     public void onApply() {
-        super.onApply();
-        IActiveCharacter character = (IActiveCharacter) getConsumer();
-        character.setProperty(DefaultProperties.weapon_damage_bonus, getGlobalScope().characterService.getCharacterProperty(character, DefaultProperties.weapon_damage_bonus) + getBonusDamage());
-        getGlobalScope().damageService.recalculateCharacterWeaponDamage(character);
+        getConsumer().setProperty(DefaultProperties.weapon_damage_bonus,
+                getConsumer().getProperty(DefaultProperties.weapon_damage_bonus) + bonusDamage);
+        if (getConsumer().getEntity().getType() == EntityTypes.PLAYER) {
+            getGlobalScope().damageService.recalculateCharacterWeaponDamage((IActiveCharacter) getConsumer());
+        }
     }
 
     @Override
     public void onRemove() {
-        super.onRemove();
-        IActiveCharacter character = (IActiveCharacter) getConsumer();
-        character.setProperty(DefaultProperties.weapon_damage_bonus, getGlobalScope().characterService.getCharacterProperty(character, DefaultProperties.weapon_damage_bonus) - getBonusDamage());
-        getGlobalScope().damageService.recalculateCharacterWeaponDamage(character);
+        getConsumer().setProperty(DefaultProperties.weapon_damage_bonus,
+                getConsumer().getProperty(DefaultProperties.weapon_damage_bonus) - bonusDamage);
+        if (getConsumer().getEntity().getType() == EntityTypes.PLAYER) {
+            getGlobalScope().damageService.recalculateCharacterWeaponDamage((IActiveCharacter) getConsumer());
+        }
     }
 }

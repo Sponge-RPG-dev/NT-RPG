@@ -14,7 +14,6 @@ public class ManacostReduction extends EffectBase {
     public ManacostReduction(IActiveCharacter character, long duration) {
         super(name, character);
         setDuration(duration);
-        setStackable(true);
     }
 
 

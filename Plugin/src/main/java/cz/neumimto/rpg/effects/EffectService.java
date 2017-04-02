@@ -157,7 +157,7 @@ public class EffectService {
      * @param consumer
      */
     public void addEffect(IEffect iEffect, IEffectConsumer consumer, IEffectSourceProvider effectSourceProvider) {
-        IEffectContainer<IEffect> eff = consumer.getEffect(iEffect.getName());
+        IEffectContainer eff = consumer.getEffect(iEffect.getName());
         if (eff == null) {
             consumer.addEffect(new EffectContainer<>(iEffect));
             iEffect.onApply();
@@ -192,7 +192,7 @@ public class EffectService {
      */
     @SuppressWarnings("unchecked")
     public void removeEffect(String iEffect, IEffectConsumer consumer, IEffectSourceProvider effectSource) {
-        IEffectContainer<IEffect> effect = consumer.getEffect(iEffect);
+        IEffectContainer effect = consumer.getEffect(iEffect);
         if (effect != null) {
             Iterator<IEffect> iterator = effect.getEffects().iterator();
             IEffect e;
@@ -274,7 +274,7 @@ public class EffectService {
 
 	@SuppressWarnings("unchecked")
     public void removeAllEffects(IActiveCharacter character) {
-	    for (IEffectContainer<IEffect> IEffectContainer : character.getEffects()) {
+	    for (IEffectContainer<Object, IEffect<Object>> IEffectContainer : character.getEffects()) {
 		    for (IEffect effect : IEffectContainer.getEffects()) {
 			    pendingRemovals.add(effect);
 		    }

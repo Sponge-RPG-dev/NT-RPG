@@ -3,35 +3,33 @@ package cz.neumimto.effects.positive;
 import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.common.stacking.IntegerEffectStackingStrategy;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 
 @ClassGenerator.Generate(id = "name")
-public class AllSkillsBonus extends EffectBase{
+public class AllSkillsBonus extends EffectBase<Integer> {
 
     public static final String name = "All skills";
-    IActiveCharacter character1;
-    private int bonus;
 
-    public AllSkillsBonus(IActiveCharacter character, long duration, float level) {
-        character1 = character;
+    public AllSkillsBonus(IActiveCharacter character, long duration, int value) {
+        super(name, character);
         setDuration(duration);
-        setStackable(false);
-        this.bonus = (int) level;
+        setStackable(true, new IntegerEffectStackingStrategy());
+        setValue(value);
+    }
+
+    public AllSkillsBonus(IActiveCharacter character, long duration, String value) {
+        this(character, duration, Integer.parseInt(value));
     }
 
     @Override
     public void onApply() {
-        character1.setProperty(DefaultProperties.all_skills_bonus,character1.getProperty(DefaultProperties.all_skills_bonus)+bonus);
+        getConsumer().setProperty(DefaultProperties.all_skills_bonus,getConsumer().getProperty(DefaultProperties.all_skills_bonus)+getValue());
     }
 
     @Override
     public void onRemove() {
-        character1.setProperty(DefaultProperties.all_skills_bonus,character1.getProperty(DefaultProperties.all_skills_bonus)-bonus);
-    }
-
-    @Override
-    public IEffectConsumer getConsumer() {
-        return character1;
+        getConsumer().setProperty(DefaultProperties.all_skills_bonus,getConsumer().getProperty(DefaultProperties.all_skills_bonus)-getValue());
     }
 }

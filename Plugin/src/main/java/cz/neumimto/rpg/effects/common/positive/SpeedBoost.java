@@ -37,6 +37,7 @@ import cz.neumimto.rpg.players.properties.DefaultProperties;
  * inject - If set to true the class loader tries to inject public static field which is assingable from IGlobalEffect.
  * Main behavior of global effects is that they are accessible via effectservice.getGlobalEffect(stringId) inject option is
  * here only if someone would like to keep direct field reference to the global effect object.
+ * Global Effects may be given to player via command or as an item enchantement
  * <p>
  * The class, which inherits from IEffect(or its implementations such as effect base) must contain a constructor - IEffectConsumer, long duration, int level.
  * <p>
@@ -48,8 +49,10 @@ public class SpeedBoost extends EffectBase {
     public static final String name = "Speed";
 
     public static IGlobalEffect<SpeedBoost> global;
+
     private float speedbonus;
     private IActiveCharacter character;
+
     public SpeedBoost(IActiveCharacter consumer, long duration, float speedbonus) {
         super(name, consumer);
         setDuration(duration);

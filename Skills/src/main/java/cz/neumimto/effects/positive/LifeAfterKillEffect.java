@@ -3,27 +3,17 @@ package cz.neumimto.effects.positive;
 import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.common.stacking.FloatEffectStackingStrategy;
 import cz.neumimto.rpg.players.IActiveCharacter;
 
 @ClassGenerator.Generate(id = "name")
-public class LifeAfterKillEffect extends EffectBase {
-
+public class LifeAfterKillEffect extends EffectBase<Float> {
     public static final String name = "Life after each kill";
-    private IActiveCharacter character;
-    private float healedAmount;
-    public LifeAfterKillEffect(IActiveCharacter character, long duration, float level) {
-        this.character = character;
+
+    public LifeAfterKillEffect(IActiveCharacter character, long duration, float healedAmount) {
+        super(name, character);
         setDuration(duration);
-        this.healedAmount = level;
-        setStackable(false);
+        setValue(healedAmount);
+        setStackable(true, new FloatEffectStackingStrategy());
     }
-
-    public float getHealedAmount() {
-        return healedAmount;
-    }
-
-    public void setHealedAmount(float healedAmount) {
-        this.healedAmount = healedAmount;
-    }
-
 }

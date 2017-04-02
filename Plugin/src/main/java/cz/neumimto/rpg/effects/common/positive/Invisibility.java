@@ -1,17 +1,20 @@
 package cz.neumimto.rpg.effects.common.positive;
 
 import cz.neumimto.rpg.ClassGenerator;
-import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.*;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.Living;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by NeumimTo on 23.12.2015.
  */
 
 @ClassGenerator.Generate(id = "name", inject = false)
-public class Invisibility extends EffectBase {
+public class Invisibility extends EffectBase implements IEffectContainer {
 
     public static String name = "Invisibility";
 
@@ -20,7 +23,7 @@ public class Invisibility extends EffectBase {
         setDuration(duration);
     }
 
-    public Invisibility(IEffectConsumer consumer, long duration, float level) {
+    public Invisibility(IEffectConsumer consumer, long duration, String level) {
         this(consumer, duration);
     }
 
@@ -34,5 +37,15 @@ public class Invisibility extends EffectBase {
     public void onRemove() {
         Living entity = getConsumer().getEntity();
         entity.offer(Keys.INVISIBLE, false);
+    }
+
+    @Override
+    public IEffectContainer constructEffectContainer() {
+        return this;
+    }
+
+    @Override
+    public Set<Invisibility> getEffects() {
+        return Collections.singleton(this);
     }
 }

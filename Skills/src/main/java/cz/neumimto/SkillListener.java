@@ -5,6 +5,7 @@ import cz.neumimto.effects.positive.DamageToMana;
 import cz.neumimto.effects.positive.LifeAfterKillEffect;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.events.character.CharacterDamageEntityEvent;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -33,10 +34,10 @@ public class SkillListener {
             Player player = first.get();
             IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
             if (!character.isStub()) {
-                IEffect effect = character.getEffect(LifeAfterKillEffect.name);
-                if (effect != null) {
-                    LifeAfterKillEffect e = (LifeAfterKillEffect) effect;
-                    characterService.healCharacter(character,e.getHealedAmount());
+                IEffectContainer container = character.getEffect(LifeAfterKillEffect.name);
+                if (container != null) {
+                    float l = (float) container.getStackedValue();
+                    characterService.healCharacter(character,l);
                 }
             }
         }
@@ -46,11 +47,9 @@ public class SkillListener {
     public void onDamage(CharacterDamageEntityEvent event) {
         IActiveCharacter character = characterService.getCharacter(event.getDamaged().getUniqueId());
         if (!character.isStub()) {
-            IEffect effect = character.getEffect(DamageToMana.name);
-            if (effect != null) {
-                DamageToMana damageToMana = (DamageToMana) effect;
-                double value = damageToMana.getValue();
-                //todo
+            IEffectContainer container = character.getEffect(DamageToMana.name);
+            if (container != null) {
+                double percentage = (double) container.getStackedValue();
 
             }
         }

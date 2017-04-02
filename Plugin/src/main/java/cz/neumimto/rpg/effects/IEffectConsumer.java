@@ -36,14 +36,14 @@ public interface IEffectConsumer<T extends Living> extends PropertyContainer {
 
     T getEntity();
 
-    Map<String, IEffectContainer<IEffect>> getEffectMap();
+    Map<String, IEffectContainer<Object, IEffect<Object>>> getEffectMap();
 
-    default Collection<IEffectContainer<IEffect>> getEffects() {
+    default Collection<IEffectContainer<Object, IEffect<Object>>> getEffects() {
         return getEffectMap().values();
     }
 
-    default <A extends IEffect> IEffectContainer<A> getEffect(String cl) {
-        return (IEffectContainer<A>) getEffectMap().get(cl);
+    default IEffectContainer getEffect(String cl) {
+        return getEffectMap().get(cl);
     }
 
     default boolean hasEffect(String cl) {
@@ -60,8 +60,8 @@ public interface IEffectConsumer<T extends Living> extends PropertyContainer {
 	    }
     }
 
-    default void addEffect(IEffectContainer<IEffect> IEffectContainer) {
-        IEffectContainer<IEffect> effectContainer1 = getEffectMap().get(IEffectContainer.getName());
+    default void addEffect(IEffectContainer IEffectContainer) {
+        IEffectContainer effectContainer1 = getEffectMap().get(IEffectContainer.getName());
         if (effectContainer1 == null) {
             getEffectMap().put(IEffectContainer.getName(), IEffectContainer);
         } else {

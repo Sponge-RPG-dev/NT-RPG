@@ -23,7 +23,6 @@ public class DOTFireDamageEffect extends EffectBase {
 		super(name, character);
 		setDuration(duration);
 		setPeriod(1000L);
-		setStackable(false);
 		this.damage = level;
 	}
 

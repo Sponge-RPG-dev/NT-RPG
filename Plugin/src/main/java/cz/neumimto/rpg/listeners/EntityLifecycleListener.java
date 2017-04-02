@@ -97,7 +97,7 @@ public class EntityLifecycleListener {
             IActiveCharacter character = characterService.getCharacter(targetEntity.getUniqueId());
             if (character.isStub())
                 return;
-            for (IEffectContainer<IEffect> iEffectIEffectContainer : character.getEffects()) {
+            for (IEffectContainer<Object, IEffect<Object>> iEffectIEffectContainer : character.getEffects()) {
                 iEffectIEffectContainer.forEach(a -> effectService.stopEffect(a));
             }
         } else {

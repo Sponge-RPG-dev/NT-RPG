@@ -207,7 +207,7 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public Map<String, IEffectContainer<IEffect>> getEffectMap() {
+    public Map<String, IEffectContainer<Object, IEffect<Object>>> getEffectMap() {
         return Collections.emptyMap();
     }
 
@@ -394,12 +394,12 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public Collection<IEffectContainer<IEffect>> getEffects() {
+    public Collection<IEffectContainer<Object, IEffect<Object>>> getEffects() {
         return Collections.EMPTY_SET;
     }
 
     @Override
-    public EffectContainer<IEffect> getEffect(String cl) {
+    public EffectContainer getEffect(String cl) {
         return null;
     }
 

@@ -28,7 +28,7 @@ import java.util.UUID;
 /**
  * Created by NeumimTo on 17.1.2015.
  */
-public interface IEffect {
+public interface IEffect<K> {
 
     static GlobalScope getGlobalScope() {
         return NtRpgPlugin.GlobalScope;
@@ -52,7 +52,7 @@ public interface IEffect {
 
     boolean isStackable();
 
-    void setStackable(boolean b);
+    void setStackable(boolean b, EffectStackingStrategy<K> stackingStrategy);
 
     boolean requiresRegister();
 
@@ -96,10 +96,17 @@ public interface IEffect {
 
     IEffectSourceProvider getEffectSourceProvider();
 
+    void setEffectSourceProvider(IEffectSourceProvider effectSourceProvider);
 
-    default <T extends IEffect> IEffectContainer<T> constructEffectContainer() {
+    void setValue(K k);
+
+    K getValue();
+
+    default <T extends IEffect<K>> IEffectContainer<K, T> constructEffectContainer() {
         return new EffectContainer(this);
     }
 
-    void setEffectSourceProvider(IEffectSourceProvider effectSourceProvider);
+    EffectStackingStrategy<K> getEffectStackingStrategy();
+
+    void setEffectStackingStrategy(EffectStackingStrategy<K> effectStackingStrategy);
 }

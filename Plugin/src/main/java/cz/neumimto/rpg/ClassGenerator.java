@@ -62,7 +62,7 @@ public class ClassGenerator implements Opcodes {
             mv.visitEnd();
         }
         {
-            mv = cw.visitMethod(ACC_PUBLIC, "construct", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JF)L" + toPath(cls) + ";", null, null);
+            mv = cw.visitMethod(ACC_PUBLIC, "construct", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JLjava/lang/String;)L" + toPath(cls) + ";", null, null);
             mv.visitCode();
             Label l0 = new Label();
             mv.visitLabel(l0);
@@ -112,7 +112,7 @@ public class ClassGenerator implements Opcodes {
             mv.visitEnd();
         }
         {
-            mv = cw.visitMethod(ACC_PUBLIC + ACC_BRIDGE + ACC_SYNTHETIC, "construct", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JF)Lcz/neumimto/rpg/effects/IEffect;", null, null);
+            mv = cw.visitMethod(ACC_PUBLIC + ACC_BRIDGE + ACC_SYNTHETIC, "construct", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JLjava/lang/String;)Lcz/neumimto/rpg/effects/IEffect;", null, null);
             mv.visitCode();
             Label l0 = new Label();
             mv.visitLabel(l0);
@@ -326,5 +326,10 @@ public class ClassGenerator implements Opcodes {
         String id();
 
         boolean inject() default false;
+
+        @Retention(RetentionPolicy.RUNTIME)
+        public @interface Constructor {
+
+        }
     }
 }
