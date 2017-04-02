@@ -47,7 +47,7 @@ public class PluginConfig {
     public static boolean DEBUG = true;
 
     @ConfigValue
-    public static short SKILLPOINTS_ON_START = 1;
+    public static int SKILLPOINTS_ON_START = 1;
 
     @ConfigValue
     public static boolean PLAYER_CAN_CHANGE_RACE = true;
@@ -68,7 +68,7 @@ public class PluginConfig {
     public static boolean PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE = true;
 
     @ConfigValue
-    public static short ATTRIBUTEPOINTS_ON_START = 1;
+    public static int ATTRIBUTEPOINTS_ON_START = 1;
 
     @ConfigValue
     public static int PLAYER_MAX_CHARS = 5;
