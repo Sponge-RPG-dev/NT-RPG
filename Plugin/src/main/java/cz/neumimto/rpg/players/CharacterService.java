@@ -139,6 +139,9 @@ public class CharacterService {
 		if (character.isStub())
 			return false;
 		character.setPlayer(pl);
+		if (character.getCharacterBase().getHealthScale() != null) {
+			pl.offer(Keys.HEALTH_SCALE, character.getCharacterBase().getHealthScale());
+		}
 		inventoryService.initializeHotbar(character);
 		return true;
 	}

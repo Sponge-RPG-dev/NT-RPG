@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.effects;
 
-import cz.neumimto.rpg.effects.common.PropertyContainer;
+import cz.neumimto.rpg.entities.PropertyContainer;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectType;

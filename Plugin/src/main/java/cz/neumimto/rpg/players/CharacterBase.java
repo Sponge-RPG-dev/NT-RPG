@@ -45,7 +45,7 @@ public class CharacterBase extends TimestampEntity {
     private Long characterId;
     //todo locking
     //@Version
-    private long version;
+    private Long version;
 
     @Convert(converter = UUID2String.class)
     private UUID uuid;
@@ -55,16 +55,17 @@ public class CharacterBase extends TimestampEntity {
 
     private String info;
 
-    private int usedAttributePoints;
+    private Integer usedAttributePoints;
 
-    protected int attributePoints;
+    private Integer attributePoints;
 
-    private boolean canResetskills;
+    private Boolean canResetskills;
 
     private String race, primaryClass;
 
-    //TODO ehcache!
-    private int guildid;
+    private Integer guildid;
+
+    private Double healthScale;
 
     @Column(length = 16)
     private String lastKnownPlayerName;
@@ -90,11 +91,11 @@ public class CharacterBase extends TimestampEntity {
     @Transient
     private Map<String,Integer> cachedAttributes = new HashMap<>();
 
-    private int X;
+    private Integer X;
 
-    private int Y;
+    private Integer Y;
 
-    private int Z;
+    private Integer Z;
 
     private String world;
 
@@ -202,27 +203,27 @@ public class CharacterBase extends TimestampEntity {
         this.version = version;
     }
 
-    public int getX() {
+    public Integer getX() {
         return X;
     }
 
-    public void setX(int x) {
+    public void setX(Integer x) {
         X = x;
     }
 
-    public int getY() {
+    public Integer getY() {
         return Y;
     }
 
-    public void setY(int y) {
+    public void setY(Integer y) {
         Y = y;
     }
 
-    public int getZ() {
+    public Integer getZ() {
         return Z;
     }
 
-    public void setZ(int z) {
+    public void setZ(Integer z) {
         Z = z;
     }
 
@@ -234,11 +235,11 @@ public class CharacterBase extends TimestampEntity {
         this.world = world;
     }
 
-    public int getAttributePoints() {
+    public Integer getAttributePoints() {
         return attributePoints;
     }
 
-    public void setAttributePoints(int attributePoints) {
+    public void setAttributePoints(Integer attributePoints) {
         this.attributePoints = attributePoints;
     }
 
@@ -302,5 +303,13 @@ public class CharacterBase extends TimestampEntity {
 
     public void setMessageType(MessageType messageType) {
         this.messageType = messageType;
+    }
+
+    public Double getHealthScale() {
+        return healthScale;
+    }
+
+    public void setHealthScale(Double healthScale) {
+        this.healthScale = healthScale;
     }
 }

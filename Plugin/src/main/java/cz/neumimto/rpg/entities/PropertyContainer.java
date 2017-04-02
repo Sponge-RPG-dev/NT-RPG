@@ -1,7 +1,7 @@
-package cz.neumimto.rpg.effects.common;
+package cz.neumimto.rpg.entities;
 
 /**
- * Created by fs on 29.3.17.
+ * Created by NeumimTo on 29.3.17.
  */
 public interface PropertyContainer {
 
