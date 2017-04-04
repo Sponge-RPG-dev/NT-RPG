@@ -35,12 +35,17 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class EffectService {
 
+
     public static final long TICK_PERIOD = 250L;
+
     private static final long unlimited_duration = -1;
+
     @Inject
     private Game game;
+
     @Inject
     private NtRpgPlugin plugin;
+
     private Set<IEffect> effectSet = new HashSet<>();
     private Set<IEffect> pendingAdditions = new HashSet<>();
     private Set<IEffect> pendingRemovals = new HashSet<>();
@@ -140,22 +145,13 @@ public class EffectService {
     }
 
     /**
-     * Stacks effect and inceremnt effect level by 1
-     *
-     * @param effect
-     */
-    public void stackEffect(IEffect effect, IEffectSourceProvider provider) {
-        effect.setStacks(effect.getStacks() + 1);
-
-    }
-
-    /**
      * Adds effect to the consumer,
      * Effects requiring register are registered into the scheduler
      *
      * @param iEffect
      * @param consumer
      */
+    @SuppressWarnings("unchecked")
     public void addEffect(IEffect iEffect, IEffectConsumer consumer, IEffectSourceProvider effectSourceProvider) {
         IEffectContainer eff = consumer.getEffect(iEffect.getName());
         if (eff == null) {
@@ -178,13 +174,16 @@ public class EffectService {
         IEffectContainer effect = consumer.getEffect(iEffect.getName());
         if (effect != null) {
             if (effect == iEffect) {
-                consumer.removeEffect(iEffect);
                 stopEffect(iEffect);
+                consumer.removeEffect(effect);
                 return;
             }
             if (effect.getEffects().contains(iEffect)) {
                 effect.getEffects().remove(iEffect);
                 stopEffect(iEffect);
+                if (effect.getEffects().isEmpty()) {
+                    consumer.removeEffect(effect);
+                }
             }
         }
     }
@@ -207,6 +206,9 @@ public class EffectService {
                     stopEffect(e);
                     iterator.remove();
                 }
+            }
+            if (effect.getEffects().isEmpty()) {
+                consumer.removeEffect(effect);
             }
 
         }

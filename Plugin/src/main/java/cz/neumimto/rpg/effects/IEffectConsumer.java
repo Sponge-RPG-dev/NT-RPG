@@ -50,7 +50,7 @@ public interface IEffectConsumer<T extends Living> extends PropertyContainer {
         return getEffectMap().containsKey(cl);
     }
 
-
+    @SuppressWarnings("unchecked")
     default void addEffect(IEffect effect) {
 	    IEffectContainer IEffectContainer1 = getEffectMap().get(effect.getName());
 	    if (IEffectContainer1 == null) {
@@ -60,6 +60,7 @@ public interface IEffectConsumer<T extends Living> extends PropertyContainer {
 	    }
     }
 
+    @SuppressWarnings("unchecked")
     default void addEffect(IEffectContainer IEffectContainer) {
         IEffectContainer effectContainer1 = getEffectMap().get(IEffectContainer.getName());
         if (effectContainer1 == null) {
@@ -73,10 +74,13 @@ public interface IEffectConsumer<T extends Living> extends PropertyContainer {
         getEffectMap().remove(cl);
     }
 
-    default void removeEffect(IEffect cl) {
+    default void removeEffect(IEffectContainer cl) {
         getEffectMap().remove(cl.getName());
     }
 
+    default void removeEffect(IEffect cl) {
+        getEffectMap().remove(cl.getName());
+    }
 
     default void addPotionEffect(PotionEffectType p, int amplifier, long duration) {
         PotionEffect build = PotionEffect.builder().potionType(p).amplifier(amplifier).duration((int) duration).build();
