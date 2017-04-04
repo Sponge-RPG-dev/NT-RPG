@@ -39,15 +39,11 @@ public class Weapon extends Charm {
     protected boolean current;
     private ItemStack itemStack;
     private int level;
-    private Map<ItemRestriction,Object> restrictionSet = new HashMap<>();
+
 
     public Weapon(ItemStack itemStack) {
         this.itemStack = itemStack;
         type = HotbarObjectTypes.WEAPON;
-    }
-
-    public Map<ItemRestriction,Object> getRestrictions() {
-        return restrictionSet;
     }
 
     public ItemType getItemType() {

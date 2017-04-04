@@ -4,6 +4,7 @@ import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.common.stacking.IntegerEffectStackingStrategy;
+import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 
@@ -20,7 +21,7 @@ public class AllSkillsBonus extends EffectBase<Integer> {
     }
 
     public AllSkillsBonus(IActiveCharacter character, long duration, String value) {
-        this(character, duration, Integer.parseInt(value));
+        this(character, duration, Integer.parseInt(InventoryService.REGEXP_NUMBER.matcher(value).group()));
     }
 
     @Override

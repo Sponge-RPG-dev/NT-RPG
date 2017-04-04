@@ -36,4 +36,6 @@ public class Armor extends Weapon {
     public IEffectSource getType() {
         return armorType;
     }
+
+    public static Armor NONE = null;
 }

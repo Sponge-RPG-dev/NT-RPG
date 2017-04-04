@@ -24,6 +24,7 @@ import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.EffectSourceType;
+import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.runewords.RWService;
@@ -62,6 +63,7 @@ import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.common.data.type.SpongeEquipmentTypeWorn;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Created by NeumimTo on 22.7.2015.
@@ -75,11 +77,13 @@ public class InventoryService {
     public static TextColor LORE_FIRSTLINE = TextColors.AQUA;
     public static TextColor SOCKET_COLOR = TextColors.GRAY;
     public static TextColor ENCHANTMENT_COLOR = TextColors.BLUE;
-    public static TextColor LEVEL_COLOR = TextColors.YELLOW;
+    public static TextColor LEVEL_COLOR = TextColors.DARK_GRAY;
     public static TextColor RESTRICTIONS = TextColors.LIGHT_PURPLE;
 
 	public static TextColor LORE_COLOR = TextColors.GOLD;
 	public static TextStyle LORE_STYLE = TextStyles.ITALIC;
+
+	public static Pattern REGEXP_NUMBER = Pattern.compile("-?\\d+");
 
     @Inject
     private SkillService skillService;
@@ -180,6 +184,61 @@ public class InventoryService {
         }
     }
 
+    protected Armor getHelmet(IActiveCharacter character) {
+        if (character.isStub()) {
+            return Armor.NONE;
+        }
+        Optional<ItemStack> leggings = character.getPlayer().getHelmet();
+        if (leggings.isPresent()) {
+            ItemStack itemStack = leggings.get();
+            return getArmor(itemStack, EffectSourceType.HELMET);
+        }
+        return Armor.NONE;
+    }
+
+    protected Armor getChestplate(IActiveCharacter character) {
+        if (character.isStub()) {
+            return Armor.NONE;
+        }
+        Optional<ItemStack> leggings = character.getPlayer().getChestplate();
+        if (leggings.isPresent()) {
+            ItemStack itemStack = leggings.get();
+            return getArmor(itemStack, EffectSourceType.CHESTPLATE);
+        }
+        return Armor.NONE;
+    }
+
+    protected Armor getLeggings(IActiveCharacter character) {
+        if (character.isStub()) {
+            return Armor.NONE;
+        }
+        Optional<ItemStack> leggings = character.getPlayer().getLeggings();
+        if (leggings.isPresent()) {
+            ItemStack itemStack = leggings.get();
+            return getArmor(itemStack, EffectSourceType.LEGGINGS);
+        }
+        return Armor.NONE;
+    }
+
+    protected Armor getBoots(IActiveCharacter character) {
+        if (character.isStub()) {
+            return Armor.NONE;
+        }
+        Optional<ItemStack> leggings = character.getPlayer().getBoots();
+        if (leggings.isPresent()) {
+            ItemStack itemStack = leggings.get();
+            return getArmor(itemStack, EffectSourceType.BOOTS);
+        }
+        return Armor.NONE;
+    }
+
+    private Armor getArmor(ItemStack itemStack, IEffectSource armorType) {
+        Map<IGlobalEffect, String> itemEffects = ItemStackUtils.getItemEffects(itemStack);
+        Armor armor = new Armor(itemStack, armorType);
+        armor.setEffects(itemEffects);
+        return armor;
+    }
+
     public void initializeArmorSlots(IActiveCharacter character) {
         Optional<ItemStack> chestplate = character.getPlayer().getChestplate();
         ItemStack is = null;
@@ -189,16 +248,15 @@ public class InventoryService {
                 character.getPlayer().setChestplate(null);
                 ItemStackUtils.dropItem(character.getPlayer(), is);
             } else {
-                Map<IGlobalEffect, String> itemEffects = ItemStackUtils.getItemEffects(is);
-                Armor armor = new Armor(is, EffectSourceType.CHESTPLATE);
-                armor.setEffects(itemEffects);
+
+                Armor armor = getChestplate(character);
 
                 Armor armor1 = character.getEquipedArmor().get(EquipmentTypes.CHESTPLATE);
                 if (armor1 != null) {
                     effectService.removeGlobalEffectsAsEnchantments(armor1.getEffects(), character, armor1);
                 }
                 character.getEquipedArmor().put(EquipmentTypes.CHESTPLATE, armor);
-                effectService.applyGlobalEffectsAsEnchantments(itemEffects, character, armor);
+                effectService.applyGlobalEffectsAsEnchantments(armor.getEffects(), character, armor);
 
             }
         }
@@ -210,15 +268,15 @@ public class InventoryService {
                 character.getPlayer().setHelmet(null);
                 ItemStackUtils.dropItem(character.getPlayer(), is);
             } else {
-                Map<IGlobalEffect, String> itemEffects = ItemStackUtils.getItemEffects(is);
-                Armor armor = new Armor(is, EffectSourceType.HELMET);
-                armor.setEffects(itemEffects);
+
+                Armor armor = getHelmet(character);
+
                 Armor armor1 = character.getEquipedArmor().get(EquipmentTypes.HEADWEAR);
                 if (armor1 != null) {
                     effectService.removeGlobalEffectsAsEnchantments(armor1.getEffects(), character, armor1);
                 }
                 character.getEquipedArmor().put(EquipmentTypes.HEADWEAR, armor );
-                effectService.applyGlobalEffectsAsEnchantments(itemEffects, character, armor);
+                effectService.applyGlobalEffectsAsEnchantments(armor.getEffects(), character, armor);
 
             }
         }
@@ -229,16 +287,13 @@ public class InventoryService {
                 character.getPlayer().setBoots(null);
                 ItemStackUtils.dropItem(character.getPlayer(), is);
             } else {
-                Map<IGlobalEffect, String> itemEffects = ItemStackUtils.getItemEffects(is);
-
-                Armor armor = new Armor(is, EffectSourceType.BOOTS);
-                armor.setEffects(itemEffects);
+                Armor armor = getBoots(character);
                 Armor armor1 = character.getEquipedArmor().get(EquipmentTypes.BOOTS);
                 if (armor1 != null) {
                     effectService.removeGlobalEffectsAsEnchantments(armor1.getEffects(), character, armor1);
                 }
                 character.getEquipedArmor().put(EquipmentTypes.BOOTS, armor );
-                effectService.applyGlobalEffectsAsEnchantments(itemEffects, character, armor);
+                effectService.applyGlobalEffectsAsEnchantments(armor.getEffects(), character, armor);
             }
         }
         Optional<ItemStack> leggings = character.getPlayer().getLeggings();
@@ -248,15 +303,14 @@ public class InventoryService {
                 character.getPlayer().setLeggings(null);
                 ItemStackUtils.dropItem(character.getPlayer(), is);
             } else {
-                Map<IGlobalEffect, String> itemEffects = ItemStackUtils.getItemEffects(is);
-                Armor armor = new Armor(is, EffectSourceType.LEGGINGS);
-                armor.setEffects(itemEffects);
+                Armor armor = getLeggings(character);
+
                 Armor armor1 = character.getEquipedArmor().get(EquipmentTypes.LEGGINGS);
                 if (armor1 != null) {
                     effectService.removeGlobalEffectsAsEnchantments(armor1.getEffects(), character, armor1);
                 }
                 character.getEquipedArmor().put(EquipmentTypes.LEGGINGS, armor );
-                effectService.applyGlobalEffectsAsEnchantments(itemEffects, character, armor);
+                effectService.applyGlobalEffectsAsEnchantments(armor.getEffects(), character, armor);
             }
         }
     }
@@ -311,6 +365,8 @@ public class InventoryService {
                 ItemStackUtils.findItemEffect(text, map);
             } else if (text.getColor() == LEVEL_COLOR) {
                 w.setLevel(ItemStackUtils.getItemLevel(text));
+            } else if (text.getColor() == RESTRICTIONS) {
+
             }
         }
         w.setEffects(map);
@@ -542,5 +598,9 @@ public class InventoryService {
 
     }
 
+    //todo
+    public Set<String> getItemRarityTypes() {
+        return new HashSet<>(Collections.singleton(Localization.RUNEWORD));
+    }
 
 }

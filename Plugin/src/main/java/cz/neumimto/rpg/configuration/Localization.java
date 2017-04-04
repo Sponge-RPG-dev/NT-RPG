@@ -336,4 +336,7 @@ public class Localization {
 
     @ConfigValue
     public static String NORMAL_RARITY = "Item";
+
+    @ConfigValue
+    public static String ITEM_LEVEL = "Item level";
 }
