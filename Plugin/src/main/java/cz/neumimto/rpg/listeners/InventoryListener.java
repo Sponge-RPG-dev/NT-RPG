@@ -25,6 +25,7 @@ import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.utils.Utils;
 import org.hibernate.annotations.Filter;
 import org.spongepowered.api.Game;
@@ -85,9 +86,7 @@ public class InventoryListener {
         IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
         if (player.get(Keys.GAME_MODE).get() == GameModes.CREATIVE)
             return;
-        inventoryService.initializeHotbar(character);
-        inventoryService.initializeArmorSlots(character);
-
+        inventoryService.initializeSlots(character);
     }
 
     /* Tempoar */
@@ -158,4 +157,16 @@ public class InventoryListener {
         inventoryService.initializeHotbar(character, hotbar.getSelectedSlotIndex());
     }
 
+    @Listener
+    public void onItemMove(ClickInventoryEvent event, @First(typeFilter = Player.class)Player pl) {
+        IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());
+        if (character.isStub()) {
+            return;
+        }
+        for (SlotTransaction slotTransaction : event.getTransactions()) {
+            Slot i = slotTransaction.getSlot();
+            int index = ((SlotAdapter)i).getOrdinal();
+            character.getSlotsToReinitialize().add(index);
+        }
+    }
 }

@@ -98,6 +98,7 @@ public class ActiveCharacter implements IActiveCharacter {
         cl.setExperiences(0);
         this.base = base;
         classes.add(cl);
+        slotsToReinitialize = new ArrayList<>();
     }
 
     @Override

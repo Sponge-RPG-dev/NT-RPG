@@ -35,6 +35,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.utils.ItemStackUtils;
+import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
@@ -582,7 +583,7 @@ public class InventoryService {
 					return false;
 				}
 			} else {
-				//todo custom items
+				//todo custom items/home/fs/IdeaProjects/NT-RPG/Plugin/target/NT-RPG-1.0.6-shaded.jar
 			}
 		}
 		return true;
@@ -600,7 +601,20 @@ public class InventoryService {
 
     //todo
     public Set<String> getItemRarityTypes() {
-        return new HashSet<>(Collections.singleton(Localization.RUNEWORD));
+        return new HashSet<>(Arrays.asList(Localization.RUNEWORD, Localization.SOCKET));
     }
 
+    public void initializeArmor(IActiveCharacter character, int k) {
+
+    }
+
+    public void initializeSlots(IActiveCharacter character) {
+        for (Integer integer : character.getSlotsToReinitialize()) {
+            if (Utils.isHotbar(integer)) {
+                initializeHotbar(character, integer);
+            } else {
+                initializeArmor(character, integer);
+            }
+        }
+    }
 }

@@ -36,6 +36,7 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
 import org.spongepowered.api.data.manipulator.mutable.item.EnchantmentData;
 import org.spongepowered.api.data.type.PickupRules;
+import org.spongepowered.api.data.value.mutable.MapValue;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.Item;
@@ -50,6 +51,7 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextFormat;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
+import org.spongepowered.asm.mixin.injection.modify.LocalVariableDiscriminator;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -464,8 +466,51 @@ public class ItemStackUtils {
         itemStack.offer(Keys.ITEM_LORE, a);
     }
 
+    //todo
     public static void addRestriction(ItemStack itemStack, String group, int level) {
 
+        Optional<CustomItemData> customItemData = itemStack.get(CustomItemData.class);
+        CustomItemData data = null;
+        data = customItemData.orElseGet(CustomItemData::new);
+        data.groupRestricitons().put(group, level);
+        itemStack.offer(data);
+
+        Optional<List<Text>> texts = itemStack.get(Keys.ITEM_LORE);
+        if (texts.isPresent()) {
+            int k = -1;
+            int l = -1;
+            List<Text> t = texts.get();
+            for (int idx = 0; t.size() > idx; idx ++) {
+                Text text = t.get(idx);
+                String a = text.toPlain();
+
+                if (text.getColor() == InventoryService.RESTRICTIONS && a.equals(Localization.ITEM_RESTRICTION)) {
+                    k = idx;
+                }
+
+                if (a.contains(group)) {
+                    l = idx;
+                }
+
+
+            }
+
+            if (k > 0 && l > 0) {
+                t.set(l, Text.builder(t.get(l).toPlain().replace(group, "")).color(InventoryService.RESTRICTIONS).build());
+            }
+
+
+            return;
+        }
+        itemStack.offer(Keys.ITEM_LORE, createRestriction(group));
+
+    }
+
+    private static List<Text> createRestriction(String group) {
+        List<Text> t = new ArrayList<>();
+        t.add(Text.builder(Localization.ITEM_RESTRICTION).color(InventoryService.RESTRICTIONS).build());
+        t.add(Text.builder(" " + group).color(InventoryService.RESTRICTIONS).build());
+        return t;
     }
 
     public static void addEchantments(ItemStack itemStack, Map<IGlobalEffect, String> addEnchantments) {

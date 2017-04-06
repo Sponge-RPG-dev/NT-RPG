@@ -67,12 +67,18 @@ public class JSLoader {
         try {
             FileUtils.createDirectoryIfNotExists(scripts_root);
             loadNashorn();
-            setup();
-            reloadGlobalEffects();
-            reloadSkills();
-            reloadAttributes();
-            generateListener();
-            System.out.println("JS resources loaded.");
+            if (engine != null) {
+                setup();
+                reloadGlobalEffects();
+                reloadSkills();
+                reloadAttributes();
+                generateListener();
+                System.out.println("JS resources loaded.");
+            } else {
+                logger.error("Could not load nashorn. Library not found on a classpath.");
+                logger.error(" - For SpongeVanilla create a symlink or place nashorn.jar into the sponge/config/nt-core folder");
+                logger.error(" - For SpongeForge create a symlink or place nashorn.jar into the sponge/mods folder");
+            }
         } catch (Exception e) {
             logger.error(e.getMessage());
         }

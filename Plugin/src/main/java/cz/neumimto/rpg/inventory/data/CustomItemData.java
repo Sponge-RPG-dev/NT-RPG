@@ -16,6 +16,7 @@ import org.spongepowered.api.data.value.mutable.MapValue;
 import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.api.text.Text;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -37,6 +38,8 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 	}
 
 	public CustomItemData() {
+		restrictions  = new HashMap<>();
+		enchantements = new HashMap<>();
 		registerGettersAndSetters();
 	}
 

@@ -20,6 +20,7 @@ package cz.neumimto.rpg.commands;
 
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.TestAction;
 import cz.neumimto.rpg.configuration.Localization;
@@ -50,10 +51,7 @@ import org.spongepowered.api.text.Text;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 
@@ -147,9 +145,10 @@ public class CommandAdmin extends CommandBase {
                 } else {
                     if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
                         ItemStack itemStack = player.getItemInHand(HandTypes.MAIN_HAND).get();
-                        List<Text> texts = ItemStackUtils.addItemEffect(itemStack, globalEffect, Integer.parseInt(a[3]));
-                        itemStack.offer(Keys.ITEM_LORE, texts);
-                        player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
+
+                        ItemStackUtils.addEchantments(itemStack, new HashMap<IGlobalEffect, String>(){{
+                            put(globalEffect, a[3]);
+                        }});
                         player.sendMessage(Text.of("Enchantment " + globalEffect.getName() + " added"));
                     } else {
                         player.sendMessage(Text.of(Localization.NO_ITEM_IN_HAND));
@@ -219,12 +218,10 @@ public class CommandAdmin extends CommandBase {
             if (PluginConfig.DEBUG) {
                 String methodcall = a[1];
                 try {
-                    Object o = TestAction.class.newInstance();
+                    Object o = IoC.get().build(TestAction.class);
                     Method method = TestAction.class.getMethod(methodcall, IActiveCharacter.class);
                     method.invoke(o,characterService.getCharacter(player.getUniqueId()));
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
                     e.printStackTrace();
                 }
             } else {

@@ -339,4 +339,7 @@ public class Localization {
 
     @ConfigValue
     public static String ITEM_LEVEL = "Item level";
+
+    @ConfigValue
+    public static String ITEM_RESTRICTION = "Restrictions";
 }
