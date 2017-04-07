@@ -31,11 +31,13 @@ public class TestAction {
 		IGlobalEffect globalEffect = effectService.getGlobalEffect("Elemental Resistance");
 		IGlobalEffect globalEffect1 = effectService.getGlobalEffect("All skills");
 
-		ItemStackUtils.addEchantments(itemStack, new HashMap<IGlobalEffect, String>() {{
+		ItemStack i = ItemStackUtils.addEchantments(itemStack, new HashMap<IGlobalEffect, String>() {{
 			put(globalEffect, "10%");
 			put(globalEffect1, "+1");
 		}}
 
 		);
+
+		character.getPlayer().setItemInHand(HandTypes.MAIN_HAND, i);
 	}
 }

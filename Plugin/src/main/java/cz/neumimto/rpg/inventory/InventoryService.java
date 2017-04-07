@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.inventory;
 
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.damage.DamageService;
@@ -36,6 +37,7 @@ import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import cz.neumimto.rpg.utils.Utils;
+import org.jboss.logging.annotations.Pos;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
@@ -86,6 +88,8 @@ public class InventoryService {
 
 	public static Pattern REGEXP_NUMBER = Pattern.compile("-?\\d+");
 
+    public static Text NORMAL_RARITY;
+
     @Inject
     private SkillService skillService;
 
@@ -105,6 +109,12 @@ public class InventoryService {
     private RWService rwService;
 
     private Map<UUID, InventoryMenu> inventoryMenus = new HashMap<>();
+
+
+    @PostProcess
+    public void init() {
+        NORMAL_RARITY = Text.of(Localization.NORMAL_RARITY);
+    }
 
     public ItemStack getHelpItem(List<String> lore, ItemType type) {
         ItemStack.Builder builder = ItemStack.builder();
@@ -617,4 +627,7 @@ public class InventoryService {
             }
         }
     }
+
+
+
 }

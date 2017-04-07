@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.inventory.data;
 
+import cz.neumimto.rpg.inventory.InventoryService;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
@@ -39,7 +40,9 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 
 	public CustomItemData() {
 		restrictions  = new HashMap<>();
+		itemLevel = 0;
 		enchantements = new HashMap<>();
+		rarity = InventoryService.NORMAL_RARITY;
 		registerGettersAndSetters();
 	}
 

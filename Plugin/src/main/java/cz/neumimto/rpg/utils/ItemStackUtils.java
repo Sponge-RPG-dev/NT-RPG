@@ -446,7 +446,7 @@ public class ItemStackUtils {
         return null;
     }
 
-    public static void addItemLevel(ItemStack itemStack, Integer level) {
+    public static ItemStack addItemLevel(ItemStack itemStack, Integer level) {
         Optional<CustomItemData> customItemData = itemStack.get(CustomItemData.class);
         CustomItemData data = null;
         data = customItemData.orElseGet(CustomItemData::new);
@@ -464,10 +464,11 @@ public class ItemStackUtils {
         }
         a.add(0, Text.builder(Localization.ITEM_LEVEL).color(InventoryService.LEVEL_COLOR).build());
         itemStack.offer(Keys.ITEM_LORE, a);
+        return itemStack;
     }
 
     //todo
-    public static void addRestriction(ItemStack itemStack, String group, int level) {
+    public static ItemStack addRestriction(ItemStack itemStack, String group, int level) {
 
         Optional<CustomItemData> customItemData = itemStack.get(CustomItemData.class);
         CustomItemData data = null;
@@ -500,10 +501,10 @@ public class ItemStackUtils {
             }
 
 
-            return;
+            return itemStack;
         }
         itemStack.offer(Keys.ITEM_LORE, createRestriction(group));
-
+        return itemStack;
     }
 
     private static List<Text> createRestriction(String group) {
@@ -513,7 +514,7 @@ public class ItemStackUtils {
         return t;
     }
 
-    public static void addEchantments(ItemStack itemStack, Map<IGlobalEffect, String> addEnchantments) {
+    public static ItemStack addEchantments(ItemStack itemStack, Map<IGlobalEffect, String> addEnchantments) {
         Optional<CustomItemData> customItemData = itemStack.get(CustomItemData.class);
         CustomItemData data = null;
         if (customItemData.isPresent()) {
@@ -543,6 +544,7 @@ public class ItemStackUtils {
         } else {
             itemStack.offer(Keys.ITEM_LORE, toText(addEnchantments));
         }
+        return itemStack;
     }
 
     public static Text toText(IGlobalEffect e, String a) {
