@@ -97,15 +97,15 @@ public class EntityService {
         return d;
     }
 
-    public float getEntityProperty(NEntity entity, Short id) {
-        return entity.getProperty(id);
+    public Float getEntityProperty(IEntity entity, int id) {
+        return Math.min(entity.getProperty(id), propertyService.getMaxPropertyValue(id));
     }
 
-    public void setEntityProperty(NEntity nEntity, Short id, Float value) {
+    public void setEntityProperty(IEntity nEntity, int id, Float value) {
         nEntity.setProperty(id, value);
     }
 
-    public void addToEntityProperty(NEntity nEntity, Short id, Float value) {
+    public void addToEntityProperty(IEntity nEntity, int id, Float value) {
         Float f = getEntityProperty(nEntity, id);
         setEntityProperty(nEntity, id, f == null ? value : f + value);
     }

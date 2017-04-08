@@ -27,11 +27,14 @@ import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.damage.ISkillDamageSource;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.events.character.PlayerCombatEvent;
 import cz.neumimto.rpg.exp.ExperienceService;
+import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.ProjectileProperties;
 import cz.neumimto.rpg.skills.SkillService;
@@ -56,6 +59,7 @@ import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.entity.damage.DamageModifier;
 import org.spongepowered.api.event.cause.entity.damage.DamageModifierTypes;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
+import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.cause.entity.damage.source.IndirectEntityDamageSource;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
@@ -198,12 +202,21 @@ public class BasicListener {
 				double newdamage = 0;
 				if (entity.getType() == IEntityType.CHARACTER) {
 					IActiveCharacter character = (IActiveCharacter) entity;
-					newdamage = character.getWeaponDamage();
-					newdamage *= damageService.getCharacterBonusDamage(character, entityDamageSource.getType());
+					if (entityDamageSource.getType() == DamageTypes.ATTACK) {
+						Hotbar hotbar = character.getPlayer().getInventory().query(Hotbar.class);
+						if (hotbar.getSelectedSlotIndex() != character.getSelectedHotbarSlot()) {
+							character.updateSelectedHotbarSlot();
+							damageService.recalculateCharacterWeaponDamage(character);
+						}
+						newdamage = character.getWeaponDamage();
+					}
 				} else {
 					if (!PluginConfig.OVERRIDE_MOBS) {
 						newdamage = entityService.getMobDamage(source.getType());
 					}
+				}
+				if (entityDamageSource.getType() == DamageTypes.FIRE) {
+					newdamage = entityService.getEntityProperty(entity, DefaultProperties.fire_damage_bonus_mult) * event.getFinalDamage();
 				}
 				//defende
 		        /*
@@ -211,7 +224,6 @@ public class BasicListener {
                     IActiveCharacter tcharacter = characterService.getCharacter(targetEntity.getUniqueId());
                     double armor = tcharacter.getArmorValue();
                     final double damagefactor = damageService.DamageArmorReductionFactor.apply(newdamage, armor);
-                    PlayerCombatEvent ce = new PlayerCombatEvent(character, tcharacter, damage, damagefactor);
                     event.setBaseDamage(ce.getDamage());
                     event.setDamage(DamageModifier.builder().cause(Cause.ofNullable(null)).type(DamageModifierTypes.ARMOR).build(), input -> input * ce.getDamagefactor());
                 }*/
@@ -260,6 +272,7 @@ public class BasicListener {
 			if (character.isStub())
 				return;
 			characterService.respawnCharacter(character, event.getTargetEntity());
+
 		}
 	}
 

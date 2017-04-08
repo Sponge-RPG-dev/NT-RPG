@@ -25,6 +25,7 @@ import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
+import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.NDamageType;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import org.spongepowered.api.data.type.HandTypes;
@@ -49,6 +50,9 @@ public class DamageService {
 
     @Inject
     private CharacterService characterService;
+
+	@Inject
+	private PropertyService propertyService;
 
     public BiFunction<Double, Double, Double> DamageArmorReductionFactor = (damage, armor) -> armor / (armor + 10 * damage);
 
@@ -79,9 +83,12 @@ public class DamageService {
     }
 
     public void recalculateCharacterWeaponDamage(IActiveCharacter character) {
-        if (!character.isStub() && character.getPlayer().getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
+        if (character.isStub()) {
+			return;
+        }
+        if (character.getPlayer().getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
             double damage = getCharacterItemDamage(character, character.getPlayer().getItemInHand(HandTypes.MAIN_HAND).get().getItem());
-            damage += character.getMainHand().getDamage() + character.getOffHand().getDamage();
+           // damage += character.getMainHand().getDamage() + character.getOffHand().getDamage();
             character.setWeaponDamage(damage);
         } else {
             //character.setWeaponDamage(DefaultProperties.unarmed);

@@ -42,6 +42,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
 import org.spongepowered.api.service.permission.SubjectData;
@@ -89,7 +90,7 @@ public class ActiveCharacter implements IActiveCharacter {
     private transient boolean openedinv = false;
     private transient List<Integer> slotsToReinitialize;
     private transient Map<EquipmentType, Armor> equipedArmor;
-
+    private transient int selected;
     public ActiveCharacter(Player pl, CharacterBase base) {
         this.pl = pl;
         characterProperties = new float[PropertyService.LAST_ID];
@@ -568,7 +569,6 @@ public class ActiveCharacter implements IActiveCharacter {
         return (character.hasParty() && hasParty() && character.getParty() == character.getParty());
     }
 
-    //TODO cache weapon damage on entityeuqipmentevent once its implemented
     @Override
     public double getWeaponDamage() {
         return weaponDamage;
@@ -687,6 +687,17 @@ public class ActiveCharacter implements IActiveCharacter {
     @Override
     public void setSlotsToReinitialize(List<Integer> slotsToReinitialize) {
         this.slotsToReinitialize = slotsToReinitialize;
+    }
+
+    @Override
+    public int getSelectedHotbarSlot() {
+        return selected;
+    }
+
+    @Override
+    public void updateSelectedHotbarSlot() {
+        Hotbar hotbar = getPlayer().getInventory().query(Hotbar.class);
+        selected = hotbar.getSelectedSlotIndex();
     }
 
     @Override

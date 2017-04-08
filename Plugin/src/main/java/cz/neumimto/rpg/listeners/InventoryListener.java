@@ -88,7 +88,9 @@ public class InventoryListener {
         IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
         if (player.get(Keys.GAME_MODE).get() == GameModes.CREATIVE)
             return;
-        inventoryService.initializeSlots(character);
+        inventoryService.initializeHotbar(character);
+        inventoryService.initializeArmor(character);
+        damageService.recalculateCharacterWeaponDamage(character);
     }
 
     /* Tempoar */
@@ -130,6 +132,7 @@ public class InventoryListener {
                    return;
                 } else {
                     inventoryService.initializeHotbar(character, index, a);
+                    damageService.recalculateCharacterWeaponDamage(character);
                 }
             }
         }
@@ -157,10 +160,11 @@ public class InventoryListener {
         }
         hotbarObject.onUnEquip(character);
         inventoryService.initializeHotbar(character, hotbar.getSelectedSlotIndex());
+        damageService.recalculateCharacterWeaponDamage(character);
     }
 
     @Listener
-    public void onItemMove(ClickInventoryEvent event, @First(typeFilter = Player.class)Player pl) {
+    public void onItemMove(ClickInventoryEvent event, @First(typeFilter = Player.class) Player pl) {
         IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());
         if (character.isStub()) {
             return;

@@ -248,4 +248,10 @@ public interface IActiveCharacter extends IEntity<Player> {
     List<Integer> getSlotsToReinitialize();
 
     void setSlotsToReinitialize(List<Integer> slotsToReinitialize);
+
+    default int getSelectedHotbarSlot() {
+        return -1;
+    }
+
+    void updateSelectedHotbarSlot();
 }

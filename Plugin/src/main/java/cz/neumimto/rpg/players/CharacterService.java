@@ -1078,11 +1078,16 @@ public class CharacterService {
 		}
 		assignPlayerToCharacter(pl);
 
+		character.updateSelectedHotbarSlot();
 		character.getMana().setValue(0);
 		inventoryService.cancelSocketing(character);
 		addDefaultEffects(character);
 		updateMaxHealth(character);
 		updateAll(character).run();
+		inventoryService.initializeHotbar(character);
+		inventoryService.initializeArmor(character);
+		damageService.recalculateCharacterWeaponDamage(character);
+
 	}
 
 	/**

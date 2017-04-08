@@ -619,16 +619,17 @@ public class InventoryService {
 
     }
 
-    public void initializeArmor(IActiveCharacter character, int k) {
+    public void initializeArmor(IActiveCharacter character) {
 
     }
 
-    public void initializeSlots(IActiveCharacter character) {
+    //todo
+    private void initializeSlots(IActiveCharacter character) {
         for (Integer integer : character.getSlotsToReinitialize()) {
             if (Utils.isHotbar(integer)) {
                 initializeHotbar(character, integer);
             } else {
-                initializeArmor(character, integer);
+               // initializeArmor(character, integer);
             }
         }
     }
