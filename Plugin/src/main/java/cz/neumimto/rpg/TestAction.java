@@ -7,10 +7,13 @@ import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.ItemStackUtils;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.text.Text;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by NeumimTo on 29.10.2016.
@@ -37,7 +40,9 @@ public class TestAction {
 		}}
 
 		);
-
+		List<Text> texts = i.get(Keys.ITEM_LORE).get();
+		texts.add(Text.of("asd"));
+		i.offer(Keys.ITEM_LORE, texts);
 		character.getPlayer().setItemInHand(HandTypes.MAIN_HAND, i);
 	}
 }

@@ -27,6 +27,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.property.entity.EyeLocationProperty;
 import org.spongepowered.api.entity.Entity;
@@ -45,6 +46,9 @@ import org.spongepowered.api.world.extent.EntityUniverse;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Created by NeumimTo on 25.7.2015.
@@ -53,7 +57,6 @@ public class Utils {
 
 	public static String LineSeparator = System.getProperty("line.separator");
 	public static String Tab = "\t";
-	public static Set<BlockType> transparentBlocks = new HashSet<>();
 	private static GlobalScope globalScope = NtRpgPlugin.GlobalScope;
 
 	public static void applyOnNearbyPartyMembers(IActiveCharacter character, int distance, Consumer<IActiveCharacter> c) {
@@ -229,5 +232,13 @@ public class Utils {
 		return Character.toUpperCase(str.charAt(0)) + str.substring(1);
 	}
 
+	public static Pattern REGEXP_NUMBER = Pattern.compile("-?\\d+");
 
+	public static String extractNumber(String string) {
+		Matcher matcher = REGEXP_NUMBER.matcher(string);
+		if (matcher.matches()) {
+			return matcher.group();
+		}
+		return null;
+	}
 }

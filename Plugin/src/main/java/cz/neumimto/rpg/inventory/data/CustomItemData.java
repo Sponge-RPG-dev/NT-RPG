@@ -26,10 +26,10 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 	private Integer itemLevel;
 	private Map<String, Integer> restrictions;
 	private Map<String, String> enchantements;
-	private Text rarity;
+	private String rarity;
 
 	public CustomItemData(Integer itemLevel, Map<String, Integer> restrictions, Map<String, String> enchantements,
-	                      Text rarity) {
+	                      String rarity) {
 		this.itemLevel = itemLevel;
 		this.restrictions = restrictions;
 		this.enchantements = enchantements;
@@ -42,7 +42,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 		restrictions  = new HashMap<>();
 		itemLevel = 0;
 		enchantements = new HashMap<>();
-		rarity = InventoryService.NORMAL_RARITY;
+		rarity = "";
 		registerGettersAndSetters();
 	}
 
@@ -71,7 +71,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 		return Sponge.getRegistry().getValueFactory().createMapValue(NKeys.CUSTOM_ITEM_DATA_RESTRICTIONS, restrictions);
 	}
 
-	public Value<Text> rarity() {
+	public Value<String> rarity() {
 		return Sponge.getRegistry().getValueFactory().createValue(NKeys.ITEM_RARITY, rarity);
 	}
 
@@ -103,7 +103,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 			this.itemLevel = view.getObject(NKeys.CUSTOM_ITEM_DATA_ITEM_LEVEL.getQuery(), Integer.class).get();
 			this.restrictions = (Map<String, Integer>) view.getMap(NKeys.CUSTOM_ITEM_DATA_RESTRICTIONS.getQuery()).get();
 			this.enchantements = (Map<String, String>) view.getMap(NKeys.CUSTOM_ITEM_DATA_ENCHANTEMENTS.getQuery()).get();
-			this.rarity = view.getObject(NKeys.ITEM_RARITY.getQuery(), Text.class).get();
+			this.rarity = view.getObject(NKeys.ITEM_RARITY.getQuery(), String.class).get();
 			return Optional.of(this);
 		} else {
 			return Optional.empty();
@@ -146,10 +146,10 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 		private int itemLevel;
 		private Map<String, Integer> restrictions;
 		private Map<String, String> enchantements;
-		private Text rarity;
+		private String rarity;
 
 		public Immutable(int itemLevel, Map<String, Integer> restrictions, Map<String, String> enchantements,
-		                 Text rarity) {
+		                 String rarity) {
 			this.itemLevel = itemLevel;
 			this.restrictions = restrictions;
 			this.enchantements = enchantements;
@@ -182,7 +182,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 			return Sponge.getRegistry().getValueFactory().createMapValue(NKeys.CUSTOM_ITEM_DATA_RESTRICTIONS, restrictions).asImmutable();
 		}
 
-		public ImmutableValue<Text> rarity() {
+		public ImmutableValue<String> rarity() {
 			return Sponge.getRegistry().getValueFactory().createValue(NKeys.ITEM_RARITY, rarity).asImmutable();
 		}
 

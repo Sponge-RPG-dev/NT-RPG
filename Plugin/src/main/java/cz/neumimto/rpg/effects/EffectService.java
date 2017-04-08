@@ -155,7 +155,7 @@ public class EffectService {
     public void addEffect(IEffect iEffect, IEffectConsumer consumer, IEffectSourceProvider effectSourceProvider) {
         IEffectContainer eff = consumer.getEffect(iEffect.getName());
         if (eff == null) {
-            consumer.addEffect(new EffectContainer<>(iEffect));
+            consumer.addEffect(iEffect.constructEffectContainer());
             iEffect.onApply();
             if (iEffect.requiresRegister())
                 runEffect(iEffect);

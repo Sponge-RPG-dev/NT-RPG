@@ -5,5 +5,13 @@ package cz.neumimto.rpg.inventory;
  */
 public class CustomItem {
 
-	//todo min level/class restrictions
+	private int slot;
+
+	public int getSlot() {
+		return slot;
+	}
+
+	public void setSlot(int slot) {
+		this.slot = slot;
+	}
 }

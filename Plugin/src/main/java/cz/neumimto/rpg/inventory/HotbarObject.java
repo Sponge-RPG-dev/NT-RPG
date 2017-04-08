@@ -12,15 +12,7 @@ public abstract class HotbarObject extends CustomItem implements IEffectSourcePr
 
     public static HotbarObject EMPTYHAND_OR_CONSUMABLE = null;
     protected IHotbarObjectType type;
-    private int slot;
 
-    public int getSlot() {
-        return slot;
-    }
-
-    public void setSlot(int slot) {
-        this.slot = slot;
-    }
 
     public IHotbarObjectType getHotbarObjectType() {
         return type;
@@ -32,13 +24,13 @@ public abstract class HotbarObject extends CustomItem implements IEffectSourcePr
 
     public void onEquip(ItemStack is, IActiveCharacter character) {
         if (PluginConfig.DEBUG) {
-            character.sendMessage("Equiped slot " + slot);
+            character.sendMessage("Equiped slot " + getSlot());
         }
     }
 
     public void onUnEquip(IActiveCharacter character) {
         if (PluginConfig.DEBUG) {
-            character.sendMessage("Unequiped slot " + slot);
+            character.sendMessage("Unequiped slot " + getSlot());
         }
     }
 }

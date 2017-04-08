@@ -54,7 +54,9 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
+import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResult;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
+import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.common.item.inventory.adapter.impl.slots.SlotAdapter;
 
 import java.util.Collection;
@@ -115,7 +117,7 @@ public class InventoryListener {
         if (character.isStub()) {
             return;
         }
-        if (player.get(Keys.GAME_MODE).get() == GameModes.CREATIVE)
+        if (player.get(Keys.GAME_MODE).get() != GameModes.SURVIVAL)
             return;
 
         for (SlotTransaction slotTransaction : event.getTransactions()) {
@@ -124,8 +126,8 @@ public class InventoryListener {
             if (Utils.isHotbar(index)) {
                 ItemStack a = slotTransaction.getFinal().createStack();
                 if (!inventoryService.canUse(a, character)) {
-                    event.setCancelled(true);
-                    return;
+                   event.setCancelled(true);
+                   return;
                 } else {
                     inventoryService.initializeHotbar(character, index, a);
                 }

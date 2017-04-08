@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.inventory.runewords;
 
+import com.google.common.base.Splitter;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
@@ -25,8 +26,10 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.text.LiteralText;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 
 import java.io.File;
 import java.io.IOException;
@@ -111,21 +114,7 @@ public class RWService {
                 .filter(l -> effectService.isGlobalEffect(l.getKey()))
                 .map(a -> new Pair<>(effectService.getGlobalEffect(a.getKey()), a.getValue()))
                 .collect(HashMap::new, (map, a) -> map.put(a.key, a.value), HashMap::putAll));
-        rw.setBlockedGroups(template.getBlockedGroups()
-                .stream()
-                .filter(a -> groupService.getByName(a) != null)
-                .map(groupService::getByName)
-                .collect(Collectors.toSet()));
-        rw.setAllowedGroups(template.getAllowedGroups()
-                .stream()
-                .filter(a -> groupService.getByName(a) != null)
-                .map(groupService::getByName)
-                .collect(Collectors.toSet()));
-        rw.setRequiredGroups(template.getRequiredGroups()
-                .stream()
-                .filter(a -> groupService.getByName(a) != null)
-                .map(groupService::getByName)
-                .collect(Collectors.toSet()));
+
         return rw;
     }
 
@@ -231,6 +220,9 @@ public class RWService {
         Optional<List<Text>> texts = i.get(Keys.ITEM_LORE);
         if (texts.isPresent()) {
             List<Text> t = texts.get();
+            if (t.size() < 2) {
+                return i;
+            }
             Text text = t.get(1);
             String s = text.toPlain();
             for (RuneWord rw : runewords.values()) {
@@ -259,26 +251,12 @@ public class RWService {
             }
             return i;
         }
-
-        i.offer(Keys.DISPLAY_NAME, Text.of(TextColors.GOLD, rw.getName()));
-        List<Text> l = new ArrayList<>();
-        l.add(Text.of(TextColors.BLUE, Localization.RUNEWORD));
-        l.add(Text.of(TextColors.RED, i.get(Keys.ITEM_LORE).get().get(1).toPlain()));
-
-        Map<IGlobalEffect, Float> effects = rw.getEffects();
-        if (rw.getMinLevel() > 1) {
-            l.add(Text.of(TextColors.GRAY, Localization.MIN_LEVEL + ": " + rw.getMinLevel()));
-        }
-
-        for (Map.Entry<IGlobalEffect, Float> entry : effects.entrySet()) {
-            IGlobalEffect key = entry.getKey();
-            Float value = entry.getValue();
-            l.add(Text.of(TextColors.AQUA, key.getName() + ": " + value));
-        }
-        RebuildRunewordEvent event = new RebuildRunewordEvent(rw, l, i);
+        i.offer(Keys.HIDE_ATTRIBUTES, true);
+        i.offer(Keys.HIDE_MISCELLANEOUS, true);
+        refreshItemLore(i, rw);
+        RebuildRunewordEvent event = new RebuildRunewordEvent(rw, i);
         Sponge.getEventManager().post(event);
         i = event.getItemStack();
-        i.offer(Keys.ITEM_LORE, event.getLore());
         return i;
     }
 
@@ -308,12 +286,16 @@ public class RWService {
     public boolean canUse(RuneWord rw, IActiveCharacter character) {
         if (character.isStub())
             return false;
+
+	    if (rw.getMinLevel() >  0 && character.getPrimaryClass() == null) {
+		    return false;
+	    }
+
         if (rw.getMinLevel() > character.getPrimaryClass().getLevel()) {
             return false;
         }
 
-        //none
-        for (PlayerGroup playerGroup : rw.getBlockedGroups()) {
+        for (PlayerGroup playerGroup : rw.getAllowedGroups()) {
 
             if (playerGroup.getType() == EffectSourceType.RACE) {
 
@@ -328,36 +310,71 @@ public class RWService {
                     }
                 }
 
-            }
-
-        //all
-        for (PlayerGroup playerGroup : rw.getRequiredGroups()) {
-            if (playerGroup.getType() == EffectSourceType.RACE) {
-                if (character.getRace() != playerGroup) {
-                    return false;
-                }
-            } else if (playerGroup.getType() == EffectSourceType.CLASS) {
-                if (!character.hasClass(playerGroup)) {
-                    return false;
-                }
-            }
         }
 
-        //at least one
-        for (PlayerGroup playerGroup : rw.getAllowedGroups()) {
-            if (playerGroup.getType() == EffectSourceType.RACE) {
-                if (character.getRace() == playerGroup) {
-                    return true;
-                }
-            } else if (playerGroup.getType() == EffectSourceType.CLASS) {
-                if (character.hasClass(playerGroup)) {
-                    return true;
-                }
-            }
-        }
-
-        //no restrictions
         return true;
+    }
+
+    private void refreshItemLore(ItemStack itemStack, RuneWord runeword) {
+        setItemHeader(itemStack, runeword);
+        setEffects(itemStack, runeword);
+        setRestrictions(itemStack, runeword);
+        if (runeword.getLore() != null) {
+            setLore(itemStack, runeword);
+        }
+    }
+
+    private ItemStack setItemHeader(ItemStack itemStack, RuneWord runeWord) {
+        itemStack.offer(Keys.DISPLAY_NAME, Text.builder(runeWord.getName()).color(TextColors.GOLD).style(TextStyles.BOLD).build());
+        ArrayList<Text> arrayList = new ArrayList<>();
+        arrayList.add(Text.builder(Localization.RUNEWORD).color(TextColors.GOLD).build());
+        arrayList.add(
+                Text.builder(
+                        runeWord.getRunes().stream().map(Rune::getName).collect(Collectors.joining())
+                ).color(TextColors.GOLD).style(TextStyles.ITALIC).build());
+        arrayList.add(Text.EMPTY);
+        itemStack.offer(Keys.ITEM_LORE, arrayList);
+        return itemStack;
+    }
+
+    private ItemStack setEffects(ItemStack itemStack, RuneWord runeWord) {
+        List<Text> arrayList = itemStack.get(Keys.ITEM_LORE).get();
+        Map<IGlobalEffect, String> effects = runeWord.getEffects();
+        for (Map.Entry<IGlobalEffect, String> e : effects.entrySet()) {
+            IGlobalEffect key = e.getKey();
+            String value = e.getValue();
+            LiteralText.Builder b = Text.builder(key.getName()).color(InventoryService.ENCHANTMENT_COLOR);
+            if (value != null) {
+                b.append(Text.builder(": " + value).color(InventoryService.ENCHANTMENT_COLOR).build());
+            }
+            arrayList.add(b.build());
+        }
+        arrayList.add(Text.EMPTY);
+        itemStack.offer(Keys.ITEM_LORE, arrayList);
+        return itemStack;
+    }
+
+    public ItemStack setRestrictions(ItemStack itemStack, RuneWord runeWord) {
+        List<Text> arrayList = itemStack.get(Keys.ITEM_LORE).get();
+        arrayList.add(
+                Text.builder(runeWord.getAllowedGroups().stream()
+                        .map(PlayerGroup::getName)
+                        .collect(Collectors.joining(" ")))
+                    .color(InventoryService.RESTRICTIONS)
+                    .build()
+                );
+        itemStack.offer(Keys.ITEM_LORE, arrayList);
+        return itemStack;
+    }
+
+    public ItemStack setLore(ItemStack itemStack, RuneWord runeWord) {
+        List<Text> arrayList = itemStack.get(Keys.ITEM_LORE).get();
+        Iterable<String> a = Splitter.fixedLength(10).split(runeWord.getLore());
+        for (String s : a) {
+            arrayList.add(Text.builder(s).color(TextColors.GOLD).style(TextStyles.ITALIC).build());
+        }
+        itemStack.offer(Keys.ITEM_LORE, arrayList);
+        return itemStack;
     }
 
     public List<ItemType> getAllowedRuneItemTypes() {

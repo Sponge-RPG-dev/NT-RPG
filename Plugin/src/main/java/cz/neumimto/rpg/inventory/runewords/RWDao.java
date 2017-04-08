@@ -39,27 +39,23 @@ public class RWDao {
             String name = config.getString(root + "." + a + ".Name");
             int minlevel = config.getInt(root + "." + a + ".MinLevel");
 
-            List<String> restricted = config.getStringList(root + "." + a + ".BlockedGroups");
+
             List<String> allowed = config.getStringList(root + "." + a + ".AllowedGroups");
-            List<String> required = config.getStringList(root + "." + a + ".RequiredGroups");
             List<String> allowedItems = config.getStringList(root + "." + a + ".AllowedItems");
 
             rw.setAllowedItems(allowedItems);
             ConfigObject object = config.getObject(root + "." + a + ".Effects");
 
-            Map<String, Float> map = new HashMap<>();
+            Map<String, String> map = new HashMap<>();
             for (String s1 : object.keySet()) {
                 ConfigValue configValue = object.get(s1);
-                float v = Float.parseFloat(configValue.render());
-                map.put(s1,v);
+                map.put(s1,configValue.render());
             }
 
             List<String> runes = config.getStringList(root + "." + a + ".Runes");
             rw.setName(name);
             rw.setMinLevel(minlevel);
-            rw.setBlockedGroups(restricted);
             rw.setAllowedGroups(allowed);
-            rw.setRequiredGroups(required);
             rw.setRunes(runes);
             rw.setEffects(map);
             s.add(rw);

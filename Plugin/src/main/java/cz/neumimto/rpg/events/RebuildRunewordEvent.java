@@ -15,26 +15,16 @@ import java.util.List;
 public class RebuildRunewordEvent extends AbstractEvent {
 
 	private final RuneWord runeWord;
-	private List<Text> lore;
 	private ItemStack itemStack;
 
-	public RebuildRunewordEvent(RuneWord rw, List<Text> lore, ItemStack i) {
+	public RebuildRunewordEvent(RuneWord rw,  ItemStack i) {
 
 		this.runeWord = rw;
-		this.lore = lore;
 		this.itemStack = i;
 	}
 
 	public RuneWord getRuneWord() {
 		return runeWord;
-	}
-
-	public List<Text> getLore() {
-		return lore;
-	}
-
-	public void setLore(List<Text> lore) {
-		this.lore = lore;
 	}
 
 	public ItemStack getItemStack() {

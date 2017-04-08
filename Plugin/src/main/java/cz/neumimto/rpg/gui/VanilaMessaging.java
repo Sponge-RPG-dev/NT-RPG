@@ -511,21 +511,7 @@ public class VanilaMessaging implements IPlayerMessage {
 			commands.add(is);
 		}
 
-		if (!rw.getRequiredGroups().isEmpty()) {
-			ItemStack is = ItemStack.of(ItemTypes.IRON_HELMET, 1);
-			is.offer(Keys.DISPLAY_NAME, Text.of(Localization.RUNEWORD_REQUIRED_GROUPS_MENU));
-			is.offer(Keys.ITEM_LORE,
-					Collections.singletonList(
-							ItemStackUtils.stringToItemTooltip(Localization.RUNEWORD_REQUIRED_GROUPS_MENU_TOOLTIP
-									.replaceAll("%1", rw.getName()))
-					)
-			);
-
-			is.offer(new InventoryItemMenuData(cmd + " runeword " + rw.getName() + " required-groups"));
-			commands.add(is);
-		}
-
-		if (!rw.getBlockedGroups().isEmpty()) {
+		if (!rw.getAllowedGroups().isEmpty()) {
 			ItemStack is = ItemStack.of(ItemTypes.REDSTONE, 1);
 			is.offer(Keys.DISPLAY_NAME, Text.of(Localization.RUNEWORD_BLOCKED_GROUPS_MENU));
 			is.offer(Keys.ITEM_LORE,
@@ -570,20 +556,18 @@ public class VanilaMessaging implements IPlayerMessage {
 
 	@Override
 	public void displayRunewordBlockedGroups(IActiveCharacter character, RuneWord rw) {
-		character.getPlayer().openInventory(displayGroupRequirements(character, rw, rw.getBlockedGroups()),
+		character.getPlayer().openInventory(displayGroupRequirements(character, rw, rw.getAllowedGroups()),
 				Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
 	}
 
 	@Override
 	public void displayRunewordRequiredGroups(IActiveCharacter character, RuneWord rw) {
-		character.getPlayer().openInventory(displayGroupRequirements(character, rw, rw.getRequiredGroups()),
-				Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
+
 	}
 
 	@Override
 	public void displayRunewordAllowedGroups(IActiveCharacter character, RuneWord rw) {
-		character.getPlayer().openInventory(displayGroupRequirements(character, rw, rw.getAllowedGroups()),
-				Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
+
 	}
 
 	@Override

@@ -45,8 +45,10 @@ import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextFormat;
 import org.spongepowered.api.text.format.TextStyles;
@@ -77,6 +79,15 @@ public class ItemStackUtils {
         add(STONE_SWORD);
         add(WOODEN_SWORD);
     }};
+
+	public static Set<ItemType> shovels = new HashSet<ItemType>() {{
+		add(DIAMOND_SHOVEL);
+		add(GOLDEN_SHOVEL);
+		add(IRON_SHOVEL);
+		add(STONE_SHOVEL);
+		add(WOODEN_SHOVEL);
+	}};
+	
     public static Set<ItemType> axes = new HashSet<ItemType>() {{
         add(DIAMOND_AXE);
         add(GOLDEN_AXE);
@@ -111,6 +122,7 @@ public class ItemStackUtils {
         addAll(bows);
         addAll(pickaxes);
         addAll(hoes);
+	    addAll(shovels);
     }};
     public static Set<ItemType> consumables = new HashSet<ItemType>() {{
         addAll(Arrays.asList(APPLE,
@@ -126,15 +138,18 @@ public class ItemStackUtils {
     }};
 
     public static Set<ItemType> chestplates = new HashSet<ItemType>() {{
-        addAll(Arrays.asList(DIAMOND_CHESTPLATE,GOLDEN_CHESTPLATE,IRON_CHESTPLATE,CHAINMAIL_CHESTPLATE,LEATHER_CHESTPLATE));
+        addAll(Arrays.asList(DIAMOND_CHESTPLATE,GOLDEN_CHESTPLATE,IRON_CHESTPLATE,
+		        CHAINMAIL_CHESTPLATE,LEATHER_CHESTPLATE));
     }};
 
     public static Set<ItemType> leggings = new HashSet<ItemType>() {{
-        addAll(Arrays.asList(DIAMOND_LEGGINGS,GOLDEN_LEGGINGS,IRON_LEGGINGS,CHAINMAIL_LEGGINGS,LEATHER_LEGGINGS));
+        addAll(Arrays.asList(DIAMOND_LEGGINGS,GOLDEN_LEGGINGS,IRON_LEGGINGS,
+		        CHAINMAIL_LEGGINGS,LEATHER_LEGGINGS));
     }};
 
     public static Set<ItemType> helmet = new HashSet<ItemType>() {{
-        addAll(Arrays.asList(DIAMOND_HELMET,GOLDEN_HELMET,IRON_HELMET,CHAINMAIL_HELMET,LEATHER_HELMET));
+        addAll(Arrays.asList(DIAMOND_HELMET,GOLDEN_HELMET,
+		        IRON_HELMET,CHAINMAIL_HELMET,LEATHER_HELMET));
     }};
 
     public static Set<ItemType> any_armor = new HashSet<>();
@@ -348,7 +363,7 @@ public class ItemStackUtils {
         Item item = (Item) optional;
         item.offer(Keys.VELOCITY, direction.mul(0.33));
         item.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
-        item.offer(Keys.PICKUP_DELAY, 75);
+        item.offer(Keys.PICKUP_DELAY, 50);
         p.getLocation().getExtent().spawnEntity(item, Cause.of(NamedCause.of("player", p)));
 
     }
@@ -438,7 +453,7 @@ public class ItemStackUtils {
                     String[] arr = plain.split(":");
                 }
             }
-            CustomItemData data = new CustomItemData(itemLevel, restrictions, enchantments, type);
+            CustomItemData data = new CustomItemData(itemLevel, restrictions, enchantments, rarity != null ? rarity : "");
             if (data.isValid()) {
                 is.offer(data);
             }
@@ -478,28 +493,21 @@ public class ItemStackUtils {
 
         Optional<List<Text>> texts = itemStack.get(Keys.ITEM_LORE);
         if (texts.isPresent()) {
-            int k = -1;
-            int l = -1;
-            List<Text> t = texts.get();
-            for (int idx = 0; t.size() > idx; idx ++) {
-                Text text = t.get(idx);
-                String a = text.toPlain();
-
-                if (text.getColor() == InventoryService.RESTRICTIONS && a.equals(Localization.ITEM_RESTRICTION)) {
-                    k = idx;
-                }
-
-                if (a.contains(group)) {
-                    l = idx;
-                }
+	        List<Text> t = texts.get();
+            int k = t.size() - 1;
+            int l = 0;
 
 
-            }
+	        for (Text text : t) {
 
-            if (k > 0 && l > 0) {
-                t.set(l, Text.builder(t.get(l).toPlain().replace(group, "")).color(InventoryService.RESTRICTIONS).build());
-            }
-
+		        if (text.getColor() == InventoryService.RESTRICTIONS) {
+			        String a = text.toPlain();
+			        for (String s : a.split(" ")) {
+				        k = l;
+			        }
+		        }
+		        l++;
+	        }
 
             return itemStack;
         }
@@ -516,35 +524,34 @@ public class ItemStackUtils {
 
     public static ItemStack addEchantments(ItemStack itemStack, Map<IGlobalEffect, String> addEnchantments) {
         Optional<CustomItemData> customItemData = itemStack.get(CustomItemData.class);
-        CustomItemData data = null;
-        if (customItemData.isPresent()) {
-            data = customItemData.get();
-            for (Map.Entry<IGlobalEffect, String> e : addEnchantments.entrySet()) {
-                data.enchantements().put(e.getKey().getName(), e.getValue());
-            }
-        } else {
-            data = new CustomItemData();
-            for (Map.Entry<IGlobalEffect, String> e : addEnchantments.entrySet()) {
-                data.enchantements().put(e.getKey().getName(), e.getValue());
-            }
+        CustomItemData data = customItemData.orElseGet(CustomItemData::new);
+        for (Map.Entry<IGlobalEffect, String> e : addEnchantments.entrySet()) {
+            data.enchantements().put(e.getKey().getName(), e.getValue());
         }
         itemStack.offer(data);
         Optional<List<Text>> texts = itemStack.get(Keys.ITEM_LORE);
         if (texts.isPresent()) {
-            int k = 0;
             List<Text> t = texts.get();
-            for (int idx = 0; t.size() > idx; idx ++) {
-                Text text = t.get(idx);
-                if (text.getColor() == InventoryService.ENCHANTMENT_COLOR) {
-                    k = idx;
-                }
-            }
+
+            int k = getLastLineWithColor(t, InventoryService.ENCHANTMENT_COLOR);
             t.addAll(k, toText(addEnchantments));
             itemStack.offer(Keys.ITEM_LORE, t);
+
         } else {
             itemStack.offer(Keys.ITEM_LORE, toText(addEnchantments));
         }
         return itemStack;
+    }
+
+    public static int getLastLineWithColor(List<Text> lore, TextColor t) {
+        int k = lore.size() -1;
+        for (int idx = 0; lore.size() > idx; idx ++) {
+            Text text = lore.get(idx);
+            if (text.getColor() == t) {
+                k = idx;
+            }
+        }
+        return k;
     }
 
     public static Text toText(IGlobalEffect e, String a) {
@@ -558,6 +565,5 @@ public class ItemStackUtils {
         }
         return a;
     }
-
 
 }

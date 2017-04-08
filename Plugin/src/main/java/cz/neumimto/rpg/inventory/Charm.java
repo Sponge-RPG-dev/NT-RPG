@@ -24,6 +24,7 @@ public class Charm extends HotbarObject {
 
     public Charm() {
         type = HotbarObjectTypes.CHARM;
+        this.effects = new HashMap<>();
     }
 
 

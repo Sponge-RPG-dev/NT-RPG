@@ -28,6 +28,7 @@ import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
@@ -609,9 +610,13 @@ public class InventoryService {
 
     }
 
-    //todo
     public Set<String> getItemRarityTypes() {
-        return new HashSet<>(Arrays.asList(Localization.RUNEWORD, Localization.SOCKET));
+        return new HashSet<>(Arrays.asList(Localization.RUNEWORD,
+                Localization.SOCKET,
+                Localization.RUNE,
+                Localization.CHARM,
+                Localization.SKILLBIND));
+
     }
 
     public void initializeArmor(IActiveCharacter character, int k) {
@@ -627,7 +632,5 @@ public class InventoryService {
             }
         }
     }
-
-
 
 }

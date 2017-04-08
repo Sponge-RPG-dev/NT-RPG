@@ -27,8 +27,10 @@ import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.damage.ISkillDamageSource;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.exp.ExperienceService;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.ProjectileProperties;
@@ -36,6 +38,9 @@ import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.block.BlockSnapshot;
+import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.Entity;
@@ -89,6 +94,9 @@ public class BasicListener {
 
 	@Inject
 	private SkillService skillService;
+
+	@Inject
+	private ExperienceService experienceService;
 
 	@Listener(order = Order.BEFORE_POST)
 	public void onAttack(InteractEntityEvent.Primary event) {
@@ -253,5 +261,29 @@ public class BasicListener {
 				return;
 			characterService.respawnCharacter(character, event.getTargetEntity());
 		}
+	}
+
+
+
+	@Listener
+	public void onBlockBreak(ChangeBlockEvent.Break event, @First(typeFilter = Player.class) Player player) {
+		if (event.isCancelled()) {
+			return;
+		}
+
+		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+		for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
+			BlockType type = transaction.getFinal().getState().getType();
+			Double d = experienceService.getMinningExperiences(type);
+			if (d != null) {
+				characterService.addExperiences(character, d, ExperienceSource.MINING);
+			} else {
+				d = experienceService.getLoggingExperiences(type);
+				if (d != null) {
+					characterService.addExperiences(character, d, ExperienceSource.LOGGING);
+				}
+			}
+		}
+
 	}
 }

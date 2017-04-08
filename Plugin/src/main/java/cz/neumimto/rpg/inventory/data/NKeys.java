@@ -34,8 +34,8 @@ public class NKeys {
 			"Inventory menu"
 	);
 
-	public static final Key<Value<Text>> ITEM_RARITY = KeyFactory.makeSingleKey(TypeToken.of(Text.class),
-			new TypeToken<Value<Text>>(){},
+	public static final Key<Value<String>> ITEM_RARITY = KeyFactory.makeSingleKey(TypeToken.of(String.class),
+			new TypeToken<Value<String>>(){},
 			DataQuery.of('.', "n.cusotmitemrarity"),
 			"n:custom_item_rarity",
 			"Custom Item Data rarity"
