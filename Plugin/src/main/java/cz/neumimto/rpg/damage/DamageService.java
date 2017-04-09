@@ -34,6 +34,7 @@ import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,7 +61,7 @@ public class DamageService {
     private Map<ProjectileType, Short> projectiles = new HashMap<>();
 
     public double getCharacterItemDamage(IActiveCharacter character, ItemType type) {
-        if (character.isStub())
+        if (character.isStub() || type == null)
             return 1;
         double base = character.getBaseWeaponDamage(type) + characterService.getCharacterProperty(character, DefaultProperties.weapon_damage_bonus);
         if (map.containsKey(type)) {
@@ -86,13 +87,11 @@ public class DamageService {
         if (character.isStub()) {
 			return;
         }
-        if (character.getPlayer().getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
-            double damage = getCharacterItemDamage(character, character.getPlayer().getItemInHand(HandTypes.MAIN_HAND).get().getItem());
+        ItemStack i = character.getPlayer().getItemInHand(HandTypes.MAIN_HAND).orElse(null);
+        double damage = getCharacterItemDamage(character, i == null ? null : i.getItem());
            // damage += character.getMainHand().getDamage() + character.getOffHand().getDamage();
-            character.setWeaponDamage(damage);
-        } else {
-            //character.setWeaponDamage(DefaultProperties.unarmed);
-        }
+        character.setWeaponDamage(damage);
+
     }
 
     public double getCharacterResistance(IActiveCharacter character, DamageType source) {

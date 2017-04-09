@@ -603,4 +603,9 @@ public class PreloadCharacter implements IActiveCharacter {
     public void setSlotsToReinitialize(List<Integer> slotsToReinitialize) {
 
     }
+
+    @Override
+    public void updateSelectedHotbarSlot() {
+
+    }
 }
