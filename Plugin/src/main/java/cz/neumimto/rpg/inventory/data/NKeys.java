@@ -34,8 +34,8 @@ public class NKeys {
 			"Inventory menu"
 	);
 
-	public static final Key<Value<String>> ITEM_RARITY = KeyFactory.makeSingleKey(TypeToken.of(String.class),
-			new TypeToken<Value<String>>(){},
+	public static final Key<Value<Text>> ITEM_RARITY = KeyFactory.makeSingleKey(TypeToken.of(Text.class),
+			new TypeToken<Value<Text>>(){},
 			DataQuery.of('.', "n.cusotmitemrarity"),
 			"n:custom_item_rarity",
 			"Custom Item Data rarity"
@@ -48,6 +48,14 @@ public class NKeys {
 			"n:custom_idem_data_level",
 			"ntrpg custom item level"
 	);
+
+	public static final Key<Value<Integer>> CUSTOM_ITEM_DATA_SOCKET_COUNT = KeyFactory
+			.makeSingleKey(TypeToken.of(Integer.class),
+					new TypeToken<Value<Integer>>(){},
+					DataQuery.of('.', "n.customitemdatasocketcount"),
+					"n:custom_idem_data_socket_count",
+					"ntrpg custom item socket count"
+			);
 
 	public static final Key<MapValue<String, String>> CUSTOM_ITEM_DATA_ENCHANTEMENTS = KeyFactory.makeMapKey(
 			new TypeToken<Map<String, String>>() { },

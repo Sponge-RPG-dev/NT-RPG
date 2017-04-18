@@ -431,11 +431,11 @@ public class ItemStackUtils {
             Map<String, String> enchantments = new HashMap<>();
             Map<String, Integer> restrictions = new HashMap<>();
             int itemLevel = 0;
-            String rarity = null;
+            Text rarity = null;
             Text type = null;
             String lore = null;
             for (Text line : texts1) {
-                String plain = line.toPlain();
+                Text plain = line.toPlain();
                 if (globalScope.inventorySerivce.getItemRarityTypes().contains(plain)) {
                     rarity = plain;
                 } else if (plain.startsWith(Localization.ITEM_LEVEL)) {

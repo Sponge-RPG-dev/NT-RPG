@@ -40,8 +40,10 @@ import cz.neumimto.rpg.utils.ItemStackUtils;
 import cz.neumimto.rpg.utils.Utils;
 import org.jboss.logging.annotations.Pos;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
+import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
@@ -634,4 +636,69 @@ public class InventoryService {
         }
     }
 
+
+	/**
+     * Rarity
+     * ItemLevel/sockets
+     *
+     * Enchantments
+     *
+     * Restrictions
+     *
+     * Lore
+     *
+     * @param itemStack
+     * @param restrictions
+     */
+    public void setRestrictions(ItemStack itemStack, List<String> restrictions) {
+
+    }
+
+    public void setEnchantments(ItemStack itemStack, Map<IGlobalEffect,String> effects) {
+
+    }
+
+    public ItemStack setItemRarity(ItemStack itemStack, Text rarity) {
+	    if (!getItemRarityTypes().contains(rarity.toPlain())) {
+		    return itemStack;
+	    }
+	    CustomItemData itemData = getItemData(itemStack);
+	    itemData.rarity().set(rarity);
+	    itemStack.offer(itemData);
+	    updateLore(itemStack);
+	    return itemStack;
+    }
+
+    public ItemStack setItemLevel(ItemStack itemStack, int level) {
+        CustomItemData item = getItemData(itemStack);
+        item.itemLevel().set(level);
+        itemStack.offer(item);
+	    updateLore(itemStack);
+	    return itemStack;
+    }
+
+	public void updateLore(ItemStack is) {
+		Optional<CustomItemData> customItemData = is.get(CustomItemData.class);
+		CustomItemData data = customItemData.orElse(new CustomItemData());
+		Value<Text> rarity = data.rarity();
+		Text text = rarity.get();
+		if (!text.toPlain().isEmpty()) {
+			
+		}
+
+	}
+
+    public CustomItemData getItemData(ItemStack itemStack) {
+        Optional<CustomItemData> opt = itemStack.get(CustomItemData.class);
+        if (opt.isPresent()) {
+            return opt.get();
+        }
+        CustomItemData data = new CustomItemData();
+        Optional<List<Text>> texts = itemStack.get(Keys.ITEM_LORE);
+        if (texts.isPresent()) {
+            itemStack.offer(data);
+        }
+
+        return data;
+    }
 }
