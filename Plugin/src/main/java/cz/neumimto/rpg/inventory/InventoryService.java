@@ -38,11 +38,10 @@ import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import cz.neumimto.rpg.utils.Utils;
-import org.jboss.logging.annotations.Pos;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
+import org.spongepowered.api.data.value.mutable.MapValue;
 import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
@@ -57,7 +56,6 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.equipment.EquipmentInventory;
-import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypes;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
@@ -66,10 +64,13 @@ import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyle;
 import org.spongepowered.api.text.format.TextStyles;
-import org.spongepowered.common.data.type.SpongeEquipmentTypeWorn;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Created by NeumimTo on 22.7.2015.
@@ -247,9 +248,10 @@ public class InventoryService {
     }
 
     private Armor getArmor(ItemStack itemStack, IEffectSource armorType) {
-        Map<IGlobalEffect, String> itemEffects = ItemStackUtils.getItemEffects(itemStack);
+        CustomItemData itemData = getItemData(itemStack);
         Armor armor = new Armor(itemStack, armorType);
-        armor.setEffects(itemEffects);
+        armor.setEffects(getItemEffects(itemStack));
+        armor.setLevel(itemData.itemLevel().get());
         return armor;
     }
 
@@ -349,7 +351,7 @@ public class InventoryService {
 
     private Charm buildCharm(IActiveCharacter character, ItemStack is) {
         Charm charm = new Charm();
-        charm.setEffects(ItemStackUtils.getItemEffects(is));
+        charm.setEffects(getItemEffects(is));
 
         return charm;
     }
@@ -373,19 +375,9 @@ public class InventoryService {
         }
         w.setItemStack(is);
         List<Text> texts = a.get();
-        Map<IGlobalEffect, String> map = new HashMap<>();
-        for (Text text : texts) {
-            if (text.getColor() == ENCHANTMENT_COLOR) {
-                ItemStackUtils.findItemEffect(text, map);
-            } else if (text.getColor() == LEVEL_COLOR) {
-                w.setLevel(ItemStackUtils.getItemLevel(text));
-            } else if (text.getColor() == RESTRICTIONS) {
-
-            }
-        }
-        w.setEffects(map);
-        Map<IGlobalEffect, String> itemEffects = ItemStackUtils.getItemEffects(is);
-        w.setEffects(itemEffects);
+        CustomItemData itemData = getItemData(is);
+        w.setLevel(itemData.itemLevel().get());
+        w.setEffects(getItemEffects(is));
         return w;
     }
 
@@ -650,12 +642,23 @@ public class InventoryService {
      * @param itemStack
      * @param restrictions
      */
-    public void setRestrictions(ItemStack itemStack, List<String> restrictions) {
-
+    public void setRestrictions(ItemStack itemStack, List<String> restrictions, int level) {
+        CustomItemData itemData = getItemData(itemStack);
+        if (restrictions.isEmpty()) {
+            //todo
+        }
     }
 
-    public void setEnchantments(ItemStack itemStack, Map<IGlobalEffect,String> effects) {
-
+    public ItemStack setEnchantments(ItemStack itemStack, Map<IGlobalEffect,String> effects) {
+        CustomItemData itemData = getItemData(itemStack);
+        for (Map.Entry<IGlobalEffect, String> iGlobalEffectStringEntry : effects.entrySet()) {
+            IGlobalEffect a = iGlobalEffectStringEntry.getKey();
+            if (a != null) {
+                itemData.enchantements().put(a.getName(), iGlobalEffectStringEntry.getValue());
+            }
+        }
+        itemStack.offer(itemData);
+        return updateLore(itemStack);
     }
 
     public ItemStack setItemRarity(ItemStack itemStack, Text rarity) {
@@ -665,28 +668,74 @@ public class InventoryService {
 	    CustomItemData itemData = getItemData(itemStack);
 	    itemData.rarity().set(rarity);
 	    itemStack.offer(itemData);
-	    updateLore(itemStack);
-	    return itemStack;
+	    return updateLore(itemStack);
     }
 
     public ItemStack setItemLevel(ItemStack itemStack, int level) {
         CustomItemData item = getItemData(itemStack);
         item.itemLevel().set(level);
         itemStack.offer(item);
-	    updateLore(itemStack);
-	    return itemStack;
+	    return updateLore(itemStack);
     }
 
-	public void updateLore(ItemStack is) {
+	public ItemStack updateLore(ItemStack is) {
 		Optional<CustomItemData> customItemData = is.get(CustomItemData.class);
 		CustomItemData data = customItemData.orElse(new CustomItemData());
 		Value<Text> rarity = data.rarity();
 		Text text = rarity.get();
+        List<Text> lore = new ArrayList<>();
 		if (!text.toPlain().isEmpty()) {
-			
+			lore.add(text);
 		}
+        int k = data.socketCount().get();
+        if (k > 0) {
+            String s = "";
+            while (k > 0) {
+                s += "{@}";
+                k--;
+            }
+            lore.add(Text.builder(s).color(SOCKET_COLOR).build());
+        }
+        if (data.itemLevel().get() > 0) {
+            lore.add(Text.builder(Localization.ITEM_LEVEL + ": " + data.itemLevel().get()).color(LEVEL_COLOR).build());
+        }
 
-	}
+        Map<String, String> map = data.enchantements().get();
+        if (!map.isEmpty()) {
+            lore.add(Text.EMPTY);
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                Text t = null;
+                if (entry.getKey() == null) {
+                    t = Text.builder(entry.getValue()).color(ENCHANTMENT_COLOR).build();
+                } else {
+                    t = Text.builder(entry.getKey() + ": " + entry.getValue()).build();
+                }
+                lore.add(t);
+            }
+        }
+        Map<String, Integer> u = data.groupRestricitons().get();
+        if (!u.isEmpty()) {
+            lore.add(Text.EMPTY);
+            Map<Integer, List<String>> q = new TreeMap<>();
+            for (Map.Entry<String, Integer> a : u.entrySet()) {
+                List<String> j = q.get(a.getValue());
+                if (j == null) {
+                    j = new ArrayList<>();
+                    j.add(a.getKey());
+                    q.put(a.getValue(), j);
+                }
+                j.add(a.getKey());
+            }
+
+            for (Map.Entry<Integer, List<String>> a : q.entrySet()) {
+                String collect = a.getValue().stream().collect(Collectors.joining(" "));
+                Text t = Text.builder(collect).color(RESTRICTIONS).build();
+                lore.add(t);
+            }
+        }
+        is.offer(Keys.ITEM_LORE, lore);
+        return is;
+    }
 
     public CustomItemData getItemData(ItemStack itemStack) {
         Optional<CustomItemData> opt = itemStack.get(CustomItemData.class);
@@ -700,5 +749,15 @@ public class InventoryService {
         }
 
         return data;
+    }
+
+    public Map<IGlobalEffect, String> getItemEffects(ItemStack is) {
+        CustomItemData itemData = getItemData(is);
+        return itemData.enchantements().get().entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                    e -> effectService.getGlobalEffect(e.getKey()),
+                    Map.Entry::getValue
+                ));
     }
 }

@@ -46,7 +46,7 @@ public class Charm extends HotbarObject {
     public void onEquip(ItemStack is, IActiveCharacter character) {
         super.onEquip(is, character);
         if (effects == null) {
-            effects = ItemStackUtils.getItemEffects(is);
+            effects = NtRpgPlugin.GlobalScope.inventorySerivce.getItemEffects(is);
         }
         NtRpgPlugin.GlobalScope.effectService.applyGlobalEffectsAsEnchantments(effects, character, this);
     }

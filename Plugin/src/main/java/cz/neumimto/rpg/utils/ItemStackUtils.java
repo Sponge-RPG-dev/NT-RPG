@@ -240,55 +240,6 @@ public class ItemStackUtils {
         createProperty(b, value, String.valueOf(key));
     }
 
-    private static Integer getLevel(String s, Map<String, Integer> levels) {
-        Integer i = levels.get(s);
-        return i == null ? 0 : i;
-    }
-
-    public static DisplayNameData setDisplayName(Text name) {
-        final DisplayNameData itemName = Sponge.getGame().getDataManager().getManipulatorBuilder(DisplayNameData.class).get().create();
-        itemName.set(Keys.DISPLAY_NAME, name);
-        return itemName;
-    }
-
-    /**
-     * Returns a collection of global ffects and its levels from itemlore
-     *
-     * @param is
-     * @return
-     */
-    public static Map<IGlobalEffect, String> getItemEffects(ItemStack is) {
-        Optional<List<Text>> texts = is.get(Keys.ITEM_LORE);
-        if (texts.isPresent()) {
-            return getItemEffects(texts.get());
-        }
-        return Collections.emptyMap();
-    }
-
-    /**
-     * Builds a effect map from item lore.
-     *
-     * @param texts
-     * @return Map<Effect,Level>
-     */
-    public static Map<IGlobalEffect, String> getItemEffects(List<Text> texts) {
-        Map<IGlobalEffect, String> map = new HashMap<>();
-        texts.stream().filter(t -> t.getFormat().getColor() == TextColors.BLUE).forEach(t -> findItemEffect(t, map));
-        return map;
-    }
-
-    public static void findItemEffect(Text text, Map<IGlobalEffect, String> map) {
-        String eff = text.toPlain().substring(3).toLowerCase();
-        String[] arr = eff.split(": ");
-        String value = null;
-        if (arr.length > 1) {
-            value = arr[1];
-        }
-        IGlobalEffect effect = globalScope.effectService.getGlobalEffect(arr[0]);
-        if (effect != null) {
-            map.put(effect, value);
-        }
-    }
 
     public static boolean isConsumable(ItemType type) {
         return consumables.contains(type);
@@ -345,13 +296,6 @@ public class ItemStackUtils {
         return 0;
     }
 
-    public static Set<String> getRestrictions(Text text) {
-        Set<String> str = new HashSet<>();
-        Matcher m = pattern.matcher(text.toPlain());
-
-        return str;
-    }
-
     public static void dropItem(Player p, ItemStack itemStack) {
         Entity optional = p.getLocation().getExtent()
                 .createEntity(EntityTypes.ITEM, p.getLocation()
@@ -394,176 +338,11 @@ public class ItemStackUtils {
         return false;
     }
 
-    public static ItemStack createHelpItem(String description, String name) {
-        String[] split = description.split("\n");
-        List<Text> descr = new ArrayList<>();
-        for (String s : split) {
-            descr.add(Text.of(s,TextColors.WHITE));
-        }
-        return ItemStack.builder().itemType(ItemTypes.PAPER)
-                .quantity(1)
-                .keyValue(Keys.ITEM_LORE, descr)
-                .keyValue(Keys.DISPLAY_NAME, Text.of(name))
-                .build();
-
-    }
-
     public static Text stringToItemTooltip(String string) {
         return Text.of(TextColors.GOLD, TextStyles.ITALIC, string);
-    }
-
-    public static List<Text> stringsToItemTooltip(List<String> string) {
-        return string.stream().map(ItemStackUtils::stringToItemTooltip).collect(Collectors.toList());
-    }
-
-    public static CustomItemData getCustomItemData(ItemStack is) {
-        Optional<List<Text>> texts = is.get(Keys.ITEM_LORE);
-        Optional<CustomItemData> customItemData = is.get(CustomItemData.class);
-        if (customItemData.isPresent()) {
-            return customItemData.get();
-        }
-        if (texts.isPresent()) {
-            List<Text> texts1 = texts.get();
-            if (texts1.isEmpty()) {
-                return null;
-            }
-
-            Map<String, String> enchantments = new HashMap<>();
-            Map<String, Integer> restrictions = new HashMap<>();
-            int itemLevel = 0;
-            Text rarity = null;
-            Text type = null;
-            String lore = null;
-            for (Text line : texts1) {
-                Text plain = line.toPlain();
-                if (globalScope.inventorySerivce.getItemRarityTypes().contains(plain)) {
-                    rarity = plain;
-                } else if (plain.startsWith(Localization.ITEM_LEVEL)) {
-                    String level = InventoryService.REGEXP_NUMBER.matcher(plain).group();
-                    itemLevel = Integer.parseInt(level);
-                } else if (line.getColor() == InventoryService.ENCHANTMENT_COLOR) {
-                    String s = line.toPlain();
-                    String[] split = plain.split(": ");
-                    if (split.length == 1) {
-                        enchantments.put(split[0], null);
-                    } else {
-                        enchantments.put(split[0], split[1]);
-                    }
-                } else if (line.getColor() == InventoryService.RESTRICTIONS) {
-                    String[] arr = plain.split(":");
-                }
-            }
-            CustomItemData data = new CustomItemData(itemLevel, restrictions, enchantments, rarity != null ? rarity : "");
-            if (data.isValid()) {
-                is.offer(data);
-            }
-        }
-        return null;
-    }
-
-    public static ItemStack addItemLevel(ItemStack itemStack, Integer level) {
-        Optional<CustomItemData> customItemData = itemStack.get(CustomItemData.class);
-        CustomItemData data = null;
-        data = customItemData.orElseGet(CustomItemData::new);
-        data.itemLevel().set(level);
-        itemStack.offer(data);
-
-        Optional<List<Text>> texts = itemStack.get(Keys.ITEM_LORE);
-        List<Text> a = texts.get();
-        if (!a.isEmpty()) {
-            String k = a.get(0).toPlain();
-
-            if (k.startsWith(Localization.ITEM_LEVEL)) {
-                a.set(0, Text.builder(Localization.ITEM_LEVEL).color(InventoryService.LEVEL_COLOR).build());
-            }
-        }
-        a.add(0, Text.builder(Localization.ITEM_LEVEL).color(InventoryService.LEVEL_COLOR).build());
-        itemStack.offer(Keys.ITEM_LORE, a);
-        return itemStack;
-    }
-
-    //todo
-    public static ItemStack addRestriction(ItemStack itemStack, String group, int level) {
-
-        Optional<CustomItemData> customItemData = itemStack.get(CustomItemData.class);
-        CustomItemData data = null;
-        data = customItemData.orElseGet(CustomItemData::new);
-        data.groupRestricitons().put(group, level);
-        itemStack.offer(data);
-
-        Optional<List<Text>> texts = itemStack.get(Keys.ITEM_LORE);
-        if (texts.isPresent()) {
-	        List<Text> t = texts.get();
-            int k = t.size() - 1;
-            int l = 0;
-
-
-	        for (Text text : t) {
-
-		        if (text.getColor() == InventoryService.RESTRICTIONS) {
-			        String a = text.toPlain();
-			        for (String s : a.split(" ")) {
-				        k = l;
-			        }
-		        }
-		        l++;
-	        }
-
-            return itemStack;
-        }
-        itemStack.offer(Keys.ITEM_LORE, createRestriction(group));
-        return itemStack;
-    }
-
-    private static List<Text> createRestriction(String group) {
-        List<Text> t = new ArrayList<>();
-        t.add(Text.builder(Localization.ITEM_RESTRICTION).color(InventoryService.RESTRICTIONS).build());
-        t.add(Text.builder(" " + group).color(InventoryService.RESTRICTIONS).build());
-        return t;
-    }
-
-    public static ItemStack addEchantments(ItemStack itemStack, Map<IGlobalEffect, String> addEnchantments) {
-        Optional<CustomItemData> customItemData = itemStack.get(CustomItemData.class);
-        CustomItemData data = customItemData.orElseGet(CustomItemData::new);
-        for (Map.Entry<IGlobalEffect, String> e : addEnchantments.entrySet()) {
-            data.enchantements().put(e.getKey().getName(), e.getValue());
-        }
-        itemStack.offer(data);
-        Optional<List<Text>> texts = itemStack.get(Keys.ITEM_LORE);
-        if (texts.isPresent()) {
-            List<Text> t = texts.get();
-
-            int k = getLastLineWithColor(t, InventoryService.ENCHANTMENT_COLOR);
-            t.addAll(k, toText(addEnchantments));
-            itemStack.offer(Keys.ITEM_LORE, t);
-
-        } else {
-            itemStack.offer(Keys.ITEM_LORE, toText(addEnchantments));
-        }
-        return itemStack;
-    }
-
-    public static int getLastLineWithColor(List<Text> lore, TextColor t) {
-        int k = lore.size() -1;
-        for (int idx = 0; lore.size() > idx; idx ++) {
-            Text text = lore.get(idx);
-            if (text.getColor() == t) {
-                k = idx;
-            }
-        }
-        return k;
     }
 
     public static Text toText(IGlobalEffect e, String a) {
         return Text.builder(e.getName() + ": " + a).color(InventoryService.ENCHANTMENT_COLOR).build();
     }
-
-    public static List<Text> toText(Map<IGlobalEffect, String> e) {
-        List<Text> a = new ArrayList<>();
-        for (Map.Entry<IGlobalEffect, String> q : e.entrySet()) {
-            a.add(toText(q.getKey(),q.getValue()));
-        }
-        return a;
-    }
-
 }

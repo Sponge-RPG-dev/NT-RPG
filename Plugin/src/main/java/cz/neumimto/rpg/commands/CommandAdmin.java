@@ -28,6 +28,7 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
@@ -145,10 +146,8 @@ public class CommandAdmin extends CommandBase {
                 } else {
                     if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
                         ItemStack itemStack = player.getItemInHand(HandTypes.MAIN_HAND).get();
-
-                        ItemStackUtils.addEchantments(itemStack, new HashMap<IGlobalEffect, String>(){{
-                            put(globalEffect, a[3]);
-                        }});
+                        CustomItemData itemData = inventoryService.getItemData(itemStack);
+                        itemData.enchantements().put(globalEffect.getName(), a[3]);
                         player.sendMessage(Text.of("Enchantment " + globalEffect.getName() + " added"));
                     } else {
                         player.sendMessage(Text.of(Localization.NO_ITEM_IN_HAND));

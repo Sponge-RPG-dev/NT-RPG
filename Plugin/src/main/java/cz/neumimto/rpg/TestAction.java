@@ -5,6 +5,7 @@ import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import org.spongepowered.api.data.key.Keys;
@@ -34,15 +35,11 @@ public class TestAction {
 		IGlobalEffect globalEffect = effectService.getGlobalEffect("Elemental Resistance");
 		IGlobalEffect globalEffect1 = effectService.getGlobalEffect("All skills");
 
-		ItemStack i = ItemStackUtils.addEchantments(itemStack, new HashMap<IGlobalEffect, String>() {{
-			put(globalEffect, "10%");
-			put(globalEffect1, "+1");
-		}}
-
-		);
-		List<Text> texts = i.get(Keys.ITEM_LORE).get();
-		texts.add(Text.of("asd"));
-		i.offer(Keys.ITEM_LORE, texts);
-		character.getPlayer().setItemInHand(HandTypes.MAIN_HAND, i);
+		CustomItemData itemData = inventoryService.getItemData(itemStack);
+		itemData.enchantements().put(globalEffect.getName(), "+10%");
+		itemData.enchantements().put(globalEffect1.getName(), "+5");
+		itemStack.offer(itemData);
+		inventoryService.updateLore(itemStack);
+		character.getPlayer().setItemInHand(HandTypes.MAIN_HAND, itemStack);
 	}
 }
