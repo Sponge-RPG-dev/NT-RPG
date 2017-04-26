@@ -33,6 +33,7 @@ import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
@@ -41,6 +42,7 @@ import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
+import org.spongepowered.api.data.value.mutable.ListValue;
 import org.spongepowered.api.data.value.mutable.MapValue;
 import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.api.entity.Entity;
@@ -255,7 +257,7 @@ public class InventoryService {
         return armor;
     }
 
-    public void initializeArmorSlots(IActiveCharacter character) {
+    public void initializeArmor(IActiveCharacter character) {
         Optional<ItemStack> chestplate = character.getPlayer().getChestplate();
         ItemStack is = null;
         if (chestplate.isPresent()) {
@@ -560,18 +562,9 @@ public class InventoryService {
                 return false;
             }
         }
-        Optional<List<Text>> lore = itemStack.get(Keys.ITEM_LORE);
-        if (lore.isPresent()) {
-            RuneWord rw = rwService.getRuneword(lore.get());
-            if (rw != null) {
-                if (!rwService.canUse(rw, character)) {
-                    return false;
-                }
-            } else {
-                //todo custom items
-            }
-        }
-        return true;
+        CustomItemData itemData = getItemData(itemStack);
+        return checkRestrictions(character, itemData);
+
     }
     
 	public boolean canUse(ItemStack itemStack, IActiveCharacter character) {
@@ -581,19 +574,28 @@ public class InventoryService {
 			}
 		}
 		Optional<List<Text>> lore = itemStack.get(Keys.ITEM_LORE);
-		if (lore.isPresent()) {
-			RuneWord rw = rwService.getRuneword(lore.get());
-			if (rw != null) {
-				if (!rwService.canUse(rw, character)) {
-					return false;
-				}
-			} else {
-				//todo custom items/home/fs/IdeaProjects/NT-RPG/Plugin/target/NT-RPG-1.0.6-shaded.jar
-			}
-		}
-		return true;
+        return checkRestrictions(character, getItemData(itemStack));
 	}
 
+    private boolean checkRestrictions(IActiveCharacter character, CustomItemData itemData) {
+        ListValue<String> strings = itemData.groupRestricitons();
+        if (strings.isEmpty())
+            return true;
+        int k = 0;
+        for (String string : strings) {
+            if (string.contains(character.getRace().getName())) {
+                k++;
+                continue;
+            }
+            for (ExtendedNClass extendedNClass : character.getClasses()) {
+                k++;
+                if (string.contains(extendedNClass.getConfigClass().getName())) {
+                    continue;
+                }
+            }
+        }
+        return strings.size() == k;
+    }
 
 
     public void cancelSocketing(IActiveCharacter character) {
@@ -613,9 +615,6 @@ public class InventoryService {
 
     }
 
-    public void initializeArmor(IActiveCharacter character) {
-
-    }
 
     //todo
     private void initializeSlots(IActiveCharacter character) {
@@ -713,23 +712,12 @@ public class InventoryService {
                 lore.add(t);
             }
         }
-        Map<String, Integer> u = data.groupRestricitons().get();
+        List<String> u = data.groupRestricitons().get();
         if (!u.isEmpty()) {
             lore.add(Text.EMPTY);
-            Map<Integer, List<String>> q = new TreeMap<>();
-            for (Map.Entry<String, Integer> a : u.entrySet()) {
-                List<String> j = q.get(a.getValue());
-                if (j == null) {
-                    j = new ArrayList<>();
-                    j.add(a.getKey());
-                    q.put(a.getValue(), j);
-                }
-                j.add(a.getKey());
-            }
 
-            for (Map.Entry<Integer, List<String>> a : q.entrySet()) {
-                String collect = a.getValue().stream().collect(Collectors.joining(" "));
-                Text t = Text.builder(collect).color(RESTRICTIONS).build();
+            for (String a : u) {
+                Text t = Text.builder(a).color(RESTRICTIONS).build();
                 lore.add(t);
             }
         }

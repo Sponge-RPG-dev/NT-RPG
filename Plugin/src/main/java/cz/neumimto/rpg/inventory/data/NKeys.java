@@ -5,6 +5,7 @@ import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.key.KeyFactory;
+import org.spongepowered.api.data.value.mutable.ListValue;
 import org.spongepowered.api.data.value.mutable.MapValue;
 import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.api.text.Text;
@@ -12,6 +13,7 @@ import org.yaml.snakeyaml.tokens.ValueToken;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -65,9 +67,9 @@ public class NKeys {
 			"ntrpg custom item enchantements"
 	);
 
-	public static final Key<MapValue<String, Integer>> CUSTOM_ITEM_DATA_RESTRICTIONS = KeyFactory.makeMapKey(
-			new TypeToken<Map<String, Integer>>() { },
-			new TypeToken<MapValue<String, Integer>>() { },
+	public static final Key<ListValue<String>> CUSTOM_ITEM_DATA_RESTRICTIONS = KeyFactory.makeListKey(
+			new TypeToken<List<String>>() { },
+			new TypeToken<ListValue<String>>() { },
 			DataQuery.of('.', "n.customitemdatarestrictions"),
 			"n:custom_idem_data_restrictions",
 			"ntrpg custom item restrictions"

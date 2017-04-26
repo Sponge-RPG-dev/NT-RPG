@@ -11,25 +11,25 @@ import org.spongepowered.api.data.manipulator.mutable.common.AbstractData;
 import org.spongepowered.api.data.merge.MergeFunction;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.api.data.persistence.InvalidDataException;
+import org.spongepowered.api.data.value.immutable.ImmutableListValue;
 import org.spongepowered.api.data.value.immutable.ImmutableMapValue;
 import org.spongepowered.api.data.value.immutable.ImmutableValue;
+import org.spongepowered.api.data.value.mutable.ListValue;
 import org.spongepowered.api.data.value.mutable.MapValue;
 import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.api.text.Text;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.Immutable> {
 
 	private Integer itemLevel;
-	private Map<String, Integer> restrictions;
+	private List<String> restrictions;
 	private Map<String, String> enchantements;
 	private Text rarity;
 	private Integer socketCount;
 
-	public CustomItemData(Integer itemLevel, Map<String, Integer> restrictions, Map<String, String> enchantements,
+	public CustomItemData(Integer itemLevel, List<String> restrictions, Map<String, String> enchantements,
 	                      Text rarity, Integer socketCount) {
 		this.itemLevel = itemLevel;
 		this.restrictions = restrictions;
@@ -40,7 +40,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 	}
 
 	public CustomItemData() {
-		restrictions  = new HashMap<>();
+		restrictions  = new ArrayList<>();
 		itemLevel = 0;
 		enchantements = new HashMap<>();
 		rarity = Text.EMPTY;
@@ -76,8 +76,8 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 		return Sponge.getRegistry().getValueFactory().createMapValue(NKeys.CUSTOM_ITEM_DATA_ENCHANTEMENTS, enchantements);
 	}
 
-	public MapValue<String, Integer> groupRestricitons() {
-		return Sponge.getRegistry().getValueFactory().createMapValue(NKeys.CUSTOM_ITEM_DATA_RESTRICTIONS, restrictions);
+	public ListValue<String> groupRestricitons() {
+		return Sponge.getRegistry().getValueFactory().createListValue(NKeys.CUSTOM_ITEM_DATA_RESTRICTIONS, restrictions);
 	}
 
 	public Value<Text> rarity() {
@@ -113,7 +113,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 				view.contains(NKeys.CUSTOM_ITEM_DATA_SOCKET_COUNT)) {
 
 			this.itemLevel = view.getObject(NKeys.CUSTOM_ITEM_DATA_ITEM_LEVEL.getQuery(), Integer.class).get();
-			this.restrictions = (Map<String, Integer>) view.getMap(NKeys.CUSTOM_ITEM_DATA_RESTRICTIONS.getQuery()).get();
+			this.restrictions = (List<String>) view.getMap(NKeys.CUSTOM_ITEM_DATA_RESTRICTIONS.getQuery()).get();
 			this.enchantements = (Map<String, String>) view.getMap(NKeys.CUSTOM_ITEM_DATA_ENCHANTEMENTS.getQuery()).get();
 			this.rarity = view.getObject(NKeys.ITEM_RARITY.getQuery(), Text.class).get();
 			this.socketCount = view.getObject(NKeys.CUSTOM_ITEM_DATA_SOCKET_COUNT.getQuery(), Integer.class).get();
@@ -160,12 +160,12 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
     public static class Immutable extends AbstractImmutableData<Immutable, CustomItemData> {
 
 		private int itemLevel;
-		private Map<String, Integer> restrictions;
+		private List<String> restrictions;
 		private Map<String, String> enchantements;
 		private Text rarity;
 		private Integer socketCount;
 
-		public Immutable(int itemLevel, Map<String, Integer> restrictions, Map<String, String> enchantements,
+		public Immutable(int itemLevel, List<String> restrictions, Map<String, String> enchantements,
 		                 Text rarity, Integer socketCount) {
 			this.itemLevel = itemLevel;
 			this.restrictions = restrictions;
@@ -203,8 +203,8 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 			return Sponge.getRegistry().getValueFactory().createMapValue(NKeys.CUSTOM_ITEM_DATA_ENCHANTEMENTS, enchantements).asImmutable();
 		}
 
-		public ImmutableMapValue<String, Integer> groupRestricitons() {
-			return Sponge.getRegistry().getValueFactory().createMapValue(NKeys.CUSTOM_ITEM_DATA_RESTRICTIONS, restrictions).asImmutable();
+		public ImmutableListValue<String> groupRestricitons() {
+			return Sponge.getRegistry().getValueFactory().createListValue(NKeys.CUSTOM_ITEM_DATA_RESTRICTIONS, restrictions).asImmutable();
 		}
 
 		public ImmutableValue<Text> rarity() {
