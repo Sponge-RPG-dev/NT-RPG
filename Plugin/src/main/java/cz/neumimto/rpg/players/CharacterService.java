@@ -29,7 +29,6 @@ import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
-import cz.neumimto.rpg.effects.common.def.ManaRegeneration;
 import cz.neumimto.rpg.events.CancellableEvent;
 import cz.neumimto.rpg.events.CharacterAttributeChange;
 import cz.neumimto.rpg.events.CharacterEvent;
@@ -67,7 +66,6 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.common.text.serializer.xml.Obfuscated;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -308,7 +306,6 @@ public class CharacterService {
 
 
 	public void addDefaultEffects(IActiveCharacter character) {
-		effectService.addEffect(new ManaRegeneration(character), character, InternalEffectSourceProvider.INSTANCE);
 		effectService.addEffect(new CombatEffect(character), character, InternalEffectSourceProvider.INSTANCE);
 		effectService.addEffect(new BossBarExpNotifier(character), character, InternalEffectSourceProvider.INSTANCE);
 	}

@@ -28,11 +28,14 @@ import cz.neumimto.rpg.events.party.PartyJoinEvent;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import org.hibernate.annotations.Filter;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
+import org.spongepowered.api.event.cause.entity.health.HealthModifierTypes;
+import org.spongepowered.api.event.entity.HealEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
 import java.util.Optional;
@@ -88,5 +91,10 @@ public class RpgListener {
                 event.setCancelled(true);
             }
         }
+    }
+
+    @Listener
+    public void onHealthRegen(HealEntityEvent event, @First(typeFilter = Player.class) Player player) {
+        
     }
 }
