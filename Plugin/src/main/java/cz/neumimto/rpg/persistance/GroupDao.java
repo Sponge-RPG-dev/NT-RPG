@@ -24,7 +24,10 @@ import com.typesafe.config.ConfigValue;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.groups.Guild;
 import cz.neumimto.rpg.players.groups.ConfigClass;
@@ -53,6 +56,9 @@ public class GroupDao {
 
     @Inject
     PropertyService propertyService;
+
+    @Inject
+    EffectService effectService;
 
     @Inject
     Game game;
@@ -205,6 +211,14 @@ public class GroupDao {
         group.setDescription(c.getString("Description"));
         List<String> permissions = c.getStringList("Permissions");
         group.setPermissions(new HashSet<>(permissions));
+
+        List<String> effects = c.getStringList("Effects");
+        for (String effect : effects) {
+            String[] split = effect.split(":");
+            IGlobalEffect globalEffect = effectService.getGlobalEffect(split[0].trim());
+            String value = split.length == 2 ? split[1] : null;
+            group.getEffects().put(globalEffect,value);
+        }
     }
 
 

@@ -126,7 +126,7 @@ public class CommandAdmin extends CommandBase {
                     ActiveSkill askill = (ActiveSkill) skill;
                     askill.cast(character, extendedSkillInfo, null);
                     Long e = System.nanoTime();
-                    character.sendMessage("Exec Time: " + TimeUnit.MILLISECONDS.convert(e-l, TimeUnit.NANOSECONDS));;
+                    character.sendMessage("Exec Time: " + TimeUnit.MILLISECONDS.convert(e-l, TimeUnit.NANOSECONDS));
                 }
             }
         } else if (a[0].equalsIgnoreCase("set")) {
