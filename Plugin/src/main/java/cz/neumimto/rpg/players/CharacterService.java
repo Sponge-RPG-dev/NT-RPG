@@ -29,10 +29,7 @@ import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
-import cz.neumimto.rpg.events.CancellableEvent;
-import cz.neumimto.rpg.events.CharacterAttributeChange;
-import cz.neumimto.rpg.events.CharacterEvent;
-import cz.neumimto.rpg.events.CharacterGainedLevelEvent;
+import cz.neumimto.rpg.events.*;
 import cz.neumimto.rpg.events.character.CharacterWeaponUpdateEvent;
 import cz.neumimto.rpg.events.character.EventCharacterArmorPostUpdate;
 import cz.neumimto.rpg.events.character.PlayerDataPreloadComplete;
@@ -325,19 +322,31 @@ public class CharacterService {
 	public void updatePlayerGroups(IActiveCharacter character, ConfigClass configClass, int slot, Race race, Guild guild) {
 		if (character.isStub())
 			return;
+		boolean k = false;
 		if (configClass != null) {
-			character.setClass(configClass, slot);
+			CharacterChangeGroupEvent e = new CharacterChangeClassEvent(character, configClass, slot);
+			game.getEventManager().post(e);
+			if (!e.isCancelled()) {
+				k = true;
+				character.setClass(configClass, slot);
+			}
 		}
 		if (race != null) {
-			character.setRace(race);
-			character.getEffects()
-					.stream()
-					.map(IEffectContainer::getEffects)
-					.forEach(a -> a.stream()
-							.filter(aa -> aa.getEffectSourceProvider().getType() == EffectSourceType.RACE)
-							.forEach(e -> effectService.removeEffect(e, character)));
+			CharacterChangeGroupEvent ev = new CharacterChangeRaceEvent(character, race);
+			game.getEventManager().post(ev);
+			if (!ev.isCancelled()) {
+				k = true;
+				character.setRace(race);
+				character.getEffects()
+						.stream()
+						.map(IEffectContainer::getEffects)
+						.forEach(a -> a.stream()
+								.filter(aa -> aa.getEffectSourceProvider().getType() == EffectSourceType.RACE)
+								.forEach(e -> effectService.removeEffect(e, character)));
+			}
 		}
 		if (guild != null) {
+			k = true;
 			character.setGuild(guild);
 			character.getEffects()
 					.stream()
@@ -347,13 +356,15 @@ public class CharacterService {
 							.forEach(e -> effectService.removeEffect(e, character)));
 
 		}
-		putInSaveQueue(character.getCharacterBase());
-		recalculateProperties(character);
-		updateArmorRestrictions(character);
-		updateWeaponRestrictions(character);
-		updateWalkSpeed(character);
-		updateMaxHealth(character);
-		updateMaxMana(character);
+		if (k) {
+			putInSaveQueue(character.getCharacterBase());
+			recalculateProperties(character);
+			updateArmorRestrictions(character);
+			updateWeaponRestrictions(character);
+			updateWalkSpeed(character);
+			updateMaxHealth(character);
+			updateMaxMana(character);
+		}
 	}
 
 
