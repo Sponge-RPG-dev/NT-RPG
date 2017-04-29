@@ -48,6 +48,7 @@ import cz.neumimto.rpg.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
+import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
@@ -328,7 +329,9 @@ public class CharacterService {
 			game.getEventManager().post(e);
 			if (!e.isCancelled()) {
 				k = true;
+				removeGroupEffects(character, character.getNClass(slot));
 				character.setClass(configClass, slot);
+				applyGroupEffects(character, configClass);
 			}
 		}
 		if (race != null) {
@@ -336,24 +339,16 @@ public class CharacterService {
 			game.getEventManager().post(ev);
 			if (!ev.isCancelled()) {
 				k = true;
+				removeGroupEffects(character, character.getRace());
 				character.setRace(race);
-				character.getEffects()
-						.stream()
-						.map(IEffectContainer::getEffects)
-						.forEach(a -> a.stream()
-								.filter(aa -> aa.getEffectSourceProvider().getType() == EffectSourceType.RACE)
-								.forEach(e -> effectService.removeEffect(e, character)));
+				applyGroupEffects(character, race);
 			}
 		}
 		if (guild != null) {
 			k = true;
+
 			character.setGuild(guild);
-			character.getEffects()
-					.stream()
-					.map(IEffectContainer::getEffects)
-					.forEach(a -> a.stream()
-							.filter(aa -> aa.getEffectSourceProvider().getType() == EffectSourceType.GUILD)
-							.forEach(e -> effectService.removeEffect(e, character)));
+
 
 		}
 		if (k) {
@@ -367,6 +362,15 @@ public class CharacterService {
 		}
 	}
 
+	public void removeGroupEffects(IActiveCharacter character, PlayerGroup p) {
+		if (p == null) return;
+		effectService.removeGlobalEffectsAsEnchantments(p.getEffects(), character, p);
+	}
+
+	public void applyGroupEffects(IActiveCharacter character, PlayerGroup p) {
+		if (p == null) return;
+		effectService.applyGlobalEffectsAsEnchantments(p.getEffects(), character, p);
+	}
 
 	/**
 	 * updates maximal mana from character properties
