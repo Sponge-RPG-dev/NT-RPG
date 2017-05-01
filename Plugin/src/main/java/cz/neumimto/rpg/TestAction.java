@@ -45,6 +45,12 @@ public class TestAction implements IEffectSourceProvider {
 
 	public void testAddEffect(IActiveCharacter character) {
 		effectService.addEffect(new Test(character), character, this);
+		effectService.addEffect(new Test(character), character, this);
+		effectService.addEffect(new Test(character), character, this);
+		IEffectContainer<Integer, Test> k = character.getEffect("test");
+		if (k.getStackedValue() != 30) {
+			throw new AssertionError();
+		}
 	}
 
 	@Override

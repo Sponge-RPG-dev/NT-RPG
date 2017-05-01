@@ -50,4 +50,8 @@ public class EffectContainer<K, T extends IEffect<K>> implements IEffectContaine
 		return value;
 	}
 
+	@Override
+	public void setStackedValue(K k) {
+		this.value = k;
+	}
 }

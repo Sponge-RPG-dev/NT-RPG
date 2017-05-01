@@ -48,4 +48,14 @@ public class Invisibility extends EffectBase implements IEffectContainer {
     public Set<Invisibility> getEffects() {
         return Collections.singleton(this);
     }
+
+    @Override
+    public Object getStackedValue() {
+        return null;
+    }
+
+    @Override
+    public void setStackedValue(Object o) {
+
+    }
 }

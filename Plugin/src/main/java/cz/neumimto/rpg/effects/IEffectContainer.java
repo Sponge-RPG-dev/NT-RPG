@@ -39,7 +39,7 @@ public interface IEffectContainer<K, T extends IEffect<K>> {
 
 	EffectStackingStrategy<K> getEffectStackingStrategy();
 
-	default K getStackedValue() {return null;}
+	K getStackedValue();
 
-	default void setStackedValue(K k) {}
+	void setStackedValue(K k);
 }

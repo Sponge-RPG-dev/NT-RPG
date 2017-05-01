@@ -99,6 +99,11 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
     public BossBarExpNotifier constructEffectContainer() {
         return this;
     }
+
+    @Override
+    public void setStackedValue(Object o) {
+
+    }
 }
 
 

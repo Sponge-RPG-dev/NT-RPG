@@ -34,6 +34,16 @@ public class SoulBindEffect extends EffectBase implements IEffectContainer {
     }
 
     @Override
+    public Object getStackedValue() {
+        return null;
+    }
+
+    @Override
+    public void setStackedValue(Object o) {
+
+    }
+
+    @Override
     public SoulBindEffect constructEffectContainer() {
         return this;
     }

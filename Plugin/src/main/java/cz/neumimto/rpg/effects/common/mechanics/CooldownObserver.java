@@ -79,5 +79,13 @@ public class CooldownObserver extends EffectBase implements IEffectContainer {
         return this;
     }
 
+    @Override
+    public Object getStackedValue() {
+        return null;
+    }
 
+    @Override
+    public void setStackedValue(Object o) {
+
+    }
 }

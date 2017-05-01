@@ -31,4 +31,14 @@ public class DefaultHealthRegeneration extends EffectBase implements IEffectCont
     public DefaultHealthRegeneration constructEffectContainer() {
         return this;
     }
+
+    @Override
+    public Object getStackedValue() {
+        return null;
+    }
+
+    @Override
+    public void setStackedValue(Object o) {
+
+    }
 }
