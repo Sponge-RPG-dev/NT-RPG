@@ -342,4 +342,7 @@ public class Localization {
 
     @ConfigValue
     public static String ITEM_RESTRICTION = "Restrictions";
+
+    @ConfigValue
+    public static String HEALTH = "Health";
 }

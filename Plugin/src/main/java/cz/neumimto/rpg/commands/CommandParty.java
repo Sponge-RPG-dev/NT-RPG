@@ -35,7 +35,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import java.util.Optional;
 
 /**
- * Created NeumimTo ja on 2.9.2015.
+ * Created NeumimTo on 2.9.2015.
  */
 @ResourceLoader.Command
 public class CommandParty extends CommandBase {

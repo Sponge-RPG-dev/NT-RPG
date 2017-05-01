@@ -153,15 +153,6 @@ public class VanilaMessaging implements IPlayerMessage {
 		//todo
 	}
 
-	@Override
-	public void sendManaStatus(IActiveCharacter character, double currentMana, double maxMana, double reserved) {
-		Text.Builder b = Text.builder("Mana: " + currentMana).color(TextColors.BLUE);
-		if (reserved != 0) {
-			b.append(Text.builder(" / " + (maxMana - reserved)).color(TextColors.DARK_RED).build());
-		}
-		b.append(Text.builder(" | " + maxMana).color(TextColors.GRAY).build());
-		character.getPlayer().sendMessage(b.build());
-	}
 
 	@Override
 	public void sendPlayerInfo(IActiveCharacter character, List<CharacterBase> target) {
@@ -668,5 +659,33 @@ public class VanilaMessaging implements IPlayerMessage {
 			//}
 
 
+	}
+
+	@Override
+	public void displayHealth(IActiveCharacter character) {
+		double value = character.getHealth().getValue();
+		double maxValue = character.getHealth().getMaxValue();
+		double reservedAmount = character.getHealth().getReservedAmount();
+
+		LiteralText a = Text.builder(Localization.HEALTH).color(TextColors.GOLD)
+				.append(Text.builder(value + "").color(TextColors.GREEN).build())
+				.append(Text.builder("/").color(TextColors.WHITE).build())
+				.append(Text.builder(String.valueOf(maxValue - reservedAmount)).color(TextColors.RED).build())
+				.append(Text.builder(" (" + maxValue + ") ").color(TextColors.GRAY).build()).build();
+		character.getPlayer().sendMessage(a);
+	}
+
+	@Override
+	public void displayMana(IActiveCharacter character) {
+		double value = character.getMana().getValue();
+		double maxValue = character.getMana().getMaxValue();
+		double reservedAmount = character.getMana().getReservedAmount();
+
+		LiteralText a = Text.builder(Localization.HEALTH).color(TextColors.GOLD)
+				.append(Text.builder(value + "").color(TextColors.BLUE).build())
+				.append(Text.builder("/").color(TextColors.WHITE).build())
+				.append(Text.builder(String.valueOf(maxValue - reservedAmount)).color(TextColors.DARK_BLUE).build())
+				.append(Text.builder(" (" + maxValue + ") ").color(TextColors.GRAY).build()).build();
+		character.getPlayer().sendMessage(a);
 	}
 }

@@ -149,7 +149,7 @@ public class SkillService {
                             character.getMana().setValue(character.getMana().getValue() - event.getRequiredMana());
                             long cd = (long) newCd;
                             character.getCooldowns().put(esi.getSkill().getName(), cd + servertime);
-                            Gui.sendManaStatus(character, character.getMana().getValue(), character.getMaxMana(), character.getMana().getReservedAmount());
+                            Gui.displayMana(character);
                             return SkillResult.OK;
                         }
                     }

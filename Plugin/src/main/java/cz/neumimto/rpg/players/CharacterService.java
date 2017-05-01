@@ -199,6 +199,10 @@ public class CharacterService {
 		return characters.get(uuid);
 	}
 
+	public IActiveCharacter getCharacter(Player player) {
+		return characters.get(player);
+	}
+
 	/**
 	 * Activates character for specified player, replaces old
 	 *
@@ -1111,5 +1115,10 @@ public class CharacterService {
 		return Math.min(propertyService.getMaxPropertyValue(index), character.getProperty(index));
 	}
 
+	public void setHeathscale(IActiveCharacter character, double i) {
+		character.getCharacterBase().setHealthScale(i);
+		character.getPlayer().offer(Keys.HEALTH_SCALE, i);
+		putInSaveQueue(character.getCharacterBase());
+	}
 }
 

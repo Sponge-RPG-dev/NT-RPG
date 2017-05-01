@@ -2,8 +2,8 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.effects.common.stacking.IntegerEffectStackingStrategy;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -22,7 +22,7 @@ import java.util.List;
  * @see cz.neumimto.rpg.commands.CommandAdmin - test.action
  */
 @Singleton
-public class TestAction {
+public class TestAction implements IEffectSourceProvider {
 
 	@Inject
 	private EffectService effectService;
@@ -41,5 +41,42 @@ public class TestAction {
 		itemStack.offer(itemData);
 		inventoryService.updateLore(itemStack);
 		character.getPlayer().setItemInHand(HandTypes.MAIN_HAND, itemStack);
+	}
+
+	public void testAddEffect(IActiveCharacter character) {
+		effectService.addEffect(new Test(character), character, this);
+	}
+
+	@Override
+	public IEffectSource getType() {
+		return EffectSourceType.COMMAND;
+	}
+
+	private static class Test extends EffectBase<Integer> {
+
+		public Test(IEffectConsumer consumer) {
+			super("test", consumer);
+			setStackable(true, new IntegerEffectStackingStrategy());
+		}
+
+		@Override
+		public long getDuration() {
+			return 10000;
+		}
+
+		@Override
+		public void onApply() {
+			getConsumer().sendMessage("added");
+		}
+
+		@Override
+		public void onRemove() {
+			getConsumer().sendMessage("removed");
+		}
+
+		@Override
+		public Integer getValue() {
+			return 10;
+		}
 	}
 }

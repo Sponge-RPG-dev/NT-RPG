@@ -37,6 +37,7 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
+import org.spongepowered.api.data.DataRegistration;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GamePostInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
@@ -77,13 +78,23 @@ public class NtRpgPlugin {
 
 	@Listener
 	public void preinit(GamePreInitializationEvent e) {
-		Sponge.getDataManager().register(InventoryItemMenuData.class,
-				InventoryItemMenuData.Immutable.class,
-				new InventoryItemMenuData.Builder());
 
-		Sponge.getDataManager().register(CustomItemData.class,
-				CustomItemData.Immutable.class,
-				new CustomItemData.Builder());
+		DataRegistration.<InventoryItemMenuData, InventoryItemMenuData.Immutable>builder()
+				.dataClass(InventoryItemMenuData.class)
+				.immutableClass(InventoryItemMenuData.Immutable.class)
+				.builder(new InventoryItemMenuData.Builder())
+				.manipulatorId("ntrpg-custominventory")
+				.dataName("CustomInventory")
+				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
+
+
+		DataRegistration.<CustomItemData, CustomItemData.Immutable>builder()
+				.dataClass(CustomItemData.class)
+				.immutableClass(CustomItemData.Immutable.class)
+				.builder(new CustomItemData.Builder())
+				.manipulatorId("ntrpg-customitemdata")
+				.dataName("CustomItemData")
+				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
 
 	}
 

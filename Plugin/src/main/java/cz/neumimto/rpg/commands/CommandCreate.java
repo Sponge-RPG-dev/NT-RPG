@@ -36,6 +36,7 @@ import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -102,10 +103,10 @@ public class CommandCreate extends CommandBase {
                         characterBase.setUuid(player.getUniqueId());
                         characterBase.setAttributePoints(PluginConfig.ATTRIBUTEPOINTS_ON_START);
                         characterService.createAndUpdate(characterBase);
-
                         commandSource.sendMessage(Text.of(CommandLocalization.CHARACTER_CREATED.replaceAll("%1", characterBase.getName())));
 
                         Gui.sendListOfCharacters(characterService.getCharacter(player.getUniqueId()),characterBase);
+
                     }
                 }).submit(plugin);
             } else if (args[0].equalsIgnoreCase("party")) {

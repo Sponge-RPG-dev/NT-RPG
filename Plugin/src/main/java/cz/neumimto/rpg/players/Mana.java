@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 
 /**
@@ -30,7 +31,7 @@ public class Mana implements IReservable {
 
     public Mana(IActiveCharacter activeCharacter) {
         this.character = activeCharacter;
-        this.characterService = IoC.get().build(CharacterService.class);
+        this.characterService = NtRpgPlugin.GlobalScope.characterService;
     }
 
     @Override

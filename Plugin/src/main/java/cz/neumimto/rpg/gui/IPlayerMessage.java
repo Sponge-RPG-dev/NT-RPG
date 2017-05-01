@@ -52,8 +52,6 @@ public interface IPlayerMessage {
 
     void invokeCharacterMenu(Player player, List<CharacterBase> characterBases);
 
-    void sendManaStatus(IActiveCharacter character, double currentMana, double maxMana, double reserved);
-
     void sendPlayerInfo(IActiveCharacter character, List<CharacterBase> target);
 
     void sendPlayerInfo(IActiveCharacter character, IActiveCharacter target);
@@ -95,4 +93,8 @@ public interface IPlayerMessage {
     void displayRunewordAllowedGroups(IActiveCharacter character, RuneWord rw);
 
     void displayRunewordAllowedItems(IActiveCharacter character, RuneWord rw);
+
+    void displayHealth(IActiveCharacter character);
+
+    void displayMana(IActiveCharacter character);
 }
