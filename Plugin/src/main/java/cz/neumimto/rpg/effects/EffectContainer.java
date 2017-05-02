@@ -23,6 +23,7 @@ public class EffectContainer<K, T extends IEffect<K>> implements IEffectContaine
 		effects.add(t);
 		effectStackingStrategy = t.getEffectStackingStrategy();
 		this.stackable = t.isStackable();
+		this.value = t.getValue();
 	}
 
 	@Override
