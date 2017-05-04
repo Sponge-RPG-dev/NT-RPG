@@ -80,9 +80,7 @@ import org.spongepowered.api.util.Color;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static cz.neumimto.rpg.gui.GuiHelper.back;
-import static cz.neumimto.rpg.gui.GuiHelper.createPlayerGroupView;
-import static cz.neumimto.rpg.gui.GuiHelper.getItemLore;
+import static cz.neumimto.rpg.gui.GuiHelper.*;
 
 /**
  * Created by NeumimTo on 6.8.2015.

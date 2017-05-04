@@ -25,18 +25,11 @@ import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.IGlobalEffect;
-import cz.neumimto.rpg.inventory.CustomItem;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.ItemRestriction;
-import cz.neumimto.rpg.inventory.data.CustomItemData;
-import cz.neumimto.rpg.inventory.data.NKeys;
-import cz.neumimto.rpg.skills.SkillNodes;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
 import org.spongepowered.api.data.manipulator.mutable.item.EnchantmentData;
-import org.spongepowered.api.data.type.PickupRules;
-import org.spongepowered.api.data.value.mutable.MapValue;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.Item;
@@ -44,28 +37,16 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.format.TextFormat;
 import org.spongepowered.api.text.format.TextStyles;
-import org.spongepowered.api.util.Color;
-import org.spongepowered.asm.mixin.injection.modify.LocalVariableDiscriminator;
 
 import java.util.*;
 import java.util.function.BiFunction;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
 import static org.spongepowered.api.item.ItemTypes.*;
-import static org.spongepowered.api.item.ItemTypes.LEATHER_HELMET;
 
 /**
  * Created by NeumimTo on 27.3.2015.

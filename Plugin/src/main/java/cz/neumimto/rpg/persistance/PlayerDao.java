@@ -21,17 +21,14 @@ package cz.neumimto.rpg.persistance;
 import cz.neumimto.core.dao.genericDao.GenericDao;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.players.CharacterBase;
-import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.jpa.HibernatePersistenceProvider;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 /**
  * Created by NeumimTo on 9.7.2015.

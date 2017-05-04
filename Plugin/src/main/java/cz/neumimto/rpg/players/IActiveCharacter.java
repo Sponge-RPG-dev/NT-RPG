@@ -20,8 +20,6 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.IEntityType;
-import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.inventory.Armor;
 import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.Weapon;
@@ -38,7 +36,6 @@ import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.equipment.EquipmentType;
-import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
 
 import java.util.List;
 import java.util.Map;
@@ -135,13 +132,13 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     void setClass(ConfigClass nclass, int slot);
 
-    public IActiveCharacter updateItemRestrictions();
+    IActiveCharacter updateItemRestrictions();
 
-    public Map<String, ExtendedSkillInfo> getSkills();
+    Map<String, ExtendedSkillInfo> getSkills();
 
     ExtendedSkillInfo getSkillInfo(ISkill skill);
 
-    public boolean hasSkill(String name);
+    boolean hasSkill(String name);
 
     int getLevel();
 

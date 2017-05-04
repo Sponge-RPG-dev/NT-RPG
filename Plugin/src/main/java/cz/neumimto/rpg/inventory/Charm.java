@@ -7,7 +7,6 @@ import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.utils.ItemStackUtils;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.HashMap;

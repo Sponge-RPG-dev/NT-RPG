@@ -7,9 +7,7 @@ import jdk.internal.dynalink.beans.StaticClass;
 import org.objectweb.asm.*;
 import org.objectweb.asm.util.CheckClassAdapter;
 import org.spongepowered.api.event.Event;
-import org.spongepowered.api.event.item.inventory.DropItemEvent;
 
-import java.io.PrintWriter;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
@@ -338,7 +336,7 @@ public class ClassGenerator implements Opcodes {
 		boolean inject() default false;
 
 		@Retention(RetentionPolicy.RUNTIME)
-		public @interface Constructor {
+		@interface Constructor {
 
 		}
 	}

@@ -1,13 +1,9 @@
 package cz.neumimto.rpg;
 
 
-import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.effects.IGlobalEffect;
-import cz.neumimto.rpg.effects.common.positive.DamageBonus;
 import cz.neumimto.rpg.effects.common.positive.SpeedBoost;
 import cz.neumimto.rpg.persistance.GroupDao;
-import cz.neumimto.rpg.players.properties.DefaultProperties;
-import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.SkillTree;
 import javassist.CannotCompileException;
@@ -16,11 +12,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.slf4j.Logger;
-import org.slf4j.helpers.SubstituteLogger;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
-
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;

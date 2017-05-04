@@ -21,12 +21,11 @@ package cz.neumimto.rpg.effects;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.utils.UUIDs;
-import org.spongepowered.api.data.DataTransactionResult;
-import org.spongepowered.api.data.key.Key;
-import org.spongepowered.api.data.value.BaseValue;
 import org.spongepowered.api.effect.potion.PotionEffect;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by NeumimTo.
@@ -231,9 +230,7 @@ public class EffectBase<Value> implements IEffect<Value> {
         if (!(o instanceof EffectBase)) return false;
 
         EffectBase that = (EffectBase) o;
-        if (uuid != null ? !uuid.equals(that.uuid) : that.uuid != null) return false;
-
-        return true;
+        return uuid != null ? uuid.equals(that.uuid) : that.uuid == null;
     }
 
     @Override

@@ -18,7 +18,6 @@
 
 package cz.neumimto.rpg.players;
 
-import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 

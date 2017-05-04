@@ -20,7 +20,6 @@ package cz.neumimto.rpg.configuration;
 
 import cz.neumimto.configuration.ConfigValue;
 import cz.neumimto.configuration.ConfigurationContainer;
-import org.spongepowered.api.text.Text;
 
 /**
  * Created by NeumimTo on 31.1.2015.

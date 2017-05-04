@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.inventory.data;
 
-import cz.neumimto.rpg.inventory.InventoryService;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;

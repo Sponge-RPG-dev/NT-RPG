@@ -19,9 +19,7 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.configuration.PluginConfig;
-import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.inventory.Armor;
 import cz.neumimto.rpg.inventory.HotbarObject;
@@ -44,10 +42,8 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.equipment.EquipmentType;
-import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
 import org.spongepowered.api.service.permission.SubjectData;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Tristate;
 
 import java.lang.ref.WeakReference;
@@ -710,8 +706,6 @@ public class ActiveCharacter implements IActiveCharacter {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ActiveCharacter that = (ActiveCharacter) o;
-        if (that.getCharacterBase().getId().equals(this.getCharacterBase().getId()))
-            return true;
-        return false;
+        return that.getCharacterBase().getId().equals(this.getCharacterBase().getId());
     }
 }

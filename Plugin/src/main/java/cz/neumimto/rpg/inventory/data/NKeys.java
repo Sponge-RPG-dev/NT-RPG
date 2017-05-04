@@ -2,17 +2,13 @@ package cz.neumimto.rpg.inventory.data;
 
 import com.google.common.reflect.TypeToken;
 import org.spongepowered.api.data.DataQuery;
-import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.key.KeyFactory;
 import org.spongepowered.api.data.value.mutable.ListValue;
 import org.spongepowered.api.data.value.mutable.MapValue;
 import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.api.text.Text;
-import org.yaml.snakeyaml.tokens.ValueToken;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

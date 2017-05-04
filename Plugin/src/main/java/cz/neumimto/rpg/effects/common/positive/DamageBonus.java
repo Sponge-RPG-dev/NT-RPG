@@ -18,7 +18,6 @@
 
 package cz.neumimto.rpg.effects.common.positive;
 
-import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.players.IActiveCharacter;

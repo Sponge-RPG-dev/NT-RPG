@@ -19,15 +19,9 @@
 package cz.neumimto.rpg.players.groups;
 
 import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by NeumimTo on 27.12.2014.

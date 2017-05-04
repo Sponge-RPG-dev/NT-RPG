@@ -2,7 +2,8 @@ package cz.neumimto.rpg.effects.common.mechanics;
 
 
 import cz.neumimto.rpg.ClassGenerator;
-import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.text.Text;

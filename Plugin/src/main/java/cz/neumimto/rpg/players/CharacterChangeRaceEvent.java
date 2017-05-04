@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.events.CharacterChangeGroupEvent;
-import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Race;
 
 /**

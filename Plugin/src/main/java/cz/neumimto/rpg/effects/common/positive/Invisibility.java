@@ -1,12 +1,13 @@
 package cz.neumimto.rpg.effects.common.positive;
 
 import cz.neumimto.rpg.ClassGenerator;
-import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.IEffectContainer;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.Living;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 /**

@@ -7,7 +7,9 @@ import cz.neumimto.rpg.players.ExperienceSource;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 /**

@@ -30,8 +30,8 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IGlobalEffect;
-import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.PropertyContainer;
+import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import javassist.CannotCompileException;
@@ -57,14 +57,10 @@ public class ResourceLoader {
 
     private final static String INNERCLASS_SEPARATOR = "$";
 
-    ;
     //TODO use nio instead of io
     public static File classDir, raceDir, guildsDir, addonDir, skilltreeDir;
 
-    ;
     private static IoC ioc;
-
-    ;
 
     static {
         classDir = new File(NtRpgPlugin.workingDir + File.separator + "classes");
@@ -230,16 +226,16 @@ public class ResourceLoader {
     }
 
     @Retention(RetentionPolicy.RUNTIME)
-    public static @interface ListenerClass {
+    public @interface ListenerClass {
     }
 
 
     @Retention(RetentionPolicy.RUNTIME)
-    public static @interface Skill {
+    public @interface Skill {
     }
 
     @Retention(RetentionPolicy.RUNTIME)
-    public static @interface Command {
+    public @interface Command {
     }
 
 

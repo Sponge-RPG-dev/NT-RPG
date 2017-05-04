@@ -22,7 +22,10 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.configuration.*;
+import cz.neumimto.rpg.configuration.CommandLocalization;
+import cz.neumimto.rpg.configuration.CommandPermissions;
+import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
@@ -36,14 +39,12 @@ import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.text.Text;
 
 /**

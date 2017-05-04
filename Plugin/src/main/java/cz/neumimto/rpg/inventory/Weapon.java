@@ -26,9 +26,6 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by NeumimTo on 31.1.2015.
  */

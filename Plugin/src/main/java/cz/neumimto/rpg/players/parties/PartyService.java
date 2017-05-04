@@ -21,7 +21,6 @@ package cz.neumimto.rpg.players.parties;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.configuration.Localization;
-import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.events.party.PartyInviteEvent;
 import cz.neumimto.rpg.events.party.PartyJoinEvent;
 import cz.neumimto.rpg.events.party.PartyLeaveEvent;

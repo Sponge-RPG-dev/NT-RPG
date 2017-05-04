@@ -7,14 +7,8 @@ import cz.neumimto.rpg.effects.common.stacking.IntegerEffectStackingStrategy;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.utils.ItemStackUtils;
-import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.text.Text;
-
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by NeumimTo on 29.10.2016.

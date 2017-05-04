@@ -1,8 +1,6 @@
 package cz.neumimto.rpg.persistance.model;
 
-import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.groups.ConfigClass;
 
 import javax.persistence.*;
 
