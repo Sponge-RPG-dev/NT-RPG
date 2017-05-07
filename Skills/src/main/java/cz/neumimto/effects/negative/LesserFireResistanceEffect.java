@@ -6,6 +6,7 @@ import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.common.stacking.FloatEffectStackingStrategy;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
+import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.entity.EntityTypes;
 
 /**
@@ -24,7 +25,7 @@ public class LesserFireResistanceEffect extends EffectBase<Float> {
 	}
 
 	public LesserFireResistanceEffect(IActiveCharacter character, long duration, String level) {
-		this(character, duration, Float.parseFloat(level));
+		this(character, duration, Float.parseFloat(Utils.extractNumber(level)));
 	}
 
 	@Override

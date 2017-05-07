@@ -166,8 +166,13 @@ public class VanilaMessaging implements IPlayerMessage {
 			b.append(Text.builder(" [").color(TextColors.DARK_GRAY).build())
 					.append(Text.builder("SELECT").color(TextColors.GREEN).onClick(TextActions.runCommand("/" + "show" + " character " + name)).build())
 					.append(Text.builder("] - ").color(TextColors.DARK_GRAY).build());
-			b.append(Text.of(name)).append(Text.builder(" ").build()).append(Text.of(level));
-			b.append(Text.of(name1));
+			b.append(Text.of(name));
+			if (character.getPrimaryClass() != ExtendedNClass.Default) {
+				b.append(Text.builder(" ").build()).append(Text.of(level));
+			}
+			if (character.getRace() != Race.Default) {
+				b.append(Text.of(name1));
+			}
 			content.add(b.build());
 		}
 		builder.contents(content);

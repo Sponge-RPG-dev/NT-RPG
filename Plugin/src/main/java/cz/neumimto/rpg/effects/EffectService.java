@@ -66,7 +66,6 @@ public class EffectService {
      * @param effect
      */
     public void stopEffect(IEffect effect) {
-        effect.onRemove();
         if (effect.requiresRegister()) {
             pendingRemovals.add(effect);
         }
@@ -156,12 +155,13 @@ public class EffectService {
         IEffectContainer eff = consumer.getEffect(iEffect.getName());
         if (eff == null) {
             consumer.addEffect(iEffect.constructEffectContainer());
-            iEffect.onApply();
-            if (iEffect.requiresRegister())
-                runEffect(iEffect);
+	        iEffect.onApply();
         } else if (eff.isStackable()) {
+            iEffect.onApply();
             eff.stackEffect(iEffect, effectSourceProvider);
         }
+	    if (iEffect.requiresRegister())
+		    runEffect(iEffect);
     }
 
     /**
@@ -174,12 +174,14 @@ public class EffectService {
         IEffectContainer effect = consumer.getEffect(iEffect.getName());
         if (effect != null) {
             if (effect == iEffect) {
+                iEffect.onRemove();
                 stopEffect(iEffect);
                 consumer.removeEffect(effect);
                 return;
             }
             if (effect.getEffects().contains(iEffect)) {
                 effect.getEffects().remove(iEffect);
+                iEffect.onRemove();
                 stopEffect(iEffect);
                 if (effect.getEffects().isEmpty()) {
                     consumer.removeEffect(effect);

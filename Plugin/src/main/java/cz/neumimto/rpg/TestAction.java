@@ -57,11 +57,7 @@ public class TestAction implements IEffectSourceProvider {
 		public Test(IEffectConsumer consumer) {
 			super("test", consumer);
 			setStackable(true, new IntegerEffectStackingStrategy());
-		}
-
-		@Override
-		public long getDuration() {
-			return 10000;
+			setDuration(10000L);
 		}
 
 		@Override
