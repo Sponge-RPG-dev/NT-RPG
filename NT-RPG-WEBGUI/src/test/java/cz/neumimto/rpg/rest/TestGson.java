@@ -62,7 +62,7 @@ public class TestGson {
 
     @Test
     public void test2() {
-        Map<String,ExtendedSkillInfo> map = new HashMap();
+        Map<String,ExtendedSkillInfo> map = new HashMap<>();
 
         ExtendedSkillInfo i = new ExtendedSkillInfo();
         i.setLevel(10);

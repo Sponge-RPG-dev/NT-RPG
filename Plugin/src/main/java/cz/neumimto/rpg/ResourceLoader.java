@@ -209,7 +209,7 @@ public class ResourceLoader {
         if (IEffect.class.isAssignableFrom(clazz)) {
             ClassGenerator.Generate a = clazz.getAnnotation(ClassGenerator.Generate.class);
             if (a != null) {
-                Class<? extends IEffect> c = (Class<? extends IEffect>) clazz;
+                Class c = (Class<? extends IEffect>) clazz;
                 IGlobalEffect iGlobalEffect = classGenerator.generateGlobalEffect(c);
                 if (iGlobalEffect == null) {
                     return;

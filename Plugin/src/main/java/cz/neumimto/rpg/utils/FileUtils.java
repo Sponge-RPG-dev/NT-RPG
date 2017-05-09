@@ -35,7 +35,7 @@ import java.security.CodeSource;
 public class FileUtils {
 
 
-    public static String getJarContainingFolder(Class aclass) throws Exception {
+    public static String getJarContainingFolder(Class<?> aclass) throws Exception {
         CodeSource codeSource = aclass.getProtectionDomain().getCodeSource();
         String str = codeSource.getLocation().toURI().toString().split("!")[0].substring(10);
         return str;

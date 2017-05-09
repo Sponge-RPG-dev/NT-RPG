@@ -200,7 +200,7 @@ public class CharacterService {
 	}
 
 	public IActiveCharacter getCharacter(Player player) {
-		return characters.get(player);
+		return characters.get(player.getUniqueId());
 	}
 
 	/**
@@ -654,14 +654,14 @@ public class CharacterService {
 	 * 0 - ok
 	 */
 	public Pair<SkillTreeActionResult, SkillTreeActionResult.Data> upgradeSkill(IActiveCharacter character, ISkill skill) {
-		Pair p = new Pair();
+		Pair<SkillTreeActionResult, SkillTreeActionResult.Data> p = new Pair<>();
 
 		CharacterClass cc = null;
 		Set<ExtendedNClass> classes = character.getClasses();
 
 		for (ExtendedNClass aClass : classes) {
 			Map<String, SkillData> skills = aClass.getConfigClass().getSkillTree().getSkills();
-			if (skills.containsValue(skill)) {
+			if (skills.containsKey(skill.getName())) {
 				cc = character.getCharacterBase().getCharacterClass(aClass.getConfigClass());
 				break;
 			}
@@ -715,7 +715,7 @@ public class CharacterService {
 	 * @param skill
 	 */
 	public Pair<SkillTreeActionResult, SkillTreeActionResult.Data> characterLearnskill(IActiveCharacter character, ISkill skill, SkillTree skillTree) {
-		Pair<SkillTreeActionResult, SkillTreeActionResult.Data> p = new Pair();
+		Pair<SkillTreeActionResult, SkillTreeActionResult.Data> p = new Pair<>();
 
 		ExtendedNClass nClass = null;
 		for (ExtendedNClass extendedNClass : character.getClasses()) {

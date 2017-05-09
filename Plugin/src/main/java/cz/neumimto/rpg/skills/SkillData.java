@@ -55,7 +55,7 @@ public class SkillData {
     }
 
     public boolean conflictsWith(SkillData skillData) {
-        return getConflicts().contains(skillData.getSkillName());
+        return getConflicts().contains(skillData);
     }
 
     public SkillSettings getSkillSettings() {

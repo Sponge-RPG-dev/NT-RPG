@@ -122,7 +122,7 @@ public class PreloadCharacter implements IActiveCharacter {
 
     @Override
     public Map<EquipmentType, Armor> getEquipedArmor() {
-        return Collections.EMPTY_MAP;
+        return Collections.emptyMap();
     }
 
     @Override
@@ -323,7 +323,7 @@ public class PreloadCharacter implements IActiveCharacter {
 
     @Override
     public Map<String, Long> getCooldowns() {
-        return Collections.EMPTY_MAP;
+        return Collections.emptyMap();
     }
 
     @Override
@@ -344,12 +344,12 @@ public class PreloadCharacter implements IActiveCharacter {
 
     @Override
     public Map<ItemType, Double> getAllowedWeapons() {
-        return Collections.EMPTY_MAP;
+        return Collections.emptyMap();
     }
 
     @Override
     public Set<ExtendedNClass> getClasses() {
-        return Collections.EMPTY_SET;
+        return Collections.emptySet();
     }
 
     @Override
@@ -394,7 +394,7 @@ public class PreloadCharacter implements IActiveCharacter {
 
     @Override
     public Collection<IEffectContainer<Object, IEffect<Object>>> getEffects() {
-        return Collections.EMPTY_SET;
+        return Collections.emptySet();
     }
 
     @Override
@@ -449,7 +449,7 @@ public class PreloadCharacter implements IActiveCharacter {
 
     @Override
     public Map<String, ExtendedSkillInfo> getSkills() {
-        return Collections.EMPTY_MAP;
+        return Collections.emptyMap();
     }
 
     @Override

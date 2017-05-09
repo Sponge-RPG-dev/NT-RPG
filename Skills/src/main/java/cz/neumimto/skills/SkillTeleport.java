@@ -35,7 +35,7 @@ public class SkillTeleport extends ActiveSkill {
         Optional<BlockRayHit<World>> optHit = BlockRay.from(player).skipFilter(BlockRay.onlyAirFilter()).build().end();
         if (optHit.isPresent()) {
             Vector3d lookPos = optHit.get().getBlockPosition().toDouble();
-            Location worldLocation = new Location<>(player.getWorld(), lookPos);
+            Location<World> worldLocation = new Location<>(player.getWorld(), lookPos);
             TeleportHelper helper = Sponge.getGame().getTeleportHelper();
             Optional<Location<World>> safeLocation = helper.getSafeLocation(worldLocation);
             if (safeLocation.isPresent()) {

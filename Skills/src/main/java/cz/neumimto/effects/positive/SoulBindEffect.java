@@ -2,12 +2,10 @@ package cz.neumimto.effects.positive;
 
 import cz.neumimto.EffectLocalization;
 import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 /**

@@ -29,18 +29,17 @@ public class ClassGenerator implements Opcodes {
 	public ClassGenerator() {
 	}
 
-	private String getCannonicalGlobalName(Class cl) {
+	private String getCannonicalGlobalName(Class<?> cl) {
 		return packagee + "Global" + cl.getSimpleName();
 	}
 
-	private String toPath(Class cl) {
+	private String toPath(Class<?> cl) {
 		return cl.getName().replaceAll("\\.", "/");
 	}
 
-	private byte[] generateEffectClass(Class<? extends IEffect> cls, String id) {
+	private byte[] generateEffectClass(Class<? extends IEffect<?>> cls, String id) {
 		ClassWriter cv = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 		ClassVisitor cw = new CheckClassAdapter(cv);
-		FieldVisitor fv;
 		MethodVisitor mv;
 
 		cw.visit(52, ACC_PUBLIC + ACC_SUPER, getCannonicalGlobalName(cls), "Ljava/lang/Object;Lcz/neumimto/rpg/effects/IGlobalEffect<L" + toPath(cls) + ";>;", "java/lang/Object", new String[]{"cz/neumimto/rpg/effects/IGlobalEffect"});
@@ -141,7 +140,7 @@ public class ClassGenerator implements Opcodes {
 
 	}
 
-	public IGlobalEffect<? extends IEffect> generateGlobalEffect(Class<? extends IEffect> cls) throws CannotCompileException, IllegalAccessException, InstantiationException {
+	public IGlobalEffect<? extends IEffect> generateGlobalEffect(Class<? extends IEffect<?>> cls) throws CannotCompileException, IllegalAccessException, InstantiationException {
 		Generate annotation = cls.getAnnotation(Generate.class);
 		String id = null;
 		try {
@@ -151,7 +150,7 @@ public class ClassGenerator implements Opcodes {
 		}
 
 		byte[] b = generateEffectClass(cls, id);
-		Class c = loadClass(getCannonicalGlobalName(cls).replaceAll("/", "."), b);
+		Class<?> c = loadClass(getCannonicalGlobalName(cls).replaceAll("/", "."), b);
 		IGlobalEffect o = (IGlobalEffect) c.newInstance();
 		return o;
 	}
@@ -180,17 +179,17 @@ public class ClassGenerator implements Opcodes {
 		return o;
 	}
 
-	protected Class loadClass(String className, byte[] b) {
-		Class clazz = null;
+	protected Class<?> loadClass(String className, byte[] b) {
+		Class<?> clazz = null;
 		try {
 			ClassLoader loader = getClass().getClassLoader();
-			Class cls = Class.forName("java.lang.ClassLoader");
+			Class<?> cls = Class.forName("java.lang.ClassLoader");
 			java.lang.reflect.Method method = cls.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class);
 
 			method.setAccessible(true);
 			try {
 				Object[] args = new Object[]{className, b, 0, b.length};
-				clazz = (Class) method.invoke(loader, args);
+				clazz = (Class<?>) method.invoke(loader, args);
 			} finally {
 				method.setAccessible(false);
 			}
@@ -247,7 +246,7 @@ public class ClassGenerator implements Opcodes {
 			mv.visitVarInsn(ALOAD, 0);
 			mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
 			for (StaticClass a : set.keySet()) {
-				Class e = a.getRepresentedClass();
+				Class<?> e = a.getRepresentedClass();
 				Label l1 = new Label();
 				mv.visitLabel(l1);
 				mv.visitLineNumber(i, l1);
@@ -268,7 +267,7 @@ public class ClassGenerator implements Opcodes {
 		}
 		{
 			for (StaticClass a : set.keySet()) {
-				Class e = a.getRepresentedClass();
+				Class<?> e = a.getRepresentedClass();
 				String name = "on" + e.getSimpleName();
 				String name1 = e.getSimpleName().substring(0, 1).toLowerCase() + e.getSimpleName().substring(1) + "s";
 				mv = cw.visitMethod(ACC_PUBLIC, name, "(L" + toPath(e) + ";)V", null, null);

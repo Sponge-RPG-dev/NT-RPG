@@ -90,6 +90,6 @@ public final class StartingPoint extends PassiveSkill {
 
     @Override
     public Set<SkillType> getSkillTypes() {
-        return Collections.EMPTY_SET;
+        return Collections.emptySet();
     }
 }
