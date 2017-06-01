@@ -19,11 +19,13 @@
 package cz.neumimto.rpg.persistance;
 
 import com.typesafe.config.Config;
+import com.typesafe.config.ConfigException;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigValue;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.MissingConfigurationException;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
@@ -105,25 +107,53 @@ public class GroupDao {
         Path path = ResourceLoader.classDir.toPath();
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, "*.conf")) {
             stream.forEach(p -> {
+                logger.info("Loading file: " + p.getFileName().toString());
                 Config c = ConfigFactory.parseFile(p.toFile());
                 ConfigClass configClass = new ConfigClass(c.getString("Name"));
                 loadPlayerGroup(c, configClass);
-                SkillTree skillTree = skillService.getSkillTrees().get(c.getString("SkillTree"));
-                if (skillTree == null) {
-                    skillTree = SkillTree.Default;
+                try {
+                    SkillTree skillTree = skillService.getSkillTrees().get(c.getString("SkillTree"));
+                    if (skillTree == null) {
+                        logger.warn(" - Unknown \"SkillTree\", setting to default value");
+                        skillTree = SkillTree.Default;
+                    }
+                    configClass.setSkillTree(skillTree);
+                } catch (MissingConfigurationException e) {
+                    configClass.setSkillTree(SkillTree.Default);
+                    logger.warn(" - Missing configuration \"SkillTree\", setting to default value");
                 }
-                configClass.setSkillTree(skillTree);
-                List<String> experienceSources = c.getStringList("ExperienceSources");
-                HashSet<ExperienceSource> objects = new HashSet<>();
-                experienceSources.forEach(a -> objects.add(ExperienceSource.valueOf(a)));
-                configClass.setExperienceSources(objects);
-                configClass.setSkillpointsperlevel(c.getInt("SkillPointsPerLevel"));
-                configClass.setAttributepointsperlevel(c.getInt("AttributePointsPerLevel"));
-                int maxLevel = c.getInt("MaxLevel");
-                double first = c.getDouble("ExpFirstLevel");
-                double last = c.getDouble("ExpLastLevel");
 
-                initLevelCurve(configClass, maxLevel, first, last);
+                try {
+                    List<String> experienceSources = c.getStringList("ExperienceSources");
+                    HashSet<ExperienceSource> objects = new HashSet<>();
+                    experienceSources.forEach(a -> objects.add(ExperienceSource.valueOf(a)));
+                    configClass.setExperienceSources(objects);
+                } catch (MissingConfigurationException e) {
+                    logger.warn(" - Missing configuration \"ExperienceSources\", skipping");
+                }
+
+                try {
+                    configClass.setSkillpointsperlevel(c.getInt("SkillPointsPerLevel"));
+                } catch (MissingConfigurationException e) {
+                    logger.warn(" - Missing configuration \"SkillPointsPerLevel\", skipping");
+                }
+
+                try {
+                    configClass.setAttributepointsperlevel(c.getInt("AttributePointsPerLevel"));
+                } catch (MissingConfigurationException e) {
+                    logger.warn(" - Missing configuration \"AttributePointsPerLevel\", skipping");
+                }
+
+                try {
+                    int maxLevel = c.getInt("MaxLevel");
+                    double first = c.getDouble("ExpFirstLevel");
+                    double last = c.getDouble("ExpLastLevel");
+                    initLevelCurve(configClass, maxLevel, first, last);
+                } catch (MissingConfigurationException e) {
+                    logger.error(" - Missing one of configuration nodes \"MaxLevel\", \"ExpFirstLevel\", \"ExpLastLevel\"");
+                    initLevelCurve(configClass, 2, 1, 2); //just some not null values which might cause npes later
+                }
+
                 getClasses().put(configClass.getName().toLowerCase(), configClass);
             });
         } catch (IOException e) {
@@ -136,6 +166,7 @@ public class GroupDao {
         Path path = ResourceLoader.raceDir.toPath();
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, "*.conf")) {
             stream.forEach(p -> {
+                logger.info("Loading file: " + p.getFileName().toString());
                 Config c = ConfigFactory.parseFile(p.toFile());
                 Race race = new Race(c.getString("Name"));
                 loadPlayerGroup(c, race);
@@ -158,65 +189,135 @@ public class GroupDao {
 
     private void loadPlayerGroup(Config c, PlayerGroup group) {
         group.setShowsInMenu(c.getBoolean("Wildcard"));
-        group.setChatPrefix(c.getString("Chat.prefix"));
-        group.setChatSufix(c.getString("Chat.suffix"));
-        Config prop = c.getConfig("BonusProperties");
-        Set<Map.Entry<String, ConfigValue>> set = prop.entrySet();
+        try {
+            Config k = c.getConfig("Chat");
+            if (k != null) {
+                group.setChatPrefix(k.getString("prefix"));
+                group.setChatSufix(k.getString("Chat.suffix"));
+            }
+        } catch (ConfigException e) {
+            logger.warn(" - Missing configuration \"Chat\", skipping");
+        }
+
         int id = 0;
         float bonus;
-        for (Map.Entry<String, ConfigValue> m : set) {
-            id = propertyService.getIdByName(m.getKey());
-            bonus = Float.parseFloat(m.getValue().render());
-            group.getPropBonus().put(id, bonus);
+        Config prop;
+        Set<Map.Entry<String, ConfigValue>> set;
+        try {
+            prop = c.getConfig("BonusProperties");
+            set = prop.entrySet();
+
+            for (Map.Entry<String, ConfigValue> m : set) {
+                try {
+                    id = propertyService.getIdByName(m.getKey());
+                    bonus = Float.parseFloat(m.getValue().render());
+                    group.getPropBonus().put(id, bonus);
+                } catch (NullPointerException e) {
+                    logger.error("Unknown property name \""+m.getKey()+"\", check out your file properties_dump.info");
+                }
+            }
+        } catch (ConfigException e) {
+            logger.warn(" - Missing configuration \"BonusProperties\", skipping");
         }
-        Config propl = c.getConfig("BonusPropertiesPerLevel");
-        Set<Map.Entry<String, ConfigValue>> setl = propl.entrySet();
-        for (Map.Entry<String, ConfigValue> m : setl) {
-            id = propertyService.getIdByName(m.getKey());
-            bonus = Float.parseFloat(m.getValue().render());
-            group.getPropLevelBonus().put(id, bonus);
-        }
-        List<String> list = c.getStringList("AllowedArmor");
-        list.stream().forEach(a -> {
-            Optional<ItemType> type = game.getRegistry().getType(ItemType.class, a);
-            if (type.isPresent()) {
-                group.getAllowedArmor().add(type.get());
-            } else logger.warn("Defined invalid itemtype  " + a + " in " + group.getName());
-        });
-        prop = c.getConfig("AllowedWeapons");
-        set = prop.entrySet();
-        for (Map.Entry<String, ConfigValue> m : set) {
-            Optional<ItemType> type = game.getRegistry().getType(ItemType.class, m.getKey());
-            if (type.isPresent()) {
-                group.getWeapons().put(type.get(), Double.parseDouble(m.getValue().render()));
-            } else logger.warn("Defined invalid itemtype  " + m.getKey() + " in " + group.getName());
+
+        try {
+            Config propl = c.getConfig("BonusPropertiesPerLevel");
+            Set<Map.Entry<String, ConfigValue>> setl = propl.entrySet();
+            for (Map.Entry<String, ConfigValue> m : setl) {
+                try {
+                    id = propertyService.getIdByName(m.getKey());
+                    bonus = Float.parseFloat(m.getValue().render());
+                    group.getPropLevelBonus().put(id, bonus);
+                } catch (NullPointerException e) {
+                    logger.error("Unknown property name \""+m.getKey()+"\", check out your file properties_dump.info");
+                }
+            }
+        } catch (ConfigException e) {
+            logger.warn(" - Missing configuration \"BonusPropertiesPerLevel\", skipping");
 
         }
-        prop = c.getConfig("Attributes");
-        set = prop.entrySet();
-        for (Map.Entry<String, ConfigValue> entry : set) {
-            String attribute = entry.getKey();
-            int i = Integer.parseInt(entry.getValue().render());
-            ICharacterAttribute attribute1 = propertyService.getAttribute(attribute);
-            group.getStartingAttributes().put(attribute1, i);
+
+        try {
+            List<String> list = c.getStringList("AllowedArmor");
+            list.stream().forEach(a -> {
+                Optional<ItemType> type = game.getRegistry().getType(ItemType.class, a);
+                if (type.isPresent()) {
+                    group.getAllowedArmor().add(type.get());
+                } else logger.warn("Defined invalid itemtype  " + a + " in " + group.getName());
+            });
+        } catch (ConfigException e) {
+            logger.warn(" - Missing configuration \"AllowedArmor\", skipping");
         }
-        Optional<ItemType> menuIcon = game.getRegistry().getType(ItemType.class, c.getString("MenuIcon"));
-        if (menuIcon.isPresent()) {
-            group.setItemType(menuIcon.get());
-        } else {
+
+        try {
+            prop = c.getConfig("AllowedWeapons");
+            set = prop.entrySet();
+            for (Map.Entry<String, ConfigValue> m : set) {
+                Optional<ItemType> type = game.getRegistry().getType(ItemType.class, m.getKey());
+                if (type.isPresent()) {
+                    group.getWeapons().put(type.get(), Double.parseDouble(m.getValue().render()));
+                } else logger.warn("Defined invalid itemtype  " + m.getKey() + " in " + group.getName());
+
+            }
+        } catch (ConfigException e) {
+            logger.warn(" - Missing configuration \"AllowedWeapons\", skipping");
+        }
+
+        try {
+            prop = c.getConfig("Attributes");
+            set = prop.entrySet();
+            for (Map.Entry<String, ConfigValue> entry : set) {
+                String attribute = entry.getKey();
+                int i = Integer.parseInt(entry.getValue().render());
+                ICharacterAttribute attribute1 = propertyService.getAttribute(attribute);
+                group.getStartingAttributes().put(attribute1, i);
+            }
+        } catch (ConfigException e) {
+            logger.warn(" - Missing configuration \"Attributes\", skipping");
+        }
+
+        try {
+            Optional<ItemType> menuIcon = game.getRegistry().getType(ItemType.class, c.getString("MenuIcon"));
+            if (menuIcon.isPresent()) {
+                group.setItemType(menuIcon.get());
+            } else {
+                logger.warn(" - Unknown item type in \"MenuIcon\", setting STONE as default");
+                group.setItemType(ItemTypes.STONE);
+            }
+        } catch (ConfigException e) {
+            logger.warn(" - Missing configuration \"MenuIcon\", setting STONE as default");
             group.setItemType(ItemTypes.STONE);
         }
 
-        group.setDescription(c.getString("Description"));
-        List<String> permissions = c.getStringList("Permissions");
-        group.setPermissions(new HashSet<>(permissions));
+        try {
+            group.setDescription(c.getString("Description"));
+        } catch (ConfigException e) {
+            group.setDescription("");
+            logger.warn(" - Missing configuration \"Description\", setting an empty string as default");
 
-        List<String> effects = c.getStringList("Effects");
-        for (String effect : effects) {
-            String[] split = effect.split(":");
-            IGlobalEffect globalEffect = effectService.getGlobalEffect(split[0].trim());
-            String value = split.length == 2 ? split[1] : null;
-            group.getEffects().put(globalEffect,value);
+        }
+
+        try {
+            List<String> permissions = c.getStringList("Permissions");
+            group.setPermissions(new HashSet<>(permissions));
+        } catch (ConfigException e) {
+            group.setPermissions(new HashSet<>());
+            logger.warn(" - Missing configuration \"Permissions\", skipping");
+        }
+
+        try {
+
+
+            List<String> effects = c.getStringList("Effects");
+            for (String effect : effects) {
+                String[] split = effect.split(":");
+                IGlobalEffect globalEffect = effectService.getGlobalEffect(split[0].trim());
+                String value = split.length == 2 ? split[1] : null;
+                group.getEffects().put(globalEffect, value);
+            }
+        } catch (ConfigException e) {
+            logger.warn(" - Missing configuration \"Effects\", skipping");
+
         }
     }
 

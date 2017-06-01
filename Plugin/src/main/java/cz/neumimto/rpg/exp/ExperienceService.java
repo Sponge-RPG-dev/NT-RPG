@@ -18,8 +18,7 @@ import java.util.logging.Logger;
 @Singleton
 public class ExperienceService {
 
-	@Inject
-	private Logger logger;
+	private Logger logger = Logger.getLogger(ExperienceService.class.getName());
 
 	private Map<BlockType, Double> minerals = new HashMap<>();
 	private Map<BlockType, Double> woodenBlocks = new HashMap<>();

@@ -43,7 +43,7 @@ public abstract class CommandBase implements CommandCallable, IEffectSourceProvi
     protected Optional<Text> shortDescription = Optional.empty();
     protected Optional<Text> help = Optional.empty();
     protected Text usage = Text.of("");
-    protected List<String> alias = new ArrayList();
+    protected List<String> alias = new ArrayList<>();
 
     public List<String> getAliases() {
         return alias;
