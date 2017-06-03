@@ -42,4 +42,9 @@ public interface IEffectContainer<K, T extends IEffect<K>> {
 	K getStackedValue();
 
 	void setStackedValue(K k);
+
+	default void removeStack(T iEffect) {
+		getEffects().remove(iEffect);
+		iEffect.onRemove();
+	}
 }

@@ -41,7 +41,7 @@ public class EffectBase<Value> implements IEffect<Value> {
     private long period = -1;
     private long lastTickTime;
     private long expireTime;
-    private int tickCount;
+    protected long tickCount;
     private long timeCreated;
     private String applyMessage;
     private String expireMessage;
@@ -154,7 +154,7 @@ public class EffectBase<Value> implements IEffect<Value> {
         tickCount++;
     }
 
-    protected int getTickCount() {
+    protected long getTickCount() {
         return tickCount;
     }
 

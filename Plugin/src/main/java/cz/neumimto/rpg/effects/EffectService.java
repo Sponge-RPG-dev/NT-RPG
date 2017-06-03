@@ -180,8 +180,7 @@ public class EffectService {
                 return;
             }
             if (effect.getEffects().contains(iEffect)) {
-                effect.getEffects().remove(iEffect);
-                iEffect.onRemove();
+                effect.removeStack(iEffect);
                 stopEffect(iEffect);
                 if (effect.getEffects().isEmpty()) {
                     consumer.removeEffect(effect);
