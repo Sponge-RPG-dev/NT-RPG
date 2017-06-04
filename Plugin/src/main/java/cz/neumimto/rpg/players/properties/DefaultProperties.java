@@ -162,7 +162,7 @@ public class DefaultProperties {
     @Property(name = "ice_damage_protection_mult", default_ = 1)
     public static int ice_damage_protection_mult;
 
-    @Property(name = "physical_damaga_bonus_mult", default_ = 1)
+    @Property(name = "physical_damage_bonus_mult", default_ = 1)
     public static int physical_damage_bonus_mult;
 
     @Property(name = "ice_damage_bonus_mult", default_ = 1)

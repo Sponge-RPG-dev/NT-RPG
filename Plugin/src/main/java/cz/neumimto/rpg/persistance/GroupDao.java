@@ -188,15 +188,20 @@ public class GroupDao {
 
 
     private void loadPlayerGroup(Config c, PlayerGroup group) {
-        group.setShowsInMenu(c.getBoolean("Wildcard"));
+        try {
+            group.setShowsInMenu(c.getBoolean("Wildcard"));
+        } catch (ConfigException e) {
+            group.setShowsInMenu(true);
+            logger.warn(" - Missing configuration \"Wildcard\", setting to true");
+        }
         try {
             Config k = c.getConfig("Chat");
             if (k != null) {
                 group.setChatPrefix(k.getString("prefix"));
-                group.setChatSufix(k.getString("Chat.suffix"));
+                group.setChatSufix(k.getString("suffix"));
             }
         } catch (ConfigException e) {
-            logger.warn(" - Missing configuration \"Chat\", skipping");
+            logger.warn(" - Missing or incomplete configuration \"Chat\", skipping");
         }
 
         int id = 0;

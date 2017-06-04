@@ -111,6 +111,7 @@ public class NtRpgPlugin {
 	public void onPluginLoad(GamePostInitializationEvent event) {
 		long start = System.nanoTime();
 		IoC ioc = IoC.get();
+		ioc.registerInterfaceImplementation(Logger.class, logger);
 		Game game = Sponge.getGame();
 		Optional<PluginContainer> gui = game.getPluginManager().getPlugin("MinecraftGUIServer");
 		if (gui.isPresent()) {

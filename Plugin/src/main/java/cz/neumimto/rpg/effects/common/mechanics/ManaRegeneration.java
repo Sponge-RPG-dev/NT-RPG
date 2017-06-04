@@ -24,6 +24,7 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.CoreEffectTypes;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.EffectStatusType;
+import cz.neumimto.rpg.effects.common.stacking.FloatEffectStackingStrategy;
 import cz.neumimto.rpg.events.character.ManaRegainEvent;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -40,7 +41,7 @@ public class ManaRegeneration extends EffectBase {
     private static final String remove = "You've lost mana regenartion.";
     IActiveCharacter character;
 
-    public ManaRegeneration(IActiveCharacter character) {
+    public ManaRegeneration(IActiveCharacter character, long duration, String value) {
         super(name, character);
         this.character = character;
         setPeriod(PluginConfig.MANA_REGENERATION_RATE);
@@ -49,7 +50,6 @@ public class ManaRegeneration extends EffectBase {
         setDuration(-1);
         effectTypes.add(CoreEffectTypes.MANA_REGEN);
     }
-
 
     @Override
     public void onApply() {

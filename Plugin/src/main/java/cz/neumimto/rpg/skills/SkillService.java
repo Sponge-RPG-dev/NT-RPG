@@ -165,7 +165,6 @@ public class SkillService {
     public void load() {
         skillTrees.putAll(skillTreeDao.getAll());
         createSkillsDefaults();
-
     }
 
     public void initIcons() {
