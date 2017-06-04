@@ -144,7 +144,7 @@ public class InventoryListener {
         damageService.recalculateCharacterWeaponDamage(character);
     }
 
-    @Listener
+    //@Listener
     public void onItemMove(ClickInventoryEvent event, @First(typeFilter = Player.class) Player pl) {
         IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());
         if (character.isStub()) {
