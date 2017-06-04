@@ -17,11 +17,11 @@ import java.util.Map;
  */
 public class NKeys {
 
-	public static final Key<Value<String>> ANY_STRING = KeyFactory.makeSingleKey(TypeToken.of(String.class),
+	public static final Key<Value<String>> COMMAND = KeyFactory.makeSingleKey(TypeToken.of(String.class),
 			new TypeToken<Value<String>>(){},
-			DataQuery.of('.', "ntrpg:anystring"),
-			"ntrpg:any_string",
-			"Any String"
+			DataQuery.of('.', "ntrpg:command"),
+			"ntrpg:command",
+			"Command"
 	);
 
 

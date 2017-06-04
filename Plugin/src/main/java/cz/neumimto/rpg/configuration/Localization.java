@@ -344,4 +344,7 @@ public class Localization {
 
     @ConfigValue
     public static String HEALTH = "Health";
+
+    @ConfigValue
+    public static String ITEM_DAMAGE = "Item damage";
 }

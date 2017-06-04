@@ -31,7 +31,7 @@ import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
-import cz.neumimto.rpg.inventory.data.InventoryItemMenuData;
+import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.runewords.RWService;
@@ -332,7 +332,9 @@ public class VanilaMessaging implements IPlayerMessage {
 	}
 
 	private void displayCommonMenu(IActiveCharacter character, Collection<? extends PlayerGroup> g, PlayerGroup default_) {
-		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
+		Inventory i = Inventory.builder()
+				.of(InventoryArchetypes.DOUBLE_CHEST)
+				.build(plugin);
 		for (PlayerGroup cc : g) {
 			if (cc == default_) {
 				continue;
@@ -348,14 +350,16 @@ public class VanilaMessaging implements IPlayerMessage {
 	private ItemStack createItemRepresentingGroup(PlayerGroup p) {
 		String s1 = infoCommand.getAliases().iterator().next();
 		ItemStack s = ItemStack.of(p.getItemType(), 1);
-		s.offer(NKeys.MENU_INVENTORY, true);
+		s.offer(new MenuInventoryData(true));
 		s.offer(Keys.DISPLAY_NAME, Text.of(p.getName(), TextColors.DARK_PURPLE));
 		s.offer(Keys.ITEM_LORE, getItemLore(p.getDescription()));
+		s.offer(Keys.HIDE_MISCELLANEOUS, true);
+		s.offer(Keys.HIDE_ATTRIBUTES, true);
 		String l = " race ";
 		if (p.getType() == EffectSourceType.CLASS) {
 			l = " class ";
 		}
-		s.offer(new InventoryItemMenuData(s1 + l + p.getName()));
+		s.offer(new InventoryCommandItemMenuData(s1 + l + p.getName()));
 		return s;
 	}
 
@@ -386,7 +390,7 @@ public class VanilaMessaging implements IPlayerMessage {
 		}
 		of.offer(new MenuInventoryData(true));
 		of.offer(Keys.DISPLAY_NAME, Text.of(Localization.BACK, TextColors.WHITE));
-		of.offer(new InventoryItemMenuData("show " + l + " " + g.getName()));
+		of.offer(new InventoryCommandItemMenuData("show " + l + " " + g.getName()));
 		i.query(new SlotPos(0, 0)).offer(of);
 
 		int x = 2;
@@ -394,7 +398,11 @@ public class VanilaMessaging implements IPlayerMessage {
 		for (List<ItemType> row : rows) {
 			y = 0;
 			for (ItemType type : row) {
-				i.query(new SlotPos(x, y)).offer(ItemStack.of(type, 1));
+				ItemStack armor = ItemStack.of(type, 1);
+				armor.offer(Keys.HIDE_ATTRIBUTES, true);
+				armor.offer(Keys.HIDE_MISCELLANEOUS, true);
+				armor.offer(new MenuInventoryData(true));
+				i.query(new SlotPos(x, y)).offer(armor);
 				y++;
 			}
 			x++;
@@ -419,8 +427,12 @@ public class VanilaMessaging implements IPlayerMessage {
 						(e1, e2) -> e1,
 						LinkedHashMap::new)).forEach((type, aDouble) -> {
 			ItemStack q = ItemStack.of(type, 1);
-			q.offer(Keys.ITEM_LORE, Collections.singletonList(Text.of(TextColors.DARK_RED, TextStyles.BOLD, aDouble.toString())));
-			q.offer(NKeys.MENU_INVENTORY, true);
+			Text lore = Text.builder(Localization.ITEM_DAMAGE).color(TextColors.GOLD).style(TextStyles.BOLD)
+					.append(Text.builder(aDouble.toString()).style(TextStyles.BOLD).color(TextColors.DARK_RED).build()).build();
+			q.offer(Keys.ITEM_LORE, Collections.singletonList(lore));
+			q.offer(new MenuInventoryData(true));
+			q.offer(Keys.HIDE_MISCELLANEOUS, true);
+			q.offer(Keys.HIDE_ATTRIBUTES, true);
 			i.offer(q);
 		});
 		target.openInventory(i, Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
@@ -431,7 +443,7 @@ public class VanilaMessaging implements IPlayerMessage {
 		Inventory i = createPlayerGroupView(race);
 		if ((target.getRace() == null || target.getRace() == Race.Default) || PluginConfig.PLAYER_CAN_CHANGE_RACE) {
 			ItemStack of = ItemStack.of(ItemTypes.DIAMOND, 1);
-			of.offer(new InventoryItemMenuData("choose race " + race.getName()));
+			of.offer(new InventoryCommandItemMenuData("choose race " + race.getName()));
 			of.offer(Keys.DISPLAY_NAME, Text.of(Localization.CONFIRM));
 			i.query(new SlotPos(8, 0)).offer(of);
 		}
@@ -486,8 +498,7 @@ public class VanilaMessaging implements IPlayerMessage {
 									.replaceAll("%1", rw.getName()))
 					)
 			);
-			is.offer(NKeys.ANY_STRING, cmd + " runeword " + rw.getName() + " allowed-items");
-			is.offer(new InventoryItemMenuData(cmd + " runeword " + rw.getName() + " blocked-groups"));
+			is.offer(new InventoryCommandItemMenuData(cmd + " runeword " + rw.getName() + " allowed-items"));
 			commands.add(is);
 		}
 
@@ -501,7 +512,7 @@ public class VanilaMessaging implements IPlayerMessage {
 					)
 			);
 			is.offer(Keys.HIDE_ATTRIBUTES, true);
-			is.offer(new InventoryItemMenuData(cmd + " runeword " + rw.getName() + " allowed-groups"));
+			is.offer(new InventoryCommandItemMenuData(cmd + " runeword " + rw.getName() + " allowed-groups"));
 			commands.add(is);
 		}
 
@@ -514,7 +525,7 @@ public class VanilaMessaging implements IPlayerMessage {
 									.replaceAll("%1", rw.getName()))
 					)
 			);
-			is.offer(new InventoryItemMenuData(cmd + " runeword " + rw.getName() + " blocked-groups"));
+			is.offer(new InventoryCommandItemMenuData(cmd + " runeword " + rw.getName() + " blocked-groups"));
 			commands.add(is);
 		}
 
@@ -627,10 +638,12 @@ public class VanilaMessaging implements IPlayerMessage {
 		ItemStack of = ItemStack.of(key.getItemRepresentation(), 1);
 		of.offer(Keys.DISPLAY_NAME, Text.of(TextColors.DARK_RED, key.getName()));
 		List<Text> lore = new ArrayList<>();
-		of.offer(NKeys.MENU_INVENTORY, true);
+		of.offer(new MenuInventoryData(true));
 		lore.add(Text.of(Localization.INITIAL_VALUE + ": " + value, TextColors.WHITE));
 		lore.addAll(getItemLore(key.getDescription()));
 		of.offer(Keys.ITEM_LORE, lore);
+		of.offer(Keys.HIDE_ATTRIBUTES, true);
+		of.offer(Keys.HIDE_MISCELLANEOUS, true);
 		return of;
 	}
 
@@ -639,13 +652,13 @@ public class VanilaMessaging implements IPlayerMessage {
 	/*	if (event.getTargetInventory().getArchetype() == InventoryArchetypes.CHEST ||
 				event.getTargetInventory().getArchetype() == InventoryArchetypes.DOUBLE_CHEST) {
 		*/
-			//todo inventory.getPlugin
+		//todo inventory.getPlugin
 
 		Iterator<SlotTransaction> iterator = event.getTransactions().iterator();
 
 		while (iterator.hasNext()){
 			SlotTransaction t = iterator.next();
-				Optional<String> s = t.getOriginal().get(NKeys.ANY_STRING);
+				Optional<String> s = t.getOriginal().get(NKeys.COMMAND);
 				if (s.isPresent()) {
 					event.setCancelled(true);
 					event.getTransactions().clear();

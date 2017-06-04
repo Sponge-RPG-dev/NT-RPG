@@ -25,7 +25,8 @@ import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.configuration.Settings;
 import cz.neumimto.rpg.inventory.data.CustomItemData;
-import cz.neumimto.rpg.inventory.data.InventoryItemMenuData;
+import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
+import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.listeners.DebugListener;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
@@ -79,12 +80,20 @@ public class NtRpgPlugin {
 	@Listener
 	public void preinit(GamePreInitializationEvent e) {
 
-		DataRegistration.<InventoryItemMenuData, InventoryItemMenuData.Immutable>builder()
-				.dataClass(InventoryItemMenuData.class)
-				.immutableClass(InventoryItemMenuData.Immutable.class)
-				.builder(new InventoryItemMenuData.Builder())
+		DataRegistration.<InventoryCommandItemMenuData, InventoryCommandItemMenuData.Immutable>builder()
+				.dataClass(InventoryCommandItemMenuData.class)
+				.immutableClass(InventoryCommandItemMenuData.Immutable.class)
+				.builder(new InventoryCommandItemMenuData.Builder())
 				.manipulatorId("ntrpg-custominventory")
 				.dataName("CustomInventory")
+				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
+
+		DataRegistration.<MenuInventoryData, MenuInventoryData.Immutable>builder()
+				.dataClass(MenuInventoryData.class)
+				.immutableClass(MenuInventoryData.Immutable.class)
+				.builder(new MenuInventoryData.Builder())
+				.manipulatorId("ntrpg-menuinventory")
+				.dataName("MenuItem")
 				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
 
 

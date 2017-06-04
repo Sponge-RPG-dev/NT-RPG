@@ -5,7 +5,8 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.EffectSourceType;
-import cz.neumimto.rpg.inventory.data.InventoryItemMenuData;
+import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
+import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import org.spongepowered.api.data.key.Keys;
@@ -50,14 +51,16 @@ public class GuiHelper {
 		i.offer(NKeys.MENU_INVENTORY, true);
 		i.offer(Keys.DISPLAY_NAME, Text.of(Localization.ATTRIBUTES, TextColors.DARK_RED));
 		String cc = IoC.get().build(InfoCommand.class).getAliases().iterator().next();
-		i.offer(new InventoryItemMenuData(cc+" attributes-initial " + group.getName()));
+		i.offer(new InventoryCommandItemMenuData(cc+" attributes-initial " + group.getName()));
 		return i;
 	}
 
 	public static ItemStack createDescriptionItem(String description) {
 		ItemStack i = ItemStack.of(ItemTypes.PAPER, 1);
-		i.offer(NKeys.MENU_INVENTORY, true);
 		i.offer(Keys.DISPLAY_NAME, Text.of(""));
+		i.offer(Keys.HIDE_MISCELLANEOUS, true);
+		i.offer(Keys.HIDE_ATTRIBUTES, true);
+		i.offer(new MenuInventoryData(true));
 		i.offer(Keys.ITEM_LORE, Arrays.asList(Text.of(description, TextColors.GRAY)));
 		return i;
 	}
@@ -67,7 +70,9 @@ public class GuiHelper {
 		i.offer(NKeys.MENU_INVENTORY, true);
 		i.offer(Keys.DISPLAY_NAME, Text.of(Localization.WEAPONS, TextColors.DARK_RED));
 		i.offer(Keys.ITEM_LORE, Arrays.asList(Text.of(Localization.WEAPONS_MENU_HELP, TextColors.GRAY)));
-		i.offer(new InventoryItemMenuData("show armor " + group.getName()));
+		i.offer(Keys.HIDE_MISCELLANEOUS, true);
+		i.offer(Keys.HIDE_ATTRIBUTES, true);
+		i.offer(new InventoryCommandItemMenuData("show armor " + group.getName()));
 		return i;
 	}
 
@@ -76,7 +81,9 @@ public class GuiHelper {
 		i.offer(NKeys.MENU_INVENTORY, true);
 		i.offer(Keys.DISPLAY_NAME, Text.of(Localization.ARMOR, TextColors.DARK_RED));
 		i.offer(Keys.ITEM_LORE, Arrays.asList(Text.of(Localization.ARMOR_MENU_HELP, TextColors.GRAY)));
-		i.offer(new InventoryItemMenuData("show weapons " + group.getName()));
+		i.offer(Keys.HIDE_MISCELLANEOUS, true);
+		i.offer(Keys.HIDE_ATTRIBUTES, true);
+		i.offer(new InventoryCommandItemMenuData("show weapons " + group.getName()));
 		return i;
 	}
 
@@ -92,7 +99,7 @@ public class GuiHelper {
 	public static ItemStack back(String command, String displayName) {
 		ItemStack of = ItemStack.of(ItemTypes.PAPER, 1);
 		of.offer(Keys.DISPLAY_NAME, Text.of(displayName, TextColors.WHITE));
-		of.offer(new InventoryItemMenuData(command));
+		of.offer(new InventoryCommandItemMenuData(command));
 		return of;
 	}
 
@@ -104,14 +111,14 @@ public class GuiHelper {
 		}
 		of.offer(Keys.DISPLAY_NAME, Text.of(Localization.BACK, TextColors.WHITE));
 		String c = IoC.get().build(InfoCommand.class).getAliases().get(0);
-		of.offer(new InventoryItemMenuData(c + " " + l + " " + g.getName()));
+		of.offer(new InventoryCommandItemMenuData(c + " " + l + " " + g.getName()));
 		return of;
 	}
 
 
 	public static ItemStack createInitialAttributesCommand(PlayerGroup group) {
 		ItemStack of = ItemStack.of(ItemTypes.BOOK, 1);
-		of.offer(new InventoryItemMenuData("show attributes-initial " + group.getName()));
+		of.offer(new InventoryCommandItemMenuData("show attributes-initial " + group.getName()));
 		return of;
 	}
 	
