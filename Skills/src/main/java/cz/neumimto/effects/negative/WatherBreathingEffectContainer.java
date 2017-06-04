@@ -1,11 +1,6 @@
 package cz.neumimto.effects.negative;
 
 import cz.neumimto.rpg.effects.EffectContainer;
-import cz.neumimto.rpg.effects.EffectStackingStrategy;
-import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.effects.IEffectContainer;
-
-import java.util.Set;
 
 /**
  * Created by NeumimTo on 3.6.2017.

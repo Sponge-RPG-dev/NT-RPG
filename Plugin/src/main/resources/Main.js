@@ -93,7 +93,7 @@ function registerAttributes() {
     for (obj in attributes) {
         var a = attributes.get(obj);
         if (a instanceof CharacterAttribute) {
-            GlobalScope.playerPropertyService.registerAttribute(a);
+            GlobalScope.propertyService.registerAttribute(a);
         }
     }
 }
