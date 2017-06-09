@@ -38,13 +38,12 @@ public class BloodMagicEffect extends EffectBase {
     private static String expire = "You have lost " + name;
     private IActiveCharacter consumer;
 
-    public BloodMagicEffect(IActiveCharacter consumer) {
+    public BloodMagicEffect(IActiveCharacter consumer, long duration, String value) {
         super(name, consumer);
-        setConsumer(consumer);
+        this.consumer = consumer;
+        setDuration(duration);
         setApplyMessage(apply);
         setExpireMessage(expire);
-        setConsumer(consumer);
-        setDuration(-1);
     }
 
     @Override

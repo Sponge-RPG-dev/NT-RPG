@@ -243,7 +243,14 @@ public class VanilaMessaging implements IPlayerMessage {
 
 	@Override
 	public void showClassInfo(IActiveCharacter character, ConfigClass cc) {
+		Inventory i = createPlayerGroupView(cc);
 
+		ItemStack of = ItemStack.of(ItemTypes.DIAMOND, 1);
+		of.offer(new InventoryCommandItemMenuData("choose class " + cc.getName()));
+		of.offer(Keys.DISPLAY_NAME, Text.of(Localization.CONFIRM));
+		i.query(new SlotPos(8, 0)).offer(of);
+
+		character.getPlayer().openInventory(i, Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
 	}
 
 	@Override
@@ -697,7 +704,9 @@ public class VanilaMessaging implements IPlayerMessage {
 		double maxValue = character.getMana().getMaxValue();
 		double reservedAmount = character.getMana().getReservedAmount();
 
-		LiteralText a = Text.builder(Localization.HEALTH).color(TextColors.GOLD)
+
+
+		LiteralText a = Text.builder(Localization.MANA).color(TextColors.GOLD)
 				.append(Text.builder(value + "").color(TextColors.BLUE).build())
 				.append(Text.builder("/").color(TextColors.WHITE).build())
 				.append(Text.builder(String.valueOf(maxValue - reservedAmount)).color(TextColors.DARK_BLUE).build())

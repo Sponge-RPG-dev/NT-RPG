@@ -2,6 +2,7 @@ package cz.neumimto.rpg.effects.common.mechanics;
 
 import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 
@@ -17,7 +18,7 @@ public class DefaultHealthRegeneration extends EffectBase implements IEffectCont
 
     public static final String name = "DefaultHealthRegen";
 
-    public DefaultHealthRegeneration(IActiveCharacter character, long duration, String value) {
+    public DefaultHealthRegeneration(IEffectConsumer character, long duration, String value) {
         super(name, character);
     }
 

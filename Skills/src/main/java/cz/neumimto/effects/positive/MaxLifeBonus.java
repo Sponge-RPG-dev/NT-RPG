@@ -10,7 +10,7 @@ public class MaxLifeBonus extends EffectBase {
 
     public static final String name = "Max. life bonus";
 
-    public MaxLifeBonus(IActiveCharacter character, long duration, float level) {
+    public MaxLifeBonus(IActiveCharacter character, long duration, String level) {
 
         //todo
     }

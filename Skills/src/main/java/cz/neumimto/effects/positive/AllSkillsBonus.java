@@ -7,6 +7,7 @@ import cz.neumimto.rpg.effects.common.stacking.IntegerEffectStackingStrategy;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
+import cz.neumimto.rpg.utils.Utils;
 
 @ClassGenerator.Generate(id = "name")
 public class AllSkillsBonus extends EffectBase<Integer> {

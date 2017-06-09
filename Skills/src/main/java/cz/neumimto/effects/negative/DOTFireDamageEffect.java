@@ -4,6 +4,7 @@ import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.event.cause.entity.damage.source.DamageSources;
 
 @ClassGenerator.Generate(id = "name")
@@ -19,11 +20,11 @@ public class DOTFireDamageEffect extends EffectBase {
 		setPeriod(period);
 	}
 
-	public DOTFireDamageEffect(IActiveCharacter character, long duration, float level) {
+	public DOTFireDamageEffect(IActiveCharacter character, long duration, String damage) {
 		super(name, character);
 		setDuration(duration);
 		setPeriod(1000L);
-		this.damage = level;
+		this.damage = Double.parseDouble(Utils.extractNumber(damage));
 	}
 
 	@Override

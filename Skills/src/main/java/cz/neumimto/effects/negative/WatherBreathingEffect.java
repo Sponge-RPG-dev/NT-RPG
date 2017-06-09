@@ -16,11 +16,11 @@ public class WatherBreathingEffect extends EffectBase<Object> {
 
 	public static final String name = "Water Breathing";
 
-	public WatherBreathingEffect(IEffectConsumer consumer, long duration, float percentage) {
+	public WatherBreathingEffect(IEffectConsumer consumer, long duration, String nll) {
 		super(name, consumer);
 		setDuration(duration);
 		setPeriod(2000L);
-		super.getPotions().add(PotionEffect.builder().amplifier(1).duration(9000).build());
+		super.getPotions().add(PotionEffect.builder().amplifier(1).duration(2500).build());
 	}
 
 	@Override
