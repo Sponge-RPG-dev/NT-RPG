@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.inventory;
 
+import com.google.common.collect.ImmutableList;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
@@ -686,7 +687,7 @@ public class InventoryService {
 		if (!text.toPlain().isEmpty()) {
 			lore.add(text);
 		}
-        int k = data.socketCount().get();
+        int k = data.getSocketCount();
         if (k > 0) {
             String s = "";
             while (k > 0) {
@@ -738,6 +739,25 @@ public class InventoryService {
 
         if (texts.isPresent()) {
             for (Text text : texts.get()) {
+               if (text.getColor() == ENCHANTMENT_COLOR) {
+                   String s = text.toPlainSingle();
+                   IGlobalEffect globalEffect = effectService.getGlobalEffect(s);
+                   if (globalEffect != null) {
+                       String a = null;
+                       ImmutableList<Text> children = text.getChildren();
+                       if (children.size() > 0) {
+                           Text text1 = children.get(children.size() - 1);
+                           a = text.toPlainSingle();
+                       }
+                       data.getEnchantements().put(globalEffect.getName(), a);
+                   }
+               } else if (text.getColor() == LEVEL_COLOR){
+                   String s = text.toPlain();
+                   String s1 = Utils.extractNumber(s);
+                   if (s1 != null) {
+                       data.setItemLevel(Integer.parseInt(s1));
+                   }
+               }
 
             }
             itemStack.offer(data);

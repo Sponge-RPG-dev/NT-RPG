@@ -323,7 +323,4 @@ public class ItemStackUtils {
         return Text.of(TextColors.GOLD, TextStyles.ITALIC, string);
     }
 
-    public static Text toText(IGlobalEffect e, String a) {
-        return Text.builder(e.getName() + ": " + a).color(InventoryService.ENCHANTMENT_COLOR).build();
-    }
 }

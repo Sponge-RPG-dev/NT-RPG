@@ -56,9 +56,13 @@ public class TestAction implements IEffectSourceProvider {
 		itemStack.offer(itemData);
 		inventoryService.setItemLevel(itemStack, 10);
 		inventoryService.setItemRarity(itemStack, Text.builder(Localization.CHARM).color(TextColors.GOLD).style(TextStyles.BOLD).build());
-		inventoryService.setSocketCount(itemStack, 3);
 		inventoryService.updateLore(itemStack);
 		character.getPlayer().setItemInHand(HandTypes.MAIN_HAND, itemStack);
+	}
+
+	public void getData(IActiveCharacter character) {
+		ItemStack itemStack = character.getPlayer().getItemInHand(HandTypes.MAIN_HAND).get();
+		CustomItemData itemData = inventoryService.getItemData(itemStack);
 	}
 
 	public void testAddEffect(IActiveCharacter character) {

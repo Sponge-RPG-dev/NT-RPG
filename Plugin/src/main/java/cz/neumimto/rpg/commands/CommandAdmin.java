@@ -165,7 +165,7 @@ public class CommandAdmin extends CommandBase {
             Rune r = runewordService.getRune(a[1]);
             if (r != null) {
                 ItemStack is = runewordService.toItemStack(r);
-                player.setItemInHand(HandTypes.MAIN_HAND,is);
+                player.getInventory().offer(is);
             }
         } else if (a[0].equalsIgnoreCase("charm")) {
 
