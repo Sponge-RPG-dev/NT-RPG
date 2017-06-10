@@ -32,6 +32,7 @@ import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.players.properties.PropertyContainer;
 import cz.neumimto.rpg.players.properties.PropertyService;
+import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import javassist.CannotCompileException;
@@ -205,6 +206,9 @@ public class ResourceLoader {
                 logger.info("Found Property container class" + clazz.getName());
             propertyService.process(clazz);
         }
+        if (clazz.isAnnotationPresent(Attribute.class)) {
+            propertyService.registerAttribute((ICharacterAttribute) clazz.newInstance());
+        }
         //Effects
         if (IEffect.class.isAssignableFrom(clazz)) {
             ClassGenerator.Generate a = clazz.getAnnotation(ClassGenerator.Generate.class);
@@ -238,5 +242,7 @@ public class ResourceLoader {
     public @interface Command {
     }
 
-
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface Attribute {
+    }
 }

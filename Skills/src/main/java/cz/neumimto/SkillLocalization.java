@@ -42,4 +42,22 @@ public class SkillLocalization {
 
     @ConfigValue
     public static String SKILL_BRAINSAP_LORE = "..";
+
+    @ConfigValue
+    public static String STR = "Strength";
+
+    @ConfigValue
+    public static String STR_DESC = "";
+
+    @ConfigValue
+    public static String INT_DESC  = "";
+
+    @ConfigValue
+    public static String AGI_DESC = "";
+
+    @ConfigValue
+    public static String INT = "Intelligence";
+
+    @ConfigValue
+    public static String AGI = "Agility";
 }

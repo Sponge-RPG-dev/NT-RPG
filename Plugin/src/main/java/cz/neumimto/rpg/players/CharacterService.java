@@ -59,6 +59,7 @@ import cz.neumimto.rpg.utils.SkillTreeActionResult;
 import cz.neumimto.rpg.utils.Utils;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
@@ -67,6 +68,7 @@ import org.spongepowered.api.text.Text;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -1104,6 +1106,10 @@ public class CharacterService {
 		inventoryService.initializeArmor(character);
 		damageService.recalculateCharacterWeaponDamage(character);
 
+		Sponge.getScheduler().createTaskBuilder().execute(() -> {
+			Double d = character.getEntity().get(Keys.MAX_HEALTH).get();
+			character.getEntity().offer(Keys.MAX_HEALTH, d);
+		}).delay(3, TimeUnit.SECONDS).submit(plugin);
 	}
 
 	/**

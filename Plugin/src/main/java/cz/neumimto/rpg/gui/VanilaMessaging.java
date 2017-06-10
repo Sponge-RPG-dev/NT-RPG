@@ -706,7 +706,7 @@ public class VanilaMessaging implements IPlayerMessage {
 
 
 
-		LiteralText a = Text.builder(Localization.MANA).color(TextColors.GOLD)
+		LiteralText a = Text.builder(Localization.MANA + " ").color(TextColors.GOLD)
 				.append(Text.builder(value + "").color(TextColors.BLUE).build())
 				.append(Text.builder("/").color(TextColors.WHITE).build())
 				.append(Text.builder(String.valueOf(maxValue - reservedAmount)).color(TextColors.DARK_BLUE).build())

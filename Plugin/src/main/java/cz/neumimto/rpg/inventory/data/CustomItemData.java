@@ -63,6 +63,46 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 		registerKeyValue(NKeys.CUSTOM_ITEM_DATA_SOCKET_COUNT, this::socketCount);
 	}
 
+	public Integer getItemLevel() {
+		return itemLevel;
+	}
+
+	public void setItemLevel(Integer itemLevel) {
+		this.itemLevel = itemLevel;
+	}
+
+	public List<String> getRestrictions() {
+		return restrictions;
+	}
+
+	public void setRestrictions(List<String> restrictions) {
+		this.restrictions = restrictions;
+	}
+
+	public Map<String, String> getEnchantements() {
+		return enchantements;
+	}
+
+	public void setEnchantements(Map<String, String> enchantements) {
+		this.enchantements = enchantements;
+	}
+
+	public Text getRarity() {
+		return rarity;
+	}
+
+	public void setRarity(Text rarity) {
+		this.rarity = rarity;
+	}
+
+	public Integer getSocketCount() {
+		return socketCount;
+	}
+
+	public void setSocketCount(Integer socketCount) {
+		this.socketCount = socketCount;
+	}
+
 	public Value<Integer> itemLevel() {
 		return Sponge.getRegistry().getValueFactory().createValue(NKeys.CUSTOM_ITEM_DATA_ITEM_LEVEL, itemLevel);
 	}
@@ -105,10 +145,10 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 	}
 
 	public Optional<CustomItemData> from(DataView view) {
-		if (view.contains(NKeys.CUSTOM_ITEM_DATA_RESTRICTIONS.getQuery()) &&
-				view.contains(NKeys.CUSTOM_ITEM_DATA_ENCHANTEMENTS.getQuery()) &&
-				view.contains(NKeys.CUSTOM_ITEM_DATA_ITEM_LEVEL.getQuery()) &&
-				view.contains(NKeys.ITEM_RARITY) &&
+		if (view.contains(NKeys.CUSTOM_ITEM_DATA_RESTRICTIONS.getQuery()) ||
+				view.contains(NKeys.CUSTOM_ITEM_DATA_ENCHANTEMENTS.getQuery()) ||
+				view.contains(NKeys.CUSTOM_ITEM_DATA_ITEM_LEVEL.getQuery()) ||
+				view.contains(NKeys.ITEM_RARITY) ||
 				view.contains(NKeys.CUSTOM_ITEM_DATA_SOCKET_COUNT)) {
 
 			this.itemLevel = view.getObject(NKeys.CUSTOM_ITEM_DATA_ITEM_LEVEL.getQuery(), Integer.class).get();

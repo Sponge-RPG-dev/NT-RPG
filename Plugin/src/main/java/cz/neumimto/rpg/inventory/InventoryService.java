@@ -84,7 +84,7 @@ public class InventoryService {
     public static TextColor ENCHANTMENT_COLOR = TextColors.BLUE;
     public static TextColor LEVEL_COLOR = TextColors.DARK_GRAY;
     public static TextColor RESTRICTIONS = TextColors.LIGHT_PURPLE;
-
+    public static TextColor DELIMITER = TextColors.GRAY;
 	public static TextColor LORE_COLOR = TextColors.GOLD;
 	public static TextStyle LORE_STYLE = TextStyles.ITALIC;
 
@@ -569,7 +569,6 @@ public class InventoryService {
 				return false;
 			}
 		}
-		Optional<List<Text>> lore = itemStack.get(Keys.ITEM_LORE);
         return checkRestrictions(character, getItemData(itemStack));
 	}
 
@@ -578,6 +577,11 @@ public class InventoryService {
         if (strings.isEmpty())
             return true;
         int k = 0;
+
+        if (character.getPrimaryClass().getLevel() < itemData.itemLevel().get()) {
+            return false;
+        }
+
         for (String string : strings) {
             if (string.contains(character.getRace().getName())) {
                 k++;
@@ -649,7 +653,7 @@ public class InventoryService {
         for (Map.Entry<IGlobalEffect, String> iGlobalEffectStringEntry : effects.entrySet()) {
             IGlobalEffect a = iGlobalEffectStringEntry.getKey();
             if (a != null) {
-                itemData.enchantements().put(a.getName(), iGlobalEffectStringEntry.getValue());
+                itemData.getEnchantements().put(a.getName(), iGlobalEffectStringEntry.getValue());
             }
         }
         itemStack.offer(itemData);
@@ -661,14 +665,14 @@ public class InventoryService {
 		    return itemStack;
 	    }
 	    CustomItemData itemData = getItemData(itemStack);
-	    itemData.rarity().set(rarity);
+	    itemData.setRarity(rarity);
 	    itemStack.offer(itemData);
 	    return updateLore(itemStack);
     }
 
     public ItemStack setItemLevel(ItemStack itemStack, int level) {
         CustomItemData item = getItemData(itemStack);
-        item.itemLevel().set(level);
+        item.setItemLevel(level);
         itemStack.offer(item);
 	    return updateLore(itemStack);
     }
@@ -703,7 +707,10 @@ public class InventoryService {
                 if (entry.getKey() == null) {
                     t = Text.builder(entry.getValue()).color(ENCHANTMENT_COLOR).build();
                 } else {
-                    t = Text.builder(entry.getKey() + ": " + entry.getValue()).build();
+                    t = Text.builder(entry.getKey()).color(ENCHANTMENT_COLOR)
+                            .append(Text.builder(": ").color(DELIMITER).style(TextStyles.BOLD).build())
+                            .append(Text.builder(entry.getValue()).color(ENCHANTMENT_COLOR).build())
+                        .build();
                 }
                 lore.add(t);
             }
@@ -728,7 +735,11 @@ public class InventoryService {
         }
         CustomItemData data = new CustomItemData();
         Optional<List<Text>> texts = itemStack.get(Keys.ITEM_LORE);
+
         if (texts.isPresent()) {
+            for (Text text : texts.get()) {
+
+            }
             itemStack.offer(data);
         }
 
@@ -743,5 +754,11 @@ public class InventoryService {
                     e -> effectService.getGlobalEffect(e.getKey()),
                     Map.Entry::getValue
                 ));
+    }
+
+    public void setSocketCount(ItemStack itemStack, int i) {
+        CustomItemData itemData = getItemData(itemStack);
+        itemData.setSocketCount(i);
+        itemStack.offer(itemData);
     }
 }
