@@ -123,14 +123,12 @@ public class RWService {
     }
 
     public RuneWord getRuneword(List<Text> lore) {
-        if (lore.size() <= 1) {
+        if (lore.size() < 1) {
             return null;
         }
         Text t = lore.get(0);
         String s = t.toPlain();
-        if (!s.startsWith(PluginConfig.RW_LORE_COLOR) || s.length() < 3)
-            return null;
-        return runewords.get(s.substring(2));
+        return runewords.get(s);
     }
 
     public RuneWord getRuneword(String name) {
