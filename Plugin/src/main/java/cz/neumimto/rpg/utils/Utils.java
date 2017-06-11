@@ -223,7 +223,7 @@ public class Utils {
 	}
 
 	private static final int lbh = 0;
-	private static final int hbh = 8;
+	public static final int hbh = 8;
 
 	public static boolean isHotbar(int index) {
 		return index >= lbh && index <= hbh;

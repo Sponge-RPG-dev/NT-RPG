@@ -137,8 +137,8 @@ public class InventoryService {
     public void initializeHotbar(IActiveCharacter character) {
         if (character.isStub())
             return;
-        int size = character.getPlayer().getInventory().query(Hotbar.class).size();
-        for (int i = 0; i<size; i++) {
+
+        for (int i = 0; i<Utils.hbh; i++) {
             initializeHotbar(character,i);
         }
     }
@@ -529,6 +529,7 @@ public class InventoryService {
                     List<Text> texts = i.get(Keys.ITEM_LORE).get();
                     if (!rwService.hasEmptySocket(texts)) {
                         RuneWord rw = rwService.runeWordByCombinationAfterInsert(texts);
+                        i = rwService.reBuildRuneword(i, rw);
                         if (rwService.canUse(rw, character)) {
                             character.getPlayer().setItemInHand(HandTypes.MAIN_HAND, i);
                         } else {

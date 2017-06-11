@@ -327,8 +327,13 @@ public class RWService {
     }
 
     private Map<String, String> toMap(Map<IGlobalEffect, String> a) {
-        return a.entrySet().stream().collect(Collectors.toMap(iGlobalEffectStringEntry -> iGlobalEffectStringEntry.getKey().getName(),
-                iGlobalEffectStringEntry -> iGlobalEffectStringEntry.getValue() ));
+        Map<String, String> map = new HashMap<>();
+        if (a != null) {
+            for (Map.Entry<IGlobalEffect, String> q : a.entrySet()) {
+                map.put(q.getKey().getName(), q.getValue());
+            }
+        }
+        return map;
     }
 
     public void refreshItemLore(ItemStack itemStack, RuneWord runeword) {
