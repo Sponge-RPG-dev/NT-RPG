@@ -293,9 +293,10 @@ public class VanilaMessaging implements IPlayerMessage {
 				if (cc != ConfigClass.Default) {
 					level = s.getLevel(cc, a.getPrimaryClassExp());
 					m = cc.getMaxLevel();
-				}
+
 				b.append(Text.builder("Level: ").color(TextColors.DARK_GRAY).append(
 						Text.builder(level + "").color(level == m ? TextColors.RED : TextColors.DARK_PURPLE).build()).build());
+				}
 				content.add(b.build());
 			});
 			builder.title(Text.of("Characters", TextColors.WHITE))
