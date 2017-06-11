@@ -1,10 +1,7 @@
 package cz.neumimto.rpg.inventory.runewords;
 
 import com.google.inject.ConfigurationException;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
-import com.typesafe.config.ConfigObject;
-import com.typesafe.config.ConfigValue;
+import com.typesafe.config.*;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.MissingConfigurationException;
@@ -38,15 +35,18 @@ public class RWDao {
 
     public Set<RuneWordTemplate> getAllRws(File p) {
         Set<RuneWordTemplate> s = new HashSet<>();
-        Config config = ConfigFactory.parseFile(p);
+        Config configr = ConfigFactory.parseFile(p);
         logger.info("Loading runewords from " + p.getName());
         final String root = "RuneWords";
-        ConfigObject rws = config.getObject(root);
-        Config c = rws.toConfig();
-        for (String a : rws.keySet()) {
+
+
+
+        List<? extends ConfigObject> objectList = configr.getObjectList(root);
+        for (ConfigObject configObject : objectList) {
+            Config config = configObject.toConfig();
             RuneWordTemplate rw = new RuneWordTemplate();
             try {
-                String name = config.getString(root + "." + a + ".Name");
+                String name = config.getString("Name");
                 rw.setName(name);
             } catch (RuntimeException e) {
                 logger.error("Runeword at index: " + s.size() +1 + " wont be loaded, missing Name node");
@@ -55,19 +55,19 @@ public class RWDao {
 
             int minlevel = 0;
             try {
-                minlevel = config.getInt(root + "." + a + ".MinLevel");
+                minlevel = config.getInt("MinLevel");
             } catch (RuntimeException ignored) {}
 
             List<String> allowed;
             try {
-                allowed = config.getStringList(root + "." + a + ".AllowedGroups");
+                allowed = config.getStringList("AllowedGroups");
             } catch (RuntimeException e) {
                 allowed = new ArrayList<>();
             }
             List<String> allowedItems;
 
             try {
-                allowedItems= config.getStringList(root + "." + a + ".AllowedItems");
+                allowedItems= config.getStringList("AllowedItems");
             } catch (RuntimeException e) {
                 allowedItems = new ArrayList<>();
             }
@@ -76,7 +76,7 @@ public class RWDao {
             rw.setAllowedItems(allowedItems);
 
             try {
-                List<String> eff = config.getStringList(root + "." + a + ".Effects");
+                List<String> eff = config.getStringList("Effects");
                 Map<String, String> map = new HashMap<>();
                 for (String s1 : eff) {
                     String[] split = s1.split(":");
@@ -95,7 +95,7 @@ public class RWDao {
 
             List<String> runes;
             try {
-                runes = config.getStringList(root + "." + a + ".Runes");
+                runes = config.getStringList("Runes");
             } catch (RuntimeException e) {
                 runes = new ArrayList<>();
                 logger.warn("Runeword " + rw.getName() + " has no rune combination defined");
@@ -108,6 +108,7 @@ public class RWDao {
 
             s.add(rw);
         }
+
         return s;
     }
 
