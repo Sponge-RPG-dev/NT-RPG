@@ -54,12 +54,12 @@ public class CooldownObserver extends EffectBase implements IEffectContainer {
                if (builder == null) {
                    builder = Text.builder(a.getKey()).color(TextColors.GREEN)
                            .append(Text.builder(":").color(TextColors.WHITE).build())
-                           .append(Text.builder(" " + p).color(p > 10 ? TextColors.RED : TextColors.AQUA).build())
+                           .append(Text.builder(" " + p).color(p > 10 ? TextColors.RED : TextColors.YELLOW).build())
                            .append(Text.builder("; ").color(TextColors.WHITE).build());
                } else {
                    builder.append(Text.builder(a.getKey()).color(TextColors.GREEN)
                            .append(Text.builder(":").color(TextColors.WHITE).build())
-                           .append(Text.builder(" " + p).color(p > 10 ? TextColors.RED : TextColors.AQUA).build())
+                           .append(Text.builder(" " + p).color(p > 10 ? TextColors.RED : TextColors.YELLOW).build())
                            .append(Text.builder("; ").color(TextColors.WHITE).build()).build());
                }
             }

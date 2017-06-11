@@ -352,32 +352,6 @@ public class RWService {
             setLore(itemStack, runeword);
         }
     }
-
-    private ItemStack setItemHeader(ItemStack itemStack, RuneWord runeWord) {
-        itemStack.offer(Keys.DISPLAY_NAME, Text.builder(runeWord.getName()).color(TextColors.GOLD).style(TextStyles.BOLD).build());
-
-
-
-        return itemStack;
-    }
-
-    private ItemStack setEffects(ItemStack itemStack, RuneWord runeWord) {
-        List<Text> arrayList = itemStack.get(Keys.ITEM_LORE).get();
-        Map<IGlobalEffect, String> effects = runeWord.getEffects();
-        for (Map.Entry<IGlobalEffect, String> e : effects.entrySet()) {
-            IGlobalEffect key = e.getKey();
-            String value = e.getValue();
-            LiteralText.Builder b = Text.builder(key.getName()).color(InventoryService.ENCHANTMENT_COLOR);
-            if (value != null) {
-                b.append(Text.builder(": " + value).color(InventoryService.ENCHANTMENT_COLOR).build());
-            }
-            arrayList.add(b.build());
-        }
-        arrayList.add(Text.EMPTY);
-        itemStack.offer(Keys.ITEM_LORE, arrayList);
-        return itemStack;
-    }
-
     public ItemStack setRestrictions(ItemStack itemStack, RuneWord runeWord) {
         List<Text> arrayList = itemStack.get(Keys.ITEM_LORE).get();
         arrayList.add(
@@ -391,7 +365,7 @@ public class RWService {
         return itemStack;
     }
 
-    public ItemStack setLore(ItemStack itemStack, RuneWord runeWord) {
+    private ItemStack setLore(ItemStack itemStack, RuneWord runeWord) {
         List<Text> arrayList = itemStack.get(Keys.ITEM_LORE).get();
         Iterable<String> a = Splitter.fixedLength(10).split(runeWord.getLore());
         for (String s : a) {

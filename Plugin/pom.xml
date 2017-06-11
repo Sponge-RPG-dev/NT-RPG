@@ -39,6 +39,14 @@
                     <artifactId>launchwrapper</artifactId>
                     <groupId>net.minecraft</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>org.spongepowered</artifactId>
+                    <groupId>spongeapi</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>terminalconsoleappender</artifactId>
+                    <groupId>net.minecrell</groupId>
+                </exclusion>
             </exclusions>
             <scope>provided</scope>
         </dependency>

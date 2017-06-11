@@ -96,7 +96,7 @@ public class CommandAdmin extends CommandBase {
             logger.warn("Can't be executed from console");
             return CommandResult.empty();
         }
-        Player player = (Player) commandSource;
+
 /*
         if (player.hasPermission("ntrpg.superadmin")) {
             return CommandResult.empty();
@@ -111,6 +111,7 @@ public class CommandAdmin extends CommandBase {
                 }
                 ISkill skill = skillService.getSkill(a[2]);
                 SkillSettings defaultSkillSettings = skill.getDefaultSkillSettings();
+                Player player = (Player) commandSource;
                 IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
                 if (character.isStub())
                     throw new RuntimeException("Character is required even for an admin.");
@@ -143,6 +144,7 @@ public class CommandAdmin extends CommandBase {
                 if (globalEffect == null) {
                     commandSource.sendMessage(Text.of(Localization.NON_EXISTING_GLOBAL_EFFECT));
                 } else {
+                    Player player = (Player) commandSource;
                     if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
                         ItemStack itemStack = player.getItemInHand(HandTypes.MAIN_HAND).get();
                         CustomItemData itemData = inventoryService.getItemData(itemStack);
@@ -156,6 +158,7 @@ public class CommandAdmin extends CommandBase {
 
             }
         } else if (a[0].equalsIgnoreCase("socket")) {
+            Player player = (Player) commandSource;
             Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
             if (itemInHand.isPresent()) {
                 ItemStack itemStack = runewordService.createSockets(itemInHand.get(), Integer.parseInt(a[1]));
@@ -163,6 +166,7 @@ public class CommandAdmin extends CommandBase {
             }
         } else if (a[0].equalsIgnoreCase("rune")) {
             Rune r = runewordService.getRune(a[1]);
+            Player player = (Player) commandSource;
             if (r != null) {
                 ItemStack is = runewordService.toItemStack(r);
                 player.getInventory().offer(is);
@@ -216,6 +220,7 @@ public class CommandAdmin extends CommandBase {
             if (PluginConfig.DEBUG) {
                 String methodcall = a[1];
                 try {
+                    Player player = (Player) commandSource;
                     Object o = IoC.get().build(TestAction.class);
                     Method method = TestAction.class.getMethod(methodcall, IActiveCharacter.class);
                     method.invoke(o,characterService.getCharacter(player.getUniqueId()));
