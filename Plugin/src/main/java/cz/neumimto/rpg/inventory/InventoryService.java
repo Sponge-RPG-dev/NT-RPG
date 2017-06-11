@@ -164,6 +164,7 @@ public class InventoryService {
                 }
                 if (toPickup != null) {
 	                HotbarObject o = getHotbarObject(character, toPickup);
+                    o.setSlot(slot);
                     if (o != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
                         o.onEquip(toPickup, character);
                         character.getHotbar()[slot] = o;
@@ -175,7 +176,6 @@ public class InventoryService {
                 }
                 ItemStack i = peek.get();
                 HotbarObject hotbarObject = getHotbarObject(character, i);
-
                 if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
                     hotbarObject.setSlot(slot);
                     character.getHotbar()[slot] = hotbarObject;
@@ -526,9 +526,9 @@ public class InventoryService {
                     Inventory query = inventory.query(Hotbar.class).query(new SlotIndex(character.getCurrentRune()));
                     query.clear();
                     character.getPlayer().setItemInHand(HandTypes.MAIN_HAND,i);
-                    if (!rwService.hasEmptySocket(i.get(Keys.ITEM_LORE).get())) {
-                        i = rwService.findRuneword(i);
-                        RuneWord rw = rwService.getRuneword(i.get(Keys.ITEM_LORE).get());
+                    List<Text> texts = i.get(Keys.ITEM_LORE).get();
+                    if (!rwService.hasEmptySocket(texts)) {
+                        RuneWord rw = rwService.runeWordByCombinationAfterInsert(texts);
                         if (rwService.canUse(rw, character)) {
                             character.getPlayer().setItemInHand(HandTypes.MAIN_HAND, i);
                         } else {

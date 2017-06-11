@@ -70,6 +70,7 @@ public class RWService {
     private GroupService groupService;
 
     private Map<String, RuneWord> runewords = new HashMap();
+    private Map<String, RuneWord> combinations = new HashMap<>();
     private Map<String, Rune> runes = new HashMap<>();
     private List<ItemType> allowedRuneItemTypes = new ArrayList<>();
 
@@ -89,8 +90,9 @@ public class RWService {
         for (Rune rune : dao.getAllRunes(p)) {
             runes.put(rune.getName().toLowerCase(), rune);
         }
-        for (RuneWordTemplate runeWord : dao.getAllRws(p)) {
-            runewords.put(runeWord.getName().toLowerCase(), getRuneword(runeWord));
+        Set<RuneWordTemplate> allRws = dao.getAllRws(p);
+        for (RuneWordTemplate runeWord : allRws) {
+            registerRuneword(getRuneword(runeWord));
         }
         for (String s : PluginConfig.ALLOWED_RUNES_ITEMTYPES) {
             Optional<ItemType> type = Sponge.getGame().getRegistry().getType(ItemType.class, s);
@@ -120,15 +122,6 @@ public class RWService {
                 .collect(HashMap::new, (map, a) -> map.put(a.key, a.value), HashMap::putAll));
 
         return rw;
-    }
-
-    public RuneWord getRuneword(List<Text> lore) {
-        if (lore.size() < 1) {
-            return null;
-        }
-        Text t = lore.get(0);
-        String s = t.toPlain();
-        return runewords.get(s);
     }
 
     public RuneWord getRuneword(String name) {
@@ -162,6 +155,13 @@ public class RWService {
         String s = lore.get(1).toPlain();
         Matcher matcher = socket.matcher(s);
         return matcher.find();
+    }
+
+    public RuneWord runeWordByCombinationAfterInsert(List<Text> lore) {
+        if (lore.size() < 2)
+            return null;
+        String s = lore.get(1).toPlain();
+        return combinations.get(s);
     }
 
     public boolean existsRune(String rune) {
@@ -227,16 +227,14 @@ public class RWService {
             }
             Text text = t.get(1);
             String s = text.toPlain();
-            for (RuneWord rw : runewords.values()) {
-                String collect = rw.getRunes().stream().map(Rune::getName).collect(Collectors.joining());
-                if (s.equalsIgnoreCase(collect)) {
-                    if (rw.getAllowedItems().contains(i.getItem())) {
-                        if (rw.getAllowedItems().isEmpty()) {
+            RuneWord rw = combinations.get(s);
+            if (rw != null) {
+                if (rw.getAllowedItems().contains(i.getItem())) {
+                    if (rw.getAllowedItems().isEmpty()) {
+                        return reBuildRuneword(i, rw);
+                    } else {
+                        if (rw.getAllowedItems().contains(i.getItem())) {
                             return reBuildRuneword(i, rw);
-                        } else {
-                            if (rw.getAllowedItems().contains(i.getItem())) {
-                                return reBuildRuneword(i, rw);
-                            }
                         }
                     }
                 }
@@ -250,6 +248,7 @@ public class RWService {
             if (PluginConfig.AUTOREMOVE_NONEXISTING_RUNEWORDS) {
                 i.offer(Keys.DISPLAY_NAME, Text.of(i.getItem().getName()));
                 i.offer(Keys.ITEM_LORE, Collections.<Text>emptyList());
+                i.offer(new CustomItemData());
             }
             return i;
         }
@@ -375,5 +374,16 @@ public class RWService {
 
     public List<ItemType> getAllowedRuneItemTypes() {
         return allowedRuneItemTypes;
+    }
+
+    public RuneWord findByCombination(String runes) {
+        return combinations.get(runes);
+    }
+
+    public void registerRuneword(RuneWord runeWord) {
+        runewords.put(runeWord.getName(), runeWord);
+        if (runeWord.getRunes() != null && runeWord.getRunes().isEmpty()) {
+            combinations.put(runeWord.getRunes().stream().map(Rune::getName).collect(Collectors.joining("")), runeWord);
+        }
     }
 }
