@@ -286,11 +286,11 @@ public class VanilaMessaging implements IPlayerMessage {
 							.append(Text.builder("] - ").color(TextColors.DARK_GRAY).build());
 				}
 				b.append(Text.builder(a.getCharacterName()).color(TextColors.GRAY).append(Text.of(" ")).build());
-				b.append(Text.builder(a.getPrimaryClassName()).color(TextColors.AQUA).append(Text.of(" ")).build());
 				ConfigClass cc = s.getNClass(a.getPrimaryClassName());
 				int level = 0;
 				int m = 0;
 				if (cc != ConfigClass.Default) {
+					b.append(Text.builder(a.getPrimaryClassName()).color(TextColors.AQUA).append(Text.of(" ")).build());
 					level = s.getLevel(cc, a.getPrimaryClassExp());
 					m = cc.getMaxLevel();
 

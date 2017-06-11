@@ -242,7 +242,9 @@ public class ItemStackUtils {
     }
 
     public static boolean hasSockets(ItemStack itemStack) {
-        return globalScope.runewordService.getSocketCount(itemStack.get(Keys.ITEM_LORE).get()) > 0;
+        Optional<List<Text>> a = itemStack.get(Keys.ITEM_LORE);
+        if (!a.isPresent()) return false;
+        return globalScope.runewordService.getSocketCount(a.get()) > 0;
     }
 
     /**

@@ -382,7 +382,7 @@ public class RWService {
 
     public void registerRuneword(RuneWord runeWord) {
         runewords.put(runeWord.getName(), runeWord);
-        if (runeWord.getRunes() != null && runeWord.getRunes().isEmpty()) {
+        if (runeWord.getRunes() != null && !runeWord.getRunes().isEmpty()) {
             combinations.put(runeWord.getRunes().stream().map(Rune::getName).collect(Collectors.joining("")), runeWord);
         }
     }
