@@ -13,6 +13,10 @@ public interface ICharacterAttribute {
 
     void setName(String name);
 
+    String getId();
+
+    void setId(String id);
+
     Map<Integer, Float> affectsProperties();
 
     String getDescription();

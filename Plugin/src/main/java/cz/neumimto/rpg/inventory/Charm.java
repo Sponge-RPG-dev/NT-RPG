@@ -17,13 +17,13 @@ import java.util.Map;
  */
 public class Charm extends HotbarObject {
 
-    private Map<IGlobalEffect, String> effects;
+
     private Map<ItemRestriction,Object> restrictionSet = new HashMap<>();
 
 
     public Charm() {
         type = HotbarObjectTypes.CHARM;
-        this.effects = new HashMap<>();
+        effects = new HashMap<>();
     }
 
 

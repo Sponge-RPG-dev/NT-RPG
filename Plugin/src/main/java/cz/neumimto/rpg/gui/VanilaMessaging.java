@@ -259,6 +259,7 @@ public class VanilaMessaging implements IPlayerMessage {
 		PaginationList.Builder builder = paginationService.builder();
 		Sponge.getScheduler().createTaskBuilder().async().execute(() -> {
 			DirectAccessDao build = IoC.get().build(DirectAccessDao.class);
+			//language=HQL
 			String query = "select new cz.neumimto.rpg.utils.model.CharacterListModel(" +
 					"c.name,d.name,d.experiences) " +
 					"from CharacterBase c left join c.characterClasses d " +

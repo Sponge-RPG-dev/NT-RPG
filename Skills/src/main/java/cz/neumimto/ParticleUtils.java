@@ -31,7 +31,7 @@ public class ParticleUtils {
 	public static void drawSquare(Location<World> location, int i, ParticleEffect effect) {
 		for (int k = -i; k <= i; k++) {
 			for (int z = -i; z <= i; z++) {
-				drawParticle(location.getExtent(),z, location.getBlockY(), k, effect);
+				drawParticle(location.getExtent(),location.getBlockZ()- z, location.getBlockY(), location.getBlockX() - k, effect);
 			}
 		}
 	}

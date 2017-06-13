@@ -128,8 +128,6 @@ public class InventoryListener {
         if (entity.getType() != EntityTypes.PLAYER)
             return;
         IActiveCharacter character = characterService.getCharacter(entity.getUniqueId());
-        if (character.getPlayer().get(Keys.GAME_MODE).get() == GameModes.CREATIVE)
-            return;
         if (character.isStub())
             return;
         if (character.hasOpenInventory()) {

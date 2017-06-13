@@ -23,6 +23,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.EffectSourceType;
@@ -475,7 +476,7 @@ public class InventoryService {
         //old
         Weapon mainHand = character.getMainHand();
         mainHand.current = false;
-        effectService.removeGlobalEffectsAsEnchantments(mainHand.getEffects(), character, mainHand);
+        mainHand.onUnEquip(character);
 
         //new
         Weapon weapon1 = buildHotbarWeapon(character, weapon);
@@ -484,6 +485,8 @@ public class InventoryService {
         int slot = ((Hotbar) character.getPlayer().getInventory().query(Hotbar.class)).getSelectedSlotIndex();
         character.setHotbarSlot(slot, weapon1);
         weapon1.current = true;
+        weapon1.setSlot(slot);
+        weapon1.onEquip(weapon, character);
         character.setMainHand(weapon1);
         damageService.recalculateCharacterWeaponDamage(character);
     }

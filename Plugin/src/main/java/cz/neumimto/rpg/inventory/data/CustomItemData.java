@@ -182,7 +182,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 	public DataContainer toContainer() {
 		return super.toContainer()
 				.set(NKeys.CUSTOM_ITEM_DATA_RESTRICTIONS.getQuery(), this.restrictions)
-				.set(NKeys.CUSTOM_ITEM_DATA_ENCHANTEMENTS.getQuery(), this.enchantements)
+				.set(NKeys.CUSTOM_ITEM_DATA_ENCHANTEMENTS.getQuery(), enchantements)
 				.set(NKeys.CUSTOM_ITEM_DATA_ITEM_LEVEL.getQuery(), this.itemLevel)
 				.set(NKeys.ITEM_RARITY.getQuery(), this.rarity)
 				.set(NKeys.CUSTOM_ITEM_DATA_SOCKET_COUNT.getQuery(), this.socketCount);

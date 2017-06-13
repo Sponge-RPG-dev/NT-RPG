@@ -261,4 +261,10 @@ public class EffectBase<Value> implements IEffect<Value> {
     public void setEffectStackingStrategy(EffectStackingStrategy<Value> effectStackingStrategy) {
         this.effectStackingStrategy = effectStackingStrategy;
     }
+
+    protected void addEffectType(EffectType e) {
+        if (effectTypes == null)
+            effectTypes = new HashSet<>();
+        effectTypes.add(e);
+    }
 }

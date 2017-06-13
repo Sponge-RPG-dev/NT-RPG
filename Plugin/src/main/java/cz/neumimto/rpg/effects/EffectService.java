@@ -23,6 +23,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Game;
 
@@ -271,6 +272,9 @@ public class EffectService {
 
 
     public void removeGlobalEffectsAsEnchantments(Map<IGlobalEffect, String> itemEffects, IActiveCharacter character, IEffectSourceProvider effectSourceProvider) {
+        if (PluginConfig.DEBUG) {
+            character.sendMessage(itemEffects.size() + " added echn. effects to remove queue.");
+        }
         itemEffects.forEach((e, l) -> {
 	        removeEffect(e.getName(), character,effectSourceProvider);
         });

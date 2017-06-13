@@ -116,7 +116,10 @@ public class CharacterService {
 	public void loadPlayerData(UUID id) {
 		characters.put(id, buildDummyChar(id));
 		game.getScheduler().createTaskBuilder().name("PlayerDataLoad-" + id).async().execute(() -> {
+			logger.info("Loading player - " + id);
+			long k = System.currentTimeMillis();
 			final List<CharacterBase> playerCharacters = playerDao.getPlayersCharacters(id);
+			logger.info("Finished loading of player " + id + ", loaded " + playerCharacters.size() + " characters   ["+(k - System.currentTimeMillis())+"]ms");
 			game.getScheduler().createTaskBuilder().name("Callback-PlayerDataLoad" + id).execute(() -> {
 				PlayerDataPreloadComplete event = new PlayerDataPreloadComplete(id, playerCharacters);
 				game.getEventManager().post(event);
@@ -170,7 +173,10 @@ public class CharacterService {
 
 	public void putInSaveQueue(CharacterBase base) {
 		game.getScheduler().createTaskBuilder().async().name("PlayerDataTaskSave").execute(() -> {
+			Long k = System.currentTimeMillis();
+			logger.info("Saving player " + base.getUuid() + " character " + base.getName());
 			save(base);
+			logger.info("Saved player " + base.getUuid() + " character " + base.getName() + "["+(k - System.currentTimeMillis())+"]ms ");
 		}).submit(plugin);
 	}
 
@@ -213,6 +219,7 @@ public class CharacterService {
 	 * @return new character
 	 */
 	public IActiveCharacter setActiveCharacter(UUID uuid, IActiveCharacter character) {
+		logger.info("Setting active character player " + uuid + " character " + character.getName());
 		IActiveCharacter activeCharacter = getCharacter(uuid);
 		if (activeCharacter == null) {
 			characters.put(uuid, character);
@@ -221,7 +228,6 @@ public class CharacterService {
 			character.setUsingGuiMod(activeCharacter.isUsingGuiMod());
 			characters.put(uuid, character);
 			initActiveCharacter(character);
-
 		}
 		return character;
 	}
@@ -288,6 +294,7 @@ public class CharacterService {
 	}
 
 	public void initActiveCharacter(IActiveCharacter character) {
+		logger.info("Initializing character " + character.getCharacterBase().getId());
 		character.getPlayer().sendMessage(Text.of(Localization.CURRENT_CHARACTER.replaceAll("%1", character.getName())));
 		addDefaultEffects(character);
 		Set<BaseCharacterAttribute> baseCharacterAttribute = character.getCharacterBase().getBaseCharacterAttribute();
@@ -329,6 +336,7 @@ public class CharacterService {
 	public void updatePlayerGroups(IActiveCharacter character, ConfigClass configClass, int slot, Race race, Guild guild) {
 		if (character.isStub())
 			return;
+		logger.info("Initializing character " + character.getCharacterBase().getId());
 		boolean k = false;
 		if (configClass != null) {
 			CharacterChangeGroupEvent e = new CharacterChangeClassEvent(character, configClass, slot);

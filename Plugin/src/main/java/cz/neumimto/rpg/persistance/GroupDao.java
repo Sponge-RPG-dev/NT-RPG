@@ -317,7 +317,7 @@ public class GroupDao {
             for (String effect : effects) {
                 String[] split = effect.split(":");
                 IGlobalEffect globalEffect = effectService.getGlobalEffect(split[0].trim());
-                String value = split.length == 2 ? split[1] : null;
+                String value = split.length == 2 ? split[1] : "";
                 group.getEffects().put(globalEffect, value);
             }
         } catch (ConfigException e) {

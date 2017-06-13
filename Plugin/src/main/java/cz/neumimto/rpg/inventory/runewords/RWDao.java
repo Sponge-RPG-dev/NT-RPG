@@ -81,7 +81,7 @@ public class RWDao {
                 for (String s1 : eff) {
                     String[] split = s1.split(":");
                     String k = split[0];
-                    String v = null;
+                    String v = "";
                     if (split.length > 1 ) {
                         v = split[1];
                     }

@@ -323,7 +323,7 @@ public class RWService {
         return new CustomItemData(runeword.getMinLevel(),
                 runeword.getAllowedGroups().stream().map(PlayerGroup::getName).collect(Collectors.toList()),
                 toMap(runeword.getEffects()),
-                Text.EMPTY,0);
+                Text.of(Localization.RUNEWORD, TextColors.GOLD, TextStyles.BOLD),0);
     }
 
     private Map<String, String> toMap(Map<IGlobalEffect, String> a) {
@@ -341,15 +341,12 @@ public class RWService {
         itemStack.offer(data);
         inventoryService.updateLore(itemStack);
         ArrayList<Text> arrayList = new ArrayList<>();
-        arrayList.add(Text.builder(Localization.RUNEWORD).color(TextColors.GOLD).build());
         arrayList.add(
                 Text.builder(
                         runeword.getRunes().stream().map(Rune::getName).collect(Collectors.joining())
-                ).color(TextColors.GOLD).style(TextStyles.ITALIC).build());
+                ).color(TextColors.GRAY).style(TextStyles.ITALIC).build());
         arrayList.add(Text.EMPTY);
-        List<Text> texts = itemStack.get(Keys.ITEM_LORE).get();
-        texts.addAll(arrayList);
-        itemStack.offer(Keys.ITEM_LORE, texts);
+        itemStack.offer(Keys.ITEM_LORE, arrayList);
         if (runeword.getLore() != null) {
             setLore(itemStack, runeword);
         }

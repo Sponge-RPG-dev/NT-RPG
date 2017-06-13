@@ -2,8 +2,11 @@ package cz.neumimto.rpg.inventory;
 
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.item.inventory.ItemStack;
+
+import java.util.Map;
 
 /**
  * Created by NeumimTo on 31.12.2015.
@@ -12,7 +15,7 @@ public abstract class HotbarObject extends CustomItem implements IEffectSourcePr
 
     public static HotbarObject EMPTYHAND_OR_CONSUMABLE = null;
     protected IHotbarObjectType type;
-
+    protected Map<IGlobalEffect, String> effects;
 
     public IHotbarObjectType getHotbarObjectType() {
         return type;
@@ -32,5 +35,9 @@ public abstract class HotbarObject extends CustomItem implements IEffectSourcePr
         if (PluginConfig.DEBUG) {
             character.sendMessage("Unequiped slot " + getSlot());
         }
+    }
+
+    public Map<IGlobalEffect, String> getEffects() {
+        return effects;
     }
 }
