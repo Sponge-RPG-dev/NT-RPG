@@ -165,11 +165,13 @@ public class CommandAdmin extends CommandBase {
                 player.setItemInHand(HandTypes.MAIN_HAND,itemStack);
             }
         } else if (a[0].equalsIgnoreCase("rune")) {
-            Rune r = runewordService.getRune(a[1]);
-            Player player = (Player) commandSource;
-            if (r != null) {
-                ItemStack is = runewordService.toItemStack(r);
-                player.getInventory().offer(is);
+            for (int i = 1; i < a.length ;i++) {
+                Rune r = runewordService.getRune(a[i]);
+                Player player = (Player) commandSource;
+                if (r != null) {
+                    ItemStack is = runewordService.toItemStack(r);
+                    player.getInventory().offer(is);
+                }
             }
         } else if (a[0].equalsIgnoreCase("charm")) {
 
@@ -189,7 +191,6 @@ public class CommandAdmin extends CommandBase {
                 ItemStack itemStack = itemInHand.get();
                 for (Rune rune1 : r) {
                     itemStack = runewordService.insertRune(itemStack, rune1.getName());
-                    itemStack = runewordService.findRuneword(itemStack);
                     p.setItemInHand(HandTypes.MAIN_HAND,itemStack);
                 }
             }

@@ -88,6 +88,8 @@ public class InventoryService {
     public static TextColor RESTRICTIONS = TextColors.LIGHT_PURPLE;
     public static TextColor DELIMITER = TextColors.GRAY;
 	public static TextColor LORE_COLOR = TextColors.GOLD;
+	public static TextColor RUNEWORD_NAME = TextColors.DARK_RED;
+    public static TextColor RUNEWORD_LORE = TextColors.RED;
 	public static TextStyle LORE_STYLE = TextStyles.ITALIC;
 
 	public static Pattern REGEXP_NUMBER = Pattern.compile("-?\\d+");
@@ -480,14 +482,12 @@ public class InventoryService {
 
         //new
         Weapon weapon1 = buildHotbarWeapon(character, weapon);
-        effectService.applyGlobalEffectsAsEnchantments(weapon1.getEffects(), character, weapon1);
-
         int slot = ((Hotbar) character.getPlayer().getInventory().query(Hotbar.class)).getSelectedSlotIndex();
         character.setHotbarSlot(slot, weapon1);
         weapon1.current = true;
         weapon1.setSlot(slot);
-        weapon1.onEquip(weapon, character);
         character.setMainHand(weapon1);
+        weapon1.onEquip(weapon, character);
         damageService.recalculateCharacterWeaponDamage(character);
     }
 
