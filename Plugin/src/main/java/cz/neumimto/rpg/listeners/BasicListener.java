@@ -237,10 +237,13 @@ public class BasicListener {
 					double projectileDamage = 0;
 					if (shooter.getType() == IEntityType.CHARACTER) {
 						IActiveCharacter c = (IActiveCharacter) shooter;
-						projectileDamage = c.getBaseProjectileDamage(projectile.getType());
+						projectileDamage = damageService.getCharacterProjectileDamage(c, projectile.getType());
 					} else if (shooter.getType() == IEntityType.MOB ) {
-
+						if (!PluginConfig.OVERRIDE_MOBS) {
+							projectileDamage = entityService.getMobDamage(shooter.getEntity().getType());
+						}
 					}
+
 					if (projectileProperties != null) {
 						event.setCancelled(true);
 						ProjectileProperties.cache.remove(projectile);
