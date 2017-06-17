@@ -36,6 +36,7 @@ import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.StartingPoint;
+import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.item.ItemType;
@@ -65,6 +66,7 @@ public class ActiveCharacter implements IActiveCharacter {
     private transient Click click = new Click();
     private transient Set<ItemType> allowedArmorIds = new HashSet<>();
     private transient Map<ItemType, Double> allowedWeapons = new HashMap<>();
+    private transient Map<EntityType, Double> projectileDamage = new HashMap<>();
     private transient Party party;
     private Map<String, ExtendedSkillInfo> skills = new HashMap<>();
     private Race race = Race.Default;
@@ -386,10 +388,16 @@ public class ActiveCharacter implements IActiveCharacter {
         return getCharacterBase().getCharacterCooldowns().containsKey(thing);
     }
 
+    //todo global config option to set stacking strategies. Take higher value/sum values
     private void mergeWeapons(PlayerGroup g) {
         for (Map.Entry<ItemType, Double> entries : g.getWeapons().entrySet()) {
             if (getBaseWeaponDamage(entries.getKey()) < entries.getValue()) {
                 allowedWeapons.put(entries.getKey(), entries.getValue());
+            }
+        }
+        for (Map.Entry<EntityType, Double> e : g.getProjectileDamage().entrySet()) {
+            if (getBaseProjectileDamage(e.getKey()) < e.getValue()) {
+                projectileDamage.put(e.getKey(), e.getValue());
             }
         }
     }
@@ -397,6 +405,14 @@ public class ActiveCharacter implements IActiveCharacter {
     @Override
     public double getBaseWeaponDamage(ItemType id) {
         Double d = getAllowedWeapons().get(id);
+        if (d == null)
+            return 0;
+        return d;
+    }
+
+    @Override
+    public double getBaseProjectileDamage(EntityType id) {
+        Double d = getProjectileDamages().get(id);
         if (d == null)
             return 0;
         return d;
@@ -434,6 +450,11 @@ public class ActiveCharacter implements IActiveCharacter {
     @Override
     public Map<ItemType, Double> getAllowedWeapons() {
         return allowedWeapons;
+    }
+
+    @Override
+    public Map<EntityType, Double> getProjectileDamages() {
+        return projectileDamage;
     }
 
     @Override

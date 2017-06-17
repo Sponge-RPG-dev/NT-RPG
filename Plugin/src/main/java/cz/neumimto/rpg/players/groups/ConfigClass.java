@@ -39,7 +39,7 @@ public class ConfigClass extends PlayerGroup {
     private double[] levels;
     private double totalExp;
     private Set<ExperienceSource> experienceSourceSet = new HashSet<>();
-
+    private boolean defaultClass;
     private Color chatColor;
 
 
@@ -110,5 +110,14 @@ public class ConfigClass extends PlayerGroup {
 
     public int getMaxLevel() {
         return levels.length -1;
+    }
+
+    public boolean isDefaultClass() {
+        return defaultClass;
+    }
+
+    public void setDefaultClass(boolean defaultClass) {
+        this.setShowsInMenu(!defaultClass);
+        this.defaultClass = defaultClass;
     }
 }

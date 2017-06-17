@@ -37,6 +37,7 @@ import cz.neumimto.rpg.skills.ISkill;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectType;
+import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
@@ -348,6 +349,11 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
+    public Map<EntityType, Double> getProjectileDamages() {
+        return Collections.emptyMap();
+    }
+
+    @Override
     public Set<ExtendedNClass> getClasses() {
         return Collections.emptySet();
     }
@@ -390,6 +396,11 @@ public class PreloadCharacter implements IActiveCharacter {
     @Override
     public void setClass(ConfigClass nclass, int slot) {
 
+    }
+
+    @Override
+    public double getBaseProjectileDamage(EntityType id) {
+        return 0;
     }
 
     @Override

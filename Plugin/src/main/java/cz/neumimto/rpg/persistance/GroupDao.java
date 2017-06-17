@@ -25,7 +25,6 @@ import com.typesafe.config.ConfigValue;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.MissingConfigurationException;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
@@ -40,6 +39,8 @@ import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.SkillTree;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.entity.EntityType;
+import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 
@@ -111,6 +112,20 @@ public class GroupDao {
                 Config c = ConfigFactory.parseFile(p.toFile());
                 ConfigClass configClass = new ConfigClass(c.getString("Name"));
                 loadPlayerGroup(c, configClass);
+                long k = classes.values().stream().filter(ConfigClass::isDefaultClass).count();
+                try {
+                    boolean aDefault = c.getBoolean("default");
+                    if (aDefault) {
+                        if (k == 0) {
+                            configClass.setDefaultClass(aDefault);
+                        } else {
+                            logger.warn("One default class already loaded, class \"" + configClass.getName() + "\" will be ignored");
+                        }
+                    }
+                } catch (ConfigException e) {
+
+                }
+
                 try {
                     SkillTree skillTree = skillService.getSkillTrees().get(c.getString("SkillTree"));
                     if (skillTree == null) {
@@ -118,7 +133,7 @@ public class GroupDao {
                         skillTree = SkillTree.Default;
                     }
                     configClass.setSkillTree(skillTree);
-                } catch (MissingConfigurationException e) {
+                } catch (ConfigException e) {
                     configClass.setSkillTree(SkillTree.Default);
                     logger.warn(" - Missing configuration \"SkillTree\", setting to default value");
                 }
@@ -128,19 +143,19 @@ public class GroupDao {
                     HashSet<ExperienceSource> objects = new HashSet<>();
                     experienceSources.forEach(a -> objects.add(ExperienceSource.valueOf(a)));
                     configClass.setExperienceSources(objects);
-                } catch (MissingConfigurationException e) {
+                } catch (ConfigException e) {
                     logger.warn(" - Missing configuration \"ExperienceSources\", skipping");
                 }
 
                 try {
                     configClass.setSkillpointsperlevel(c.getInt("SkillPointsPerLevel"));
-                } catch (MissingConfigurationException e) {
+                } catch (ConfigException e) {
                     logger.warn(" - Missing configuration \"SkillPointsPerLevel\", skipping");
                 }
 
                 try {
                     configClass.setAttributepointsperlevel(c.getInt("AttributePointsPerLevel"));
-                } catch (MissingConfigurationException e) {
+                } catch (ConfigException e) {
                     logger.warn(" - Missing configuration \"AttributePointsPerLevel\", skipping");
                 }
 
@@ -149,7 +164,7 @@ public class GroupDao {
                     double first = c.getDouble("ExpFirstLevel");
                     double last = c.getDouble("ExpLastLevel");
                     initLevelCurve(configClass, maxLevel, first, last);
-                } catch (MissingConfigurationException e) {
+                } catch (ConfigException e) {
                     logger.error(" - Missing one of configuration nodes \"MaxLevel\", \"ExpFirstLevel\", \"ExpLastLevel\"");
                     initLevelCurve(configClass, 2, 1, 2); //just some not null values which might cause npes later
                 }
@@ -266,6 +281,26 @@ public class GroupDao {
             }
         } catch (ConfigException e) {
             logger.warn(" - Missing configuration \"AllowedWeapons\", skipping");
+        }
+
+        try {
+            prop = c.getConfig("ProjectileDamage");
+            set = prop.entrySet();
+            for (Map.Entry<String, ConfigValue> m : set) {
+                if (m.getKey().equalsIgnoreCase("arrow") || m.getKey().equalsIgnoreCase("minecraft:arrow")) {
+                    group.getProjectileDamage().put(EntityTypes.SPECTRAL_ARROW, Double.parseDouble(m.getValue().render()));
+                    group.getProjectileDamage().put(EntityTypes.TIPPED_ARROW, Double.parseDouble(m.getValue().render()));
+                } else {
+                    Optional<EntityType> type = game.getRegistry().getType(EntityType.class, m.getKey());
+                    if (type.isPresent()) {
+                        group.getProjectileDamage().put(type.get(), Double.parseDouble(m.getValue().render()));
+                    } else logger.warn("Defined invalid projectile type  " + m.getKey() + " in " + group.getName());
+                }
+            }
+        } catch (ConfigException e) {
+            if (group.getWeapons().keySet().stream().map(ItemType::getType).filter(t -> t == ItemTypes.BOW).count() > 0) {
+                logger.warn(" - Bow defined, but configuration is missing \"ProjectileDamage\" section");
+            }
         }
 
         try {

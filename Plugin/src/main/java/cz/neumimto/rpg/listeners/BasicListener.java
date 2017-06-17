@@ -234,10 +234,21 @@ public class BasicListener {
 					IEntity shooter = entityService.get((Entity) projectile.getShooter());
 					IEntity target = entityService.get(targetEntity);
 					ProjectileProperties projectileProperties = ProjectileProperties.cache.get(projectile);
+					double projectileDamage = 0;
+					if (shooter.getType() == IEntityType.CHARACTER) {
+						IActiveCharacter c = (IActiveCharacter) shooter;
+						projectileDamage = c.getBaseProjectileDamage(projectile.getType());
+					} else if (shooter.getType() == IEntityType.MOB ) {
+
+					}
 					if (projectileProperties != null) {
+						event.setCancelled(true);
 						ProjectileProperties.cache.remove(projectile);
 						projectileProperties.consumer.accept(shooter, target);
+					} else {
+						event.setBaseDamage(projectileDamage);
 					}
+
 				}
 			}
 			Optional<ISkillDamageSource> skilldamage = cause.first(ISkillDamageSource.class);

@@ -22,6 +22,7 @@ import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
+import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 
@@ -47,6 +48,8 @@ public class PlayerGroup implements IEffectSourceProvider {
     private Map<IGlobalEffect, String> effects = new HashMap<>();
 
     protected cz.neumimto.rpg.effects.IEffectSource playerGroupType;
+    private Map<EntityType, Double> projectileDamage = new HashMap<>();
+
     public PlayerGroup(String name) {
         this.name = name;
         if (name.toLowerCase().equalsIgnoreCase("none")) {
@@ -160,5 +163,9 @@ public class PlayerGroup implements IEffectSourceProvider {
 
     public void setEffects(Map<IGlobalEffect, String> effects) {
         this.effects = effects;
+    }
+
+    public Map<EntityType, Double> getProjectileDamage() {
+        return projectileDamage;
     }
 }

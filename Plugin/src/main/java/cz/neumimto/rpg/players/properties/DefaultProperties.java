@@ -156,7 +156,7 @@ public class DefaultProperties {
     @Property(name = "weapon_damage_bonus")
     public static int weapon_damage_bonus;
 
-    @Property(name = "mana_regen_mult", default_ = 0)
+    @Property(name = "mana_regen_mult")
     public static int mana_regen_mult;
 
     @Property(name = "ice_damage_protection_mult", default_ = 1)
@@ -173,4 +173,13 @@ public class DefaultProperties {
 
     @Property
     public static int all_skills_bonus;
+
+    @Property(name = "arrow_damage_mult", default_ = 1)
+    public static int arrow_damage_mult;
+
+    @Property(name = "other_projectile_damage_mult", default_ = 1)
+    public static int other_projectile_damage_mult;
+
+    @Property(name = "projectile_damage_bonus")
+    public static int projectile_damage_bonus;
 }

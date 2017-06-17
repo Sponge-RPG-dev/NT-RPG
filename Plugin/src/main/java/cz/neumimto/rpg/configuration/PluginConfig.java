@@ -37,8 +37,6 @@ public class PluginConfig {
 
     @ConfigValue
     public static long COMBAT_TIME = 20000L;
-    @ConfigValue
-    public static boolean CREATE_FIRST_CHAR_AFTER_LOGIN = true;
 
     @ConfigValue
     public static boolean REMOVE_PLAYERDATA_AFTER_PERMABAN = false;
@@ -85,28 +83,11 @@ public class PluginConfig {
     public static long MANA_REGENERATION_RATE = 1000;
 
     @ConfigValue
-    public static String LORE_EFFECT_COLOR = "$b";
-
-    @ConfigValue
     public static boolean ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS = true;
 
     @ConfigValue
     @Comment(content = "Works only if PLAYER_MAX_CHARS > 1.")
     public static boolean TELEPORT_PLAYER_TO_LAST_CHAR_LOCATION = true;
-
-    @ConfigValue
-    public static String RW_LORE_COLOR;
-
-    @ConfigValue
-    public static double HEALTH_SCALE = 2;
-
-    @ConfigValue
-    @Comment(content = {"Count of attribute players gain per level"})
-    public static int ATTRIBUTEPOINTS_PER_LEVEL;
-
-    @ConfigValue
-    @Comment(content = {"Count of skillpoints players gain per level"})
-    public static int SKILLPOINTS_PER_LEVEL;
 
     @ConfigValue
     public static Set<String> ALLOWED_RUNES_ITEMTYPES = new HashSet<String>() {{
@@ -128,8 +109,18 @@ public class PluginConfig {
 	public static double PARTY_EXPERIENCE_SHARE_DISTANCE = 25;
 
 	@ConfigValue
-	@Comment(content = {"Value lesser than 0 means there will be no party limit. Additional content can override this value."})
+	@Comment(content = {"Value lesser than 0 means there will be no party limit. Skills or effects can override this value."})
 	public static double MAX_PARTY_SIZE = -68458;
 
+
+    //todo see ActiveCharacter mergeWeapons
+    /*
+    @ConfigValue
+    @Comment(content = {"If a player chooses a race and a class, where both those groups define damage value for one specific weapon, or projectile" +
+                        " this option specifies how the weapon damage will be calculated.",
+                        "1 = sum",
+                        "2 = take higher value"})
+    public static int WEAPON_MERGE_STRTATEGY = 2;
+*/
 
 }

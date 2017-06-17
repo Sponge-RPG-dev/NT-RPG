@@ -31,6 +31,7 @@ import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
+import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.item.ItemType;
@@ -116,6 +117,8 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     Map<ItemType, Double> getAllowedWeapons();
 
+    Map<EntityType, Double> getProjectileDamages();
+
     Set<ExtendedNClass> getClasses();
 
     ConfigClass getNClass(int index);
@@ -131,6 +134,8 @@ public interface IActiveCharacter extends IEntity<Player> {
     CharacterBase getCharacterBase();
 
     void setClass(ConfigClass nclass, int slot);
+
+    double getBaseProjectileDamage(EntityType id);
 
     IActiveCharacter updateItemRestrictions();
 
@@ -251,4 +256,5 @@ public interface IActiveCharacter extends IEntity<Player> {
     }
 
     void updateSelectedHotbarSlot();
+
 }
