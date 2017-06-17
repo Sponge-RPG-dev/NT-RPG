@@ -27,6 +27,9 @@ import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.damage.ISkillDamageSource;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.events.CharacterWeaponDamageEvent;
+import cz.neumimto.rpg.events.INEntityWeaponDamageEvent;
+import cz.neumimto.rpg.events.ProjectileHitEvent;
 import cz.neumimto.rpg.exp.ExperienceService;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.CharacterService;
@@ -34,11 +37,13 @@ import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.NDamageType;
 import cz.neumimto.rpg.skills.ProjectileProperties;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.data.Transaction;
@@ -52,7 +57,6 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
-import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.entity.damage.DamageModifier;
 import org.spongepowered.api.event.cause.entity.damage.DamageModifierTypes;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
@@ -62,10 +66,11 @@ import org.spongepowered.api.event.cause.entity.damage.source.IndirectEntityDama
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.InteractEntityEvent;
 import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
+import org.spongepowered.api.event.filter.IsCancelled;
 import org.spongepowered.api.event.filter.cause.First;
-import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
+import org.spongepowered.api.util.Tristate;
 
 import java.util.Optional;
 
@@ -185,95 +190,119 @@ public class BasicListener {
 
 
 	@Listener
-	public void onPreDamage(DamageEntityEvent event) {
-		final Cause cause = event.getCause();
-		Optional<EntityDamageSource> first = cause.first(EntityDamageSource.class);
-		if (first.isPresent()) {
-			Entity targetEntity = event.getTargetEntity();
-			EntityDamageSource entityDamageSource = first.get();
-			Entity source = entityDamageSource.getSource();
-			if (source.get(Keys.HEALTH).isPresent()) {
-				targetEntity.offer(Keys.INVULNERABILITY_TICKS, 0);
-				//attacker
-				IEntity entity = entityService.get(source);
-				double newdamage = 0;
-				if (entity.getType() == IEntityType.CHARACTER) {
-					IActiveCharacter character = (IActiveCharacter) entity;
-					if (entityDamageSource.getType() == DamageTypes.ATTACK) {
-						Hotbar hotbar = character.getPlayer().getInventory().query(Hotbar.class);
-						if (hotbar.getSelectedSlotIndex() != character.getSelectedHotbarSlot()) {
-							character.updateSelectedHotbarSlot();
-							damageService.recalculateCharacterWeaponDamage(character);
-						}
-						newdamage = character.getWeaponDamage();
+	public void onWeaponDamage(DamageEntityEvent event, @First(typeFilter = EntityDamageSource.class) EntityDamageSource entityDamageSource) {
+
+		if (entityDamageSource.getType() == NDamageType.DAMAGE_CHECK) {
+
+			return;
+		}
+
+		Entity targetEntity = event.getTargetEntity();
+		Entity source = entityDamageSource.getSource();
+		if (source.get(Keys.HEALTH).isPresent()) {
+			targetEntity.offer(Keys.INVULNERABILITY_TICKS, 0);
+			//attacker
+			IEntity entity = entityService.get(source);
+			double newdamage = event.getBaseDamage();
+
+			IActiveCharacter character = null;
+			if (entity.getType() == IEntityType.CHARACTER) {
+				character = (IActiveCharacter) entity;
+				if (entityDamageSource.getType() == DamageTypes.ATTACK) {
+					INEntityWeaponDamageEvent e;
+					Hotbar hotbar = character.getPlayer().getInventory().query(Hotbar.class);
+					if (hotbar.getSelectedSlotIndex() != character.getSelectedHotbarSlot()) {
+						character.updateSelectedHotbarSlot();
+						damageService.recalculateCharacterWeaponDamage(character);
 					}
-				} else {
-					if (!PluginConfig.OVERRIDE_MOBS) {
-						newdamage = entityService.getMobDamage(source.getType());
+					newdamage = character.getWeaponDamage();
+					e = new CharacterWeaponDamageEvent(character, entityService.get(targetEntity), newdamage);
+					Sponge.getGame().getEventManager().post(e);
+					if (e.isCancelled() || e.getDamage() <= 0) {
+						event.setCancelled(true);
+						return;
 					}
+					event.setBaseDamage(e.getDamage());
 				}
-				if (entityDamageSource.getType() == DamageTypes.FIRE) {
-					newdamage = entityService.getEntityProperty(entity, DefaultProperties.fire_damage_bonus_mult) * event.getFinalDamage();
+			} else {
+				if (!PluginConfig.OVERRIDE_MOBS) {
+					newdamage = entityService.getMobDamage(source.getType());
 				}
-				//defende
-		        /*
-                if (targetEntity.getHotbarObjectType() == EntityTypes.PLAYER) {
+				if (entityDamageSource.getType() == DamageTypes.ATTACK) {
+					INEntityWeaponDamageEvent e = new INEntityWeaponDamageEvent(entityService.get(source), entityService.get(targetEntity), newdamage);
+					Sponge.getGame().getEventManager().post(e);
+					if (e.isCancelled() || e.getDamage() <= 0) {
+						event.setCancelled(true);
+						return;
+					}
+					event.setBaseDamage(e.getDamage());
+				}
+			}
+			//todo
+			//defende
+			    /*
+		        if (targetEntity.getHotbarObjectType() == EntityTypes.PLAYER) {
                     IActiveCharacter tcharacter = characterService.getCharacter(targetEntity.getUniqueId());
                     double armor = tcharacter.getArmorValue();
                     final double damagefactor = damageService.DamageArmorReductionFactor.apply(newdamage, armor);
                     event.setBaseDamage(ce.getDamage());
                     event.setDamage(DamageModifier.builder().cause(Cause.ofNullable(null)).type(DamageModifierTypes.ARMOR).build(), input -> input * ce.getDamagefactor());
                 }*/
-				event.setBaseDamage(newdamage);
-			}
-			Optional<IndirectEntityDamageSource> q = event.getCause().first(IndirectEntityDamageSource.class);
-			if (q.isPresent()) {
-				IndirectEntityDamageSource indirectEntityDamageSource = q.get();
-				if (indirectEntityDamageSource.getSource() instanceof Projectile) {
-					Projectile projectile = (Projectile) indirectEntityDamageSource.getSource();
-					IEntity shooter = entityService.get((Entity) projectile.getShooter());
-					IEntity target = entityService.get(targetEntity);
-					ProjectileProperties projectileProperties = ProjectileProperties.cache.get(projectile);
-					double projectileDamage = 0;
-					if (shooter.getType() == IEntityType.CHARACTER) {
-						IActiveCharacter c = (IActiveCharacter) shooter;
-						projectileDamage = damageService.getCharacterProjectileDamage(c, projectile.getType());
-					} else if (shooter.getType() == IEntityType.MOB ) {
-						if (!PluginConfig.OVERRIDE_MOBS) {
-							projectileDamage = entityService.getMobDamage(shooter.getEntity().getType());
-						}
-					}
-
-					if (projectileProperties != null) {
-						event.setCancelled(true);
-						ProjectileProperties.cache.remove(projectile);
-						projectileProperties.consumer.accept(shooter, target);
-					} else {
-						event.setBaseDamage(projectileDamage);
-					}
-
-				}
-			}
-			Optional<ISkillDamageSource> skilldamage = cause.first(ISkillDamageSource.class);
-			if (skilldamage.isPresent()) {
-				ISkillDamageSource iSkillDamageSource = skilldamage.get();
-				IActiveCharacter caster = iSkillDamageSource.getCaster();
-				ISkill skill = iSkillDamageSource.getSkill();
-				DamageType type = skill.getDamageType();
-
-				if (caster.hasPreferedDamageType()) {
-					type = caster.getDamageType();
-				}
-				double finalDamage = damageService.getSkillDamage(caster, skill.getDamageType()) * damageService.getCharacterBonusDamage(caster, type);
-				event.setBaseDamage(finalDamage);
-				if (event.getTargetEntity().getType() == EntityTypes.PLAYER) {
-					IActiveCharacter targetchar = characterService.getCharacter(event.getTargetEntity().getUniqueId());
-					double target_resistence = damageService.getCharacterResistance(targetchar, type);
-					event.setDamage(DamageModifier.builder().type(DamageModifierTypes.MAGIC).build(), input -> input * target_resistence);
-				}
-			}
 		}
 	}
+
+
+	@Listener
+	public void onIndirectEntityDamage(DamageEntityEvent event,
+	                                   @First(typeFilter = IndirectEntityDamageSource.class)
+			                                   IndirectEntityDamageSource indirectEntityDamageSource) {
+
+		Projectile projectile = (Projectile) indirectEntityDamageSource.getSource();
+		IEntity shooter = entityService.get((Entity) projectile.getShooter());
+		IEntity target = entityService.get(event.getTargetEntity());
+		ProjectileProperties projectileProperties = ProjectileProperties.cache.get(projectile);
+		if (projectileProperties != null) {
+			event.setCancelled(true);
+			ProjectileProperties.cache.remove(projectile);
+			projectileProperties.consumer.accept(shooter, target);
+			return;
+		}
+
+		double projectileDamage = 0;
+		if (shooter.getType() == IEntityType.CHARACTER) {
+			IActiveCharacter c = (IActiveCharacter) shooter;
+			projectileDamage = damageService.getCharacterProjectileDamage(c, projectile.getType());
+		} else if (shooter.getType() == IEntityType.MOB) {
+			if (!PluginConfig.OVERRIDE_MOBS) {
+				projectileDamage = entityService.getMobDamage(shooter.getEntity().getType());
+			}
+		}
+
+		ProjectileHitEvent event1 = new ProjectileHitEvent(shooter, target, projectileDamage, projectile);
+		Sponge.getGame().getEventManager().post(event1);
+		event.setBaseDamage(event1.getProjectileDamage());
+	}
+
+	@Listener
+	public void onSkilLDamage(DamageEntityEvent event,
+	                                   @First(typeFilter = ISkillDamageSource.class)
+			                                   ISkillDamageSource iSkillDamageSource) {
+		IActiveCharacter caster = iSkillDamageSource.getCaster();
+		ISkill skill = iSkillDamageSource.getSkill();
+		DamageType type = skill.getDamageType();
+
+		if (caster.hasPreferedDamageType()) {
+			type = caster.getDamageType();
+		}
+		double finalDamage = damageService.getSkillDamage(caster, skill.getDamageType()) * damageService.getCharacterBonusDamage(caster, type);
+		event.setBaseDamage(finalDamage);
+		if (event.getTargetEntity().getType() == EntityTypes.PLAYER) {
+			IActiveCharacter targetchar = characterService.getCharacter(event.getTargetEntity().getUniqueId());
+			double target_resistence = damageService.getCharacterResistance(targetchar, type);
+			event.setDamage(DamageModifier.builder().type(DamageModifierTypes.MAGIC).build(), input -> input * target_resistence);
+		}
+	}
+
 
 	@Listener
 	public void onRespawn(RespawnPlayerEvent event) {
@@ -286,7 +315,6 @@ public class BasicListener {
 
 		}
 	}
-
 
 
 	@Listener
