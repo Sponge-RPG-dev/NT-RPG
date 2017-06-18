@@ -49,6 +49,11 @@ public class InventoryCommandItemMenuData extends AbstractSingleData<String, Inv
 	}
 
 	@Override
+	public DataContainer toContainer() {
+		return super.toContainer();
+	}
+
+	@Override
 	public InventoryCommandItemMenuData copy() {
 		return new InventoryCommandItemMenuData(getValue());
 	}
@@ -104,4 +109,5 @@ public class InventoryCommandItemMenuData extends AbstractSingleData<String, Inv
 			return create().from(container.getContainer());
 		}
 	}
+
 }
