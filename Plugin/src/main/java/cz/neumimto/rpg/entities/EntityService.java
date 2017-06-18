@@ -97,7 +97,7 @@ public class EntityService {
         return d;
     }
 
-    public Float getEntityProperty(IEntity entity, int id) {
+    public float getEntityProperty(IEntity entity, int id) {
         return Math.min(entity.getProperty(id), propertyService.getMaxPropertyValue(id));
     }
 

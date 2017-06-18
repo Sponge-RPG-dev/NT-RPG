@@ -27,9 +27,7 @@ import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.damage.ISkillDamageSource;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.events.CharacterWeaponDamageEvent;
-import cz.neumimto.rpg.events.INEntityWeaponDamageEvent;
-import cz.neumimto.rpg.events.ProjectileHitEvent;
+import cz.neumimto.rpg.events.*;
 import cz.neumimto.rpg.exp.ExperienceService;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.CharacterService;
@@ -216,6 +214,7 @@ public class BasicListener {
 						damageService.recalculateCharacterWeaponDamage(character);
 					}
 					newdamage = character.getWeaponDamage();
+					newdamage *= damageService.getEntityBonusDamage(character, entityDamageSource.getType());
 					e = new CharacterWeaponDamageEvent(character, entityService.get(targetEntity), newdamage);
 					Sponge.getGame().getEventManager().post(e);
 					if (e.isCancelled() || e.getDamage() <= 0) {
@@ -228,6 +227,7 @@ public class BasicListener {
 				if (!PluginConfig.OVERRIDE_MOBS) {
 					newdamage = entityService.getMobDamage(source.getType());
 				}
+				newdamage *= damageService.getEntityBonusDamage(character, entityDamageSource.getType());
 				if (entityDamageSource.getType() == DamageTypes.ATTACK) {
 					INEntityWeaponDamageEvent e = new INEntityWeaponDamageEvent(entityService.get(source), entityService.get(targetEntity), newdamage);
 					Sponge.getGame().getEventManager().post(e);
@@ -280,27 +280,45 @@ public class BasicListener {
 
 		ProjectileHitEvent event1 = new ProjectileHitEvent(shooter, target, projectileDamage, projectile);
 		Sponge.getGame().getEventManager().post(event1);
+		if (event1.isCancelled() || event1.getProjectileDamage() <= 0) {
+			event.setCancelled(true);
+			return;
+		}
 		event.setBaseDamage(event1.getProjectileDamage());
 	}
 
 	@Listener
-	public void onSkilLDamage(DamageEntityEvent event,
+	public void onSkillDamage(DamageEntityEvent event,
 	                                   @First(typeFilter = ISkillDamageSource.class)
 			                                   ISkillDamageSource iSkillDamageSource) {
-		IActiveCharacter caster = iSkillDamageSource.getCaster();
+		IEntity caster = iSkillDamageSource.getCaster();
 		ISkill skill = iSkillDamageSource.getSkill();
 		DamageType type = skill.getDamageType();
 
-		if (caster.hasPreferedDamageType()) {
-			type = caster.getDamageType();
+		if (caster.getType() == IEntityType.CHARACTER) {
+			IActiveCharacter c = (IActiveCharacter)caster;
+			if (c.hasPreferedDamageType()) {
+				type = c.getDamageType();
+			}
 		}
-		double finalDamage = damageService.getSkillDamage(caster, skill.getDamageType()) * damageService.getCharacterBonusDamage(caster, type);
-		event.setBaseDamage(finalDamage);
-		if (event.getTargetEntity().getType() == EntityTypes.PLAYER) {
-			IActiveCharacter targetchar = characterService.getCharacter(event.getTargetEntity().getUniqueId());
-			double target_resistence = damageService.getCharacterResistance(targetchar, type);
-			event.setDamage(DamageModifier.builder().type(DamageModifierTypes.MAGIC).build(), input -> input * target_resistence);
+		IEntity targetchar = entityService.get(event.getTargetEntity());
+		double finalDamage = event.getBaseDamage() * damageService.getEntityBonusDamage(caster, type);
+
+
+		SkillDamageEvent event1 = new SkillDamageEvent(caster, targetchar, skill, finalDamage, type);
+		if (event1.isCancelled() || event1.getDamage() <= 0) {
+			event.setCancelled(true);
+			return;
 		}
+		finalDamage = event1.getDamage();
+		double target_resistence = damageService.getEntityResistance(targetchar, type);
+
+		SkillDamageEventLate event2 = new SkillDamageEventLate(caster, targetchar, skill, finalDamage, target_resistence, type);
+		if (event2.isCancelled() || event2.getDamage() <= 0) {
+			event.setCancelled(true);
+			return;
+		}
+		event.setBaseDamage(event2.getDamage() * event2.getTargetResistance());
 	}
 
 

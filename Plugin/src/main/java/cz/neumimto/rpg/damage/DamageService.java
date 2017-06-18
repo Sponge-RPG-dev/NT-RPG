@@ -21,6 +21,7 @@ package cz.neumimto.rpg.damage;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.CharacterService;
@@ -54,8 +55,6 @@ public class DamageService {
     @Inject
     private CharacterService characterService;
 
-	@Inject
-	private PropertyService propertyService;
 
     public BiFunction<Double, Double, Double> DamageArmorReductionFactor = (damage, armor) -> armor / (armor + 10 * damage);
 
@@ -107,31 +106,31 @@ public class DamageService {
 
     }
 
-    public double getCharacterResistance(IActiveCharacter character, DamageType source) {
+    public double getEntityResistance(IEntity entity, DamageType source) {
         if (source == DamageTypes.ATTACK)
-            return characterService.getCharacterProperty(character, DefaultProperties.physical_damage_protection_mult);
+            return entityService.getEntityProperty(entity, DefaultProperties.physical_damage_protection_mult);
         if (source == DamageTypes.FIRE)
-            return characterService.getCharacterProperty(character, DefaultProperties.fire_damage_protection_mult);
+            return entityService.getEntityProperty(entity, DefaultProperties.fire_damage_protection_mult);
         if (source == DamageTypes.MAGIC)
-            return characterService.getCharacterProperty(character, DefaultProperties.magic_damage_protection_mult);
+            return entityService.getEntityProperty(entity, DefaultProperties.magic_damage_protection_mult);
         if (source == NDamageType.LIGHTNING)
-            return characterService.getCharacterProperty(character, DefaultProperties.lightning_damage_protection_mult);
+            return entityService.getEntityProperty(entity, DefaultProperties.lightning_damage_protection_mult);
         if (source == NDamageType.ICE)
-            return characterService.getCharacterProperty(character, DefaultProperties.ice_damage_protection_mult);
+            return entityService.getEntityProperty(entity, DefaultProperties.ice_damage_protection_mult);
         return 1;
     }
 
-    public double getCharacterBonusDamage(IActiveCharacter character, DamageType source) {
+    public double getEntityBonusDamage(IEntity entity, DamageType source) {
         if (source == DamageTypes.ATTACK)
-            return characterService.getCharacterProperty(character, DefaultProperties.physical_damage_bonus_mult);
+            return entityService.getEntityProperty(entity, DefaultProperties.physical_damage_bonus_mult);
         if (source == DamageTypes.FIRE)
-            return characterService.getCharacterProperty(character, DefaultProperties.fire_damage_bonus_mult);
+            return entityService.getEntityProperty(entity, DefaultProperties.fire_damage_bonus_mult);
         if (source == DamageTypes.MAGIC)
-            return characterService.getCharacterProperty(character, DefaultProperties.magic_damage_bonus_mult);
+            return entityService.getEntityProperty(entity, DefaultProperties.magic_damage_bonus_mult);
         if (source == NDamageType.LIGHTNING)
-            return characterService.getCharacterProperty(character, DefaultProperties.lightning_damage_bonus_mult);
+            return entityService.getEntityProperty(entity, DefaultProperties.lightning_damage_bonus_mult);
         if (source == NDamageType.ICE)
-            return characterService.getCharacterProperty(character, DefaultProperties.ice_damage_bonus_mult);
+            return entityService.getEntityProperty(entity, DefaultProperties.ice_damage_bonus_mult);
         return 0;
     }
 
@@ -162,24 +161,5 @@ public class DamageService {
 
 
     }
-
-
-    public double getSkillDamage(IActiveCharacter caster, DamageType source) {
-        if (caster.hasPreferedDamageType())
-            source = caster.getDamageType();
-        if (source == DamageTypes.ATTACK)
-            return caster.getProperty(DefaultProperties.physical_damage_bonus_mult);
-        if (source == DamageTypes.FIRE)
-            return caster.getProperty(DefaultProperties.fire_damage_bonus_mult);
-        if (source == DamageTypes.MAGIC)
-            return caster.getProperty(DefaultProperties.magic_damage_bonus_mult);
-        if (source == NDamageType.LIGHTNING)
-            return caster.getProperty(DefaultProperties.lightning_damage_bonus_mult);
-        if (source == NDamageType.ICE)
-            return caster.getProperty(DefaultProperties.ice_damage_bonus_mult);
-
-        return 0;
-    }
-
 
 }

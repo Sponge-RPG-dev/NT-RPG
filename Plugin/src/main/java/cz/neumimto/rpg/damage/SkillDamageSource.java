@@ -20,6 +20,7 @@ package cz.neumimto.rpg.damage;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.source.common.AbstractDamageSource;
 
 /**
@@ -28,7 +29,7 @@ import org.spongepowered.api.event.cause.entity.damage.source.common.AbstractDam
 public class SkillDamageSource extends AbstractDamageSource implements ISkillDamageSource {
 
     private ISkill skill;
-    private IActiveCharacter caster;
+    private IEntity caster;
     private IEntity target;
 
     public SkillDamageSource(SkillDamageSourceBuilder builder) {
@@ -44,7 +45,7 @@ public class SkillDamageSource extends AbstractDamageSource implements ISkillDam
     }
 
     @Override
-    public IActiveCharacter getCaster() {
+    public IEntity<Player> getCaster() {
         return caster;
     }
 
