@@ -21,6 +21,7 @@ import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.source.common.AbstractDamageSourceBuilder;
 
 /**
@@ -38,6 +39,11 @@ public class SkillDamageSourceBuilder extends AbstractDamageSourceBuilder<SkillD
 
     public void setSkill(ISkill skill) {
         this.skill = skill;
+    }
+
+    public void fromSkill(ISkill skill) {
+        this.skill = skill;
+        type(skill.getDamageType());
     }
 
     public IEntity getCaster() {

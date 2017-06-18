@@ -73,6 +73,10 @@ public interface ISkill extends IEffectSourceProvider {
 
     void setDamageType(DamageType type);
 
+    default float getFloatNodeValue(ExtendedSkillInfo extendedSkillInfo, ISkillNode node) {
+       return extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node,extendedSkillInfo.getTotalLevel());
+    }
+
     @Override
     default IEffectSource getType() {
         return EffectSourceType.SKILL;

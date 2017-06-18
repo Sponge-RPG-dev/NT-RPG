@@ -27,6 +27,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.property.entity.EyeLocationProperty;
 import org.spongepowered.api.entity.Entity;
@@ -42,10 +43,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.EntityUniverse;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -59,6 +57,7 @@ public class Utils {
 	public static String LineSeparator = System.getProperty("line.separator");
 	public static String Tab = "\t";
 	private static GlobalScope globalScope = NtRpgPlugin.GlobalScope;
+
 
 	public static void applyOnNearbyPartyMembers(IActiveCharacter character, int distance, Consumer<IActiveCharacter> c) {
 		double k = Math.pow(distance, 2);
@@ -124,8 +123,10 @@ public class Utils {
 		return Optional.empty(); //todo
 	}
 
+	public static Set<BlockType> transparentBlocks = new HashSet<>();
+
 	public static boolean isTransparent(BlockType e) {
-		return true;
+		return transparentBlocks.contains(e);
 	}
 
 	public static Living getTargettedEntity(IActiveCharacter character, int range) {
@@ -134,30 +135,35 @@ public class Utils {
 		Vector3d r = player.getRotation();
 		Vector3d dir = Quaterniond.fromAxesAnglesDeg(r.getX(), -r.getY(), r.getZ()).getDirection();
 		Vector3d vec3d = player.getProperty(EyeLocationProperty.class).get().getValue();
-		Optional<EntityUniverse.EntityHit> e = player.getWorld().getIntersectingEntities(vec3d, dir, range, entityHit -> isLivingEntity(entityHit.getEntity()))
+		Optional<EntityUniverse.EntityHit> e = player
+				.getWorld()
+				.getIntersectingEntities(vec3d, dir, range, entityHit -> entityHit.getEntity() != character.getEntity() && isLivingEntity(entityHit.getEntity()))
 				.stream().reduce((a, b) -> a.getDistance() < b.getDistance() ? a : b);
 
 		if (e.isPresent()) {
-			Optional<BlockRayHit<World>> end = BlockRay.from(player).to(e.get().getIntersection()).skipFilter(BlockRay.onlyAirFilter()).build().end();
+			Optional<BlockRayHit<World>> end = BlockRay.from(player)
+												.distanceLimit(range)
+												.stopFilter(SKILL_TARGET_BLOCK_FILTER)
+												.build()
+												.end();
 			if (!end.isPresent()) {
 				return (Living) e.get().getEntity();
+			} else {
+				Entity entity = e.get().getEntity();
+				Location<World> location = entity.getLocation();
+				if (end.get().getBlockPosition()
+					.distanceSquared(location.getBlockX(), location.getBlockZ(), location.getBlockZ()) <= 2) {
+					return (Living) e.get().getEntity();
+				}
 			}
 		}
-	    /*
-        Optional<BlockRayHit<World>> h = BlockRay.from(player).distanceLimit(range).skipFilter(BlockRay.onlyAirFilter()).build().end();
-        if (h.isPresent()) {
-            Vector3d lookPos = h.get().getBlockPosition().toDouble();
-            Collection<Entity> entities = player.getWorld().getEntities(entity -> entity != player && entity.getLocation().getPosition().distanceSquared(lookPos) < 4 && isLivingEntity(entity));
-            if (entities.isEmpty())
-                return null;
-            for (Entity e : entities) {
-                return (Living) e;
-            }
-        }
-        return null;*/
 		return null;
 	}
 
+
+	public static Predicate<BlockRayHit<World>> SKILL_TARGET_BLOCK_FILTER =
+			(Predicate<BlockRayHit<World>>)
+					a -> !isTransparent(a.getExtent().getBlockType(a.getBlockX(), a.getBlockY(), a.getBlockZ()));
 
 	public static void hideProjectile(Projectile projectile) {
 		projectile.offer(Keys.INVISIBLE, true);
@@ -243,4 +249,9 @@ public class Utils {
 		return null;
 	}
 
+	static {
+		transparentBlocks.addAll(Arrays.asList(BlockTypes.AIR,
+				BlockTypes.GRASS, BlockTypes.TALLGRASS, BlockTypes.GRASS, BlockTypes.BED,
+				BlockTypes.WHEAT, BlockTypes.FLOWER_POT, BlockTypes.FIRE, BlockTypes.WATER, BlockTypes.LAVA, BlockTypes.FLOWING_WATER));
+	}
 }

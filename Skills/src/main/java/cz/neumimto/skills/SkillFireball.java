@@ -53,7 +53,7 @@ public class SkillFireball extends ActiveSkill {
 		ProjectileProperties projectileProperties = new ProjectileProperties(sb, character);
 		projectileProperties.setDamage(settings.getLevelNodeValue(SkillNodes.DAMAGE, info.getTotalLevel()));
 		SkillDamageSourceBuilder build = new SkillDamageSourceBuilder();
-		build.setSkill(this);
+		build.fromSkill(this);
 		build.setCaster(character);
 		build.type(getDamageType());
 		projectileProperties.onHit((caster, target) -> {

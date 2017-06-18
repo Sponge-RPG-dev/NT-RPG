@@ -307,6 +307,7 @@ public class BasicListener {
 
 
 		SkillDamageEvent event1 = new SkillDamageEvent(caster, targetchar, skill, finalDamage, type);
+		Sponge.getGame().getEventManager().post(event1);
 		if (event1.isCancelled() || event1.getDamage() <= 0) {
 			event.setCancelled(true);
 			return;
@@ -315,6 +316,7 @@ public class BasicListener {
 		double target_resistence = damageService.getEntityResistance(targetchar, type);
 
 		SkillDamageEventLate event2 = new SkillDamageEventLate(caster, targetchar, skill, finalDamage, target_resistence, type);
+		Sponge.getGame().getEventManager().post(event2);
 		if (event2.isCancelled() || event2.getDamage() <= 0) {
 			event.setCancelled(true);
 			return;

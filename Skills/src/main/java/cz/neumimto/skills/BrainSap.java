@@ -7,6 +7,8 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.events.SkillDamageEvent;
+import cz.neumimto.rpg.events.SkillDamageEventLate;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.utils.Utils;
@@ -42,12 +44,13 @@ public class BrainSap extends ActiveSkill {
         Living targettedEntity = Utils.getTargettedEntity(iActiveCharacter, (int) range);
         if (targettedEntity != null) {
             SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
-            builder.setSkill(this);
+            builder.fromSkill(this);
+            IEntity e = entityService.get(targettedEntity);
+            builder.setTarget(e);
             builder.setCaster(iActiveCharacter);
             SkillDamageSource s = builder.build();
-            IEntity entity = entityService.get(targettedEntity);
-            float damage = extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.DAMAGE,extendedSkillInfo.getTotalLevel());
-            entity.getEntity().damage(damage,s);
+            float damage = getFloatNodeValue(extendedSkillInfo, SkillNodes.DAMAGE);
+            e.getEntity().damage(damage,s);
             return SkillResult.OK;
         }
         return SkillResult.CANCELLED;
@@ -55,16 +58,12 @@ public class BrainSap extends ActiveSkill {
 
     //todo skilldamageevent
     @Listener(order = Order.LAST)
-    public void onDamage(DamageEntityEvent event) {
+    public void onDamage(SkillDamageEventLate event) {
         if (event.isCancelled())
             return;
-        if (event.getCause().first(SkillDamageSource.class).isPresent()) {
-            SkillDamageSource source = event.getCause().first(SkillDamageSource.class).get();
-            if (source.getSkill() == this) {
-                IEntity caster = source.getCaster();
-                entityService.healEntity(caster, (float) event.getFinalDamage());
-            }
+        if (event.getSkill().getClass() == getClass()) {
+            IEntity caster = event.getCaster();
+            entityService.healEntity(caster, (float) event.getDamage());
         }
     }
-
 }

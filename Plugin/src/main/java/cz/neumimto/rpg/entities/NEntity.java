@@ -1,6 +1,10 @@
 package cz.neumimto.rpg.entities;
 
+import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.rpg.GlobalScope;
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.players.properties.PropertyService;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.Creature;
 import org.spongepowered.api.entity.living.Living;
@@ -83,7 +87,10 @@ public class NEntity implements IMob {
 
     @Override
     public float getProperty(int propertyName) {
-        return properties.get(propertyName);
+        if (properties.containsKey(propertyName)) {
+            return properties.get(propertyName);
+        }
+        return NtRpgPlugin.GlobalScope.propertyService.getDefault(propertyName);
     }
 
     @Override
