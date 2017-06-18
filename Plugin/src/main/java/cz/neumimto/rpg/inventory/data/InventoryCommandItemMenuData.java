@@ -84,6 +84,11 @@ public class InventoryCommandItemMenuData extends AbstractSingleData<String, Inv
 		}
 
 		@Override
+		public DataContainer toContainer() {
+			return super.toContainer().set(NKeys.COMMAND, Immutable.this.getValue());
+		}
+
+		@Override
 		public int getContentVersion() {
 			return 1;
 		}
