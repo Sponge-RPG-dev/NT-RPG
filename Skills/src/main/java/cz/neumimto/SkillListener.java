@@ -5,6 +5,7 @@ import cz.neumimto.effects.positive.DamageToMana;
 import cz.neumimto.effects.positive.LifeAfterKillEffect;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.events.character.CharacterDamageEntityEvent;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -23,6 +24,9 @@ public class SkillListener {
     @Inject
     private CharacterService characterService;
 
+    @Inject
+    private EntityService entityService;
+
     @Listener
     public void onKill(DestructEntityEvent.Death event) {
         Optional<Player> first = event.getCause().first(Player.class);
@@ -33,7 +37,7 @@ public class SkillListener {
                 IEffectContainer container = character.getEffect(LifeAfterKillEffect.name);
                 if (container != null) {
                     float l = (float) container.getStackedValue();
-                    characterService.healCharacter(character,l);
+                    entityService.healEntity(character,l);
                 }
             }
         }

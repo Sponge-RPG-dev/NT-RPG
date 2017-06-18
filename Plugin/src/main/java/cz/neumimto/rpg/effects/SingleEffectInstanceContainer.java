@@ -9,6 +9,15 @@ public class SingleEffectInstanceContainer<K, T extends IEffect<K>> extends Effe
         super(t);
     }
 
+
+    @Override
+    public void stackEffect(T t, IEffectSourceProvider effectSourceProvider) {
+        T a = effects.stream().findFirst().get();
+        if (t.getDuration() == -1 && a.getDuration() != -1) {
+            a.setDuration(-1);
+        }
+    }
+
     @Override
     public void removeStack(T iEffect) {
         if (getEffects().size() == 1) {

@@ -55,7 +55,7 @@ public class BloodMagicEffect extends EffectBase {
     public void onApply() {
         Gui.sendEffectStatus(consumer, EffectStatusType.APPLIED, this);
         consumer.removeEffect(ManaRegeneration.name);
-        Health health = consumer.getHealth();
+        Health health = (Health) consumer.getHealth();
         consumer.setMana(health);
     }
 

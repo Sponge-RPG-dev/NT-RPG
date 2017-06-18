@@ -53,6 +53,7 @@ public class BrainSap extends ActiveSkill {
         return SkillResult.CANCELLED;
     }
 
+    //todo skilldamageevent
     @Listener(order = Order.LAST)
     public void onDamage(DamageEntityEvent event) {
         if (event.isCancelled())
@@ -60,8 +61,8 @@ public class BrainSap extends ActiveSkill {
         if (event.getCause().first(SkillDamageSource.class).isPresent()) {
             SkillDamageSource source = event.getCause().first(SkillDamageSource.class).get();
             if (source.getSkill() == this) {
-                IActiveCharacter caster = source.getCaster();
-                characterService.healCharacter(caster, (float) event.getFinalDamage());
+                IEntity caster = source.getCaster();
+                entityService.healEntity(caster, (float) event.getFinalDamage());
             }
         }
     }

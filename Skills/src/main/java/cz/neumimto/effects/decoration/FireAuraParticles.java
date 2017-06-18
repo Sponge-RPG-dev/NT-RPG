@@ -33,21 +33,21 @@ public class FireAuraParticles  extends EffectBase {
 		A {
 			@Override
 			public STAGE process(IEffectConsumer consumer) {
-				ParticleUtils.drawSquare(consumer.getEntity().getLocation(), 1, ParticleEffect.builder().type(ParticleTypes.SMOKE).build());
+				ParticleUtils.drawSquare(consumer.getEntity().getLocation(), 2, ParticleEffect.builder().type(ParticleTypes.SMOKE).build());
 				return B;
 			}
 		},
 		B {
 			@Override
 			public STAGE process(IEffectConsumer consumer) {
-				ParticleUtils.drawSquare(consumer.getEntity().getLocation(), 1, ParticleEffect.builder().type(ParticleTypes.LARGE_SMOKE).build());
+				ParticleUtils.drawSquare(consumer.getEntity().getLocation(), 2, ParticleEffect.builder().type(ParticleTypes.LARGE_SMOKE).build());
 				return C;
 			}
 		},
 		C {
 			@Override
 			public STAGE process(IEffectConsumer consumer) {
-				ParticleUtils.drawSquare(consumer.getEntity().getLocation(), 1, ParticleEffect.builder().type(ParticleTypes.SMOKE).build());
+				ParticleUtils.drawSquare(consumer.getEntity().getLocation(), 2, ParticleEffect.builder().type(ParticleTypes.FIRE_SMOKE).build());
 				return A;
 			}
 		};

@@ -139,9 +139,11 @@ public class EntityLifecycleListener {
             if (sds.isPresent()) {
 
                 SkillDamageSource source = sds.get();
-                IActiveCharacter caster = source.getCaster();
-                double exp = entityService.getExperiences(event.getTargetEntity().getType());
-                characterService.addExperiences(caster, exp, ExperienceSource.PVE);
+                IEntity caster = source.getCaster();
+                if (caster.getType() == IEntityType.CHARACTER) {
+                    double exp = entityService.getExperiences(event.getTargetEntity().getType());
+                    characterService.addExperiences((IActiveCharacter) caster, exp, ExperienceSource.PVE);
+                }
             }
             IMob mob = (IMob) entityService.get(event.getTargetEntity());
             Collection<IEffect> values = mob.getEffectMap().values();

@@ -158,7 +158,6 @@ public class EffectService {
             consumer.addEffect(iEffect.constructEffectContainer());
 	        iEffect.onApply();
         } else if (eff.isStackable()) {
-            iEffect.onApply();
             eff.stackEffect(iEffect, effectSourceProvider);
         }
 	    if (iEffect.requiresRegister())
@@ -285,8 +284,8 @@ public class EffectService {
     }
 
 	@SuppressWarnings("unchecked")
-    public void removeAllEffects(IActiveCharacter character) {
-	    for (IEffectContainer<Object, IEffect<Object>> IEffectContainer : character.getEffects()) {
+    public void removeAllEffects(IEffectConsumer<?> character) {
+	    for (final IEffectContainer<Object, IEffect<Object>> IEffectContainer : character.getEffects()) {
 		    for (IEffect effect : IEffectContainer.getEffects()) {
 			    pendingRemovals.add(effect);
 		    }

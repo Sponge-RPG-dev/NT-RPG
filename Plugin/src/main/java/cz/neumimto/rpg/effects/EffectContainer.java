@@ -12,7 +12,7 @@ public class EffectContainer<K, T extends IEffect<K>> implements IEffectContaine
 
 	final String name;
 
-	final boolean stackable;
+	boolean stackable;
 
 	private K value;
 
@@ -20,6 +20,10 @@ public class EffectContainer<K, T extends IEffect<K>> implements IEffectContaine
 
 	public EffectContainer(T t) {
 		name = t.getName();
+		init(t);
+	}
+
+	protected void init(T t) {
 		this.effects.add(t);
 		this.effectStackingStrategy = t.getEffectStackingStrategy();
 		this.stackable = t.isStackable();

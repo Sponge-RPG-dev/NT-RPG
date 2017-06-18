@@ -18,6 +18,7 @@ public class NEntity implements IMob {
     private WeakReference<Living> entity;
     private Map<String, IEffectContainer> effectSet = new HashMap<>();
     private Map<Integer, Float> properties = new HashMap<>();
+    private EntityHealth entityHealth;
 
     protected NEntity(Creature l) {
         attach(l);
@@ -48,19 +49,22 @@ public class NEntity implements IMob {
     }
 
     @Override
+    public EntityHealth getHealth() {
+        return entityHealth;
+    }
+
+    @Override
     public void attach(Living creature) {
         this.entity = new WeakReference<>(creature);
+        this.entityHealth = new EntityHealth(this);
     }
 
     @Override
     public void detach() {
+        entityHealth = null;
         this.entity = null;
     }
 
-    @Override
-    public boolean isDetached() {
-        return entity != null;
-    }
 
     @Override
     public Living getEntity() {

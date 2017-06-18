@@ -66,6 +66,7 @@ import org.spongepowered.api.event.entity.InteractEntityEvent;
 import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
 import org.spongepowered.api.event.filter.IsCancelled;
 import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.event.world.chunk.UnloadChunkEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.util.Tristate;
@@ -179,12 +180,12 @@ public class BasicListener {
 		inventoryService.onRightClick(character, h.getSelectedSlotIndex());
 	}
 
-/*
+
     @Listener
     public void onChunkDespawn(UnloadChunkEvent event) {
         entityService.remove(event.getTargetChunk().getEntities(Utils::isLivingEntity));
     }
-*/
+
 
 
 	@Listener

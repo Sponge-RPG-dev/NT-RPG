@@ -690,12 +690,13 @@ public class VanilaMessaging implements IPlayerMessage {
 	public void displayHealth(IActiveCharacter character) {
 		double value = character.getHealth().getValue();
 		double maxValue = character.getHealth().getMaxValue();
-		double reservedAmount = character.getHealth().getReservedAmount();
+		//todo implement
+		//double reservedAmount = character.getHealth().getReservedAmount();
 
 		LiteralText a = Text.builder(Localization.HEALTH).color(TextColors.GOLD)
 				.append(Text.builder(value + "").color(TextColors.GREEN).build())
 				.append(Text.builder("/").color(TextColors.WHITE).build())
-				.append(Text.builder(String.valueOf(maxValue - reservedAmount)).color(TextColors.RED).build())
+		//		.append(Text.builder(String.valueOf(maxValue - reservedAmount)).color(TextColors.RED).build())
 				.append(Text.builder(" (" + maxValue + ") ").color(TextColors.GRAY).build()).build();
 		character.getPlayer().sendMessage(a);
 	}

@@ -605,54 +605,6 @@ public class CharacterService {
 	}
 
 	/**
-	 * Heals the character and`fire an event
-	 *
-	 * @param character
-	 * @param healedamount
-	 * @return healed hp
-	 */
-	public double healCharacter(IActiveCharacter character, float healedamount) {
-		if (character.getHealth().getValue() == character.getHealth().getMaxValue()) {
-			return 0;
-		}
-		SkillHealEvent event = null;
-		if (character.getHealth().getValue() + healedamount > character.getHealth().getMaxValue()) {
-			healedamount = (float) (character.getHealth().getMaxValue() - (character.getHealth().getValue() + healedamount));
-		}
-		event = new SkillHealEvent(character, healedamount);
-		game.getEventManager().post(event);
-		if (event.isCancelled())
-			return 0;
-		return setCharacterHealth(event.getCharacter(), event.getAmount());
-	}
-
-
-	/**
-	 * sets character's hp to choosen amount.
-	 *
-	 * @param character
-	 * @param amount
-	 * @return difference
-	 */
-	public double setCharacterHealth(IActiveCharacter character, double amount) {
-		if (character.getHealth().getValue() + amount > character.getHealth().getMaxValue()) {
-			setCharacterToFullHealth(character);
-			return character.getHealth().getMaxValue() - (character.getHealth().getValue() + amount);
-		}
-		character.getHealth().setValue(character.getHealth().getValue() + amount);
-		return amount;
-	}
-
-	/**
-	 * sets character to its full health
-	 *
-	 * @param character
-	 */
-	public void setCharacterToFullHealth(IActiveCharacter character) {
-		character.getHealth().setValue(character.getHealth().getMaxValue());
-	}
-
-	/**
 	 * @param character
 	 * @param skill
 	 * @return 1 if character has no skillpoints,

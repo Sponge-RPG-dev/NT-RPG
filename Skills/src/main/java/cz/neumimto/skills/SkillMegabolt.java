@@ -22,8 +22,8 @@ public class SkillMegabolt extends ActiveSkill {
         setName("Megabolt");
         setDamageType(NDamageType.LIGHTNING);
         SkillSettings settings = new SkillSettings();
-        settings.addNode(SkillNodes.DAMAGE,10,10);
-        settings.addNode(SkillNodes.RADIUS, 30, 30);
+        settings.addNode(SkillNodes.DAMAGE, 10, 10);
+        settings.addNode(SkillNodes.RADIUS, 30, 5);
         super.settings = settings;
     }
 
@@ -40,8 +40,10 @@ public class SkillMegabolt extends ActiveSkill {
         for (Entity e : nearbyEntities) {
             if (Utils.isLivingEntity(e)) {
                 Living l = (Living) e;
-                l.damage(damage,src);
-                l.getLocation().getExtent().createEntity(EntityTypes.LIGHTNING,l.getLocation().getPosition());
+                if (Utils.canDamage(iActiveCharacter, l)) {
+                    l.damage(damage,src);
+                    l.getLocation().getExtent().createEntity(EntityTypes.LIGHTNING, l.getLocation().getPosition());
+                }
             }
         }
         return SkillResult.OK;

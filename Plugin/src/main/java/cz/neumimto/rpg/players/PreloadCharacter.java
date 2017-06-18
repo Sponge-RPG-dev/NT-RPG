@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.players;
 
+import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.IEffect;
@@ -254,14 +255,15 @@ public class PreloadCharacter implements IActiveCharacter {
 
     }
 
-    @Override
-    public Health getHealth() {
-        return health;
-    }
 
     @Override
     public void setHealth(Health health) {
 
+    }
+
+    @Override
+    public Health getHealth() {
+        return health;
     }
 
     @Override
