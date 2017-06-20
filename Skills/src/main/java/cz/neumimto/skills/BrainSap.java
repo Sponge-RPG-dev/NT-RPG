@@ -16,6 +16,7 @@ import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
+import org.spongepowered.api.event.filter.cause.First;
 
 /**
  * Created by NeumimTo on 5.2.2016.
@@ -56,14 +57,12 @@ public class BrainSap extends ActiveSkill {
         return SkillResult.CANCELLED;
     }
 
-    //todo skilldamageevent
+
     @Listener(order = Order.LAST)
-    public void onDamage(SkillDamageEventLate event) {
+    public void onDamage(SkillDamageEventLate event, @First(typeFilter = BrainSap.class) BrainSap skill) {
         if (event.isCancelled())
             return;
-        if (event.getSkill().getClass() == getClass()) {
-            IEntity caster = event.getCaster();
-            entityService.healEntity(caster, (float) event.getDamage());
-        }
+        IEntity caster = event.getCaster();
+        entityService.healEntity(caster, (float) event.getDamage());
     }
 }

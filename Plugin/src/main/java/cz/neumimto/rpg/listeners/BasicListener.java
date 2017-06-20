@@ -26,6 +26,7 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.damage.ISkillDamageSource;
 import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.events.*;
 import cz.neumimto.rpg.exp.ExperienceService;
@@ -55,6 +56,8 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.cause.entity.damage.DamageModifier;
 import org.spongepowered.api.event.cause.entity.damage.DamageModifierTypes;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
@@ -294,8 +297,8 @@ public class BasicListener {
 			                                   ISkillDamageSource iSkillDamageSource) {
 		IEntity caster = iSkillDamageSource.getCaster();
 		ISkill skill = iSkillDamageSource.getSkill();
-		DamageType type = skill.getDamageType();
-
+		DamageType type = iSkillDamageSource.getType();
+		IEffect effect = iSkillDamageSource.getEffect();
 		if (caster.getType() == IEntityType.CHARACTER) {
 			IActiveCharacter c = (IActiveCharacter)caster;
 			if (c.hasPreferedDamageType()) {
@@ -307,6 +310,16 @@ public class BasicListener {
 
 
 		SkillDamageEvent event1 = new SkillDamageEvent(caster, targetchar, skill, finalDamage, type);
+		if (effect != null) {
+			event1.setCause(Cause.of(NamedCause.of("effect", effect)));
+		}
+
+		if (skill != null) {
+			NamedCause c = NamedCause.of("skill", skill);
+			Cause cause = event1.getCause() == null ? Cause.of(c) : event1.getCause().with(c);
+			event1.setCause(cause);
+		}
+
 		Sponge.getGame().getEventManager().post(event1);
 		if (event1.isCancelled() || event1.getDamage() <= 0) {
 			event.setCancelled(true);
@@ -316,6 +329,9 @@ public class BasicListener {
 		double target_resistence = damageService.getEntityResistance(targetchar, type);
 
 		SkillDamageEventLate event2 = new SkillDamageEventLate(caster, targetchar, skill, finalDamage, target_resistence, type);
+		event2.setCause(event1.getCause());
+
+
 		Sponge.getGame().getEventManager().post(event2);
 		if (event2.isCancelled() || event2.getDamage() <= 0) {
 			event.setCancelled(true);
@@ -323,6 +339,8 @@ public class BasicListener {
 		}
 		event.setBaseDamage(event2.getDamage() * event2.getTargetResistance());
 	}
+
+
 
 
 	@Listener

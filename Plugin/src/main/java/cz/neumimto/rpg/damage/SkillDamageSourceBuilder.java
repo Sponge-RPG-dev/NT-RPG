@@ -18,6 +18,7 @@
 package cz.neumimto.rpg.damage;
 
 import cz.neumimto.rpg.IEntity;
+import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
 import org.spongepowered.api.entity.living.player.Player;
@@ -32,26 +33,30 @@ public class SkillDamageSourceBuilder extends AbstractDamageSourceBuilder<SkillD
     protected ISkill skill;
     protected IEntity caster;
     protected IEntity target;
+    protected IEffect effect;
 
     public ISkill getSkill() {
         return skill;
     }
 
-    public void setSkill(ISkill skill) {
+    public SkillDamageSourceBuilder setSkill(ISkill skill) {
         this.skill = skill;
+        return this;
     }
 
-    public void fromSkill(ISkill skill) {
+    public SkillDamageSourceBuilder fromSkill(ISkill skill) {
         this.skill = skill;
         type(skill.getDamageType());
+        return this;
     }
 
     public IEntity getCaster() {
         return caster;
     }
 
-    public void setCaster(IActiveCharacter caster) {
+    public SkillDamageSourceBuilder setCaster(IActiveCharacter caster) {
         this.caster = caster;
+        return this;
     }
 
     @Override
@@ -63,7 +68,21 @@ public class SkillDamageSourceBuilder extends AbstractDamageSourceBuilder<SkillD
         return target;
     }
 
-    public void setTarget(IEntity target) {
+    public SkillDamageSourceBuilder setTarget(IEntity target) {
         this.target = target;
+        return this;
+    }
+
+    public void setCaster(IEntity caster) {
+        this.caster = caster;
+    }
+
+    public IEffect getEffect() {
+        return effect;
+    }
+
+    public SkillDamageSourceBuilder setEffect(IEffect effect) {
+        this.effect = effect;
+        return this;
     }
 }
