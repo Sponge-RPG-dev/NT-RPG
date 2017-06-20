@@ -77,6 +77,10 @@ public interface ISkill extends IEffectSourceProvider {
        return extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node,extendedSkillInfo.getTotalLevel());
     }
 
+    default long getLongNodeValue(ExtendedSkillInfo extendedSkillInfo, ISkillNode node) {
+        return (long) extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node,extendedSkillInfo.getTotalLevel());
+    }
+
     @Override
     default IEffectSource getType() {
         return EffectSourceType.SKILL;
