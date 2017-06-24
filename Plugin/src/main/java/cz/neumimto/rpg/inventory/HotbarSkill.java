@@ -5,6 +5,7 @@ import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
+import org.spongepowered.api.item.inventory.ItemStack;
 
 /**
  * Created by NeumimTo on 31.12.2015.
@@ -13,7 +14,8 @@ public class HotbarSkill extends HotbarObject {
     ISkill right_skill;
     ISkill left_skill;
 
-    public HotbarSkill() {
+    public HotbarSkill(ItemStack itemStack) {
+        super(itemStack);
         type = HotbarObjectTypes.SKILL;
     }
 

@@ -6,6 +6,7 @@ import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.item.inventory.ItemStack;
 
@@ -21,9 +22,9 @@ public class Charm extends HotbarObject {
     private Map<ItemRestriction,Object> restrictionSet = new HashMap<>();
 
 
-    public Charm() {
+    public Charm(ItemStack itemStack) {
+        super(itemStack);
         type = HotbarObjectTypes.CHARM;
-        effects = new HashMap<>();
     }
 
 
@@ -42,11 +43,8 @@ public class Charm extends HotbarObject {
     }
 
     @Override
-    public void onEquip(ItemStack is, IActiveCharacter character) {
-        super.onEquip(is, character);
-        if (effects == null) {
-            effects = NtRpgPlugin.GlobalScope.inventorySerivce.getItemEffects(is);
-        }
+    public void onEquip(IActiveCharacter character) {
+        super.onEquip(character);
         NtRpgPlugin.GlobalScope.effectService.applyGlobalEffectsAsEnchantments(effects, character, this);
     }
 

@@ -21,6 +21,7 @@ package cz.neumimto.rpg.inventory;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
+import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
@@ -31,20 +32,21 @@ import org.spongepowered.api.item.inventory.ItemStack;
  */
 public class Weapon extends Charm {
 
-    public static Weapon EmptyHand = new Weapon(null);
+    public static Weapon EmptyHand = new Weapon(ItemStack.empty());
     protected double damage;
     protected boolean current;
-    private ItemStack itemStack;
+    private ItemType itemType;
     private int level;
 
 
     public Weapon(ItemStack itemStack) {
-        this.itemStack = itemStack;
+        super(itemStack);
+        this.itemType = itemStack.getItem();
         type = HotbarObjectTypes.WEAPON;
     }
 
     public ItemType getItemType() {
-        return itemStack.getItem();
+        return itemType;
     }
 
     public void setDamage(float f) {
@@ -60,7 +62,7 @@ public class Weapon extends Charm {
     }
 
     public boolean isShield() {
-        return itemStack.getItem() == ItemTypes.SHIELD;
+        return getItemType() == ItemTypes.SHIELD;
     }
 
     public void setCurrent(boolean current) {
@@ -85,12 +87,8 @@ public class Weapon extends Charm {
         }
     }
 
-    public ItemStack getItemStack() {
-        return itemStack;
-    }
-
-    public void setItemStack(ItemStack i) {
-        itemStack = i;
+    public void setItemData(CustomItemData i) {
+        customItemData = i;
     }
 
     public int getLevel() {

@@ -179,7 +179,7 @@ public class InventoryService {
                 HotbarObject o = getHotbarObject(character, toPickup);
                 if (o != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
                     o.setSlot(slot);
-                    o.onEquip(toPickup, character);
+                    o.onEquip(character);
                     character.getHotbar()[slot] = o;
                 }
             }
@@ -199,9 +199,9 @@ public class InventoryService {
                     return;
                 }
                 if (hotbarObject.getHotbarObjectType() == HotbarObjectTypes.CHARM) {
-                    hotbarObject.onEquip(i,character);
+                    hotbarObject.onEquip(character);
                 } else if (hotbarObject.getHotbarObjectType() == HotbarObjectTypes.WEAPON && slot == selectedSlotIndex) {
-                    hotbarObject.onEquip(i,character);
+                    hotbarObject.onEquip(character);
                 }
 
             } else {
@@ -353,7 +353,7 @@ public class InventoryService {
             return buildCharm(character, is);
         }
         if (ItemStackUtils.isItemRune(is)) {
-            return new HotbarRune();
+            return new HotbarRune(is);
         }
         if (ItemStackUtils.isWeapon(is.getItem())) {
             return buildHotbarWeapon(character, is);
@@ -362,14 +362,14 @@ public class InventoryService {
     }
 
     private Charm buildCharm(IActiveCharacter character, ItemStack is) {
-        Charm charm = new Charm();
+        Charm charm = new Charm(is);
         charm.setEffects(getItemEffects(is));
 
         return charm;
     }
 
     private HotbarRune buildHotbarRune(ItemStack is) {
-        HotbarRune rune = new HotbarRune();
+        HotbarRune rune = new HotbarRune(is);
         Optional<Text> text = is.get(Keys.DISPLAY_NAME);
         if (text.isPresent()) {
             String s = text.get().toPlain();
@@ -385,16 +385,16 @@ public class InventoryService {
         if (!a.isPresent()) {
             return w;
         }
-        w.setItemStack(is);
+        w.setItemData(getItemData(is));
         List<Text> texts = a.get();
-        CustomItemData itemData = getItemData(is);
+        CustomItemData itemData = w.getCustomItemData();
         w.setLevel(itemData.itemLevel().get());
         w.setEffects(getItemEffects(is));
         return w;
     }
 
     public HotbarSkill buildHotbarSkill(IActiveCharacter character, ItemStack is) {
-        HotbarSkill skill = new HotbarSkill();
+        HotbarSkill skill = new HotbarSkill(is);
         Optional<Text> text = is.get(Keys.DISPLAY_NAME);
         if (text.isPresent()) {
             String s = text.get().toPlain();
@@ -469,26 +469,31 @@ public class InventoryService {
         }
     }
 
-    protected void changeEquipedWeapon(IActiveCharacter character, Weapon weapon) {
-        changeEquipedWeapon(character, weapon.getItemStack());
+    protected void changeEquipedWeapon(IActiveCharacter character, Weapon changeTo) {
+        unEquipWeapon(character);
+
+        int slot = ((Hotbar) character.getPlayer().getInventory().query(Hotbar.class)).getSelectedSlotIndex();
+        character.setHotbarSlot(slot, changeTo);
+        changeTo.current = true;
+        changeTo.setSlot(slot);
+        character.setMainHand(changeTo);
+        changeTo.onEquip(character);
+        damageService.recalculateCharacterWeaponDamage(character);
     }
 
-
-    protected void changeEquipedWeapon(IActiveCharacter character, ItemStack weapon) {
-        //old
+    private void unEquipWeapon(IActiveCharacter character) {
         Weapon mainHand = character.getMainHand();
         mainHand.current = false;
         mainHand.onUnEquip(character);
+    }
+
+    protected void changeEquipedWeapon(IActiveCharacter character, ItemStack weapon) {
+        unEquipWeapon(character);
 
         //new
         Weapon weapon1 = buildHotbarWeapon(character, weapon);
-        int slot = ((Hotbar) character.getPlayer().getInventory().query(Hotbar.class)).getSelectedSlotIndex();
-        character.setHotbarSlot(slot, weapon1);
-        weapon1.current = true;
-        weapon1.setSlot(slot);
-        character.setMainHand(weapon1);
-        weapon1.onEquip(weapon, character);
-        damageService.recalculateCharacterWeaponDamage(character);
+        changeEquipedWeapon(character, weapon1);
+
     }
 
     public void startSocketing(IActiveCharacter character) {
@@ -782,13 +787,18 @@ public class InventoryService {
 
     public Map<IGlobalEffect, String> getItemEffects(ItemStack is) {
         CustomItemData itemData = getItemData(is);
-        return itemData.enchantements().get().entrySet()
-                .stream()
-                .collect(Collectors.toMap(
-                    e -> effectService.getGlobalEffect(e.getKey()),
-                    Map.Entry::getValue
-                ));
+        return getItemEffects(itemData);
     }
+
+    public Map<IGlobalEffect, String> getItemEffects(CustomItemData itemData) {
+        return itemData.enchantements().get().entrySet()
+                    .stream()
+                    .collect(Collectors.toMap(
+                            e -> effectService.getGlobalEffect(e.getKey()),
+                    Map.Entry::getValue
+        ));
+    }
+
 
     public void setSocketCount(ItemStack itemStack, int i) {
         CustomItemData itemData = getItemData(itemStack);

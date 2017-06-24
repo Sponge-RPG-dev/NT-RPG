@@ -3,9 +3,11 @@ package cz.neumimto.rpg.inventory;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.item.inventory.ItemStack;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -15,7 +17,12 @@ public abstract class HotbarObject extends CustomItem implements IEffectSourcePr
 
     public static HotbarObject EMPTYHAND_OR_CONSUMABLE = null;
     protected IHotbarObjectType type;
-    protected Map<IGlobalEffect, String> effects;
+
+
+    public HotbarObject(ItemStack itemStack) {
+        super(itemStack);
+    }
+
 
     public IHotbarObjectType getHotbarObjectType() {
         return type;
@@ -25,7 +32,7 @@ public abstract class HotbarObject extends CustomItem implements IEffectSourcePr
 
     public abstract void onLeftClick(IActiveCharacter character);
 
-    public void onEquip(ItemStack is, IActiveCharacter character) {
+    public void onEquip(IActiveCharacter character) {
         if (PluginConfig.DEBUG) {
             character.sendMessage("Equiped slot " + getSlot());
         }
@@ -37,7 +44,5 @@ public abstract class HotbarObject extends CustomItem implements IEffectSourcePr
         }
     }
 
-    public Map<IGlobalEffect, String> getEffects() {
-        return effects;
-    }
+
 }

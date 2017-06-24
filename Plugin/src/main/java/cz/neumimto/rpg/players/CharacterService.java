@@ -312,6 +312,8 @@ public class CharacterService {
 		damageService.recalculateCharacterWeaponDamage(character);
 
 		inventoryService.initializeHotbar(character);
+		CharacterInitializedEvent event = new CharacterInitializedEvent(character);
+		game.getEventManager().post(event);
 
 	}
 

@@ -30,6 +30,7 @@ public class Armor extends Weapon {
 
     public Armor(ItemStack itemStack, IEffectSource armorType) {
         super(itemStack);
+        this.armorType = armorType;
     }
 
     @Override

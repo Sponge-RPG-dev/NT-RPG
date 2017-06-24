@@ -40,9 +40,9 @@ public class InventoryCommandItemMenuData extends AbstractSingleData<String, Inv
 
 	@Override
 	public Optional<InventoryCommandItemMenuData> from(DataContainer container) {
-		Optional<String> s = container.getString(NKeys.COMMAND.getQuery());
+		Optional<Object> s = container.get(NKeys.COMMAND.getQuery());
 		if (s.isPresent()) {
-			setValue(s.get());
+			setValue((String) s.get());
 			return Optional.of(this);
 		}
 		return Optional.empty();
