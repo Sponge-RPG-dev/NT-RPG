@@ -101,12 +101,9 @@ public class EffectService {
                 .delay(10L, TimeUnit.MILLISECONDS).interval(TICK_PERIOD, TimeUnit.MILLISECONDS)
                 .execute(() -> {
                     for (IEffect pendingRemoval : pendingRemovals) {
+                        removeEffect(pendingRemoval.getEffectContainer(),pendingRemoval, pendingRemoval.getConsumer());
                         if (effectSet.contains(pendingRemoval)) {
                             effectSet.remove(pendingRemoval);
-                            IEffectConsumer consumer = pendingRemoval.getConsumer();
-                            if (consumer != null) {
-                                consumer.removeEffect(pendingRemoval);
-                            }
                         }
                     }
                     pendingRemovals.clear();
@@ -155,9 +152,12 @@ public class EffectService {
     public void addEffect(IEffect iEffect, IEffectConsumer consumer, IEffectSourceProvider effectSourceProvider) {
         IEffectContainer eff = consumer.getEffect(iEffect.getName());
         if (eff == null) {
-            consumer.addEffect(iEffect.constructEffectContainer());
+            IEffectContainer iEffectContainer = iEffect.constructEffectContainer();
+            iEffect.setEffectContainer(iEffectContainer);
+            consumer.addEffect(iEffectContainer);
 	        iEffect.onApply();
         } else if (eff.isStackable()) {
+            iEffect.setEffectContainer(eff);
             eff.stackEffect(iEffect, effectSourceProvider);
         }
 	    if (iEffect.requiresRegister())
@@ -165,7 +165,7 @@ public class EffectService {
     }
 
     /**
-     * Removes and stops the effect
+     * Removes effect from IEffectConsumer, and stops it. The effect will be removed from the scheduler next tick
      *
      * @param iEffect
      * @param consumer
@@ -173,18 +173,21 @@ public class EffectService {
     public void removeEffect(IEffect iEffect, IEffectConsumer consumer) {
         IEffectContainer effect = consumer.getEffect(iEffect.getName());
         if (effect != null) {
-            if (effect == iEffect) {
+            removeEffect(effect, iEffect, consumer);
+            stopEffect(iEffect);
+        }
+    }
+
+
+    protected void removeEffect(IEffectContainer container, IEffect iEffect, IEffectConsumer consumer) {
+        if (iEffect == container) {
+            iEffect.onRemove();
+            consumer.removeEffect(iEffect);
+        } else if (container.getEffects().contains(iEffect)){
+            container.removeStack(iEffect);
+            if (container.getEffects().isEmpty()) {
                 iEffect.onRemove();
-                stopEffect(iEffect);
-                consumer.removeEffect(effect);
-                return;
-            }
-            if (effect.getEffects().contains(iEffect)) {
-                effect.removeStack(iEffect);
-                stopEffect(iEffect);
-                if (effect.getEffects().isEmpty()) {
-                    consumer.removeEffect(effect);
-                }
+                consumer.removeEffect(container);
             }
         }
     }
@@ -204,8 +207,9 @@ public class EffectService {
             while (iterator.hasNext()) {
                 e = iterator.next();
                 if (e.getEffectSourceProvider() == effectSource) {
-                    stopEffect(e);
                     iterator.remove();
+                    if (effectSet.contains(iEffect))
+                        effectSet.remove(iEffect);
                 }
             }
             if (effect.getEffects().isEmpty()) {

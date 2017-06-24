@@ -49,6 +49,7 @@ public class EffectBase<Value> implements IEffect<Value> {
     private IEffectSourceProvider effectSourceProvider;
     private Value value;
     private EffectStackingStrategy<Value> effectStackingStrategy;
+    private IEffectContainer<Value, IEffect<Value>> container;
 
     public EffectBase(String name, IEffectConsumer consumer) {
         this();
@@ -260,6 +261,16 @@ public class EffectBase<Value> implements IEffect<Value> {
     @Override
     public void setEffectStackingStrategy(EffectStackingStrategy<Value> effectStackingStrategy) {
         this.effectStackingStrategy = effectStackingStrategy;
+    }
+
+    @Override
+    public IEffectContainer<Value, IEffect<Value>> getEffectContainer() {
+        return container;
+    }
+
+    @Override
+    public void setEffectContainer(IEffectContainer<Value, IEffect<Value>> iEffectContainer) {
+        this.container = iEffectContainer;
     }
 
     protected void addEffectType(EffectType e) {

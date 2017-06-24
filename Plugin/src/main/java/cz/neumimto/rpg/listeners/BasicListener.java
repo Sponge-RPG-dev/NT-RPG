@@ -231,7 +231,7 @@ public class BasicListener {
 				if (!PluginConfig.OVERRIDE_MOBS) {
 					newdamage = entityService.getMobDamage(source.getType());
 				}
-				newdamage *= damageService.getEntityBonusDamage(character, entityDamageSource.getType());
+				newdamage *= damageService.getEntityBonusDamage(entity, entityDamageSource.getType());
 				if (entityDamageSource.getType() == DamageTypes.ATTACK) {
 					INEntityWeaponDamageEvent e = new INEntityWeaponDamageEvent(entityService.get(source), entityService.get(targetEntity), newdamage);
 					Sponge.getGame().getEventManager().post(e);

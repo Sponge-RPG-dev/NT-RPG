@@ -109,4 +109,8 @@ public interface IEffect<K> {
     EffectStackingStrategy<K> getEffectStackingStrategy();
 
     void setEffectStackingStrategy(EffectStackingStrategy<K> effectStackingStrategy);
+
+    IEffectContainer<K, IEffect<K>> getEffectContainer();
+
+    void setEffectContainer(IEffectContainer<K, IEffect<K>> iEffectContainer);
 }

@@ -140,6 +140,7 @@ public class InventoryListener {
             return;
         }
         hotbarObject.onUnEquip(character);
+        character.setHotbarSlot(hotbar.getSelectedSlotIndex(), HotbarObject.EMPTYHAND_OR_CONSUMABLE);
         inventoryService.initializeHotbar(character, hotbar.getSelectedSlotIndex());
         damageService.recalculateCharacterWeaponDamage(character);
     }
