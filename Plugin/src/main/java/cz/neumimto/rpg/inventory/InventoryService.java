@@ -25,10 +25,7 @@ import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.EffectSourceType;
-import cz.neumimto.rpg.effects.IEffectSource;
-import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.inventory.runewords.RWService;
@@ -179,7 +176,12 @@ public class InventoryService {
                 HotbarObject o = getHotbarObject(character, toPickup);
                 if (o != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
                     o.setSlot(slot);
-                    o.onEquip(character);
+                    if (o.getType() == EffectSourceType.WEAPON && slot == selectedSlotIndex) {
+	                    ((Weapon)o).setCurrent(true);
+                        o.onRightClick(character); //simulate player interaction to equip the weapon
+                    } else if (o.getType() == EffectSourceType.CHARM) {
+	                    o.onEquip(character);
+                    }
                     character.getHotbar()[slot] = o;
                 }
             }
@@ -201,7 +203,8 @@ public class InventoryService {
                 if (hotbarObject.getHotbarObjectType() == HotbarObjectTypes.CHARM) {
                     hotbarObject.onEquip(character);
                 } else if (hotbarObject.getHotbarObjectType() == HotbarObjectTypes.WEAPON && slot == selectedSlotIndex) {
-                    hotbarObject.onEquip(character);
+	                hotbarObject.onRightClick(character); //simulate player interaction to equip the weapon
+	                ((Weapon)hotbarObject).setCurrent(true);
                 }
 
             } else {
@@ -478,22 +481,12 @@ public class InventoryService {
         changeTo.setSlot(slot);
         character.setMainHand(changeTo);
         changeTo.onEquip(character);
-        damageService.recalculateCharacterWeaponDamage(character);
     }
 
     private void unEquipWeapon(IActiveCharacter character) {
         Weapon mainHand = character.getMainHand();
         mainHand.current = false;
         mainHand.onUnEquip(character);
-    }
-
-    protected void changeEquipedWeapon(IActiveCharacter character, ItemStack weapon) {
-        unEquipWeapon(character);
-
-        //new
-        Weapon weapon1 = buildHotbarWeapon(character, weapon);
-        changeEquipedWeapon(character, weapon1);
-
     }
 
     public void startSocketing(IActiveCharacter character) {

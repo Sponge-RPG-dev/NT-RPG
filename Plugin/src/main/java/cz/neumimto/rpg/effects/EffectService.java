@@ -155,9 +155,11 @@ public class EffectService {
             IEffectContainer iEffectContainer = iEffect.constructEffectContainer();
             iEffect.setEffectContainer(iEffectContainer);
             consumer.addEffect(iEffectContainer);
+            iEffect.setEffectSourceProvider(effectSourceProvider);
 	        iEffect.onApply();
         } else if (eff.isStackable()) {
             iEffect.setEffectContainer(eff);
+            iEffect.setEffectSourceProvider(effectSourceProvider);
             eff.stackEffect(iEffect, effectSourceProvider);
         }
 	    if (iEffect.requiresRegister())
@@ -193,7 +195,7 @@ public class EffectService {
     }
 
     /**
-     * Removes and stops the effect
+     * Removes and stops the effect previously applied as item enchantement
      *
      * @param iEffect
      * @param consumer
@@ -208,14 +210,13 @@ public class EffectService {
                 e = iterator.next();
                 if (e.getEffectSourceProvider() == effectSource) {
                     iterator.remove();
-                    if (effectSet.contains(iEffect))
-                        effectSet.remove(iEffect);
+                    if (effectSet.contains(e))
+                        effectSet.remove(e);
                 }
             }
             if (effect.getEffects().isEmpty()) {
                 consumer.removeEffect(effect);
             }
-
         }
     }
 
