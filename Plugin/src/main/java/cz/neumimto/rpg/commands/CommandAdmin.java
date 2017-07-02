@@ -97,11 +97,11 @@ public class CommandAdmin extends CommandBase {
             return CommandResult.empty();
         }
 
-/*
-        if (player.hasPermission("ntrpg.superadmin")) {
+
+        if (commandSource.hasPermission("ntrpg.superadmin")) {
             return CommandResult.empty();
         }
-*/
+
         if (a[0].equalsIgnoreCase("use")) {
 
             if (a[1].equalsIgnoreCase("skill")) {
