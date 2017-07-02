@@ -19,42 +19,34 @@
 package cz.neumimto.rpg.inventory;
 
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.effects.EffectSourceType;
+import cz.neumimto.rpg.effects.IEffectSource;
+import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.scoreboard.objective.Objective;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by NeumimTo on 31.1.2015.
  */
 public class Weapon extends Charm {
 
-    public static Weapon EmptyHand = new Weapon(null);
+    public static Weapon EmptyHand = new Weapon(ItemStack.empty());
     protected double damage;
     protected boolean current;
-    private Map<IGlobalEffect, Integer> effects = new HashMap<>();
-    private ItemStack itemStack;
+    private ItemType itemType;
     private int level;
-    private Map<ItemRestriction,Object> restrictionSet = new HashMap<>();
+
 
     public Weapon(ItemStack itemStack) {
-        this.itemStack = itemStack;
+        super(itemStack);
+        this.itemType = itemStack.getItem();
         type = HotbarObjectTypes.WEAPON;
     }
 
-    public Map<ItemRestriction,Object> getRestrictions() {
-        return restrictionSet;
-    }
-
     public ItemType getItemType() {
-        return itemStack.getItem();
+        return itemType;
     }
 
     public void setDamage(float f) {
@@ -70,15 +62,7 @@ public class Weapon extends Charm {
     }
 
     public boolean isShield() {
-        return itemStack.getItem() == ItemTypes.SHIELD;
-    }
-
-    public Map<IGlobalEffect, Integer> getEffects() {
-        return effects;
-    }
-
-    public void setEffects(Map<IGlobalEffect, Integer> effects) {
-        this.effects = effects;
+        return getItemType() == ItemTypes.SHIELD;
     }
 
     public void setCurrent(boolean current) {
@@ -103,12 +87,8 @@ public class Weapon extends Charm {
         }
     }
 
-    public ItemStack getItemStack() {
-        return itemStack;
-    }
-
-    public void setItemStack(ItemStack i) {
-        itemStack = i;
+    public void setItemData(CustomItemData i) {
+        customItemData = i;
     }
 
     public int getLevel() {
@@ -117,5 +97,10 @@ public class Weapon extends Charm {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    @Override
+    public IEffectSource getType() {
+        return EffectSourceType.WEAPON;
     }
 }

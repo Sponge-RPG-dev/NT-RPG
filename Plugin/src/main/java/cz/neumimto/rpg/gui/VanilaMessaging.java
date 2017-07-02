@@ -29,12 +29,9 @@ import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.CommandPermissions;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.EffectStatusType;
-import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
-import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.inventory.data.InventoryItemMenuData;
+import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.runewords.RWService;
@@ -47,7 +44,6 @@ import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
-import cz.neumimto.rpg.players.groups.PlayerGroupType;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.SkillData;
@@ -58,7 +54,6 @@ import cz.neumimto.rpg.utils.model.CharacterListModel;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.Cause;
@@ -81,14 +76,11 @@ import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
-import cz.neumimto.rpg.gui.GuiHelper.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static cz.neumimto.rpg.gui.GuiHelper.back;
-import static cz.neumimto.rpg.gui.GuiHelper.createPlayerGroupView;
-import static cz.neumimto.rpg.gui.GuiHelper.getItemLore;
+import static cz.neumimto.rpg.gui.GuiHelper.*;
 
 /**
  * Created by NeumimTo on 6.8.2015.
@@ -159,15 +151,6 @@ public class VanilaMessaging implements IPlayerMessage {
 		//todo
 	}
 
-	@Override
-	public void sendManaStatus(IActiveCharacter character, double currentMana, double maxMana, double reserved) {
-		Text.Builder b = Text.builder("Mana: " + currentMana).color(TextColors.BLUE);
-		if (reserved != 0) {
-			b.append(Text.builder(" / " + (maxMana - reserved)).color(TextColors.DARK_RED).build());
-		}
-		b.append(Text.builder(" | " + maxMana).color(TextColors.GRAY).build());
-		character.getPlayer().sendMessage(b.build());
-	}
 
 	@Override
 	public void sendPlayerInfo(IActiveCharacter character, List<CharacterBase> target) {
@@ -183,8 +166,13 @@ public class VanilaMessaging implements IPlayerMessage {
 			b.append(Text.builder(" [").color(TextColors.DARK_GRAY).build())
 					.append(Text.builder("SELECT").color(TextColors.GREEN).onClick(TextActions.runCommand("/" + "show" + " character " + name)).build())
 					.append(Text.builder("] - ").color(TextColors.DARK_GRAY).build());
-			b.append(Text.of(name)).append(Text.builder(" ").build()).append(Text.of(level));
-			b.append(Text.of(name1));
+			b.append(Text.of(name));
+			if (character.getPrimaryClass() != ExtendedNClass.Default) {
+				b.append(Text.builder(" ").build()).append(Text.of(level));
+			}
+			if (character.getRace() != Race.Default) {
+				b.append(Text.of(name1));
+			}
 			content.add(b.build());
 		}
 		builder.contents(content);
@@ -208,14 +196,13 @@ public class VanilaMessaging implements IPlayerMessage {
 
 	@Override
 	public void showExpChange(IActiveCharacter character, String classname, double expchange) {
-		IEffect effect = character.getEffect(BossBarExpNotifier.name);
+		IEffectContainer<Object, BossBarExpNotifier> barExpNotifier = character.getEffect(BossBarExpNotifier.name);
+		BossBarExpNotifier effect = (BossBarExpNotifier) barExpNotifier;
 		if (effect == null) {
 			effect = new BossBarExpNotifier(character);
-			effectService.addEffect(effect, character);
+			effectService.addEffect(effect, character, InternalEffectSourceProvider.INSTANCE);
 		}
-		BossBarExpNotifier bossbar = (BossBarExpNotifier) effect;
-		bossbar.setLevel(character.getPrimaryClass().getLevel());
-		bossbar.notifyExpChange(classname, expchange);
+		effect.notifyExpChange(classname, expchange);
 	}
 
 	@Override
@@ -256,7 +243,14 @@ public class VanilaMessaging implements IPlayerMessage {
 
 	@Override
 	public void showClassInfo(IActiveCharacter character, ConfigClass cc) {
+		Inventory i = createPlayerGroupView(cc);
 
+		ItemStack of = ItemStack.of(ItemTypes.DIAMOND, 1);
+		of.offer(new InventoryCommandItemMenuData("choose class " + cc.getName()));
+		of.offer(Keys.DISPLAY_NAME, Text.of(Localization.CONFIRM));
+		i.query(new SlotPos(8, 0)).offer(of);
+
+		character.getPlayer().openInventory(i, Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
 	}
 
 	@Override
@@ -265,6 +259,7 @@ public class VanilaMessaging implements IPlayerMessage {
 		PaginationList.Builder builder = paginationService.builder();
 		Sponge.getScheduler().createTaskBuilder().async().execute(() -> {
 			DirectAccessDao build = IoC.get().build(DirectAccessDao.class);
+			//language=HQL
 			String query = "select new cz.neumimto.rpg.utils.model.CharacterListModel(" +
 					"c.name,d.name,d.experiences) " +
 					"from CharacterBase c left join c.characterClasses d " +
@@ -292,16 +287,17 @@ public class VanilaMessaging implements IPlayerMessage {
 							.append(Text.builder("] - ").color(TextColors.DARK_GRAY).build());
 				}
 				b.append(Text.builder(a.getCharacterName()).color(TextColors.GRAY).append(Text.of(" ")).build());
-				b.append(Text.builder(a.getPrimaryClassName()).color(TextColors.AQUA).append(Text.of(" ")).build());
 				ConfigClass cc = s.getNClass(a.getPrimaryClassName());
 				int level = 0;
 				int m = 0;
 				if (cc != ConfigClass.Default) {
+					b.append(Text.builder(a.getPrimaryClassName()).color(TextColors.AQUA).append(Text.of(" ")).build());
 					level = s.getLevel(cc, a.getPrimaryClassExp());
 					m = cc.getMaxLevel();
-				}
+
 				b.append(Text.builder("Level: ").color(TextColors.DARK_GRAY).append(
 						Text.builder(level + "").color(level == m ? TextColors.RED : TextColors.DARK_PURPLE).build()).build());
+				}
 				content.add(b.build());
 			});
 			builder.title(Text.of("Characters", TextColors.WHITE))
@@ -345,7 +341,9 @@ public class VanilaMessaging implements IPlayerMessage {
 	}
 
 	private void displayCommonMenu(IActiveCharacter character, Collection<? extends PlayerGroup> g, PlayerGroup default_) {
-		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
+		Inventory i = Inventory.builder()
+				.of(InventoryArchetypes.DOUBLE_CHEST)
+				.build(plugin);
 		for (PlayerGroup cc : g) {
 			if (cc == default_) {
 				continue;
@@ -361,14 +359,16 @@ public class VanilaMessaging implements IPlayerMessage {
 	private ItemStack createItemRepresentingGroup(PlayerGroup p) {
 		String s1 = infoCommand.getAliases().iterator().next();
 		ItemStack s = ItemStack.of(p.getItemType(), 1);
-		s.offer(NKeys.MENU_INVENTORY, true);
+		s.offer(new MenuInventoryData(true));
 		s.offer(Keys.DISPLAY_NAME, Text.of(p.getName(), TextColors.DARK_PURPLE));
 		s.offer(Keys.ITEM_LORE, getItemLore(p.getDescription()));
+		s.offer(Keys.HIDE_MISCELLANEOUS, true);
+		s.offer(Keys.HIDE_ATTRIBUTES, true);
 		String l = " race ";
-		if (p.getPlayerGroupType() == PlayerGroupType.CLASS) {
+		if (p.getType() == EffectSourceType.CLASS) {
 			l = " class ";
 		}
-		s.offer(new InventoryItemMenuData(s1 + l + p.getName()));
+		s.offer(new InventoryCommandItemMenuData(s1 + l + p.getName()));
 		return s;
 	}
 
@@ -399,7 +399,7 @@ public class VanilaMessaging implements IPlayerMessage {
 		}
 		of.offer(new MenuInventoryData(true));
 		of.offer(Keys.DISPLAY_NAME, Text.of(Localization.BACK, TextColors.WHITE));
-		of.offer(new InventoryItemMenuData("show " + l + " " + g.getName()));
+		of.offer(new InventoryCommandItemMenuData("show " + l + " " + g.getName()));
 		i.query(new SlotPos(0, 0)).offer(of);
 
 		int x = 2;
@@ -407,7 +407,11 @@ public class VanilaMessaging implements IPlayerMessage {
 		for (List<ItemType> row : rows) {
 			y = 0;
 			for (ItemType type : row) {
-				i.query(new SlotPos(x, y)).offer(ItemStack.of(type, 1));
+				ItemStack armor = ItemStack.of(type, 1);
+				armor.offer(Keys.HIDE_ATTRIBUTES, true);
+				armor.offer(Keys.HIDE_MISCELLANEOUS, true);
+				armor.offer(new MenuInventoryData(true));
+				i.query(new SlotPos(x, y)).offer(armor);
 				y++;
 			}
 			x++;
@@ -432,8 +436,12 @@ public class VanilaMessaging implements IPlayerMessage {
 						(e1, e2) -> e1,
 						LinkedHashMap::new)).forEach((type, aDouble) -> {
 			ItemStack q = ItemStack.of(type, 1);
-			q.offer(Keys.ITEM_LORE, Collections.singletonList(Text.of(TextColors.DARK_RED, TextStyles.BOLD, aDouble.toString())));
-			q.offer(NKeys.MENU_INVENTORY, true);
+			Text lore = Text.builder(Localization.ITEM_DAMAGE).color(TextColors.GOLD).style(TextStyles.BOLD)
+					.append(Text.builder(aDouble.toString()).style(TextStyles.BOLD).color(TextColors.DARK_RED).build()).build();
+			q.offer(Keys.ITEM_LORE, Collections.singletonList(lore));
+			q.offer(new MenuInventoryData(true));
+			q.offer(Keys.HIDE_MISCELLANEOUS, true);
+			q.offer(Keys.HIDE_ATTRIBUTES, true);
 			i.offer(q);
 		});
 		target.openInventory(i, Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
@@ -444,7 +452,7 @@ public class VanilaMessaging implements IPlayerMessage {
 		Inventory i = createPlayerGroupView(race);
 		if ((target.getRace() == null || target.getRace() == Race.Default) || PluginConfig.PLAYER_CAN_CHANGE_RACE) {
 			ItemStack of = ItemStack.of(ItemTypes.DIAMOND, 1);
-			of.offer(new InventoryItemMenuData("choose race " + race.getName()));
+			of.offer(new InventoryCommandItemMenuData("choose race " + race.getName()));
 			of.offer(Keys.DISPLAY_NAME, Text.of(Localization.CONFIRM));
 			i.query(new SlotPos(8, 0)).offer(of);
 		}
@@ -499,8 +507,7 @@ public class VanilaMessaging implements IPlayerMessage {
 									.replaceAll("%1", rw.getName()))
 					)
 			);
-			is.offer(NKeys.ANY_STRING, cmd + " runeword " + rw.getName() + " allowed-items");
-			is.offer(new InventoryItemMenuData(cmd + " runeword " + rw.getName() + " blocked-groups"));
+			is.offer(new InventoryCommandItemMenuData(cmd + " runeword " + rw.getName() + " allowed-items"));
 			commands.add(is);
 		}
 
@@ -514,25 +521,11 @@ public class VanilaMessaging implements IPlayerMessage {
 					)
 			);
 			is.offer(Keys.HIDE_ATTRIBUTES, true);
-			is.offer(new InventoryItemMenuData(cmd + " runeword " + rw.getName() + " allowed-groups"));
+			is.offer(new InventoryCommandItemMenuData(cmd + " runeword " + rw.getName() + " allowed-groups"));
 			commands.add(is);
 		}
 
-		if (!rw.getRequiredGroups().isEmpty()) {
-			ItemStack is = ItemStack.of(ItemTypes.IRON_HELMET, 1);
-			is.offer(Keys.DISPLAY_NAME, Text.of(Localization.RUNEWORD_REQUIRED_GROUPS_MENU));
-			is.offer(Keys.ITEM_LORE,
-					Collections.singletonList(
-							ItemStackUtils.stringToItemTooltip(Localization.RUNEWORD_REQUIRED_GROUPS_MENU_TOOLTIP
-									.replaceAll("%1", rw.getName()))
-					)
-			);
-
-			is.offer(new InventoryItemMenuData(cmd + " runeword " + rw.getName() + " required-groups"));
-			commands.add(is);
-		}
-
-		if (!rw.getBlockedGroups().isEmpty()) {
+		if (!rw.getAllowedGroups().isEmpty()) {
 			ItemStack is = ItemStack.of(ItemTypes.REDSTONE, 1);
 			is.offer(Keys.DISPLAY_NAME, Text.of(Localization.RUNEWORD_BLOCKED_GROUPS_MENU));
 			is.offer(Keys.ITEM_LORE,
@@ -541,7 +534,7 @@ public class VanilaMessaging implements IPlayerMessage {
 									.replaceAll("%1", rw.getName()))
 					)
 			);
-			is.offer(new InventoryItemMenuData(cmd + " runeword " + rw.getName() + " blocked-groups"));
+			is.offer(new InventoryCommandItemMenuData(cmd + " runeword " + rw.getName() + " blocked-groups"));
 			commands.add(is);
 		}
 
@@ -577,20 +570,18 @@ public class VanilaMessaging implements IPlayerMessage {
 
 	@Override
 	public void displayRunewordBlockedGroups(IActiveCharacter character, RuneWord rw) {
-		character.getPlayer().openInventory(displayGroupRequirements(character, rw, rw.getBlockedGroups()),
+		character.getPlayer().openInventory(displayGroupRequirements(character, rw, rw.getAllowedGroups()),
 				Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
 	}
 
 	@Override
 	public void displayRunewordRequiredGroups(IActiveCharacter character, RuneWord rw) {
-		character.getPlayer().openInventory(displayGroupRequirements(character, rw, rw.getRequiredGroups()),
-				Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
+
 	}
 
 	@Override
 	public void displayRunewordAllowedGroups(IActiveCharacter character, RuneWord rw) {
-		character.getPlayer().openInventory(displayGroupRequirements(character, rw, rw.getAllowedGroups()),
-				Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
+
 	}
 
 	@Override
@@ -643,10 +634,10 @@ public class VanilaMessaging implements IPlayerMessage {
 	}
 
 	private TextColor hasGroup(IActiveCharacter character, PlayerGroup playerGroup) {
-		if (playerGroup.getPlayerGroupType() == PlayerGroupType.RACE) {
+		if (playerGroup.getType() == EffectSourceType.RACE) {
 			return character.getRace() == playerGroup ? TextColors.GREEN : TextColors.RED;
 		}
-		if (playerGroup.getPlayerGroupType() == PlayerGroupType.CLASS) {
+		if (playerGroup.getType() == EffectSourceType.CLASS) {
 			return character.hasClass(playerGroup) ? TextColors.GREEN : TextColors.RED;
 		}
 		return null;
@@ -656,10 +647,12 @@ public class VanilaMessaging implements IPlayerMessage {
 		ItemStack of = ItemStack.of(key.getItemRepresentation(), 1);
 		of.offer(Keys.DISPLAY_NAME, Text.of(TextColors.DARK_RED, key.getName()));
 		List<Text> lore = new ArrayList<>();
-		of.offer(NKeys.MENU_INVENTORY, true);
+		of.offer(new MenuInventoryData(true));
 		lore.add(Text.of(Localization.INITIAL_VALUE + ": " + value, TextColors.WHITE));
 		lore.addAll(getItemLore(key.getDescription()));
 		of.offer(Keys.ITEM_LORE, lore);
+		of.offer(Keys.HIDE_ATTRIBUTES, true);
+		of.offer(Keys.HIDE_MISCELLANEOUS, true);
 		return of;
 	}
 
@@ -668,13 +661,13 @@ public class VanilaMessaging implements IPlayerMessage {
 	/*	if (event.getTargetInventory().getArchetype() == InventoryArchetypes.CHEST ||
 				event.getTargetInventory().getArchetype() == InventoryArchetypes.DOUBLE_CHEST) {
 		*/
-			//todo inventory.getPlugin
+		//todo inventory.getPlugin
 
 		Iterator<SlotTransaction> iterator = event.getTransactions().iterator();
 
 		while (iterator.hasNext()){
 			SlotTransaction t = iterator.next();
-				Optional<String> s = t.getOriginal().get(NKeys.ANY_STRING);
+				Optional<String> s = t.getOriginal().get(NKeys.COMMAND);
 				if (s.isPresent()) {
 					event.setCancelled(true);
 					event.getTransactions().clear();
@@ -691,5 +684,36 @@ public class VanilaMessaging implements IPlayerMessage {
 			//}
 
 
+	}
+
+	@Override
+	public void displayHealth(IActiveCharacter character) {
+		double value = character.getHealth().getValue();
+		double maxValue = character.getHealth().getMaxValue();
+		//todo implement
+		//double reservedAmount = character.getHealth().getReservedAmount();
+
+		LiteralText a = Text.builder(Localization.HEALTH).color(TextColors.GOLD)
+				.append(Text.builder(value + "").color(TextColors.GREEN).build())
+				.append(Text.builder("/").color(TextColors.WHITE).build())
+		//		.append(Text.builder(String.valueOf(maxValue - reservedAmount)).color(TextColors.RED).build())
+				.append(Text.builder(" (" + maxValue + ") ").color(TextColors.GRAY).build()).build();
+		character.getPlayer().sendMessage(a);
+	}
+
+	@Override
+	public void displayMana(IActiveCharacter character) {
+		double value = character.getMana().getValue();
+		double maxValue = character.getMana().getMaxValue();
+		double reservedAmount = character.getMana().getReservedAmount();
+
+
+
+		LiteralText a = Text.builder(Localization.MANA + " ").color(TextColors.GOLD)
+				.append(Text.builder(value + "").color(TextColors.BLUE).build())
+				.append(Text.builder("/").color(TextColors.WHITE).build())
+				.append(Text.builder(String.valueOf(maxValue - reservedAmount)).color(TextColors.DARK_BLUE).build())
+				.append(Text.builder(" (" + maxValue + ") ").color(TextColors.GRAY).build()).build();
+		character.getPlayer().sendMessage(a);
 	}
 }

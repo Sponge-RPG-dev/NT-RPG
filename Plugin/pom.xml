@@ -14,7 +14,7 @@
 
     <artifactId>NT-RPG</artifactId>
     <groupId>cz.neumimto.rpg</groupId>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
 
     <properties>
         <timestamp>${maven.build.timestamp}</timestamp>
@@ -39,6 +39,14 @@
                     <artifactId>launchwrapper</artifactId>
                     <groupId>net.minecraft</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>org.spongepowered</artifactId>
+                    <groupId>spongeapi</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>terminalconsoleappender</artifactId>
+                    <groupId>net.minecrell</groupId>
+                </exclusion>
             </exclusions>
             <scope>provided</scope>
         </dependency>
@@ -58,7 +66,10 @@
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.spongepowered</groupId>
+            <artifactId>spongeapi</artifactId>
+        </dependency>
 
 
     </dependencies>

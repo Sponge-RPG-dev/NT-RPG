@@ -33,6 +33,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
+import org.spongepowered.api.event.entity.HealEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
 import java.util.Optional;
@@ -61,7 +62,7 @@ public class RpgListener {
             Player player = retardedOptional.get();
             if (!event.getCharacterBases().isEmpty()) {
                 if (PluginConfig.PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR || event.getCharacterBases().size() == 1) {
-                    Sponge.getScheduler().createTaskBuilder().async().execute(()-> {
+                    Sponge.getScheduler().createTaskBuilder().async().execute(() -> {
                         final IActiveCharacter character = characterService.buildActiveCharacterAsynchronously(player, event.getCharacterBases().get(0));
                         Sponge.getScheduler().createTaskBuilder().execute(() -> {
                             characterService.setActiveCharacter(event.getPlayer(), character);
@@ -88,5 +89,10 @@ public class RpgListener {
                 event.setCancelled(true);
             }
         }
+    }
+
+    @Listener
+    public void onHealthRegen(HealEntityEvent event, @First(typeFilter = Player.class) Player player) {
+
     }
 }

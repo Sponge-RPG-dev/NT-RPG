@@ -21,7 +21,7 @@ package cz.neumimto.rpg.effects.common.positive;
 import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.EffectStatusType;
-import cz.neumimto.rpg.effects.common.def.ManaRegeneration;
+import cz.neumimto.rpg.effects.common.mechanics.ManaRegeneration;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.Health;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -37,13 +37,13 @@ public class BloodMagicEffect extends EffectBase {
     private static String apply = "You have gained " + name;
     private static String expire = "You have lost " + name;
     private IActiveCharacter consumer;
-    public BloodMagicEffect(IActiveCharacter consumer) {
+
+    public BloodMagicEffect(IActiveCharacter consumer, long duration, String value) {
         super(name, consumer);
-        setConsumer(consumer);
+        this.consumer = consumer;
+        setDuration(duration);
         setApplyMessage(apply);
         setExpireMessage(expire);
-        setConsumer(consumer);
-        setDuration(-1);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class BloodMagicEffect extends EffectBase {
     public void onApply() {
         Gui.sendEffectStatus(consumer, EffectStatusType.APPLIED, this);
         consumer.removeEffect(ManaRegeneration.name);
-        Health health = consumer.getHealth();
+        Health health = (Health) consumer.getHealth();
         consumer.setMana(health);
     }
 
@@ -64,7 +64,7 @@ public class BloodMagicEffect extends EffectBase {
     public void onRemove() {
         Gui.sendEffectStatus(consumer, EffectStatusType.EXPIRED, this);
         consumer.setMana(new Mana(consumer));
-        consumer.addEffect(new ManaRegeneration(consumer));
+        //todo re-add mana regain event, or set period of mana regen to long.maxval; + listener
     }
 
 }

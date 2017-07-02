@@ -18,8 +18,12 @@
 
 package cz.neumimto.rpg.players;
 
+import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.configuration.PluginConfig;
+import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.inventory.Armor;
 import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.players.groups.ConfigClass;
@@ -28,18 +32,19 @@ import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
-import cz.neumimto.rpg.players.properties.PlayerPropertyService;
+import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectType;
+import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
+import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 
 import java.util.*;
 
@@ -48,7 +53,7 @@ import java.util.*;
  */
 public class PreloadCharacter implements IActiveCharacter {
 
-    static float[] characterProperties = new float[PlayerPropertyService.LAST_ID];
+    static float[] characterProperties = new float[PropertyService.LAST_ID];
     private static HotbarObject[] objects = new HotbarObject[9];
     IReservable mana = new Mana(this);
     UUID uuid;
@@ -118,8 +123,8 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public Map<EquipmentTypeWorn, Weapon> getEquipedArmor() {
-        return Collections.EMPTY_MAP;
+    public Map<EquipmentType, Armor> getEquipedArmor() {
+        return Collections.emptyMap();
     }
 
     @Override
@@ -153,7 +158,7 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public void setCharacterProperties(float[] arr) {
+    public void setProperties(float[] arr) {
 
     }
 
@@ -203,12 +208,12 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public Map<String, IEffect> getEffectMap() {
+    public Map<String, IEffectContainer<Object, IEffect<Object>>> getEffectMap() {
         return Collections.emptyMap();
     }
 
     @Override
-    public float getCharacterProperty(int index) {
+    public float getProperty(int index) {
         if (index == DefaultProperties.walk_speed) { //let player move around even without character
             return 0.2f;
         }
@@ -216,7 +221,7 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public void setCharacterProperty(int index, float value) {
+    public void setProperty(int index, float value) {
 
     }
 
@@ -250,14 +255,15 @@ public class PreloadCharacter implements IActiveCharacter {
 
     }
 
-    @Override
-    public Health getHealth() {
-        return health;
-    }
 
     @Override
     public void setHealth(Health health) {
 
+    }
+
+    @Override
+    public Health getHealth() {
+        return health;
     }
 
     @Override
@@ -320,7 +326,7 @@ public class PreloadCharacter implements IActiveCharacter {
 
     @Override
     public Map<String, Long> getCooldowns() {
-        return Collections.EMPTY_MAP;
+        return Collections.emptyMap();
     }
 
     @Override
@@ -341,12 +347,17 @@ public class PreloadCharacter implements IActiveCharacter {
 
     @Override
     public Map<ItemType, Double> getAllowedWeapons() {
-        return Collections.EMPTY_MAP;
+        return Collections.emptyMap();
+    }
+
+    @Override
+    public Map<EntityType, Double> getProjectileDamages() {
+        return Collections.emptyMap();
     }
 
     @Override
     public Set<ExtendedNClass> getClasses() {
-        return Collections.EMPTY_SET;
+        return Collections.emptySet();
     }
 
     @Override
@@ -390,12 +401,17 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public Collection<IEffect> getEffects() {
-        return Collections.EMPTY_SET;
+    public double getBaseProjectileDamage(EntityType id) {
+        return 0;
     }
 
     @Override
-    public IEffect getEffect(String cl) {
+    public Collection<IEffectContainer<Object, IEffect<Object>>> getEffects() {
+        return Collections.emptySet();
+    }
+
+    @Override
+    public EffectContainer getEffect(String cl) {
         return null;
     }
 
@@ -435,11 +451,6 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public void removeAllTempEffects() {
-
-    }
-
-    @Override
     public void addPotionEffect(PotionEffect e) {
 
     }
@@ -451,7 +462,7 @@ public class PreloadCharacter implements IActiveCharacter {
 
     @Override
     public Map<String, ExtendedSkillInfo> getSkills() {
-        return Collections.EMPTY_MAP;
+        return Collections.emptyMap();
     }
 
     @Override
@@ -593,5 +604,20 @@ public class PreloadCharacter implements IActiveCharacter {
     @Override
     public boolean hasClass(PlayerGroup configClass) {
         return false;
+    }
+
+    @Override
+    public List<Integer> getSlotsToReinitialize() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void setSlotsToReinitialize(List<Integer> slotsToReinitialize) {
+
+    }
+
+    @Override
+    public void updateSelectedHotbarSlot() {
+
     }
 }

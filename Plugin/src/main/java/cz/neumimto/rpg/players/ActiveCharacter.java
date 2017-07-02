@@ -20,6 +20,8 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.inventory.Armor;
 import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
@@ -29,16 +31,18 @@ import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
-import cz.neumimto.rpg.players.properties.PlayerPropertyService;
+import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.StartingPoint;
+import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
+import org.spongepowered.api.item.inventory.entity.Hotbar;
+import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import org.spongepowered.api.service.permission.SubjectData;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Tristate;
@@ -58,11 +62,11 @@ public class ActiveCharacter implements IActiveCharacter {
     private IReservable mana = new Mana(this);
     private Health health = new Health(this);
     private transient Player pl;
-    private transient Map<String, IEffect> effects = new HashMap<>();
+    private transient Map<String, IEffectContainer<Object, IEffect<Object>>> effects = new HashMap<>();
     private transient Click click = new Click();
     private transient Set<ItemType> allowedArmorIds = new HashSet<>();
     private transient Map<ItemType, Double> allowedWeapons = new HashMap<>();
-    private transient Map<EquipmentTypeWorn, Weapon> equipedArmor = new HashMap<>();
+    private transient Map<EntityType, Double> projectileDamage = new HashMap<>();
     private transient Party party;
     private Map<String, ExtendedSkillInfo> skills = new HashMap<>();
     private Race race = Race.Default;
@@ -82,17 +86,21 @@ public class ActiveCharacter implements IActiveCharacter {
     private transient int socketing;
     private transient Map<String, Integer> transientAttributes = new HashMap<>();
     private transient boolean openedinv = false;
-
+    private transient List<Integer> slotsToReinitialize;
+    private transient Map<EquipmentType, Armor> equipedArmor;
+    private transient int selected;
     public ActiveCharacter(Player pl, CharacterBase base) {
         this.pl = pl;
-        characterProperties = new float[PlayerPropertyService.LAST_ID];
-        characterPropertiesLevel = new float[PlayerPropertyService.LAST_ID];
+        characterProperties = new float[PropertyService.LAST_ID];
+        characterPropertiesLevel = new float[PropertyService.LAST_ID];
+        equipedArmor = new HashMap<>();
         ExtendedNClass cl = new ExtendedNClass();
         cl.setPrimary(true);
         cl.setConfigClass(ConfigClass.Default);
         cl.setExperiences(0);
         this.base = base;
         classes.add(cl);
+        slotsToReinitialize = new ArrayList<>();
     }
 
     @Override
@@ -139,17 +147,17 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
-    public void setCharacterProperties(float[] arr) {
+    public void setProperties(float[] arr) {
         characterProperties = arr;
     }
 
     @Override
-    public float getCharacterProperty(int index) {
+    public float getProperty(int index) {
         return characterProperties[index] + characterPropertiesLevel[index] * getPrimaryClass().getLevel();
     }
 
     @Override
-    public void setCharacterProperty(int index, float value) {
+    public void setProperty(int index, float value) {
         characterProperties[index] = value;
     }
 
@@ -194,22 +202,22 @@ public class ActiveCharacter implements IActiveCharacter {
 
     @Override
     public double getMaxMana() {
-        return getCharacterProperty(DefaultProperties.max_mana);
+        return getProperty(DefaultProperties.max_mana);
     }
 
     @Override
     public void setMaxMana(float mana) {
-        setCharacterProperty(DefaultProperties.max_mana, mana);
+        setProperty(DefaultProperties.max_mana, mana);
     }
 
     @Override
     public void setMaxHealth(float maxHealth) {
-        setCharacterProperty(DefaultProperties.max_health, maxHealth);
+        setProperty(DefaultProperties.max_health, maxHealth);
     }
 
     @Override
     public void setHealth(float mana) {
-        setCharacterProperty(DefaultProperties.max_mana, mana);
+        setProperty(DefaultProperties.max_mana, mana);
     }
 
     @Override
@@ -249,13 +257,13 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
-    public Map<EquipmentTypeWorn, Weapon> getEquipedArmor() {
+    public Map<EquipmentType, Armor> getEquipedArmor() {
         return equipedArmor;
     }
 
 
     @Override
-    public Map<String, IEffect> getEffectMap() {
+    public Map<String, IEffectContainer<Object, IEffect<Object>>> getEffectMap() {
         return effects;
     }
 
@@ -354,7 +362,7 @@ public class ActiveCharacter implements IActiveCharacter {
             cc.setExperiences(0D);
             getCharacterBase().getCharacterClasses().add(cc);
         } else {
-            //  primary.setLevel(getCharacterBase().getLevel());
+            //  primary.setStacks(getCharacterBase().getStacks());
             primary.setExperiences(aDouble);
         }
         base.setPrimaryClass(nclass.getName());
@@ -380,10 +388,16 @@ public class ActiveCharacter implements IActiveCharacter {
         return getCharacterBase().getCharacterCooldowns().containsKey(thing);
     }
 
+    //todo global config option to set stacking strategies. Take higher value/sum values
     private void mergeWeapons(PlayerGroup g) {
         for (Map.Entry<ItemType, Double> entries : g.getWeapons().entrySet()) {
             if (getBaseWeaponDamage(entries.getKey()) < entries.getValue()) {
                 allowedWeapons.put(entries.getKey(), entries.getValue());
+            }
+        }
+        for (Map.Entry<EntityType, Double> e : g.getProjectileDamage().entrySet()) {
+            if (getBaseProjectileDamage(e.getKey()) < e.getValue()) {
+                projectileDamage.put(e.getKey(), e.getValue());
             }
         }
     }
@@ -391,6 +405,14 @@ public class ActiveCharacter implements IActiveCharacter {
     @Override
     public double getBaseWeaponDamage(ItemType id) {
         Double d = getAllowedWeapons().get(id);
+        if (d == null)
+            return 0;
+        return d;
+    }
+
+    @Override
+    public double getBaseProjectileDamage(EntityType id) {
+        Double d = getProjectileDamages().get(id);
         if (d == null)
             return 0;
         return d;
@@ -428,6 +450,11 @@ public class ActiveCharacter implements IActiveCharacter {
     @Override
     public Map<ItemType, Double> getAllowedWeapons() {
         return allowedWeapons;
+    }
+
+    @Override
+    public Map<EntityType, Double> getProjectileDamages() {
+        return projectileDamage;
     }
 
     @Override
@@ -559,7 +586,6 @@ public class ActiveCharacter implements IActiveCharacter {
         return (character.hasParty() && hasParty() && character.getParty() == character.getParty());
     }
 
-    //TODO cache weapon damage on entityeuqipmentevent once its implemented
     @Override
     public double getWeaponDamage() {
         return weaponDamage;
@@ -671,6 +697,27 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
+    public List<Integer> getSlotsToReinitialize() {
+        return slotsToReinitialize;
+    }
+
+    @Override
+    public void setSlotsToReinitialize(List<Integer> slotsToReinitialize) {
+        this.slotsToReinitialize = slotsToReinitialize;
+    }
+
+    @Override
+    public int getSelectedHotbarSlot() {
+        return selected;
+    }
+
+    @Override
+    public void updateSelectedHotbarSlot() {
+        Hotbar hotbar = getPlayer().getInventory().query(Hotbar.class);
+        selected = hotbar.getSelectedSlotIndex();
+    }
+
+    @Override
     public int hashCode() {
         return getPlayer().getUniqueId().hashCode() * 37;
     }
@@ -680,8 +727,6 @@ public class ActiveCharacter implements IActiveCharacter {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ActiveCharacter that = (ActiveCharacter) o;
-        if (that.getCharacterBase().getId() == this.getCharacterBase().getId())
-            return true;
-        return false;
+        return that.getCharacterBase().getId().equals(this.getCharacterBase().getId());
     }
 }

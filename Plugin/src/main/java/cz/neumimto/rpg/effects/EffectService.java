@@ -23,14 +23,11 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.world.World;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -39,12 +36,17 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class EffectService {
 
+
     public static final long TICK_PERIOD = 250L;
+
     private static final long unlimited_duration = -1;
+
     @Inject
     private Game game;
+
     @Inject
     private NtRpgPlugin plugin;
+
     private Set<IEffect> effectSet = new HashSet<>();
     private Set<IEffect> pendingAdditions = new HashSet<>();
     private Set<IEffect> pendingRemovals = new HashSet<>();
@@ -65,7 +67,6 @@ public class EffectService {
      * @param effect
      */
     public void stopEffect(IEffect effect) {
-        effect.onRemove();
         if (effect.requiresRegister()) {
             pendingRemovals.add(effect);
         }
@@ -100,12 +101,9 @@ public class EffectService {
                 .delay(10L, TimeUnit.MILLISECONDS).interval(TICK_PERIOD, TimeUnit.MILLISECONDS)
                 .execute(() -> {
                     for (IEffect pendingRemoval : pendingRemovals) {
+                        removeEffect(pendingRemoval.getEffectContainer(),pendingRemoval, pendingRemoval.getConsumer());
                         if (effectSet.contains(pendingRemoval)) {
                             effectSet.remove(pendingRemoval);
-                            IEffectConsumer consumer = pendingRemoval.getConsumer();
-                            if (consumer != null) {
-                                consumer.removeEffect(pendingRemoval);
-                            }
                         }
                     }
                     pendingRemovals.clear();
@@ -121,7 +119,7 @@ public class EffectService {
                         }
 
                         if (e.getExpireTime() <= l) {
-                            stopEffect(e);
+	                        removeEffect(e, e.getConsumer());
                         }
                     }
 
@@ -144,64 +142,82 @@ public class EffectService {
     }
 
     /**
-     * Stacks effect and inceremnt effect level by 1
-     *
-     * @param effect
-     */
-    public void stackEffect(IEffect effect) {
-        effect.setLevel(effect.getLevel() + 1);
-        effect.onStack(effect.getLevel());
-    }
-
-    /**
      * Adds effect to the consumer,
      * Effects requiring register are registered into the scheduler
-     * If the consumer already has same effect the effect is stacked
-     * If the effect is not stackable and level of new effect is greater than level of old effect, the old effect is replaced by new one, but wont call onApply
      *
      * @param iEffect
      * @param consumer
      */
-    public void addEffect(IEffect iEffect, IEffectConsumer consumer) {
-        IEffect eff = consumer.getEffect(iEffect.getClass().getName());
+    @SuppressWarnings("unchecked")
+    public void addEffect(IEffect iEffect, IEffectConsumer consumer, IEffectSourceProvider effectSourceProvider) {
+        IEffectContainer eff = consumer.getEffect(iEffect.getName());
         if (eff == null) {
-            consumer.addEffect(iEffect);
-            iEffect.onApply();
-            if (iEffect.requiresRegister())
-                runEffect(iEffect);
+            IEffectContainer iEffectContainer = iEffect.constructEffectContainer();
+            iEffect.setEffectContainer(iEffectContainer);
+            consumer.addEffect(iEffectContainer);
+            iEffect.setEffectSourceProvider(effectSourceProvider);
+	        iEffect.onApply();
         } else if (eff.isStackable()) {
-            stackEffect(iEffect);
-        } else {
-            if (eff.getLevel() >= iEffect.getLevel()) {
-                if (iEffect.requiresRegister()) {
-                    consumer.removeEffect(eff.getClass().getName());
-                }
-                consumer.addEffect(iEffect);
-            }
+            iEffect.setEffectContainer(eff);
+            iEffect.setEffectSourceProvider(effectSourceProvider);
+            eff.stackEffect(iEffect, effectSourceProvider);
         }
+	    if (iEffect.requiresRegister())
+		    runEffect(iEffect);
     }
 
     /**
-     * Removes and stops the effect
+     * Removes effect from IEffectConsumer, and stops it. The effect will be removed from the scheduler next tick
      *
      * @param iEffect
      * @param consumer
      */
     public void removeEffect(IEffect iEffect, IEffectConsumer consumer) {
-        removeEffect(iEffect, consumer);
+        IEffectContainer effect = consumer.getEffect(iEffect.getName());
+        if (effect != null) {
+            removeEffect(effect, iEffect, consumer);
+            stopEffect(iEffect);
+        }
+    }
+
+
+    protected void removeEffect(IEffectContainer container, IEffect iEffect, IEffectConsumer consumer) {
+        if (iEffect == container) {
+            iEffect.onRemove();
+            consumer.removeEffect(iEffect);
+        } else if (container.getEffects().contains(iEffect)){
+            container.removeStack(iEffect);
+            if (container.getEffects().isEmpty()) {
+                iEffect.onRemove();
+                consumer.removeEffect(container);
+            }
+        }
+        iEffect.setConsumer(null);
     }
 
     /**
-     * Removes and stops the effect
+     * Removes and stops the effect previously applied as item enchantement
      *
      * @param iEffect
      * @param consumer
      */
-    public void removeEffect(String iEffect, IEffectConsumer consumer) {
-        IEffect effect = consumer.getEffect(iEffect);
+    @SuppressWarnings("unchecked")
+    public void removeEffect(String iEffect, IEffectConsumer consumer, IEffectSourceProvider effectSource) {
+        IEffectContainer effect = consumer.getEffect(iEffect);
         if (effect != null) {
-            consumer.removeEffect(iEffect);
-            stopEffect(effect);
+            Iterator<IEffect> iterator = effect.getEffects().iterator();
+            IEffect e;
+            while (iterator.hasNext()) {
+                e = iterator.next();
+                if (e.getEffectSourceProvider() == effectSource) {
+                    iterator.remove();
+                    if (effectSet.contains(e))
+                        effectSet.remove(e);
+                }
+            }
+            if (effect.getEffects().isEmpty()) {
+                consumer.removeEffect(effect);
+            }
         }
     }
 
@@ -240,11 +256,11 @@ public class EffectService {
      *
      * @param effect
      * @param consumer
-     * @param level
+     * @param value
      */
-    public void applyGlobalEffectAsEnchantment(IGlobalEffect effect, IEffectConsumer consumer, int level) {
-        IEffect construct = effect.construct(consumer, unlimited_duration, level);
-        addEffect(construct, consumer);
+    public void applyGlobalEffectAsEnchantment(IGlobalEffect effect, IEffectConsumer consumer, String value, IEffectSourceProvider effectSourceType) {
+        IEffect construct = effect.construct(consumer, unlimited_duration, value);
+        addEffect(construct, consumer, effectSourceType);
     }
 
     /**
@@ -253,22 +269,19 @@ public class EffectService {
      * @param map
      * @param consumer
      */
-    public void applyGlobalEffectsAsEnchantments(Map<IGlobalEffect, Integer> map, IEffectConsumer consumer) {
-        map.forEach((e, l) -> {
-            applyGlobalEffectAsEnchantment(e, consumer, l);
-        });
+    public void applyGlobalEffectsAsEnchantments(Map<IGlobalEffect, String> map, IEffectConsumer consumer, IEffectSourceProvider effectSourceType) {
+        map.forEach((e, l) ->
+            applyGlobalEffectAsEnchantment(e, consumer, l, effectSourceType)
+        );
     }
 
 
-    public void removeGlobalEffectsAsEnchantments(Map<IGlobalEffect, Integer> itemEffects, IActiveCharacter character) {
+    public void removeGlobalEffectsAsEnchantments(Map<IGlobalEffect, String> itemEffects, IActiveCharacter character, IEffectSourceProvider effectSourceProvider) {
+        if (PluginConfig.DEBUG) {
+            character.sendMessage(itemEffects.size() + " added echn. effects to remove queue.");
+        }
         itemEffects.forEach((e, l) -> {
-            IEffect effect = character.getEffect(e.getName());
-            if (effect.getLevel() - l <= 0) {
-                character.removeEffect(e.getName());
-            } else {
-                effect.setLevel(effect.getLevel() - l);
-                effect.onStack(effect.getLevel());
-            }
+	        removeEffect(e.getName(), character,effectSourceProvider);
         });
     }
 
@@ -276,8 +289,13 @@ public class EffectService {
         return globalEffects.containsKey(s.toLowerCase());
     }
 
-    public void removeAllEffects(IActiveCharacter character) {
-        pendingRemovals.addAll(character.getEffects());
+	@SuppressWarnings("unchecked")
+    public void removeAllEffects(IEffectConsumer<?> character) {
+	    for (final IEffectContainer<Object, IEffect<Object>> IEffectContainer : character.getEffects()) {
+		    for (IEffect effect : IEffectContainer.getEffects()) {
+			    pendingRemovals.add(effect);
+		    }
+	    }
     }
 }
 

@@ -27,6 +27,7 @@ import cz.neumimto.configuration.ConfigurationContainer;
 @ConfigurationContainer(path = "{WorkingDir}", filename = "CommandLocalization.conf")
 public class CommandLocalization {
 
+
     @ConfigValue
     public static String PLAYERINFO_HELP = "Shows info about player";
 
@@ -55,11 +56,17 @@ public class CommandLocalization {
     public static String COMMAND_SKILL_DESC = "Executes a skill";
 
     @ConfigValue
-    public static String COMMAND_PARTY_USAGE = "/nparty {leave|leader|kick|invite} [name]";
+    public static String COMMAND_PARTY_USAGE = "/party {leave|leader|kick|invite} [name]";
 
     @ConfigValue
     public static String COMMAND_PARTY_DESCRIPTION = "manages party";
 
     @ConfigValue
     public static String COMMAND_CHOOSE_USAGE = "/choose {class [name]|race [name]|skill [upgrade|learn|refund]|character [name]}";
+
+    @ConfigValue
+    public static String COMMAND_SET_HEALTHSCALE_USAGE = "/healthscale [integer]";
+
+    @ConfigValue
+    public static String COMMAND_SET_HEALTHSCALE_DESCRIPTION = "Sets healthscale for currently choosen character, persistant between restarts";
 }

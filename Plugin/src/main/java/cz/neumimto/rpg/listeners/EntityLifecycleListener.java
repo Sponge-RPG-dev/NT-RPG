@@ -8,6 +8,7 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.IMob;
 import cz.neumimto.rpg.inventory.InventoryService;
@@ -22,10 +23,8 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
-import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.user.BanUserEvent;
-import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -96,8 +95,8 @@ public class EntityLifecycleListener {
             IActiveCharacter character = characterService.getCharacter(targetEntity.getUniqueId());
             if (character.isStub())
                 return;
-            for (IEffect effect : character.getEffects()) {
-                effectService.stopEffect(effect);
+            for (IEffectContainer<Object, IEffect<Object>> iEffectIEffectContainer : character.getEffects()) {
+                iEffectIEffectContainer.forEach(a -> effectService.stopEffect(a));
             }
         } else {
             if (!event.getTargetEntity().get(Keys.HEALTH).isPresent()) {
@@ -140,9 +139,11 @@ public class EntityLifecycleListener {
             if (sds.isPresent()) {
 
                 SkillDamageSource source = sds.get();
-                IActiveCharacter caster = source.getCaster();
-                double exp = entityService.getExperiences(event.getTargetEntity().getType());
-                characterService.addExperiences(caster, exp, ExperienceSource.PVE);
+                IEntity caster = source.getCaster();
+                if (caster.getType() == IEntityType.CHARACTER) {
+                    double exp = entityService.getExperiences(event.getTargetEntity().getType());
+                    characterService.addExperiences((IActiveCharacter) caster, exp, ExperienceSource.PVE);
+                }
             }
             IMob mob = (IMob) entityService.get(event.getTargetEntity());
             Collection<IEffect> values = mob.getEffectMap().values();

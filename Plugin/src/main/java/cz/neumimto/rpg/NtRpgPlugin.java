@@ -24,17 +24,21 @@ import cz.neumimto.core.FindPersistenceContextEvent;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.configuration.Settings;
-import cz.neumimto.rpg.inventory.data.InventoryItemMenuData;
+import cz.neumimto.rpg.inventory.data.CustomItemData;
+import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
+import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.listeners.DebugListener;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.utils.FileUtils;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
+import org.spongepowered.api.data.DataRegistration;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GamePostInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
@@ -54,51 +58,76 @@ import java.util.Optional;
 /**
  * Created by NeumimTo on 29.4.2015.
  */
-@Plugin(id = "nt-rpg", version = "1.0.5", name = "NT-Rpg", dependencies = {
-        @Dependency(id = "MinecraftGuiServer", optional = true),
+@Plugin(id = "nt-rpg", version = "1.0.6", name = "NT-Rpg", dependencies = {
         @Dependency(id = "nt-core", version = "1.7",optional = false)
 })
 public class NtRpgPlugin {
-    public static String workingDir;
-    public static File pluginjar;
-    public static GlobalScope GlobalScope;
-    public static final String namedCause = "ntrpg";
-    @Inject
-    @ConfigDir(sharedRoot = false)
-    private Path config;
+	public static String workingDir;
+	public static File pluginjar;
+	public static GlobalScope GlobalScope;
+	public static final String namedCause = "ntrpg";
+
+	@Inject
+	@ConfigDir(sharedRoot = false)
+	private Path config;
 
 
-    @Inject
-    public Logger logger;
+	@Inject
+	public Logger logger;
 
 
-    @Listener
-    public void preinit(GamePreInitializationEvent e) {
-        Sponge.getDataManager().register(InventoryItemMenuData.class,
-                InventoryItemMenuData.Immutable.class,
-                new InventoryItemMenuData.Builder());
-    }
+	@Listener
+	public void preinit(GamePreInitializationEvent e) {
 
-    @Listener
-    public void registerEntities(FindPersistenceContextEvent event) {
-        event.getClasses().add(CharacterBase.class);
-        event.getClasses().add(BaseCharacterAttribute.class);
-        event.getClasses().add(CharacterSkill.class);
-        event.getClasses().add(CharacterClass.class);
-    }
+		DataRegistration.<InventoryCommandItemMenuData, InventoryCommandItemMenuData.Immutable>builder()
+				.dataClass(InventoryCommandItemMenuData.class)
+				.immutableClass(InventoryCommandItemMenuData.Immutable.class)
+				.builder(new InventoryCommandItemMenuData.Builder())
+				.manipulatorId("ntrpg-custominventory")
+				.dataName("CustomInventory")
+				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
 
-    @Listener
-    public void onPluginLoad(GamePostInitializationEvent event) {
-        long start = System.nanoTime();
-        IoC ioc = IoC.get();
-        Game game = Sponge.getGame();
-        Optional<PluginContainer> gui = game.getPluginManager().getPlugin("MinecraftGUIServer");
-        if (gui.isPresent()) {
-            //ioc.registerInterfaceImplementation(MinecraftGuiService.class, game.getServiceManager().provide(MinecraftGuiService.class).get());
-        } else {
-            Settings.ENABLED_GUI = false;
-        }
-        ioc.registerDependency(this);
+		DataRegistration.<MenuInventoryData, MenuInventoryData.Immutable>builder()
+				.dataClass(MenuInventoryData.class)
+				.immutableClass(MenuInventoryData.Immutable.class)
+				.builder(new MenuInventoryData.Builder())
+				.manipulatorId("ntrpg-menuinventory")
+				.dataName("MenuItem")
+				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
+
+
+		DataRegistration.<CustomItemData, CustomItemData.Immutable>builder()
+				.dataClass(CustomItemData.class)
+				.immutableClass(CustomItemData.Immutable.class)
+				.builder(new CustomItemData.Builder())
+				.manipulatorId("ntrpg-customitemdata")
+				.dataName("CustomItemData")
+				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
+
+	}
+
+	@Listener
+	public void registerEntities(FindPersistenceContextEvent event) {
+		event.getClasses().add(CharacterBase.class);
+		event.getClasses().add(BaseCharacterAttribute.class);
+		event.getClasses().add(CharacterSkill.class);
+		event.getClasses().add(CharacterClass.class);
+
+	}
+
+	@Listener
+	public void onPluginLoad(GamePostInitializationEvent event) {
+		long start = System.nanoTime();
+		IoC ioc = IoC.get();
+		ioc.registerInterfaceImplementation(Logger.class, logger);
+		Game game = Sponge.getGame();
+		Optional<PluginContainer> gui = game.getPluginManager().getPlugin("MinecraftGUIServer");
+		if (gui.isPresent()) {
+			//ioc.registerInterfaceImplementation(MinecraftGuiService.class, game.getServiceManager().provide(MinecraftGuiService.class).get());
+		} else {
+			Settings.ENABLED_GUI = false;
+		}
+		ioc.registerDependency(this);
 
         try {
             workingDir = config.toString();
@@ -124,6 +153,7 @@ public class NtRpgPlugin {
         if (PluginConfig.DEBUG) {
             Sponge.getEventManager().registerListeners(this, ioc.build(DebugListener.class));
         }
+        IoC.get().build(PropertyService.class).loadMaximalServerPropertyValues();
         double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
         logger.info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
     }

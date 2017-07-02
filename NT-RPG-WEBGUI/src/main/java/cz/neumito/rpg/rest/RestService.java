@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
@@ -33,7 +32,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-import static spark.Spark.staticFileLocation;
 
 @Singleton
 public class RestService {
@@ -233,7 +231,7 @@ public class RestService {
             CountDownLatch l = new CountDownLatch(1);
             ConfigClass configClass = groupService.getNClass(params);
             if (configClass == null) {
-                //// TODO:
+                //TODO
             } else {
                 response.body(toJson(configClass.getSkillTree()));
             }

@@ -13,7 +13,7 @@ public class EffectTest extends EffectBase {
     public static String name = "testeffect";
     public long l;
 
-    public EffectTest(IEffectConsumer c, long duration, float level) {
+    public EffectTest(IEffectConsumer c, long duration, String level) {
 
     }
 

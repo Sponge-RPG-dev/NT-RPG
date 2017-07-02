@@ -82,10 +82,6 @@ public class Gui {
         getMessageTypeOf(player).invokeCharacterMenu(player, characterBases);
     }
 
-    public static void sendManaStatus(IActiveCharacter character, double currentMana, double maxMana, double reserved) {
-        getMessageTypeOf(character).sendManaStatus(character, currentMana, maxMana, reserved);
-    }
-
     public static void sendPlayerInfo(IActiveCharacter character, List<CharacterBase> target) {
         getMessageTypeOf(character).sendPlayerInfo(character, target);
     }
@@ -119,7 +115,7 @@ public class Gui {
     }
 
     public static void sendListOfCharacters(IActiveCharacter player, CharacterBase currentlyCreated) {
-        getMessageTypeOf(player).sendListOfCharacters(player,currentlyCreated);
+        getMessageTypeOf(player).sendListOfCharacters(player, currentlyCreated);
     }
 
     public static void showClassInfo(IActiveCharacter character, ConfigClass cc) {
@@ -168,5 +164,13 @@ public class Gui {
 
     public static void displayRunewordAllowedItems(IActiveCharacter character, RuneWord rw) {
         getMessageTypeOf(character).displayRunewordAllowedItems(character, rw);
+    }
+
+    public static void displayHealth(IActiveCharacter character) {
+        getMessageTypeOf(character).displayHealth(character);
+    }
+
+    public static void displayMana(IActiveCharacter character) {
+        getMessageTypeOf(character).displayMana(character);
     }
 }

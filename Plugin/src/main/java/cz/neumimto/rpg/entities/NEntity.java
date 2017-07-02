@@ -1,6 +1,10 @@
 package cz.neumimto.rpg.entities;
 
-import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.rpg.GlobalScope;
+import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.players.properties.PropertyService;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.Creature;
 import org.spongepowered.api.entity.living.Living;
@@ -16,14 +20,15 @@ public class NEntity implements IMob {
 
     private double experiences;
     private WeakReference<Living> entity;
-    private Map<String, IEffect> effectSet = new HashMap<>();
+    private Map<String, IEffectContainer> effectSet = new HashMap<>();
+    private Map<Integer, Float> properties = new HashMap<>();
+    private EntityHealth entityHealth;
 
     protected NEntity(Creature l) {
         attach(l);
     }
 
-    protected NEntity() {
-
+    NEntity() {
     }
 
     @Override
@@ -48,19 +53,22 @@ public class NEntity implements IMob {
     }
 
     @Override
+    public EntityHealth getHealth() {
+        return entityHealth;
+    }
+
+    @Override
     public void attach(Living creature) {
-        this.entity = new WeakReference(creature);
+        this.entity = new WeakReference<>(creature);
+        this.entityHealth = new EntityHealth(this);
     }
 
     @Override
     public void detach() {
+        entityHealth = null;
         this.entity = null;
     }
 
-    @Override
-    public boolean isDetached() {
-        return entity != null;
-    }
 
     @Override
     public Living getEntity() {
@@ -68,7 +76,7 @@ public class NEntity implements IMob {
     }
 
     @Override
-    public Map<String, IEffect> getEffectMap() {
+    public Map<String, IEffectContainer> getEffectMap() {
         return effectSet;
     }
 
@@ -76,4 +84,18 @@ public class NEntity implements IMob {
     public void sendMessage(String message) {
 
     }
+
+    @Override
+    public float getProperty(int propertyName) {
+        if (properties.containsKey(propertyName)) {
+            return properties.get(propertyName);
+        }
+        return NtRpgPlugin.GlobalScope.propertyService.getDefault(propertyName);
+    }
+
+    @Override
+    public void setProperty(int propertyName, float value) {
+        properties.put(propertyName, value);
+    }
+
 }

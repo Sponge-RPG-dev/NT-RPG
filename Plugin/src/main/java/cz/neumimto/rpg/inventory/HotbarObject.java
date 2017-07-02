@@ -1,27 +1,30 @@
 package cz.neumimto.rpg.inventory;
 
 import cz.neumimto.rpg.configuration.PluginConfig;
+import cz.neumimto.rpg.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.item.inventory.ItemStack;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by NeumimTo on 31.12.2015.
  */
-public abstract class HotbarObject extends CustomItem {
+public abstract class HotbarObject extends CustomItem implements IEffectSourceProvider {
 
     public static HotbarObject EMPTYHAND_OR_CONSUMABLE = null;
     protected IHotbarObjectType type;
-    private int slot;
 
-    public int getSlot() {
-        return slot;
+
+    public HotbarObject(ItemStack itemStack) {
+        super(itemStack);
     }
 
-    public void setSlot(int slot) {
-        this.slot = slot;
-    }
 
-    public IHotbarObjectType getType() {
+    public IHotbarObjectType getHotbarObjectType() {
         return type;
     }
 
@@ -29,15 +32,17 @@ public abstract class HotbarObject extends CustomItem {
 
     public abstract void onLeftClick(IActiveCharacter character);
 
-    public void onEquip(ItemStack is, IActiveCharacter character) {
+    public void onEquip(IActiveCharacter character) {
         if (PluginConfig.DEBUG) {
-            character.sendMessage("Equiped slot " + slot);
+            character.sendMessage("Equiped slot " + getSlot());
         }
     }
 
     public void onUnEquip(IActiveCharacter character) {
         if (PluginConfig.DEBUG) {
-            character.sendMessage("Unequiped slot " + slot);
+            character.sendMessage("Unequiped slot " + getSlot());
         }
     }
+
+
 }

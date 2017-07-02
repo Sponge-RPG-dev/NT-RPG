@@ -30,8 +30,9 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IGlobalEffect;
-import cz.neumimto.rpg.players.properties.PlayerPropertyService;
 import cz.neumimto.rpg.players.properties.PropertyContainer;
+import cz.neumimto.rpg.players.properties.PropertyService;
+import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import javassist.CannotCompileException;
@@ -57,14 +58,10 @@ public class ResourceLoader {
 
     private final static String INNERCLASS_SEPARATOR = "$";
 
-    ;
     //TODO use nio instead of io
     public static File classDir, raceDir, guildsDir, addonDir, skilltreeDir;
 
-    ;
     private static IoC ioc;
-
-    ;
 
     static {
         classDir = new File(NtRpgPlugin.workingDir + File.separator + "classes");
@@ -87,7 +84,7 @@ public class ResourceLoader {
     @Inject
     private EffectService effectService;
     @Inject
-    private PlayerPropertyService playerPropertyService;
+    private PropertyService propertyService;
     @Inject
     private Logger logger;
     @Inject
@@ -207,13 +204,16 @@ public class ResourceLoader {
         if (clazz.isAnnotationPresent(PropertyContainer.class)) {
             if (PluginConfig.DEBUG)
                 logger.info("Found Property container class" + clazz.getName());
-            playerPropertyService.process(clazz);
+            propertyService.process(clazz);
+        }
+        if (clazz.isAnnotationPresent(Attribute.class)) {
+            propertyService.registerAttribute((ICharacterAttribute) clazz.newInstance());
         }
         //Effects
         if (IEffect.class.isAssignableFrom(clazz)) {
             ClassGenerator.Generate a = clazz.getAnnotation(ClassGenerator.Generate.class);
             if (a != null) {
-                Class<? extends IEffect> c = (Class<? extends IEffect>) clazz;
+                Class c = (Class<? extends IEffect>) clazz;
                 IGlobalEffect iGlobalEffect = classGenerator.generateGlobalEffect(c);
                 if (iGlobalEffect == null) {
                     return;
@@ -230,17 +230,19 @@ public class ResourceLoader {
     }
 
     @Retention(RetentionPolicy.RUNTIME)
-    public static @interface ListenerClass {
+    public @interface ListenerClass {
     }
 
 
     @Retention(RetentionPolicy.RUNTIME)
-    public static @interface Skill {
+    public @interface Skill {
     }
 
     @Retention(RetentionPolicy.RUNTIME)
-    public static @interface Command {
+    public @interface Command {
     }
 
-
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface Attribute {
+    }
 }

@@ -18,7 +18,11 @@
 
 package cz.neumimto.rpg.players.groups;
 
+import cz.neumimto.rpg.effects.IEffectSource;
+import cz.neumimto.rpg.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
+import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 
@@ -27,7 +31,7 @@ import java.util.*;
 /**
  * Created by NeumimTo on 27.12.2014.
  */
-public class PlayerGroup {
+public class PlayerGroup implements IEffectSourceProvider {
     private final String name;
     private String chatPrefix, chatSufix;
     private Map<Integer, Float> propBonus = new HashMap<>();
@@ -41,7 +45,11 @@ public class PlayerGroup {
     private ItemType itemType;
     private String description;
     private Map<ICharacterAttribute, Integer> startingAttributes = new HashMap<>();
-    protected PlayerGroupType playerGroupType;
+    private Map<IGlobalEffect, String> effects = new HashMap<>();
+
+    protected cz.neumimto.rpg.effects.IEffectSource playerGroupType;
+    private Map<EntityType, Double> projectileDamage = new HashMap<>();
+
     public PlayerGroup(String name) {
         this.name = name;
         if (name.toLowerCase().equalsIgnoreCase("none")) {
@@ -145,7 +153,19 @@ public class PlayerGroup {
         return canCraft;
     }
 
-    public PlayerGroupType getPlayerGroupType() {
+    public IEffectSource getType() {
         return playerGroupType;
+    }
+
+    public Map<IGlobalEffect, String> getEffects() {
+        return effects;
+    }
+
+    public void setEffects(Map<IGlobalEffect, String> effects) {
+        this.effects = effects;
+    }
+
+    public Map<EntityType, Double> getProjectileDamage() {
+        return projectileDamage;
     }
 }

@@ -12,7 +12,7 @@ import java.util.Map;
 public abstract class CharacterAttribute implements ICharacterAttribute {
 
     private String name;
-
+    private String id;
     private Map<Integer, Float> affectedProperties = new HashMap<>();
     private String desc;
     private ItemType item = ItemTypes.STONE;
@@ -61,5 +61,15 @@ public abstract class CharacterAttribute implements ICharacterAttribute {
     @Override
     public void setMaxValue(int value) {
         this.maxval = value;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
     }
 }

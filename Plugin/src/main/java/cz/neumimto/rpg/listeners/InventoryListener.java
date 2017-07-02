@@ -26,40 +26,24 @@ import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.Utils;
-import org.hibernate.annotations.Filter;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
+import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.action.InteractEvent;
-import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.entity.spawn.EntitySpawnCause;
-import org.spongepowered.api.event.entity.ChangeEntityEquipmentEvent;
-import org.spongepowered.api.event.filter.Getter;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.type.Exclude;
-import org.spongepowered.api.event.filter.type.Include;
-import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
-import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
-import org.spongepowered.api.event.item.inventory.DropItemEvent;
-import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
+import org.spongepowered.api.event.item.inventory.*;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
-import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.common.item.inventory.adapter.impl.slots.SlotAdapter;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
 
 
 /**
@@ -86,7 +70,8 @@ public class InventoryListener {
         if (player.get(Keys.GAME_MODE).get() == GameModes.CREATIVE)
             return;
         inventoryService.initializeHotbar(character);
-
+        inventoryService.initializeArmor(character);
+        damageService.recalculateCharacterWeaponDamage(character);
     }
 
     /* Tempoar */
@@ -115,7 +100,7 @@ public class InventoryListener {
         if (character.isStub()) {
             return;
         }
-        if (player.get(Keys.GAME_MODE).get() == GameModes.CREATIVE)
+        if (player.get(Keys.GAME_MODE).get() != GameModes.SURVIVAL)
             return;
 
         for (SlotTransaction slotTransaction : event.getTransactions()) {
@@ -124,8 +109,8 @@ public class InventoryListener {
             if (Utils.isHotbar(index)) {
                 ItemStack a = slotTransaction.getFinal().createStack();
                 if (!inventoryService.canUse(a, character)) {
-                    event.setCancelled(true);
-                    return;
+                   event.setCancelled(true);
+                   return;
                 } else {
                     inventoryService.initializeHotbar(character, index, a);
                 }
@@ -140,8 +125,6 @@ public class InventoryListener {
         if (entity.getType() != EntityTypes.PLAYER)
             return;
         IActiveCharacter character = characterService.getCharacter(entity.getUniqueId());
-        if (character.getPlayer().get(Keys.GAME_MODE).get() == GameModes.CREATIVE)
-            return;
         if (character.isStub())
             return;
         if (character.hasOpenInventory()) {
@@ -154,7 +137,20 @@ public class InventoryListener {
             return;
         }
         hotbarObject.onUnEquip(character);
+        character.setHotbarSlot(hotbar.getSelectedSlotIndex(), HotbarObject.EMPTYHAND_OR_CONSUMABLE);
         inventoryService.initializeHotbar(character, hotbar.getSelectedSlotIndex());
     }
 
+    //@Listener
+    public void onItemMove(ClickInventoryEvent event, @First(typeFilter = Player.class) Player pl) {
+        IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());
+        if (character.isStub()) {
+            return;
+        }
+        for (SlotTransaction slotTransaction : event.getTransactions()) {
+            Slot i = slotTransaction.getSlot();
+            int index = ((SlotAdapter)i).getOrdinal();
+            character.getSlotsToReinitialize().add(index);
+        }
+    }
 }

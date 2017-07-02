@@ -19,7 +19,6 @@
 package cz.neumimto.rpg.utils;
 
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by NeumimTo on 23.7.2015.

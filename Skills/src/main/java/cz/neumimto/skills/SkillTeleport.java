@@ -5,6 +5,7 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.SkillLocalization;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.util.blockray.BlockRay;
@@ -32,10 +33,10 @@ public class SkillTeleport extends ActiveSkill {
     @Override
     public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo extendedSkillInfo, SkillModifier skillModifier) {
         Player player = character.getPlayer();
-        Optional<BlockRayHit<World>> optHit = BlockRay.from(player).skipFilter(BlockRay.onlyAirFilter()).build().end();
+        Optional<BlockRayHit<World>> optHit = BlockRay.from(player).stopFilter(Utils.SKILL_TARGET_BLOCK_FILTER).build().end();
         if (optHit.isPresent()) {
             Vector3d lookPos = optHit.get().getBlockPosition().toDouble();
-            Location worldLocation = new Location<World>(player.getWorld(), lookPos);
+            Location<World> worldLocation = new Location<>(player.getWorld(), lookPos);
             TeleportHelper helper = Sponge.getGame().getTeleportHelper();
             Optional<Location<World>> safeLocation = helper.getSafeLocation(worldLocation);
             if (safeLocation.isPresent()) {

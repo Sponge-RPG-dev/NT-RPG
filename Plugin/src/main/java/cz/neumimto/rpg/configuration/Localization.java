@@ -332,4 +332,22 @@ public class Localization {
 
     @ConfigValue
     public static String RUNEWORD_DETAILS_MENU = "Runeword Details";
+
+    @ConfigValue
+    public static String NORMAL_RARITY = "Item";
+
+    @ConfigValue
+    public static String ITEM_LEVEL = "Item level";
+
+    @ConfigValue
+    public static String ITEM_RESTRICTION = "Restrictions";
+
+    @ConfigValue
+    public static String HEALTH = "Health";
+
+    @ConfigValue
+    public static String MANA = "Mana";
+
+    @ConfigValue
+    public static String ITEM_DAMAGE = "Item damage";
 }

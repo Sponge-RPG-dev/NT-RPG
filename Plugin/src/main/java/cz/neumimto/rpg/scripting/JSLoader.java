@@ -26,6 +26,7 @@ import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.utils.FileUtils;
 import jdk.internal.dynalink.beans.StaticClass;
 import org.slf4j.Logger;
@@ -34,6 +35,7 @@ import org.spongepowered.api.event.Event;
 
 import javax.script.*;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -67,18 +69,27 @@ public class JSLoader {
         try {
             FileUtils.createDirectoryIfNotExists(scripts_root);
             loadNashorn();
-            setup();
-            reloadGlobalEffects();
-            reloadSkills();
-            reloadAttributes();
-            generateListener();
-            System.out.println("JS resources loaded.");
+            if (engine != null) {
+                setup();
+                reloadGlobalEffects();
+                reloadSkills();
+                reloadAttributes();
+                generateListener();
+                logger.info("JS resources loaded.");
+            } else {
+                logger.error("Could not load nashorn. Library not found on a classpath.");
+                logger.error(" - For SpongeVanilla create a symlink or place nashorn.jar into the sponge/config/nt-core folder");
+                logger.error(" - For SpongeForge create a symlink or place nashorn.jar into the sponge/mods folder");
+            }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error("Could not load nashorn. Library not found on a classpath.");
+            logger.error(" - For SpongeVanilla create a symlink or place nashorn.jar into the sponge/config/nt-core folder");
+            logger.error(" - For SpongeForge create a symlink or place nashorn.jar into the sponge/mods folder");
         }
     }
-    public void loadNashorn() {
-        engine = new ScriptEngineManager().getEngineByName("nashorn");
+    public void loadNashorn() throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+        Object fct = Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory").newInstance();
+        engine = (ScriptEngine) fct.getClass().getMethod("getScriptEngine", String[].class, ClassLoader.class).invoke(fct, PluginConfig.JJS_ARGS.split(" "), Thread.currentThread().getContextClassLoader());
     }
 
     private void setup() {

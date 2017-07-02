@@ -20,7 +20,7 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.IEntityType;
-import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.inventory.Armor;
 import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.players.groups.ConfigClass;
@@ -31,12 +31,14 @@ import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
+import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
+import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -55,11 +57,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     float[] getCharacterProperties();
 
-    void setCharacterProperties(float[] arr);
-
-    float getCharacterProperty(int index);
-
-    void setCharacterProperty(int index, float value);
+    void setProperties(float[] arr);
 
     void setCharacterLevelProperty(int index, float value);
 
@@ -77,11 +75,9 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     void setMana(IReservable mana);
 
-    Health getHealth();
-
     void setHealth(Health health);
 
-    Map<EquipmentTypeWorn, Weapon> getEquipedArmor();
+    Map<EquipmentType, Armor> getEquipedArmor();
 
     double getExperiencs();
 
@@ -119,6 +115,8 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     Map<ItemType, Double> getAllowedWeapons();
 
+    Map<EntityType, Double> getProjectileDamages();
+
     Set<ExtendedNClass> getClasses();
 
     ConfigClass getNClass(int index);
@@ -135,13 +133,15 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     void setClass(ConfigClass nclass, int slot);
 
-    public IActiveCharacter updateItemRestrictions();
+    double getBaseProjectileDamage(EntityType id);
 
-    public Map<String, ExtendedSkillInfo> getSkills();
+    IActiveCharacter updateItemRestrictions();
+
+    Map<String, ExtendedSkillInfo> getSkills();
 
     ExtendedSkillInfo getSkillInfo(ISkill skill);
 
-    public boolean hasSkill(String name);
+    boolean hasSkill(String name);
 
     int getLevel();
 
@@ -225,8 +225,6 @@ public interface IActiveCharacter extends IEntity<Player> {
     @Override
     Player getEntity();
 
-    @Override
-    Map<String, IEffect> getEffectMap();
 
     @Override
     void sendMessage(String message);
@@ -246,4 +244,15 @@ public interface IActiveCharacter extends IEntity<Player> {
     void setPreferedMessageType(MessageType type);
 
     boolean hasClass(PlayerGroup configClass);
+
+    List<Integer> getSlotsToReinitialize();
+
+    void setSlotsToReinitialize(List<Integer> slotsToReinitialize);
+
+    default int getSelectedHotbarSlot() {
+        return -1;
+    }
+
+    void updateSelectedHotbarSlot();
+
 }

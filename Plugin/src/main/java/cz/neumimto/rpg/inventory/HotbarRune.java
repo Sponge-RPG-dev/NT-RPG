@@ -1,8 +1,11 @@
 package cz.neumimto.rpg.inventory;
 
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.effects.EffectSourceType;
+import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import org.spongepowered.api.item.inventory.ItemStack;
 
 /**
  * Created by NeumimTo on 2.1.2016.
@@ -11,7 +14,8 @@ public class HotbarRune extends HotbarObject {
 
     protected Rune r;
 
-    public HotbarRune() {
+    public HotbarRune(ItemStack itemStack) {
+        super(itemStack);
         type = HotbarObjectTypes.RUNE;
     }
 
@@ -32,5 +36,10 @@ public class HotbarRune extends HotbarObject {
 
     public void setRune(Rune r) {
         this.r = r;
+    }
+
+    @Override
+    public IEffectSource getType() {
+        return EffectSourceType.CHARM;
     }
 }

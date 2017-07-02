@@ -5,7 +5,12 @@ import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.configuration.PluginConfig;
+import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.events.skills.SkillHealEvent;
 import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.properties.PropertyService;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityType;
@@ -34,6 +39,12 @@ public class EntityService {
     @Inject
     private MobSettingsDao dao;
 
+    @Inject
+    private PropertyService propertyService;
+
+    @Inject
+    private EffectService effectService;
+
     public IEntity get(Entity id) {
         if (id.getType() == EntityTypes.PLAYER) {
             return service.getCharacter(id.getUniqueId());
@@ -55,8 +66,11 @@ public class EntityService {
     }
 
     public void remove(UUID e) {
-        if (entityHashMap.containsKey(e))
+        if (entityHashMap.containsKey(e)) {
+            IMob iMob = entityHashMap.get(e);
+            effectService.removeAllEffects(iMob);
             entityHashMap.remove(e);
+        }
     }
 
     public void remove(Collection<Entity> l) {
@@ -91,5 +105,67 @@ public class EntityService {
         Double d = entityExperiences.get(type);
         if (d == null) return 0;
         return d;
+    }
+
+    public float getEntityProperty(IEntity entity, int id) {
+        return Math.min(entity.getProperty(id), propertyService.getMaxPropertyValue(id));
+    }
+
+    public void setEntityProperty(IEntity nEntity, int id, Float value) {
+        nEntity.setProperty(id, value);
+    }
+
+    public void addToEntityProperty(IEntity nEntity, int id, Float value) {
+        Float f = getEntityProperty(nEntity, id);
+        setEntityProperty(nEntity, id, f == null ? value : f + value);
+    }
+
+
+    /**
+     * Heals the entity and`fire an event
+     *
+     * @param entity
+     * @param healedamount
+     * @return healed hp
+     */
+    public double healEntity(IEntity entity, float healedamount) {
+        if (entity.getHealth().getValue() == entity.getHealth().getMaxValue()) {
+            return 0;
+        }
+        SkillHealEvent event = null;
+        if (entity.getHealth().getValue() + healedamount > entity.getHealth().getMaxValue()) {
+            healedamount = (float) (entity.getHealth().getMaxValue() - (entity.getHealth().getValue() + healedamount));
+        }
+        event = new SkillHealEvent(entity, healedamount);
+        Sponge.getGame().getEventManager().post(event);
+        if (event.isCancelled() || event.getAmount() <= 0)
+            return 0;
+        return setEntityHealth(event.getEntity(), event.getAmount());
+    }
+
+    /**
+     * sets character's hp to choosen amount.
+     *
+     * @param entity
+     * @param amount
+     * @return difference
+     */
+    public double setEntityHealth(IEntity entity, double amount) {
+        if (entity.getHealth().getValue() + amount > entity.getHealth().getMaxValue()) {
+            double k = entity.getHealth().getMaxValue() - (entity.getHealth().getValue() + amount);
+            setEntityToFullHealth(entity);
+            return k;
+        }
+        entity.getHealth().setValue(entity.getHealth().getValue() + amount);
+        return amount;
+    }
+
+    /**
+     * sets character to its full health
+     *
+     * @param entityToFullHealth
+     */
+    public void setEntityToFullHealth(IEntity entityToFullHealth) {
+        entityToFullHealth.getHealth().setValue(entityToFullHealth.getHealth().getMaxValue());
     }
 }

@@ -27,12 +27,9 @@ import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.ItemRestriction;
-import cz.neumimto.rpg.skills.SkillNodes;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
 import org.spongepowered.api.data.manipulator.mutable.item.EnchantmentData;
-import org.spongepowered.api.data.type.PickupRules;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.Item;
@@ -40,25 +37,16 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.format.TextFormat;
 import org.spongepowered.api.text.format.TextStyles;
-import org.spongepowered.api.util.Color;
 
 import java.util.*;
 import java.util.function.BiFunction;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
 import static org.spongepowered.api.item.ItemTypes.*;
-import static org.spongepowered.api.item.ItemTypes.LEATHER_HELMET;
 
 /**
  * Created by NeumimTo on 27.3.2015.
@@ -72,6 +60,15 @@ public class ItemStackUtils {
         add(STONE_SWORD);
         add(WOODEN_SWORD);
     }};
+
+	public static Set<ItemType> shovels = new HashSet<ItemType>() {{
+		add(DIAMOND_SHOVEL);
+		add(GOLDEN_SHOVEL);
+		add(IRON_SHOVEL);
+		add(STONE_SHOVEL);
+		add(WOODEN_SHOVEL);
+	}};
+	
     public static Set<ItemType> axes = new HashSet<ItemType>() {{
         add(DIAMOND_AXE);
         add(GOLDEN_AXE);
@@ -106,6 +103,7 @@ public class ItemStackUtils {
         addAll(bows);
         addAll(pickaxes);
         addAll(hoes);
+	    addAll(shovels);
     }};
     public static Set<ItemType> consumables = new HashSet<ItemType>() {{
         addAll(Arrays.asList(APPLE,
@@ -121,15 +119,18 @@ public class ItemStackUtils {
     }};
 
     public static Set<ItemType> chestplates = new HashSet<ItemType>() {{
-        addAll(Arrays.asList(DIAMOND_CHESTPLATE,GOLDEN_CHESTPLATE,IRON_CHESTPLATE,CHAINMAIL_CHESTPLATE,LEATHER_CHESTPLATE));
+        addAll(Arrays.asList(DIAMOND_CHESTPLATE,GOLDEN_CHESTPLATE,IRON_CHESTPLATE,
+		        CHAINMAIL_CHESTPLATE,LEATHER_CHESTPLATE));
     }};
 
     public static Set<ItemType> leggings = new HashSet<ItemType>() {{
-        addAll(Arrays.asList(DIAMOND_LEGGINGS,GOLDEN_LEGGINGS,IRON_LEGGINGS,CHAINMAIL_LEGGINGS,LEATHER_LEGGINGS));
+        addAll(Arrays.asList(DIAMOND_LEGGINGS,GOLDEN_LEGGINGS,IRON_LEGGINGS,
+		        CHAINMAIL_LEGGINGS,LEATHER_LEGGINGS));
     }};
 
     public static Set<ItemType> helmet = new HashSet<ItemType>() {{
-        addAll(Arrays.asList(DIAMOND_HELMET,GOLDEN_HELMET,IRON_HELMET,CHAINMAIL_HELMET,LEATHER_HELMET));
+        addAll(Arrays.asList(DIAMOND_HELMET,GOLDEN_HELMET,
+		        IRON_HELMET,CHAINMAIL_HELMET,LEATHER_HELMET));
     }};
 
     public static Set<ItemType> any_armor = new HashSet<>();
@@ -220,78 +221,6 @@ public class ItemStackUtils {
         createProperty(b, value, String.valueOf(key));
     }
 
-    private static Integer getLevel(String s, Map<String, Integer> levels) {
-        Integer i = levels.get(s);
-        return i == null ? 0 : i;
-    }
-
-    public static DisplayNameData setDisplayName(Text name) {
-        final DisplayNameData itemName = Sponge.getGame().getDataManager().getManipulatorBuilder(DisplayNameData.class).get().create();
-        itemName.set(Keys.DISPLAY_NAME, name);
-        return itemName;
-    }
-
-    /**
-     * Returns a collection of global ffects and its levels from itemlore
-     *
-     * @param is
-     * @return
-     */
-    public static Map<IGlobalEffect, Integer> getItemEffects(ItemStack is) {
-        Optional<List<Text>> texts = is.get(Keys.ITEM_LORE);
-        if (texts.isPresent()) {
-            return getItemEffects(texts.get());
-        }
-        return Collections.emptyMap();
-    }
-
-    /**
-     * Builds a effect map from item lore.
-     *
-     * @param texts
-     * @return Map<Effect,Level>
-     */
-    public static Map<IGlobalEffect, Integer> getItemEffects(List<Text> texts) {
-        Map<IGlobalEffect, Integer> map = new HashMap<>();
-        texts.stream().filter(t -> t.getFormat().getColor() == TextColors.BLUE).forEach(t -> {
-            findItemEffect(t, map);
-        });
-        return map;
-    }
-
-    public static void findItemEffect(Text text, Map<IGlobalEffect, Integer> map) {
-        String eff = text.toPlain().substring(3).toLowerCase();
-        String[] arr = eff.split(": ");
-        int level = Integer.parseInt(arr[1]);
-        IGlobalEffect effect = globalScope.effectService.getGlobalEffect(arr[0]);
-        if (effect != null) {
-            map.put(effect, level);
-        }
-    }
-
-    public static List<Text> addItemEffect(ItemStack itemStack, IGlobalEffect globalEffect, int level) {
-        Optional<List<Text>> texts = itemStack.get(Keys.ITEM_LORE);
-        List<Text> lore = null;
-        if (texts.isPresent()) {
-            lore = texts.get();
-        } else {
-            lore = new ArrayList<>();
-        }
-        lore.add(Text.of(TextColors.AQUA, globalEffect.getName() + ": " + level));
-        return lore;
-    }
-
-    public static List<Text> addItemEffect(ItemStack itemStack, IGlobalEffect globalEffect, float level) {
-        Optional<List<Text>> texts = itemStack.get(Keys.ITEM_LORE);
-        List<Text> lore = null;
-        if (texts.isPresent()) {
-            lore = texts.get();
-        } else {
-            lore = new ArrayList<>();
-        }
-        lore.add(Text.of(TextColors.AQUA, globalEffect.getName() + ": " + level));
-        return lore;
-    }
 
     public static boolean isConsumable(ItemType type) {
         return consumables.contains(type);
@@ -313,7 +242,9 @@ public class ItemStackUtils {
     }
 
     public static boolean hasSockets(ItemStack itemStack) {
-        return globalScope.runewordService.getSocketCount(itemStack.get(Keys.ITEM_LORE).get()) > 0;
+        Optional<List<Text>> a = itemStack.get(Keys.ITEM_LORE);
+        if (!a.isPresent()) return false;
+        return globalScope.runewordService.getSocketCount(a.get()) > 0;
     }
 
     /**
@@ -348,13 +279,6 @@ public class ItemStackUtils {
         return 0;
     }
 
-    public static Set<String> getRestrictions(Text text) {
-        Set<String> str = new HashSet<>();
-        Matcher m = pattern.matcher(text.toPlain());
-
-        return str;
-    }
-
     public static void dropItem(Player p, ItemStack itemStack) {
         Entity optional = p.getLocation().getExtent()
                 .createEntity(EntityTypes.ITEM, p.getLocation()
@@ -366,7 +290,7 @@ public class ItemStackUtils {
         Item item = (Item) optional;
         item.offer(Keys.VELOCITY, direction.mul(0.33));
         item.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
-        item.offer(Keys.PICKUP_DELAY, 75);
+        item.offer(Keys.PICKUP_DELAY, 50);
         p.getLocation().getExtent().spawnEntity(item, Cause.of(NamedCause.of("player", p)));
 
     }
@@ -376,8 +300,6 @@ public class ItemStackUtils {
         any_armor.addAll(chestplates);
         any_armor.addAll(leggings);
         any_armor.addAll(boots);
-        restrictionMap.put("L", ItemRestriction.Level);
-        restrictionMap.put("G", ItemRestriction.Group);
     }
 
     public static boolean checkType(ItemType i, String item) {
@@ -399,25 +321,8 @@ public class ItemStackUtils {
         return false;
     }
 
-    public static ItemStack createHelpItem(String description, String name) {
-        String[] split = description.split("\n");
-        List<Text> descr = new ArrayList<>();
-        for (String s : split) {
-            descr.add(Text.of(s,TextColors.WHITE));
-        }
-        return ItemStack.builder().itemType(ItemTypes.PAPER)
-                .quantity(1)
-                .keyValue(Keys.ITEM_LORE, descr)
-                .keyValue(Keys.DISPLAY_NAME, Text.of(name))
-                .build();
-
-    }
-
     public static Text stringToItemTooltip(String string) {
         return Text.of(TextColors.GOLD, TextStyles.ITALIC, string);
     }
 
-    public static List<Text> stringsToItemTooltip(List<String> string) {
-        return string.stream().map(ItemStackUtils::stringToItemTooltip).collect(Collectors.toList());
-    }
 }

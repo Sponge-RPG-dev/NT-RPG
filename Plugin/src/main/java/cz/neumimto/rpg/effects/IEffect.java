@@ -20,6 +20,7 @@ package cz.neumimto.rpg.effects;
 
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
+import org.spongepowered.api.effect.potion.PotionEffect;
 
 import java.util.Set;
 import java.util.UUID;
@@ -27,7 +28,8 @@ import java.util.UUID;
 /**
  * Created by NeumimTo on 17.1.2015.
  */
-public interface IEffect {
+public interface IEffect<K> {
+
     static GlobalScope getGlobalScope() {
         return NtRpgPlugin.GlobalScope;
     }
@@ -36,23 +38,23 @@ public interface IEffect {
 
     void onApply();
 
-    void onStack(int level);
+    default void reApplyPotions() {
+        for (PotionEffect e : getPotions()) {
+            getConsumer().addPotionEffect(e.getType(), e.getAmplifier(), e.getDuration());
+        }
+    }
 
     void onRemove();
 
-    int getLevel();
+    int getStacks();
 
-    void setLevel(int level);
+    void setStacks(int level);
 
     boolean isStackable();
 
-    void setStackable(boolean b);
+    void setStackable(boolean b, EffectStackingStrategy<K> stackingStrategy);
 
     boolean requiresRegister();
-
-    IEffectSource getEffectSource();
-
-    void setEffectSource(IEffectSource effectSource);
 
     long getPeriod();
 
@@ -63,6 +65,8 @@ public interface IEffect {
     void setLastTickTime(long currTime);
 
     void onTick();
+
+    Set<PotionEffect> getPotions();
 
     long getExpireTime();
 
@@ -89,4 +93,24 @@ public interface IEffect {
     void setConsumer(IEffectConsumer consumer);
 
     Set<EffectType> getEffectTypes();
+
+    IEffectSourceProvider getEffectSourceProvider();
+
+    void setEffectSourceProvider(IEffectSourceProvider effectSourceProvider);
+
+    void setValue(K k);
+
+    K getValue();
+
+    default <T extends IEffect<K>> IEffectContainer<K, T> constructEffectContainer() {
+        return new EffectContainer(this);
+    }
+
+    EffectStackingStrategy<K> getEffectStackingStrategy();
+
+    void setEffectStackingStrategy(EffectStackingStrategy<K> effectStackingStrategy);
+
+    IEffectContainer<K, IEffect<K>> getEffectContainer();
+
+    void setEffectContainer(IEffectContainer<K, IEffect<K>> iEffectContainer);
 }

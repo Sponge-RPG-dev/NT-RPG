@@ -26,40 +26,40 @@ import static java.lang.Math.sin;
 @ResourceLoader.Skill
 public class SkillFireball extends ActiveSkill {
 
-    public SkillFireball() {
-        setName("Fireball");
-        setLore(SkillLocalization.SKILL_FIREBALL_LORE);
-        setDamageType(DamageTypes.FIRE);
-        setDescription(SkillLocalization.SKILL_FIREBALL_DESC);
-        SkillSettings skillSettings = new SkillSettings();
-        skillSettings.addNode(SkillNodes.DAMAGE, 10, 10);
-        skillSettings.addNode(SkillNodes.VELOCITY, 1.5f, .5f);
-        settings = skillSettings;
-    }
+	public SkillFireball() {
+		setName("Fireball");
+		setLore(SkillLocalization.SKILL_FIREBALL_LORE);
+		setDamageType(DamageTypes.FIRE);
+		setDescription(SkillLocalization.SKILL_FIREBALL_DESC);
+		SkillSettings skillSettings = new SkillSettings();
+		skillSettings.addNode(SkillNodes.DAMAGE, 10, 10);
+		skillSettings.addNode(SkillNodes.VELOCITY, 1.5f, .5f);
+		settings = skillSettings;
+	}
 
-    @Override
-    public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info,SkillModifier skillModifier) {
-        Player p = character.getPlayer();
-        World world = p.getWorld();
-        Entity optional = world.createEntity(EntityTypes.SNOWBALL,p.getLocation().getPosition().add(cos((p.getRotation().getX() - 90) % 360) * 0.2,1.8, sin((p.getRotation().getX() - 90) % 360) * 0.2));
+	@Override
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier skillModifier) {
+		Player p = character.getPlayer();
+		World world = p.getWorld();
+		Entity optional = world.createEntity(EntityTypes.SNOWBALL, p.getLocation().getPosition().add(cos((p.getRotation().getX() - 90) % 360) * 0.2, 1.8, sin((p.getRotation().getX() - 90) % 360) * 0.2));
 
-            Vector3d rotation = p.getRotation();
-            Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();
-            Snowball sb = (Snowball) optional;
-            sb.offer(Keys.VELOCITY, direction.mul(settings.getLevelNodeValue(SkillNodes.VELOCITY, info.getLevel())));
-            sb.setShooter(p);
-            world.spawnEntity(sb, Cause.of(NamedCause.of("player",character.getPlayer())));
-            sb.offer(Keys.FIRE_TICKS, 999);
-            ProjectileProperties projectileProperties = new ProjectileProperties(sb, character);
-            projectileProperties.setDamage(settings.getLevelNodeValue(SkillNodes.DAMAGE, info.getLevel()));
-            SkillDamageSourceBuilder build = new SkillDamageSourceBuilder();
-            build.setSkill(this);
-            build.setCaster(character);
-            build.type(getDamageType());
-            projectileProperties.onHit((caster, target) -> {
-                target.getEntity().damage(projectileProperties.getDamage(), build.build());
-            });
-            return SkillResult.OK;
+		Vector3d rotation = p.getRotation();
+		Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();
+		Snowball sb = (Snowball) optional;
+		sb.offer(Keys.VELOCITY, direction.mul(settings.getLevelNodeValue(SkillNodes.VELOCITY, info.getTotalLevel())));
+		sb.setShooter(p);
+		world.spawnEntity(sb, Cause.of(NamedCause.of("player", character.getPlayer())));
+		sb.offer(Keys.FIRE_TICKS, 999);
+		ProjectileProperties projectileProperties = new ProjectileProperties(sb, character);
+		projectileProperties.setDamage(settings.getLevelNodeValue(SkillNodes.DAMAGE, info.getTotalLevel()));
+		SkillDamageSourceBuilder build = new SkillDamageSourceBuilder();
+		build.fromSkill(this);
+		build.setCaster(character);
+		build.type(getDamageType());
+		projectileProperties.onHit((caster, target) -> {
+			target.getEntity().damage(projectileProperties.getDamage(), build.build());
+		});
+		return SkillResult.OK;
 
-    }
+	}
 }

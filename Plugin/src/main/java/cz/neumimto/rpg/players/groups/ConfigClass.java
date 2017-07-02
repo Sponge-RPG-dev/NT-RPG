@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.players.groups;
 
+import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.skills.SkillTree;
 import org.spongepowered.api.util.Color;
@@ -38,13 +39,13 @@ public class ConfigClass extends PlayerGroup {
     private double[] levels;
     private double totalExp;
     private Set<ExperienceSource> experienceSourceSet = new HashSet<>();
-
+    private boolean defaultClass;
     private Color chatColor;
 
 
     public ConfigClass(String name) {
         super(name);
-        playerGroupType = PlayerGroupType.CLASS;
+        playerGroupType = EffectSourceType.CLASS;
     }
 
     public SkillTree getSkillTree() {
@@ -109,5 +110,14 @@ public class ConfigClass extends PlayerGroup {
 
     public int getMaxLevel() {
         return levels.length -1;
+    }
+
+    public boolean isDefaultClass() {
+        return defaultClass;
+    }
+
+    public void setDefaultClass(boolean defaultClass) {
+        this.setShowsInMenu(!defaultClass);
+        this.defaultClass = defaultClass;
     }
 }

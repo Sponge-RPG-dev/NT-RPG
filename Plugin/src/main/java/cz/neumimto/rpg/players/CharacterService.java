@@ -18,7 +18,6 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.MissingConfigurationException;
@@ -30,11 +29,7 @@ import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
-import cz.neumimto.rpg.effects.common.def.ManaRegeneration;
-import cz.neumimto.rpg.events.CancellableEvent;
-import cz.neumimto.rpg.events.CharacterAttributeChange;
-import cz.neumimto.rpg.events.CharacterEvent;
-import cz.neumimto.rpg.events.CharacterGainedLevelEvent;
+import cz.neumimto.rpg.events.*;
 import cz.neumimto.rpg.events.character.CharacterWeaponUpdateEvent;
 import cz.neumimto.rpg.events.character.EventCharacterArmorPostUpdate;
 import cz.neumimto.rpg.events.character.PlayerDataPreloadComplete;
@@ -47,23 +42,24 @@ import cz.neumimto.rpg.events.skills.SkillUpgradeEvent;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.Weapon;
-import cz.neumimto.rpg.persistance.DirectAccessDao;
 import cz.neumimto.rpg.persistance.PlayerDao;
+import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
+import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
-import cz.neumimto.rpg.players.properties.PlayerPropertyService;
+import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.utils.SkillTreeActionResult;
 import cz.neumimto.rpg.utils.Utils;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
@@ -72,6 +68,7 @@ import org.spongepowered.api.text.Text;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -98,7 +95,7 @@ public class CharacterService {
 	private GroupService groupService;
 
 	@Inject
-	private PlayerPropertyService playerPropertyService;
+	private PropertyService propertyService;
 
 	@Inject
 	private DamageService damageService;
@@ -119,7 +116,10 @@ public class CharacterService {
 	public void loadPlayerData(UUID id) {
 		characters.put(id, buildDummyChar(id));
 		game.getScheduler().createTaskBuilder().name("PlayerDataLoad-" + id).async().execute(() -> {
+			logger.info("Loading player - " + id);
+			long k = System.currentTimeMillis();
 			final List<CharacterBase> playerCharacters = playerDao.getPlayersCharacters(id);
+			logger.info("Finished loading of player " + id + ", loaded " + playerCharacters.size() + " characters   ["+(System.currentTimeMillis() - k)+"]ms");
 			game.getScheduler().createTaskBuilder().name("Callback-PlayerDataLoad" + id).execute(() -> {
 				PlayerDataPreloadComplete event = new PlayerDataPreloadComplete(id, playerCharacters);
 				game.getEventManager().post(event);
@@ -140,6 +140,9 @@ public class CharacterService {
 		if (character.isStub())
 			return false;
 		character.setPlayer(pl);
+		if (character.getCharacterBase().getHealthScale() != null) {
+			pl.offer(Keys.HEALTH_SCALE, character.getCharacterBase().getHealthScale());
+		}
 		inventoryService.initializeHotbar(character);
 		return true;
 	}
@@ -170,7 +173,10 @@ public class CharacterService {
 
 	public void putInSaveQueue(CharacterBase base) {
 		game.getScheduler().createTaskBuilder().async().name("PlayerDataTaskSave").execute(() -> {
+			Long k = System.currentTimeMillis();
+			logger.info("Saving player " + base.getUuid() + " character " + base.getName());
 			save(base);
+			logger.info("Saved player " + base.getUuid() + " character " + base.getName() + "["+(System.currentTimeMillis() - k )+"]ms ");
 		}).submit(plugin);
 	}
 
@@ -201,6 +207,10 @@ public class CharacterService {
 		return characters.get(uuid);
 	}
 
+	public IActiveCharacter getCharacter(Player player) {
+		return characters.get(player.getUniqueId());
+	}
+
 	/**
 	 * Activates character for specified player, replaces old
 	 *
@@ -209,6 +219,7 @@ public class CharacterService {
 	 * @return new character
 	 */
 	public IActiveCharacter setActiveCharacter(UUID uuid, IActiveCharacter character) {
+		logger.info("Setting active character player " + uuid + " character " + character.getName());
 		IActiveCharacter activeCharacter = getCharacter(uuid);
 		if (activeCharacter == null) {
 			characters.put(uuid, character);
@@ -217,7 +228,6 @@ public class CharacterService {
 			character.setUsingGuiMod(activeCharacter.isUsingGuiMod());
 			characters.put(uuid, character);
 			initActiveCharacter(character);
-
 		}
 		return character;
 	}
@@ -284,15 +294,21 @@ public class CharacterService {
 	}
 
 	public void initActiveCharacter(IActiveCharacter character) {
+		logger.info("Initializing character " + character.getCharacterBase().getId());
 		character.getPlayer().sendMessage(Text.of(Localization.CURRENT_CHARACTER.replaceAll("%1", character.getName())));
 		addDefaultEffects(character);
 		Set<BaseCharacterAttribute> baseCharacterAttribute = character.getCharacterBase().getBaseCharacterAttribute();
 		for (BaseCharacterAttribute at : baseCharacterAttribute) {
-			ICharacterAttribute attribute = playerPropertyService.getAttribute(at.getName());
+			ICharacterAttribute attribute = propertyService.getAttribute(at.getName());
 			if (attribute != null) {
 				assignAttribute(character, attribute, character.getLevel());
 			}
 		}
+
+		for (ExtendedNClass nClass : character.getClasses()) {
+			applyGroupEffects(character, nClass.getConfigClass());
+		}
+		applyGroupEffects(character, character.getRace());
 
 		updateMaxHealth(character);
 		updateMaxHealth(character);
@@ -301,14 +317,14 @@ public class CharacterService {
 		damageService.recalculateCharacterWeaponDamage(character);
 
 		inventoryService.initializeHotbar(character);
+		CharacterInitializedEvent event = new CharacterInitializedEvent(character);
+		game.getEventManager().post(event);
 
 	}
 
 
 	public void addDefaultEffects(IActiveCharacter character) {
-		effectService.addEffect(new ManaRegeneration(character), character);
-		effectService.addEffect(new CombatEffect(character), character);
-		effectService.addEffect(new BossBarExpNotifier(character), character);
+		effectService.addEffect(new CombatEffect(character), character, InternalEffectSourceProvider.INSTANCE);
 	}
 
 	/**
@@ -326,29 +342,55 @@ public class CharacterService {
 	public void updatePlayerGroups(IActiveCharacter character, ConfigClass configClass, int slot, Race race, Guild guild) {
 		if (character.isStub())
 			return;
+		logger.info("Initializing character " + character.getCharacterBase().getId());
+		boolean k = false;
 		if (configClass != null) {
-			character.setClass(configClass, slot);
+			CharacterChangeGroupEvent e = new CharacterChangeClassEvent(character, configClass, slot);
+			game.getEventManager().post(e);
+			if (!e.isCancelled()) {
+				k = true;
+				removeGroupEffects(character, character.getNClass(slot));
+				character.setClass(configClass, slot);
+				applyGroupEffects(character, configClass);
+			}
 		}
 		if (race != null) {
-			character.setRace(race);
-			character.getEffects().stream().filter(e -> e.getEffectSource() == EffectSource.RACE)
-					.forEach(e -> effectService.removeEffect(e, character));
+			CharacterChangeGroupEvent ev = new CharacterChangeRaceEvent(character, race);
+			game.getEventManager().post(ev);
+			if (!ev.isCancelled()) {
+				k = true;
+				removeGroupEffects(character, character.getRace());
+				character.setRace(race);
+				applyGroupEffects(character, race);
+			}
 		}
 		if (guild != null) {
+			k = true;
+
 			character.setGuild(guild);
-			character.getEffects().stream().filter(e -> e.getEffectSource() == EffectSource.GUILD)
-					.forEach(e -> effectService.removeEffect(e, character));
+
 
 		}
-		putInSaveQueue(character.getCharacterBase());
-		recalculateProperties(character);
-		updateArmorRestrictions(character);
-		updateWeaponRestrictions(character);
-		updateWalkSpeed(character);
-		updateMaxHealth(character);
-		updateMaxMana(character);
+		if (k) {
+			putInSaveQueue(character.getCharacterBase());
+			recalculateProperties(character);
+			updateArmorRestrictions(character);
+			updateWeaponRestrictions(character);
+			updateWalkSpeed(character);
+			updateMaxHealth(character);
+			updateMaxMana(character);
+		}
 	}
 
+	public void removeGroupEffects(IActiveCharacter character, PlayerGroup p) {
+		if (p == null) return;
+		effectService.removeGlobalEffectsAsEnchantments(p.getEffects(), character, p);
+	}
+
+	public void applyGroupEffects(IActiveCharacter character, PlayerGroup p) {
+		if (p == null) return;
+		effectService.applyGlobalEffectsAsEnchantments(p.getEffects(), character, p);
+	}
 
 	/**
 	 * updates maximal mana from character properties
@@ -357,9 +399,9 @@ public class CharacterService {
 	 */
 	public void updateMaxMana(IActiveCharacter character) {
 		IReservable mana = character.getMana();
-		float max_mana = character.getCharacterProperty(DefaultProperties.max_mana) - character.getCharacterProperty(DefaultProperties.reserved_mana);
-		float actreserved = character.getCharacterProperty(DefaultProperties.reserved_mana);
-		float reserved = character.getCharacterProperty(DefaultProperties.reserved_mana_multiplier);
+		float max_mana = getCharacterProperty(character, DefaultProperties.max_mana) - getCharacterProperty(character, DefaultProperties.reserved_mana);
+		float actreserved = getCharacterProperty(character, DefaultProperties.reserved_mana);
+		float reserved = getCharacterProperty(character, DefaultProperties.reserved_mana_multiplier);
 		float maxval = max_mana - (actreserved * reserved);
 		character.getMana().setMaxValue(maxval);
 	}
@@ -370,9 +412,9 @@ public class CharacterService {
 	 * @param character
 	 */
 	public void updateMaxHealth(IActiveCharacter character) {
-		float max_health = character.getCharacterProperty(DefaultProperties.max_health) - character.getCharacterProperty(DefaultProperties.reserved_health);
-		float actreserved = character.getCharacterProperty(DefaultProperties.reserved_health);
-		float reserved = character.getCharacterProperty(DefaultProperties.reserved_health_multiplier);
+		float max_health = getCharacterProperty(character, DefaultProperties.max_health) - getCharacterProperty(character, DefaultProperties.reserved_health);
+		float actreserved = getCharacterProperty(character, DefaultProperties.reserved_health);
+		float reserved = getCharacterProperty(character, DefaultProperties.reserved_health_multiplier);
 		float maxval = max_health - (actreserved * reserved);
 		if (maxval <= 0) {
 			maxval = 1;
@@ -390,10 +432,10 @@ public class CharacterService {
 	}
 
 	protected IActiveCharacter deleteCharacterReferences(IActiveCharacter character) {
-		Collection<IEffect> effects = character.getEffects();
-		for (IEffect effect : effects) {
-			effectService.stopEffect(effect);
-		}
+		Collection<IEffectContainer<Object,IEffect<Object>>> effects = character.getEffects();
+		effects.stream()
+				.map(IEffectContainer::getEffects)
+				.forEach(a -> a.stream().forEach(e -> effectService.stopEffect(e)));
 		if (character.hasParty())
 			character.getParty().removePlayer(character);
 		character.setParty(null);
@@ -432,7 +474,7 @@ public class CharacterService {
 	}
 
 	public void recalculateProperties(IActiveCharacter character) {
-		Map<Integer, Float> defaults = playerPropertyService.getDefaults();
+		Map<Integer, Float> defaults = propertyService.getDefaults();
 		float[] arr = character.getCharacterProperties();
 		float[] lvl = character.getCharacterLevelProperties();
 		float val = 0;
@@ -569,54 +611,6 @@ public class CharacterService {
 	}
 
 	/**
-	 * Heals the character and`fire an event
-	 *
-	 * @param character
-	 * @param healedamount
-	 * @return healed hp
-	 */
-	public double healCharacter(IActiveCharacter character, float healedamount) {
-		if (character.getHealth().getValue() == character.getHealth().getMaxValue()) {
-			return 0;
-		}
-		SkillHealEvent event = null;
-		if (character.getHealth().getValue() + healedamount > character.getHealth().getMaxValue()) {
-			healedamount = (float) (character.getHealth().getMaxValue() - (character.getHealth().getValue() + healedamount));
-		}
-		event = new SkillHealEvent(character, healedamount);
-		game.getEventManager().post(event);
-		if (event.isCancelled())
-			return 0;
-		return setCharacterHealth(event.getCharacter(), event.getAmount());
-	}
-
-
-	/**
-	 * sets character's hp to choosen amount.
-	 *
-	 * @param character
-	 * @param amount
-	 * @return difference
-	 */
-	public double setCharacterHealth(IActiveCharacter character, double amount) {
-		if (character.getHealth().getValue() + amount > character.getHealth().getMaxValue()) {
-			setCharacterToFullHealth(character);
-			return character.getHealth().getMaxValue() - (character.getHealth().getValue() + amount);
-		}
-		character.getHealth().setValue(character.getHealth().getValue() + amount);
-		return amount;
-	}
-
-	/**
-	 * sets character to its full health
-	 *
-	 * @param character
-	 */
-	public void setCharacterToFullHealth(IActiveCharacter character) {
-		character.getHealth().setValue(character.getHealth().getMaxValue());
-	}
-
-	/**
 	 * @param character
 	 * @param skill
 	 * @return 1 if character has no skillpoints,
@@ -628,14 +622,14 @@ public class CharacterService {
 	 * 0 - ok
 	 */
 	public Pair<SkillTreeActionResult, SkillTreeActionResult.Data> upgradeSkill(IActiveCharacter character, ISkill skill) {
-		Pair p = new Pair();
+		Pair<SkillTreeActionResult, SkillTreeActionResult.Data> p = new Pair<>();
 
 		CharacterClass cc = null;
 		Set<ExtendedNClass> classes = character.getClasses();
 
 		for (ExtendedNClass aClass : classes) {
 			Map<String, SkillData> skills = aClass.getConfigClass().getSkillTree().getSkills();
-			if (skills.containsValue(skill)) {
+			if (skills.containsKey(skill.getName())) {
 				cc = character.getCharacterBase().getCharacterClass(aClass.getConfigClass());
 				break;
 			}
@@ -689,7 +683,7 @@ public class CharacterService {
 	 * @param skill
 	 */
 	public Pair<SkillTreeActionResult, SkillTreeActionResult.Data> characterLearnskill(IActiveCharacter character, ISkill skill, SkillTree skillTree) {
-		Pair<SkillTreeActionResult, SkillTreeActionResult.Data> p = new Pair();
+		Pair<SkillTreeActionResult, SkillTreeActionResult.Data> p = new Pair<>();
 
 		ExtendedNClass nClass = null;
 		for (ExtendedNClass extendedNClass : character.getClasses()) {
@@ -876,7 +870,7 @@ public class CharacterService {
 	 * @param character
 	 */
 	public void updateWalkSpeed(IActiveCharacter character) {
-		double speed = character.getCharacterProperty(DefaultProperties.walk_speed);
+		double speed = getCharacterProperty(character, DefaultProperties.walk_speed);
 		character.getPlayer().offer(Keys.WALKING_SPEED, speed);
 	}
 
@@ -909,9 +903,9 @@ public class CharacterService {
 		if (event.isCancelled())
 			return 2;
 		Set<IGlobalEffect> effects = event.getLastItem().getEffects().keySet();
-		effects.stream().forEach(g -> effectService.removeEffect(g.getName(), character));
-		Map<IGlobalEffect, Integer> toadd = event.getNewItem().getEffects();
-		effectService.applyGlobalEffectsAsEnchantments(toadd, character);
+		effects.stream().forEach(g -> effectService.removeEffect(g.getName(), character, weapon));
+		Map<IGlobalEffect, String> toadd = event.getNewItem().getEffects();
+		effectService.applyGlobalEffectsAsEnchantments(toadd, character, weapon);
 		return 0;
 	}
 
@@ -921,11 +915,11 @@ public class CharacterService {
         }*/
 		Weapon armor1 = character.getEquipedArmor().get(type);
 		if (armor1 != null) {
-			armor1.getEffects().keySet().forEach(g -> effectService.removeEffect(g.getName(), character));
+			armor1.getEffects().keySet().forEach(g -> effectService.removeEffect(g.getName(), character, armor));
 			character.getEquipedArmor().remove(type);
 		}
 		if (armor != null) {
-			effectService.applyGlobalEffectsAsEnchantments(armor.getEffects(), character);
+			effectService.applyGlobalEffectsAsEnchantments(armor.getEffects(), character, armor);
 		}
 
 		return 0;
@@ -957,7 +951,7 @@ public class CharacterService {
 		int level = aClass.getLevel();
 
 		if (!onlyinit)
-			exp = exp * character.getCharacterProperty(DefaultProperties.experiences_mult);
+			exp = exp * getCharacterProperty(character, DefaultProperties.experiences_mult);
 		double total = aClass.getExperiences();
 		double lvlexp = aClass.getExperiencesFromLevel();
 		double[] levels = aClass.getConfigClass().getLevels();
@@ -1060,27 +1054,50 @@ public class CharacterService {
 	 * character object is heavy, lets do not recreate its instance just reasign player and effects
 	 */
 	public void respawnCharacter(IActiveCharacter character, Player pl) {
-		Iterator<Map.Entry<String, IEffect>> iterator1 = character.getEffectMap().entrySet().iterator();
-
-		Iterator<IEffect> iterator = character.getEffects().iterator();
-		Set<IEffect> a = new HashSet<>();
+		Iterator<IEffectContainer<Object, IEffect<Object>>> iterator = character.getEffects().iterator();
 		while (iterator.hasNext()) {
-			IEffect next = iterator.next();
-			if (!next.getEffectSource().isClearedOnDeath()) {
-				a.add(next);
-			}
-			effectService.stopEffect(next);
+			IEffectContainer<Object, IEffect<Object>> next = iterator.next();
+			next.forEach(q -> effectService.stopEffect(q));
 			iterator.remove();
 		}
 		assignPlayerToCharacter(pl);
-		for (IEffect effect : a) {
-			effectService.addEffect(effect, character);
+
+		for (ExtendedNClass nClass : character.getClasses()) {
+			applyGroupEffects(character, nClass.getConfigClass());
 		}
+
+		applyGroupEffects(character, character.getRace());
+
+
+		character.updateSelectedHotbarSlot();
 		character.getMana().setValue(0);
 		inventoryService.cancelSocketing(character);
 		addDefaultEffects(character);
 		updateMaxHealth(character);
 		updateAll(character).run();
+		inventoryService.initializeHotbar(character);
+		inventoryService.initializeArmor(character);
+		damageService.recalculateCharacterWeaponDamage(character);
+
+		Sponge.getScheduler().createTaskBuilder().execute(() -> {
+			Double d = character.getEntity().get(Keys.MAX_HEALTH).get();
+			character.getEntity().offer(Keys.MAX_HEALTH, d);
+		}).delay(3, TimeUnit.SECONDS).submit(plugin);
+	}
+
+	/**
+	 *
+	 * Unlike ActiveCharacter#getProperty this method checks for maximal allowed value, defined in configfile.
+	 * @see PropertyService#loadMaximalServerPropertyValues()
+	 */
+	public float getCharacterProperty(IActiveCharacter character, int index) {
+		return Math.min(propertyService.getMaxPropertyValue(index), character.getProperty(index));
+	}
+
+	public void setHeathscale(IActiveCharacter character, double i) {
+		character.getCharacterBase().setHealthScale(i);
+		character.getPlayer().offer(Keys.HEALTH_SCALE, i);
+		putInSaveQueue(character.getCharacterBase());
 	}
 }
 

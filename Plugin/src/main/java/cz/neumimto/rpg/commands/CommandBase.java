@@ -19,6 +19,9 @@
 package cz.neumimto.rpg.commands;
 
 import cz.neumimto.rpg.configuration.CommandLocalization;
+import cz.neumimto.rpg.effects.EffectSourceType;
+import cz.neumimto.rpg.effects.IEffectSource;
+import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -34,13 +37,13 @@ import java.util.List;
 import java.util.Optional;
 
 
-public abstract class CommandBase implements CommandCallable {
+public abstract class CommandBase implements CommandCallable, IEffectSourceProvider {
 
     protected String permission = "*";
     protected Optional<Text> shortDescription = Optional.empty();
     protected Optional<Text> help = Optional.empty();
     protected Text usage = Text.of("");
-    protected List<String> alias = new ArrayList();
+    protected List<String> alias = new ArrayList<>();
 
     public List<String> getAliases() {
         return alias;
@@ -100,5 +103,8 @@ public abstract class CommandBase implements CommandCallable {
         return usage;
     }
 
-
+    @Override
+    public IEffectSource getType() {
+        return EffectSourceType.COMMAND;
+    }
 }

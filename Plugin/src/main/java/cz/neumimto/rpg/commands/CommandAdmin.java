@@ -18,8 +18,8 @@
 
 package cz.neumimto.rpg.commands;
 
-import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.TestAction;
 import cz.neumimto.rpg.configuration.Localization;
@@ -27,6 +27,7 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
@@ -35,19 +36,19 @@ import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.skills.*;
-import cz.neumimto.rpg.utils.ItemStackUtils;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.manipulator.mutable.entity.VelocityData;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -95,10 +96,12 @@ public class CommandAdmin extends CommandBase {
             logger.warn("Can't be executed from console");
             return CommandResult.empty();
         }
-        Player player = (Player) commandSource;
-        if (player.hasPermission("ntrpg.superadmin")) {
-            return CommandResult.empty(); //todo testPermission seems to not be called
+
+
+        if (commandSource.hasPermission("ntrpg.superadmin")) {
+            return CommandResult.empty();
         }
+
         if (a[0].equalsIgnoreCase("use")) {
 
             if (a[1].equalsIgnoreCase("skill")) {
@@ -108,6 +111,7 @@ public class CommandAdmin extends CommandBase {
                 }
                 ISkill skill = skillService.getSkill(a[2]);
                 SkillSettings defaultSkillSettings = skill.getDefaultSkillSettings();
+                Player player = (Player) commandSource;
                 IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
                 if (character.isStub())
                     throw new RuntimeException("Character is required even for an admin.");
@@ -116,9 +120,6 @@ public class CommandAdmin extends CommandBase {
                     level = Integer.parseInt(a[3]);
                 if (skill instanceof ActiveSkill) {
                     Long l = System.nanoTime();
-                    Vector3d vector3d = character.getPlayer().get(Keys.VELOCITY).get();
-                    vector3d.add(0,8,0);
-                    character.getPlayer().offer(Keys.VELOCITY, vector3d);
                     ExtendedSkillInfo extendedSkillInfo = new ExtendedSkillInfo();
                     extendedSkillInfo.setLevel(level);
                     SkillData skillData = new SkillData(skill.getName());
@@ -128,7 +129,7 @@ public class CommandAdmin extends CommandBase {
                     ActiveSkill askill = (ActiveSkill) skill;
                     askill.cast(character, extendedSkillInfo, null);
                     Long e = System.nanoTime();
-                    character.sendMessage("Exec Time: " + TimeUnit.MILLISECONDS.convert(e-l, TimeUnit.NANOSECONDS));;
+                    character.sendMessage("Exec Time: " + TimeUnit.MILLISECONDS.convert(e-l, TimeUnit.NANOSECONDS));
                 }
             }
         } else if (a[0].equalsIgnoreCase("set")) {
@@ -143,11 +144,11 @@ public class CommandAdmin extends CommandBase {
                 if (globalEffect == null) {
                     commandSource.sendMessage(Text.of(Localization.NON_EXISTING_GLOBAL_EFFECT));
                 } else {
+                    Player player = (Player) commandSource;
                     if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
                         ItemStack itemStack = player.getItemInHand(HandTypes.MAIN_HAND).get();
-                        List<Text> texts = ItemStackUtils.addItemEffect(itemStack, globalEffect, Integer.parseInt(a[3]));
-                        itemStack.offer(Keys.ITEM_LORE, texts);
-                        player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
+                        CustomItemData itemData = inventoryService.getItemData(itemStack);
+                        itemData.enchantements().put(globalEffect.getName(), a[3]);
                         player.sendMessage(Text.of("Enchantment " + globalEffect.getName() + " added"));
                     } else {
                         player.sendMessage(Text.of(Localization.NO_ITEM_IN_HAND));
@@ -157,16 +158,20 @@ public class CommandAdmin extends CommandBase {
 
             }
         } else if (a[0].equalsIgnoreCase("socket")) {
+            Player player = (Player) commandSource;
             Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
             if (itemInHand.isPresent()) {
                 ItemStack itemStack = runewordService.createSockets(itemInHand.get(), Integer.parseInt(a[1]));
                 player.setItemInHand(HandTypes.MAIN_HAND,itemStack);
             }
         } else if (a[0].equalsIgnoreCase("rune")) {
-            Rune r = runewordService.getRune(a[1]);
-            if (r != null) {
-                ItemStack is = runewordService.toItemStack(r);
-                player.setItemInHand(HandTypes.MAIN_HAND,is);
+            for (int i = 1; i < a.length ;i++) {
+                Rune r = runewordService.getRune(a[i]);
+                Player player = (Player) commandSource;
+                if (r != null) {
+                    ItemStack is = runewordService.toItemStack(r);
+                    player.getInventory().offer(is);
+                }
             }
         } else if (a[0].equalsIgnoreCase("charm")) {
 
@@ -186,7 +191,6 @@ public class CommandAdmin extends CommandBase {
                 ItemStack itemStack = itemInHand.get();
                 for (Rune rune1 : r) {
                     itemStack = runewordService.insertRune(itemStack, rune1.getName());
-                    itemStack = runewordService.findRuneword(itemStack);
                     p.setItemInHand(HandTypes.MAIN_HAND,itemStack);
                 }
             }
@@ -217,13 +221,15 @@ public class CommandAdmin extends CommandBase {
             if (PluginConfig.DEBUG) {
                 String methodcall = a[1];
                 try {
-                    Method method = TestAction.class.getClass().getMethod(methodcall, IActiveCharacter.class);
-                    method.invoke(null,characterService.getCharacter(player.getUniqueId()));
+                    Player player = (Player) commandSource;
+                    Object o = IoC.get().build(TestAction.class);
+                    Method method = TestAction.class.getMethod(methodcall, IActiveCharacter.class);
+                    method.invoke(o,characterService.getCharacter(player.getUniqueId()));
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
                 }
             } else {
-                throw new IllegalStateException("Only awalaible in debug mode");
+                throw new IllegalStateException("Only avalaible in debug mode");
             }
         } else if (a[0].equalsIgnoreCase("reloadjs")) {
             if (!PluginConfig.DEBUG) {
@@ -236,13 +242,13 @@ public class CommandAdmin extends CommandBase {
             String q = null;
             while (i < a.length) {
                 q = a[i];
-                if (q.equalsIgnoreCase("skills") | q.equalsIgnoreCase("s")) {
+                if (q.equalsIgnoreCase("skills") || q.equalsIgnoreCase("s")) {
                     jsLoader.reloadSkills();
                 }
-                if (q.equalsIgnoreCase("attributes") | q.equalsIgnoreCase("a")) {
+                if (q.equalsIgnoreCase("attributes") || q.equalsIgnoreCase("a")) {
                     jsLoader.reloadAttributes();
                 }
-                if (q.equalsIgnoreCase("globaleffects") | q.equalsIgnoreCase("g")) {
+                if (q.equalsIgnoreCase("globaleffects") || q.equalsIgnoreCase("g")) {
                     jsLoader.reloadGlobalEffects();
                 }
                 i++;

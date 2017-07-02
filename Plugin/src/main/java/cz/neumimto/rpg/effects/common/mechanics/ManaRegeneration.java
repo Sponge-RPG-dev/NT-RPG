@@ -16,13 +16,16 @@
  *     
  */
 
-package cz.neumimto.rpg.effects.common.def;
+package cz.neumimto.rpg.effects.common.mechanics;
 
+import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.CoreEffectTypes;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.EffectStatusType;
+import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.common.stacking.FloatEffectStackingStrategy;
 import cz.neumimto.rpg.events.character.ManaRegainEvent;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -31,23 +34,23 @@ import cz.neumimto.rpg.players.properties.DefaultProperties;
 /**
  * Created by NeumimTo on 9.8.2015.
  */
+@ClassGenerator.Generate(id = "name")
 public class ManaRegeneration extends EffectBase {
 
-    public static final String name = "DefaultRegen";
+    public static final String name = "DefaultManaRegen";
     private static final String apply = "You've gained mana reneneration.";
     private static final String remove = "You've lost mana regenartion.";
     IActiveCharacter character;
 
-    public ManaRegeneration(IActiveCharacter character) {
+    public ManaRegeneration(IEffectConsumer character, long duration, String value) {
         super(name, character);
-        this.character = character;
+        this.character = (IActiveCharacter) character;
         setPeriod(PluginConfig.MANA_REGENERATION_RATE);
         setApplyMessage(apply);
         setExpireMessage(remove);
         setDuration(-1);
         effectTypes.add(CoreEffectTypes.MANA_REGEN);
     }
-
 
     @Override
     public void onApply() {
@@ -66,7 +69,7 @@ public class ManaRegeneration extends EffectBase {
         if (current >= max)
             return;
         double regen = character.getMana().getRegen()
-                + character.getCharacterProperty(DefaultProperties.mana_regen_mult) * character.getLevel();
+                + getGlobalScope().characterService.getCharacterProperty(character, DefaultProperties.mana_regen_mult) * character.getLevel();
         current += regen;
         ManaRegainEvent event = new ManaRegainEvent(character);
         if (current >= max) {
@@ -77,16 +80,16 @@ public class ManaRegeneration extends EffectBase {
         }
         NtRpgPlugin.GlobalScope.game.getEventManager().post(event);
         event.getCharacter().getMana().setValue(event.getNewVal());
-        Gui.sendManaStatus(character, current, max, character.getMana().getReservedAmount());
+        Gui.displayMana(character);
     }
 
     @Override
-    public int getLevel() {
+    public int getStacks() {
         return 1;
     }
 
     @Override
-    public void setLevel(int level) {
+    public void setStacks(int level) {
 
     }
 

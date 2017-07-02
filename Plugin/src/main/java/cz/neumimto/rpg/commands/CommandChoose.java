@@ -32,7 +32,7 @@ import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.*;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Race;
-import cz.neumimto.rpg.players.properties.PlayerPropertyService;
+import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
@@ -71,7 +71,7 @@ public class CommandChoose extends CommandBase {
     private DamageService damageService;
 
     @Inject
-    private PlayerPropertyService playerPropertyService;
+    private PropertyService propertyService;
 
     public CommandChoose() {
         setUsage(CommandLocalization.COMMAND_CHOOSE_USAGE);
@@ -212,7 +212,7 @@ public class CommandChoose extends CommandBase {
                 commandSource.sendMessage(Text.of(Localization.ARGUMENT_MUST_BE_POSITIVE_INT));
                 return CommandResult.empty();
             }
-            ICharacterAttribute attribute = playerPropertyService.getAttribute(args[1]);
+            ICharacterAttribute attribute = propertyService.getAttribute(args[1]);
             IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
             characterService.addAttribute(character, attribute, i);
             characterService.putInSaveQueue(character.getCharacterBase());

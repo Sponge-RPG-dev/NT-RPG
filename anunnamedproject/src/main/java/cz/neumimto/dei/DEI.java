@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
 /**
  * Created by ja on 5.7.2016.
  */
-@Plugin(id = "cz.neumimto.dei",
+@Plugin(id = "dei",
         version = "1.0.0",
-        name = "NT-dei",
+        name = "nt-dei",
         dependencies = {@Dependency(id = "cz.neumimto.core")})
 public class DEI {
 

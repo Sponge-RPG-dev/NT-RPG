@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.inventory;
 
+import cz.neumimto.rpg.effects.IEffectSource;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 /**
@@ -25,7 +26,17 @@ import org.spongepowered.api.item.inventory.ItemStack;
  */
 public class Armor extends Weapon {
 
-    public Armor(ItemStack itemStack) {
+    private IEffectSource armorType;
+
+    public Armor(ItemStack itemStack, IEffectSource armorType) {
         super(itemStack);
+        this.armorType = armorType;
     }
+
+    @Override
+    public IEffectSource getType() {
+        return armorType;
+    }
+
+    public static Armor NONE = null;
 }

@@ -36,9 +36,9 @@ var events = new HashMap();
 var skills = new ArrayList();
 var globalEffects = new ArrayList();
 var attributes = new ArrayList();
-
+//
 function log(obj) {
-    console.println(obj);
+    console.println("[NTRPG-JS]" + obj);
 }
 
 function registerSkill(obj) {
@@ -93,7 +93,7 @@ function registerAttributes() {
     for (obj in attributes) {
         var a = attributes.get(obj);
         if (a instanceof CharacterAttribute) {
-            GlobalScope.playerPropertyService.registerAttribute(a);
+            GlobalScope.propertyService.registerAttribute(a);
         }
     }
 }

@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.inventory.runewords;
 
 import cz.neumimto.rpg.effects.IGlobalEffect;
-import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import org.spongepowered.api.item.ItemType;
 
@@ -15,12 +14,12 @@ public class RuneWord {
     private String name;
     private List<Rune> runes = new ArrayList<>();
     private int minLevel;
-    private Set<PlayerGroup> blockedGroups = new HashSet<>();
     private Set<PlayerGroup> allowedGroups = new HashSet<>();
-    private Set<PlayerGroup> requiredGroups = new HashSet<>();
 
-    private Map<IGlobalEffect, Float> effects = new HashMap<>();
+    private Map<IGlobalEffect, String> effects = new HashMap<>();
     private Set<ItemType> allowedItems = new HashSet<>();
+
+    private String lore;
 
     public String getName() {
         return name;
@@ -46,14 +45,6 @@ public class RuneWord {
         this.minLevel = minLevel;
     }
 
-    public Set<PlayerGroup> getBlockedGroups() {
-        return blockedGroups;
-    }
-
-    public void setBlockedGroups(Set<PlayerGroup> blockedGroups) {
-        this.blockedGroups = blockedGroups;
-    }
-
     public Set<PlayerGroup> getAllowedGroups() {
         return allowedGroups;
     }
@@ -62,19 +53,11 @@ public class RuneWord {
         this.allowedGroups = allowedGroups;
     }
 
-    public Set<PlayerGroup> getRequiredGroups() {
-        return requiredGroups;
-    }
-
-    public void setRequiredGroups(Set<PlayerGroup> requiredGroups) {
-        this.requiredGroups = requiredGroups;
-    }
-
-    public Map<IGlobalEffect, Float> getEffects() {
+    public Map<IGlobalEffect, String> getEffects() {
         return effects;
     }
 
-    public void setEffects(Map<IGlobalEffect, Float> effects) {
+    public void setEffects(Map<IGlobalEffect, String> effects) {
         this.effects = effects;
     }
 
@@ -84,5 +67,13 @@ public class RuneWord {
 
     public void setAllowedItems(Set<ItemType> allowedItems) {
         this.allowedItems = allowedItems;
+    }
+
+    public String getLore() {
+        return lore;
+    }
+
+    public void setLore(String lore) {
+        this.lore = lore;
     }
 }

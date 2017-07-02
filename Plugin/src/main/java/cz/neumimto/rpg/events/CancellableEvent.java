@@ -19,7 +19,6 @@
 package cz.neumimto.rpg.events;
 
 import org.spongepowered.api.event.Cancellable;
-import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.impl.AbstractEvent;
 
@@ -30,7 +29,7 @@ import org.spongepowered.api.event.impl.AbstractEvent;
 public class CancellableEvent extends AbstractEvent implements Cancellable {
 
     public boolean cancelled;
-
+    private Cause cause;
 
     @Override
     public boolean isCancelled() {
@@ -44,6 +43,10 @@ public class CancellableEvent extends AbstractEvent implements Cancellable {
 
     @Override
     public Cause getCause() {
-        return null;
+        return cause;
+    }
+
+    public void setCause(Cause cause) {
+        this.cause = cause;
     }
 }

@@ -2,9 +2,10 @@ package cz.neumimto.rpg.effects.common.def;
 
 import cz.neumimto.rpg.effects.CoreEffectTypes;
 import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.boss.BossBarColors;
 import org.spongepowered.api.boss.BossBarOverlays;
@@ -12,14 +13,12 @@ import org.spongepowered.api.boss.ServerBossBar;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 25.6.2016.
  */
-public class BossBarExpNotifier extends EffectBase {
+public class BossBarExpNotifier extends EffectBase<Object> implements IEffectContainer<Object, BossBarExpNotifier>{
 
     public static final String name = "BossBarExp";
     private IActiveCharacter character;
@@ -86,6 +85,31 @@ public class BossBarExpNotifier extends EffectBase {
         if (l >= 0)
             throw new IllegalArgumentException();
         super.setDuration(l);
+    }
+
+    @Override
+    public Set<BossBarExpNotifier> getEffects() {
+        return new HashSet<>(Collections.singletonList(this));
+    }
+
+    @Override
+    public BossBarExpNotifier getStackedValue() {
+        return this;
+    }
+
+    @Override
+    public BossBarExpNotifier constructEffectContainer() {
+        return this;
+    }
+
+    @Override
+    public void setStackedValue(Object o) {
+
+    }
+
+    @Override
+    public void stackEffect(BossBarExpNotifier bossBarExpNotifier, IEffectSourceProvider effectSourceProvider) {
+
     }
 }
 

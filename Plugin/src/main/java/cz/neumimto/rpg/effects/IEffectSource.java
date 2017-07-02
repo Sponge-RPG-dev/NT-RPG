@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.effects;
 
 /**
- * Created by NeumimTo on 29.10.2015.
+ * Created by NeumimTo on 31.3.17.
  */
 public interface IEffectSource {
-    boolean isClearedOnDeath();
+	boolean multiple();
 }

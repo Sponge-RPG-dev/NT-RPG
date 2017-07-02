@@ -22,10 +22,12 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.persistance.GroupDao;
+import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
+import org.slf4j.Logger;
 
 import java.util.Collection;
 
@@ -37,6 +39,9 @@ public class GroupService {
 
     @Inject
     private GroupDao groupDao;
+
+    @Inject
+    Logger logger;
 
     public GroupService() {
 
@@ -86,11 +91,18 @@ public class GroupService {
         return groupDao.getGuilds().values();
     }
 
-    @PostProcess
+    @PostProcess(priority = 401)
     public void registerPlaceholders() {
 
         registerClass(ConfigClass.Default);
         registerRace(Race.Default);
+
+        for (ConfigClass configClass : getClasses()) {
+            if (configClass.isDefaultClass()) {
+                setDefaultClass(configClass);
+                break;
+            }
+        }
     }
 
     public boolean existsGuild(String s) {
@@ -128,5 +140,11 @@ public class GroupService {
         if (existsRace(arg))
             return getRace(arg);
         return null;
+    }
+
+    public void setDefaultClass(ConfigClass configClass) {
+        ConfigClass.Default = configClass;
+        ExtendedNClass.Default.setConfigClass(configClass);
+        logger.info("Default class set to \"" + configClass.getName()+ "\"");
     }
 }

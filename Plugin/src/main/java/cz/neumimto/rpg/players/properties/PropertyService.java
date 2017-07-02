@@ -26,9 +26,12 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.utils.Utils;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
@@ -44,7 +47,7 @@ import java.util.function.Supplier;
  */
 
 @Singleton
-public class PlayerPropertyService {
+public class PropertyService {
 
     public static final double WALKING_SPEED = 0.1d;
     public static short LAST_ID = 0;
@@ -53,26 +56,31 @@ public class PlayerPropertyService {
         LAST_ID++;
         return t;
     };
+
     @Inject
     private Logger logger;
 
     private Map<String, Short> idMap = new HashMap<>();
+    private Map<Short, String> nameMap = new HashMap<>();
+
     private Map<Integer, Float> defaults = new HashMap<>();
-    private Map<String, Short> persistant = new HashMap<>();
     private Map<String, ICharacterAttribute> attributes = new HashMap<>();
+
+    private float[] maxValues;
 
     public void registerProperty(String name, short id) {
         if (PluginConfig.DEBUG)
             logger.info("Found property " + name + "; assigned id: " + id);
         idMap.put(name, id);
-    }
-
-    public Map<String, Short> getPersistantProperties() {
-        return persistant;
+        nameMap.put(id, name);
     }
 
     public int getIdByName(String name) {
         return idMap.get(name);
+    }
+
+    public String getNameById(Short id) {
+        return nameMap.get(id);
     }
 
     public void registerDefaultValue(int id, float def) {
@@ -111,7 +119,51 @@ public class PlayerPropertyService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
+
+    public void loadMaximalServerPropertyValues() {
+        maxValues = new float[LAST_ID];
+        for (int i = 0; i < maxValues.length; i++) {
+            maxValues[i] = Float.MAX_VALUE;
+        }
+
+
+        Path path = Paths.get(NtRpgPlugin.workingDir, "max_server_property_values.properties");
+        File file = path.toFile();
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        Set<String> missing = new HashSet<>();
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+            Properties properties = new Properties();
+            properties.load(fileInputStream);
+            for (String s : idMap.keySet()) {
+                Object o = properties.get(s);
+                if (o == null) {
+                    missing.add(s);
+                } else {
+                    maxValues[getIdByName(s)] = Float.parseFloat(o.toString());
+                }
+            }
+
+            if (!missing.isEmpty()) {
+                missing.forEach(a -> properties.put(a, "10000"));
+                FileOutputStream fileOutputStream = FileUtils.openOutputStream(file, false);
+                properties.store(fileOutputStream, null);
+                fileOutputStream.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 
     public void setupDefaultProperties(IActiveCharacter character) {
         if (character.isStub())
@@ -132,7 +184,7 @@ public class PlayerPropertyService {
         for (Field f : container.getDeclaredFields()) {
             if (f.isAnnotationPresent(Property.class)) {
                 Property p = f.getAnnotation(Property.class);
-                value = PlayerPropertyService.getAndIncrement.get();
+                value = PropertyService.getAndIncrement.get();
                 try {
                     f.setShort(null, value);
                 } catch (IllegalAccessException e) {
@@ -155,4 +207,14 @@ public class PlayerPropertyService {
             return 0;
         return f;
     }
+
+    public float getMaxPropertyValue(int index) {
+        return maxValues[index];
+    }
+
+    public float getMaxPropertyValue(short index) {
+        return maxValues[index];
+    }
+
+
 }

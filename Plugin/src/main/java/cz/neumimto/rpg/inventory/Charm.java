@@ -2,12 +2,15 @@ package cz.neumimto.rpg.inventory;
 
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.effects.EffectSourceType;
+import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.utils.ItemStackUtils;
 import org.spongepowered.api.item.inventory.ItemStack;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -15,10 +18,18 @@ import java.util.Map;
  */
 public class Charm extends HotbarObject {
 
-    private Map<IGlobalEffect, Integer> effects;
 
-    public Charm() {
+    private Map<ItemRestriction,Object> restrictionSet = new HashMap<>();
+
+
+    public Charm(ItemStack itemStack) {
+        super(itemStack);
         type = HotbarObjectTypes.CHARM;
+    }
+
+
+    public Map<ItemRestriction,Object> getRestrictions() {
+        return restrictionSet;
     }
 
     @Override
@@ -32,25 +43,32 @@ public class Charm extends HotbarObject {
     }
 
     @Override
-    public void onEquip(ItemStack is, IActiveCharacter character) {
-        super.onEquip(is, character);
-        if (effects == null) {
-            effects = ItemStackUtils.getItemEffects(is);
+    public void onEquip(IActiveCharacter character) {
+        super.onEquip(character);
+        if (effects != null) {
+            NtRpgPlugin.GlobalScope.effectService.applyGlobalEffectsAsEnchantments(effects, character, this);
         }
-        NtRpgPlugin.GlobalScope.effectService.applyGlobalEffectsAsEnchantments(effects, character);
+        NtRpgPlugin.GlobalScope.damageService.recalculateCharacterWeaponDamage(character);
     }
 
     @Override
     public void onUnEquip(IActiveCharacter character) {
-        if (effects != null)
-            NtRpgPlugin.GlobalScope.effectService.removeGlobalEffectsAsEnchantments(effects, character);
+        if (effects != null) {
+            NtRpgPlugin.GlobalScope.effectService.removeGlobalEffectsAsEnchantments(effects, character, this);
+        }
+        NtRpgPlugin.GlobalScope.damageService.recalculateCharacterWeaponDamage(character);
     }
 
-    public Map<IGlobalEffect, Integer> getEffects() {
+    public Map<IGlobalEffect, String> getEffects() {
         return effects;
     }
 
-    public void setEffects(Map<IGlobalEffect, Integer> effects) {
+    public void setEffects(Map<IGlobalEffect, String> effects) {
         this.effects = effects;
+    }
+
+    @Override
+    public IEffectSource getType() {
+        return EffectSourceType.CHARM;
     }
 }

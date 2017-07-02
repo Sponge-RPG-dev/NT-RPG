@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.effects;
 
+import cz.neumimto.rpg.entities.PropertyContainer;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectType;
@@ -31,16 +32,17 @@ import java.util.stream.Collectors;
 /**
  * Created by NeumimTo on 17.1.2015.
  */
-public interface IEffectConsumer<T extends Living> {
+public interface IEffectConsumer<T extends Living> extends PropertyContainer {
+
     T getEntity();
 
-    Map<String, IEffect> getEffectMap();
+    Map<String, IEffectContainer<Object, IEffect<Object>>> getEffectMap();
 
-    default Collection<IEffect> getEffects() {
+    default Collection<IEffectContainer<Object, IEffect<Object>>> getEffects() {
         return getEffectMap().values();
     }
 
-    default IEffect getEffect(String cl) {
+    default IEffectContainer getEffect(String cl) {
         return getEffectMap().get(cl);
     }
 
@@ -48,27 +50,37 @@ public interface IEffectConsumer<T extends Living> {
         return getEffectMap().containsKey(cl);
     }
 
+    @SuppressWarnings("unchecked")
     default void addEffect(IEffect effect) {
-        getEffectMap().put(effect.getName(), effect);
+	    IEffectContainer IEffectContainer1 = getEffectMap().get(effect.getName());
+	    if (IEffectContainer1 == null) {
+		    getEffectMap().put(effect.getName(), new EffectContainer<>(effect));
+	    } else {
+		    IEffectContainer1.getEffects().add(effect);
+	    }
+    }
+
+    @SuppressWarnings("unchecked")
+    default void addEffect(IEffectContainer IEffectContainer) {
+        IEffectContainer effectContainer1 = getEffectMap().get(IEffectContainer.getName());
+        if (effectContainer1 == null) {
+            getEffectMap().put(IEffectContainer.getName(), IEffectContainer);
+        } else {
+            effectContainer1.mergeWith(IEffectContainer);
+        }
     }
 
     default void removeEffect(String cl) {
         getEffectMap().remove(cl);
     }
 
-    default void removeEffect(IEffect cl) {
+    default void removeEffect(IEffectContainer cl) {
         getEffectMap().remove(cl.getName());
     }
 
-    default void removeAllTempEffects() {
-        for (Map.Entry<String, IEffect> entry : getEffectMap().entrySet()) {
-            IEffect effect = entry.getValue();
-            if (effect.getEffectSource() == EffectSource.TEMP) {
-                removeEffect(entry.getKey());
-            }
-        }
+    default void removeEffect(IEffect cl) {
+        getEffectMap().remove(cl.getName());
     }
-
 
     default void addPotionEffect(PotionEffectType p, int amplifier, long duration) {
         PotionEffect build = PotionEffect.builder().potionType(p).amplifier(amplifier).duration((int) duration).build();

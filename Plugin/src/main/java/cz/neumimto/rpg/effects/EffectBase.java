@@ -30,23 +30,26 @@ import java.util.UUID;
 /**
  * Created by NeumimTo.
  */
-public class EffectBase implements IEffect {
+public class EffectBase<Value> implements IEffect<Value> {
     protected Set<EffectType> effectTypes = new HashSet<>();
     private boolean stackable = false;
     private String name;
     private int level;
     private Set<PotionEffect> potions = new HashSet<>();
     private IEffectConsumer consumer;
-    private IEffectSource effectSource = EffectSource.TEMP;
     private long duration = -1;
     private long period = -1;
     private long lastTickTime;
     private long expireTime;
-    private int tickCount;
+    protected long tickCount;
     private long timeCreated;
     private String applyMessage;
     private String expireMessage;
     private UUID uuid;
+    private IEffectSourceProvider effectSourceProvider;
+    private Value value;
+    private EffectStackingStrategy<Value> effectStackingStrategy;
+    private IEffectContainer<Value, IEffect<Value>> container;
 
     public EffectBase(String name, IEffectConsumer consumer) {
         this();
@@ -65,7 +68,7 @@ public class EffectBase implements IEffect {
 
     @Override
     public boolean requiresRegister() {
-        return duration >= 0 || period >= 0;
+        return getDuration() >= 0 || getPeriod() >= 0;
     }
 
     @Override
@@ -93,17 +96,19 @@ public class EffectBase implements IEffect {
     }
 
     @Override
-    public void setStackable(boolean b) {
+    public void setStackable(boolean b, EffectStackingStrategy<Value> stackingStrategy) {
         this.stackable = b;
+	    setEffectStackingStrategy(stackingStrategy);
     }
 
     @Override
-    public int getLevel() {
+    public int getStacks() {
         return level;
     }
 
+
     @Override
-    public void setLevel(int level) {
+    public void setStacks(int level) {
         this.level = level;
     }
 
@@ -117,15 +122,6 @@ public class EffectBase implements IEffect {
     }
 
     @Override
-    public IEffectSource getEffectSource() {
-        return effectSource;
-    }
-
-    @Override
-    public void setEffectSource(IEffectSource effectSource) {
-        this.effectSource = effectSource;
-    }
-
     public Set<PotionEffect> getPotions() {
         return potions;
     }
@@ -145,13 +141,6 @@ public class EffectBase implements IEffect {
     }
 
     @Override
-    public void onStack(int level) {
-        for (PotionEffect e : getPotions()) {
-            getConsumer().addPotionEffect(e.getType(), e.getAmplifier(), e.getDuration());
-        }
-    }
-
-    @Override
     public long getDuration() {
         return duration;
     }
@@ -166,7 +155,7 @@ public class EffectBase implements IEffect {
         tickCount++;
     }
 
-    protected int getTickCount() {
+    protected long getTickCount() {
         return tickCount;
     }
 
@@ -201,23 +190,6 @@ public class EffectBase implements IEffect {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        if (!(o instanceof EffectBase)) return false;
-
-        EffectBase that = (EffectBase) o;
-        if (uuid != null ? !uuid.equals(that.uuid) : that.uuid != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return uuid.hashCode();
-    }
-
-    @Override
     public String getExpireMessage() {
         return expireMessage;
     }
@@ -240,5 +212,70 @@ public class EffectBase implements IEffect {
     @Override
     public Set<EffectType> getEffectTypes() {
         return effectTypes;
+    }
+
+    @Override
+    public IEffectSourceProvider getEffectSourceProvider() {
+        return effectSourceProvider;
+    }
+
+    @Override
+    public void setEffectSourceProvider(IEffectSourceProvider effectSourceProvider) {
+        this.effectSourceProvider = effectSourceProvider;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        if (!(o instanceof EffectBase)) return false;
+
+        EffectBase that = (EffectBase) o;
+        return uuid != null ? uuid.equals(that.uuid) : that.uuid == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return uuid.hashCode();
+    }
+
+    public void setEffectTypes(Set<EffectType> effectTypes) {
+        this.effectTypes = effectTypes;
+    }
+
+    @Override
+    public void setValue(Value o) {
+        this.value = o;
+    }
+
+    @Override
+    public Value getValue() {
+        return value;
+    }
+
+    @Override
+    public EffectStackingStrategy<Value> getEffectStackingStrategy() {
+        return effectStackingStrategy;
+    }
+
+    @Override
+    public void setEffectStackingStrategy(EffectStackingStrategy<Value> effectStackingStrategy) {
+        this.effectStackingStrategy = effectStackingStrategy;
+    }
+
+    @Override
+    public IEffectContainer<Value, IEffect<Value>> getEffectContainer() {
+        return container;
+    }
+
+    @Override
+    public void setEffectContainer(IEffectContainer<Value, IEffect<Value>> iEffectContainer) {
+        this.container = iEffectContainer;
+    }
+
+    protected void addEffectType(EffectType e) {
+        if (effectTypes == null)
+            effectTypes = new HashSet<>();
+        effectTypes.add(e);
     }
 }

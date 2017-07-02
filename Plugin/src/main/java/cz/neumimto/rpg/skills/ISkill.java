@@ -18,6 +18,9 @@
 
 package cz.neumimto.rpg.skills;
 
+import cz.neumimto.rpg.effects.EffectSourceType;
+import cz.neumimto.rpg.effects.IEffectSource;
+import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 
@@ -26,7 +29,7 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 1.1.2015.
  */
-public interface ISkill {
+public interface ISkill extends IEffectSourceProvider {
 
     String getName();
 
@@ -69,4 +72,17 @@ public interface ISkill {
     DamageType getDamageType();
 
     void setDamageType(DamageType type);
+
+    default float getFloatNodeValue(ExtendedSkillInfo extendedSkillInfo, ISkillNode node) {
+       return extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node,extendedSkillInfo.getTotalLevel());
+    }
+
+    default long getLongNodeValue(ExtendedSkillInfo extendedSkillInfo, ISkillNode node) {
+        return (long) extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node,extendedSkillInfo.getTotalLevel());
+    }
+
+    @Override
+    default IEffectSource getType() {
+        return EffectSourceType.SKILL;
+    }
 }

@@ -71,4 +71,7 @@ public class CommandPermissions {
 
     @ConfigValue
     public static String SWOW_RUNEWORD_COMBINATION = "ntrpg.runeword.showcombination";
+
+    @ConfigValue
+    public static String COMMAND_SET_HEALTHSCALE = "hs";
 }
