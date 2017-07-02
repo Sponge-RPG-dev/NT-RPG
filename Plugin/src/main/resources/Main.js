@@ -36,9 +36,9 @@ var events = new HashMap();
 var skills = new ArrayList();
 var globalEffects = new ArrayList();
 var attributes = new ArrayList();
-
+//
 function log(obj) {
-    console.println(obj);
+    console.println("[NTRPG-JS]" + obj);
 }
 
 function registerSkill(obj) {

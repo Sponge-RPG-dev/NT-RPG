@@ -143,6 +143,7 @@ public class InventoryService {
             initializeHotbar(character, slot, null,(Slot) inventory, hotbar);
             slot ++;
         }
+
     }
 
     public void initializeHotbar(IActiveCharacter character, int slot) {
