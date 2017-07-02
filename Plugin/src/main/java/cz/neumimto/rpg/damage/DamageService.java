@@ -100,8 +100,16 @@ public class DamageService {
 			return;
         }
         ItemStack i = character.getPlayer().getItemInHand(HandTypes.MAIN_HAND).orElse(null);
-        double damage = getCharacterItemDamage(character, i == null ? null : i.getItem());
-           // damage += character.getMainHand().getDamage() + character.getOffHand().getDamage();
+        recalculateCharacterWeaponDamage(character, i == null ? null : i.getItem());
+    }
+
+    public void recalculateCharacterWeaponDamage(IActiveCharacter character, ItemType type) {
+        if (character.isStub()) {
+            return;
+        }
+
+        double damage = getCharacterItemDamage(character, type);
+        // damage += character.getMainHand().getDamage() + character.getOffHand().getDamage();
         character.setWeaponDamage(damage);
 
     }

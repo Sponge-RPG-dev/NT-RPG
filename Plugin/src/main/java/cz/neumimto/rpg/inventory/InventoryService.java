@@ -178,7 +178,6 @@ public class InventoryService {
                 if (o != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
                     o.setSlot(slot);
                     if (o.getType() == EffectSourceType.WEAPON && slot == selectedSlotIndex) {
-	                    ((Weapon)o).setCurrent(true);
                         o.onRightClick(character); //simulate player interaction to equip the weapon
                     } else if (o.getType() == EffectSourceType.CHARM) {
 	                    o.onEquip(character);
@@ -482,6 +481,7 @@ public class InventoryService {
         changeTo.setSlot(slot);
         character.setMainHand(changeTo);
         changeTo.onEquip(character);
+        damageService.recalculateCharacterWeaponDamage(character, changeTo.getItemType());
     }
 
     private void unEquipWeapon(IActiveCharacter character) {

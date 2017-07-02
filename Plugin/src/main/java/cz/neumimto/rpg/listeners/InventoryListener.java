@@ -113,7 +113,6 @@ public class InventoryListener {
                    return;
                 } else {
                     inventoryService.initializeHotbar(character, index, a);
-                    damageService.recalculateCharacterWeaponDamage(character);
                 }
             }
         }
@@ -140,7 +139,6 @@ public class InventoryListener {
         hotbarObject.onUnEquip(character);
         character.setHotbarSlot(hotbar.getSelectedSlotIndex(), HotbarObject.EMPTYHAND_OR_CONSUMABLE);
         inventoryService.initializeHotbar(character, hotbar.getSelectedSlotIndex());
-        damageService.recalculateCharacterWeaponDamage(character);
     }
 
     //@Listener
