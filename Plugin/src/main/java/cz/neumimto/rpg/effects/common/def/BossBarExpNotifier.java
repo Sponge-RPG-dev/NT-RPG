@@ -3,6 +3,7 @@ package cz.neumimto.rpg.effects.common.def;
 import cz.neumimto.rpg.effects.CoreEffectTypes;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.Utils;
@@ -103,6 +104,11 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 
     @Override
     public void setStackedValue(Object o) {
+
+    }
+
+    @Override
+    public void stackEffect(BossBarExpNotifier bossBarExpNotifier, IEffectSourceProvider effectSourceProvider) {
 
     }
 }

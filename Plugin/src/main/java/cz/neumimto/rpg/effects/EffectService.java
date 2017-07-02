@@ -192,6 +192,7 @@ public class EffectService {
                 consumer.removeEffect(container);
             }
         }
+        iEffect.setConsumer(null);
     }
 
     /**

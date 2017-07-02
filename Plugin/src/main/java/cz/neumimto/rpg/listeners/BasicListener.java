@@ -144,10 +144,11 @@ public class BasicListener {
 		Optional<ItemStack> itemInHand = pl.getItemInHand(HandTypes.MAIN_HAND);
 		if (itemInHand.isPresent()) {
 			ItemStack itemStack = itemInHand.get();
-			IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());
 			if (ItemStackUtils.any_armor.contains(itemStack.getItem())) {
 				event.setCancelled(true); //restrict armor equip on rightclick
+				return;
 			} else {
+				IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());
 				if (character.isStub())
 					return;
 				inventoryService.onRightClick(character, 0);
@@ -176,6 +177,7 @@ public class BasicListener {
 		Optional<ItemStack> itemInHand = pl.getItemInHand(HandTypes.MAIN_HAND);
 		if (itemInHand.isPresent() && ItemStackUtils.any_armor.contains(itemInHand.get().getItem())) {
 			event.setCancelled(true); //restrict armor equip on rightclick
+			return;
 		}
 		if (character.isStub())
 			return;

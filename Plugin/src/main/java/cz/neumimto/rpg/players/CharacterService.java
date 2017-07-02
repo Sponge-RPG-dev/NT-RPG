@@ -119,7 +119,7 @@ public class CharacterService {
 			logger.info("Loading player - " + id);
 			long k = System.currentTimeMillis();
 			final List<CharacterBase> playerCharacters = playerDao.getPlayersCharacters(id);
-			logger.info("Finished loading of player " + id + ", loaded " + playerCharacters.size() + " characters   ["+(k - System.currentTimeMillis())+"]ms");
+			logger.info("Finished loading of player " + id + ", loaded " + playerCharacters.size() + " characters   ["+(System.currentTimeMillis() - k)+"]ms");
 			game.getScheduler().createTaskBuilder().name("Callback-PlayerDataLoad" + id).execute(() -> {
 				PlayerDataPreloadComplete event = new PlayerDataPreloadComplete(id, playerCharacters);
 				game.getEventManager().post(event);
@@ -176,7 +176,7 @@ public class CharacterService {
 			Long k = System.currentTimeMillis();
 			logger.info("Saving player " + base.getUuid() + " character " + base.getName());
 			save(base);
-			logger.info("Saved player " + base.getUuid() + " character " + base.getName() + "["+(k - System.currentTimeMillis())+"]ms ");
+			logger.info("Saved player " + base.getUuid() + " character " + base.getName() + "["+(System.currentTimeMillis() - k )+"]ms ");
 		}).submit(plugin);
 	}
 
@@ -305,6 +305,11 @@ public class CharacterService {
 			}
 		}
 
+		for (ExtendedNClass nClass : character.getClasses()) {
+			applyGroupEffects(character, nClass.getConfigClass());
+		}
+		applyGroupEffects(character, character.getRace());
+
 		updateMaxHealth(character);
 		updateMaxHealth(character);
 		updateWalkSpeed(character);
@@ -320,7 +325,6 @@ public class CharacterService {
 
 	public void addDefaultEffects(IActiveCharacter character) {
 		effectService.addEffect(new CombatEffect(character), character, InternalEffectSourceProvider.INSTANCE);
-		effectService.addEffect(new BossBarExpNotifier(character), character, InternalEffectSourceProvider.INSTANCE);
 	}
 
 	/**
@@ -1057,6 +1061,13 @@ public class CharacterService {
 			iterator.remove();
 		}
 		assignPlayerToCharacter(pl);
+
+		for (ExtendedNClass nClass : character.getClasses()) {
+			applyGroupEffects(character, nClass.getConfigClass());
+		}
+
+		applyGroupEffects(character, character.getRace());
+
 
 		character.updateSelectedHotbarSlot();
 		character.getMana().setValue(0);
