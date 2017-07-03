@@ -188,7 +188,6 @@ public class EffectService {
         } else if (container.getEffects().contains(iEffect)){
             container.removeStack(iEffect);
             if (container.getEffects().isEmpty()) {
-                iEffect.onRemove();
                 consumer.removeEffect(container);
             }
         }
@@ -210,13 +209,10 @@ public class EffectService {
             while (iterator.hasNext()) {
                 e = iterator.next();
                 if (e.getEffectSourceProvider() == effectSource) {
-                    iterator.remove();
                     if (effectSet.contains(e))
                         effectSet.remove(e);
+                    removeEffect(effect, e, consumer);
                 }
-            }
-            if (effect.getEffects().isEmpty()) {
-                consumer.removeEffect(effect);
             }
         }
     }
@@ -249,6 +245,10 @@ public class EffectService {
      */
     public IGlobalEffect getGlobalEffect(String name) {
         return globalEffects.get(name.toLowerCase());
+    }
+
+    public Map<String, IGlobalEffect> getGlobalEffects() {
+        return globalEffects;
     }
 
     /**

@@ -113,14 +113,12 @@ public class PluginConfig {
 	public static double MAX_PARTY_SIZE = -68458;
 
 
-    //todo see ActiveCharacter mergeWeapons
-    /*
     @ConfigValue
     @Comment(content = {"If a player chooses a race and a class, where both those groups define damage value for one specific weapon, or projectile" +
                         " this option specifies how the weapon damage will be calculated.",
                         "1 = sum",
                         "2 = take higher value"})
     public static int WEAPON_MERGE_STRTATEGY = 2;
-*/
+
 
 }

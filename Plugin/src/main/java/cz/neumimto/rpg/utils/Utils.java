@@ -243,7 +243,7 @@ public class Utils {
 
 	public static String extractNumber(String string) {
 		Matcher matcher = REGEXP_NUMBER.matcher(string);
-		if (matcher.matches()) {
+		if (matcher.find()) {
 			return matcher.group();
 		}
 		return null;

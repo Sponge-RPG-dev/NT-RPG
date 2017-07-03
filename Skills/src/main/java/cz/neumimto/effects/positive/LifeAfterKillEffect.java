@@ -2,6 +2,7 @@ package cz.neumimto.effects.positive;
 
 import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.common.stacking.FloatEffectStackingStrategy;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.Utils;
@@ -10,7 +11,7 @@ import cz.neumimto.rpg.utils.Utils;
 public class LifeAfterKillEffect extends EffectBase<Float> {
     public static final String name = "Life after each kill";
 
-    public LifeAfterKillEffect(IActiveCharacter character, long duration, String healedAmount) {
+    public LifeAfterKillEffect(IEffectConsumer character, long duration, String healedAmount) {
         super(name, character);
         setDuration(duration);
         setValue(Float.parseFloat(Utils.extractNumber(healedAmount)));

@@ -29,6 +29,8 @@ import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
+import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.entities.PropertyContainer;
 import cz.neumimto.rpg.events.*;
 import cz.neumimto.rpg.events.character.CharacterWeaponUpdateEvent;
 import cz.neumimto.rpg.events.character.EventCharacterArmorPostUpdate;
@@ -95,10 +97,13 @@ public class CharacterService {
 	private GroupService groupService;
 
 	@Inject
-	private PropertyService propertyService;
+	private EntityService entityService;
 
 	@Inject
 	private DamageService damageService;
+
+	@Inject
+	private PropertyService propertyService;
 
 	@Inject
 	private Logger logger;
@@ -867,11 +872,13 @@ public class CharacterService {
 	/**
 	 * Updates character walkspeed to match DefaultProperties.walk_speed property
 	 *
-	 * @param character
+	 * @param entity
 	 */
-	public void updateWalkSpeed(IActiveCharacter character) {
-		double speed = getCharacterProperty(character, DefaultProperties.walk_speed);
-		character.getPlayer().offer(Keys.WALKING_SPEED, speed);
+	public void updateWalkSpeed(IEffectConsumer entity) {
+		double speed = entityService.getEntityProperty(entity, DefaultProperties.walk_speed);
+		entity.getEntity().offer(Keys.WALKING_SPEED, speed);
+		if (PluginConfig.DEBUG)
+			logger.info(entity + " setting walk speed to " + speed);
 	}
 
 	/**

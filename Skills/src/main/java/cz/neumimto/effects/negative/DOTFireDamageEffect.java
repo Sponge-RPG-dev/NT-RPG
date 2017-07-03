@@ -14,13 +14,13 @@ public class DOTFireDamageEffect extends EffectBase {
 
 	private double damage;
 
-	public DOTFireDamageEffect(String name, IEffectConsumer consumer, double damage, long period, long duration) {
+	public DOTFireDamageEffect(IEffectConsumer consumer, double damage, long period, long duration) {
 		super(name, consumer);
 		setDuration(duration);
 		setPeriod(period);
 	}
 
-	public DOTFireDamageEffect(IActiveCharacter character, long duration, String damage) {
+	public DOTFireDamageEffect(IEffectConsumer character, long duration, String damage) {
 		super(name, character);
 		setDuration(duration);
 		setPeriod(1000L);

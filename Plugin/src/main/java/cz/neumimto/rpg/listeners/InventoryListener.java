@@ -136,8 +136,6 @@ public class InventoryListener {
         if (hotbarObject == HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
             return;
         }
-        hotbarObject.onUnEquip(character);
-        character.setHotbarSlot(hotbar.getSelectedSlotIndex(), HotbarObject.EMPTYHAND_OR_CONSUMABLE);
         inventoryService.initializeHotbar(character, hotbar.getSelectedSlotIndex());
     }
 

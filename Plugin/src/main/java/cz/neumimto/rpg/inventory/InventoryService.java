@@ -28,6 +28,7 @@ import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.data.CustomItemData;
+import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
@@ -662,14 +663,12 @@ public class InventoryService {
         }
     }
 
-    public ItemStack setEnchantments(ItemStack itemStack, Map<IGlobalEffect,String> effects) {
+    public ItemStack setEnchantments(Map<String, String> effects,ItemStack itemStack) {
         CustomItemData itemData = getItemData(itemStack);
-        for (Map.Entry<IGlobalEffect, String> iGlobalEffectStringEntry : effects.entrySet()) {
-            IGlobalEffect a = iGlobalEffectStringEntry.getKey();
-            if (a != null) {
-                itemData.getEnchantements().put(a.getName(), iGlobalEffectStringEntry.getValue());
-            }
-        }
+        Map<String, String> map = new HashMap<>();
+        map.putAll(itemData.getEnchantements());
+        map.putAll(effects);
+        itemData.setEnchantements(map);
         itemStack.offer(itemData);
         return updateLore(itemStack);
     }

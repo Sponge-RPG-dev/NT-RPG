@@ -39,7 +39,5 @@ public class LesserFireResistanceEffect extends EffectBase<Float> {
 		float characterProperty = getConsumer().getProperty(DefaultProperties.fire_damage_protection_mult);
 		getConsumer().setProperty(DefaultProperties.fire_damage_protection_mult, characterProperty + getValue());
 	}
-
-
 }
 
