@@ -18,7 +18,8 @@ public enum EffectSourceType implements IEffectSource {
 	CLASS(false),
 	CHARM(true),
 	INTERNAL(true),
-	COMMAND(true);
+	COMMAND(true),
+	EFFECT(false);
 
 	private boolean m;
 

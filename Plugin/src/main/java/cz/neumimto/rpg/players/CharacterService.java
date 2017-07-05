@@ -676,7 +676,6 @@ public class CharacterService {
 		cc.setUsedSkillPoints(s + 1);
 		CharacterSkill characterSkill = character.getCharacterBase().getCharacterSkill(skill);
 		characterSkill.setLevel(extendedSkillInfo.getLevel());
-		putInSaveQueue(character.getCharacterBase());
 		skill.skillUpgrade(character, event.getLevel());
 		p.key = SkillTreeActionResult.UPGRADED;
 		p.value = new SkillTreeActionResult.Data(skill.getName(), event.getLevel() + "");

@@ -58,7 +58,7 @@ import java.util.Optional;
 /**
  * Created by NeumimTo on 29.4.2015.
  */
-@Plugin(id = "nt-rpg", version = "1.0.6", name = "NT-Rpg", dependencies = {
+@Plugin(id = "nt-rpg", version = "1.0.7", name = "NT-Rpg", dependencies = {
         @Dependency(id = "nt-core", version = "1.7",optional = false)
 })
 public class NtRpgPlugin {

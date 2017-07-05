@@ -71,6 +71,7 @@ public class EntityService {
             IMob iMob = entityHashMap.get(e);
             effectService.removeAllEffects(iMob);
             entityHashMap.remove(e);
+            iMob.detach();
         }
     }
 

@@ -25,6 +25,7 @@ import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.PropertyService;
+import cz.neumimto.rpg.skills.NDamageType;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
@@ -36,12 +37,17 @@ import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Projectile;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
+import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.blockray.BlockRay;
 import org.spongepowered.api.util.blockray.BlockRayHit;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.EntityUniverse;
+import org.spongepowered.common.event.damage.SpongeDamageSourceBuilder;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -205,7 +211,12 @@ public class Utils {
 				}
 			}
 		}
-		return true;
+		DamageSource build = new SpongeDamageSourceBuilder()
+				.type(NDamageType.DAMAGE_CHECK)
+				.absolute()
+				.build();
+
+		return l.damage(0, build);
 	}
 
 	public static boolean isLivingEntity(Entity entity) {

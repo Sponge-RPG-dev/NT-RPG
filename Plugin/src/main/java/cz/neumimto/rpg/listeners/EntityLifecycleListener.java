@@ -146,11 +146,6 @@ public class EntityLifecycleListener {
                 }
             }
             IMob mob = (IMob) entityService.get(event.getTargetEntity());
-            Collection<IEffect> values = mob.getEffectMap().values();
-            for (IEffect value : values) {
-                effectService.stopEffect(value);
-            }
-            mob.detach();
             entityService.remove(event.getTargetEntity().getUniqueId());
         }
     }

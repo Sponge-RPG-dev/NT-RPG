@@ -60,4 +60,16 @@ public class SkillLocalization {
 
     @ConfigValue
     public static String AGI = "Agility";
+
+    @ConfigValue
+    public static String Arrowstorm = "Shoots a random number of arrows";
+
+    @ConfigValue
+    public static String basher;
+
+    @ConfigValue
+    public static String burningPrescense = "";
+
+    @ConfigValue
+    public static String burningPrescense_desc = "";
 }

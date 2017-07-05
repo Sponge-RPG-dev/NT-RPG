@@ -50,6 +50,7 @@ public class EffectBase<Value> implements IEffect<Value> {
     private Value value;
     private EffectStackingStrategy<Value> effectStackingStrategy;
     private IEffectContainer<Value, IEffect<Value>> container;
+    private boolean tickingDisabled = false;
 
     public EffectBase(String name, IEffectConsumer consumer) {
         this();
@@ -277,5 +278,15 @@ public class EffectBase<Value> implements IEffect<Value> {
         if (effectTypes == null)
             effectTypes = new HashSet<>();
         effectTypes.add(e);
+    }
+
+    @Override
+    public boolean isTickingDisabled() {
+        return tickingDisabled;
+    }
+
+    @Override
+    public void setTickingDisabled(boolean tickingDisabled) {
+        this.tickingDisabled = tickingDisabled;
     }
 }

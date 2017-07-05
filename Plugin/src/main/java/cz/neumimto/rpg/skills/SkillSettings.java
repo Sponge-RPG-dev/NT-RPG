@@ -18,6 +18,8 @@
 
 package cz.neumimto.rpg.skills;
 
+import cz.neumimto.rpg.players.properties.DefaultProperties;
+
 import java.util.HashMap;
 import java.util.Map;
 

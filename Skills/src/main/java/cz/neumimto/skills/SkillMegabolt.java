@@ -36,7 +36,6 @@ public class SkillMegabolt extends ActiveSkill {
         SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
         builder.fromSkill(this);
         builder.setCaster(iActiveCharacter);
-        builder.type(getDamageType());
         SkillDamageSource src = builder.build();
         for (Entity e : nearbyEntities) {
             if (Utils.isLivingEntity(e)) {

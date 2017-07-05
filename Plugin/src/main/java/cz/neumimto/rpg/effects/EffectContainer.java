@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.effects;
 
+import cz.neumimto.rpg.effects.common.stacking.UnstackableEffectData;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -58,5 +60,42 @@ public class EffectContainer<K, T extends IEffect<K>> implements IEffectContaine
 	@Override
 	public void setStackedValue(K k) {
 		this.value = k;
+	}
+
+
+	public static class UnstackableSingleInstance extends EffectContainer<UnstackableEffectData<?>, IEffect<UnstackableEffectData<?>>> {
+
+		public UnstackableSingleInstance(IEffect iEffect) {
+			super(iEffect);
+		}
+
+		@Override
+		public void stackEffect(IEffect<UnstackableEffectData<?>> unstackableEffectDataIEffect, IEffectSourceProvider effectSourceProvider) {
+			super.stackEffect(unstackableEffectDataIEffect, effectSourceProvider);
+		}
+
+		@Override
+		public void removeStack(IEffect<UnstackableEffectData<?>> iEffect) {
+			super.removeStack(iEffect);
+			updateStackedValue();
+		}
+
+
+		@Override
+		public void updateStackedValue() {
+			UnstackableEffectData stackedValue = getStackedValue();
+			IEffect<UnstackableEffectData<?>> next = null;
+			for (IEffect<UnstackableEffectData<?>> effect : getEffects()) {
+				if (stackedValue.isInferiorTo(effect.getValue())) {
+					if (next != null) {
+						next.setTickingDisabled(true);
+					}
+					next = effect;
+					setStackedValue(effect.getValue());
+				} else {
+					effect.setTickingDisabled(true);
+				}
+			}
+		}
 	}
 }

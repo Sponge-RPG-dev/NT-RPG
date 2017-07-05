@@ -113,4 +113,8 @@ public interface IEffect<K> {
     IEffectContainer<K, IEffect<K>> getEffectContainer();
 
     void setEffectContainer(IEffectContainer<K, IEffect<K>> iEffectContainer);
+
+    boolean isTickingDisabled();
+
+    void setTickingDisabled(boolean tickingDisabled);
 }

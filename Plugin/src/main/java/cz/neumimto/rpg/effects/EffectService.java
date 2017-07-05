@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 public class EffectService {
 
 
-    public static final long TICK_PERIOD = 250L;
+    public static final long TICK_PERIOD = 5L;
 
     private static final long unlimited_duration = -1;
 
@@ -136,8 +136,10 @@ public class EffectService {
      * @param effect
      */
     public void tickEffect(IEffect effect, long time) {
-        effect.onTick();
-        effect.tickCountIncrement();
+        if (!effect.isTickingDisabled()) {
+            effect.onTick();
+            effect.tickCountIncrement();
+        }
         effect.setLastTickTime(time);
     }
 
@@ -180,6 +182,9 @@ public class EffectService {
         }
     }
 
+    public void removeEffect(IEffectContainer<?, IEffect<?>> container, IEffectConsumer consumer) {
+        container.forEach(a->removeEffect(a, consumer));
+    }
 
     protected void removeEffect(IEffectContainer container, IEffect iEffect, IEffectConsumer consumer) {
         if (iEffect == container) {
@@ -284,6 +289,7 @@ public class EffectService {
 	        removeEffect(e.getName(), character,effectSourceProvider);
         });
     }
+
 
     public boolean isGlobalEffect(String s) {
         return globalEffects.containsKey(s.toLowerCase());
