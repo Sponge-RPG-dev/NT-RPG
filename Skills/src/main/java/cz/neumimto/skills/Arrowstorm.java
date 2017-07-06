@@ -28,7 +28,7 @@ public class Arrowstorm extends ActiveSkill {
 		settings.addNode(SkillNodes.DAMAGE, 10, 10);
 		settings.addNode("min-arrows", 5, 1);
 		settings.addNode("max-arrows", 10, 1);
-		settings.addNode(SkillNodes.PERIOD, 2500, -100);
+		settings.addNode(SkillNodes.PERIOD, 500, -10);
 		super.settings = settings;
 	}
 
@@ -38,6 +38,7 @@ public class Arrowstorm extends ActiveSkill {
 		int max = getIntNodeValue(info, "max-arrows");
 		int arrows = ThreadLocalRandom.current().nextInt(max - min) + min;
 		min = getIntNodeValue(info, SkillNodes.PERIOD);
+		min = min <= 0 ? 1 : min;
 		effectService.addEffect(new ArrowstormEffect(character, min, arrows), character, this);
 		return SkillResult.OK;
 	}

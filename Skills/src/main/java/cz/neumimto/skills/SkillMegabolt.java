@@ -9,6 +9,9 @@ import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.entity.spawn.SpawnCause;
+import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
 
 import java.util.Set;
 
@@ -42,7 +45,8 @@ public class SkillMegabolt extends ActiveSkill {
                 Living l = (Living) e;
                 if (Utils.canDamage(iActiveCharacter, l)) {
                     l.damage(damage,src);
-                    l.getLocation().getExtent().createEntity(EntityTypes.LIGHTNING, l.getLocation().getPosition());
+                    Entity li = l.getLocation().getExtent().createEntity(EntityTypes.LIGHTNING, l.getLocation().getPosition());
+                    l.getLocation().getExtent().spawnEntity(li, Cause.source(SpawnCause.builder().type(SpawnTypes.PLUGIN).build()).build());
                 }
             }
         }
