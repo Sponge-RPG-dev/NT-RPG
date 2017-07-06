@@ -137,6 +137,10 @@ public class EffectService {
      */
     public void tickEffect(IEffect effect, long time) {
         if (!effect.isTickingDisabled()) {
+            if (effect.getConsumer().isDetached()) {
+                removeEffect(effect.getName(), effect.getConsumer(), effect.getEffectSourceProvider());
+                return;
+            }
             effect.onTick();
             effect.tickCountIncrement();
         }
@@ -154,16 +158,14 @@ public class EffectService {
     public void addEffect(IEffect iEffect, IEffectConsumer consumer, IEffectSourceProvider effectSourceProvider) {
         IEffectContainer eff = consumer.getEffect(iEffect.getName());
         if (eff == null) {
-            IEffectContainer iEffectContainer = iEffect.constructEffectContainer();
-            iEffect.setEffectContainer(iEffectContainer);
-            consumer.addEffect(iEffectContainer);
-            iEffect.setEffectSourceProvider(effectSourceProvider);
+            eff = iEffect.constructEffectContainer();
+            consumer.addEffect(eff);
 	        iEffect.onApply();
         } else if (eff.isStackable()) {
-            iEffect.setEffectContainer(eff);
-            iEffect.setEffectSourceProvider(effectSourceProvider);
             eff.stackEffect(iEffect, effectSourceProvider);
         }
+        iEffect.setEffectContainer(eff);
+        iEffect.setEffectSourceProvider(effectSourceProvider);
 	    if (iEffect.requiresRegister())
 		    runEffect(iEffect);
     }
@@ -188,7 +190,9 @@ public class EffectService {
 
     protected void removeEffect(IEffectContainer container, IEffect iEffect, IEffectConsumer consumer) {
         if (iEffect == container) {
-            iEffect.onRemove();
+            if (!iEffect.getConsumer().isDetached()) {
+                iEffect.onRemove();
+            }
             consumer.removeEffect(iEffect);
         } else if (container.getEffects().contains(iEffect)){
             container.removeStack(iEffect);
@@ -197,6 +201,7 @@ public class EffectService {
             }
         }
         iEffect.setConsumer(null);
+        pendingRemovals.add(iEffect);
     }
 
     /**
@@ -214,8 +219,6 @@ public class EffectService {
             while (iterator.hasNext()) {
                 e = iterator.next();
                 if (e.getEffectSourceProvider() == effectSource) {
-                    if (effectSet.contains(e))
-                        effectSet.remove(e);
                     removeEffect(effect, e, consumer);
                 }
             }

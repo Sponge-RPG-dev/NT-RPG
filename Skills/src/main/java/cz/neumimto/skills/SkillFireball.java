@@ -1,5 +1,6 @@
 package cz.neumimto.skills;
 
+import com.flowpowered.math.TrigMath;
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.ResourceLoader;
@@ -17,8 +18,8 @@ import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.world.World;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
+import static com.flowpowered.math.TrigMath.cos;
+import static com.flowpowered.math.TrigMath.sin;
 
 /**
  * Created by NeumimTo on 23.12.2015.
@@ -60,6 +61,5 @@ public class SkillFireball extends ActiveSkill {
 			target.getEntity().damage(projectileProperties.getDamage(), build.build());
 		});
 		return SkillResult.OK;
-
 	}
 }

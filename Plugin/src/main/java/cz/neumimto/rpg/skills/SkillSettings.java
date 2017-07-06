@@ -57,7 +57,7 @@ public class SkillSettings {
     }
 
     public void addNode(String s, float val) {
-        settingsMap.put(s, val);
+        settingsMap.put(s.toLowerCase(), val);
     }
 
     public void addObjectNode(String k, String v) {
@@ -78,7 +78,7 @@ public class SkillSettings {
     }
 
     public float getNodeValue(String s) {
-        return settingsMap.get(s);
+        return settingsMap.get(s.toLowerCase());
     }
 
     public float getLevelNodeValue(ISkillNode n, int level) {

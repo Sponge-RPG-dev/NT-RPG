@@ -30,7 +30,6 @@ public class Arrowstorm extends ActiveSkill {
 		settings.addNode("max-arrows", 10, 1);
 		settings.addNode(SkillNodes.PERIOD, 2500, -100);
 		super.settings = settings;
-		setDamageType(NDamageType.LIGHTNING);
 	}
 
 	@Override

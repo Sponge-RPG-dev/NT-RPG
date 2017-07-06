@@ -27,7 +27,7 @@ public class Basher extends PassiveSkill {
 	private EntityService entityService;
 
 	public Basher() {
-		setName("Arrowstorm");
+		setName("Basher");
 		setDescription(SkillLocalization.basher);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DAMAGE, 10, 10);

@@ -718,6 +718,11 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
+    public boolean isDetached() {
+        return getPlayer() == null;
+    }
+
+    @Override
     public int hashCode() {
         return getPlayer().getUniqueId().hashCode() * 37;
     }

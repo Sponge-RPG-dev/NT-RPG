@@ -268,7 +268,6 @@ public class BasicListener {
 		IEntity target = entityService.get(event.getTargetEntity());
 		ProjectileProperties projectileProperties = ProjectileProperties.cache.get(projectile);
 		if (projectileProperties != null) {
-			event.setCancelled(true);
 			ProjectileProperties.cache.remove(projectile);
 			projectileProperties.consumer.accept(shooter, target);
 			return;

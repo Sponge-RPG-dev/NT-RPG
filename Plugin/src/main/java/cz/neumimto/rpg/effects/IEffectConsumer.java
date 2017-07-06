@@ -117,4 +117,6 @@ public interface IEffectConsumer<T extends Living> extends PropertyContainer {
     }
 
     void sendMessage(String message);
+
+    boolean isDetached();
 }

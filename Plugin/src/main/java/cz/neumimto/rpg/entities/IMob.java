@@ -20,7 +20,4 @@ public interface IMob<T extends Living> extends IEntity {
 
     void detach();
 
-    default boolean isDetached() {
-        return getEntity() == null;
-    };
 }

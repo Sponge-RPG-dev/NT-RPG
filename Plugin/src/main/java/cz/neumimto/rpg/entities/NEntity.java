@@ -76,6 +76,11 @@ public class NEntity implements IMob {
     }
 
     @Override
+    public boolean isDetached() {
+        return entity == null || entity.get() == null;
+    }
+
+    @Override
     public Map<String, IEffectContainer> getEffectMap() {
         return effectSet;
     }

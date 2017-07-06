@@ -137,7 +137,6 @@ public class EntityLifecycleListener {
             }
             Optional<SkillDamageSource> sds = event.getCause().first(SkillDamageSource.class);
             if (sds.isPresent()) {
-
                 SkillDamageSource source = sds.get();
                 IEntity caster = source.getCaster();
                 if (caster.getType() == IEntityType.CHARACTER) {
@@ -145,7 +144,6 @@ public class EntityLifecycleListener {
                     characterService.addExperiences((IActiveCharacter) caster, exp, ExperienceSource.PVE);
                 }
             }
-            IMob mob = (IMob) entityService.get(event.getTargetEntity());
             entityService.remove(event.getTargetEntity().getUniqueId());
         }
     }

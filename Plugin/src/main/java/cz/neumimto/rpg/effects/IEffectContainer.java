@@ -49,7 +49,9 @@ public interface IEffectContainer<K, T extends IEffect<K>> extends IEffectSource
 
 	default void removeStack(T iEffect) {
 		getEffects().remove(iEffect);
-		iEffect.onRemove();
+		if (!iEffect.getConsumer().isDetached()) {
+			iEffect.onRemove();
+		}
 	}
 
 	@Override
