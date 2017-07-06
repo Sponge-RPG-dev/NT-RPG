@@ -16,7 +16,8 @@ public enum SkillNodes implements ISkillNode {
     DURATION("duration", SkillModifierProcessor.L_STACK),
     AMOUNT("amount", SkillModifierProcessor.D_STACK),
     PERIOD("period", SkillModifierProcessor.L_STACK),
-    CHANCE("chance", SkillModifierProcessor.D_STACK );
+    CHANCE("chance", SkillModifierProcessor.D_STACK ),
+    MULTIPLIER("multiplier",SkillModifierProcessor.F_MAX);
 
 
     private final String str;

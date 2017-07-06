@@ -7,6 +7,7 @@ import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
@@ -37,6 +38,13 @@ public class ArrowstormEffect extends EffectBase implements IEffectContainer {
 		this.arrows = arrows;
 		setDuration(-1L);
 		setPeriod(period);
+	}
+
+	public ArrowstormEffect(IEffectConsumer consumer, long duration, String data) {
+		super(name, consumer);
+		setDuration(duration);
+		setDuration(-1L);
+		setPeriod(Integer.parseInt(Utils.extractNumber(data)));
 	}
 
 	@Override

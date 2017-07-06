@@ -25,14 +25,21 @@ import org.spongepowered.api.entity.living.Living;
 
 public abstract class Targetted extends ActiveSkill implements ITargetted {
 
-    @Inject
-    private Game game;
+
+    @Override
+    public void init() {
+        super.init();
+        settings.addNode(SkillNodes.RANGE, 10, 10);
+    }
 
     @Override
     public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info,SkillModifier modifier) {
         int range = (int) info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.RANGE, info.getTotalLevel());
         Living l = Utils.getTargettedEntity(character, range);
         if (l != null) {
+            if (getDamageType() != null && !Utils.canDamage(character, l)) {
+                return SkillResult.CANCELLED;
+            }
             SkillFindTargetEvent event = new SkillFindTargetEvent(character, l, this);
             game.getEventManager().post(event);
             if (event.isCancelled()) {

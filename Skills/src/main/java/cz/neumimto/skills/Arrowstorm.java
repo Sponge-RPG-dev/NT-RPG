@@ -26,9 +26,9 @@ public class Arrowstorm extends ActiveSkill {
 		setDescription(SkillLocalization.Arrowstorm);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DAMAGE, 10, 10);
-		settings.addNode("min-arrows", 5, 1);
-		settings.addNode("max-arrows", 10, 1);
-		settings.addNode(SkillNodes.PERIOD, 500, -10);
+		settings.addNode("min-arrows", 35, 1);
+		settings.addNode("max-arrows", 45, 1);
+		settings.addNode(SkillNodes.PERIOD, 100, -10);
 		super.settings = settings;
 	}
 

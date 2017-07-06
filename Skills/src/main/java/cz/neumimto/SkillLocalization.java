@@ -72,4 +72,22 @@ public class SkillLocalization {
 
     @ConfigValue
     public static String burningPrescense_desc = "";
+
+    @ConfigValue
+    public static String SKILL_MULTIBOLT_DESC = "";
+
+    @ConfigValue
+    public static String SKILL_MULTIBOLT_LORE = "";
+
+    @ConfigValue
+    public static String SKILL_DODGE_LORE = "";;
+
+    @ConfigValue
+    public static String SKILL_DODGE_DESC = "";;
+
+    @ConfigValue
+    public static String SKILL_RESOLUTE_TECHNIQUE_DESC = "";
+
+    @ConfigValue
+    public static String SKILL_RESOLUTE_TECHNIQUE_LORE = "";
 }

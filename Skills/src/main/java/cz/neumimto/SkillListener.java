@@ -1,12 +1,14 @@
 package cz.neumimto;
 
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.effects.ResoluteTechniqueEffect;
 import cz.neumimto.effects.negative.StunEffect;
-import cz.neumimto.effects.positive.Bash;
-import cz.neumimto.effects.positive.DamageToMana;
-import cz.neumimto.effects.positive.LifeAfterKillEffect;
+import cz.neumimto.effects.positive.*;
+import cz.neumimto.events.CriticalStrikeEvent;
+import cz.neumimto.events.DamageDodgedEvent;
 import cz.neumimto.events.StunApplyEvent;
 import cz.neumimto.model.BashModel;
+import cz.neumimto.model.CriticalEffectModel;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
@@ -17,14 +19,17 @@ import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
-import cz.neumimto.skills.Basher;
+import cz.neumimto.rpg.utils.XORShiftRnd;
+import cz.neumimto.skills.ResoluteTechnique;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
+import org.spongepowered.api.event.filter.IsCancelled;
+import org.spongepowered.api.util.Tristate;
 
 import java.util.Optional;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by ja on 21.5.2016.
@@ -76,7 +81,25 @@ public class SkillListener {
     }
 
     @Listener
+    @SuppressWarnings("unchecked")
     public void onDamage(INEntityWeaponDamageEvent event) {
+        XORShiftRnd random = new XORShiftRnd();
+        //dodge
+        if (event.getTarget().hasEffect(DodgeEffect.name)) {
+            IEffectContainer<Float, DodgeEffect> effect = event.getSource().getEffect(DodgeEffect.name);
+            Float stackedValue = effect.getStackedValue();
+            float next = random.nextFloat(100);
+            if (stackedValue <= next) {
+                DamageDodgedEvent event0 = new DamageDodgedEvent(event.getSource(), event.getTarget(), effect);
+                boolean t = game.getEventManager().post(event0);
+                if (t) {
+                    event.setCancelled(t);
+                    event.setDamage(0);
+                    return;
+                }
+            }
+        }
+        //bash
         if (event.getSource().hasEffect(Bash.name)) {
             IEffectContainer<BashModel, Bash> effect = event.getSource().getEffect(Bash.name);
             BashModel stackedValue = effect.getStackedValue();
@@ -84,7 +107,7 @@ public class SkillListener {
             float reduced = entityService.getEntityProperty(event.getTarget(), DefaultProperties.cooldown_reduce);
             long cooldown = (long) (reduced * (float) stackedValue.cooldown);
             if (stackedValue.lasttime + cooldown <= time) {
-                int rnd = ThreadLocalRandom.current().nextInt(100);
+                int rnd = random.nextInt(100);
                 if (rnd <= stackedValue.chance) {
                     StunEffect stunEffect = new StunEffect(event.getTarget(),stackedValue.stunDuration);
                     if (stackedValue.damage > 0) {
@@ -97,6 +120,16 @@ public class SkillListener {
                 }
             }
         }
+        if (event.getSource().hasEffect(CriticalEffect.name)) {
+            IEffectContainer<CriticalEffectModel, CriticalEffect> effect = event.getSource().getEffect(CriticalEffect.name);
+            CriticalEffectModel stackedValue = effect.getStackedValue();
+            if (stackedValue.chance <= random.nextInt(100)) {
+                CriticalStrikeEvent criticalStrikeEvent = new CriticalStrikeEvent(event.getSource(), event.getTarget(), stackedValue.mult * event.getDamage());
+                if (!game.getEventManager().post(criticalStrikeEvent)) {
+                    event.setDamage(event.getDamage() + criticalStrikeEvent.getDamage());
+                }
+            }
+        }
     }
 
     @Listener
@@ -104,5 +137,25 @@ public class SkillListener {
         StunEffect effect = event.getEffect();
         float f = entityService.getEntityProperty(event.getSource(), AdditionalProperties.stun_duration_mult);
         effect.setDuration((long) (f * event.getEffect().getDuration()));
+    }
+
+    @Listener(order = Order.LAST)
+    @IsCancelled(Tristate.UNDEFINED)
+    public void onCriticalStrike(CriticalStrikeEvent event) {
+        if (event.isCancelled()) {
+            if (event.getSource().hasEffect(ResoluteTechniqueEffect.name)) {
+                event.setCancelled(false);
+            }
+        }
+    }
+
+    @Listener(order = Order.LAST)
+    @IsCancelled(Tristate.UNDEFINED)
+    public void onDodge(DamageDodgedEvent event) {
+        if (event.isCancelled()) {
+            if (event.getSource().hasEffect(ResoluteTechniqueEffect.name)) {
+                event.setCancelled(false);
+            }
+        }
     }
 }
