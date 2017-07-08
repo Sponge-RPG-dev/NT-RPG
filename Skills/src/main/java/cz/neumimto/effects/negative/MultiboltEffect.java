@@ -2,6 +2,7 @@ package cz.neumimto.effects.negative;
 
 import cz.neumimto.model.MultiboltModel;
 import cz.neumimto.rpg.ClassGenerator;
+import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
@@ -18,10 +19,10 @@ import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
  */
 public class MultiboltEffect extends EffectBase<MultiboltModel> {
 
-	private final IEffectConsumer source;
+	private final IEntity source;
 	private final MultiboltModel model;
 
-	public MultiboltEffect(IEffectConsumer consumer, IEffectConsumer source, MultiboltModel model) {
+	public MultiboltEffect(IEffectConsumer consumer, IEntity source, MultiboltModel model) {
 		super("Multibolt", consumer);
 		this.source = source;
 		this.model = model;

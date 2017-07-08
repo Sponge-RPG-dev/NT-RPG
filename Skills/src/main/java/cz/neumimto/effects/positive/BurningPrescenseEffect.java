@@ -3,9 +3,7 @@ package cz.neumimto.effects.positive;
 import cz.neumimto.model.BurningpresenseModel;
 import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.*;
-import cz.neumimto.rpg.effects.common.stacking.FloatEffectStackingStrategy;
 import cz.neumimto.rpg.utils.Utils;
-import cz.neumimto.skills.BurningPrescense;
 
 /**
  * Created by ja on 5.7.2017.

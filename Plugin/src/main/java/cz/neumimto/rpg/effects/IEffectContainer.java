@@ -54,6 +54,16 @@ public interface IEffectContainer<K, T extends IEffect<K>> extends IEffectSource
 		}
 	}
 
+	default void updateValue(K value, IEffectSourceProvider provider) {
+		for (T t : getEffects()) {
+			if (t.getEffectSourceProvider() == provider) {
+				t.setValue(value);
+				break;
+			}
+		}
+		updateStackedValue();
+	}
+
 	@Override
 	default IEffectSource getType() {
 		return EffectSourceType.EFFECT;

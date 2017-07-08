@@ -1,4 +1,4 @@
-package cz.neumimto.skills;
+package cz.neumimto.skills.active;
 
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.ResourceLoader;

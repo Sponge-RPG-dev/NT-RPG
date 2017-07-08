@@ -1,26 +1,31 @@
 package cz.neumimto;
 
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.effects.ManaDrainEffect;
 import cz.neumimto.effects.ResoluteTechniqueEffect;
 import cz.neumimto.effects.negative.StunEffect;
 import cz.neumimto.effects.positive.*;
 import cz.neumimto.events.CriticalStrikeEvent;
 import cz.neumimto.events.DamageDodgedEvent;
+import cz.neumimto.events.ManaDrainEvent;
 import cz.neumimto.events.StunApplyEvent;
 import cz.neumimto.model.BashModel;
 import cz.neumimto.model.CriticalEffectModel;
+import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.events.INEntityDamageEvent;
 import cz.neumimto.rpg.events.INEntityWeaponDamageEvent;
 import cz.neumimto.rpg.events.character.CharacterDamageEntityEvent;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.IReservable;
+import cz.neumimto.rpg.players.Mana;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.utils.XORShiftRnd;
-import cz.neumimto.skills.ResoluteTechnique;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -81,8 +86,23 @@ public class SkillListener {
     }
 
     @Listener
+    public void onEntityDamage(INEntityDamageEvent event) {
+
+    }
+
+    @Listener
     @SuppressWarnings("unchecked")
-    public void onDamage(INEntityWeaponDamageEvent event) {
+    public void onWeaponDamage(INEntityWeaponDamageEvent event) {
+        if (event.getTarget().hasEffect(DampenEffect.name)) {
+            if (event.getSource().getType() == IEntityType.CHARACTER) {
+                IActiveCharacter character = (IActiveCharacter) event.getSource();
+                IEffectContainer<Double, DampenEffect> effect = event.getTarget().getEffect(DampenEffect.name);
+                if (character.getMana().getValue() <= effect.getStackedValue()) {
+                    event.setCancelled(true);
+                    return;
+                }
+            }
+        }
         XORShiftRnd random = new XORShiftRnd();
         //dodge
         if (event.getTarget().hasEffect(DodgeEffect.name)) {
@@ -120,6 +140,7 @@ public class SkillListener {
                 }
             }
         }
+        //critical
         if (event.getSource().hasEffect(CriticalEffect.name)) {
             IEffectContainer<CriticalEffectModel, CriticalEffect> effect = event.getSource().getEffect(CriticalEffect.name);
             CriticalEffectModel stackedValue = effect.getStackedValue();
@@ -128,6 +149,16 @@ public class SkillListener {
                 if (!game.getEventManager().post(criticalStrikeEvent)) {
                     event.setDamage(event.getDamage() + criticalStrikeEvent.getDamage());
                 }
+            }
+        }
+        //manadrain
+        if (event.getTarget().getType() == IEntityType.CHARACTER) {
+            IActiveCharacter character = (IActiveCharacter) event.getTarget();
+            if (character.hasEffect(ManaDrainEffect.name)) {
+                IEffectContainer<Float, ManaDrainEffect> container = character.getEffect(ManaDrainEffect.name);
+                IReservable mana = character.getMana();
+                double k = character.getMana().getValue() - container.getStackedValue();
+                ManaDrainEvent mde = new ManaDrainEvent(event.getSource(), character, k);
             }
         }
     }
@@ -139,7 +170,7 @@ public class SkillListener {
         effect.setDuration((long) (f * event.getEffect().getDuration()));
     }
 
-    @Listener(order = Order.LAST)
+    @Listener(order = Order.LATE)
     @IsCancelled(Tristate.UNDEFINED)
     public void onCriticalStrike(CriticalStrikeEvent event) {
         if (event.isCancelled()) {
@@ -149,7 +180,7 @@ public class SkillListener {
         }
     }
 
-    @Listener(order = Order.LAST)
+    @Listener(order = Order.LATE)
     @IsCancelled(Tristate.UNDEFINED)
     public void onDodge(DamageDodgedEvent event) {
         if (event.isCancelled()) {
@@ -157,5 +188,13 @@ public class SkillListener {
                 event.setCancelled(false);
             }
         }
+    }
+
+    @Listener(order = Order.LAST)
+    @IsCancelled(Tristate.FALSE)
+    public void onManaDrain(ManaDrainEvent mde) {
+        IReservable mana = mde.getTarget().getMana();
+        double k = mana.getValue() - mde.getAmountDrained() <= 0 ? 0 : mana.getValue() - mde.getAmountDrained();
+        mana.setValue(k);
     }
 }

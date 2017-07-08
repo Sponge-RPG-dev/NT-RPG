@@ -350,4 +350,5 @@ public class Localization {
 
     @ConfigValue
     public static String ITEM_DAMAGE = "Item damage";
+    public static String SKILL_DRAIN_DESC;
 }

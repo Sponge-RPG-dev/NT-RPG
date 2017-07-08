@@ -1,4 +1,4 @@
-package cz.neumimto.skills;
+package cz.neumimto.skills.passive;
 
 import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;

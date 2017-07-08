@@ -1,4 +1,4 @@
-package cz.neumimto.skills;
+package cz.neumimto.skills.active;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;

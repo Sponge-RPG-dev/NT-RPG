@@ -90,4 +90,34 @@ public class SkillLocalization {
 
     @ConfigValue
     public static String SKILL_RESOLUTE_TECHNIQUE_LORE = "";
+
+    @ConfigValue
+    public static String SKILL_WRESTLE_LORE = "";
+
+    @ConfigValue
+    public static String SKILL_WRESTLE_DESC = "";
+
+    @ConfigValue
+    public static String SKILL_DRAIN_DESC = "";
+
+    @ConfigValue
+    public static String SKILL_DRAIN_LORE = "";
+
+    @ConfigValue
+    public static String SKILL_CRITICAL_DESC = "";
+
+    @ConfigValue
+    public static String SKILL_CRITICAL_LORE = "";
+
+    @ConfigValue
+    public static String SKILL_EMPHATY_DESC = "";
+
+    @ConfigValue
+    public static String SKILL_EMPHATY_LORE = "";
+
+    @ConfigValue
+    public static String SKILL_DAMPEN_DESC = "";
+
+    @ConfigValue
+    public static String SKILL_DAMPEN_LORE = "";
 }

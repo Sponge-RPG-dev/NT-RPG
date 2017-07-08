@@ -1,4 +1,4 @@
-package cz.neumimto.skills;
+package cz.neumimto.skills.passive;
 
 import antlr.ASdebug.IASDebugStream;
 import cz.neumimto.AdditionalProperties;

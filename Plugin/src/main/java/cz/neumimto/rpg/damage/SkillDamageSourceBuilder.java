@@ -32,8 +32,8 @@ import org.spongepowered.api.event.cause.entity.damage.source.common.AbstractDam
 public class SkillDamageSourceBuilder extends AbstractDamageSourceBuilder<SkillDamageSource, SkillDamageSourceBuilder> {
 
     protected ISkill skill;
-    protected IEffectConsumer caster;
-    protected IEffectConsumer target;
+    protected IEntity caster;
+    protected IEntity target;
     protected IEffect effect;
 
     public ISkill getSkill() {
@@ -51,7 +51,7 @@ public class SkillDamageSourceBuilder extends AbstractDamageSourceBuilder<SkillD
         return this;
     }
 
-    public IEffectConsumer getCaster() {
+    public IEntity getCaster() {
         return caster;
     }
 
@@ -65,7 +65,7 @@ public class SkillDamageSourceBuilder extends AbstractDamageSourceBuilder<SkillD
         return new SkillDamageSource(this);
     }
 
-    public IEffectConsumer getTarget() {
+    public IEntity getTarget() {
         return target;
     }
 
@@ -74,7 +74,7 @@ public class SkillDamageSourceBuilder extends AbstractDamageSourceBuilder<SkillD
         return this;
     }
 
-    public void setCaster(IEffectConsumer caster) {
+    public void setCaster(IEntity caster) {
         this.caster = caster;
     }
 
