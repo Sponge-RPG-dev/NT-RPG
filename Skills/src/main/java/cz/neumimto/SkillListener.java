@@ -266,16 +266,4 @@ public class SkillListener {
         }
     }
 
-    @Listener
-    public void onArrowFire(LaunchProjectileEvent event, @First(typeFilter = Entity.class) Entity e ){
-
-        Decorator.createTrajectory(
-                event.getTargetEntity(),
-                1,
-                1,
-                new ParticleDecorator.SIMPLE_TRAJECTORY(
-                        ParticleEffect.builder()
-                                .quantity(5).type(ParticleTypes.AMBIENT_MOB_SPELL).build()));
-    }
-
 }

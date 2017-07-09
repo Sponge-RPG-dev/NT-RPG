@@ -36,15 +36,17 @@ public class ParticleDecorator implements IActionDecorator {
 
 	@Override
 	public void createTrajectory(Entity entity, int interval, int maxticks, BiConsumer<Task, Entity> e) {
-		Sponge.getScheduler()
+		Task submit = Sponge.getScheduler()
 				.createTaskBuilder()
 				.delay(1L, TimeUnit.MILLISECONDS)
 				.interval(interval, TimeUnit.MILLISECONDS)
 				.execute((task -> {
-			if (!entity.isRemoved()) {
-				e.accept(task, entity);
-			}
-		})).submit(plugin);
+					if (!entity.isRemoved()) {
+						e.accept(task, entity);
+					} else {
+						task.cancel();
+					}
+				})).submit(plugin);
 	}
 
 	public static class SIMPLE_TRAJECTORY implements BiConsumer<Task, Entity> {
