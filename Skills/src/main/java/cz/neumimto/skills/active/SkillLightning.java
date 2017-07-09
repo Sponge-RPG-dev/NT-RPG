@@ -1,5 +1,6 @@
 package cz.neumimto.skills.active;
 
+import cz.neumimto.Decorator;
 import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.IEntity;
@@ -43,8 +44,7 @@ public class SkillLightning extends Targetted {
 		build.fromSkill(this);
 		build.setCaster(source);
 		target.damage(damage, build.build());
-		Entity q = target.getLocation().getExtent().createEntity(EntityTypes.LIGHTNING, target.getLocation().getPosition());
-		target.getLocation().getExtent().spawnEntity(q, Cause.source(SpawnCause.builder().type(SpawnTypes.PLUGIN).build()).build());
+		Decorator.strikeLightning(target);
 		return SkillResult.OK;
 	}
 }

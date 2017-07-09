@@ -1,5 +1,6 @@
 package cz.neumimto.skills.active;
 
+import cz.neumimto.Decorator;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
@@ -45,8 +46,7 @@ public class SkillMegabolt extends ActiveSkill {
                 Living l = (Living) e;
                 if (Utils.canDamage(iActiveCharacter, l)) {
                     l.damage(damage,src);
-                    Entity li = l.getLocation().getExtent().createEntity(EntityTypes.LIGHTNING, l.getLocation().getPosition());
-                    l.getLocation().getExtent().spawnEntity(li, Cause.source(SpawnCause.builder().type(SpawnTypes.PLUGIN).build()).build());
+                    Decorator.strikeLightning(l);
                 }
             }
         }

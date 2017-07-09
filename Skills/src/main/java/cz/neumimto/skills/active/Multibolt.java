@@ -32,7 +32,6 @@ public class Multibolt extends Targetted {
 	private EffectService effectService;
 
 	public Multibolt() {
-		super();
 		setName("Multibolt");
 		setLore(SkillLocalization.SKILL_MULTIBOLT_LORE);
 		setDescription(SkillLocalization.SKILL_MULTIBOLT_DESC);

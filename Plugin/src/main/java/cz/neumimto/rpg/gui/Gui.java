@@ -21,6 +21,7 @@ package cz.neumimto.rpg.gui;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.inventory.CannotUseItemReson;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.ExtendedNClass;
@@ -31,6 +32,7 @@ import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillTree;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.List;
 import java.util.Map;
@@ -172,5 +174,9 @@ public class Gui {
 
     public static void displayMana(IActiveCharacter character) {
         getMessageTypeOf(character).displayMana(character);
+    }
+
+    public static void sendCannotUseItemNotification(IActiveCharacter character, ItemStack is, CannotUseItemReson reason) {
+        getMessageTypeOf(character).sendCannotUseItemNotification(character, is, reason);
     }
 }

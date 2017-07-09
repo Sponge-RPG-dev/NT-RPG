@@ -31,6 +31,8 @@ import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
+import cz.neumimto.rpg.effects.common.def.ManaBarNotifier;
+import cz.neumimto.rpg.inventory.CannotUseItemReson;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
@@ -703,17 +705,19 @@ public class VanilaMessaging implements IPlayerMessage {
 
 	@Override
 	public void displayMana(IActiveCharacter character) {
-		double value = character.getMana().getValue();
-		double maxValue = character.getMana().getMaxValue();
-		double reservedAmount = character.getMana().getReservedAmount();
+		IEffectContainer<Object, ManaBarNotifier> barExpNotifier = character.getEffect(ManaBarNotifier.name);
+		ManaBarNotifier effect = (ManaBarNotifier) barExpNotifier;
+		if (effect == null) {
+			effect = new ManaBarNotifier(character);
+			effectService.addEffect(effect, character, InternalEffectSourceProvider.INSTANCE);
+		}
+		effect.notifyManaChange();
 
+	}
 
-
-		LiteralText a = Text.builder(Localization.MANA + " ").color(TextColors.GOLD)
-				.append(Text.builder(value + "").color(TextColors.BLUE).build())
-				.append(Text.builder("/").color(TextColors.WHITE).build())
-				.append(Text.builder(String.valueOf(maxValue - reservedAmount)).color(TextColors.DARK_BLUE).build())
-				.append(Text.builder(" (" + maxValue + ") ").color(TextColors.GRAY).build()).build();
-		character.getPlayer().sendMessage(a);
+	@Override
+	public void sendCannotUseItemNotification(IActiveCharacter character, ItemStack is, CannotUseItemReson reason) {
+		if (reason == CannotUseItemReson.CONFIG)
+		character.getPlayer().sendMessage(Text.of());
 	}
 }

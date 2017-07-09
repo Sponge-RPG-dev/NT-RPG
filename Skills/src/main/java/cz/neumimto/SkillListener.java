@@ -3,6 +3,7 @@ package cz.neumimto;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.ManaDrainEffect;
 import cz.neumimto.effects.ResoluteTechniqueEffect;
+import cz.neumimto.effects.decoration.ParticleDecorator;
 import cz.neumimto.effects.negative.StunEffect;
 import cz.neumimto.effects.positive.*;
 import cz.neumimto.events.CriticalStrikeEvent;
@@ -11,6 +12,7 @@ import cz.neumimto.events.ManaDrainEvent;
 import cz.neumimto.events.StunApplyEvent;
 import cz.neumimto.model.BashModel;
 import cz.neumimto.model.CriticalEffectModel;
+import cz.neumimto.model.PotionEffectModel;
 import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
@@ -27,14 +29,35 @@ import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.utils.XORShiftRnd;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.type.HandTypes;
+import org.spongepowered.api.effect.particle.ParticleEffect;
+import org.spongepowered.api.effect.particle.ParticleTypes;
+import org.spongepowered.api.effect.potion.PotionEffectType;
+import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
+import org.spongepowered.api.event.action.InteractEvent;
+import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
+import org.spongepowered.api.event.entity.InteractEntityEvent;
+import org.spongepowered.api.event.entity.projectile.LaunchProjectileEvent;
 import org.spongepowered.api.event.filter.IsCancelled;
+import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.event.filter.cause.Root;
+import org.spongepowered.api.event.filter.type.Include;
+import org.spongepowered.api.event.item.inventory.InteractItemEvent;
+import org.spongepowered.api.event.item.inventory.UseItemStackEvent;
+import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.util.Tristate;
 
 import java.util.Optional;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * Created by ja on 21.5.2016.
@@ -197,4 +220,62 @@ public class SkillListener {
         double k = mana.getValue() - mde.getAmountDrained() <= 0 ? 0 : mana.getValue() - mde.getAmountDrained();
         mana.setValue(k);
     }
+
+    @Listener(order = Order.FIRST)
+    public void onItemConsume(UseItemStackEvent.Start event, @Root(typeFilter = Player.class) Player player) {
+        Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
+        processConsumption(player, itemInHand, (e, l) -> {
+            if (l.cooldowns.containsKey(e)) {
+                if (l.cooldowns.get(e) <= System.currentTimeMillis())
+                    event.setCancelled(true);
+            }
+        });
+    }
+
+    private void processConsumption(Player player, Optional<ItemStack> itemInHand, BiConsumer<PotionEffectType, PotionEffectModel> l) {
+        if (itemInHand.isPresent()) {
+            ItemStack itemStack = itemInHand.get();
+            if (itemStack.getItem() == ItemTypes.POTION
+                    || itemStack.getItem() == ItemTypes.SPLASH_POTION
+                    || itemStack.getItem() == ItemTypes.LINGERING_POTION) {
+                IActiveCharacter character = characterService.getCharacter(player);
+                if (character.hasEffect(PotionEffect.name)) {
+                    PotionEffect effect = (PotionEffect) character.getEffect(PotionEffect.name);
+                    l.accept(null, effect.getValue());
+                }
+            }
+        }
+    }
+
+    @Listener(order = Order.LATE)
+    public void onItemConsumerFinish(UseItemStackEvent.Finish event, @Root(typeFilter = Player.class) Player player) {
+        Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
+        processConsumption(player, itemInHand, (e, l) -> {
+            long k = System.currentTimeMillis();
+            l.cooldowns.put(e, l.potions.get(e) + k);
+        });
+    }
+
+    @Listener
+    public void onBlockInteract(InteractBlockEvent event, @First(typeFilter = Player.class) Player player) {
+        if (event.getTargetBlock().getState().getType() == BlockTypes.BREWING_STAND) {
+            IActiveCharacter character = characterService.getCharacter(player);
+            if (!character.hasEffect(AlchemyEffect.name)) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @Listener
+    public void onArrowFire(LaunchProjectileEvent event, @First(typeFilter = Entity.class) Entity e ){
+
+        Decorator.createTrajectory(
+                event.getTargetEntity(),
+                1,
+                1,
+                new ParticleDecorator.SIMPLE_TRAJECTORY(
+                        ParticleEffect.builder()
+                                .quantity(5).type(ParticleTypes.AMBIENT_MOB_SPELL).build()));
+    }
+
 }

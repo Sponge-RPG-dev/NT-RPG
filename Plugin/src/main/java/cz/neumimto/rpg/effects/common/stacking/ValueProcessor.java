@@ -43,7 +43,6 @@ public abstract class ValueProcessor<T extends Number, I extends IEffect<T>> ext
 		public Long findValue() {
 			return getEffects().stream().mapToLong(IEffect::getValue).max().orElse(0L);
 		}
-
 	}
 
 	public static class D_MIN extends ValueProcessor<Double, IEffect<Double>> {

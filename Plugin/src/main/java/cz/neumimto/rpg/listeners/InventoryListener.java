@@ -21,6 +21,7 @@ package cz.neumimto.rpg.listeners;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.damage.DamageService;
+import cz.neumimto.rpg.inventory.CannotUseItemReson;
 import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.CharacterService;
@@ -108,7 +109,7 @@ public class InventoryListener {
             int index = ((SlotAdapter)i).getOrdinal();
             if (Utils.isHotbar(index)) {
                 ItemStack a = slotTransaction.getFinal().createStack();
-                if (!inventoryService.canUse(a, character)) {
+                if (inventoryService.canUse(a, character) != CannotUseItemReson.OK) {
                    event.setCancelled(true);
                    return;
                 } else {

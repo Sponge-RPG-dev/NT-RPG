@@ -49,7 +49,7 @@ public class Localization {
     public static String WEAPON_EQUIPED = "You have equiped weapon %1";
 
     @ConfigValue
-    public static String WEAPON_CANT_BE_EQUIPED = "You can't use %1";
+    public static String WEAPON_CANT_BE_EQUIPED = "You are not trained to use %1";
 
     @ConfigValue
     public static String CHARACTER_CREATION = "";
@@ -350,5 +350,4 @@ public class Localization {
 
     @ConfigValue
     public static String ITEM_DAMAGE = "Item damage";
-    public static String SKILL_DRAIN_DESC;
 }
