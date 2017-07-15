@@ -20,6 +20,8 @@ public class SkillDamageEventLate extends CancellableEvent {
 		this.target = target;
 		this.skill = skill;
 		this.damage = damage;
+		this.damageType = type;
+		this.targetResistance = resistance;
 	}
 
 	public IEntity getCaster() {

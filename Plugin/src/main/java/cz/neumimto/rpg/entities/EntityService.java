@@ -6,6 +6,7 @@ import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.events.skills.SkillHealEvent;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -70,6 +71,7 @@ public class EntityService {
             IMob iMob = entityHashMap.get(e);
             effectService.removeAllEffects(iMob);
             entityHashMap.remove(e);
+            iMob.detach();
         }
     }
 
@@ -107,7 +109,7 @@ public class EntityService {
         return d;
     }
 
-    public float getEntityProperty(IEntity entity, int id) {
+    public float getEntityProperty(IEffectConsumer entity, int id) {
         return Math.min(entity.getProperty(id), propertyService.getMaxPropertyValue(id));
     }
 

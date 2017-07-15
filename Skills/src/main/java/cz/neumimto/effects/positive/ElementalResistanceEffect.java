@@ -23,7 +23,7 @@ public class ElementalResistanceEffect extends EffectBase<Float> {
         setDuration(duration);
     }
 
-    public ElementalResistanceEffect(IActiveCharacter character, long duration, String level) {
+    public ElementalResistanceEffect(IEffectConsumer character, long duration, String level) {
         this(character, Float.parseFloat(level), duration);
     }
 

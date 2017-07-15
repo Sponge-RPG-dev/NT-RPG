@@ -1,4 +1,4 @@
-package cz.neumimto.skills;
+package cz.neumimto.skills.active;
 
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.ResourceLoader;
@@ -7,7 +7,6 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.events.SkillDamageEvent;
 import cz.neumimto.rpg.events.SkillDamageEventLate;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.*;
@@ -15,7 +14,6 @@ import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
-import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
 /**

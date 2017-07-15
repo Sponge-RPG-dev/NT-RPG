@@ -28,6 +28,7 @@ import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.data.CustomItemData;
+import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
@@ -194,9 +195,10 @@ public class InventoryService {
             if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
                 hotbarObject.setSlot(slot);
                 character.getHotbar()[slot] = hotbarObject;
-                if (!canUse(i, character)) {
+                CannotUseItemReson reason = canWear(i, character);
+                if (reason != CannotUseItemReson.OK) {
                     ItemStack itemStack = s.poll().get();
-                    ItemStackUtils.dropItem(character.getPlayer(), itemStack);
+                    dropItem(character, itemStack, reason);
                     character.getHotbar()[slot] = HotbarObject.EMPTYHAND_OR_CONSUMABLE;
                     return;
                 }
@@ -275,9 +277,10 @@ public class InventoryService {
         ItemStack is = null;
         if (chestplate.isPresent()) {
             is = chestplate.get();
-            if (!canWear(is, character)) {
+            CannotUseItemReson reason = canWear(is, character);
+            if (reason != CannotUseItemReson.OK) {
                 character.getPlayer().setChestplate(null);
-                ItemStackUtils.dropItem(character.getPlayer(), is);
+                dropItem(character, is, reason);
             } else {
 
                 Armor armor = getChestplate(character);
@@ -295,9 +298,10 @@ public class InventoryService {
         Optional<ItemStack> helmet = character.getPlayer().getHelmet();
         if (helmet.isPresent()) {
             is = helmet.get();
-            if (!canWear(is, character)) {
+            CannotUseItemReson reason = canWear(is, character);
+            if (reason != CannotUseItemReson.OK) {
                 character.getPlayer().setHelmet(null);
-                ItemStackUtils.dropItem(character.getPlayer(), is);
+                dropItem(character, is, reason);
             } else {
 
                 Armor armor = getHelmet(character);
@@ -314,9 +318,10 @@ public class InventoryService {
         Optional<ItemStack> boots = character.getPlayer().getBoots();
         if (boots.isPresent()) {
             is = boots.get();
-            if (!canWear(is, character)) {
+            CannotUseItemReson reason = canWear(is, character);
+            if (reason != CannotUseItemReson.OK) {
                 character.getPlayer().setBoots(null);
-                ItemStackUtils.dropItem(character.getPlayer(), is);
+                dropItem(character, is, reason);
             } else {
                 Armor armor = getBoots(character);
                 Armor armor1 = character.getEquipedArmor().get(EquipmentTypes.BOOTS);
@@ -330,9 +335,11 @@ public class InventoryService {
         Optional<ItemStack> leggings = character.getPlayer().getLeggings();
         if (leggings.isPresent()) {
             is = leggings.get();
-            if (!canWear(is, character)) {
+            CannotUseItemReson reason = canWear(is, character);
+            if (reason != CannotUseItemReson.OK) {
                 character.getPlayer().setLeggings(null);
-                ItemStackUtils.dropItem(character.getPlayer(), is);
+
+                dropItem(character, is, reason);
             } else {
                 Armor armor = getLeggings(character);
 
@@ -344,6 +351,12 @@ public class InventoryService {
                 effectService.applyGlobalEffectsAsEnchantments(armor.getEffects(), character, armor);
             }
         }
+    }
+
+
+    private void dropItem(IActiveCharacter character, ItemStack is, CannotUseItemReson reason) {
+        ItemStackUtils.dropItem(character.getPlayer(), is);
+        Gui.sendCannotUseItemNotification(character, is, reason);
     }
 
     protected HotbarObject getHotbarObject(IActiveCharacter character, ItemStack is) {
@@ -566,10 +579,10 @@ public class InventoryService {
     }
 
 
-    public boolean canWear(ItemStack itemStack, IActiveCharacter character) {
+    public CannotUseItemReson canWear(ItemStack itemStack, IActiveCharacter character) {
         if (ItemStackUtils.any_armor.contains(itemStack.getItem())) {
             if (!character.canWear(itemStack)) {
-                return false;
+                return CannotUseItemReson.CONFIG;
             }
         }
         CustomItemData itemData = getItemData(itemStack);
@@ -577,24 +590,20 @@ public class InventoryService {
 
     }
     
-	public boolean canUse(ItemStack itemStack, IActiveCharacter character) {
+	public CannotUseItemReson canUse(ItemStack itemStack, IActiveCharacter character) {
 		if (ItemStackUtils.weapons.contains(itemStack.getItem())) {
 			if (!character.canUse(itemStack.getItem())) {
-				return false;
+				return CannotUseItemReson.CONFIG;
 			}
 		}
         return checkRestrictions(character, getItemData(itemStack));
 	}
 
-    private boolean checkRestrictions(IActiveCharacter character, CustomItemData itemData) {
+    private CannotUseItemReson checkRestrictions(IActiveCharacter character, CustomItemData itemData) {
         ListValue<String> strings = itemData.groupRestricitons();
         if (strings.isEmpty())
-            return true;
+            return CannotUseItemReson.OK;
         int k = 0;
-
-        if (character.getPrimaryClass().getLevel() < itemData.itemLevel().get()) {
-            return false;
-        }
 
         for (String string : strings) {
             if (string.contains(character.getRace().getName())) {
@@ -608,7 +617,16 @@ public class InventoryService {
                 }
             }
         }
-        return strings.size() == k;
+
+        if (strings.size() == k) {
+            if (character.getPrimaryClass().getLevel() < itemData.itemLevel().get()) {
+                return CannotUseItemReson.OK;
+            } else {
+                return CannotUseItemReson.LEVEL;
+            }
+        } else {
+            return CannotUseItemReson.LORE;
+        }
     }
 
 
@@ -662,14 +680,12 @@ public class InventoryService {
         }
     }
 
-    public ItemStack setEnchantments(ItemStack itemStack, Map<IGlobalEffect,String> effects) {
+    public ItemStack setEnchantments(Map<String, String> effects,ItemStack itemStack) {
         CustomItemData itemData = getItemData(itemStack);
-        for (Map.Entry<IGlobalEffect, String> iGlobalEffectStringEntry : effects.entrySet()) {
-            IGlobalEffect a = iGlobalEffectStringEntry.getKey();
-            if (a != null) {
-                itemData.getEnchantements().put(a.getName(), iGlobalEffectStringEntry.getValue());
-            }
-        }
+        Map<String, String> map = new HashMap<>();
+        map.putAll(itemData.getEnchantements());
+        map.putAll(effects);
+        itemData.setEnchantements(map);
         itemStack.offer(itemData);
         return updateLore(itemStack);
     }

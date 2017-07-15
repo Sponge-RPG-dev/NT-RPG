@@ -51,11 +51,9 @@ import org.spongepowered.api.world.World;
 import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 
 @ResourceLoader.Command
@@ -98,7 +96,7 @@ public class CommandAdmin extends CommandBase {
         }
 
 
-        if (commandSource.hasPermission("ntrpg.superadmin")) {
+        if (!commandSource.hasPermission("ntrpg.superadmin")) {
             return CommandResult.empty();
         }
 
@@ -136,7 +134,7 @@ public class CommandAdmin extends CommandBase {
 
         } else if (a[0].equalsIgnoreCase("delete")) {
 
-        } else if (a[0].equalsIgnoreCase("enchantment")) {
+        } else if (a[0].equalsIgnoreCase("enchantment") || a[0].equalsIgnoreCase("e")) {
             if (a[1].equalsIgnoreCase("add")) {
                 String name = a[2];
                 name = name.replaceAll("_", " ");
@@ -148,7 +146,11 @@ public class CommandAdmin extends CommandBase {
                     if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
                         ItemStack itemStack = player.getItemInHand(HandTypes.MAIN_HAND).get();
                         CustomItemData itemData = inventoryService.getItemData(itemStack);
-                        itemData.enchantements().put(globalEffect.getName(), a[3]);
+                        Map<String, String> map = new HashMap<>();
+                        map.putAll(itemData.getEnchantements());
+                        map.put(globalEffect.getName(), a.length == 2 ?  "" : a[3].replaceAll("_", " "));
+                        itemStack = inventoryService.setEnchantments(map, itemStack);
+                        player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
                         player.sendMessage(Text.of("Enchantment " + globalEffect.getName() + " added"));
                     } else {
                         player.sendMessage(Text.of(Localization.NO_ITEM_IN_HAND));
@@ -255,5 +257,34 @@ public class CommandAdmin extends CommandBase {
             }
         }
         return CommandResult.success();
+    }
+
+    @Override
+    public List<String> getSuggestions(CommandSource source, String arguments, @Nullable Location<World> targetPosition) throws CommandException {
+        String[] a = arguments.split(" ");
+        List<String> ar = new ArrayList<>();
+        if (a[0].equalsIgnoreCase("enchantment") || a[0].equalsIgnoreCase("e") ) {
+            if (a.length == 1) {
+                ar.add("add");
+                ar.add("remove");
+                return ar;
+            } else if (a[1].equalsIgnoreCase("add")) {
+                if (a.length == 2) {
+                    ar.addAll(effectService.getGlobalEffects().keySet());
+                } else {
+                    String q = a[2].replaceAll("_", " ");
+                    int lim = 20;
+                    for (String e : effectService.getGlobalEffects().keySet()) {
+                        if (e.toLowerCase().startsWith(q.toLowerCase())) {
+                            ar.add(e);
+                            lim --;
+                            if (lim == 0)
+                                return ar;
+                        }
+                    }
+                }
+            }
+        }
+        return ar.stream().map(w -> w.replaceAll(" ", "_")).collect(Collectors.toList());
     }
 }

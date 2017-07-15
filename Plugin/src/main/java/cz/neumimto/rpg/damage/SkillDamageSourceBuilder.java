@@ -19,6 +19,7 @@ package cz.neumimto.rpg.damage;
 
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
 import org.spongepowered.api.entity.living.player.Player;

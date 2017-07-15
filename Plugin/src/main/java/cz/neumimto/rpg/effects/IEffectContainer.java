@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 /**
  * Created by NeumimTo on 1.4.2017.
  */
-public interface IEffectContainer<K, T extends IEffect<K>> {
+public interface IEffectContainer<K, T extends IEffect<K>> extends IEffectSourceProvider {
 
 	Set<T> getEffects();
 
@@ -33,9 +33,11 @@ public interface IEffectContainer<K, T extends IEffect<K>> {
 	}
 
 	default void updateStackedValue(){
-		setStackedValue(getEffectStackingStrategy().getDefaultValue());
-		for (T t : getEffects()) {
-			setStackedValue(t.getEffectStackingStrategy().mergeValues(getStackedValue(), t.getValue()));
+		if (getEffectStackingStrategy() != null) {
+			setStackedValue(getEffectStackingStrategy().getDefaultValue());
+			for (T t : getEffects()) {
+				setStackedValue(t.getEffectStackingStrategy().mergeValues(getStackedValue(), t.getValue()));
+			}
 		}
 	}
 
@@ -47,6 +49,23 @@ public interface IEffectContainer<K, T extends IEffect<K>> {
 
 	default void removeStack(T iEffect) {
 		getEffects().remove(iEffect);
-		iEffect.onRemove();
+		if (!iEffect.getConsumer().isDetached()) {
+			iEffect.onRemove();
+		}
+	}
+
+	default void updateValue(K value, IEffectSourceProvider provider) {
+		for (T t : getEffects()) {
+			if (t.getEffectSourceProvider() == provider) {
+				t.setValue(value);
+				break;
+			}
+		}
+		updateStackedValue();
+	}
+
+	@Override
+	default IEffectSource getType() {
+		return EffectSourceType.EFFECT;
 	}
 }

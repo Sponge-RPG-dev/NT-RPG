@@ -20,6 +20,17 @@ public class XORShiftRnd {
         return (out < 0) ? -out : out;
     }
 
+    public double nextDouble(long max) {
+        long out = nextLong() % max;
+        return (out < 0) ? -out * 0.01d : out * 0.01d;  //.00 precision is enough
+    }
+
+    //just so we dont have to typecast after
+    public float nextFloat(int max) {
+        int out = nextInt() % max;
+        return (out < 0) ? -out * 0.01f : out * 0.01f;  //.00 precision is enough
+    }
+
     public int nextInt() {
         l ^= (l << 21);
         l ^= (l >>> 35);
@@ -27,7 +38,7 @@ public class XORShiftRnd {
         return (int) l;
     }
 
-    public long nextLong(int max) {
+    public long nextLong(long max) {
         long out = nextLong() % max;
         return (out < 0) ? -out : out;
     }

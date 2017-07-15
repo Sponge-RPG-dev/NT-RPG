@@ -14,7 +14,10 @@ public enum SkillNodes implements ISkillNode {
     PROJECTILE_TYPE("projectile-type", null),
     RANGE("range", SkillModifierProcessor.D_STACK),
     DURATION("duration", SkillModifierProcessor.L_STACK),
-    AMOUNT("amount", SkillModifierProcessor.D_STACK);
+    AMOUNT("amount", SkillModifierProcessor.D_STACK),
+    PERIOD("period", SkillModifierProcessor.L_STACK),
+    CHANCE("chance", SkillModifierProcessor.D_STACK ),
+    MULTIPLIER("multiplier",SkillModifierProcessor.F_MAX);
 
 
     private final String str;

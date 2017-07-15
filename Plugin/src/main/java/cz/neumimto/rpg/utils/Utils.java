@@ -25,6 +25,7 @@ import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.PropertyService;
+import cz.neumimto.rpg.skills.NDamageType;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
@@ -36,12 +37,17 @@ import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Projectile;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
+import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.blockray.BlockRay;
 import org.spongepowered.api.util.blockray.BlockRayHit;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.EntityUniverse;
+import org.spongepowered.common.event.damage.SpongeDamageSourceBuilder;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -107,15 +113,35 @@ public class Utils {
 		return str.matches("-?\\d+(\\.\\d+)?");
 	}
 
-	public static Set<Entity> getNearbyEntities(Location l, int radius) {
-		double s = Math.pow(radius, 2);
-		HashSet<Entity> ee = new HashSet<>();
-		for (Entity e : l.getExtent().getEntities()) {
-			if (e.getLocation().getPosition().distanceSquared(l.getX(), l.getY(), l.getZ()) <= s) {
-				ee.add(e);
+	public static Set<Entity> getNearbyEntities(Location l, int radius){
+		int chunkRadius = radius < 16 ? 1 : (radius - (radius % 16))/16;
+		HashSet<Entity> set = new HashSet<>();
+		double pow = Math.pow(radius, 2);
+		for (int chX = 0 -chunkRadius; chX <= chunkRadius; chX ++){
+			for (int chZ = 0 -chunkRadius; chZ <= chunkRadius; chZ++){
+				Location chunkLoc = new Location(l.getExtent(),l.getBlockX()+(chX*16),l.getBlockY(),l.getBlockZ()+(chZ*16));
+				for (Entity e : chunkLoc.getExtent().getEntities()){
+					if (e.getLocation().getPosition().distanceSquared(l.getPosition()) <= pow)
+						set.add(e);
+				}
 			}
 		}
-		return ee;
+		return set;
+	}
+
+	public static Set<Entity> getNearbyEntitiesPrecise(Location l, int radius){
+		int chunkRadius = radius < 16 ? 1 : (radius - (radius % 16))/16;
+		HashSet<Entity> set = new HashSet<>();
+		for (int chX = 0 -chunkRadius; chX <= chunkRadius; chX ++){
+			for (int chZ = 0 -chunkRadius; chZ <= chunkRadius; chZ++){
+				Location chunkLoc = new Location(l.getExtent(),l.getBlockX()+(chX*16),l.getBlockY(),l.getBlockZ()+(chZ*16));
+				for (Entity e : chunkLoc.getExtent().getEntities()){
+					if (e.getLocation().getPosition().distance(l.getPosition()) <= radius)
+						set.add(e);
+				}
+			}
+		}
+		return set;
 	}
 
 
@@ -205,7 +231,12 @@ public class Utils {
 				}
 			}
 		}
-		return true;
+		DamageSource build = new SpongeDamageSourceBuilder()
+				.type(NDamageType.DAMAGE_CHECK)
+				.absolute()
+				.build();
+
+		return l.damage(0, build);
 	}
 
 	public static boolean isLivingEntity(Entity entity) {
@@ -243,7 +274,7 @@ public class Utils {
 
 	public static String extractNumber(String string) {
 		Matcher matcher = REGEXP_NUMBER.matcher(string);
-		if (matcher.matches()) {
+		if (matcher.find()) {
 			return matcher.group();
 		}
 		return null;

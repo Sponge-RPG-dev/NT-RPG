@@ -3,6 +3,7 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.effects.common.positive.SpeedBoost;
+import cz.neumimto.rpg.effects.common.stacking.ValueProcessor;
 import cz.neumimto.rpg.persistance.GroupDao;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.SkillTree;
@@ -55,7 +56,7 @@ public class Tests {
     }
 
 
-    @Test
+   // @Test
     public void testEffectClassGenerator() {
         ClassGenerator classGenerator = new ClassGenerator();
         IGlobalEffect eff = null;
@@ -86,4 +87,5 @@ public class Tests {
             e.printStackTrace();
         }
     }
+
 }

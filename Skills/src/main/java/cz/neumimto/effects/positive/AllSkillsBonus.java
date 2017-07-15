@@ -14,15 +14,15 @@ public class AllSkillsBonus extends EffectBase<Integer> {
 
     public static final String name = "All skills";
 
-    public AllSkillsBonus(IActiveCharacter character, long duration, int value) {
+    public AllSkillsBonus(IEffectConsumer character, long duration, int value) {
         super(name, character);
         setDuration(duration);
         setStackable(true, new IntegerEffectStackingStrategy());
         setValue(value);
     }
 
-    public AllSkillsBonus(IActiveCharacter character, long duration, String value) {
-        this(character, duration, Integer.parseInt(InventoryService.REGEXP_NUMBER.matcher(value).group()));
+    public AllSkillsBonus(IEffectConsumer character, long duration, String value) {
+        this(character, duration, Integer.parseInt(Utils.extractNumber(value)));
     }
 
     @Override

@@ -40,7 +40,7 @@ public interface IEffect<K> {
 
     default void reApplyPotions() {
         for (PotionEffect e : getPotions()) {
-            getConsumer().addPotionEffect(e.getType(), e.getAmplifier(), e.getDuration());
+            getConsumer().addPotionEffect(e.getType(), e.getAmplifier(),  e.getDuration());
         }
     }
 
@@ -113,4 +113,8 @@ public interface IEffect<K> {
     IEffectContainer<K, IEffect<K>> getEffectContainer();
 
     void setEffectContainer(IEffectContainer<K, IEffect<K>> iEffectContainer);
+
+    boolean isTickingDisabled();
+
+    void setTickingDisabled(boolean tickingDisabled);
 }

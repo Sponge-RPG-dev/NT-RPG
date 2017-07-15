@@ -620,4 +620,9 @@ public class PreloadCharacter implements IActiveCharacter {
     public void updateSelectedHotbarSlot() {
 
     }
+
+    @Override
+    public boolean isDetached() {
+        return true;
+    }
 }

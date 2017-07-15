@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 public class EffectService {
 
 
-    public static final long TICK_PERIOD = 250L;
+    public static final long TICK_PERIOD = 5L;
 
     private static final long unlimited_duration = -1;
 
@@ -136,8 +136,14 @@ public class EffectService {
      * @param effect
      */
     public void tickEffect(IEffect effect, long time) {
-        effect.onTick();
-        effect.tickCountIncrement();
+        if (!effect.isTickingDisabled()) {
+            if (effect.getConsumer().isDetached()) {
+                removeEffect(effect.getName(), effect.getConsumer(), effect.getEffectSourceProvider());
+                return;
+            }
+            effect.onTick();
+            effect.tickCountIncrement();
+        }
         effect.setLastTickTime(time);
     }
 
@@ -152,16 +158,14 @@ public class EffectService {
     public void addEffect(IEffect iEffect, IEffectConsumer consumer, IEffectSourceProvider effectSourceProvider) {
         IEffectContainer eff = consumer.getEffect(iEffect.getName());
         if (eff == null) {
-            IEffectContainer iEffectContainer = iEffect.constructEffectContainer();
-            iEffect.setEffectContainer(iEffectContainer);
-            consumer.addEffect(iEffectContainer);
-            iEffect.setEffectSourceProvider(effectSourceProvider);
+            eff = iEffect.constructEffectContainer();
+            consumer.addEffect(eff);
 	        iEffect.onApply();
         } else if (eff.isStackable()) {
-            iEffect.setEffectContainer(eff);
-            iEffect.setEffectSourceProvider(effectSourceProvider);
             eff.stackEffect(iEffect, effectSourceProvider);
         }
+        iEffect.setEffectContainer(eff);
+        iEffect.setEffectSourceProvider(effectSourceProvider);
 	    if (iEffect.requiresRegister())
 		    runEffect(iEffect);
     }
@@ -180,19 +184,24 @@ public class EffectService {
         }
     }
 
+    public void removeEffect(IEffectContainer<?, IEffect<?>> container, IEffectConsumer consumer) {
+        container.forEach(a->removeEffect(a, consumer));
+    }
 
     protected void removeEffect(IEffectContainer container, IEffect iEffect, IEffectConsumer consumer) {
         if (iEffect == container) {
-            iEffect.onRemove();
+            if (!iEffect.getConsumer().isDetached()) {
+                iEffect.onRemove();
+            }
             consumer.removeEffect(iEffect);
         } else if (container.getEffects().contains(iEffect)){
             container.removeStack(iEffect);
             if (container.getEffects().isEmpty()) {
-                iEffect.onRemove();
                 consumer.removeEffect(container);
             }
         }
         iEffect.setConsumer(null);
+        pendingRemovals.add(iEffect);
     }
 
     /**
@@ -210,13 +219,8 @@ public class EffectService {
             while (iterator.hasNext()) {
                 e = iterator.next();
                 if (e.getEffectSourceProvider() == effectSource) {
-                    iterator.remove();
-                    if (effectSet.contains(e))
-                        effectSet.remove(e);
+                    removeEffect(effect, e, consumer);
                 }
-            }
-            if (effect.getEffects().isEmpty()) {
-                consumer.removeEffect(effect);
             }
         }
     }
@@ -249,6 +253,10 @@ public class EffectService {
      */
     public IGlobalEffect getGlobalEffect(String name) {
         return globalEffects.get(name.toLowerCase());
+    }
+
+    public Map<String, IGlobalEffect> getGlobalEffects() {
+        return globalEffects;
     }
 
     /**
@@ -284,6 +292,7 @@ public class EffectService {
 	        removeEffect(e.getName(), character,effectSourceProvider);
         });
     }
+
 
     public boolean isGlobalEffect(String s) {
         return globalEffects.containsKey(s.toLowerCase());

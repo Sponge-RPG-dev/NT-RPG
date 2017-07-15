@@ -74,11 +74,31 @@ public interface ISkill extends IEffectSourceProvider {
     void setDamageType(DamageType type);
 
     default float getFloatNodeValue(ExtendedSkillInfo extendedSkillInfo, ISkillNode node) {
-       return extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node,extendedSkillInfo.getTotalLevel());
+       return getFloatNodeValue(extendedSkillInfo, node.value());
+    }
+
+    default float getFloatNodeValue(ExtendedSkillInfo extendedSkillInfo, String node) {
+        return extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node,extendedSkillInfo.getTotalLevel());
+    }
+
+    default int getIntNodeValue(ExtendedSkillInfo extendedSkillInfo, ISkillNode node) {
+        return getIntNodeValue(extendedSkillInfo, node.value());
+    }
+
+    default int getIntNodeValue(ExtendedSkillInfo extendedSkillInfo, String node) {
+        return (int) extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node,extendedSkillInfo.getTotalLevel());
     }
 
     default long getLongNodeValue(ExtendedSkillInfo extendedSkillInfo, ISkillNode node) {
         return (long) extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node,extendedSkillInfo.getTotalLevel());
+    }
+
+    default double getDoubleNodeValue(ExtendedSkillInfo extendedSkillInfo, String node) {
+        return extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node,extendedSkillInfo.getTotalLevel());
+    }
+
+    default double getDoubleNodeValue(ExtendedSkillInfo extendedSkillInfo, ISkillNode node) {
+        return getDoubleNodeValue(extendedSkillInfo, node.value());
     }
 
     @Override
