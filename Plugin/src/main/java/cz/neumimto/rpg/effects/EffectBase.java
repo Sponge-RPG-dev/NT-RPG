@@ -35,7 +35,7 @@ public class EffectBase<Value> implements IEffect<Value> {
     private boolean stackable = false;
     private String name;
     private int level;
-    private Set<PotionEffect> potions = new HashSet<>();
+    private Set<PotionEffect> potions;
     private IEffectConsumer consumer;
     private long duration = -1;
     private long period = -1;
@@ -124,6 +124,8 @@ public class EffectBase<Value> implements IEffect<Value> {
 
     @Override
     public Set<PotionEffect> getPotions() {
+        if (potions == null)
+            potions = new HashSet<>();
         return potions;
     }
 

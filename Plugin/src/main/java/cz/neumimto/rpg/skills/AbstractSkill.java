@@ -170,8 +170,7 @@ public abstract class AbstractSkill implements ISkill {
     /* Skills are singletons */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        return false;
+        return this == o;
     }
 
     @Override

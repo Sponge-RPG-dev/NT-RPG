@@ -113,15 +113,35 @@ public class Utils {
 		return str.matches("-?\\d+(\\.\\d+)?");
 	}
 
-	public static Set<Entity> getNearbyEntities(Location l, int radius) {
-		double s = Math.pow(radius, 2);
-		HashSet<Entity> ee = new HashSet<>();
-		for (Entity e : l.getExtent().getEntities()) {
-			if (e.getLocation().getPosition().distanceSquared(l.getX(), l.getY(), l.getZ()) <= s) {
-				ee.add(e);
+	public static Set<Entity> getNearbyEntities(Location l, int radius){
+		int chunkRadius = radius < 16 ? 1 : (radius - (radius % 16))/16;
+		HashSet<Entity> set = new HashSet<>();
+		double pow = Math.pow(radius, 2);
+		for (int chX = 0 -chunkRadius; chX <= chunkRadius; chX ++){
+			for (int chZ = 0 -chunkRadius; chZ <= chunkRadius; chZ++){
+				Location chunkLoc = new Location(l.getExtent(),l.getBlockX()+(chX*16),l.getBlockY(),l.getBlockZ()+(chZ*16));
+				for (Entity e : chunkLoc.getExtent().getEntities()){
+					if (e.getLocation().getPosition().distanceSquared(l.getPosition()) <= pow)
+						set.add(e);
+				}
 			}
 		}
-		return ee;
+		return set;
+	}
+
+	public static Set<Entity> getNearbyEntitiesPrecise(Location l, int radius){
+		int chunkRadius = radius < 16 ? 1 : (radius - (radius % 16))/16;
+		HashSet<Entity> set = new HashSet<>();
+		for (int chX = 0 -chunkRadius; chX <= chunkRadius; chX ++){
+			for (int chZ = 0 -chunkRadius; chZ <= chunkRadius; chZ++){
+				Location chunkLoc = new Location(l.getExtent(),l.getBlockX()+(chX*16),l.getBlockY(),l.getBlockZ()+(chZ*16));
+				for (Entity e : chunkLoc.getExtent().getEntities()){
+					if (e.getLocation().getPosition().distance(l.getPosition()) <= radius)
+						set.add(e);
+				}
+			}
+		}
+		return set;
 	}
 
 
