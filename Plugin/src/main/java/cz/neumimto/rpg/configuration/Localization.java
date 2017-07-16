@@ -350,4 +350,13 @@ public class Localization {
 
     @ConfigValue
     public static String ITEM_DAMAGE = "Item damage";
+
+    @ConfigValue
+    public static String CANNOT_USE_ITEM_CONFIGURATION_REASON = "You are not trained to use this item";
+
+    @ConfigValue
+    public static String CANNOT_USE_ITEM_LEVEL_REASON = "The item requires higher character level";
+
+    @ConfigValue
+    public static String CANNOT_USE_ITEM_LORE_REASON = "You are not trained to use this item";
 }

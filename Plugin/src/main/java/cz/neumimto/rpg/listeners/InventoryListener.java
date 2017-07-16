@@ -21,11 +21,13 @@ package cz.neumimto.rpg.listeners;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.damage.DamageService;
+import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.CannotUseItemReson;
 import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.utils.ItemStackUtils;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
@@ -150,6 +152,17 @@ public class InventoryListener {
             Slot i = slotTransaction.getSlot();
             int index = ((SlotAdapter)i).getOrdinal();
             character.getSlotsToReinitialize().add(index);
+        }
+    }
+
+    @Listener
+    public void onArmorInteract(InteractItemEvent event, @First(typeFilter = Player.class) Player player) {
+        IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+        ItemStack is = event.getItemStack().createStack();
+        CannotUseItemReson reason = inventoryService.canWear(is, character);
+        if (reason != CannotUseItemReson.OK) {
+            Gui.sendCannotUseItemNotification(character, is, reason);
+            event.setCancelled(true);
         }
     }
 }
