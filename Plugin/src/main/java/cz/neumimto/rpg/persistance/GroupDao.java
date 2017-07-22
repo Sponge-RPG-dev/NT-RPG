@@ -18,10 +18,7 @@
 
 package cz.neumimto.rpg.persistance;
 
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigException;
-import com.typesafe.config.ConfigFactory;
-import com.typesafe.config.ConfigValue;
+import com.typesafe.config.*;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
@@ -29,10 +26,7 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.players.ExperienceSource;
-import cz.neumimto.rpg.players.groups.ConfigClass;
-import cz.neumimto.rpg.players.groups.Guild;
-import cz.neumimto.rpg.players.groups.PlayerGroup;
-import cz.neumimto.rpg.players.groups.Race;
+import cz.neumimto.rpg.players.groups.*;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.SkillService;
@@ -49,6 +43,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.Optional;
 
 /**
  * Created by NeumimTo on 10.7.2015.
@@ -338,8 +333,10 @@ public class GroupDao {
         }
 
         try {
-            List<String> permissions = c.getStringList("Permissions");
-            group.setPermissions(new HashSet<>(permissions));
+            List<? extends Config> permissions = c.getConfigList("Permissions");
+            for (Config permission : permissions) {
+                group.getPermissions().add(ConfigBeanFactory.create(permission, PlayerGroupPermission.class));
+            }
         } catch (ConfigException e) {
             group.setPermissions(new HashSet<>());
             logger.warn(" - Missing configuration \"Permissions\", skipping");

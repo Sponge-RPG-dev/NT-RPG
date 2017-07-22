@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.players.groups;
 
+import com.google.common.collect.ImmutableSet;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.effects.IGlobalEffect;
@@ -40,7 +41,7 @@ public class PlayerGroup implements IEffectSourceProvider {
     private Set<ItemType> canCraft = new HashSet<>();
     private Set<ItemType> allowedArmor = new HashSet<>();
     private Map<ItemType, Double> weapons = new HashMap<>();
-    private Set<String> permissions = Collections.synchronizedSet(new HashSet<>());
+    private Set<PlayerGroupPermission> permissions = new TreeSet<>();
     private Map<Integer, Float> propLevelBonus = new HashMap<>();
     private ItemType itemType;
     private String description;
@@ -113,11 +114,11 @@ public class PlayerGroup implements IEffectSourceProvider {
         return weapons;
     }
 
-    public Set<String> getPermissions() {
-        return permissions;
+    public Set<PlayerGroupPermission> getPermissions() {
+        return Collections.unmodifiableSet(permissions);
     }
 
-    public void setPermissions(Set<String> permissions) {
+    public void setPermissions(Set<PlayerGroupPermission> permissions) {
         this.permissions = permissions;
     }
 

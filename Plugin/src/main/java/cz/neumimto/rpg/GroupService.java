@@ -21,15 +21,22 @@ package cz.neumimto.rpg;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.effects.EffectSource;
+import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.persistance.GroupDao;
 import cz.neumimto.rpg.players.ExtendedNClass;
-import cz.neumimto.rpg.players.groups.ConfigClass;
-import cz.neumimto.rpg.players.groups.Guild;
-import cz.neumimto.rpg.players.groups.PlayerGroup;
-import cz.neumimto.rpg.players.groups.Race;
+import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.groups.*;
+import org.h2.mvstore.cache.CacheLongKeyLIRS;
 import org.slf4j.Logger;
+import org.spongepowered.api.service.permission.SubjectData;
+import org.spongepowered.api.util.Tristate;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by NeumimTo on 28.12.2014.
@@ -146,5 +153,46 @@ public class GroupService {
         ConfigClass.Default = configClass;
         ExtendedNClass.Default.setConfigClass(configClass);
         logger.info("Default class set to \"" + configClass.getName()+ "\"");
+    }
+
+    public void updatePermissions(IActiveCharacter character, PlayerGroup from, PlayerGroup to) {
+             if (from.getType() == EffectSourceType.RACE) {
+
+
+                Set<String> intersection = new HashSet<>();
+                to.getPermissions().forEach(playerGroupPermission -> {
+                    intersection.addAll(playerGroupPermission.getPermissions());
+                });
+                Set<String> toRemove = new HashSet<>(intersection);
+
+                Set<ExtendedNClass> classes = character.getClasses();
+                Set<String> all = new HashSet<>();
+                classes.stream().forEach(extendedNClass -> {
+                    extendedNClass.getConfigClass().getPermissions()
+                            .stream().forEach(q -> {
+                        all.addAll(q.getPermissions());
+                    });
+                });
+
+                intersection.retainAll(all);
+                toRemove.removeAll(intersection);
+
+            }
+
+    }
+
+    public void removePermissions(IActiveCharacter character, Set<String> perms) {
+        SubjectData transientSubjectData = character.getPlayer().getTransientSubjectData();
+        for (String perm : perms) {
+            transientSubjectData.setPermission(SubjectData.GLOBAL_CONTEXT, perm, Tristate.UNDEFINED);
+        }
+    }
+
+
+    public void addPermissions(IActiveCharacter character, Set<String> perms) {
+        SubjectData transientSubjectData = character.getPlayer().getTransientSubjectData();
+        for (String perm : perms) {
+            transientSubjectData.setPermission(SubjectData.GLOBAL_CONTEXT, perm, Tristate.UNDEFINED);
+        }
     }
 }

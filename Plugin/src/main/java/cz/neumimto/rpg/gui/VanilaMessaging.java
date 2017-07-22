@@ -76,6 +76,7 @@ import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.LiteralText;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
+import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
@@ -720,11 +721,11 @@ public class VanilaMessaging implements IPlayerMessage {
 	@Override
 	public void sendCannotUseItemNotification(IActiveCharacter character, ItemStack is, CannotUseItemReson reason) {
 		if (reason == CannotUseItemReson.CONFIG) {
-			character.getPlayer().sendMessage(Text.of(TextColors.RED, Localization.CANNOT_USE_ITEM_CONFIGURATION_REASON));
+			character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Text.of(TextColors.RED, Localization.CANNOT_USE_ITEM_CONFIGURATION_REASON));
 		} else if (reason == CannotUseItemReson.LEVEL) {
-			character.getPlayer().sendMessage(Text.of(TextColors.RED, Localization.CANNOT_USE_ITEM_LEVEL_REASON));
+			character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Text.of(TextColors.RED, Localization.CANNOT_USE_ITEM_LEVEL_REASON));
 		} else if (reason == CannotUseItemReson.LORE) {
-			character.getPlayer().sendMessage(Text.of(TextColors.RED, Localization.CANNOT_USE_ITEM_LORE_REASON));
+			character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Text.of(TextColors.RED, Localization.CANNOT_USE_ITEM_LORE_REASON));
 		}
 	}
 }
