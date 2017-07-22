@@ -1,8 +1,7 @@
 package cz.neumimto;
 
 import cz.neumimto.core.ioc.IoC;
-import cz.neumimto.effects.decoration.ParticleDecorator;
-import org.spongepowered.api.effect.particle.ParticleEffect;
+import cz.neumimto.rpg.gui.ParticleDecorator;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.world.Location;
@@ -37,10 +36,6 @@ public class Decorator {
 
 	public static void circle(Location location, int count, double radius, Consumer<Location> callback) {
 		decorator.circle(location, count, radius, callback);
-	}
-
-	public static void particleExplosion(Location location, int size) {
-
 	}
 
 

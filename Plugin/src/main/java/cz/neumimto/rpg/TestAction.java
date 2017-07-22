@@ -1,16 +1,22 @@
 package cz.neumimto.rpg;
 
+import com.flowpowered.math.imaginary.Quaterniond;
+import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.common.stacking.IntegerEffectStackingStrategy;
+import cz.neumimto.rpg.gui.ParticleDecorator;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.data.value.mutable.MapValue;
+import org.spongepowered.api.effect.particle.ParticleEffect;
+import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;

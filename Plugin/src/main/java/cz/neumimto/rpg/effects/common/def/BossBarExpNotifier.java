@@ -24,6 +24,7 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
     private IActiveCharacter character;
     private Player player;
     private Map<String,ServerBossBar> bossBarMap = new HashMap<>();
+    private double expCurrentSession;
 
     public BossBarExpNotifier(IActiveCharacter consumer) {
         super(name, consumer);
@@ -55,7 +56,8 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
             }
             ExtendedNClass extendedNClass = first.get();
 
-            serverBossBar.setName(Text.of(Utils.capitalizeFirst(classname)+" Level: "+extendedNClass.getLevel()+" +" + exps + "  " + extendedNClass.getExperiencesFromLevel()+"/"+extendedNClass.getConfigClass().getLevels()[extendedNClass.getLevel()]));
+            expCurrentSession += exps;
+            serverBossBar.setName(Text.of(Utils.capitalizeFirst(classname)+" Level: "+extendedNClass.getLevel()+" +" + expCurrentSession + "  " + extendedNClass.getExperiencesFromLevel()+"/"+extendedNClass.getConfigClass().getLevels()[extendedNClass.getLevel()]));
             serverBossBar.setPercent((float) Utils.getPercentage(extendedNClass.getExperiencesFromLevel(),extendedNClass.getConfigClass().getLevels()[extendedNClass.getLevel()])/100);
             serverBossBar.setVisible(true);
             setLastTickTime(System.currentTimeMillis());
@@ -67,6 +69,7 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
         for (ServerBossBar  bossBar : bossBarMap.values()) {
             if (bossBar.isVisible()) {
                 bossBar.setVisible(false);
+                expCurrentSession = 0;
             }
         }
     }
