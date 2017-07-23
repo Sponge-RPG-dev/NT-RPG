@@ -64,6 +64,8 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
 import org.spongepowered.api.text.Text;
@@ -71,6 +73,7 @@ import org.spongepowered.api.text.Text;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -350,7 +353,8 @@ public class CharacterService {
 		logger.info("Initializing character " + character.getCharacterBase().getId());
 		boolean k = false;
 		if (configClass != null) {
-			CharacterChangeGroupEvent e = new CharacterChangeClassEvent(character, configClass, slot);
+			CharacterChangeGroupEvent e = new CharacterChangeClassEvent(character, configClass, slot, character.getNClass(slot));
+			e.setCause(Cause.of(NamedCause.source(character)));
 			game.getEventManager().post(e);
 			if (!e.isCancelled()) {
 				k = true;
@@ -360,7 +364,8 @@ public class CharacterService {
 			}
 		}
 		if (race != null) {
-			CharacterChangeGroupEvent ev = new CharacterChangeRaceEvent(character, race);
+			CharacterChangeGroupEvent ev = new CharacterChangeRaceEvent(character, race, character.getRace());
+			ev.setCause(Cause.of(NamedCause.source(character)));
 			game.getEventManager().post(ev);
 			if (!ev.isCancelled()) {
 				k = true;
@@ -557,8 +562,10 @@ public class CharacterService {
 		characterBase = playerDao.fetchCharacterBase(characterBase);
 		ActiveCharacter activeCharacter = new ActiveCharacter(player, characterBase);
 		activeCharacter.setRace(groupService.getRace(characterBase.getRace()));
-		// activeCharacter.setGuild(groupService.getGuild(characterBase.getGuild()));
+
 		activeCharacter.setPrimaryClass(groupService.getNClass(characterBase.getPrimaryClass()));
+		groupService.addPermissions(activeCharacter, activeCharacter.getRace());
+
 		String s = activeCharacter.getPrimaryClass().getConfigClass().getName();
 		Optional<CharacterClass> first = characterBase.getCharacterClasses()
 				.stream()

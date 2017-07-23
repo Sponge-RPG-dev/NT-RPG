@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import org.spongepowered.api.data.key.Keys;
 
@@ -27,11 +28,9 @@ import org.spongepowered.api.data.key.Keys;
  */
 public class Health implements IReservable {
     private final IActiveCharacter activeCharacter;
-    private final CharacterService characterService;
 
     public Health(IActiveCharacter activeCharacter) {
         this.activeCharacter = activeCharacter;
-        this.characterService = IoC.get().build(CharacterService.class);
     }
 
     @Override
@@ -53,7 +52,7 @@ public class Health implements IReservable {
 
     @Override
     public double getReservedAmount() {
-        return characterService.getCharacterProperty(activeCharacter, DefaultProperties.reserved_health);
+        return NtRpgPlugin.GlobalScope.characterService.getCharacterProperty(activeCharacter, DefaultProperties.reserved_health);
     }
 
     @Override
@@ -68,7 +67,7 @@ public class Health implements IReservable {
 
     @Override
     public double getRegen() {
-        return characterService.getCharacterProperty(activeCharacter, DefaultProperties.health_regen);
+        return NtRpgPlugin.GlobalScope.characterService.getCharacterProperty(activeCharacter, DefaultProperties.health_regen);
     }
 
     @Override

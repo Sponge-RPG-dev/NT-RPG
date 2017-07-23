@@ -40,7 +40,7 @@ public class ExtendedNClass {
     private ConfigClass configClass;
     private double experiences;
     private double experiencesFromLevel;
-    private boolean isPrimary;
+    private int slot;
     private int level;
 
     public boolean takesExp() {
@@ -64,11 +64,11 @@ public class ExtendedNClass {
     }
 
     public boolean isPrimary() {
-        return isPrimary;
+        return slot == 1;
     }
 
     public void setPrimary(boolean isPrimary) {
-        this.isPrimary = isPrimary;
+        this.slot = 1;
     }
 
     public int getLevel() {
@@ -85,5 +85,13 @@ public class ExtendedNClass {
 
     public void setExperiencesFromLevel(double experiencesFromLevel) {
         this.experiencesFromLevel = experiencesFromLevel;
+    }
+
+    public int getSlot() {
+        return slot;
+    }
+
+    public void setSlot(int slot) {
+        this.slot = slot;
     }
 }
