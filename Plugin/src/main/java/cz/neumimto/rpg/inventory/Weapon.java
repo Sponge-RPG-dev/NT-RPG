@@ -32,12 +32,15 @@ import org.spongepowered.api.item.inventory.ItemStack;
  */
 public class Weapon extends Charm {
 
-    public static Weapon EmptyHand = new Weapon(ItemStack.empty());
+    public static Weapon EmptyHand;
     protected double damage;
     protected boolean current;
     private ItemType itemType;
     private int level;
 
+    static {
+        //EmptyHand = new Weapon(ItemStack.empty());
+    }
 
     public Weapon(ItemStack itemStack) {
         super(itemStack);

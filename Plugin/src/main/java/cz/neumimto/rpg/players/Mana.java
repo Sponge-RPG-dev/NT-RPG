@@ -26,16 +26,14 @@ import cz.neumimto.rpg.players.properties.DefaultProperties;
  */
 public class Mana implements IReservable {
     private final IActiveCharacter character;
-    private CharacterService characterService;
 
     public Mana(IActiveCharacter activeCharacter) {
         this.character = activeCharacter;
-        this.characterService = NtRpgPlugin.GlobalScope.characterService;
     }
 
     @Override
     public double getMaxValue() {
-        return characterService.getCharacterProperty(character, DefaultProperties.max_mana);
+        return NtRpgPlugin.GlobalScope.characterService.getCharacterProperty(character, DefaultProperties.max_mana);
     }
 
     @Override
@@ -50,12 +48,12 @@ public class Mana implements IReservable {
 
     @Override
     public double getReservedAmount() {
-        return characterService.getCharacterProperty(character, DefaultProperties.reserved_mana);
+        return NtRpgPlugin.GlobalScope.characterService.getCharacterProperty(character, DefaultProperties.reserved_mana);
     }
 
     @Override
     public double getValue() {
-        return characterService.getCharacterProperty(character, DefaultProperties.mana);
+        return NtRpgPlugin.GlobalScope.characterService.getCharacterProperty(character, DefaultProperties.mana);
     }
 
     @Override
@@ -67,7 +65,7 @@ public class Mana implements IReservable {
 
     @Override
     public double getRegen() {
-        return characterService.getCharacterProperty(character, DefaultProperties.mana_regen);
+        return NtRpgPlugin.GlobalScope.characterService.getCharacterProperty(character, DefaultProperties.mana_regen);
     }
 
     @Override

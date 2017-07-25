@@ -10,8 +10,8 @@ public class CharacterChangeClassEvent extends CharacterChangeGroupEvent {
 
 	private final int slot;
 
-	public CharacterChangeClassEvent(IActiveCharacter character, ConfigClass configClass, int slot) {
-		super(configClass, character);
+	public CharacterChangeClassEvent(IActiveCharacter character, ConfigClass next, int slot, ConfigClass old) {
+		super(next, character, old);
 		this.slot = slot;
 	}
 

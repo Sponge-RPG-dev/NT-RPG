@@ -469,12 +469,8 @@ public class ActiveCharacter implements IActiveCharacter {
 
     @Override
     public void setRace(Race race) {
-        if (this.race != Race.Default) {
-            removePermissions(race.getPermissions());
-        }
         this.race = race;
         getCharacterBase().setRace(race.getName());
-        addPermissions(race.getPermissions());
     }
 
     @Override
@@ -491,20 +487,6 @@ public class ActiveCharacter implements IActiveCharacter {
         this.guild = guild;
         //  fixPropertyValues(guild.getPropBonus(), 1);
         //   addPermissions(guild.getPermissions());*/
-    }
-
-    public void addPermissions(Collection<String> perms) {
-        SubjectData subjectData = pl.getTransientSubjectData();
-        perms.stream().forEach(s -> {
-            subjectData.setPermission(SubjectData.GLOBAL_CONTEXT, s, Tristate.TRUE);
-        });
-    }
-
-    public void removePermissions(Collection<String> perms) {
-        SubjectData subjectData = pl.getTransientSubjectData();
-        perms.stream().forEach(s -> {
-            subjectData.setPermission(SubjectData.GLOBAL_CONTEXT, s, Tristate.FALSE);
-        });
     }
 
     @Override
@@ -560,7 +542,11 @@ public class ActiveCharacter implements IActiveCharacter {
 
     @Override
     public ConfigClass getNClass(int index) {
-        return getPrimaryClass().getConfigClass();
+        for (ExtendedNClass aClass : classes) {
+            if (aClass.getSlot() == index)
+                return aClass.getConfigClass();
+        }
+        return null;
     }
 
     @Override

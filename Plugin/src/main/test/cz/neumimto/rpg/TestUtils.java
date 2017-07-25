@@ -98,7 +98,7 @@ public class TestUtils {
     public static CharacterBase buildCharacterBase(UUID uuid) {
         CharacterBase characterBase = new CharacterBase();
         characterBase.setUuid(uuid);
-        characterBase.setAttributePoints((short) 10);
+        characterBase.setAttributePoints(10);
         characterBase.setCanResetskills(true);
         characterBase.setRace("test");
         //characterBase.setGuild("attributes");

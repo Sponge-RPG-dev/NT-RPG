@@ -22,6 +22,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.PluginConfig;
+import cz.neumimto.rpg.events.CharacterChangeGroupEvent;
 import cz.neumimto.rpg.events.PlayerGuiModInitEvent;
 import cz.neumimto.rpg.events.character.PlayerDataPreloadComplete;
 import cz.neumimto.rpg.events.party.PartyJoinEvent;
@@ -34,7 +35,9 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.entity.HealEntityEvent;
+import org.spongepowered.api.event.filter.IsCancelled;
 import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.util.Tristate;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -94,5 +97,11 @@ public class RpgListener {
     @Listener
     public void onHealthRegen(HealEntityEvent event, @First(typeFilter = Player.class) Player player) {
 
+    }
+
+    @Listener
+    @IsCancelled(Tristate.FALSE)
+    public void onChangeGroup(CharacterChangeGroupEvent event, @First(typeFilter = IActiveCharacter.class) IActiveCharacter character) {
+       
     }
 }
