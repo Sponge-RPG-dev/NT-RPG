@@ -182,10 +182,11 @@ public class GroupService {
 						toBeRemoved.addAll(pgp.getPermissions());
 					}
 				}
-			}
-			for (PlayerGroupPermission playerGroupPermission : configClass.getPermissions()) {
-				if (playerGroupPermission.getLevel() <= character.getLevel()) {
-					intersection.addAll(playerGroupPermission.getPermissions());
+			} else {
+				for (PlayerGroupPermission playerGroupPermission : configClass.getPermissions()) {
+					if (playerGroupPermission.getLevel() <= character.getLevel()) {
+						intersection.addAll(playerGroupPermission.getPermissions());
+					}
 				}
 			}
 		}
@@ -218,7 +219,7 @@ public class GroupService {
 		}
 	}
 
-	public void addPermissions(IActiveCharacter character, PlayerGroup playerGroup) {
+	public void addAllPermissions(IActiveCharacter character, PlayerGroup playerGroup) {
 		for (PlayerGroupPermission playerGroupPermission : playerGroup.getPermissions()) {
 			if (playerGroupPermission.getLevel() <= character.getLevel()) {
 				addPermissions(character, playerGroupPermission.getPermissions());
@@ -226,5 +227,11 @@ public class GroupService {
 		}
 	}
 
-
+	public void addPermissions(IActiveCharacter character, PlayerGroup playerGroup) {
+		for (PlayerGroupPermission playerGroupPermission : playerGroup.getPermissions()) {
+			if (playerGroupPermission.getLevel() == character.getLevel()) {
+				addPermissions(character, playerGroupPermission.getPermissions());
+			}
+		}
+	}
 }

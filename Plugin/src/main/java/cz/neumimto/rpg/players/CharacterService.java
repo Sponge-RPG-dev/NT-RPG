@@ -564,8 +564,8 @@ public class CharacterService {
 		activeCharacter.setRace(groupService.getRace(characterBase.getRace()));
 
 		activeCharacter.setPrimaryClass(groupService.getNClass(characterBase.getPrimaryClass()));
-		groupService.addPermissions(activeCharacter, activeCharacter.getRace());
-
+		groupService.addAllPermissions(activeCharacter, activeCharacter.getRace());
+		groupService.addAllPermissions(activeCharacter, activeCharacter.getPrimaryClass().getConfigClass());
 		String s = activeCharacter.getPrimaryClass().getConfigClass().getName();
 		Optional<CharacterClass> first = characterBase.getCharacterClasses()
 				.stream()
@@ -980,9 +980,11 @@ public class CharacterService {
 				Gui.showLevelChange(character, aClass, level);
 
 				CharacterGainedLevelEvent event = new CharacterGainedLevelEvent(character, aClass, level, aClass.getConfigClass().getSkillpointsperlevel(), aClass.getConfigClass().getAttributepointsperlevel());
-				game.getEventManager().post(event);
 				event.getaClass().setLevel(event.getLevel());
+				game.getEventManager().post(event);
 				characterAddPoints(character, aClass.getConfigClass(), event.getSkillpointsPerLevel(), event.getAttributepointsPerLevel());
+				groupService.addPermissions(character, character.getRace());
+				groupService.addPermissions(character, character.getPrimaryClass().getConfigClass());
 			}
 			aClass.setExperiencesFromLevel(0);
 			if (!aClass.takesExp()) {
