@@ -18,14 +18,18 @@
 
 package cz.neumimto.rpg.damage;
 
+import com.google.common.collect.Iterables;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.groups.ConfigClass;
+import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.NDamageType;
@@ -38,10 +42,12 @@ import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.text.format.TextColor;
+import org.spongepowered.api.text.format.TextColors;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiFunction;
+import java.util.stream.DoubleStream;
 
 /**
  * Created by NeumimTo on 4.8.15.
@@ -55,6 +61,8 @@ public class DamageService {
     @Inject
     private CharacterService characterService;
 
+    @Inject
+    private GroupService groupService;
 
     public BiFunction<Double, Double, Double> DamageArmorReductionFactor = (damage, armor) -> armor / (armor + 10 * damage);
 
@@ -167,7 +175,52 @@ public class DamageService {
 
         map.put(ItemTypes.BOW, DefaultProperties.bow_meele_bonus_damage);
 
+    }
 
+
+    private Map<Double, TextColor> doubleColorMap = new TreeMap<>();
+    private TextColor[] colorScale = new TextColor[] {
+            TextColors.WHITE,
+            TextColors.YELLOW,
+            TextColors.GOLD,
+            TextColors.RED,
+            TextColors.DARK_RED,
+            TextColors.DARK_PURPLE
+    };
+
+    public void createDamageToColorMapping() {
+        Collection<ConfigClass> classes = groupService.getClasses();
+        Set<Double> list = new TreeSet<>();
+        classes.stream().map(ConfigClass::getWeapons).forEach(a -> {
+            list.addAll(a.values());
+        });
+        Collection<Race> races = groupService.getRaces();
+        races.stream().map(Race::getWeapons).forEach(a -> {
+            list.addAll(a.values());
+        });
+        int size = list.size();
+        if (size > colorScale.length) {
+            int l = 0;
+            Iterable<List<Double>> lists = Iterables.partition(list, size / colorScale.length);
+            for (List<Double> doubles : lists) {
+                OptionalDouble max = doubles.stream().mapToDouble(d -> d).max();
+                doubleColorMap.put(max.getAsDouble(), colorScale[l]);
+                l++;
+            }
+        }
+    }
+
+    public TextColor getColorByDamage(Double damage) {
+        if (doubleColorMap.size() != colorScale.length) {
+            return TextColors.RED;
+        }
+        TextColor val = TextColors.RED;
+        for (Map.Entry<Double, TextColor> aDouble : doubleColorMap.entrySet()) {
+            if (damage <= aDouble.getKey() || aDouble.getValue() == colorScale[colorScale.length -1]) {
+                val = aDouble.getValue();
+            }
+        }
+        return val;
     }
 
 }

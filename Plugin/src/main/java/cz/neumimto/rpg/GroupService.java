@@ -21,6 +21,7 @@ package cz.neumimto.rpg;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.persistance.GroupDao;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -45,6 +46,9 @@ public class GroupService {
 
 	@Inject
 	Logger logger;
+
+	@Inject
+	DamageService damageService;
 
 	public GroupService() {
 
@@ -106,6 +110,8 @@ public class GroupService {
 				break;
 			}
 		}
+
+		damageService.createDamageToColorMapping();
 	}
 
 	public boolean existsGuild(String s) {
