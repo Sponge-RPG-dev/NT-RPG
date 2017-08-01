@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.effects;
 
+import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.entities.PropertyContainer;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.effect.potion.PotionEffect;
@@ -124,5 +125,9 @@ public interface IEffectConsumer<T extends Living> extends PropertyContainer {
 
     default Location<World> getLocation() {
         return getEntity().getLocation();
+    }
+
+    default Vector3d getRotation() {
+        return getEntity().getRotation();
     }
 }

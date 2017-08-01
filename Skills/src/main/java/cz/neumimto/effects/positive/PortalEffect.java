@@ -2,6 +2,7 @@ package cz.neumimto.effects.positive;
 
 import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
+import cz.neumimto.Decorator;
 import cz.neumimto.Utils;
 import cz.neumimto.effects.decoration.ShapedEffectDecorator;
 import cz.neumimto.rpg.ClassGenerator;
@@ -47,6 +48,7 @@ public class PortalEffect extends ShapedEffectDecorator {
     private double chanceToFail;
     private boolean safe;
     private IActiveCharacter character;
+    private Vector3d[] vertices;
 
     private static ParticleEffect uninicialized = ParticleEffect.builder()
             .type(ParticleTypes.ENCHANTING_GLYPHS)
@@ -204,7 +206,11 @@ public class PortalEffect extends ShapedEffectDecorator {
 
     @Override
     public Vector3d[] getVertices() {
-        return new Vector3d[0];
+        if (vertices == null) {
+            vertices = new Vector3d[30];
+            Decorator.ellipse(vertices, 3, 2.1, 1, getConsumer().getRotation());
+        }
+        return vertices;
     }
 
     @Override

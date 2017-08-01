@@ -1,6 +1,8 @@
 package cz.neumimto;
 
+import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.rpg.VectorUtils;
 import cz.neumimto.rpg.gui.ParticleDecorator;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.scheduler.Task;
@@ -38,5 +40,7 @@ public class Decorator {
 		decorator.circle(location, count, radius, callback);
 	}
 
-
+	public static void ellipse(Vector3d[] vector3ds, double a, double b, double vecmult, Vector3d rotationAngle) {
+		decorator.ellipse(vector3ds,a,b,vecmult,rotationAngle);
+	}
 }

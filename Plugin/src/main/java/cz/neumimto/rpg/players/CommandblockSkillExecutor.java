@@ -1,7 +1,9 @@
 package cz.neumimto.rpg.players;
 
+import com.flowpowered.math.vector.Vector3d;
 import org.spongepowered.api.block.tileentity.CommandBlock;
 import org.spongepowered.api.block.tileentity.TileEntity;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.immutable.entity.ImmutableCustomNameVisibleData;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.world.Location;
@@ -10,7 +12,7 @@ import org.spongepowered.api.world.World;
 import java.util.UUID;
 
 /**
- * Created by ja on 1.8.2017.
+ * Created by NeumimTo on 1.8.2017.
  */
 public class CommandblockSkillExecutor extends PreloadCharacter {
     private CommandBlock c;
@@ -57,6 +59,11 @@ public class CommandblockSkillExecutor extends PreloadCharacter {
     @Override
     public boolean hasCooldown(String thing) {
         return false;
+    }
+
+    @Override
+    public Vector3d getRotation() {
+        return new Vector3d(0,c.getBlock().get(Keys.ROTATION).get().getAngle(),0);
     }
 
     private static class InfinityPool implements IReservable {
