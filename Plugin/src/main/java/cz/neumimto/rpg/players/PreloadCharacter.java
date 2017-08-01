@@ -257,12 +257,12 @@ public class PreloadCharacter implements IActiveCharacter {
 
 
     @Override
-    public void setHealth(Health health) {
+    public void setHealth(IReservable health) {
 
     }
 
     @Override
-    public Health getHealth() {
+    public IReservable getHealth() {
         return health;
     }
 

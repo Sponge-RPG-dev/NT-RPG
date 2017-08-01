@@ -120,4 +120,13 @@ public class SkillLocalization {
 
     @ConfigValue
     public static String SKILL_DAMPEN_LORE = "";
+
+    @ConfigValue
+    public static String TELEPORTATION_SCROLL = "Teleportation Scroll";
+
+    @ConfigValue
+    public static String SKILL_PORTAL_DESC = "Creates a portal to another location";
+
+    @ConfigValue
+    public static String SKILL_PORTAL_NAME = "Portal";
 }
