@@ -13,7 +13,7 @@ public abstract class ShapedEffectDecorator<Value> extends EffectBase<Value> {
 	protected int printerCount;
 
 	int iter = 0;
-	public ShapedEffectDecorator(String name, IEffectConsumer consumers, Vector3d[]particles) {
+	public ShapedEffectDecorator(String name, IEffectConsumer consumers) {
 		super(name, consumers);
 		setPeriod(7L);
 	}
