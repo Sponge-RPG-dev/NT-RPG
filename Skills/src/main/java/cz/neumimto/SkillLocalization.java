@@ -129,4 +129,10 @@ public class SkillLocalization {
 
     @ConfigValue
     public static String SKILL_PORTAL_NAME = "Portal";
+
+    @ConfigValue
+    public static String CONDUCTIVITY_NAME = "Conductivity";
+
+    @ConfigValue
+    public static String CONDUCTIVITY_DESC = "Decreases lightning resistance of entities in area";
 }

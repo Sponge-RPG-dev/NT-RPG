@@ -39,7 +39,7 @@ public class Weapon extends Charm {
     private int level;
 
     static {
-        //EmptyHand = new Weapon(ItemStack.empty());
+        EmptyHand = new Weapon(ItemStack.empty());
     }
 
     public Weapon(ItemStack itemStack) {

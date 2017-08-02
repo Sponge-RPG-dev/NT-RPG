@@ -4,6 +4,8 @@ import com.flowpowered.math.TrigMath;
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.VectorUtils;
@@ -93,4 +95,27 @@ public class ParticleDecorator implements IActionDecorator {
 	public void draw(Location<World> world, Vector3d vector3d, ParticleEffect particleEffect) {
 		world.getExtent().spawnParticles(particleEffect, vector3d);
 	}
+
+	public void fillCircle(Vector3d[] d, double radius) {
+		double increment = TrigMath.TWO_PI / d.length;
+		for (int i = 0; i < d.length; i++) {
+			double angle = i * increment;
+			double x = radius * TrigMath.cos(angle);
+			double z = radius * TrigMath.sin(angle);
+			d[i] = new Vector3d(x,0,z);
+		}
+	}
+
+	public static Vector3d[] smallCircle;
+	public static Vector3d[] tinyCircle;
+	@PostProcess
+	public void initModels() {
+		smallCircle = new Vector3d[15];
+		fillCircle(smallCircle, 1.3);
+
+		tinyCircle = new Vector3d[10];
+		fillCircle(ParticleDecorator.tinyCircle,0.5);
+	}
+
+
 }

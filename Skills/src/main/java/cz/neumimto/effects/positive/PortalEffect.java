@@ -4,7 +4,7 @@ import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
 import cz.neumimto.Decorator;
 import cz.neumimto.Utils;
-import cz.neumimto.effects.decoration.ShapedEffectDecorator;
+import cz.neumimto.rpg.effects.ShapedEffectDecorator;
 import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.VectorUtils;
 import cz.neumimto.rpg.effects.IEffectConsumer;
@@ -83,20 +83,21 @@ public class PortalEffect extends ShapedEffectDecorator {
     public PortalEffect(IEffectConsumer consumer, long duration, Location<World> targetLocation,
                         double manaPerLookup, double manaPerEntity, long entityLookupInterval,
                         double chanceToFail, boolean safe) {
-        super(name, consumer, null);
+        super(name, consumer);
         this.castLocation = consumer.getLocation().add(0, 1, 0);
         this.targetLocation = targetLocation;
         this.manaPerLookup = manaPerLookup;
         this.manaPerEntity = manaPerEntity;
         this.entityLookupInterval = entityLookupInterval;
         setDuration(duration);
-        printerCount = 1;
+        setPrinterCount(10);
         this.safe = safe;
         lastTimeRun = System.currentTimeMillis() + 2500;
         this.chanceToFail = chanceToFail;
         if (getConsumer() instanceof IActiveCharacter) {
             character = (IActiveCharacter) getConsumer();
         }
+        portalState = PortalState.UNINITIALIZED;
     }
 
     @Override
@@ -109,7 +110,7 @@ public class PortalEffect extends ShapedEffectDecorator {
                     entity.remove();
                 }
             } else {
-                Set<Entity> teleportCandidates = getTeleportCandidates(targetLocation);
+                Set<Entity> teleportCandidates = getTeleportCandidates(castLocation);
                 if (safe) {
                     Optional<Location<World>> safeLocation = Sponge.getTeleportHelper().getSafeLocation(targetLocation, 10, 10);
                     for (Entity candidate : teleportCandidates) {
@@ -141,7 +142,7 @@ public class PortalEffect extends ShapedEffectDecorator {
     private Entity getLocationImprint() {
         Chunk c = getChunk(castLocation);
         for (Entity entity : c.getEntities()) {
-            if (entity.getLocation().getPosition().distanceSquared(targetLocation.getPosition()) <= 4) {
+            if (entity.getLocation().getPosition().distanceSquared(castLocation.getPosition()) <= 4) {
                 if (entity.getType() == EntityTypes.ITEM) {
                     Item i = (Item) entity;
                     Location location = Utils.extractLocationFromItem(i);
@@ -149,7 +150,7 @@ public class PortalEffect extends ShapedEffectDecorator {
                         continue;
                     }
                     setTargetLocation(location);
-                    printerCount = 4;
+                    setPrinterCount(4);
                     return entity;
                 }
             }
@@ -208,7 +209,7 @@ public class PortalEffect extends ShapedEffectDecorator {
     public Vector3d[] getVertices() {
         if (vertices == null) {
             vertices = new Vector3d[30];
-            Decorator.ellipse(vertices, 3, 2.1, 1, getConsumer().getRotation());
+            Decorator.ellipse(vertices, 1, 3, 1, getConsumer().getRotation());
         }
         return vertices;
     }

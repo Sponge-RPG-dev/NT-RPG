@@ -69,6 +69,7 @@ public class RpgListener {
         if (retardedOptional.isPresent()) {
             Player player = retardedOptional.get();
             if (!event.getCharacterBases().isEmpty()) {
+                System.out.println(Thread.currentThread().getName());
                 if (PluginConfig.PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR || event.getCharacterBases().size() == 1) {
                     Sponge.getScheduler().createTaskBuilder().async().execute(() -> {
                         final IActiveCharacter character = characterService.buildActiveCharacterAsynchronously(player, event.getCharacterBases().get(0));
