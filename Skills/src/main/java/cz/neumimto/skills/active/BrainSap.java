@@ -21,7 +21,7 @@ import org.spongepowered.api.event.filter.cause.First;
  */
 @ResourceLoader.Skill
 @ResourceLoader.ListenerClass
-public class BrainSap extends ActiveSkill {
+public class BrainSap extends Targetted {
 
     @Inject
     private EntityService entityService;
@@ -38,23 +38,17 @@ public class BrainSap extends ActiveSkill {
     }
 
     @Override
-    public SkillResult cast(IActiveCharacter iActiveCharacter, ExtendedSkillInfo extendedSkillInfo, SkillModifier skillModifier) {
-        float range = extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.RANGE,extendedSkillInfo.getTotalLevel());
-        Living targettedEntity = Utils.getTargettedEntity(iActiveCharacter, (int) range);
-        if (targettedEntity != null) {
-            SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
-            builder.fromSkill(this);
-            IEntity e = entityService.get(targettedEntity);
-            builder.setTarget(e);
-            builder.setCaster(iActiveCharacter);
-            SkillDamageSource s = builder.build();
-            float damage = getFloatNodeValue(extendedSkillInfo, SkillNodes.DAMAGE);
-            e.getEntity().damage(damage,s);
-            return SkillResult.OK;
-        }
-        return SkillResult.CANCELLED;
+    public SkillResult castOn(Living targettedEntity, IActiveCharacter iActiveCharacter, ExtendedSkillInfo info) {
+        SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
+        builder.fromSkill(this);
+        IEntity e = entityService.get(targettedEntity);
+        builder.setTarget(e);
+        builder.setCaster(iActiveCharacter);
+        SkillDamageSource s = builder.build();
+        float damage = getFloatNodeValue(info, SkillNodes.DAMAGE);
+        e.getEntity().damage(damage,s);
+        return SkillResult.OK;
     }
-
 
     @Listener(order = Order.LAST)
     public void onDamage(SkillDamageEventLate event, @First(typeFilter = BrainSap.class) BrainSap skill) {

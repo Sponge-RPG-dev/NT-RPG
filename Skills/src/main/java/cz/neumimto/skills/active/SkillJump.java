@@ -14,10 +14,8 @@ import org.spongepowered.api.data.key.Keys;
 @ResourceLoader.Skill
 public class SkillJump extends ActiveSkill {
 
-    public static String name = "Jump";
-
     public SkillJump() {
-        setName(name);
+        setName(SkillLocalization.SKILL_JUMP_NAME);
         setDamageType(null);
         setDescription(SkillLocalization.SKILL_JUMP_DESC);
         SkillSettings skillSettings = new SkillSettings();

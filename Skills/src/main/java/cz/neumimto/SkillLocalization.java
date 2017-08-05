@@ -141,4 +141,16 @@ public class SkillLocalization {
 
     @ConfigValue
     public static String ASTRONOMY_DESC = "Ability to print current coordinates onto a peper, which can be later used for redirecting a portal";
+
+    @ConfigValue
+    public static String ASTRONOMY_CANNOT_SEE_THE_SKY = "You cannot see the sky from current location";
+
+    @ConfigValue
+    public static String SKILL_JUMP_NAME = "Jump";
+
+    @ConfigValue
+    public static String GRAPPLING_HOOK_NAME = "GrapplingHook";
+
+    @ConfigValue
+    public static String GRAPPLING_HOOK_DESC = "";
 }

@@ -35,7 +35,7 @@ public abstract class Targetted extends ActiveSkill implements ITargetted {
     @Override
     public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info,SkillModifier modifier) {
         int range = (int) info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.RANGE, info.getTotalLevel());
-        Living l = Utils.getTargettedEntity(character, range);
+        Living l = getTargettedEntity(character, range);
         if (l != null) {
             if (getDamageType() != null && !Utils.canDamage(character, l)) {
                 return SkillResult.CANCELLED;
@@ -50,4 +50,8 @@ public abstract class Targetted extends ActiveSkill implements ITargetted {
         return SkillResult.NO_TARGET;
     }
 
+
+    public Living getTargettedEntity(IActiveCharacter character, int range) {
+        return Utils.getTargettedEntity(character, range);
+    }
 }
