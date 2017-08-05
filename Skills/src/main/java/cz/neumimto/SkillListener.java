@@ -16,6 +16,7 @@ import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.effects.common.positive.Invisibility;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.events.INEntityDamageEvent;
 import cz.neumimto.rpg.events.INEntityWeaponDamageEvent;
@@ -97,7 +98,12 @@ public class SkillListener {
 
     @Listener
     public void onEntityDamage(INEntityDamageEvent event) {
-
+        if (event.getTarget().hasEffect(Invisibility.name)) {
+            effectService.removeEffect(event.getTarget().getEffect(Invisibility.name), event.getTarget());
+        }
+        if (event.getSource().hasEffect(Invisibility.name)) {
+            effectService.removeEffect(event.getTarget().getEffect(Invisibility.name), event.getSource());
+        }
     }
 
     @Listener
