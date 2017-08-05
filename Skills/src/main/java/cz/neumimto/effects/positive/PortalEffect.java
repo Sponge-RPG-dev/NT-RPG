@@ -104,7 +104,7 @@ public class PortalEffect extends ShapedEffectDecorator {
     public void onTick() {
         super.onTick();
         if (lastTimeRun <= System.currentTimeMillis() - entityLookupInterval) {
-            if (initialized()) {
+            if (!initialized()) {
                 Entity entity = getLocationImprint();
                 if (entity != null) {
                     entity.remove();
@@ -176,7 +176,7 @@ public class PortalEffect extends ShapedEffectDecorator {
         Set<Entity> entities = new HashSet<>();
         int max = 5;
         for (Entity entity : c.getEntities()) {
-            if (entity.getLocation().getPosition().distanceSquared(targetLocation.getPosition()) <= 4) {
+            if (entity.getLocation().getPosition().distanceSquared(castLocation.getPosition()) <= 4) {
                 if (max <= 0) {
                     break;
                 }

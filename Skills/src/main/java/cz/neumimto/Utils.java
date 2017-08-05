@@ -3,9 +3,13 @@ package cz.neumimto;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.RepresentedItemData;
+import org.spongepowered.api.data.value.mutable.Value;
+import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.Item;
+import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
@@ -30,7 +34,7 @@ public class Utils {
                 .color(teleportationScrollColor).build());
         List<Text> lore = new ArrayList<>();
         String name = location.getExtent().getName();
-        lore.add(Text.builder(name).color(TextColors.DARK_PURPLE).style(TextStyles.BOLD).build());
+        lore.add(Text.builder(name).color(TextColors.DARK_GRAY).style(TextStyles.BOLD).build());
         int x = location.getBlockX();
         int y = location.getBlockY();
         int z = location.getBlockZ();
@@ -40,15 +44,15 @@ public class Utils {
     }
 
     public static Location extractLocationFromItem(Item i) {
-        if (i.getType() == ItemTypes.PAPER) {
+        if (i.getItemType() == ItemTypes.PAPER) {
 
-            RepresentedItemData itemData = i.getItemData();
+            ItemStackSnapshot itemData = i.getItemData().item().get();
             Optional<Text> text = itemData.get(Keys.DISPLAY_NAME);
             if (!text.isPresent()) {
                 return null;
             }
             Text text1 = text.get();
-            if (text1.getColor() != teleportationScrollColor) {
+            if (text1.getChildren().get(0).getColor() != teleportationScrollColor) {
                 return null;
             }
 
@@ -57,7 +61,7 @@ public class Utils {
             }
 
 
-            Optional<List<Text>> texts = i.getItemData().get(Keys.ITEM_LORE);
+            Optional<List<Text>> texts = itemData.get(Keys.ITEM_LORE);
             if (!texts.isPresent()) {
                 return null;
             }
@@ -71,9 +75,9 @@ public class Utils {
             String[] xyz = texts1.get(1).toPlain().split(",");
             return new Location<>(
                     world.get(),
-                    Integer.parseInt(xyz[0]),
-                    Integer.parseInt(xyz[1]),
-                    Integer.parseInt(xyz[2])
+                    Integer.parseInt(xyz[0].trim()),
+                    Integer.parseInt(xyz[1].trim()),
+                    Integer.parseInt(xyz[2].trim())
             );
         }
         return null;

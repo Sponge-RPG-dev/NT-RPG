@@ -24,7 +24,6 @@ public class Astronomy extends ActiveSkill {
 
     @Override
     public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
-
         ItemStack is = Utils.createTeleportationScroll(character.getLocation());
         character.getEntity().getInventory().offer(is);
         return SkillResult.OK;
