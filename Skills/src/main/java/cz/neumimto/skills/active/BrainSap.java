@@ -14,6 +14,8 @@ import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
+import org.spongepowered.api.event.cause.entity.damage.DamageType;
+import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.event.filter.cause.First;
 
 /**
@@ -35,6 +37,8 @@ public class BrainSap extends Targetted {
         super.settings = settings;
         setName("BrainSap");
         setDescription(SkillLocalization.SKILL_BRAINSAP_DESC);
+        setDamageType(DamageTypes.MAGIC);
+        addSkillType(SkillType.HEALTH_DRAIN);
     }
 
     @Override
@@ -55,6 +59,6 @@ public class BrainSap extends Targetted {
         if (event.isCancelled())
             return;
         IEntity caster = event.getCaster();
-        entityService.healEntity(caster, (float) event.getDamage());
+        entityService.healEntity(caster, (float) event.getDamage(), this);
     }
 }

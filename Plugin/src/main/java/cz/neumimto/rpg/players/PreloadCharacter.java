@@ -68,6 +68,11 @@ public class PreloadCharacter implements IActiveCharacter {
 
 
     @Override
+    public boolean isFriendlyTo(IActiveCharacter character) {
+        return false;
+    }
+
+    @Override
     public boolean isSocketing() {
         return false;
     }

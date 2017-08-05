@@ -41,6 +41,8 @@ public class CommandblockSkillExecutor extends PreloadCharacter {
         return INFINITY_POOL;
     }
 
+
+
     @Override
     public Location<World> getLocation() {
         return c.getLocation();

@@ -708,6 +708,18 @@ public class ActiveCharacter implements IActiveCharacter {
         return getPlayer() == null;
     }
 
+
+    @Override
+    public boolean isFriendlyTo(IActiveCharacter character) {
+        if (character == this) return true;
+        for (IActiveCharacter iActiveCharacter : getParty().getPlayers()) {
+            if (iActiveCharacter == character) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public int hashCode() {
         return getPlayer().getUniqueId().hashCode() * 37;

@@ -74,8 +74,9 @@ public class SkillDamageSourceBuilder extends AbstractDamageSourceBuilder<SkillD
         return this;
     }
 
-    public void setCaster(IEntity caster) {
+    public SkillDamageSourceBuilder setCaster(IEntity caster) {
         this.caster = caster;
+        return this;
     }
 
     public IEffect getEffect() {

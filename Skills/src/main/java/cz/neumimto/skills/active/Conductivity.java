@@ -19,6 +19,8 @@ public class Conductivity extends ActiveSkill {
         settings.addNode(SkillNodes.RADIUS, 10, 1);
         settings.addNode(SkillNodes.RANGE, 15, 1);
         super.settings = settings;
+        addSkillType(SkillType.CURSE);
+        addSkillType(SkillType.DECREASED_RESISTANCE);
     }
 
     @Override

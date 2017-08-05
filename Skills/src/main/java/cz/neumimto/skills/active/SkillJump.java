@@ -21,6 +21,9 @@ public class SkillJump extends ActiveSkill {
         SkillSettings skillSettings = new SkillSettings();
         skillSettings.addNode(SkillNodes.VELOCITY, 2,2);
         settings = skillSettings;
+        addSkillType(SkillType.STEALTH);
+        addSkillType(SkillType.MOVEMENT);
+        addSkillType(SkillType.PHYSICAL);
     }
 
 

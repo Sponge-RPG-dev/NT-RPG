@@ -28,6 +28,7 @@ public class SkillTeleport extends ActiveSkill {
         settings.addNode(SkillNodes.RANGE, 20, 20);
         super.settings = settings;
         super.setDescription(SkillLocalization.SKILL_TELEPORT_DESC);
+        addSkillType(SkillType.TELEPORT);
     }
 
     @Override

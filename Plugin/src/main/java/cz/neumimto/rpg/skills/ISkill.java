@@ -49,7 +49,7 @@ public interface ISkill extends IEffectSourceProvider {
 
     SkillResult onPreUse(IActiveCharacter character);
 
-    Set<SkillType> getSkillTypes();
+    Set<ISkillType> getSkillTypes();
 
     SkillSettings getSettings();
 

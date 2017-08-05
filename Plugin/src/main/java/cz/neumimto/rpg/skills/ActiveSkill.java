@@ -29,7 +29,7 @@ public abstract class ActiveSkill extends AbstractSkill {
     @Override
     public SkillResult onPreUse(IActiveCharacter character) {
         ExtendedSkillInfo info = character.getSkillInfo(this);
-        if (character.isSilenced() && getSkillTypes().contains(SkillType.CANT_CAST_WHILE_SILENCED)) {
+        if (character.isSilenced() && !getSkillTypes().contains(SkillType.CAN_CAST_WHILE_SILENCED)) {
             character.sendMessage(Localization.PLAYER_IS_SILENCED);
             return SkillResult.CASTER_SILENCED;
         }

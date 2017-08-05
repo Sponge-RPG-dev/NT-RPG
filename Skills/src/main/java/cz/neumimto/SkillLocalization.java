@@ -153,4 +153,10 @@ public class SkillLocalization {
 
     @ConfigValue
     public static String GRAPPLING_HOOK_DESC = "";
+
+    @ConfigValue
+    public static String Skill_BANDAGE_DESC = "Heals the target, or a caster";
+
+    @ConfigValue
+    public static String SKILL_BANDAGE_NAME = "Bandage";
 }

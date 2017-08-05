@@ -36,28 +36,17 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.effect.potion.PotionEffectType;
 import org.spongepowered.api.effect.sound.SoundTypes;
-import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.entity.projectile.arrow.Arrow;
 import org.spongepowered.api.entity.projectile.arrow.TippedArrow;
-import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.action.CollideEvent;
-import org.spongepowered.api.event.block.CollideBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
-import org.spongepowered.api.event.entity.CollideEntityEvent;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
-import org.spongepowered.api.event.entity.MoveEntityEvent;
-import org.spongepowered.api.event.entity.ai.AITaskEvent;
 import org.spongepowered.api.event.filter.IsCancelled;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.cause.Root;
-import org.spongepowered.api.event.filter.type.Exclude;
-import org.spongepowered.api.event.impl.AbstractSpawnEntityEvent;
-import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 import org.spongepowered.api.event.item.inventory.UseItemStackEvent;
-import org.spongepowered.api.event.statistic.ChangeStatisticEvent;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.scheduler.Task;
@@ -66,7 +55,6 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import java.util.Optional;
-import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -105,7 +93,7 @@ public class SkillListener {
                 IEffectContainer container = character.getEffect(LifeAfterKillEffect.name);
                 if (container != null) {
                     float l = (float) container.getStackedValue();
-                    entityService.healEntity(character,l);
+                    entityService.healEntity(character,l, null);
                 }
             }
         }
@@ -126,10 +114,10 @@ public class SkillListener {
     @Listener
     public void onEntityDamage(INEntityDamageEvent event) {
         if (event.getTarget().hasEffect(Invisibility.name)) {
-            effectService.removeEffect(event.getTarget().getEffect(Invisibility.name), event.getTarget());
+            effectService.removeEffectContainer(event.getTarget().getEffect(Invisibility.name), event.getTarget());
         }
         if (event.getSource().hasEffect(Invisibility.name)) {
-            effectService.removeEffect(event.getTarget().getEffect(Invisibility.name), event.getSource());
+            effectService.removeEffectContainer(event.getTarget().getEffect(Invisibility.name), event.getSource());
         }
     }
 

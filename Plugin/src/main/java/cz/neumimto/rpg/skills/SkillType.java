@@ -22,5 +22,5 @@ package cz.neumimto.rpg.skills;
  * Created by NeumimTo on 26.7.2015.
  */
 public enum SkillType implements ISkillType {
-    CANT_CAST_WHILE_SILENCED,
+    PHYSICAL, HEALING, SUMMON, PROJECTILE, CAN_CAST_WHILE_SILENCED, UTILITY, HEALTH_DRAIN, AURA, CURSE, AOE, DECREASED_RESISTANCE, ESCAPE, TELEPORT, STEALTH, MOVEMENT,
 }

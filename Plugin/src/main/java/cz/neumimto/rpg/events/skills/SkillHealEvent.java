@@ -21,6 +21,7 @@ package cz.neumimto.rpg.events.skills;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.events.CancellableEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.skills.ISkill;
 
 /**
  * Created by NeumimTo on 7.8.2015.
@@ -28,10 +29,12 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 public class SkillHealEvent extends CancellableEvent {
     private IEntity character;
     private double amount;
+    private ISkill skill;
 
-    public SkillHealEvent(IEntity character, double amount) {
+    public SkillHealEvent(IEntity character, double amount, ISkill skill) {
         this.character = character;
         this.amount = amount;
+        this.skill = skill;
     }
 
     public IEntity getEntity() {
@@ -48,5 +51,13 @@ public class SkillHealEvent extends CancellableEvent {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public ISkill getSkill() {
+        return skill;
+    }
+
+    public void setSkill(ISkill skill) {
+        this.skill = skill;
     }
 }

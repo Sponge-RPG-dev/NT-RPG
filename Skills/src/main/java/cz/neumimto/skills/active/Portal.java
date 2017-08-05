@@ -31,6 +31,8 @@ public class Portal extends ActiveSkill {
 		settings.addNode("portal-duration", 20, 20);
 		settings.addNode("manacost-per-teleported-entity", 5, 7);
 		setSettings(settings);
+		addSkillType(SkillType.UTILITY);
+		addSkillType(SkillType.TELEPORT);
 	}
 
 	@Override

@@ -23,7 +23,8 @@ public class SkillInvisibility extends ActiveSkill {
         SkillSettings settings = new SkillSettings();
         settings.addNode(SkillNodes.DURATION, 10, 10);
         setSettings(settings);
-        getSkillTypes().add(SkillType.CANT_CAST_WHILE_SILENCED);
+        addSkillType(SkillType.STEALTH);
+        addSkillType(SkillType.MOVEMENT);
     }
 
     @Override

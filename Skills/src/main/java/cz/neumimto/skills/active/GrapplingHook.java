@@ -58,6 +58,10 @@ public class GrapplingHook extends ActiveSkill {
         SkillSettings settings = new SkillSettings();
         settings.addNode(SkillNodes.RANGE, 100, 10);
         setSettings(settings);
+        addSkillType(SkillType.PHYSICAL);
+        addSkillType(SkillType.PROJECTILE);
+        addSkillType(SkillType.SUMMON);
+        addSkillType(SkillType.STEALTH);
     }
 
     @Override

@@ -5,10 +5,7 @@ import cz.neumimto.SkillLocalization;
 import cz.neumimto.Utils;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ActiveSkill;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.SkillModifier;
-import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.*;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
@@ -29,6 +26,8 @@ public class Astronomy extends ActiveSkill {
         setName(SkillLocalization.ASTRONOMY_NAME);
         setDescription(SkillLocalization.ASTRONOMY_DESC);
         setSettings(settings);
+        addSkillType(SkillType.CAN_CAST_WHILE_SILENCED);
+        addSkillType(SkillType.UTILITY);
     }
 
     @Override
