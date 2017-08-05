@@ -135,4 +135,10 @@ public class SkillLocalization {
 
     @ConfigValue
     public static String CONDUCTIVITY_DESC = "Decreases lightning resistance of entities in area";
+
+    @ConfigValue
+    public static String ASTRONOMY_NAME = "Astronomy";
+
+    @ConfigValue
+    public static String ASTRONOMY_DESC = "Ability to print current coordinates onto a peper, which can be later used for redirecting a portal";
 }

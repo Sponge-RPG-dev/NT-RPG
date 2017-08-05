@@ -5,12 +5,15 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.RepresentedItemData;
 import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +23,21 @@ import java.util.Optional;
 public class Utils {
 
     public static TextColor teleportationScrollColor = TextColors.GREEN;
+
+    public static ItemStack createTeleportationScroll(Location<World> location) {
+        ItemStack of = ItemStack.of(ItemTypes.PAPER, 1);
+        of.offer(Keys.DISPLAY_NAME, Text.builder(SkillLocalization.TELEPORTATION_SCROLL)
+                .color(teleportationScrollColor).build());
+        List<Text> lore = new ArrayList<>();
+        String name = location.getExtent().getName();
+        lore.add(Text.builder(name).color(TextColors.DARK_PURPLE).style(TextStyles.BOLD).build());
+        int x = location.getBlockX();
+        int y = location.getBlockY();
+        int z = location.getBlockZ();
+        lore.add(Text.builder(x + ", " + y + ", " + z).color(TextColors.GRAY).build());
+        of.offer(Keys.ITEM_LORE, lore);
+        return of;
+    }
 
     public static Location extractLocationFromItem(Item i) {
         if (i.getType() == ItemTypes.PAPER) {

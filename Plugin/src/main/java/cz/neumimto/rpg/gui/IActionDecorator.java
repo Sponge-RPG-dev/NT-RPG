@@ -22,4 +22,8 @@ public interface IActionDecorator {
 	void circle(Location location, int count, double radius, Consumer<Location> callback);
 
 	void ellipse(Vector3d[] vector3ds, double a, double b, double vecmult, Vector3d rotationAngle);
+
+	void spiral(double radius, double sides, double coils,
+				double rotation,
+				Consumer<Vector3d> cb);
 }

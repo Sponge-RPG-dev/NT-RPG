@@ -83,6 +83,26 @@ public class ParticleDecorator implements IActionDecorator {
 	}
 
 
+
+
+	@Override
+	public void spiral(double radius, double points, double fullrot,
+					   double rotation,
+					   Consumer<Vector3d> cb) {
+		double a = radius/points;
+		double s = fullrot/points;
+		double arad = s * TrigMath.TWO_PI;
+		rotation *= TrigMath.TWO_PI; //torad
+		for(double i=1; i<=points; i++){
+			double dist = i * a;
+			double angle = i * arad + rotation;
+			double x =TrigMath.cos(angle) * dist;
+			double y =TrigMath.sin(angle) * dist;
+			cb.accept(new Vector3d(x,0,y));
+		}
+	}
+
+
 	public void draw(Location world, Vector3d[] vector3ds, ParticleEffect effect) {
 		for (Vector3d vector3d : vector3ds) {
 			if (vector3d != null) {
@@ -108,6 +128,7 @@ public class ParticleDecorator implements IActionDecorator {
 
 	public static Vector3d[] smallCircle;
 	public static Vector3d[] tinyCircle;
+
 	@PostProcess
 	public void initModels() {
 		smallCircle = new Vector3d[15];
