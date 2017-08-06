@@ -62,4 +62,19 @@ public class SkillDamageSource extends AbstractDamageSource implements ISkillDam
         return effect;
     }
 
+    public void setSkill(ISkill skill) {
+        this.skill = skill;
+    }
+
+    public void setCaster(IEntity caster) {
+        this.caster = caster;
+    }
+
+    public void setTarget(IEntity target) {
+        this.target = target;
+    }
+
+    public void setEffect(IEffect effect) {
+        this.effect = effect;
+    }
 }

@@ -1,5 +1,6 @@
 package cz.neumimto.skills.active;
 
+import cz.neumimto.Decorator;
 import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.negative.Bleeding;
@@ -39,6 +40,7 @@ public class Bandage extends Targetted {
         if (iEntity.isFriendlyTo(source)) {
             float floatNodeValue = getFloatNodeValue(info, SkillNodes.HEALED_AMOUNT);
             entityService.healEntity(iEntity, floatNodeValue, this);
+            Decorator.healEffect(iEntity.getLocation());
             if (iEntity.hasEffect(Bleeding.name)) {
                 effectService.removeEffectContainer(iEntity.getEffect(Bleeding.name),iEntity);
             }

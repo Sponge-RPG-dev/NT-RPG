@@ -159,4 +159,22 @@ public class SkillLocalization {
 
     @ConfigValue
     public static String SKILL_BANDAGE_NAME = "Bandage";
+
+    @ConfigValue
+    public static String SKILL_GROUPHEAL_NAME = "GroupHeal";
+
+    @ConfigValue
+    public static String SKILL_GROUPHEAL_DESC = "Heals nearby allies";
+
+    @ConfigValue
+    public static String SKILL_PANDEMIC_NAME = "Pandemic";
+
+    @ConfigValue
+    public static String SKILL_PANDEMIC_DESC = "Drains health from nearby entities";
+
+    @ConfigValue
+    public static String SKILL_BATTLECHARGE_DESC = "Speed boost for your party";
+
+    @ConfigValue
+    public static String SKILL_BATTLECHARGE_NAME = "BattleCharge";
 }
