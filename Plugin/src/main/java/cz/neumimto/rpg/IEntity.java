@@ -3,6 +3,7 @@ package cz.neumimto.rpg;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.entities.EntityHealth;
 import cz.neumimto.rpg.players.Health;
+import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.IEntityHealth;
 import cz.neumimto.rpg.players.IReservable;
 import org.spongepowered.api.entity.living.Living;
@@ -23,4 +24,6 @@ public interface IEntity<T extends Living> extends IEffectConsumer<T> {
     IEntityType getType();
 
     IEntityHealth getHealth();
+
+    boolean isFriendlyTo(IActiveCharacter character);
 }

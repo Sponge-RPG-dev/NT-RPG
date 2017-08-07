@@ -55,26 +55,35 @@ public class CharacterBase extends TimestampEntity {
 
     private String info;
 
+    @Column(name = "used_attribute_points")
     private Integer usedAttributePoints;
 
+    @Column(name = "attribute_points")
     private Integer attributePoints;
 
+    @Column(name = "can_reset_skills")
     private Boolean canResetskills;
 
-    private String race, primaryClass;
+    @Column(name = "race")
+    private String race;
 
-    private Integer guildid;
+    @Column(name = "primary_class")
+    private String primaryClass;
 
+    @Column(name = "guild_id")
+    private Long guildid;
+
+    @Column(name = "health_scale")
     private Double healthScale;
 
-    @Column(length = 16)
+    @Column(name = "last_known_player_name", length = 16)
     private String lastKnownPlayerName;
 
     @Column(name = "last_reset_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastReset;
 
-    @Column(columnDefinition="TEXT")
+    @Column(name = "character_cooldowns", columnDefinition="TEXT")
     @Convert(converter = MapSL2Json.class)
     private Map<String,Long> characterCooldowns = new HashMap<>();
 
@@ -138,11 +147,11 @@ public class CharacterBase extends TimestampEntity {
         this.race = race;
     }
 
-    public int getGuildid() {
+    public Long getGuildid() {
         return guildid;
     }
 
-    public void setGuildid(int guildid) {
+    public void setGuildid(Long guildid) {
         this.guildid = guildid;
     }
 
@@ -170,7 +179,7 @@ public class CharacterBase extends TimestampEntity {
         this.usedAttributePoints = usedAttributePoints;
     }
 
-    public boolean isCanResetskills() {
+    public Boolean isCanResetskills() {
         return canResetskills;
     }
 

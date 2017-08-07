@@ -101,7 +101,7 @@ public class EffectService {
                 .delay(10L, TimeUnit.MILLISECONDS).interval(TICK_PERIOD, TimeUnit.MILLISECONDS)
                 .execute(() -> {
                     for (IEffect pendingRemoval : pendingRemovals) {
-                        removeEffect(pendingRemoval.getEffectContainer(),pendingRemoval, pendingRemoval.getConsumer());
+                        removeEffectContainer(pendingRemoval.getEffectContainer(),pendingRemoval, pendingRemoval.getConsumer());
                         if (effectSet.contains(pendingRemoval)) {
                             effectSet.remove(pendingRemoval);
                         }
@@ -179,16 +179,16 @@ public class EffectService {
     public void removeEffect(IEffect iEffect, IEffectConsumer consumer) {
         IEffectContainer effect = consumer.getEffect(iEffect.getName());
         if (effect != null) {
-            removeEffect(effect, iEffect, consumer);
+            removeEffectContainer(effect, iEffect, consumer);
             stopEffect(iEffect);
         }
     }
 
-    public void removeEffect(IEffectContainer<?, IEffect<?>> container, IEffectConsumer consumer) {
+    public void removeEffectContainer(IEffectContainer<?, IEffect<?>> container, IEffectConsumer consumer) {
         container.forEach(a->removeEffect(a, consumer));
     }
 
-    protected void removeEffect(IEffectContainer container, IEffect iEffect, IEffectConsumer consumer) {
+    protected void removeEffectContainer(IEffectContainer container, IEffect iEffect, IEffectConsumer consumer) {
         if (iEffect == container) {
             if (!iEffect.getConsumer().isDetached()) {
                 iEffect.onRemove();
@@ -219,7 +219,7 @@ public class EffectService {
             while (iterator.hasNext()) {
                 e = iterator.next();
                 if (e.getEffectSourceProvider() == effectSource) {
-                    removeEffect(effect, e, consumer);
+                    removeEffectContainer(effect, e, consumer);
                 }
             }
         }

@@ -1,6 +1,7 @@
 package cz.neumimto.rpg;
 
 
+import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.persistance.GroupDao;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.ExtendedNClass;
@@ -15,6 +16,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.spongepowered.api.event.block.TickBlockEvent;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 
@@ -25,10 +27,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

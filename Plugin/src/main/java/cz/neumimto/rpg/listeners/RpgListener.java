@@ -19,10 +19,12 @@
 package cz.neumimto.rpg.listeners;
 
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.events.CharacterChangeGroupEvent;
+import cz.neumimto.rpg.events.CharacterGainedLevelEvent;
 import cz.neumimto.rpg.events.PlayerGuiModInitEvent;
 import cz.neumimto.rpg.events.character.PlayerDataPreloadComplete;
 import cz.neumimto.rpg.events.party.PartyJoinEvent;
@@ -56,6 +58,9 @@ public class RpgListener {
     private Game game;
 
     @Inject
+    private GroupService groupService;
+
+    @Inject
     private NtRpgPlugin plugin;
 
     @Listener
@@ -64,6 +69,7 @@ public class RpgListener {
         if (retardedOptional.isPresent()) {
             Player player = retardedOptional.get();
             if (!event.getCharacterBases().isEmpty()) {
+                System.out.println(Thread.currentThread().getName());
                 if (PluginConfig.PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR || event.getCharacterBases().size() == 1) {
                     Sponge.getScheduler().createTaskBuilder().async().execute(() -> {
                         final IActiveCharacter character = characterService.buildActiveCharacterAsynchronously(player, event.getCharacterBases().get(0));
@@ -102,6 +108,8 @@ public class RpgListener {
     @Listener
     @IsCancelled(Tristate.FALSE)
     public void onChangeGroup(CharacterChangeGroupEvent event, @First(typeFilter = IActiveCharacter.class) IActiveCharacter character) {
-       
+        groupService.removePermissions(character, groupService.getPermissionsToRemove(character, event.getOld()));
+        groupService.addAllPermissions(character, event.getNew());
     }
+
 }

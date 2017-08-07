@@ -36,6 +36,8 @@ public class SkillFireball extends ActiveSkill {
 		skillSettings.addNode(SkillNodes.DAMAGE, 10, 10);
 		skillSettings.addNode(SkillNodes.VELOCITY, 1.5f, .5f);
 		settings = skillSettings;
+		addSkillType(SkillType.SUMMON);
+		addSkillType(SkillType.PROJECTILE);
 	}
 
 	@Override

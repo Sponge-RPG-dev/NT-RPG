@@ -120,4 +120,61 @@ public class SkillLocalization {
 
     @ConfigValue
     public static String SKILL_DAMPEN_LORE = "";
+
+    @ConfigValue
+    public static String TELEPORTATION_SCROLL = "Teleportation Scroll";
+
+    @ConfigValue
+    public static String SKILL_PORTAL_DESC = "Creates a portal to another location";
+
+    @ConfigValue
+    public static String SKILL_PORTAL_NAME = "Portal";
+
+    @ConfigValue
+    public static String CONDUCTIVITY_NAME = "Conductivity";
+
+    @ConfigValue
+    public static String CONDUCTIVITY_DESC = "Decreases lightning resistance of entities in area";
+
+    @ConfigValue
+    public static String ASTRONOMY_NAME = "Astronomy";
+
+    @ConfigValue
+    public static String ASTRONOMY_DESC = "Ability to print current coordinates onto a peper, which can be later used for redirecting a portal";
+
+    @ConfigValue
+    public static String ASTRONOMY_CANNOT_SEE_THE_SKY = "You cannot see the sky from current location";
+
+    @ConfigValue
+    public static String SKILL_JUMP_NAME = "Jump";
+
+    @ConfigValue
+    public static String GRAPPLING_HOOK_NAME = "GrapplingHook";
+
+    @ConfigValue
+    public static String GRAPPLING_HOOK_DESC = "";
+
+    @ConfigValue
+    public static String Skill_BANDAGE_DESC = "Heals the target, or a caster";
+
+    @ConfigValue
+    public static String SKILL_BANDAGE_NAME = "Bandage";
+
+    @ConfigValue
+    public static String SKILL_GROUPHEAL_NAME = "GroupHeal";
+
+    @ConfigValue
+    public static String SKILL_GROUPHEAL_DESC = "Heals nearby allies";
+
+    @ConfigValue
+    public static String SKILL_PANDEMIC_NAME = "Pandemic";
+
+    @ConfigValue
+    public static String SKILL_PANDEMIC_DESC = "Drains health from nearby entities";
+
+    @ConfigValue
+    public static String SKILL_BATTLECHARGE_DESC = "Speed boost for your party";
+
+    @ConfigValue
+    public static String SKILL_BATTLECHARGE_NAME = "BattleCharge";
 }

@@ -6,6 +6,7 @@ import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.Living;
+import org.spongepowered.api.entity.living.player.Player;
 
 import java.util.Collections;
 import java.util.Set;
@@ -31,13 +32,13 @@ public class Invisibility extends EffectBase implements IEffectContainer {
     @Override
     public void onApply() {
         Living entity = getConsumer().getEntity();
-        entity.offer(Keys.INVISIBLE, true);
+        entity.offer(Keys.VANISH, true);
     }
 
     @Override
     public void onRemove() {
         Living entity = getConsumer().getEntity();
-        entity.offer(Keys.INVISIBLE, false);
+        entity.offer(Keys.VANISH, false);
     }
 
     @Override

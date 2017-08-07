@@ -60,7 +60,7 @@ public class ActiveCharacter implements IActiveCharacter {
     private transient float[] characterPropertiesLevel;
     private transient boolean invulnerable;
     private IReservable mana = new Mana(this);
-    private Health health = new Health(this);
+    private IReservable health = new Health(this);
     private transient Player pl;
     private transient Map<String, IEffectContainer<Object, IEffect<Object>>> effects = new HashMap<>();
     private transient Click click = new Click();
@@ -231,12 +231,12 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
-    public Health getHealth() {
+    public IReservable getHealth() {
         return health;
     }
 
     @Override
-    public void setHealth(Health health) {
+    public void setHealth(IReservable health) {
         this.health = health;
     }
 
@@ -706,6 +706,18 @@ public class ActiveCharacter implements IActiveCharacter {
     @Override
     public boolean isDetached() {
         return getPlayer() == null;
+    }
+
+
+    @Override
+    public boolean isFriendlyTo(IActiveCharacter character) {
+        if (character == this) return true;
+        for (IActiveCharacter iActiveCharacter : getParty().getPlayers()) {
+            if (iActiveCharacter == character) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

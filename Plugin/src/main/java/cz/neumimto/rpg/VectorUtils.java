@@ -4,6 +4,12 @@ import com.flowpowered.math.GenericMath;
 import com.flowpowered.math.TrigMath;
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
+import cz.neumimto.rpg.gui.ParticleDecorator;
+import org.spongepowered.api.text.selector.ArgumentHolder;
+
+import java.util.Random;
+import java.util.Vector;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by NeumimTo on 22.7.2017.
@@ -96,5 +102,14 @@ public class VectorUtils {
 		double x = v.getX() * cos + v.getZ() * sin;
 		return new Vector3d(x, v.getY(), z);
 	}
+
+	public static Vector3d getRandomPointBetween(Vector3d start, Vector3d end) {
+		return end
+				.sub(start)
+				.normalize()
+				.mul(ThreadLocalRandom.current().nextDouble(start.distance(end)));
+	}
+
+	
 
 }

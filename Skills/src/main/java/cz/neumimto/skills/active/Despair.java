@@ -48,6 +48,9 @@ public class Despair extends ActiveSkill {
 		settings.addNode(SkillNodes.DAMAGE, 10L, 1.5f);
 		settings.addNode(SkillNodes.RADIUS, 7L, 2);
 		super.settings = settings;
+		addSkillType(SkillType.AOE);
+		addSkillType(SkillType.ESCAPE);
+		addSkillType(SkillType.STEALTH);
 	}
 
 	@Override

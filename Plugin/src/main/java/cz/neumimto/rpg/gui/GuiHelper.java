@@ -21,6 +21,7 @@ import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -60,7 +61,7 @@ public class GuiHelper {
 		i.offer(Keys.HIDE_MISCELLANEOUS, true);
 		i.offer(Keys.HIDE_ATTRIBUTES, true);
 		i.offer(new MenuInventoryData(true));
-		i.offer(Keys.ITEM_LORE, Arrays.asList(Text.of(description, TextColors.GRAY)));
+		i.offer(Keys.ITEM_LORE, Collections.singletonList(Text.of(description, TextColors.GRAY)));
 		return i;
 	}
 
@@ -68,7 +69,7 @@ public class GuiHelper {
 		ItemStack i = ItemStack.of(ItemTypes.DIAMOND_CHESTPLATE, 1);
 		i.offer(NKeys.MENU_INVENTORY, true);
 		i.offer(Keys.DISPLAY_NAME, Text.of(Localization.WEAPONS, TextColors.DARK_RED));
-		i.offer(Keys.ITEM_LORE, Arrays.asList(Text.of(Localization.WEAPONS_MENU_HELP, TextColors.GRAY)));
+		i.offer(Keys.ITEM_LORE, Collections.singletonList(Text.of(Localization.WEAPONS_MENU_HELP, TextColors.GRAY)));
 		i.offer(Keys.HIDE_MISCELLANEOUS, true);
 		i.offer(Keys.HIDE_ATTRIBUTES, true);
 		i.offer(new InventoryCommandItemMenuData("show armor " + group.getName()));
@@ -79,7 +80,7 @@ public class GuiHelper {
 		ItemStack i = ItemStack.of(ItemTypes.DIAMOND_SWORD, 1);
 		i.offer(NKeys.MENU_INVENTORY, true);
 		i.offer(Keys.DISPLAY_NAME, Text.of(Localization.ARMOR, TextColors.DARK_RED));
-		i.offer(Keys.ITEM_LORE, Arrays.asList(Text.of(Localization.ARMOR_MENU_HELP, TextColors.GRAY)));
+		i.offer(Keys.ITEM_LORE, Collections.singletonList(Text.of(Localization.ARMOR_MENU_HELP, TextColors.GRAY)));
 		i.offer(Keys.HIDE_MISCELLANEOUS, true);
 		i.offer(Keys.HIDE_ATTRIBUTES, true);
 		i.offer(new InventoryCommandItemMenuData("show weapons " + group.getName()));

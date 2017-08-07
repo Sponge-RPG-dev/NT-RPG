@@ -22,6 +22,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.players.CharacterService;
@@ -64,4 +65,7 @@ public class GlobalScope {
 
     @Inject
     public RWService runewordService;
+
+    @Inject
+    public EntityService entityService;
 }

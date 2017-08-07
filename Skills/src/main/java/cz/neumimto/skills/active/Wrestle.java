@@ -37,6 +37,8 @@ public class Wrestle extends Targetted {
 		settings.addNode(SkillNodes.DURATION, 1, 0.1f);
 		settings.addNode(SkillNodes.DAMAGE, 1, 0.5f);
 		super.settings = settings;
+		addSkillType(SkillType.PHYSICAL);
+		addSkillType(SkillType.AOE);
 	}
 
 	@Override

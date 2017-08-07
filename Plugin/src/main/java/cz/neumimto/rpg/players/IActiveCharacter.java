@@ -75,7 +75,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     void setMana(IReservable mana);
 
-    void setHealth(Health health);
+    void setHealth(IReservable health);
 
     Map<EquipmentType, Armor> getEquipedArmor();
 

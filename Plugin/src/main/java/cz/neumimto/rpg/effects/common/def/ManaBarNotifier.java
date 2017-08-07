@@ -51,8 +51,10 @@ public class ManaBarNotifier extends  EffectBase<Object> implements IEffectConta
 				bossBar.addPlayer(player);
 			}
 			bossBar.setName(Text.of("Mana: " + "(" + character.getMana().getValue() + "/" + character.getMana().getMaxValue()+ ")"));
-			bossBar.setPercent((float) (Utils.getPercentage(character.getMana().getValue(),character.getMana().getMaxValue()) * 0.01f));
-			bossBar.setVisible(true);
+			if (character.getMana().getMaxValue() > 0) {
+				bossBar.setPercent((float) (Utils.getPercentage(character.getMana().getValue(), character.getMana().getMaxValue()) * 0.01f));
+				bossBar.setVisible(true);
+			}
 			setLastTickTime(System.currentTimeMillis());
 
 	}

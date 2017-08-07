@@ -46,7 +46,7 @@ public abstract class AbstractSkill implements ISkill {
     protected Game game;
     @Inject
     protected CharacterService characterService;
-    private Set<SkillType> skillTypes = new HashSet<>();
+    private Set<ISkillType> skillTypes = new HashSet<>();
     private String lore;
     private DamageType damagetype = DamageTypes.MAGIC;
 
@@ -124,7 +124,7 @@ public abstract class AbstractSkill implements ISkill {
     }
 
     @Override
-    public Set<SkillType> getSkillTypes() {
+    public Set<ISkillType> getSkillTypes() {
         return skillTypes;
     }
 
@@ -165,6 +165,13 @@ public abstract class AbstractSkill implements ISkill {
     @Override
     public void setDamageType(DamageType type) {
         damagetype = type;
+    }
+
+    public void addSkillType(ISkillType type) {
+        if (skillTypes == null) {
+            skillTypes = new HashSet<>();
+        }
+        skillTypes.add(type);
     }
 
     /* Skills are singletons */

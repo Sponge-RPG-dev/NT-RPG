@@ -18,12 +18,15 @@ public class CharacterClass {
     @JoinColumn(name = "characterId")
     private CharacterBase characterBase;
 
+    @Column(name = "experiences")
     private Double experiences;
 
     private String name;
 
+    @Column(name = "skillpoints")
     protected int skillPoints;
 
+    @Column(name = "used_skil_points")
     private int usedSkillPoints;
 
     public Long getId() {

@@ -4,6 +4,8 @@ import com.flowpowered.math.TrigMath;
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.VectorUtils;
@@ -81,6 +83,26 @@ public class ParticleDecorator implements IActionDecorator {
 	}
 
 
+
+
+	@Override
+	public void spiral(double radius, double points, double fullrot,
+					   double rotation,
+					   Consumer<Vector3d> cb) {
+		double a = radius/points;
+		double s = fullrot/points;
+		double arad = s * TrigMath.TWO_PI;
+		rotation *= TrigMath.TWO_PI; //torad
+		for(double i=1; i<=points; i++){
+			double dist = i * a;
+			double angle = i * arad + rotation;
+			double x =TrigMath.cos(angle) * dist;
+			double y =TrigMath.sin(angle) * dist;
+			cb.accept(new Vector3d(x,0,y));
+		}
+	}
+
+
 	public void draw(Location world, Vector3d[] vector3ds, ParticleEffect effect) {
 		for (Vector3d vector3d : vector3ds) {
 			if (vector3d != null) {
@@ -93,4 +115,28 @@ public class ParticleDecorator implements IActionDecorator {
 	public void draw(Location<World> world, Vector3d vector3d, ParticleEffect particleEffect) {
 		world.getExtent().spawnParticles(particleEffect, vector3d);
 	}
+
+	public void fillCircle(Vector3d[] d, double radius) {
+		double increment = TrigMath.TWO_PI / d.length;
+		for (int i = 0; i < d.length; i++) {
+			double angle = i * increment;
+			double x = radius * TrigMath.cos(angle);
+			double z = radius * TrigMath.sin(angle);
+			d[i] = new Vector3d(x,0,z);
+		}
+	}
+
+	public static Vector3d[] smallCircle;
+	public static Vector3d[] tinyCircle;
+
+	@PostProcess
+	public void initModels() {
+		smallCircle = new Vector3d[15];
+		fillCircle(smallCircle, 1.3);
+
+		tinyCircle = new Vector3d[10];
+		fillCircle(ParticleDecorator.tinyCircle,0.5);
+	}
+
+
 }

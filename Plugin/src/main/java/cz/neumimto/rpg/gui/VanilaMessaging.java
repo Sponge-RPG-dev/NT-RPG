@@ -29,6 +29,7 @@ import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.CommandPermissions;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
+import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.effects.common.def.ManaBarNotifier;
@@ -111,6 +112,9 @@ public class VanilaMessaging implements IPlayerMessage {
 
 	@Inject
 	private InfoCommand infoCommand;
+
+	@Inject
+	private DamageService damageService;
 
 	@Override
 	public boolean isClientSideGui() {
@@ -441,8 +445,14 @@ public class VanilaMessaging implements IPlayerMessage {
 						(e1, e2) -> e1,
 						LinkedHashMap::new)).forEach((type, aDouble) -> {
 			ItemStack q = ItemStack.of(type, 1);
-			Text lore = Text.builder(Localization.ITEM_DAMAGE).color(TextColors.GOLD).style(TextStyles.BOLD)
-					.append(Text.builder(aDouble.toString()).style(TextStyles.BOLD).color(TextColors.DARK_RED).build()).build();
+			Text lore = Text.builder(Localization.ITEM_DAMAGE)
+					.color(TextColors.GOLD)
+					.style(TextStyles.BOLD)
+					.append(Text.builder(" " + aDouble.toString())
+							.style(TextStyles.BOLD)
+							.color(damageService.getColorByDamage(aDouble))
+							.build())
+					.build();
 			q.offer(Keys.ITEM_LORE, Collections.singletonList(lore));
 			q.offer(new MenuInventoryData(true));
 			q.offer(Keys.HIDE_MISCELLANEOUS, true);

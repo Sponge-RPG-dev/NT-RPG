@@ -1,7 +1,11 @@
 package cz.neumimto;
 
+import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.rpg.VectorUtils;
 import cz.neumimto.rpg.gui.ParticleDecorator;
+import org.spongepowered.api.effect.particle.ParticleEffect;
+import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.world.Location;
@@ -38,5 +42,17 @@ public class Decorator {
 		decorator.circle(location, count, radius, callback);
 	}
 
+	public static void ellipse(Vector3d[] vector3ds, double a, double b, double vecmult, Vector3d rotationAngle) {
+		decorator.ellipse(vector3ds,a,b,vecmult,rotationAngle);
+	}
 
+	public static ParticleEffect healingEffect = ParticleEffect.builder()
+			.quantity(3)
+			.type(ParticleTypes.HEART)
+			.offset(new Vector3d(1,0,1))
+			.velocity(new Vector3d(0,1,0).normalize())
+			.build();
+	public static void healEffect(Location<World> worldLocation) {
+		worldLocation.getExtent().spawnParticles(healingEffect, worldLocation.getPosition());
+	}
 }

@@ -239,6 +239,15 @@ public class Utils {
 		return l.damage(0, build);
 	}
 
+	public static boolean canDamage(IEntity entity, Living l) {
+		DamageSource build = new SpongeDamageSourceBuilder()
+				.type(NDamageType.DAMAGE_CHECK)
+				.absolute()
+				.build();
+
+		return l.damage(0, build);
+	}
+
 	public static boolean isLivingEntity(Entity entity) {
 		if (entity.isRemoved())
 			return false;

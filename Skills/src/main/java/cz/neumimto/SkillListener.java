@@ -1,5 +1,6 @@
 package cz.neumimto;
 
+import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.ManaDrainEffect;
 import cz.neumimto.effects.ResoluteTechniqueEffect;
@@ -13,9 +14,11 @@ import cz.neumimto.model.BashModel;
 import cz.neumimto.model.CriticalEffectModel;
 import cz.neumimto.model.PotionEffectModel;
 import cz.neumimto.rpg.IEntityType;
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.effects.common.positive.Invisibility;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.events.INEntityDamageEvent;
 import cz.neumimto.rpg.events.INEntityWeaponDamageEvent;
@@ -26,13 +29,18 @@ import cz.neumimto.rpg.players.IReservable;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.utils.XORShiftRnd;
+import cz.neumimto.skills.active.GrapplingHook;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.effect.potion.PotionEffectType;
+import org.spongepowered.api.effect.sound.SoundTypes;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.projectile.arrow.TippedArrow;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
+import org.spongepowered.api.event.action.CollideEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.filter.IsCancelled;
@@ -41,16 +49,24 @@ import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.event.item.inventory.UseItemStackEvent;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.util.Tristate;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * Created by ja on 21.5.2016.
  */
 @ResourceLoader.ListenerClass
 public class SkillListener {
+
+    @Inject
+    private NtRpgPlugin plugin;
 
     @Inject
     private CharacterService characterService;
@@ -77,7 +93,7 @@ public class SkillListener {
                 IEffectContainer container = character.getEffect(LifeAfterKillEffect.name);
                 if (container != null) {
                     float l = (float) container.getStackedValue();
-                    entityService.healEntity(character,l);
+                    entityService.healEntity(character,l, null);
                 }
             }
         }
@@ -97,7 +113,12 @@ public class SkillListener {
 
     @Listener
     public void onEntityDamage(INEntityDamageEvent event) {
-
+        if (event.getTarget().hasEffect(Invisibility.name)) {
+            effectService.removeEffectContainer(event.getTarget().getEffect(Invisibility.name), event.getTarget());
+        }
+        if (event.getSource().hasEffect(Invisibility.name)) {
+            effectService.removeEffectContainer(event.getTarget().getEffect(Invisibility.name), event.getSource());
+        }
     }
 
     @Listener
@@ -250,6 +271,47 @@ public class SkillListener {
             if (!character.hasEffect(AlchemyEffect.name)) {
                 event.setCancelled(true);
             }
+        }
+    }
+
+    @Listener
+    public void event(CollideEvent.Impact event, @First(typeFilter = TippedArrow.class) TippedArrow arrow) {
+        if (GrapplingHook.cache.containsKey(arrow.getUniqueId())) {
+            IActiveCharacter character = characterService.getCharacter(((Player)arrow.getShooter()).getUniqueId());
+            Vector3d velocity = character.getPlayer().getLocation().getPosition().sub(event.getImpactPoint().getPosition()).normalize().mul(-2);
+            Player player = character.getPlayer();
+
+            player.getLocation().getExtent().playSound(SoundTypes.BLOCK_ANVIL_LAND, event.getImpactPoint().getPosition(),1);
+
+            Location<World> startLoc = player.getLocation();
+            double distToGrapple = startLoc.getPosition().distance(event.getImpactPoint().getPosition());
+
+            Sponge.getScheduler().createTaskBuilder()
+                    .execute(new Consumer<Task>() {
+                int ticks = 0;
+                Location<World> prev;
+                double distTraveled = 0.0D;
+                @Override
+                public void accept(Task task) {
+                    if (player.getLocation().getPosition().distance(event.getImpactPoint().getPosition()) <= 2.0D
+                            || distTraveled > distToGrapple) {
+                        player.setVelocity(new Vector3d(0, 0, 0));
+                        GrapplingHook.cache.remove(arrow.getUniqueId());
+                        arrow.remove();
+                        task.cancel();
+                        return;
+                    }
+                    if (prev != null) {
+                        if (player.getLocation().getPosition().distance(prev.getPosition()) <= 0.25) {
+                            ticks++;
+                        }
+                    }
+                    distTraveled = player.getLocation().getPosition().distance(startLoc.getPosition());
+                    prev = player.getLocation();
+                    player.setVelocity(velocity);
+                    player.getLocation().getExtent().playSound(SoundTypes.BLOCK_TRIPWIRE_DETACH, event.getImpactPoint().getPosition(),1);
+                }
+            }).interval(50, TimeUnit.MILLISECONDS).submit(plugin);
         }
     }
 

@@ -73,6 +73,7 @@ import org.spongepowered.api.event.world.chunk.UnloadChunkEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.util.Tristate;
+import org.spongepowered.common.entity.projectile.ProjectileLauncher;
 
 import java.util.Optional;
 
@@ -256,7 +257,6 @@ public class BasicListener {
                 }*/
 		}
 	}
-
 
 	@Listener
 	public void onIndirectEntityDamage(DamageEntityEvent event,

@@ -18,12 +18,21 @@
 
 package cz.neumimto.rpg.effects.common.positive;
 
+import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.gui.ParticleDecorator;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
+import cz.neumimto.rpg.utils.XORShiftRnd;
+import org.spongepowered.api.effect.particle.ParticleEffect;
+import org.spongepowered.api.effect.particle.ParticleOptions;
+import org.spongepowered.api.effect.particle.ParticleTypes;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 /**
  * Created by NeumimTo on 23.7.2015.
@@ -54,15 +63,14 @@ public class SpeedBoost extends EffectBase {
     private IActiveCharacter character;
 
 
-    public SpeedBoost(IActiveCharacter consumer, long duration, String speedbonus) {
+    public SpeedBoost(IEffectConsumer consumer, long duration, String speedbonus) {
         this(consumer, duration, Float.parseFloat(speedbonus));
     }
 
-    public SpeedBoost(IActiveCharacter consumer, long duration, float speedbonus) {
+    public SpeedBoost(IEffectConsumer consumer, long duration, float speedbonus) {
         super(name, consumer);
         setDuration(duration);
         this.speedbonus = speedbonus;
-        character = consumer;
     }
 
 
@@ -77,7 +85,20 @@ public class SpeedBoost extends EffectBase {
         super.onApply();
         character.setProperty(DefaultProperties.walk_speed, getGlobalScope().characterService.getCharacterProperty(character, DefaultProperties.walk_speed) + speedbonus);
         getGlobalScope().characterService.updateWalkSpeed(character);
+        Location<World> location = getConsumer().getLocation();
+
+        ParticleEffect build = ParticleEffect.builder()
+                .type(ParticleTypes.CLOUD)
+                .velocity(new Vector3d(0,0.8,0))
+                .quantity(2).build();
+        Vector3d[] smallCircle = ParticleDecorator.smallCircle;
+
+        for (Vector3d vector3d : smallCircle) {
+            location.getExtent().spawnParticles(build, location.getPosition().add(vector3d));
+        }
+
         getConsumer().sendMessage(Localization.SPEED_BOOST_APPLY);
+
     }
 
     @Override

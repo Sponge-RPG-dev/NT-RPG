@@ -4,6 +4,8 @@ import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.Creature;
@@ -12,6 +14,8 @@ import org.spongepowered.api.entity.living.Living;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Created by NeumimTo on 19.12.2015.
@@ -55,6 +59,28 @@ public class NEntity implements IMob {
     @Override
     public EntityHealth getHealth() {
         return entityHealth;
+    }
+
+    @Override
+    public boolean isFriendlyTo(IActiveCharacter character) {
+        Optional<Optional<UUID>> uuid = getEntity().get(Keys.TAMED_OWNER);
+        if (uuid.isPresent()) {
+            Optional<UUID> uuid1 = uuid.get();
+            if (uuid1.isPresent()) {
+                UUID uuid2 = uuid1.get();
+                if (character.getPlayer().getUniqueId().equals(uuid2)) {
+                    return true;
+                }
+                Party party = character.getParty();
+                for (IActiveCharacter iActiveCharacter : party.getPlayers()) {
+                    UUID uniqueId = iActiveCharacter.getPlayer().getUniqueId();
+                    if (uuid2.equals(uniqueId)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     @Override

@@ -216,6 +216,8 @@ public class SkillService {
         try (FileWriter fileWriter = new FileWriter(path.toFile());
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
             for (ISkill skill : skills.values()) {
+                if (skill.getDefaultSkillSettings() == null)
+                    continue;
                 builder.append(skill.getName()).append(": { ").append(Utils.LineSeparator);
                 for (Map.Entry<String, Float> entry : skill.getDefaultSkillSettings().getNodes().entrySet()) {
                     builder.append(Utils.Tab).append(entry.getKey()).append(" : ").append(entry.getValue()).append(Utils.LineSeparator);

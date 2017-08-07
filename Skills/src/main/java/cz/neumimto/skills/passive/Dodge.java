@@ -30,7 +30,7 @@ public class Dodge extends PassiveSkill {
 	@Override
 	public void applyEffect(ExtendedSkillInfo info, IActiveCharacter character) {
 		float chance = getFloatNodeValue(info, SkillNodes.CHANCE);
-		DodgeEffect dodgeEffect = new DodgeEffect(character, chance);
+		DodgeEffect dodgeEffect = new DodgeEffect(character,-1, chance);
 		effectService.addEffect(dodgeEffect, character, this);
 	}
 

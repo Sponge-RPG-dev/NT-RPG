@@ -68,6 +68,11 @@ public class PreloadCharacter implements IActiveCharacter {
 
 
     @Override
+    public boolean isFriendlyTo(IActiveCharacter character) {
+        return false;
+    }
+
+    @Override
     public boolean isSocketing() {
         return false;
     }
@@ -257,12 +262,12 @@ public class PreloadCharacter implements IActiveCharacter {
 
 
     @Override
-    public void setHealth(Health health) {
+    public void setHealth(IReservable health) {
 
     }
 
     @Override
-    public Health getHealth() {
+    public IReservable getHealth() {
         return health;
     }
 
