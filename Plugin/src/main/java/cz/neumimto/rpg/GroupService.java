@@ -198,13 +198,7 @@ public class GroupService {
 		}
 
 
-		Iterator<String> iterator = intersection.iterator();
-		while (iterator.hasNext()) {
-			String next = iterator.next();
-			if (!toBeRemoved.contains(next)) {
-				iterator.remove();
-			}
-		}
+		intersection.removeIf(next -> !toBeRemoved.contains(next));
 
 		toBeRemoved.removeAll(intersection);
 		return toBeRemoved;

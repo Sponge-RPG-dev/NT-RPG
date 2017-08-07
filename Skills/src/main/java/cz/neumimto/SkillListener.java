@@ -2,6 +2,7 @@ package cz.neumimto;
 
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.effects.EnderPearlEffect;
 import cz.neumimto.effects.ManaDrainEffect;
 import cz.neumimto.effects.ResoluteTechniqueEffect;
 import cz.neumimto.effects.negative.StunEffect;
@@ -13,6 +14,7 @@ import cz.neumimto.events.StunApplyEvent;
 import cz.neumimto.model.BashModel;
 import cz.neumimto.model.CriticalEffectModel;
 import cz.neumimto.model.PotionEffectModel;
+import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
@@ -23,6 +25,7 @@ import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.events.INEntityDamageEvent;
 import cz.neumimto.rpg.events.INEntityWeaponDamageEvent;
 import cz.neumimto.rpg.events.character.CharacterDamageEntityEvent;
+import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.IReservable;
@@ -36,13 +39,16 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.effect.potion.PotionEffectType;
 import org.spongepowered.api.effect.sound.SoundTypes;
+import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.projectile.EnderPearl;
 import org.spongepowered.api.entity.projectile.arrow.TippedArrow;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.action.CollideEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
+import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.filter.IsCancelled;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.cause.Root;
@@ -50,6 +56,7 @@ import org.spongepowered.api.event.item.inventory.UseItemStackEvent;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Tristate;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -315,4 +322,19 @@ public class SkillListener {
         }
     }
 
+
+    @Listener
+    public void onEntityTeleport(MoveEntityEvent.Teleport event, @First(typeFilter = EnderPearl.class) EnderPearl ep) {
+        Entity targetEntity = event.getTargetEntity();
+        IActiveCharacter iEntity = characterService.getCharacter(targetEntity.getUniqueId());
+        if (iEntity.hasEffect(EnderPearlEffect.name)) {
+            EnderPearlEffect.Container container = (EnderPearlEffect.Container) iEntity.getEffect(EnderPearlEffect.name);
+            if (container.getLastTimeUsed() < System.currentTimeMillis() - container.getStackedValue()) {
+                Gui.sendCooldownMessage(iEntity, "Ender Pearl", System.currentTimeMillis() - container.getStackedValue());
+                event.setCancelled(true);
+            } else {
+                container.setLastTimeUsed(System.currentTimeMillis());
+            }
+        }
+    }
 }

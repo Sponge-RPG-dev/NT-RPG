@@ -142,8 +142,8 @@ public class Tests {
 		Set<String> permissionsToRemove = groupService.getPermissionsToRemove(character, nClass.getConfigClass());
 		Assert.assertFalse(permissionsToRemove.contains("common2"));
 		Assert.assertFalse(permissionsToRemove.contains("common1"));
-		Assert.assertFalse(permissionsToRemove.contains("class1"));
-		Assert.assertFalse(permissionsToRemove.contains("class2"));
+		Assert.assertTrue(permissionsToRemove.contains("class1"));
+		Assert.assertTrue(permissionsToRemove.contains("class2"));
 		Assert.assertTrue(permissionsToRemove.contains("class4"));
 	}
 }

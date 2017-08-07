@@ -33,6 +33,8 @@ import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillTree;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.chat.ChatTypes;
 
 import java.util.List;
 import java.util.Map;
@@ -178,5 +180,9 @@ public class Gui {
 
     public static void sendCannotUseItemNotification(IActiveCharacter character, ItemStack is, CannotUseItemReson reason) {
         getMessageTypeOf(character).sendCannotUseItemNotification(character, is, reason);
+    }
+
+    public static void sendNotification(IActiveCharacter character, Text text) {
+        character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, text);
     }
 }

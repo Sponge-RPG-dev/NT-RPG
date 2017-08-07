@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.gui;
 
+import com.google.common.collect.ImmutableMap;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
@@ -72,10 +73,12 @@ import org.spongepowered.api.item.inventory.InventoryArchetypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.property.SlotPos;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
+import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.LiteralText;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.TextTemplate;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.text.format.TextColor;
@@ -83,6 +86,8 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -131,9 +136,31 @@ public class VanilaMessaging implements IPlayerMessage {
 		player.sendMessage(message);
 	}
 
+
+
+	private static final String timeleft = "tl";
+	private static final TextTemplate.Arg TIMELEFT = TextTemplate.arg("tl")
+			.color(TextColors.WHITE)
+			.style(TextStyles.BOLD)
+			.build();
+
+	private static final String skillname = "sk";
+	private static final TextTemplate.Arg SKILLNAME = TextTemplate.arg(skillname)
+			.color(TextColors.WHITE)
+			.style(TextStyles.BOLD)
+			.build();
+
+	private static final TextTemplate cooldown = TextTemplate.of(
+			SKILLNAME,
+			TextColors.GRAY, TextStyles.NONE, Localization.ON_COOLDOWN,
+			TIMELEFT
+	);
+
 	@Override
 	public void sendCooldownMessage(IActiveCharacter player, String message, double cooldown) {
-		sendMessage(player, Localization.ON_COOLDOWN.replaceAll("%1", message).replace("%2", String.valueOf(cooldown)));
+		Text.Builder builder = VanilaMessaging.cooldown.apply(ImmutableMap.of(timeleft, Text.of(cooldown),
+																				skillname, Text.of(message)));
+		player.getPlayer().sendMessage(builder.build());
 	}
 
 	@Override

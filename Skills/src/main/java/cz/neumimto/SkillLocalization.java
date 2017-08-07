@@ -177,4 +177,10 @@ public class SkillLocalization {
 
     @ConfigValue
     public static String SKILL_BATTLECHARGE_NAME = "BattleCharge";
+
+    @ConfigValue
+    public static String SKILL_ENDERPEARL_NAME = "EnderPeaerl";
+
+    @ConfigValue
+    public static String SKILL_ENDERPEARL_DESC = "Ability to use ender pearls to teleport";
 }
