@@ -28,6 +28,7 @@ public class Critical extends PassiveSkill {
 		skillSettings.addNode(SkillNodes.MULTIPLIER, 10, 20);
 		super.settings = skillSettings;
 		setDamageType(NDamageType.MEELE_CRITICAL);
+		addSkillType(SkillType.PHYSICAL);
 	}
 
 	@Override

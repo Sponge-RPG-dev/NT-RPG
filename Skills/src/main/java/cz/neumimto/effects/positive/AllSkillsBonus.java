@@ -2,7 +2,9 @@ package cz.neumimto.effects.positive;
 
 import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.effects.common.stacking.IntegerEffectStackingStrategy;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -34,4 +36,5 @@ public class AllSkillsBonus extends EffectBase<Integer> {
     public void onRemove() {
         getConsumer().setProperty(DefaultProperties.all_skills_bonus,getConsumer().getProperty(DefaultProperties.all_skills_bonus)-getValue());
     }
+
 }

@@ -110,7 +110,7 @@ public class SkillService {
         int level = esi.getTotalLevel();
         if (level < 0)
             //this should never happen
-            return SkillResult.WRONG_DATA;
+            return SkillResult.NEGATIVE_SKILL_LEVEL;
         level += characterService.getCharacterProperty(character, DefaultProperties.all_skills_bonus);
         Long aLong = character.getCooldowns().get(esi.getSkill().getName());
         long servertime = System.currentTimeMillis();

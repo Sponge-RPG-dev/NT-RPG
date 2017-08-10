@@ -12,6 +12,7 @@ import cz.neumimto.rpg.skills.*;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
+import org.spongepowered.api.entity.weather.Lightning;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.entity.spawn.SpawnCause;
 import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
@@ -34,7 +35,9 @@ public class SkillLightning extends Targetted {
 		skillSettings.addNode(SkillNodes.DAMAGE, 10, 20);
 		skillSettings.addNode(SkillNodes.RANGE, 10, 10);
 		super.settings = skillSettings;
-		setDamageType(NDamageType.LIGHTNING);
+		addSkillType(SkillType.ELEMENTAL);
+		addSkillType(SkillType.LIGHTNING);
+
 	}
 
 	@Override

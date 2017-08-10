@@ -40,7 +40,8 @@ public class Multibolt extends Targetted {
 		skillSettings.addNode(SkillNodes.DAMAGE, 10, 20);
 		skillSettings.addNode("times-hit", 10, 20);
 		super.settings = skillSettings;
-		setDamageType(NDamageType.LIGHTNING);
+		addSkillType(SkillType.ELEMENTAL);
+		addSkillType(SkillType.LIGHTNING);
 	}
 
 	@Override

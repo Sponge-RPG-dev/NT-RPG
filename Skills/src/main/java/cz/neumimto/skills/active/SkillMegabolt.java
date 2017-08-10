@@ -30,7 +30,8 @@ public class SkillMegabolt extends ActiveSkill {
         settings.addNode(SkillNodes.RADIUS, 30, 5);
         super.settings = settings;
         addSkillType(SkillType.AOE);
-
+        addSkillType(SkillType.ELEMENTAL);
+        addSkillType(SkillType.LIGHTNING);
     }
 
     @Override

@@ -52,7 +52,7 @@ public class PortalEffect extends ShapedEffectDecorator {
 
     private static ParticleEffect uninicialized = ParticleEffect.builder()
             .type(ParticleTypes.ENCHANTING_GLYPHS)
-            .quantity(2)
+            .quantity(3)
             .build();
 
     private static ParticleEffect inLava = ParticleEffect.builder()
@@ -66,7 +66,7 @@ public class PortalEffect extends ShapedEffectDecorator {
             .build();
 
     private static ParticleEffect initialized = ParticleEffect.builder()
-            .type(ParticleTypes.MOB_SPELL)
+            .type(ParticleTypes.REDSTONE_DUST)
             .option(ParticleOptions.COLOR, Color.YELLOW)
             .quantity(5)
             .build();

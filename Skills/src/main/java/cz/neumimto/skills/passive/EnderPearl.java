@@ -20,6 +20,8 @@ public class EnderPearl extends PassiveSkill {
         setDescription(SkillLocalization.SKILL_ENDERPEARL_DESC);
         SkillSettings settings = new SkillSettings();
         settings.addNode(SkillNodes.COOLDOWN, 7500, -150);
+        addSkillType(SkillType.TELEPORT);
+        addSkillType(SkillType.MOVEMENT);
     }
 
     @Override

@@ -146,6 +146,16 @@ public class Tests {
 		Assert.assertTrue(permissionsToRemove.contains("class2"));
 		Assert.assertTrue(permissionsToRemove.contains("class4"));
 	}
+
+
+	@Test
+	public void k() {
+		int x = -256;
+		boolean is16 = (x & 0x0F) == 0;
+		Assert.assertTrue(is16);
+		is16 = x == (x >> 4) << 4;
+		Assert.assertTrue(is16);
+	}
 }
 
 

@@ -183,4 +183,10 @@ public class SkillLocalization {
 
     @ConfigValue
     public static String SKILL_ENDERPEARL_DESC = "Ability to use ender pearls to teleport";
+
+    @ConfigValue
+    public static String SKILL_DEMENTIA_DESC = "Decreases level of all skills of the target";
+
+    @ConfigValue
+    public static String SKILL_DEMENTIA_NAME = "Dementia";
 }

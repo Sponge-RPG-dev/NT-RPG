@@ -25,6 +25,7 @@ public class Dodge extends PassiveSkill {
 		SkillSettings skillSettings = new SkillSettings();
 		skillSettings.addNode(SkillNodes.CHANCE, 10, 20);
 		super.settings = skillSettings;
+		addSkillType(SkillType.PHYSICAL);
 	}
 
 	@Override

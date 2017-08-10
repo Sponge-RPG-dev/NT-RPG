@@ -18,9 +18,39 @@
 
 package cz.neumimto.rpg.skills;
 
+import org.spongepowered.api.util.Tristate;
+import static org.spongepowered.api.util.Tristate.*;
 /**
  * Created by NeumimTo on 26.7.2015.
  */
 public enum SkillType implements ISkillType {
-    PHYSICAL, HEALING, SUMMON, PROJECTILE, CAN_CAST_WHILE_SILENCED, UTILITY, HEALTH_DRAIN, AURA, CURSE, AOE, DECREASED_RESISTANCE, ESCAPE, TELEPORT, STEALTH, MOVEMENT, DISEASE,
+    PHYSICAL(UNDEFINED),
+    HEALING(FALSE),
+    SUMMON(UNDEFINED),
+    PROJECTILE(UNDEFINED),
+    CAN_CAST_WHILE_SILENCED(FALSE),
+    UTILITY(UNDEFINED),
+    HEALTH_DRAIN(TRUE),
+    AURA(UNDEFINED),
+    CURSE(TRUE),
+    AOE(UNDEFINED),
+    DECREASED_RESISTANCE(UNDEFINED),
+    ESCAPE(FALSE),
+    TELEPORT(UNDEFINED),
+    STEALTH(FALSE),
+    MOVEMENT(UNDEFINED),
+    DISEASE(TRUE),
+    FIRE(UNDEFINED),
+    ELEMENTAL(UNDEFINED),
+    LIGHTNING(UNDEFINED),
+    DRAIN(TRUE);
+    private Tristate negative;
+    SkillType(Tristate negative) {
+        this.negative = negative;
+    }
+
+    @Override
+    public Tristate isNegative() {
+        return negative;
+    }
 }

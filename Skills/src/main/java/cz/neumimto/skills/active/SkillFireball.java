@@ -38,6 +38,8 @@ public class SkillFireball extends ActiveSkill {
 		settings = skillSettings;
 		addSkillType(SkillType.SUMMON);
 		addSkillType(SkillType.PROJECTILE);
+		addSkillType(SkillType.ELEMENTAL);
+		addSkillType(SkillType.FIRE);
 	}
 
 	@Override

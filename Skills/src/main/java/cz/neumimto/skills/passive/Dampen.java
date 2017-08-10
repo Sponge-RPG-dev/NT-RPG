@@ -25,6 +25,7 @@ public class Dampen extends PassiveSkill {
 		SkillSettings skillSettings = new SkillSettings();
 		skillSettings.addNode("min-mana", 310, -5);
 		super.settings = skillSettings;
+		addSkillType(SkillType.UTILITY);
 	}
 
 	@Override

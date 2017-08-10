@@ -30,6 +30,8 @@ public class BurningPrescense extends ActiveSkill {
 		setDamageType(DamageTypes.FIRE);
 		addSkillType(SkillType.AURA);
 		addSkillType(SkillType.AOE);
+		addSkillType(SkillType.ELEMENTAL);
+		addSkillType(SkillType.FIRE);
 	}
 
 	@Override

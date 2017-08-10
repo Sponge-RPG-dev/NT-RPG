@@ -24,6 +24,8 @@ public class GroupHeal extends ActiveSkill {
         settings.addNode(SkillNodes.RADIUS, 10, 10);
         settings.addNode(SkillNodes.HEALED_AMOUNT, 10, 10);
         setSettings(settings);
+        addSkillType(SkillType.HEALING);
+        addSkillType(SkillType.AOE);
     }
 
     @Override

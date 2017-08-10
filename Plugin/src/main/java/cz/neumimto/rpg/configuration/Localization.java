@@ -359,4 +359,7 @@ public class Localization {
 
     @ConfigValue
     public static String CANNOT_USE_ITEM_LORE_REASON = "You are not trained to use this item";
+
+    @ConfigValue
+    public static String NO_PARTYMEMBERS = "No nearby partymembers!";
 }

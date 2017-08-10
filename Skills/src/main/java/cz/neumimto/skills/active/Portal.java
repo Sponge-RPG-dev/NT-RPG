@@ -46,7 +46,7 @@ public class Portal extends ActiveSkill {
 		double manaPerEntity = getDoubleNodeValue(info, "manacost-per-teleported-entity");
 		double chanceToFail = getDoubleNodeValue(info, "chance-to-fail");
 		PortalEffect portalEffect = new PortalEffect(character,duration, null,
-				manaPerTick,manaPerEntity,3000, chanceToFail,false);
+				manaPerTick,manaPerEntity,1750, chanceToFail,false);
 		effectService.addEffect(portalEffect, character, this);
 		return SkillResult.OK;
 	}
