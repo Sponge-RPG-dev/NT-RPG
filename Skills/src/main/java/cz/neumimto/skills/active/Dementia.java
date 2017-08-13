@@ -23,7 +23,7 @@ public class Dementia extends Targetted {
     @Inject
     private EffectService effectService;
 
-    private Dementia() {
+    public Dementia() {
         setName(SkillLocalization.SKILL_DEMENTIA_NAME);
         setDescription(SkillLocalization.SKILL_DEMENTIA_DESC);
         SkillSettings settings = new SkillSettings();

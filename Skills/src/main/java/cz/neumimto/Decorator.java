@@ -52,6 +52,7 @@ public class Decorator {
 			.offset(new Vector3d(1,0,1))
 			.velocity(new Vector3d(0,1,0).normalize())
 			.build();
+
 	public static void healEffect(Location<World> worldLocation) {
 		worldLocation.getExtent().spawnParticles(healingEffect, worldLocation.getPosition());
 	}

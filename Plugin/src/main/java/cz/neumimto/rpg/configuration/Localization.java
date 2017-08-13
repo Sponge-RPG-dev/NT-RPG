@@ -178,7 +178,7 @@ public class Localization {
     public static String CAST_SKILl_ON_LEFTCLICK = "Casts skill %1 on rightclick";
 
     @ConfigValue
-    public static String ITEM_SKILLBIND_FOOTER = "For casting bounded skills you must have access to the skills via command /skill";
+    public static String ITEM_SKILLBIND_FOOTER = "For casting bounded skills you must have access :n to the skills via command /skill";
 
     @ConfigValue
     public static String RUNE = "Rune";

@@ -14,7 +14,6 @@ import cz.neumimto.events.StunApplyEvent;
 import cz.neumimto.model.BashModel;
 import cz.neumimto.model.CriticalEffectModel;
 import cz.neumimto.model.PotionEffectModel;
-import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
@@ -36,6 +35,7 @@ import cz.neumimto.skills.active.GrapplingHook;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.effect.potion.PotionEffectType;
 import org.spongepowered.api.effect.sound.SoundTypes;
@@ -56,7 +56,6 @@ import org.spongepowered.api.event.item.inventory.UseItemStackEvent;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.scheduler.Task;
-import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Tristate;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -301,7 +300,8 @@ public class SkillListener {
                 @Override
                 public void accept(Task task) {
                     if (player.getLocation().getPosition().distance(event.getImpactPoint().getPosition()) <= 2.0D
-                            || distTraveled > distToGrapple) {
+                            || distTraveled > distToGrapple
+                            || player.get(Keys.IS_SNEAKING).orElse(Boolean.FALSE)) {
                         player.setVelocity(new Vector3d(0, 0, 0));
                         GrapplingHook.cache.remove(arrow.getUniqueId());
                         arrow.remove();

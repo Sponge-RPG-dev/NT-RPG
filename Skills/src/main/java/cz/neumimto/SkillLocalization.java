@@ -173,7 +173,7 @@ public class SkillLocalization {
     public static String SKILL_PANDEMIC_DESC = "Drains health from nearby entities";
 
     @ConfigValue
-    public static String SKILL_BATTLECHARGE_DESC = "Speed boost for your party";
+    public static String SKILL_BATTLECHARGE_DESC = "Applies speed potion II to your party";
 
     @ConfigValue
     public static String SKILL_BATTLECHARGE_NAME = "BattleCharge";

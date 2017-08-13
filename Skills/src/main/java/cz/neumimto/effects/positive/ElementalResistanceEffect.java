@@ -38,10 +38,10 @@ public class ElementalResistanceEffect extends EffectBase<Float> {
         propertyContainer.setProperty(DefaultProperties.fire_damage_protection_mult, characterProperty + getValue()* i);
 
         characterProperty = propertyContainer.getProperty(DefaultProperties.ice_damage_protection_mult);
-        propertyContainer.setProperty(DefaultProperties.fire_damage_protection_mult, characterProperty + getValue() * i);
+        propertyContainer.setProperty(DefaultProperties.ice_damage_protection_mult, characterProperty + getValue() * i);
 
         characterProperty = propertyContainer.getProperty(DefaultProperties.lightning_damage_protection_mult);
-        propertyContainer.setProperty(DefaultProperties.fire_damage_protection_mult, characterProperty + getValue() * i);
+        propertyContainer.setProperty(DefaultProperties.lightning_damage_protection_mult, characterProperty + getValue() * i);
     }
 
     @Override

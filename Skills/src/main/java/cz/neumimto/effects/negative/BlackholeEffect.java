@@ -5,6 +5,8 @@ import com.flowpowered.math.vector.Vector3i;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 
+import cz.neumimto.rpg.effects.ShapedEffectDecorator;
+import cz.neumimto.rpg.gui.ParticleDecorator;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.entity.Entity;
@@ -21,7 +23,9 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 2.8.2017.
  */
-public class BlackholeEffect extends EffectBase<Location<World>> {
+public class BlackholeEffect extends ShapedEffectDecorator<Location<World>> {
+
+
 
     public static final String name = "Blackhole";
     private Location<World> targetLocation;
@@ -66,9 +70,19 @@ public class BlackholeEffect extends EffectBase<Location<World>> {
         }
     }
 
+    @Override
+    public void draw(Vector3d vec) {
+
+    }
+
+    @Override
+    public Vector3d[] getVertices() {
+        return new Vector3d[0];
+    }
+
     public void changeGravity(Entity entity) {
         Vector3d sub = targetLocation.getPosition().sub(entity.getLocation().getPosition());
-        entity.setVelocity(sub.normalize().mul(0.1));
+        entity.setVelocity(sub.normalize().mul(2));
 
     }
 }

@@ -81,18 +81,21 @@ public class TestAction implements IEffectSourceProvider {
 		ParticleEffect build = ParticleEffect.builder().type(ParticleTypes.SMOKE)
 				.quantity(1).build();
 
-		double rot = 0.3;
+		double rot = 0.125;
 		Vector3d position = character.getLocation().getPosition();
 		World w = character.getLocation().getExtent();
 		while (rot < 1) {
 			new ParticleDecorator()
 					.spiral(
-							20,
-							500,
-							1,
+							4,
+							32,
+							7,
 							rot,
-							vector3d -> w.spawnParticles(build, vector3d));
-			rot += 0.3;
+							vector3d -> {
+								Vector3d vector3d1 = VectorUtils.rotateAroundAxisY(character.getLocation().add(vector3d).getPosition(), 30);
+								w.spawnParticles(build, vector3d1);
+							});
+			rot += 0.125;
 		}
 
 	}

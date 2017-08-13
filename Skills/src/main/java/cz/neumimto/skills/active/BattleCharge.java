@@ -36,7 +36,7 @@ public class BattleCharge extends ActiveSkill {
     public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
         if (character.getParty().getPlayers().size() == 1) {
             Gui.sendNotification(character, Text.builder(Localization.NO_PARTYMEMBERS)
-                    .color(TextColors.YELLOW).style(TextStyles.BOLD).build());
+                    .color(TextColors.GOLD).style(TextStyles.BOLD).build());
             return SkillResult.CANCELLED;
         }
 
@@ -54,7 +54,7 @@ public class BattleCharge extends ActiveSkill {
 
         if (!found) {
             Gui.sendNotification(character, Text.builder(Localization.NO_PARTYMEMBERS)
-                    .color(TextColors.YELLOW).style(TextStyles.BOLD).build());
+                    .color(TextColors.GOLD).style(TextStyles.BOLD).build());
             return SkillResult.CANCELLED;
         }
         return SkillResult.OK;

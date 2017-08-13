@@ -58,7 +58,6 @@ public class ResourceLoader {
 
     private final static String INNERCLASS_SEPARATOR = "$";
 
-    //TODO use nio instead of io
     public static File classDir, raceDir, guildsDir, addonDir, skilltreeDir;
 
     private static IoC ioc;
@@ -79,17 +78,24 @@ public class ResourceLoader {
 
     @Inject
     private SkillService skillService;
+
     @Inject
     private GroupService groupService;
+
     @Inject
     private EffectService effectService;
+
     @Inject
     private PropertyService propertyService;
+
     @Inject
     private Logger logger;
+
     @Inject
     private CommandService commandService;
+
     private ConfigMapper configMapper;
+
     @Inject
     private ClassGenerator classGenerator;
 
@@ -123,6 +129,7 @@ public class ResourceLoader {
             file = new JarFile(f);
         } catch (IOException e) {
             e.printStackTrace();
+            return;
         }
         logger.info("Loading jarfile " + file.getName());
         Enumeration<JarEntry> entries = file.entries();
@@ -157,8 +164,8 @@ public class ResourceLoader {
             }
             try {
                 loadClass(clazz);
-            } catch (IllegalAccessException | CannotCompileException | InstantiationException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                logger.warn("Could not load the class [" + className + "]", e.getCause());
             }
 
         }

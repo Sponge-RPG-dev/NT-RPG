@@ -11,16 +11,16 @@ import cz.neumimto.rpg.utils.Utils;
  * Created by NeumimTo on 1.8.2017.
  */
 @ClassGenerator.Generate(id = "name")
-public class LesserLightningResistanceEffect extends SingleResistanceValueEffect {
+public class IceResistanceEffect extends SingleResistanceValueEffect {
 
-    public static final String name = "Lesser Lightning resistance";
+    public static final String name = "Ice Resistance";
 
-    public LesserLightningResistanceEffect(IEffectConsumer consumer, long duration, float value) {
-        super(name, consumer, DefaultProperties.lightning_damage_protection_mult, value);
+    public IceResistanceEffect(IEffectConsumer consumer, long duration, float value) {
+        super(name, consumer, DefaultProperties.ice_damage_protection_mult, value);
         setDuration(duration);
     }
 
-    public LesserLightningResistanceEffect(IActiveCharacter character, long duration, String level) {
+    public IceResistanceEffect(IActiveCharacter character, long duration, String level) {
         this(character, duration, Float.parseFloat(Utils.extractNumber(level)));
     }
 }
