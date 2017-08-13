@@ -46,7 +46,7 @@
             <dependency>
                 <groupId>com.github.NeumimTo</groupId>
                 <artifactId>NTCore</artifactId>
-                <version>f000d9633b</version>
+                <version>1.9</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>

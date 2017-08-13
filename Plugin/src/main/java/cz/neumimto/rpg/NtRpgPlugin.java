@@ -58,8 +58,8 @@ import java.util.Optional;
 /**
  * Created by NeumimTo on 29.4.2015.
  */
-@Plugin(id = "nt-rpg", version = "1.0.7", name = "NT-Rpg", dependencies = {
-        @Dependency(id = "nt-core", version = "1.7",optional = false)
+@Plugin(id = "nt-rpg", version = "1.0.8", name = "NT-Rpg", dependencies = {
+        @Dependency(id = "nt-core", version = "1.9",optional = false)
 })
 public class NtRpgPlugin {
 	public static String workingDir;
