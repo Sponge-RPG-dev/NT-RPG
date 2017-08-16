@@ -31,11 +31,13 @@ import cz.neumimto.rpg.utils.Utils;
 import org.slf4j.Logger;
 
 
+import javax.management.RuntimeErrorException;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -73,6 +75,7 @@ public class SkillTreeDao {
                 skillTree.getSkills().put(StartingPoint.name, StartingPoint.SKILL_DATA);
                 try {
                     Config sub = config.getObject("Skills").toConfig();
+                    createConfigSkills(sub, skillTree);
                     loadSkills(sub, skillTree);
                 } catch (ConfigurationException e) {
                     logger.warn("Missing \"Skills\" section. No skills defined");
@@ -86,25 +89,70 @@ public class SkillTreeDao {
         return map;
     }
 
+    private void createConfigSkills(Config sub, SkillTree skillTree) {
+        for (Map.Entry<String, ConfigValue> entry : sub.root().entrySet()) {
+            String name = entry.getKey();
+            ISkill skill = skillService.getSkill(name);
+            if (skill == null) {
+                ConfigObject value = (ConfigObject) entry.getValue();
+                Config c = value.toConfig();
+
+                try {
+                    boolean bool = c.getBoolean("path");
+                    if (!bool)
+                        continue;
+                    SkillTreePath path = new SkillTreePath(name);
+                    skillService.addSkill(path);
+                } catch (ConfigurationException ignored) {}
+            }
+        }
+    }
+
     private void loadSkills(Config sub, SkillTree skillTree) {
         for (Map.Entry<String, ConfigValue> entry : sub.root().entrySet()) {
-            SkillData info = getSkillInfo(entry.getKey(), skillTree);
-            ISkill skill = skillService.getSkill(info.getSkillName());
 
             ConfigObject value = (ConfigObject) entry.getValue();
             Config c = value.toConfig();
+
+
+            SkillData info = getSkillInfo(entry.getKey(), skillTree);
+            if (info instanceof SkillPathData) {
+                SkillPathData pdata = (SkillPathData) info;
+                try {
+                    List<String> permissions = c.getStringList("permissions");
+                    pdata.getPermissions().addAll(permissions);
+                } catch (ConfigurationException e) {
+                    logger.info("Found SkillPath in the tree \"" + skillTree.getId() + "\" but no permissions defined");
+                }
+                try {
+                    int tier = c.getInt("tier");
+                    pdata.setTier(tier);
+                } catch (ConfigurationException e) {
+                    logger.info("Found SkillPath in the tree \"" + skillTree.getId() + "\" but no tier defined, setting to 0");
+                }
+
+                try {
+                    pdata.setSkillPointsRequired(c.getInt("SkillPointsRequired"));
+                } catch (ConfigurationException e) {
+                    logger.info("Found SkillPath in the tree \"" + skillTree.getId() + "\" but no permissions defined, setting to 1");
+                    pdata.setSkillPointsRequired(1);
+                }
+                info.setMaxSkillLevel(1);
+            } else {
+                try {
+                    info.setMaxSkillLevel(c.getInt("MaxSkillLevel"));
+                } catch (ConfigurationException e) {
+                    info.setMaxSkillLevel(1);
+                    logger.warn("Missing \"MaxSkillLevel\" node for a skill \""+info.getSkillName()+"\", setting to 1");
+                }
+            }
             try {
                 info.setMinPlayerLevel(c.getInt("MinPlayerLevel"));
             } catch (ConfigurationException e) {
                 info.setMinPlayerLevel(1);
                 logger.warn("Missing \"MinPlayerLevel\" node for a skill \""+info.getSkillName()+"\", setting to 1");
             }
-            try {
-                info.setMaxSkillLevel(c.getInt("MaxSkillLevel"));
-            } catch (ConfigurationException e) {
-                info.setMaxSkillLevel(1);
-                logger.warn("Missing \"MaxSkillLevel\" node for a skill \""+info.getSkillName()+"\", setting to 1");
-            }
+
             try {
                 for (String conflicts : c.getStringList("Conflicts")) {
                     info.getConflicts().add(getSkillInfo(conflicts, skillTree));
@@ -141,9 +189,11 @@ public class SkillTreeDao {
                         String name = e.getKey();
                         skillSettings.addNode(name, norm);
                         name = name + SkillSettings.bonus;
-                        //todo if not exists set to 0;
-                        float bon = Float.parseFloat(settings.getString(name));
-                        skillSettings.addNode(name, bon);
+                        float bonus = 0f;
+                        try {
+                            bonus = Float.parseFloat(settings.getString(name));
+                        } catch (ConfigurationException ignored) {}
+                        skillSettings.addNode(name, bonus);
                     } else {
                         skillSettings.addObjectNode(e.getKey(), val);
                     }
@@ -175,8 +225,13 @@ public class SkillTreeDao {
     private SkillData getSkillInfo(String name, SkillTree tree) {
         SkillData info = tree.getSkills().get(name);
         if (info == null) {
-            info = new SkillData(name);
-            info.setSkill(skillService.getSkill(name));
+            ISkill skill = skillService.getSkill(name);
+            if (skill instanceof SkillTreePath) {
+                info = new SkillPathData(name);
+            } else {
+                info = new SkillData(name);
+            }
+            info.setSkill(skill);
             tree.getSkills().put(name, info);
         }
         return info;

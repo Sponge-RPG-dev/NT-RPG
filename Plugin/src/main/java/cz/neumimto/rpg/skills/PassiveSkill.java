@@ -43,6 +43,12 @@ public abstract class PassiveSkill extends AbstractSkill {
     }
 
     @Override
+    public void onCharacterInit(IActiveCharacter c, int level) {
+        super.onCharacterInit(c, level);
+        update(c);
+    }
+
+    @Override
     public void skillLearn(IActiveCharacter IActiveCharacter) {
         super.skillLearn(IActiveCharacter);
         update(IActiveCharacter);

@@ -82,12 +82,12 @@ public class SkillService {
             if (skills.containsKey(ISkill.getName().toLowerCase()))
                 throw new RuntimeException("Skill " + ISkill.getName() + " already exists");
         }
-        skills.put(ISkill.getName().toLowerCase(), ISkill);
+        skills.put(ISkill.getName().toLowerCase().replaceAll(" ", "_"), ISkill);
     }
 
 
     public ISkill getSkill(String name) {
-        return skills.get(name.toLowerCase());
+        return skills.get(name.toLowerCase().replaceAll(" ", "_"));
     }
 
     public Map<String, ISkill> getSkills() {
@@ -109,7 +109,6 @@ public class SkillService {
     public SkillResult executeSkill(IActiveCharacter character, ExtendedSkillInfo esi) {
         int level = esi.getTotalLevel();
         if (level < 0)
-            //this should never happen
             return SkillResult.NEGATIVE_SKILL_LEVEL;
         level += characterService.getCharacterProperty(character, DefaultProperties.all_skills_bonus);
         Long aLong = character.getCooldowns().get(esi.getSkill().getName());

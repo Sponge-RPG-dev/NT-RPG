@@ -362,4 +362,7 @@ public class Localization {
 
     @ConfigValue
     public static String NO_PARTYMEMBERS = "No nearby partymembers!";
+
+    @ConfigValue
+    public static String PLAYER_CHOOSED_SKILLTREE_PATH_GLOBAL_MESSAGE_CONTENT = "Player $1 choosed $2";
 }

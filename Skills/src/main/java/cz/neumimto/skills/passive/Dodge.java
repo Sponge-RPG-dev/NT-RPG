@@ -8,6 +8,7 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.*;
+import org.spongepowered.api.world.World;
 
 /**
  * Created by NeumimTo on 6.7.2017.
