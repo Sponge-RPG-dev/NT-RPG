@@ -32,6 +32,10 @@ public final class StartingPoint extends PassiveSkill {
     public static final SkillData SKILL_DATA = new SkillData(name);
     private static SkillSettings skillSettings = new SkillSettings();
 
+    public StartingPoint() {
+        super(null);
+    }
+
     @Override
     public boolean showsToPlayers() {
         return false;
