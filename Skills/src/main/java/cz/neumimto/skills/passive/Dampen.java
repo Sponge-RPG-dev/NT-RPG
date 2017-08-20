@@ -19,6 +19,7 @@ public class Dampen extends PassiveSkill {
 	private EffectService effectService;
 
 	public Dampen() {
+		super(DampenEffect.name);
 		setName("Dampen");
 		setLore(SkillLocalization.SKILL_DAMPEN_LORE);
 		setDescription(SkillLocalization.SKILL_DAMPEN_DESC);

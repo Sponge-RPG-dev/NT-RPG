@@ -16,6 +16,7 @@ public class EnderPearl extends PassiveSkill {
 
 
     public EnderPearl() {
+        super(EnderPearlEffect.name);
         setName(SkillLocalization.SKILL_ENDERPEARL_NAME);
         setDescription(SkillLocalization.SKILL_ENDERPEARL_DESC);
         SkillSettings settings = new SkillSettings();

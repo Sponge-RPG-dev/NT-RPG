@@ -20,6 +20,7 @@ public class Dodge extends PassiveSkill {
 	private EffectService effectService;
 
 	public Dodge() {
+		super(DodgeEffect.name);
 		setName("Dodge");
 		setLore(SkillLocalization.SKILL_DODGE_LORE);
 		setDescription(SkillLocalization.SKILL_DODGE_DESC);

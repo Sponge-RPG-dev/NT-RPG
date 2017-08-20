@@ -22,6 +22,7 @@ public class ResoluteTechnique extends PassiveSkill {
 	private EffectService effectService;
 
 	public ResoluteTechnique() {
+		super(ResoluteTechniqueEffect.name);
 		setName("ResoluteTechnique");
 		setLore(SkillLocalization.SKILL_RESOLUTE_TECHNIQUE_LORE);
 		setDescription(SkillLocalization.SKILL_RESOLUTE_TECHNIQUE_DESC);

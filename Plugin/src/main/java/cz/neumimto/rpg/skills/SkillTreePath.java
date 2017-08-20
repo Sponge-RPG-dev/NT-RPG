@@ -16,8 +16,10 @@ public class SkillTreePath extends PassiveSkill {
 
 
     public SkillTreePath(String name) {
+        super(null);
         setName(name);
         SkillSettings settings = new SkillSettings();
+        addSkillType(SkillType.PATH);
         super.setSettings(settings);
     }
 
@@ -54,7 +56,6 @@ public class SkillTreePath extends PassiveSkill {
 
     @Override
     public void skillRefund(IActiveCharacter c) {
-        super.skillRefund(c);
         if (PluginConfig.PATH_NODES_SEALED) {
             //todo
         } else {

@@ -21,6 +21,7 @@ public class Drain extends PassiveSkill {
 	private EffectService effectService;
 
 	public Drain() {
+		super(ManaDrainEffect.name);
 		setName("Drain");
 		setLore(SkillLocalization.SKILL_DRAIN_LORE);
 		setDescription(SkillLocalization.SKILL_DRAIN_DESC);

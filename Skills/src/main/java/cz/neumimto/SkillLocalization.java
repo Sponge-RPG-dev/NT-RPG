@@ -189,4 +189,28 @@ public class SkillLocalization {
 
     @ConfigValue
     public static String SKILL_DEMENTIA_NAME = "Dementia";
+
+    @ConfigValue
+    public static String SKILL_WEB_NAME = "Web";
+
+    @ConfigValue
+    public static String SKILL_WEB_DESC = "Spawns web under target's feets";
+
+    @ConfigValue
+    public static String SKILL_HARMTOUCH_DESC = "Damages a target";
+
+    @ConfigValue
+    public static String SKILL_HARMTOUCH_NAME = "Harmtouch";
+
+    @ConfigValue
+    public static String SKILL_SLOW_DESC = "Applies slow potion to the target";
+
+    @ConfigValue
+    public static String SKILL_SLOW_NAME = "Slow";
+
+    @ConfigValue
+    public static String SKILL_STUN_DESC = "Stuns the target";
+
+    @ConfigValue
+    public static String SKILL_STUN_NAME = "Stun";
 }

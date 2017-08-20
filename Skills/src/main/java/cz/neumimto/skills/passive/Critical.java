@@ -20,6 +20,7 @@ public class Critical extends PassiveSkill {
 	private EffectService effectService;
 
 	public Critical() {
+		super(CriticalEffect.name);
 		setName("Critical");
 		setLore(SkillLocalization.SKILL_CRITICAL_LORE);
 		setDescription(SkillLocalization.SKILL_CRITICAL_DESC);

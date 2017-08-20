@@ -27,6 +27,7 @@ public class Basher extends PassiveSkill {
 	private EntityService entityService;
 
 	public Basher() {
+		super(Bash.name);
 		setName("Basher");
 		setDescription(SkillLocalization.basher);
 		SkillSettings settings = new SkillSettings();

@@ -29,7 +29,9 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
+import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.SkillTree;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -185,4 +187,19 @@ public class Gui {
     public static void sendNotification(IActiveCharacter character, Text text) {
         character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, text);
     }
+
+    //only here until gets advancements gets implemented
+    public static void displayAllSkills(IActiveCharacter character) {
+        ExtendedNClass primaryClass = character.getPrimaryClass();
+        ConfigClass configClass = primaryClass.getConfigClass();
+        SkillTree skillTree = configClass.getSkillTree();
+        SkillService service = IoC.get().build(SkillService.class);
+        for (Map.Entry<String, SkillData> entry : skillTree.getSkills().entrySet()) {
+            String skillName = entry.getKey();
+            SkillData data = entry.getValue();
+            ItemStack itemStack = GuiHelper.skillToItemStack(character, data);
+
+        }
+    }
+
 }

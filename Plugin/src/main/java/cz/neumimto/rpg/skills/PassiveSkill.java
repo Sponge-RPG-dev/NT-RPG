@@ -21,6 +21,8 @@ package cz.neumimto.rpg.skills;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 
 /**
@@ -30,6 +32,12 @@ public abstract class PassiveSkill extends AbstractSkill {
 
     @Inject
     protected EffectService effectService;
+
+    protected String relevantEffectName;
+
+    public PassiveSkill(String relevantEffectName) {
+        this.relevantEffectName = relevantEffectName;
+    }
 
     @Override
     public SkillResult onPreUse(IActiveCharacter character) {
@@ -57,7 +65,12 @@ public abstract class PassiveSkill extends AbstractSkill {
     @Override
     public void skillRefund(IActiveCharacter IActiveCharacter) {
         super.skillRefund(IActiveCharacter);
-        update(IActiveCharacter);
+        ExtendedSkillInfo skillInfo = IActiveCharacter.getSkillInfo(this);
+        if (skillInfo.getLevel() <= 0) {
+            effectService.removeEffect(relevantEffectName,IActiveCharacter, this);
+        } else {
+            update(IActiveCharacter);
+        }
     }
 
     public abstract void applyEffect(ExtendedSkillInfo info, IActiveCharacter character);
