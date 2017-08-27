@@ -19,10 +19,7 @@
 package cz.neumimto.rpg.persistance;
 
 import com.google.inject.ConfigurationException;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
-import com.typesafe.config.ConfigObject;
-import com.typesafe.config.ConfigValue;
+import com.typesafe.config.*;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
@@ -144,6 +141,11 @@ public class SkillTreeDao {
                 } catch (ConfigurationException e) {
                     info.setMaxSkillLevel(1);
                     logger.warn("Missing \"MaxSkillLevel\" node for a skill \""+info.getSkillName()+"\", setting to 1");
+                }
+                try {
+                    String combination = c.getString("Combination");
+
+                } catch (ConfigurationException e) {
                 }
             }
             try {

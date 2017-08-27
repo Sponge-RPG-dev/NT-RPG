@@ -127,4 +127,24 @@ public class PluginConfig {
     @ConfigValue
     @Comment(content = {"Whenever a player is able to refund skills, representing root of the path of specialization on any skilltree"})
     public static boolean PATH_NODES_SEALED = true;
+
+    @ConfigValue
+    @Comment(content = {"Whenever pressing shift(sneak) resets click combination"})
+    public static boolean SHIFT_CANCELS_COMBO = false;
+
+    @ConfigValue
+    @Comment(content = {"Recognizes pressing Q key (/throwing an item out of inventory) as the click combo option 'Q'"
+    , " This action has priority over throwing item out of the inventoryinventory. Click combo may not start whit this action"})
+    public static boolean ENABLED_Q;
+
+    @ConfigValue
+    @Comment(content = {"Recognizes pressing E key (/opening player inventory) as the click combo option 'E'"
+            , " This action has priority over opening players' inventory. Click combo may not start whit this action"})
+    public static boolean ENABLED_E;
+
+    @ConfigValue
+    @Comment(content = {"Time interval in milliseconds, defines maximal interval between two clicks (E/Q/RMB/LMB/S)"})
+    public static long CLICK_COMBO_MAX_INVERVAL_BETWEEN_ACTIONS = 1250;
+
+
 }

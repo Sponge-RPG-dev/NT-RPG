@@ -40,6 +40,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -227,6 +228,14 @@ public class SkillService {
             bufferedWriter.flush();
         } catch (IOException ex) {
             ex.printStackTrace();
+        }
+    }
+
+    public void invokeSkillByCombo(String combo, IActiveCharacter character) {
+        for (ExtendedSkillInfo extendedSkillInfo : character.getSkills().values()) {
+            if (combo.equals(extendedSkillInfo.getSkillData().getCombination())) {
+                executeSkill(character,extendedSkillInfo);
+            }
         }
     }
 }

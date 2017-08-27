@@ -11,8 +11,10 @@ import java.util.function.BiFunction;
  */
 public class PotionEffectModel {
 	public Map<PotionEffectType, Long> cooldowns;
+	public Map<PotionEffectType, Long> nextUseTime;
 	public PotionEffectModel() {
 		cooldowns = new HashMap<>();
+		nextUseTime = new HashMap<>();
 	}
 
 	public void mergeWith(PotionEffectModel that) {

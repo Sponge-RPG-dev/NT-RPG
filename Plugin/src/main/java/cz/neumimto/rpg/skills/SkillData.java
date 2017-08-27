@@ -18,7 +18,9 @@
 
 package cz.neumimto.rpg.skills;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -37,6 +39,7 @@ public class SkillData {
     private Set<SkillData> conflicts = new HashSet<>();
     private Set<SkillData> depending = new HashSet<>();
     private ISkill iskill;
+    private String combination = null;
 
     public SkillData(String skill) {
         this.skill = skill;
@@ -108,5 +111,13 @@ public class SkillData {
 
     public Set<SkillData> getDepending() {
         return depending;
+    }
+
+    public String getCombination() {
+        return combination;
+    }
+
+    public void setCombination(String combination) {
+        this.combination = combination;
     }
 }

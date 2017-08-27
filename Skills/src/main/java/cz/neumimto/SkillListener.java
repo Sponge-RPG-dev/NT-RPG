@@ -7,6 +7,7 @@ import cz.neumimto.effects.ManaDrainEffect;
 import cz.neumimto.effects.ResoluteTechniqueEffect;
 import cz.neumimto.effects.negative.StunEffect;
 import cz.neumimto.effects.positive.*;
+import cz.neumimto.effects.positive.PotionEffect;
 import cz.neumimto.events.CriticalStrikeEvent;
 import cz.neumimto.events.DamageDodgedEvent;
 import cz.neumimto.events.ManaDrainEvent;
@@ -36,8 +37,10 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.manipulator.mutable.PotionEffectData;
 import org.spongepowered.api.data.type.HandTypes;
-import org.spongepowered.api.effect.potion.PotionEffectType;
+import org.spongepowered.api.data.value.mutable.ListValue;
+import org.spongepowered.api.effect.potion.*;
 import org.spongepowered.api.effect.sound.SoundTypes;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
@@ -238,36 +241,62 @@ public class SkillListener {
     @Listener(order = Order.FIRST)
     public void onItemConsume(UseItemStackEvent.Start event, @Root(typeFilter = Player.class) Player player) {
         Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
-        processConsumption(player, itemInHand, (e, l) -> {
-            if (l.cooldowns.containsKey(e)) {
-                if (l.cooldowns.get(e) <= System.currentTimeMillis())
-                    event.setCancelled(true);
-            }
-        });
-    }
-
-    private void processConsumption(Player player, Optional<ItemStack> itemInHand, BiConsumer<PotionEffectType, PotionEffectModel> l) {
         if (itemInHand.isPresent()) {
             ItemStack itemStack = itemInHand.get();
-            if (itemStack.getItem() == ItemTypes.POTION
-                    || itemStack.getItem() == ItemTypes.SPLASH_POTION
-                    || itemStack.getItem() == ItemTypes.LINGERING_POTION) {
+            if (itemStack.getType() == ItemTypes.POTION) {
                 IActiveCharacter character = characterService.getCharacter(player);
                 if (character.hasEffect(PotionEffect.name)) {
-                    PotionEffect effect = (PotionEffect) character.getEffect(PotionEffect.name);
-                    l.accept(null, effect.getValue());
+                    Optional<PotionEffectData> potionEffectData = itemStack.get(PotionEffectData.class);
+                    if (potionEffectData.isPresent()) {
+                        PotionEffectData o = potionEffectData.get();
+                        ListValue<org.spongepowered.api.effect.potion.PotionEffect> effects = o.effects();
+                        if (effects.size() >= 1) {
+                            org.spongepowered.api.effect.potion.PotionEffect potionEffect = effects.get(0);
+                            PotionEffect effect = (PotionEffect) character.getEffect(PotionEffect.name);
+                            PotionEffectModel value = effect.getValue();
+                            if (value.cooldowns.get(potionEffect.getType()) == null) {
+                                event.setCancelled(true);
+                                return;
+                            }
+                            Long next = value.nextUseTime.get(potionEffect.getType());
+                            if (next > System.currentTimeMillis()) {
+                                event.setCancelled(true);
+                            }
+                        }
+                    }
+                } else {
+                    event.setCancelled(true);
                 }
             }
         }
     }
 
+
     @Listener(order = Order.LATE)
-    public void onItemConsumerFinish(UseItemStackEvent.Finish event, @Root(typeFilter = Player.class) Player player) {
+    public void onItemConsumerFinish(UseItemStackEvent.Finish event,
+                                     @Root(typeFilter = Player.class) Player player) {
         Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
-        processConsumption(player, itemInHand, (e, l) -> {
-            long k = System.currentTimeMillis();
-            l.cooldowns.put(e, l.potions.get(e) + k);
-        });
+        ItemStack itemStack = itemInHand.get();
+        if (itemStack.getType() == ItemTypes.POTION
+                || itemStack.getType() == ItemTypes.SPLASH_POTION
+                || itemStack.getType() == ItemTypes.LINGERING_POTION) {
+            IActiveCharacter character = characterService.getCharacter(player);
+            if (character.hasEffect(PotionEffect.name)) {
+                PotionEffect effect = (PotionEffect) character.getEffect(PotionEffect.name);
+                long k = System.currentTimeMillis();
+                PotionEffectModel value = effect.getValue();
+                Optional<PotionEffectData> potionEffectData = itemStack.get(PotionEffectData.class);
+                if (potionEffectData.isPresent()) {
+                    PotionEffectData o = potionEffectData.get();
+                    ListValue<org.spongepowered.api.effect.potion.PotionEffect> effects = o.effects();
+                    if (effects.size() > 1) {
+                        value.nextUseTime.put(effects.get(0).getType(), value.cooldowns.get(effects.get(0).getType()) + System.currentTimeMillis());
+                    }
+                }
+            } else {
+                event.setCancelled(true);
+            }
+        }
     }
 
     @Listener

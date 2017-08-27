@@ -21,6 +21,7 @@ package cz.neumimto.rpg.gui;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.common.def.ClickComboActionEvent;
 import cz.neumimto.rpg.inventory.CannotUseItemReson;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.players.CharacterBase;
@@ -202,4 +203,11 @@ public class Gui {
         }
     }
 
+    public static void displayCurrentClicks(ClickComboActionEvent clickComboActionEvent) {
+
+    }
+
+    public static void resetCurrentClicks(ClickComboActionEvent clickComboActionEvent) {
+
+    }
 }
