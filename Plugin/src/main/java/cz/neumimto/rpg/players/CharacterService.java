@@ -27,21 +27,20 @@ import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.*;
-import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
+import cz.neumimto.rpg.effects.common.def.ClickComboActionEvent;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.entities.PropertyContainer;
 import cz.neumimto.rpg.events.*;
 import cz.neumimto.rpg.events.character.CharacterWeaponUpdateEvent;
 import cz.neumimto.rpg.events.character.EventCharacterArmorPostUpdate;
 import cz.neumimto.rpg.events.character.PlayerDataPreloadComplete;
 import cz.neumimto.rpg.events.character.WeaponEquipEvent;
 import cz.neumimto.rpg.events.party.PartyInviteEvent;
-import cz.neumimto.rpg.events.skills.SkillHealEvent;
 import cz.neumimto.rpg.events.skills.SkillLearnEvent;
 import cz.neumimto.rpg.events.skills.SkillRefundEvent;
 import cz.neumimto.rpg.events.skills.SkillUpgradeEvent;
 import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.inventory.UserActionType;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.persistance.PlayerDao;
@@ -73,7 +72,6 @@ import org.spongepowered.api.text.Text;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -1114,6 +1112,36 @@ public class CharacterService {
 		character.getCharacterBase().setHealthScale(i);
 		character.getPlayer().offer(Keys.HEALTH_SCALE, i);
 		putInSaveQueue(character.getCharacterBase());
+	}
+
+	/**
+	 *
+	 * @param character
+	 * @param userActionType
+     * @return whenever root event should be cancelled
+     */
+	public boolean processUserAction(IActiveCharacter character, UserActionType userActionType) {
+		IEffectContainer effect = character.getEffect(ClickComboActionEvent.name);
+		if (effect == null)
+			return false;
+		ClickComboActionEvent e = (ClickComboActionEvent) effect;
+		if (userActionType == UserActionType.L && e.hasStarted()) {
+			e.processLMB();
+			return false;
+		}
+		if (userActionType == UserActionType.R) {
+			e.processRMB();
+			return false;
+		}
+		if (userActionType == UserActionType.Q && PluginConfig.ENABLED_Q && e.hasStarted()) {
+			e.processQ();
+			return true;
+		}
+		if (userActionType == UserActionType.E && PluginConfig.ENABLED_E && e.hasStarted()) {
+			e.processE();
+			return true;
+		}
+		return false;
 	}
 }
 

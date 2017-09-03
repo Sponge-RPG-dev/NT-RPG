@@ -5,18 +5,24 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.inventory.UserActionType;
 import cz.neumimto.rpg.players.IActiveCharacter;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by NeumimTo on 28.8.2017.
  */
 @ClassGenerator.Generate(id = "name")
-public class ClickComboActionEvent extends EffectBase{
+public class ClickComboActionEvent extends EffectBase implements IEffectContainer {
 
     public static final String name = "ClickCombos";
 
-    StringBuilder combination = new StringBuilder();
+    StringBuilder combination;
 
     private long k = 0;
 
@@ -34,6 +40,9 @@ public class ClickComboActionEvent extends EffectBase{
     }
 
     public void processRMB() {
+        if (!hasStarted()) {
+            combination = new StringBuilder();
+        }
         combination.append('R');
         update();
     }
@@ -45,7 +54,7 @@ public class ClickComboActionEvent extends EffectBase{
 
     public void processShift() {
         if (PluginConfig.SHIFT_CANCELS_COMBO) {
-            combination = new StringBuilder();
+            cancel();
         } else {
             combination.append('S');
         }
@@ -78,7 +87,7 @@ public class ClickComboActionEvent extends EffectBase{
     @Override
     public void onTick() {
         if (getLastTickTime() + getPeriod() >= k) {
-
+            cancel();
         }
     }
 
@@ -90,5 +99,31 @@ public class ClickComboActionEvent extends EffectBase{
 
     public IActiveCharacter getCharacter() {
         return character;
+    }
+
+
+    @Override
+    public IEffectContainer constructEffectContainer() {
+        return this;
+    }
+
+
+    @Override
+    public Set<ClickComboActionEvent> getEffects() {
+        return new HashSet<>(Collections.singletonList(this));
+    }
+
+    @Override
+    public Object getStackedValue() {
+        return null;
+    }
+
+    @Override
+    public void setStackedValue(Object o) {
+
+    }
+
+    public boolean hasStarted() {
+        return combination != null;
     }
 }

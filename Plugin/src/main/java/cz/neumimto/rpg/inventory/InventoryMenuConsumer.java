@@ -28,5 +28,5 @@ public interface InventoryMenuConsumer {
 
     InventoryMenuConsumer EMPTY = (type, character) -> false;
 
-    boolean onClick(ClickType type, IActiveCharacter character);
+    boolean onClick(UserActionType type, IActiveCharacter character);
 }

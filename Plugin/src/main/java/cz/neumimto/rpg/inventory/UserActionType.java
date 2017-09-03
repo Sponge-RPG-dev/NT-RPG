@@ -21,6 +21,6 @@ package cz.neumimto.rpg.inventory;
 /**
  * Created by NeumimTo on 22.7.2015.
  */
-public enum ClickType {
+public enum UserActionType {
     R, L, M, Q, S, E;
 }
