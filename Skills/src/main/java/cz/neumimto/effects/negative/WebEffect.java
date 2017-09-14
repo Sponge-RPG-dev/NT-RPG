@@ -3,12 +3,11 @@ package cz.neumimto.effects.negative;
 import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
 import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.EffectType;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.world.BlockChangeFlag;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -44,7 +43,7 @@ public class WebEffect extends EffectBase<Long> {
                 location.getExtent().setBlock(
                         vector3i,
                         build,
-                        Cause.of(NamedCause.of("effect", this))
+                        BlockChangeFlag.NONE
                 );
             }
         }
@@ -62,7 +61,7 @@ public class WebEffect extends EffectBase<Long> {
                 location.getExtent().setBlock(
                         vector3i,
                         build,
-                        Cause.of(NamedCause.of("effect", this))
+                        BlockChangeFlag.NONE
                 );
             }
         }

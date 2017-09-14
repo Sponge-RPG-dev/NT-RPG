@@ -135,6 +135,15 @@ public class SkillTreeDao {
                     pdata.setSkillPointsRequired(1);
                 }
                 info.setMaxSkillLevel(1);
+                try {
+                    Config skillBonus = c.getConfig("SkillBonus");
+                    for (Map.Entry<String, ConfigValue> e : skillBonus.entrySet()) {
+                        
+                    }
+                } catch (ConfigurationException e) {
+                    logger.info("Found SkillPath in the tree \"" + skillTree.getId() + "\" but no permissions defined, setting to 1");
+                    pdata.setSkillPointsRequired(1);
+                }
             } else {
                 try {
                     info.setMaxSkillLevel(c.getInt("MaxSkillLevel"));
@@ -144,7 +153,10 @@ public class SkillTreeDao {
                 }
                 try {
                     String combination = c.getString("Combination");
-
+                    combination = combination.trim();
+                    if (!"".equals(combination)) {
+                        info.setCombination(combination);
+                    }
                 } catch (ConfigurationException e) {
                 }
             }

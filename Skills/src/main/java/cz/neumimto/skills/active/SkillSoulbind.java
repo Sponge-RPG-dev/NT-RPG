@@ -15,7 +15,6 @@ import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 
 import java.util.UUID;
@@ -76,9 +75,9 @@ public class SkillSoulbind extends ActiveSkill {
                 SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
 
                 if (effect.getConsumer() == character) {
-                   effect.getTarget().getEntity().damage(event.getBaseDamage(), builder.build() ,Cause.of(NamedCause.of("effect", effect)));
+                   effect.getTarget().getEntity().damage(event.getBaseDamage(), builder.build());
                 } else {
-                    effect.getConsumer().getEntity().damage(event.getBaseDamage(),builder.build(),Cause.of(NamedCause.of("effect", effect)));
+                    effect.getConsumer().getEntity().damage(event.getBaseDamage(),builder.build());
                 }
             }
         }

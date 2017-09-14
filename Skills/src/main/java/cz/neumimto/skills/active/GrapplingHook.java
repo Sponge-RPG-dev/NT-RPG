@@ -21,7 +21,6 @@ import org.spongepowered.api.entity.projectile.arrow.Arrow;
 import org.spongepowered.api.entity.projectile.arrow.TippedArrow;
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -81,7 +80,7 @@ public class GrapplingHook extends ActiveSkill {
         double range = getDoubleNodeValue(info, SkillNodes.RANGE);
         //final double rangeSquared = Math.pow(range, 2);
 
-        world.spawnEntity(sb, Cause.of(NamedCause.of("player", character.getPlayer())));
+        world.spawnEntity(sb);
         cache.put(sb.getUniqueId(), System.currentTimeMillis());
         ParticleEffect eff = ParticleEffect.builder()
                 .quantity(1)
