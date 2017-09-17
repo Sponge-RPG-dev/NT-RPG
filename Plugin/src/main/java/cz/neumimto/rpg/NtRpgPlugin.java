@@ -39,6 +39,7 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.data.DataRegistration;
+import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GamePostInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
@@ -128,7 +129,7 @@ public class NtRpgPlugin {
 			Settings.ENABLED_GUI = false;
 		}
 		ioc.registerDependency(this);
-
+		ioc.registerInterfaceImplementation(CauseStackManager.class, Sponge.getCauseStackManager());
         try {
             workingDir = config.toString();
             URL url = FileUtils.getPluginUrl();

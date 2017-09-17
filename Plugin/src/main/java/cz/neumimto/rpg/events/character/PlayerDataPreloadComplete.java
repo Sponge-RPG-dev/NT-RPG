@@ -18,8 +18,12 @@
 
 package cz.neumimto.rpg.events.character;
 
+import cz.neumimto.rpg.NEventContextKeys;
 import cz.neumimto.rpg.events.CancellableEvent;
 import cz.neumimto.rpg.players.CharacterBase;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.EventContext;
+import org.spongepowered.api.event.cause.EventContextKeys;
 
 import java.util.List;
 import java.util.UUID;
@@ -46,5 +50,10 @@ public class PlayerDataPreloadComplete extends CancellableEvent {
 
     public void setCharacterBases(List<CharacterBase> characterBases) {
         this.characterBases = characterBases;
+    }
+
+    @Override
+    public Cause getCause() {
+        return Cause.of(EventContext.builder().add(NEventContextKeys.GAME_PROFILE, player).build(), player);
     }
 }

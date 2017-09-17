@@ -13,9 +13,6 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.projectile.arrow.Arrow;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.entity.spawn.SpawnCause;
-import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
 import org.spongepowered.api.world.World;
 
 import java.util.Collections;
@@ -62,7 +59,7 @@ public class ArrowstormEffect extends EffectBase implements IEffectContainer {
 								sin((entity.getRotation().getX() - 90) % 360) * 0.2));
 			Arrow sb = (Arrow) arrow;
 			sb.setShooter(entity);
-			world.spawnEntity(sb, Cause.source(SpawnCause.builder().type(SpawnTypes.PLUGIN).build()).build());
+			world.spawnEntity(sb);
 			sb.offer(Keys.VELOCITY, direction.mul(3f));
 			arrows--;
 		} else {

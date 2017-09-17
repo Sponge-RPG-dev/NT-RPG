@@ -63,7 +63,6 @@ import org.spongepowered.api.entity.living.monster.ZombiePigman;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.ItemType;
@@ -286,7 +285,7 @@ public class VanilaMessaging implements IPlayerMessage {
 		of.offer(Keys.DISPLAY_NAME, Text.of(Localization.CONFIRM));
 		i.query(new SlotPos(8, 0)).offer(of);
 
-		character.getPlayer().openInventory(i, Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
+		character.getPlayer().openInventory(i);
 	}
 
 	@Override
@@ -389,7 +388,7 @@ public class VanilaMessaging implements IPlayerMessage {
 			}
 			i.offer(createItemRepresentingGroup(cc));
 		}
-		character.getPlayer().openInventory(i, Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
+		character.getPlayer().openInventory(i);
 	}
 
 	private ItemStack createItemRepresentingGroup(PlayerGroup p) {
@@ -452,7 +451,7 @@ public class VanilaMessaging implements IPlayerMessage {
 			}
 			x++;
 		}
-		target.openInventory(i, Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
+		target.openInventory(i);
 	}
 
 	@Override
@@ -486,7 +485,7 @@ public class VanilaMessaging implements IPlayerMessage {
 			q.offer(Keys.HIDE_ATTRIBUTES, true);
 			i.offer(q);
 		});
-		target.openInventory(i, Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
+		target.openInventory(i);
 	}
 
 	@Override
@@ -498,13 +497,13 @@ public class VanilaMessaging implements IPlayerMessage {
 			of.offer(Keys.DISPLAY_NAME, Text.of(Localization.CONFIRM));
 			i.query(new SlotPos(8, 0)).offer(of);
 		}
-		target.getPlayer().openInventory(i, Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
+		target.getPlayer().openInventory(i);
 	}
 
 	@Override
 	public void sendClassInfo(IActiveCharacter target, ConfigClass configClass) {
 		Inventory i = createPlayerGroupView(configClass);
-		target.getPlayer().openInventory(i, Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
+		target.getPlayer().openInventory(i);
 	}
 
 	@Override
@@ -526,7 +525,7 @@ public class VanilaMessaging implements IPlayerMessage {
 				x++;
 			}
 		}
-		player.openInventory(i, Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
+		player.openInventory(i);
 	}
 
 	@Override
@@ -606,14 +605,13 @@ public class VanilaMessaging implements IPlayerMessage {
 			}
 		}
 
-		character.getPlayer().openInventory(i, Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
+		character.getPlayer().openInventory(i);
 	}
 
 
 	@Override
 	public void displayRunewordBlockedGroups(IActiveCharacter character, RuneWord rw) {
-		character.getPlayer().openInventory(displayGroupRequirements(character, rw, rw.getAllowedGroups()),
-				Cause.of(NamedCause.of(NtRpgPlugin.namedCause, plugin)));
+		character.getPlayer().openInventory(displayGroupRequirements(character, rw, rw.getAllowedGroups()));
 	}
 
 	@Override
@@ -714,7 +712,7 @@ public class VanilaMessaging implements IPlayerMessage {
 					event.setCancelled(true);
 					event.getTransactions().clear();
 					t.setCustom(ItemStack.of(ItemTypes.NONE, 1));
-					player.closeInventory(Cause.of(NamedCause.of("player", player)));
+					player.closeInventory();
 					Sponge.getCommandManager().process(player, s.get());
 					break;
 				}

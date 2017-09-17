@@ -15,7 +15,6 @@ import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.entity.spawn.SpawnCause;
 import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.world.Location;
@@ -40,7 +39,7 @@ public class ParticleDecorator implements IActionDecorator {
 	@Override
 	public void strikeLightning(Location<World> location) {
 		Entity q = location.getExtent().createEntity(EntityTypes.LIGHTNING, location.getPosition());
-		location.getExtent().spawnEntity(q, Cause.source(SpawnCause.builder().type(SpawnTypes.PLUGIN).build()).build());
+		location.getExtent().spawnEntity(q);
 	}
 
 	@Override

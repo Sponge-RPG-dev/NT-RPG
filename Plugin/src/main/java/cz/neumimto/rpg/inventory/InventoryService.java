@@ -47,8 +47,6 @@ import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Carrier;
@@ -561,7 +559,7 @@ public class InventoryService {
                             character.getPlayer().setItemInHand(HandTypes.MAIN_HAND, null);
                             Entity entity = character.getPlayer().getLocation().getExtent().createEntity(EntityTypes.ITEM, character.getPlayer().getLocation().getPosition());
                             entity.offer(Keys.REPRESENTED_ITEM, i.createSnapshot());
-                            character.getPlayer().getWorld().spawnEntity(entity, Cause.of(NamedCause.of("CANNOTHOLDRW", character.getPlayer())));
+                            character.getPlayer().getWorld().spawnEntity(entity);
                         }
                     }
                 }

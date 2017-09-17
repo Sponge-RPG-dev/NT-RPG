@@ -21,6 +21,7 @@ package cz.neumimto.rpg.listeners;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.IEntityType;
+import cz.neumimto.rpg.NEventContextKeys;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
@@ -52,14 +53,13 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Projectile;
+import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
-import org.spongepowered.api.event.cause.entity.damage.DamageModifier;
-import org.spongepowered.api.event.cause.entity.damage.DamageModifierTypes;
+import org.spongepowered.api.event.cause.EventContext;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
@@ -106,6 +106,9 @@ public class BasicListener {
 
 	@Inject
 	private ExperienceService experienceService;
+
+	@Inject
+	private CauseStackManager causeStackManager;
 
 	@Listener(order = Order.BEFORE_POST)
 	public void onAttack(InteractEntityEvent.Primary event) {
@@ -310,15 +313,20 @@ public class BasicListener {
 		double finalDamage = event.getBaseDamage() * damageService.getEntityBonusDamage(caster, type);
 
 
-		SkillDamageEvent event1 = new SkillDamageEvent(caster, targetchar, skill, finalDamage, type);
-		if (effect != null) {
-			event1.setCause(Cause.of(NamedCause.of("effect", effect)));
-		}
+
+        CauseStackManager.StackFrame frame = causeStackManager.pushCauseFrame();
+
+        if (effect != null) {
+            EventContext build = EventContext.builder().add(NEventContextKeys.EFFECT_DAMAGE, effect).build();
+            causeStackManager.pushCause(Cause.builder().build(build));
+        }
+
+        SkillDamageEvent event1 = new SkillDamageEvent(caster, targetchar, skill, finalDamage, type);
+
 
 		if (skill != null) {
-			NamedCause c = NamedCause.of("skill", skill);
-			Cause cause = event1.getCause() == null ? Cause.of(c) : event1.getCause().with(c);
-			event1.setCause(cause);
+            EventContext build = EventContext.builder().add(NEventContextKeys.SKILL_DAMAGE, skill).build();
+            causeStackManager.pushCause(Cause.builder().build(build));
 		}
 
 		Sponge.getGame().getEventManager().post(event1);

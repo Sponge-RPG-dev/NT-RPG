@@ -35,7 +35,6 @@ import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
@@ -291,7 +290,7 @@ public class ItemStackUtils {
         item.offer(Keys.VELOCITY, direction.mul(0.33));
         item.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
         item.offer(Keys.PICKUP_DELAY, 50);
-        p.getLocation().getExtent().spawnEntity(item, Cause.of(NamedCause.of("player", p)));
+        p.getLocation().getExtent().spawnEntity(item);
 
     }
 

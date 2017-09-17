@@ -19,10 +19,7 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.GroupService;
-import cz.neumimto.rpg.MissingConfigurationException;
-import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.Pair;
+import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
@@ -63,10 +60,9 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
+import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import org.spongepowered.api.text.Text;
 
 import java.util.*;
@@ -105,6 +101,9 @@ public class CharacterService {
 
 	@Inject
 	private PropertyService propertyService;
+
+	@Inject
+	private CauseStackManager causeStackManager;
 
 	@Inject
 	private Logger logger;
@@ -155,14 +154,20 @@ public class CharacterService {
 
 	public void updateWeaponRestrictions(IActiveCharacter character) {
 		Map<ItemType, Double> allowedArmor = character.updateItemRestrictions().getAllowedWeapons();
-		CharacterWeaponUpdateEvent event = new CharacterWeaponUpdateEvent(character, allowedArmor);
-		game.getEventManager().post(event);
+		try (CauseStackManager.StackFrame stackFrame = causeStackManager.pushCauseFrame()) {
+			causeStackManager.pushCause(character);
+			CharacterWeaponUpdateEvent event = new CharacterWeaponUpdateEvent(character, allowedArmor);
+			game.getEventManager().post(event);
+		}
 	}
 
 	public void updateArmorRestrictions(IActiveCharacter character) {
 		Set<ItemType> allowedArmor = character.updateItemRestrictions().getAllowedArmor();
-		EventCharacterArmorPostUpdate event = new EventCharacterArmorPostUpdate(character, allowedArmor);
-		game.getEventManager().post(event);
+		try (CauseStackManager.StackFrame stackFrame = causeStackManager.pushCauseFrame()) {
+			causeStackManager.pushCause(character);
+			EventCharacterArmorPostUpdate event = new EventCharacterArmorPostUpdate(character, allowedArmor);
+			game.getEventManager().post(event);
+		}
 	}
 
 
@@ -352,7 +357,7 @@ public class CharacterService {
 		boolean k = false;
 		if (configClass != null) {
 			CharacterChangeGroupEvent e = new CharacterChangeClassEvent(character, configClass, slot, character.getNClass(slot));
-			e.setCause(Cause.of(NamedCause.source(character)));
+
 			game.getEventManager().post(e);
 			if (!e.isCancelled()) {
 				k = true;
@@ -361,10 +366,13 @@ public class CharacterService {
 				applyGroupEffects(character, configClass);
 			}
 		}
+
 		if (race != null) {
+			CauseStackManager.StackFrame stackFrame = causeStackManager.pushCauseFrame();
+			causeStackManager.pushCause(character);
 			CharacterChangeGroupEvent ev = new CharacterChangeRaceEvent(character, race, character.getRace());
-			ev.setCause(Cause.of(NamedCause.source(character)));
 			game.getEventManager().post(ev);
+			causeStackManager.popCauseFrame(stackFrame);
 			if (!ev.isCancelled()) {
 				k = true;
 				removeGroupEffects(character, character.getRace());
@@ -921,10 +929,11 @@ public class CharacterService {
 		return 0;
 	}
 
-	public int changeEquipedArmor(IActiveCharacter character, EquipmentTypeWorn type, Weapon armor) {
+	public int changeEquipedArmor(IActiveCharacter character, EquipmentType type, Weapon armor) {
 	    /*if (!character.canWear(armor.getItemType())) {
             return 1;
         }*/
+
 		Weapon armor1 = character.getEquipedArmor().get(type);
 		if (armor1 != null) {
 			armor1.getEffects().keySet().forEach(g -> effectService.removeEffect(g.getName(), character, armor));
@@ -1118,7 +1127,7 @@ public class CharacterService {
 	 *
 	 * @param character
 	 * @param userActionType
-     * @return whenever root event should be cancelled
+     * @return true whenever root event should be cancelled
      */
 	public boolean processUserAction(IActiveCharacter character, UserActionType userActionType) {
 		IEffectContainer effect = character.getEffect(ClickComboActionEvent.name);

@@ -40,19 +40,32 @@
         <dependencies>
             <dependency>
                 <groupId>org.spongepowered</groupId>
-                <artifactId>spongevanilla</artifactId>
-                <version>1.12-7.0.0-BETA-278</version>
+                <artifactId>spongeapi</artifactId>
+                <version>7.0.0-20170911.153654-37</version>
+                <scope>provided</scope>
             </dependency>
+
+            <!--Only here due to retarded api refusing to expose slotid via slot interface...  -->
+            <dependency>
+                <groupId>org.spongepowered</groupId>
+                <artifactId>spongevanilla</artifactId>
+                <version>1.12.1-7.0.0-BETA-328</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.spongepowered</groupId>
+                        <artifactId>spongeapi</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>testplugins</artifactId>
+                        <groupId>org.spongepowered</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
             <dependency>
                 <groupId>com.github.NeumimTo</groupId>
                 <artifactId>NTCore</artifactId>
                 <version>1.9</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.spongepowered</groupId>
-                <artifactId>spongeapi</artifactId>
-                <version>7.0.0-20170911.153654-37</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
