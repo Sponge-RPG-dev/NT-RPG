@@ -6,18 +6,12 @@ import cz.neumimto.effects.negative.MultiboltEffect;
 import cz.neumimto.model.MultiboltModel;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.*;
-import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.entity.spawn.SpawnCause;
-import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
 
 /**
  * Created by NeumimTo on 6.7.2017.

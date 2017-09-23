@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.events;
 
+import cz.neumimto.rpg.players.IActiveCharacter;
+
 /**
  * Created by NeumimTo on 23.1.2016.
  */

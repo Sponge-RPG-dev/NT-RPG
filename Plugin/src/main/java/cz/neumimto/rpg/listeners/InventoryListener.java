@@ -36,6 +36,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.event.item.inventory.*;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
@@ -118,8 +119,7 @@ public class InventoryListener {
 
 
     @Listener
-    public void onItemDrop(DropItemEvent event, @First(typeFilter = {EntitySpawnCause.class}) EntitySpawnCause esc) {
-        Entity entity = esc.getEntity();
+    public void onItemDrop(DropItemEvent event, @Root Entity entity) {
         if (entity.getType() != EntityTypes.PLAYER)
             return;
         IActiveCharacter character = characterService.getCharacter(entity.getUniqueId());
