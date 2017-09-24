@@ -18,8 +18,11 @@
 
 package cz.neumimto.rpg.events;
 
+import cz.neumimto.rpg.GlobalScope;
+import cz.neumimto.rpg.NtRpgPlugin;
 import org.spongepowered.api.event.Cancellable;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.EventContext;
 import org.spongepowered.api.event.impl.AbstractEvent;
 
 
@@ -43,7 +46,7 @@ public class CancellableEvent extends AbstractEvent implements Cancellable {
 
     @Override
     public Cause getCause() {
-        return cause;
+        return cause == null ? Cause.of(EventContext.empty(), NtRpgPlugin.GlobalScope.plugin) : cause;
     }
 
     public void setCause(Cause cause) {
