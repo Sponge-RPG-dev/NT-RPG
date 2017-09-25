@@ -38,100 +38,100 @@ import java.util.UUID;
 public class PlayerDao extends GenericDao<CharacterBase> {
 
 
-    /**
-     * Returns player's characters ordered by updated time desc
-     *
-     * @param uuid
-     * @return
-     */
-    public List<CharacterBase> getPlayersCharacters(UUID uuid) {
-        Session session = factory.openSession();
-        Query query = session.createQuery("SELECT a FROM CharacterBase a WHERE a.uuid=:id");
-        query.setParameter("id", uuid);
-        List list = query.list();
-        session.close();
-        return list;
-    }
+	/**
+	 * Returns player's characters ordered by updated time desc
+	 *
+	 * @param uuid
+	 * @return
+	 */
+	public List<CharacterBase> getPlayersCharacters(UUID uuid) {
+		Session session = factory.openSession();
+		Query query = session.createQuery("SELECT a FROM CharacterBase a WHERE a.uuid=:id");
+		query.setParameter("id", uuid);
+		List list = query.list();
+		session.close();
+		return list;
+	}
 
-    public CharacterBase fetchCharacterBase(CharacterBase base) {
-        Session session = factory.openSession();
-        CharacterBase cb = (CharacterBase) session.merge(base);
-        session.beginTransaction();
-        cb.getCharacterSkills();
-        cb.getCharacterClasses();
-        cb.getBaseCharacterAttribute();
-        cb.getCharacterSkills();
-        session.getTransaction().commit();
-        session.close();
-        return cb;
-    }
+	public CharacterBase fetchCharacterBase(CharacterBase base) {
+		Session session = factory.openSession();
+		CharacterBase cb = (CharacterBase) session.merge(base);
+		session.beginTransaction();
+		cb.getCharacterSkills();
+		cb.getCharacterClasses();
+		cb.getBaseCharacterAttribute();
+		cb.getCharacterSkills();
+		session.getTransaction().commit();
+		session.close();
+		return cb;
+	}
 
-    public CharacterBase getLastPlayed(UUID uuid) {
-        Session session = factory.openSession();
-        List r = session.createCriteria(CharacterBase.class)
-                .add(Restrictions.eq("uuid", uuid.toString()))
-                .addOrder(Order.desc("updated"))
-                .list();
-        session.close();
+	public CharacterBase getLastPlayed(UUID uuid) {
+		Session session = factory.openSession();
+		List r = session.createCriteria(CharacterBase.class)
+				.add(Restrictions.eq("uuid", uuid.toString()))
+				.addOrder(Order.desc("updated"))
+				.list();
+		session.close();
 
-        if (r.size() == 0)
-            return null;
-        return (CharacterBase) r.get(0);
-    }
+		if (r.size() == 0)
+			return null;
+		return (CharacterBase) r.get(0);
+	}
 
-    public CharacterBase getCharacter(UUID player, String name) {
-        Session s = factory.openSession();
-        s.beginTransaction();
-        Query query = s.createQuery("SELECT a FROM CharacterBase a WHERE a.uuid=:uuid and a.name=:name");
-        query.setParameter("uuid", player);
-        query.setParameter("name", name);
-        List<CharacterBase> list = query.list();
-        s.close();
-        if (list.size() == 0)
-            return null;
-        return list.get(0);
-    }
+	public CharacterBase getCharacter(UUID player, String name) {
+		Session s = factory.openSession();
+		s.beginTransaction();
+		Query query = s.createQuery("SELECT a FROM CharacterBase a WHERE a.uuid=:uuid and a.name=:name");
+		query.setParameter("uuid", player);
+		query.setParameter("name", name);
+		List<CharacterBase> list = query.list();
+		s.close();
+		if (list.size() == 0)
+			return null;
+		return list.get(0);
+	}
 
-    public int getCharacterCount(UUID uuid) {
-        Session s = factory.openSession();
-        s.beginTransaction();
-        Query query = null;
-        query = s.createQuery("SELECT COUNT(c.id) FROM CharacterBase c WHERE c.uuid=:id");
-        query.setParameter("id", uuid);
-        int i = query.getFirstResult();
-        s.close();
-        return i;
-    }
+	public int getCharacterCount(UUID uuid) {
+		Session s = factory.openSession();
+		s.beginTransaction();
+		Query query = null;
+		query = s.createQuery("SELECT COUNT(c.id) FROM CharacterBase c WHERE c.uuid=:id");
+		query.setParameter("id", uuid);
+		int i = query.getFirstResult();
+		s.close();
+		return i;
+	}
 
-    /**
-     * @param uniqueId
-     * @return rows updated
-     */
-    public int deleteData(UUID uniqueId) {
-        Session session = factory.openSession();
-        Transaction transaction = session.beginTransaction();
-        int i = -1;
-        try {
-            Query query = session.createQuery("DELETE FROM CharacterBase where uuid=:uuid");
-            query.setParameter("uuid", uniqueId);
-            i = query.executeUpdate();
-            transaction.commit();
-        } catch (Throwable t) {
-            transaction.rollback();
-        } finally {
-            session.close();
-        }
-        return i;
-    }
+	/**
+	 * @param uniqueId
+	 * @return rows updated
+	 */
+	public int deleteData(UUID uniqueId) {
+		Session session = factory.openSession();
+		Transaction transaction = session.beginTransaction();
+		int i = -1;
+		try {
+			Query query = session.createQuery("DELETE FROM CharacterBase where uuid=:uuid");
+			query.setParameter("uuid", uniqueId);
+			i = query.executeUpdate();
+			transaction.commit();
+		} catch (Throwable t) {
+			transaction.rollback();
+		} finally {
+			session.close();
+		}
+		return i;
+	}
 
 
-    public void createAndUpdate(CharacterBase base) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        tx = session.beginTransaction();
-        session.saveOrUpdate(base);
-        session.flush();
-        tx.commit();
-        session.close();
-    }
+	public void createAndUpdate(CharacterBase base) {
+		Session session = factory.openSession();
+		Transaction tx = null;
+		tx = session.beginTransaction();
+		session.saveOrUpdate(base);
+		session.flush();
+		tx.commit();
+		session.close();
+	}
 }

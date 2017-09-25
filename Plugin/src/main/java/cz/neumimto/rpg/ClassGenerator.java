@@ -137,7 +137,6 @@ public class ClassGenerator implements Opcodes {
 		return cv.toByteArray();
 
 
-
 	}
 
 	public IGlobalEffect<? extends IEffect> generateGlobalEffect(Class<? extends IEffect<?>> cls) throws CannotCompileException, IllegalAccessException, InstantiationException {

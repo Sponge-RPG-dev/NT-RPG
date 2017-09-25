@@ -26,7 +26,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 @FunctionalInterface
 public interface InventoryMenuConsumer {
 
-    InventoryMenuConsumer EMPTY = (type, character) -> false;
+	InventoryMenuConsumer EMPTY = (type, character) -> false;
 
-    boolean onClick(UserActionType type, IActiveCharacter character);
+	boolean onClick(UserActionType type, IActiveCharacter character);
 }

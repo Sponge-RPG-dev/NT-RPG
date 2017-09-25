@@ -25,5 +25,5 @@ import org.spongepowered.api.entity.living.Living;
  * Created by NeumimTo on 1.1.2015.
  */
 public interface ITargetted {
-    SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info);
+	SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info);
 }

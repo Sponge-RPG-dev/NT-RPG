@@ -2,7 +2,6 @@ package cz.neumimto.skills.active;
 
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.Decorator;
-import cz.neumimto.ParticleUtils;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.negative.Blindness;
 import cz.neumimto.rpg.IEntity;
@@ -21,11 +20,7 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.util.Color;
-import org.spongepowered.api.util.Direction;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
 
-import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -76,7 +71,7 @@ public class Despair extends ActiveSkill {
 			}
 		}
 
-		Vector3d vec = new Vector3d(0,1,0);
+		Vector3d vec = new Vector3d(0, 1, 0);
 		Decorator.circle(character.getEntity().getLocation(), 36, k, location -> {
 			ParticleEffect build = ParticleEffect.builder()
 					.type(ParticleTypes.SPELL)

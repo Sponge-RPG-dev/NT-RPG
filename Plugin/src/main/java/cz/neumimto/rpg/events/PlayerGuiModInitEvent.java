@@ -10,23 +10,23 @@ import java.util.UUID;
  */
 public class PlayerGuiModInitEvent implements Event {
 
-    UUID uuid;
+	UUID uuid;
 
-    public PlayerGuiModInitEvent(UUID uuid) {
-        this.uuid = uuid;
-    }
+	public PlayerGuiModInitEvent(UUID uuid) {
+		this.uuid = uuid;
+	}
 
-    public UUID getUuid() {
-        return uuid;
-    }
+	public UUID getUuid() {
+		return uuid;
+	}
 
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
+	}
 
-    @Override
-    public Cause getCause() {
-        return Cause.source(uuid).build();
-    }
+	@Override
+	public Cause getCause() {
+		return Cause.source(uuid).build();
+	}
 
 }

@@ -9,29 +9,29 @@ import java.util.Map;
  */
 public interface ICharacterAttribute {
 
-    String getName();
+	String getName();
 
-    void setName(String name);
+	void setName(String name);
 
-    String getId();
+	String getId();
 
-    void setId(String id);
+	void setId(String id);
 
-    Map<Integer, Float> affectsProperties();
+	Map<Integer, Float> affectsProperties();
 
-    String getDescription();
+	String getDescription();
 
-    void setDescription(String desc);
+	void setDescription(String desc);
 
-    ItemType getItemRepresentation();
+	ItemType getItemRepresentation();
 
-    void setItemRepresentation(ItemType itemType);
+	void setItemRepresentation(ItemType itemType);
 
-    int getMaxValue();
+	int getMaxValue();
 
-    void setMaxValue(int value);
+	void setMaxValue(int value);
 
-    default boolean hasLimit() {
-        return getMaxValue() > 0;
-    }
+	default boolean hasLimit() {
+		return getMaxValue() > 0;
+	}
 }

@@ -8,7 +8,7 @@ import cz.neumimto.rpg.effects.IEffect;
  */
 public abstract class ValueProcessor<T extends Number, I extends IEffect<T>> extends EffectContainer<T, I> {
 
-	
+
 	public ValueProcessor(I numberIEffect) {
 		super(numberIEffect);
 	}

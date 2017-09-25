@@ -30,21 +30,21 @@ import cz.neumimto.rpg.effects.common.positive.DamageBonus;
  * An example class how to manually create global effect
  */
 public class DamageBonusGlobal implements IGlobalEffect<DamageBonus> {
-    public DamageBonusGlobal() {
-    }
+	public DamageBonusGlobal() {
+	}
 
-    @Override
-    public DamageBonus construct(IEffectConsumer consumer, long duration, String value) {
-        return new DamageBonus(consumer, duration, value);
-    }
+	@Override
+	public DamageBonus construct(IEffectConsumer consumer, long duration, String value) {
+		return new DamageBonus(consumer, duration, value);
+	}
 
-    @Override
-    public String getName() {
-        return DamageBonus.name;
-    }
+	@Override
+	public String getName() {
+		return DamageBonus.name;
+	}
 
-    @Override
-    public Class<DamageBonus> asEffectClass() {
-        return DamageBonus.class;
-    }
+	@Override
+	public Class<DamageBonus> asEffectClass() {
+		return DamageBonus.class;
+	}
 }

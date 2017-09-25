@@ -18,33 +18,33 @@ import org.spongepowered.api.entity.living.Living;
 @ResourceLoader.Skill
 public class Bandage extends Targetted {
 
-    @Inject
-    private EntityService entityService;
+	@Inject
+	private EntityService entityService;
 
-    @Inject
-    private EffectService effectService;
+	@Inject
+	private EffectService effectService;
 
-    public Bandage() {
-        setName(SkillLocalization.SKILL_BANDAGE_NAME);
-        setDescription(SkillLocalization.Skill_BANDAGE_DESC);
-        SkillSettings settings = new SkillSettings();
-        settings.addNode(SkillNodes.HEALED_AMOUNT, 15, 5);
-        setSettings(settings);
-        addSkillType(SkillType.HEALING);
-        addSkillType(SkillType.PHYSICAL);
-    }
+	public Bandage() {
+		setName(SkillLocalization.SKILL_BANDAGE_NAME);
+		setDescription(SkillLocalization.Skill_BANDAGE_DESC);
+		SkillSettings settings = new SkillSettings();
+		settings.addNode(SkillNodes.HEALED_AMOUNT, 15, 5);
+		setSettings(settings);
+		addSkillType(SkillType.HEALING);
+		addSkillType(SkillType.PHYSICAL);
+	}
 
-    @Override
-    public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info) {
-        IEntity iEntity = entityService.get(target);
-        if (iEntity.isFriendlyTo(source)) {
-            float floatNodeValue = getFloatNodeValue(info, SkillNodes.HEALED_AMOUNT);
-            entityService.healEntity(iEntity, floatNodeValue, this);
-            Decorator.healEffect(iEntity.getLocation());
-            if (iEntity.hasEffect(Bleeding.name)) {
-                effectService.removeEffectContainer(iEntity.getEffect(Bleeding.name),iEntity);
-            }
-        }
-        return SkillResult.CANCELLED;
-    }
+	@Override
+	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info) {
+		IEntity iEntity = entityService.get(target);
+		if (iEntity.isFriendlyTo(source)) {
+			float floatNodeValue = getFloatNodeValue(info, SkillNodes.HEALED_AMOUNT);
+			entityService.healEntity(iEntity, floatNodeValue, this);
+			Decorator.healEffect(iEntity.getLocation());
+			if (iEntity.hasEffect(Bleeding.name)) {
+				effectService.removeEffectContainer(iEntity.getEffect(Bleeding.name), iEntity);
+			}
+		}
+		return SkillResult.CANCELLED;
+	}
 }

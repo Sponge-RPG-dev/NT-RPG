@@ -12,22 +12,21 @@ import java.util.List;
  */
 public class EffectSourceFactory {
 
-    public static <T> EffectValue<List<T>> createEffectSource(ISkill iSkill, T t) {
-        List<T> set = new ArrayList<T>();
-        set.add(t);
-        return new EffectValue<>(iSkill, set);
-    }
+	public static <T> EffectValue<List<T>> createEffectSource(ISkill iSkill, T t) {
+		List<T> set = new ArrayList<T>();
+		set.add(t);
+		return new EffectValue<>(iSkill, set);
+	}
 
-    public static <T> EffectValue<T> createEffectSource(PlayerGroup playerGroup, T t) {
-        return new EffectValue<>(playerGroup, t);
-    }
+	public static <T> EffectValue<T> createEffectSource(PlayerGroup playerGroup, T t) {
+		return new EffectValue<>(playerGroup, t);
+	}
 
-    public static <T> EffectValue<List<T>> createEffectSource(CommandBase commandBase, T t) {
-        List<T> set = new ArrayList<T>();
-        set.add(t);
-        return new EffectValue<>(commandBase, set);
-    }
-
+	public static <T> EffectValue<List<T>> createEffectSource(CommandBase commandBase, T t) {
+		List<T> set = new ArrayList<T>();
+		set.add(t);
+		return new EffectValue<>(commandBase, set);
+	}
 
 
 }

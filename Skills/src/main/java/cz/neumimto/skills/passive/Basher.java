@@ -1,7 +1,5 @@
 package cz.neumimto.skills.passive;
 
-import antlr.ASdebug.IASDebugStream;
-import cz.neumimto.AdditionalProperties;
 import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.Bash;
@@ -10,7 +8,6 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.skills.*;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
@@ -42,7 +39,7 @@ public class Basher extends PassiveSkill {
 	@Override
 	public void applyEffect(ExtendedSkillInfo info, IActiveCharacter character) {
 		BashModel model = getBashModel(info, character);
-		effectService.addEffect(new Bash(character,-1, model), character, this);
+		effectService.addEffect(new Bash(character, -1, model), character, this);
 	}
 
 	@Override
@@ -51,7 +48,7 @@ public class Basher extends PassiveSkill {
 		ExtendedSkillInfo info = IActiveCharacter.getSkills().get(getName());
 		BashModel model = getBashModel(info, IActiveCharacter);
 		effectService.removeEffect(Bash.name, IActiveCharacter, this);
-		effectService.addEffect(new Bash(IActiveCharacter,-1, model), IActiveCharacter, this);
+		effectService.addEffect(new Bash(IActiveCharacter, -1, model), IActiveCharacter, this);
 	}
 
 	private BashModel getBashModel(ExtendedSkillInfo info, IActiveCharacter character) {

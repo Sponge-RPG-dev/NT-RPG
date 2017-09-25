@@ -19,7 +19,6 @@ import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.api.text.Text;
 
 import java.util.*;
-import java.util.function.Supplier;
 
 public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.Immutable> {
 
@@ -30,7 +29,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 	private Integer socketCount;
 
 	public CustomItemData(Integer itemLevel, List<String> restrictions, Map<String, String> enchantements,
-	                      Text rarity, Integer socketCount) {
+						  Text rarity, Integer socketCount) {
 		this.itemLevel = itemLevel;
 		this.restrictions = restrictions;
 		this.enchantements = enchantements;
@@ -186,7 +185,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 
 	@Override
 	public DataContainer toContainer() {
-		DataContainer container =  super.toContainer();
+		DataContainer container = super.toContainer();
 		if (restrictions != null) {
 			container = container.set(NKeys.CUSTOM_ITEM_DATA_RESTRICTIONS.getQuery(), this.restrictions);
 		}
@@ -217,7 +216,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 		private Integer socketCount;
 
 		public Immutable(Integer itemLevel, List<String> restrictions, Map<String, String> enchantements,
-		                 Text rarity, Integer socketCount) {
+						 Text rarity, Integer socketCount) {
 			this.itemLevel = itemLevel;
 			this.restrictions = restrictions;
 			this.enchantements = enchantements;
@@ -270,7 +269,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 
 		@Override
 		public DataContainer toContainer() {
-			DataContainer container =  super.toContainer();
+			DataContainer container = super.toContainer();
 			if (restrictions != null) {
 				container = container.set(NKeys.CUSTOM_ITEM_DATA_RESTRICTIONS.getQuery(), this.restrictions);
 			}

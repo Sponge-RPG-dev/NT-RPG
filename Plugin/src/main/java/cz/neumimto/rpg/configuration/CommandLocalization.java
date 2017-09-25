@@ -28,45 +28,45 @@ import cz.neumimto.configuration.ConfigurationContainer;
 public class CommandLocalization {
 
 
-    @ConfigValue
-    public static String PLAYERINFO_HELP = "Shows info about player";
+	@ConfigValue
+	public static String PLAYERINFO_HELP = "Shows info about player";
 
-    @ConfigValue
-    public static String PLAYERINFO_DESC = "Shows info about player";
+	@ConfigValue
+	public static String PLAYERINFO_DESC = "Shows info about player";
 
-    @ConfigValue
-    public static String COMMAND_CHOOSEGROUP_USAGE = "/choose {class|race} [name]";
+	@ConfigValue
+	public static String COMMAND_CHOOSEGROUP_USAGE = "/choose {class|race} [name]";
 
-    @ConfigValue
-    public static String PLAYERINFO_USAGE = "/info {character|player|race(s)|guild(s)|class(es)|runes} [name]";
+	@ConfigValue
+	public static String PLAYERINFO_USAGE = "/info {character|player|race(s)|guild(s)|class(es)|runes} [name]";
 
-    @ConfigValue
-    public static String COMMAND_CHOOSE_DESC = "Allows you to choose a class and a race for your character.";
+	@ConfigValue
+	public static String COMMAND_CHOOSE_DESC = "Allows you to choose a class and a race for your character.";
 
-    @ConfigValue
-    public static String COMMAND_CREATE_USAGE = "/create character [name]";
+	@ConfigValue
+	public static String COMMAND_CREATE_USAGE = "/create character [name]";
 
-    @ConfigValue
-    public static String COMMAND_CREATE_DESCRIPTION = "Allows you to create a new character";
+	@ConfigValue
+	public static String COMMAND_CREATE_DESCRIPTION = "Allows you to create a new character";
 
-    @ConfigValue
-    public static String CHARACTER_CREATED = "You've created a new character named %1";
+	@ConfigValue
+	public static String CHARACTER_CREATED = "You've created a new character named %1";
 
-    @ConfigValue
-    public static String COMMAND_SKILL_DESC = "Executes a skill";
+	@ConfigValue
+	public static String COMMAND_SKILL_DESC = "Executes a skill";
 
-    @ConfigValue
-    public static String COMMAND_PARTY_USAGE = "/party {leave|leader|kick|invite} [name]";
+	@ConfigValue
+	public static String COMMAND_PARTY_USAGE = "/party {leave|leader|kick|invite} [name]";
 
-    @ConfigValue
-    public static String COMMAND_PARTY_DESCRIPTION = "manages party";
+	@ConfigValue
+	public static String COMMAND_PARTY_DESCRIPTION = "manages party";
 
-    @ConfigValue
-    public static String COMMAND_CHOOSE_USAGE = "/choose {class [name]|race [name]|skill [upgrade|learn|refund]|character [name]}";
+	@ConfigValue
+	public static String COMMAND_CHOOSE_USAGE = "/choose {class [name]|race [name]|skill [upgrade|learn|refund]|character [name]}";
 
-    @ConfigValue
-    public static String COMMAND_SET_HEALTHSCALE_USAGE = "/healthscale [integer]";
+	@ConfigValue
+	public static String COMMAND_SET_HEALTHSCALE_USAGE = "/healthscale [integer]";
 
-    @ConfigValue
-    public static String COMMAND_SET_HEALTHSCALE_DESCRIPTION = "Sets healthscale for currently choosen character, persistant between restarts";
+	@ConfigValue
+	public static String COMMAND_SET_HEALTHSCALE_DESCRIPTION = "Sets healthscale for currently choosen character, persistant between restarts";
 }

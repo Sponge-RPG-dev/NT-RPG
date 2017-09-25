@@ -28,25 +28,25 @@ import org.spongepowered.api.event.impl.AbstractEvent;
  */
 public class CancellableEvent extends AbstractEvent implements Cancellable {
 
-    public boolean cancelled;
-    private Cause cause;
+	public boolean cancelled;
+	private Cause cause;
 
-    @Override
-    public boolean isCancelled() {
-        return cancelled;
-    }
+	@Override
+	public boolean isCancelled() {
+		return cancelled;
+	}
 
-    @Override
-    public void setCancelled(boolean b) {
-        cancelled = b;
-    }
+	@Override
+	public void setCancelled(boolean b) {
+		cancelled = b;
+	}
 
-    @Override
-    public Cause getCause() {
-        return cause;
-    }
+	@Override
+	public Cause getCause() {
+		return cause;
+	}
 
-    public void setCause(Cause cause) {
-        this.cause = cause;
-    }
+	public void setCause(Cause cause) {
+		this.cause = cause;
+	}
 }

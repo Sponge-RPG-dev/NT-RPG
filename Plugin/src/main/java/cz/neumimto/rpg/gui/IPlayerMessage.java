@@ -40,65 +40,65 @@ import java.util.Map;
  * Created by NeumimTo on 6.8.2015.
  */
 public interface IPlayerMessage {
-    boolean isClientSideGui();
+	boolean isClientSideGui();
 
-    void sendMessage(IActiveCharacter player, String message);
+	void sendMessage(IActiveCharacter player, String message);
 
-    void sendCooldownMessage(IActiveCharacter player, String message, double cooldown);
+	void sendCooldownMessage(IActiveCharacter player, String message, double cooldown);
 
-    void openSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, SkillData skillData);
+	void openSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, SkillData skillData);
 
-    void moveSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, Map<String, Integer> learnedSkill, SkillData center);
+	void moveSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, Map<String, Integer> learnedSkill, SkillData center);
 
-    void sendEffectStatus(IActiveCharacter player, EffectStatusType type, IEffect effect);
+	void sendEffectStatus(IActiveCharacter player, EffectStatusType type, IEffect effect);
 
-    void invokeCharacterMenu(Player player, List<CharacterBase> characterBases);
+	void invokeCharacterMenu(Player player, List<CharacterBase> characterBases);
 
-    void sendPlayerInfo(IActiveCharacter character, List<CharacterBase> target);
+	void sendPlayerInfo(IActiveCharacter character, List<CharacterBase> target);
 
-    void sendPlayerInfo(IActiveCharacter character, IActiveCharacter target);
+	void sendPlayerInfo(IActiveCharacter character, IActiveCharacter target);
 
-    void showExpChange(IActiveCharacter character, String classname, double expchange);
+	void showExpChange(IActiveCharacter character, String classname, double expchange);
 
-    void showLevelChange(IActiveCharacter character, ExtendedNClass clazz, int level);
+	void showLevelChange(IActiveCharacter character, ExtendedNClass clazz, int level);
 
-    void sendStatus(IActiveCharacter character);
+	void sendStatus(IActiveCharacter character);
 
-    void showAvalaibleClasses(IActiveCharacter character);
+	void showAvalaibleClasses(IActiveCharacter character);
 
-    void invokerDefaultMenu(IActiveCharacter character);
+	void invokerDefaultMenu(IActiveCharacter character);
 
-    void sendListOfCharacters(IActiveCharacter player, CharacterBase currentlyCreated);
+	void sendListOfCharacters(IActiveCharacter player, CharacterBase currentlyCreated);
 
-    void showClassInfo(IActiveCharacter character, ConfigClass cc);
+	void showClassInfo(IActiveCharacter character, ConfigClass cc);
 
-    void sendListOfRunes(IActiveCharacter character);
+	void sendListOfRunes(IActiveCharacter character);
 
-    void sendListOfRaces(IActiveCharacter target);
+	void sendListOfRaces(IActiveCharacter target);
 
-    void sendRaceInfo(IActiveCharacter target, Race race);
+	void sendRaceInfo(IActiveCharacter target, Race race);
 
-    void displayGroupArmor(PlayerGroup g, Player target);
+	void displayGroupArmor(PlayerGroup g, Player target);
 
-    void displayGroupWeapon(PlayerGroup g, Player target);
+	void displayGroupWeapon(PlayerGroup g, Player target);
 
-    void sendClassInfo(IActiveCharacter target, ConfigClass configClass);
+	void sendClassInfo(IActiveCharacter target, ConfigClass configClass);
 
-    void displayAttributes(Player target, PlayerGroup group);
+	void displayAttributes(Player target, PlayerGroup group);
 
-    void displayRuneword(IActiveCharacter character, RuneWord rw, boolean linkToRWList);
+	void displayRuneword(IActiveCharacter character, RuneWord rw, boolean linkToRWList);
 
-    void displayRunewordBlockedGroups(IActiveCharacter character, RuneWord rw);
+	void displayRunewordBlockedGroups(IActiveCharacter character, RuneWord rw);
 
-    void displayRunewordRequiredGroups(IActiveCharacter character, RuneWord rw);
+	void displayRunewordRequiredGroups(IActiveCharacter character, RuneWord rw);
 
-    void displayRunewordAllowedGroups(IActiveCharacter character, RuneWord rw);
+	void displayRunewordAllowedGroups(IActiveCharacter character, RuneWord rw);
 
-    void displayRunewordAllowedItems(IActiveCharacter character, RuneWord rw);
+	void displayRunewordAllowedItems(IActiveCharacter character, RuneWord rw);
 
-    void displayHealth(IActiveCharacter character);
+	void displayHealth(IActiveCharacter character);
 
-    void displayMana(IActiveCharacter character);
+	void displayMana(IActiveCharacter character);
 
-    void sendCannotUseItemNotification(IActiveCharacter character, ItemStack is, CannotUseItemReson reason);
+	void sendCannotUseItemNotification(IActiveCharacter character, ItemStack is, CannotUseItemReson reason);
 }

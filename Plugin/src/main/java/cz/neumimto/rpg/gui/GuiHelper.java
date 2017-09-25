@@ -26,7 +26,6 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,13 +34,13 @@ import java.util.List;
  */
 public class GuiHelper {
 
-	
+
 	private static NtRpgPlugin plugin;
-	
+
 	static {
 		plugin = IoC.get().build(NtRpgPlugin.class);
 	}
-	
+
 	public static Inventory createPlayerGroupView(PlayerGroup group) {
 		Inventory.Builder builder = Inventory.builder();
 		Inventory i = builder.of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
@@ -57,7 +56,7 @@ public class GuiHelper {
 		i.offer(NKeys.MENU_INVENTORY, true);
 		i.offer(Keys.DISPLAY_NAME, Text.of(Localization.ATTRIBUTES, TextColors.DARK_RED));
 		String cc = IoC.get().build(InfoCommand.class).getAliases().iterator().next();
-		i.offer(new InventoryCommandItemMenuData(cc+" attributes-initial " + group.getName()));
+		i.offer(new InventoryCommandItemMenuData(cc + " attributes-initial " + group.getName()));
 		return i;
 	}
 
@@ -159,7 +158,6 @@ public class GuiHelper {
 				.color(TextColors.YELLOW)
 				.build());
 		lore.add(Text.EMPTY);
-
 
 
 		if (skill.getLore() != null) {

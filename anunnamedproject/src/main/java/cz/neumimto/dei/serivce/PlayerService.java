@@ -14,21 +14,21 @@ import java.util.UUID;
 @Singleton
 public class PlayerService {
 
-    @Inject
-    private WorldService worldService;
+	@Inject
+	private WorldService worldService;
 
-    private Map<UUID,Citizen> players = new HashMap<>();
+	private Map<UUID, Citizen> players = new HashMap<>();
 
-    public void updateCache(UUID uuid) {
-        Citizen citizen = players.get(uuid);
-        if (citizen == null) {
+	public void updateCache(UUID uuid) {
+		Citizen citizen = players.get(uuid);
+		if (citizen == null) {
 
-        } else {
+		} else {
 
-        }
-    }
+		}
+	}
 
-    public Citizen getCitizen(UUID uuid) {
-        return players.get(uuid);
-    }
+	public Citizen getCitizen(UUID uuid) {
+		return players.get(uuid);
+	}
 }

@@ -4,7 +4,6 @@ import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.ManaDrainEffect;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;

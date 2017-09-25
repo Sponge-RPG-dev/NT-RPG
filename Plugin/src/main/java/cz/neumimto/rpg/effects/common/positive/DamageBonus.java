@@ -29,48 +29,47 @@ import org.spongepowered.api.entity.EntityTypes;
  */
 public class DamageBonus extends EffectBase {
 
-    public static final String name = "Bonus Damage";
-    float bonusDamage;
+	public static final String name = "Bonus Damage";
+	float bonusDamage;
 
-    public DamageBonus(IEffectConsumer consumer, long duration, float bonusDamage) {
-        super(name, consumer);
-        setDuration(duration);
-        setBonusDamage(bonusDamage);
-    }
+	public DamageBonus(IEffectConsumer consumer, long duration, float bonusDamage) {
+		super(name, consumer);
+		setDuration(duration);
+		setBonusDamage(bonusDamage);
+	}
 
-    /**
-     *@see cz.neumimto.rpg.effects.IGlobalEffect#construct(IEffectConsumer, long, String)
-     *
-     */
+	/**
+	 * @see cz.neumimto.rpg.effects.IGlobalEffect#construct(IEffectConsumer, long, String)
+	 */
 
-    public DamageBonus(IEffectConsumer consumer, long duration, String bonusDamage) {
-        this(consumer, duration, Float.parseFloat(bonusDamage));
-    }
+	public DamageBonus(IEffectConsumer consumer, long duration, String bonusDamage) {
+		this(consumer, duration, Float.parseFloat(bonusDamage));
+	}
 
 
-    public float getBonusDamage() {
-        return bonusDamage;
-    }
+	public float getBonusDamage() {
+		return bonusDamage;
+	}
 
-    public void setBonusDamage(float bonusDamage) {
-        this.bonusDamage = bonusDamage;
-    }
+	public void setBonusDamage(float bonusDamage) {
+		this.bonusDamage = bonusDamage;
+	}
 
-    @Override
-    public void onApply() {
-        getConsumer().setProperty(DefaultProperties.weapon_damage_bonus,
-                getConsumer().getProperty(DefaultProperties.weapon_damage_bonus) + bonusDamage);
-        if (getConsumer().getEntity().getType() == EntityTypes.PLAYER) {
-            getGlobalScope().damageService.recalculateCharacterWeaponDamage((IActiveCharacter) getConsumer());
-        }
-    }
+	@Override
+	public void onApply() {
+		getConsumer().setProperty(DefaultProperties.weapon_damage_bonus,
+				getConsumer().getProperty(DefaultProperties.weapon_damage_bonus) + bonusDamage);
+		if (getConsumer().getEntity().getType() == EntityTypes.PLAYER) {
+			getGlobalScope().damageService.recalculateCharacterWeaponDamage((IActiveCharacter) getConsumer());
+		}
+	}
 
-    @Override
-    public void onRemove() {
-        getConsumer().setProperty(DefaultProperties.weapon_damage_bonus,
-                getConsumer().getProperty(DefaultProperties.weapon_damage_bonus) - bonusDamage);
-        if (getConsumer().getEntity().getType() == EntityTypes.PLAYER) {
-            getGlobalScope().damageService.recalculateCharacterWeaponDamage((IActiveCharacter) getConsumer());
-        }
-    }
+	@Override
+	public void onRemove() {
+		getConsumer().setProperty(DefaultProperties.weapon_damage_bonus,
+				getConsumer().getProperty(DefaultProperties.weapon_damage_bonus) - bonusDamage);
+		if (getConsumer().getEntity().getType() == EntityTypes.PLAYER) {
+			getGlobalScope().damageService.recalculateCharacterWeaponDamage((IActiveCharacter) getConsumer());
+		}
+	}
 }

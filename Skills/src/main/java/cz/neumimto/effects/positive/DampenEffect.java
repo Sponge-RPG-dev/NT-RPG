@@ -1,7 +1,9 @@
 package cz.neumimto.effects.positive;
 
 import cz.neumimto.rpg.ClassGenerator;
-import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.effects.common.stacking.ValueProcessor;
 import cz.neumimto.rpg.utils.Utils;
 
@@ -14,7 +16,7 @@ public class DampenEffect extends EffectBase<Double> {
 	public static final String name = "Dampen";
 
 	public DampenEffect(IEffectConsumer consumer, long duration, String value) {
-		this(consumer, duration,Double.parseDouble(Utils.extractNumber(value)));
+		this(consumer, duration, Double.parseDouble(Utils.extractNumber(value)));
 	}
 
 	public DampenEffect(IEffectConsumer consumer, long duration, double value) {

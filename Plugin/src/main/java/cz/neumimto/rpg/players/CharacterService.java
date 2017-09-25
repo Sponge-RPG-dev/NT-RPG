@@ -19,7 +19,10 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.*;
+import cz.neumimto.rpg.GroupService;
+import cz.neumimto.rpg.MissingConfigurationException;
+import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
@@ -37,8 +40,8 @@ import cz.neumimto.rpg.events.skills.SkillLearnEvent;
 import cz.neumimto.rpg.events.skills.SkillRefundEvent;
 import cz.neumimto.rpg.events.skills.SkillUpgradeEvent;
 import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.inventory.UserActionType;
 import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.UserActionType;
 import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.persistance.PlayerDao;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
@@ -124,7 +127,7 @@ public class CharacterService {
 			logger.info("Loading player - " + id);
 			long k = System.currentTimeMillis();
 			final List<CharacterBase> playerCharacters = playerDao.getPlayersCharacters(id);
-			logger.info("Finished loading of player " + id + ", loaded " + playerCharacters.size() + " characters   ["+(System.currentTimeMillis() - k)+"]ms");
+			logger.info("Finished loading of player " + id + ", loaded " + playerCharacters.size() + " characters   [" + (System.currentTimeMillis() - k) + "]ms");
 			game.getScheduler().createTaskBuilder().name("Callback-PlayerDataLoad" + id).execute(() -> {
 				PlayerDataPreloadComplete event = new PlayerDataPreloadComplete(id, playerCharacters);
 				game.getEventManager().post(event);
@@ -187,7 +190,7 @@ public class CharacterService {
 			Long k = System.currentTimeMillis();
 			logger.info("Saving player " + base.getUuid() + " character " + base.getName());
 			save(base);
-			logger.info("Saved player " + base.getUuid() + " character " + base.getName() + "["+(System.currentTimeMillis() - k )+"]ms ");
+			logger.info("Saved player " + base.getUuid() + " character " + base.getName() + "[" + (System.currentTimeMillis() - k) + "]ms ");
 		}).submit(plugin);
 	}
 
@@ -448,7 +451,7 @@ public class CharacterService {
 	}
 
 	protected IActiveCharacter deleteCharacterReferences(IActiveCharacter character) {
-		Collection<IEffectContainer<Object,IEffect<Object>>> effects = character.getEffects();
+		Collection<IEffectContainer<Object, IEffect<Object>>> effects = character.getEffects();
 		effects.stream()
 				.map(IEffectContainer::getEffects)
 				.forEach(a -> a.stream().forEach(e -> effectService.stopEffect(e)));
@@ -930,7 +933,7 @@ public class CharacterService {
 	}
 
 	public int changeEquipedArmor(IActiveCharacter character, EquipmentType type, Weapon armor) {
-	    /*if (!character.canWear(armor.getItemType())) {
+		/*if (!character.canWear(armor.getItemType())) {
             return 1;
         }*/
 
@@ -1109,8 +1112,8 @@ public class CharacterService {
 	}
 
 	/**
-	 *
 	 * Unlike ActiveCharacter#getProperty this method checks for maximal allowed value, defined in configfile.
+	 *
 	 * @see PropertyService#loadMaximalServerPropertyValues()
 	 */
 	public float getCharacterProperty(IActiveCharacter character, int index) {
@@ -1124,11 +1127,10 @@ public class CharacterService {
 	}
 
 	/**
-	 *
 	 * @param character
 	 * @param userActionType
-     * @return true whenever root event should be cancelled
-     */
+	 * @return true whenever root event should be cancelled
+	 */
 	public boolean processUserAction(IActiveCharacter character, UserActionType userActionType) {
 		IEffectContainer effect = character.getEffect(ClickComboActionEvent.name);
 		if (effect == null)

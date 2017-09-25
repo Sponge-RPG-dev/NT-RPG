@@ -25,48 +25,48 @@ import cz.neumimto.rpg.players.IActiveCharacter;
  * Created by NeumimTo on 7.8.2015.
  */
 public class SkillPostUsageEvent extends CancellableEvent {
-    private IActiveCharacter character;
-    private double hpcost;
-    private double manacost;
-    private float cooldown;
+	private IActiveCharacter character;
+	private double hpcost;
+	private double manacost;
+	private float cooldown;
 
-    public SkillPostUsageEvent(IActiveCharacter character, double hpcost, double manacost, float cooldown) {
-        this.character = character;
-        this.hpcost = hpcost;
-        this.manacost = manacost;
-        this.cooldown = cooldown;
-    }
+	public SkillPostUsageEvent(IActiveCharacter character, double hpcost, double manacost, float cooldown) {
+		this.character = character;
+		this.hpcost = hpcost;
+		this.manacost = manacost;
+		this.cooldown = cooldown;
+	}
 
 
-    public IActiveCharacter getCharacter() {
-        return character;
-    }
+	public IActiveCharacter getCharacter() {
+		return character;
+	}
 
-    public void setCharacter(IActiveCharacter character) {
-        this.character = character;
-    }
+	public void setCharacter(IActiveCharacter character) {
+		this.character = character;
+	}
 
-    public double getHpcost() {
-        return hpcost;
-    }
+	public double getHpcost() {
+		return hpcost;
+	}
 
-    public void setHpcost(float hpcost) {
-        this.hpcost = hpcost;
-    }
+	public void setHpcost(float hpcost) {
+		this.hpcost = hpcost;
+	}
 
-    public double getManacost() {
-        return manacost;
-    }
+	public double getManacost() {
+		return manacost;
+	}
 
-    public void setManacost(float manacost) {
-        this.manacost = manacost;
-    }
+	public void setManacost(float manacost) {
+		this.manacost = manacost;
+	}
 
-    public float getCooldown() {
-        return cooldown;
-    }
+	public float getCooldown() {
+		return cooldown;
+	}
 
-    public void setCooldown(long cooldown) {
-        this.cooldown = cooldown;
-    }
+	public void setCooldown(long cooldown) {
+		this.cooldown = cooldown;
+	}
 }

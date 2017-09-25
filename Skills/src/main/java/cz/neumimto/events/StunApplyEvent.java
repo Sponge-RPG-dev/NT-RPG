@@ -1,7 +1,6 @@
 package cz.neumimto.events;
 
 import cz.neumimto.effects.negative.StunEffect;
-import cz.neumimto.effects.positive.Bash;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.events.CancellableEvent;
 

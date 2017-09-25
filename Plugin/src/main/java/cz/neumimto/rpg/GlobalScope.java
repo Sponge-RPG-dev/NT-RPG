@@ -36,36 +36,36 @@ import org.spongepowered.api.Game;
 @Singleton
 public class GlobalScope {
 
-    @Inject
-    public CharacterService characterService;
+	@Inject
+	public CharacterService characterService;
 
-    @Inject
-    public EffectService effectService;
+	@Inject
+	public EffectService effectService;
 
-    @Inject
-    public GroupService groupService;
+	@Inject
+	public GroupService groupService;
 
-    @Inject
-    public PropertyService propertyService;
+	@Inject
+	public PropertyService propertyService;
 
-    @Inject
-    public SkillService skillService;
+	@Inject
+	public SkillService skillService;
 
-    @Inject
-    public NtRpgPlugin plugin;
+	@Inject
+	public NtRpgPlugin plugin;
 
-    @Inject
-    public Game game;
+	@Inject
+	public Game game;
 
-    @Inject
-    public DamageService damageService;
+	@Inject
+	public DamageService damageService;
 
-    @Inject
-    public InventoryService inventorySerivce;
+	@Inject
+	public InventoryService inventorySerivce;
 
-    @Inject
-    public RWService runewordService;
+	@Inject
+	public RWService runewordService;
 
-    @Inject
-    public EntityService entityService;
+	@Inject
+	public EntityService entityService;
 }

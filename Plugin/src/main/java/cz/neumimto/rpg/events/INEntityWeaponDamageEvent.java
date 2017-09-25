@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.events;
 
 import cz.neumimto.rpg.IEntity;
-import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
 /**

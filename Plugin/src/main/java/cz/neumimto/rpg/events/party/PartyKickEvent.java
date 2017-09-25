@@ -26,8 +26,8 @@ import cz.neumimto.rpg.players.parties.Party;
  */
 public class PartyKickEvent extends PartyLeaveEvent {
 
-    public PartyKickEvent(Party party, IActiveCharacter kicked) {
-        super(party, kicked);
-    }
+	public PartyKickEvent(Party party, IActiveCharacter kicked) {
+		super(party, kicked);
+	}
 
 }

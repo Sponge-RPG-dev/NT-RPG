@@ -24,14 +24,12 @@ import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.IEntity;
-import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
-import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.NDamageType;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import org.spongepowered.api.data.type.HandTypes;
@@ -47,7 +45,6 @@ import org.spongepowered.api.text.format.TextColors;
 
 import java.util.*;
 import java.util.function.BiFunction;
-import java.util.stream.DoubleStream;
 
 /**
  * Created by NeumimTo on 4.8.15.
@@ -55,172 +52,172 @@ import java.util.stream.DoubleStream;
 @Singleton
 public class DamageService {
 
-    @Inject
-    public EntityService entityService;
+	@Inject
+	public EntityService entityService;
 
-    @Inject
-    private CharacterService characterService;
+	@Inject
+	private CharacterService characterService;
 
-    @Inject
-    private GroupService groupService;
+	@Inject
+	private GroupService groupService;
 
-    public BiFunction<Double, Double, Double> DamageArmorReductionFactor = (damage, armor) -> armor / (armor + 10 * damage);
+	public BiFunction<Double, Double, Double> DamageArmorReductionFactor = (damage, armor) -> armor / (armor + 10 * damage);
 
-    private Map<ItemType, Integer> map = new HashMap<>();
+	private Map<ItemType, Integer> map = new HashMap<>();
 
-    public double getCharacterItemDamage(IActiveCharacter character, ItemType type) {
-        if (character.isStub() || type == null)
-            return 1;
-        double base = character.getBaseWeaponDamage(type) + characterService.getCharacterProperty(character, DefaultProperties.weapon_damage_bonus);
-        if (map.containsKey(type)) {
-            base += characterService.getCharacterProperty(character, map.get(type));
-        } else return 1;
-        if (ItemStackUtils.isSword(type)) {
-            base *= characterService.getCharacterProperty(character, DefaultProperties.swords_damage_mult);
-        } else if (ItemStackUtils.isAxe(type)) {
-            base *= characterService.getCharacterProperty(character, DefaultProperties.axes_damage_mult);
-        } else if (ItemStackUtils.isPickaxe(type)) {
-            base *= characterService.getCharacterProperty(character, DefaultProperties.pickaxes_damage_mult);
-        } else if (ItemStackUtils.isHoe(type)) {
-            base *= characterService.getCharacterProperty(character, DefaultProperties.hoes_damage_mult);
-        } else if (ItemStackUtils.isBow(type)) {
-            base *= characterService.getCharacterProperty(character, DefaultProperties.bows_meele_damage_mult);
-        } else if (ItemStackUtils.isStaff(type)) {
-            base *= characterService.getCharacterProperty(character, DefaultProperties.staffs_damage_mult);
-        }
-        return base;
-    }
+	public double getCharacterItemDamage(IActiveCharacter character, ItemType type) {
+		if (character.isStub() || type == null)
+			return 1;
+		double base = character.getBaseWeaponDamage(type) + characterService.getCharacterProperty(character, DefaultProperties.weapon_damage_bonus);
+		if (map.containsKey(type)) {
+			base += characterService.getCharacterProperty(character, map.get(type));
+		} else return 1;
+		if (ItemStackUtils.isSword(type)) {
+			base *= characterService.getCharacterProperty(character, DefaultProperties.swords_damage_mult);
+		} else if (ItemStackUtils.isAxe(type)) {
+			base *= characterService.getCharacterProperty(character, DefaultProperties.axes_damage_mult);
+		} else if (ItemStackUtils.isPickaxe(type)) {
+			base *= characterService.getCharacterProperty(character, DefaultProperties.pickaxes_damage_mult);
+		} else if (ItemStackUtils.isHoe(type)) {
+			base *= characterService.getCharacterProperty(character, DefaultProperties.hoes_damage_mult);
+		} else if (ItemStackUtils.isBow(type)) {
+			base *= characterService.getCharacterProperty(character, DefaultProperties.bows_meele_damage_mult);
+		} else if (ItemStackUtils.isStaff(type)) {
+			base *= characterService.getCharacterProperty(character, DefaultProperties.staffs_damage_mult);
+		}
+		return base;
+	}
 
-    public double getCharacterProjectileDamage(IActiveCharacter character, EntityType type) {
-        if (character.isStub() || type == null)
-            return 1;
-        double base = character.getBaseProjectileDamage(type) + characterService.getCharacterProperty(character, DefaultProperties.projectile_damage_bonus);
-        if (type == EntityTypes.SPECTRAL_ARROW || type == EntityTypes.TIPPED_ARROW) {
-            base *= characterService.getCharacterProperty(character, DefaultProperties.arrow_damage_mult);
-        } else {
-            base *= characterService.getCharacterProperty(character, DefaultProperties.other_projectile_damage_mult);
-        }
-        return base;
-    }
+	public double getCharacterProjectileDamage(IActiveCharacter character, EntityType type) {
+		if (character.isStub() || type == null)
+			return 1;
+		double base = character.getBaseProjectileDamage(type) + characterService.getCharacterProperty(character, DefaultProperties.projectile_damage_bonus);
+		if (type == EntityTypes.SPECTRAL_ARROW || type == EntityTypes.TIPPED_ARROW) {
+			base *= characterService.getCharacterProperty(character, DefaultProperties.arrow_damage_mult);
+		} else {
+			base *= characterService.getCharacterProperty(character, DefaultProperties.other_projectile_damage_mult);
+		}
+		return base;
+	}
 
-    public void recalculateCharacterWeaponDamage(IActiveCharacter character) {
-        if (character.isStub()) {
+	public void recalculateCharacterWeaponDamage(IActiveCharacter character) {
+		if (character.isStub()) {
 			return;
-        }
-        ItemStack i = character.getPlayer().getItemInHand(HandTypes.MAIN_HAND).orElse(null);
-        recalculateCharacterWeaponDamage(character, i == null ? null : i.getItem());
-    }
+		}
+		ItemStack i = character.getPlayer().getItemInHand(HandTypes.MAIN_HAND).orElse(null);
+		recalculateCharacterWeaponDamage(character, i == null ? null : i.getItem());
+	}
 
-    public void recalculateCharacterWeaponDamage(IActiveCharacter character, ItemType type) {
-        if (character.isStub()) {
-            return;
-        }
+	public void recalculateCharacterWeaponDamage(IActiveCharacter character, ItemType type) {
+		if (character.isStub()) {
+			return;
+		}
 
-        double damage = getCharacterItemDamage(character, type);
-        // damage += character.getMainHand().getDamage() + character.getOffHand().getDamage();
-        character.setWeaponDamage(damage);
+		double damage = getCharacterItemDamage(character, type);
+		// damage += character.getMainHand().getDamage() + character.getOffHand().getDamage();
+		character.setWeaponDamage(damage);
 
-    }
+	}
 
-    public double getEntityResistance(IEntity entity, DamageType source) {
-        if (source == DamageTypes.ATTACK)
-            return entityService.getEntityProperty(entity, DefaultProperties.physical_damage_protection_mult);
-        if (source == DamageTypes.FIRE)
-            return entityService.getEntityProperty(entity, DefaultProperties.fire_damage_protection_mult);
-        if (source == DamageTypes.MAGIC)
-            return entityService.getEntityProperty(entity, DefaultProperties.magic_damage_protection_mult);
-        if (source == NDamageType.LIGHTNING)
-            return entityService.getEntityProperty(entity, DefaultProperties.lightning_damage_protection_mult);
-        if (source == NDamageType.ICE)
-            return entityService.getEntityProperty(entity, DefaultProperties.ice_damage_protection_mult);
-        return 1;
-    }
+	public double getEntityResistance(IEntity entity, DamageType source) {
+		if (source == DamageTypes.ATTACK)
+			return entityService.getEntityProperty(entity, DefaultProperties.physical_damage_protection_mult);
+		if (source == DamageTypes.FIRE)
+			return entityService.getEntityProperty(entity, DefaultProperties.fire_damage_protection_mult);
+		if (source == DamageTypes.MAGIC)
+			return entityService.getEntityProperty(entity, DefaultProperties.magic_damage_protection_mult);
+		if (source == NDamageType.LIGHTNING)
+			return entityService.getEntityProperty(entity, DefaultProperties.lightning_damage_protection_mult);
+		if (source == NDamageType.ICE)
+			return entityService.getEntityProperty(entity, DefaultProperties.ice_damage_protection_mult);
+		return 1;
+	}
 
-    public double getEntityBonusDamage(IEntity entity, DamageType source) {
-        if (source == DamageTypes.ATTACK)
-            return entityService.getEntityProperty(entity, DefaultProperties.physical_damage_bonus_mult);
-        if (source == DamageTypes.FIRE)
-            return entityService.getEntityProperty(entity, DefaultProperties.fire_damage_bonus_mult);
-        if (source == DamageTypes.MAGIC)
-            return entityService.getEntityProperty(entity, DefaultProperties.magic_damage_bonus_mult);
-        if (source == NDamageType.LIGHTNING)
-            return entityService.getEntityProperty(entity, DefaultProperties.lightning_damage_bonus_mult);
-        if (source == NDamageType.ICE)
-            return entityService.getEntityProperty(entity, DefaultProperties.ice_damage_bonus_mult);
-        return 0;
-    }
+	public double getEntityBonusDamage(IEntity entity, DamageType source) {
+		if (source == DamageTypes.ATTACK)
+			return entityService.getEntityProperty(entity, DefaultProperties.physical_damage_bonus_mult);
+		if (source == DamageTypes.FIRE)
+			return entityService.getEntityProperty(entity, DefaultProperties.fire_damage_bonus_mult);
+		if (source == DamageTypes.MAGIC)
+			return entityService.getEntityProperty(entity, DefaultProperties.magic_damage_bonus_mult);
+		if (source == NDamageType.LIGHTNING)
+			return entityService.getEntityProperty(entity, DefaultProperties.lightning_damage_bonus_mult);
+		if (source == NDamageType.ICE)
+			return entityService.getEntityProperty(entity, DefaultProperties.ice_damage_bonus_mult);
+		return 0;
+	}
 
-    @PostProcess(priority = 6)
-    public void buildPropertiesMap() {
-        map.put(ItemTypes.DIAMOND_SWORD, DefaultProperties.diamond_sword_bonus_damage);
-        map.put(ItemTypes.GOLDEN_SWORD, DefaultProperties.golden_sword_bonus_damage);
-        map.put(ItemTypes.IRON_SWORD, DefaultProperties.iron_sword_bonus_damage);
-        map.put(ItemTypes.WOODEN_SWORD, DefaultProperties.wooden_sword_bonus_damage);
+	@PostProcess(priority = 6)
+	public void buildPropertiesMap() {
+		map.put(ItemTypes.DIAMOND_SWORD, DefaultProperties.diamond_sword_bonus_damage);
+		map.put(ItemTypes.GOLDEN_SWORD, DefaultProperties.golden_sword_bonus_damage);
+		map.put(ItemTypes.IRON_SWORD, DefaultProperties.iron_sword_bonus_damage);
+		map.put(ItemTypes.WOODEN_SWORD, DefaultProperties.wooden_sword_bonus_damage);
 
-        map.put(ItemTypes.DIAMOND_AXE, DefaultProperties.diamond_axe_bonus_damage);
-        map.put(ItemTypes.GOLDEN_AXE, DefaultProperties.golden_axe_bonus_damage);
-        map.put(ItemTypes.IRON_AXE, DefaultProperties.iron_axe_bonus_damage);
-        map.put(ItemTypes.WOODEN_AXE, DefaultProperties.wooden_axe_bonus_damage);
+		map.put(ItemTypes.DIAMOND_AXE, DefaultProperties.diamond_axe_bonus_damage);
+		map.put(ItemTypes.GOLDEN_AXE, DefaultProperties.golden_axe_bonus_damage);
+		map.put(ItemTypes.IRON_AXE, DefaultProperties.iron_axe_bonus_damage);
+		map.put(ItemTypes.WOODEN_AXE, DefaultProperties.wooden_axe_bonus_damage);
 
-        map.put(ItemTypes.DIAMOND_PICKAXE, DefaultProperties.diamond_pickaxe_bonus_damage);
-        map.put(ItemTypes.GOLDEN_PICKAXE, DefaultProperties.golden_pickaxe_bonus_damage);
-        map.put(ItemTypes.IRON_PICKAXE, DefaultProperties.iron_pickaxe_bonus_damage);
-        map.put(ItemTypes.WOODEN_PICKAXE, DefaultProperties.wooden_pickaxe_bonus_damage);
-
-
-        map.put(ItemTypes.DIAMOND_HOE, DefaultProperties.diamond_hoe_bonus_damage);
-        map.put(ItemTypes.GOLDEN_HOE, DefaultProperties.golden_hoe_bonus_damage);
-        map.put(ItemTypes.IRON_HOE, DefaultProperties.iron_hoe_bonus_damage);
-        map.put(ItemTypes.WOODEN_HOE, DefaultProperties.wooden_hoe_bonus_damage);
-
-        map.put(ItemTypes.BOW, DefaultProperties.bow_meele_bonus_damage);
-
-    }
+		map.put(ItemTypes.DIAMOND_PICKAXE, DefaultProperties.diamond_pickaxe_bonus_damage);
+		map.put(ItemTypes.GOLDEN_PICKAXE, DefaultProperties.golden_pickaxe_bonus_damage);
+		map.put(ItemTypes.IRON_PICKAXE, DefaultProperties.iron_pickaxe_bonus_damage);
+		map.put(ItemTypes.WOODEN_PICKAXE, DefaultProperties.wooden_pickaxe_bonus_damage);
 
 
-    private Map<Double, TextColor> doubleColorMap = new TreeMap<>();
-    private TextColor[] colorScale = new TextColor[] {
-            TextColors.WHITE,
-            TextColors.YELLOW,
-            TextColors.GOLD,
-            TextColors.RED,
-            TextColors.DARK_RED,
-            TextColors.DARK_PURPLE
-    };
+		map.put(ItemTypes.DIAMOND_HOE, DefaultProperties.diamond_hoe_bonus_damage);
+		map.put(ItemTypes.GOLDEN_HOE, DefaultProperties.golden_hoe_bonus_damage);
+		map.put(ItemTypes.IRON_HOE, DefaultProperties.iron_hoe_bonus_damage);
+		map.put(ItemTypes.WOODEN_HOE, DefaultProperties.wooden_hoe_bonus_damage);
 
-    public void createDamageToColorMapping() {
-        Collection<ConfigClass> classes = groupService.getClasses();
-        Set<Double> list = new TreeSet<>();
-        classes.stream().map(ConfigClass::getWeapons).forEach(a -> {
-            list.addAll(a.values());
-        });
-        Collection<Race> races = groupService.getRaces();
-        races.stream().map(Race::getWeapons).forEach(a -> {
-            list.addAll(a.values());
-        });
-        int size = list.size();
-        if (size > colorScale.length) {
-            int l = 0;
-            Iterable<List<Double>> lists = Iterables.partition(list, size / colorScale.length);
-            for (List<Double> doubles : lists) {
-                OptionalDouble max = doubles.stream().mapToDouble(d -> d).max();
-                doubleColorMap.put(max.getAsDouble(), colorScale[l]);
-                l++;
-            }
-        }
-    }
+		map.put(ItemTypes.BOW, DefaultProperties.bow_meele_bonus_damage);
 
-    public TextColor getColorByDamage(Double damage) {
-        if (doubleColorMap.size() != colorScale.length) {
-            return TextColors.RED;
-        }
-        TextColor val = TextColors.RED;
-        for (Map.Entry<Double, TextColor> aDouble : doubleColorMap.entrySet()) {
-            if (damage <= aDouble.getKey() || aDouble.getValue() == colorScale[colorScale.length -1]) {
-                val = aDouble.getValue();
-            }
-        }
-        return val;
-    }
+	}
+
+
+	private Map<Double, TextColor> doubleColorMap = new TreeMap<>();
+	private TextColor[] colorScale = new TextColor[]{
+			TextColors.WHITE,
+			TextColors.YELLOW,
+			TextColors.GOLD,
+			TextColors.RED,
+			TextColors.DARK_RED,
+			TextColors.DARK_PURPLE
+	};
+
+	public void createDamageToColorMapping() {
+		Collection<ConfigClass> classes = groupService.getClasses();
+		Set<Double> list = new TreeSet<>();
+		classes.stream().map(ConfigClass::getWeapons).forEach(a -> {
+			list.addAll(a.values());
+		});
+		Collection<Race> races = groupService.getRaces();
+		races.stream().map(Race::getWeapons).forEach(a -> {
+			list.addAll(a.values());
+		});
+		int size = list.size();
+		if (size > colorScale.length) {
+			int l = 0;
+			Iterable<List<Double>> lists = Iterables.partition(list, size / colorScale.length);
+			for (List<Double> doubles : lists) {
+				OptionalDouble max = doubles.stream().mapToDouble(d -> d).max();
+				doubleColorMap.put(max.getAsDouble(), colorScale[l]);
+				l++;
+			}
+		}
+	}
+
+	public TextColor getColorByDamage(Double damage) {
+		if (doubleColorMap.size() != colorScale.length) {
+			return TextColors.RED;
+		}
+		TextColor val = TextColors.RED;
+		for (Map.Entry<Double, TextColor> aDouble : doubleColorMap.entrySet()) {
+			if (damage <= aDouble.getKey() || aDouble.getValue() == colorScale[colorScale.length - 1]) {
+				val = aDouble.getValue();
+			}
+		}
+		return val;
+	}
 
 }

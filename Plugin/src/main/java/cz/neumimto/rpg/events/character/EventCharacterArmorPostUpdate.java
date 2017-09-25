@@ -29,29 +29,29 @@ import java.util.Set;
  * Created by NeumimTo on 25.7.2015.
  */
 public class EventCharacterArmorPostUpdate extends AbstractEvent {
-    IActiveCharacter character;
-    Set<ItemType> armor;
-    private Cause cause = null;
+	IActiveCharacter character;
+	Set<ItemType> armor;
+	private Cause cause = null;
 
-    public EventCharacterArmorPostUpdate(IActiveCharacter character, Set<ItemType> allowedArmor) {
-        this.character = character;
-        this.armor = allowedArmor;
-    }
+	public EventCharacterArmorPostUpdate(IActiveCharacter character, Set<ItemType> allowedArmor) {
+		this.character = character;
+		this.armor = allowedArmor;
+	}
 
-    public IActiveCharacter getCharacter() {
-        return character;
-    }
+	public IActiveCharacter getCharacter() {
+		return character;
+	}
 
-    public Set<ItemType> getArmor() {
-        return armor;
-    }
+	public Set<ItemType> getArmor() {
+		return armor;
+	}
 
-    @Override
-    public Cause getCause() {
-        return cause;
-    }
+	@Override
+	public Cause getCause() {
+		return cause;
+	}
 
-    public void setCause(Cause cause) {
-        this.cause = cause;
-    }
+	public void setCause(Cause cause) {
+		this.cause = cause;
+	}
 }

@@ -10,12 +10,12 @@ import org.spongepowered.api.effect.potion.PotionEffectTypes;
  */
 public class SlowPotion extends RPGPotionEffect {
 
-    public static final String name = "SlowPotion";
+	public static final String name = "SlowPotion";
 
-    public SlowPotion(IEffectConsumer iEffectConsumer, long duration, int amplifier) {
-        super(name, iEffectConsumer, duration, PotionEffect.builder()
-                .amplifier(amplifier).potionType(PotionEffectTypes.SLOWNESS)
-                .ambience(true)
-                );
-    }
+	public SlowPotion(IEffectConsumer iEffectConsumer, long duration, int amplifier) {
+		super(name, iEffectConsumer, duration, PotionEffect.builder()
+				.amplifier(amplifier).potionType(PotionEffectTypes.SLOWNESS)
+				.ambience(true)
+		);
+	}
 }

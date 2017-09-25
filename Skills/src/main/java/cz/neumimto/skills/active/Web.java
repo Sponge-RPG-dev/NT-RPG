@@ -17,28 +17,28 @@ import org.spongepowered.api.entity.living.Living;
 @ResourceLoader.Skill
 public class Web extends Targetted {
 
-    @Inject
-    EntityService entityService;
+	@Inject
+	EntityService entityService;
 
-    @Inject
-    EffectService effectService;
+	@Inject
+	EffectService effectService;
 
-    public Web() {
-        setName(SkillLocalization.SKILL_WEB_NAME);
-        setDescription(SkillLocalization.SKILL_WEB_DESC);
-        SkillSettings settings = new SkillSettings();
-        settings.addNode(SkillNodes.DURATION, 5000, 100);
-        setSettings(settings);
-    }
+	public Web() {
+		setName(SkillLocalization.SKILL_WEB_NAME);
+		setDescription(SkillLocalization.SKILL_WEB_DESC);
+		SkillSettings settings = new SkillSettings();
+		settings.addNode(SkillNodes.DURATION, 5000, 100);
+		setSettings(settings);
+	}
 
-    @Override
-    public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info) {
-        long duration = getLongNodeValue(info, SkillNodes.DURATION);
-        IEntity iEntity = entityService.get(target);
-        WebEffect eff = new WebEffect(iEntity, duration);
-        effectService.addEffect(eff,iEntity,this);
-        return null;
-    }
+	@Override
+	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info) {
+		long duration = getLongNodeValue(info, SkillNodes.DURATION);
+		IEntity iEntity = entityService.get(target);
+		WebEffect eff = new WebEffect(iEntity, duration);
+		effectService.addEffect(eff, iEntity, this);
+		return null;
+	}
 
 
 }

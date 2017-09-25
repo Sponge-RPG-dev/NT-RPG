@@ -3,7 +3,6 @@ package cz.neumimto.effects.negative;
 import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.event.cause.entity.damage.source.DamageSources;
 

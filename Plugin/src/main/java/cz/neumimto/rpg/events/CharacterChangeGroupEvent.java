@@ -9,6 +9,7 @@ import cz.neumimto.rpg.players.groups.PlayerGroup;
 public class CharacterChangeGroupEvent extends CharacterEvent {
 	private final PlayerGroup _new;
 	private final PlayerGroup old;
+
 	public CharacterChangeGroupEvent(PlayerGroup playerGroup, IActiveCharacter character, PlayerGroup old) {
 		super(character);
 		this._new = playerGroup;

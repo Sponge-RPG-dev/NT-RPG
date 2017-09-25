@@ -58,11 +58,8 @@ import cz.neumimto.rpg.utils.model.CharacterListModel;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.entity.ArmorEquipable;
-import org.spongepowered.api.entity.living.monster.ZombiePigman;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.ItemType;
@@ -72,7 +69,6 @@ import org.spongepowered.api.item.inventory.InventoryArchetypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.property.SlotPos;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
-import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.LiteralText;
@@ -85,8 +81,6 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -136,7 +130,6 @@ public class VanilaMessaging implements IPlayerMessage {
 	}
 
 
-
 	private static final String timeleft = "tl";
 	private static final TextTemplate.Arg TIMELEFT = TextTemplate.arg("tl")
 			.color(TextColors.WHITE)
@@ -158,7 +151,7 @@ public class VanilaMessaging implements IPlayerMessage {
 	@Override
 	public void sendCooldownMessage(IActiveCharacter player, String message, double cooldown) {
 		Text.Builder builder = VanilaMessaging.cooldown.apply(ImmutableMap.of(timeleft, Text.of(cooldown),
-																				skillname, Text.of(message)));
+				skillname, Text.of(message)));
 		player.getPlayer().sendMessage(builder.build());
 	}
 
@@ -330,8 +323,8 @@ public class VanilaMessaging implements IPlayerMessage {
 					level = s.getLevel(cc, a.getPrimaryClassExp());
 					m = cc.getMaxLevel();
 
-				b.append(Text.builder("Level: ").color(TextColors.DARK_GRAY).append(
-						Text.builder(level + "").color(level == m ? TextColors.RED : TextColors.DARK_PURPLE).build()).build());
+					b.append(Text.builder("Level: ").color(TextColors.DARK_GRAY).append(
+							Text.builder(level + "").color(level == m ? TextColors.RED : TextColors.DARK_PURPLE).build()).build());
 				}
 				content.add(b.build());
 			});
@@ -705,23 +698,23 @@ public class VanilaMessaging implements IPlayerMessage {
 
 		Iterator<SlotTransaction> iterator = event.getTransactions().iterator();
 
-		while (iterator.hasNext()){
+		while (iterator.hasNext()) {
 			SlotTransaction t = iterator.next();
-				Optional<String> s = t.getOriginal().get(NKeys.COMMAND);
-				if (s.isPresent()) {
-					event.setCancelled(true);
-					event.getTransactions().clear();
-					t.setCustom(ItemStack.of(ItemTypes.NONE, 1));
-					player.closeInventory();
-					Sponge.getCommandManager().process(player, s.get());
-					break;
-				}
-
-				if (t.getOriginal().get(NKeys.MENU_INVENTORY).isPresent()) {
-					event.setCancelled(true);
-				}
+			Optional<String> s = t.getOriginal().get(NKeys.COMMAND);
+			if (s.isPresent()) {
+				event.setCancelled(true);
+				event.getTransactions().clear();
+				t.setCustom(ItemStack.of(ItemTypes.NONE, 1));
+				player.closeInventory();
+				Sponge.getCommandManager().process(player, s.get());
+				break;
 			}
-			//}
+
+			if (t.getOriginal().get(NKeys.MENU_INVENTORY).isPresent()) {
+				event.setCancelled(true);
+			}
+		}
+		//}
 
 
 	}
@@ -736,7 +729,7 @@ public class VanilaMessaging implements IPlayerMessage {
 		LiteralText a = Text.builder(Localization.HEALTH).color(TextColors.GOLD)
 				.append(Text.builder(value + "").color(TextColors.GREEN).build())
 				.append(Text.builder("/").color(TextColors.WHITE).build())
-		//		.append(Text.builder(String.valueOf(maxValue - reservedAmount)).color(TextColors.RED).build())
+				//		.append(Text.builder(String.valueOf(maxValue - reservedAmount)).color(TextColors.RED).build())
 				.append(Text.builder(" (" + maxValue + ") ").color(TextColors.GRAY).build()).build();
 		character.getPlayer().sendMessage(a);
 	}

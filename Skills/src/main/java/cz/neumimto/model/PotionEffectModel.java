@@ -4,7 +4,6 @@ import org.spongepowered.api.effect.potion.PotionEffectType;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiFunction;
 
 /**
  * Created by NeumimTo on 9.7.2017.
@@ -12,6 +11,7 @@ import java.util.function.BiFunction;
 public class PotionEffectModel {
 	public Map<PotionEffectType, Long> cooldowns;
 	public Map<PotionEffectType, Long> nextUseTime;
+
 	public PotionEffectModel() {
 		cooldowns = new HashMap<>();
 		nextUseTime = new HashMap<>();

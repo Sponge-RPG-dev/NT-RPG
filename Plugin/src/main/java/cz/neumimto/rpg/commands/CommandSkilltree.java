@@ -38,53 +38,53 @@ import org.spongepowered.api.text.Text;
  */
 @ResourceLoader.Command
 public class CommandSkilltree extends CommandBase {
-    @Inject
-    private GroupService groupService;
+	@Inject
+	private GroupService groupService;
 
-    @Inject
-    private CharacterService characterService;
+	@Inject
+	private CharacterService characterService;
 
-    public CommandSkilltree() {
+	public CommandSkilltree() {
 
-    }
+	}
 
-    @Override
-    public CommandResult process(CommandSource commandSource, String s) throws CommandException {
-        if (commandSource instanceof Player) {
-            String[] args = s.split(" ");
-            ConfigClass configClass = null;
-            SkillData skillData = null;
-            Player player = (Player) commandSource;
-            IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-            if (character.isStub()) {
-                player.sendMessage(Text.of(Localization.CHARACTER_IS_REQUIRED));
-            }
-            for (int i = 0; i < args.length - 1; i++) {
-                if (args[i].equalsIgnoreCase("class")) {
-                    configClass = groupService.getNClass(args[i + 1]);
-                    if (configClass == ConfigClass.Default) {
-                        commandSource.sendMessage(Text.of(Localization.NON_EXISTING_GROUP));
-                        return CommandResult.empty();
-                    }
-                    if (args[i].equalsIgnoreCase("skill")) {
-                        skillData = configClass.getSkillTree().getSkills().get(args[i + 1]);
-                        if (skillData == SkillData.EMPTY) {
-                            commandSource.sendMessage(Text.of(Localization.SKILL_DOES_NOT_EXIST));
-                            return CommandResult.empty();
-                        }
-                    }
-                }
-            }
-            //todo
-            if (configClass == null) {
-                configClass = character.getPrimaryClass().getConfigClass();
-            }
-            if (skillData == null) {
-                skillData = configClass.getSkillTree().getSkills().get(StartingPoint.name);
-            }
+	@Override
+	public CommandResult process(CommandSource commandSource, String s) throws CommandException {
+		if (commandSource instanceof Player) {
+			String[] args = s.split(" ");
+			ConfigClass configClass = null;
+			SkillData skillData = null;
+			Player player = (Player) commandSource;
+			IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+			if (character.isStub()) {
+				player.sendMessage(Text.of(Localization.CHARACTER_IS_REQUIRED));
+			}
+			for (int i = 0; i < args.length - 1; i++) {
+				if (args[i].equalsIgnoreCase("class")) {
+					configClass = groupService.getNClass(args[i + 1]);
+					if (configClass == ConfigClass.Default) {
+						commandSource.sendMessage(Text.of(Localization.NON_EXISTING_GROUP));
+						return CommandResult.empty();
+					}
+					if (args[i].equalsIgnoreCase("skill")) {
+						skillData = configClass.getSkillTree().getSkills().get(args[i + 1]);
+						if (skillData == SkillData.EMPTY) {
+							commandSource.sendMessage(Text.of(Localization.SKILL_DOES_NOT_EXIST));
+							return CommandResult.empty();
+						}
+					}
+				}
+			}
+			//todo
+			if (configClass == null) {
+				configClass = character.getPrimaryClass().getConfigClass();
+			}
+			if (skillData == null) {
+				skillData = configClass.getSkillTree().getSkills().get(StartingPoint.name);
+			}
 
-            return CommandResult.success();
-        }
-        return CommandResult.empty();
-    }
+			return CommandResult.success();
+		}
+		return CommandResult.empty();
+	}
 }

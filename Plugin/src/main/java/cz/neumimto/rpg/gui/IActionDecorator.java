@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.gui;
 
 import com.flowpowered.math.vector.Vector3d;
-import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.world.Location;

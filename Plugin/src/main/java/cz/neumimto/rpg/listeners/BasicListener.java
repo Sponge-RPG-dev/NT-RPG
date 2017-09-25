@@ -35,7 +35,6 @@ import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.NDamageType;
 import cz.neumimto.rpg.skills.ProjectileProperties;
@@ -67,13 +66,10 @@ import org.spongepowered.api.event.cause.entity.damage.source.IndirectEntityDama
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.InteractEntityEvent;
 import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
-import org.spongepowered.api.event.filter.IsCancelled;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.world.chunk.UnloadChunkEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
-import org.spongepowered.api.util.Tristate;
-import org.spongepowered.common.entity.projectile.ProjectileLauncher;
 
 import java.util.Optional;
 
@@ -190,11 +186,10 @@ public class BasicListener {
 	}
 
 
-    @Listener
-    public void onChunkDespawn(UnloadChunkEvent event) {
-        entityService.remove(event.getTargetChunk().getEntities(Utils::isLivingEntity));
-    }
-
+	@Listener
+	public void onChunkDespawn(UnloadChunkEvent event) {
+		entityService.remove(event.getTargetChunk().getEntities(Utils::isLivingEntity));
+	}
 
 
 	@Listener
@@ -250,7 +245,7 @@ public class BasicListener {
 			}
 			//todo
 			//defende
-			    /*
+				/*
 		        if (targetEntity.getHotbarObjectType() == EntityTypes.PLAYER) {
                     IActiveCharacter tcharacter = characterService.getCharacter(targetEntity.getUniqueId());
                     double armor = tcharacter.getArmorValue();
@@ -263,8 +258,8 @@ public class BasicListener {
 
 	@Listener
 	public void onIndirectEntityDamage(DamageEntityEvent event,
-	                                   @First(typeFilter = IndirectEntityDamageSource.class)
-			                                   IndirectEntityDamageSource indirectEntityDamageSource) {
+									   @First(typeFilter = IndirectEntityDamageSource.class)
+											   IndirectEntityDamageSource indirectEntityDamageSource) {
 
 		Projectile projectile = (Projectile) indirectEntityDamageSource.getSource();
 		IEntity shooter = entityService.get((Entity) projectile.getShooter());
@@ -297,14 +292,14 @@ public class BasicListener {
 
 	@Listener
 	public void onSkillDamage(DamageEntityEvent event,
-	                                   @First(typeFilter = ISkillDamageSource.class)
-			                                   ISkillDamageSource iSkillDamageSource) {
+							  @First(typeFilter = ISkillDamageSource.class)
+									  ISkillDamageSource iSkillDamageSource) {
 		IEntity caster = iSkillDamageSource.getCaster();
 		ISkill skill = iSkillDamageSource.getSkill();
 		DamageType type = iSkillDamageSource.getType();
 		IEffect effect = iSkillDamageSource.getEffect();
 		if (caster.getType() == IEntityType.CHARACTER) {
-			IActiveCharacter c = (IActiveCharacter)caster;
+			IActiveCharacter c = (IActiveCharacter) caster;
 			if (c.hasPreferedDamageType()) {
 				type = c.getDamageType();
 			}
@@ -313,20 +308,19 @@ public class BasicListener {
 		double finalDamage = event.getBaseDamage() * damageService.getEntityBonusDamage(caster, type);
 
 
+		CauseStackManager.StackFrame frame = causeStackManager.pushCauseFrame();
 
-        CauseStackManager.StackFrame frame = causeStackManager.pushCauseFrame();
+		if (effect != null) {
+			EventContext build = EventContext.builder().add(NEventContextKeys.EFFECT_DAMAGE, effect).build();
+			causeStackManager.pushCause(Cause.builder().build(build));
+		}
 
-        if (effect != null) {
-            EventContext build = EventContext.builder().add(NEventContextKeys.EFFECT_DAMAGE, effect).build();
-            causeStackManager.pushCause(Cause.builder().build(build));
-        }
-
-        SkillDamageEvent event1 = new SkillDamageEvent(caster, targetchar, skill, finalDamage, type);
+		SkillDamageEvent event1 = new SkillDamageEvent(caster, targetchar, skill, finalDamage, type);
 
 
 		if (skill != null) {
-            EventContext build = EventContext.builder().add(NEventContextKeys.SKILL_DAMAGE, skill).build();
-            causeStackManager.pushCause(Cause.builder().build(build));
+			EventContext build = EventContext.builder().add(NEventContextKeys.SKILL_DAMAGE, skill).build();
+			causeStackManager.pushCause(Cause.builder().build(build));
 		}
 
 		Sponge.getGame().getEventManager().post(event1);
@@ -348,8 +342,6 @@ public class BasicListener {
 		}
 		event.setBaseDamage(event2.getDamage() * event2.getTargetResistance());
 	}
-
-
 
 
 	@Listener

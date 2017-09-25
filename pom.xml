@@ -27,7 +27,7 @@
             <id>sponge-repo</id>
             <url>http://repo.spongepowered.org/maven/</url>
             <snapshots>
-               <enabled>true</enabled>
+                <enabled>true</enabled>
             </snapshots>
         </repository>
         <repository>

@@ -13,14 +13,14 @@ import cz.neumimto.rpg.utils.Utils;
 @ClassGenerator.Generate(id = "name")
 public class IceResistanceEffect extends SingleResistanceValueEffect {
 
-    public static final String name = "Ice Resistance";
+	public static final String name = "Ice Resistance";
 
-    public IceResistanceEffect(IEffectConsumer consumer, long duration, float value) {
-        super(name, consumer, DefaultProperties.ice_damage_protection_mult, value);
-        setDuration(duration);
-    }
+	public IceResistanceEffect(IEffectConsumer consumer, long duration, float value) {
+		super(name, consumer, DefaultProperties.ice_damage_protection_mult, value);
+		setDuration(duration);
+	}
 
-    public IceResistanceEffect(IActiveCharacter character, long duration, String level) {
-        this(character, duration, Float.parseFloat(Utils.extractNumber(level)));
-    }
+	public IceResistanceEffect(IActiveCharacter character, long duration, String level) {
+		this(character, duration, Float.parseFloat(Utils.extractNumber(level)));
+	}
 }

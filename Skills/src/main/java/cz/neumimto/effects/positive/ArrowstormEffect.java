@@ -55,8 +55,8 @@ public class ArrowstormEffect extends EffectBase implements IEffectContainer {
 			Entity arrow = world.createEntity(EntityTypes.TIPPED_ARROW,
 					entity.getLocation().getPosition()
 							.add(cos((entity.getRotation().getX() - 90) % 360) * 0.2,
-								1.8,
-								sin((entity.getRotation().getX() - 90) % 360) * 0.2));
+									1.8,
+									sin((entity.getRotation().getX() - 90) % 360) * 0.2));
 			Arrow sb = (Arrow) arrow;
 			sb.setShooter(entity);
 			world.spawnEntity(sb);

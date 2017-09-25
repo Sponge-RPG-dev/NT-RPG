@@ -24,8 +24,8 @@ package cz.neumimto.rpg.players;
 public interface IReservable extends IEntityHealth {
 
 
-    void setReservedAmnout(float f);
+	void setReservedAmnout(float f);
 
-    double getReservedAmount();
+	double getReservedAmount();
 
 }

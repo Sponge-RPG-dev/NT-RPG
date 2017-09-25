@@ -49,142 +49,143 @@ import java.util.function.Consumer;
  */
 @Singleton
 public class JSLoader {
-    public static ScriptEngine engine;
-    private static Path scripts_root = Paths.get(NtRpgPlugin.workingDir + "/scripts");
+	public static ScriptEngine engine;
+	private static Path scripts_root = Paths.get(NtRpgPlugin.workingDir + "/scripts");
 
-    @Inject
-    private Logger logger;
+	@Inject
+	private Logger logger;
 
-    @Inject
-    private IoC ioc;
+	@Inject
+	private IoC ioc;
 
-    @Inject
-    private ClassGenerator classGenerator;
+	@Inject
+	private ClassGenerator classGenerator;
 
-    @Inject
-    private ResourceLoader resourceLoader;
+	@Inject
+	private ResourceLoader resourceLoader;
 
-    @PostProcess(priority = 2)
-    public void initEngine() {
-        try {
-            FileUtils.createDirectoryIfNotExists(scripts_root);
-            loadNashorn();
-            if (engine != null) {
-                setup();
-                reloadGlobalEffects();
-                reloadSkills();
-                reloadAttributes();
-                generateListener();
-                logger.info("JS resources loaded.");
-            } else {
-                logger.error("Could not load nashorn. Library not found on a classpath.");
-                logger.error(" - For SpongeVanilla create a symlink or place nashorn.jar into the sponge/config/nt-core folder");
-                logger.error(" - For SpongeForge create a symlink or place nashorn.jar into the sponge/mods folder");
-            }
-        } catch (Exception e) {
-            logger.error("Could not load nashorn. Library not found on a classpath.");
-            logger.error(" - For SpongeVanilla create a symlink or place nashorn.jar into the sponge/config/nt-core folder");
-            logger.error(" - For SpongeForge create a symlink or place nashorn.jar into the sponge/mods folder");
-        }
-    }
-    public void loadNashorn() throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
-        Object fct = Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory").newInstance();
-        engine = (ScriptEngine) fct.getClass().getMethod("getScriptEngine", String[].class, ClassLoader.class).invoke(fct, PluginConfig.JJS_ARGS.split(" "), Thread.currentThread().getContextClassLoader());
-    }
+	@PostProcess(priority = 2)
+	public void initEngine() {
+		try {
+			FileUtils.createDirectoryIfNotExists(scripts_root);
+			loadNashorn();
+			if (engine != null) {
+				setup();
+				reloadGlobalEffects();
+				reloadSkills();
+				reloadAttributes();
+				generateListener();
+				logger.info("JS resources loaded.");
+			} else {
+				logger.error("Could not load nashorn. Library not found on a classpath.");
+				logger.error(" - For SpongeVanilla create a symlink or place nashorn.jar into the sponge/config/nt-core folder");
+				logger.error(" - For SpongeForge create a symlink or place nashorn.jar into the sponge/mods folder");
+			}
+		} catch (Exception e) {
+			logger.error("Could not load nashorn. Library not found on a classpath.");
+			logger.error(" - For SpongeVanilla create a symlink or place nashorn.jar into the sponge/config/nt-core folder");
+			logger.error(" - For SpongeForge create a symlink or place nashorn.jar into the sponge/mods folder");
+		}
+	}
 
-    private void setup() {
-        Path path = Paths.get(scripts_root + File.separator + "Main.js");
-        if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
-            try (InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("Main.js")) {
-                Files.copy(resourceAsStream, path);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+	public void loadNashorn() throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+		Object fct = Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory").newInstance();
+		engine = (ScriptEngine) fct.getClass().getMethod("getScriptEngine", String[].class, ClassLoader.class).invoke(fct, PluginConfig.JJS_ARGS.split(" "), Thread.currentThread().getContextClassLoader());
+	}
 
-        try (InputStreamReader rs = new InputStreamReader(new FileInputStream(path.toFile()))) {
-            Bindings bindings = new SimpleBindings();
-            bindings.put("IoC", ioc);
-            bindings.put("Bindings", new BindingsHelper(engine));
-            bindings.put("Folder",scripts_root.toString());
-            bindings.put("GlobalScope", ioc.build(GlobalScope.class));
-            engine.setBindings(bindings,ScriptContext.ENGINE_SCOPE);
-            engine.eval(rs);
+	private void setup() {
+		Path path = Paths.get(scripts_root + File.separator + "Main.js");
+		if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
+			try (InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("Main.js")) {
+				Files.copy(resourceAsStream, path);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+		try (InputStreamReader rs = new InputStreamReader(new FileInputStream(path.toFile()))) {
+			Bindings bindings = new SimpleBindings();
+			bindings.put("IoC", ioc);
+			bindings.put("Bindings", new BindingsHelper(engine));
+			bindings.put("Folder", scripts_root.toString());
+			bindings.put("GlobalScope", ioc.build(GlobalScope.class));
+			engine.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
+			engine.eval(rs);
 
-    public void generateDynamicListener(Map<StaticClass, Set<Consumer<? extends Event>>> set) {
-        Object o = classGenerator.generateDynamicListener(set);
-        ioc.build(Game.class).getEventManager().registerListeners(ioc.build(NtRpgPlugin.class), o);
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-    public void reloadSkills() {
-        Invocable invocable = (Invocable) engine;
-        try {
-            invocable.invokeFunction("registerSkills");
-        } catch (ScriptException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-    }
+	public void generateDynamicListener(Map<StaticClass, Set<Consumer<? extends Event>>> set) {
+		Object o = classGenerator.generateDynamicListener(set);
+		ioc.build(Game.class).getEventManager().registerListeners(ioc.build(NtRpgPlugin.class), o);
+	}
 
-    public void reloadGlobalEffects() {
-        Invocable invocable = (Invocable) engine;
-        try {
-            invocable.invokeFunction("registerGlobalEffects");
-        } catch (ScriptException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-    }
+	public void reloadSkills() {
+		Invocable invocable = (Invocable) engine;
+		try {
+			invocable.invokeFunction("registerSkills");
+		} catch (ScriptException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+	}
 
-    public void reloadAttributes() {
-        Invocable invocable = (Invocable) engine;
-        try {
-            invocable.invokeFunction("registerAttributes");
-        } catch (ScriptException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-    }
+	public void reloadGlobalEffects() {
+		Invocable invocable = (Invocable) engine;
+		try {
+			invocable.invokeFunction("registerGlobalEffects");
+		} catch (ScriptException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+	}
 
-    public void generateListener() {
-        Invocable invocable = (Invocable) engine;
-        try {
-            invocable.invokeFunction("generateListener");
-        } catch (ScriptException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-    }
+	public void reloadAttributes() {
+		Invocable invocable = (Invocable) engine;
+		try {
+			invocable.invokeFunction("registerAttributes");
+		} catch (ScriptException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+	}
 
-    public static class BindingsHelper {
+	public void generateListener() {
+		Invocable invocable = (Invocable) engine;
+		try {
+			invocable.invokeFunction("generateListener");
+		} catch (ScriptException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+	}
 
-        private ScriptEngine scriptEngine;
+	public static class BindingsHelper {
 
-        public BindingsHelper(ScriptEngine scriptEngine) {
-            this.scriptEngine = scriptEngine;
-        }
+		private ScriptEngine scriptEngine;
 
-        public ScriptEngine getScriptEngine() {
-            return scriptEngine;
-        }
+		public BindingsHelper(ScriptEngine scriptEngine) {
+			this.scriptEngine = scriptEngine;
+		}
 
-        public Set<Map.Entry<String, Object>> getEngineScopeKeys() {
-            return scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE).entrySet();
-        }
+		public ScriptEngine getScriptEngine() {
+			return scriptEngine;
+		}
 
-        public Bindings getGlobalScopeKeys() {
-            return (Bindings) scriptEngine.getBindings(ScriptContext.GLOBAL_SCOPE).entrySet();
-        }
-    }
+		public Set<Map.Entry<String, Object>> getEngineScopeKeys() {
+			return scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE).entrySet();
+		}
+
+		public Bindings getGlobalScopeKeys() {
+			return (Bindings) scriptEngine.getBindings(ScriptContext.GLOBAL_SCOPE).entrySet();
+		}
+	}
 
 }
 

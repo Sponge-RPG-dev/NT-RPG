@@ -17,7 +17,7 @@ import org.spongepowered.api.entity.living.player.Player;
  * Created by NeumimTo on 29.4.2017.
  */
 @ResourceLoader.Command
-public class CommandSetHealthScale extends CommandBase  {
+public class CommandSetHealthScale extends CommandBase {
 
 	@Inject
 	private Game game;

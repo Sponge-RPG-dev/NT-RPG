@@ -29,18 +29,18 @@ import javax.persistence.PreUpdate;
 @MappedSuperclass
 public abstract class TimestampEntity {
 
-    @Column(name = "updated")
-    public Long updated;
-    @Column(name = "created")
-    private Long created;
+	@Column(name = "updated")
+	public Long updated;
+	@Column(name = "created")
+	private Long created;
 
-    @PrePersist
-    public void onCreate() {
-        updated = created = System.currentTimeMillis();
-    }
+	@PrePersist
+	public void onCreate() {
+		updated = created = System.currentTimeMillis();
+	}
 
-    @PreUpdate
-    public void onUpdate() {
-        updated = System.currentTimeMillis();
-    }
+	@PreUpdate
+	public void onUpdate() {
+		updated = System.currentTimeMillis();
+	}
 }

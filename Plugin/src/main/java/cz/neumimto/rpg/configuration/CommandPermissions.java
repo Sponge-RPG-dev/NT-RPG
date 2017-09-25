@@ -27,51 +27,51 @@ import cz.neumimto.configuration.ConfigurationContainer;
 @ConfigurationContainer(path = "{WorkingDir}", filename = "Permissions.conf")
 public class CommandPermissions {
 
-    @ConfigValue
-    public static String CHOOSEGROUP_ALIAS = "choose";
+	@ConfigValue
+	public static String CHOOSEGROUP_ALIAS = "choose";
 
-    @ConfigValue
-    public static String COMMAND_CHOOSE_ACCESS = "*";
+	@ConfigValue
+	public static String COMMAND_CHOOSE_ACCESS = "*";
 
-    @ConfigValue
-    public static String COMMANDINFO_PERMS = "*";
+	@ConfigValue
+	public static String COMMANDINFO_PERMS = "*";
 
-    @ConfigValue
-    public static String COMMANDINFO_ALIAS = "show";
+	@ConfigValue
+	public static String COMMANDINFO_ALIAS = "show";
 
-    @ConfigValue
-    public static String CHARACTER_INFO_ALIAS = "character";
+	@ConfigValue
+	public static String CHARACTER_INFO_ALIAS = "character";
 
-    @ConfigValue
-    public static String COMMAND_CREATE_ALIAS = "create";
+	@ConfigValue
+	public static String COMMAND_CREATE_ALIAS = "create";
 
-    @ConfigValue
-    public static String CANT_CHOOSE_RACE = ".";
+	@ConfigValue
+	public static String CANT_CHOOSE_RACE = ".";
 
-    @ConfigValue
-    public static String CHARACTER_EXECUTE_SKILL_PERMISSION = "*";
+	@ConfigValue
+	public static String CHARACTER_EXECUTE_SKILL_PERMISSION = "*";
 
-    @ConfigValue
-    public static String COMMAND_PARTY_ALIAS = "party";
+	@ConfigValue
+	public static String COMMAND_PARTY_ALIAS = "party";
 
-    @ConfigValue
-    public static String SELECT_CLASS = "ntrpg.select.class.";
+	@ConfigValue
+	public static String SELECT_CLASS = "ntrpg.select.class.";
 
-    @ConfigValue
-    public static String SELECT_RACE = "ntrpg.select.race.";
+	@ConfigValue
+	public static String SELECT_RACE = "ntrpg.select.race.";
 
-    @ConfigValue
-    public static String ATTRIBUTES = "ntrpg.manage.attributes";
+	@ConfigValue
+	public static String ATTRIBUTES = "ntrpg.manage.attributes";
 
-    @ConfigValue
-    public static String PARTY_CREATE = "ntrpg.party.create";
+	@ConfigValue
+	public static String PARTY_CREATE = "ntrpg.party.create";
 
-    @ConfigValue
-    public static String SHOW_RUNEWORD_LIST = "ntrpg.runewords.showlist";
+	@ConfigValue
+	public static String SHOW_RUNEWORD_LIST = "ntrpg.runewords.showlist";
 
-    @ConfigValue
-    public static String SWOW_RUNEWORD_COMBINATION = "ntrpg.runeword.showcombination";
+	@ConfigValue
+	public static String SWOW_RUNEWORD_COMBINATION = "ntrpg.runeword.showcombination";
 
-    @ConfigValue
-    public static String COMMAND_SET_HEALTHSCALE = "hs";
+	@ConfigValue
+	public static String COMMAND_SET_HEALTHSCALE = "hs";
 }

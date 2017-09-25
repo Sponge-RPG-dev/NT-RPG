@@ -19,27 +19,26 @@ package cz.neumimto.rpg.damage;
 
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
 import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 
 public interface ISkillDamageSource extends DamageSource {
 
-    /**
-     * Returns the skill which caused damage
-     *
-     * @return
-     */
-    ISkill getSkill();
+	/**
+	 * Returns the skill which caused damage
+	 *
+	 * @return
+	 */
+	ISkill getSkill();
 
-    /**
-     * Returns the character, which casted the skill
-     *
-     * @return
-     */
-    IEntity getCaster();
+	/**
+	 * Returns the character, which casted the skill
+	 *
+	 * @return
+	 */
+	IEntity getCaster();
 
-    IEntity getTarget();
+	IEntity getTarget();
 
-    IEffect getEffect();
+	IEffect getEffect();
 }

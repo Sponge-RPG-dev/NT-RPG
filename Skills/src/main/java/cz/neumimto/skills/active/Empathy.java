@@ -9,7 +9,6 @@ import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.*;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;

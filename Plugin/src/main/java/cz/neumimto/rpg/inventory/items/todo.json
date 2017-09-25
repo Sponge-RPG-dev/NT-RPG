@@ -1,7 +1,7 @@
 {
   "rarity": [
     {
-      "type":"random",
+      "type": "random",
       "name": "magic",
       "color": "blue",
       "max_suffixes": 1,
@@ -9,13 +9,16 @@
       "min_modifiers": 1
     },
     {
-      "type":"random",
+      "type": "random",
       "name": "rare",
       "color": "yellow",
       "max_suffixes": 2,
       "max_prefixes": 2,
       "min_modifiers": 1,
-      "display_name": [2,2]
+      "display_name": [
+        2,
+        2
+      ]
     },
     {
       "type": "random",
@@ -24,7 +27,10 @@
       "max_suffixes": 3,
       "max_prefixes": 3,
       "min_modifiers": 2,
-      "display_name": [2,2]
+      "display_name": [
+        2,
+        2
+      ]
     },
     {
       "type": "predefined",
@@ -33,7 +39,10 @@
       "max_suffixes": 3,
       "max_prefixes": 3,
       "min_modifiers": 3,
-      "display_name": [2,2]
+      "display_name": [
+        2,
+        2
+      ]
     }
   ],
   "enchantments": [
@@ -76,7 +85,7 @@
           ]
         },
         {
-          "name":"frosted",
+          "name": "frosted",
           "items": [
             {
               "item_type": "minecraft:diamond_sword",
@@ -95,13 +104,17 @@
         ],
         "named": [
           {
-            "name":"someboss",
-            "drop_rate": 2800, //1000 guarteeds 1 item, 2800 guarteeds 2 items and 800 permille (80%) chance for third
-            "drop_rarity": 750, //0..(2^31)-1
+            "name": "someboss",
+            "drop_rate": 2800,
+            //1000 guarteeds 1 item, 2800 guarteeds 2 items and 800 permille (80%) chance for third
+            "drop_rarity": 750,
+            //0..(2^31)-1
             "unique_drop": [
               {
-                "name": "some_item", //extra roll
-                "drop_rarity": 20 //overrites specified rarity in unique drops section, adds extra roll for that item, with 20 permille chance to drop
+                "name": "some_item",
+                //extra roll
+                "drop_rarity": 20
+                //overrites specified rarity in unique drops section, adds extra roll for that item, with 20 permille chance to drop
               }
             ]
           }
@@ -109,14 +122,19 @@
       }
     }
   ],
-  "unique_drops":[
+  "unique_drops": [
     {
       "item_type": "minecraft:bow",
       "rarity": "relic",
       "only_specified": false,
-      "enchantments": ["frosted", "of Restoration"],
-      "drop_rate": 2, //every monster can drop
-      "drop_rarity": 1 //1:1000 to be dropped in a single roll
+      "enchantments": [
+        "frosted",
+        "of Restoration"
+      ],
+      "drop_rate": 2,
+      //every monster can drop
+      "drop_rarity": 1
+      //1:1000 to be dropped in a single roll
     }
   ]
 }

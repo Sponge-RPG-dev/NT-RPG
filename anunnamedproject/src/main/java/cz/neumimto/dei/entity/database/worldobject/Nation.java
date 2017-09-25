@@ -1,9 +1,7 @@
 package cz.neumimto.dei.entity.database.worldobject;
 
 import cz.neumimto.dei.entity.database.player.Citizen;
-import cz.neumimto.dei.entity.database.utils.BlockType2String;
 import cz.neumimto.dei.entity.database.utils.ItemType2String;
-import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.item.ItemType;
 
 import javax.persistence.*;
@@ -15,49 +13,49 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "nations")
-public class Nation  {
+public class Nation {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "nation_id")
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "nation_id")
+	private Long id;
 
-    private String name;
+	private String name;
 
-    private long balance;
+	private long balance;
 
-    private String description;
+	private String description;
 
-    @OneToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name="leader_id")
-    private Citizen leader;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "leader_id")
+	private Citizen leader;
 
-    @ElementCollection
-    @CollectionTable( name = "dei_nation_blockpallete",
-            joinColumns = @JoinColumn( name = "nation_id" ) )
-    @Column(name = "items" )
-    @OrderColumn(name = "item")
-    @Enumerated(EnumType.STRING)
-    @Convert(converter = ItemType2String.class )
-    private Set<ItemType> blockPalette;
+	@ElementCollection
+	@CollectionTable(name = "dei_nation_blockpallete",
+			joinColumns = @JoinColumn(name = "nation_id"))
+	@Column(name = "items")
+	@OrderColumn(name = "item")
+	@Enumerated(EnumType.STRING)
+	@Convert(converter = ItemType2String.class)
+	private Set<ItemType> blockPalette;
 
-    @OneToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name="capital_town_id")
-    private Town capital;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "capital_town_id")
+	private Town capital;
 
-    @OneToMany(mappedBy = "nation", cascade = CascadeType.ALL)
-    private List<Town> towns;
+	@OneToMany(mappedBy = "nation", cascade = CascadeType.ALL)
+	private List<Town> towns;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-            name="nation_permissions",
-            joinColumns=@JoinColumn(name="nation_id")
-    )
-    @OrderColumn(name = "index_id")
-    private List<String> permissions;
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(
+			name = "nation_permissions",
+			joinColumns = @JoinColumn(name = "nation_id")
+	)
+	@OrderColumn(name = "index_id")
+	private List<String> permissions;
 
 
-    public long started;
+	public long started;
 
-    public boolean isActive;
+	public boolean isActive;
 }

@@ -1,9 +1,7 @@
 package cz.neumimto.skills.active;
 
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.Decorator;
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.gui.ParticleDecorator;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ActiveSkill;
@@ -18,16 +16,16 @@ import javax.annotation.PostConstruct;
  */
 public class Blackhole extends ActiveSkill {
 
-    public static Vector3d[] arm = new Vector3d[0];
+	public static Vector3d[] arm = new Vector3d[0];
 
-    @Inject
-    private ParticleDecorator particleDecorator;
+	@Inject
+	private ParticleDecorator particleDecorator;
 
-    @PostConstruct
-    public void initArms() {
-        arm = new Vector3d[75];
-        int rot = 0;
-        /*while (rot < 1) {
+	@PostConstruct
+	public void initArms() {
+		arm = new Vector3d[75];
+		int rot = 0;
+		/*while (rot < 1) {
             new ParticleDecorator()
                     .spiral(
                             5,
@@ -39,10 +37,10 @@ public class Blackhole extends ActiveSkill {
             rot += 0.3;
         }
         */
-    }
+	}
 
-    @Override
-    public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
-        return null;
-    }
+	@Override
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
+		return null;
+	}
 }

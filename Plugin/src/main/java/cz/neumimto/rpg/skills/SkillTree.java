@@ -25,32 +25,32 @@ import java.util.Map;
  * Created by NeumimTo on 14.2.2015.
  */
 public class SkillTree {
-    public static SkillTree Default = new SkillTree() {{
-        setId("None");
-        setDescription("No skill tree");
-    }};
-    private String id;
-    private Map<String, SkillData> skills = new HashMap<>();
-    private String description;
+	public static SkillTree Default = new SkillTree() {{
+		setId("None");
+		setDescription("No skill tree");
+	}};
+	private String id;
+	private Map<String, SkillData> skills = new HashMap<>();
+	private String description;
 
 
-    public Map<String, SkillData> getSkills() {
-        return skills;
-    }
+	public Map<String, SkillData> getSkills() {
+		return skills;
+	}
 
-    public String getId() {
-        return id;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 }

@@ -35,47 +35,47 @@ import java.security.CodeSource;
 public class FileUtils {
 
 
-    public static String getJarContainingFolder(Class<?> aclass) throws Exception {
-        CodeSource codeSource = aclass.getProtectionDomain().getCodeSource();
-        String str = codeSource.getLocation().toURI().toString().split("!")[0].substring(10);
-        return str;
-    }
+	public static String getJarContainingFolder(Class<?> aclass) throws Exception {
+		CodeSource codeSource = aclass.getProtectionDomain().getCodeSource();
+		String str = codeSource.getLocation().toURI().toString().split("!")[0].substring(10);
+		return str;
+	}
 
-    public static URL getPluginUrl() {
-        URL clsUrl = NtRpgPlugin.class.getResource(NtRpgPlugin.class.getSimpleName() + ".class");
-        if (clsUrl != null) {
-            try {
-                URLConnection conn = clsUrl.openConnection();
-                if (conn instanceof JarURLConnection) {
-                    JarURLConnection connection = (JarURLConnection) conn;
-                    return connection.getJarFileURL();
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return null;
-    }
+	public static URL getPluginUrl() {
+		URL clsUrl = NtRpgPlugin.class.getResource(NtRpgPlugin.class.getSimpleName() + ".class");
+		if (clsUrl != null) {
+			try {
+				URLConnection conn = clsUrl.openConnection();
+				if (conn instanceof JarURLConnection) {
+					JarURLConnection connection = (JarURLConnection) conn;
+					return connection.getJarFileURL();
+				}
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return null;
+	}
 
 
-    public static void createFileIfNotExists(Path path) {
-        if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS))
-            try {
-                Files.createFile(path);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-    }
+	public static void createFileIfNotExists(Path path) {
+		if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS))
+			try {
+				Files.createFile(path);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	}
 
-    public static Path createDirectoryIfNotExists(Path path) {
-        if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS))
-            try {
-                Files.createDirectory(path);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        return path;
-    }
+	public static Path createDirectoryIfNotExists(Path path) {
+		if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS))
+			try {
+				Files.createDirectory(path);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		return path;
+	}
 
 }
 

@@ -26,17 +26,17 @@ import org.spongepowered.api.item.inventory.ItemStack;
  */
 public class Armor extends Weapon {
 
-    private IEffectSource armorType;
+	private IEffectSource armorType;
 
-    public Armor(ItemStack itemStack, IEffectSource armorType) {
-        super(itemStack);
-        this.armorType = armorType;
-    }
+	public Armor(ItemStack itemStack, IEffectSource armorType) {
+		super(itemStack);
+		this.armorType = armorType;
+	}
 
-    @Override
-    public IEffectSource getType() {
-        return armorType;
-    }
+	@Override
+	public IEffectSource getType() {
+		return armorType;
+	}
 
-    public static Armor NONE = null;
+	public static Armor NONE = null;
 }

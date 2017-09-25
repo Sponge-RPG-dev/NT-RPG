@@ -1,9 +1,6 @@
 package cz.neumimto.rpg.effects;
 
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.IEffectConsumer;
-import org.spongepowered.api.effect.particle.ParticleEffect;
 
 /**
  * Created by NeumimTo on 29.7.2017.
@@ -13,6 +10,7 @@ public abstract class ShapedEffectDecorator<Value> extends EffectBase<Value> {
 	private int printerCount;
 	private int q = 0;
 	int iter = 0;
+
 	public ShapedEffectDecorator(String name, IEffectConsumer consumers) {
 		super(name, consumers);
 		setPeriod(7L);
@@ -37,9 +35,9 @@ public abstract class ShapedEffectDecorator<Value> extends EffectBase<Value> {
 	public int getIndex(int i) {
 		if (i < 0)
 			return 0;
-		if (i > getVertices().length - 1 ) {
-			while (i > getVertices().length -1) {
-				i-= getVertices().length-1;
+		if (i > getVertices().length - 1) {
+			while (i > getVertices().length - 1) {
+				i -= getVertices().length - 1;
 			}
 			return i;
 		}

@@ -5,28 +5,28 @@ package cz.neumimto.rpg.effects;
  */
 public class EffectValue<K> {
 
-    private IEffectSourceProvider effectSource;
+	private IEffectSourceProvider effectSource;
 
-    private K k;
+	private K k;
 
-    public EffectValue(IEffectSourceProvider effectSource, K k) {
-        this.effectSource = effectSource;
-        this.k = k;
-    }
+	public EffectValue(IEffectSourceProvider effectSource, K k) {
+		this.effectSource = effectSource;
+		this.k = k;
+	}
 
-    public K getValue() {
-        return k;
-    }
+	public K getValue() {
+		return k;
+	}
 
-    public void setValue(K k) {
-        this.k = k;
-    }
+	public void setValue(K k) {
+		this.k = k;
+	}
 
-    public IEffectSourceProvider getEffectSource() {
-        return effectSource;
-    }
+	public IEffectSourceProvider getEffectSource() {
+		return effectSource;
+	}
 
-    public void setEffectSource(IEffectSourceProvider effectSource) {
-        this.effectSource = effectSource;
-    }
+	public void setEffectSource(IEffectSourceProvider effectSource) {
+		this.effectSource = effectSource;
+	}
 }

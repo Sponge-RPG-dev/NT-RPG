@@ -24,74 +24,74 @@ import cz.neumimto.rpg.players.groups.ConfigClass;
  * Created by NeumimTo on 28.7.2015.
  */
 public class ExtendedNClass {
-    public static ExtendedNClass Default;
+	public static ExtendedNClass Default;
 
-    static {
-        Default = new ExtendedNClass() {
-            @Override
-            public boolean takesExp() {
-                return false;
-            }
-        };
-        Default.setConfigClass(ConfigClass.Default);
-        Default.setPrimary(true);
-    }
+	static {
+		Default = new ExtendedNClass() {
+			@Override
+			public boolean takesExp() {
+				return false;
+			}
+		};
+		Default.setConfigClass(ConfigClass.Default);
+		Default.setPrimary(true);
+	}
 
-    private ConfigClass configClass;
-    private double experiences;
-    private double experiencesFromLevel;
-    private int slot;
-    private int level;
+	private ConfigClass configClass;
+	private double experiences;
+	private double experiencesFromLevel;
+	private int slot;
+	private int level;
 
-    public boolean takesExp() {
-        return experiences <= configClass.getTotalExp();
-    }
+	public boolean takesExp() {
+		return experiences <= configClass.getTotalExp();
+	}
 
-    public ConfigClass getConfigClass() {
-        return configClass;
-    }
+	public ConfigClass getConfigClass() {
+		return configClass;
+	}
 
-    public void setConfigClass(ConfigClass configClass) {
-        this.configClass = configClass;
-    }
+	public void setConfigClass(ConfigClass configClass) {
+		this.configClass = configClass;
+	}
 
-    public double getExperiences() {
-        return experiences;
-    }
+	public double getExperiences() {
+		return experiences;
+	}
 
-    public void setExperiences(double experiences) {
-        this.experiences = experiences;
-    }
+	public void setExperiences(double experiences) {
+		this.experiences = experiences;
+	}
 
-    public boolean isPrimary() {
-        return slot == 1;
-    }
+	public boolean isPrimary() {
+		return slot == 1;
+	}
 
-    public void setPrimary(boolean isPrimary) {
-        this.slot = 1;
-    }
+	public void setPrimary(boolean isPrimary) {
+		this.slot = 1;
+	}
 
-    public int getLevel() {
-        return level;
-    }
+	public int getLevel() {
+		return level;
+	}
 
-    public void setLevel(int level) {
-        this.level = level;
-    }
+	public void setLevel(int level) {
+		this.level = level;
+	}
 
-    public double getExperiencesFromLevel() {
-        return experiencesFromLevel;
-    }
+	public double getExperiencesFromLevel() {
+		return experiencesFromLevel;
+	}
 
-    public void setExperiencesFromLevel(double experiencesFromLevel) {
-        this.experiencesFromLevel = experiencesFromLevel;
-    }
+	public void setExperiencesFromLevel(double experiencesFromLevel) {
+		this.experiencesFromLevel = experiencesFromLevel;
+	}
 
-    public int getSlot() {
-        return slot;
-    }
+	public int getSlot() {
+		return slot;
+	}
 
-    public void setSlot(int slot) {
-        this.slot = slot;
-    }
+	public void setSlot(int slot) {
+		this.slot = slot;
+	}
 }

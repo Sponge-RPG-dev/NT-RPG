@@ -1,28 +1,21 @@
 package cz.neumimto.rpg.gui;
 
 import com.flowpowered.math.TrigMath;
-import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.VectorUtils;
-import cz.neumimto.rpg.gui.IActionDecorator;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.Extent;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -82,22 +75,20 @@ public class ParticleDecorator implements IActionDecorator {
 	}
 
 
-
-
 	@Override
 	public void spiral(double radius, double points, double fullrot,
 					   double rotation,
 					   Consumer<Vector3d> cb) {
-		double a = radius/points;
-		double s = fullrot/points;
+		double a = radius / points;
+		double s = fullrot / points;
 		double arad = s * TrigMath.TWO_PI;
 		rotation *= TrigMath.TWO_PI; //torad
-		for(double i=1; i<=points; i++){
+		for (double i = 1; i <= points; i++) {
 			double dist = i * a;
 			double angle = i * arad + rotation;
-			double x =TrigMath.cos(angle) * dist;
-			double y =TrigMath.sin(angle) * dist;
-			cb.accept(new Vector3d(x,0,y));
+			double x = TrigMath.cos(angle) * dist;
+			double y = TrigMath.sin(angle) * dist;
+			cb.accept(new Vector3d(x, 0, y));
 		}
 	}
 
@@ -121,7 +112,7 @@ public class ParticleDecorator implements IActionDecorator {
 			double angle = i * increment;
 			double x = radius * TrigMath.cos(angle);
 			double z = radius * TrigMath.sin(angle);
-			d[i] = new Vector3d(x,0,z);
+			d[i] = new Vector3d(x, 0, z);
 		}
 	}
 
@@ -134,7 +125,7 @@ public class ParticleDecorator implements IActionDecorator {
 		fillCircle(smallCircle, 1.3);
 
 		tinyCircle = new Vector3d[10];
-		fillCircle(ParticleDecorator.tinyCircle,0.5);
+		fillCircle(ParticleDecorator.tinyCircle, 0.5);
 	}
 
 

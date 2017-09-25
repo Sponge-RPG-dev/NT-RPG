@@ -20,35 +20,35 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 
 public class PlayerCombatEvent extends CharacterEvent {
 
-    private final cz.neumimto.rpg.players.IActiveCharacter target;
-    private double damage;
-    private double damagefactor;
+	private final cz.neumimto.rpg.players.IActiveCharacter target;
+	private double damage;
+	private double damagefactor;
 
-    public PlayerCombatEvent(IActiveCharacter IActiveCharacter, IActiveCharacter target, double damage, double damagefactor) {
-        super(IActiveCharacter);
-        this.target = target;
-        this.damage = damage;
-        this.damagefactor = damagefactor;
-    }
+	public PlayerCombatEvent(IActiveCharacter IActiveCharacter, IActiveCharacter target, double damage, double damagefactor) {
+		super(IActiveCharacter);
+		this.target = target;
+		this.damage = damage;
+		this.damagefactor = damagefactor;
+	}
 
-    public IActiveCharacter getTarget() {
-        return target;
-    }
+	public IActiveCharacter getTarget() {
+		return target;
+	}
 
-    public double getDamage() {
-        return damage;
-    }
+	public double getDamage() {
+		return damage;
+	}
 
-    public void setDamage(double damage) {
-        this.damage = damage;
-    }
+	public void setDamage(double damage) {
+		this.damage = damage;
+	}
 
-    public double getDamagefactor() {
-        return damagefactor;
-    }
+	public double getDamagefactor() {
+		return damagefactor;
+	}
 
-    public void setDamagefactor(double damagefactor) {
-        this.damagefactor = damagefactor;
-    }
+	public void setDamagefactor(double damagefactor) {
+		this.damagefactor = damagefactor;
+	}
 }
 

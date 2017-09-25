@@ -8,8 +8,6 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.*;
 
-import javax.sound.sampled.Port;
-
 /**
  * Created by NeumimTo on 22.7.2017.
  */
@@ -45,8 +43,8 @@ public class Portal extends ActiveSkill {
 		double manaPerTick = getDoubleNodeValue(info, "manacost-per-tick");
 		double manaPerEntity = getDoubleNodeValue(info, "manacost-per-teleported-entity");
 		double chanceToFail = getDoubleNodeValue(info, "chance-to-fail");
-		PortalEffect portalEffect = new PortalEffect(character,duration, null,
-				manaPerTick,manaPerEntity,1750, chanceToFail,false);
+		PortalEffect portalEffect = new PortalEffect(character, duration, null,
+				manaPerTick, manaPerEntity, 1750, chanceToFail, false);
 		effectService.addEffect(portalEffect, character, this);
 		return SkillResult.OK;
 	}

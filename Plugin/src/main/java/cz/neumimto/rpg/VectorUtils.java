@@ -1,14 +1,9 @@
 package cz.neumimto.rpg;
 
-import com.flowpowered.math.GenericMath;
 import com.flowpowered.math.TrigMath;
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.gui.ParticleDecorator;
-import org.spongepowered.api.text.selector.ArgumentHolder;
 
-import java.util.Random;
-import java.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -73,7 +68,7 @@ public class VectorUtils {
 				+ (num9 + num10) * v.getY()
 				+ (1 - (num4 + num5)) * v.getZ();
 
-		return new Vector3d(x,y,z);
+		return new Vector3d(x, y, z);
 	}
 
 	//https://en.wikipedia.org/wiki/Rotation_matrix
@@ -110,6 +105,5 @@ public class VectorUtils {
 				.mul(ThreadLocalRandom.current().nextDouble(start.distance(end)));
 	}
 
-	
 
 }

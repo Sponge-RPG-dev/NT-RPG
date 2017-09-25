@@ -34,28 +34,29 @@ import org.spongepowered.api.text.Text;
 public class DebugListener {
 
 
-    @Listener(order = Order.LAST)
-    public void debug(DamageEntityEvent event, @First(typeFilter = EntityDamageSource.class) EntityDamageSource entityDamageSource) {
-        Entity targetEntity = event.getTargetEntity();
+	@Listener(order = Order.LAST)
+	public void debug(DamageEntityEvent event, @First(typeFilter = EntityDamageSource.class) EntityDamageSource entityDamageSource) {
+		Entity targetEntity = event.getTargetEntity();
 
-        Entity source = entityDamageSource.getSource();
-        if (source.getType() == EntityTypes.PLAYER) {
-            ((Player) source).sendMessage(Text.of(">> " + event.getFinalDamage()));
-        }
-        if (targetEntity.getType() == EntityTypes.PLAYER) {
-            ((Player) targetEntity).sendMessage(Text.of("<< " + event.getFinalDamage()));
-        }
-    }
-    @Listener(order = Order.LAST)
-    public void debugi(DamageEntityEvent event, @First(typeFilter = IndirectEntityDamageSource.class) IndirectEntityDamageSource entityDamageSource) {
-        Entity targetEntity = event.getTargetEntity();
+		Entity source = entityDamageSource.getSource();
+		if (source.getType() == EntityTypes.PLAYER) {
+			((Player) source).sendMessage(Text.of(">> " + event.getFinalDamage()));
+		}
+		if (targetEntity.getType() == EntityTypes.PLAYER) {
+			((Player) targetEntity).sendMessage(Text.of("<< " + event.getFinalDamage()));
+		}
+	}
 
-        Entity source = entityDamageSource.getIndirectSource();
-        if (source.getType() == EntityTypes.PLAYER) {
-            ((Player) source).sendMessage(Text.of(">> " + event.getFinalDamage()));
-        }
-        if (targetEntity.getType() == EntityTypes.PLAYER) {
-            ((Player) targetEntity).sendMessage(Text.of("<< " + event.getFinalDamage()));
-        }
-    }
+	@Listener(order = Order.LAST)
+	public void debugi(DamageEntityEvent event, @First(typeFilter = IndirectEntityDamageSource.class) IndirectEntityDamageSource entityDamageSource) {
+		Entity targetEntity = event.getTargetEntity();
+
+		Entity source = entityDamageSource.getIndirectSource();
+		if (source.getType() == EntityTypes.PLAYER) {
+			((Player) source).sendMessage(Text.of(">> " + event.getFinalDamage()));
+		}
+		if (targetEntity.getType() == EntityTypes.PLAYER) {
+			((Player) targetEntity).sendMessage(Text.of("<< " + event.getFinalDamage()));
+		}
+	}
 }

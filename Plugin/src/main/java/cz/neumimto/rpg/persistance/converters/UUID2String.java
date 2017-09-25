@@ -28,13 +28,13 @@ import java.util.UUID;
 /* Some databases tends to save uuid as binary data */
 @Converter
 public class UUID2String implements AttributeConverter<UUID, String> {
-    @Override
-    public String convertToDatabaseColumn(UUID uuid) {
-        return uuid.toString();
-    }
+	@Override
+	public String convertToDatabaseColumn(UUID uuid) {
+		return uuid.toString();
+	}
 
-    @Override
-    public UUID convertToEntityAttribute(String s) {
-        return UUID.fromString(s);
-    }
+	@Override
+	public UUID convertToEntityAttribute(String s) {
+		return UUID.fromString(s);
+	}
 }

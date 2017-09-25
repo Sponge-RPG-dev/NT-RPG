@@ -40,7 +40,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,191 +50,191 @@ import java.util.concurrent.ConcurrentHashMap;
 @Singleton
 public class SkillService {
 
-    @Inject
-    private SkillTreeDao skillTreeDao;
+	@Inject
+	private SkillTreeDao skillTreeDao;
 
-    @Inject
-    private GroupService groupService;
+	@Inject
+	private GroupService groupService;
 
-    @Inject
-    private JSLoader jsLoader;
+	@Inject
+	private JSLoader jsLoader;
 
-    @Inject
-    private Game game;
+	@Inject
+	private Game game;
 
-    @Inject
-    private CharacterService characterService;
+	@Inject
+	private CharacterService characterService;
 
-    private Map<String, ISkill> skills = new ConcurrentHashMap<>();
+	private Map<String, ISkill> skills = new ConcurrentHashMap<>();
 
-    private Map<String, SkillTree> skillTrees = new ConcurrentHashMap<>();
+	private Map<String, SkillTree> skillTrees = new ConcurrentHashMap<>();
 
-    public void addSkill(ISkill ISkill) {
-        if (ISkill.getName() == null) {
-            String simpleName = ISkill.getClass().getSimpleName();
-            if (simpleName.startsWith("Skill")) {
-                simpleName = simpleName.substring(5, simpleName.length());
-            }
-            ISkill.setName(simpleName);
-        }
-        if (!PluginConfig.DEBUG) {
+	public void addSkill(ISkill ISkill) {
+		if (ISkill.getName() == null) {
+			String simpleName = ISkill.getClass().getSimpleName();
+			if (simpleName.startsWith("Skill")) {
+				simpleName = simpleName.substring(5, simpleName.length());
+			}
+			ISkill.setName(simpleName);
+		}
+		if (!PluginConfig.DEBUG) {
 
-            if (skills.containsKey(ISkill.getName().toLowerCase()))
-                throw new RuntimeException("Skill " + ISkill.getName() + " already exists");
-        }
-        skills.put(ISkill.getName().toLowerCase().replaceAll(" ", "_"), ISkill);
-    }
-
-
-    public ISkill getSkill(String name) {
-        return skills.get(name.toLowerCase().replaceAll(" ", "_"));
-    }
-
-    public Map<String, ISkill> getSkills() {
-        return skills;
-    }
+			if (skills.containsKey(ISkill.getName().toLowerCase()))
+				throw new RuntimeException("Skill " + ISkill.getName() + " already exists");
+		}
+		skills.put(ISkill.getName().toLowerCase().replaceAll(" ", "_"), ISkill);
+	}
 
 
-    public Map<String, SkillTree> getSkillTrees() {
-        return skillTrees;
-    }
+	public ISkill getSkill(String name) {
+		return skills.get(name.toLowerCase().replaceAll(" ", "_"));
+	}
 
-    public SkillResult executeSkill(IActiveCharacter character, ISkill skill) {
-        if (character.hasSkill(skill.getName())) {
-            return executeSkill(character, character.getSkillInfo(skill));
-        }
-        return SkillResult.WRONG_DATA;
-    }
-
-    public SkillResult executeSkill(IActiveCharacter character, ExtendedSkillInfo esi) {
-        int level = esi.getTotalLevel();
-        if (level < 0)
-            return SkillResult.NEGATIVE_SKILL_LEVEL;
-        level += characterService.getCharacterProperty(character, DefaultProperties.all_skills_bonus);
-        Long aLong = character.getCooldowns().get(esi.getSkill().getName());
-        long servertime = System.currentTimeMillis();
-        if (aLong != null && aLong > servertime) {
-            Gui.sendCooldownMessage(character, esi.getSkill().getName(), ((aLong - servertime) / 1000.0));
-            return SkillResult.ON_COOLDOWN;
-        }
-        SkillData skillData = esi.getSkillData();
-        SkillSettings skillSettings = skillData.getSkillSettings();
-        float requiredMana = skillSettings.getLevelNodeValue(SkillNodes.MANACOST, level);
-        float requiredHp = skillSettings.getLevelNodeValue(SkillNodes.HPCOST, level);
-        SkillPrepareEvent event = new SkillPrepareEvent(character, requiredHp, requiredMana);
-        game.getEventManager().post(event);
-        if (event.isCancelled())
-            return SkillResult.FAIL;
-        double hpcost = event.getRequiredHp() * characterService.getCharacterProperty(character, DefaultProperties.health_cost_reduce);
-        double manacost = event.getRequiredMana() * characterService.getCharacterProperty(character, DefaultProperties.mana_cost_reduce);
-        //todo float staminacost =
-        if (character.getHealth().getValue() > hpcost) {
-            if (character.getMana().getValue() >= manacost) {
-                SkillResult result = esi.getSkill().onPreUse(character);
-                if (result == SkillResult.CANCELLED)
-                    return SkillResult.CANCELLED;
-                if (result == SkillResult.OK) {
-                    float newCd = skillSettings.getLevelNodeValue(SkillNodes.COOLDOWN, level);
-                    SkillPostUsageEvent eventt = new SkillPostUsageEvent(character, hpcost, manacost, newCd);
-                    game.getEventManager().post(eventt);
-                    if (!event.isCancelled()) {
-                        double newval = character.getHealth().getValue() - eventt.getHpcost();
-                        if (newval <= 0) {
-                            //todo kill the player ?
-                            HealthData healthData = character.getPlayer().getHealthData();
-                        } else {
-                            character.getHealth().setValue(newval);
-                            newCd = eventt.getCooldown() * characterService.getCharacterProperty(character, DefaultProperties.cooldown_reduce);
-                            character.getMana().setValue(character.getMana().getValue() - event.getRequiredMana());
-                            long cd = (long) newCd;
-                            character.getCooldowns().put(esi.getSkill().getName(), cd + servertime);
-                            Gui.displayMana(character);
-                            return SkillResult.OK;
-                        }
-                    }
-                }
-            }
-            return SkillResult.NO_MANA;
-        }
-        return SkillResult.NO_HP;
-    }
+	public Map<String, ISkill> getSkills() {
+		return skills;
+	}
 
 
-    @PostProcess(priority = 300)
-    public void load() {
-        skillTrees.putAll(skillTreeDao.getAll());
-        createSkillsDefaults();
-    }
+	public Map<String, SkillTree> getSkillTrees() {
+		return skillTrees;
+	}
 
-    public void initIcons() {
-        Properties properties = new Properties();
-        File f = new File(NtRpgPlugin.workingDir, "Icons.properties");
-        if (!f.exists()) {
-            try {
-                f.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        try (FileInputStream stream = new FileInputStream(f)) {
-            properties.load(stream);
-            for (Map.Entry<Object, Object> l : properties.entrySet()) {
-                String skillname = (String) l.getKey();
-                String url = (String) l.getValue();
+	public SkillResult executeSkill(IActiveCharacter character, ISkill skill) {
+		if (character.hasSkill(skill.getName())) {
+			return executeSkill(character, character.getSkillInfo(skill));
+		}
+		return SkillResult.WRONG_DATA;
+	}
 
-                getSkill(skillname).setIconURL(url);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+	public SkillResult executeSkill(IActiveCharacter character, ExtendedSkillInfo esi) {
+		int level = esi.getTotalLevel();
+		if (level < 0)
+			return SkillResult.NEGATIVE_SKILL_LEVEL;
+		level += characterService.getCharacterProperty(character, DefaultProperties.all_skills_bonus);
+		Long aLong = character.getCooldowns().get(esi.getSkill().getName());
+		long servertime = System.currentTimeMillis();
+		if (aLong != null && aLong > servertime) {
+			Gui.sendCooldownMessage(character, esi.getSkill().getName(), ((aLong - servertime) / 1000.0));
+			return SkillResult.ON_COOLDOWN;
+		}
+		SkillData skillData = esi.getSkillData();
+		SkillSettings skillSettings = skillData.getSkillSettings();
+		float requiredMana = skillSettings.getLevelNodeValue(SkillNodes.MANACOST, level);
+		float requiredHp = skillSettings.getLevelNodeValue(SkillNodes.HPCOST, level);
+		SkillPrepareEvent event = new SkillPrepareEvent(character, requiredHp, requiredMana);
+		game.getEventManager().post(event);
+		if (event.isCancelled())
+			return SkillResult.FAIL;
+		double hpcost = event.getRequiredHp() * characterService.getCharacterProperty(character, DefaultProperties.health_cost_reduce);
+		double manacost = event.getRequiredMana() * characterService.getCharacterProperty(character, DefaultProperties.mana_cost_reduce);
+		//todo float staminacost =
+		if (character.getHealth().getValue() > hpcost) {
+			if (character.getMana().getValue() >= manacost) {
+				SkillResult result = esi.getSkill().onPreUse(character);
+				if (result == SkillResult.CANCELLED)
+					return SkillResult.CANCELLED;
+				if (result == SkillResult.OK) {
+					float newCd = skillSettings.getLevelNodeValue(SkillNodes.COOLDOWN, level);
+					SkillPostUsageEvent eventt = new SkillPostUsageEvent(character, hpcost, manacost, newCd);
+					game.getEventManager().post(eventt);
+					if (!event.isCancelled()) {
+						double newval = character.getHealth().getValue() - eventt.getHpcost();
+						if (newval <= 0) {
+							//todo kill the player ?
+							HealthData healthData = character.getPlayer().getHealthData();
+						} else {
+							character.getHealth().setValue(newval);
+							newCd = eventt.getCooldown() * characterService.getCharacterProperty(character, DefaultProperties.cooldown_reduce);
+							character.getMana().setValue(character.getMana().getValue() - event.getRequiredMana());
+							long cd = (long) newCd;
+							character.getCooldowns().put(esi.getSkill().getName(), cd + servertime);
+							Gui.displayMana(character);
+							return SkillResult.OK;
+						}
+					}
+				}
+			}
+			return SkillResult.NO_MANA;
+		}
+		return SkillResult.NO_HP;
+	}
 
-    public void deleteConfFile() {
-        Path path = Paths.get(NtRpgPlugin.workingDir + "/skills-nodelist.conf");
-        if (Files.exists(path))
-            try {
-                Files.delete(path);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-    }
 
-    public void createSkillsDefaults() {
-        Path path = Paths.get(NtRpgPlugin.workingDir + "/skills-nodelist.conf");
-        try {
-            if (Files.exists(path)) {
-                Files.delete(path);
-            }
-            Files.createFile(path);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+	@PostProcess(priority = 300)
+	public void load() {
+		skillTrees.putAll(skillTreeDao.getAll());
+		createSkillsDefaults();
+	}
 
-        StringBuilder builder = new StringBuilder();
+	public void initIcons() {
+		Properties properties = new Properties();
+		File f = new File(NtRpgPlugin.workingDir, "Icons.properties");
+		if (!f.exists()) {
+			try {
+				f.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		try (FileInputStream stream = new FileInputStream(f)) {
+			properties.load(stream);
+			for (Map.Entry<Object, Object> l : properties.entrySet()) {
+				String skillname = (String) l.getKey();
+				String url = (String) l.getValue();
 
-        try (FileWriter fileWriter = new FileWriter(path.toFile());
-             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
-            for (ISkill skill : skills.values()) {
-                if (skill.getDefaultSkillSettings() == null)
-                    continue;
-                builder.append(skill.getName()).append(": { ").append(Utils.LineSeparator);
-                for (Map.Entry<String, Float> entry : skill.getDefaultSkillSettings().getNodes().entrySet()) {
-                    builder.append(Utils.Tab).append(entry.getKey()).append(" : ").append(entry.getValue()).append(Utils.LineSeparator);
-                }
-                builder.append(Utils.Tab).append(" },").append(Utils.LineSeparator);
-                bufferedWriter.write(builder.toString());
-            }
-            bufferedWriter.flush();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
+				getSkill(skillname).setIconURL(url);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-    public void invokeSkillByCombo(String combo, IActiveCharacter character) {
-        for (ExtendedSkillInfo extendedSkillInfo : character.getSkills().values()) {
-            if (combo.equals(extendedSkillInfo.getSkillData().getCombination())) {
-                executeSkill(character,extendedSkillInfo);
-            }
-        }
-    }
+	public void deleteConfFile() {
+		Path path = Paths.get(NtRpgPlugin.workingDir + "/skills-nodelist.conf");
+		if (Files.exists(path))
+			try {
+				Files.delete(path);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	}
+
+	public void createSkillsDefaults() {
+		Path path = Paths.get(NtRpgPlugin.workingDir + "/skills-nodelist.conf");
+		try {
+			if (Files.exists(path)) {
+				Files.delete(path);
+			}
+			Files.createFile(path);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		StringBuilder builder = new StringBuilder();
+
+		try (FileWriter fileWriter = new FileWriter(path.toFile());
+			 BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+			for (ISkill skill : skills.values()) {
+				if (skill.getDefaultSkillSettings() == null)
+					continue;
+				builder.append(skill.getName()).append(": { ").append(Utils.LineSeparator);
+				for (Map.Entry<String, Float> entry : skill.getDefaultSkillSettings().getNodes().entrySet()) {
+					builder.append(Utils.Tab).append(entry.getKey()).append(" : ").append(entry.getValue()).append(Utils.LineSeparator);
+				}
+				builder.append(Utils.Tab).append(" },").append(Utils.LineSeparator);
+				bufferedWriter.write(builder.toString());
+			}
+			bufferedWriter.flush();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	public void invokeSkillByCombo(String combo, IActiveCharacter character) {
+		for (ExtendedSkillInfo extendedSkillInfo : character.getSkills().values()) {
+			if (combo.equals(extendedSkillInfo.getSkillData().getCombination())) {
+				executeSkill(character, extendedSkillInfo);
+			}
+		}
+	}
 }

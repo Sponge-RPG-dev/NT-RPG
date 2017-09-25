@@ -11,16 +11,16 @@ import java.util.Map;
 public class SkillModifier {
 
 
-    private Map<SkillModifierType, SkillModifierData> map = new EnumMap<>(SkillModifierType.class);
+	private Map<SkillModifierType, SkillModifierData> map = new EnumMap<>(SkillModifierType.class);
 
-    public SkillModifierData getValueOf(SkillModifierType t) {
-        throw new NotImplementedException();
-    }
+	public SkillModifierData getValueOf(SkillModifierType t) {
+		throw new NotImplementedException();
+	}
 
 
-    public static SkillModifier fromCommandArgs(String[] args) {
-        SkillModifier mod = new SkillModifier();
-        //todo
-        return null;
-    }
+	public static SkillModifier fromCommandArgs(String[] args) {
+		SkillModifier mod = new SkillModifier();
+		//todo
+		return null;
+	}
 }

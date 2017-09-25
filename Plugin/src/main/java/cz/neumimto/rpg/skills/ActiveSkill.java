@@ -26,17 +26,17 @@ import cz.neumimto.rpg.players.IActiveCharacter;
  */
 public abstract class ActiveSkill extends AbstractSkill {
 
-    @Override
-    public SkillResult onPreUse(IActiveCharacter character) {
-        ExtendedSkillInfo info = character.getSkillInfo(this);
+	@Override
+	public SkillResult onPreUse(IActiveCharacter character) {
+		ExtendedSkillInfo info = character.getSkillInfo(this);
 
-        if (character.isSilenced() && !getSkillTypes().contains(SkillType.CAN_CAST_WHILE_SILENCED)) {
-            character.sendMessage(Localization.PLAYER_IS_SILENCED);
-            return SkillResult.CASTER_SILENCED;
-        }
-        //todo
-        return cast(character, info,null);
-    }
+		if (character.isSilenced() && !getSkillTypes().contains(SkillType.CAN_CAST_WHILE_SILENCED)) {
+			character.sendMessage(Localization.PLAYER_IS_SILENCED);
+			return SkillResult.CASTER_SILENCED;
+		}
+		//todo
+		return cast(character, info, null);
+	}
 
-    public abstract SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier);
+	public abstract SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier);
 }

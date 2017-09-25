@@ -24,12 +24,12 @@ import java.util.UUID;
  * Created by NeumimTo on 23.7.2015.
  */
 public class UUIDs {
-    /*
-    * UUID.randomUUID uses secure random, which is slow and we arent
-    * using it for crypthography
-    * */
-    public static UUID random() {
-        XORShiftRnd r = new XORShiftRnd();
-        return new UUID(r.nextLong(), r.nextLong());
-    }
+	/*
+	* UUID.randomUUID uses secure random, which is slow and we arent
+	* using it for crypthography
+	* */
+	public static UUID random() {
+		XORShiftRnd r = new XORShiftRnd();
+		return new UUID(r.nextLong(), r.nextLong());
+	}
 }

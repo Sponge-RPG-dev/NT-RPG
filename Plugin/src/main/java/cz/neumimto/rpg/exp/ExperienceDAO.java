@@ -28,7 +28,7 @@ public class ExperienceDAO {
 
 	private Map<String, Double> getStringDoubleMap(File defaults) {
 		Map<String, Double> map = new HashMap<>();
-		try (FileInputStream stream =  new FileInputStream(defaults)){
+		try (FileInputStream stream = new FileInputStream(defaults)) {
 			Properties properties = new Properties();
 			properties.load(stream);
 			for (Map.Entry<Object, Object> entry : properties.entrySet()) {

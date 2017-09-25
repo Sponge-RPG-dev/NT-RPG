@@ -13,14 +13,14 @@ import cz.neumimto.rpg.utils.Utils;
 @ClassGenerator.Generate(id = "name")
 public class LightningResistanceEffect extends SingleResistanceValueEffect {
 
-    public static final String name = "Lightning resistance";
+	public static final String name = "Lightning resistance";
 
-    public LightningResistanceEffect(IEffectConsumer consumer, long duration, float value) {
-        super(name, consumer, DefaultProperties.lightning_damage_protection_mult, value);
-        setDuration(duration);
-    }
+	public LightningResistanceEffect(IEffectConsumer consumer, long duration, float value) {
+		super(name, consumer, DefaultProperties.lightning_damage_protection_mult, value);
+		setDuration(duration);
+	}
 
-    public LightningResistanceEffect(IActiveCharacter character, long duration, String level) {
-        this(character, duration, Float.parseFloat(Utils.extractNumber(level)));
-    }
+	public LightningResistanceEffect(IActiveCharacter character, long duration, String level) {
+		this(character, duration, Float.parseFloat(Utils.extractNumber(level)));
+	}
 }

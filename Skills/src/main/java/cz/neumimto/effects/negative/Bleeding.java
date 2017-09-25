@@ -18,37 +18,37 @@ import org.spongepowered.api.world.World;
  */
 public class Bleeding extends EffectBase<Double> {
 
-    public static final String name = "Bleeding";
+	public static final String name = "Bleeding";
 
-    private IActiveCharacter caster;
+	private IActiveCharacter caster;
 
-    private SkillDamageSource source;
-    private double damage;
+	private SkillDamageSource source;
+	private double damage;
 
-    private static ParticleEffect particleEffect = ParticleEffect.builder()
-            .quantity(3)
-            .type(ParticleTypes.BREAK_BLOCK)
-            .option(ParticleOptions.BLOCK_STATE,
-                    BlockState.builder()
-                            .blockType(BlockTypes.REDSTONE_BLOCK)
-                            .build())
-            .build();
+	private static ParticleEffect particleEffect = ParticleEffect.builder()
+			.quantity(3)
+			.type(ParticleTypes.BREAK_BLOCK)
+			.option(ParticleOptions.BLOCK_STATE,
+					BlockState.builder()
+							.blockType(BlockTypes.REDSTONE_BLOCK)
+							.build())
+			.build();
 
-    public Bleeding(IEffectConsumer consumer, IActiveCharacter caster, SkillDamageSource source, double damage, long period, long duration) {
-        super(name, consumer);
-        this.caster = caster;
-        setDuration(duration);
-        setPeriod(period);
-        this.damage = damage;
-        this.source = source;
-    }
+	public Bleeding(IEffectConsumer consumer, IActiveCharacter caster, SkillDamageSource source, double damage, long period, long duration) {
+		super(name, consumer);
+		this.caster = caster;
+		setDuration(duration);
+		setPeriod(period);
+		this.damage = damage;
+		this.source = source;
+	}
 
-    @Override
-    public void onTick() {
-        if (Utils.canDamage(caster, getConsumer().getEntity())) {
-            getConsumer().getEntity().damage(damage, source);
-            Location<World> location = getConsumer().getEntity().getLocation();
-            location.getExtent().spawnParticles(particleEffect, location.getPosition());
-        }
-    }
+	@Override
+	public void onTick() {
+		if (Utils.canDamage(caster, getConsumer().getEntity())) {
+			getConsumer().getEntity().damage(damage, source);
+			Location<World> location = getConsumer().getEntity().getLocation();
+			location.getExtent().spawnParticles(particleEffect, location.getPosition());
+		}
+	}
 }

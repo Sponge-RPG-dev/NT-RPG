@@ -1,7 +1,10 @@
 package cz.neumimto.effects.negative;
 
 import cz.neumimto.rpg.ClassGenerator;
-import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectTypes;
 

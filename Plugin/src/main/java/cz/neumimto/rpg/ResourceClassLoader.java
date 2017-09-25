@@ -25,13 +25,13 @@ import java.net.URLClassLoader;
  * Created by NeumimTo on 27.12.2014.
  */
 public class ResourceClassLoader extends URLClassLoader {
-    public ResourceClassLoader(URLClassLoader parent) {
-        super(parent.getURLs(), parent);
+	public ResourceClassLoader(URLClassLoader parent) {
+		super(parent.getURLs(), parent);
 
-    }
+	}
 
-    @Override
-    public void addURL(URL url) {
-        super.addURL(url);
-    }
+	@Override
+	public void addURL(URL url) {
+		super.addURL(url);
+	}
 }

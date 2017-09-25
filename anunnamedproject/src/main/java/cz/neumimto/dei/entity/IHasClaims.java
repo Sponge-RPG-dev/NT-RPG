@@ -1,10 +1,7 @@
 package cz.neumimto.dei.entity;
 
-import cz.neumimto.dei.entity.database.area.ClaimedArea;
 import cz.neumimto.dei.serivce.ClaimedAreaType;
 
-import javax.persistence.MappedSuperclass;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -12,9 +9,9 @@ import java.util.Set;
  */
 public interface IHasClaims<T> {
 
-    Set<T> getClaimedAreas();
+	Set<T> getClaimedAreas();
 
-    void setClaimedAreas(Set<T> areas);
+	void setClaimedAreas(Set<T> areas);
 
-    ClaimedAreaType getType();
+	ClaimedAreaType getType();
 }

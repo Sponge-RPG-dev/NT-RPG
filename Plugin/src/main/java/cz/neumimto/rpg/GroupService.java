@@ -32,7 +32,6 @@ import org.spongepowered.api.util.Tristate;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -178,8 +177,8 @@ public class GroupService {
 				}
 			}
 		}
-		
-	
+
+
 		for (ExtendedNClass nClass : character.getClasses()) {
 			ConfigClass configClass = nClass.getConfigClass();
 			if (configClass == toBeReplaced) {

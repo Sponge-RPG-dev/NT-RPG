@@ -22,6 +22,7 @@ import org.spongepowered.api.world.World;
 /**
  * Created by NeumimTo on 29.10.2016.
  * When unit tests are not enough.
+ *
  * @see cz.neumimto.rpg.commands.CommandAdmin - test.action
  */
 @Singleton

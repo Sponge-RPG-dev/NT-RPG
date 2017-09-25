@@ -11,20 +11,20 @@ import cz.neumimto.rpg.effects.IEffectConsumer;
 @ClassGenerator.Generate(id = "name")
 public class Silence extends EffectBase {
 
-    public static String name = "Silence";
+	public static String name = "Silence";
 
-    public Silence(IEffectConsumer consumer, long duration) {
-        super(name, consumer);
-        setDuration(duration);
-        effectTypes.add(CommonEffectTypes.SILENCE);
-    }
+	public Silence(IEffectConsumer consumer, long duration) {
+		super(name, consumer);
+		setDuration(duration);
+		effectTypes.add(CommonEffectTypes.SILENCE);
+	}
 
-    public Silence(IEffectConsumer consumer, long duration, String c) {
-        this(consumer, duration);
-    }
+	public Silence(IEffectConsumer consumer, long duration, String c) {
+		this(consumer, duration);
+	}
 
-    @Override
-    public String getName() {
-        return name;
-    }
+	@Override
+	public String getName() {
+		return name;
+	}
 }

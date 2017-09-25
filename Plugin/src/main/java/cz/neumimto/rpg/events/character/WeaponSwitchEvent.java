@@ -25,7 +25,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
  */
 public class WeaponSwitchEvent extends CharacterEvent {
 
-    public WeaponSwitchEvent(cz.neumimto.rpg.players.IActiveCharacter IActiveCharacter, ItemStack newWeapon) {
-        super(IActiveCharacter);
-    }
+	public WeaponSwitchEvent(cz.neumimto.rpg.players.IActiveCharacter IActiveCharacter, ItemStack newWeapon) {
+		super(IActiveCharacter);
+	}
 }

@@ -20,50 +20,50 @@ import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
 public class NDamageType {
-    public static final DamageType MEELE_CRITICAL = new DamageType() {
-        @Override
-        public String getId() {
-            return "ntrpg:meele_critical";
-        }
+	public static final DamageType MEELE_CRITICAL = new DamageType() {
+		@Override
+		public String getId() {
+			return "ntrpg:meele_critical";
+		}
 
-        @Override
-        public String getName() {
-            return "meelecritical";
-        }
-    };
-    public static DamageType LIGHTNING = new DamageType() {
-        @Override
-        public String getId() {
-            return "ntrpg:lightning";
-        }
+		@Override
+		public String getName() {
+			return "meelecritical";
+		}
+	};
+	public static DamageType LIGHTNING = new DamageType() {
+		@Override
+		public String getId() {
+			return "ntrpg:lightning";
+		}
 
-        @Override
-        public String getName() {
-            return "lightning";
-        }
-    };
-    public static DamageType ICE = new DamageType() {
-        @Override
-        public String getId() {
-            return "ntrpg:ice";
-        }
+		@Override
+		public String getName() {
+			return "lightning";
+		}
+	};
+	public static DamageType ICE = new DamageType() {
+		@Override
+		public String getId() {
+			return "ntrpg:ice";
+		}
 
-        @Override
-        public String getName() {
-            return "ice";
-        }
-    };
-    public static DamageType DAMAGE_CHECK = new DamageType() {
-        @Override
-        public String getId() {
-            return "ntrpg:damagecheck";
-        }
+		@Override
+		public String getName() {
+			return "ice";
+		}
+	};
+	public static DamageType DAMAGE_CHECK = new DamageType() {
+		@Override
+		public String getId() {
+			return "ntrpg:damagecheck";
+		}
 
-        @Override
-        public String getName() {
-            return "damagecheck";
-        }
-    };
-    public static DamageType PHYSICAL = DamageTypes.ATTACK;
-    public static DamageType MAGICAL = DamageTypes.MAGIC;
+		@Override
+		public String getName() {
+			return "damagecheck";
+		}
+	};
+	public static DamageType PHYSICAL = DamageTypes.ATTACK;
+	public static DamageType MAGICAL = DamageTypes.MAGIC;
 }

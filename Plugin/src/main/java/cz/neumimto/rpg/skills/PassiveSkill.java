@@ -21,8 +21,6 @@ package cz.neumimto.rpg.skills;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 
 /**
@@ -30,48 +28,48 @@ import cz.neumimto.rpg.players.IActiveCharacter;
  */
 public abstract class PassiveSkill extends AbstractSkill {
 
-    @Inject
-    protected EffectService effectService;
+	@Inject
+	protected EffectService effectService;
 
-    protected String relevantEffectName;
+	protected String relevantEffectName;
 
-    public PassiveSkill(String relevantEffectName) {
-        this.relevantEffectName = relevantEffectName;
-    }
+	public PassiveSkill(String relevantEffectName) {
+		this.relevantEffectName = relevantEffectName;
+	}
 
-    @Override
-    public SkillResult onPreUse(IActiveCharacter character) {
-        character.sendMessage(Localization.CANT_USE_PASSIVE_SKILL);
-        return SkillResult.FAIL;
-    }
+	@Override
+	public SkillResult onPreUse(IActiveCharacter character) {
+		character.sendMessage(Localization.CANT_USE_PASSIVE_SKILL);
+		return SkillResult.FAIL;
+	}
 
-    private void update(IActiveCharacter IActiveCharacter) {
-        ExtendedSkillInfo skill = IActiveCharacter.getSkill(getName());
-        applyEffect(skill, IActiveCharacter);
-    }
+	private void update(IActiveCharacter IActiveCharacter) {
+		ExtendedSkillInfo skill = IActiveCharacter.getSkill(getName());
+		applyEffect(skill, IActiveCharacter);
+	}
 
-    @Override
-    public void onCharacterInit(IActiveCharacter c, int level) {
-        super.onCharacterInit(c, level);
-        update(c);
-    }
+	@Override
+	public void onCharacterInit(IActiveCharacter c, int level) {
+		super.onCharacterInit(c, level);
+		update(c);
+	}
 
-    @Override
-    public void skillLearn(IActiveCharacter IActiveCharacter) {
-        super.skillLearn(IActiveCharacter);
-        update(IActiveCharacter);
-    }
+	@Override
+	public void skillLearn(IActiveCharacter IActiveCharacter) {
+		super.skillLearn(IActiveCharacter);
+		update(IActiveCharacter);
+	}
 
-    @Override
-    public void skillRefund(IActiveCharacter IActiveCharacter) {
-        super.skillRefund(IActiveCharacter);
-        ExtendedSkillInfo skillInfo = IActiveCharacter.getSkillInfo(this);
-        if (skillInfo.getLevel() <= 0) {
-            effectService.removeEffect(relevantEffectName,IActiveCharacter, this);
-        } else {
-            update(IActiveCharacter);
-        }
-    }
+	@Override
+	public void skillRefund(IActiveCharacter IActiveCharacter) {
+		super.skillRefund(IActiveCharacter);
+		ExtendedSkillInfo skillInfo = IActiveCharacter.getSkillInfo(this);
+		if (skillInfo.getLevel() <= 0) {
+			effectService.removeEffect(relevantEffectName, IActiveCharacter, this);
+		} else {
+			update(IActiveCharacter);
+		}
+	}
 
-    public abstract void applyEffect(ExtendedSkillInfo info, IActiveCharacter character);
+	public abstract void applyEffect(ExtendedSkillInfo info, IActiveCharacter character);
 }

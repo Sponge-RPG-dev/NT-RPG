@@ -5,13 +5,13 @@ import java.util.Map;
 
 
 public class APIData {
-    private Map<String,Integer> allocatedSkillpoints = new HashMap<>();
+	private Map<String, Integer> allocatedSkillpoints = new HashMap<>();
 
-    public Map<String, Integer> getAllocatedSkillpoints() {
-        return allocatedSkillpoints;
-    }
+	public Map<String, Integer> getAllocatedSkillpoints() {
+		return allocatedSkillpoints;
+	}
 
-    public void setAllocatedSkillpoints(Map<String, Integer> allocatedSkillpoints) {
-        this.allocatedSkillpoints = allocatedSkillpoints;
-    }
+	public void setAllocatedSkillpoints(Map<String, Integer> allocatedSkillpoints) {
+		this.allocatedSkillpoints = allocatedSkillpoints;
+	}
 }

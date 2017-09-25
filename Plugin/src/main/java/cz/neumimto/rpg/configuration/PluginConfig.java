@@ -31,79 +31,79 @@ import java.util.Set;
 @ConfigurationContainer(path = "{WorkingDir}", filename = "Settings.conf")
 public class PluginConfig {
 
-    @Comment(content = {"If you want to use another plugin, which handles mob's hp and damage set this value to true"})
-    @ConfigValue
-    public static boolean OVERRIDE_MOBS = false;
+	@Comment(content = {"If you want to use another plugin, which handles mob's hp and damage set this value to true"})
+	@ConfigValue
+	public static boolean OVERRIDE_MOBS = false;
 
-    @ConfigValue
-    public static long COMBAT_TIME = 20000L;
+	@ConfigValue
+	public static long COMBAT_TIME = 20000L;
 
-    @ConfigValue
-    public static boolean REMOVE_PLAYERDATA_AFTER_PERMABAN = false;
+	@ConfigValue
+	public static boolean REMOVE_PLAYERDATA_AFTER_PERMABAN = false;
 
-    @ConfigValue
-    public static boolean DEBUG = true;
+	@ConfigValue
+	public static boolean DEBUG = true;
 
-    @ConfigValue
-    public static int SKILLPOINTS_ON_START = 1;
+	@ConfigValue
+	public static int SKILLPOINTS_ON_START = 1;
 
-    @ConfigValue
-    public static boolean PLAYER_CAN_CHANGE_RACE = true;
+	@ConfigValue
+	public static boolean PLAYER_CAN_CHANGE_RACE = true;
 
-    @ConfigValue
-    public static boolean PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR = true;
+	@ConfigValue
+	public static boolean PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR = true;
 
-    @ConfigValue
-    public static boolean SKILLGAIN_MESSAGES_AFTER_LOGIN = true;
+	@ConfigValue
+	public static boolean SKILLGAIN_MESSAGES_AFTER_LOGIN = true;
 
-    @ConfigValue
-    public static boolean PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE = true;
+	@ConfigValue
+	public static boolean PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE = true;
 
-    @ConfigValue
-    public static boolean PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE = true;
+	@ConfigValue
+	public static boolean PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE = true;
 
-    @ConfigValue
-    public static boolean PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE = true;
+	@ConfigValue
+	public static boolean PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE = true;
 
-    @ConfigValue
-    public static int ATTRIBUTEPOINTS_ON_START = 1;
+	@ConfigValue
+	public static int ATTRIBUTEPOINTS_ON_START = 1;
 
-    @ConfigValue
-    public static int PLAYER_MAX_CHARS = 5;
+	@ConfigValue
+	public static int PLAYER_MAX_CHARS = 5;
 
-    @ConfigValue
-    public static boolean CAN_REFUND_SKILL = true;
+	@ConfigValue
+	public static boolean CAN_REFUND_SKILL = true;
 
-    @ConfigValue
-    @Comment(content = {"Works only, if the server is using jdk, for passing these arguments with jre use -D flag"})
-    public static String JJS_ARGS = "--optimistic-types=true";
+	@ConfigValue
+	@Comment(content = {"Works only, if the server is using jdk, for passing these arguments with jre use -D flag"})
+	public static String JJS_ARGS = "--optimistic-types=true";
 
-    @ConfigValue
-    @Comment(content = {"Time period in milliseconds"})
-    public static long MANA_REGENERATION_RATE = 1000;
+	@ConfigValue
+	@Comment(content = {"Time period in milliseconds"})
+	public static long MANA_REGENERATION_RATE = 1000;
 
-    @ConfigValue
-    public static boolean ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS = true;
+	@ConfigValue
+	public static boolean ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS = true;
 
-    @ConfigValue
-    @Comment(content = "Works only if PLAYER_MAX_CHARS > 1.")
-    public static boolean TELEPORT_PLAYER_TO_LAST_CHAR_LOCATION = true;
+	@ConfigValue
+	@Comment(content = "Works only if PLAYER_MAX_CHARS > 1.")
+	public static boolean TELEPORT_PLAYER_TO_LAST_CHAR_LOCATION = true;
 
-    @ConfigValue
-    public static Set<String> ALLOWED_RUNES_ITEMTYPES = new HashSet<String>() {{
-        add("minecraft:nether_star");
-    }};
+	@ConfigValue
+	public static Set<String> ALLOWED_RUNES_ITEMTYPES = new HashSet<String>() {{
+		add("minecraft:nether_star");
+	}};
 
-    @ConfigValue
-    public static boolean AUTOREMOVE_NONEXISTING_RUNEWORDS = false;
+	@ConfigValue
+	public static boolean AUTOREMOVE_NONEXISTING_RUNEWORDS = false;
 
-    @ConfigValue
-    @Comment(content = {"Enables passing arguments to skills", "eg.: /skill Fireball arg1 arg2"})
-    public static boolean SKILL_COMMAND_ARGUMENTS = false;
+	@ConfigValue
+	@Comment(content = {"Enables passing arguments to skills", "eg.: /skill Fireball arg1 arg2"})
+	public static boolean SKILL_COMMAND_ARGUMENTS = false;
 
-    @ConfigValue
-    @Comment(content = {"Multiplier of shared experience gain for players in a party.", "Exp=(MobExp*Mult)/partyplayers in area"})
-    public static double PARTY_EXPERIENCE_MULTIPLIER = 2;
+	@ConfigValue
+	@Comment(content = {"Multiplier of shared experience gain for players in a party.", "Exp=(MobExp*Mult)/partyplayers in area"})
+	public static double PARTY_EXPERIENCE_MULTIPLIER = 2;
 
 	@ConfigValue
 	public static double PARTY_EXPERIENCE_SHARE_DISTANCE = 25;
@@ -113,38 +113,38 @@ public class PluginConfig {
 	public static double MAX_PARTY_SIZE = -68458;
 
 
-    @ConfigValue
-    @Comment(content = {"If a player chooses a race and a class, where both those groups define damage value for one specific weapon, or projectile" +
-                        " this option specifies how the weapon damage will be calculated.",
-                        "1 = sum",
-                        "2 = take higher value"})
-    public static int WEAPON_MERGE_STRTATEGY = 2;
+	@ConfigValue
+	@Comment(content = {"If a player chooses a race and a class, where both those groups define damage value for one specific weapon, or projectile" +
+			" this option specifies how the weapon damage will be calculated.",
+			"1 = sum",
+			"2 = take higher value"})
+	public static int WEAPON_MERGE_STRTATEGY = 2;
 
-    @ConfigValue
-    @Comment(content = {"Whenever global chat message will be displayed if any player chooses a skill tree path"})
-    public static boolean PLAYER_CHOOSED_SKILLTREE_PATH_GLOBAL_MESSAGE;
+	@ConfigValue
+	@Comment(content = {"Whenever global chat message will be displayed if any player chooses a skill tree path"})
+	public static boolean PLAYER_CHOOSED_SKILLTREE_PATH_GLOBAL_MESSAGE;
 
-    @ConfigValue
-    @Comment(content = {"Whenever a player is able to refund skills, representing root of the path of specialization on any skilltree"})
-    public static boolean PATH_NODES_SEALED = true;
+	@ConfigValue
+	@Comment(content = {"Whenever a player is able to refund skills, representing root of the path of specialization on any skilltree"})
+	public static boolean PATH_NODES_SEALED = true;
 
-    @ConfigValue
-    @Comment(content = {"Whenever pressing shift(sneak) resets click combination"})
-    public static boolean SHIFT_CANCELS_COMBO = false;
+	@ConfigValue
+	@Comment(content = {"Whenever pressing shift(sneak) resets click combination"})
+	public static boolean SHIFT_CANCELS_COMBO = false;
 
-    @ConfigValue
-    @Comment(content = {"Recognizes pressing Q key (/throwing an item out of inventory) as the click combo option 'Q'"
-    , " This action has priority over throwing item out of the inventoryinventory. Click combo may not start whit this action"})
-    public static boolean ENABLED_Q;
+	@ConfigValue
+	@Comment(content = {"Recognizes pressing Q key (/throwing an item out of inventory) as the click combo option 'Q'"
+			, " This action has priority over throwing item out of the inventoryinventory. Click combo may not start whit this action"})
+	public static boolean ENABLED_Q;
 
-    @ConfigValue
-    @Comment(content = {"Recognizes pressing E key (/opening player inventory) as the click combo option 'E'"
-            , " This action has priority over opening players' inventory. Click combo may not start whit this action"})
-    public static boolean ENABLED_E;
+	@ConfigValue
+	@Comment(content = {"Recognizes pressing E key (/opening player inventory) as the click combo option 'E'"
+			, " This action has priority over opening players' inventory. Click combo may not start whit this action"})
+	public static boolean ENABLED_E;
 
-    @ConfigValue
-    @Comment(content = {"Time interval in milliseconds, defines maximal interval between two clicks (E/Q/RMB/LMB/S)"})
-    public static long CLICK_COMBO_MAX_INVERVAL_BETWEEN_ACTIONS = 1250;
+	@ConfigValue
+	@Comment(content = {"Time interval in milliseconds, defines maximal interval between two clicks (E/Q/RMB/LMB/S)"})
+	public static long CLICK_COMBO_MAX_INVERVAL_BETWEEN_ACTIONS = 1250;
 
 
 }

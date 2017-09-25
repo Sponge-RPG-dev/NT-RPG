@@ -60,7 +60,7 @@ import java.util.Optional;
  * Created by NeumimTo on 29.4.2015.
  */
 @Plugin(id = "nt-rpg", version = "1.0.8", name = "NT-Rpg", dependencies = {
-        @Dependency(id = "nt-core", version = "1.9",optional = false)
+		@Dependency(id = "nt-core", version = "1.9", optional = false)
 })
 public class NtRpgPlugin {
 	public static String workingDir;
@@ -130,34 +130,34 @@ public class NtRpgPlugin {
 		}
 		ioc.registerDependency(this);
 		ioc.registerInterfaceImplementation(CauseStackManager.class, Sponge.getCauseStackManager());
-        try {
-            workingDir = config.toString();
-            URL url = FileUtils.getPluginUrl();
-            pluginjar = new File(url.toURI());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        Path path = Paths.get(workingDir);
-        ConfigMapper.init("NtRpg", path);
-        ioc.registerDependency(ConfigMapper.get("NtRpg"));
-        try {
-            Files.createDirectories(path);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ioc.get(IoC.class, ioc);
-        ResourceLoader rl = ioc.build(ResourceLoader.class);
-        rl.loadJarFile(pluginjar, true);
-        GlobalScope = ioc.build(GlobalScope.class);
-        rl.loadExternalJars();
-        ioc.postProcess();
-        if (PluginConfig.DEBUG) {
-            Sponge.getEventManager().registerListeners(this, ioc.build(DebugListener.class));
-        }
-        IoC.get().build(PropertyService.class).loadMaximalServerPropertyValues();
-        double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
-        logger.info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
-    }
+		try {
+			workingDir = config.toString();
+			URL url = FileUtils.getPluginUrl();
+			pluginjar = new File(url.toURI());
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		Path path = Paths.get(workingDir);
+		ConfigMapper.init("NtRpg", path);
+		ioc.registerDependency(ConfigMapper.get("NtRpg"));
+		try {
+			Files.createDirectories(path);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		ioc.get(IoC.class, ioc);
+		ResourceLoader rl = ioc.build(ResourceLoader.class);
+		rl.loadJarFile(pluginjar, true);
+		GlobalScope = ioc.build(GlobalScope.class);
+		rl.loadExternalJars();
+		ioc.postProcess();
+		if (PluginConfig.DEBUG) {
+			Sponge.getEventManager().registerListeners(this, ioc.build(DebugListener.class));
+		}
+		IoC.get().build(PropertyService.class).loadMaximalServerPropertyValues();
+		double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
+		logger.info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
+	}
 
 
 }

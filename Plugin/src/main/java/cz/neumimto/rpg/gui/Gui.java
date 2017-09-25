@@ -30,7 +30,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
-import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.SkillTree;
@@ -47,167 +46,167 @@ import java.util.Map;
  */
 public class Gui {
 
-    public static IPlayerMessage vanilla;
+	public static IPlayerMessage vanilla;
 
-    public static IPlayerMessage mod;
+	public static IPlayerMessage mod;
 
-    static {
-        vanilla = IoC.get().build(VanilaMessaging.class);
-    }
+	static {
+		vanilla = IoC.get().build(VanilaMessaging.class);
+	}
 
-    public static IPlayerMessage getMessageTypeOf(IActiveCharacter player) {
-        if (player.isUsingGuiMod())
-            return mod;
-        return vanilla;
-    }
+	public static IPlayerMessage getMessageTypeOf(IActiveCharacter player) {
+		if (player.isUsingGuiMod())
+			return mod;
+		return vanilla;
+	}
 
-    public static IPlayerMessage getMessageTypeOf(Player player) {
-        if (mod == null)
-            return vanilla;
+	public static IPlayerMessage getMessageTypeOf(Player player) {
+		if (mod == null)
+			return vanilla;
    /*     if (isUsingClientSideGui(player))
-            return mod;*/
-        return vanilla;
-    }
+			return mod;*/
+		return vanilla;
+	}
 
-    public static void sendMessage(IActiveCharacter player, String message) {
-        getMessageTypeOf(player).sendMessage(player, message);
-    }
+	public static void sendMessage(IActiveCharacter player, String message) {
+		getMessageTypeOf(player).sendMessage(player, message);
+	}
 
-    public static void sendCooldownMessage(IActiveCharacter player, String skillname, double cooldown) {
-        getMessageTypeOf(player).sendCooldownMessage(player, skillname, cooldown);
-    }
+	public static void sendCooldownMessage(IActiveCharacter player, String skillname, double cooldown) {
+		getMessageTypeOf(player).sendCooldownMessage(player, skillname, cooldown);
+	}
 
-    public static void openSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, SkillData center) {
-        getMessageTypeOf(player).openSkillTreeMenu(player, skillTree, center);
-    }
+	public static void openSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, SkillData center) {
+		getMessageTypeOf(player).openSkillTreeMenu(player, skillTree, center);
+	}
 
-    public static void sendEffectStatus(IActiveCharacter player, EffectStatusType type, IEffect effect) {
-        getMessageTypeOf(player).sendEffectStatus(player, type, effect);
-    }
+	public static void sendEffectStatus(IActiveCharacter player, EffectStatusType type, IEffect effect) {
+		getMessageTypeOf(player).sendEffectStatus(player, type, effect);
+	}
 
-    public static void invokeCharacterMenu(Player player, List<CharacterBase> characterBases) {
-        getMessageTypeOf(player).invokeCharacterMenu(player, characterBases);
-    }
+	public static void invokeCharacterMenu(Player player, List<CharacterBase> characterBases) {
+		getMessageTypeOf(player).invokeCharacterMenu(player, characterBases);
+	}
 
-    public static void sendPlayerInfo(IActiveCharacter character, List<CharacterBase> target) {
-        getMessageTypeOf(character).sendPlayerInfo(character, target);
-    }
+	public static void sendPlayerInfo(IActiveCharacter character, List<CharacterBase> target) {
+		getMessageTypeOf(character).sendPlayerInfo(character, target);
+	}
 
-    public static void moveSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, Map<String, Integer> learnedSkill, SkillData center) {
-        getMessageTypeOf(player).moveSkillTreeMenu(player, skillTree, learnedSkill, center);
-    }
+	public static void moveSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, Map<String, Integer> learnedSkill, SkillData center) {
+		getMessageTypeOf(player).moveSkillTreeMenu(player, skillTree, learnedSkill, center);
+	}
 
-    public static void showCharacterInfo(IActiveCharacter player, IActiveCharacter character) {
-        getMessageTypeOf(player).sendPlayerInfo(player, character);
-    }
+	public static void showCharacterInfo(IActiveCharacter player, IActiveCharacter character) {
+		getMessageTypeOf(player).sendPlayerInfo(player, character);
+	}
 
-    public static void showExpChange(IActiveCharacter character, String classname, double expchange) {
-        getMessageTypeOf(character).showExpChange(character, classname, expchange);
-    }
+	public static void showExpChange(IActiveCharacter character, String classname, double expchange) {
+		getMessageTypeOf(character).showExpChange(character, classname, expchange);
+	}
 
-    public static void showLevelChange(IActiveCharacter character, ExtendedNClass aClass, int level) {
-        getMessageTypeOf(character).showLevelChange(character, aClass, level);
-    }
+	public static void showLevelChange(IActiveCharacter character, ExtendedNClass aClass, int level) {
+		getMessageTypeOf(character).showLevelChange(character, aClass, level);
+	}
 
-    public static void sendStatus(IActiveCharacter character) {
-        getMessageTypeOf(character).sendStatus(character);
-    }
+	public static void sendStatus(IActiveCharacter character) {
+		getMessageTypeOf(character).sendStatus(character);
+	}
 
-    public static void showAvalaibleClasses(IActiveCharacter character) {
-        getMessageTypeOf(character).showAvalaibleClasses(character);
-    }
+	public static void showAvalaibleClasses(IActiveCharacter character) {
+		getMessageTypeOf(character).showAvalaibleClasses(character);
+	}
 
-    public static void invokeDefaultMenu(IActiveCharacter character) {
-        getMessageTypeOf(character).invokerDefaultMenu(character);
-    }
+	public static void invokeDefaultMenu(IActiveCharacter character) {
+		getMessageTypeOf(character).invokerDefaultMenu(character);
+	}
 
-    public static void sendListOfCharacters(IActiveCharacter player, CharacterBase currentlyCreated) {
-        getMessageTypeOf(player).sendListOfCharacters(player, currentlyCreated);
-    }
+	public static void sendListOfCharacters(IActiveCharacter player, CharacterBase currentlyCreated) {
+		getMessageTypeOf(player).sendListOfCharacters(player, currentlyCreated);
+	}
 
-    public static void showClassInfo(IActiveCharacter character, ConfigClass cc) {
-        getMessageTypeOf(character).showClassInfo(character,cc);
-    }
+	public static void showClassInfo(IActiveCharacter character, ConfigClass cc) {
+		getMessageTypeOf(character).showClassInfo(character, cc);
+	}
 
-    public static void sendListOfRunes(IActiveCharacter character) {
-        getMessageTypeOf(character).sendListOfRunes(character);
-    }
+	public static void sendListOfRunes(IActiveCharacter character) {
+		getMessageTypeOf(character).sendListOfRunes(character);
+	}
 
-    public static void sendRaceInfo(IActiveCharacter target, Race race) {
-        getMessageTypeOf(target).sendRaceInfo(target, race);
-    }
+	public static void sendRaceInfo(IActiveCharacter target, Race race) {
+		getMessageTypeOf(target).sendRaceInfo(target, race);
+	}
 
-    public static void sendRaceList(IActiveCharacter target) {
-        getMessageTypeOf(target).sendListOfRaces(target);
-    }
+	public static void sendRaceList(IActiveCharacter target) {
+		getMessageTypeOf(target).sendListOfRaces(target);
+	}
 
-    public static void displayGroupArmor(PlayerGroup g, Player target) {
-        getMessageTypeOf(target).displayGroupArmor(g, target);
-    }
+	public static void displayGroupArmor(PlayerGroup g, Player target) {
+		getMessageTypeOf(target).displayGroupArmor(g, target);
+	}
 
-    public static void displayGroupWeapon(PlayerGroup g, Player target) {
-        getMessageTypeOf(target).displayGroupWeapon(g, target);
-    }
+	public static void displayGroupWeapon(PlayerGroup g, Player target) {
+		getMessageTypeOf(target).displayGroupWeapon(g, target);
+	}
 
-    public static void displayInitialAttributes(PlayerGroup g, Player target) {
-        getMessageTypeOf(target).displayAttributes(target, g);
-    }
+	public static void displayInitialAttributes(PlayerGroup g, Player target) {
+		getMessageTypeOf(target).displayAttributes(target, g);
+	}
 
-    public static void displayRuneword(IActiveCharacter character, RuneWord rw) {
-        getMessageTypeOf(character).displayRuneword(character, rw, true);
-    }
+	public static void displayRuneword(IActiveCharacter character, RuneWord rw) {
+		getMessageTypeOf(character).displayRuneword(character, rw, true);
+	}
 
-    public static void displayRunewordBlockedGroups(IActiveCharacter character, RuneWord rw) {
-        getMessageTypeOf(character).displayRunewordBlockedGroups(character, rw);
-    }
+	public static void displayRunewordBlockedGroups(IActiveCharacter character, RuneWord rw) {
+		getMessageTypeOf(character).displayRunewordBlockedGroups(character, rw);
+	}
 
-    public static void displayRunewordRequiredGroups(IActiveCharacter character, RuneWord rw) {
-        getMessageTypeOf(character).displayRunewordRequiredGroups(character, rw);
-    }
+	public static void displayRunewordRequiredGroups(IActiveCharacter character, RuneWord rw) {
+		getMessageTypeOf(character).displayRunewordRequiredGroups(character, rw);
+	}
 
-    public static void displayRunewordAllowedGroups(IActiveCharacter character, RuneWord rw) {
-        getMessageTypeOf(character).displayRunewordAllowedGroups(character, rw);
-    }
+	public static void displayRunewordAllowedGroups(IActiveCharacter character, RuneWord rw) {
+		getMessageTypeOf(character).displayRunewordAllowedGroups(character, rw);
+	}
 
-    public static void displayRunewordAllowedItems(IActiveCharacter character, RuneWord rw) {
-        getMessageTypeOf(character).displayRunewordAllowedItems(character, rw);
-    }
+	public static void displayRunewordAllowedItems(IActiveCharacter character, RuneWord rw) {
+		getMessageTypeOf(character).displayRunewordAllowedItems(character, rw);
+	}
 
-    public static void displayHealth(IActiveCharacter character) {
-        getMessageTypeOf(character).displayHealth(character);
-    }
+	public static void displayHealth(IActiveCharacter character) {
+		getMessageTypeOf(character).displayHealth(character);
+	}
 
-    public static void displayMana(IActiveCharacter character) {
-        getMessageTypeOf(character).displayMana(character);
-    }
+	public static void displayMana(IActiveCharacter character) {
+		getMessageTypeOf(character).displayMana(character);
+	}
 
-    public static void sendCannotUseItemNotification(IActiveCharacter character, ItemStack is, CannotUseItemReson reason) {
-        getMessageTypeOf(character).sendCannotUseItemNotification(character, is, reason);
-    }
+	public static void sendCannotUseItemNotification(IActiveCharacter character, ItemStack is, CannotUseItemReson reason) {
+		getMessageTypeOf(character).sendCannotUseItemNotification(character, is, reason);
+	}
 
-    public static void sendNotification(IActiveCharacter character, Text text) {
-        character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, text);
-    }
+	public static void sendNotification(IActiveCharacter character, Text text) {
+		character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, text);
+	}
 
-    //only here until gets advancements gets implemented
-    public static void displayAllSkills(IActiveCharacter character) {
-        ExtendedNClass primaryClass = character.getPrimaryClass();
-        ConfigClass configClass = primaryClass.getConfigClass();
-        SkillTree skillTree = configClass.getSkillTree();
-        SkillService service = IoC.get().build(SkillService.class);
-        for (Map.Entry<String, SkillData> entry : skillTree.getSkills().entrySet()) {
-            String skillName = entry.getKey();
-            SkillData data = entry.getValue();
-            ItemStack itemStack = GuiHelper.skillToItemStack(character, data);
+	//only here until gets advancements gets implemented
+	public static void displayAllSkills(IActiveCharacter character) {
+		ExtendedNClass primaryClass = character.getPrimaryClass();
+		ConfigClass configClass = primaryClass.getConfigClass();
+		SkillTree skillTree = configClass.getSkillTree();
+		SkillService service = IoC.get().build(SkillService.class);
+		for (Map.Entry<String, SkillData> entry : skillTree.getSkills().entrySet()) {
+			String skillName = entry.getKey();
+			SkillData data = entry.getValue();
+			ItemStack itemStack = GuiHelper.skillToItemStack(character, data);
 
-        }
-    }
+		}
+	}
 
-    public static void displayCurrentClicks(ClickComboActionEvent clickComboActionEvent) {
+	public static void displayCurrentClicks(ClickComboActionEvent clickComboActionEvent) {
 
-    }
+	}
 
-    public static void resetCurrentClicks(ClickComboActionEvent clickComboActionEvent) {
+	public static void resetCurrentClicks(ClickComboActionEvent clickComboActionEvent) {
 
-    }
+	}
 }

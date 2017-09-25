@@ -10,8 +10,8 @@ import cz.neumimto.rpg.skills.SkillResult;
  * Created by NeumimTo on 11.8.17.
  */
 public class IceBolt extends ActiveSkill {
-    @Override
-    public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
-        return null;
-    }
+	@Override
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
+		return null;
+	}
 }

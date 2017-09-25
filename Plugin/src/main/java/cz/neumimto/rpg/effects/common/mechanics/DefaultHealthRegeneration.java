@@ -4,7 +4,6 @@ import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.players.IActiveCharacter;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -16,30 +15,30 @@ import java.util.Set;
 @ClassGenerator.Generate(id = "name")
 public class DefaultHealthRegeneration extends EffectBase implements IEffectContainer {
 
-    public static final String name = "DefaultHealthRegen";
+	public static final String name = "DefaultHealthRegen";
 
-    public DefaultHealthRegeneration(IEffectConsumer character, long duration, String value) {
-        super(name, character);
-    }
+	public DefaultHealthRegeneration(IEffectConsumer character, long duration, String value) {
+		super(name, character);
+	}
 
-    @Override
-    public Set<DefaultHealthRegeneration> getEffects() {
-        return new HashSet<>(Collections.singletonList(this));
-    }
+	@Override
+	public Set<DefaultHealthRegeneration> getEffects() {
+		return new HashSet<>(Collections.singletonList(this));
+	}
 
 
-    @Override
-    public DefaultHealthRegeneration constructEffectContainer() {
-        return this;
-    }
+	@Override
+	public DefaultHealthRegeneration constructEffectContainer() {
+		return this;
+	}
 
-    @Override
-    public Object getStackedValue() {
-        return null;
-    }
+	@Override
+	public Object getStackedValue() {
+		return null;
+	}
 
-    @Override
-    public void setStackedValue(Object o) {
+	@Override
+	public void setStackedValue(Object o) {
 
-    }
+	}
 }

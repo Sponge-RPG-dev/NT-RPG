@@ -12,20 +12,20 @@ import org.spongepowered.api.entity.living.player.Player;
 //@ResourceLoader.Command
 public class ServerCommand extends CommandBase {
 
-    @Inject
-    private RestService restService;
+	@Inject
+	private RestService restService;
 
-    @Override
-    public CommandResult process(CommandSource commandSource, String s) throws CommandException {
-        if (commandSource instanceof Player) {
+	@Override
+	public CommandResult process(CommandSource commandSource, String s) throws CommandException {
+		if (commandSource instanceof Player) {
 
-        } else {
-            restart();
-        }
-        return CommandResult.success();
-    }
+		} else {
+			restart();
+		}
+		return CommandResult.success();
+	}
 
-    private void restart() {
+	private void restart() {
 
-    }
+	}
 }

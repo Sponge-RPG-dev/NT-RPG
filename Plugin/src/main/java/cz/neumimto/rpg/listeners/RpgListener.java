@@ -24,7 +24,6 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.events.CharacterChangeGroupEvent;
-import cz.neumimto.rpg.events.CharacterGainedLevelEvent;
 import cz.neumimto.rpg.events.PlayerGuiModInitEvent;
 import cz.neumimto.rpg.events.character.PlayerDataPreloadComplete;
 import cz.neumimto.rpg.events.party.PartyJoinEvent;
@@ -51,65 +50,65 @@ import java.util.UUID;
 @ResourceLoader.ListenerClass
 public class RpgListener {
 
-    @Inject
-    private CharacterService characterService;
+	@Inject
+	private CharacterService characterService;
 
-    @Inject
-    private Game game;
+	@Inject
+	private Game game;
 
-    @Inject
-    private GroupService groupService;
+	@Inject
+	private GroupService groupService;
 
-    @Inject
-    private NtRpgPlugin plugin;
+	@Inject
+	private NtRpgPlugin plugin;
 
-    @Listener
-    public void onPlayerDataPreloadComplete(PlayerDataPreloadComplete event) {
-        Optional<Player> retardedOptional = game.getServer().getPlayer(event.getPlayer());
-        if (retardedOptional.isPresent()) {
-            Player player = retardedOptional.get();
-            if (!event.getCharacterBases().isEmpty()) {
-                System.out.println(Thread.currentThread().getName());
-                if (PluginConfig.PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR || event.getCharacterBases().size() == 1) {
-                    Sponge.getScheduler().createTaskBuilder().async().execute(() -> {
-                        final IActiveCharacter character = characterService.buildActiveCharacterAsynchronously(player, event.getCharacterBases().get(0));
-                        Sponge.getScheduler().createTaskBuilder().execute(() -> {
-                            characterService.setActiveCharacter(event.getPlayer(), character);
-                        }).submit(plugin);
-                    }).submit(plugin);
-                } else {
-                    Gui.invokeCharacterMenu(player, event.getCharacterBases());
-                }
-            }
-        }
-    }
+	@Listener
+	public void onPlayerDataPreloadComplete(PlayerDataPreloadComplete event) {
+		Optional<Player> retardedOptional = game.getServer().getPlayer(event.getPlayer());
+		if (retardedOptional.isPresent()) {
+			Player player = retardedOptional.get();
+			if (!event.getCharacterBases().isEmpty()) {
+				System.out.println(Thread.currentThread().getName());
+				if (PluginConfig.PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR || event.getCharacterBases().size() == 1) {
+					Sponge.getScheduler().createTaskBuilder().async().execute(() -> {
+						final IActiveCharacter character = characterService.buildActiveCharacterAsynchronously(player, event.getCharacterBases().get(0));
+						Sponge.getScheduler().createTaskBuilder().execute(() -> {
+							characterService.setActiveCharacter(event.getPlayer(), character);
+						}).submit(plugin);
+					}).submit(plugin);
+				} else {
+					Gui.invokeCharacterMenu(player, event.getCharacterBases());
+				}
+			}
+		}
+	}
 
-    @Listener
-    public void onGuiInit(PlayerGuiModInitEvent event) {
-        UUID uuid = event.getUuid();
-        characterService.getCharacter(uuid).setUsingGuiMod(true);
-    }
+	@Listener
+	public void onGuiInit(PlayerGuiModInitEvent event) {
+		UUID uuid = event.getUuid();
+		characterService.getCharacter(uuid).setUsingGuiMod(true);
+	}
 
 
-    @Listener(order = Order.EARLY)
-    public void onPartyJoin(PartyJoinEvent event) {
-        if (PluginConfig.MAX_PARTY_SIZE > -1) {
-            if (event.getParty().getPlayers().size() > PluginConfig.MAX_PARTY_SIZE) {
-                event.setCancelled(true);
-            }
-        }
-    }
+	@Listener(order = Order.EARLY)
+	public void onPartyJoin(PartyJoinEvent event) {
+		if (PluginConfig.MAX_PARTY_SIZE > -1) {
+			if (event.getParty().getPlayers().size() > PluginConfig.MAX_PARTY_SIZE) {
+				event.setCancelled(true);
+			}
+		}
+	}
 
-    @Listener
-    public void onHealthRegen(HealEntityEvent event, @First(typeFilter = Player.class) Player player) {
+	@Listener
+	public void onHealthRegen(HealEntityEvent event, @First(typeFilter = Player.class) Player player) {
 
-    }
+	}
 
-    @Listener
-    @IsCancelled(Tristate.FALSE)
-    public void onChangeGroup(CharacterChangeGroupEvent event, @First(typeFilter = IActiveCharacter.class) IActiveCharacter character) {
-        groupService.removePermissions(character, groupService.getPermissionsToRemove(character, event.getOld()));
-        groupService.addAllPermissions(character, event.getNew());
-    }
+	@Listener
+	@IsCancelled(Tristate.FALSE)
+	public void onChangeGroup(CharacterChangeGroupEvent event, @First(typeFilter = IActiveCharacter.class) IActiveCharacter character) {
+		groupService.removePermissions(character, groupService.getPermissionsToRemove(character, event.getOld()));
+		groupService.addAllPermissions(character, event.getNew());
+	}
 
 }

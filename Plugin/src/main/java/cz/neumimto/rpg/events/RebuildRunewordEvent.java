@@ -12,7 +12,7 @@ public class RebuildRunewordEvent extends AbstractEvent {
 	private final RuneWord runeWord;
 	private ItemStack itemStack;
 
-	public RebuildRunewordEvent(RuneWord rw,  ItemStack i) {
+	public RebuildRunewordEvent(RuneWord rw, ItemStack i) {
 
 		this.runeWord = rw;
 		this.itemStack = i;
