@@ -24,15 +24,15 @@ public class NEventContextKeys {
 			.id("ntrpg.gameprofile")
 			.build();
 
-	public static final EventContextKey<ISkill> SKILL_DAMAGE = EventContextKey
-			.builder(ISkill.class)
-			.name("skilldamage")
-			.id("ntrpg.skilldamage")
-			.build();
+    public static final EventContextKey<ISkill> SKILL = EventContextKey
+            .builder(ISkill.class)
+            .name("skilldamage")
+            .id("ntrpg.skilldamage")
+            .build();
 
-	public static final EventContextKey<IEffect> EFFECT_DAMAGE = EventContextKey
-			.builder(IEffect.class)
-			.name("effectdamage")
-			.id("ntrpg.effectdamage")
-			.build();
+    public static final EventContextKey<IEffect> EFFECT = EventContextKey
+            .builder(IEffect.class)
+            .name("effectdamage")
+            .id("ntrpg.effectdamage")
+            .build();
 }

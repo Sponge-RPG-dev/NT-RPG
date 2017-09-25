@@ -15,6 +15,8 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.event.filter.cause.Last;
+import org.spongepowered.api.event.filter.cause.Root;
 
 /**
  * Created by NeumimTo on 5.2.2016.
@@ -52,11 +54,13 @@ public class BrainSap extends Targetted {
 		return SkillResult.OK;
 	}
 
-	@Listener(order = Order.LAST)
-	public void onDamage(SkillDamageEventLate event, @First(typeFilter = BrainSap.class) BrainSap skill) {
-		if (event.isCancelled())
-			return;
-		IEntity caster = event.getCaster();
-		entityService.healEntity(caster, (float) event.getDamage(), this);
-	}
+    @Listener(order = Order.LAST)
+    public void onDamage(SkillDamageEventLate event) {
+        if (event.isCancelled())
+            return;
+        if (event.getSkill().getClass() == this.getClass()) {
+            IEntity caster = event.getCaster();
+            entityService.healEntity(caster, (float) event.getDamage(), this);
+        }
+    }
 }

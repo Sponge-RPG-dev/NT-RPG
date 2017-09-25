@@ -19,10 +19,7 @@
 package cz.neumimto.rpg.listeners;
 
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.rpg.IEntity;
-import cz.neumimto.rpg.IEntityType;
-import cz.neumimto.rpg.NEventContextKeys;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.damage.ISkillDamageSource;
@@ -287,6 +284,7 @@ public class BasicListener {
 			event.setCancelled(true);
 			return;
 		}
+
 		event.setBaseDamage(event1.getProjectileDamage());
 	}
 
@@ -308,39 +306,39 @@ public class BasicListener {
 		double finalDamage = event.getBaseDamage() * damageService.getEntityBonusDamage(caster, type);
 
 
-		CauseStackManager.StackFrame frame = causeStackManager.pushCauseFrame();
 
-		if (effect != null) {
-			EventContext build = EventContext.builder().add(NEventContextKeys.EFFECT_DAMAGE, effect).build();
-			causeStackManager.pushCause(Cause.builder().build(build));
+        try (CauseStackManager.StackFrame frame = causeStackManager.pushCauseFrame()) {
+			if (effect != null) {
+				EventContext build = EventContext.builder().add(NEventContextKeys.EFFECT, effect).build();
+				causeStackManager.pushCause(Cause.of(build, effect));
+			}
+
+			SkillDamageEvent event1 = new SkillDamageEvent(caster, targetchar, skill, finalDamage, type);
+			if (skill != null) {
+				EventContext build = EventContext.builder().add(NEventContextKeys.SKILL, skill).build();
+				causeStackManager.pushCause(Cause.of(build, skill));
+			}
+
+			Sponge.getGame().getEventManager().post(event1);
+			if (event1.isCancelled() || event1.getDamage() <= 0) {
+				event.setCancelled(true);
+				return;
+			}
+
+			finalDamage = event1.getDamage();
+			double target_resistence = damageService.getEntityResistance(targetchar, type);
+
+			SkillDamageEventLate event2 = new SkillDamageEventLate(caster, targetchar, skill, finalDamage, target_resistence, type);
+			event2.setCause(causeStackManager.getCurrentCause());
+
+
+			Sponge.getGame().getEventManager().post(event2);
+			if (event2.isCancelled() || event2.getDamage() <= 0) {
+				event.setCancelled(true);
+				return;
+			}
+			event.setBaseDamage(event2.getDamage() * event2.getTargetResistance());
 		}
-
-		SkillDamageEvent event1 = new SkillDamageEvent(caster, targetchar, skill, finalDamage, type);
-
-
-		if (skill != null) {
-			EventContext build = EventContext.builder().add(NEventContextKeys.SKILL_DAMAGE, skill).build();
-			causeStackManager.pushCause(Cause.builder().build(build));
-		}
-
-		Sponge.getGame().getEventManager().post(event1);
-		if (event1.isCancelled() || event1.getDamage() <= 0) {
-			event.setCancelled(true);
-			return;
-		}
-		finalDamage = event1.getDamage();
-		double target_resistence = damageService.getEntityResistance(targetchar, type);
-
-		SkillDamageEventLate event2 = new SkillDamageEventLate(caster, targetchar, skill, finalDamage, target_resistence, type);
-		event2.setCause(event1.getCause());
-
-
-		Sponge.getGame().getEventManager().post(event2);
-		if (event2.isCancelled() || event2.getDamage() <= 0) {
-			event.setCancelled(true);
-			return;
-		}
-		event.setBaseDamage(event2.getDamage() * event2.getTargetResistance());
 	}
 
 
