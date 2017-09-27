@@ -2,11 +2,12 @@ package cz.neumimto.rpg.skills;
 
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
-import cz.neumimto.rpg.persistance.SkillPathData;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.service.permission.SubjectData;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Tristate;
+
+import java.util.Map;
 
 /**
  * Created by NeumimTo on 16.8.17.
@@ -52,6 +53,12 @@ public class SkillTreePath extends PassiveSkill {
         for (String perm : pdata.getPermissions()) {
             transientSubjectData.setPermission(SubjectData.GLOBAL_CONTEXT, perm, Tristate.TRUE);
         }
+
+        for (Map.Entry<String, Integer> entry : pdata.getSkillBonus().entrySet()) {
+            ExtendedSkillInfo skill = c.getSkill(entry.getKey());
+            skill.setBonusLevel(skill.getBonusLevel() + entry.getValue());
+        }
+
     }
 
     @Override

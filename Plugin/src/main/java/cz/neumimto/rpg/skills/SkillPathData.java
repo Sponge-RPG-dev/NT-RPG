@@ -1,8 +1,10 @@
-package cz.neumimto.rpg.persistance;
+package cz.neumimto.rpg.skills;
 
 import cz.neumimto.rpg.skills.SkillData;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -13,7 +15,7 @@ public class SkillPathData extends SkillData {
     private Set<String> permissions = new HashSet<>();
     private int tier;
     private int skillPointsRequired;
-
+    private Map<String, Integer> skillBonus = new HashMap<>();
     public SkillPathData(String name) {
         super(name);
     }
@@ -40,5 +42,13 @@ public class SkillPathData extends SkillData {
 
     public void setSkillPointsRequired(int skillPointsRequired) {
         this.skillPointsRequired = skillPointsRequired;
+    }
+
+    public void addSkillBonus(String skill, int levels) {
+        skillBonus.put(skill, levels);
+    }
+
+    public Map<String, Integer> getSkillBonus() {
+        return skillBonus;
     }
 }

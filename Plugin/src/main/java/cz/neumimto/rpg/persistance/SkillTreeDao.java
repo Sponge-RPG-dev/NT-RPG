@@ -100,7 +100,7 @@ public class SkillTreeDao {
                         continue;
                     SkillTreePath path = new SkillTreePath(name);
                     skillService.addSkill(path);
-                } catch (ConfigurationException ignored) {}
+                } catch (ConfigException.Missing ignored) {}
             }
         }
     }
@@ -136,13 +136,19 @@ public class SkillTreeDao {
                 }
                 info.setMaxSkillLevel(1);
                 try {
-                    Config skillBonus = c.getConfig("SkillBonus");
-                    for (Map.Entry<String, ConfigValue> e : skillBonus.entrySet()) {
-                        
+                    List<? extends Config> skillBonus = c.getConfigList("SkillBonus");
+                    for (Config s : skillBonus) {
+                        try {
+                            String skill = s.getString("skill");
+                            int levels = s.getInt("levels");
+                            pdata.addSkillBonus(skill, levels);
+                        } catch (ConfigurationException e) {
+                            logger.info("Found SkillPath.SkillBonus in the tree \"" + skillTree.getId() + "\" missing \"skill\" or \"level\" configuration node");
+                        }
+
                     }
                 } catch (ConfigurationException e) {
-                    logger.info("Found SkillPath in the tree \"" + skillTree.getId() + "\" but no permissions defined, setting to 1");
-                    pdata.setSkillPointsRequired(1);
+                    //logger.info("Found SkillPath in the tree \"" + skillTree.getId() + "\" but no permissions defined, setting to 1");
                 }
             } else {
                 try {
