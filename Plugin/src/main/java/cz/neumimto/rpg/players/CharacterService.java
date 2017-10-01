@@ -811,6 +811,7 @@ public class CharacterService {
 	 * @return 1 - if character has not a single skillpoint in the skill
 	 * 2 - if one or more skills are on a path in a skilltree after the skill.
 	 * 3 - SkillRefundEvent was cancelled
+	 * 4 - Cant refund skill-tree path
 	 * 0 - ok
 	 */
 	public int refundSkill(IActiveCharacter character, ISkill skill, ConfigClass configClass) {
@@ -828,6 +829,9 @@ public class CharacterService {
 		game.getEventManager().post(event);
 		if (event.isCancelled()) {
 			return 3;
+		}
+		if (skill instanceof SkillTreePath && PluginConfig.PATH_NODES_SEALED) {
+			return 4;
 		}
 		int level = skillInfo.getLevel();
 		skill.skillRefund(character);

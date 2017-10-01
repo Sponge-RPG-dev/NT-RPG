@@ -63,16 +63,13 @@ public class SkillTreePath extends PassiveSkill {
 
     @Override
     public void skillRefund(IActiveCharacter c) {
-        if (PluginConfig.PATH_NODES_SEALED) {
-            //todo
-        } else {
-            ExtendedSkillInfo skillInfo = c.getSkillInfo(this);
-            SkillData skillData = skillInfo.getSkillData();
-            SkillPathData pdata = (SkillPathData) skillData;
-            SubjectData transientSubjectData = c.getPlayer().getTransientSubjectData();
-            for (String perm : pdata.getPermissions()) {
-                transientSubjectData.setPermission(SubjectData.GLOBAL_CONTEXT, perm, Tristate.FALSE);
-            }
+        ExtendedSkillInfo skillInfo = c.getSkillInfo(this);
+        SkillData skillData = skillInfo.getSkillData();
+        SkillPathData pdata = (SkillPathData) skillData;
+        SubjectData transientSubjectData = c.getPlayer().getTransientSubjectData();
+        for (String perm : pdata.getPermissions()) {
+            transientSubjectData.setPermission(SubjectData.GLOBAL_CONTEXT, perm, Tristate.FALSE);
         }
     }
+
 }
