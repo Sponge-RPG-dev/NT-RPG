@@ -110,5 +110,4 @@ public class RpgListener {
 		groupService.removePermissions(character, groupService.getPermissionsToRemove(character, event.getOld()));
 		groupService.addAllPermissions(character, event.getNew());
 	}
-
 }
