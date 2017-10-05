@@ -21,9 +21,7 @@ package cz.neumimto.rpg.players;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.inventory.Armor;
-import cz.neumimto.rpg.inventory.HotbarObject;
-import cz.neumimto.rpg.inventory.Weapon;
+import cz.neumimto.rpg.inventory.*;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
@@ -63,7 +61,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	private transient Map<String, IEffectContainer<Object, IEffect<Object>>> effects = new HashMap<>();
 	private transient Click click = new Click();
 	private transient Set<ItemType> allowedArmorIds = new HashSet<>();
-	private transient Map<ItemType, Double> allowedWeapons = new HashMap<>();
+	private transient Map<ItemType, TreeSet<ConfigRPGItemType>> allowedWeapons = new HashMap<>();
 	private transient Map<EntityType, Double> projectileDamage = new HashMap<>();
 	private transient Party party;
 	private Map<String, ExtendedSkillInfo> skills = new HashMap<>();
@@ -389,11 +387,25 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	//todo global config option to set stacking strategies. Take higher value/sum values
 	private void mergeWeapons(PlayerGroup g) {
-		for (Map.Entry<ItemType, Double> entries : g.getWeapons().entrySet()) {
-			if (getBaseWeaponDamage(entries.getKey()) < entries.getValue()) {
-				allowedWeapons.put(entries.getKey(), entries.getValue());
+		for (Map.Entry<ItemType, TreeSet<ConfigRPGItemType>> entry : g.getWeapons().entrySet()) {
+			TreeSet<ConfigRPGItemType> treeSet = allowedWeapons.get(entry.getKey());
+			if (treeSet == null) {
+				treeSet = new TreeSet<>();
+				treeSet.addAll(entry.getValue());
+				allowedWeapons.put(entry.getKey(), treeSet);
+			} else {
+				TreeSet<ConfigRPGItemType> value = entry.getValue();
+				for (ConfigRPGItemType configRPGItemType : value) {
+					for (ConfigRPGItemType rpgItemType : treeSet) {
+						if (configRPGItemType.equals(rpgItemType)) {
+							rpgItemType.setDamage(Math.max(rpgItemType.getDamage(),configRPGItemType.getDamage()));
+						}
+					}
+				}
 			}
 		}
+
+
 		for (Map.Entry<EntityType, Double> e : g.getProjectileDamage().entrySet()) {
 			if (getBaseProjectileDamage(e.getKey()) < e.getValue()) {
 				projectileDamage.put(e.getKey(), e.getValue());
@@ -402,11 +414,23 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public double getBaseWeaponDamage(ItemType id) {
-		Double d = getAllowedWeapons().get(id);
-		if (d == null)
-			return 0;
-		return d;
+	public double getBaseWeaponDamage(RPGItemType weaponItemType) {
+		TreeSet<ConfigRPGItemType> treeSet = getAllowedWeapons().get(weaponItemType.getItemType());
+		if (treeSet == null || treeSet.isEmpty())
+			return 0D;
+		for (ConfigRPGItemType configRPGItemType : treeSet) {
+			if (weaponItemType.getDisplayName() == null) {
+				if (configRPGItemType.getDisplayName() == null) {
+					//todo check if the displayname is reserved
+					return configRPGItemType.getDamage(); //null is first, if both null => can use unnamed item
+				}
+			} else {
+				if (weaponItemType.getDisplayName().equalsIgnoreCase(configRPGItemType.getDisplayName())) {
+					return configRPGItemType.getDamage();
+				}
+			}
+		}
+		return 0D;
 	}
 
 	@Override
@@ -419,10 +443,12 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	public IActiveCharacter updateItemRestrictions() {
 		allowedWeapons.clear();
+
 		allowedWeapons.putAll(getRace().getWeapons());
+
 		//   mergeWeapons(getGuild());
 		mergeWeapons(getPrimaryClass().getConfigClass());
-		mergeWeapons(getRace());
+		//mergeWeapons(getRace());
 		allowedArmorIds.clear();
 		allowedArmorIds.addAll(getRace().getAllowedArmor());
 		//   allowedArmorIds.addAll(getGuild().getAllowedArmor());
@@ -441,13 +467,28 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public boolean canUse(ItemType weaponItemType) {
-		return getAllowedWeapons().containsKey(weaponItemType);
+	public boolean canUse(RPGItemType weaponItemType) {
+		TreeSet<ConfigRPGItemType> treeSet = getAllowedWeapons().get(weaponItemType.getItemType());
+		if (treeSet == null || treeSet.isEmpty())
+			return false;
+		for (ConfigRPGItemType configRPGItemType : treeSet) {
+			if (weaponItemType.getDisplayName() == null) {
+				if (configRPGItemType.getDisplayName() == null) {
+					//todo check if the displayname is reserved
+					return true; //null is first, if both null => can use unnamed item
+				}
+			} else {
+				if (weaponItemType.getDisplayName().equalsIgnoreCase(configRPGItemType.getDisplayName())) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 
 	@Override
-	public Map<ItemType, Double> getAllowedWeapons() {
+	public Map<ItemType, TreeSet<ConfigRPGItemType>> getAllowedWeapons() {
 		return allowedWeapons;
 	}
 

@@ -22,9 +22,7 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.inventory.Armor;
-import cz.neumimto.rpg.inventory.HotbarObject;
-import cz.neumimto.rpg.inventory.Weapon;
+import cz.neumimto.rpg.inventory.*;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
@@ -137,7 +135,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public double getBaseWeaponDamage(ItemType id) {
+	public double getBaseWeaponDamage(RPGItemType type) {
 		return 0;
 	}
 
@@ -167,7 +165,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public boolean canUse(ItemType weaponItemType) {
+	public boolean canUse(RPGItemType weaponItemType) {
 		return false;
 	}
 
@@ -350,7 +348,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Map<ItemType, Double> getAllowedWeapons() {
+	public Map<ItemType, TreeSet<ConfigRPGItemType>> getAllowedWeapons() {
 		return Collections.emptyMap();
 	}
 

@@ -69,6 +69,8 @@ public class SkillService {
 
 	private Map<String, SkillTree> skillTrees = new ConcurrentHashMap<>();
 
+	private static int id = 0;
+
 	public void addSkill(ISkill ISkill) {
 		if (ISkill.getName() == null) {
 			String simpleName = ISkill.getClass().getSimpleName();
@@ -82,6 +84,9 @@ public class SkillService {
 			if (skills.containsKey(ISkill.getName().toLowerCase()))
 				throw new RuntimeException("Skill " + ISkill.getName() + " already exists");
 		}
+		ISkill.setId(id);
+		id++;
+		ISkill.init();
 		skills.put(ISkill.getName().toLowerCase().replaceAll(" ", "_"), ISkill);
 	}
 
@@ -164,6 +169,7 @@ public class SkillService {
 	public void load() {
 		skillTrees.putAll(skillTreeDao.getAll());
 		createSkillsDefaults();
+		initGuis();
 	}
 
 	public void initIcons() {
@@ -236,5 +242,9 @@ public class SkillService {
 				executeSkill(character, extendedSkillInfo);
 			}
 		}
+	}
+
+	public void initGuis() {
+		
 	}
 }

@@ -105,4 +105,8 @@ public interface ISkill extends IEffectSourceProvider {
 	default IEffectSource getType() {
 		return EffectSourceType.SKILL;
 	}
+
+	int getId();
+
+	void setId(int runtimeId);
 }

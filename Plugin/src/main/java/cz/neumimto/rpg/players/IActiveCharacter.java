@@ -20,9 +20,7 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.IEntityType;
-import cz.neumimto.rpg.inventory.Armor;
-import cz.neumimto.rpg.inventory.HotbarObject;
-import cz.neumimto.rpg.inventory.Weapon;
+import cz.neumimto.rpg.inventory.*;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
@@ -41,6 +39,7 @@ import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by NeumimTo on 23.7.2015.
@@ -107,13 +106,13 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	boolean hasCooldown(String thing);
 
-	double getBaseWeaponDamage(ItemType id);
+	double getBaseWeaponDamage(RPGItemType type);
 
 	Set<ItemType> getAllowedArmor();
 
 	boolean canWear(ItemStack armor);
 
-	Map<ItemType, Double> getAllowedWeapons();
+	Map<ItemType, TreeSet<ConfigRPGItemType>> getAllowedWeapons();
 
 	Map<EntityType, Double> getProjectileDamages();
 
@@ -177,7 +176,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setOffHand(Weapon offHand);
 
-	boolean canUse(ItemType weaponItemType);
+	boolean canUse(RPGItemType weaponItemType);
 
 	double getWeaponDamage();
 

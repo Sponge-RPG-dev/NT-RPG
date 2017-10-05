@@ -38,6 +38,8 @@ public class SkillData {
 	private Set<SkillData> depending = new HashSet<>();
 	private ISkill iskill;
 	private String combination = null;
+	private int relativeX;
+	private int relativeY;
 
 	public SkillData(String skill) {
 		this.skill = skill;
@@ -117,5 +119,21 @@ public class SkillData {
 
 	public void setCombination(String combination) {
 		this.combination = combination;
+	}
+
+	public int getRelativeX() {
+		return relativeX;
+	}
+
+	public void setRelativeX(int relativeX) {
+		this.relativeX = relativeX;
+	}
+
+	public int getRelativeY() {
+		return relativeY;
+	}
+
+	public void setRelativeY(int relativeY) {
+		this.relativeY = relativeY;
 	}
 }

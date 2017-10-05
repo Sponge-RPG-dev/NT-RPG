@@ -590,8 +590,10 @@ public class InventoryService {
 	}
 
 	public CannotUseItemReson canUse(ItemStack itemStack, IActiveCharacter character) {
+		//todo change
 		if (ItemStackUtils.weapons.contains(itemStack.getItem())) {
-			if (!character.canUse(itemStack.getItem())) {
+
+			if (!character.canUse(RPGItemType.from(itemStack))) {
 				return CannotUseItemReson.CONFIG;
 			}
 		}

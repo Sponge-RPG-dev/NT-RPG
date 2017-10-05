@@ -21,6 +21,7 @@ package cz.neumimto.rpg.players.groups;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.item.ItemType;
@@ -39,7 +40,7 @@ public class PlayerGroup implements IEffectSourceProvider {
 	private boolean showsInMenu = true;
 	private Set<ItemType> canCraft = new HashSet<>();
 	private Set<ItemType> allowedArmor = new HashSet<>();
-	private Map<ItemType, Double> weapons = new HashMap<>();
+	private HashMap<ItemType, TreeSet<ConfigRPGItemType>> weapons = new HashMap<>();
 	private Set<PlayerGroupPermission> permissions = new TreeSet<>();
 	private Map<Integer, Float> propLevelBonus = new HashMap<>();
 	private ItemType itemType;
@@ -109,8 +110,17 @@ public class PlayerGroup implements IEffectSourceProvider {
 		return allowedArmor;
 	}
 
-	public Map<ItemType, Double> getWeapons() {
+	public Map<ItemType, TreeSet<ConfigRPGItemType>> getWeapons() {
 		return weapons;
+	}
+
+	public void addWeapon(ConfigRPGItemType item) {
+		TreeSet<ConfigRPGItemType> configRPGItemTypes = weapons.get(item.getItemType());
+		if (configRPGItemTypes == null) {
+			configRPGItemTypes = new TreeSet<>();
+			weapons.put(item.getItemType(), configRPGItemTypes);
+		}
+		configRPGItemTypes.add(item);
 	}
 
 	public Set<PlayerGroupPermission> getPermissions() {

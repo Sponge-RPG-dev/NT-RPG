@@ -35,6 +35,7 @@ import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.effects.common.def.ManaBarNotifier;
 import cz.neumimto.rpg.inventory.CannotUseItemReson;
+import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
@@ -82,7 +83,6 @@ import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.gui.GuiHelper.*;
 
@@ -458,18 +458,19 @@ public class VanilaMessaging implements IPlayerMessage {
 		ItemStack of = back(g);
 		i.query(new SlotPos(0, 0)).offer(of);
 
-		g.getWeapons().entrySet().stream().sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
-				.collect(Collectors.toMap(Map.Entry::getKey,
-						Map.Entry::getValue,
-						(e1, e2) -> e1,
-						LinkedHashMap::new)).forEach((type, aDouble) -> {
-			ItemStack q = ItemStack.of(type, 1);
+		TreeSet<ConfigRPGItemType> treeSet = new TreeSet<>();
+		for (Map.Entry<ItemType, TreeSet<ConfigRPGItemType>> entry : g.getWeapons().entrySet()) {
+			treeSet.addAll(entry.getValue());
+		}
+
+		for (ConfigRPGItemType configRPGItemType : treeSet) {
+			ItemStack q = ItemStack.of(configRPGItemType.getItemType(), 1);
 			Text lore = Text.builder(Localization.ITEM_DAMAGE)
 					.color(TextColors.GOLD)
 					.style(TextStyles.BOLD)
-					.append(Text.builder(" " + aDouble.toString())
+					.append(Text.builder(" " + configRPGItemType.getDamage())
 							.style(TextStyles.BOLD)
-							.color(damageService.getColorByDamage(aDouble))
+							.color(damageService.getColorByDamage(configRPGItemType.getDamage()))
 							.build())
 					.build();
 			q.offer(Keys.ITEM_LORE, Collections.singletonList(lore));
@@ -477,7 +478,8 @@ public class VanilaMessaging implements IPlayerMessage {
 			q.offer(Keys.HIDE_MISCELLANEOUS, true);
 			q.offer(Keys.HIDE_ATTRIBUTES, true);
 			i.offer(q);
-		});
+		}
+
 		target.openInventory(i);
 	}
 

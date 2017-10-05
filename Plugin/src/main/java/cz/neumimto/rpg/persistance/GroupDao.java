@@ -25,6 +25,7 @@ import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.groups.*;
 import cz.neumimto.rpg.players.properties.PropertyService;
@@ -33,6 +34,7 @@ import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.SkillTree;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.item.ItemType;
@@ -265,15 +267,27 @@ public class GroupDao {
 		}
 
 		try {
-			prop = c.getConfig("AllowedWeapons");
-			set = prop.entrySet();
-			for (Map.Entry<String, ConfigValue> m : set) {
-				Optional<ItemType> type = game.getRegistry().getType(ItemType.class, m.getKey());
-				if (type.isPresent()) {
-					group.getWeapons().put(type.get(), Double.parseDouble(m.getValue().render()));
-				} else logger.warn("Defined invalid itemtype  " + m.getKey() + " in " + group.getName());
-
+			List<String> allowedWeapons = c.getStringList("AllowedWeapons");
+			for (String allowedWeapon : allowedWeapons) {
+				String[] split = allowedWeapon.split(",");
+				String s = split[0];
+				double damage = 0;
+				String itemName = null;
+				ItemType type = game.getRegistry().getType(ItemType.class, s).orElse(null);
+				if (type == null) {
+					logger.error(" - Unknown item type " + s);
+				} else {
+					String s1 = split[1];
+					damage = Double.parseDouble(s1);
+					if (split.length == 3) {
+						itemName = split[2];
+					}
+				}
+				ConfigRPGItemType t = new ConfigRPGItemType(type,itemName);
+				t.setDamage(damage);
+				group.addWeapon(t);
 			}
+
 		} catch (ConfigException e) {
 			logger.warn(" - Missing configuration \"AllowedWeapons\", skipping");
 		}
@@ -293,9 +307,7 @@ public class GroupDao {
 				}
 			}
 		} catch (ConfigException e) {
-			if (group.getWeapons().keySet().stream().map(ItemType::getType).filter(t -> t == ItemTypes.BOW).count() > 0) {
-				logger.warn(" - Bow defined, but configuration is missing \"ProjectileDamage\" section");
-			}
+
 		}
 
 		try {
@@ -354,6 +366,33 @@ public class GroupDao {
 			}
 		} catch (ConfigException e) {
 			logger.warn(" - Missing configuration \"Effects\", skipping");
+
+		}
+
+		try {
+			List<? extends Config> customWeapons = c.getConfigList("CustomWeapons");
+			for (Config customWeapon : customWeapons) {
+				String name = null;
+
+				if (customWeapon.hasPath("name")) {
+					name = customWeapon.getString("name");
+				}
+
+
+				String type = customWeapon.getString("type");
+
+				ItemType type1 = Sponge.getRegistry().getType(ItemType.class, type).orElse(null);
+				ConfigRPGItemType rpgItemType = new ConfigRPGItemType(type1, name);
+				double damage = 0;
+				try {
+					damage = customWeapon.getDouble("damage");
+				} catch (ConfigException e) {
+					logger.info(" - Missing node damage value for a weapon - " + type+ "|"+name+" setting to 0");
+				}
+				rpgItemType.setDamage((float) damage);
+
+			}
+		} catch (ConfigException e) {
 
 		}
 	}

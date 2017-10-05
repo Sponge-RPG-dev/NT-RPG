@@ -18,7 +18,6 @@
 
 package cz.neumimto.rpg.persistance;
 
-import com.google.inject.ConfigurationException;
 import com.typesafe.config.*;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
@@ -27,8 +26,6 @@ import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.utils.Utils;
 import org.slf4j.Logger;
 
-
-import javax.management.RuntimeErrorException;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -59,13 +56,13 @@ public class SkillTreeDao {
                 SkillTree skillTree = new SkillTree();
                 try {
                     skillTree.setDescription(config.getString("Description"));
-                } catch (ConfigurationException e) {
+                } catch (ConfigException e) {
                     skillTree.setDescription("");
                     logger.warn("Missing \"Description\" node");
                 }
                 try {
                     skillTree.setId(config.getString("Name"));
-                } catch (ConfigurationException e) {
+                } catch (ConfigException e) {
                     logger.warn("Missing \"Name\" skipping to another file");
                     return;
                 }
@@ -74,7 +71,7 @@ public class SkillTreeDao {
                     Config sub = config.getObject("Skills").toConfig();
                     createConfigSkills(sub, skillTree);
                     loadSkills(sub, skillTree);
-                } catch (ConfigurationException e) {
+                } catch (ConfigException e) {
                     logger.warn("Missing \"Skills\" section. No skills defined");
 
                 }
@@ -118,19 +115,19 @@ public class SkillTreeDao {
                 try {
                     List<String> permissions = c.getStringList("permissions");
                     pdata.getPermissions().addAll(permissions);
-                } catch (ConfigurationException e) {
+                } catch (ConfigException e) {
                     logger.info("Found SkillPath in the tree \"" + skillTree.getId() + "\" but no permissions defined");
                 }
                 try {
                     int tier = c.getInt("tier");
                     pdata.setTier(tier);
-                } catch (ConfigurationException e) {
+                } catch (ConfigException e) {
                     logger.info("Found SkillPath in the tree \"" + skillTree.getId() + "\" but no tier defined, setting to 0");
                 }
 
                 try {
                     pdata.setSkillPointsRequired(c.getInt("SkillPointsRequired"));
-                } catch (ConfigurationException e) {
+                } catch (ConfigException e) {
                     logger.info("Found SkillPath in the tree \"" + skillTree.getId() + "\" but no permissions defined, setting to 1");
                     pdata.setSkillPointsRequired(1);
                 }
@@ -142,18 +139,18 @@ public class SkillTreeDao {
                             String skill = s.getString("skill");
                             int levels = s.getInt("levels");
                             pdata.addSkillBonus(skill, levels);
-                        } catch (ConfigurationException e) {
+                        } catch (ConfigException e) {
                             logger.info("Found SkillPath.SkillBonus in the tree \"" + skillTree.getId() + "\" missing \"skill\" or \"level\" configuration node");
                         }
 
                     }
-                } catch (ConfigurationException e) {
+                } catch (ConfigException e) {
                     //logger.info("Found SkillPath in the tree \"" + skillTree.getId() + "\" but no permissions defined, setting to 1");
                 }
             } else {
                 try {
                     info.setMaxSkillLevel(c.getInt("MaxSkillLevel"));
-                } catch (ConfigurationException e) {
+                } catch (ConfigException e) {
                     info.setMaxSkillLevel(1);
                     logger.warn("Missing \"MaxSkillLevel\" node for a skill \""+info.getSkillName()+"\", setting to 1");
                 }
@@ -163,12 +160,12 @@ public class SkillTreeDao {
                     if (!"".equals(combination)) {
                         info.setCombination(combination);
                     }
-                } catch (ConfigurationException e) {
+                } catch (ConfigException e) {
                 }
             }
             try {
                 info.setMinPlayerLevel(c.getInt("MinPlayerLevel"));
-            } catch (ConfigurationException e) {
+            } catch (ConfigException e) {
                 info.setMinPlayerLevel(1);
                 logger.warn("Missing \"MinPlayerLevel\" node for a skill \""+info.getSkillName()+"\", setting to 1");
             }
@@ -177,7 +174,7 @@ public class SkillTreeDao {
                 for (String conflicts : c.getStringList("Conflicts")) {
                     info.getConflicts().add(getSkillInfo(conflicts, skillTree));
                 }
-            } catch (ConfigurationException ignored) {}
+            } catch (ConfigException ignored) {}
 
             try {
                 for (String conflicts : c.getStringList("SoftDepends")) {
@@ -185,7 +182,7 @@ public class SkillTreeDao {
                     info.getSoftDepends().add(i);
                     i.getDepending().add(info);
                 }
-            } catch (ConfigurationException ignored) {}
+            } catch (ConfigException ignored) {}
 
 
             try {
@@ -194,7 +191,7 @@ public class SkillTreeDao {
                     info.getHardDepends().add(i);
                     i.getDepending().add(info);
                 }
-            } catch (ConfigurationException ignored) {}
+            } catch (ConfigException ignored) {}
 
             try {
                 Config settings = c.getConfig("SkillSettings");
@@ -212,7 +209,7 @@ public class SkillTreeDao {
                         float bonus = 0f;
                         try {
                             bonus = Float.parseFloat(settings.getString(name));
-                        } catch (ConfigurationException ignored) {}
+                        } catch (ConfigException ignored) {}
                         skillSettings.addNode(name, bonus);
                     } else {
                         skillSettings.addObjectNode(e.getKey(), val);
@@ -220,7 +217,19 @@ public class SkillTreeDao {
                 }
                 addRequiredIfMissing(skillSettings);
                 info.setSkillSettings(skillSettings);
-            } catch (ConfigurationException ignored) {}
+            } catch (ConfigException ignored) {}
+
+            try {
+				info.setRelativeX(c.getInt("x"));
+			} catch (Exception e) {
+            	logger.warn("Missing \"x\" for the skill"+info.getSkillName()+", unless set it wont be possible to display skilltree in the vanilla game client");
+			}
+			try {
+				info.setRelativeY(c.getInt("y"));
+			} catch (Exception e) {
+				logger.warn("Missing \"y\" for the skill"+info.getSkillName()+", unless set it wont be possible to display skilltree in the vanilla game client");
+			}
+
 
             skillTree.getSkills().put(info.getSkillName(), info);
 

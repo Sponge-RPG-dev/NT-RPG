@@ -48,6 +48,7 @@ public abstract class AbstractSkill implements ISkill {
 	private Set<ISkillType> skillTypes = new HashSet<>();
 	private String lore;
 	private DamageType damagetype = DamageTypes.MAGIC;
+	private int id;
 
 	public AbstractSkill() {
 		icon = new SkillItemIcon(this);
@@ -182,5 +183,15 @@ public abstract class AbstractSkill implements ISkill {
 	@Override
 	public int hashCode() {
 		return name.hashCode() * 77;
+	}
+
+	@Override
+	public int getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(int runtimeId) {
+		this.id = runtimeId;
 	}
 }

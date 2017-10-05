@@ -23,7 +23,6 @@ import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 
@@ -35,7 +34,7 @@ public class Weapon extends Charm {
 	public static Weapon EmptyHand;
 	protected double damage;
 	protected boolean current;
-	private ItemType itemType;
+	private RPGItemType itemType;
 	private int level;
 
 	static {
@@ -44,11 +43,11 @@ public class Weapon extends Charm {
 
 	public Weapon(ItemStack itemStack) {
 		super(itemStack);
-		this.itemType = itemStack.getItem();
+		this.itemType = RPGItemType.from(itemStack);
 		type = HotbarObjectTypes.WEAPON;
 	}
 
-	public ItemType getItemType() {
+	public RPGItemType getItemType() {
 		return itemType;
 	}
 

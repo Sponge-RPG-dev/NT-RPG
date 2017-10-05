@@ -40,9 +40,7 @@ import cz.neumimto.rpg.events.skills.SkillLearnEvent;
 import cz.neumimto.rpg.events.skills.SkillRefundEvent;
 import cz.neumimto.rpg.events.skills.SkillUpgradeEvent;
 import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.inventory.UserActionType;
-import cz.neumimto.rpg.inventory.Weapon;
+import cz.neumimto.rpg.inventory.*;
 import cz.neumimto.rpg.persistance.PlayerDao;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
@@ -156,7 +154,7 @@ public class CharacterService {
 	}
 
 	public void updateWeaponRestrictions(IActiveCharacter character) {
-		Map<ItemType, Double> allowedArmor = character.updateItemRestrictions().getAllowedWeapons();
+		Map<ItemType, TreeSet<ConfigRPGItemType>> allowedArmor = character.updateItemRestrictions().getAllowedWeapons();
 		try (CauseStackManager.StackFrame stackFrame = causeStackManager.pushCauseFrame()) {
 			causeStackManager.pushCause(character);
 			CharacterWeaponUpdateEvent event = new CharacterWeaponUpdateEvent(character, allowedArmor);
@@ -953,7 +951,7 @@ public class CharacterService {
 		return 0;
 	}
 
-	public boolean canUseItemType(IActiveCharacter character, ItemType type) {
+	public boolean canUseItemType(IActiveCharacter character, RPGItemType type) {
 		return character.canUse(type);
 	}
 

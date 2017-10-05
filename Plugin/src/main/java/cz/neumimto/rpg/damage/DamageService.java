@@ -25,6 +25,8 @@ import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.inventory.ConfigRPGItemType;
+import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
@@ -65,13 +67,17 @@ public class DamageService {
 
 	private Map<ItemType, Integer> map = new HashMap<>();
 
-	public double getCharacterItemDamage(IActiveCharacter character, ItemType type) {
+	public double getCharacterItemDamage(IActiveCharacter character, RPGItemType type) {
 		if (character.isStub() || type == null)
 			return 1;
-		double base = character.getBaseWeaponDamage(type) + characterService.getCharacterProperty(character, DefaultProperties.weapon_damage_bonus);
-		if (map.containsKey(type)) {
-			base += characterService.getCharacterProperty(character, map.get(type));
+		double base = character.getBaseWeaponDamage(type) +
+				characterService.getCharacterProperty(character, DefaultProperties.weapon_damage_bonus);
+		if (map.containsKey(type.getItemType())) {
+			base += characterService.getCharacterProperty(character, map.get(type.getItemType()));
 		} else return 1;
+
+		//todo configurate item groups, ie add daggers, spears from config
+		//in invneotry service
 		if (ItemStackUtils.isSword(type)) {
 			base *= characterService.getCharacterProperty(character, DefaultProperties.swords_damage_mult);
 		} else if (ItemStackUtils.isAxe(type)) {
@@ -105,18 +111,24 @@ public class DamageService {
 			return;
 		}
 		ItemStack i = character.getPlayer().getItemInHand(HandTypes.MAIN_HAND).orElse(null);
-		recalculateCharacterWeaponDamage(character, i == null ? null : i.getItem());
+		recalculateCharacterWeaponDamage(character, i);
 	}
 
-	public void recalculateCharacterWeaponDamage(IActiveCharacter character, ItemType type) {
+	public void recalculateCharacterWeaponDamage(IActiveCharacter character, ItemStack itemStack) {
 		if (character.isStub()) {
 			return;
 		}
+		if (itemStack == null)
+			character.setWeaponDamage(0);
 
+		recalculateCharacterWeaponDamage(character, RPGItemType.from(itemStack));
+
+	}
+
+	public void recalculateCharacterWeaponDamage(IActiveCharacter character, RPGItemType type) {
 		double damage = getCharacterItemDamage(character, type);
 		// damage += character.getMainHand().getDamage() + character.getOffHand().getDamage();
 		character.setWeaponDamage(damage);
-
 	}
 
 	public double getEntityResistance(IEntity entity, DamageType source) {
@@ -188,13 +200,31 @@ public class DamageService {
 	public void createDamageToColorMapping() {
 		Collection<ConfigClass> classes = groupService.getClasses();
 		Set<Double> list = new TreeSet<>();
-		classes.stream().map(ConfigClass::getWeapons).forEach(a -> {
-			list.addAll(a.values());
-		});
+
+		for (ConfigClass aClass : classes) {
+			Map<ItemType, TreeSet<ConfigRPGItemType>> weapons = aClass.getWeapons();
+			for (TreeSet<ConfigRPGItemType> configRPGItemTypes : weapons.values()) {
+				configRPGItemTypes
+						.stream()
+						.map(ConfigRPGItemType::getDamage)
+						.forEach(list::add);
+			}
+		}
+
 		Collection<Race> races = groupService.getRaces();
-		races.stream().map(Race::getWeapons).forEach(a -> {
-			list.addAll(a.values());
-		});
+
+
+		for (Race aClass : races) {
+			Map<ItemType, TreeSet<ConfigRPGItemType>> weapons = aClass.getWeapons();
+			for (TreeSet<ConfigRPGItemType> configRPGItemTypes : weapons.values()) {
+				configRPGItemTypes
+						.stream()
+						.map(ConfigRPGItemType::getDamage)
+						.forEach(list::add);
+			}
+		}
+
+
 		int size = list.size();
 		if (size > colorScale.length) {
 			int l = 0;
