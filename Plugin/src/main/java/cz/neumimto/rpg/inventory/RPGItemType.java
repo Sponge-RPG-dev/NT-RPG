@@ -1,8 +1,10 @@
 package cz.neumimto.rpg.inventory;
 
+import cz.neumimto.rpg.NtRpgPlugin;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.text.Text;
 
 /**
  * Created by NeumimTo on 5.10.17.
@@ -30,7 +32,13 @@ public class RPGItemType {
 	public static RPGItemType from(ItemStack itemStack) {
 		RPGItemType RPGItemType = new RPGItemType();
 		RPGItemType.itemType = itemStack.getType();
-		itemStack.get(Keys.DISPLAY_NAME).ifPresent(text -> RPGItemType.displayName = text.toPlain());
+		Text text = itemStack.get(Keys.DISPLAY_NAME).orElse(null);
+		if (text != null) {
+			String name = text.toPlain();
+			if (NtRpgPlugin.GlobalScope.inventorySerivce.getReservedItemNames().contains(name.toLowerCase())) {
+				RPGItemType.displayName = name;
+			}
+		}
 		return RPGItemType;
 	}
 

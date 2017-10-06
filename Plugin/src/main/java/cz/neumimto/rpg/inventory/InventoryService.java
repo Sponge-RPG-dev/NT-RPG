@@ -169,7 +169,7 @@ public class InventoryService {
 				if (type == null) {
 					String[] split = item.split(":");
 					if (split.length > 1) {
-						reservedItemNames.add(split[1]);
+						reservedItemNames.add(split[1].toLowerCase());
 						Optional<ItemType> type1 = Sponge.getRegistry().getType(ItemType.class, split[0]);
 						if (type1.isPresent()) {
 							RPGItemType rpgItemType = new RPGItemType(type1.get(), split[1]);
@@ -926,5 +926,13 @@ public class InventoryService {
 		CustomItemData itemData = getItemData(itemStack);
 		itemData.setSocketCount(i);
 		itemStack.offer(itemData);
+	}
+
+	public void addReservedItemname(String k) {
+		reservedItemNames.add(k.toLowerCase());
+	}
+
+	public Set<String> getReservedItemNames() {
+		return reservedItemNames;
 	}
 }
