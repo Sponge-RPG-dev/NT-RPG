@@ -369,32 +369,6 @@ public class GroupDao {
 
 		}
 
-		try {
-			List<? extends Config> customWeapons = c.getConfigList("CustomWeapons");
-			for (Config customWeapon : customWeapons) {
-				String name = null;
-
-				if (customWeapon.hasPath("name")) {
-					name = customWeapon.getString("name");
-				}
-
-
-				String type = customWeapon.getString("type");
-
-				ItemType type1 = Sponge.getRegistry().getType(ItemType.class, type).orElse(null);
-				ConfigRPGItemType rpgItemType = new ConfigRPGItemType(type1, name);
-				double damage = 0;
-				try {
-					damage = customWeapon.getDouble("damage");
-				} catch (ConfigException e) {
-					logger.info(" - Missing node damage value for a weapon - " + type+ "|"+name+" setting to 0");
-				}
-				rpgItemType.setDamage((float) damage);
-
-			}
-		} catch (ConfigException e) {
-
-		}
 	}
 
 
