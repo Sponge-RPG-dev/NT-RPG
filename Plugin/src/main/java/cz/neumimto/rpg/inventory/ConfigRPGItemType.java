@@ -26,24 +26,7 @@ public class ConfigRPGItemType extends RPGItemType implements Comparable<ConfigR
 		this.damage = damage;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null)
-			return false;
-		if (obj instanceof RPGItemType) {
-			return false;
-		}
-		RPGItemType that = (RPGItemType) obj;
-		if (getItemType().equals(that.getItemType())) {
-			if (getDisplayName() == null && that.getDisplayName() == null)
-				return true;
-			if (getDisplayName() != null && getDisplayName().equalsIgnoreCase(that.getDisplayName())) {
-				return true;
-			}
-		}
-		return false;
 
-	}
 
 	@Override
 	public int compareTo(ConfigRPGItemType o) {

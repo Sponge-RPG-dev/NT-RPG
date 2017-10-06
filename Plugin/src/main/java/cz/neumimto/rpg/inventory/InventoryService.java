@@ -19,9 +19,12 @@
 package cz.neumimto.rpg.inventory;
 
 import com.google.common.collect.ImmutableList;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectService;
@@ -36,11 +39,13 @@ import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.data.value.mutable.ListValue;
@@ -65,6 +70,11 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyle;
 import org.spongepowered.api.text.format.TextStyles;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -111,12 +121,113 @@ public class InventoryService {
 	@Inject
 	private RWService rwService;
 
+	@Inject
+	private PropertyService propertyService;
+
+	private Set<String> reservedItemNames = new HashSet<>();
+
 	private Map<UUID, InventoryMenu> inventoryMenus = new HashMap<>();
+	private Map<String, ItemGroup> itemGroups = new HashMap<>();
 
 
-	@PostProcess
+	@PostProcess(priority = 3000)
 	public void init() {
 		NORMAL_RARITY = Text.of(Localization.NORMAL_RARITY);
+		loadItemGroups();
+	}
+
+	private void loadItemGroups() {
+		Path path = Paths.get(NtRpgPlugin.workingDir+"/ItemGroups.conf");
+		File f = path.toFile();
+		if (!f.exists()) {
+			try {
+				PrintWriter writer = new PrintWriter(f);
+				writer.println("ReservedItemNames:[]");
+				writer.println("ItemGroups:[");
+				addDefaultItemsToGroup(writer, WeaponKeys.SWORDS, "swords_damage_mult");
+				addDefaultItemsToGroup(writer, WeaponKeys.AXES, "axes_damage_mult");
+				addDefaultItemsToGroup(writer, WeaponKeys.SPADES, "shovels_damage_mult");
+				addDefaultItemsToGroup(writer, WeaponKeys.PICKAXES, "pickaxes_damage_mult");
+				addDefaultItemsToGroup(writer, WeaponKeys.HOES, "hoes_damage_mult");
+				addDefaultItemsToGroup(writer, WeaponKeys.BOWS, "bows_meele_damage_mult");
+				addDefaultItemsToGroup(writer, WeaponKeys.STAFF, "staffs_damage_mult");
+				writer.println("]");
+				writer.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+
+		Config c = ConfigFactory.parseFile(path.toFile());
+		reservedItemNames.addAll(c.getStringList("ReservedItemNames"));
+		for (Config itemGroups : c.getConfigList("ItemGroups")) {
+			List<String> items = itemGroups.getStringList("Items");
+			String groupName = itemGroups.getString("ItemGroupName");
+			ItemGroup itemGroup = new ItemGroup(groupName);
+			for (String item : items) {
+				ItemType type = Sponge.getRegistry().getType(ItemType.class, item).orElse(null);
+				if (type == null) {
+					String[] split = item.split(":");
+					if (split.length > 1) {
+						reservedItemNames.add(split[1]);
+						Optional<ItemType> type1 = Sponge.getRegistry().getType(ItemType.class, split[0]);
+						if (type1.isPresent()) {
+							RPGItemType rpgItemType = new RPGItemType(type1.get(), split[1]);
+							itemGroup.getItemTypes().add(rpgItemType);
+						}
+					}
+				} else {
+					RPGItemType rpgItemType = new RPGItemType(type, null);
+					itemGroup.getItemTypes().add(rpgItemType);
+				}
+			}
+			String damageMultPropertyId = c.getString("DamageMultPropertyId");
+			int idByName = propertyService.getIdByName(damageMultPropertyId);
+			itemGroup.setDamageMultPropertyId(idByName);
+			addItemGroup(itemGroup);
+		}
+
+	}
+
+	public void addItemGroup(ItemGroup itemGroup) {
+		itemGroups.put(itemGroup.getGroupName(), itemGroup);
+	}
+
+	public ItemGroup getItemGroup(ItemStack itemStack) {
+		return getItemGroup(RPGItemType.from(itemStack));
+	}
+
+	public ItemGroup getItemGroup(RPGItemType itemType) {
+		for (ItemGroup itemGroup : itemGroups.values()) {
+			for (RPGItemType rpgItemType : itemGroup.getItemTypes()) {
+				if (rpgItemType.getItemType().equals(itemType.getItemType())) {
+					if (rpgItemType.getDisplayName() == null && itemType.getDisplayName() == null
+							&& rpgItemType.getItemType().equals(itemType.getItemType()))
+						return itemGroup;
+					if (rpgItemType.getDisplayName() != null &&
+							rpgItemType.getDisplayName().equalsIgnoreCase(itemType.getDisplayName()) &&
+							rpgItemType.getItemType().equals(itemType.getItemType())
+							) {
+						return itemGroup;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	private void addDefaultItemsToGroup(PrintWriter writer, String id, String damageMultProperty) {
+		writer.println("  {");
+		writer.println("   Items:[");
+		for (ItemType type : Sponge.getGame().getRegistry().getAllOf(ItemType.class)) {
+			if (type.getName().contains(id)) {
+				writer.println(type);
+			}
+		}
+		writer.println("  ]");
+		writer.println("  ItemGroupName:"+id);
+		writer.println("  DamageMultPropertyId:"+damageMultProperty);
+		writer.println("}");
 	}
 
 	public ItemStack getHelpItem(List<String> lore, ItemType type) {

@@ -120,6 +120,9 @@ public class DefaultProperties {
 	@Property(name = "axes_damage_mult", default_ = 1)
 	public static int axes_damage_mult;
 
+	@Property(name = "shovels_damage_mult", default_ = 1)
+	public static int shovels_damage_mult;
+
 	@Property(name = "pickaxes_damage_mult", default_ = 1)
 	public static int pickaxes_damage_mult;
 

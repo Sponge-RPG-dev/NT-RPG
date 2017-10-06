@@ -26,6 +26,8 @@ import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
+import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.ItemGroup;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -63,6 +65,9 @@ public class DamageService {
 	@Inject
 	private GroupService groupService;
 
+	@Inject
+	private InventoryService inventoryService;
+
 	public BiFunction<Double, Double, Double> DamageArmorReductionFactor = (damage, armor) -> armor / (armor + 10 * damage);
 
 	private Map<ItemType, Integer> map = new HashMap<>();
@@ -76,20 +81,9 @@ public class DamageService {
 			base += characterService.getCharacterProperty(character, map.get(type.getItemType()));
 		} else return 1;
 
-		//todo configurate item groups, ie add daggers, spears from config
-		//in invneotry service
-		if (ItemStackUtils.isSword(type)) {
-			base *= characterService.getCharacterProperty(character, DefaultProperties.swords_damage_mult);
-		} else if (ItemStackUtils.isAxe(type)) {
-			base *= characterService.getCharacterProperty(character, DefaultProperties.axes_damage_mult);
-		} else if (ItemStackUtils.isPickaxe(type)) {
-			base *= characterService.getCharacterProperty(character, DefaultProperties.pickaxes_damage_mult);
-		} else if (ItemStackUtils.isHoe(type)) {
-			base *= characterService.getCharacterProperty(character, DefaultProperties.hoes_damage_mult);
-		} else if (ItemStackUtils.isBow(type)) {
-			base *= characterService.getCharacterProperty(character, DefaultProperties.bows_meele_damage_mult);
-		} else if (ItemStackUtils.isStaff(type)) {
-			base *= characterService.getCharacterProperty(character, DefaultProperties.staffs_damage_mult);
+		ItemGroup itemGroup = inventoryService.getItemGroup(type);
+		if (itemGroup != null) {
+			base *= characterService.getCharacterProperty(character, itemGroup.getDamageMultPropertyId());
 		}
 		return base;
 	}
