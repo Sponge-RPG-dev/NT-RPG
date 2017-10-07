@@ -112,11 +112,11 @@ public class DamageService {
 		if (character.isStub()) {
 			return;
 		}
-		if (itemStack == null)
+		if (itemStack == null) {
 			character.setWeaponDamage(0);
-
-		recalculateCharacterWeaponDamage(character, RPGItemType.from(itemStack));
-
+		} else {
+			recalculateCharacterWeaponDamage(character, RPGItemType.from(itemStack));
+		}
 	}
 
 	public void recalculateCharacterWeaponDamage(IActiveCharacter character, RPGItemType type) {

@@ -477,6 +477,9 @@ public class VanilaMessaging implements IPlayerMessage {
 			q.offer(new MenuInventoryData(true));
 			q.offer(Keys.HIDE_MISCELLANEOUS, true);
 			q.offer(Keys.HIDE_ATTRIBUTES, true);
+			if (configRPGItemType.getDisplayName() != null) {
+				q.offer(Keys.DISPLAY_NAME, Text.of(configRPGItemType.getDisplayName()));
+			}
 			i.offer(q);
 		}
 
