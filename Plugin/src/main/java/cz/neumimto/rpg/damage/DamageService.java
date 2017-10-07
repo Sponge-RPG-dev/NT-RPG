@@ -220,7 +220,7 @@ public class DamageService {
 
 
 		int size = list.size();
-		if (size > colorScale.length) {
+		if (size >= colorScale.length) {
 			int l = 0;
 			Iterable<List<Double>> lists = Iterables.partition(list, size / colorScale.length);
 			for (List<Double> doubles : lists) {

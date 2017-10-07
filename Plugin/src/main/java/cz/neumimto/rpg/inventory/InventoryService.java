@@ -168,11 +168,11 @@ public class InventoryService {
 				ItemType type = Sponge.getRegistry().getType(ItemType.class, item).orElse(null);
 				if (type == null) {
 					String[] split = item.split(";");
-					if (split.length > 1) {
-						reservedItemNames.add(split[1].toLowerCase());
+					if (split.length > 2) {
+						addReservedItemname(split[2]);
 						Optional<ItemType> type1 = Sponge.getRegistry().getType(ItemType.class, split[0]);
 						if (type1.isPresent()) {
-							RPGItemType rpgItemType = new RPGItemType(type1.get(), split[1]);
+							RPGItemType rpgItemType = new RPGItemType(type1.get(), split[2]);
 							itemGroup.getItemTypes().add(rpgItemType);
 						}
 					}
@@ -305,7 +305,7 @@ public class InventoryService {
 			if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
 				hotbarObject.setSlot(slot);
 				character.getHotbar()[slot] = hotbarObject;
-				CannotUseItemReson reason = canWear(i, character);
+				CannotUseItemReson reason = canUse(i, character);
 				if (reason != CannotUseItemReson.OK) {
 					ItemStack itemStack = s.poll().get();
 					dropItem(character, itemStack, reason);
@@ -481,7 +481,8 @@ public class InventoryService {
 		if (ItemStackUtils.isItemRune(is)) {
 			return new HotbarRune(is);
 		}
-		if (ItemStackUtils.isWeapon(is.getItem())) {
+		ItemGroup itemGroup = getItemGroup(is);
+		if (itemGroup != null) {
 			return buildHotbarWeapon(character, is);
 		}
 		return HotbarObject.EMPTYHAND_OR_CONSUMABLE;
@@ -701,9 +702,10 @@ public class InventoryService {
 	}
 
 	public CannotUseItemReson canUse(ItemStack itemStack, IActiveCharacter character) {
-		//todo change
-		if (ItemStackUtils.weapons.contains(itemStack.getItem())) {
+		if (itemStack == null)
+			return CannotUseItemReson.OK;
 
+		if (ItemStackUtils.weapons.contains(itemStack.getItem())) {
 			if (!character.canUse(RPGItemType.from(itemStack))) {
 				return CannotUseItemReson.CONFIG;
 			}

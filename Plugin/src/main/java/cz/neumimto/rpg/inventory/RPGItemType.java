@@ -30,16 +30,16 @@ public class RPGItemType {
 	}
 
 	public static RPGItemType from(ItemStack itemStack) {
-		RPGItemType RPGItemType = new RPGItemType();
-		RPGItemType.itemType = itemStack.getType();
+		RPGItemType itemType = new RPGItemType();
+		itemType.itemType = itemStack.getType();
 		Text text = itemStack.get(Keys.DISPLAY_NAME).orElse(null);
 		if (text != null) {
 			String name = text.toPlain();
 			if (NtRpgPlugin.GlobalScope.inventorySerivce.getReservedItemNames().contains(name.toLowerCase())) {
-				RPGItemType.displayName = name;
+				itemType.displayName = name;
 			}
 		}
-		return RPGItemType;
+		return itemType;
 	}
 
 	@Override
