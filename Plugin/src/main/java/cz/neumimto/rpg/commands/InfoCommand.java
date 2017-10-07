@@ -242,10 +242,8 @@ public class InfoCommand extends CommandBase {
 
 			}
 		} else if (args[0].equalsIgnoreCase("skilltree")) {
-			String skillname = args[1];
-			SkillTree skillTree = skillService.getSkillTrees().get(skillname);
-			SkillData skillData = skillTree.getSkills().get(args[2]);
-			Gui.openSkillTreeMenu(characterService.getCharacter(((Player) commandSource).getUniqueId()), skillTree, skillData);
+			IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
+			Gui.openSkillTreeMenu(character, character.getPrimaryClass().getConfigClass().getSkillTree());
 		} else {
 			commandSource.sendMessage(getUsage(commandSource));
 		}

@@ -22,6 +22,7 @@ import com.typesafe.config.*;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.utils.Utils;
 import org.slf4j.Logger;
@@ -30,9 +31,8 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by NeumimTo on 24.7.2015.
@@ -75,6 +75,41 @@ public class SkillTreeDao {
                     logger.warn("Missing \"Skills\" section. No skills defined");
 
                 }
+
+                try {
+                    List<String> asciiMap = config.getStringList("AsciiMap");
+                    java.util.Optional<String> max = asciiMap.stream().max(Comparator.comparingInt(String::length));
+                    if (max.isPresent()) {
+                        int length = max.get().length();
+                        int rows = asciiMap.size();
+
+                        short[][] array = new short[rows][length];
+
+                        int i = 0;
+                        int j = 0;
+                        String num = "";
+                        for (String s : asciiMap) {
+                            for (char c1 : s.toCharArray()) {
+                                if (Character.isDigit(c1)){
+                                    num += c1;
+                                    continue;
+                                }
+                                if (!num.equals("")) {
+                                    array[i][j] = Short.parseShort(num);
+                                } else if (SkillService.SKILL_CONNECTION_TYPES.keySet().contains(c1)){
+                                    array[i][j] = SkillService.SKILL_CONNECTION_TYPES.get(c1).value;
+                                }
+                                num = "";
+                                j++;
+                            }
+                            j=0;
+                            i++;
+                        }
+                        skillTree.setSkillTreeMap(array);
+                    }
+                } catch (ConfigException ignored) {}
+
+
                 map.put(skillTree.getId(), skillTree);
             });
         } catch (IOException e) {
@@ -194,6 +229,12 @@ public class SkillTreeDao {
             } catch (ConfigException ignored) {}
 
             try {
+                info.setSkillTreeId(c.getInt("SkillTreeId"));
+            } catch (ConfigException ignored) {
+                logger.info(" - Skill " + info.getSkillName() + " missing SkillTreeId, it wont be possible to reference this skill in the ascii map");
+            }
+
+            try {
                 Config settings = c.getConfig("SkillSettings");
                 SkillSettings skillSettings = new SkillSettings();
                 for (Map.Entry<String, ConfigValue> e : settings.entrySet()) {
@@ -219,22 +260,12 @@ public class SkillTreeDao {
                 info.setSkillSettings(skillSettings);
             } catch (ConfigException ignored) {}
 
-            try {
-				info.setRelativeX(c.getInt("x"));
-			} catch (Exception e) {
-            	logger.warn("Missing \"x\" for the skill"+info.getSkillName()+", unless set it wont be possible to display skilltree in the vanilla game client");
-			}
-			try {
-				info.setRelativeY(c.getInt("y"));
-			} catch (Exception e) {
-				logger.warn("Missing \"y\" for the skill"+info.getSkillName()+", unless set it wont be possible to display skilltree in the vanilla game client");
-			}
-
-
             skillTree.getSkills().put(info.getSkillName(), info);
 
         }
     }
+
+
 
     private void addRequiredIfMissing(SkillSettings skillSettings) {
         Map.Entry<String, Float> q = skillSettings.getFloatNodeEntry(SkillNodes.HPCOST.name());

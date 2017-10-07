@@ -156,18 +156,6 @@ public class VanilaMessaging implements IPlayerMessage {
 	}
 
 	@Override
-	public void openSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, SkillData skillData) {
-		Sponge.getScheduler().createTaskBuilder().async().execute(() -> {
-
-		}).submit(plugin);
-	}
-
-	@Override
-	public void moveSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, Map<String, Integer> learnedSkill, SkillData center) {
-
-	}
-
-	@Override
 	public void sendEffectStatus(IActiveCharacter player, EffectStatusType type, IEffect effect) {
 		sendMessage(player, type.toMessage(effect));
 	}

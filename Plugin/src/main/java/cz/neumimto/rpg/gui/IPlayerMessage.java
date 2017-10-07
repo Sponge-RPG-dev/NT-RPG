@@ -46,9 +46,6 @@ public interface IPlayerMessage {
 
 	void sendCooldownMessage(IActiveCharacter player, String message, double cooldown);
 
-	void openSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, SkillData skillData);
-
-	void moveSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, Map<String, Integer> learnedSkill, SkillData center);
 
 	void sendEffectStatus(IActiveCharacter player, EffectStatusType type, IEffect effect);
 

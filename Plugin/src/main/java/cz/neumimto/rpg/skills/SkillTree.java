@@ -32,6 +32,7 @@ public class SkillTree {
 	private String id;
 	private Map<String, SkillData> skills = new HashMap<>();
 	private String description;
+	private short[][] skillTreeMap;
 
 
 	public Map<String, SkillData> getSkills() {
@@ -52,5 +53,22 @@ public class SkillTree {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public SkillData getSkillById(int id) {
+		for (SkillData skillData : skills.values()) {
+			if (skillData.getSkillTreeId() == id) {
+				return skillData;
+			}
+		}
+		return null;
+	}
+
+	public void setSkillTreeMap(short[][] skillTreeMap) {
+		this.skillTreeMap = skillTreeMap;
+	}
+
+	public short[][] getSkillTreeMap() {
+		return skillTreeMap;
 	}
 }

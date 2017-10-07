@@ -76,8 +76,8 @@ public class Gui {
 		getMessageTypeOf(player).sendCooldownMessage(player, skillname, cooldown);
 	}
 
-	public static void openSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, SkillData center) {
-		getMessageTypeOf(player).openSkillTreeMenu(player, skillTree, center);
+	public static void openSkillTreeMenu(IActiveCharacter player, SkillTree skillTree) {
+
 	}
 
 	public static void sendEffectStatus(IActiveCharacter player, EffectStatusType type, IEffect effect) {
@@ -90,10 +90,6 @@ public class Gui {
 
 	public static void sendPlayerInfo(IActiveCharacter character, List<CharacterBase> target) {
 		getMessageTypeOf(character).sendPlayerInfo(character, target);
-	}
-
-	public static void moveSkillTreeMenu(IActiveCharacter player, SkillTree skillTree, Map<String, Integer> learnedSkill, SkillData center) {
-		getMessageTypeOf(player).moveSkillTreeMenu(player, skillTree, learnedSkill, center);
 	}
 
 	public static void showCharacterInfo(IActiveCharacter player, IActiveCharacter character) {
@@ -187,6 +183,7 @@ public class Gui {
 	public static void sendNotification(IActiveCharacter character, Text text) {
 		character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, text);
 	}
+
 
 	//only here until gets advancements gets implemented
 	public static void displayAllSkills(IActiveCharacter character) {

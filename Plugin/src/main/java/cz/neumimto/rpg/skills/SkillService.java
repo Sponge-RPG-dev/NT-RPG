@@ -23,6 +23,7 @@ import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.events.skills.SkillPostUsageEvent;
 import cz.neumimto.rpg.events.skills.SkillPrepareEvent;
@@ -34,14 +35,20 @@ import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.entity.HealthData;
+import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.text.Text;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -68,6 +75,8 @@ public class SkillService {
 	private Map<String, ISkill> skills = new ConcurrentHashMap<>();
 
 	private Map<String, SkillTree> skillTrees = new ConcurrentHashMap<>();
+
+	public static Map<java.lang.Character, Pair<ItemStack, Short>> SKILL_CONNECTION_TYPES = new HashMap<>();
 
 	private static int id = 0;
 
@@ -167,9 +176,9 @@ public class SkillService {
 
 	@PostProcess(priority = 300)
 	public void load() {
+		initGuis();
 		skillTrees.putAll(skillTreeDao.getAll());
 		createSkillsDefaults();
-		initGuis();
 	}
 
 	public void initIcons() {
@@ -245,6 +254,17 @@ public class SkillService {
 	}
 
 	public void initGuis() {
-		
+		ItemStack vertical = ItemStack.of(ItemTypes.STICK,1);
+		vertical.offer(Keys.DISPLAY_NAME, Text.of("|"));
+		ItemStack horizontal = ItemStack.of(ItemTypes.STICK,1);
+		vertical.offer(Keys.DISPLAY_NAME, Text.of("-"));
+		ItemStack d45 = ItemStack.of(ItemTypes.STICK,1);
+		vertical.offer(Keys.DISPLAY_NAME, Text.of("\\"));
+		ItemStack d45i = ItemStack.of(ItemTypes.STICK,1);
+		vertical.offer(Keys.DISPLAY_NAME, Text.of("/"));
+		SKILL_CONNECTION_TYPES.put('|', new Pair<>(vertical,Short.MAX_VALUE));
+		SKILL_CONNECTION_TYPES.put('-', new Pair<>(horizontal,(short)(Short.MAX_VALUE - 1)));
+		SKILL_CONNECTION_TYPES.put('\\', new Pair<>(d45,(short)(Short.MAX_VALUE -2)));
+		SKILL_CONNECTION_TYPES.put('/', new Pair<>(d45i,(short)(Short.MAX_VALUE -3)));
 	}
 }

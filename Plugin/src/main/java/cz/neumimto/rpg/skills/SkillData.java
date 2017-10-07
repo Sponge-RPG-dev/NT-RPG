@@ -40,6 +40,7 @@ public class SkillData {
 	private String combination = null;
 	private int relativeX;
 	private int relativeY;
+	private int skillTreeId;
 
 	public SkillData(String skill) {
 		this.skill = skill;
@@ -135,5 +136,13 @@ public class SkillData {
 
 	public void setRelativeY(int relativeY) {
 		this.relativeY = relativeY;
+	}
+
+	public void setSkillTreeId(int skillTreeId) {
+		this.skillTreeId = skillTreeId;
+	}
+
+	public int getSkillTreeId() {
+		return skillTreeId;
 	}
 }
