@@ -146,7 +146,7 @@ public class InventoryService {
 				writer.println("ItemGroups:[");
 				addDefaultItemsToGroup(writer, WeaponKeys.SWORDS, "swords_damage_mult");
 				addDefaultItemsToGroup(writer, WeaponKeys.AXES, "axes_damage_mult");
-				addDefaultItemsToGroup(writer, WeaponKeys.SPADES, "shovels_damage_mult");
+				addDefaultItemsToGroup(writer, WeaponKeys.SHOVELS, "shovels_damage_mult");
 				addDefaultItemsToGroup(writer, WeaponKeys.PICKAXES, "pickaxes_damage_mult");
 				addDefaultItemsToGroup(writer, WeaponKeys.HOES, "hoes_damage_mult");
 				addDefaultItemsToGroup(writer, WeaponKeys.BOWS, "bows_meele_damage_mult");
@@ -167,7 +167,7 @@ public class InventoryService {
 			for (String item : items) {
 				ItemType type = Sponge.getRegistry().getType(ItemType.class, item).orElse(null);
 				if (type == null) {
-					String[] split = item.split(":");
+					String[] split = item.split(";");
 					if (split.length > 1) {
 						reservedItemNames.add(split[1].toLowerCase());
 						Optional<ItemType> type1 = Sponge.getRegistry().getType(ItemType.class, split[0]);
@@ -181,7 +181,7 @@ public class InventoryService {
 					itemGroup.getItemTypes().add(rpgItemType);
 				}
 			}
-			String damageMultPropertyId = c.getString("DamageMultPropertyId");
+			String damageMultPropertyId = itemGroups.getString("DamageMultPropertyId");
 			int idByName = propertyService.getIdByName(damageMultPropertyId);
 			itemGroup.setDamageMultPropertyId(idByName);
 			addItemGroup(itemGroup);
@@ -217,17 +217,17 @@ public class InventoryService {
 	}
 
 	private void addDefaultItemsToGroup(PrintWriter writer, String id, String damageMultProperty) {
-		writer.println("  {");
-		writer.println("   Items:[");
+		writer.println("\t{");
+		writer.println("\t\tItems:[");
 		for (ItemType type : Sponge.getGame().getRegistry().getAllOf(ItemType.class)) {
-			if (type.getName().contains(id)) {
-				writer.println(type);
+			if (type.getId().toUpperCase().contains(id)) {
+				writer.println("\t\t\t\"" +type.getId() + "\"");
 			}
 		}
-		writer.println("  ]");
-		writer.println("  ItemGroupName:"+id);
-		writer.println("  DamageMultPropertyId:"+damageMultProperty);
-		writer.println("}");
+		writer.println("\t\t]");
+		writer.println("\t\tItemGroupName:"+id);
+		writer.println("\t\tDamageMultPropertyId:"+damageMultProperty);
+		writer.println("\t}");
 	}
 
 	public ItemStack getHelpItem(List<String> lore, ItemType type) {

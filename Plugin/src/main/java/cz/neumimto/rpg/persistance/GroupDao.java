@@ -269,7 +269,7 @@ public class GroupDao {
 		try {
 			List<String> allowedWeapons = c.getStringList("AllowedWeapons");
 			for (String allowedWeapon : allowedWeapons) {
-				String[] split = allowedWeapon.split(",");
+				String[] split = allowedWeapon.split(";");
 				String s = split[0];
 				double damage = 0;
 				String itemName = null;
