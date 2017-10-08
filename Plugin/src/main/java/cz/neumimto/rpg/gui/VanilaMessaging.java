@@ -74,6 +74,7 @@ import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.*;
 import org.spongepowered.api.item.inventory.property.SlotPos;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
+import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.LiteralText;
@@ -794,7 +795,7 @@ public class VanilaMessaging implements IPlayerMessage {
 		Optional<Container> openInventory = character.getPlayer().getOpenInventory();
 		if (openInventory.isPresent()) {
 			Container inventories = openInventory.get();
-			createSkillTreeView(character, inventories, character.getPrimaryClass().getConfigClass().getSkillTree());
+			createSkillTreeView(character, inventories.query(GridInventory.class), character.getPrimaryClass().getConfigClass().getSkillTree());
 		}
 	}
 

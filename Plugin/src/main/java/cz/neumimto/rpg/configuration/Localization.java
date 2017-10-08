@@ -365,4 +365,19 @@ public class Localization {
 
 	@ConfigValue
 	public static String PLAYER_CHOOSED_SKILLTREE_PATH_GLOBAL_MESSAGE_CONTENT = "Player $1 choosed $2";
+
+	@ConfigValue
+	public static String SKILL_TYPE_TARGETTED = "Targetted";
+
+	@ConfigValue
+	public static String SKILL_TYPE_ACTIVE = "Active";
+
+	@ConfigValue
+	public static String SKILL_TYPE_PASSIVE = "Passive";
+
+	@ConfigValue
+	public static String MIN_PLAYER_LEVEL = "Min. Player Level";
+
+	@ConfigValue
+	public static String MAX_SKILL_LEVEL = "Max. Skill Level";
 }

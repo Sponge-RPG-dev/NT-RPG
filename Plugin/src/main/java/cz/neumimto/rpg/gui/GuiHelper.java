@@ -151,11 +151,11 @@ public class GuiHelper {
 		List<Text> lore = new ArrayList<>();
 
 		String desc = skill.getDescription();
-		String skillTargetType = "Targetted";
+		String skillTargetType = Localization.SKILL_TYPE_TARGETTED;
 		if (skill instanceof ActiveSkill) {
-			skillTargetType = "Active";
+			skillTargetType = Localization.SKILL_TYPE_ACTIVE;
 		} else if (skill instanceof PassiveSkill) {
-			skillTargetType = "Passive";
+			skillTargetType = Localization.SKILL_TYPE_PASSIVE;
 		}
 		if (desc != null)
 			for (String s : desc.split(":n")) {
@@ -168,7 +168,7 @@ public class GuiHelper {
 		int minPlayerLevel = skillData.getMinPlayerLevel();
 		int maxSkillLevel = skillData.getMaxSkillLevel();
 
-		String s = "Min. Player lvl: ";
+		String s = Localization.MIN_PLAYER_LEVEL;
 		if (minPlayerLevel > 0) {
 			lore.add(Text.builder(s).color(TextColors.YELLOW)
 					.append(Text.builder("" + minPlayerLevel)
@@ -176,7 +176,7 @@ public class GuiHelper {
 							.build())
 					.build());
 		}
-		s = "Max. Skill lvl: " + maxSkillLevel;
+		s = Localization.MAX_SKILL_LEVEL + " " + maxSkillLevel;
 		lore.add(Text.builder(s)
 				.color(TextColors.YELLOW)
 				.build());
