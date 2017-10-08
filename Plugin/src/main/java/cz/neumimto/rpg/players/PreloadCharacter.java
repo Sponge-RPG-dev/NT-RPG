@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.players;
 
+import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.IEffect;
@@ -626,5 +627,15 @@ public class PreloadCharacter implements IActiveCharacter {
 	@Override
 	public boolean isDetached() {
 		return true;
+	}
+
+	@Override
+	public Pair<Integer, Integer> getSkillTreeViewLocation() {
+		return new Pair<>(0,0);
+	}
+
+	@Override
+	public void setSkillTreeViewLocation(Pair<Integer, Integer> location) {
+
 	}
 }

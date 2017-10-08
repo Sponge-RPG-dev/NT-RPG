@@ -77,7 +77,7 @@ public class Gui {
 	}
 
 	public static void openSkillTreeMenu(IActiveCharacter player, SkillTree skillTree) {
-
+		getMessageTypeOf(player).openSkillTreeMenu(player, skillTree);
 	}
 
 	public static void sendEffectStatus(IActiveCharacter player, EffectStatusType type, IEffect effect) {
@@ -205,5 +205,9 @@ public class Gui {
 
 	public static void resetCurrentClicks(ClickComboActionEvent clickComboActionEvent) {
 
+	}
+
+	public static void moveSkillTreeMenu(IActiveCharacter character) {
+		getMessageTypeOf(character).moveSkillTreeMenu(character);
 	}
 }

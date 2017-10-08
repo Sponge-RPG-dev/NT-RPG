@@ -24,6 +24,7 @@ import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.commands.CommandChoose;
 import cz.neumimto.rpg.commands.InfoCommand;
@@ -52,19 +53,24 @@ import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.SkillTree;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import cz.neumimto.rpg.utils.Utils;
 import cz.neumimto.rpg.utils.model.CharacterListModel;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.type.SkullTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.Container;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -747,6 +753,74 @@ public class VanilaMessaging implements IPlayerMessage {
 			character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Text.of(TextColors.RED, Localization.CANNOT_USE_ITEM_LEVEL_REASON));
 		} else if (reason == CannotUseItemReson.LORE) {
 			character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Text.of(TextColors.RED, Localization.CANNOT_USE_ITEM_LORE_REASON));
+		}
+	}
+
+	@Override
+	public void openSkillTreeMenu(IActiveCharacter player, SkillTree skillTree) {
+		Inventory skillTreeInventoryViewTemplate = GuiHelper.createSkillTreeInventoryViewTemplate(player);
+		createSkillTreeView(player, skillTreeInventoryViewTemplate, skillTree);
+		player.getPlayer().openInventory(skillTreeInventoryViewTemplate);
+
+	}
+
+	@Override
+	public void moveSkillTreeMenu(IActiveCharacter character) {
+		Optional<Container> openInventory = character.getPlayer().getOpenInventory();
+		if (openInventory.isPresent()) {
+			Container inventories = openInventory.get();
+			createSkillTreeView(character, inventories, character.getPrimaryClass().getConfigClass().getSkillTree());
+		}
+	}
+
+	private void createSkillTreeView(IActiveCharacter character, Inventory skillTreeInventoryViewTemplate, SkillTree skillTree) {
+		Pair<Integer, Integer> skillTreeViewLocation = character.getSkillTreeViewLocation();
+		short[][] skillTreeMap = skillTree.getSkillTreeMap();
+		int y = skillTree.getCenter().value + skillTreeViewLocation.value; //y
+		int x = skillTree.getCenter().key + skillTreeViewLocation.key; //x
+
+		//TODO make this configurable
+		Map<Short, Character> conn = new HashMap<>();
+		conn.put(Short.MAX_VALUE, '|');
+		conn.put((short)(Short.MAX_VALUE - 1), '-');
+		conn.put((short)(Short.MAX_VALUE - 2), '\\');
+		conn.put((short)(Short.MAX_VALUE - 3), '/');
+		int columns = skillTreeMap[0].length;
+		int rows = skillTreeMap.length;
+		for (int k = -3; k <= 3; k++) { //x
+			for (int l = -2; l <= 3; l++) { //y
+				if (x + k >= 0 && x + k < rows) {
+					if (l + y >= 0 && l + y < columns) {
+						short id = skillTreeMap[x+k][l+y];
+						ItemStack itemStack = null;
+						if (id > 0) {
+
+							if (conn.containsKey(id)) {
+								itemStack = ItemStack.of(ItemTypes.STICK, 1);
+								itemStack.offer(Keys.DISPLAY_NAME, Text.of(conn.get(id)));
+								itemStack.offer(new MenuInventoryData(true));
+							} else {
+								SkillData skillById = skillTree.getSkillById(id);
+
+								if (skillById == null) {
+									itemStack = ItemStack.of(ItemTypes.BARRIER, 1);
+									itemStack.offer(Keys.DISPLAY_NAME, Text.of("UNKNOWN SKILL ID: " + id));
+									itemStack.offer(new MenuInventoryData(true));
+								} else {
+									itemStack = skillById.getSkill().getIcon().toItemStack();
+								}
+							}
+						} else {
+							itemStack = ItemStack.empty();
+						}
+						skillTreeInventoryViewTemplate.query(new SlotPos(l + 3, k + 3)).offer(itemStack);
+					} else if (l + y == -1 || l + y == columns +1) {
+						skillTreeInventoryViewTemplate.query(new SlotPos(l + 3, k + 3)).offer(GuiHelper.createSkillTreeInventoryMenuBoundary());
+					}
+				} else if (x+k == -1 || x + k == rows +1) {
+					skillTreeInventoryViewTemplate.query(new SlotPos(l + 3, k + 3)).offer(GuiHelper.createSkillTreeInventoryMenuBoundary());
+				}
+			}
 		}
 	}
 }

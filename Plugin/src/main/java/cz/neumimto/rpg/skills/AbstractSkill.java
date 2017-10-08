@@ -26,6 +26,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
+import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 
 import java.util.HashSet;
@@ -49,6 +50,7 @@ public abstract class AbstractSkill implements ISkill {
 	private String lore;
 	private DamageType damagetype = DamageTypes.MAGIC;
 	private int id;
+	protected ItemType itemType;
 
 	public AbstractSkill() {
 		icon = new SkillItemIcon(this);
@@ -193,5 +195,10 @@ public abstract class AbstractSkill implements ISkill {
 	@Override
 	public void setId(int runtimeId) {
 		this.id = runtimeId;
+	}
+
+	@Override
+	public ItemType getItemType() {
+		return itemType;
 	}
 }

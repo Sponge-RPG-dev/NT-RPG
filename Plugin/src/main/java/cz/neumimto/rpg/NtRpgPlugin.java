@@ -27,6 +27,7 @@ import cz.neumimto.rpg.configuration.Settings;
 import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
+import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
 import cz.neumimto.rpg.listeners.DebugListener;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
@@ -103,6 +104,15 @@ public class NtRpgPlugin {
 				.builder(new CustomItemData.Builder())
 				.manipulatorId("ntrpg-customitemdata")
 				.dataName("CustomItemData")
+				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
+
+
+		DataRegistration.<CustomItemData, CustomItemData.Immutable>builder()
+				.dataClass(SkillTreeInventoryViewControllsData.class)
+				.immutableClass(SkillTreeInventoryViewControllsData.Immutable.class)
+				.builder(new SkillTreeInventoryViewControllsData.Builder())
+				.manipulatorId("ntrpg-stivcd")
+				.dataName("SkillTreeInventoryViewControllsData")
 				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
 
 	}

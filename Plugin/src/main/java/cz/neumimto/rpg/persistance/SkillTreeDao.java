@@ -21,6 +21,7 @@ package cz.neumimto.rpg.persistance;
 import com.typesafe.config.*;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.skills.*;
@@ -96,6 +97,9 @@ public class SkillTreeDao {
                                 }
                                 if (!num.equals("")) {
                                     array[i][j] = Short.parseShort(num);
+                                    if (array[i][j] == 1) {
+                                        skillTree.setCenter(new Pair<>(i,j));
+                                    }
                                 } else if (SkillService.SKILL_CONNECTION_TYPES.keySet().contains(c1)){
                                     array[i][j] = SkillService.SKILL_CONNECTION_TYPES.get(c1).value;
                                 }

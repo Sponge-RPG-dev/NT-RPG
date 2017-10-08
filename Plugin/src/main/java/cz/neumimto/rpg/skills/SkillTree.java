@@ -18,6 +18,8 @@
 
 package cz.neumimto.rpg.skills;
 
+import cz.neumimto.rpg.Pair;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +35,7 @@ public class SkillTree {
 	private Map<String, SkillData> skills = new HashMap<>();
 	private String description;
 	private short[][] skillTreeMap;
-
+	private Pair<Integer, Integer> center = new Pair<>(0,0);
 
 	public Map<String, SkillData> getSkills() {
 		return skills;
@@ -70,5 +72,13 @@ public class SkillTree {
 
 	public short[][] getSkillTreeMap() {
 		return skillTreeMap;
+	}
+
+	public Pair<Integer, Integer> getCenter() {
+		return center;
+	}
+
+	public void setCenter(Pair<Integer, Integer> center) {
+		this.center = center;
 	}
 }

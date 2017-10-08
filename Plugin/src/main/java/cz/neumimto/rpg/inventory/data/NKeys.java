@@ -34,6 +34,14 @@ public class NKeys {
 			"Inventory menu"
 	);
 
+	public static final Key<Value<String>> SKILLTREE_CONTROLLS = KeyFactory.makeSingleKey(TypeToken.of(String.class),
+			new TypeToken<Value<String>>() {
+			},
+			DataQuery.of('.', "ntrpg:skilltreecontrolls"),
+			"ntrpg:skilltreecontrolls",
+			"Skilltree controls"
+	);
+
 	public static final Key<Value<Text>> ITEM_RARITY = KeyFactory.makeSingleKey(TypeToken.of(Text.class),
 			new TypeToken<Value<Text>>() {
 			},

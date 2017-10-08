@@ -23,6 +23,8 @@ import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
+import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.ItemTypes;
 
 import java.util.Set;
 
@@ -99,6 +101,10 @@ public interface ISkill extends IEffectSourceProvider {
 
 	default double getDoubleNodeValue(ExtendedSkillInfo extendedSkillInfo, ISkillNode node) {
 		return getDoubleNodeValue(extendedSkillInfo, node.value());
+	}
+
+	default ItemType getItemType() {
+		return ItemTypes.STONE;
 	}
 
 	@Override

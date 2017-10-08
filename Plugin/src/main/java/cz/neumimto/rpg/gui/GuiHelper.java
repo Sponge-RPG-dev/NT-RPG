@@ -8,26 +8,28 @@ import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
+import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
-import cz.neumimto.rpg.skills.ActiveSkill;
-import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.PassiveSkill;
-import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.*;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.type.DyeColors;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.Container;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.property.InventoryDimension;
 import org.spongepowered.api.item.inventory.property.SlotPos;
+import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
+import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by ja on 29.12.2016.
@@ -37,8 +39,17 @@ public class GuiHelper {
 
 	private static NtRpgPlugin plugin;
 
+	public static GameProfile HEAD_ARROW_DOWN;
+	public static GameProfile HEAD_ARROW_UP;
+	public static GameProfile HEAD_ARROW_LEFT;
+	public static GameProfile HEAD_ARROW_RIGHT;
+
 	static {
 		plugin = IoC.get().build(NtRpgPlugin.class);
+		HEAD_ARROW_DOWN = GameProfile.of(UUID.fromString("f14aa295-a1b0-4edd-974c-e1e00d9a1e39"));
+		HEAD_ARROW_UP = GameProfile.of(UUID.fromString("96f198b9-1e67-4b68-bbd1-c5213797e58a"));
+		HEAD_ARROW_LEFT = GameProfile.of(UUID.fromString("4d35f021-81b6-44ee-a711-8d8462174124"));
+		HEAD_ARROW_RIGHT = GameProfile.of(UUID.fromString("1f961930-4e97-47b7-a5a1-2cc5150f3764"));
 	}
 
 	public static Inventory createPlayerGroupView(PlayerGroup group) {
@@ -108,6 +119,14 @@ public class GuiHelper {
 		return of;
 	}
 
+	public static ItemStack unclickableInterface() {
+		ItemStack of = ItemStack.of(ItemTypes.STAINED_GLASS_PANE, 1);
+		of.offer(new MenuInventoryData(true));
+		of.offer(Keys.DYE_COLOR, DyeColors.YELLOW);
+		of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
+		return of;
+	}
+
 	public static ItemStack back(PlayerGroup g) {
 		ItemStack of = ItemStack.of(ItemTypes.PAPER, 1);
 		String l = "class";
@@ -169,5 +188,77 @@ public class GuiHelper {
 				.build();
 		is.offer(new MenuInventoryData(true));
 		return is;
+	}
+
+
+	public static Inventory createSkillTreeInventoryViewTemplate(IActiveCharacter character) {
+		Inventory i = Inventory.builder()
+				.of(InventoryArchetypes.DOUBLE_CHEST)
+				.listener(ClickInventoryEvent.class, event -> {
+					Container targetInventory = event.getTargetInventory();
+					SlotTransaction slotTransaction = event.getTransactions().stream().findFirst().get();
+					if (slotTransaction.getSlot().peek().isPresent()) {
+						ItemStack itemStack = slotTransaction.getSlot().peek().get();
+						Optional<Text> text = itemStack.get(Keys.DISPLAY_NAME);
+						if (text.isPresent()) {
+							Text text1 = text.get();
+							String cmd = text1.toPlain();
+							switch (cmd) {
+								case "Up":
+									character.getSkillTreeViewLocation().key+=1;
+									Gui.moveSkillTreeMenu(character);
+									break;
+								case "Down":
+									character.getSkillTreeViewLocation().key-=1;
+									Gui.moveSkillTreeMenu(character);
+									break;
+								case "Right":
+									character.getSkillTreeViewLocation().value+=1;
+									Gui.moveSkillTreeMenu(character);
+									break;
+								case "Left":
+									character.getSkillTreeViewLocation().value-=1;
+									Gui.moveSkillTreeMenu(character);
+									break;
+							}
+						}
+					}
+				})
+				.build(plugin);
+
+		i.query(new SlotPos(7, 0)).offer(unclickableInterface());
+		i.query(new SlotPos(7, 1)).offer(unclickableInterface());
+		i.query(new SlotPos(7, 2)).offer(unclickableInterface());
+		i.query(new SlotPos(7, 3)).offer(unclickableInterface());
+		i.query(new SlotPos(7, 4)).offer(unclickableInterface());
+		i.query(new SlotPos(7, 5)).offer(unclickableInterface());
+
+		i.query(new SlotPos(8, 2)).offer(createHead(/*HEAD_ARROW_UP*/ "Up"));
+		i.query(new SlotPos(8, 3)).offer(createHead(/*HEAD_ARROW_DOWN*/ "Down"));
+		i.query(new SlotPos(8, 4)).offer(createHead(/*HEAD_ARROW_RIGHT*/ "Right"));
+		i.query(new SlotPos(8, 5)).offer(createHead(/*HEAD_ARROW_LEFT*/ "Left"));
+
+		return i;
+	}
+	public static ItemStack createHead(/* GameProfile gameProfile*/ String name) {
+		ItemStack of = ItemStack.of(ItemTypes.STONE, 1);
+		of.offer(Keys.HIDE_MISCELLANEOUS, true);
+		of.offer(Keys.HIDE_ATTRIBUTES, true);
+		of.offer(Keys.DISPLAY_NAME, Text.of(name));
+		of.offer(new SkillTreeInventoryViewControllsData(name));
+		//of.offer(Keys.SKULL_TYPE, SkullTypes.PLAYER);
+		//of.offer(Keys.REPRESENTED_PLAYER, gameProfile);
+
+		return of;
+	}
+
+	public static ItemStack createSkillTreeInventoryMenuBoundary() {
+		ItemStack of = ItemStack.of(ItemTypes.STAINED_GLASS_PANE, 1);
+		of.offer(Keys.HIDE_MISCELLANEOUS, true);
+		of.offer(Keys.HIDE_ATTRIBUTES, true);
+		of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
+		of.offer(new MenuInventoryData(true));
+		of.offer(Keys.DYE_COLOR, DyeColors.RED);
+		return of;
 	}
 }

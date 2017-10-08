@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.players;
 
+import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
@@ -85,6 +86,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	private transient List<Integer> slotsToReinitialize;
 	private transient Map<EquipmentType, Armor> equipedArmor;
 	private transient int selected;
+	private transient Pair<Integer, Integer> skillTreeViewLocation;
 
 	public ActiveCharacter(Player pl, CharacterBase base) {
 		this.pl = pl;
@@ -758,6 +760,16 @@ public class ActiveCharacter implements IActiveCharacter {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public Pair<Integer, Integer> getSkillTreeViewLocation() {
+		return skillTreeViewLocation;
+	}
+
+	@Override
+	public void setSkillTreeViewLocation(Pair<Integer, Integer> location) {
+		skillTreeViewLocation = location;
 	}
 
 	@Override

@@ -98,4 +98,8 @@ public interface IPlayerMessage {
 	void displayMana(IActiveCharacter character);
 
 	void sendCannotUseItemNotification(IActiveCharacter character, ItemStack is, CannotUseItemReson reason);
+
+	void openSkillTreeMenu(IActiveCharacter player, SkillTree skillTree);
+
+	void moveSkillTreeMenu(IActiveCharacter character);
 }

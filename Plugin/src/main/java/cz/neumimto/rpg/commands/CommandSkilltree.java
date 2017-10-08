@@ -20,12 +20,17 @@ package cz.neumimto.rpg.commands;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.GroupService;
+import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.configuration.CommandLocalization;
+import cz.neumimto.rpg.configuration.CommandPermissions;
 import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillTree;
 import cz.neumimto.rpg.skills.StartingPoint;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -45,46 +50,18 @@ public class CommandSkilltree extends CommandBase {
 	private CharacterService characterService;
 
 	public CommandSkilltree() {
-
+		addAlias("skilltree");
+		setUsage("skilltree");
 	}
 
 	@Override
 	public CommandResult process(CommandSource commandSource, String s) throws CommandException {
-		if (commandSource instanceof Player) {
-			String[] args = s.split(" ");
-			ConfigClass configClass = null;
-			SkillData skillData = null;
-			Player player = (Player) commandSource;
-			IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-			if (character.isStub()) {
-				player.sendMessage(Text.of(Localization.CHARACTER_IS_REQUIRED));
-			}
-			for (int i = 0; i < args.length - 1; i++) {
-				if (args[i].equalsIgnoreCase("class")) {
-					configClass = groupService.getNClass(args[i + 1]);
-					if (configClass == ConfigClass.Default) {
-						commandSource.sendMessage(Text.of(Localization.NON_EXISTING_GROUP));
-						return CommandResult.empty();
-					}
-					if (args[i].equalsIgnoreCase("skill")) {
-						skillData = configClass.getSkillTree().getSkills().get(args[i + 1]);
-						if (skillData == SkillData.EMPTY) {
-							commandSource.sendMessage(Text.of(Localization.SKILL_DOES_NOT_EXIST));
-							return CommandResult.empty();
-						}
-					}
-				}
-			}
-			//todo
-			if (configClass == null) {
-				configClass = character.getPrimaryClass().getConfigClass();
-			}
-			if (skillData == null) {
-				skillData = configClass.getSkillTree().getSkills().get(StartingPoint.name);
-			}
-
-			return CommandResult.success();
+		Player p =(Player) commandSource;
+		IActiveCharacter character = characterService.getCharacter(p);
+		if (character.getSkillTreeViewLocation() == null) {
+			character.setSkillTreeViewLocation(new Pair<>(0,0));
 		}
-		return CommandResult.empty();
+		Gui.openSkillTreeMenu(character, character.getPrimaryClass().getConfigClass().getSkillTree());
+		return CommandResult.success();
 	}
 }

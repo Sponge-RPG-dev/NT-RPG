@@ -30,7 +30,6 @@ public class SkillLightning extends Targetted {
 		super.settings = skillSettings;
 		addSkillType(SkillType.ELEMENTAL);
 		addSkillType(SkillType.LIGHTNING);
-
 	}
 
 	@Override
