@@ -157,7 +157,11 @@ public class GuiHelper {
 		} else if (skill instanceof PassiveSkill) {
 			skillTargetType = "Passive";
 		}
-		lore.add(Text.of(desc, TextColors.GOLD));
+		if (desc != null)
+			for (String s : desc.split(":n")) {
+				lore.add(Text.of(s, TextColors.GOLD));
+			}
+
 		lore.add(Text.of(skillTargetType, TextColors.DARK_PURPLE, TextStyles.ITALIC));
 		lore.add(Text.EMPTY);
 
@@ -180,13 +184,18 @@ public class GuiHelper {
 
 
 		if (skill.getLore() != null) {
-			lore.add(Text.builder(skill.getLore()).style(TextStyles.ITALIC).color(TextColors.GOLD).build());
+			String[] split = skill.getLore().split(":n");
+			for (String ss : split) {
+				lore.add(Text.builder(ss).style(TextStyles.ITALIC).color(TextColors.GOLD).build());
+			}
 		}
+
 		ItemStack is = ItemStack.builder().itemType(itemType)
 				.quantity(1)
 				.add(Keys.ITEM_LORE, lore)
 				.build();
 		is.offer(new MenuInventoryData(true));
+		is.offer(Keys.DISPLAY_NAME, Text.builder(skill.getName()).style(TextStyles.BOLD).build());
 		return is;
 	}
 
@@ -194,36 +203,6 @@ public class GuiHelper {
 	public static Inventory createSkillTreeInventoryViewTemplate(IActiveCharacter character) {
 		Inventory i = Inventory.builder()
 				.of(InventoryArchetypes.DOUBLE_CHEST)
-				.listener(ClickInventoryEvent.class, event -> {
-					Container targetInventory = event.getTargetInventory();
-					SlotTransaction slotTransaction = event.getTransactions().stream().findFirst().get();
-					if (slotTransaction.getSlot().peek().isPresent()) {
-						ItemStack itemStack = slotTransaction.getSlot().peek().get();
-						Optional<Text> text = itemStack.get(Keys.DISPLAY_NAME);
-						if (text.isPresent()) {
-							Text text1 = text.get();
-							String cmd = text1.toPlain();
-							switch (cmd) {
-								case "Up":
-									character.getSkillTreeViewLocation().key+=1;
-									Gui.moveSkillTreeMenu(character);
-									break;
-								case "Down":
-									character.getSkillTreeViewLocation().key-=1;
-									Gui.moveSkillTreeMenu(character);
-									break;
-								case "Right":
-									character.getSkillTreeViewLocation().value+=1;
-									Gui.moveSkillTreeMenu(character);
-									break;
-								case "Left":
-									character.getSkillTreeViewLocation().value-=1;
-									Gui.moveSkillTreeMenu(character);
-									break;
-							}
-						}
-					}
-				})
 				.build(plugin);
 
 		i.query(new SlotPos(7, 0)).offer(unclickableInterface());
