@@ -793,7 +793,7 @@ public class VanilaMessaging implements IPlayerMessage {
 	public void moveSkillTreeMenu(IActiveCharacter character) {
 		Optional<Container> openInventory = character.getPlayer().getOpenInventory();
 		if (openInventory.isPresent()) {
-			createSkillTreeView(character, inventory.query(GridInventory.class).first(), character.getPrimaryClass().getConfigClass().getSkillTree());
+			createSkillTreeView(character, openInventory.get().query(GridInventory.class).first(), character.getPrimaryClass().getConfigClass().getSkillTree());
 		}
 	}
 
