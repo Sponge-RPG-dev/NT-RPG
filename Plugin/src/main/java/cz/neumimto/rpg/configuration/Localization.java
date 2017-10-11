@@ -380,4 +380,10 @@ public class Localization {
 
 	@ConfigValue
 	public static String MAX_SKILL_LEVEL = "Max. Skill Level";
+
+	@ConfigValue
+	public static String CONFIRM_SKILL_SELECTION_BUTTON = "Confirm change";
+
+	@ConfigValue
+	public static String SKILLTREE = "SkillTree";
 }

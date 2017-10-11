@@ -12,24 +12,26 @@ import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.skills.*;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.DyeColors;
-import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
+import org.spongepowered.api.event.cause.entity.damage.DamageType;
+import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.Container;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.property.InventoryDimension;
 import org.spongepowered.api.item.inventory.property.SlotPos;
-import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.*;
+
+import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Block;
+import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Item;
 
 /**
  * Created by ja on 29.12.2016.
@@ -44,12 +46,51 @@ public class GuiHelper {
 	public static GameProfile HEAD_ARROW_LEFT;
 	public static GameProfile HEAD_ARROW_RIGHT;
 
+	public static Map<DamageType, CatalogTypeItemStackBuilder> damageTypeToItemStack = new HashMap<>();
+
 	static {
 		plugin = IoC.get().build(NtRpgPlugin.class);
 		HEAD_ARROW_DOWN = GameProfile.of(UUID.fromString("f14aa295-a1b0-4edd-974c-e1e00d9a1e39"));
 		HEAD_ARROW_UP = GameProfile.of(UUID.fromString("96f198b9-1e67-4b68-bbd1-c5213797e58a"));
 		HEAD_ARROW_LEFT = GameProfile.of(UUID.fromString("4d35f021-81b6-44ee-a711-8d8462174124"));
 		HEAD_ARROW_RIGHT = GameProfile.of(UUID.fromString("1f961930-4e97-47b7-a5a1-2cc5150f3764"));
+
+		damageTypeToItemStack.put(DamageTypes.ATTACK, Item.of(ItemTypes.STONE_SWORD));
+		damageTypeToItemStack.put(DamageTypes.CONTACT, Item.of(ItemTypes.CACTUS));
+
+		damageTypeToItemStack.put(DamageTypes.CUSTOM, Item.of(ItemTypes.BARRIER));
+
+		damageTypeToItemStack.put(DamageTypes.DROWN, Block.of(BlockTypes.WATER));
+		damageTypeToItemStack.put(DamageTypes.EXPLOSIVE, Item.of(ItemTypes.TNT));
+		damageTypeToItemStack.put(DamageTypes.FALL, Item.of(ItemTypes.IRON_BOOTS));
+		damageTypeToItemStack.put(DamageTypes.FIRE, Block.of(BlockTypes.FIRE));
+
+		damageTypeToItemStack.put(DamageTypes.HUNGER, Item.of(ItemTypes.ROTTEN_FLESH));
+		damageTypeToItemStack.put(DamageTypes.MAGMA, Block.of(BlockTypes.LAVA));
+		damageTypeToItemStack.put(DamageTypes.PROJECTILE, Item.of(ItemTypes.TIPPED_ARROW));
+		damageTypeToItemStack.put(DamageTypes.VOID, Block.of(BlockTypes.PORTAL));
+		damageTypeToItemStack.put(DamageTypes.MAGIC, Item.of(ItemTypes.ENCHANTED_BOOK));
+
+		damageTypeToItemStack.put(NDamageType.ICE, Block.of(BlockTypes.FROSTED_ICE));
+		damageTypeToItemStack.put(NDamageType.MAGICAL, Item.of(ItemTypes.ENCHANTED_BOOK));
+		damageTypeToItemStack.put(NDamageType.MEELE_CRITICAL, Item.of(ItemTypes.DIAMOND_SWORD));
+		damageTypeToItemStack.put(NDamageType.PHYSICAL, Item.of(ItemTypes.IRON_NUGGET));
+		damageTypeToItemStack.put(NDamageType.LIGHTNING, Item.of(ItemTypes.NETHER_STAR));
+	}
+
+	public static ItemStack damageTypeToItemStack(DamageType type) {
+		if (type == null)
+			return ItemStack.empty();
+		CatalogTypeItemStackBuilder a = damageTypeToItemStack.get(type);
+		ItemStack is = null;
+		if (a == null) {
+			is = ItemStack.of(ItemTypes.STONE, 1);
+		} else {
+			is = a.toItemStack();
+		}
+		is.offer(new MenuInventoryData(true));
+		is.offer(Keys.DISPLAY_NAME, Text.of(type.getName()));
+		return is;
 	}
 
 	public static Inventory createPlayerGroupView(PlayerGroup group) {
@@ -239,5 +280,27 @@ public class GuiHelper {
 		of.offer(new MenuInventoryData(true));
 		of.offer(Keys.DYE_COLOR, DyeColors.RED);
 		return of;
+	}
+
+	public static ItemStack createSkillTreeConfirmButtom() {
+		ItemStack itemStack = ItemStack.of(ItemTypes.KNOWLEDGE_BOOK, 1);
+		itemStack.offer(Keys.HIDE_MISCELLANEOUS, true);
+		itemStack.offer(Keys.HIDE_ATTRIBUTES, true);
+		itemStack.offer(Keys.DISPLAY_NAME, Text.of(Localization.CONFIRM_SKILL_SELECTION_BUTTON));
+		itemStack.offer(new SkillTreeInventoryViewControllsData("confirm"));
+		return itemStack;
+	}
+
+	public static Inventory createSkillDetailInventoryView(ISkill skill) {
+		Inventory build = Inventory.builder()
+				.of(InventoryArchetypes.DOUBLE_CHEST)
+				.build(plugin);
+
+		ItemStack back = back("skilltree", Localization.SKILLTREE);
+		build.query(new SlotPos(0,0)).offer(back);
+
+		build.query(new SlotPos(0,1)).offer(damageTypeToItemStack(skill.getDamageType()));
+
+		return build;
 	}
 }

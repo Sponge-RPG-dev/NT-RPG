@@ -35,7 +35,6 @@ import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.skills.NDamageType;
-import cz.neumimto.rpg.utils.ItemStackUtils;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
@@ -69,6 +68,7 @@ public class DamageService {
 	private InventoryService inventoryService;
 
 	public BiFunction<Double, Double, Double> DamageArmorReductionFactor = (damage, armor) -> armor / (armor + 10 * damage);
+
 
 	private Map<ItemType, Integer> map = new HashMap<>();
 
