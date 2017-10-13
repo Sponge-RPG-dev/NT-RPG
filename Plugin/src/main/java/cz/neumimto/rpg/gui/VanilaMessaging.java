@@ -703,8 +703,6 @@ public class VanilaMessaging implements IPlayerMessage {
 			Optional<String> s = t.getOriginal().get(NKeys.COMMAND);
 			if (s.isPresent()) {
 				event.setCancelled(true);
-				event.getTransactions().clear();
-				t.setCustom(ItemStack.of(ItemTypes.NONE, 1));
 				player.closeInventory();
 				Sponge.getCommandManager().process(player, s.get());
 				break;
