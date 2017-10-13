@@ -87,6 +87,7 @@ import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static cz.neumimto.rpg.gui.GuiHelper.*;
 
@@ -702,10 +703,16 @@ public class VanilaMessaging implements IPlayerMessage {
 			SlotTransaction t = iterator.next();
 			Optional<String> s = t.getOriginal().get(NKeys.COMMAND);
 			if (s.isPresent()) {
-				event.setCancelled(true);
 				player.closeInventory();
-				Sponge.getCommandManager().process(player, s.get());
-				break;
+				event.setCancelled(true);
+				Sponge.getScheduler().createTaskBuilder()
+						.delay(1L, TimeUnit.MILLISECONDS)
+						.execute(() -> {
+
+							Sponge.getCommandManager().process(player, s.get());
+						})
+						.submit(plugin);
+				return;
 			}
 
 			if (t.getOriginal().get(NKeys.MENU_INVENTORY).isPresent()) {
