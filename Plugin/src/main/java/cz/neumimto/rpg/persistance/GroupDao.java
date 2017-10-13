@@ -34,7 +34,6 @@ import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.SkillTree;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.item.ItemType;
@@ -205,15 +204,6 @@ public class GroupDao {
 		} catch (ConfigException e) {
 			group.setShowsInMenu(true);
 			logger.warn(" - Missing configuration \"Wildcard\", setting to true");
-		}
-		try {
-			Config k = c.getConfig("Chat");
-			if (k != null) {
-				group.setChatPrefix(k.getString("prefix"));
-				group.setChatSufix(k.getString("suffix"));
-			}
-		} catch (ConfigException e) {
-			logger.warn(" - Missing or incomplete configuration \"Chat\", skipping");
 		}
 
 		int id = 0;

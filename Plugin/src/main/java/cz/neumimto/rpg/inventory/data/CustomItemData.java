@@ -17,6 +17,7 @@ import org.spongepowered.api.data.value.mutable.ListValue;
 import org.spongepowered.api.data.value.mutable.MapValue;
 import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.common.data.MemoryDataContainer;
 
 import java.util.*;
 
@@ -154,14 +155,14 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 		}
 
 		if (view.contains(NKeys.CUSTOM_ITEM_DATA_ITEM_LEVEL.getQuery())) {
-			this.itemLevel = view.getObject(NKeys.CUSTOM_ITEM_DATA_ITEM_LEVEL.getQuery(), Integer.class).orElseGet(() -> 0);
+			this.itemLevel = view.getObject(NKeys.CUSTOM_ITEM_DATA_ITEM_LEVEL.getQuery(), Integer.class).orElse(0);
 
 		}
 		if (view.contains(NKeys.ITEM_RARITY)) {
-			this.rarity = view.getObject(NKeys.ITEM_RARITY.getQuery(), Text.class).orElseGet(() -> Text.EMPTY);
+			this.rarity = view.getObject(NKeys.ITEM_RARITY.getQuery(), Text.class).orElse(Text.EMPTY);
 		}
 		if (view.contains(NKeys.CUSTOM_ITEM_DATA_SOCKET_COUNT)) {
-			this.socketCount = view.getObject(NKeys.CUSTOM_ITEM_DATA_SOCKET_COUNT.getQuery(), Integer.class).orElseGet(() -> 0);
+			this.socketCount = view.getObject(NKeys.CUSTOM_ITEM_DATA_SOCKET_COUNT.getQuery(), Integer.class).orElse(0);
 		}
 
 		return Optional.of(this);
@@ -185,7 +186,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 
 	@Override
 	public DataContainer toContainer() {
-		DataContainer container = super.toContainer();
+		DataContainer container = new MemoryDataContainer();
 		if (restrictions != null) {
 			container = container.set(NKeys.CUSTOM_ITEM_DATA_RESTRICTIONS.getQuery(), this.restrictions);
 		}

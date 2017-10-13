@@ -46,6 +46,13 @@ public class MenuInventoryData extends AbstractBooleanData<MenuInventoryData, Me
 	}
 
 	@Override
+	public DataContainer toContainer() {
+		DataContainer container = super.toContainer();
+		container.set(NKeys.MENU_INVENTORY, getValue());
+		return container;
+	}
+
+	@Override
 	public MenuInventoryData copy() {
 		return new MenuInventoryData(getValue());
 	}
