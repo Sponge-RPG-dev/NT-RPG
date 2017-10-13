@@ -703,7 +703,6 @@ public class VanilaMessaging implements IPlayerMessage {
 			SlotTransaction t = iterator.next();
 			Optional<String> s = t.getOriginal().get(NKeys.COMMAND);
 			if (s.isPresent()) {
-				player.closeInventory();
 				event.setCancelled(true);
 				Sponge.getScheduler().createTaskBuilder()
 						.delay(1L, TimeUnit.MILLISECONDS)
