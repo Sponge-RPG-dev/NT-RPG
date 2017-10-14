@@ -233,29 +233,38 @@ public class CommandAdmin extends CommandBase {
 			} else {
 				throw new IllegalStateException("Only avalaible in debug mode");
 			}
-		} else if (a[0].equalsIgnoreCase("reloadjs")) {
-			if (!PluginConfig.DEBUG) {
-				commandSource.sendMessage(Text.of("Reloading is allowed only in debug mode"));
-				return CommandResult.success();
+		} else if (a[0].equalsIgnoreCase("reload")) {
+			if (a.length == 1) {
+				commandSource.sendMessage(Text.of("js[s/a/g] skilltree [r,a]"));
+				return CommandResult.empty();
 			}
-			jsLoader.initEngine();
+			if (a[1].equalsIgnoreCase("js")) {
+				if (!PluginConfig.DEBUG) {
+					commandSource.sendMessage(Text.of("Reloading is allowed only in debug mode"));
+					return CommandResult.success();
+				}
+				jsLoader.initEngine();
 
-			int i = 1;
-			String q = null;
-			while (i < a.length) {
-				q = a[i];
-				if (q.equalsIgnoreCase("skills") || q.equalsIgnoreCase("s")) {
-					jsLoader.reloadSkills();
+				int i = 1;
+				String q = null;
+				while (i < a.length) {
+					q = a[i];
+					if (q.equalsIgnoreCase("skills") || q.equalsIgnoreCase("s")) {
+						jsLoader.reloadSkills();
+					}
+					if (q.equalsIgnoreCase("attributes") || q.equalsIgnoreCase("a")) {
+						jsLoader.reloadAttributes();
+					}
+					if (q.equalsIgnoreCase("globaleffects") || q.equalsIgnoreCase("g")) {
+						jsLoader.reloadGlobalEffects();
+					}
+					i++;
 				}
-				if (q.equalsIgnoreCase("attributes") || q.equalsIgnoreCase("a")) {
-					jsLoader.reloadAttributes();
-				}
-				if (q.equalsIgnoreCase("globaleffects") || q.equalsIgnoreCase("g")) {
-					jsLoader.reloadGlobalEffects();
-				}
-				i++;
+			} else if (a[1].equalsIgnoreCase("skilltree")) {
+				IoC.get().build(SkillService.class).reloadSkillTrees();
 			}
 		}
+
 		return CommandResult.success();
 	}
 

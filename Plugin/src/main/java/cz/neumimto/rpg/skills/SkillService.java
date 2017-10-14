@@ -30,6 +30,7 @@ import cz.neumimto.rpg.events.skills.SkillPrepareEvent;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.persistance.SkillTreeDao;
 import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.scripting.JSLoader;
@@ -50,12 +51,15 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 /**
  * Created by NeumimTo on 1.1.2015.
  */
 @Singleton
 public class SkillService {
+
+	private Logger logger = Logger.getLogger("SkillService");
 
 	@Inject
 	private SkillTreeDao skillTreeDao;
@@ -266,5 +270,38 @@ public class SkillService {
 		SKILL_CONNECTION_TYPES.put('-', new Pair<>(horizontal,(short)(Short.MAX_VALUE - 1)));
 		SKILL_CONNECTION_TYPES.put('\\', new Pair<>(d45,(short)(Short.MAX_VALUE -2)));
 		SKILL_CONNECTION_TYPES.put('/', new Pair<>(d45i,(short)(Short.MAX_VALUE -3)));
+	}
+
+	public void reloadSkillTrees() {
+		try {
+			logger.info("Currently its possible to reload ascii maps or add new skill trees");
+			Map<String, SkillTree> all = skillTreeDao.getAll();
+			for (Map.Entry<String, SkillTree> s : all.entrySet()) {
+				SkillTree skillTree = skillTrees.get(s.getKey());
+				if (skillTree == null)
+					skillTrees.put(s.getValue().getId(), s.getValue());
+				else
+					skillTree.setSkillTreeMap(s.getValue().getSkillTreeMap());
+			}
+
+			/* todo thats gonna be quite tricky,
+			   todo  it should be easiest to lock (maybe even joining) specific commands,  save all current data, reset player objects, and recreate ActiveCharacters
+			for (IActiveCharacter character : characterService.getCharacters()) {
+				Set<ExtendedNClass> classes = character.getClasses();
+				for (ExtendedNClass aClass : classes) {
+					SkillTree skillTree = aClass.getConfigClass().getSkillTree();
+					if (skillTree == null) continue; //should not happen anyway
+					String id = skillTree.getId();
+					SkillTree skillTree1 = skillTrees.get(id);
+					if (skillTree1 == null) continue;
+					aClass.getConfigClass().setSkillTree(skillTree1);
+
+					aClass.getConfigClass().
+				}
+			}
+			*/
+		} catch (Exception e) {
+			//todo
+		}
 	}
 }

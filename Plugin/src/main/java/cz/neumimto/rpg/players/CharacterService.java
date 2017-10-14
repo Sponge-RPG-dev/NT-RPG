@@ -223,6 +223,10 @@ public class CharacterService {
 		return characters.get(player.getUniqueId());
 	}
 
+	public Collection<IActiveCharacter> getCharacters() {
+		return characters.values();
+	}
+
 	/**
 	 * Activates character for specified player, replaces old
 	 *
