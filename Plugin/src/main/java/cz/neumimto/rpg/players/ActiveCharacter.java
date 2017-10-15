@@ -64,7 +64,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	private transient Set<ItemType> allowedArmorIds = new HashSet<>();
 	private transient Map<ItemType, TreeSet<ConfigRPGItemType>> allowedWeapons = new HashMap<>();
 	private transient Map<EntityType, Double> projectileDamage = new HashMap<>();
-	private transient Party party;
+	private transient Party party = new Party(this);
 	private Map<String, ExtendedSkillInfo> skills = new HashMap<>();
 	private Race race = Race.Default;
 	private Guild guild;

@@ -189,6 +189,8 @@ public class EffectService {
 	}
 
 	protected void removeEffectContainer(IEffectContainer container, IEffect iEffect, IEffectConsumer consumer) {
+		if (container == null)
+			return;
 		if (iEffect == container) {
 			if (!iEffect.getConsumer().isDetached()) {
 				iEffect.onRemove();
@@ -201,7 +203,6 @@ public class EffectService {
 			}
 		}
 		iEffect.setConsumer(null);
-		pendingRemovals.add(iEffect);
 	}
 
 	/**
@@ -220,6 +221,7 @@ public class EffectService {
 				e = iterator.next();
 				if (e.getEffectSourceProvider() == effectSource) {
 					removeEffectContainer(effect, e, consumer);
+					stopEffect(e);
 				}
 			}
 		}
@@ -299,10 +301,16 @@ public class EffectService {
 	}
 
 	@SuppressWarnings("unchecked")
+	/**
+	 * Called only in cases when entities dies, or players logs off
+	 */
 	public void removeAllEffects(IEffectConsumer<?> character) {
 		for (final IEffectContainer<Object, IEffect<Object>> IEffectContainer : character.getEffects()) {
-			for (IEffect effect : IEffectContainer.getEffects()) {
-				pendingRemovals.add(effect);
+			for (IEffect<Object> objectIEffect : IEffectContainer.getEffects()) {
+				IEffectContainer.removeStack(objectIEffect);
+				if (effectSet.contains(objectIEffect)) {
+					effectSet.remove(objectIEffect);
+				}
 			}
 		}
 	}

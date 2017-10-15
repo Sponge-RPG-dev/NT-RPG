@@ -68,7 +68,7 @@ public class SkillLocalization {
 	public static String basher;
 
 	@ConfigValue
-	public static String burningPrescense = "";
+	public static String burningPrescense = "BurningPresence";
 
 	@ConfigValue
 	public static String burningPrescense_desc = "";

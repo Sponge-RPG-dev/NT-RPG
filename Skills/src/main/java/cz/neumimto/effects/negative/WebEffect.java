@@ -16,7 +16,7 @@ import org.spongepowered.api.world.World;
 public class WebEffect extends EffectBase<Long> {
 
 	public static String name = "Web";
-	private Vector3i[] vector3is = new Vector3i[8];
+	private Vector3i[] vector3is = new Vector3i[9];
 
 	public WebEffect(IEffectConsumer effectConsumer, long duration) {
 		super(name, effectConsumer);
@@ -40,11 +40,14 @@ public class WebEffect extends EffectBase<Long> {
 						position.getFloorZ() + x);
 				vector3is[b] = vector3i;
 				b++;
-				location.getExtent().setBlock(
-						vector3i,
-						build,
-						BlockChangeFlag.NONE
-				);
+				if (location.getExtent().getBlock(vector3i).getType() == BlockTypes.AIR) {
+					location.getExtent().setBlock(
+							vector3i,
+							build,
+							BlockChangeFlag.NONE
+					);
+
+				}
 			}
 		}
 	}
