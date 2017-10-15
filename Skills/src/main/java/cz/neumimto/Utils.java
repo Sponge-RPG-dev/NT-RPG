@@ -48,7 +48,7 @@ public class Utils {
 				return null;
 			}
 			Text text1 = text.get();
-			if (text1.getChildren().get(0).getColor() != teleportationScrollColor) {
+			if (text1.getColor() != teleportationScrollColor) {
 				return null;
 			}
 

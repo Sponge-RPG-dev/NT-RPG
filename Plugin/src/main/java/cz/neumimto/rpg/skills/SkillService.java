@@ -130,6 +130,8 @@ public class SkillService {
 	}
 
 	public SkillResult executeSkill(IActiveCharacter character, ExtendedSkillInfo esi) {
+		if (esi == null)
+			return SkillResult.FAIL;
 		int level = esi.getTotalLevel();
 		if (level < 0)
 			return SkillResult.NEGATIVE_SKILL_LEVEL;
