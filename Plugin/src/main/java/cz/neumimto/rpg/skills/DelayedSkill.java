@@ -22,10 +22,10 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 
 
 public class DelayedSkill extends ActiveSkill {
-    @Override
-    public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier mod) {
-        return null;
-    }
+	@Override
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier mod) {
+		return null;
+	}
 
 
 }

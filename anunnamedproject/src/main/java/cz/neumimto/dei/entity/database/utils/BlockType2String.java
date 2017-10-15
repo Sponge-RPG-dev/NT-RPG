@@ -12,17 +12,17 @@ import java.util.Optional;
  */
 public class BlockType2String implements AttributeConverter<BlockType, String> {
 
-    @Override
-    public String convertToDatabaseColumn(BlockType attribute) {
-        return attribute.getId();
-    }
+	@Override
+	public String convertToDatabaseColumn(BlockType attribute) {
+		return attribute.getId();
+	}
 
-    @Override
-    public BlockType convertToEntityAttribute(String s) {
-        Optional<BlockType> type = Sponge.getGame().getRegistry().getType(BlockType.class, s);
-        if (type.isPresent()) {
-            return type.get();
-        }
-        throw new NotExistingItemTypeException(s);
-    }
+	@Override
+	public BlockType convertToEntityAttribute(String s) {
+		Optional<BlockType> type = Sponge.getGame().getRegistry().getType(BlockType.class, s);
+		if (type.isPresent()) {
+			return type.get();
+		}
+		throw new NotExistingItemTypeException(s);
+	}
 }

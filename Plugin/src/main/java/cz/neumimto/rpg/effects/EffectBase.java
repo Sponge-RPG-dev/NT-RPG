@@ -31,264 +31,264 @@ import java.util.UUID;
  * Created by NeumimTo.
  */
 public class EffectBase<Value> implements IEffect<Value> {
-    protected Set<EffectType> effectTypes = new HashSet<>();
-    private boolean stackable = false;
-    private String name;
-    private int level;
-    private Set<PotionEffect> potions;
-    private IEffectConsumer consumer;
-    private long duration = -1;
-    private long period = -1;
-    private long lastTickTime;
-    private long expireTime;
-    protected long tickCount;
-    private long timeCreated;
-    private String applyMessage;
-    private String expireMessage;
-    private UUID uuid;
-    private IEffectSourceProvider effectSourceProvider;
-    private Value value;
-    private EffectStackingStrategy<Value> effectStackingStrategy;
-    private IEffectContainer<Value, IEffect<Value>> container;
-    private boolean tickingDisabled = false;
+	protected Set<EffectType> effectTypes = new HashSet<>();
+	private boolean stackable = false;
+	private String name;
+	private int level;
+	private Set<PotionEffect> potions;
+	private IEffectConsumer consumer;
+	private long duration = -1;
+	private long period = -1;
+	private long lastTickTime;
+	private long expireTime;
+	protected long tickCount;
+	private long timeCreated;
+	private String applyMessage;
+	private String expireMessage;
+	private UUID uuid;
+	private IEffectSourceProvider effectSourceProvider;
+	private Value value;
+	private EffectStackingStrategy<Value> effectStackingStrategy;
+	private IEffectContainer<Value, IEffect<Value>> container;
+	private boolean tickingDisabled = false;
 
-    public EffectBase(String name, IEffectConsumer consumer) {
-        this();
-        this.name = name;
-        this.consumer = consumer;
-    }
+	public EffectBase(String name, IEffectConsumer consumer) {
+		this();
+		this.name = name;
+		this.consumer = consumer;
+	}
 
-    public EffectBase() {
-        timeCreated = System.currentTimeMillis();
-        uuid = UUIDs.random();
-    }
+	public EffectBase() {
+		timeCreated = System.currentTimeMillis();
+		uuid = UUIDs.random();
+	}
 
-    public static GlobalScope getGlobalScope() {
-        return NtRpgPlugin.GlobalScope;
-    }
+	public static GlobalScope getGlobalScope() {
+		return NtRpgPlugin.GlobalScope;
+	}
 
-    @Override
-    public boolean requiresRegister() {
-        return getDuration() >= 0 || getPeriod() >= 0;
-    }
+	@Override
+	public boolean requiresRegister() {
+		return getDuration() >= 0 || getPeriod() >= 0;
+	}
 
-    @Override
-    public String getName() {
-        return name;
-    }
+	@Override
+	public String getName() {
+		return name;
+	}
 
-    @Override
-    public void onApply() {
-        for (PotionEffect e : getPotions()) {
-            getConsumer().addPotionEffect(e);
-        }
-    }
+	@Override
+	public void onApply() {
+		for (PotionEffect e : getPotions()) {
+			getConsumer().addPotionEffect(e);
+		}
+	}
 
-    @Override
-    public void onRemove() {
-        for (PotionEffect e : getPotions()) {
-            getConsumer().removePotionEffect(e.getType());
-        }
-    }
+	@Override
+	public void onRemove() {
+		for (PotionEffect e : getPotions()) {
+			getConsumer().removePotionEffect(e.getType());
+		}
+	}
 
-    @Override
-    public boolean isStackable() {
-        return stackable;
-    }
+	@Override
+	public boolean isStackable() {
+		return stackable;
+	}
 
-    @Override
-    public void setStackable(boolean b, EffectStackingStrategy<Value> stackingStrategy) {
-        this.stackable = b;
-	    setEffectStackingStrategy(stackingStrategy);
-    }
+	@Override
+	public void setStackable(boolean b, EffectStackingStrategy<Value> stackingStrategy) {
+		this.stackable = b;
+		setEffectStackingStrategy(stackingStrategy);
+	}
 
-    @Override
-    public int getStacks() {
-        return level;
-    }
+	@Override
+	public int getStacks() {
+		return level;
+	}
 
 
-    @Override
-    public void setStacks(int level) {
-        this.level = level;
-    }
+	@Override
+	public void setStacks(int level) {
+		this.level = level;
+	}
 
-    public IEffectConsumer getConsumer() {
-        return consumer;
-    }
+	public IEffectConsumer getConsumer() {
+		return consumer;
+	}
 
-    public void setConsumer(IEffectConsumer consumer) {
-        if (consumer != null)
-            this.consumer = consumer;
-    }
+	public void setConsumer(IEffectConsumer consumer) {
+		if (consumer != null)
+			this.consumer = consumer;
+	}
 
-    @Override
-    public Set<PotionEffect> getPotions() {
-        if (potions == null)
-            potions = new HashSet<>();
-        return potions;
-    }
+	@Override
+	public Set<PotionEffect> getPotions() {
+		if (potions == null)
+			potions = new HashSet<>();
+		return potions;
+	}
 
-    @Override
-    public long getExpireTime() {
-        return timeCreated + duration;
-    }
+	@Override
+	public long getExpireTime() {
+		return timeCreated + duration;
+	}
 
-    protected void setExpireTime(long expireTime) {
-        this.expireTime = expireTime;
-    }
+	protected void setExpireTime(long expireTime) {
+		this.expireTime = expireTime;
+	}
 
-    @Override
-    public long getTimeLeft(long currenttime) {
-        return timeCreated + duration - currenttime;
-    }
+	@Override
+	public long getTimeLeft(long currenttime) {
+		return timeCreated + duration - currenttime;
+	}
 
-    @Override
-    public long getDuration() {
-        return duration;
-    }
+	@Override
+	public long getDuration() {
+		return duration;
+	}
 
-    @Override
-    public void setDuration(long l) {
-        this.duration = l;
-    }
+	@Override
+	public void setDuration(long l) {
+		this.duration = l;
+	}
 
-    @Override
-    public void tickCountIncrement() {
-        tickCount++;
-    }
+	@Override
+	public void tickCountIncrement() {
+		tickCount++;
+	}
 
-    protected long getTickCount() {
-        return tickCount;
-    }
+	protected long getTickCount() {
+		return tickCount;
+	}
 
-    @Override
-    public long getPeriod() {
-        return period;
-    }
+	@Override
+	public long getPeriod() {
+		return period;
+	}
 
-    @Override
-    public void setPeriod(long period) {
-        this.period = period;
-    }
+	@Override
+	public void setPeriod(long period) {
+		this.period = period;
+	}
 
-    @Override
-    public long getLastTickTime() {
-        return lastTickTime;
-    }
+	@Override
+	public long getLastTickTime() {
+		return lastTickTime;
+	}
 
-    @Override
-    public void setLastTickTime(long lastTickTime) {
-        this.lastTickTime = lastTickTime;
-    }
+	@Override
+	public void setLastTickTime(long lastTickTime) {
+		this.lastTickTime = lastTickTime;
+	}
 
-    @Override
-    public void onTick() {
+	@Override
+	public void onTick() {
 
-    }
+	}
 
-    @Override
-    public UUID getUUID() {
-        return uuid;
-    }
+	@Override
+	public UUID getUUID() {
+		return uuid;
+	}
 
-    @Override
-    public String getExpireMessage() {
-        return expireMessage;
-    }
+	@Override
+	public String getExpireMessage() {
+		return expireMessage;
+	}
 
-    @Override
-    public void setExpireMessage(String expireMessage) {
-        this.expireMessage = expireMessage;
-    }
+	@Override
+	public void setExpireMessage(String expireMessage) {
+		this.expireMessage = expireMessage;
+	}
 
-    @Override
-    public String getApplyMessage() {
-        return applyMessage;
-    }
+	@Override
+	public String getApplyMessage() {
+		return applyMessage;
+	}
 
-    @Override
-    public void setApplyMessage(String applyMessage) {
-        this.applyMessage = applyMessage;
-    }
+	@Override
+	public void setApplyMessage(String applyMessage) {
+		this.applyMessage = applyMessage;
+	}
 
-    @Override
-    public Set<EffectType> getEffectTypes() {
-        return effectTypes;
-    }
+	@Override
+	public Set<EffectType> getEffectTypes() {
+		return effectTypes;
+	}
 
-    @Override
-    public IEffectSourceProvider getEffectSourceProvider() {
-        return effectSourceProvider;
-    }
+	@Override
+	public IEffectSourceProvider getEffectSourceProvider() {
+		return effectSourceProvider;
+	}
 
-    @Override
-    public void setEffectSourceProvider(IEffectSourceProvider effectSourceProvider) {
-        this.effectSourceProvider = effectSourceProvider;
-    }
+	@Override
+	public void setEffectSourceProvider(IEffectSourceProvider effectSourceProvider) {
+		this.effectSourceProvider = effectSourceProvider;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        if (!(o instanceof EffectBase)) return false;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null) return false;
+		if (!(o instanceof EffectBase)) return false;
 
-        EffectBase that = (EffectBase) o;
-        return uuid != null ? uuid.equals(that.uuid) : that.uuid == null;
-    }
+		EffectBase that = (EffectBase) o;
+		return uuid != null ? uuid.equals(that.uuid) : that.uuid == null;
+	}
 
-    @Override
-    public int hashCode() {
-        return uuid.hashCode();
-    }
+	@Override
+	public int hashCode() {
+		return uuid.hashCode();
+	}
 
-    public void setEffectTypes(Set<EffectType> effectTypes) {
-        this.effectTypes = effectTypes;
-    }
+	public void setEffectTypes(Set<EffectType> effectTypes) {
+		this.effectTypes = effectTypes;
+	}
 
-    @Override
-    public void setValue(Value o) {
-        this.value = o;
-    }
+	@Override
+	public void setValue(Value o) {
+		this.value = o;
+	}
 
-    @Override
-    public Value getValue() {
-        return value;
-    }
+	@Override
+	public Value getValue() {
+		return value;
+	}
 
-    @Override
-    public EffectStackingStrategy<Value> getEffectStackingStrategy() {
-        return effectStackingStrategy;
-    }
+	@Override
+	public EffectStackingStrategy<Value> getEffectStackingStrategy() {
+		return effectStackingStrategy;
+	}
 
-    @Override
-    public void setEffectStackingStrategy(EffectStackingStrategy<Value> effectStackingStrategy) {
-        this.effectStackingStrategy = effectStackingStrategy;
-    }
+	@Override
+	public void setEffectStackingStrategy(EffectStackingStrategy<Value> effectStackingStrategy) {
+		this.effectStackingStrategy = effectStackingStrategy;
+	}
 
-    @Override
-    public IEffectContainer<Value, IEffect<Value>> getEffectContainer() {
-        return container;
-    }
+	@Override
+	public IEffectContainer<Value, IEffect<Value>> getEffectContainer() {
+		return container;
+	}
 
-    @Override
-    public void setEffectContainer(IEffectContainer<Value, IEffect<Value>> iEffectContainer) {
-        this.container = iEffectContainer;
-    }
+	@Override
+	public void setEffectContainer(IEffectContainer<Value, IEffect<Value>> iEffectContainer) {
+		this.container = iEffectContainer;
+	}
 
-    protected void addEffectType(EffectType e) {
-        if (effectTypes == null)
-            effectTypes = new HashSet<>();
-        effectTypes.add(e);
-    }
+	protected void addEffectType(EffectType e) {
+		if (effectTypes == null)
+			effectTypes = new HashSet<>();
+		effectTypes.add(e);
+	}
 
-    @Override
-    public boolean isTickingDisabled() {
-        return tickingDisabled;
-    }
+	@Override
+	public boolean isTickingDisabled() {
+		return tickingDisabled;
+	}
 
-    @Override
-    public void setTickingDisabled(boolean tickingDisabled) {
-        this.tickingDisabled = tickingDisabled;
-    }
+	@Override
+	public void setTickingDisabled(boolean tickingDisabled) {
+		this.tickingDisabled = tickingDisabled;
+	}
 }

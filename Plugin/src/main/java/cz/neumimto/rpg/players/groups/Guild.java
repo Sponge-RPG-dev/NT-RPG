@@ -32,49 +32,49 @@ import java.util.List;
 //TODO put guilds in a second level cache; configure ehcache in nt core
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)*/
 public class Guild {
-    public static Guild Default = new Guild();
+	public static Guild Default = new Guild();
 
-    static {
-        Default.name = "None";
-    }
+	static {
+		Default.name = "None";
+	}
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long guildId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long guildId;
 
-    private String name;
+	private String name;
 
-    private Long leaderId;
+	private Long leaderId;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "characterId")
-    private List<CharacterBase> memebers;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "characterId")
+	private List<CharacterBase> memebers;
 
 
-    public Guild() {
+	public Guild() {
 
-    }
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public Long getLeaderId() {
-        return leaderId;
-    }
+	public Long getLeaderId() {
+		return leaderId;
+	}
 
-    public void setLeaderId(Long leaderId) {
-        this.leaderId = leaderId;
-    }
+	public void setLeaderId(Long leaderId) {
+		this.leaderId = leaderId;
+	}
 
-    public List<CharacterBase> getMemebers() {
-        return memebers;
-    }
+	public List<CharacterBase> getMemebers() {
+		return memebers;
+	}
 
-    public void setMemebers(List<CharacterBase> memebers) {
-        this.memebers = memebers;
-    }
+	public void setMemebers(List<CharacterBase> memebers) {
+		this.memebers = memebers;
+	}
 }

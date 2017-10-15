@@ -28,12 +28,16 @@ public class BurningPrescense extends ActiveSkill {
 		settings.addNode(SkillNodes.RADIUS, 2500, -100);
 		super.settings = settings;
 		setDamageType(DamageTypes.FIRE);
+		addSkillType(SkillType.AURA);
+		addSkillType(SkillType.AOE);
+		addSkillType(SkillType.ELEMENTAL);
+		addSkillType(SkillType.FIRE);
 	}
 
 	@Override
 	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
 		if (character.hasEffect(BurningPrescenseEffect.name)) {
-			effectService.removeEffect(character.getEffect(BurningPrescenseEffect.name), character);
+			effectService.removeEffectContainer(character.getEffect(BurningPrescenseEffect.name), character);
 		} else {
 			BurningpresenseModel model = getBPModel(info, character);
 			model.duration = -1;

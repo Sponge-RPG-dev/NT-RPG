@@ -1,0 +1,51 @@
+package cz.neumimto.effects;
+
+import cz.neumimto.rpg.ClassGenerator;
+import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.EffectContainer;
+import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.common.stacking.MinLongStackingStrategy;
+import cz.neumimto.rpg.utils.Utils;
+
+
+/**
+ * Created by NeumimTo on 7.8.17.
+ */
+@ClassGenerator.Generate(id = "name")
+public class EnderPearlEffect extends EffectBase<Long> {
+
+	public static final String name = "Ender Pearl";
+
+	public EnderPearlEffect(IEffectConsumer consumer, long duration, String value) {
+		this(consumer, duration, Long.parseLong(Utils.extractNumber(value)) * 1000);
+	}
+
+	public EnderPearlEffect(IEffectConsumer consumer, long duration, Long value) {
+		super(name, consumer);
+		setDuration(duration);
+		setStackable(true, MinLongStackingStrategy.INSTNCE);
+	}
+
+	@Override
+	public Container constructEffectContainer() {
+		return new Container(this);
+	}
+
+
+	public static class Container extends EffectContainer<Long, EnderPearlEffect> {
+
+		private long lastTimeUsed = 0;
+
+		public Container(EnderPearlEffect enderPearlEffect) {
+			super(enderPearlEffect);
+		}
+
+		public long getLastTimeUsed() {
+			return lastTimeUsed;
+		}
+
+		public void setLastTimeUsed(long lastTimeUsed) {
+			this.lastTimeUsed = lastTimeUsed;
+		}
+	}
+}

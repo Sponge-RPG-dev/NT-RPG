@@ -28,27 +28,27 @@ import java.util.function.Function;
  * Created by NeumimTo on 17.7.2015.
  */
 public class SASTask<T, U> {
-    Function<T, U> function;
-    Consumer<U> consumer;
+	Function<T, U> function;
+	Consumer<U> consumer;
 
-    public SASTask async(Function<T, U> funct) {
-        this.function = funct;
-        return this;
-    }
+	public SASTask async(Function<T, U> funct) {
+		this.function = funct;
+		return this;
+	}
 
-    public SASTask sync(Consumer<U> consumer) {
-        this.consumer = consumer;
-        return this;
-    }
+	public SASTask sync(Consumer<U> consumer) {
+		this.consumer = consumer;
+		return this;
+	}
 
-    public void start(T t, Object plugin) {
+	public void start(T t, Object plugin) {
 
-        Task.Builder taskBuilder = Task.builder();
-        taskBuilder.async().execute(() -> {
-            U u1 = function.apply(t);
-            Task.builder().execute(() -> consumer.accept(u1)).submit(plugin);
-        }).submit(plugin);
+		Task.Builder taskBuilder = Task.builder();
+		taskBuilder.async().execute(() -> {
+			U u1 = function.apply(t);
+			Task.builder().execute(() -> consumer.accept(u1)).submit(plugin);
+		}).submit(plugin);
 
-    }
+	}
 
 }

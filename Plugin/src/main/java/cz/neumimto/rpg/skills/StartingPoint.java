@@ -28,68 +28,72 @@ import java.util.Set;
  */
 
 public final class StartingPoint extends PassiveSkill {
-    public static final String name = "StartingPoint";
-    public static final SkillData SKILL_DATA = new SkillData(name);
-    private static SkillSettings skillSettings = new SkillSettings();
+	public static final String name = "StartingPoint";
+	public static final SkillData SKILL_DATA = new SkillData(name);
+	private static SkillSettings skillSettings = new SkillSettings();
 
-    @Override
-    public boolean showsToPlayers() {
-        return false;
-    }
+	public StartingPoint() {
+		super(null);
+	}
 
-    @Override
-    public String getName() {
-        return name;
-    }
+	@Override
+	public boolean showsToPlayers() {
+		return false;
+	}
 
-    @Override
-    public String getDescription() {
-        return "";
-    }
+	@Override
+	public String getName() {
+		return name;
+	}
 
-    @Override
-    public void skillLearn(IActiveCharacter IActiveCharacter) {
+	@Override
+	public String getDescription() {
+		return "";
+	}
 
-    }
+	@Override
+	public void skillLearn(IActiveCharacter IActiveCharacter) {
 
-    @Override
-    public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
+	}
 
-    }
+	@Override
+	public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
 
-    @Override
-    public void skillRefund(IActiveCharacter IActiveCharacter) {
+	}
 
-    }
+	@Override
+	public void skillRefund(IActiveCharacter IActiveCharacter) {
 
-    @Override
-    public void applyEffect(ExtendedSkillInfo info, IActiveCharacter character) {
+	}
 
-    }
+	@Override
+	public void applyEffect(ExtendedSkillInfo info, IActiveCharacter character) {
 
-    @Override
-    public SkillSettings getDefaultSkillSettings() {
-        return skillSettings;
-    }
+	}
 
-    @Override
-    public void onCharacterInit(IActiveCharacter c, int level) {
+	@Override
+	public SkillSettings getDefaultSkillSettings() {
+		return skillSettings;
+	}
 
-    }
+	@Override
+	public void onCharacterInit(IActiveCharacter c, int level) {
 
-    @Override
-    public SkillSettings getSettings() {
-        return getDefaultSkillSettings();
-    }
+	}
 
-    @Override
-    public void setSettings(SkillSettings settings) {
+	@Override
+	public SkillSettings getSettings() {
+		return getDefaultSkillSettings();
+	}
 
-    }
+	@Override
+	public void setSettings(SkillSettings settings) {
+
+	}
 
 
-    @Override
-    public Set<SkillType> getSkillTypes() {
-        return Collections.emptySet();
-    }
+	@Override
+	public Set<ISkillType> getSkillTypes() {
+		return Collections.emptySet();
+	}
 }

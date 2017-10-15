@@ -27,89 +27,89 @@ import static org.mockito.Mockito.*;
  */
 public class TestUtils {
 
-    public static UUID uuid1 = UUID.randomUUID();
-    public static UUID uuid2 = UUID.randomUUID();
-    private static EntityManager em;
-    private static Game game;
+	public static UUID uuid1 = UUID.randomUUID();
+	public static UUID uuid2 = UUID.randomUUID();
+	private static EntityManager em;
+	private static Game game;
 
-    static {
-        game = buildGameImpl();
-    }
+	static {
+		game = buildGameImpl();
+	}
 
-    public static IActiveCharacter buildCharacter(Player player, CharacterBase characterBase) {
-        ActiveCharacter character = new ActiveCharacter(player, characterBase);
-        return character;
-    }
+	public static IActiveCharacter buildCharacter(Player player, CharacterBase characterBase) {
+		ActiveCharacter character = new ActiveCharacter(player, characterBase);
+		return character;
+	}
 
-    public static EntityManager buildEntityManager() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        NtRpgPlugin pl = new NtRpgPlugin();
-        Method method = pl.getClass().getDeclaredMethod("setupEntityManager", Path.class);
-        method.setAccessible(true);
-        EntityManager em = (EntityManager) method.invoke(pl, Paths.get("./src/main/resources/database.properties"));
-        return em;
-    }
+	public static EntityManager buildEntityManager() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+		NtRpgPlugin pl = new NtRpgPlugin();
+		Method method = pl.getClass().getDeclaredMethod("setupEntityManager", Path.class);
+		method.setAccessible(true);
+		EntityManager em = (EntityManager) method.invoke(pl, Paths.get("./src/main/resources/database.properties"));
+		return em;
+	}
 
-    public static EntityManager getEntityManager() {
-        if (em == null) {
-            try {
-                em = buildEntityManager();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-        return em;
-    }
+	public static EntityManager getEntityManager() {
+		if (em == null) {
+			try {
+				em = buildEntityManager();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
+		return em;
+	}
 
-    public static Game buildGameImpl() {
-        Game g = mock(Game.class);
-        EventManager manager = mock(EventManager.class);
-        when(manager.post(any())).thenReturn(true);
-        when(g.getEventManager()).thenReturn(manager);
-        return g;
-    }
+	public static Game buildGameImpl() {
+		Game g = mock(Game.class);
+		EventManager manager = mock(EventManager.class);
+		when(manager.post(any())).thenReturn(true);
+		when(g.getEventManager()).thenReturn(manager);
+		return g;
+	}
 
-    public static IoC setupIocEnviromentTest() {
-        IoC c = IoC.get();
-        c.registerInterfaceImplementation(Game.class, game);
-        c.registerInterfaceImplementation(EntityManager.class, getEntityManager());
+	public static IoC setupIocEnviromentTest() {
+		IoC c = IoC.get();
+		c.registerInterfaceImplementation(Game.class, game);
+		c.registerInterfaceImplementation(EntityManager.class, getEntityManager());
 
-        return c;
-    }
+		return c;
+	}
 
-    public static ActiveCharacter buildActiveCharacter(UUID uuid) {
-        IoC ioC = setupIocEnviromentTest();
-        PropertyService p = ioC.build(PropertyService.class);
-        p.process(DefaultProperties.class);
-        ActiveCharacter character = mock(ActiveCharacter.class);
-        Player player = buildPlayerImpl(uuid);
-        when(character.getPlayer()).thenReturn(player);
-        CharacterBase characterBase = buildCharacterBase(uuid);
-        when(character.getCharacterBase()).thenReturn(characterBase);
-        ExtendedNClass k = new ExtendedNClass();
-        k.setConfigClass(new ConfigClass("test"));
-        when(character.getPrimaryClass()).thenReturn(k);
-        return character;
-    }
+	public static ActiveCharacter buildActiveCharacter(UUID uuid) {
+		IoC ioC = setupIocEnviromentTest();
+		PropertyService p = ioC.build(PropertyService.class);
+		p.process(DefaultProperties.class);
+		ActiveCharacter character = mock(ActiveCharacter.class);
+		Player player = buildPlayerImpl(uuid);
+		when(character.getPlayer()).thenReturn(player);
+		CharacterBase characterBase = buildCharacterBase(uuid);
+		when(character.getCharacterBase()).thenReturn(characterBase);
+		ExtendedNClass k = new ExtendedNClass();
+		k.setConfigClass(new ConfigClass("test"));
+		when(character.getPrimaryClass()).thenReturn(k);
+		return character;
+	}
 
-    public static CharacterBase buildCharacterBase(UUID uuid) {
-        CharacterBase characterBase = new CharacterBase();
-        characterBase.setUuid(uuid);
-        characterBase.setAttributePoints((short) 10);
-        characterBase.setCanResetskills(true);
-        characterBase.setRace("test");
-        //characterBase.setGuild("attributes");
-        characterBase.setLastReset(new Date(System.currentTimeMillis()));
-        characterBase.setName("testChar");
-        return characterBase;
-    }
+	public static CharacterBase buildCharacterBase(UUID uuid) {
+		CharacterBase characterBase = new CharacterBase();
+		characterBase.setUuid(uuid);
+		characterBase.setAttributePoints(10);
+		characterBase.setCanResetskills(true);
+		characterBase.setRace("test");
+		//characterBase.setGuild("attributes");
+		characterBase.setLastReset(new Date(System.currentTimeMillis()));
+		characterBase.setName("testChar");
+		return characterBase;
+	}
 
-    public static Player buildPlayerImpl(UUID uuid) {
-        Player mock = mock(Player.class);
-        when(mock.getUniqueId()).thenReturn(uuid);
-        return mock;
-    }
+	public static Player buildPlayerImpl(UUID uuid) {
+		Player mock = mock(Player.class);
+		when(mock.getUniqueId()).thenReturn(uuid);
+		return mock;
+	}
 }

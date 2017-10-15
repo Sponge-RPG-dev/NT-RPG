@@ -21,37 +21,37 @@ import cz.neumimto.rpg.skills.ISkill;
 import org.spongepowered.api.entity.living.Living;
 
 public class SkillFindTargetEvent extends CancellableEvent {
-    private IActiveCharacter character;
-    private Living target;
-    private ISkill skill;
+	private IActiveCharacter character;
+	private Living target;
+	private ISkill skill;
 
-    public SkillFindTargetEvent(IActiveCharacter character, Living target, ISkill targetted) {
-        this.character = character;
-        this.target = target;
-        this.skill = targetted;
-    }
+	public SkillFindTargetEvent(IActiveCharacter character, Living target, ISkill targetted) {
+		this.character = character;
+		this.target = target;
+		this.skill = targetted;
+	}
 
-    public IActiveCharacter getCharacter() {
-        return character;
-    }
+	public IActiveCharacter getCharacter() {
+		return character;
+	}
 
-    public void setCharacter(IActiveCharacter character) {
-        this.character = character;
-    }
+	public void setCharacter(IActiveCharacter character) {
+		this.character = character;
+	}
 
-    public Living getTarget() {
-        return target;
-    }
+	public Living getTarget() {
+		return target;
+	}
 
-    public void setTarget(Living target) {
-        this.target = target;
-    }
+	public void setTarget(Living target) {
+		this.target = target;
+	}
 
-    public ISkill getSkill() {
-        return skill;
-    }
+	public ISkill getSkill() {
+		return skill;
+	}
 
-    public void setSkill(ISkill skill) {
-        this.skill = skill;
-    }
+	public void setSkill(ISkill skill) {
+		this.skill = skill;
+	}
 }

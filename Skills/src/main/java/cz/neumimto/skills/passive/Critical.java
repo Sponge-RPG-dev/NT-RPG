@@ -20,6 +20,7 @@ public class Critical extends PassiveSkill {
 	private EffectService effectService;
 
 	public Critical() {
+		super(CriticalEffect.name);
 		setName("Critical");
 		setLore(SkillLocalization.SKILL_CRITICAL_LORE);
 		setDescription(SkillLocalization.SKILL_CRITICAL_DESC);
@@ -28,6 +29,7 @@ public class Critical extends PassiveSkill {
 		skillSettings.addNode(SkillNodes.MULTIPLIER, 10, 20);
 		super.settings = skillSettings;
 		setDamageType(NDamageType.MEELE_CRITICAL);
+		addSkillType(SkillType.PHYSICAL);
 	}
 
 	@Override

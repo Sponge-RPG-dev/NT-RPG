@@ -18,82 +18,82 @@ import java.util.Optional;
 @Table(name = "dei_contquest_points")
 public class ConquestPoint {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private int x;
+	private int x;
 
-    private int z;
+	private int z;
 
-    private int y;
+	private int y;
 
-    private String world;
+	private String world;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinColumn(name = "town_id")
-    private Town town;
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "town_id")
+	private Town town;
 
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public int getX() {
-        return x;
-    }
+	public int getX() {
+		return x;
+	}
 
-    public void setX(int x) {
-        this.x = x;
-    }
+	public void setX(int x) {
+		this.x = x;
+	}
 
-    public int getZ() {
-        return z;
-    }
+	public int getZ() {
+		return z;
+	}
 
-    public void setZ(int z) {
-        this.z = z;
-    }
+	public void setZ(int z) {
+		this.z = z;
+	}
 
-    public int getY() {
-        return y;
-    }
+	public int getY() {
+		return y;
+	}
 
-    public void setY(int y) {
-        this.y = y;
-    }
+	public void setY(int y) {
+		this.y = y;
+	}
 
-    public String getWorld() {
-        return world;
-    }
+	public String getWorld() {
+		return world;
+	}
 
-    public void setWorld(String world) {
-        this.world = world;
-    }
+	public void setWorld(String world) {
+		this.world = world;
+	}
 
-    public Color getColor() {
-        Optional<World> world = Sponge.getGame().getServer().getWorld(this.world);
-        if (world.isPresent()) {
-            World world1 = world.get();
-            BlockSnapshot snapshot = world1.createSnapshot(x,y,z);
-            Optional<Color> color = snapshot.get(Keys.COLOR);
-            return color.isPresent() ? color.get() : null;
-        }
-        throw new WorldNotExistsException(this.world);
-    }
+	public Color getColor() {
+		Optional<World> world = Sponge.getGame().getServer().getWorld(this.world);
+		if (world.isPresent()) {
+			World world1 = world.get();
+			BlockSnapshot snapshot = world1.createSnapshot(x, y, z);
+			Optional<Color> color = snapshot.get(Keys.COLOR);
+			return color.isPresent() ? color.get() : null;
+		}
+		throw new WorldNotExistsException(this.world);
+	}
 
-    public void setColor(Color data) {
-        Optional<World> world = Sponge.getGame().getServer().getWorld(this.world);
-        if (world.isPresent()) {
-            World world1 = world.get();
-            BlockSnapshot snapshot = world1.createSnapshot(x,y,z);
+	public void setColor(Color data) {
+		Optional<World> world = Sponge.getGame().getServer().getWorld(this.world);
+		if (world.isPresent()) {
+			World world1 = world.get();
+			BlockSnapshot snapshot = world1.createSnapshot(x, y, z);
 
 
-        }
-        throw new WorldNotExistsException(this.world);
-    }
+		}
+		throw new WorldNotExistsException(this.world);
+	}
 
 }

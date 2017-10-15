@@ -20,8 +20,8 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 
 public class PermissionSkill extends AbstractSkill {
 
-    @Override
-    public SkillResult onPreUse(IActiveCharacter character) {
-        return null;
-    }
+	@Override
+	public SkillResult onPreUse(IActiveCharacter character) {
+		return null;
+	}
 }

@@ -10,7 +10,6 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.entities.IMob;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExperienceSource;
@@ -28,7 +27,10 @@ import org.spongepowered.api.event.user.BanUserEvent;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by NeumimTo on 3.1.2016.
@@ -36,116 +38,117 @@ import java.util.*;
 @ResourceLoader.ListenerClass
 public class EntityLifecycleListener {
 
-    @Inject
-    private CharacterService characterService;
+	@Inject
+	private CharacterService characterService;
 
-    @Inject
-    private EffectService effectService;
+	@Inject
+	private EffectService effectService;
 
-    @Inject
-    private EntityService entityService;
+	@Inject
+	private EntityService entityService;
 
-    @Inject
-    private InventoryService inventoryService;
+	@Inject
+	private InventoryService inventoryService;
 
-    @Listener
-    public void onPlayerJoin(ClientConnectionEvent.Auth event) {
-        if (event.isCancelled())
-            return;
-        UUID id = event.getProfile().getUniqueId();
-        characterService.loadPlayerData(id);
-    }
-    @Listener
-    public void onPlayerLogin(ClientConnectionEvent.Join event) {
-      //  IActiveCharacter character = characterService.getCharacter(event.getTargetEntity().getUniqueId());
-        characterService.assignPlayerToCharacter(event.getTargetEntity());
-    }
+	@Listener
+	public void onPlayerJoin(ClientConnectionEvent.Auth event) {
+		if (event.isCancelled())
+			return;
+		UUID id = event.getProfile().getUniqueId();
+		characterService.loadPlayerData(id);
+	}
 
-    @Listener
-    public void onPlayerQuit(ClientConnectionEvent.Disconnect event) {
-        Player player = event.getTargetEntity();
-        IActiveCharacter character = characterService.removeCachedWrapper(player.getUniqueId());
-        if (!character.isStub()) {
-            Location loc = player.getLocation();
-            World ex = (World) loc.getExtent();
-            character.getCharacterBase().setLastKnownPlayerName(event.getTargetEntity().getName());
-            character.updateLastKnownLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockY(), ex.getName());
-            characterService.putInSaveQueue(character.getCharacterBase());
-            effectService.removeAllEffects(character);
-            /*Always reset the persistent properties back to vanilla values in a case
+	@Listener
+	public void onPlayerLogin(ClientConnectionEvent.Join event) {
+		//  IActiveCharacter character = characterService.getCharacter(event.getTargetEntity().getUniqueId());
+		characterService.assignPlayerToCharacter(event.getTargetEntity());
+	}
+
+	@Listener
+	public void onPlayerQuit(ClientConnectionEvent.Disconnect event) {
+		Player player = event.getTargetEntity();
+		IActiveCharacter character = characterService.removeCachedWrapper(player.getUniqueId());
+		if (!character.isStub()) {
+			Location loc = player.getLocation();
+			World ex = (World) loc.getExtent();
+			character.getCharacterBase().setLastKnownPlayerName(event.getTargetEntity().getName());
+			character.updateLastKnownLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockY(), ex.getName());
+			characterService.putInSaveQueue(character.getCharacterBase());
+			effectService.removeAllEffects(character);
+			/*Always reset the persistent properties back to vanilla values in a case
              some dummy decides to remove my awesome plugin :C */
-            Utils.resetPlayerToDefault(player);
-        }
-    }
+			Utils.resetPlayerToDefault(player);
+		}
+	}
 
-    @Listener
-    public void onUserBan(BanUserEvent event) {
-        if (PluginConfig.REMOVE_PLAYERDATA_AFTER_PERMABAN) {
-            if (!event.getBan().getExpirationDate().isPresent()) {
-                characterService.removePlayerData(event.getTargetUser().getUniqueId());
-            }
-        }
-    }
+	@Listener
+	public void onUserBan(BanUserEvent event) {
+		if (PluginConfig.REMOVE_PLAYERDATA_AFTER_PERMABAN) {
+			if (!event.getBan().getExpirationDate().isPresent()) {
+				characterService.removePlayerData(event.getTargetUser().getUniqueId());
+			}
+		}
+	}
 
 
-    @Listener
-    public void onEntityDespawn(DestructEntityEvent event) {
-        Entity targetEntity = event.getTargetEntity();
-        if (targetEntity.getType() == EntityTypes.PLAYER) {
-            IActiveCharacter character = characterService.getCharacter(targetEntity.getUniqueId());
-            if (character.isStub())
-                return;
-            for (IEffectContainer<Object, IEffect<Object>> iEffectIEffectContainer : character.getEffects()) {
-                iEffectIEffectContainer.forEach(a -> effectService.stopEffect(a));
-            }
-        } else {
-            if (!event.getTargetEntity().get(Keys.HEALTH).isPresent()) {
-                return;
-            }
+	@Listener
+	public void onEntityDespawn(DestructEntityEvent event) {
+		Entity targetEntity = event.getTargetEntity();
+		if (targetEntity.getType() == EntityTypes.PLAYER) {
+			IActiveCharacter character = characterService.getCharacter(targetEntity.getUniqueId());
+			if (character.isStub())
+				return;
+			for (IEffectContainer<Object, IEffect<Object>> iEffectIEffectContainer : character.getEffects()) {
+				iEffectIEffectContainer.forEach(a -> effectService.stopEffect(a));
+			}
+		} else {
+			if (!event.getTargetEntity().get(Keys.HEALTH).isPresent()) {
+				return;
+			}
 
-            Optional<EntityDamageSource> first = event.getCause().first(EntityDamageSource.class);
-            if (first.isPresent()) {
+			Optional<EntityDamageSource> first = event.getCause().first(EntityDamageSource.class);
+			if (first.isPresent()) {
 
-                EntityDamageSource entityDamageSource = first.get();
-                if (!Utils.isLivingEntity(entityDamageSource.getSource())) {
-                    return;
-                }
-                double exp = entityService.getExperiences(targetEntity.getType());
-                //todo share in party
-                IEntity source = entityService.get(entityDamageSource.getSource());
+				EntityDamageSource entityDamageSource = first.get();
+				if (!Utils.isLivingEntity(entityDamageSource.getSource())) {
+					return;
+				}
+				double exp = entityService.getExperiences(targetEntity.getType());
+				//todo share in party
+				IEntity source = entityService.get(entityDamageSource.getSource());
 
-                if (source.getType() == IEntityType.CHARACTER) {
-                    IActiveCharacter character = (IActiveCharacter) source;
-                    if (character.hasParty()) {
-                        exp *= PluginConfig.PARTY_EXPERIENCE_MULTIPLIER;
-                        double dist = Math.pow(PluginConfig.PARTY_EXPERIENCE_SHARE_DISTANCE, 2);
-                        Set<IActiveCharacter> set = new HashSet<>();
-                        for (IActiveCharacter member : character.getParty().getPlayers()) {
-                            if (member.getPlayer().getLocation().getPosition()
-                                    .distanceSquared(character.getPlayer().getLocation().getPosition()) <= dist) {
-                                set.add(member);
-                            }
-                        }
-                        exp /= set.size();
-                        for (IActiveCharacter character1 : set) {
-                            characterService.addExperiences(character1, exp, ExperienceSource.PVE);
-                        }
-                    } else {
-                        characterService.addExperiences(character, exp, ExperienceSource.PVE);
-                    }
-                }
-            }
-            Optional<SkillDamageSource> sds = event.getCause().first(SkillDamageSource.class);
-            if (sds.isPresent()) {
-                SkillDamageSource source = sds.get();
-                IEntity caster = source.getCaster();
-                if (caster.getType() == IEntityType.CHARACTER) {
-                    double exp = entityService.getExperiences(event.getTargetEntity().getType());
-                    characterService.addExperiences((IActiveCharacter) caster, exp, ExperienceSource.PVE);
-                }
-            }
-            entityService.remove(event.getTargetEntity().getUniqueId());
-        }
-    }
+				if (source.getType() == IEntityType.CHARACTER) {
+					IActiveCharacter character = (IActiveCharacter) source;
+					if (character.hasParty()) {
+						exp *= PluginConfig.PARTY_EXPERIENCE_MULTIPLIER;
+						double dist = Math.pow(PluginConfig.PARTY_EXPERIENCE_SHARE_DISTANCE, 2);
+						Set<IActiveCharacter> set = new HashSet<>();
+						for (IActiveCharacter member : character.getParty().getPlayers()) {
+							if (member.getPlayer().getLocation().getPosition()
+									.distanceSquared(character.getPlayer().getLocation().getPosition()) <= dist) {
+								set.add(member);
+							}
+						}
+						exp /= set.size();
+						for (IActiveCharacter character1 : set) {
+							characterService.addExperiences(character1, exp, ExperienceSource.PVE);
+						}
+					} else {
+						characterService.addExperiences(character, exp, ExperienceSource.PVE);
+					}
+				}
+			}
+			Optional<SkillDamageSource> sds = event.getCause().first(SkillDamageSource.class);
+			if (sds.isPresent()) {
+				SkillDamageSource source = sds.get();
+				IEntity caster = source.getCaster();
+				if (caster.getType() == IEntityType.CHARACTER) {
+					double exp = entityService.getExperiences(event.getTargetEntity().getType());
+					characterService.addExperiences((IActiveCharacter) caster, exp, ExperienceSource.PVE);
+				}
+			}
+			entityService.remove(event.getTargetEntity().getUniqueId());
+		}
+	}
 }
 

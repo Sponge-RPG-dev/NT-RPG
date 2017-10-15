@@ -11,53 +11,53 @@ import java.util.Set;
 @Table(name = "dei_blueprints")
 public class Blueprint {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String schematicPath;
+	private String schematicPath;
 
-    private int maxHealth;
+	private int maxHealth;
 
-    private int blockRepairRate;
+	private int blockRepairRate;
 
-    private int level;
+	private int level;
 
-    @Access(AccessType.PROPERTY)
+	@Access(AccessType.PROPERTY)
 
-    private Set<ItemStackResource> buildResources = new HashSet<>();
+	private Set<ItemStackResource> buildResources = new HashSet<>();
 
-    private Set<Reward> rewardSet = new HashSet<>();
+	private Set<Reward> rewardSet = new HashSet<>();
 
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setSchematicPath(String schematicPath) {
-        this.schematicPath = schematicPath;
-    }
+	public void setSchematicPath(String schematicPath) {
+		this.schematicPath = schematicPath;
+	}
 
-    public void setMaxHealth(int maxHealth) {
-        this.maxHealth = maxHealth;
-    }
+	public void setMaxHealth(int maxHealth) {
+		this.maxHealth = maxHealth;
+	}
 
-    public void setBlockRepairRate(int blockRepairRate) {
-        this.blockRepairRate = blockRepairRate;
-    }
+	public void setBlockRepairRate(int blockRepairRate) {
+		this.blockRepairRate = blockRepairRate;
+	}
 
-    public void setLevel(int level) {
-        this.level = level;
-    }
+	public void setLevel(int level) {
+		this.level = level;
+	}
 
-    public void setBuildResources(Set<ItemStackResource> buildResources) {
-        this.buildResources = buildResources;
-    }
+	public void setBuildResources(Set<ItemStackResource> buildResources) {
+		this.buildResources = buildResources;
+	}
 
-    public void setRewardSet(Set<Reward> rewardSet) {
-        this.rewardSet = rewardSet;
-    }
+	public void setRewardSet(Set<Reward> rewardSet) {
+		this.rewardSet = rewardSet;
+	}
 }

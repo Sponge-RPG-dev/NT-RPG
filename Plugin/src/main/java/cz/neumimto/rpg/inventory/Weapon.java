@@ -23,7 +23,6 @@ import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 
@@ -32,75 +31,78 @@ import org.spongepowered.api.item.inventory.ItemStack;
  */
 public class Weapon extends Charm {
 
-    public static Weapon EmptyHand = new Weapon(ItemStack.empty());
-    protected double damage;
-    protected boolean current;
-    private ItemType itemType;
-    private int level;
+	public static Weapon EmptyHand;
+	protected double damage;
+	protected boolean current;
+	private RPGItemType itemType;
+	private int level;
 
+	static {
+		EmptyHand = new Weapon(ItemStack.empty());
+	}
 
-    public Weapon(ItemStack itemStack) {
-        super(itemStack);
-        this.itemType = itemStack.getItem();
-        type = HotbarObjectTypes.WEAPON;
-    }
+	public Weapon(ItemStack itemStack) {
+		super(itemStack);
+		this.itemType = RPGItemType.from(itemStack);
+		type = HotbarObjectTypes.WEAPON;
+	}
 
-    public ItemType getItemType() {
-        return itemType;
-    }
+	public RPGItemType getItemType() {
+		return itemType;
+	}
 
-    public void setDamage(float f) {
-        this.damage = f;
-    }
+	public void setDamage(float f) {
+		this.damage = f;
+	}
 
-    public double getDamage() {
-        return damage;
-    }
+	public double getDamage() {
+		return damage;
+	}
 
-    public void setDamage(double damage) {
-        this.damage = damage;
-    }
+	public void setDamage(double damage) {
+		this.damage = damage;
+	}
 
-    public boolean isShield() {
-        return getItemType() == ItemTypes.SHIELD;
-    }
+	public boolean isShield() {
+		return getItemType() == ItemTypes.SHIELD;
+	}
 
-    public void setCurrent(boolean current) {
-        this.current = current;
-    }
+	public void setCurrent(boolean current) {
+		this.current = current;
+	}
 
-    @Override
-    public void onRightClick(IActiveCharacter character) {
-        if (character.isSocketing()) {
-            NtRpgPlugin.GlobalScope.inventorySerivce.insertRune(character);
-        } else if (!current) {
-            NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character, this);
-        }
-    }
+	@Override
+	public void onRightClick(IActiveCharacter character) {
+		if (character.isSocketing()) {
+			NtRpgPlugin.GlobalScope.inventorySerivce.insertRune(character);
+		} else if (!current) {
+			NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character, this);
+		}
+	}
 
-    @Override
-    public void onLeftClick(IActiveCharacter character) {
-        if (character.isSocketing()) {
-            NtRpgPlugin.GlobalScope.inventorySerivce.cancelSocketing(character);
-        } else if (!current) {
-            NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character, this);
-        }
-    }
+	@Override
+	public void onLeftClick(IActiveCharacter character) {
+		if (character.isSocketing()) {
+			NtRpgPlugin.GlobalScope.inventorySerivce.cancelSocketing(character);
+		} else if (!current) {
+			NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character, this);
+		}
+	}
 
-    public void setItemData(CustomItemData i) {
-        customItemData = i;
-    }
+	public void setItemData(CustomItemData i) {
+		customItemData = i;
+	}
 
-    public int getLevel() {
-        return level;
-    }
+	public int getLevel() {
+		return level;
+	}
 
-    public void setLevel(int level) {
-        this.level = level;
-    }
+	public void setLevel(int level) {
+		this.level = level;
+	}
 
-    @Override
-    public IEffectSource getType() {
-        return EffectSourceType.WEAPON;
-    }
+	@Override
+	public IEffectSource getType() {
+		return EffectSourceType.WEAPON;
+	}
 }

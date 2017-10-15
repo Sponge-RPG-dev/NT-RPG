@@ -22,6 +22,6 @@ public class CriticalEffectModel implements UnstackableEffectData<CriticalEffect
 		if (o == null) {
 			return -1;
 		}
-		return (int) ((o.chance + o.mult) - (chance  + mult));
+		return (int) ((o.chance + o.mult) - (chance + mult));
 	}
 }

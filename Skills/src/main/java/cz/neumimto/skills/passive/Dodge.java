@@ -19,18 +19,20 @@ public class Dodge extends PassiveSkill {
 	private EffectService effectService;
 
 	public Dodge() {
+		super(DodgeEffect.name);
 		setName("Dodge");
 		setLore(SkillLocalization.SKILL_DODGE_LORE);
 		setDescription(SkillLocalization.SKILL_DODGE_DESC);
 		SkillSettings skillSettings = new SkillSettings();
 		skillSettings.addNode(SkillNodes.CHANCE, 10, 20);
 		super.settings = skillSettings;
+		addSkillType(SkillType.PHYSICAL);
 	}
 
 	@Override
 	public void applyEffect(ExtendedSkillInfo info, IActiveCharacter character) {
 		float chance = getFloatNodeValue(info, SkillNodes.CHANCE);
-		DodgeEffect dodgeEffect = new DodgeEffect(character, chance);
+		DodgeEffect dodgeEffect = new DodgeEffect(character, -1, chance);
 		effectService.addEffect(dodgeEffect, character, this);
 	}
 

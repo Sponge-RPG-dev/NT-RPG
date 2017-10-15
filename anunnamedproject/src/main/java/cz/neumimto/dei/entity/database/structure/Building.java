@@ -9,25 +9,25 @@ import javax.persistence.*;
 @Table(name = "dei_buildings")
 public class Building {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false,name = "blueprint_id")
-    private Blueprint blueprint;
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, name = "blueprint_id")
+	private Blueprint blueprint;
 
-    private boolean life;
+	private boolean life;
 
-    private boolean isFinished;
+	private boolean isFinished;
 
-    private long timeLeftToBuild;
+	private long timeLeftToBuild;
 
-    private boolean maxDamageTreshhold;
+	private boolean maxDamageTreshhold;
 
-    private String upKeepCron;
+	private String upKeepCron;
 
-    private long lastTimeCronRun;
+	private long lastTimeCronRun;
 
 
 }

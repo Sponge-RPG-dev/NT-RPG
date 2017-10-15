@@ -8,6 +8,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 @FunctionalInterface
 public interface ItemRestriction<T> {
 
-    boolean canUse(IActiveCharacter character, T requiredValue);
+	boolean canUse(IActiveCharacter character, T requiredValue);
 
 }

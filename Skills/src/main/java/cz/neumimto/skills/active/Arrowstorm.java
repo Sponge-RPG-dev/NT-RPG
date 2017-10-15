@@ -30,6 +30,9 @@ public class Arrowstorm extends ActiveSkill {
 		settings.addNode("max-arrows", 45, 1);
 		settings.addNode(SkillNodes.PERIOD, 100, -10);
 		super.settings = settings;
+		addSkillType(SkillType.PHYSICAL);
+		addSkillType(SkillType.SUMMON);
+		addSkillType(SkillType.PROJECTILE);
 	}
 
 	@Override

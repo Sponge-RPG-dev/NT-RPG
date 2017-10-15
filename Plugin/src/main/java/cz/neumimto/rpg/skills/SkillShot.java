@@ -32,25 +32,25 @@ import java.util.function.BiConsumer;
  */
 public abstract class SkillShot extends ActiveSkill {
 
-    @Inject
-    private Game game;
+	@Inject
+	private Game game;
 
 
-    @Override
-    public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info,SkillModifier modifier) {
-        Optional<Projectile> projectile = character.getPlayer().launchProjectile(getProjectile(character, info));
-        if (projectile.isPresent()) {
-            ProjectileProperties projectileProperties = getProjectileProperties(character, info,modifier, projectile.get());
-            projectileProperties.onHit(getHitConsumer());
-            return SkillResult.OK;
-        }
-        return SkillResult.CANCELLED;
-    }
+	@Override
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
+		Optional<Projectile> projectile = character.getPlayer().launchProjectile(getProjectile(character, info));
+		if (projectile.isPresent()) {
+			ProjectileProperties projectileProperties = getProjectileProperties(character, info, modifier, projectile.get());
+			projectileProperties.onHit(getHitConsumer());
+			return SkillResult.OK;
+		}
+		return SkillResult.CANCELLED;
+	}
 
-    protected abstract ProjectileProperties getProjectileProperties(IActiveCharacter character, ExtendedSkillInfo info,SkillModifier modifier, Projectile projectile);
+	protected abstract ProjectileProperties getProjectileProperties(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier, Projectile projectile);
 
-    protected abstract Class<Projectile> getProjectile(IActiveCharacter character, ExtendedSkillInfo info);
+	protected abstract Class<Projectile> getProjectile(IActiveCharacter character, ExtendedSkillInfo info);
 
-    protected abstract BiConsumer<IEntity, IEntity> getHitConsumer();
+	protected abstract BiConsumer<IEntity, IEntity> getHitConsumer();
 
 }

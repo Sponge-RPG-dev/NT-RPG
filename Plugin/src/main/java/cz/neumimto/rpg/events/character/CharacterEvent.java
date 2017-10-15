@@ -25,17 +25,17 @@ import cz.neumimto.rpg.players.IActiveCharacter;
  * Created by NeumimTo on 13.3.2015.
  */
 public class CharacterEvent extends CancellableEvent {
-    private cz.neumimto.rpg.players.IActiveCharacter IActiveCharacter;
+	private cz.neumimto.rpg.players.IActiveCharacter IActiveCharacter;
 
-    public CharacterEvent(IActiveCharacter IActiveCharacter) {
-        this.IActiveCharacter = IActiveCharacter;
-    }
+	public CharacterEvent(IActiveCharacter IActiveCharacter) {
+		this.IActiveCharacter = IActiveCharacter;
+	}
 
-    public IActiveCharacter getActiveCharacter() {
-        return IActiveCharacter;
-    }
+	public IActiveCharacter getActiveCharacter() {
+		return IActiveCharacter;
+	}
 
-    public void setActiveCharacter(IActiveCharacter IActiveCharacter) {
-        this.IActiveCharacter = IActiveCharacter;
-    }
+	public void setActiveCharacter(IActiveCharacter IActiveCharacter) {
+		this.IActiveCharacter = IActiveCharacter;
+	}
 }

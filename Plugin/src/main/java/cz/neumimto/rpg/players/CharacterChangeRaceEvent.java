@@ -7,7 +7,7 @@ import cz.neumimto.rpg.players.groups.Race;
  * Created by NeumimTo on 29.4.2017.
  */
 public class CharacterChangeRaceEvent extends CharacterChangeGroupEvent {
-	public CharacterChangeRaceEvent(IActiveCharacter character, Race race) {
-		super(race, character);
+	public CharacterChangeRaceEvent(IActiveCharacter character, Race next, Race old) {
+		super(next, character, old);
 	}
 }

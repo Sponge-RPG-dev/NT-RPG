@@ -31,93 +31,93 @@ import java.util.Set;
  */
 public class ConfigClass extends PlayerGroup {
 
-    public static ConfigClass Default = new ConfigClass("CNone");
+	public static ConfigClass Default = new ConfigClass("CNone");
 
-    private SkillTree skillTree = new SkillTree();
+	private SkillTree skillTree = new SkillTree();
 
-    private int skillpointsperlevel, attributepointsperlevel;
-    private double[] levels;
-    private double totalExp;
-    private Set<ExperienceSource> experienceSourceSet = new HashSet<>();
-    private boolean defaultClass;
-    private Color chatColor;
+	private int skillpointsperlevel, attributepointsperlevel;
+	private double[] levels;
+	private double totalExp;
+	private Set<ExperienceSource> experienceSourceSet = new HashSet<>();
+	private boolean defaultClass;
+	private Color chatColor;
 
 
-    public ConfigClass(String name) {
-        super(name);
-        playerGroupType = EffectSourceType.CLASS;
-    }
+	public ConfigClass(String name) {
+		super(name);
+		playerGroupType = EffectSourceType.CLASS;
+	}
 
-    public SkillTree getSkillTree() {
-        return skillTree;
-    }
+	public SkillTree getSkillTree() {
+		return skillTree;
+	}
 
-    public void setSkillTree(SkillTree skillTree) {
-        this.skillTree = skillTree;
-    }
+	public void setSkillTree(SkillTree skillTree) {
+		this.skillTree = skillTree;
+	}
 
-    public boolean hasExperienceSource(ExperienceSource source) {
-        return experienceSourceSet.contains(source);
-    }
+	public boolean hasExperienceSource(ExperienceSource source) {
+		return experienceSourceSet.contains(source);
+	}
 
-    public double[] getLevels() {
-        return levels;
-    }
+	public double[] getLevels() {
+		return levels;
+	}
 
-    public void setLevels(double[] levels) {
-        this.levels = levels;
-    }
+	public void setLevels(double[] levels) {
+		this.levels = levels;
+	}
 
-    public void setExperienceSources(HashSet<ExperienceSource> experienceSources) {
-        this.experienceSourceSet = experienceSources;
-    }
+	public void setExperienceSources(HashSet<ExperienceSource> experienceSources) {
+		this.experienceSourceSet = experienceSources;
+	}
 
-    public double getTotalExp() {
-        return totalExp;
-    }
+	public double getTotalExp() {
+		return totalExp;
+	}
 
-    public void setTotalExp(double totalExp) {
-        this.totalExp = totalExp;
-    }
+	public void setTotalExp(double totalExp) {
+		this.totalExp = totalExp;
+	}
 
-    public int getAttributepointsperlevel() {
-        return attributepointsperlevel;
-    }
+	public int getAttributepointsperlevel() {
+		return attributepointsperlevel;
+	}
 
-    public void setAttributepointsperlevel(int attributepointsperlevel) {
-        this.attributepointsperlevel = attributepointsperlevel;
-    }
+	public void setAttributepointsperlevel(int attributepointsperlevel) {
+		this.attributepointsperlevel = attributepointsperlevel;
+	}
 
-    public int getSkillpointsperlevel() {
-        return skillpointsperlevel;
-    }
+	public int getSkillpointsperlevel() {
+		return skillpointsperlevel;
+	}
 
-    public void setSkillpointsperlevel(int skillpointsperlevel) {
-        this.skillpointsperlevel = skillpointsperlevel;
-    }
+	public void setSkillpointsperlevel(int skillpointsperlevel) {
+		this.skillpointsperlevel = skillpointsperlevel;
+	}
 
-    public Color getChatColor() {
-        return chatColor;
-    }
+	public Color getChatColor() {
+		return chatColor;
+	}
 
-    public void setChatColor(Color chatColor) {
-        this.chatColor = chatColor;
-    }
+	public void setChatColor(Color chatColor) {
+		this.chatColor = chatColor;
+	}
 
-    public double getFirstLevelExp() {
-        return levels[1];
-    }
+	public double getFirstLevelExp() {
+		return levels[1];
+	}
 
-    public int getMaxLevel() {
-        return levels.length -1;
-    }
+	public int getMaxLevel() {
+		return levels.length - 1;
+	}
 
-    public boolean isDefaultClass() {
-        return defaultClass;
-    }
+	public boolean isDefaultClass() {
+		return defaultClass;
+	}
 
-    public void setDefaultClass(boolean defaultClass) {
-        this.setShowsInMenu(!defaultClass);
-        this.defaultClass = defaultClass;
-    }
+	public void setDefaultClass(boolean defaultClass) {
+		this.setShowsInMenu(!defaultClass);
+		this.defaultClass = defaultClass;
+	}
 }

@@ -21,6 +21,7 @@ package cz.neumimto.rpg.listeners;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.damage.DamageService;
+import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.CannotUseItemReson;
 import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.InventoryService;
@@ -33,13 +34,10 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
-import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.cause.entity.spawn.EntitySpawnCause;
 import org.spongepowered.api.event.filter.cause.First;
-import org.spongepowered.api.event.filter.type.Exclude;
+import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.event.item.inventory.*;
-import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
@@ -53,76 +51,75 @@ import org.spongepowered.common.item.inventory.adapter.impl.slots.SlotAdapter;
 @ResourceLoader.ListenerClass
 public class InventoryListener {
 
-    @Inject
-    private InventoryService inventoryService;
+	@Inject
+	private InventoryService inventoryService;
 
-    @Inject
-    private CharacterService characterService;
+	@Inject
+	private CharacterService characterService;
 
-    @Inject
-    private DamageService damageService;
+	@Inject
+	private DamageService damageService;
 
-    @Inject
-    private Game game;
+	@Inject
+	private Game game;
+
+	@Listener
+	public void onInventoryClose(InteractInventoryEvent.Close event, @First(typeFilter = {Player.class}) Player player) {
+		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+		if (player.get(Keys.GAME_MODE).get() == GameModes.CREATIVE)
+			return;
+		inventoryService.initializeHotbar(character);
+		inventoryService.initializeArmor(character);
+		damageService.recalculateCharacterWeaponDamage(character);
+	}
+
+	/* Tempoar */
+	@Listener
+	public void onInventoryOpen(InteractInventoryEvent.Close event, @First(typeFilter = {Player.class}) Player player) {
+		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+		if (!character.isStub()) {
+			character.setOpenInventory(false);
+		}
+
+	}
+
+	@Listener
+	public void onInventoryOpen(InteractInventoryEvent.Open event, @First(typeFilter = {Player.class}) Player player) {
+		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+		if (!character.isStub()) {
+			character.setOpenInventory(true);
+		}
+	}
+
+
+	@Listener
+	public void onItemPickup(ChangeInventoryEvent.Pickup event, @First(typeFilter = {Player.class}) Player player) {
+
+		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+		if (character.isStub()) {
+			return;
+		}
+		if (player.get(Keys.GAME_MODE).get() != GameModes.SURVIVAL)
+			return;
+
+		for (SlotTransaction slotTransaction : event.getTransactions()) {
+			Slot i = slotTransaction.getSlot();
+			int index = ((SlotAdapter) i).getOrdinal();
+			if (Utils.isHotbar(index)) {
+				ItemStack a = slotTransaction.getFinal().createStack();
+				if (inventoryService.canUse(a, character) != CannotUseItemReson.OK) {
+					event.setCancelled(true);
+					return;
+				} else {
+					inventoryService.initializeHotbar(character, index, a);
+				}
+			}
+		}
+	}
+
 
     @Listener
-    public void onInventoryClose(InteractInventoryEvent.Close event, @First(typeFilter = {Player.class}) Player player) {
-        IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-        if (player.get(Keys.GAME_MODE).get() == GameModes.CREATIVE)
-            return;
-        inventoryService.initializeHotbar(character);
-        inventoryService.initializeArmor(character);
-        damageService.recalculateCharacterWeaponDamage(character);
-    }
-
-    /* Tempoar */
-    @Listener
-    public void onInventoryOpen(InteractInventoryEvent.Close event, @First(typeFilter = {Player.class}) Player player) {
-        IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-        if (!character.isStub()) {
-            character.setOpenInventory(false);
-        }
-
-    }
-
-    @Listener
-    public void onInventoryOpen(InteractInventoryEvent.Open event, @First(typeFilter = {Player.class}) Player player) {
-        IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-        if (!character.isStub()) {
-            character.setOpenInventory(true);
-        }
-    }
-
-
-    @Listener
-    public void onItemPickup(ChangeInventoryEvent.Pickup event, @First(typeFilter = {Player.class}) Player player) {
-
-        IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-        if (character.isStub()) {
-            return;
-        }
-        if (player.get(Keys.GAME_MODE).get() != GameModes.SURVIVAL)
-            return;
-
-        for (SlotTransaction slotTransaction : event.getTransactions()) {
-            Slot i = slotTransaction.getSlot();
-            int index = ((SlotAdapter)i).getOrdinal();
-            if (Utils.isHotbar(index)) {
-                ItemStack a = slotTransaction.getFinal().createStack();
-                if (inventoryService.canUse(a, character) != CannotUseItemReson.OK) {
-                   event.setCancelled(true);
-                   return;
-                } else {
-                    inventoryService.initializeHotbar(character, index, a);
-                }
-            }
-        }
-    }
-
-
-    @Listener
-    public void onItemDrop(DropItemEvent event, @First(typeFilter = {EntitySpawnCause.class}) EntitySpawnCause esc) {
-        Entity entity = esc.getEntity();
+    public void onItemDrop(DropItemEvent event, @Root Entity entity) {
         if (entity.getType() != EntityTypes.PLAYER)
             return;
         IActiveCharacter character = characterService.getCharacter(entity.getUniqueId());
@@ -132,24 +129,35 @@ public class InventoryListener {
             return;
         }
 
-        Hotbar hotbar = character.getPlayer().getInventory().query(Hotbar.class);
-        HotbarObject hotbarObject = character.getHotbar()[hotbar.getSelectedSlotIndex()];
-        if (hotbarObject == HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
-            return;
-        }
-        inventoryService.initializeHotbar(character, hotbar.getSelectedSlotIndex());
-    }
+		Hotbar hotbar = character.getPlayer().getInventory().query(Hotbar.class);
+		HotbarObject hotbarObject = character.getHotbar()[hotbar.getSelectedSlotIndex()];
+		if (hotbarObject == HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
+			return;
+		}
+		inventoryService.initializeHotbar(character, hotbar.getSelectedSlotIndex());
+	}
 
-    //@Listener
-    public void onItemMove(ClickInventoryEvent event, @First(typeFilter = Player.class) Player pl) {
-        IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());
-        if (character.isStub()) {
-            return;
-        }
-        for (SlotTransaction slotTransaction : event.getTransactions()) {
-            Slot i = slotTransaction.getSlot();
-            int index = ((SlotAdapter)i).getOrdinal();
-            character.getSlotsToReinitialize().add(index);
-        }
-    }
+	//@Listener
+	public void onItemMove(ClickInventoryEvent event, @First(typeFilter = Player.class) Player pl) {
+		IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());
+		if (character.isStub()) {
+			return;
+		}
+		for (SlotTransaction slotTransaction : event.getTransactions()) {
+			Slot i = slotTransaction.getSlot();
+			int index = ((SlotAdapter) i).getOrdinal();
+			character.getSlotsToReinitialize().add(index);
+		}
+	}
+
+	@Listener
+	public void onArmorInteract(InteractItemEvent event, @First(typeFilter = Player.class) Player player) {
+		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+		ItemStack is = event.getItemStack().createStack();
+		CannotUseItemReson reason = inventoryService.canWear(is, character);
+		if (reason != CannotUseItemReson.OK) {
+			Gui.sendCannotUseItemNotification(character, is, reason);
+			event.setCancelled(true);
+		}
+	}
 }

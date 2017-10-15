@@ -10,85 +10,88 @@ import javax.persistence.*;
 @Entity(name = "rpg_character_class")
 public class CharacterClass {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long classId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long classId;
 
-    @ManyToOne
-    @JoinColumn(name = "characterId")
-    private CharacterBase characterBase;
+	@ManyToOne
+	@JoinColumn(name = "characterId")
+	private CharacterBase characterBase;
 
-    private Double experiences;
+	@Column(name = "experiences")
+	private Double experiences;
 
-    private String name;
+	private String name;
 
-    protected int skillPoints;
+	@Column(name = "skillpoints")
+	protected int skillPoints;
 
-    private int usedSkillPoints;
+	@Column(name = "used_skil_points")
+	private int usedSkillPoints;
 
-    public Long getId() {
-        return classId;
-    }
+	public Long getId() {
+		return classId;
+	}
 
-    public void setId(Long id) {
-        this.classId = id;
-    }
+	public void setId(Long id) {
+		this.classId = id;
+	}
 
-    public CharacterBase getCharacterBase() {
-        return characterBase;
-    }
+	public CharacterBase getCharacterBase() {
+		return characterBase;
+	}
 
-    public void setCharacterBase(CharacterBase characterBase) {
-        this.characterBase = characterBase;
-    }
+	public void setCharacterBase(CharacterBase characterBase) {
+		this.characterBase = characterBase;
+	}
 
-    public Double getExperiences() {
-        return experiences;
-    }
+	public Double getExperiences() {
+		return experiences;
+	}
 
-    public void setExperiences(Double experiences) {
-        this.experiences = experiences;
-    }
+	public void setExperiences(Double experiences) {
+		this.experiences = experiences;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public int getSkillPoints() {
-        return skillPoints;
-    }
+	public int getSkillPoints() {
+		return skillPoints;
+	}
 
-    public void setSkillPoints(int skillPoints) {
-        this.skillPoints = skillPoints;
-    }
+	public void setSkillPoints(int skillPoints) {
+		this.skillPoints = skillPoints;
+	}
 
-    public int getUsedSkillPoints() {
-        return usedSkillPoints;
-    }
+	public int getUsedSkillPoints() {
+		return usedSkillPoints;
+	}
 
-    public void setUsedSkillPoints(int usedSkillPoints) {
-        this.usedSkillPoints = usedSkillPoints;
-    }
+	public void setUsedSkillPoints(int usedSkillPoints) {
+		this.usedSkillPoints = usedSkillPoints;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-        CharacterClass that = (CharacterClass) o;
+		CharacterClass that = (CharacterClass) o;
 
-        return classId.equals(that.classId);
+		return classId.equals(that.classId);
 
-    }
+	}
 
-    @Override
-    public int hashCode() {
-        return classId != null ? classId.hashCode() : 775701;
-    }
+	@Override
+	public int hashCode() {
+		return classId != null ? classId.hashCode() : 775701;
+	}
 
 
 }

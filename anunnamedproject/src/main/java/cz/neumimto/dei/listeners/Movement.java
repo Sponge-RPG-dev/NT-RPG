@@ -21,29 +21,29 @@ import org.spongepowered.api.world.World;
 @Singleton
 public class Movement {
 
-    @Inject
-    private PlayerService playerService;
+	@Inject
+	private PlayerService playerService;
 
-    @Inject
-    private WorldService worldService;
+	@Inject
+	private WorldService worldService;
 
-    @Listener
-    public void onEntityMovement(MoveEntityEvent e) {
-        Transform<World> f = e.getFromTransform();
-        Transform<World> t = e.getToTransform();
-        if (f.getLocation().getBlockX() == t.getLocation().getBlockX() &&
-                t.getLocation().getBlockZ() == f.getLocation().getBlockZ()) {
-            return;
-        }
-        int x = t.getLocation().getBlockX();
-        int z = t.getLocation().getBlockZ();
-        if (x == (x >> 4) << 4 && z == (z >> 4) << 4) {
-            EntityType type = e.getTargetEntity().getType();
-            if (type == EntityTypes.PLAYER) {
-                Citizen citizen = playerService.getCitizen(e.getTargetEntity().getUniqueId());
-                ClaimedArea nextArea = worldService.getClaimedArea(t.getLocation());
-                worldService.handleChunkChange(citizen, nextArea);
-            }
-        }
-    }
+	@Listener
+	public void onEntityMovement(MoveEntityEvent e) {
+		Transform<World> f = e.getFromTransform();
+		Transform<World> t = e.getToTransform();
+		if (f.getLocation().getBlockX() == t.getLocation().getBlockX() &&
+				t.getLocation().getBlockZ() == f.getLocation().getBlockZ()) {
+			return;
+		}
+		int x = t.getLocation().getBlockX();
+		int z = t.getLocation().getBlockZ();
+		if (x == (x >> 4) << 4 && z == (z >> 4) << 4) {
+			EntityType type = e.getTargetEntity().getType();
+			if (type == EntityTypes.PLAYER) {
+				Citizen citizen = playerService.getCitizen(e.getTargetEntity().getUniqueId());
+				ClaimedArea nextArea = worldService.getClaimedArea(t.getLocation());
+				worldService.handleChunkChange(citizen, nextArea);
+			}
+		}
+	}
 }

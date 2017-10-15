@@ -14,21 +14,21 @@ import javax.persistence.*;
 @PrimaryKeyJoinColumn
 public class TownClaim extends ClaimedArea<Town> {
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "town_id")
-    private Town town;
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "town_id")
+	private Town town;
 
-    public TownClaim() {
-        setAreaType(AreaType.TOWN);
-    }
+	public TownClaim() {
+		setAreaType(AreaType.TOWN);
+	}
 
-    @Override
-    public Town getParent() {
-        return town;
-    }
+	@Override
+	public Town getParent() {
+		return town;
+	}
 
-    @Override
-    public void setParent(Town town) {
-        this.town = town;
-    }
+	@Override
+	public void setParent(Town town) {
+		this.town = town;
+	}
 }

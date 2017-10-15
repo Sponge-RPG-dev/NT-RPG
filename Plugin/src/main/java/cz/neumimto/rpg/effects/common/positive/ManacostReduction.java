@@ -10,16 +10,16 @@ import cz.neumimto.rpg.players.IActiveCharacter;
  */
 @ClassGenerator.Generate(id = "name", inject = false)
 public class ManacostReduction extends EffectBase<Double> {
-    public static String name = "Manacost Reduction";
+	public static String name = "Manacost Reduction";
 
-    public ManacostReduction(IActiveCharacter character, long duration, double value) {
-        super(name, character);
-        setDuration(duration);
-        setValue(value);
-        setStackable(true, new DoubleEffectStackingStrategy());
-    }
+	public ManacostReduction(IActiveCharacter character, long duration, double value) {
+		super(name, character);
+		setDuration(duration);
+		setValue(value);
+		setStackable(true, new DoubleEffectStackingStrategy());
+	}
 
-    public ManacostReduction(IActiveCharacter character, long duration, String value) {
-        this(character, duration, Double.parseDouble(value));
-    }
+	public ManacostReduction(IActiveCharacter character, long duration, String value) {
+		this(character, duration, Double.parseDouble(value));
+	}
 }

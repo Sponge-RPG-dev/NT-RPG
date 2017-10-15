@@ -11,19 +11,19 @@ import java.util.Map;
  */
 public class MapSL2Json implements AttributeConverter<Object, String> {
 
-    private static Gson gson;
+	private static Gson gson;
 
-    static {
-        gson = new GsonBuilder().enableComplexMapKeySerialization().setPrettyPrinting().create();
-    }
+	static {
+		gson = new GsonBuilder().enableComplexMapKeySerialization().setPrettyPrinting().create();
+	}
 
-    @Override
-    public String convertToDatabaseColumn(Object data) {
-        return gson.toJson(data,Map.class);
-    }
+	@Override
+	public String convertToDatabaseColumn(Object data) {
+		return gson.toJson(data, Map.class);
+	}
 
-    @Override
-    public Object convertToEntityAttribute(String s) {
-        return gson.fromJson(s,Map.class);
-    }
+	@Override
+	public Object convertToEntityAttribute(String s) {
+		return gson.fromJson(s, Map.class);
+	}
 }

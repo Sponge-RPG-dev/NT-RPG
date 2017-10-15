@@ -22,6 +22,7 @@ public class InventoryCommandItemMenuData extends AbstractSingleData<String, Inv
 	public InventoryCommandItemMenuData(String s) {
 		super(s, NKeys.COMMAND);
 	}
+
 	@Override
 	protected Value<?> getValueGetter() {
 		return Sponge.getRegistry().getValueFactory().createValue(NKeys.COMMAND, getValue());

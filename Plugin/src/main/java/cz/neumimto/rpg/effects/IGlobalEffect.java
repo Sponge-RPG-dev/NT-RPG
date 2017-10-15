@@ -23,9 +23,9 @@ package cz.neumimto.rpg.effects;
  */
 public interface IGlobalEffect<T extends IEffect> {
 
-    T construct(IEffectConsumer consumer, long duration, String data);
+	T construct(IEffectConsumer consumer, long duration, String data);
 
-    String getName();
+	String getName();
 
-    Class<T> asEffectClass();
+	Class<T> asEffectClass();
 }

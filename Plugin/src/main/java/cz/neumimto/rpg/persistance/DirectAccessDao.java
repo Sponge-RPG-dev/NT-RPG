@@ -16,27 +16,27 @@ import java.util.Map;
 public class DirectAccessDao extends GenericDao {
 
 
-    public <T> T findUnique(Class<T> t, String query, Map<String,Object> param) {
-        Session session = factory.openSession();
-        Query q = session.createQuery(query);
-        for (Map.Entry<String, Object> stringObjectEntry : param.entrySet()) {
-            q.setParameter(stringObjectEntry.getKey(),stringObjectEntry.getValue());
-        }
-        T result = (T) q.uniqueResult();
-        session.flush();
-        session.close();
-        return result;
-    }
+	public <T> T findUnique(Class<T> t, String query, Map<String, Object> param) {
+		Session session = factory.openSession();
+		Query q = session.createQuery(query);
+		for (Map.Entry<String, Object> stringObjectEntry : param.entrySet()) {
+			q.setParameter(stringObjectEntry.getKey(), stringObjectEntry.getValue());
+		}
+		T result = (T) q.uniqueResult();
+		session.flush();
+		session.close();
+		return result;
+	}
 
-    public <T> List<T> findList(Class<T> t, String query, Map<String,Object> param) {
-        Session session = factory.openSession();
-        Query q = session.createQuery(query);
-        for (Map.Entry<String, Object> stringObjectEntry : param.entrySet()) {
-            q.setParameter(stringObjectEntry.getKey(),stringObjectEntry.getValue());
-        }
-        List result = q.list();
-        session.flush();
-        session.close();
-        return result;
-    }
+	public <T> List<T> findList(Class<T> t, String query, Map<String, Object> param) {
+		Session session = factory.openSession();
+		Query q = session.createQuery(query);
+		for (Map.Entry<String, Object> stringObjectEntry : param.entrySet()) {
+			q.setParameter(stringObjectEntry.getKey(), stringObjectEntry.getValue());
+		}
+		List result = q.list();
+		session.flush();
+		session.close();
+		return result;
+	}
 }

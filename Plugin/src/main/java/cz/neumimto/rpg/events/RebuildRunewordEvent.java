@@ -2,7 +2,7 @@ package cz.neumimto.rpg.events;
 
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.event.cause.EventContext;
 import org.spongepowered.api.event.impl.AbstractEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
 
@@ -15,7 +15,6 @@ public class RebuildRunewordEvent extends AbstractEvent {
 	private ItemStack itemStack;
 
 	public RebuildRunewordEvent(RuneWord rw,  ItemStack i) {
-
 		this.runeWord = rw;
 		this.itemStack = i;
 	}
@@ -34,6 +33,6 @@ public class RebuildRunewordEvent extends AbstractEvent {
 
 	@Override
 	public Cause getCause() {
-		return Cause.of(NamedCause.source(runeWord));
+		return Cause.of(EventContext.empty(), runeWord);
 	}
 }

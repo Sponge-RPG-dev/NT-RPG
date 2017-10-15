@@ -32,7 +32,7 @@ public interface IEffectContainer<K, T extends IEffect<K>> extends IEffectSource
 		}
 	}
 
-	default void updateStackedValue(){
+	default void updateStackedValue() {
 		if (getEffectStackingStrategy() != null) {
 			setStackedValue(getEffectStackingStrategy().getDefaultValue());
 			for (T t : getEffects()) {

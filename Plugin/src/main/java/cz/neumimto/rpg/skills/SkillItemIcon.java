@@ -18,21 +18,32 @@
 
 package cz.neumimto.rpg.skills;
 
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.text.Text;
 
 /**
  * Created by ja on 31.8.2015.
  */
 public class SkillItemIcon {
-    public ItemType itemType;
-    public String skillName;
+	public ItemType itemType;
+	public String skillName;
 
-    public ISkill skill;
+	public ISkill skill;
 
-    public SkillItemIcon(ISkill skill) {
-        this.skillName = skill.getName();
-        this.skill = skill;
-    }
+	public SkillItemIcon(ISkill skill) {
+		this.skillName = skill.getName();
+		this.skill = skill;
+		itemType = skill.getItemType();
+	}
+
+	public ItemStack toItemStack() {
+		ItemStack of = ItemStack.of(itemType == null ? ItemTypes.STONE : itemType, 1);
+		of.offer(Keys.DISPLAY_NAME, Text.of(skill.getName()));
+		return of;
+	}
 
 
 }

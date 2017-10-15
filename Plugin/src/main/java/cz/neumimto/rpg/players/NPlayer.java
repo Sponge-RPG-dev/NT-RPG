@@ -31,21 +31,21 @@ import java.util.Vector;
 public class NPlayer implements INPlayer {
 
 
-    private final Vector<CharacterBase> characters = new Vector<>(PluginConfig.PLAYER_MAX_CHARS, 1);
-    private IActiveCharacter activeIActiveCharacter;
-    private Map<String, Long> cooldowns = new HashMap<>();
+	private final Vector<CharacterBase> characters = new Vector<>(PluginConfig.PLAYER_MAX_CHARS, 1);
+	private IActiveCharacter activeIActiveCharacter;
+	private Map<String, Long> cooldowns = new HashMap<>();
 
 
-    public IActiveCharacter getActiveActiveCharacter() {
-        return activeIActiveCharacter;
-    }
+	public IActiveCharacter getActiveActiveCharacter() {
+		return activeIActiveCharacter;
+	}
 
-    public void setActiveActiveCharacter(IActiveCharacter c) {
-        this.activeIActiveCharacter = c;
-    }
+	public void setActiveActiveCharacter(IActiveCharacter c) {
+		this.activeIActiveCharacter = c;
+	}
 
-    public Vector<CharacterBase> getCharacterList() {
-        return characters;
-    }
+	public Vector<CharacterBase> getCharacterList() {
+		return characters;
+	}
 
 }

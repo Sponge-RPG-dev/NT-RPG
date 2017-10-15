@@ -18,11 +18,14 @@
 
 package cz.neumimto.rpg.effects;
 
+import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.entities.PropertyContainer;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectType;
 import org.spongepowered.api.entity.living.Living;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import java.util.Collection;
 import java.util.List;
@@ -34,89 +37,97 @@ import java.util.stream.Collectors;
  */
 public interface IEffectConsumer<T extends Living> extends PropertyContainer {
 
-    T getEntity();
+	T getEntity();
 
-    Map<String, IEffectContainer<Object, IEffect<Object>>> getEffectMap();
+	Map<String, IEffectContainer<Object, IEffect<Object>>> getEffectMap();
 
-    default Collection<IEffectContainer<Object, IEffect<Object>>> getEffects() {
-        return getEffectMap().values();
-    }
+	default Collection<IEffectContainer<Object, IEffect<Object>>> getEffects() {
+		return getEffectMap().values();
+	}
 
-    default IEffectContainer getEffect(String cl) {
-        return getEffectMap().get(cl);
-    }
+	default IEffectContainer getEffect(String cl) {
+		return getEffectMap().get(cl);
+	}
 
-    default boolean hasEffect(String cl) {
-        return getEffectMap().containsKey(cl);
-    }
+	default boolean hasEffect(String cl) {
+		return getEffectMap().containsKey(cl);
+	}
 
-    @SuppressWarnings("unchecked")
-    default void addEffect(IEffect effect) {
-	    IEffectContainer IEffectContainer1 = getEffectMap().get(effect.getName());
-	    if (IEffectContainer1 == null) {
-		    getEffectMap().put(effect.getName(), new EffectContainer<>(effect));
-	    } else {
-		    IEffectContainer1.getEffects().add(effect);
-	    }
-    }
+	@SuppressWarnings("unchecked")
+	default void addEffect(IEffect effect) {
+		IEffectContainer IEffectContainer1 = getEffectMap().get(effect.getName());
+		if (IEffectContainer1 == null) {
+			getEffectMap().put(effect.getName(), new EffectContainer<>(effect));
+		} else {
+			IEffectContainer1.getEffects().add(effect);
+		}
+	}
 
-    @SuppressWarnings("unchecked")
-    default void addEffect(IEffectContainer IEffectContainer) {
-        IEffectContainer effectContainer1 = getEffectMap().get(IEffectContainer.getName());
-        if (effectContainer1 == null) {
-            getEffectMap().put(IEffectContainer.getName(), IEffectContainer);
-        } else {
-            effectContainer1.mergeWith(IEffectContainer);
-        }
-    }
+	@SuppressWarnings("unchecked")
+	default void addEffect(IEffectContainer IEffectContainer) {
+		IEffectContainer effectContainer1 = getEffectMap().get(IEffectContainer.getName());
+		if (effectContainer1 == null) {
+			getEffectMap().put(IEffectContainer.getName(), IEffectContainer);
+		} else {
+			effectContainer1.mergeWith(IEffectContainer);
+		}
+	}
 
-    default void removeEffect(String cl) {
-        getEffectMap().remove(cl);
-    }
+	default void removeEffect(String cl) {
+		getEffectMap().remove(cl);
+	}
 
-    default void removeEffect(IEffectContainer cl) {
-        getEffectMap().remove(cl.getName());
-    }
+	default void removeEffect(IEffectContainer cl) {
+		getEffectMap().remove(cl.getName());
+	}
 
-    default void removeEffect(IEffect cl) {
-        getEffectMap().remove(cl.getName());
-    }
+	default void removeEffect(IEffect cl) {
+		getEffectMap().remove(cl.getName());
+	}
 
-    default void addPotionEffect(PotionEffectType p, int amplifier, long duration) {
-        PotionEffect build = PotionEffect.builder().potionType(p).amplifier(amplifier).duration((int) duration).build();
-        List<PotionEffect> potionEffects = getEntity().get(Keys.POTION_EFFECTS).get();
-        potionEffects.add(build);
-        getEntity().offer(Keys.POTION_EFFECTS, potionEffects);
-    }
+	default void addPotionEffect(PotionEffectType p, int amplifier, long duration) {
+		PotionEffect build = PotionEffect.builder().potionType(p).amplifier(amplifier).duration((int) duration).build();
+		List<PotionEffect> potionEffects = getEntity().get(Keys.POTION_EFFECTS).get();
+		potionEffects.add(build);
+		getEntity().offer(Keys.POTION_EFFECTS, potionEffects);
+	}
 
-    default void addPotionEffect(PotionEffectType p, int amplifier, long duration, boolean partciles) {
-        PotionEffect build = PotionEffect.builder().particles(partciles).potionType(p).amplifier(amplifier).duration((int) duration).build();
-        addPotionEffect(build);
-    }
+	default void addPotionEffect(PotionEffectType p, int amplifier, long duration, boolean partciles) {
+		PotionEffect build = PotionEffect.builder().particles(partciles).potionType(p).amplifier(amplifier).duration((int) duration).build();
+		addPotionEffect(build);
+	}
 
-    default void removePotionEffect(PotionEffectType type) {
-        List<PotionEffect> potionEffects = getEntity().get(Keys.POTION_EFFECTS).get();
-        List l = potionEffects.stream().filter(p -> p.getType() != type).collect(Collectors.toList());
-        getEntity().offer(Keys.POTION_EFFECTS, l);
-    }
+	default void removePotionEffect(PotionEffectType type) {
+		List<PotionEffect> potionEffects = getEntity().get(Keys.POTION_EFFECTS).get();
+		List l = potionEffects.stream().filter(p -> p.getType() != type).collect(Collectors.toList());
+		getEntity().offer(Keys.POTION_EFFECTS, l);
+	}
 
-    default boolean hasPotionEffect(PotionEffectType type) {
-        List<PotionEffect> potionEffects = getEntity().get(Keys.POTION_EFFECTS).get();
-        for (PotionEffect potionEffect : potionEffects) {
-            if (potionEffect.getType() == type) {
-                return true;
-            }
-        }
-        return false;
-    }
+	default boolean hasPotionEffect(PotionEffectType type) {
+		List<PotionEffect> potionEffects = getEntity().get(Keys.POTION_EFFECTS).get();
+		for (PotionEffect potionEffect : potionEffects) {
+			if (potionEffect.getType() == type) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-    default void addPotionEffect(PotionEffect e) {
-        List<PotionEffect> potionEffects = getEntity().get(Keys.POTION_EFFECTS).get();
-        potionEffects.add(e);
-        getEntity().offer(Keys.POTION_EFFECTS, potionEffects);
-    }
+	default void addPotionEffect(PotionEffect e) {
+		List<PotionEffect> potionEffects = getEntity().get(Keys.POTION_EFFECTS).get();
+		potionEffects.add(e);
+		getEntity().offer(Keys.POTION_EFFECTS, potionEffects);
+	}
 
-    void sendMessage(String message);
+	void sendMessage(String message);
 
-    boolean isDetached();
+	boolean isDetached();
+
+	default Location<World> getLocation() {
+		return getEntity().getLocation();
+	}
+
+	default Vector3d getRotation() {
+		return getEntity().getRotation();
+	}
 }

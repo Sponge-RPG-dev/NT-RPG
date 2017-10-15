@@ -37,10 +37,7 @@ import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Projectile;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
-import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.blockray.BlockRay;
 import org.spongepowered.api.util.blockray.BlockRayHit;
@@ -113,14 +110,14 @@ public class Utils {
 		return str.matches("-?\\d+(\\.\\d+)?");
 	}
 
-	public static Set<Entity> getNearbyEntities(Location l, int radius){
-		int chunkRadius = radius < 16 ? 1 : (radius - (radius % 16))/16;
+	public static Set<Entity> getNearbyEntities(Location l, int radius) {
+		int chunkRadius = radius < 16 ? 1 : (radius - (radius % 16)) / 16;
 		HashSet<Entity> set = new HashSet<>();
 		double pow = Math.pow(radius, 2);
-		for (int chX = 0 -chunkRadius; chX <= chunkRadius; chX ++){
-			for (int chZ = 0 -chunkRadius; chZ <= chunkRadius; chZ++){
-				Location chunkLoc = new Location(l.getExtent(),l.getBlockX()+(chX*16),l.getBlockY(),l.getBlockZ()+(chZ*16));
-				for (Entity e : chunkLoc.getExtent().getEntities()){
+		for (int chX = 0 - chunkRadius; chX <= chunkRadius; chX++) {
+			for (int chZ = 0 - chunkRadius; chZ <= chunkRadius; chZ++) {
+				Location chunkLoc = new Location(l.getExtent(), l.getBlockX() + (chX * 16), l.getBlockY(), l.getBlockZ() + (chZ * 16));
+				for (Entity e : chunkLoc.getExtent().getEntities()) {
 					if (e.getLocation().getPosition().distanceSquared(l.getPosition()) <= pow)
 						set.add(e);
 				}
@@ -129,13 +126,13 @@ public class Utils {
 		return set;
 	}
 
-	public static Set<Entity> getNearbyEntitiesPrecise(Location l, int radius){
-		int chunkRadius = radius < 16 ? 1 : (radius - (radius % 16))/16;
+	public static Set<Entity> getNearbyEntitiesPrecise(Location l, int radius) {
+		int chunkRadius = radius < 16 ? 1 : (radius - (radius % 16)) / 16;
 		HashSet<Entity> set = new HashSet<>();
-		for (int chX = 0 -chunkRadius; chX <= chunkRadius; chX ++){
-			for (int chZ = 0 -chunkRadius; chZ <= chunkRadius; chZ++){
-				Location chunkLoc = new Location(l.getExtent(),l.getBlockX()+(chX*16),l.getBlockY(),l.getBlockZ()+(chZ*16));
-				for (Entity e : chunkLoc.getExtent().getEntities()){
+		for (int chX = 0 - chunkRadius; chX <= chunkRadius; chX++) {
+			for (int chZ = 0 - chunkRadius; chZ <= chunkRadius; chZ++) {
+				Location chunkLoc = new Location(l.getExtent(), l.getBlockX() + (chX * 16), l.getBlockY(), l.getBlockZ() + (chZ * 16));
+				for (Entity e : chunkLoc.getExtent().getEntities()) {
 					if (e.getLocation().getPosition().distance(l.getPosition()) <= radius)
 						set.add(e);
 				}
@@ -168,17 +165,17 @@ public class Utils {
 
 		if (e.isPresent()) {
 			Optional<BlockRayHit<World>> end = BlockRay.from(player)
-												.distanceLimit(range)
-												.stopFilter(SKILL_TARGET_BLOCK_FILTER)
-												.build()
-												.end();
+					.distanceLimit(range)
+					.stopFilter(SKILL_TARGET_BLOCK_FILTER)
+					.build()
+					.end();
 			if (!end.isPresent()) {
 				return (Living) e.get().getEntity();
 			} else {
 				Entity entity = e.get().getEntity();
 				Location<World> location = entity.getLocation();
 				if (end.get().getBlockPosition()
-					.distanceSquared(location.getBlockX(), location.getBlockZ(), location.getBlockZ()) <= 2) {
+						.distanceSquared(location.getBlockX(), location.getBlockZ(), location.getBlockZ()) <= 2) {
 					return (Living) e.get().getEntity();
 				}
 			}
@@ -231,6 +228,15 @@ public class Utils {
 				}
 			}
 		}
+		DamageSource build = new SpongeDamageSourceBuilder()
+				.type(NDamageType.DAMAGE_CHECK)
+				.absolute()
+				.build();
+
+		return l.damage(0, build);
+	}
+
+	public static boolean canDamage(IEntity entity, Living l) {
 		DamageSource build = new SpongeDamageSourceBuilder()
 				.type(NDamageType.DAMAGE_CHECK)
 				.absolute()

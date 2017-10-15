@@ -23,6 +23,8 @@ import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
+import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.ItemTypes;
 
 import java.util.Set;
 
@@ -31,78 +33,86 @@ import java.util.Set;
  */
 public interface ISkill extends IEffectSourceProvider {
 
-    String getName();
+	String getName();
 
-    void setName(String name);
+	void setName(String name);
 
-    void init();
+	void init();
 
-    void skillLearn(IActiveCharacter character);
+	void skillLearn(IActiveCharacter character);
 
-    void skillUpgrade(IActiveCharacter character, int level);
+	void skillUpgrade(IActiveCharacter character, int level);
 
-    void skillRefund(IActiveCharacter character);
+	void skillRefund(IActiveCharacter character);
 
-    SkillSettings getDefaultSkillSettings();
+	SkillSettings getDefaultSkillSettings();
 
-    void onCharacterInit(IActiveCharacter c, int level);
+	void onCharacterInit(IActiveCharacter c, int level);
 
-    SkillResult onPreUse(IActiveCharacter character);
+	SkillResult onPreUse(IActiveCharacter character);
 
-    Set<SkillType> getSkillTypes();
+	Set<ISkillType> getSkillTypes();
 
-    SkillSettings getSettings();
+	SkillSettings getSettings();
 
-    void setSettings(SkillSettings settings);
+	void setSettings(SkillSettings settings);
 
-    String getDescription();
+	String getDescription();
 
-    void setDescription(String description);
+	void setDescription(String description);
 
-    String getLore();
+	String getLore();
 
-    boolean showsToPlayers();
+	boolean showsToPlayers();
 
-    SkillItemIcon getIcon();
+	SkillItemIcon getIcon();
 
-    String getIconURL();
+	String getIconURL();
 
-    void setIconURL(String url);
+	void setIconURL(String url);
 
-    DamageType getDamageType();
+	DamageType getDamageType();
 
-    void setDamageType(DamageType type);
+	void setDamageType(DamageType type);
 
-    default float getFloatNodeValue(ExtendedSkillInfo extendedSkillInfo, ISkillNode node) {
-       return getFloatNodeValue(extendedSkillInfo, node.value());
-    }
+	default float getFloatNodeValue(ExtendedSkillInfo extendedSkillInfo, ISkillNode node) {
+		return getFloatNodeValue(extendedSkillInfo, node.value());
+	}
 
-    default float getFloatNodeValue(ExtendedSkillInfo extendedSkillInfo, String node) {
-        return extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node,extendedSkillInfo.getTotalLevel());
-    }
+	default float getFloatNodeValue(ExtendedSkillInfo extendedSkillInfo, String node) {
+		return extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node, extendedSkillInfo.getTotalLevel());
+	}
 
-    default int getIntNodeValue(ExtendedSkillInfo extendedSkillInfo, ISkillNode node) {
-        return getIntNodeValue(extendedSkillInfo, node.value());
-    }
+	default int getIntNodeValue(ExtendedSkillInfo extendedSkillInfo, ISkillNode node) {
+		return getIntNodeValue(extendedSkillInfo, node.value());
+	}
 
-    default int getIntNodeValue(ExtendedSkillInfo extendedSkillInfo, String node) {
-        return (int) extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node,extendedSkillInfo.getTotalLevel());
-    }
+	default int getIntNodeValue(ExtendedSkillInfo extendedSkillInfo, String node) {
+		return (int) extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node, extendedSkillInfo.getTotalLevel());
+	}
 
-    default long getLongNodeValue(ExtendedSkillInfo extendedSkillInfo, ISkillNode node) {
-        return (long) extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node,extendedSkillInfo.getTotalLevel());
-    }
+	default long getLongNodeValue(ExtendedSkillInfo extendedSkillInfo, ISkillNode node) {
+		return (long) extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node, extendedSkillInfo.getTotalLevel());
+	}
 
-    default double getDoubleNodeValue(ExtendedSkillInfo extendedSkillInfo, String node) {
-        return extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node,extendedSkillInfo.getTotalLevel());
-    }
+	default double getDoubleNodeValue(ExtendedSkillInfo extendedSkillInfo, String node) {
+		return extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node, extendedSkillInfo.getTotalLevel());
+	}
 
-    default double getDoubleNodeValue(ExtendedSkillInfo extendedSkillInfo, ISkillNode node) {
-        return getDoubleNodeValue(extendedSkillInfo, node.value());
-    }
+	default double getDoubleNodeValue(ExtendedSkillInfo extendedSkillInfo, ISkillNode node) {
+		return getDoubleNodeValue(extendedSkillInfo, node.value());
+	}
 
-    @Override
-    default IEffectSource getType() {
-        return EffectSourceType.SKILL;
-    }
+	default ItemType getItemType() {
+		return ItemTypes.STONE;
+	}
+
+	@Override
+	default IEffectSource getType() {
+		return EffectSourceType.SKILL;
+	}
+
+	int getId();
+
+	void setId(int runtimeId);
 }

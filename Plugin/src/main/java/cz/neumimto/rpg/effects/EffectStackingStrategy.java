@@ -5,9 +5,9 @@ package cz.neumimto.rpg.effects;
  */
 public interface EffectStackingStrategy<U> {
 
-    U mergeValues(U current, U toAdd);
+	U mergeValues(U current, U toAdd);
 
-    default U getDefaultValue() {
-        return null;
-    }
+	default U getDefaultValue() {
+		return null;
+	}
 }

@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.gui;
 
-import org.spongepowered.api.effect.particle.ParticleEffect;
+import com.flowpowered.math.vector.Vector3d;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.world.Location;
@@ -19,4 +19,10 @@ public interface IActionDecorator {
 	void createTrajectory(Entity entity, int interval, int maxticks, BiConsumer<Task, Entity> e);
 
 	void circle(Location location, int count, double radius, Consumer<Location> callback);
+
+	void ellipse(Vector3d[] vector3ds, double a, double b, double vecmult, Vector3d rotationAngle);
+
+	void spiral(double radius, double sides, double coils,
+				double rotation,
+				Consumer<Vector3d> cb);
 }

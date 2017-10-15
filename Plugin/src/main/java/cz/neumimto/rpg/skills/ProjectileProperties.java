@@ -29,41 +29,41 @@ import java.util.function.BiConsumer;
  * Created by NeumimTo on 15.1.2015.
  */
 public class ProjectileProperties {
-    /*public static Map<UUID, ProjectileProperties> cache = new LinkedHashMap<UUID, ProjectileProperties>() {
+	/*public static Map<UUID, ProjectileProperties> cache = new LinkedHashMap<UUID, ProjectileProperties>() {
         @Override
         protected boolean removeEldestEntry(Map.Entry<UUID, ProjectileProperties> entry) {
             return entry.getValue().lifetime > System.currentTimeMillis();
         }
     };*/
 
-    public static Map<Projectile, ProjectileProperties> cache = new WeakHashMap<>();
-    public BiConsumer<IEntity, IEntity> consumer;
-    //protected Projectile t;
-    private double damage;
-    // private long lifetime;
-    private IEntity caster;
+	public static Map<Projectile, ProjectileProperties> cache = new WeakHashMap<>();
+	public BiConsumer<IEntity, IEntity> consumer;
+	//protected Projectile t;
+	private double damage;
+	// private long lifetime;
+	private IEntity caster;
 
-    public ProjectileProperties(Projectile t, IEntity caster) {
-        //  this.t = t;
-        cache.put(t, this);
-        //   lifetime = System.currentTimeMillis()+5000;
-        this.caster = caster;
-    }
+	public ProjectileProperties(Projectile t, IEntity caster) {
+		//  this.t = t;
+		cache.put(t, this);
+		//   lifetime = System.currentTimeMillis()+5000;
+		this.caster = caster;
+	}
 
-    public void onHit(BiConsumer<IEntity, IEntity> consumer) {
-        this.consumer = consumer;
-    }
+	public void onHit(BiConsumer<IEntity, IEntity> consumer) {
+		this.consumer = consumer;
+	}
 
-    public void process(IEntity target) {
-        consumer.accept(caster, target);
-    }
+	public void process(IEntity target) {
+		consumer.accept(caster, target);
+	}
 
-    public double getDamage() {
-        return damage;
-    }
+	public double getDamage() {
+		return damage;
+	}
 
-    public void setDamage(double damage) {
-        this.damage = damage;
-    }
+	public void setDamage(double damage) {
+		this.damage = damage;
+	}
 
 }

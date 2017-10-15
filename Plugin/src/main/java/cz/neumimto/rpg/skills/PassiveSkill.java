@@ -28,31 +28,48 @@ import cz.neumimto.rpg.players.IActiveCharacter;
  */
 public abstract class PassiveSkill extends AbstractSkill {
 
-    @Inject
-    protected EffectService effectService;
+	@Inject
+	protected EffectService effectService;
 
-    @Override
-    public SkillResult onPreUse(IActiveCharacter character) {
-        character.sendMessage(Localization.CANT_USE_PASSIVE_SKILL);
-        return SkillResult.FAIL;
-    }
+	protected String relevantEffectName;
 
-    private void update(IActiveCharacter IActiveCharacter) {
-        ExtendedSkillInfo skill = IActiveCharacter.getSkill(getName());
-        applyEffect(skill, IActiveCharacter);
-    }
+	public PassiveSkill(String relevantEffectName) {
+		this.relevantEffectName = relevantEffectName;
+	}
 
-    @Override
-    public void skillLearn(IActiveCharacter IActiveCharacter) {
-        super.skillLearn(IActiveCharacter);
-        update(IActiveCharacter);
-    }
+	@Override
+	public SkillResult onPreUse(IActiveCharacter character) {
+		character.sendMessage(Localization.CANT_USE_PASSIVE_SKILL);
+		return SkillResult.FAIL;
+	}
 
-    @Override
-    public void skillRefund(IActiveCharacter IActiveCharacter) {
-        super.skillRefund(IActiveCharacter);
-        update(IActiveCharacter);
-    }
+	private void update(IActiveCharacter IActiveCharacter) {
+		ExtendedSkillInfo skill = IActiveCharacter.getSkill(getName());
+		applyEffect(skill, IActiveCharacter);
+	}
 
-    public abstract void applyEffect(ExtendedSkillInfo info, IActiveCharacter character);
+	@Override
+	public void onCharacterInit(IActiveCharacter c, int level) {
+		super.onCharacterInit(c, level);
+		update(c);
+	}
+
+	@Override
+	public void skillLearn(IActiveCharacter IActiveCharacter) {
+		super.skillLearn(IActiveCharacter);
+		update(IActiveCharacter);
+	}
+
+	@Override
+	public void skillRefund(IActiveCharacter IActiveCharacter) {
+		super.skillRefund(IActiveCharacter);
+		ExtendedSkillInfo skillInfo = IActiveCharacter.getSkillInfo(this);
+		if (skillInfo.getLevel() <= 0) {
+			effectService.removeEffect(relevantEffectName, IActiveCharacter, this);
+		} else {
+			update(IActiveCharacter);
+		}
+	}
+
+	public abstract void applyEffect(ExtendedSkillInfo info, IActiveCharacter character);
 }

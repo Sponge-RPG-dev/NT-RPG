@@ -22,48 +22,48 @@ package cz.neumimto.rpg.skills;
  * Created by NeumimTo on 26.7.2015.
  */
 public class ExtendedSkillInfo {
-    public static ExtendedSkillInfo Empty = new ExtendedSkillInfo() {{
-        setSkillData(SkillData.EMPTY);
-    }};
-    private ISkill skill;
-    private int level;
-    private SkillData skillData;
+	public static ExtendedSkillInfo Empty = new ExtendedSkillInfo() {{
+		setSkillData(SkillData.EMPTY);
+	}};
+	private ISkill skill;
+	private int level;
+	private SkillData skillData;
 
-    private int bonusLevel;
+	private int bonusLevel;
 
-    public ISkill getSkill() {
-        return skill;
-    }
+	public ISkill getSkill() {
+		return skill;
+	}
 
-    public void setSkill(ISkill skill) {
-        this.skill = skill;
-    }
+	public void setSkill(ISkill skill) {
+		this.skill = skill;
+	}
 
-    public int getLevel() {
-        return level;
-    }
+	public int getLevel() {
+		return level;
+	}
 
-    public void setLevel(int level) {
-        this.level = level;
-    }
+	public void setLevel(int level) {
+		this.level = level;
+	}
 
-    public SkillData getSkillData() {
-        return skillData;
-    }
+	public SkillData getSkillData() {
+		return skillData;
+	}
 
-    public void setSkillData(SkillData skillData) {
-        this.skillData = skillData;
-    }
+	public void setSkillData(SkillData skillData) {
+		this.skillData = skillData;
+	}
 
-    public int getBonusLevel() {
-        return bonusLevel;
-    }
+	public int getBonusLevel() {
+		return bonusLevel;
+	}
 
-    public void setBonusLevel(int bonusLevel) {
-        this.bonusLevel = bonusLevel;
-    }
+	public void setBonusLevel(int bonusLevel) {
+		this.bonusLevel = bonusLevel;
+	}
 
-    public int getTotalLevel() {
-        return getBonusLevel() + getLevel();
-    }
+	public int getTotalLevel() {
+		return getBonusLevel() + getLevel();
+	}
 }

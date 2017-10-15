@@ -13,37 +13,37 @@ import java.util.Set;
  */
 public class SoulBindEffect extends EffectBase implements IEffectContainer {
 
-    private final IEffectConsumer target;
+	private final IEffectConsumer target;
 
-    public SoulBindEffect(IEffectConsumer caster, IEffectConsumer target) {
-        this.target = target;
-        setConsumer(caster);
-        setExpireMessage(EffectLocalization.SOULBIND_EXPIRE);
-    }
+	public SoulBindEffect(IEffectConsumer caster, IEffectConsumer target) {
+		this.target = target;
+		setConsumer(caster);
+		setExpireMessage(EffectLocalization.SOULBIND_EXPIRE);
+	}
 
-    public IEffectConsumer getTarget() {
-        return target;
-    }
+	public IEffectConsumer getTarget() {
+		return target;
+	}
 
 
-    @Override
-    public Set<SoulBindEffect> getEffects() {
-        return Collections.singleton(this);
-    }
+	@Override
+	public Set<SoulBindEffect> getEffects() {
+		return Collections.singleton(this);
+	}
 
-    @Override
-    public Object getStackedValue() {
-        return null;
-    }
+	@Override
+	public Object getStackedValue() {
+		return null;
+	}
 
-    @Override
-    public void setStackedValue(Object o) {
+	@Override
+	public void setStackedValue(Object o) {
 
-    }
+	}
 
-    @Override
-    public SoulBindEffect constructEffectContainer() {
-        return this;
-    }
+	@Override
+	public SoulBindEffect constructEffectContainer() {
+		return this;
+	}
 
 }

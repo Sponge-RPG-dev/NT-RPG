@@ -12,34 +12,34 @@ import org.spongepowered.api.item.inventory.ItemStack;
  */
 public class HotbarRune extends HotbarObject {
 
-    protected Rune r;
+	protected Rune r;
 
-    public HotbarRune(ItemStack itemStack) {
-        super(itemStack);
-        type = HotbarObjectTypes.RUNE;
-    }
+	public HotbarRune(ItemStack itemStack) {
+		super(itemStack);
+		type = HotbarObjectTypes.RUNE;
+	}
 
-    @Override
-    public void onRightClick(IActiveCharacter character) {
-        NtRpgPlugin.GlobalScope.inventorySerivce.startSocketing(character);
-    }
+	@Override
+	public void onRightClick(IActiveCharacter character) {
+		NtRpgPlugin.GlobalScope.inventorySerivce.startSocketing(character);
+	}
 
-    @Override
-    public void onLeftClick(IActiveCharacter character) {
-        onRightClick(character);
-    }
+	@Override
+	public void onLeftClick(IActiveCharacter character) {
+		onRightClick(character);
+	}
 
 
-    public Rune getRune() {
-        return r;
-    }
+	public Rune getRune() {
+		return r;
+	}
 
-    public void setRune(Rune r) {
-        this.r = r;
-    }
+	public void setRune(Rune r) {
+		this.r = r;
+	}
 
-    @Override
-    public IEffectSource getType() {
-        return EffectSourceType.CHARM;
-    }
+	@Override
+	public IEffectSource getType() {
+		return EffectSourceType.CHARM;
+	}
 }

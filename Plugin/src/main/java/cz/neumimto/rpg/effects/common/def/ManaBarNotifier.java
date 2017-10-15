@@ -4,7 +4,6 @@ import cz.neumimto.rpg.effects.CoreEffectTypes;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
-import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.boss.BossBarColors;
@@ -13,12 +12,14 @@ import org.spongepowered.api.boss.ServerBossBar;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by NeumimTo on 9.7.2017.
  */
-public class ManaBarNotifier extends  EffectBase<Object> implements IEffectContainer<Object, ManaBarNotifier> {
+public class ManaBarNotifier extends EffectBase<Object> implements IEffectContainer<Object, ManaBarNotifier> {
 
 
 	public static final String name = "ManaBar";
@@ -37,37 +38,39 @@ public class ManaBarNotifier extends  EffectBase<Object> implements IEffectConta
 	}
 
 	public void notifyManaChange() {
-			if (bossBar == null) {
-				bossBar = ServerBossBar.builder()
-						.visible(false)
-						.playEndBossMusic(false)
-						.darkenSky(false)
-						.name(Text.of("manabar"))
-						.overlay(BossBarOverlays.PROGRESS)
-						.color(BossBarColors.BLUE)
-						.createFog(false)
-						.percent(0)
-						.build();
-				bossBar.addPlayer(player);
-			}
-			bossBar.setName(Text.of("Mana: " + "(" + character.getMana().getValue() + "/" + character.getMana().getMaxValue()+ ")"));
-			bossBar.setPercent((float) (Utils.getPercentage(character.getMana().getValue(),character.getMana().getMaxValue()) * 0.01f));
+		if (bossBar == null) {
+			bossBar = ServerBossBar.builder()
+					.visible(false)
+					.playEndBossMusic(false)
+					.darkenSky(false)
+					.name(Text.of("manabar"))
+					.overlay(BossBarOverlays.PROGRESS)
+					.color(BossBarColors.BLUE)
+					.createFog(false)
+					.percent(0)
+					.build();
+			bossBar.addPlayer(player);
+		}
+		bossBar.setName(Text.of("Mana: " + "(" + character.getMana().getValue() + "/" + character.getMana().getMaxValue() + ")"));
+		if (character.getMana().getMaxValue() > 0) {
+			bossBar.setPercent((float) (Utils.getPercentage(character.getMana().getValue(), character.getMana().getMaxValue()) * 0.01f));
 			bossBar.setVisible(true);
-			setLastTickTime(System.currentTimeMillis());
+		}
+		setLastTickTime(System.currentTimeMillis());
 
 	}
 
 	@Override
 	public void onTick() {
-			if (bossBar.isVisible()) {
-				bossBar.setVisible(false);
-			}
+		if (bossBar.isVisible()) {
+			bossBar.setVisible(false);
+		}
 
 	}
 
 	@Override
 	public void onRemove() {
-			bossBar.removePlayer(player);
+		bossBar.removePlayer(player);
 
 	}
 

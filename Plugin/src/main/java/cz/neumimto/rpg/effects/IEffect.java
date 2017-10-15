@@ -30,91 +30,91 @@ import java.util.UUID;
  */
 public interface IEffect<K> {
 
-    static GlobalScope getGlobalScope() {
-        return NtRpgPlugin.GlobalScope;
-    }
+	static GlobalScope getGlobalScope() {
+		return NtRpgPlugin.GlobalScope;
+	}
 
-    String getName();
+	String getName();
 
-    void onApply();
+	void onApply();
 
-    default void reApplyPotions() {
-        for (PotionEffect e : getPotions()) {
-            getConsumer().addPotionEffect(e.getType(), e.getAmplifier(),  e.getDuration());
-        }
-    }
+	default void reApplyPotions() {
+		for (PotionEffect e : getPotions()) {
+			getConsumer().addPotionEffect(e.getType(), e.getAmplifier(), e.getDuration());
+		}
+	}
 
-    void onRemove();
+	void onRemove();
 
-    int getStacks();
+	int getStacks();
 
-    void setStacks(int level);
+	void setStacks(int level);
 
-    boolean isStackable();
+	boolean isStackable();
 
-    void setStackable(boolean b, EffectStackingStrategy<K> stackingStrategy);
+	void setStackable(boolean b, EffectStackingStrategy<K> stackingStrategy);
 
-    boolean requiresRegister();
+	boolean requiresRegister();
 
-    long getPeriod();
+	long getPeriod();
 
-    void setPeriod(long period);
+	void setPeriod(long period);
 
-    long getLastTickTime();
+	long getLastTickTime();
 
-    void setLastTickTime(long currTime);
+	void setLastTickTime(long currTime);
 
-    void onTick();
+	void onTick();
 
-    Set<PotionEffect> getPotions();
+	Set<PotionEffect> getPotions();
 
-    long getExpireTime();
+	long getExpireTime();
 
-    long getTimeLeft(long currenttime);
+	long getTimeLeft(long currenttime);
 
-    long getDuration();
+	long getDuration();
 
-    void setDuration(long l);
+	void setDuration(long l);
 
-    void tickCountIncrement();
+	void tickCountIncrement();
 
-    UUID getUUID();
+	UUID getUUID();
 
-    String getExpireMessage();
+	String getExpireMessage();
 
-    void setExpireMessage(String expireMessage);
+	void setExpireMessage(String expireMessage);
 
-    String getApplyMessage();
+	String getApplyMessage();
 
-    void setApplyMessage(String applyMessage);
+	void setApplyMessage(String applyMessage);
 
-    IEffectConsumer getConsumer();
+	IEffectConsumer getConsumer();
 
-    void setConsumer(IEffectConsumer consumer);
+	void setConsumer(IEffectConsumer consumer);
 
-    Set<EffectType> getEffectTypes();
+	Set<EffectType> getEffectTypes();
 
-    IEffectSourceProvider getEffectSourceProvider();
+	IEffectSourceProvider getEffectSourceProvider();
 
-    void setEffectSourceProvider(IEffectSourceProvider effectSourceProvider);
+	void setEffectSourceProvider(IEffectSourceProvider effectSourceProvider);
 
-    void setValue(K k);
+	void setValue(K k);
 
-    K getValue();
+	K getValue();
 
-    default <T extends IEffect<K>> IEffectContainer<K, T> constructEffectContainer() {
-        return new EffectContainer(this);
-    }
+	default <T extends IEffect<K>> IEffectContainer<K, T> constructEffectContainer() {
+		return new EffectContainer(this);
+	}
 
-    EffectStackingStrategy<K> getEffectStackingStrategy();
+	EffectStackingStrategy<K> getEffectStackingStrategy();
 
-    void setEffectStackingStrategy(EffectStackingStrategy<K> effectStackingStrategy);
+	void setEffectStackingStrategy(EffectStackingStrategy<K> effectStackingStrategy);
 
-    IEffectContainer<K, IEffect<K>> getEffectContainer();
+	IEffectContainer<K, IEffect<K>> getEffectContainer();
 
-    void setEffectContainer(IEffectContainer<K, IEffect<K>> iEffectContainer);
+	void setEffectContainer(IEffectContainer<K, IEffect<K>> iEffectContainer);
 
-    boolean isTickingDisabled();
+	boolean isTickingDisabled();
 
-    void setTickingDisabled(boolean tickingDisabled);
+	void setTickingDisabled(boolean tickingDisabled);
 }

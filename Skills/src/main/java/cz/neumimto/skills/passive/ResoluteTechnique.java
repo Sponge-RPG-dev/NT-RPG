@@ -6,7 +6,11 @@ import cz.neumimto.effects.ResoluteTechniqueEffect;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PassiveSkill;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.SkillType;
+import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
 /**
  * Created by NeumimTo on 6.7.2017.
@@ -18,11 +22,13 @@ public class ResoluteTechnique extends PassiveSkill {
 	private EffectService effectService;
 
 	public ResoluteTechnique() {
-		setName("Resolute Technique");
-		setName("Multibolt");
+		super(ResoluteTechniqueEffect.name);
+		setName("ResoluteTechnique");
 		setLore(SkillLocalization.SKILL_RESOLUTE_TECHNIQUE_LORE);
 		setDescription(SkillLocalization.SKILL_RESOLUTE_TECHNIQUE_DESC);
 		super.settings = new SkillSettings();
+		setDamageType(DamageTypes.ATTACK);
+		addSkillType(SkillType.PHYSICAL);
 	}
 
 	@Override

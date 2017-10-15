@@ -4,7 +4,6 @@ import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.common.stacking.FloatEffectStackingStrategy;
-import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.utils.Utils;
 
@@ -17,7 +16,7 @@ public class IncreasedMovementSpeedEffect extends EffectBase<Float> {
 	public static final String name = "Movement Speed";
 
 	public IncreasedMovementSpeedEffect(IEffectConsumer consumer, long duration, float value) {
-		super(name,consumer);
+		super(name, consumer);
 		setValue(value);
 		setDuration(duration);
 		setStackable(true, new FloatEffectStackingStrategy());

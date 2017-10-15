@@ -20,9 +20,8 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.IEntityType;
-import cz.neumimto.rpg.inventory.Armor;
-import cz.neumimto.rpg.inventory.HotbarObject;
-import cz.neumimto.rpg.inventory.Weapon;
+import cz.neumimto.rpg.Pair;
+import cz.neumimto.rpg.inventory.*;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
@@ -41,218 +40,222 @@ import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by NeumimTo on 23.7.2015.
  */
 public interface IActiveCharacter extends IEntity<Player> {
 
-    Party getParty();
+	Party getParty();
 
-    void setParty(Party party);
+	void setParty(Party party);
 
-    String getName();
+	String getName();
 
-    boolean isStub();
+	boolean isStub();
 
-    float[] getCharacterProperties();
+	float[] getCharacterProperties();
 
-    void setProperties(float[] arr);
+	void setProperties(float[] arr);
 
-    void setCharacterLevelProperty(int index, float value);
+	void setCharacterLevelProperty(int index, float value);
 
-    float getCharacterPropertyWithoutLevel(int index);
+	float getCharacterPropertyWithoutLevel(int index);
 
-    double getMaxMana();
+	double getMaxMana();
 
-    void setMaxMana(float mana);
+	void setMaxMana(float mana);
 
-    void setMaxHealth(float maxHealth);
+	void setMaxHealth(float maxHealth);
 
-    void setHealth(float mana);
+	void setHealth(float mana);
 
-    IReservable getMana();
+	IReservable getMana();
 
-    void setMana(IReservable mana);
+	void setMana(IReservable mana);
 
-    void setHealth(Health health);
+	void setHealth(IReservable health);
 
-    Map<EquipmentType, Armor> getEquipedArmor();
+	Map<EquipmentType, Armor> getEquipedArmor();
 
-    double getExperiencs();
+	double getExperiencs();
 
-    void addExperiences(double exp, ExperienceSource source);
+	void addExperiences(double exp, ExperienceSource source);
 
-    Player getPlayer();
+	Player getPlayer();
 
-    void setPlayer(Player pl);
+	void setPlayer(Player pl);
 
-    void resetRightClicks();
+	void resetRightClicks();
 
-    int getAttributePoints();
+	int getAttributePoints();
 
-    void setAttributePoints(int attributePoints);
+	void setAttributePoints(int attributePoints);
 
-    Integer getAttributeValue(String name);
+	Integer getAttributeValue(String name);
 
-    default Integer getAttributeValue(ICharacterAttribute attribute) {
-        return getAttributeValue(attribute.getName());
-    }
+	default Integer getAttributeValue(ICharacterAttribute attribute) {
+		return getAttributeValue(attribute.getName());
+	}
 
-    ExtendedNClass getPrimaryClass();
+	ExtendedNClass getPrimaryClass();
 
-    void setPrimaryClass(ConfigClass clazz);
+	void setPrimaryClass(ConfigClass clazz);
 
-    Map<String, Long> getCooldowns();
+	Map<String, Long> getCooldowns();
 
-    boolean hasCooldown(String thing);
+	boolean hasCooldown(String thing);
 
-    double getBaseWeaponDamage(ItemType id);
+	double getBaseWeaponDamage(RPGItemType type);
 
-    Set<ItemType> getAllowedArmor();
+	Set<ItemType> getAllowedArmor();
 
-    boolean canWear(ItemStack armor);
+	boolean canWear(ItemStack armor);
 
-    Map<ItemType, Double> getAllowedWeapons();
+	Map<ItemType, TreeSet<ConfigRPGItemType>> getAllowedWeapons();
 
-    Map<EntityType, Double> getProjectileDamages();
+	Map<EntityType, Double> getProjectileDamages();
 
-    Set<ExtendedNClass> getClasses();
+	Set<ExtendedNClass> getClasses();
 
-    ConfigClass getNClass(int index);
+	ConfigClass getNClass(int index);
 
-    Race getRace();
+	Race getRace();
 
-    void setRace(Race race);
+	void setRace(Race race);
 
-    Guild getGuild();
+	Guild getGuild();
 
-    void setGuild(Guild guild);
+	void setGuild(Guild guild);
 
-    CharacterBase getCharacterBase();
+	CharacterBase getCharacterBase();
 
-    void setClass(ConfigClass nclass, int slot);
+	void setClass(ConfigClass nclass, int slot);
 
-    double getBaseProjectileDamage(EntityType id);
+	double getBaseProjectileDamage(EntityType id);
 
-    IActiveCharacter updateItemRestrictions();
+	IActiveCharacter updateItemRestrictions();
 
-    Map<String, ExtendedSkillInfo> getSkills();
+	Map<String, ExtendedSkillInfo> getSkills();
 
-    ExtendedSkillInfo getSkillInfo(ISkill skill);
+	ExtendedSkillInfo getSkillInfo(ISkill skill);
 
-    boolean hasSkill(String name);
+	boolean hasSkill(String name);
 
-    int getLevel();
+	int getLevel();
 
-    ExtendedSkillInfo getSkillInfo(String s);
+	ExtendedSkillInfo getSkillInfo(String s);
 
-    boolean isSilenced();
+	boolean isSilenced();
 
-    void addSkill(String name, ExtendedSkillInfo info);
+	void addSkill(String name, ExtendedSkillInfo info);
 
-    ExtendedSkillInfo getSkill(String skillName);
+	ExtendedSkillInfo getSkill(String skillName);
 
-    void getRemoveAllSkills();
+	void getRemoveAllSkills();
 
-    boolean hasParty();
+	boolean hasParty();
 
-    boolean isInPartyWith(IActiveCharacter character);
+	boolean isInPartyWith(IActiveCharacter character);
 
-    boolean isUsingGuiMod();
+	boolean isUsingGuiMod();
 
-    void setUsingGuiMod(boolean b);
+	void setUsingGuiMod(boolean b);
 
-    boolean isPartyLeader();
+	boolean isPartyLeader();
 
-    Party getPendingPartyInvite();
+	Party getPendingPartyInvite();
 
-    void setPendingPartyInvite(Party party);
+	void setPendingPartyInvite(Party party);
 
-    Weapon getMainHand();
+	Weapon getMainHand();
 
-    void setMainHand(Weapon mainHand);
+	void setMainHand(Weapon mainHand);
 
-    Weapon getOffHand();
+	Weapon getOffHand();
 
-    void setOffHand(Weapon offHand);
+	void setOffHand(Weapon offHand);
 
-    boolean canUse(ItemType weaponItemType);
+	boolean canUse(RPGItemType weaponItemType);
 
-    double getWeaponDamage();
+	double getWeaponDamage();
 
-    void setWeaponDamage(double damage);
+	void setWeaponDamage(double damage);
 
-    double getArmorValue();
+	double getArmorValue();
 
-    void setArmorValue(double value);
+	void setArmorValue(double value);
 
-    boolean hasPreferedDamageType();
+	boolean hasPreferedDamageType();
 
-    DamageType getDamageType();
+	DamageType getDamageType();
 
-    void setDamageType(DamageType damageType);
+	void setDamageType(DamageType damageType);
 
-    void updateLastKnownLocation(int x, int y, int z, String name);
+	void updateLastKnownLocation(int x, int y, int z, String name);
 
-    boolean isInvulnerable();
+	boolean isInvulnerable();
 
-    void setInvulnerable(boolean b);
+	void setInvulnerable(boolean b);
 
-    HotbarObject[] getHotbar();
+	HotbarObject[] getHotbar();
 
-    void setHotbarSlot(int i, HotbarObject o);
+	void setHotbarSlot(int i, HotbarObject o);
 
-    default boolean isSocketing() {
-        return getCurrentRune() > 0;
-    }
+	default boolean isSocketing() {
+		return getCurrentRune() > 0;
+	}
 
-    int getCurrentRune();
+	int getCurrentRune();
 
-    void setCurrentRune(int slot);
+	void setCurrentRune(int slot);
 
-    @Override
-    double getHp();
+	@Override
+	double getHp();
 
-    @Override
-    void setHp(double d);
+	@Override
+	void setHp(double d);
 
-    @Override
-    default IEntityType getType() {
-        return IEntityType.CHARACTER;
-    }
+	@Override
+	default IEntityType getType() {
+		return IEntityType.CHARACTER;
+	}
 
-    @Override
-    Player getEntity();
+	@Override
+	Player getEntity();
 
 
-    @Override
-    void sendMessage(String message);
+	@Override
+	void sendMessage(String message);
 
-    float[] getCharacterLevelProperties();
+	float[] getCharacterLevelProperties();
 
-    void setCharacterLevelProperties(float[] arr);
+	void setCharacterLevelProperties(float[] arr);
 
-    Map<String, Integer> getTransientAttributes();
+	Map<String, Integer> getTransientAttributes();
 
-    void setOpenInventory(boolean b);
+	void setOpenInventory(boolean b);
 
-    boolean hasOpenInventory();
+	boolean hasOpenInventory();
 
-    MessageType getPreferedMessageType();
+	MessageType getPreferedMessageType();
 
-    void setPreferedMessageType(MessageType type);
+	void setPreferedMessageType(MessageType type);
 
-    boolean hasClass(PlayerGroup configClass);
+	boolean hasClass(PlayerGroup configClass);
 
-    List<Integer> getSlotsToReinitialize();
+	List<Integer> getSlotsToReinitialize();
 
-    void setSlotsToReinitialize(List<Integer> slotsToReinitialize);
+	void setSlotsToReinitialize(List<Integer> slotsToReinitialize);
 
-    default int getSelectedHotbarSlot() {
-        return -1;
-    }
+	default int getSelectedHotbarSlot() {
+		return -1;
+	}
 
-    void updateSelectedHotbarSlot();
+	void updateSelectedHotbarSlot();
 
+	Pair<Integer, Integer> getSkillTreeViewLocation();
+
+	void setSkillTreeViewLocation(Pair<Integer, Integer> location);
 }

@@ -41,63 +41,63 @@ import java.util.Properties;
 @Singleton
 public class GuiService {
 
-    @Inject
-    private Game game;
+	@Inject
+	private Game game;
 
-    @Inject
-    private SkillService skillService;
+	@Inject
+	private SkillService skillService;
 
-    private Map<String, String> skillIconsUrls = new HashMap<>();
+	private Map<String, String> skillIconsUrls = new HashMap<>();
 
-    //@PostProcess(priority = 350)
-    public void createStubSkillIcons() {
-        Properties properties = new Properties();
-        Path prop = Paths.get(NtRpgPlugin.workingDir + "/skillicons.properties");
-        FileUtils.createFileIfNotExists(prop);
-        try {
-            properties.load(new FileInputStream(prop.toFile()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Path outputdir = Paths.get(NtRpgPlugin.workingDir + "/icons/skills");
-        FileUtils.createDirectoryIfNotExists(outputdir);
-        try (final PrintWriter p = new PrintWriter(new BufferedWriter(new FileWriter(prop.toFile(), true)))) {
-            skillService.getSkills().values().stream().forEach(skill -> {
-                if (!properties.containsKey(skill.getName())) {
-                    BufferedImage img = createImageFromText(skill.getName());
-                    File file = new File(outputdir + "/" + skill.getName() + ".png");
-                    try {
-                        ImageIO.write(img, "png", file);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    String uri = file.toPath().toUri().toString();
-                    properties.put(skill.getName(), uri);
-                    p.println(skill.getName() + "=" + uri);
-                }
-            });
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        skillIconsUrls = (Map) properties;
-    }
+	//@PostProcess(priority = 350)
+	public void createStubSkillIcons() {
+		Properties properties = new Properties();
+		Path prop = Paths.get(NtRpgPlugin.workingDir + "/skillicons.properties");
+		FileUtils.createFileIfNotExists(prop);
+		try {
+			properties.load(new FileInputStream(prop.toFile()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Path outputdir = Paths.get(NtRpgPlugin.workingDir + "/icons/skills");
+		FileUtils.createDirectoryIfNotExists(outputdir);
+		try (final PrintWriter p = new PrintWriter(new BufferedWriter(new FileWriter(prop.toFile(), true)))) {
+			skillService.getSkills().values().stream().forEach(skill -> {
+				if (!properties.containsKey(skill.getName())) {
+					BufferedImage img = createImageFromText(skill.getName());
+					File file = new File(outputdir + "/" + skill.getName() + ".png");
+					try {
+						ImageIO.write(img, "png", file);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					String uri = file.toPath().toUri().toString();
+					properties.put(skill.getName(), uri);
+					p.println(skill.getName() + "=" + uri);
+				}
+			});
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		skillIconsUrls = (Map) properties;
+	}
 
 
-    private BufferedImage createImageFromText(String text) {
-        BufferedImage img = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = img.createGraphics();
-        Font font = new Font("Arial", Font.BOLD, 12);
-        g.setFont(font);
-        FontMetrics fm = g.getFontMetrics();
-        g.setBackground(Color.WHITE);
-        g.clearRect(0, 0, img.getWidth(), img.getHeight());
-        g.setColor(Color.black);
-        g.drawString(text, 2, (img.getHeight() + fm.getHeight()) / 2);
-        g.dispose();
-        return img;
-    }
+	private BufferedImage createImageFromText(String text) {
+		BufferedImage img = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = img.createGraphics();
+		Font font = new Font("Arial", Font.BOLD, 12);
+		g.setFont(font);
+		FontMetrics fm = g.getFontMetrics();
+		g.setBackground(Color.WHITE);
+		g.clearRect(0, 0, img.getWidth(), img.getHeight());
+		g.setColor(Color.black);
+		g.drawString(text, 2, (img.getHeight() + fm.getHeight()) / 2);
+		g.dispose();
+		return img;
+	}
 
-    public String getIconURI(String skill) {
-        return skillIconsUrls.get(skill);
-    }
+	public String getIconURI(String skill) {
+		return skillIconsUrls.get(skill);
+	}
 }

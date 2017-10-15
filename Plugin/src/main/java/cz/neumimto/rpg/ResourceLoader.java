@@ -56,193 +56,200 @@ import java.util.jar.JarFile;
 @Singleton
 public class ResourceLoader {
 
-    private final static String INNERCLASS_SEPARATOR = "$";
+	private final static String INNERCLASS_SEPARATOR = "$";
 
-    //TODO use nio instead of io
-    public static File classDir, raceDir, guildsDir, addonDir, skilltreeDir;
+	public static File classDir, raceDir, guildsDir, addonDir, skilltreeDir;
 
-    private static IoC ioc;
+	private static IoC ioc;
 
-    static {
-        classDir = new File(NtRpgPlugin.workingDir + File.separator + "classes");
-        raceDir = new File(NtRpgPlugin.workingDir + File.separator + "races");
-        guildsDir = new File(NtRpgPlugin.workingDir + File.separator + "guilds");
-        addonDir = new File(NtRpgPlugin.workingDir + File.separator + "addons");
-        skilltreeDir = new File(NtRpgPlugin.workingDir + File.separator + "skilltrees");
-        classDir.mkdirs();
-        raceDir.mkdirs();
-        guildsDir.mkdirs();
-        skilltreeDir.mkdirs();
-        addonDir.mkdirs();
-        ioc = IoC.get();
-    }
+	static {
+		classDir = new File(NtRpgPlugin.workingDir + File.separator + "classes");
+		raceDir = new File(NtRpgPlugin.workingDir + File.separator + "races");
+		guildsDir = new File(NtRpgPlugin.workingDir + File.separator + "guilds");
+		addonDir = new File(NtRpgPlugin.workingDir + File.separator + "addons");
+		skilltreeDir = new File(NtRpgPlugin.workingDir + File.separator + "skilltrees");
+		classDir.mkdirs();
+		raceDir.mkdirs();
+		guildsDir.mkdirs();
+		skilltreeDir.mkdirs();
+		addonDir.mkdirs();
+		ioc = IoC.get();
+	}
 
-    @Inject
-    private SkillService skillService;
-    @Inject
-    private GroupService groupService;
-    @Inject
-    private EffectService effectService;
-    @Inject
-    private PropertyService propertyService;
-    @Inject
-    private Logger logger;
-    @Inject
-    private CommandService commandService;
-    private ConfigMapper configMapper;
-    @Inject
-    private ClassGenerator classGenerator;
+	@Inject
+	private SkillService skillService;
 
-    public ResourceLoader() {
-        ConfigMapper.init("NtRPG", Paths.get(NtRpgPlugin.workingDir));
-        configMapper = ConfigMapper.get("NtRPG");
-    }
+	@Inject
+	private GroupService groupService;
 
-    private static <T> T newInstance(Class<T> excepted, Class<?> clazz) {
-        T t = null;
-        try {
-            t = (T) clazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return t;
-    }
+	@Inject
+	private EffectService effectService;
 
-    public void loadExternalJars() {
-        Path dir = addonDir.toPath();
-        for (File f : dir.toFile().listFiles()) {
-            loadJarFile(f, false);
-        }
-    }
+	@Inject
+	private PropertyService propertyService;
 
-    public void loadJarFile(File f, boolean main) {
-        if (f == null)
-            return;
-        JarFile file = null;
-        try {
-            file = new JarFile(f);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        logger.info("Loading jarfile " + file.getName());
-        Enumeration<JarEntry> entries = file.entries();
-        JarEntry next = null;
+	@Inject
+	private Logger logger;
 
-        if (!main) {
-            PluginCore.loadJarFile(f);
-        }
-        while (entries.hasMoreElements()) {
-            next = entries.nextElement();
-            if (next.isDirectory() || !next.getName().endsWith(".class")) {
-                continue;
-            }
-            if (main && !next.getName().startsWith("cz/neumimto"))
-                continue;
-            //todo place this into each modules
-            if (next.getName().startsWith("org")
-                    || next.getName().startsWith("spark")
-                    || next.getName().startsWith("javax")) {
-                continue;
-            }
-            if (next.getName().lastIndexOf(INNERCLASS_SEPARATOR) > 1)
-                continue;
-            String className = next.getName().substring(0, next.getName().length() - 6);
-            className = className.replace('/', '.');
-            Class<?> clazz = null;
-            try {
-                clazz = PluginCore.getClassLoader().loadClass(className);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-                continue;
-            }
-            try {
-                loadClass(clazz);
-            } catch (IllegalAccessException | CannotCompileException | InstantiationException e) {
-                e.printStackTrace();
-            }
+	@Inject
+	private CommandService commandService;
 
-        }
-        logger.info("Finished loading of jarfile " + file.getName());
-    }
+	private ConfigMapper configMapper;
 
-    public void loadClass(Class<?> clazz) throws IllegalAccessException, CannotCompileException, InstantiationException {
-        if (clazz.isInterface())
-            return;
-        if (Modifier.isAbstract(clazz.getModifiers())) {
-            return;
-        }
-        if (PluginConfig.DEBUG)
-            logger.info(" - Checking if theres something to load in a class " + clazz.getName());
-        //Properties
-        Object container = null;
-        if (clazz.isAnnotationPresent(Singleton.class)) {
-            ioc.build(clazz);
-        }
-        if (clazz.isAnnotationPresent(ListenerClass.class)) {
-            if (PluginConfig.DEBUG)
-                logger.info("Registering listener" + clazz.getName());
-            container = ioc.build(clazz);
-            ioc.build(Game.class).getEventManager().registerListeners(ioc.build(NtRpgPlugin.class), container);
-        }
-        if (clazz.isAnnotationPresent(Command.class)) {
-            container = ioc.build(clazz);
-            if (PluginConfig.DEBUG)
-                logger.info("registering command class" + clazz.getName());
-            commandService.registerCommand((CommandBase) container);
-        }
-        if (clazz.isAnnotationPresent(Skill.class)) {
-            container = ioc.build(clazz);
-            if (PluginConfig.DEBUG)
-                logger.info("registering skill " + clazz.getName());
-            skillService.addSkill((ISkill) container);
-        }
-        if (clazz.isAnnotationPresent(ConfigurationContainer.class)) {
-            configMapper.loadClass(clazz);
-            if (PluginConfig.DEBUG)
-                logger.info("Found configuration container class", clazz.getName());
-        }
-        if (clazz.isAnnotationPresent(PropertyContainer.class)) {
-            if (PluginConfig.DEBUG)
-                logger.info("Found Property container class" + clazz.getName());
-            propertyService.process(clazz);
-        }
-        if (clazz.isAnnotationPresent(Attribute.class)) {
-            propertyService.registerAttribute((ICharacterAttribute) clazz.newInstance());
-        }
-        //Effects
-        if (IEffect.class.isAssignableFrom(clazz)) {
-            ClassGenerator.Generate a = clazz.getAnnotation(ClassGenerator.Generate.class);
-            if (a != null) {
-                Class c = (Class<? extends IEffect>) clazz;
-                IGlobalEffect iGlobalEffect = classGenerator.generateGlobalEffect(c);
-                if (iGlobalEffect == null) {
-                    return;
-                }
-                classGenerator.injectGlobalEffectField(c, iGlobalEffect);
-                effectService.registerGlobalEffect(iGlobalEffect);
-            }
-        }
-        if (IGlobalEffect.class.isAssignableFrom(clazz)) {
-            IGlobalEffect i = newInstance(IGlobalEffect.class, clazz);
-            effectService.registerGlobalEffect(i);
-        }
+	@Inject
+	private ClassGenerator classGenerator;
 
-    }
+	public ResourceLoader() {
+		ConfigMapper.init("NtRPG", Paths.get(NtRpgPlugin.workingDir));
+		configMapper = ConfigMapper.get("NtRPG");
+	}
 
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface ListenerClass {
-    }
+	private static <T> T newInstance(Class<T> excepted, Class<?> clazz) {
+		T t = null;
+		try {
+			t = (T) clazz.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return t;
+	}
+
+	public void loadExternalJars() {
+		Path dir = addonDir.toPath();
+		for (File f : dir.toFile().listFiles()) {
+			loadJarFile(f, false);
+		}
+	}
+
+	public void loadJarFile(File f, boolean main) {
+		if (f == null)
+			return;
+		JarFile file = null;
+		try {
+			file = new JarFile(f);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
+		logger.info("Loading jarfile " + file.getName());
+		Enumeration<JarEntry> entries = file.entries();
+		JarEntry next = null;
+
+		if (!main) {
+			PluginCore.loadJarFile(f);
+		}
+		while (entries.hasMoreElements()) {
+			next = entries.nextElement();
+			if (next.isDirectory() || !next.getName().endsWith(".class")) {
+				continue;
+			}
+			if (main && !next.getName().startsWith("cz/neumimto"))
+				continue;
+			//todo place this into each modules
+			if (next.getName().startsWith("org")
+					|| next.getName().startsWith("spark")
+					|| next.getName().startsWith("javax")) {
+				continue;
+			}
+			if (next.getName().lastIndexOf(INNERCLASS_SEPARATOR) > 1)
+				continue;
+			String className = next.getName().substring(0, next.getName().length() - 6);
+			className = className.replace('/', '.');
+			Class<?> clazz = null;
+			try {
+				clazz = PluginCore.getClassLoader().loadClass(className);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+				continue;
+			}
+			try {
+				loadClass(clazz);
+			} catch (Exception e) {
+				logger.warn("Could not load the class [" + className + "]", e.getCause());
+			}
+
+		}
+		logger.info("Finished loading of jarfile " + file.getName());
+	}
+
+	public void loadClass(Class<?> clazz) throws IllegalAccessException, CannotCompileException, InstantiationException {
+		if (clazz.isInterface())
+			return;
+		if (Modifier.isAbstract(clazz.getModifiers())) {
+			return;
+		}
+		if (PluginConfig.DEBUG)
+			logger.info(" - Checking if theres something to load in a class " + clazz.getName());
+		//Properties
+		Object container = null;
+		if (clazz.isAnnotationPresent(Singleton.class)) {
+			ioc.build(clazz);
+		}
+		if (clazz.isAnnotationPresent(ListenerClass.class)) {
+			if (PluginConfig.DEBUG)
+				logger.info("Registering listener" + clazz.getName());
+			container = ioc.build(clazz);
+			ioc.build(Game.class).getEventManager().registerListeners(ioc.build(NtRpgPlugin.class), container);
+		}
+		if (clazz.isAnnotationPresent(Command.class)) {
+			container = ioc.build(clazz);
+			if (PluginConfig.DEBUG)
+				logger.info("registering command class" + clazz.getName());
+			commandService.registerCommand((CommandBase) container);
+		}
+		if (clazz.isAnnotationPresent(Skill.class)) {
+			container = ioc.build(clazz);
+			if (PluginConfig.DEBUG)
+				logger.info("registering skill " + clazz.getName());
+			skillService.addSkill((ISkill) container);
+		}
+		if (clazz.isAnnotationPresent(ConfigurationContainer.class)) {
+			configMapper.loadClass(clazz);
+			if (PluginConfig.DEBUG)
+				logger.info("Found configuration container class", clazz.getName());
+		}
+		if (clazz.isAnnotationPresent(PropertyContainer.class)) {
+			if (PluginConfig.DEBUG)
+				logger.info("Found Property container class" + clazz.getName());
+			propertyService.process(clazz);
+		}
+		if (clazz.isAnnotationPresent(Attribute.class)) {
+			propertyService.registerAttribute((ICharacterAttribute) clazz.newInstance());
+		}
+		//Effects
+		if (IEffect.class.isAssignableFrom(clazz)) {
+			ClassGenerator.Generate a = clazz.getAnnotation(ClassGenerator.Generate.class);
+			if (a != null) {
+				Class c = (Class<? extends IEffect>) clazz;
+				IGlobalEffect iGlobalEffect = classGenerator.generateGlobalEffect(c);
+				if (iGlobalEffect == null) {
+					return;
+				}
+				classGenerator.injectGlobalEffectField(c, iGlobalEffect);
+				effectService.registerGlobalEffect(iGlobalEffect);
+			}
+		}
+		if (IGlobalEffect.class.isAssignableFrom(clazz)) {
+			IGlobalEffect i = newInstance(IGlobalEffect.class, clazz);
+			effectService.registerGlobalEffect(i);
+		}
+
+	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	public @interface ListenerClass {
+	}
 
 
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface Skill {
-    }
+	@Retention(RetentionPolicy.RUNTIME)
+	public @interface Skill {
+	}
 
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface Command {
-    }
+	@Retention(RetentionPolicy.RUNTIME)
+	public @interface Command {
+	}
 
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface Attribute {
-    }
+	@Retention(RetentionPolicy.RUNTIME)
+	public @interface Attribute {
+	}
 }

@@ -17,6 +17,6 @@ public class BashModel implements UnstackableEffectData<BashModel> {
 		if (o == null) {
 			return -1;
 		}
-		return (int) (((o.damage + o.stunDuration) * o.chance) - ((damage  + stunDuration) * chance));
+		return (int) (((o.damage + o.stunDuration) * o.chance) - ((damage + stunDuration) * chance));
 	}
 }

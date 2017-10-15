@@ -27,23 +27,20 @@ import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.*;
-import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
+import cz.neumimto.rpg.effects.common.def.ClickComboActionEvent;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.entities.PropertyContainer;
 import cz.neumimto.rpg.events.*;
 import cz.neumimto.rpg.events.character.CharacterWeaponUpdateEvent;
 import cz.neumimto.rpg.events.character.EventCharacterArmorPostUpdate;
 import cz.neumimto.rpg.events.character.PlayerDataPreloadComplete;
 import cz.neumimto.rpg.events.character.WeaponEquipEvent;
 import cz.neumimto.rpg.events.party.PartyInviteEvent;
-import cz.neumimto.rpg.events.skills.SkillHealEvent;
 import cz.neumimto.rpg.events.skills.SkillLearnEvent;
 import cz.neumimto.rpg.events.skills.SkillRefundEvent;
 import cz.neumimto.rpg.events.skills.SkillUpgradeEvent;
 import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.inventory.Weapon;
+import cz.neumimto.rpg.inventory.*;
 import cz.neumimto.rpg.persistance.PlayerDao;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
@@ -64,8 +61,9 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.inventory.equipment.EquipmentTypeWorn;
+import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import org.spongepowered.api.text.Text;
 
 import java.util.*;
@@ -106,6 +104,9 @@ public class CharacterService {
 	private PropertyService propertyService;
 
 	@Inject
+	private CauseStackManager causeStackManager;
+
+	@Inject
 	private Logger logger;
 
 	private Map<UUID, NPlayer> playerWrappers = new ConcurrentHashMap<>();
@@ -124,7 +125,7 @@ public class CharacterService {
 			logger.info("Loading player - " + id);
 			long k = System.currentTimeMillis();
 			final List<CharacterBase> playerCharacters = playerDao.getPlayersCharacters(id);
-			logger.info("Finished loading of player " + id + ", loaded " + playerCharacters.size() + " characters   ["+(System.currentTimeMillis() - k)+"]ms");
+			logger.info("Finished loading of player " + id + ", loaded " + playerCharacters.size() + " characters   [" + (System.currentTimeMillis() - k) + "]ms");
 			game.getScheduler().createTaskBuilder().name("Callback-PlayerDataLoad" + id).execute(() -> {
 				PlayerDataPreloadComplete event = new PlayerDataPreloadComplete(id, playerCharacters);
 				game.getEventManager().post(event);
@@ -153,15 +154,21 @@ public class CharacterService {
 	}
 
 	public void updateWeaponRestrictions(IActiveCharacter character) {
-		Map<ItemType, Double> allowedArmor = character.updateItemRestrictions().getAllowedWeapons();
-		CharacterWeaponUpdateEvent event = new CharacterWeaponUpdateEvent(character, allowedArmor);
-		game.getEventManager().post(event);
+		Map<ItemType, TreeSet<ConfigRPGItemType>> allowedArmor = character.updateItemRestrictions().getAllowedWeapons();
+		try (CauseStackManager.StackFrame stackFrame = causeStackManager.pushCauseFrame()) {
+			causeStackManager.pushCause(character);
+			CharacterWeaponUpdateEvent event = new CharacterWeaponUpdateEvent(character, allowedArmor);
+			game.getEventManager().post(event);
+		}
 	}
 
 	public void updateArmorRestrictions(IActiveCharacter character) {
 		Set<ItemType> allowedArmor = character.updateItemRestrictions().getAllowedArmor();
-		EventCharacterArmorPostUpdate event = new EventCharacterArmorPostUpdate(character, allowedArmor);
-		game.getEventManager().post(event);
+		try (CauseStackManager.StackFrame stackFrame = causeStackManager.pushCauseFrame()) {
+			causeStackManager.pushCause(character);
+			EventCharacterArmorPostUpdate event = new EventCharacterArmorPostUpdate(character, allowedArmor);
+			game.getEventManager().post(event);
+		}
 	}
 
 
@@ -181,7 +188,7 @@ public class CharacterService {
 			Long k = System.currentTimeMillis();
 			logger.info("Saving player " + base.getUuid() + " character " + base.getName());
 			save(base);
-			logger.info("Saved player " + base.getUuid() + " character " + base.getName() + "["+(System.currentTimeMillis() - k )+"]ms ");
+			logger.info("Saved player " + base.getUuid() + " character " + base.getName() + "[" + (System.currentTimeMillis() - k) + "]ms ");
 		}).submit(plugin);
 	}
 
@@ -214,6 +221,10 @@ public class CharacterService {
 
 	public IActiveCharacter getCharacter(Player player) {
 		return characters.get(player.getUniqueId());
+	}
+
+	public Collection<IActiveCharacter> getCharacters() {
+		return characters.values();
 	}
 
 	/**
@@ -350,7 +361,8 @@ public class CharacterService {
 		logger.info("Initializing character " + character.getCharacterBase().getId());
 		boolean k = false;
 		if (configClass != null) {
-			CharacterChangeGroupEvent e = new CharacterChangeClassEvent(character, configClass, slot);
+			CharacterChangeGroupEvent e = new CharacterChangeClassEvent(character, configClass, slot, character.getNClass(slot));
+
 			game.getEventManager().post(e);
 			if (!e.isCancelled()) {
 				k = true;
@@ -359,9 +371,13 @@ public class CharacterService {
 				applyGroupEffects(character, configClass);
 			}
 		}
+
 		if (race != null) {
-			CharacterChangeGroupEvent ev = new CharacterChangeRaceEvent(character, race);
+			CauseStackManager.StackFrame stackFrame = causeStackManager.pushCauseFrame();
+			causeStackManager.pushCause(character);
+			CharacterChangeGroupEvent ev = new CharacterChangeRaceEvent(character, race, character.getRace());
 			game.getEventManager().post(ev);
+			causeStackManager.popCauseFrame(stackFrame);
 			if (!ev.isCancelled()) {
 				k = true;
 				removeGroupEffects(character, character.getRace());
@@ -437,7 +453,7 @@ public class CharacterService {
 	}
 
 	protected IActiveCharacter deleteCharacterReferences(IActiveCharacter character) {
-		Collection<IEffectContainer<Object,IEffect<Object>>> effects = character.getEffects();
+		Collection<IEffectContainer<Object, IEffect<Object>>> effects = character.getEffects();
 		effects.stream()
 				.map(IEffectContainer::getEffects)
 				.forEach(a -> a.stream().forEach(e -> effectService.stopEffect(e)));
@@ -557,8 +573,11 @@ public class CharacterService {
 		characterBase = playerDao.fetchCharacterBase(characterBase);
 		ActiveCharacter activeCharacter = new ActiveCharacter(player, characterBase);
 		activeCharacter.setRace(groupService.getRace(characterBase.getRace()));
-		// activeCharacter.setGuild(groupService.getGuild(characterBase.getGuild()));
+
+		System.out.println(Thread.currentThread().getName());
 		activeCharacter.setPrimaryClass(groupService.getNClass(characterBase.getPrimaryClass()));
+		groupService.addAllPermissions(activeCharacter, activeCharacter.getRace());
+		groupService.addAllPermissions(activeCharacter, activeCharacter.getPrimaryClass().getConfigClass());
 		String s = activeCharacter.getPrimaryClass().getConfigClass().getName();
 		Optional<CharacterClass> first = characterBase.getCharacterClasses()
 				.stream()
@@ -797,6 +816,7 @@ public class CharacterService {
 	 * @return 1 - if character has not a single skillpoint in the skill
 	 * 2 - if one or more skills are on a path in a skilltree after the skill.
 	 * 3 - SkillRefundEvent was cancelled
+	 * 4 - Cant refund skill-tree path
 	 * 0 - ok
 	 */
 	public int refundSkill(IActiveCharacter character, ISkill skill, ConfigClass configClass) {
@@ -814,6 +834,9 @@ public class CharacterService {
 		game.getEventManager().post(event);
 		if (event.isCancelled()) {
 			return 3;
+		}
+		if (skill instanceof SkillTreePath && PluginConfig.PATH_NODES_SEALED) {
+			return 4;
 		}
 		int level = skillInfo.getLevel();
 		skill.skillRefund(character);
@@ -915,10 +938,11 @@ public class CharacterService {
 		return 0;
 	}
 
-	public int changeEquipedArmor(IActiveCharacter character, EquipmentTypeWorn type, Weapon armor) {
-	    /*if (!character.canWear(armor.getItemType())) {
+	public int changeEquipedArmor(IActiveCharacter character, EquipmentType type, Weapon armor) {
+		/*if (!character.canWear(armor.getItemType())) {
             return 1;
         }*/
+
 		Weapon armor1 = character.getEquipedArmor().get(type);
 		if (armor1 != null) {
 			armor1.getEffects().keySet().forEach(g -> effectService.removeEffect(g.getName(), character, armor));
@@ -931,7 +955,7 @@ public class CharacterService {
 		return 0;
 	}
 
-	public boolean canUseItemType(IActiveCharacter character, ItemType type) {
+	public boolean canUseItemType(IActiveCharacter character, RPGItemType type) {
 		return character.canUse(type);
 	}
 
@@ -973,9 +997,11 @@ public class CharacterService {
 				Gui.showLevelChange(character, aClass, level);
 
 				CharacterGainedLevelEvent event = new CharacterGainedLevelEvent(character, aClass, level, aClass.getConfigClass().getSkillpointsperlevel(), aClass.getConfigClass().getAttributepointsperlevel());
-				game.getEventManager().post(event);
 				event.getaClass().setLevel(event.getLevel());
+				game.getEventManager().post(event);
 				characterAddPoints(character, aClass.getConfigClass(), event.getSkillpointsPerLevel(), event.getAttributepointsPerLevel());
+				groupService.addPermissions(character, character.getRace());
+				groupService.addPermissions(character, character.getPrimaryClass().getConfigClass());
 			}
 			aClass.setExperiencesFromLevel(0);
 			if (!aClass.takesExp()) {
@@ -1092,8 +1118,8 @@ public class CharacterService {
 	}
 
 	/**
-	 *
 	 * Unlike ActiveCharacter#getProperty this method checks for maximal allowed value, defined in configfile.
+	 *
 	 * @see PropertyService#loadMaximalServerPropertyValues()
 	 */
 	public float getCharacterProperty(IActiveCharacter character, int index) {
@@ -1104,6 +1130,35 @@ public class CharacterService {
 		character.getCharacterBase().setHealthScale(i);
 		character.getPlayer().offer(Keys.HEALTH_SCALE, i);
 		putInSaveQueue(character.getCharacterBase());
+	}
+
+	/**
+	 * @param character
+	 * @param userActionType
+	 * @return true whenever root event should be cancelled
+	 */
+	public boolean processUserAction(IActiveCharacter character, UserActionType userActionType) {
+		IEffectContainer effect = character.getEffect(ClickComboActionEvent.name);
+		if (effect == null)
+			return false;
+		ClickComboActionEvent e = (ClickComboActionEvent) effect;
+		if (userActionType == UserActionType.L && e.hasStarted()) {
+			e.processLMB();
+			return false;
+		}
+		if (userActionType == UserActionType.R) {
+			e.processRMB();
+			return false;
+		}
+		if (userActionType == UserActionType.Q && PluginConfig.ENABLED_Q && e.hasStarted()) {
+			e.processQ();
+			return true;
+		}
+		if (userActionType == UserActionType.E && PluginConfig.ENABLED_E && e.hasStarted()) {
+			e.processE();
+			return true;
+		}
+		return false;
 	}
 }
 

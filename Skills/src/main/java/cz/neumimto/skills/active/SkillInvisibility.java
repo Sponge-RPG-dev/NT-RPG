@@ -14,25 +14,26 @@ import cz.neumimto.rpg.skills.*;
 @ResourceLoader.ListenerClass
 public class SkillInvisibility extends ActiveSkill {
 
-    @Inject
-    private EffectService effectService;
+	@Inject
+	private EffectService effectService;
 
-    public SkillInvisibility() {
-        setName("Invisibility");
-        setDamageType(null);
-        SkillSettings settings = new SkillSettings();
-        settings.addNode(SkillNodes.DURATION, 10, 10);
-        setSettings(settings);
-        getSkillTypes().add(SkillType.CANT_CAST_WHILE_SILENCED);
-    }
+	public SkillInvisibility() {
+		setName("Invisibility");
+		setDamageType(null);
+		SkillSettings settings = new SkillSettings();
+		settings.addNode(SkillNodes.DURATION, 10, 10);
+		setSettings(settings);
+		addSkillType(SkillType.STEALTH);
+		addSkillType(SkillType.MOVEMENT);
+	}
 
-    @Override
-    public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info,SkillModifier skillModifier) {
-        long duration = (long) settings.getLevelNodeValue(SkillNodes.DURATION,info.getTotalLevel());
-        Invisibility invisibility = new Invisibility(character, duration);
-        effectService.addEffect(invisibility,character, this);
-        return SkillResult.OK;
-    }
+	@Override
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier skillModifier) {
+		long duration = (long) settings.getLevelNodeValue(SkillNodes.DURATION, info.getTotalLevel());
+		Invisibility invisibility = new Invisibility(character, duration);
+		effectService.addEffect(invisibility, character, this);
+		return SkillResult.OK;
+	}
 
 
 }

@@ -22,6 +22,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.players.CharacterService;
@@ -35,33 +36,36 @@ import org.spongepowered.api.Game;
 @Singleton
 public class GlobalScope {
 
-    @Inject
-    public CharacterService characterService;
+	@Inject
+	public CharacterService characterService;
 
-    @Inject
-    public EffectService effectService;
+	@Inject
+	public EffectService effectService;
 
-    @Inject
-    public GroupService groupService;
+	@Inject
+	public GroupService groupService;
 
-    @Inject
-    public PropertyService propertyService;
+	@Inject
+	public PropertyService propertyService;
 
-    @Inject
-    public SkillService skillService;
+	@Inject
+	public SkillService skillService;
 
-    @Inject
-    public NtRpgPlugin plugin;
+	@Inject
+	public NtRpgPlugin plugin;
 
-    @Inject
-    public Game game;
+	@Inject
+	public Game game;
 
-    @Inject
-    public DamageService damageService;
+	@Inject
+	public DamageService damageService;
 
-    @Inject
-    public InventoryService inventorySerivce;
+	@Inject
+	public InventoryService inventorySerivce;
 
-    @Inject
-    public RWService runewordService;
+	@Inject
+	public RWService runewordService;
+
+	@Inject
+	public EntityService entityService;
 }

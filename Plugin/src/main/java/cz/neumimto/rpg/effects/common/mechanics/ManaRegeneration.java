@@ -25,7 +25,6 @@ import cz.neumimto.rpg.effects.CoreEffectTypes;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.effects.common.stacking.FloatEffectStackingStrategy;
 import cz.neumimto.rpg.events.character.ManaRegainEvent;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -37,71 +36,71 @@ import cz.neumimto.rpg.players.properties.DefaultProperties;
 @ClassGenerator.Generate(id = "name")
 public class ManaRegeneration extends EffectBase {
 
-    public static final String name = "DefaultManaRegen";
-    private static final String apply = "You've gained mana reneneration.";
-    private static final String remove = "You've lost mana regenartion.";
-    IActiveCharacter character;
+	public static final String name = "DefaultManaRegen";
+	private static final String apply = "You've gained mana reneneration.";
+	private static final String remove = "You've lost mana regenartion.";
+	IActiveCharacter character;
 
-    public ManaRegeneration(IEffectConsumer character, long duration, String value) {
-        super(name, character);
-        this.character = (IActiveCharacter) character;
-        setPeriod(PluginConfig.MANA_REGENERATION_RATE);
-        setApplyMessage(apply);
-        setExpireMessage(remove);
-        setDuration(-1);
-        effectTypes.add(CoreEffectTypes.MANA_REGEN);
-    }
+	public ManaRegeneration(IEffectConsumer character, long duration, String value) {
+		super(name, character);
+		this.character = (IActiveCharacter) character;
+		setPeriod(PluginConfig.MANA_REGENERATION_RATE);
+		setApplyMessage(apply);
+		setExpireMessage(remove);
+		setDuration(-1);
+		effectTypes.add(CoreEffectTypes.MANA_REGEN);
+	}
 
-    @Override
-    public void onApply() {
-        Gui.sendEffectStatus(character, EffectStatusType.APPLIED, this);
-    }
+	@Override
+	public void onApply() {
+		Gui.sendEffectStatus(character, EffectStatusType.APPLIED, this);
+	}
 
-    @Override
-    public void onRemove() {
-        Gui.sendEffectStatus(character, EffectStatusType.EXPIRED, this);
-    }
+	@Override
+	public void onRemove() {
+		Gui.sendEffectStatus(character, EffectStatusType.EXPIRED, this);
+	}
 
-    @Override
-    public void onTick() {
-        double current = character.getMana().getValue();
-        double max = character.getMana().getMaxValue();
-        if (current >= max)
-            return;
-        double regen = character.getMana().getRegen()
-                + getGlobalScope().characterService.getCharacterProperty(character, DefaultProperties.mana_regen_mult) * character.getLevel();
-        current += regen;
-        ManaRegainEvent event = new ManaRegainEvent(character);
-        if (current >= max) {
-            event.setNewVal(max);
-        } else {
-            event.setNewVal(current);
-            event.setAmount(regen);
-        }
-        NtRpgPlugin.GlobalScope.game.getEventManager().post(event);
-        event.getCharacter().getMana().setValue(event.getNewVal());
-        Gui.displayMana(character);
-    }
+	@Override
+	public void onTick() {
+		double current = character.getMana().getValue();
+		double max = character.getMana().getMaxValue();
+		if (current >= max)
+			return;
+		double regen = character.getMana().getRegen()
+				+ getGlobalScope().characterService.getCharacterProperty(character, DefaultProperties.mana_regen_mult) * character.getLevel();
+		current += regen;
+		ManaRegainEvent event = new ManaRegainEvent(character);
+		if (current >= max) {
+			event.setNewVal(max);
+		} else {
+			event.setNewVal(current);
+			event.setAmount(regen);
+		}
+		NtRpgPlugin.GlobalScope.game.getEventManager().post(event);
+		event.getCharacter().getMana().setValue(event.getNewVal());
+		Gui.displayMana(character);
+	}
 
-    @Override
-    public int getStacks() {
-        return 1;
-    }
+	@Override
+	public int getStacks() {
+		return 1;
+	}
 
-    @Override
-    public void setStacks(int level) {
+	@Override
+	public void setStacks(int level) {
 
-    }
+	}
 
-    @Override
-    public boolean isStackable() {
-        return false;
-    }
+	@Override
+	public boolean isStackable() {
+		return false;
+	}
 
-    @Override
-    public boolean requiresRegister() {
-        return true;
-    }
+	@Override
+	public boolean requiresRegister() {
+		return true;
+	}
 
 
 }

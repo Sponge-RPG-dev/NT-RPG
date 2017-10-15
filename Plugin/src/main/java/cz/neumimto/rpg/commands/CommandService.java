@@ -33,21 +33,21 @@ import java.util.List;
 @Singleton
 public class CommandService {
 
-    @Inject
-    private NtRpgPlugin plugin;
+	@Inject
+	private NtRpgPlugin plugin;
 
-    public void registerCommand(CommandBase commandCallable) {
-        try {
-            Sponge.getCommandManager().register(plugin, commandCallable, commandCallable.getAliases());
-        } catch (NoSuchMethodError e) {
-            try {
-                Object o = Sponge.class.getDeclaredMethod("getCommandDispatcher").invoke(null);
-                o.getClass().getDeclaredMethod("register", Object.class, CommandCallable.class, List.class).invoke(o, plugin, commandCallable, commandCallable.getAliases());
-            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e1) {
-                e1.printStackTrace();
-            }
-        }
-    }
+	public void registerCommand(CommandBase commandCallable) {
+		try {
+			Sponge.getCommandManager().register(plugin, commandCallable, commandCallable.getAliases());
+		} catch (NoSuchMethodError e) {
+			try {
+				Object o = Sponge.class.getDeclaredMethod("getCommandDispatcher").invoke(null);
+				o.getClass().getDeclaredMethod("register", Object.class, CommandCallable.class, List.class).invoke(o, plugin, commandCallable, commandCallable.getAliases());
+			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
 
 
 }

@@ -16,38 +16,40 @@
 
 package cz.neumimto.rpg.skills;
 
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.events.skills.SkillFindTargetEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.Utils;
-import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.Living;
 
 public abstract class Targetted extends ActiveSkill implements ITargetted {
 
 
-    @Override
-    public void init() {
-        super.init();
-        settings.addNode(SkillNodes.RANGE, 10, 10);
-    }
+	@Override
+	public void init() {
+		super.init();
+		settings.addNode(SkillNodes.RANGE, 10, 10);
+	}
 
-    @Override
-    public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info,SkillModifier modifier) {
-        int range = (int) info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.RANGE, info.getTotalLevel());
-        Living l = Utils.getTargettedEntity(character, range);
-        if (l != null) {
-            if (getDamageType() != null && !Utils.canDamage(character, l)) {
-                return SkillResult.CANCELLED;
-            }
-            SkillFindTargetEvent event = new SkillFindTargetEvent(character, l, this);
-            game.getEventManager().post(event);
-            if (event.isCancelled()) {
-                return SkillResult.CANCELLED;
-            }
-            castOn(event.getTarget(), event.getCharacter(), info);
-        }
-        return SkillResult.NO_TARGET;
-    }
+	@Override
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
+		int range = (int) info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.RANGE, info.getTotalLevel());
+		Living l = getTargettedEntity(character, range);
+		if (l != null) {
+			if (getDamageType() != null && !Utils.canDamage(character, l)) {
+				return SkillResult.CANCELLED;
+			}
+			SkillFindTargetEvent event = new SkillFindTargetEvent(character, l, this);
+			game.getEventManager().post(event);
+			if (event.isCancelled()) {
+				return SkillResult.CANCELLED;
+			}
+			castOn(event.getTarget(), event.getCharacter(), info);
+		}
+		return SkillResult.NO_TARGET;
+	}
 
+
+	public Living getTargettedEntity(IActiveCharacter character, int range) {
+		return Utils.getTargettedEntity(character, range);
+	}
 }

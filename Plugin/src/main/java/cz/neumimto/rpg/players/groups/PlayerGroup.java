@@ -21,6 +21,7 @@ package cz.neumimto.rpg.players.groups;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.item.ItemType;
@@ -32,140 +33,149 @@ import java.util.*;
  * Created by NeumimTo on 27.12.2014.
  */
 public class PlayerGroup implements IEffectSourceProvider {
-    private final String name;
-    private String chatPrefix, chatSufix;
-    private Map<Integer, Float> propBonus = new HashMap<>();
-    private ItemStack info;
-    private boolean showsInMenu = true;
-    private Set<ItemType> canCraft = new HashSet<>();
-    private Set<ItemType> allowedArmor = new HashSet<>();
-    private Map<ItemType, Double> weapons = new HashMap<>();
-    private Set<String> permissions = Collections.synchronizedSet(new HashSet<>());
-    private Map<Integer, Float> propLevelBonus = new HashMap<>();
-    private ItemType itemType;
-    private String description;
-    private Map<ICharacterAttribute, Integer> startingAttributes = new HashMap<>();
-    private Map<IGlobalEffect, String> effects = new HashMap<>();
+	private final String name;
+	private String chatPrefix, chatSufix;
+	private Map<Integer, Float> propBonus = new HashMap<>();
+	private ItemStack info;
+	private boolean showsInMenu = true;
+	private Set<ItemType> canCraft = new HashSet<>();
+	private Set<ItemType> allowedArmor = new HashSet<>();
+	private HashMap<ItemType, TreeSet<ConfigRPGItemType>> weapons = new HashMap<>();
+	private Set<PlayerGroupPermission> permissions = new TreeSet<>();
+	private Map<Integer, Float> propLevelBonus = new HashMap<>();
+	private ItemType itemType;
+	private String description;
+	private Map<ICharacterAttribute, Integer> startingAttributes = new HashMap<>();
+	private Map<IGlobalEffect, String> effects = new HashMap<>();
 
-    protected cz.neumimto.rpg.effects.IEffectSource playerGroupType;
-    private Map<EntityType, Double> projectileDamage = new HashMap<>();
+	protected cz.neumimto.rpg.effects.IEffectSource playerGroupType;
+	private Map<EntityType, Double> projectileDamage = new HashMap<>();
 
-    public PlayerGroup(String name) {
-        this.name = name;
-        if (name.toLowerCase().equalsIgnoreCase("none")) {
-            setShowsInMenu(false);
-        }
-    }
+	public PlayerGroup(String name) {
+		this.name = name;
+		if (name.toLowerCase().equalsIgnoreCase("none")) {
+			setShowsInMenu(false);
+		}
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getChatPrefix() {
-        return chatPrefix;
-    }
+	public String getChatPrefix() {
+		return chatPrefix;
+	}
 
-    public void setChatPrefix(String chatPrefix) {
-        this.chatPrefix = chatPrefix;
-    }
+	public void setChatPrefix(String chatPrefix) {
+		this.chatPrefix = chatPrefix;
+	}
 
-    public String getChatSufix() {
-        return chatSufix;
-    }
+	public String getChatSufix() {
+		return chatSufix;
+	}
 
-    public void setChatSufix(String chatSufix) {
-        this.chatSufix = chatSufix;
-    }
+	public void setChatSufix(String chatSufix) {
+		this.chatSufix = chatSufix;
+	}
 
-    public ItemStack getInfo() {
-        return info;
-    }
+	public ItemStack getInfo() {
+		return info;
+	}
 
-    public void setInfo(ItemStack info) {
-        this.info = info;
-    }
+	public void setInfo(ItemStack info) {
+		this.info = info;
+	}
 
-    public boolean showsInMenu() {
-        return showsInMenu;
-    }
+	public boolean showsInMenu() {
+		return showsInMenu;
+	}
 
-    public Map<Integer, Float> getPropBonus() {
-        return propBonus;
-    }
+	public Map<Integer, Float> getPropBonus() {
+		return propBonus;
+	}
 
-    public void setPropBonus(Map<Integer, Float> propBonus) {
-        this.propBonus = propBonus;
-    }
+	public void setPropBonus(Map<Integer, Float> propBonus) {
+		this.propBonus = propBonus;
+	}
 
-    public boolean isShowsInMenu() {
-        return showsInMenu;
-    }
+	public boolean isShowsInMenu() {
+		return showsInMenu;
+	}
 
-    public void setShowsInMenu(boolean showsInMenu) {
-        this.showsInMenu = showsInMenu;
-    }
+	public void setShowsInMenu(boolean showsInMenu) {
+		this.showsInMenu = showsInMenu;
+	}
 
-    public Set<ItemType> getAllowedArmor() {
-        return allowedArmor;
-    }
+	public Set<ItemType> getAllowedArmor() {
+		return allowedArmor;
+	}
 
-    public Map<ItemType, Double> getWeapons() {
-        return weapons;
-    }
+	public Map<ItemType, TreeSet<ConfigRPGItemType>> getWeapons() {
+		return weapons;
+	}
 
-    public Set<String> getPermissions() {
-        return permissions;
-    }
+	public void addWeapon(ConfigRPGItemType item) {
+		TreeSet<ConfigRPGItemType> configRPGItemTypes = weapons.get(item.getItemType());
+		if (configRPGItemTypes == null) {
+			configRPGItemTypes = new TreeSet<>();
+			weapons.put(item.getItemType(), configRPGItemTypes);
+		}
+		configRPGItemTypes.add(item);
+	}
 
-    public void setPermissions(Set<String> permissions) {
-        this.permissions = permissions;
-    }
+	public Set<PlayerGroupPermission> getPermissions() {
+		return Collections.unmodifiableSet(permissions);
+	}
 
-    public Map<Integer, Float> getPropLevelBonus() {
-        return propLevelBonus;
-    }
+	public void setPermissions(Set<PlayerGroupPermission> permissions) {
+		this.permissions = permissions;
+	}
 
-    public ItemType getItemType() {
-        return itemType;
-    }
+	public Map<Integer, Float> getPropLevelBonus() {
+		return propLevelBonus;
+	}
 
-    public void setItemType(ItemType itemType) {
-        this.itemType = itemType;
-    }
+	public ItemType getItemType() {
+		return itemType;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public void setItemType(ItemType itemType) {
+		this.itemType = itemType;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public Map<ICharacterAttribute, Integer> getStartingAttributes() {
-        return startingAttributes;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public void setStartingAttributes(Map<ICharacterAttribute, Integer> startingAttributes) {
-        this.startingAttributes = startingAttributes;
-    }
+	public Map<ICharacterAttribute, Integer> getStartingAttributes() {
+		return startingAttributes;
+	}
 
-    public Set<ItemType> getCanCraft() {
-        return canCraft;
-    }
+	public void setStartingAttributes(Map<ICharacterAttribute, Integer> startingAttributes) {
+		this.startingAttributes = startingAttributes;
+	}
 
-    public IEffectSource getType() {
-        return playerGroupType;
-    }
+	public Set<ItemType> getCanCraft() {
+		return canCraft;
+	}
 
-    public Map<IGlobalEffect, String> getEffects() {
-        return effects;
-    }
+	public IEffectSource getType() {
+		return playerGroupType;
+	}
 
-    public void setEffects(Map<IGlobalEffect, String> effects) {
-        this.effects = effects;
-    }
+	public Map<IGlobalEffect, String> getEffects() {
+		return effects;
+	}
 
-    public Map<EntityType, Double> getProjectileDamage() {
-        return projectileDamage;
-    }
+	public void setEffects(Map<IGlobalEffect, String> effects) {
+		this.effects = effects;
+	}
+
+	public Map<EntityType, Double> getProjectileDamage() {
+		return projectileDamage;
+	}
 }

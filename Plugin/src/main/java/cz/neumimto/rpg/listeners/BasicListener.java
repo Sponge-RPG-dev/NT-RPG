@@ -19,9 +19,7 @@
 package cz.neumimto.rpg.listeners;
 
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.rpg.IEntity;
-import cz.neumimto.rpg.IEntityType;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.damage.ISkillDamageSource;
@@ -34,7 +32,6 @@ import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.NDamageType;
 import cz.neumimto.rpg.skills.ProjectileProperties;
@@ -52,14 +49,13 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Projectile;
+import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
-import org.spongepowered.api.event.cause.entity.damage.DamageModifier;
-import org.spongepowered.api.event.cause.entity.damage.DamageModifierTypes;
+import org.spongepowered.api.event.cause.EventContext;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
@@ -67,12 +63,10 @@ import org.spongepowered.api.event.cause.entity.damage.source.IndirectEntityDama
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.InteractEntityEvent;
 import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
-import org.spongepowered.api.event.filter.IsCancelled;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.world.chunk.UnloadChunkEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
-import org.spongepowered.api.util.Tristate;
 
 import java.util.Optional;
 
@@ -105,6 +99,9 @@ public class BasicListener {
 
 	@Inject
 	private ExperienceService experienceService;
+
+	@Inject
+	private CauseStackManager causeStackManager;
 
 	@Listener(order = Order.BEFORE_POST)
 	public void onAttack(InteractEntityEvent.Primary event) {
@@ -186,11 +183,10 @@ public class BasicListener {
 	}
 
 
-    @Listener
-    public void onChunkDespawn(UnloadChunkEvent event) {
-        entityService.remove(event.getTargetChunk().getEntities(Utils::isLivingEntity));
-    }
-
+	@Listener
+	public void onChunkDespawn(UnloadChunkEvent event) {
+		entityService.remove(event.getTargetChunk().getEntities(Utils::isLivingEntity));
+	}
 
 
 	@Listener
@@ -246,7 +242,7 @@ public class BasicListener {
 			}
 			//todo
 			//defende
-			    /*
+				/*
 		        if (targetEntity.getHotbarObjectType() == EntityTypes.PLAYER) {
                     IActiveCharacter tcharacter = characterService.getCharacter(targetEntity.getUniqueId());
                     double armor = tcharacter.getArmorValue();
@@ -257,11 +253,10 @@ public class BasicListener {
 		}
 	}
 
-
 	@Listener
 	public void onIndirectEntityDamage(DamageEntityEvent event,
-	                                   @First(typeFilter = IndirectEntityDamageSource.class)
-			                                   IndirectEntityDamageSource indirectEntityDamageSource) {
+									   @First(typeFilter = IndirectEntityDamageSource.class)
+											   IndirectEntityDamageSource indirectEntityDamageSource) {
 
 		Projectile projectile = (Projectile) indirectEntityDamageSource.getSource();
 		IEntity shooter = entityService.get((Entity) projectile.getShooter());
@@ -289,19 +284,20 @@ public class BasicListener {
 			event.setCancelled(true);
 			return;
 		}
+
 		event.setBaseDamage(event1.getProjectileDamage());
 	}
 
 	@Listener
 	public void onSkillDamage(DamageEntityEvent event,
-	                                   @First(typeFilter = ISkillDamageSource.class)
-			                                   ISkillDamageSource iSkillDamageSource) {
+							  @First(typeFilter = ISkillDamageSource.class)
+									  ISkillDamageSource iSkillDamageSource) {
 		IEntity caster = iSkillDamageSource.getCaster();
 		ISkill skill = iSkillDamageSource.getSkill();
 		DamageType type = iSkillDamageSource.getType();
 		IEffect effect = iSkillDamageSource.getEffect();
 		if (caster.getType() == IEntityType.CHARACTER) {
-			IActiveCharacter c = (IActiveCharacter)caster;
+			IActiveCharacter c = (IActiveCharacter) caster;
 			if (c.hasPreferedDamageType()) {
 				type = c.getDamageType();
 			}
@@ -310,38 +306,40 @@ public class BasicListener {
 		double finalDamage = event.getBaseDamage() * damageService.getEntityBonusDamage(caster, type);
 
 
-		SkillDamageEvent event1 = new SkillDamageEvent(caster, targetchar, skill, finalDamage, type);
-		if (effect != null) {
-			event1.setCause(Cause.of(NamedCause.of("effect", effect)));
+
+        try (CauseStackManager.StackFrame frame = causeStackManager.pushCauseFrame()) {
+			if (effect != null) {
+				EventContext build = EventContext.builder().add(NEventContextKeys.EFFECT, effect).build();
+				causeStackManager.pushCause(Cause.of(build, effect));
+			}
+
+			SkillDamageEvent event1 = new SkillDamageEvent(caster, targetchar, skill, finalDamage, type);
+			if (skill != null) {
+				EventContext build = EventContext.builder().add(NEventContextKeys.SKILL, skill).build();
+				causeStackManager.pushCause(Cause.of(build, skill));
+			}
+
+			Sponge.getGame().getEventManager().post(event1);
+			if (event1.isCancelled() || event1.getDamage() <= 0) {
+				event.setCancelled(true);
+				return;
+			}
+
+			finalDamage = event1.getDamage();
+			double target_resistence = damageService.getEntityResistance(targetchar, type);
+
+			SkillDamageEventLate event2 = new SkillDamageEventLate(caster, targetchar, skill, finalDamage, target_resistence, type);
+			event2.setCause(causeStackManager.getCurrentCause());
+
+
+			Sponge.getGame().getEventManager().post(event2);
+			if (event2.isCancelled() || event2.getDamage() <= 0) {
+				event.setCancelled(true);
+				return;
+			}
+			event.setBaseDamage(event2.getDamage() * event2.getTargetResistance());
 		}
-
-		if (skill != null) {
-			NamedCause c = NamedCause.of("skill", skill);
-			Cause cause = event1.getCause() == null ? Cause.of(c) : event1.getCause().with(c);
-			event1.setCause(cause);
-		}
-
-		Sponge.getGame().getEventManager().post(event1);
-		if (event1.isCancelled() || event1.getDamage() <= 0) {
-			event.setCancelled(true);
-			return;
-		}
-		finalDamage = event1.getDamage();
-		double target_resistence = damageService.getEntityResistance(targetchar, type);
-
-		SkillDamageEventLate event2 = new SkillDamageEventLate(caster, targetchar, skill, finalDamage, target_resistence, type);
-		event2.setCause(event1.getCause());
-
-
-		Sponge.getGame().getEventManager().post(event2);
-		if (event2.isCancelled() || event2.getDamage() <= 0) {
-			event.setCancelled(true);
-			return;
-		}
-		event.setBaseDamage(event2.getDamage() * event2.getTargetResistance());
 	}
-
-
 
 
 	@Listener
@@ -376,6 +374,5 @@ public class BasicListener {
 				}
 			}
 		}
-
 	}
 }

@@ -7,7 +7,10 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PassiveSkill;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.SkillType;
 
 /**
  * Created by NeumimTo on 7.7.2017.
@@ -19,12 +22,14 @@ public class Dampen extends PassiveSkill {
 	private EffectService effectService;
 
 	public Dampen() {
+		super(DampenEffect.name);
 		setName("Dampen");
 		setLore(SkillLocalization.SKILL_DAMPEN_LORE);
 		setDescription(SkillLocalization.SKILL_DAMPEN_DESC);
 		SkillSettings skillSettings = new SkillSettings();
 		skillSettings.addNode("min-mana", 310, -5);
 		super.settings = skillSettings;
+		addSkillType(SkillType.UTILITY);
 	}
 
 	@Override
@@ -39,7 +44,7 @@ public class Dampen extends PassiveSkill {
 		super.skillUpgrade(IActiveCharacter, level);
 
 		double val = getDoubleNodeValue(IActiveCharacter.getSkill(getName()), "min-mana");
-		IEffectContainer<Double,DampenEffect> effect = IActiveCharacter.getEffect(DampenEffect.name);
+		IEffectContainer<Double, DampenEffect> effect = IActiveCharacter.getEffect(DampenEffect.name);
 		effect.updateValue(val, this);
 	}
 }

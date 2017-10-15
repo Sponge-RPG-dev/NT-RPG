@@ -19,9 +19,7 @@ package cz.neumimto.rpg.damage;
 
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.source.common.AbstractDamageSource;
 
 /**
@@ -29,37 +27,52 @@ import org.spongepowered.api.event.cause.entity.damage.source.common.AbstractDam
  */
 public class SkillDamageSource extends AbstractDamageSource implements ISkillDamageSource {
 
-    private ISkill skill;
-    private IEntity caster;
-    private IEntity target;
-    private IEffect effect;
+	private ISkill skill;
+	private IEntity caster;
+	private IEntity target;
+	private IEffect effect;
 
-    public SkillDamageSource(SkillDamageSourceBuilder builder) {
-        super(builder);
-        this.skill = builder.getSkill();
-        this.caster = builder.getCaster();
-        this.target = builder.getTarget();
-        this.effect = builder.getEffect();
-    }
+	public SkillDamageSource(SkillDamageSourceBuilder builder) {
+		super(builder);
+		this.skill = builder.getSkill();
+		this.caster = builder.getCaster();
+		this.target = builder.getTarget();
+		this.effect = builder.getEffect();
+	}
 
-    @Override
-    public final ISkill getSkill() {
-        return this.skill;
-    }
+	@Override
+	public final ISkill getSkill() {
+		return this.skill;
+	}
 
-    @Override
-    public IEntity getCaster() {
-        return caster;
-    }
+	@Override
+	public IEntity getCaster() {
+		return caster;
+	}
 
-    @Override
-    public IEntity getTarget() {
-        return target;
-    }
+	@Override
+	public IEntity getTarget() {
+		return target;
+	}
 
-    @Override
-    public IEffect getEffect() {
-        return effect;
-    }
+	@Override
+	public IEffect getEffect() {
+		return effect;
+	}
 
+	public void setSkill(ISkill skill) {
+		this.skill = skill;
+	}
+
+	public void setCaster(IEntity caster) {
+		this.caster = caster;
+	}
+
+	public void setTarget(IEntity target) {
+		this.target = target;
+	}
+
+	public void setEffect(IEffect effect) {
+		this.effect = effect;
+	}
 }

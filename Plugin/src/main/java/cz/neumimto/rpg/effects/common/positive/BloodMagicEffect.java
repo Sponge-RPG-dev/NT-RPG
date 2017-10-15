@@ -33,38 +33,38 @@ import cz.neumimto.rpg.players.Mana;
 @ClassGenerator.Generate(id = "name")
 public class BloodMagicEffect extends EffectBase {
 
-    public static String name = "BloodMagic";
-    private static String apply = "You have gained " + name;
-    private static String expire = "You have lost " + name;
-    private IActiveCharacter consumer;
+	public static String name = "BloodMagic";
+	private static String apply = "You have gained " + name;
+	private static String expire = "You have lost " + name;
+	private IActiveCharacter consumer;
 
-    public BloodMagicEffect(IActiveCharacter consumer, long duration, String value) {
-        super(name, consumer);
-        this.consumer = consumer;
-        setDuration(duration);
-        setApplyMessage(apply);
-        setExpireMessage(expire);
-    }
+	public BloodMagicEffect(IActiveCharacter consumer, long duration, String value) {
+		super(name, consumer);
+		this.consumer = consumer;
+		setDuration(duration);
+		setApplyMessage(apply);
+		setExpireMessage(expire);
+	}
 
-    @Override
-    public String getName() {
-        return name;
-    }
+	@Override
+	public String getName() {
+		return name;
+	}
 
-    @Override
-    public void onApply() {
-        Gui.sendEffectStatus(consumer, EffectStatusType.APPLIED, this);
-        consumer.removeEffect(ManaRegeneration.name);
-        Health health = (Health) consumer.getHealth();
-        consumer.setMana(health);
-    }
+	@Override
+	public void onApply() {
+		Gui.sendEffectStatus(consumer, EffectStatusType.APPLIED, this);
+		consumer.removeEffect(ManaRegeneration.name);
+		Health health = (Health) consumer.getHealth();
+		consumer.setMana(health);
+	}
 
 
-    @Override
-    public void onRemove() {
-        Gui.sendEffectStatus(consumer, EffectStatusType.EXPIRED, this);
-        consumer.setMana(new Mana(consumer));
-        //todo re-add mana regain event, or set period of mana regen to long.maxval; + listener
-    }
+	@Override
+	public void onRemove() {
+		Gui.sendEffectStatus(consumer, EffectStatusType.EXPIRED, this);
+		consumer.setMana(new Mana(consumer));
+		//todo re-add mana regain event, or set period of mana regen to long.maxval; + listener
+	}
 
 }

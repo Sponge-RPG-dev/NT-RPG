@@ -25,88 +25,124 @@ import java.util.Set;
  * Created by NeumimTo on 14.2.2015.
  */
 public class SkillData {
-    public static SkillData EMPTY = new SkillData("Empty") {{
-        setSkillSettings(new SkillSettings());
-    }};
-    private final String skill;
-    private SkillSettings skillSettings;
-    private int minPlayerLevel;
-    private int maxSkillLevel;
-    private Set<SkillData> softDepends = new HashSet<>();
-    private Set<SkillData> hardDepends = new HashSet<>();
-    private Set<SkillData> conflicts = new HashSet<>();
-    private Set<SkillData> depending = new HashSet<>();
-    private ISkill iskill;
+	public static SkillData EMPTY = new SkillData("Empty") {{
+		setSkillSettings(new SkillSettings());
+	}};
+	private final String skill;
+	private SkillSettings skillSettings;
+	private int minPlayerLevel;
+	private int maxSkillLevel;
+	private Set<SkillData> softDepends = new HashSet<>();
+	private Set<SkillData> hardDepends = new HashSet<>();
+	private Set<SkillData> conflicts = new HashSet<>();
+	private Set<SkillData> depending = new HashSet<>();
+	private ISkill iskill;
+	private String combination = null;
+	private int relativeX;
+	private int relativeY;
+	private int skillTreeId;
 
-    public SkillData(String skill) {
-        this.skill = skill;
-    }
+	public SkillData(String skill) {
+		this.skill = skill;
+	}
 
-    public ISkill getSkill() {
-        return iskill;
-    }
+	public ISkill getSkill() {
+		return iskill;
+	}
 
-    public void setSkill(ISkill skill) {
-        this.iskill = skill;
-    }
+	public void setSkill(ISkill skill) {
+		this.iskill = skill;
+	}
 
-    public String getSkillName() {
-        return skill;
-    }
+	public String getSkillName() {
+		return skill;
+	}
 
-    public boolean conflictsWith(SkillData skillData) {
-        return getConflicts().contains(skillData);
-    }
+	public boolean conflictsWith(SkillData skillData) {
+		return getConflicts().contains(skillData);
+	}
 
-    public SkillSettings getSkillSettings() {
-        return skillSettings;
-    }
+	public SkillSettings getSkillSettings() {
+		return skillSettings;
+	}
 
-    public void setSkillSettings(SkillSettings skillSettings) {
-        this.skillSettings = skillSettings;
-    }
+	public void setSkillSettings(SkillSettings skillSettings) {
+		this.skillSettings = skillSettings;
+	}
 
-    public int getMinPlayerLevel() {
-        return minPlayerLevel;
-    }
+	public int getMinPlayerLevel() {
+		return minPlayerLevel;
+	}
 
-    public void setMinPlayerLevel(int minPlayerLevel) {
-        this.minPlayerLevel = minPlayerLevel;
-    }
+	public void setMinPlayerLevel(int minPlayerLevel) {
+		this.minPlayerLevel = minPlayerLevel;
+	}
 
-    public int getMaxSkillLevel() {
-        return maxSkillLevel;
-    }
+	public int getMaxSkillLevel() {
+		return maxSkillLevel;
+	}
 
-    public void setMaxSkillLevel(int maxSkillLevel) {
-        this.maxSkillLevel = maxSkillLevel;
-    }
+	public void setMaxSkillLevel(int maxSkillLevel) {
+		this.maxSkillLevel = maxSkillLevel;
+	}
 
-    public Set<SkillData> getSoftDepends() {
-        return softDepends;
-    }
+	public Set<SkillData> getSoftDepends() {
+		return softDepends;
+	}
 
-    public void setSoftDepends(Set<SkillData> softDepends) {
-        this.softDepends = softDepends;
-    }
+	public void setSoftDepends(Set<SkillData> softDepends) {
+		this.softDepends = softDepends;
+	}
 
-    public Set<SkillData> getHardDepends() {
-        return hardDepends;
-    }
+	public Set<SkillData> getHardDepends() {
+		return hardDepends;
+	}
 
-    public void setHardDepends(Set<SkillData> hardDepends) {
-        this.hardDepends = hardDepends;
-    }
+	public void setHardDepends(Set<SkillData> hardDepends) {
+		this.hardDepends = hardDepends;
+	}
 
-    public Set<SkillData> getConflicts() {
-        return conflicts;
-    }
+	public Set<SkillData> getConflicts() {
+		return conflicts;
+	}
 
-    public void setConflicts(Set<SkillData> conflicts) {
-        this.conflicts = conflicts;
-    }
+	public void setConflicts(Set<SkillData> conflicts) {
+		this.conflicts = conflicts;
+	}
 
-    public Set<SkillData> getDepending() {
-        return depending;
-    }
+	public Set<SkillData> getDepending() {
+		return depending;
+	}
+
+	public String getCombination() {
+		return combination;
+	}
+
+	public void setCombination(String combination) {
+		this.combination = combination;
+	}
+
+	public int getRelativeX() {
+		return relativeX;
+	}
+
+	public void setRelativeX(int relativeX) {
+		this.relativeX = relativeX;
+	}
+
+	public int getRelativeY() {
+		return relativeY;
+	}
+
+	public void setRelativeY(int relativeY) {
+		this.relativeY = relativeY;
+	}
+
+	public void setSkillTreeId(int skillTreeId) {
+		this.skillTreeId = skillTreeId;
+	}
+
+	public int getSkillTreeId() {
+		return skillTreeId;
+	}
 }

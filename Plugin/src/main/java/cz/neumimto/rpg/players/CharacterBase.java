@@ -36,280 +36,289 @@ import java.util.*;
 
 @Entity
 @Table(name = "rpg_character_base",
-        indexes = {@Index(columnList = "uuid")})
+		indexes = {@Index(columnList = "uuid")})
 public class CharacterBase extends TimestampEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "character_id")
-    private Long characterId;
-    //todo locking
-    //@Version
-    private Long version;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "character_id")
+	private Long characterId;
+	//todo locking
+	//@Version
+	private Long version;
 
-    @Convert(converter = UUID2String.class)
-    private UUID uuid;
+	@Convert(converter = UUID2String.class)
+	private UUID uuid;
 
-    @Column(length = 40)
-    private String name;
+	@Column(length = 40)
+	private String name;
 
-    private String info;
+	private String info;
 
-    private Integer usedAttributePoints;
+	@Column(name = "used_attribute_points")
+	private Integer usedAttributePoints;
 
-    private Integer attributePoints;
+	@Column(name = "attribute_points")
+	private Integer attributePoints;
 
-    private Boolean canResetskills;
+	@Column(name = "can_reset_skills")
+	private Boolean canResetskills;
 
-    private String race, primaryClass;
+	@Column(name = "race")
+	private String race;
 
-    private Integer guildid;
+	@Column(name = "primary_class")
+	private String primaryClass;
 
-    private Double healthScale;
+	@Column(name = "guild_id")
+	private Long guildid;
 
-    @Column(length = 16)
-    private String lastKnownPlayerName;
+	@Column(name = "health_scale")
+	private Double healthScale;
 
-    @Column(name = "last_reset_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastReset;
+	@Column(name = "last_known_player_name", length = 16)
+	private String lastKnownPlayerName;
 
-    @Column(columnDefinition="TEXT")
-    @Convert(converter = MapSL2Json.class)
-    private Map<String,Long> characterCooldowns = new HashMap<>();
+	@Column(name = "last_reset_time")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date lastReset;
 
-    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "characterBase")
-    private Set<CharacterSkill> characterSkills = new HashSet<>();
+	@Column(name = "character_cooldowns", columnDefinition = "TEXT")
+	@Convert(converter = MapSL2Json.class)
+	private Map<String, Long> characterCooldowns = new HashMap<>();
 
-    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "characterBase")
-    private Set<CharacterClass> characterClasses = new HashSet<>();
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "characterBase")
+	private Set<CharacterSkill> characterSkills = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "characterBase")
-    @Access(AccessType.FIELD)
-    private Set<BaseCharacterAttribute> baseCharacterAttribute = new HashSet<>();
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "characterBase")
+	private Set<CharacterClass> characterClasses = new HashSet<>();
 
-    @Transient
-    private Map<String,Integer> cachedAttributes = new HashMap<>();
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "characterBase")
+	@Access(AccessType.FIELD)
+	private Set<BaseCharacterAttribute> baseCharacterAttribute = new HashSet<>();
 
-    private Integer X;
+	@Transient
+	private Map<String, Integer> cachedAttributes = new HashMap<>();
 
-    private Integer Y;
+	private Integer X;
 
-    private Integer Z;
+	private Integer Y;
 
-    private String world;
+	private Integer Z;
 
-    @Enumerated(EnumType.STRING)
-    private MessageType messageType;
+	private String world;
 
-    public Map<String,Integer> getAttributes() {
-        return cachedAttributes;
-    }
+	@Enumerated(EnumType.STRING)
+	private MessageType messageType;
 
-    public Long getId() {
-        return characterId;
-    }
+	public Map<String, Integer> getAttributes() {
+		return cachedAttributes;
+	}
 
-    public void setId(Long id) {
-        this.characterId = id;
-    }
+	public Long getId() {
+		return characterId;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setId(Long id) {
+		this.characterId = id;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getInfo() {
-        return info;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setInfo(String info) {
-        this.info = info;
-    }
+	public String getInfo() {
+		return info;
+	}
 
-    public String getRace() {
-        return race;
-    }
+	public void setInfo(String info) {
+		this.info = info;
+	}
 
-    public void setRace(String race) {
-        this.race = race;
-    }
+	public String getRace() {
+		return race;
+	}
 
-    public int getGuildid() {
-        return guildid;
-    }
+	public void setRace(String race) {
+		this.race = race;
+	}
 
-    public void setGuildid(int guildid) {
-        this.guildid = guildid;
-    }
+	public Long getGuildid() {
+		return guildid;
+	}
 
-    public String getLastKnownPlayerName() {
-        return lastKnownPlayerName;
-    }
+	public void setGuildid(Long guildid) {
+		this.guildid = guildid;
+	}
 
-    public void setLastKnownPlayerName(String lastKnownPlayerName) {
-        this.lastKnownPlayerName = lastKnownPlayerName;
-    }
+	public String getLastKnownPlayerName() {
+		return lastKnownPlayerName;
+	}
 
-    public UUID getUuid() {
-        return uuid;
-    }
+	public void setLastKnownPlayerName(String lastKnownPlayerName) {
+		this.lastKnownPlayerName = lastKnownPlayerName;
+	}
 
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
+	public UUID getUuid() {
+		return uuid;
+	}
 
-    public int getUsedAttributePoints() {
-        return usedAttributePoints;
-    }
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
+	}
 
-    public void setUsedAttributePoints(int usedAttributePoints) {
-        this.usedAttributePoints = usedAttributePoints;
-    }
+	public int getUsedAttributePoints() {
+		return usedAttributePoints;
+	}
 
-    public boolean isCanResetskills() {
-        return canResetskills;
-    }
+	public void setUsedAttributePoints(int usedAttributePoints) {
+		this.usedAttributePoints = usedAttributePoints;
+	}
 
-    public void setCanResetskills(boolean canResetskills) {
-        this.canResetskills = canResetskills;
-    }
-
-    public String getPrimaryClass() {
-        return primaryClass;
-    }
-
-    public void setPrimaryClass(String primaryClass) {
-        this.primaryClass = primaryClass;
-    }
-
-    public Date getLastReset() {
-        return lastReset;
-    }
-
-    public void setLastReset(Date lastReset) {
-        this.lastReset = lastReset;
-    }
-
-
-    public long getVersion() {
-        return version;
-    }
-
-    public void setVersion(long version) {
-        this.version = version;
-    }
-
-    public Integer getX() {
-        return X;
-    }
-
-    public void setX(Integer x) {
-        X = x;
-    }
-
-    public Integer getY() {
-        return Y;
-    }
-
-    public void setY(Integer y) {
-        Y = y;
-    }
-
-    public Integer getZ() {
-        return Z;
-    }
-
-    public void setZ(Integer z) {
-        Z = z;
-    }
-
-    public String getWorld() {
-        return world;
-    }
-
-    public void setWorld(String world) {
-        this.world = world;
-    }
-
-    public Integer getAttributePoints() {
-        return attributePoints;
-    }
-
-    public void setAttributePoints(Integer attributePoints) {
-        this.attributePoints = attributePoints;
-    }
-
-    public Map<String,Long> getCharacterCooldowns() {
-        return characterCooldowns;
-    }
-
-    public void setCharacterCooldowns(Map<String,Long> characterCooldowns) {
-        this.characterCooldowns = characterCooldowns;
-    }
-
-    public Set<CharacterSkill> getCharacterSkills() {
-        return characterSkills;
-    }
-
-    public void setCharacterSkills(Set<CharacterSkill> characterSkills) {
-        this.characterSkills = characterSkills;
-    }
-
-    public Set<CharacterClass> getCharacterClasses() {
-        return characterClasses;
-    }
-
-    public void setCharacterClasses(Set<CharacterClass> characterClasses) {
-        this.characterClasses = characterClasses;
-    }
-
-    public Set<BaseCharacterAttribute> getBaseCharacterAttribute() {
-        return baseCharacterAttribute;
-    }
-
-    public void setBaseCharacterAttribute(Set<BaseCharacterAttribute> baseCharacterAttribute) {
-        this.baseCharacterAttribute = baseCharacterAttribute;
-        for (BaseCharacterAttribute attribute : baseCharacterAttribute) {
-            cachedAttributes.put(attribute.getName(),attribute.getLevel());
-        }
-    }
-
-    public CharacterClass getCharacterClass(ConfigClass configClass) {
-        for (CharacterClass characterClass : characterClasses) {
-            if (configClass.getName().equalsIgnoreCase(characterClass.getName())) {
-                return characterClass;
-            }
-        }
-        return null;
-    }
-
-    public CharacterSkill getCharacterSkill(ISkill skill) {
-        for (CharacterSkill characterSkill : characterSkills) {
-            if (characterSkill.getName().equalsIgnoreCase(skill.getName())) {
-                return characterSkill;
-            }
-        }
-        return null;
-    }
-
-
-    public MessageType getMessageType() {
-        return messageType;
-    }
-
-    public void setMessageType(MessageType messageType) {
-        this.messageType = messageType;
-    }
-
-    public Double getHealthScale() {
-        return healthScale;
-    }
-
-    public void setHealthScale(Double healthScale) {
-        this.healthScale = healthScale;
-    }
+	public Boolean isCanResetskills() {
+		return canResetskills;
+	}
+
+	public void setCanResetskills(boolean canResetskills) {
+		this.canResetskills = canResetskills;
+	}
+
+	public String getPrimaryClass() {
+		return primaryClass;
+	}
+
+	public void setPrimaryClass(String primaryClass) {
+		this.primaryClass = primaryClass;
+	}
+
+	public Date getLastReset() {
+		return lastReset;
+	}
+
+	public void setLastReset(Date lastReset) {
+		this.lastReset = lastReset;
+	}
+
+
+	public long getVersion() {
+		return version;
+	}
+
+	public void setVersion(long version) {
+		this.version = version;
+	}
+
+	public Integer getX() {
+		return X;
+	}
+
+	public void setX(Integer x) {
+		X = x;
+	}
+
+	public Integer getY() {
+		return Y;
+	}
+
+	public void setY(Integer y) {
+		Y = y;
+	}
+
+	public Integer getZ() {
+		return Z;
+	}
+
+	public void setZ(Integer z) {
+		Z = z;
+	}
+
+	public String getWorld() {
+		return world;
+	}
+
+	public void setWorld(String world) {
+		this.world = world;
+	}
+
+	public Integer getAttributePoints() {
+		return attributePoints;
+	}
+
+	public void setAttributePoints(Integer attributePoints) {
+		this.attributePoints = attributePoints;
+	}
+
+	public Map<String, Long> getCharacterCooldowns() {
+		return characterCooldowns;
+	}
+
+	public void setCharacterCooldowns(Map<String, Long> characterCooldowns) {
+		this.characterCooldowns = characterCooldowns;
+	}
+
+	public Set<CharacterSkill> getCharacterSkills() {
+		return characterSkills;
+	}
+
+	public void setCharacterSkills(Set<CharacterSkill> characterSkills) {
+		this.characterSkills = characterSkills;
+	}
+
+	public Set<CharacterClass> getCharacterClasses() {
+		return characterClasses;
+	}
+
+	public void setCharacterClasses(Set<CharacterClass> characterClasses) {
+		this.characterClasses = characterClasses;
+	}
+
+	public Set<BaseCharacterAttribute> getBaseCharacterAttribute() {
+		return baseCharacterAttribute;
+	}
+
+	public void setBaseCharacterAttribute(Set<BaseCharacterAttribute> baseCharacterAttribute) {
+		this.baseCharacterAttribute = baseCharacterAttribute;
+		for (BaseCharacterAttribute attribute : baseCharacterAttribute) {
+			cachedAttributes.put(attribute.getName(), attribute.getLevel());
+		}
+	}
+
+	public CharacterClass getCharacterClass(ConfigClass configClass) {
+		for (CharacterClass characterClass : characterClasses) {
+			if (configClass.getName().equalsIgnoreCase(characterClass.getName())) {
+				return characterClass;
+			}
+		}
+		return null;
+	}
+
+	public CharacterSkill getCharacterSkill(ISkill skill) {
+		for (CharacterSkill characterSkill : characterSkills) {
+			if (characterSkill.getName().equalsIgnoreCase(skill.getName())) {
+				return characterSkill;
+			}
+		}
+		return null;
+	}
+
+
+	public MessageType getMessageType() {
+		return messageType;
+	}
+
+	public void setMessageType(MessageType messageType) {
+		this.messageType = messageType;
+	}
+
+	public Double getHealthScale() {
+		return healthScale;
+	}
+
+	public void setHealthScale(Double healthScale) {
+		this.healthScale = healthScale;
+	}
 }

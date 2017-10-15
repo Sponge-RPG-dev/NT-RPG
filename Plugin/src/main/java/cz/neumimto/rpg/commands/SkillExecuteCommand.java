@@ -42,47 +42,47 @@ import org.spongepowered.api.text.Text;
 @ResourceLoader.Command
 public class SkillExecuteCommand extends CommandBase {
 
-    @Inject
-    private SkillService skillService;
+	@Inject
+	private SkillService skillService;
 
-    @Inject
-    private CharacterService characterService;
+	@Inject
+	private CharacterService characterService;
 
-    public SkillExecuteCommand() {
-        setPermission(CommandPermissions.CHARACTER_EXECUTE_SKILL_PERMISSION);
-        setDescription(CommandLocalization.COMMAND_SKILL_DESC);
-        alias.add("skill");
-    }
+	public SkillExecuteCommand() {
+		setPermission(CommandPermissions.CHARACTER_EXECUTE_SKILL_PERMISSION);
+		setDescription(CommandLocalization.COMMAND_SKILL_DESC);
+		alias.add("skill");
+	}
 
-    @Override
-    public CommandResult process(CommandSource commandSource, String s) throws CommandException {
-        IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
-        if (character.isStub()) {
-            commandSource.sendMessage(Text.of(Localization.CHARACTER_IS_REQUIRED));
-            return CommandResult.empty();
-        }
+	@Override
+	public CommandResult process(CommandSource commandSource, String s) throws CommandException {
+		IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
+		if (character.isStub()) {
+			commandSource.sendMessage(Text.of(Localization.CHARACTER_IS_REQUIRED));
+			return CommandResult.empty();
+		}
 
-        ExtendedSkillInfo info = character.getSkillInfo(s);
-        if (info == ExtendedSkillInfo.Empty || info == null) {
-            commandSource.sendMessage(Text.of(Localization.CHARACTER_DOES_NOT_HAVE_SKILL));
-        }
-        SkillResult sk = skillService.executeSkill(character, info);
-        switch (sk) {
-            case ON_COOLDOWN:
-                Gui.sendMessage(character, Localization.ON_COOLDOWN);
-                break;
-            case NO_MANA:
-                Gui.sendMessage(character, Localization.NO_MANA);
-                break;
-            case NO_HP:
-                Gui.sendMessage(character, Localization.NO_HP);
-                break;
-            case CASTER_SILENCED:
-                Gui.sendMessage(character, Localization.PLAYER_IS_SILENCED);
-                break;
-            case NO_TARGET:
-                Gui.sendMessage(character, Localization.NO_TARGET);
-        }
-        return CommandResult.empty();
-    }
+		ExtendedSkillInfo info = character.getSkillInfo(s);
+		if (info == ExtendedSkillInfo.Empty || info == null) {
+			commandSource.sendMessage(Text.of(Localization.CHARACTER_DOES_NOT_HAVE_SKILL));
+		}
+		SkillResult sk = skillService.executeSkill(character, info);
+		switch (sk) {
+			case ON_COOLDOWN:
+				Gui.sendMessage(character, Localization.ON_COOLDOWN);
+				break;
+			case NO_MANA:
+				Gui.sendMessage(character, Localization.NO_MANA);
+				break;
+			case NO_HP:
+				Gui.sendMessage(character, Localization.NO_HP);
+				break;
+			case CASTER_SILENCED:
+				Gui.sendMessage(character, Localization.PLAYER_IS_SILENCED);
+				break;
+			case NO_TARGET:
+				Gui.sendMessage(character, Localization.NO_TARGET);
+		}
+		return CommandResult.empty();
+	}
 }

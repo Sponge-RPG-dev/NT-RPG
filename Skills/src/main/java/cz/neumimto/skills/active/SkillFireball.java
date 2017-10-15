@@ -1,10 +1,9 @@
 package cz.neumimto.skills.active;
 
-import com.flowpowered.math.TrigMath;
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.SkillLocalization;
+import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.*;
@@ -13,8 +12,6 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Snowball;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.world.World;
 
@@ -36,6 +33,10 @@ public class SkillFireball extends ActiveSkill {
 		skillSettings.addNode(SkillNodes.DAMAGE, 10, 10);
 		skillSettings.addNode(SkillNodes.VELOCITY, 1.5f, .5f);
 		settings = skillSettings;
+		addSkillType(SkillType.SUMMON);
+		addSkillType(SkillType.PROJECTILE);
+		addSkillType(SkillType.ELEMENTAL);
+		addSkillType(SkillType.FIRE);
 	}
 
 	@Override
@@ -49,7 +50,7 @@ public class SkillFireball extends ActiveSkill {
 		Snowball sb = (Snowball) optional;
 		sb.offer(Keys.VELOCITY, direction.mul(settings.getLevelNodeValue(SkillNodes.VELOCITY, info.getTotalLevel())));
 		sb.setShooter(p);
-		world.spawnEntity(sb, Cause.of(NamedCause.of("player", character.getPlayer())));
+		world.spawnEntity(sb);
 		sb.offer(Keys.FIRE_TICKS, 999);
 		ProjectileProperties projectileProperties = new ProjectileProperties(sb, character);
 		projectileProperties.setDamage(settings.getLevelNodeValue(SkillNodes.DAMAGE, info.getTotalLevel()));

@@ -11,7 +11,7 @@ import org.spongepowered.api.effect.particle.ParticleTypes;
  * Created by NeumimTo on 11.6.2017.
  */
 @ClassGenerator.Generate(id = "name")
-public class FireAuraParticles  extends EffectBase {
+public class FireAuraParticles extends EffectBase {
 
 	public static final String name = "Fire particles";
 

@@ -2,7 +2,6 @@ package cz.neumimto.rpg.entities;
 
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.players.IEntityHealth;
-import cz.neumimto.rpg.players.IReservable;
 import org.spongepowered.api.data.key.Keys;
 
 /**

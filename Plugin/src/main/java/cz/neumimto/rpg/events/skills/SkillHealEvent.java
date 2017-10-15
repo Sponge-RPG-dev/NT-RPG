@@ -20,33 +20,43 @@ package cz.neumimto.rpg.events.skills;
 
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.events.CancellableEvent;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.skills.ISkill;
 
 /**
  * Created by NeumimTo on 7.8.2015.
  */
 public class SkillHealEvent extends CancellableEvent {
-    private IEntity character;
-    private double amount;
+	private IEntity character;
+	private double amount;
+	private ISkill skill;
 
-    public SkillHealEvent(IEntity character, double amount) {
-        this.character = character;
-        this.amount = amount;
-    }
+	public SkillHealEvent(IEntity character, double amount, ISkill skill) {
+		this.character = character;
+		this.amount = amount;
+		this.skill = skill;
+	}
 
-    public IEntity getEntity() {
-        return character;
-    }
+	public IEntity getEntity() {
+		return character;
+	}
 
-    public void setEntity(IEntity character) {
-        this.character = character;
-    }
+	public void setEntity(IEntity character) {
+		this.character = character;
+	}
 
-    public double getAmount() {
-        return amount;
-    }
+	public double getAmount() {
+		return amount;
+	}
 
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+
+	public ISkill getSkill() {
+		return skill;
+	}
+
+	public void setSkill(ISkill skill) {
+		this.skill = skill;
+	}
 }

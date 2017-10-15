@@ -19,11 +19,8 @@ package cz.neumimto.rpg.damage;
 
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.source.common.AbstractDamageSourceBuilder;
 
 /**
@@ -31,59 +28,60 @@ import org.spongepowered.api.event.cause.entity.damage.source.common.AbstractDam
  */
 public class SkillDamageSourceBuilder extends AbstractDamageSourceBuilder<SkillDamageSource, SkillDamageSourceBuilder> {
 
-    protected ISkill skill;
-    protected IEntity caster;
-    protected IEntity target;
-    protected IEffect effect;
+	protected ISkill skill;
+	protected IEntity caster;
+	protected IEntity target;
+	protected IEffect effect;
 
-    public ISkill getSkill() {
-        return skill;
-    }
+	public ISkill getSkill() {
+		return skill;
+	}
 
-    public SkillDamageSourceBuilder setSkill(ISkill skill) {
-        this.skill = skill;
-        return this;
-    }
+	public SkillDamageSourceBuilder setSkill(ISkill skill) {
+		this.skill = skill;
+		return this;
+	}
 
-    public SkillDamageSourceBuilder fromSkill(ISkill skill) {
-        this.skill = skill;
-        type(skill.getDamageType());
-        return this;
-    }
+	public SkillDamageSourceBuilder fromSkill(ISkill skill) {
+		this.skill = skill;
+		type(skill.getDamageType());
+		return this;
+	}
 
-    public IEntity getCaster() {
-        return caster;
-    }
+	public IEntity getCaster() {
+		return caster;
+	}
 
-    public SkillDamageSourceBuilder setCaster(IActiveCharacter caster) {
-        this.caster = caster;
-        return this;
-    }
+	public SkillDamageSourceBuilder setCaster(IActiveCharacter caster) {
+		this.caster = caster;
+		return this;
+	}
 
-    @Override
-    public SkillDamageSource build() throws IllegalStateException {
-        return new SkillDamageSource(this);
-    }
+	@Override
+	public SkillDamageSource build() throws IllegalStateException {
+		return new SkillDamageSource(this);
+	}
 
-    public IEntity getTarget() {
-        return target;
-    }
+	public IEntity getTarget() {
+		return target;
+	}
 
-    public SkillDamageSourceBuilder setTarget(IEntity target) {
-        this.target = target;
-        return this;
-    }
+	public SkillDamageSourceBuilder setTarget(IEntity target) {
+		this.target = target;
+		return this;
+	}
 
-    public void setCaster(IEntity caster) {
-        this.caster = caster;
-    }
+	public SkillDamageSourceBuilder setCaster(IEntity caster) {
+		this.caster = caster;
+		return this;
+	}
 
-    public IEffect getEffect() {
-        return effect;
-    }
+	public IEffect getEffect() {
+		return effect;
+	}
 
-    public SkillDamageSourceBuilder setEffect(IEffect effect) {
-        this.effect = effect;
-        return this;
-    }
+	public SkillDamageSourceBuilder setEffect(IEffect effect) {
+		this.effect = effect;
+		return this;
+	}
 }

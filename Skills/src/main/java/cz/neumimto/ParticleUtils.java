@@ -20,7 +20,7 @@ public class ParticleUtils {
 
 
 	public static void drawCircle(Location<World> center, double radius, ParticleType type) {
-		drawCircle(center.getExtent(),center.getX(), center.getY(), center.getZ(), radius,
+		drawCircle(center.getExtent(), center.getX(), center.getY(), center.getZ(), radius,
 				ParticleEffect.builder().type(type).build());
 	}
 
@@ -31,7 +31,7 @@ public class ParticleUtils {
 	public static void drawSquare(Location<World> location, int i, ParticleEffect effect) {
 		for (int k = -i; k <= i; k++) {
 			for (int z = -i; z <= i; z++) {
-				drawParticle(location.getExtent(),location.getBlockZ()- z, location.getBlockY(), location.getBlockX() - k, effect);
+				drawParticle(location.getExtent(), location.getBlockZ() - z, location.getBlockY(), location.getBlockX() - k, effect);
 			}
 		}
 	}

@@ -18,6 +18,8 @@
 
 package cz.neumimto.rpg.skills;
 
+import cz.neumimto.rpg.Pair;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,32 +27,58 @@ import java.util.Map;
  * Created by NeumimTo on 14.2.2015.
  */
 public class SkillTree {
-    public static SkillTree Default = new SkillTree() {{
-        setId("None");
-        setDescription("No skill tree");
-    }};
-    private String id;
-    private Map<String, SkillData> skills = new HashMap<>();
-    private String description;
+	public static SkillTree Default = new SkillTree() {{
+		setId("None");
+		setDescription("No skill tree");
+	}};
+	private String id;
+	private Map<String, SkillData> skills = new HashMap<>();
+	private String description;
+	private short[][] skillTreeMap;
+	private Pair<Integer, Integer> center = new Pair<>(0,0);
 
+	public Map<String, SkillData> getSkills() {
+		return skills;
+	}
 
-    public Map<String, SkillData> getSkills() {
-        return skills;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public String getId() {
-        return id;
-    }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public SkillData getSkillById(int id) {
+		for (SkillData skillData : skills.values()) {
+			if (skillData.getSkillTreeId() == id) {
+				return skillData;
+			}
+		}
+		return null;
+	}
+
+	public void setSkillTreeMap(short[][] skillTreeMap) {
+		this.skillTreeMap = skillTreeMap;
+	}
+
+	public short[][] getSkillTreeMap() {
+		return skillTreeMap;
+	}
+
+	public Pair<Integer, Integer> getCenter() {
+		return center;
+	}
+
+	public void setCenter(Pair<Integer, Integer> center) {
+		this.center = center;
+	}
 }
