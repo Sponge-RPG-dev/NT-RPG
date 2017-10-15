@@ -731,11 +731,11 @@ public class VanilaMessaging implements IPlayerMessage {
 						Gui.moveSkillTreeMenu(character);
 						break;
 					case "Right":
-						character.getSkillTreeViewLocation().value-=1;
+						character.getSkillTreeViewLocation().value+=1;
 						Gui.moveSkillTreeMenu(character);
 						break;
 					case "Left":
-						character.getSkillTreeViewLocation().value+=1;
+						character.getSkillTreeViewLocation().value-=1;
 						Gui.moveSkillTreeMenu(character);
 						break;
 				}
