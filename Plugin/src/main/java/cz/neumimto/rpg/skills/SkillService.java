@@ -18,6 +18,8 @@
 
 package cz.neumimto.rpg.skills;
 
+import com.google.gson.*;
+import com.google.gson.internal.bind.ObjectTypeAdapter;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
@@ -35,6 +37,8 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.utils.Utils;
+import ninja.leaping.configurate.objectmapping.DefaultObjectMapperFactory;
+import ninja.leaping.configurate.objectmapping.ObjectMapperFactory;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.entity.HealthData;
@@ -43,6 +47,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -229,21 +234,17 @@ public class SkillService {
 			e.printStackTrace();
 		}
 
-		StringBuilder builder = new StringBuilder();
-
-		try (FileWriter fileWriter = new FileWriter(path.toFile());
-			 BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
-			for (ISkill skill : skills.values()) {
-				if (skill.getDefaultSkillSettings() == null)
-					continue;
-				builder.append(skill.getName()).append(": { ").append(Utils.LineSeparator);
-				for (Map.Entry<String, Float> entry : skill.getDefaultSkillSettings().getNodes().entrySet()) {
-					builder.append(Utils.Tab).append(entry.getKey()).append(" : ").append(entry.getValue()).append(Utils.LineSeparator);
-				}
-				builder.append(Utils.Tab).append(" },").append(Utils.LineSeparator);
-				bufferedWriter.write(builder.toString());
-			}
-			bufferedWriter.flush();
+		Gson gson = new GsonBuilder()
+				.setPrettyPrinting()
+				.create();
+		Map<String, SkillSettings> result = new HashMap<>();
+		try (PrintWriter writer = new PrintWriter(path.toFile())) {
+			skills.values()
+					.stream()
+					.filter(entry -> entry.getName() != null)
+					.forEach(entry -> result.put(entry.getName(), entry.getDefaultSkillSettings()));
+			String s = gson.toJson(result);
+			writer.print(s);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
