@@ -255,7 +255,6 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void updateSelectedHotbarSlot();
 
-	Pair<Integer, Integer> getSkillTreeViewLocation();
+	Map<String, SkillTreeViewModel> getSkillTreeViewLocation();
 
-	void setSkillTreeViewLocation(Pair<Integer, Integer> location);
 }

@@ -10,6 +10,7 @@ import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.skills.*;
 import org.spongepowered.api.block.BlockTypes;
@@ -241,7 +242,7 @@ public class GuiHelper {
 	}
 
 
-	public static Inventory createSkillTreeInventoryViewTemplate(IActiveCharacter character) {
+	public static Inventory createSkillTreeInventoryViewTemplate(IActiveCharacter character, SkillTree skillTree) {
 		Inventory i = Inventory.builder()
 				.of(InventoryArchetypes.DOUBLE_CHEST)
 				.build(plugin);
@@ -252,6 +253,22 @@ public class GuiHelper {
 		i.query(new SlotPos(7, 3)).offer(unclickableInterface());
 		i.query(new SlotPos(7, 4)).offer(unclickableInterface());
 		i.query(new SlotPos(7, 5)).offer(unclickableInterface());
+
+		ItemStack md = ItemStack.of(ItemTypes.PAPER, 1);
+
+		md.offer(new SkillTreeInventoryViewControllsData("mode"));
+
+		List<Text> lore = new ArrayList<>();
+		SkillTreeViewModel model = character.getSkillTreeViewLocation().get(skillTree.getId());
+		if (model == null) {
+			model = new SkillTreeViewModel();
+			character.getSkillTreeViewLocation().put(skillTree.getId(), model);
+		}
+		lore.add(Text.builder().build());
+		lore.add(Text.builder(model.getInteractiveMode().getTransltion()).build());
+		md.offer(Keys.ITEM_LORE, lore);
+
+		i.query(new SlotPos(8, 1)).offer(md);
 
 		i.query(new SlotPos(8, 2)).offer(createHead(/*HEAD_ARROW_UP*/ "Up"));
 		i.query(new SlotPos(8, 3)).offer(createHead(/*HEAD_ARROW_DOWN*/ "Down"));
@@ -291,7 +308,7 @@ public class GuiHelper {
 		return itemStack;
 	}
 
-	public static Inventory createSkillDetailInventoryView(ISkill skill) {
+	public static Inventory createSkillDetailInventoryView(String skillTree, SkillData skillData) {
 		Inventory build = Inventory.builder()
 				.of(InventoryArchetypes.DOUBLE_CHEST)
 				.build(plugin);

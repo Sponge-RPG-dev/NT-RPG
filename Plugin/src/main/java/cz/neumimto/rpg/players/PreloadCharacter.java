@@ -43,6 +43,8 @@ import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.equipment.EquipmentType;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.chat.ChatType;
 
 import java.util.*;
 
@@ -464,6 +466,11 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
+	public void sendMessage(ChatType chatType, Text message) {
+
+	}
+
+	@Override
 	public Map<String, ExtendedSkillInfo> getSkills() {
 		return Collections.emptyMap();
 	}
@@ -630,7 +637,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Pair<Integer, Integer> getSkillTreeViewLocation() {
+	public Map<String, SkillTreeViewModel> getSkillTreeViewLocation() {
 		return new Pair<>(0,0);
 	}
 
