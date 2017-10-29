@@ -14,9 +14,7 @@ import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
-import org.spongepowered.api.event.filter.cause.First;
-import org.spongepowered.api.event.filter.cause.Last;
-import org.spongepowered.api.event.filter.cause.Root;
+import org.spongepowered.api.item.ItemTypes;
 
 /**
  * Created by NeumimTo on 5.2.2016.
@@ -37,6 +35,7 @@ public class BrainSap extends Targetted {
 		super.settings = settings;
 		setName("BrainSap");
 		setDescription(SkillLocalization.SKILL_BRAINSAP_DESC);
+		setIcon(ItemTypes.ENDER_EYE);
 		setDamageType(DamageTypes.MAGIC);
 		addSkillType(SkillType.HEALTH_DRAIN);
 	}

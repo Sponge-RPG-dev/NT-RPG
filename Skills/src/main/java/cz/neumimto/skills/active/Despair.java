@@ -13,6 +13,7 @@ import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.utils.Utils;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleOptions;
 import org.spongepowered.api.effect.particle.ParticleTypes;
@@ -46,6 +47,7 @@ public class Despair extends ActiveSkill {
 		addSkillType(SkillType.AOE);
 		addSkillType(SkillType.ESCAPE);
 		addSkillType(SkillType.STEALTH);
+		setIcon(BlockTypes.END_PORTAL.getItem().get());
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.*;
 import org.spongepowered.api.entity.living.Living;
+import org.spongepowered.api.item.ItemTypes;
 
 /**
  * Created by NeumimTo on 20.8.2017.
@@ -29,6 +30,7 @@ public class Web extends Targetted {
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DURATION, 5000, 100);
 		setSettings(settings);
+		setIcon(ItemTypes.WEB);
 	}
 
 	@Override

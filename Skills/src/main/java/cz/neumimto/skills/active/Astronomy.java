@@ -7,6 +7,7 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.*;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
@@ -26,6 +27,7 @@ public class Astronomy extends ActiveSkill {
 		setName(SkillLocalization.ASTRONOMY_NAME);
 		setDescription(SkillLocalization.ASTRONOMY_DESC);
 		setSettings(settings);
+		setIcon(ItemTypes.CLOCK);
 		addSkillType(SkillType.CAN_CAST_WHILE_SILENCED);
 		addSkillType(SkillType.UTILITY);
 	}

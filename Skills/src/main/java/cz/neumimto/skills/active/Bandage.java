@@ -11,6 +11,7 @@ import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.*;
 import org.spongepowered.api.entity.living.Living;
+import org.spongepowered.api.item.ItemTypes;
 
 /**
  * Created by NeumimTo on 5.8.2017.
@@ -30,6 +31,7 @@ public class Bandage extends Targetted {
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.HEALED_AMOUNT, 15, 5);
 		setSettings(settings);
+		setIcon(ItemTypes.PAPER);
 		addSkillType(SkillType.HEALING);
 		addSkillType(SkillType.PHYSICAL);
 	}

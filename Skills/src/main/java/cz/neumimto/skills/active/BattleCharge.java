@@ -9,6 +9,7 @@ import cz.neumimto.rpg.effects.common.positive.SpeedBoost;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.*;
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
@@ -29,6 +30,7 @@ public class BattleCharge extends ActiveSkill {
 		settings.addNode(SkillNodes.DURATION, 7500, 100);
 		settings.addNode(SkillNodes.RADIUS, 7500, 100);
 		settings.addNode("speed-per-level", 0.9f, 0.01f);
+		setIcon(ItemTypes.BANNER);
 		setSettings(settings);
 	}
 

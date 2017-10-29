@@ -7,6 +7,7 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.*;
+import org.spongepowered.api.item.ItemTypes;
 
 /**
  * Created by NeumimTo on 6.8.2017.
@@ -26,6 +27,7 @@ public class GroupHeal extends ActiveSkill {
 		setSettings(settings);
 		addSkillType(SkillType.HEALING);
 		addSkillType(SkillType.AOE);
+		setIcon(ItemTypes.PAPER);
 	}
 
 	@Override

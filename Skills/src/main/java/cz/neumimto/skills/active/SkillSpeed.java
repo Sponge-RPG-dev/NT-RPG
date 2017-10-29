@@ -7,6 +7,7 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.common.positive.SpeedBoost;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.*;
+import org.spongepowered.api.item.ItemTypes;
 
 /**
  * Created by NeumimTo on 23.12.2015.
@@ -26,6 +27,7 @@ public class SkillSpeed extends ActiveSkill {
 		settings.addNode(SkillNodes.AMOUNT, 0.1f, 0.05f);
 		setSettings(settings);
 		addSkillType(SkillType.MOVEMENT);
+		setIcon(ItemTypes.LEATHER_BOOTS);
 	}
 
 	@Override

@@ -752,8 +752,13 @@ public class VanilaMessaging implements IPlayerMessage {
 						if (viewModel.getInteractiveMode() == SkillTreeViewModel.InteractiveMode.FAST) {
 							ISkill iSkill = skillService.getSkill(command);
 							SkillTree tree = character.getPrimaryClass().getConfigClass().getSkillTree();
-							Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data = characterService.characterLearnskill(character, iSkill, tree);
-							player.sendMessage(Text.of(data.value.bind(data.key.message)));
+							if (character.getSkill(command) == null) {
+								Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data = characterService.characterLearnskill(character, iSkill, tree);
+								player.sendMessage(Text.of(data.value.bind(data.key.message)));
+							} else {
+								Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data = characterService.upgradeSkill(character, iSkill);
+								player.sendMessage(Text.of(data.value.bind(data.key.message)));
+							}
 							//redraw
 							Gui.moveSkillTreeMenu(character);
 						} else {
@@ -851,7 +856,8 @@ public class VanilaMessaging implements IPlayerMessage {
 		int rows = skillTreeMap.length;
 		SkillTreeViewModel.InteractiveMode interactiveMode = skillTreeViewModel.getInteractiveMode();
 		ItemStack md = GuiHelper.interactiveModeToitemStack(character, interactiveMode);
-		skillTreeInventoryViewTemplate.query(new SlotPos(8,1)).set(md);
+		skillTreeInventoryViewTemplate.query(new SlotPos(8,1)).clear();
+		skillTreeInventoryViewTemplate.query(new SlotPos(8,1)).offer(md);
 		for (int k = -3; k <= 3; k++) { //x
 			for (int l = -3; l <= 3; l++) { //y
 				SlotPos slotPos = new SlotPos(l + 3, k + 3);

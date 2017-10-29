@@ -8,6 +8,7 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.*;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
+import org.spongepowered.api.item.ItemTypes;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -23,6 +24,7 @@ public class Arrowstorm extends ActiveSkill {
 	public Arrowstorm() {
 		setDamageType(DamageTypes.PROJECTILE);
 		setName("Arrowstorm");
+		setIcon(ItemTypes.ARROW);
 		setDescription(SkillLocalization.Arrowstorm);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DAMAGE, 10, 10);

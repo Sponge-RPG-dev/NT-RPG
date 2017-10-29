@@ -15,6 +15,7 @@ import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleOptions;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.util.Color;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -35,6 +36,7 @@ public class Harmtouch extends Targetted {
 		settings.addNode(SkillNodes.DAMAGE, 5000, 100);
 		setSettings(settings);
 		setDamageType(DamageTypes.MAGIC);
+		setIcon(ItemTypes.BLAZE_ROD);
 	}
 
 	@Override

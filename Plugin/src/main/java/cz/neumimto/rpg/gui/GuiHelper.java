@@ -18,7 +18,6 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
@@ -64,7 +63,7 @@ public class GuiHelper {
 		damageTypeToItemStack.put(DamageTypes.DROWN, Block.of(BlockTypes.WATER));
 		damageTypeToItemStack.put(DamageTypes.EXPLOSIVE, Item.of(ItemTypes.TNT));
 		damageTypeToItemStack.put(DamageTypes.FALL, Item.of(ItemTypes.IRON_BOOTS));
-		damageTypeToItemStack.put(DamageTypes.FIRE, Block.of(BlockTypes.FIRE));
+		damageTypeToItemStack.put(DamageTypes.FIRE, Item.of(ItemTypes.BLAZE_POWDER));
 
 		damageTypeToItemStack.put(DamageTypes.HUNGER, Item.of(ItemTypes.ROTTEN_FLESH));
 		damageTypeToItemStack.put(DamageTypes.MAGMA, Block.of(BlockTypes.LAVA));
@@ -81,7 +80,7 @@ public class GuiHelper {
 
 	public static ItemStack damageTypeToItemStack(DamageType type) {
 		if (type == null)
-			return ItemStack.empty();
+			return ItemStack.of(ItemTypes.STONE, 1);
 		CatalogTypeItemStackBuilder a = damageTypeToItemStack.get(type);
 		ItemStack is = null;
 		if (a == null) {
@@ -183,13 +182,17 @@ public class GuiHelper {
 
 	public static ItemStack skillToItemStack(IActiveCharacter character, SkillData skillData) {
 		ISkill skill = skillData.getSkill();
-		ItemType itemType = skill.getIcon().itemType;
-		if (itemType == null) {
-			itemType = ItemTypes.STONE;
+		SkillItemIcon icon = skill.getIcon();
+
+		ItemStack is = null;
+		if (icon == null || icon.itemType == null) {
+			is = damageTypeToItemStack(skill.getDamageType());
+		} else {
+			is = icon.toItemStack();
+			is.offer(new MenuInventoryData(true));
 		}
 
-		ItemStack.Builder builder = ItemStack.builder();
-		builder.itemType(itemType);
+
 		List<Text> lore = new ArrayList<>();
 
 		String desc = skill.getDescription();
@@ -209,7 +212,7 @@ public class GuiHelper {
 
 		int minPlayerLevel = skillData.getMinPlayerLevel();
 		int maxSkillLevel = skillData.getMaxSkillLevel();
-		ExtendedSkillInfo ei = character.getSkills().get(skill.getName());
+		ExtendedSkillInfo ei = character.getSkill(skill.getName());
 		int currentLevel = 0;
 		int totalLevel = 0;
 		if (ei != null) {
@@ -242,10 +245,7 @@ public class GuiHelper {
 			}
 		}
 
-		ItemStack is = ItemStack.builder().itemType(itemType)
-				.quantity(1)
-				.add(Keys.ITEM_LORE, lore)
-				.build();
+		is.offer(Keys.ITEM_LORE, lore);
 
 		is.offer(Keys.DISPLAY_NAME, Text.builder(skill.getName()).style(TextStyles.BOLD).build());
 		return is;
@@ -275,7 +275,7 @@ public class GuiHelper {
 		ItemStack md = interactiveModeToitemStack(character, model.getInteractiveMode());
 
 
-		i.query(new SlotPos(8, 1)).offer(md);
+		i.query(new SlotPos(8, 1)).set(md);
 
 		i.query(new SlotPos(8, 2)).offer(createControlls(/*HEAD_ARROW_UP*/ "Up"));
 		i.query(new SlotPos(8, 3)).offer(createControlls(/*HEAD_ARROW_DOWN*/ "Down"));
