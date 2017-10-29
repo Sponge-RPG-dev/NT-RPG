@@ -395,4 +395,7 @@ public class Localization {
 
 	@ConfigValue
 	public static String INTERACTIVE_SKILLTREE_MOD_DETAILS = "Details";
+
+	@ConfigValue
+	public static String SKILL_LEVEL = "Skill Level";
 }

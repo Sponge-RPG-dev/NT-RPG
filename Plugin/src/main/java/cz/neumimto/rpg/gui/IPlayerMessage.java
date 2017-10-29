@@ -28,13 +28,11 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
-import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillTree;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by NeumimTo on 6.8.2015.
@@ -102,4 +100,6 @@ public interface IPlayerMessage {
 	void openSkillTreeMenu(IActiveCharacter player, SkillTree skillTree);
 
 	void moveSkillTreeMenu(IActiveCharacter character);
+
+	void displaySkillDetailsInventoryMenu(IActiveCharacter character, SkillTree tree, String command);
 }

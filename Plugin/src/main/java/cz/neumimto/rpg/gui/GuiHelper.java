@@ -209,6 +209,13 @@ public class GuiHelper {
 
 		int minPlayerLevel = skillData.getMinPlayerLevel();
 		int maxSkillLevel = skillData.getMaxSkillLevel();
+		ExtendedSkillInfo ei = character.getSkills().get(skill.getName());
+		int currentLevel = 0;
+		int totalLevel = 0;
+		if (ei != null) {
+			currentLevel = ei.getLevel();
+			totalLevel = ei.getTotalLevel();
+		}
 
 		String s = Localization.MIN_PLAYER_LEVEL;
 		if (minPlayerLevel > 0) {
@@ -218,12 +225,15 @@ public class GuiHelper {
 							.build())
 					.build());
 		}
+
 		s = Localization.MAX_SKILL_LEVEL + " " + maxSkillLevel;
 		lore.add(Text.builder(s)
 				.color(TextColors.YELLOW)
 				.build());
-		lore.add(Text.EMPTY);
 
+
+		lore.add(Text.EMPTY);
+		lore.add(Text.builder(Localization.SKILL_LEVEL + " " + currentLevel + " (" + totalLevel + ") ").build());
 
 		if (skill.getLore() != null) {
 			String[] split = skill.getLore().split(":n");
@@ -236,7 +246,7 @@ public class GuiHelper {
 				.quantity(1)
 				.add(Keys.ITEM_LORE, lore)
 				.build();
-		is.offer(new MenuInventoryData(true));
+
 		is.offer(Keys.DISPLAY_NAME, Text.builder(skill.getName()).style(TextStyles.BOLD).build());
 		return is;
 	}
@@ -254,30 +264,27 @@ public class GuiHelper {
 		i.query(new SlotPos(7, 4)).offer(unclickableInterface());
 		i.query(new SlotPos(7, 5)).offer(unclickableInterface());
 
-		ItemStack md = ItemStack.of(ItemTypes.PAPER, 1);
 
-		md.offer(new SkillTreeInventoryViewControllsData("mode"));
 
-		List<Text> lore = new ArrayList<>();
 		SkillTreeViewModel model = character.getSkillTreeViewLocation().get(skillTree.getId());
 		if (model == null) {
 			model = new SkillTreeViewModel();
 			character.getSkillTreeViewLocation().put(skillTree.getId(), model);
 		}
-		lore.add(Text.builder().build());
-		lore.add(Text.builder(model.getInteractiveMode().getTransltion()).build());
-		md.offer(Keys.ITEM_LORE, lore);
+
+		ItemStack md = interactiveModeToitemStack(character, model.getInteractiveMode());
+
 
 		i.query(new SlotPos(8, 1)).offer(md);
 
-		i.query(new SlotPos(8, 2)).offer(createHead(/*HEAD_ARROW_UP*/ "Up"));
-		i.query(new SlotPos(8, 3)).offer(createHead(/*HEAD_ARROW_DOWN*/ "Down"));
-		i.query(new SlotPos(8, 4)).offer(createHead(/*HEAD_ARROW_RIGHT*/ "Right"));
-		i.query(new SlotPos(8, 5)).offer(createHead(/*HEAD_ARROW_LEFT*/ "Left"));
+		i.query(new SlotPos(8, 2)).offer(createControlls(/*HEAD_ARROW_UP*/ "Up"));
+		i.query(new SlotPos(8, 3)).offer(createControlls(/*HEAD_ARROW_DOWN*/ "Down"));
+		i.query(new SlotPos(8, 4)).offer(createControlls(/*HEAD_ARROW_RIGHT*/ "Right"));
+		i.query(new SlotPos(8, 5)).offer(createControlls(/*HEAD_ARROW_LEFT*/ "Left"));
 
 		return i;
 	}
-	public static ItemStack createHead(/* GameProfile gameProfile*/ String name) {
+	public static ItemStack createControlls(/* GameProfile gameProfile*/ String name) {
 		ItemStack of = ItemStack.of(ItemTypes.STONE, 1);
 		of.offer(Keys.HIDE_MISCELLANEOUS, true);
 		of.offer(Keys.HIDE_ATTRIBUTES, true);
@@ -311,13 +318,33 @@ public class GuiHelper {
 	public static Inventory createSkillDetailInventoryView(String skillTree, SkillData skillData) {
 		Inventory build = Inventory.builder()
 				.of(InventoryArchetypes.DOUBLE_CHEST)
-				.build(plugin);
+			 	.build(plugin);
 
 		ItemStack back = back("skilltree", Localization.SKILLTREE);
 		build.query(new SlotPos(0,0)).offer(back);
 
-		build.query(new SlotPos(0,1)).offer(damageTypeToItemStack(skill.getDamageType()));
+		build.query(new SlotPos(1,1)).offer(damageTypeToItemStack(skillData.getSkill().getDamageType()));
 
 		return build;
+	}
+
+	public static ItemStack interactiveModeToitemStack(IActiveCharacter character, SkillTreeViewModel.InteractiveMode interactiveMode) {
+		ItemStack md = ItemStack.of(interactiveMode.getItemType(), 1);
+		List<Text> lore = new ArrayList<>();
+
+		md.offer(new SkillTreeInventoryViewControllsData("mode"));
+		lore.add(Text.builder(interactiveMode.getTransltion()).build());
+		lore.add(Text.EMPTY);
+		lore.add(Text.builder("Level: ").color(TextColors.YELLOW)
+				.append(Text.builder(String.valueOf(character.getLevel())).style(TextStyles.BOLD).build())
+				.build());
+
+		int sp = character.getCharacterBase().getCharacterClass(character.getPrimaryClass().getConfigClass()).getSkillPoints();
+
+		lore.add(Text.builder("SP: ").color(TextColors.GREEN)
+				.append(Text.builder(String.valueOf(sp)).style(TextStyles.BOLD).build())
+				.build());
+		md.offer(Keys.ITEM_LORE, lore);
+		return md;
 	}
 }

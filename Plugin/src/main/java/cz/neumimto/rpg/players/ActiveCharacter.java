@@ -18,7 +18,6 @@
 
 package cz.neumimto.rpg.players;
 
-import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
@@ -65,7 +64,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	private transient Set<ItemType> allowedArmorIds = new HashSet<>();
 	private transient Map<ItemType, TreeSet<ConfigRPGItemType>> allowedWeapons = new HashMap<>();
 	private transient Map<EntityType, Double> projectileDamage = new HashMap<>();
-	private transient Party party = new Party(this);
+	private transient Party party;
 	private Map<String, ExtendedSkillInfo> skills = new HashMap<>();
 	private Race race = Race.Default;
 	private Guild guild;
@@ -101,6 +100,7 @@ public class ActiveCharacter implements IActiveCharacter {
 		this.base = base;
 		classes.add(cl);
 		slotsToReinitialize = new ArrayList<>();
+		skillTreeViewLocation = new HashMap<>();
 	}
 
 	@Override

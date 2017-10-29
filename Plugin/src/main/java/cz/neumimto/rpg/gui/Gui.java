@@ -204,4 +204,8 @@ public class Gui {
 	public static void moveSkillTreeMenu(IActiveCharacter character) {
 		getMessageTypeOf(character).moveSkillTreeMenu(character);
 	}
+
+	public static void displaySkillDetailsInventoryMenu(IActiveCharacter character, SkillTree tree, String command) {
+		getMessageTypeOf(character).displaySkillDetailsInventoryMenu(character, tree, command);
+	}
 }
