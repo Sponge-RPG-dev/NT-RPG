@@ -1,4 +1,5 @@
 *.class
+.idea
 *.project
 *.classpath
 # Mobile Tools for Java (J2ME)

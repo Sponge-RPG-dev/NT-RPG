@@ -10,6 +10,7 @@ import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.skills.*;
 import org.spongepowered.api.block.BlockTypes;
@@ -17,7 +18,6 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
@@ -63,7 +63,7 @@ public class GuiHelper {
 		damageTypeToItemStack.put(DamageTypes.DROWN, Block.of(BlockTypes.WATER));
 		damageTypeToItemStack.put(DamageTypes.EXPLOSIVE, Item.of(ItemTypes.TNT));
 		damageTypeToItemStack.put(DamageTypes.FALL, Item.of(ItemTypes.IRON_BOOTS));
-		damageTypeToItemStack.put(DamageTypes.FIRE, Block.of(BlockTypes.FIRE));
+		damageTypeToItemStack.put(DamageTypes.FIRE, Item.of(ItemTypes.BLAZE_POWDER));
 
 		damageTypeToItemStack.put(DamageTypes.HUNGER, Item.of(ItemTypes.ROTTEN_FLESH));
 		damageTypeToItemStack.put(DamageTypes.MAGMA, Block.of(BlockTypes.LAVA));
@@ -80,7 +80,7 @@ public class GuiHelper {
 
 	public static ItemStack damageTypeToItemStack(DamageType type) {
 		if (type == null)
-			return ItemStack.empty();
+			return ItemStack.of(ItemTypes.STONE, 1);
 		CatalogTypeItemStackBuilder a = damageTypeToItemStack.get(type);
 		ItemStack is = null;
 		if (a == null) {
@@ -182,13 +182,17 @@ public class GuiHelper {
 
 	public static ItemStack skillToItemStack(IActiveCharacter character, SkillData skillData) {
 		ISkill skill = skillData.getSkill();
-		ItemType itemType = skill.getIcon().itemType;
-		if (itemType == null) {
-			itemType = ItemTypes.STONE;
+		SkillItemIcon icon = skill.getIcon();
+
+		ItemStack is = null;
+		if (icon == null || icon.itemType == null) {
+			is = damageTypeToItemStack(skill.getDamageType());
+		} else {
+			is = icon.toItemStack();
+			is.offer(new MenuInventoryData(true));
 		}
 
-		ItemStack.Builder builder = ItemStack.builder();
-		builder.itemType(itemType);
+
 		List<Text> lore = new ArrayList<>();
 
 		String desc = skill.getDescription();
@@ -208,6 +212,13 @@ public class GuiHelper {
 
 		int minPlayerLevel = skillData.getMinPlayerLevel();
 		int maxSkillLevel = skillData.getMaxSkillLevel();
+		ExtendedSkillInfo ei = character.getSkill(skill.getName());
+		int currentLevel = 0;
+		int totalLevel = 0;
+		if (ei != null) {
+			currentLevel = ei.getLevel();
+			totalLevel = ei.getTotalLevel();
+		}
 
 		String s = Localization.MIN_PLAYER_LEVEL;
 		if (minPlayerLevel > 0) {
@@ -217,12 +228,15 @@ public class GuiHelper {
 							.build())
 					.build());
 		}
+
 		s = Localization.MAX_SKILL_LEVEL + " " + maxSkillLevel;
 		lore.add(Text.builder(s)
 				.color(TextColors.YELLOW)
 				.build());
-		lore.add(Text.EMPTY);
 
+
+		lore.add(Text.EMPTY);
+		lore.add(Text.builder(Localization.SKILL_LEVEL + " " + currentLevel + " (" + totalLevel + ") ").build());
 
 		if (skill.getLore() != null) {
 			String[] split = skill.getLore().split(":n");
@@ -231,17 +245,14 @@ public class GuiHelper {
 			}
 		}
 
-		ItemStack is = ItemStack.builder().itemType(itemType)
-				.quantity(1)
-				.add(Keys.ITEM_LORE, lore)
-				.build();
-		is.offer(new MenuInventoryData(true));
+		is.offer(Keys.ITEM_LORE, lore);
+
 		is.offer(Keys.DISPLAY_NAME, Text.builder(skill.getName()).style(TextStyles.BOLD).build());
 		return is;
 	}
 
 
-	public static Inventory createSkillTreeInventoryViewTemplate(IActiveCharacter character) {
+	public static Inventory createSkillTreeInventoryViewTemplate(IActiveCharacter character, SkillTree skillTree) {
 		Inventory i = Inventory.builder()
 				.of(InventoryArchetypes.DOUBLE_CHEST)
 				.build(plugin);
@@ -253,14 +264,27 @@ public class GuiHelper {
 		i.query(new SlotPos(7, 4)).offer(unclickableInterface());
 		i.query(new SlotPos(7, 5)).offer(unclickableInterface());
 
-		i.query(new SlotPos(8, 2)).offer(createHead(/*HEAD_ARROW_UP*/ "Up"));
-		i.query(new SlotPos(8, 3)).offer(createHead(/*HEAD_ARROW_DOWN*/ "Down"));
-		i.query(new SlotPos(8, 4)).offer(createHead(/*HEAD_ARROW_RIGHT*/ "Right"));
-		i.query(new SlotPos(8, 5)).offer(createHead(/*HEAD_ARROW_LEFT*/ "Left"));
+
+
+		SkillTreeViewModel model = character.getSkillTreeViewLocation().get(skillTree.getId());
+		if (model == null) {
+			model = new SkillTreeViewModel();
+			character.getSkillTreeViewLocation().put(skillTree.getId(), model);
+		}
+
+		ItemStack md = interactiveModeToitemStack(character, model.getInteractiveMode());
+
+
+		i.query(new SlotPos(8, 1)).set(md);
+
+		i.query(new SlotPos(8, 2)).offer(createControlls(/*HEAD_ARROW_UP*/ "Up"));
+		i.query(new SlotPos(8, 3)).offer(createControlls(/*HEAD_ARROW_DOWN*/ "Down"));
+		i.query(new SlotPos(8, 4)).offer(createControlls(/*HEAD_ARROW_RIGHT*/ "Right"));
+		i.query(new SlotPos(8, 5)).offer(createControlls(/*HEAD_ARROW_LEFT*/ "Left"));
 
 		return i;
 	}
-	public static ItemStack createHead(/* GameProfile gameProfile*/ String name) {
+	public static ItemStack createControlls(/* GameProfile gameProfile*/ String name) {
 		ItemStack of = ItemStack.of(ItemTypes.STONE, 1);
 		of.offer(Keys.HIDE_MISCELLANEOUS, true);
 		of.offer(Keys.HIDE_ATTRIBUTES, true);
@@ -291,16 +315,36 @@ public class GuiHelper {
 		return itemStack;
 	}
 
-	public static Inventory createSkillDetailInventoryView(ISkill skill) {
+	public static Inventory createSkillDetailInventoryView(String skillTree, SkillData skillData) {
 		Inventory build = Inventory.builder()
 				.of(InventoryArchetypes.DOUBLE_CHEST)
-				.build(plugin);
+			 	.build(plugin);
 
 		ItemStack back = back("skilltree", Localization.SKILLTREE);
 		build.query(new SlotPos(0,0)).offer(back);
 
-		build.query(new SlotPos(0,1)).offer(damageTypeToItemStack(skill.getDamageType()));
+		build.query(new SlotPos(1,1)).offer(damageTypeToItemStack(skillData.getSkill().getDamageType()));
 
 		return build;
+	}
+
+	public static ItemStack interactiveModeToitemStack(IActiveCharacter character, SkillTreeViewModel.InteractiveMode interactiveMode) {
+		ItemStack md = ItemStack.of(interactiveMode.getItemType(), 1);
+		List<Text> lore = new ArrayList<>();
+
+		md.offer(new SkillTreeInventoryViewControllsData("mode"));
+		lore.add(Text.builder(interactiveMode.getTransltion()).build());
+		lore.add(Text.EMPTY);
+		lore.add(Text.builder("Level: ").color(TextColors.YELLOW)
+				.append(Text.builder(String.valueOf(character.getLevel())).style(TextStyles.BOLD).build())
+				.build());
+
+		int sp = character.getCharacterBase().getCharacterClass(character.getPrimaryClass().getConfigClass()).getSkillPoints();
+
+		lore.add(Text.builder("SP: ").color(TextColors.GREEN)
+				.append(Text.builder(String.valueOf(sp)).style(TextStyles.BOLD).build())
+				.build());
+		md.offer(Keys.ITEM_LORE, lore);
+		return md;
 	}
 }

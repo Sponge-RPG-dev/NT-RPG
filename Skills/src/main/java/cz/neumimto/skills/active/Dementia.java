@@ -10,6 +10,7 @@ import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.*;
 import org.spongepowered.api.entity.living.Living;
+import org.spongepowered.api.item.ItemTypes;
 
 /**
  * Created by NeumimTo on 10.8.17.
@@ -31,6 +32,7 @@ public class Dementia extends Targetted {
 		settings.addNode("skill-level", 1, 2);
 		setSettings(settings);
 		addSkillType(SkillType.DISEASE);
+		setIcon(ItemTypes.ROTTEN_FLESH);
 	}
 
 	@Override

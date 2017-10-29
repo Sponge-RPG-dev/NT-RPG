@@ -7,6 +7,8 @@ import cz.neumimto.rpg.players.parties.Party;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.Creature;
 import org.spongepowered.api.entity.living.Living;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.chat.ChatType;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -110,6 +112,11 @@ public class NEntity implements IMob {
 
 	@Override
 	public void sendMessage(String message) {
+
+	}
+
+	@Override
+	public void sendMessage(ChatType chatType, Text message) {
 
 	}
 

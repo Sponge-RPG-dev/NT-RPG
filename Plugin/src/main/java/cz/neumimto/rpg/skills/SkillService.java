@@ -18,8 +18,8 @@
 
 package cz.neumimto.rpg.skills;
 
-import com.google.gson.*;
-import com.google.gson.internal.bind.ObjectTypeAdapter;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
@@ -32,29 +32,29 @@ import cz.neumimto.rpg.events.skills.SkillPrepareEvent;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.persistance.SkillTreeDao;
 import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.scripting.JSLoader;
-import cz.neumimto.rpg.utils.Utils;
-import ninja.leaping.configurate.objectmapping.DefaultObjectMapperFactory;
-import ninja.leaping.configurate.objectmapping.ObjectMapperFactory;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.entity.HealthData;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.chat.ChatTypes;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 
-import java.io.*;
-import java.lang.reflect.Type;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
@@ -255,9 +255,17 @@ public class SkillService {
 	public void invokeSkillByCombo(String combo, IActiveCharacter character) {
 		for (ExtendedSkillInfo extendedSkillInfo : character.getSkills().values()) {
 			if (combo.equals(extendedSkillInfo.getSkillData().getCombination())) {
+				character.sendMessage(ChatTypes.ACTION_BAR,
+						Text.builder(extendedSkillInfo.getSkill().getName())
+								.style(TextStyles.BOLD)
+								.color(TextColors.GOLD)
+								.build()
+				);
 				executeSkill(character, extendedSkillInfo);
+				break;
 			}
 		}
+		Gui.displayCurrentClicks(character, combo);
 	}
 
 	public void initGuis() {

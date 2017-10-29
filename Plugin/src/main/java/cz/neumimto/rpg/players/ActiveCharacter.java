@@ -18,7 +18,6 @@
 
 package cz.neumimto.rpg.players;
 
-import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
@@ -43,6 +42,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.chat.ChatType;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
@@ -64,7 +64,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	private transient Set<ItemType> allowedArmorIds = new HashSet<>();
 	private transient Map<ItemType, TreeSet<ConfigRPGItemType>> allowedWeapons = new HashMap<>();
 	private transient Map<EntityType, Double> projectileDamage = new HashMap<>();
-	private transient Party party = new Party(this);
+	private transient Party party;
 	private Map<String, ExtendedSkillInfo> skills = new HashMap<>();
 	private Race race = Race.Default;
 	private Guild guild;
@@ -86,7 +86,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	private transient List<Integer> slotsToReinitialize;
 	private transient Map<EquipmentType, Armor> equipedArmor;
 	private transient int selected;
-	private transient Pair<Integer, Integer> skillTreeViewLocation;
+	private transient Map<String, SkillTreeViewModel> skillTreeViewLocation;
 
 	public ActiveCharacter(Player pl, CharacterBase base) {
 		this.pl = pl;
@@ -100,6 +100,7 @@ public class ActiveCharacter implements IActiveCharacter {
 		this.base = base;
 		classes.add(cl);
 		slotsToReinitialize = new ArrayList<>();
+		skillTreeViewLocation = new HashMap<>();
 	}
 
 	@Override
@@ -542,6 +543,11 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
+	public void sendMessage(ChatType chatType, Text message) {
+		pl.sendMessage(chatType, Text.of(message));
+	}
+
+	@Override
 	public Map<String, ExtendedSkillInfo> getSkills() {
 		return Collections.unmodifiableMap(skills); //lets use wrapper class instaed of guava's immutable
 	}
@@ -763,13 +769,8 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Pair<Integer, Integer> getSkillTreeViewLocation() {
+	public Map<String, SkillTreeViewModel> getSkillTreeViewLocation() {
 		return skillTreeViewLocation;
-	}
-
-	@Override
-	public void setSkillTreeViewLocation(Pair<Integer, Integer> location) {
-		skillTreeViewLocation = location;
 	}
 
 	@Override

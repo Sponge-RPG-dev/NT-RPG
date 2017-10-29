@@ -53,7 +53,7 @@ public class ClickComboActionEvent extends EffectBase implements IEffectContaine
 
 	public void processShift() {
 		if (PluginConfig.SHIFT_CANCELS_COMBO) {
-			cancel();
+			cancel(true);
 		} else {
 			combination.append('S');
 		}
@@ -71,22 +71,21 @@ public class ClickComboActionEvent extends EffectBase implements IEffectContaine
 	}
 
 	public void update() {
-		Gui.displayCurrentClicks(this);
 		if (combination != null) {
 			NtRpgPlugin.GlobalScope.skillService.invokeSkillByCombo(getCurrent(), character);
 		}
 		k = System.currentTimeMillis();
 	}
 
-	public void cancel() {
+	public void cancel(boolean byShift) {
 		combination = null;
-		Gui.resetCurrentClicks(this);
+		Gui.resetCurrentClicks(this, byShift);
 	}
 
 	@Override
 	public void onTick() {
 		if (getLastTickTime() + getPeriod() >= k) {
-			cancel();
+			cancel(false);
 		}
 	}
 

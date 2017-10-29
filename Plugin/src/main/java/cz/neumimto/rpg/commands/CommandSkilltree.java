@@ -20,23 +20,14 @@ package cz.neumimto.rpg.commands;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.GroupService;
-import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.configuration.CommandLocalization;
-import cz.neumimto.rpg.configuration.CommandPermissions;
-import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.groups.ConfigClass;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillTree;
-import cz.neumimto.rpg.skills.StartingPoint;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Text;
 
 /**
  * Created by ja on 31.8.2015.
@@ -58,9 +49,6 @@ public class CommandSkilltree extends CommandBase {
 	public CommandResult process(CommandSource commandSource, String s) throws CommandException {
 		Player p =(Player) commandSource;
 		IActiveCharacter character = characterService.getCharacter(p);
-		if (character.getSkillTreeViewLocation() == null) {
-			character.setSkillTreeViewLocation(new Pair<>(0,0));
-		}
 		Gui.openSkillTreeMenu(character, character.getPrimaryClass().getConfigClass().getSkillTree());
 		return CommandResult.success();
 	}

@@ -538,12 +538,8 @@ public class CharacterService {
 		Map<String, Long> cooldowns = characterBase.getCharacterCooldowns();
 
 		long l = System.currentTimeMillis();
-		Iterator<Map.Entry<String, Long>> iterator = cooldowns.entrySet().iterator();
-		while (iterator.hasNext()) {
-			Map.Entry<String, Long> next = iterator.next();
-			if (next.getValue() <= l) ;
-			iterator.remove();
-		}
+		cooldowns.entrySet().removeIf(next -> next.getValue() <= l);
+
 		characterBase.getCharacterCooldowns().clear();
 		for (Map.Entry<String, Integer> stringIntegerEntry : skills.entrySet()) {
 			ExtendedSkillInfo info = new ExtendedSkillInfo();

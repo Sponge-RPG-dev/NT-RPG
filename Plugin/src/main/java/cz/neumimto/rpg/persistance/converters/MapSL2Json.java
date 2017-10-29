@@ -2,8 +2,10 @@ package cz.neumimto.rpg.persistance.converters;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import javax.persistence.AttributeConverter;
+import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
@@ -14,7 +16,10 @@ public class MapSL2Json implements AttributeConverter<Object, String> {
 	private static Gson gson;
 
 	static {
-		gson = new GsonBuilder().enableComplexMapKeySerialization().setPrettyPrinting().create();
+		gson = new GsonBuilder()
+				.enableComplexMapKeySerialization()
+				.setPrettyPrinting()
+				.create();
 	}
 
 	@Override
@@ -24,6 +29,7 @@ public class MapSL2Json implements AttributeConverter<Object, String> {
 
 	@Override
 	public Object convertToEntityAttribute(String s) {
-		return gson.fromJson(s, Map.class);
+		Type slmap = new TypeToken<Map<String, Long>>() { }.getType();
+		return gson.fromJson(s, slmap);
 	}
 }

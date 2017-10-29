@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.gui;
 
 import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.common.def.ClickComboActionEvent;
@@ -30,16 +31,15 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.SkillTree;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by NeumimTo on 12.2.2015.
@@ -184,30 +184,28 @@ public class Gui {
 		character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, text);
 	}
 
-
-	//only here until gets advancements gets implemented
-	public static void displayAllSkills(IActiveCharacter character) {
-		ExtendedNClass primaryClass = character.getPrimaryClass();
-		ConfigClass configClass = primaryClass.getConfigClass();
-		SkillTree skillTree = configClass.getSkillTree();
-		SkillService service = IoC.get().build(SkillService.class);
-		for (Map.Entry<String, SkillData> entry : skillTree.getSkills().entrySet()) {
-			String skillName = entry.getKey();
-			SkillData data = entry.getValue();
-			ItemStack itemStack = GuiHelper.skillToItemStack(character, data);
-
-		}
-	}
-
-	public static void displayCurrentClicks(ClickComboActionEvent clickComboActionEvent) {
+	public static void displayCurrentClicks(IActiveCharacter character, String combo) {
+		character.sendMessage(ChatTypes.ACTION_BAR,
+				Text.builder(combo.replaceAll(".", "$0, "))
+						.color(TextColors.GOLD)
+						.build());
 
 	}
 
-	public static void resetCurrentClicks(ClickComboActionEvent clickComboActionEvent) {
+	public static void resetCurrentClicks(ClickComboActionEvent clickComboActionEvent, boolean byShift) {
+		clickComboActionEvent.getConsumer().sendMessage(ChatTypes.ACTION_BAR,
+					Text.builder("<"+ Localization.CANCELLED+">")
+							.color(TextColors.DARK_GRAY)
+							.style(TextStyles.ITALIC)
+							.build());
 
 	}
 
 	public static void moveSkillTreeMenu(IActiveCharacter character) {
 		getMessageTypeOf(character).moveSkillTreeMenu(character);
+	}
+
+	public static void displaySkillDetailsInventoryMenu(IActiveCharacter character, SkillTree tree, String command) {
+		getMessageTypeOf(character).displaySkillDetailsInventoryMenu(character, tree, command);
 	}
 }

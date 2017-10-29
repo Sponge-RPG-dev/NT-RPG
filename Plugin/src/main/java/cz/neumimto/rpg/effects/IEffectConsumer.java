@@ -24,6 +24,8 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectType;
 import org.spongepowered.api.entity.living.Living;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.chat.ChatType;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -120,6 +122,8 @@ public interface IEffectConsumer<T extends Living> extends PropertyContainer {
 	}
 
 	void sendMessage(String message);
+
+	void sendMessage(ChatType chatType, Text message);
 
 	boolean isDetached();
 

@@ -201,4 +201,9 @@ public abstract class AbstractSkill implements ISkill {
 	public ItemType getItemType() {
 		return itemType;
 	}
+
+	public void setIcon(ItemType icon) {
+		if (this.icon == null)
+			this.icon = new SkillItemIcon(this);
+	}
 }

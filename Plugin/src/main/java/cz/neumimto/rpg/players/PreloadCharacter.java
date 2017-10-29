@@ -18,7 +18,6 @@
 
 package cz.neumimto.rpg.players;
 
-import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.IEffect;
@@ -43,6 +42,8 @@ import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.equipment.EquipmentType;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.chat.ChatType;
 
 import java.util.*;
 
@@ -464,6 +465,11 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
+	public void sendMessage(ChatType chatType, Text message) {
+
+	}
+
+	@Override
 	public Map<String, ExtendedSkillInfo> getSkills() {
 		return Collections.emptyMap();
 	}
@@ -630,12 +636,9 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Pair<Integer, Integer> getSkillTreeViewLocation() {
-		return new Pair<>(0,0);
+	public Map<String, SkillTreeViewModel> getSkillTreeViewLocation() {
+		return Collections.emptyMap();
 	}
 
-	@Override
-	public void setSkillTreeViewLocation(Pair<Integer, Integer> location) {
 
-	}
 }

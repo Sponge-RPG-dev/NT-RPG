@@ -8,6 +8,7 @@ import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.util.blockray.BlockRay;
 import org.spongepowered.api.util.blockray.BlockRayHit;
 import org.spongepowered.api.world.Location;
@@ -29,6 +30,7 @@ public class SkillTeleport extends ActiveSkill {
 		super.settings = settings;
 		super.setDescription(SkillLocalization.SKILL_TELEPORT_DESC);
 		addSkillType(SkillType.TELEPORT);
+		setIcon(ItemTypes.END_PORTAL_FRAME);
 	}
 
 	@Override

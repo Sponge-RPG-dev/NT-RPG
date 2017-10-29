@@ -40,22 +40,23 @@ import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
+import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.persistance.DirectAccessDao;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
-import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.ExtendedNClass;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.*;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
+import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.SkillTree;
 import cz.neumimto.rpg.utils.ItemStackUtils;
+import cz.neumimto.rpg.utils.SkillTreeActionResult;
 import cz.neumimto.rpg.utils.Utils;
 import cz.neumimto.rpg.utils.model.CharacterListModel;
 import org.spongepowered.api.Game;
@@ -121,6 +122,9 @@ public class VanilaMessaging implements IPlayerMessage {
 
 	@Inject
 	private CharacterService characterService;
+
+	@Inject
+	private SkillService skillService;
 
 	@Override
 	public boolean isClientSideGui() {
@@ -721,23 +725,48 @@ public class VanilaMessaging implements IPlayerMessage {
 			if (t.getOriginal().get(NKeys.SKILLTREE_CONTROLLS).isPresent()) {
 				String command = t.getOriginal().get(NKeys.SKILLTREE_CONTROLLS).get();
 				IActiveCharacter character = characterService.getCharacter(player);
+				SkillTreeViewModel viewModel = character.getSkillTreeViewLocation().get(character.getPrimaryClass().getConfigClass().getSkillTree().getId());
 				switch (command) {
 					case "Up":
-						character.getSkillTreeViewLocation().key-=1;
+						viewModel.getLocation().key-=1;
 						Gui.moveSkillTreeMenu(character);
 						break;
 					case "Down":
-						character.getSkillTreeViewLocation().key+=1;
+						viewModel.getLocation().key+=1;
 						Gui.moveSkillTreeMenu(character);
 						break;
 					case "Right":
-						character.getSkillTreeViewLocation().value+=1;
+						viewModel.getLocation().value+=1;
 						Gui.moveSkillTreeMenu(character);
 						break;
 					case "Left":
-						character.getSkillTreeViewLocation().value-=1;
+						viewModel.getLocation().value-=1;
 						Gui.moveSkillTreeMenu(character);
 						break;
+					case "mode":
+						viewModel.setInteractiveMode(viewModel.getInteractiveMode().opposite());
+						//just redraw
+						Gui.moveSkillTreeMenu(character);
+						break;
+					default:
+						if (viewModel.getInteractiveMode() == SkillTreeViewModel.InteractiveMode.FAST) {
+							ISkill iSkill = skillService.getSkill(command);
+							SkillTree tree = character.getPrimaryClass().getConfigClass().getSkillTree();
+							if (character.getSkill(command) == null) {
+								Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data = characterService.characterLearnskill(character, iSkill, tree);
+								player.sendMessage(Text.of(data.value.bind(data.key.message)));
+							} else {
+								Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data = characterService.upgradeSkill(character, iSkill);
+								player.sendMessage(Text.of(data.value.bind(data.key.message)));
+							}
+							//redraw
+							Gui.moveSkillTreeMenu(character);
+						} else {
+							SkillTree tree = character.getPrimaryClass().getConfigClass().getSkillTree();
+							Gui.displaySkillDetailsInventoryMenu(character, tree, command);
+						}
+						break;
+
 				}
 				event.setCancelled(true);
 			}
@@ -787,7 +816,10 @@ public class VanilaMessaging implements IPlayerMessage {
 
 	@Override
 	public void openSkillTreeMenu(IActiveCharacter player, SkillTree skillTree) {
-		Inventory skillTreeInventoryViewTemplate = GuiHelper.createSkillTreeInventoryViewTemplate(player);
+		if (player.getSkillTreeViewLocation().get(skillTree.getId()) == null){
+			player.getSkillTreeViewLocation().put(skillTree.getId(), new SkillTreeViewModel());
+		}
+		Inventory skillTreeInventoryViewTemplate = GuiHelper.createSkillTreeInventoryViewTemplate(player, skillTree);
 		createSkillTreeView(player, skillTreeInventoryViewTemplate, skillTree);
 		player.getPlayer().openInventory(skillTreeInventoryViewTemplate);
 
@@ -801,11 +833,18 @@ public class VanilaMessaging implements IPlayerMessage {
 		}
 	}
 
+	@Override
+	public void displaySkillDetailsInventoryMenu(IActiveCharacter character, SkillTree tree, String command) {
+		Inventory skillDetailInventoryView = GuiHelper.createSkillDetailInventoryView(tree.getId(), tree.getSkills().get(command));
+		character.getPlayer().openInventory(skillDetailInventoryView);
+	}
+
 	private void createSkillTreeView(IActiveCharacter character, Inventory skillTreeInventoryViewTemplate, SkillTree skillTree) {
-		Pair<Integer, Integer> skillTreeViewLocation = character.getSkillTreeViewLocation();
+		//todo
+		SkillTreeViewModel skillTreeViewModel = character.getSkillTreeViewLocation().get(character.getPrimaryClass().getConfigClass().getSkillTree().getId());
 		short[][] skillTreeMap = skillTree.getSkillTreeMap();
-		int y = skillTree.getCenter().value + skillTreeViewLocation.value; //y
-		int x = skillTree.getCenter().key + skillTreeViewLocation.key; //x
+		int y = skillTree.getCenter().value + skillTreeViewModel.getLocation().value; //y
+		int x = skillTree.getCenter().key + skillTreeViewModel.getLocation().key; //x
 
 		//TODO make this configurable
 		Map<Short, String> conn = new HashMap<>();
@@ -815,6 +854,10 @@ public class VanilaMessaging implements IPlayerMessage {
 		conn.put((short)(Short.MAX_VALUE - 3), "/");
 		int columns = skillTreeMap[0].length;
 		int rows = skillTreeMap.length;
+		SkillTreeViewModel.InteractiveMode interactiveMode = skillTreeViewModel.getInteractiveMode();
+		ItemStack md = GuiHelper.interactiveModeToitemStack(character, interactiveMode);
+		skillTreeInventoryViewTemplate.query(new SlotPos(8,1)).clear();
+		skillTreeInventoryViewTemplate.query(new SlotPos(8,1)).offer(md);
 		for (int k = -3; k <= 3; k++) { //x
 			for (int l = -3; l <= 3; l++) { //y
 				SlotPos slotPos = new SlotPos(l + 3, k + 3);
@@ -839,6 +882,11 @@ public class VanilaMessaging implements IPlayerMessage {
 									itemStack.offer(new MenuInventoryData(true));
 								} else {
 									itemStack = GuiHelper.skillToItemStack(character, skillById);
+									if (interactiveMode == SkillTreeViewModel.InteractiveMode.DETAILED) {
+										itemStack.offer(new SkillTreeInventoryViewControllsData(skillById.getSkillName()));
+									} else {
+										itemStack.offer(new SkillTreeInventoryViewControllsData(skillById.getSkillName()));
+									}
 								}
 							}
 						}

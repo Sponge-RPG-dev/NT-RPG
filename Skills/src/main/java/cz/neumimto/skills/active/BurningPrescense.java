@@ -9,6 +9,7 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.*;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
+import org.spongepowered.api.item.ItemTypes;
 
 /**
  * Created by NeumimTo on 4.7.2017.
@@ -32,6 +33,7 @@ public class BurningPrescense extends ActiveSkill {
 		addSkillType(SkillType.AOE);
 		addSkillType(SkillType.ELEMENTAL);
 		addSkillType(SkillType.FIRE);
+		setIcon(ItemTypes.FIRE_CHARGE);
 	}
 
 	@Override
