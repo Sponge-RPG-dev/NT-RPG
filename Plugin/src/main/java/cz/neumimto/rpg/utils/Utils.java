@@ -286,6 +286,12 @@ public class Utils {
 		return null;
 	}
 
+	public static String configNodeToReadableString(Map.Entry<String, Float> t) {
+		String a =  t.replaceAll("_"," ");
+		a = a.substring(0, 1).toUpperCase() + a.substring(1);
+		return a;
+	}
+
 	static {
 		transparentBlocks.addAll(Arrays.asList(BlockTypes.AIR,
 				BlockTypes.GRASS, BlockTypes.TALLGRASS, BlockTypes.GRASS, BlockTypes.BED,

@@ -13,11 +13,13 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
+import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
@@ -325,8 +327,39 @@ public class GuiHelper {
 
 		build.query(new SlotPos(1,1)).offer(damageTypeToItemStack(skillData.getSkill().getDamageType()));
 
+		List<ItemStack> itemStacks = skillConfigurationToItemStacks(skillData);
+		int m,n,i = 0;
+
+		for (m = 0; m < 8; m++) {
+			for (n = 3; n < 5; n++) {
+				build.query(new SlotPos(m,n)).offer(itemStacks.get(i));
+				i++;
+			}
+		}
+
 		return build;
 	}
+
+	public static List<ItemStack> skillConfigurationToItemStacks(SkillData skillData) {
+		List<ItemStack> a = new ArrayList<>();
+		Map<String, Float> nodes = skillData.getSkillSettings().getNodes();
+		for (Map.Entry<String, Float> s : nodes.entrySet()) {
+			if (!s.getKey().endsWith("_levelbonus")) {
+				String s1 = Utils.configNodeToReadableString(s);
+				Float init = s.getValue();
+				Float lbonus = nodes.get(s.getKey() + "_levelbonus");
+				ItemStack of = ItemStack.of(ItemTypes.PAPER, 1);
+				of.offer(Keys.DISPLAY_NAME, Text.builder(s1).build());
+				of.offer(Keys.ITEM_LORE, Arrays.asList(
+					Text.builder(Localization.SKILL_VALUE_STARTS_AT.replaceAll("%1", String.valueOf(init))).build(),
+					Text.builder(Localization.SKILL_VALUE_PER_LEVEL.replaceAll("%1", String.valueOf(lbonus))).build()	
+				));
+				a.add(of);
+			}
+		}
+		return a;
+	}
+
 
 	public static ItemStack interactiveModeToitemStack(IActiveCharacter character, SkillTreeViewModel.InteractiveMode interactiveMode) {
 		ItemStack md = ItemStack.of(interactiveMode.getItemType(), 1);

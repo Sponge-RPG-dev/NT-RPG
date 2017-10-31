@@ -398,4 +398,10 @@ public class Localization {
 
 	@ConfigValue
 	public static String SKILL_LEVEL = "Skill Level";
+
+	@ConfigValue
+	public static String SKILL_VALUE_STARTS_AT = "Value: %1";
+
+	@ConfigValue
+	public static String SKILL_VALUE_PER_LEVEL = "Value per skill level: %1";
 }
