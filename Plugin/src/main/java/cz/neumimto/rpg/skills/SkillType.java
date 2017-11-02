@@ -45,12 +45,14 @@ public enum SkillType implements ISkillType {
 	FIRE(UNDEFINED),
 	ELEMENTAL(UNDEFINED),
 	LIGHTNING(UNDEFINED),
+	ICE(UNDEFINED),
 	DRAIN(TRUE),
 	/**
 	 * Do not use this one in custom skills
 	 */
 	PATH(UNDEFINED);
-	private Tristate negative;
+	;
+    private Tristate negative;
 
 	SkillType(Tristate negative) {
 		this.negative = negative;

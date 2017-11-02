@@ -215,4 +215,10 @@ public class SkillLocalization {
 
 	@ConfigValue
 	public static String SKILL_STUN_NAME = "Stun";
+
+	@ConfigValue
+	public static String SKILL_ICEBOLT_DESC = "Low velocity icebolt, that slows down the target";
+
+	@ConfigValue
+	public static String SKILL_ICEBOLT_LORE = "";
 }
