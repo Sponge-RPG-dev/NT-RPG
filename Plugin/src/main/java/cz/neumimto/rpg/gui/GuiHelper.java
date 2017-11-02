@@ -345,7 +345,7 @@ public class GuiHelper {
 		Map<String, Float> nodes = skillData.getSkillSettings().getNodes();
 		for (Map.Entry<String, Float> s : nodes.entrySet()) {
 			if (!s.getKey().endsWith("_levelbonus")) {
-				String s1 = Utils.configNodeToReadableString(s);
+				String s1 = Utils.configNodeToReadableString(s.getKey());
 				Float init = s.getValue();
 				Float lbonus = nodes.get(s.getKey() + "_levelbonus");
 				ItemStack of = ItemStack.of(ItemTypes.PAPER, 1);

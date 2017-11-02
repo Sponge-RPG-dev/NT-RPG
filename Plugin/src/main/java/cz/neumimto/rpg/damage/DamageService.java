@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.damage;
 
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
@@ -188,7 +189,8 @@ public class DamageService {
 			TextColors.GOLD,
 			TextColors.RED,
 			TextColors.DARK_RED,
-			TextColors.DARK_PURPLE
+			TextColors.DARK_PURPLE,
+			TextColors.GRAY
 	};
 
 	public void createDamageToColorMapping() {
@@ -221,12 +223,12 @@ public class DamageService {
 
 		int size = list.size();
 		if (size >= colorScale.length) {
-			int l = 0;
-			Iterable<List<Double>> lists = Iterables.partition(list, size / colorScale.length);
-			for (List<Double> doubles : lists) {
-				OptionalDouble max = doubles.stream().mapToDouble(d -> d).max();
-				doubleColorMap.put(max.getAsDouble(), colorScale[l]);
-				l++;
+			int l = list.size() / colorScale.length;
+			int w = 0;
+			for (List<Double> partition : Lists.partition(new ArrayList<>(list), l +1)) {
+				OptionalDouble max = partition.stream().mapToDouble(d -> d).max();
+				doubleColorMap.put(max.getAsDouble(), colorScale[w]);
+				w++;
 			}
 		}
 	}
