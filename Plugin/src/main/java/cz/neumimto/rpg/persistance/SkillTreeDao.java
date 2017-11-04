@@ -97,11 +97,14 @@ public class SkillTreeDao {
                                     continue;
                                 } else if (c1 == 'X') {
                                     skillTree.setCenter(new Pair<>(i,j));
+                                    j++;
                                     continue;
                                 }
                                 if (!num.equals("")) {
                                     array[i][j] = Short.parseShort(num);
-                                } else if (SkillService.SKILL_CONNECTION_TYPES.keySet().contains(c1)){
+                                    j++;
+                                }
+                                if (SkillService.SKILL_CONNECTION_TYPES.keySet().contains(c1)){
                                     array[i][j] = SkillService.SKILL_CONNECTION_TYPES.get(c1).value;
                                 }
                                 num = "";

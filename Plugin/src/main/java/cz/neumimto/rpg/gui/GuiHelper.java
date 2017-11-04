@@ -365,6 +365,9 @@ public class GuiHelper {
 
 			for (m = 0; m < 8; m++) {
 				for (n = 3; n < 5; n++) {
+					if (i > itemStacks.size() -1) {
+						return build;
+					}
 					build.query(new SlotPos(m, n)).offer(itemStacks.get(i));
 					i++;
 				}
