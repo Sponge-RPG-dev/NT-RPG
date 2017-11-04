@@ -640,5 +640,8 @@ public class PreloadCharacter implements IActiveCharacter {
 		return Collections.emptyMap();
 	}
 
-
+	@Override
+	public SkillTreeViewModel getLastTimeInvokedSkillTreeView() {
+		return null;
+	}
 }

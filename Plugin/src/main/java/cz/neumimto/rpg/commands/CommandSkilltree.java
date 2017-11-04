@@ -21,9 +21,11 @@ package cz.neumimto.rpg.commands;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.groups.ConfigClass;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -49,7 +51,17 @@ public class CommandSkilltree extends CommandBase {
 	public CommandResult process(CommandSource commandSource, String s) throws CommandException {
 		Player p =(Player) commandSource;
 		IActiveCharacter character = characterService.getCharacter(p);
-		Gui.openSkillTreeMenu(character, character.getPrimaryClass().getConfigClass().getSkillTree());
+		ConfigClass configClass;
+		if ("".equals(s.trim()) ) {
+			configClass = character.getPrimaryClass().getConfigClass();
+		} else {
+			configClass = groupService.getNClass(s);
+		}
+		if (configClass == null) {
+			Gui.sendMessage(character, Localization.NON_EXISTING_GROUP);
+			return CommandResult.builder().build();
+		}
+		Gui.openSkillTreeMenu(character, configClass.getSkillTree());
 		return CommandResult.success();
 	}
 }

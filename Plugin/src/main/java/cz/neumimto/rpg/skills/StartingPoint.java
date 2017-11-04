@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.skills;
 
 import cz.neumimto.rpg.players.IActiveCharacter;
+import org.spongepowered.api.item.ItemTypes;
 
 import java.util.Collections;
 import java.util.Set;
@@ -34,6 +35,7 @@ public final class StartingPoint extends PassiveSkill {
 
 	public StartingPoint() {
 		super(null);
+		setIcon(ItemTypes.WOOL);
 	}
 
 	@Override

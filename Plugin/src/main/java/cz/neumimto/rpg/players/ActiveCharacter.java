@@ -774,6 +774,17 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
+	public SkillTreeViewModel getLastTimeInvokedSkillTreeView() {
+		for (SkillTreeViewModel skillTreeViewModel : skillTreeViewLocation.values()) {
+			if (skillTreeViewModel.isCurrent()) {
+				return skillTreeViewModel;
+			}
+		}
+		return null;
+	}
+
+
+	@Override
 	public int hashCode() {
 		return getPlayer().getUniqueId().hashCode() * 37;
 	}

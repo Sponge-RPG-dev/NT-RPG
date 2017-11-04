@@ -23,7 +23,6 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.utils.Utils;
 import org.slf4j.Logger;
@@ -32,8 +31,10 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by NeumimTo on 24.7.2015.
@@ -94,13 +95,16 @@ public class SkillTreeDao {
                                 if (Character.isDigit(c1)){
                                     num += c1;
                                     continue;
+                                } else if (c1 == 'X') {
+                                    skillTree.setCenter(new Pair<>(i,j));
+                                    j++;
+                                    continue;
                                 }
                                 if (!num.equals("")) {
                                     array[i][j] = Short.parseShort(num);
-                                    if (array[i][j] == 1) {
-                                        skillTree.setCenter(new Pair<>(i,j));
-                                    }
-                                } else if (SkillService.SKILL_CONNECTION_TYPES.keySet().contains(c1)){
+                                    j++;
+                                }
+                                if (SkillService.SKILL_CONNECTION_TYPES.keySet().contains(c1)){
                                     array[i][j] = SkillService.SKILL_CONNECTION_TYPES.get(c1).value;
                                 }
                                 num = "";

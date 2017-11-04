@@ -289,10 +289,12 @@ public class SkillService {
 			Map<String, SkillTree> all = skillTreeDao.getAll();
 			for (Map.Entry<String, SkillTree> s : all.entrySet()) {
 				SkillTree skillTree = skillTrees.get(s.getKey());
-				if (skillTree == null)
+				if (skillTree == null) {
 					skillTrees.put(s.getValue().getId(), s.getValue());
-				else
+				} else {
 					skillTree.setSkillTreeMap(s.getValue().getSkillTreeMap());
+					skillTree.setCenter(s.getValue().getCenter());
+				}
 			}
 
 			/* todo thats gonna be quite tricky,
