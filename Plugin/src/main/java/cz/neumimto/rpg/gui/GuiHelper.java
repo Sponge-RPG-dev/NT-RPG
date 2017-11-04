@@ -19,7 +19,6 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
@@ -271,6 +270,9 @@ public class GuiHelper {
 		SkillTreeViewModel model = character.getSkillTreeViewLocation().get(skillTree.getId());
 		if (model == null) {
 			model = new SkillTreeViewModel();
+			for (SkillTreeViewModel treeViewModel : character.getSkillTreeViewLocation().values()) {
+				treeViewModel.setCurrent(false);
+			}
 			character.getSkillTreeViewLocation().put(skillTree.getId(), model);
 		}
 
@@ -317,7 +319,7 @@ public class GuiHelper {
 		return itemStack;
 	}
 
-	public static Inventory createSkillDetailInventoryView(String skillTree, SkillData skillData) {
+	public static Inventory createSkillDetailInventoryView(IActiveCharacter character, String skillTree, SkillData skillData) {
 		Inventory build = Inventory.builder()
 				.of(InventoryArchetypes.DOUBLE_CHEST)
 			 	.build(plugin);
@@ -325,19 +327,51 @@ public class GuiHelper {
 		ItemStack back = back("skilltree", Localization.SKILLTREE);
 		build.query(new SlotPos(0,0)).offer(back);
 
-		build.query(new SlotPos(1,1)).offer(damageTypeToItemStack(skillData.getSkill().getDamageType()));
+		if (skillData instanceof SkillPathData) {
+			SkillPathData data = (SkillPathData) skillData;
 
-		List<ItemStack> itemStacks = skillConfigurationToItemStacks(skillData);
-		int m,n,i = 0;
+			ItemStack of = ItemStack.of(ItemTypes.PAPER, 1);
+			of.offer(Keys.DISPLAY_NAME, Text.of("Tier " + data.getTier()));
+			of.offer(new MenuInventoryData(true));
+			build.query(new SlotPos(1,0)).offer(of);
 
-		for (m = 0; m < 8; m++) {
-			for (n = 3; n < 5; n++) {
-				build.query(new SlotPos(m,n)).offer(itemStacks.get(i));
-				i++;
+			SkillService skillService = IoC.get().build(SkillService.class);
+
+			int i = 0;
+			int j = 2;
+			for (Map.Entry<String, Integer> entry : data.getSkillBonus().entrySet()) {
+				ISkill skill = skillService.getSkill(entry.getKey());
+				if (skill != null) {
+					ItemStack itemStack = skillToItemStack(character, character.getSkill(skill.getName()).getSkillData());
+					itemStack.offer(Keys.DISPLAY_NAME, Text
+							.builder(String.format("%+d",entry.getValue()) + " | " + entry.getKey())
+							.color(entry.getValue() < 0 ? TextColors.RED : TextColors.DARK_GREEN)
+							.build());
+					build.query(new SlotPos(j,i)).offer(itemStack);
+					if (j > 8) {
+						j = 0;
+						i++;
+					} else {
+						j++;
+					}
+				}
+			}
+
+		} else {
+			build.query(new SlotPos(1, 1)).offer(damageTypeToItemStack(skillData.getSkill().getDamageType()));
+
+			List<ItemStack> itemStacks = skillConfigurationToItemStacks(skillData);
+			int m, n, i = 0;
+
+			for (m = 0; m < 8; m++) {
+				for (n = 3; n < 5; n++) {
+					build.query(new SlotPos(m, n)).offer(itemStacks.get(i));
+					i++;
+				}
 			}
 		}
-
 		return build;
+
 	}
 
 	public static List<ItemStack> skillConfigurationToItemStacks(SkillData skillData) {

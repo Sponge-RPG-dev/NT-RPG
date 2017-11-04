@@ -12,6 +12,7 @@ public class SkillTreeViewModel {
 
     private InteractiveMode interactiveMode;
     private Pair<Integer, Integer> location;
+    private boolean current = true;
 
     public SkillTreeViewModel() {
         interactiveMode = InteractiveMode.DETAILED;
@@ -32,6 +33,14 @@ public class SkillTreeViewModel {
 
     public void setLocation(Pair<Integer, Integer> location) {
         this.location = location;
+    }
+
+    public boolean isCurrent() {
+        return current;
+    }
+
+    public void setCurrent(boolean current) {
+        this.current = current;
     }
 
     public enum InteractiveMode {

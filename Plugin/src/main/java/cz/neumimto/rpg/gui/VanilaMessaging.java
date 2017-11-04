@@ -725,7 +725,8 @@ public class VanilaMessaging implements IPlayerMessage {
 			if (t.getOriginal().get(NKeys.SKILLTREE_CONTROLLS).isPresent()) {
 				String command = t.getOriginal().get(NKeys.SKILLTREE_CONTROLLS).get();
 				IActiveCharacter character = characterService.getCharacter(player);
-				SkillTreeViewModel viewModel = character.getSkillTreeViewLocation().get(character.getPrimaryClass().getConfigClass().getSkillTree().getId());
+				ConfigClass clazz = character.getPrimaryClass().getConfigClass();
+				SkillTreeViewModel viewModel = character.getSkillTreeViewLocation().get(clazz.getSkillTree().getId());
 				switch (command) {
 					case "Up":
 						viewModel.getLocation().key-=1;
@@ -817,7 +818,11 @@ public class VanilaMessaging implements IPlayerMessage {
 	@Override
 	public void openSkillTreeMenu(IActiveCharacter player, SkillTree skillTree) {
 		if (player.getSkillTreeViewLocation().get(skillTree.getId()) == null){
-			player.getSkillTreeViewLocation().put(skillTree.getId(), new SkillTreeViewModel());
+			SkillTreeViewModel skillTreeViewModel = new SkillTreeViewModel();
+			for (SkillTreeViewModel treeViewModel : player.getSkillTreeViewLocation().values()) {
+				treeViewModel.setCurrent(false);
+			}
+			player.getSkillTreeViewLocation().put(skillTree.getId(), skillTreeViewModel);
 		}
 		Inventory skillTreeInventoryViewTemplate = GuiHelper.createSkillTreeInventoryViewTemplate(player, skillTree);
 		createSkillTreeView(player, skillTreeInventoryViewTemplate, skillTree);
@@ -835,13 +840,13 @@ public class VanilaMessaging implements IPlayerMessage {
 
 	@Override
 	public void displaySkillDetailsInventoryMenu(IActiveCharacter character, SkillTree tree, String command) {
-		Inventory skillDetailInventoryView = GuiHelper.createSkillDetailInventoryView(tree.getId(), tree.getSkills().get(command));
+		Inventory skillDetailInventoryView = GuiHelper.createSkillDetailInventoryView(character, tree.getId(), tree.getSkills().get(command));
 		character.getPlayer().openInventory(skillDetailInventoryView);
 	}
 
 	private void createSkillTreeView(IActiveCharacter character, Inventory skillTreeInventoryViewTemplate, SkillTree skillTree) {
-		//todo
-		SkillTreeViewModel skillTreeViewModel = character.getSkillTreeViewLocation().get(character.getPrimaryClass().getConfigClass().getSkillTree().getId());
+
+		SkillTreeViewModel skillTreeViewModel = character.getLastTimeInvokedSkillTreeView();
 		short[][] skillTreeMap = skillTree.getSkillTreeMap();
 		int y = skillTree.getCenter().value + skillTreeViewModel.getLocation().value; //y
 		int x = skillTree.getCenter().key + skillTreeViewModel.getLocation().key; //x

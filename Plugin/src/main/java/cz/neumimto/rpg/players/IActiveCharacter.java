@@ -20,7 +20,6 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.IEntityType;
-import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.inventory.*;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
@@ -257,4 +256,5 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	Map<String, SkillTreeViewModel> getSkillTreeViewLocation();
 
+	SkillTreeViewModel getLastTimeInvokedSkillTreeView();
 }
