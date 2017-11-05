@@ -366,23 +366,42 @@ public class CharacterService {
 			game.getEventManager().post(e);
 			if (!e.isCancelled()) {
 				k = true;
+
+				Map<String, String> args = new HashMap<>();
+				args.put("player", character.getPlayer().getName());
+				args.put("uuid", character.getPlayer().getUniqueId().toString());
+				args.put("class", character.getRace().getName());
+				Utils.executeCommandBatch(args, character.getNClass(slot).getExitCommands(), character.getPlayer());
+
+
 				removeGroupEffects(character, character.getNClass(slot));
 				character.setClass(configClass, slot);
 				applyGroupEffects(character, configClass);
+
+				args.put("class", character.getRace().getName());
+				Utils.executeCommandBatch(args, character.getNClass(slot).getEnterCommands(), character.getPlayer());
 			}
 		}
 
 		if (race != null) {
-			CauseStackManager.StackFrame stackFrame = causeStackManager.pushCauseFrame();
-			causeStackManager.pushCause(character);
 			CharacterChangeGroupEvent ev = new CharacterChangeRaceEvent(character, race, character.getRace());
 			game.getEventManager().post(ev);
-			causeStackManager.popCauseFrame(stackFrame);
 			if (!ev.isCancelled()) {
 				k = true;
+
+				Map<String, String> args = new HashMap<>();
+				args.put("player", character.getPlayer().getName());
+				args.put("uuid", character.getPlayer().getUniqueId().toString());
+				args.put("race", character.getRace().getName());
+				Utils.executeCommandBatch(args, character.getRace().getExitCommands(), character.getPlayer());
+
 				removeGroupEffects(character, character.getRace());
 				character.setRace(race);
 				applyGroupEffects(character, race);
+
+
+				args.put("race", character.getRace().getName());
+				Utils.executeCommandBatch(args, character.getRace().getEnterCommands(), character.getPlayer());
 			}
 		}
 		if (guild != null) {
@@ -1016,7 +1035,7 @@ public class CharacterService {
 			aClass.setExperiencesFromLevel(newcurrentexp);
 			for (CharacterClass characterClass : character.getCharacterBase().getCharacterClasses()) {
 				if (characterClass.getName().equalsIgnoreCase(aClass.getConfigClass().getName())) {
-					characterClass.setExperiences(newcurrentexp);
+					characterClass.setExperiences(character.getExperiencs() + exp);
 					break;
 				}
 			}

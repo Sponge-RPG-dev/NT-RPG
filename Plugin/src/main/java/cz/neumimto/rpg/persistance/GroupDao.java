@@ -335,6 +335,27 @@ public class GroupDao {
 		}
 
 		try {
+			Config commands = c.getConfig("Commands");
+			try {
+				List<String> enter = commands.getStringList("enter");
+				group.setEnterCommands(enter);
+			} catch (ConfigException e) {
+				group.setEnterCommands(new ArrayList<>());
+				logger.warn(" - Missing configuration \"Commands.enter\", skipping");
+			}
+
+			try {
+				List<String> exit = commands.getStringList("exit");
+				group.setExitCommands(exit);
+			} catch (ConfigException e) {
+				group.setExitCommands(new ArrayList<>());
+				logger.warn(" - Missing configuration \"Commands.exit\", skipping");
+			}
+		} catch (ConfigException e) {
+			logger.warn(" - Missing configuration \"Commands\", skipping");
+		}
+
+		try {
 			List<? extends Config> permissions = c.getConfigList("Permissions");
 			for (Config permission : permissions) {
 				group.getPermissions().add(ConfigBeanFactory.create(permission, PlayerGroupPermission.class));

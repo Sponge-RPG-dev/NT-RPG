@@ -22,31 +22,51 @@ import com.google.inject.Inject;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.FindPersistenceContextEvent;
 import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.rpg.commands.GlobalEffectCommandElement;
+import cz.neumimto.rpg.commands.RuneCommandElement;
+import cz.neumimto.rpg.commands.SkillCommandElement;
+import cz.neumimto.rpg.configuration.CommandLocalization;
+import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.configuration.Settings;
+import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
+import cz.neumimto.rpg.inventory.runewords.Rune;
+import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.listeners.DebugListener;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.players.ExtendedNClass;
+import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.PropertyService;
+import cz.neumimto.rpg.scripting.JSLoader;
+import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.utils.FileUtils;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.args.GenericArguments;
+import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.data.DataRegistration;
+import org.spongepowered.api.data.type.HandTypes;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GamePostInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
+import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.serializer.TextSerializers;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,7 +75,11 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by NeumimTo on 29.4.2015.
@@ -147,6 +171,7 @@ public class NtRpgPlugin {
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
+
 		Path path = Paths.get(workingDir);
 		ConfigMapper.init("NtRpg", path);
 		ioc.registerDependency(ConfigMapper.get("NtRpg"));
@@ -164,10 +189,272 @@ public class NtRpgPlugin {
 		if (PluginConfig.DEBUG) {
 			Sponge.getEventManager().registerListeners(this, ioc.build(DebugListener.class));
 		}
+		registerCommands();
 		IoC.get().build(PropertyService.class).loadMaximalServerPropertyValues();
 		double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
 		logger.info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
 	}
 
+	public void registerCommands() {
+		registerAdminCommands();
+	}
 
+
+
+	public void registerAdminCommands() {
+		// ===========================================================
+		// ==================         SKILLS        ==================
+		// ===========================================================
+		CommandSpec executeSkill = CommandSpec.builder()
+				.description(TextSerializers
+						.FORMATTING_CODE
+						.deserialize(CommandLocalization.COMMAND_ADMIN_EXEC_SKILL_DESC))
+				.arguments(
+						new SkillCommandElement(Text.of("skill")),
+						GenericArguments.flags().valueFlag(GenericArguments
+								.integer(Text.of("level")), "l")
+								.buildWith(GenericArguments.none())
+				)
+				.executor((src, args) -> {
+					ISkill skill = args.<ISkill>getOne("skill").get();
+					SkillSettings defaultSkillSettings = skill.getDefaultSkillSettings();
+					Player player = (Player) src;
+					IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
+					if (character.isStub())
+						throw new RuntimeException("Character is required even for an admin.");
+
+					int level = 1;
+					Optional<Integer> optional = args.getOne("level");
+					if (optional.isPresent()) {
+						level = optional.get();
+					}
+					if (skill instanceof ActiveSkill) {
+						Long l = System.nanoTime();
+						ExtendedSkillInfo extendedSkillInfo = new ExtendedSkillInfo();
+						extendedSkillInfo.setLevel(level);
+						SkillData skillData = new SkillData(skill.getName());
+						skillData.setSkillSettings(defaultSkillSettings);
+						extendedSkillInfo.setSkillData(skillData);
+						extendedSkillInfo.setSkill(skill);
+						ActiveSkill askill = (ActiveSkill) skill;
+						askill.cast(character, extendedSkillInfo, null);
+						Long e = System.nanoTime();
+						character.sendMessage("Exec Time: " + TimeUnit.MILLISECONDS.convert(e - l, TimeUnit.NANOSECONDS));
+					}
+					return CommandResult.success();
+				})
+				.build();
+
+		// ===========================================================
+		// ==================        ENCHANTS       ==================
+		// ===========================================================
+
+		CommandSpec enchantAdd = CommandSpec.builder()
+				.description(TextSerializers
+						.FORMATTING_CODE
+						.deserialize(CommandLocalization.COMMAND_ADMIN_ENCHANT_ADD))
+				.arguments(
+						new GlobalEffectCommandElement(Text.of("effect")),
+						GenericArguments.remainingJoinedStrings(Text.of("params"))
+				)
+				.executor((src, args) -> {
+					IGlobalEffect effect = args.<IGlobalEffect>getOne("effect").get();
+					Player player = (Player) src;
+					if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
+						ItemStack itemStack = player.getItemInHand(HandTypes.MAIN_HAND).get();
+						CustomItemData itemData = NtRpgPlugin.GlobalScope.inventorySerivce.getItemData(itemStack);
+						Map<String, String> map = new HashMap<>();
+						map.putAll(itemData.getEnchantements());
+
+						String message = args.<String>getOne("args").orElse("");
+						map.put(effect.getName(), message);
+
+						itemStack = NtRpgPlugin.GlobalScope.inventorySerivce.setEnchantments(map, itemStack);
+						player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
+						player.sendMessage(Text.of("Enchantment " + effect.getName() + " added"));
+					} else {
+						player.sendMessage(TextSerializers.FORMATTING_CODE.deserialize(Localization.NO_ITEM_IN_HAND));
+					}
+					return CommandResult.success();
+				})
+				.build();
+
+
+		CommandSpec enchant = CommandSpec.builder()
+				.description(
+						TextSerializers
+								.FORMATTING_CODE
+								.deserialize(CommandLocalization.COMMAND_ADMIN_ENCHANT))
+				.arguments(
+						new GlobalEffectCommandElement(Text.of("effect")),
+						GenericArguments.remainingJoinedStrings(Text.of("args")))
+				.child(enchantAdd, "add", "e")
+				.build();
+
+		// ===========================================================
+		// ==================         SOCKET        ==================
+		// ===========================================================
+
+		CommandSpec socket = CommandSpec.builder()
+				.description(
+						TextSerializers
+								.FORMATTING_CODE
+								.deserialize(CommandLocalization.COMMAND_ADMIN_SOCKET))
+				.arguments(
+						GenericArguments.onlyOne(GenericArguments.integer(Text.of("count")))
+				)
+				.executor((src, args) -> {
+					Player player = (Player) src;
+					Integer count = args.<Integer>getOne("count").orElse(1);
+					Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
+					if (itemInHand.isPresent()) {
+						ItemStack itemStack = NtRpgPlugin.GlobalScope.runewordService.createSockets(itemInHand.get(), count);
+						player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
+					}
+					return CommandResult.success();
+				})
+				.build();
+
+		// ===========================================================
+		// ==================          RUNE         ==================
+		// ===========================================================
+
+		CommandSpec rune = CommandSpec.builder()
+				.description(
+						TextSerializers
+								.FORMATTING_CODE
+								.deserialize(CommandLocalization.COMMAND_ADMIN_RUNE))
+				.arguments(
+						new RuneCommandElement(Text.of("rune"))
+				)
+				.executor((src, args) -> {
+					Rune runee = args.<Rune>getOne("rune").get();
+					Player player = (Player) src;
+					ItemStack is = NtRpgPlugin.GlobalScope.runewordService.toItemStack(runee);
+					player.getInventory().offer(is);
+					return CommandResult.success();
+				})
+				.build();
+
+		// ===========================================================
+		// ==================           RW          ==================
+		// ===========================================================
+
+		CommandSpec runeword = CommandSpec.builder()
+				.description(
+						TextSerializers
+								.FORMATTING_CODE
+								.deserialize(CommandLocalization.COMMAND_ADMIN_RUNEWORD))
+				.arguments(
+						new RuneCommandElement(Text.of("rw"))
+				)
+				.executor((src, args) -> {
+					RuneWord r = args.<RuneWord>getOne("rw").get();
+					Player p = (Player) src;
+					Optional<ItemStack> itemInHand = p.getItemInHand(HandTypes.MAIN_HAND);
+					if (itemInHand.isPresent()) {
+						ItemStack itemStack = itemInHand.get();
+						ItemStack itemStack1 = NtRpgPlugin.GlobalScope.runewordService.reBuildRuneword(itemStack, r);
+						p.setItemInHand(HandTypes.MAIN_HAND, itemStack1);
+					}
+					return CommandResult.success();
+				})
+				.build();
+
+		// ===========================================================
+		// ==================          EXP          ==================
+		// ===========================================================
+
+		CommandSpec expadd = CommandSpec.builder()
+				.description(
+						TextSerializers
+								.FORMATTING_CODE
+								.deserialize(CommandLocalization.COMMAND_ADMIN_EXP_ADD))
+				.arguments(
+						GenericArguments.onlyOne(GenericArguments.player(Text.of("player"))),
+						GenericArguments.remainingJoinedStrings(Text.of("data"))
+				)
+				.executor((src, args) -> {
+					Player player = args.<Player>getOne("player").get();
+					String data = args.<String>getOne("data").get();
+					IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
+					Set<ExtendedNClass> classes = character.getClasses();
+					String[] a = data.split(" ");
+					for (ExtendedNClass aClass : classes) {
+						if (aClass.getConfigClass().getName().equalsIgnoreCase(a[0])) {
+							NtRpgPlugin.GlobalScope.characterService.addExperiences(character, Double.valueOf(a[1]), aClass, false);
+						}
+					}
+					return CommandResult.success();
+				})
+				.build();
+
+		CommandSpec exp = CommandSpec.builder()
+				.child(expadd, "add")
+				.build();
+
+
+
+		// ===========================================================
+		// ==================          ROOT         ==================
+		// ===========================================================
+
+		CommandSpec reload = CommandSpec.builder()
+				.description(TextSerializers
+						.FORMATTING_CODE
+						.deserialize(CommandLocalization.COMMAND_ADMIN_RELOAD))
+				.arguments(GenericArguments.remainingJoinedStrings(Text.of("args")))
+				.executor((src, args) -> {
+					String[] a = args.<String>getOne("args").get().split(" ");
+					if (a.length == 1) {
+						src.sendMessage(Text.of("js[s/a/g] skilltree [r,a]"));
+						return CommandResult.empty();
+					}
+					if (a[1].equalsIgnoreCase("js")) {
+						if (!PluginConfig.DEBUG) {
+							src.sendMessage(Text.of("Reloading is allowed only in debug mode"));
+							return CommandResult.success();
+						}
+						JSLoader jsLoader = IoC.get().build(JSLoader.class);
+						jsLoader.initEngine();
+
+						int i = 1;
+						String q = null;
+						while (i < a.length) {
+							q = a[i];
+							if (q.equalsIgnoreCase("skills") || q.equalsIgnoreCase("s")) {
+								jsLoader.reloadSkills();
+							}
+							if (q.equalsIgnoreCase("attributes") || q.equalsIgnoreCase("a")) {
+								jsLoader.reloadAttributes();
+							}
+							if (q.equalsIgnoreCase("globaleffects") || q.equalsIgnoreCase("g")) {
+								jsLoader.reloadGlobalEffects();
+							}
+							i++;
+						}
+					} else if (a[1].equalsIgnoreCase("skilltree")) {
+						IoC.get().build(SkillService.class).reloadSkillTrees();
+					}
+					return CommandResult.success();
+				})
+				.build();
+
+		CommandSpec adminRoot = CommandSpec
+				.builder()
+				.description(TextSerializers
+						.FORMATTING_CODE
+						.deserialize(CommandLocalization.COMMAND_ADMIN_DESC))
+				.permission("ntrpg.admin")
+				.child(executeSkill,"skill", "s")
+				.child(enchant, "enchant", "e")
+				.child(socket, "socket", "sk")
+				.child(rune, "rune", "r")
+				.child(runeword, "runeword", "rw")
+				.child(exp, "experiences", "exp")
+				.child(reload, "reload")
+				.build();
+
+		Sponge.getCommandManager().register(this, adminRoot, "nadmin", "na");
+	}
 }

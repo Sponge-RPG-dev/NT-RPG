@@ -29,6 +29,33 @@ public class CommandLocalization {
 
 
 	@ConfigValue
+	public static String COMMAND_ADMIN_ENCHANT = "&2Enchants held item with custom enchantment";
+	@ConfigValue
+	public static String COMMAND_ADMIN_DESC = "&2Access to administration commands";
+
+	@ConfigValue
+	public static String COMMAND_ADMIN_EXEC_SKILL_DESC = "&2Executes a skill, bypasses restrictions such as mana cost, skill access ... ";
+
+	@ConfigValue
+	public static String COMMAND_ADMIN_ENCHANT_ADD = "&2Adds enchant to the held item";
+
+	@ConfigValue
+	public static String COMMAND_ADMIN_SOCKET = "&2Inserts sockets into held item";
+
+	@ConfigValue
+	public static String COMMAND_ADMIN_RUNE = "&2Creates a rune";;
+
+	@ConfigValue
+	public static String COMMAND_ADMIN_RUNEWORD = "&2Tries to insert runeword into held item";
+
+	@ConfigValue
+	public static String COMMAND_ADMIN_EXP_ADD  = "&2Adds experience to specific player and class";
+
+	@ConfigValue
+	public static String COMMAND_ADMIN_RELOAD  = "&2Reloads specific resource";
+
+
+	@ConfigValue
 	public static String PLAYERINFO_HELP = "Shows info about player";
 
 	@ConfigValue
@@ -69,4 +96,5 @@ public class CommandLocalization {
 
 	@ConfigValue
 	public static String COMMAND_SET_HEALTHSCALE_DESCRIPTION = "Sets healthscale for currently choosen character, persistant between restarts";
+
 }

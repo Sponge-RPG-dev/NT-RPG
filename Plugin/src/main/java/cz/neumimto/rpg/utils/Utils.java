@@ -29,6 +29,7 @@ import cz.neumimto.rpg.skills.NDamageType;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.property.entity.EyeLocationProperty;
 import org.spongepowered.api.entity.Entity;
@@ -290,6 +291,15 @@ public class Utils {
 		String a =  t.replaceAll("_"," ");
 		a = a.substring(0, 1).toUpperCase() + a.substring(1);
 		return a;
+	}
+
+	public static void executeCommandBatch(Map<String,String> variables, List<String> commandTemplates, CommandSource sender ) {
+		for (String commandTemplate : commandTemplates) {
+			for (Map.Entry<String, String> entry : variables.entrySet()) {
+				commandTemplate = commandTemplate.replaceAll("\\{\\{"+entry.getKey()+"}}",entry.getValue());
+			}
+			Sponge.getCommandManager().process(sender, commandTemplate);
+		}
 	}
 
 	static {

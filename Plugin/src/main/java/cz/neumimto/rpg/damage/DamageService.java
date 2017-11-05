@@ -18,7 +18,6 @@
 
 package cz.neumimto.rpg.damage;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;

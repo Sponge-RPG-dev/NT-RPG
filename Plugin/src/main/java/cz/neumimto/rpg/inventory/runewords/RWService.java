@@ -390,4 +390,8 @@ public class RWService {
 			combinations.put(runeWord.getRunes().stream().map(Rune::getName).collect(Collectors.joining("")), runeWord);
 		}
 	}
+
+	public Map<String, RuneWord> getRunewords() {
+		return runewords;
+	}
 }

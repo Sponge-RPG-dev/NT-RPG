@@ -50,6 +50,8 @@ public class PlayerGroup implements IEffectSourceProvider {
 
 	protected cz.neumimto.rpg.effects.IEffectSource playerGroupType;
 	private Map<EntityType, Double> projectileDamage = new HashMap<>();
+	private List<String> exitCommands;
+	private List<String> enterCommands;
 
 	public PlayerGroup(String name) {
 		this.name = name;
@@ -177,5 +179,21 @@ public class PlayerGroup implements IEffectSourceProvider {
 
 	public Map<EntityType, Double> getProjectileDamage() {
 		return projectileDamage;
+	}
+
+	public void setExitCommands(List<String> exitCommands) {
+		this.exitCommands = exitCommands;
+	}
+
+	public List<String> getExitCommands() {
+		return exitCommands;
+	}
+
+	public void setEnterCommands(List<String> enterCommands) {
+		this.enterCommands = enterCommands;
+	}
+
+	public List<String> getEnterCommands() {
+		return enterCommands;
 	}
 }
