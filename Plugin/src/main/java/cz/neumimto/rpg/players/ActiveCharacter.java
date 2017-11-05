@@ -93,10 +93,9 @@ public class ActiveCharacter implements IActiveCharacter {
 		characterProperties = new float[PropertyService.LAST_ID];
 		characterPropertiesLevel = new float[PropertyService.LAST_ID];
 		equipedArmor = new HashMap<>();
-		ExtendedNClass cl = new ExtendedNClass();
+		ExtendedNClass cl = new ExtendedNClass(this);
 		cl.setPrimary(true);
 		cl.setConfigClass(ConfigClass.Default);
-		cl.setExperiences(0);
 		this.base = base;
 		classes.add(cl);
 		slotsToReinitialize = new ArrayList<>();
@@ -341,7 +340,7 @@ public class ActiveCharacter implements IActiveCharacter {
 		//classes.clear();
 
 		if (slot == 0) {
-			primary = new ExtendedNClass();
+			primary = new ExtendedNClass(this);
 			primary.setConfigClass(nclass);
 			primary.setPrimary(true);
 			classes.add(primary);

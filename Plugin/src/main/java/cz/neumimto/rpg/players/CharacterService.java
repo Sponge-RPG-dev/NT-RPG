@@ -589,7 +589,6 @@ public class CharacterService {
 		ActiveCharacter activeCharacter = new ActiveCharacter(player, characterBase);
 		activeCharacter.setRace(groupService.getRace(characterBase.getRace()));
 
-		System.out.println(Thread.currentThread().getName());
 		activeCharacter.setPrimaryClass(groupService.getNClass(characterBase.getPrimaryClass()));
 		groupService.addAllPermissions(activeCharacter, activeCharacter.getRace());
 		groupService.addAllPermissions(activeCharacter, activeCharacter.getPrimaryClass().getConfigClass());
@@ -989,7 +988,7 @@ public class CharacterService {
 
 
 	public void addExperiences(IActiveCharacter character, double exp, ExtendedNClass aClass, boolean onlyinit) {
-		if (!aClass.takesExp()) {
+		if (!aClass.takesExp() && !onlyinit) {
 			return;
 		}
 
@@ -1010,14 +1009,13 @@ public class CharacterService {
 			level++;
 			if (!onlyinit) {
 				Gui.showLevelChange(character, aClass, level);
-
 				CharacterGainedLevelEvent event = new CharacterGainedLevelEvent(character, aClass, level, aClass.getConfigClass().getSkillpointsperlevel(), aClass.getConfigClass().getAttributepointsperlevel());
 				event.getaClass().setLevel(event.getLevel());
 				game.getEventManager().post(event);
 				characterAddPoints(character, aClass.getConfigClass(), event.getSkillpointsPerLevel(), event.getAttributepointsPerLevel());
-				groupService.addPermissions(character, character.getRace());
-				groupService.addPermissions(character, character.getPrimaryClass().getConfigClass());
 			}
+			groupService.addPermissions(character, character.getRace());
+			groupService.addPermissions(character, character.getPrimaryClass().getConfigClass());
 			aClass.setExperiencesFromLevel(0);
 			if (!aClass.takesExp()) {
 				break;
@@ -1033,12 +1031,6 @@ public class CharacterService {
 		if (!onlyinit) {
 			aClass.setExperiences(newcurrentexp);
 			aClass.setExperiencesFromLevel(newcurrentexp);
-			for (CharacterClass characterClass : character.getCharacterBase().getCharacterClasses()) {
-				if (characterClass.getName().equalsIgnoreCase(aClass.getConfigClass().getName())) {
-					characterClass.setExperiences(character.getExperiencs() + exp);
-					break;
-				}
-			}
 		} else {
 			aClass.setExperiencesFromLevel(newcurrentexp);
 		}
