@@ -203,6 +203,8 @@ public class NtRpgPlugin {
 
 	public void registerCommands() {
 		registerAdminCommands();
+		registerCharacterCommands();
+		registerSkillCommands();
 	}
 
 
