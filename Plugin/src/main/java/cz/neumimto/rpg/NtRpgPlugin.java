@@ -23,10 +23,8 @@ import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.FindPersistenceContextEvent;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.commands.*;
-import cz.neumimto.rpg.configuration.CommandLocalization;
-import cz.neumimto.rpg.configuration.Localization;
-import cz.neumimto.rpg.configuration.PluginConfig;
-import cz.neumimto.rpg.configuration.Settings;
+import cz.neumimto.rpg.commands.PlayerClassCommandElement;
+import cz.neumimto.rpg.configuration.*;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.InventoryService;
@@ -512,11 +510,64 @@ public class NtRpgPlugin {
 				})
 				.build();
 
+		CommandSpec setclass = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE
+						.deserialize(CommandLocalization.COMMAND_CHOOSE_DESC))
+				.arguments(new PlayerClassCommandElement(Text.of("class")))
+				.executor((src, args) -> {
+					ConfigClass configClass = args.<ConfigClass>getOne("class").get();
+					if (configClass == ConfigClass.Default) {
+						src.sendMessage(Text.of(Localization.NON_EXISTING_GROUP));
+						return CommandResult.empty();
+					}
+
+					if (!src.hasPermission("ntrpg.classes."+configClass.getName().toLowerCase())) {
+						src.sendMessage(TextHelper.parse(Localization.NO_PERMISSIONS));
+						return CommandResult.empty();
+					}
+					int i = 0;
+					/*
+					if (args.length == 3) {
+						i = Integer.parseInt(args[2]) - 1;
+					}
+					if (i < 0) {
+						i = 0;
+					}
+					*/
+					Player player = (Player) src;
+					IActiveCharacter character = GlobalScope.characterService.getCharacter(player.getUniqueId());
+					if (character.isStub()) {
+						player.sendMessage(Text.of(Localization.CHARACTER_IS_REQUIRED));
+						return CommandResult.empty();
+					}
+					if (character.getClasses().contains(ExtendedNClass.Default)) {
+						character.getClasses().remove(ExtendedNClass.Default);
+					}
+					GlobalScope.characterService.updatePlayerGroups(character, configClass, i, null, null);
+					player.sendMessage(Text.of(Localization.PLAYER_CHOOSED_CLASS.replaceAll("%1", configClass.getName())));
+					return CommandResult.success();
+				})
+				.build();
+
+
+
+		CommandSpec cset= CommandSpec.builder()
+				.child(setclass, "class", "c")
+
+				.build();
+
+
+
+
+
 		CommandSpec characterRoot = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE
 						.deserialize(CommandLocalization.COMMAND_CHOOSE_DESC))
 				.child(createCharacter, "create", "c")
+				.child(cset, "set", "s")
 				.build();
+
+
 
 
 		Sponge.getCommandManager().register(this, characterRoot, "character", "char", "nc");

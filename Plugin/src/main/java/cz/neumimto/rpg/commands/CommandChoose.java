@@ -90,47 +90,7 @@ public class CommandChoose extends CommandBase {
 		if (args.length == 0) {
 			Gui.invokeDefaultMenu(characterService.getCharacter(player.getUniqueId()));
 		} else if (args[0].equalsIgnoreCase("class")) {
-			ConfigClass configClass = groupService.getNClass(args[1].toLowerCase());
-			if (configClass == ConfigClass.Default) {
-				player.sendMessage(Text.of(Localization.NON_EXISTING_GROUP));
-				return CommandResult.empty();
-			}
-			if (!commandSource.hasPermission(CommandPermissions.SELECT_CLASS + "*")
-					|| !commandSource.hasPermission(CommandPermissions.SELECT_CLASS + configClass.getName())) {
-				commandSource.sendMessage(Text.of(Localization.NO_PERMISSIONS));
-				return CommandResult.empty();
-			}
-
-
-			int i = 0;
-			if (args.length == 3) {
-				i = Integer.parseInt(args[2]) - 1;
-			}
-			if (i < 0) {
-				i = 0;
-			}
-
-			IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-			if (character.isStub()) {
-				player.sendMessage(Text.of(Localization.CHARACTER_IS_REQUIRED));
-				return CommandResult.empty();
-			}
-			if (character.getRace() == Race.Default) {
-				player.sendMessage(Text.of(Localization.RACE_IS_REQUIRED));
-				return CommandResult.empty();
-			}
-			if (!character.getRace().getAllowedClasses().contains(configClass)) {
-				player.sendMessage(Text.of(Localization.RACE_AND_CLASS_CONFLICT
-						.replaceAll("%1", character.getRace().getName()).replaceAll("%2", configClass.getName())));
-				return CommandResult.empty();
-			}
-			if (character.getClasses().contains(ExtendedNClass.Default)) {
-				character.getClasses().remove(ExtendedNClass.Default);
-			}
-			characterService.updatePlayerGroups(character, configClass, i, null, null);
-			player.sendMessage(Text.of(Localization.PLAYER_CHOOSED_CLASS.replaceAll("%1", configClass.getName())));
-			return CommandResult.success();
-		} else if (args[0].equalsIgnoreCase("race")) {
+					} else if (args[0].equalsIgnoreCase("race")) {
 			IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
 			if (character.isStub()) {
 				player.sendMessage(Text.of(Localization.CHARACTER_IS_REQUIRED));

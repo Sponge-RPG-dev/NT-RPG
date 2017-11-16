@@ -146,5 +146,7 @@ public class PluginConfig {
 	@Comment(content = {"Time interval in milliseconds, defines maximal interval between two clicks (E/Q/RMB/LMB/S)"})
 	public static long CLICK_COMBO_MAX_INVERVAL_BETWEEN_ACTIONS = 1250;
 
-
+	@ConfigValue
+	@Comment(content = {"If true then class is validated against character's race.allowedClasses parameter "})
+	public static boolean VALIDATE_RACE_DURING_CLASS_SELECTION = true;
 }
