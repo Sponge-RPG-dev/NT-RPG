@@ -519,6 +519,44 @@ public class NtRpgPlugin {
 
 		Sponge.getCommandManager().register(this, characterRoot, "character", "char", "nc");
 
+		// ===========================================================
+		// =================          SKILLS         =================
+		// ===========================================================
+
+		CommandSpec skillexecute = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE
+						.deserialize(CommandLocalization.COMMAND_HP_DESC))
+				.arguments(new LearnedSkillCommandElement(Text.of("skill")))
+				.executor((src, args) -> {
+					IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
+					args.<ISkill>getOne(Text.of("skill")).ifPresent(iSkill -> {
+						ExtendedSkillInfo info = character.getSkillInfo(iSkill.getName());
+						if (info == ExtendedSkillInfo.Empty || info == null) {
+							src.sendMessage(Text.of(Localization.CHARACTER_DOES_NOT_HAVE_SKILL));
+						}
+						SkillResult sk = GlobalScope.skillService.executeSkill(character, info);
+						switch (sk) {
+							case ON_COOLDOWN:
+								Gui.sendMessage(character, Localization.ON_COOLDOWN);
+								break;
+							case NO_MANA:
+								Gui.sendMessage(character, Localization.NO_MANA);
+								break;
+							case NO_HP:
+								Gui.sendMessage(character, Localization.NO_HP);
+								break;
+							case CASTER_SILENCED:
+								Gui.sendMessage(character, Localization.PLAYER_IS_SILENCED);
+								break;
+							case NO_TARGET:
+								Gui.sendMessage(character, Localization.NO_TARGET);
+						}
+					});
+					return CommandResult.success();
+				})
+				.build();
+
+		Sponge.getCommandManager().register(this, skillexecute, "skill", "skl", "ns");
 
 		// ===========================================================
 		// ==============              MP HP            ==============
