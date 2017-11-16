@@ -26,7 +26,6 @@ import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.commands.CommandChoose;
 import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.CommandPermissions;
 import cz.neumimto.rpg.configuration.Localization;
@@ -274,7 +273,7 @@ public class VanilaMessaging implements IPlayerMessage {
 		Inventory i = createPlayerGroupView(cc);
 
 		ItemStack of = ItemStack.of(ItemTypes.DIAMOND, 1);
-		of.offer(new InventoryCommandItemMenuData("choose class " + cc.getName()));
+		of.offer(new InventoryCommandItemMenuData("character set class " + cc.getName()));
 		of.offer(Keys.DISPLAY_NAME, Text.of(Localization.CONFIRM));
 		i.query(new SlotPos(8, 0)).offer(of);
 
@@ -300,14 +299,13 @@ public class VanilaMessaging implements IPlayerMessage {
 			builder.padding(Text.builder("=").color(TextColors.DARK_GRAY).build());
 			GroupService s = IoC.get().build(GroupService.class);
 			String current = player.getName();
-			CommandChoose build1 = IoC.get().build(CommandChoose.class);
-			String s1 = build1.getAliases().get(0);
+
 			list.forEach(a -> {
 				Text.Builder b = Text.builder(" -")
 						.color(TextColors.GRAY);
 				if (!a.getCharacterName().equalsIgnoreCase(current)) {
 					b.append(Text.builder(" [").color(TextColors.DARK_GRAY).build())
-							.append(Text.builder("SELECT").color(TextColors.GREEN).onClick(TextActions.runCommand("/" + s1 + " character " + a.getCharacterName())).build())
+							.append(Text.builder("SELECT").color(TextColors.GREEN).onClick(TextActions.runCommand("/character switch " + a.getCharacterName())).build())
 							.append(Text.builder("] - ").color(TextColors.DARK_GRAY).build());
 				} else {
 					b.append(Text.builder(" [").color(TextColors.DARK_GRAY).build())
@@ -491,7 +489,7 @@ public class VanilaMessaging implements IPlayerMessage {
 		Inventory i = createPlayerGroupView(race);
 		if ((target.getRace() == null || target.getRace() == Race.Default) || PluginConfig.PLAYER_CAN_CHANGE_RACE) {
 			ItemStack of = ItemStack.of(ItemTypes.DIAMOND, 1);
-			of.offer(new InventoryCommandItemMenuData("choose race " + race.getName()));
+			of.offer(new InventoryCommandItemMenuData("character set race " + race.getName()));
 			of.offer(Keys.DISPLAY_NAME, Text.of(Localization.CONFIRM));
 			i.query(new SlotPos(8, 0)).offer(of);
 		}

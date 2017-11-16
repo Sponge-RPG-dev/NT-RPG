@@ -47,9 +47,6 @@ public class GlobalScope {
 	public GroupService groupService;
 
 	@Inject
-	public PropertyService propertyService;
-
-	@Inject
 	public SkillService skillService;
 
 	@Inject
@@ -72,4 +69,7 @@ public class GlobalScope {
 
 	@Inject
 	public PartyService partyService;
+
+	@Inject
+	public PropertyService propertyService;
 }

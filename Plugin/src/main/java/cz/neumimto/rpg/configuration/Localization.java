@@ -404,4 +404,7 @@ public class Localization {
 
 	@ConfigValue
 	public static String SKILL_VALUE_PER_LEVEL = "Value per skill level: %1";
+
+	@ConfigValue
+	public static String UNKNOWN_ATTRIBUTE = "Unknown attribute %s";
 }

@@ -103,6 +103,10 @@ public class PropertyService {
 		return attributes.get(name.toLowerCase());
 	}
 
+	public Map<String, ICharacterAttribute> getAttributes() {
+		return attributes;
+	}
+
 	@PostProcess(priority = 2000)
 	public void dump() {
 		Path path = Paths.get(NtRpgPlugin.workingDir + File.separator + "properties_dump.info");

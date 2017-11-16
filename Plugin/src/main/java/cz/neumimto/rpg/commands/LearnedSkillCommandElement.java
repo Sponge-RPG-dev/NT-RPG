@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.commands;
 
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
 import org.spongepowered.api.command.CommandSource;
@@ -10,7 +11,6 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.args.CommandElement;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.serializer.TextSerializers;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -30,7 +30,11 @@ public class LearnedSkillCommandElement extends CommandElement {
         String skilllc = args.next().toLowerCase();
         ISkill skill = NtRpgPlugin.GlobalScope.skillService.getSkill(skilllc);
         if (skill == null) {
-            throw args.createError(TextSerializers.FORMATTING_CODE.deserialize("&CUnknown skill &C\"" + skilllc + "\""));
+            throw args.createError(TextHelper.parse("&CUnknown skill &C%s", skilllc));
+        }
+        IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) source);
+        if (!character.hasSkill(skill.getName())) {
+            throw args.createError(TextHelper.parse("&CYou don't have skill %s", skill.getName()));
         }
         return skill;
     }
