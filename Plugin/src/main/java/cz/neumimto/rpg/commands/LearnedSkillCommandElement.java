@@ -1,12 +1,14 @@
 package cz.neumimto.rpg.commands;
 
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.ArgumentParseException;
 import org.spongepowered.api.command.args.CommandArgs;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.args.CommandElement;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
@@ -15,11 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by NeumimTo on 5.11.2017.
+ * Created by NeumimTo on 16.11.2017.
  */
-public class SkillCommandElement extends CommandElement {
+public class LearnedSkillCommandElement extends CommandElement {
 
-    public SkillCommandElement(@Nullable Text key) {
+    public LearnedSkillCommandElement(@Nullable Text key) {
         super(key);
     }
 
@@ -35,7 +37,8 @@ public class SkillCommandElement extends CommandElement {
 
     @Override
     public List<String> complete(CommandSource src, CommandArgs args, CommandContext context) {
-        return new ArrayList<>(NtRpgPlugin.GlobalScope.skillService.getSkills().keySet());
+        IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src);
+        return new ArrayList<>(character.getSkills().keySet());
     }
 
     @Override

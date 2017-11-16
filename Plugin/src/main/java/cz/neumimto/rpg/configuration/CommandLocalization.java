@@ -54,6 +54,14 @@ public class CommandLocalization {
 	@ConfigValue
 	public static String COMMAND_ADMIN_RELOAD  = "&2Reloads specific resource";
 
+	@ConfigValue
+	public static String COMMAND_BIND_DESC = "&2Binds skill to an item";
+
+	@ConfigValue
+	public static String COMMAND_MP_DESC = "&2Displays current mana";
+
+	@ConfigValue
+	public static String COMMAND_HP_DESC = "&2Health";
 
 	@ConfigValue
 	public static String PLAYERINFO_HELP = "Shows info about player";
@@ -96,5 +104,6 @@ public class CommandLocalization {
 
 	@ConfigValue
 	public static String COMMAND_SET_HEALTHSCALE_DESCRIPTION = "Sets healthscale for currently choosen character, persistant between restarts";
+
 
 }

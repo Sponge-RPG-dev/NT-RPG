@@ -22,14 +22,14 @@ import com.google.inject.Inject;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.FindPersistenceContextEvent;
 import cz.neumimto.core.ioc.IoC;
-import cz.neumimto.rpg.commands.GlobalEffectCommandElement;
-import cz.neumimto.rpg.commands.RuneCommandElement;
-import cz.neumimto.rpg.commands.SkillCommandElement;
+import cz.neumimto.rpg.commands.*;
 import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.configuration.Settings;
 import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
@@ -41,8 +41,12 @@ import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.groups.ConfigClass;
+import cz.neumimto.rpg.players.groups.Race;
+import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.skills.*;
@@ -65,6 +69,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
+import org.spongepowered.api.scheduler.SpongeExecutorService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
@@ -79,6 +84,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -210,7 +216,7 @@ public class NtRpgPlugin {
 						.FORMATTING_CODE
 						.deserialize(CommandLocalization.COMMAND_ADMIN_EXEC_SKILL_DESC))
 				.arguments(
-						new SkillCommandElement(Text.of("skill")),
+						new AnySkillCommandElement(Text.of("skill")),
 						GenericArguments.flags().valueFlag(GenericArguments
 								.integer(Text.of("level")), "l")
 								.buildWith(GenericArguments.none())
@@ -456,5 +462,212 @@ public class NtRpgPlugin {
 				.build();
 
 		Sponge.getCommandManager().register(this, adminRoot, "nadmin", "na");
+	}
+
+
+
+	public void registerCharacterCommands() {
+		SpongeExecutorService asyncExecutor = Sponge.getGame().getScheduler().createAsyncExecutor(NtRpgPlugin.this);
+
+		// ===========================================================
+		// ==============           CHAR CREATE         ==============
+		// ===========================================================
+
+		CommandSpec createCharacter = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE
+						.deserialize(CommandLocalization.COMMAND_CREATE_DESCRIPTION))
+				.arguments(GenericArguments.remainingJoinedStrings(Text.of("name")))
+				.permission("ntrpg.player.character.create")
+				.executor((src, args) -> {
+					String a = args.<String>getOne("name").get();
+					CompletableFuture.runAsync(() -> {
+						Player player = (Player) src;
+						CharacterService characterService = IoC.get().build(CharacterService.class);
+						int i = characterService.canCreateNewCharacter(player.getUniqueId(), a);
+						if (i == 1) {
+							src.sendMessage(Text.of(Localization.REACHED_CHARACTER_LIMIT));
+						} else if (i == 2) {
+							src.sendMessage(Text.of(Localization.CHARACTER_EXISTS));
+						} else if (i == 0) {
+							CharacterBase characterBase = new CharacterBase();
+							characterBase.setName(a);
+							characterBase.setRace(Race.Default.getName());
+							characterBase.setPrimaryClass(ConfigClass.Default.getName());
+							CharacterClass characterClass = new CharacterClass();
+							characterClass.setName(ConfigClass.Default.getName());
+							characterClass.setExperiences(0D);
+							characterClass.setCharacterBase(characterBase);
+							characterBase.setAttributePoints(PluginConfig.ATTRIBUTEPOINTS_ON_START);
+							characterBase.getCharacterClasses().add(characterClass);
+							characterBase.setUuid(player.getUniqueId());
+							characterBase.setAttributePoints(PluginConfig.ATTRIBUTEPOINTS_ON_START);
+							characterService.createAndUpdate(characterBase);
+							src.sendMessage(Text.of(CommandLocalization.CHARACTER_CREATED.replaceAll("%1", characterBase.getName())));
+							Gui.sendListOfCharacters(characterService.getCharacter(player.getUniqueId()), characterBase);
+						}
+					}, asyncExecutor);
+					return CommandResult.success();
+				})
+				.build();
+
+		CommandSpec characterRoot = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE
+						.deserialize(CommandLocalization.COMMAND_CHOOSE_DESC))
+				.child(createCharacter, "create", "c")
+				.build();
+
+
+		Sponge.getCommandManager().register(this, characterRoot, "character", "char", "nc");
+
+
+		// ===========================================================
+		// ==============              MP HP            ==============
+		// ===========================================================
+
+
+		CommandSpec hp = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE
+						.deserialize(CommandLocalization.COMMAND_HP_DESC))
+				.executor((src, args) -> {
+
+					return CommandResult.success();
+				})
+				.build();
+
+		CommandSpec mp = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE
+						.deserialize(CommandLocalization.COMMAND_MP_DESC))
+				.executor((src, args) -> {
+					final Player player = (Player) src;
+					IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
+					Gui.displayMana(character);
+					return CommandResult.success();
+				})
+				.build();
+
+		Sponge.getCommandManager().register(this, hp, "health", "mp");
+		Sponge.getCommandManager().register(this, mp, "mana", "hp");
+
+		// ===========================================================
+		// =================          PARTY          =================
+		// ===========================================================
+		CommandSpec createparty = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE
+						.deserialize(CommandLocalization.COMMAND_BIND_DESC))
+				.permission("ntrpg.player.party.create")
+				.executor((src, args) -> {
+					IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
+					if (character.isStub()) {
+						Gui.sendMessage(character, Localization.CHARACTER_IS_REQUIRED);
+						return CommandResult.success();
+					}
+					if (character.hasParty()) {
+						Gui.sendMessage(character, Localization.ALREADY_IN_PARTY);
+						return CommandResult.success();
+					}
+					Party party = new Party(character);
+					character.setParty(party);
+					Gui.sendMessage(character, Localization.PARTY_CREATED);
+					return CommandResult.success();
+				})
+				.build();
+
+		CommandSpec kick = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE
+						.deserialize(CommandLocalization.COMMAND_BIND_DESC))
+				.permission("ntrpg.player.party.create")
+				.arguments(new PartyMemberCommandElement(Text.of("player")))
+				.executor((src, args) -> {
+					args.<IActiveCharacter>getOne(Text.of("player")).ifPresent(o -> {
+
+						GlobalScope.partyService.kickCharacterFromParty(
+								GlobalScope.characterService.getCharacter((Player) src).getParty(), o);
+					});
+					return CommandResult.success();
+				})
+				.build();
+
+
+		CommandSpec invite = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE
+						.deserialize(CommandLocalization.COMMAND_BIND_DESC))
+				.permission("ntrpg.player.party.create")
+				.arguments(GenericArguments.player(Text.of("player")))
+				.executor((src, args) -> {
+					args.<Player>getOne(Text.of("player")).ifPresent(o -> {
+						GlobalScope.partyService.sendPartyInvite(
+								GlobalScope.characterService.getCharacter((Player) src).getParty(),
+								GlobalScope.characterService.getCharacter(o));
+					});
+					return CommandResult.success();
+				})
+				.build();
+
+
+
+		CommandSpec accept = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE
+						.deserialize(CommandLocalization.COMMAND_BIND_DESC))
+				.permission("ntrpg.player.party.create")
+				.executor((src, args) -> {
+					IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
+					if (character.getPendingPartyInvite() != null) {
+						GlobalScope.partyService.addToParty(character.getPendingPartyInvite(), character);
+					}
+					return CommandResult.success();
+				})
+				.build();
+
+
+		CommandSpec partyRoot = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE
+						.deserialize(CommandLocalization.COMMAND_CHOOSE_DESC))
+				.child(createparty, "create", "c")
+				.child(kick, "kick", "k")
+				.child(invite, "invite", "i")
+				.child(accept, "accept", "a")
+				.build();
+
+
+		Sponge.getCommandManager().register(this, partyRoot, "party", "np");
+	}
+
+	public void registerSkillCommands() {
+		// ===========================================================
+		// ===============          SKILL BIND         ===============
+		// ===========================================================
+		CommandSpec bind = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE
+						.deserialize(CommandLocalization.COMMAND_BIND_DESC))
+				.permission("ntrpg.player.skillbind")
+				.arguments(
+						GenericArguments.flags().valueFlag(GenericArguments
+								.string(Text.of("lmb")), "l")
+								.buildWith(new LearnedSkillCommandElement(Text.of("lmbskill"))),
+						GenericArguments.flags().valueFlag(GenericArguments
+								.string(Text.of("rmb")), "r")
+								.buildWith(new LearnedSkillCommandElement(Text.of("rmbskill")))
+
+				)
+				.executor((src, args) -> {
+					Optional<ISkill> lmb = args.getOne("lmb");
+
+					Optional<ISkill> rmb = args.getOne("rmb");
+					IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
+					if (!character.getPlayer().getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
+						ISkill r = rmb.orElse(null);
+						ISkill l = lmb.orElse(null);
+
+						ItemStack i = ItemStack.of(InventoryService.ITEM_SKILL_BIND, 1);
+						NtRpgPlugin.GlobalScope.inventorySerivce.createHotbarSkill(i, r, l);
+						character.getPlayer().setItemInHand(HandTypes.MAIN_HAND, i);
+					} else {
+						character.getPlayer().sendMessage(Text.of(Localization.EMPTY_HAND_REQUIRED));
+					}
+					return CommandResult.success();
+				})
+				.build();
+
+		Sponge.getCommandManager().register(this, bind, "bind", "nb");
 	}
 }
