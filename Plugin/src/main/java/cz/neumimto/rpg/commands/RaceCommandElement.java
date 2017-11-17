@@ -30,11 +30,18 @@ public class RaceCommandElement extends CommandElement {
         if (r == null) {
             throw args.createError(TextHelper.parse("&CUnknown race %s", race));
         }
+        if (!source.hasPermission("ntrpg.races."+r.getName().toLowerCase())) {
+            throw args.createError(TextHelper.parse("&CNo permission ntrpg.races.%s", r.getName().toLowerCase()));
+        }
         return r;
     }
 
     @Override
     public List<String> complete(CommandSource src, CommandArgs args, CommandContext context) {
-        return NtRpgPlugin.GlobalScope.groupService.getRaces().stream().map(Race::getName).collect(Collectors.toList());
+        return NtRpgPlugin.GlobalScope.groupService.getRaces().stream()
+                .map(Race::getName)
+                .filter(a -> src.hasPermission("ntrpg.races."+a.toLowerCase()))
+                .collect(Collectors.toList());
+
     }
 }

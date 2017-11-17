@@ -42,6 +42,7 @@ import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.players.*;
 import cz.neumimto.rpg.players.groups.ConfigClass;
+import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.PropertyService;
@@ -854,6 +855,109 @@ public class NtRpgPlugin {
 
 
 		Sponge.getCommandManager().register(this, partyRoot, "party", "np");
+
+		// ===========================================================
+		// =================          Groups         =================
+		// ===========================================================
+
+		CommandSpec classes = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE
+						.deserialize(CommandLocalization.COMMAND_CLASSES_DESC))
+				.permission("ntrpg.groups.list.classes")
+				.executor((src, args) -> {
+					IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
+					Gui.showAvalaibleClasses(character);
+					return CommandResult.success();
+				})
+				.build();
+
+		Sponge.getCommandManager().register(this, classes, "classes");
+
+		CommandSpec races = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE
+						.deserialize(CommandLocalization.COMMAND_CLASSES_RACE))
+				.permission("ntrpg.groups.list.races")
+				.executor((src, args) -> {
+					IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
+					Gui.sendRaceList(character);
+					return CommandResult.success();
+				})
+				.build();
+
+		Sponge.getCommandManager().register(this, races, "races");
+
+
+		CommandSpec classgui = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE
+						.deserialize(CommandLocalization.COMMAND_RACE_DESC))
+				.arguments(new PlayerClassCommandElement(Text.of("class")))
+				.executor((src, args) -> {
+					args.<ConfigClass>getOne(Text.of("class")).ifPresent(o -> {
+						IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
+						Gui.showClassInfo(character, o);
+					});
+					return CommandResult.success();
+				})
+				.build();
+
+		Sponge.getCommandManager().register(this, classgui, "class");
+
+
+		CommandSpec racegui = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE
+						.deserialize(CommandLocalization.COMMAND_RACE_DESC))
+				.arguments(new RaceCommandElement(Text.of("race")))
+				.executor((src, args) -> {
+					args.<ConfigClass>getOne(Text.of("race")).ifPresent(o -> {
+						IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
+						Gui.showClassInfo(character, o);
+					});
+					return CommandResult.success();
+				})
+				.build();
+
+		Sponge.getCommandManager().register(this, racegui, "race");
+
+
+
+		CommandSpec weapon = CommandSpec.builder()
+				.arguments(new AnyPlayerGroupCommandElement(Text.of("class_or_race")))
+				.executor((src, args) -> {
+					args.<PlayerGroup>getOne(Text.of("class_or_race"))
+							.ifPresent(playerGroup -> {
+								Player player = (Player) src;
+								Gui.displayGroupWeapon(playerGroup, player);
+							});
+					return CommandResult.success();
+				})
+				.build();
+		Sponge.getCommandManager().register(this, weapon, "weapons");
+
+		CommandSpec armor = CommandSpec.builder()
+				.arguments(new AnyPlayerGroupCommandElement(Text.of("class_or_race")))
+				.executor((src, args) -> {
+
+					args.<PlayerGroup>getOne(Text.of("class_or_race"))
+							.ifPresent(playerGroup -> {
+								Player player = (Player) src;
+								Gui.displayGroupArmor(playerGroup, player);
+							});
+					return CommandResult.success();
+				})
+				.build();
+		Sponge.getCommandManager().register(this, armor, "armor");
+
+
+
+		CommandSpec runes = CommandSpec.builder()
+				.permission("ntrpg.runes.list")
+				.executor((src, args) -> {
+					Gui.sendListOfRunes(GlobalScope.characterService.getCharacter((Player)src));
+					return CommandResult.success();
+				})
+				.build();
+
+		Sponge.getCommandManager().register(this, runes, "runes");
 	}
 
 	public void registerSkillCommands() {

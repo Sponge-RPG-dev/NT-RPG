@@ -25,19 +25,14 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.configuration.CommandPermissions;
 import cz.neumimto.rpg.configuration.Localization;
-import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
-import cz.neumimto.rpg.players.groups.Race;
-import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.skills.SkillTree;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.command.CommandException;
@@ -90,9 +85,6 @@ public class InfoCommand extends CommandBase {
 
 	@Override
 	public CommandResult process(CommandSource commandSource, String s) throws CommandException {
-		if (PluginConfig.DEBUG) {
-			logger.info(commandSource.getName() + " executed /" + alias.get(0) + " " + s);
-		}
 		final String[] args = s.split(" ");
 		if (args.length == 0) {
 			commandSource.sendMessage(getUsage(commandSource));
@@ -115,73 +107,6 @@ public class InfoCommand extends CommandBase {
 			} else {
 				commandSource.sendMessage(Text.of(Localization.PLAYER_IS_OFFLINE_MSG));
 			}
-		} else if (args[0].equalsIgnoreCase("race")) {
-			Player player = (Player) commandSource;
-			IActiveCharacter target = characterService.getCharacter(player.getUniqueId());
-			if (args.length == 1) {
-				if (target.getRace() == Race.Default) {
-					return CommandResult.empty();
-				}
-				Gui.sendRaceInfo(target, target.getRace());
-			} else if (args.length == 2) {
-				String a = args[1];
-				Race race = groupService.getRace(a);
-				if (race == null)
-					return CommandResult.empty();
-				if (player.hasPermission("list.races") || player.hasPermission("list.races." + race.getName())) {
-					Gui.sendRaceInfo(target, race);
-				}
-			} else {
-				if (player.hasPermission("list.races")) {
-					Gui.sendRaceList(target);
-				} else {
-					player.sendMessage(Text.of(Localization.NO_PERMISSIONS));
-				}
-			}
-
-		} else if (args[0].equalsIgnoreCase("races")) {
-			Player player = (Player) commandSource;
-			if (!player.hasPermission("list.races")) {
-				player.sendMessage(Text.of(Localization.NO_PERMISSIONS));
-				return CommandResult.empty();
-			}
-			IActiveCharacter target = characterService.getCharacter(player.getUniqueId());
-			Gui.sendRaceList(target);
-		} else if (args[0].equalsIgnoreCase("guilds")) {
-
-		} else if (args[0].equalsIgnoreCase("armor")) {
-			if (args.length == 1) {
-				//todo show accessible
-			} else {
-				PlayerGroup g = groupService.getByName(args[1]);
-				if (g == null) {
-					return CommandResult.empty();
-				}
-				Player player = (Player) commandSource;
-				Gui.displayGroupArmor(g, player);
-			}
-		} else if (args[0].equalsIgnoreCase("weapons")) {
-			PlayerGroup g = groupService.getByName(args[1]);
-			if (g == null) {
-				return CommandResult.empty();
-			}
-			Player player = (Player) commandSource;
-			Gui.displayGroupWeapon(g, player);
-		} else if (args[0].equalsIgnoreCase("class")) {
-			IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
-			if (args.length == 1) {
-				ConfigClass nClass = character.getNClass(0);
-				if (nClass == ConfigClass.Default) {
-					return CommandResult.empty();
-				}
-				Gui.showClassInfo(character, nClass);
-			} else {
-				ConfigClass cc = groupService.getNClass(args[1]);
-				Gui.showClassInfo(character, cc);
-			}
-		} else if (args[0].equalsIgnoreCase("classes")) {
-			IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
-			Gui.showAvalaibleClasses(character);
 		} else if (args[0].equalsIgnoreCase("character")) {
 			if (!(commandSource instanceof Player)) {
 				if (args.length != 2) {
@@ -197,11 +122,6 @@ public class InfoCommand extends CommandBase {
 					IActiveCharacter target = characterService.getCharacter(player.getUniqueId());
 					Gui.sendListOfCharacters(target, target.getCharacterBase());
 				}
-			}
-		} else if (args[0].equalsIgnoreCase("runes")) {
-			Player player = (Player) commandSource;
-			if (player.hasPermission("ntrpg.runes.showlist")) {
-				Gui.sendListOfRunes(characterService.getCharacter(player.getUniqueId()));
 			}
 		} else if (args[0].equalsIgnoreCase("runeword")) {
 			Player player = (Player) commandSource;

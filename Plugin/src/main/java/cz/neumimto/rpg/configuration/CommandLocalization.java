@@ -110,4 +110,16 @@ public class CommandLocalization {
 
 	@ConfigValue
 	public static String COMMAND_SET_HEALTHSCALE_DESCRIPTION = "Sets healthscale for currently choosen character, persistant between restarts";
+
+	@ConfigValue
+	public static String COMMAND_CLASSES_DESC = "Displays list of avalaible classes";
+
+	@ConfigValue
+	public static String COMMAND_CLASSES_RACE = "Displays list of avalaible races";
+
+	@ConfigValue
+	public static String COMMAND_RACE_DESC = "Displays detailed informations about a race";
+
+	@ConfigValue
+	public static String COMMAND_CLASS_DESC = "Displays detailed informations about a class";
 }

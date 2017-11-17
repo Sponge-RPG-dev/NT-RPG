@@ -46,6 +46,9 @@ public class PlayerClassCommandElement extends CommandElement {
                 throw args.createError(TextHelper.parse("&CRace %s cannot become %s", race.getName(), configClass.getName()));
             }
         }
+        if (!source.hasPermission("ntrpg.groups."+configClass.getName().toLowerCase())) {
+            throw args.createError(TextHelper.parse("&CNo permission ntrpg.classes.%s", configClass.getName().toLowerCase()));
+        }
         return configClass;
     }
 
@@ -59,12 +62,12 @@ public class PlayerClassCommandElement extends CommandElement {
             }
             return race.getAllowedClasses().stream()
                     .map(ConfigClass::getName)
-                    .filter(a -> src.hasPermission("ntrpg.classes."+a.toLowerCase()))
+                    .filter(a -> src.hasPermission("ntrpg.groups."+a.toLowerCase()))
                     .collect(Collectors.toList());
         }
         return NtRpgPlugin.GlobalScope.groupService.getClasses().stream()
                 .map(ConfigClass::getName)
-                .filter(a -> src.hasPermission("ntrpg.classes."+a.toLowerCase()))
+                .filter(a -> src.hasPermission("ntrpg.groups."+a.toLowerCase()))
                 .collect(Collectors.toList());
     }
 
