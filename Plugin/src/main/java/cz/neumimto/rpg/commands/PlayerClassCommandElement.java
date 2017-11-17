@@ -24,8 +24,17 @@ import java.util.stream.Collectors;
  */
 public class PlayerClassCommandElement extends CommandElement {
 
+    private final boolean validate;
+
     public PlayerClassCommandElement(@Nullable Text key) {
         super(key);
+        validate = true;
+    }
+
+    public PlayerClassCommandElement(@Nullable Text key, boolean validate) {
+        super(key);
+
+        this.validate = validate;
     }
 
     @Override
@@ -37,7 +46,7 @@ public class PlayerClassCommandElement extends CommandElement {
         }
         IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) source);
 
-        if (PluginConfig.VALIDATE_RACE_DURING_CLASS_SELECTION) {
+        if (validate && PluginConfig.VALIDATE_RACE_DURING_CLASS_SELECTION) {
             Race race = character.getRace();
             if (race == Race.Default) {
                 throw args.createError(TextHelper.parse("&CYou have to select race before class"));

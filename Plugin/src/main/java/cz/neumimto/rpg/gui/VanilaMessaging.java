@@ -374,7 +374,7 @@ public class VanilaMessaging implements IPlayerMessage {
 			if (cc == default_) {
 				continue;
 			}
-			if (!cc.isShowsInMenu() && !character.getPlayer().hasPermission("ntrpg.showsEverything")) {
+			if (!cc.isShowsInMenu() && !character.getPlayer().hasPermission("ntrpg.admin")) {
 				continue;
 			}
 			i.offer(createItemRepresentingGroup(cc));
@@ -383,18 +383,17 @@ public class VanilaMessaging implements IPlayerMessage {
 	}
 
 	private ItemStack createItemRepresentingGroup(PlayerGroup p) {
-		String s1 = infoCommand.getAliases().iterator().next();
 		ItemStack s = ItemStack.of(p.getItemType(), 1);
 		s.offer(new MenuInventoryData(true));
 		s.offer(Keys.DISPLAY_NAME, Text.of(p.getName(), TextColors.DARK_PURPLE));
 		s.offer(Keys.ITEM_LORE, getItemLore(p.getDescription()));
 		s.offer(Keys.HIDE_MISCELLANEOUS, true);
 		s.offer(Keys.HIDE_ATTRIBUTES, true);
-		String l = " race ";
+		String l = "race ";
 		if (p.getType() == EffectSourceType.CLASS) {
-			l = " class ";
+			l = "class ";
 		}
-		s.offer(new InventoryCommandItemMenuData(s1 + l + p.getName()));
+		s.offer(new InventoryCommandItemMenuData(l + p.getName()));
 		return s;
 	}
 
