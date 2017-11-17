@@ -770,8 +770,8 @@ public class NtRpgPlugin {
 				})
 				.build();
 
-		Sponge.getCommandManager().register(this, hp, "health", "mp");
-		Sponge.getCommandManager().register(this, mp, "mana", "hp");
+		Sponge.getCommandManager().register(this, hp, "health");
+		Sponge.getCommandManager().register(this, mp, "mana", "mp");
 
 		// ===========================================================
 		// =================          PARTY          =================
