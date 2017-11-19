@@ -25,11 +25,10 @@ public class AnyPlayerGroupCommandElement extends CommandElement {
     @Override
     protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
         String k = args.next();
-        NtRpgPlugin.GlobalScope.groupService.getAll().stream()
+        return NtRpgPlugin.GlobalScope.groupService.getAll().stream()
                 .filter(a -> source.hasPermission("ntrpg.groups."+a.getName().toLowerCase()))
                 .filter(a -> a.getName().equalsIgnoreCase(k))
                 .collect(Collectors.toList());
-        return null;
     }
 
     @Override
