@@ -171,13 +171,12 @@ public class GuiHelper {
 
 	public static ItemStack back(PlayerGroup g) {
 		ItemStack of = ItemStack.of(ItemTypes.PAPER, 1);
-		String l = "class";
+		String l = "class ";
 		if (g.getType() == EffectSourceType.RACE) {
-			l = "race";
+			l = "race ";
 		}
 		of.offer(Keys.DISPLAY_NAME, Text.of(Localization.BACK, TextColors.WHITE));
-		String c = IoC.get().build(InfoCommand.class).getAliases().get(0);
-		of.offer(new InventoryCommandItemMenuData(c + " " + l + " " + g.getName()));
+		of.offer(new InventoryCommandItemMenuData(l + g.getName()));
 		return of;
 	}
 

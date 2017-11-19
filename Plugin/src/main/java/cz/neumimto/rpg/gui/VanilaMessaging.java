@@ -442,10 +442,7 @@ public class VanilaMessaging implements IPlayerMessage {
 	@Override
 	public void displayGroupWeapon(PlayerGroup g, Player target) {
 		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
-		List<List<ItemType>> rows = new ArrayList<>(5);
-		for (int ki = 0; ki <= 5; ki++) {
-			rows.add(new ArrayList<>());
-		}
+
 
 		ItemStack of = back(g);
 		i.query(new SlotPos(0, 0)).offer(of);
