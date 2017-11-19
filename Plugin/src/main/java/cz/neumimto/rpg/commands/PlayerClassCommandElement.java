@@ -33,7 +33,6 @@ public class PlayerClassCommandElement extends CommandElement {
 
     public PlayerClassCommandElement(@Nullable Text key, boolean validate) {
         super(key);
-
         this.validate = validate;
     }
 

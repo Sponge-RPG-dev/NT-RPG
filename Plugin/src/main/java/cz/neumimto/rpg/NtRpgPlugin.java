@@ -890,7 +890,7 @@ public class NtRpgPlugin {
 		CommandSpec classgui = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE
 						.deserialize(CommandLocalization.COMMAND_RACE_DESC))
-				.arguments(new PlayerClassCommandElement(Text.of("class", false)))
+				.arguments(new PlayerClassCommandElement(Text.of("class"), false))
 				.executor((src, args) -> {
 					args.<ConfigClass>getOne(Text.of("class")).ifPresent(o -> {
 						IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
