@@ -936,9 +936,9 @@ public class NtRpgPlugin {
 						.deserialize(CommandLocalization.COMMAND_RACE_DESC))
 				.arguments(new RaceCommandElement(Text.of("race")))
 				.executor((src, args) -> {
-					args.<ConfigClass>getOne(Text.of("race")).ifPresent(o -> {
+					args.<Race>getOne(Text.of("race")).ifPresent(o -> {
 						IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
-						Gui.showClassInfo(character, o);
+						Gui.sendRaceInfo(character, o);
 					});
 					return CommandResult.success();
 				})
