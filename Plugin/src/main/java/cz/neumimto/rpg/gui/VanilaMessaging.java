@@ -416,10 +416,8 @@ public class VanilaMessaging implements IPlayerMessage {
 				rows.get(4).add(type);
 			}
 		}
-		ItemStack of = ItemStack.of(ItemTypes.PAPER, 1);
-		of.offer(new MenuInventoryData(true));
-		of.offer(Keys.DISPLAY_NAME, Text.of(Localization.BACK, TextColors.WHITE));
-		of.offer(new InventoryCommandItemMenuData("armor " + g.getName()));
+
+		ItemStack of = GuiHelper.back(g);
 		i.query(new SlotPos(0, 0)).offer(of);
 
 		int x = 2;
@@ -521,7 +519,7 @@ public class VanilaMessaging implements IPlayerMessage {
 		String cmd = infoCommand.getAliases().get(0);
 		if (linkToRWList) {
 			if (character.getPlayer().hasPermission(CommandPermissions.SHOW_RUNEWORD_LIST)) {
-				i.query(new SlotPos(0, 0)).offer(back(cmd + " runes", Localization.RUNE_LIST));
+				i.query(new SlotPos(0, 0)).offer(back("runes", Localization.RUNE_LIST));
 			}
 		}
 
@@ -535,7 +533,7 @@ public class VanilaMessaging implements IPlayerMessage {
 									.replaceAll("%1", rw.getName()))
 					)
 			);
-			is.offer(new InventoryCommandItemMenuData(cmd + " runeword " + rw.getName() + " allowed-items"));
+			is.offer(new InventoryCommandItemMenuData("runeword " + rw.getName() + " allowed-items"));
 			commands.add(is);
 		}
 
@@ -549,7 +547,7 @@ public class VanilaMessaging implements IPlayerMessage {
 					)
 			);
 			is.offer(Keys.HIDE_ATTRIBUTES, true);
-			is.offer(new InventoryCommandItemMenuData(cmd + " runeword " + rw.getName() + " allowed-groups"));
+			is.offer(new InventoryCommandItemMenuData("runeword " + rw.getName() + " allowed-groups"));
 			commands.add(is);
 		}
 
@@ -562,7 +560,7 @@ public class VanilaMessaging implements IPlayerMessage {
 									.replaceAll("%1", rw.getName()))
 					)
 			);
-			is.offer(new InventoryCommandItemMenuData(cmd + " runeword " + rw.getName() + " blocked-groups"));
+			is.offer(new InventoryCommandItemMenuData("runeword " + rw.getName() + " blocked-groups"));
 			commands.add(is);
 		}
 
@@ -614,8 +612,7 @@ public class VanilaMessaging implements IPlayerMessage {
 	@Override
 	public void displayRunewordAllowedItems(IActiveCharacter character, RuneWord rw) {
 		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
-		String cmd = infoCommand.getAliases().get(0);
-		i.query(new SlotPos(0, 0)).offer(back(cmd + " runeword " + rw.getName(), Localization.RUNEWORD_DETAILS_MENU));
+		i.query(new SlotPos(0, 0)).offer(back("runeword " + rw.getName(), Localization.RUNEWORD_DETAILS_MENU));
 		int x = 1;
 		int y = 2;
 		for (ItemType type : rw.getAllowedItems()) {
@@ -633,7 +630,7 @@ public class VanilaMessaging implements IPlayerMessage {
 	private Inventory displayGroupRequirements(IActiveCharacter character, RuneWord rw, Set<PlayerGroup> groups) {
 		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
 		String cmd = infoCommand.getAliases().get(0);
-		i.query(new SlotPos(0, 0)).offer(back(cmd + " runeword " + rw.getName(), Localization.RUNEWORD_DETAILS_MENU));
+		i.query(new SlotPos(0, 0)).offer(back("runeword " + rw.getName(), Localization.RUNEWORD_DETAILS_MENU));
 
 		List<ItemStack> list = new ArrayList<>();
 		for (PlayerGroup playerGroup : groups) {
