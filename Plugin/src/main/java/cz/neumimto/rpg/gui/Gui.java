@@ -55,7 +55,7 @@ public class Gui {
 	}
 
 	public static IPlayerMessage getMessageTypeOf(IActiveCharacter player) {
-		if (player.isUsingGuiMod())
+		if (player == null || player.isUsingGuiMod())
 			return mod;
 		return vanilla;
 	}

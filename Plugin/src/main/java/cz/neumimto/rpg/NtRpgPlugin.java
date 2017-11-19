@@ -670,7 +670,7 @@ public class NtRpgPlugin {
 					args.<String>getOne("name").ifPresent(s -> {
 						Player player = (Player) src;
 						IActiveCharacter current = GlobalScope.characterService.getCharacter(player);
-						if (current.getName().equalsIgnoreCase(s)) {
+						if (current != null && current.getName().equalsIgnoreCase(s)) {
 							player.sendMessage(Text.of(Localization.ALREADY_CUURENT_CHARACTER));
 							return;
 						}
