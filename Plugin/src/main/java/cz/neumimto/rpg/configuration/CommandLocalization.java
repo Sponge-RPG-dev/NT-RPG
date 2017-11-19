@@ -82,6 +82,9 @@ public class CommandLocalization {
 	public static String PLAYERINFO_DESC = "Shows info about player";
 
 	@ConfigValue
+	public static String COMMAND_ADMIN_EFFECT_ADD = "Applies effect to a player";
+
+	@ConfigValue
 	public static String PLAYERINFO_USAGE = "/info {character|player|race(s)|guild(s)|class(es)|runes} [name]";
 
 	@ConfigValue

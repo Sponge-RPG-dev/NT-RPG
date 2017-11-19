@@ -27,7 +27,9 @@ import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.configuration.Settings;
+import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.data.CustomItemData;
@@ -446,6 +448,32 @@ public class NtRpgPlugin {
 				})
 				.build();
 
+		CommandSpec effect = CommandSpec.builder()
+				.description(
+						TextSerializers
+								.FORMATTING_CODE
+								.deserialize(CommandLocalization.COMMAND_ADMIN_EFFECT_ADD))
+				.arguments(
+						GenericArguments.onlyOne(GenericArguments.player(TextHelper.parse("player"))),
+						new GlobalEffectCommandElement(Text.of("effect")),
+						GenericArguments.longNum(TextHelper.parse("duration")),
+						GenericArguments.remainingJoinedStrings(TextHelper.parse("data"))
+				)
+				.executor((src, args) -> {
+					Player player = args.<Player>getOne("player").get();
+					String data = args.<String>getOne("data").get();
+					Long k  = args.<Long>getOne("duration").get();
+						IGlobalEffect effect1 = args.<IGlobalEffect>getOne("data").get();
+					IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
+					GlobalScope.effectService.addEffect(effect1.construct(character, k, data), character, InternalEffectSourceProvider.INSTANCE);
+					return CommandResult.success();
+				})
+				.build();
+
+
+
+
+
 		CommandSpec adminRoot = CommandSpec
 				.builder()
 				.description(TextSerializers
@@ -458,6 +486,7 @@ public class NtRpgPlugin {
 				.child(rune, "rune", "r")
 				.child(runeword, "runeword", "rw")
 				.child(exp, "experiences", "exp")
+				.child(effect, "effect", "ef")
 				.child(reload, "reload")
 				.build();
 
