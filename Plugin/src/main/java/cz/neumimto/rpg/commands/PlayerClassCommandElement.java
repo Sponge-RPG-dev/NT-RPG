@@ -55,7 +55,7 @@ public class PlayerClassCommandElement extends CommandElement {
             }
         }
         if (!source.hasPermission("ntrpg.groups."+configClass.getName().toLowerCase())) {
-            throw args.createError(TextHelper.parse("&CNo permission ntrpg.classes.%s", configClass.getName().toLowerCase()));
+            throw args.createError(TextHelper.parse("&CNo permission ntrpg.groups.%s", configClass.getName().toLowerCase()));
         }
         return configClass;
     }

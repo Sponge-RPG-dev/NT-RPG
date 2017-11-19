@@ -27,7 +27,6 @@ import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.configuration.Settings;
-import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.gui.Gui;
@@ -551,7 +550,7 @@ public class NtRpgPlugin {
 						return CommandResult.empty();
 					}
 
-					if (!src.hasPermission("ntrpg.classes."+configClass.getName().toLowerCase())) {
+					if (!src.hasPermission("ntrpg.groups."+configClass.getName().toLowerCase())) {
 						src.sendMessage(TextHelper.parse(Localization.NO_PERMISSIONS));
 						return CommandResult.empty();
 					}
@@ -597,7 +596,7 @@ public class NtRpgPlugin {
 							return;
 						}
 
-						if (!src.hasPermission("ntrpg.races" + r.getName().toLowerCase())) {
+						if (!src.hasPermission("ntrpg.groups" + r.getName().toLowerCase())) {
 							src.sendMessage(TextHelper.parse(Localization.NO_PERMISSIONS));
 							return;
 						}
