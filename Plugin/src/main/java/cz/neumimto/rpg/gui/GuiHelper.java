@@ -130,7 +130,7 @@ public class GuiHelper {
 		i.offer(Keys.ITEM_LORE, Collections.singletonList(Text.of(Localization.WEAPONS_MENU_HELP, TextColors.GRAY)));
 		i.offer(Keys.HIDE_MISCELLANEOUS, true);
 		i.offer(Keys.HIDE_ATTRIBUTES, true);
-		i.offer(new InventoryCommandItemMenuData("show armor " + group.getName()));
+		i.offer(new InventoryCommandItemMenuData("armor " + group.getName()));
 		return i;
 	}
 
@@ -141,7 +141,7 @@ public class GuiHelper {
 		i.offer(Keys.ITEM_LORE, Collections.singletonList(Text.of(Localization.ARMOR_MENU_HELP, TextColors.GRAY)));
 		i.offer(Keys.HIDE_MISCELLANEOUS, true);
 		i.offer(Keys.HIDE_ATTRIBUTES, true);
-		i.offer(new InventoryCommandItemMenuData("show weapons " + group.getName()));
+		i.offer(new InventoryCommandItemMenuData("weapons " + group.getName()));
 		return i;
 	}
 

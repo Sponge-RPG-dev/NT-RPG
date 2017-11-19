@@ -931,7 +931,7 @@ public class NtRpgPlugin {
 					return CommandResult.success();
 				})
 				.build();
-		Sponge.getCommandManager().register(this, weapon, "weapons");
+		Sponge.getCommandManager().register(this, weapon, "weapons", "wp");
 
 		CommandSpec armor = CommandSpec.builder()
 				.arguments(new AnyPlayerGroupCommandElement(Text.of("class_or_race")))

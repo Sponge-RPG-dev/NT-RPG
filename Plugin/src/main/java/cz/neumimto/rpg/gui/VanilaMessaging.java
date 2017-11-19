@@ -191,7 +191,7 @@ public class VanilaMessaging implements IPlayerMessage {
 			String name1 = character.getRace().getName();
 			Text.Builder b = Text.builder();
 			b.append(Text.builder(" [").color(TextColors.DARK_GRAY).build())
-					.append(Text.builder("SELECT").color(TextColors.GREEN).onClick(TextActions.runCommand("/" + "show" + " character " + name)).build())
+					.append(Text.builder("SELECT").color(TextColors.GREEN).build())
 					.append(Text.builder("] - ").color(TextColors.DARK_GRAY).build());
 			b.append(Text.of(name));
 			if (character.getPrimaryClass() != ExtendedNClass.Default) {
@@ -261,7 +261,6 @@ public class VanilaMessaging implements IPlayerMessage {
 		content.add(Text.builder().append(Text.of("Attribute points: ", TextColors.GREEN))
 				.append(Text.of(character.getCharacterBase().getAttributePoints(), TextColors.AQUA))
 				.append(Text.of(String.format("(%s)", character.getCharacterBase().getUsedAttributePoints(), TextColors.GRAY))).toText());
-		Player player = character.getPlayer();
 
 		builder.contents(content);
 		builder.sendTo(character.getPlayer());
@@ -418,13 +417,9 @@ public class VanilaMessaging implements IPlayerMessage {
 			}
 		}
 		ItemStack of = ItemStack.of(ItemTypes.PAPER, 1);
-		String l = "class";
-		if (g instanceof Race) {
-			l = "race";
-		}
 		of.offer(new MenuInventoryData(true));
 		of.offer(Keys.DISPLAY_NAME, Text.of(Localization.BACK, TextColors.WHITE));
-		of.offer(new InventoryCommandItemMenuData("show " + l + " " + g.getName()));
+		of.offer(new InventoryCommandItemMenuData("armor " + g.getName()));
 		i.query(new SlotPos(0, 0)).offer(of);
 
 		int x = 2;
