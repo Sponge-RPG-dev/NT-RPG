@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.skills;
 
+import com.typesafe.config.Config;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
@@ -27,6 +28,7 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * Created by NeumimTo on 1.1.2015.
@@ -115,4 +117,12 @@ public interface ISkill extends IEffectSourceProvider {
 	int getId();
 
 	void setId(int runtimeId);
+
+    default <T extends SkillData> T constructSkillData() {
+    	return (T) new SkillData(getName());
+	}
+
+	default <T extends SkillData> void loadSkillData(T skillData, SkillTree context, SkillLoadingErrors errors, Config c) {
+
+	}
 }

@@ -3,6 +3,7 @@ package cz.neumimto.rpg.events.character;
 import cz.neumimto.rpg.events.CancellableEvent;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.RPGItemWrapper;
 import org.spongepowered.api.item.ItemType;
 
 import java.util.Map;
@@ -13,9 +14,9 @@ import java.util.TreeSet;
  */
 public class CharacterWeaponUpdateEvent extends CancellableEvent {
 	private final IActiveCharacter character;
-	private final Map<ItemType, TreeSet<ConfigRPGItemType>> allowedArmor;
+	private final Map<ItemType, RPGItemWrapper> allowedArmor;
 
-	public CharacterWeaponUpdateEvent(IActiveCharacter character, Map<ItemType, TreeSet<ConfigRPGItemType>> allowedArmor) {
+	public CharacterWeaponUpdateEvent(IActiveCharacter character, Map<ItemType, RPGItemWrapper> allowedArmor) {
 		this.character = character;
 		this.allowedArmor = allowedArmor;
 	}
@@ -24,7 +25,7 @@ public class CharacterWeaponUpdateEvent extends CancellableEvent {
 		return character;
 	}
 
-	public Map<ItemType, TreeSet<ConfigRPGItemType>> getAllowedWeapons() {
+	public Map<ItemType, RPGItemWrapper> getAllowedWeapons() {
 		return allowedArmor;
 	}
 }

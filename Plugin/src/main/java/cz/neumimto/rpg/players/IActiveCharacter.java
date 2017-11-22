@@ -39,7 +39,6 @@ import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * Created by NeumimTo on 23.7.2015.
@@ -112,7 +111,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	boolean canWear(ItemStack armor);
 
-	Map<ItemType, TreeSet<ConfigRPGItemType>> getAllowedWeapons();
+	Map<ItemType, RPGItemWrapper> getAllowedWeapons();
 
 	Map<EntityType, Double> getProjectileDamages();
 

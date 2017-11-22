@@ -51,4 +51,6 @@ public class SkillPathData extends SkillData {
     public Map<String, Integer> getSkillBonus() {
         return skillBonus;
     }
+
+
 }

@@ -22,6 +22,28 @@ public class PermissionSkill extends AbstractSkill {
 
 	@Override
 	public SkillResult onPreUse(IActiveCharacter character) {
-		return null;
+		return SkillResult.CANCELLED;
 	}
+
+	@Override
+	public void onCharacterInit(IActiveCharacter c, int level) {
+		super.onCharacterInit(c, level);
+
+	}
+
+	@Override
+	public void skillLearn(IActiveCharacter IActiveCharacter) {
+		super.skillLearn(IActiveCharacter);
+	}
+
+	@Override
+	public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
+		super.skillUpgrade(IActiveCharacter, level);
+	}
+
+	@Override
+	public void skillRefund(IActiveCharacter IActiveCharacter) {
+		super.skillRefund(IActiveCharacter);
+	}
+
 }

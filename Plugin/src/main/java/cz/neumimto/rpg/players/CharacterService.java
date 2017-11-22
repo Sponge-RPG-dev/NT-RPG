@@ -154,21 +154,20 @@ public class CharacterService {
 	}
 
 	public void updateWeaponRestrictions(IActiveCharacter character) {
-		Map<ItemType, TreeSet<ConfigRPGItemType>> allowedArmor = character.updateItemRestrictions().getAllowedWeapons();
-		try (CauseStackManager.StackFrame stackFrame = causeStackManager.pushCauseFrame()) {
-			causeStackManager.pushCause(character);
-			CharacterWeaponUpdateEvent event = new CharacterWeaponUpdateEvent(character, allowedArmor);
-			game.getEventManager().post(event);
-		}
+		Map<ItemType, RPGItemWrapper> weapons = character.updateItemRestrictions().getAllowedWeapons();
+
+
+		CharacterWeaponUpdateEvent event = new CharacterWeaponUpdateEvent(character, weapons);
+		game.getEventManager().post(event);
+
 	}
 
 	public void updateArmorRestrictions(IActiveCharacter character) {
 		Set<ItemType> allowedArmor = character.updateItemRestrictions().getAllowedArmor();
-		try (CauseStackManager.StackFrame stackFrame = causeStackManager.pushCauseFrame()) {
-			causeStackManager.pushCause(character);
-			EventCharacterArmorPostUpdate event = new EventCharacterArmorPostUpdate(character, allowedArmor);
-			game.getEventManager().post(event);
-		}
+
+		EventCharacterArmorPostUpdate event = new EventCharacterArmorPostUpdate(character, allowedArmor);
+		game.getEventManager().post(event);
+
 	}
 
 
@@ -849,7 +848,7 @@ public class CharacterService {
 		if (event.isCancelled()) {
 			return 3;
 		}
-		if (skill instanceof SkillTreePath && PluginConfig.PATH_NODES_SEALED) {
+		if (skill instanceof SkillTreeSpecialization && PluginConfig.PATH_NODES_SEALED) {
 			return 4;
 		}
 		int level = skillInfo.getLevel();
