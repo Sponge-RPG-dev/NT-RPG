@@ -116,9 +116,6 @@ public class CharacterService {
 	@Inject
 	private EffectService effectService;
 
-	/**
-	 * @param id
-	 */
 	public void loadPlayerData(UUID id) {
 		characters.put(id, buildDummyChar(id));
 		game.getScheduler().createTaskBuilder().name("PlayerDataLoad-" + id).async().execute(() -> {
@@ -537,6 +534,7 @@ public class CharacterService {
 			}
 			lvl[i] = val;
 		}
+		//todo
 	}
 
 	private void initSkills(ActiveCharacter activeCharacter) {
@@ -945,7 +943,7 @@ public class CharacterService {
 		if (event.isCancelled())
 			return 2;
 		Set<IGlobalEffect> effects = event.getLastItem().getEffects().keySet();
-		effects.stream().forEach(g -> effectService.removeEffect(g.getName(), character, weapon));
+		effects.forEach(g -> effectService.removeEffect(g.getName(), character, weapon));
 		Map<IGlobalEffect, String> toadd = event.getNewItem().getEffects();
 		effectService.applyGlobalEffectsAsEnchantments(toadd, character, weapon);
 		return 0;
@@ -1079,12 +1077,7 @@ public class CharacterService {
 	}
 
 	public void addTemporalAttribute(IActiveCharacter character, ICharacterAttribute attribute, int amount) {
-		Integer att = character.getTransientAttributes().get(attribute.getName());
-		if (att == null) {
-			character.getTransientAttributes().put(attribute.getName(), amount);
-		} else {
-			character.getTransientAttributes().put(attribute.getName(), att + amount);
-		}
+		character.getTransientAttributes().merge(attribute.getId(), amount, (a, b) -> a + b);
 	}
 
 	/**

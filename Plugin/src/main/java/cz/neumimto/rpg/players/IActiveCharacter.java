@@ -94,7 +94,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 	Integer getAttributeValue(String name);
 
 	default Integer getAttributeValue(ICharacterAttribute attribute) {
-		return getAttributeValue(attribute.getName());
+		return getAttributeValue(attribute.getId());
 	}
 
 	ExtendedNClass getPrimaryClass();

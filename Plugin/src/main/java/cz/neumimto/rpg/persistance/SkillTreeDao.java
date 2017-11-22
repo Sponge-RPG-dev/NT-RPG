@@ -153,10 +153,12 @@ public class SkillTreeDao {
                             skillService.addSkill(s);
                             break;
                         case "attribute":
-
+                            CharacterAttributeSkill a = new CharacterAttributeSkill(name);
+                            skillService.addSkill(a);
                             break;
                         case "property":
-
+                            PropertySkill p = new PropertySkill(name);
+                            skillService.addSkill(p);
                             break;
 
                     }
