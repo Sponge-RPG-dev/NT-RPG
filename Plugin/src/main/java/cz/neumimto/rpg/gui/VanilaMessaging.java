@@ -446,7 +446,7 @@ public class VanilaMessaging implements IPlayerMessage {
 		i.query(new SlotPos(0, 0)).offer(of);
 
 		TreeSet<ConfigRPGItemType> treeSet = new TreeSet<>();
-		for (Map.Entry<ItemType, TreeSet<ConfigRPGItemType>> entry : g.getWeapons().entrySet()) {
+		for (Map.Entry<ItemType, Set<ConfigRPGItemType>> entry : g.getWeapons().entrySet()) {
 			treeSet.addAll(entry.getValue());
 		}
 
