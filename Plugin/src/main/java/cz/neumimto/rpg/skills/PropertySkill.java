@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.skills;
 
-import antlr.ASdebug.IASDebugStream;
 import com.typesafe.config.Config;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -61,7 +60,7 @@ public class PropertySkill extends AbstractSkill{
     @Override
     public <T extends SkillData> void loadSkillData(T skillData, SkillTree context, SkillLoadingErrors errors, Config c) {
         PropertySkillData data = (PropertySkillData) skillData;
-        List<? extends Config> properties = c.getConfigList("properties");
+        List<? extends Config> properties = c.getConfigList("Properties");
         for (Config cprop : properties) {
             int level = cprop.getInt("level");
             float value = (float) cprop.getDouble("value");

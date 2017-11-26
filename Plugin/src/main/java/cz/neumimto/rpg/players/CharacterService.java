@@ -367,7 +367,8 @@ public class CharacterService {
 				args.put("player", character.getPlayer().getName());
 				args.put("uuid", character.getPlayer().getUniqueId().toString());
 				args.put("class", character.getRace().getName());
-				Utils.executeCommandBatch(args, character.getNClass(slot).getExitCommands(), character.getPlayer());
+				if (character.getNClass(slot).getExitCommands() != null)
+					Utils.executeCommandBatch(args, character.getNClass(slot).getExitCommands(), character.getPlayer());
 
 
 				removeGroupEffects(character, character.getNClass(slot));
@@ -375,7 +376,8 @@ public class CharacterService {
 				applyGroupEffects(character, configClass);
 
 				args.put("class", character.getRace().getName());
-				Utils.executeCommandBatch(args, character.getNClass(slot).getEnterCommands(), character.getPlayer());
+				if (character.getNClass(slot).getExitCommands() != null)
+					Utils.executeCommandBatch(args, character.getNClass(slot).getEnterCommands(), character.getPlayer());
 			}
 		}
 
@@ -389,7 +391,8 @@ public class CharacterService {
 				args.put("player", character.getPlayer().getName());
 				args.put("uuid", character.getPlayer().getUniqueId().toString());
 				args.put("race", character.getRace().getName());
-				Utils.executeCommandBatch(args, character.getRace().getExitCommands(), character.getPlayer());
+				if (character.getRace().getExitCommands() != null)
+					Utils.executeCommandBatch(args, character.getRace().getExitCommands(), character.getPlayer());
 
 				removeGroupEffects(character, character.getRace());
 				character.setRace(race);
@@ -397,7 +400,8 @@ public class CharacterService {
 
 
 				args.put("race", character.getRace().getName());
-				Utils.executeCommandBatch(args, character.getRace().getEnterCommands(), character.getPlayer());
+				if (character.getRace().getExitCommands() != null)
+					Utils.executeCommandBatch(args, character.getRace().getEnterCommands(), character.getPlayer());
 			}
 		}
 		if (guild != null) {
