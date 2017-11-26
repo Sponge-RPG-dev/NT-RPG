@@ -142,10 +142,10 @@ public class Localization {
 	public static String NON_EXISTING_CHARACTER = "Selected character does not exist";
 
 	@ConfigValue
-	public static String PLAYER_CHOOSED_CLASS = "You've chosen class %1";
+	public static String PLAYER_CHOOSED_CLASS = "You've chosen class %s";
 
 	@ConfigValue
-	public static String PLAYER_CHOOSED_RACE = "You've chosen race 1%";
+	public static String PLAYER_CHOOSED_RACE = "You've chosen race %s";
 
 	@ConfigValue
 	public static String ALREADY_CUURENT_CHARACTER = "This character has been already activated";
@@ -154,7 +154,7 @@ public class Localization {
 	public static String NO_TARGET = "No target";
 
 	@ConfigValue
-	public static String CURRENT_CHARACTER = "Selected character: %1";
+	public static String CURRENT_CHARACTER = "Selected character: %s";
 
 	@ConfigValue
 	public static String CHARACTER_GAINED_POINTS = "You've gained %1 skillpoints and 2% attribute points";
