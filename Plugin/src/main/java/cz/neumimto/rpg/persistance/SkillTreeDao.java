@@ -118,7 +118,10 @@ public class SkillTreeDao {
                         }
                         skillTree.setSkillTreeMap(array);
                     }
-                } catch (ConfigException ignored) {}
+                } catch (ConfigException | ArrayIndexOutOfBoundsException ignored) {
+                    logger.error("Could not read ascii map in the skilltree " + skillTree.getId(), ignored);
+                    skillTree.setSkillTreeMap(new short[][]{});
+                }
 
 
                 map.put(skillTree.getId(), skillTree);
