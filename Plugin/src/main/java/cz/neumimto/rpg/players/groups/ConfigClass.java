@@ -120,4 +120,6 @@ public class ConfigClass extends PlayerGroup {
 		this.setShowsInMenu(!defaultClass);
 		this.defaultClass = defaultClass;
 	}
+
+
 }

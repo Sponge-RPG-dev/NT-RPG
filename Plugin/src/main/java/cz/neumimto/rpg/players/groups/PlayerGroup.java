@@ -196,4 +196,12 @@ public class PlayerGroup implements IEffectSourceProvider {
 	public List<String> getEnterCommands() {
 		return enterCommands;
 	}
+
+	@Override
+	public String toString() {
+		return "PlayerGroup{" +
+				"name='" + name + '\'' +
+				", playerGroupType=" + playerGroupType +
+				'}';
+	}
 }

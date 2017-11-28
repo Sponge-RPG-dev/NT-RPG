@@ -362,7 +362,7 @@ public class CharacterService {
 			game.getEventManager().post(e);
 			if (!e.isCancelled()) {
 				k = true;
-
+				logger.info("Processing class change - " + e);
 				Map<String, String> args = new HashMap<>();
 				args.put("player", character.getPlayer().getName());
 				args.put("uuid", character.getPlayer().getUniqueId().toString());
@@ -386,7 +386,7 @@ public class CharacterService {
 			game.getEventManager().post(ev);
 			if (!ev.isCancelled()) {
 				k = true;
-
+				logger.info("Processing race change - " + ev);
 				Map<String, String> args = new HashMap<>();
 				args.put("player", character.getPlayer().getName());
 				args.put("uuid", character.getPlayer().getUniqueId().toString());
