@@ -367,7 +367,7 @@ public class CharacterService {
 				args.put("player", character.getPlayer().getName());
 				args.put("uuid", character.getPlayer().getUniqueId().toString());
 				args.put("class", character.getRace().getName());
-				if (character.getNClass(slot).getExitCommands() != null)
+				if (character.getNClass(slot) != null && character.getNClass(slot).getExitCommands() != null)
 					Utils.executeCommandBatch(args, character.getNClass(slot).getExitCommands(), character.getPlayer());
 
 
