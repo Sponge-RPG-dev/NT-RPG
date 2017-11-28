@@ -350,6 +350,7 @@ public class ActiveCharacter implements IActiveCharacter {
 			cc = new CharacterClass();
 			cc.setCharacterBase(getCharacterBase());
 			cc.setName(nclass.getName());
+			getCharacterBase().getCharacterClasses().add(cc);
 		}
 		Double aDouble = cc.getExperiences();
 		if (aDouble == null) {
@@ -359,7 +360,6 @@ public class ActiveCharacter implements IActiveCharacter {
 				cc.setSkillPoints(PluginConfig.SKILLPOINTS_ON_START);
 			}
 			cc.setExperiences(0D);
-			getCharacterBase().getCharacterClasses().add(cc);
 		} else {
 			//  primary.setStacks(getCharacterBase().getStacks());
 			primary.setExperiences(aDouble);
