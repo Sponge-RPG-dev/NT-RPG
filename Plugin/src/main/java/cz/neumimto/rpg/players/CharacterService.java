@@ -376,7 +376,7 @@ public class CharacterService {
 				applyGroupEffects(character, configClass);
 
 				args.put("class", character.getRace().getName());
-				if (character.getNClass(slot).getExitCommands() != null)
+				if (character.getNClass(slot) != null && character.getNClass(slot).getEnterCommands() != null)
 					Utils.executeCommandBatch(args, character.getNClass(slot).getEnterCommands(), character.getPlayer());
 			}
 		}
