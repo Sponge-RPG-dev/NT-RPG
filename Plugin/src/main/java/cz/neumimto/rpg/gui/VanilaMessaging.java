@@ -451,22 +451,7 @@ public class VanilaMessaging implements IPlayerMessage {
 		}
 
 		for (ConfigRPGItemType configRPGItemType : treeSet) {
-			ItemStack q = ItemStack.of(configRPGItemType.getItemType(), 1);
-			Text lore = Text.builder(Localization.ITEM_DAMAGE)
-					.color(TextColors.GOLD)
-					.style(TextStyles.BOLD)
-					.append(Text.builder(" " + configRPGItemType.getDamage())
-							.style(TextStyles.BOLD)
-							.color(damageService.getColorByDamage(configRPGItemType.getDamage()))
-							.build())
-					.build();
-			q.offer(Keys.ITEM_LORE, Collections.singletonList(lore));
-			q.offer(new MenuInventoryData(true));
-			q.offer(Keys.HIDE_MISCELLANEOUS, true);
-			q.offer(Keys.HIDE_ATTRIBUTES, true);
-			if (configRPGItemType.getDisplayName() != null) {
-				q.offer(Keys.DISPLAY_NAME, Text.of(configRPGItemType.getDisplayName()));
-			}
+			ItemStack q = GuiHelper.rpgItemTypeToItemStack(configRPGItemType);
 			i.offer(q);
 		}
 

@@ -19,15 +19,20 @@
 package cz.neumimto.rpg.skills;
 
 import com.typesafe.config.Config;
+import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.utils.Utils;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.text.Text;
 
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -124,5 +129,27 @@ public interface ISkill extends IEffectSourceProvider {
 
 	default <T extends SkillData> void loadSkillData(T skillData, SkillTree context, SkillLoadingErrors errors, Config c) {
 
+	}
+
+    default List<ItemStack> configurationToItemStacks(SkillData skillData) {
+		List<ItemStack> a = new ArrayList<>();
+		if (skillData.getSkillSettings() != null) {
+			Map<String, Float> nodes = skillData.getSkillSettings().getNodes();
+			for (Map.Entry<String, Float> s : nodes.entrySet()) {
+				if (!s.getKey().endsWith("_levelbonus")) {
+					String s1 = Utils.configNodeToReadableString(s.getKey());
+					Float init = s.getValue();
+					Float lbonus = nodes.get(s.getKey() + "_levelbonus");
+					ItemStack of = ItemStack.of(ItemTypes.PAPER, 1);
+					of.offer(Keys.DISPLAY_NAME, Text.builder(s1).build());
+					of.offer(Keys.ITEM_LORE, Arrays.asList(
+							Text.builder(Localization.SKILL_VALUE_STARTS_AT.replaceAll("%1", String.valueOf(init))).build(),
+							Text.builder(Localization.SKILL_VALUE_PER_LEVEL.replaceAll("%1", String.valueOf(lbonus))).build()
+					));
+					a.add(of);
+				}
+			}
+		}
+		return a;
 	}
 }

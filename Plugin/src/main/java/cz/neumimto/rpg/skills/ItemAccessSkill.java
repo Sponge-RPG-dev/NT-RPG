@@ -2,14 +2,21 @@ package cz.neumimto.rpg.skills;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
+import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
+import cz.neumimto.rpg.gui.GuiHelper;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class ItemAccessSkill extends AbstractSkill {
@@ -95,6 +102,32 @@ public class ItemAccessSkill extends AbstractSkill {
         } catch (ConfigException e) {
 
         }
+    }
+
+    @Override
+    public List<ItemStack> configurationToItemStacks(SkillData skillData) {
+        List<ItemStack> list = new ArrayList<>();
+        ItemAccessSkillData data = (ItemAccessSkillData) skillData;
+        for (Map.Entry<Integer, Map<ItemType, Set<ConfigRPGItemType>>> entry : data.items.entrySet()) {
+            for (Set<ConfigRPGItemType> configRPGItemTypes : entry.getValue().values()) {
+                list.addAll(configRPGItemTypes.stream()
+                        .map(GuiHelper::rpgItemTypeToItemStack)
+                        .map(a -> {
+                            List<Text> texts = a.get(Keys.ITEM_LORE).get();
+                            texts.add(Text.EMPTY);
+                            texts.add(Text.builder(Localization.SKILL_LEVEL)
+                                    .color(TextColors.GREEN)
+                                    .append(Text.builder(": " + entry.getKey())
+                                            .build()
+                                    )
+                                    .build());
+                            a.offer(Keys.ITEM_LORE, texts);
+                            return a;
+                        }).collect(Collectors.toList()));
+
+            }
+        }
+        return list;
     }
 
     public class ItemAccessSkillData extends SkillData {

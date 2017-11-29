@@ -83,6 +83,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -159,6 +161,7 @@ public class NtRpgPlugin {
 		long start = System.nanoTime();
 		IoC ioc = IoC.get();
 		asyncExecutor = Sponge.getGame().getScheduler().createAsyncExecutor(NtRpgPlugin.this);
+
 		ioc.registerInterfaceImplementation(Logger.class, logger);
 		Game game = Sponge.getGame();
 		Optional<PluginContainer> gui = game.getPluginManager().getPlugin("MinecraftGUIServer");
@@ -702,7 +705,7 @@ public class NtRpgPlugin {
 							player.sendMessage(Text.of(Localization.ALREADY_CUURENT_CHARACTER));
 							return;
 						}
-						asyncExecutor.schedule(() -> {
+						asyncExecutor.execute(() -> {
 							List<CharacterBase> playersCharacters = GlobalScope.characterService.getPlayersCharacters(player.getUniqueId());
 							boolean b = false;
 							for (CharacterBase playersCharacter : playersCharacters) {
@@ -716,7 +719,7 @@ public class NtRpgPlugin {
 							}
 							if (!b)
 								player.sendMessage(Text.of(Localization.NON_EXISTING_CHARACTER));
-						},0,TimeUnit.SECONDS);
+						});
 					});
 					return CommandResult.success();
 				})

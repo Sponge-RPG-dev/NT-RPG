@@ -87,9 +87,10 @@ public class CharacterAttributeSkill extends AbstractSkill {
         } catch (ConfigException ex) {
 
         }
-
-
     }
+
+
+
 
     public class CharacterAttributeSkillData extends SkillData {
 

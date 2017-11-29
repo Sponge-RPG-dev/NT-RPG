@@ -42,6 +42,9 @@ public class SkillData {
 	private int relativeY;
 	private int skillTreeId;
 
+
+
+
 	public SkillData(String skill) {
 		this.skill = skill;
 	}

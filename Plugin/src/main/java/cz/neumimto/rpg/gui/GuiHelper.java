@@ -1,10 +1,12 @@
 package cz.neumimto.rpg.gui;
 
 import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.EffectSourceType;
+import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
@@ -359,7 +361,7 @@ public class GuiHelper {
 		} else {
 			build.query(new SlotPos(1, 1)).offer(damageTypeToItemStack(skillData.getSkill().getDamageType()));
 
-			List<ItemStack> itemStacks = skillConfigurationToItemStacks(skillData);
+			List<ItemStack> itemStacks = skillData.getSkill().configurationToItemStacks(skillData);
 			int m, n, i = 0;
 
 			for (m = 0; m < 8; m++) {
@@ -375,27 +377,6 @@ public class GuiHelper {
 		return build;
 
 	}
-
-	public static List<ItemStack> skillConfigurationToItemStacks(SkillData skillData) {
-		List<ItemStack> a = new ArrayList<>();
-		Map<String, Float> nodes = skillData.getSkillSettings().getNodes();
-		for (Map.Entry<String, Float> s : nodes.entrySet()) {
-			if (!s.getKey().endsWith("_levelbonus")) {
-				String s1 = Utils.configNodeToReadableString(s.getKey());
-				Float init = s.getValue();
-				Float lbonus = nodes.get(s.getKey() + "_levelbonus");
-				ItemStack of = ItemStack.of(ItemTypes.PAPER, 1);
-				of.offer(Keys.DISPLAY_NAME, Text.builder(s1).build());
-				of.offer(Keys.ITEM_LORE, Arrays.asList(
-					Text.builder(Localization.SKILL_VALUE_STARTS_AT.replaceAll("%1", String.valueOf(init))).build(),
-					Text.builder(Localization.SKILL_VALUE_PER_LEVEL.replaceAll("%1", String.valueOf(lbonus))).build()	
-				));
-				a.add(of);
-			}
-		}
-		return a;
-	}
-
 
 	public static ItemStack interactiveModeToitemStack(IActiveCharacter character, SkillTreeViewModel.InteractiveMode interactiveMode) {
 		ItemStack md = ItemStack.of(interactiveMode.getItemType(), 1);
@@ -415,5 +396,25 @@ public class GuiHelper {
 				.build());
 		md.offer(Keys.ITEM_LORE, lore);
 		return md;
+	}
+
+	public static ItemStack rpgItemTypeToItemStack(ConfigRPGItemType configRPGItemType) {
+		ItemStack q = ItemStack.of(configRPGItemType.getItemType(), 1);
+		Text lore = Text.builder(Localization.ITEM_DAMAGE)
+				.color(TextColors.GOLD)
+				.style(TextStyles.BOLD)
+				.append(Text.builder(": " + configRPGItemType.getDamage())
+						.style(TextStyles.BOLD)
+						.color(NtRpgPlugin.GlobalScope.damageService.getColorByDamage(configRPGItemType.getDamage()))
+						.build())
+				.build();
+		q.offer(Keys.ITEM_LORE, Collections.singletonList(lore));
+		q.offer(new MenuInventoryData(true));
+		q.offer(Keys.HIDE_MISCELLANEOUS, true);
+		q.offer(Keys.HIDE_ATTRIBUTES, true);
+		if (configRPGItemType.getDisplayName() != null) {
+			q.offer(Keys.DISPLAY_NAME, Text.of(configRPGItemType.getDisplayName()));
+		}
+		return q;
 	}
 }

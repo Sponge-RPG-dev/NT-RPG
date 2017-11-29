@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -188,7 +188,7 @@ public class InfoCommand extends CommandBase {
 	}
 
 	private void printPlayerInfo(CommandSource commandSource, String[] args, Player player) {
-		game.getScheduler().createTaskBuilder().async().execute(() -> {
+		NtRpgPlugin.asyncExecutor.execute(() -> {
 			List<CharacterBase> characters = characterService.getPlayersCharacters(player.getUniqueId());
 			if (characters.isEmpty()) {
 				commandSource.sendMessage(Text.of("Player has no characters"));
@@ -201,7 +201,7 @@ public class InfoCommand extends CommandBase {
 						.build();
 				commandSource.sendMessage(build);
 			}
-		}).submit(plugin);
+		});
 	}
 
 	private String getSmallInfo(CharacterBase character) {

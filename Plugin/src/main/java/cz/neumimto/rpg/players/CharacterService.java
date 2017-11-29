@@ -103,8 +103,6 @@ public class CharacterService {
 	@Inject
 	private PropertyService propertyService;
 
-	@Inject
-	private CauseStackManager causeStackManager;
 
 	@Inject
 	private Logger logger;
@@ -137,11 +135,13 @@ public class CharacterService {
 			return false;
 		}
 		if (!characters.containsKey(pl.getUniqueId())) {
+			logger.error("Could not find any character for player " + pl.getName() + " Auth event not fired?");
 			return false;
 		}
 		IActiveCharacter character = characters.get(pl.getUniqueId());
-		if (character.isStub())
+		if (character.isStub()) {
 			return false;
+		}
 		character.setPlayer(pl);
 		if (character.getCharacterBase().getHealthScale() != null) {
 			pl.offer(Keys.HEALTH_SCALE, character.getCharacterBase().getHealthScale());
@@ -180,12 +180,12 @@ public class CharacterService {
 	}
 
 	public void putInSaveQueue(CharacterBase base) {
-		game.getScheduler().createTaskBuilder().async().name("PlayerDataTaskSave").execute(() -> {
+		NtRpgPlugin.asyncExecutor.execute(() -> {
 			Long k = System.currentTimeMillis();
 			logger.info("Saving player " + base.getUuid() + " character " + base.getName());
 			save(base);
 			logger.info("Saved player " + base.getUuid() + " character " + base.getName() + "[" + (System.currentTimeMillis() - k) + "]ms ");
-		}).submit(plugin);
+		});
 	}
 
 	/**
@@ -500,6 +500,7 @@ public class CharacterService {
 	 * @return
 	 */
 	public PreloadCharacter buildDummyChar(UUID uuid) {
+		logger.info("Creating a dummy character for " + uuid);
 		return new PreloadCharacter(uuid);
 	}
 
