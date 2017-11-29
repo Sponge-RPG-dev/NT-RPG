@@ -322,13 +322,14 @@ public class CharacterService {
 		}
 		applyGroupEffects(character, character.getRace());
 
-		updateMaxHealth(character);
-		updateMaxHealth(character);
-		updateWalkSpeed(character);
 
 		damageService.recalculateCharacterWeaponDamage(character);
 
 		inventoryService.initializeHotbar(character);
+
+		updateMaxHealth(character);
+		updateWalkSpeed(character);
+
 		CharacterInitializedEvent event = new CharacterInitializedEvent(character);
 		game.getEventManager().post(event);
 
@@ -404,13 +405,7 @@ public class CharacterService {
 					Utils.executeCommandBatch(args, character.getRace().getEnterCommands(), character.getPlayer());
 			}
 		}
-		if (guild != null) {
-			k = true;
 
-			character.setGuild(guild);
-
-
-		}
 		if (k) {
 			putInSaveQueue(character.getCharacterBase());
 			recalculateProperties(character);
@@ -459,6 +454,7 @@ public class CharacterService {
 		if (maxval <= 0) {
 			maxval = 1;
 		}
+		logger.info("Setting max health " + character.getName() + " to " + maxval);
 		character.getHealth().setMaxValue(maxval);
 	}
 
@@ -1109,10 +1105,11 @@ public class CharacterService {
 		character.getMana().setValue(0);
 		inventoryService.cancelSocketing(character);
 		addDefaultEffects(character);
-		updateMaxHealth(character);
-		updateAll(character).run();
+
 		inventoryService.initializeHotbar(character);
 		inventoryService.initializeArmor(character);
+		updateAll(character).run();
+
 		damageService.recalculateCharacterWeaponDamage(character);
 
 		Sponge.getScheduler().createTaskBuilder().execute(() -> {
