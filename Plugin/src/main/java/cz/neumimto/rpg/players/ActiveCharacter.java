@@ -793,4 +793,12 @@ public class ActiveCharacter implements IActiveCharacter {
 		ActiveCharacter that = (ActiveCharacter) o;
 		return that.getCharacterBase().getId().equals(this.getCharacterBase().getId());
 	}
+
+	@Override
+	public String toString() {
+		return "ActiveCharacter{" +
+				"uuid=" + pl.getUniqueId() +
+				" name=" + getName() +
+				'}';
+	}
 }
