@@ -19,10 +19,12 @@
 package cz.neumimto.rpg.skills;
 
 import com.typesafe.config.Config;
+import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.gui.GuiHelper;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.Utils;
@@ -32,9 +34,10 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.*;
-import java.util.logging.Logger;
 
 /**
  * Created by NeumimTo on 1.1.2015.
@@ -153,5 +156,72 @@ public interface ISkill extends IEffectSourceProvider {
 			}
 		}
 		return a;
+	}
+
+	default ItemStack toItemStack(IActiveCharacter character, SkillData skillData) {
+		SkillItemIcon icon = getIcon();
+
+		ItemStack is = null;
+		if (icon == null || icon.itemType == null) {
+			is = GuiHelper.damageTypeToItemStack(getDamageType());
+		} else {
+			is = icon.toItemStack();
+		}
+		is.offer(new MenuInventoryData(true));
+
+		List<Text> lore = new ArrayList<>();
+
+		String desc = getDescription();
+		String skillTargetType = Localization.SKILL_TYPE_TARGETTED;
+		if (this instanceof ActiveSkill) {
+			skillTargetType = Localization.SKILL_TYPE_ACTIVE;
+		} else if (this instanceof PassiveSkill) {
+			skillTargetType = Localization.SKILL_TYPE_PASSIVE;
+		}
+		if (desc != null) {
+			lore.addAll(TextHelper.splitStringByDelimiter(desc));
+		}
+
+		lore.add(Text.of(skillTargetType, TextColors.DARK_PURPLE, TextStyles.ITALIC));
+		lore.add(Text.EMPTY);
+
+		int minPlayerLevel = skillData.getMinPlayerLevel();
+		int maxSkillLevel = skillData.getMaxSkillLevel();
+		ExtendedSkillInfo ei = character.getSkill(getName());
+		int currentLevel = 0;
+		int totalLevel = 0;
+		if (ei != null) {
+			currentLevel = ei.getLevel();
+			totalLevel = ei.getTotalLevel();
+		}
+
+		String s = Localization.MIN_PLAYER_LEVEL;
+		if (minPlayerLevel > 0) {
+			lore.add(Text.builder(s).color(TextColors.YELLOW)
+					.append(Text.builder(" " + minPlayerLevel)
+							.color(character.getLevel() < minPlayerLevel ? TextColors.RED : TextColors.GREEN)
+							.build())
+					.build());
+		}
+
+		s = Localization.MAX_SKILL_LEVEL + " " + maxSkillLevel;
+		lore.add(Text.builder(s)
+				.color(TextColors.YELLOW)
+				.build());
+
+
+		lore.add(Text.EMPTY);
+		lore.add(Text.builder(Localization.SKILL_LEVEL + " " + currentLevel + " (" + totalLevel + ") ").build());
+
+		if (getLore() != null) {
+			String[] split = getLore().split(":n");
+			for (String ss : split) {
+				lore.add(Text.builder(ss).style(TextStyles.ITALIC).color(TextColors.GOLD).build());
+			}
+		}
+
+		is.offer(Keys.ITEM_LORE, lore);
+		is.offer(Keys.DISPLAY_NAME, Text.builder(getName()).color(character.hasSkill(this.getName()) ? TextColors.GREEN : TextColors.GRAY).style(TextStyles.BOLD).build());
+		return is;
 	}
 }

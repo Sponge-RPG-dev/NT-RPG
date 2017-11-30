@@ -209,75 +209,7 @@ public class GuiHelper {
 	}
 
 	public static ItemStack skillToItemStack(IActiveCharacter character, SkillData skillData) {
-		ISkill skill = skillData.getSkill();
-		SkillItemIcon icon = skill.getIcon();
-
-		ItemStack is = null;
-		if (icon == null || icon.itemType == null) {
-			is = damageTypeToItemStack(skill.getDamageType());
-		} else {
-			is = icon.toItemStack();
-			is.offer(new MenuInventoryData(true));
-		}
-
-
-		List<Text> lore = new ArrayList<>();
-
-		String desc = skill.getDescription();
-		String skillTargetType = Localization.SKILL_TYPE_TARGETTED;
-		if (skill instanceof ActiveSkill) {
-			skillTargetType = Localization.SKILL_TYPE_ACTIVE;
-		} else if (skill instanceof PassiveSkill) {
-			skillTargetType = Localization.SKILL_TYPE_PASSIVE;
-		}
-		if (desc != null)
-			for (String s : desc.split(":n")) {
-				lore.add(Text.of(s, TextColors.GOLD));
-			}
-
-		lore.add(Text.of(skillTargetType, TextColors.DARK_PURPLE, TextStyles.ITALIC));
-		lore.add(Text.EMPTY);
-
-		int minPlayerLevel = skillData.getMinPlayerLevel();
-		int maxSkillLevel = skillData.getMaxSkillLevel();
-		ExtendedSkillInfo ei = character.getSkill(skill.getName());
-		int currentLevel = 0;
-		int totalLevel = 0;
-		if (ei != null) {
-			currentLevel = ei.getLevel();
-			totalLevel = ei.getTotalLevel();
-		}
-
-		String s = Localization.MIN_PLAYER_LEVEL;
-		if (minPlayerLevel > 0) {
-			lore.add(Text.builder(s).color(TextColors.YELLOW)
-					.append(Text.builder("" + minPlayerLevel)
-							.color(character.getLevel() < minPlayerLevel ? TextColors.RED : TextColors.GREEN)
-							.build())
-					.build());
-		}
-
-		s = Localization.MAX_SKILL_LEVEL + " " + maxSkillLevel;
-		lore.add(Text.builder(s)
-				.color(TextColors.YELLOW)
-				.build());
-
-
-		lore.add(Text.EMPTY);
-		lore.add(Text.builder(Localization.SKILL_LEVEL + " " + currentLevel + " (" + totalLevel + ") ").build());
-
-		if (skill.getLore() != null) {
-			String[] split = skill.getLore().split(":n");
-			for (String ss : split) {
-				lore.add(Text.builder(ss).style(TextStyles.ITALIC).color(TextColors.GOLD).build());
-			}
-		}
-
-		is.offer(Keys.ITEM_LORE, lore);
-
-		is.offer(Keys.DISPLAY_NAME, Text.builder(skill.getName()).style(TextStyles.BOLD).build());
-		is.offer(new MenuInventoryData(true));
-		return is;
+		return skillData.getSkill().toItemStack(character, skillData);
 	}
 
 
