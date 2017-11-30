@@ -815,6 +815,12 @@ public class VanilaMessaging implements IPlayerMessage {
 		character.getPlayer().openInventory(skillDetailInventoryView);
 	}
 
+	@Override
+	public void displayInitialProperties(PlayerGroup g, Player p) {
+		ItemStack back = GuiHelper.back(g);
+
+	}
+
 	private void createSkillTreeView(IActiveCharacter character, Inventory skillTreeInventoryViewTemplate, SkillTree skillTree) {
 
 		SkillTreeViewModel skillTreeViewModel = character.getLastTimeInvokedSkillTreeView();

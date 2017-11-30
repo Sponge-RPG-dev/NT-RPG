@@ -3,6 +3,7 @@ package cz.neumimto.rpg.gui;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.EffectSourceType;
@@ -21,6 +22,7 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
+import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
@@ -102,7 +104,17 @@ public class GuiHelper {
 		i.query(new SlotPos(2, 2)).offer(createWeaponCommand(group));
 		i.query(new SlotPos(3, 2)).offer(createArmorCommand(group));
 		i.query(new SlotPos(2, 3)).offer(createAttributesCommand(group));
+		i.query(new SlotPos(3, 3)).offer(createPropertyCommand(group));
 		i.query(new SlotPos(0, 0)).offer(createDescriptionItem(group.getDescription()));
+		return i;
+	}
+
+	private static ItemStack createPropertyCommand(PlayerGroup group) {
+		ItemStack i = ItemStack.of(ItemTypes.BOOK, 1);
+		i.offer(NKeys.MENU_INVENTORY, true);
+		i.offer(Keys.DISPLAY_NAME, Text.of(Localization.ATTRIBUTES, TextColors.DARK_RED));
+		String cc = IoC.get().build(InfoCommand.class).getAliases().iterator().next();
+		i.offer(new InventoryCommandItemMenuData(cc + " properties-initial " + group.getName()));
 		return i;
 	}
 
@@ -144,6 +156,20 @@ public class GuiHelper {
 		i.offer(Keys.HIDE_MISCELLANEOUS, true);
 		i.offer(Keys.HIDE_ATTRIBUTES, true);
 		i.offer(new InventoryCommandItemMenuData("weapons " + group.getName()));
+		return i;
+	}
+
+	public static ItemStack propertyToItemStack(short id, float value) {
+		ItemStack i = ItemStack.of(ItemTypes.BOOK, 1);
+		String nameById = NtRpgPlugin.GlobalScope.propertyService.getNameById(id);
+		nameById = Utils.configNodeToReadableString(nameById);
+		i.offer(Keys.DISPLAY_NAME, TextHelper.makeText(nameById, TextColors.GREEN));
+		if (nameById.endsWith("mult")) {
+			i.offer(Keys.ITEM_LORE, Collections.singletonList(TextHelper.makeText((value * 100) + "%", TextColors.GOLD)));
+		} else {
+			i.offer(Keys.ITEM_LORE, Collections.singletonList(TextHelper.makeText(String.valueOf(value), TextColors.GOLD)));
+		}
+		i.offer(new MenuInventoryData(true));
 		return i;
 	}
 
@@ -250,6 +276,7 @@ public class GuiHelper {
 		is.offer(Keys.ITEM_LORE, lore);
 
 		is.offer(Keys.DISPLAY_NAME, Text.builder(skill.getName()).style(TextStyles.BOLD).build());
+		is.offer(new MenuInventoryData(true));
 		return is;
 	}
 

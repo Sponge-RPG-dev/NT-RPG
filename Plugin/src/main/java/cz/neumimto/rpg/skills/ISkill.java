@@ -23,6 +23,7 @@ import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.data.key.Keys;
@@ -142,6 +143,7 @@ public interface ISkill extends IEffectSourceProvider {
 					Float lbonus = nodes.get(s.getKey() + "_levelbonus");
 					ItemStack of = ItemStack.of(ItemTypes.PAPER, 1);
 					of.offer(Keys.DISPLAY_NAME, Text.builder(s1).build());
+					of.offer(new MenuInventoryData(true));
 					of.offer(Keys.ITEM_LORE, Arrays.asList(
 							Text.builder(Localization.SKILL_VALUE_STARTS_AT.replaceAll("%1", String.valueOf(init))).build(),
 							Text.builder(Localization.SKILL_VALUE_PER_LEVEL.replaceAll("%1", String.valueOf(lbonus))).build()

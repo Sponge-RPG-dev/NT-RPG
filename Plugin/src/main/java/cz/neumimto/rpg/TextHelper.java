@@ -1,6 +1,7 @@
 package cz.neumimto.rpg;
 
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
 /**
@@ -13,5 +14,9 @@ public class TextHelper {
 
     public static Text parse(String text) {
         return TextSerializers.FORMATTING_CODE.deserialize(text);
+    }
+
+    public static Text makeText(String nameById, TextColor c) {
+        return Text.builder(nameById).color(c).build();
     }
 }

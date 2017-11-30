@@ -7,6 +7,7 @@ import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.gui.GuiHelper;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
+import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
@@ -122,6 +123,7 @@ public class ItemAccessSkill extends AbstractSkill {
                                     )
                                     .build());
                             a.offer(Keys.ITEM_LORE, texts);
+                            a.offer(new MenuInventoryData(true));
                             return a;
                         }).collect(Collectors.toList()));
 

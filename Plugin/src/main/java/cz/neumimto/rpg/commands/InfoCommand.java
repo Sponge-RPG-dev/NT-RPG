@@ -152,6 +152,12 @@ public class InfoCommand extends CommandBase {
 				return CommandResult.empty();
 			}
 			Gui.displayInitialAttributes(byName, (Player) commandSource);
+		} else if (args[0].equalsIgnoreCase("properties-initial")) {
+			PlayerGroup byName = groupService.getByName(args[1]);
+			if (byName == null) {
+				return CommandResult.empty();
+			}
+			Gui.displayInitialProperties(byName, (Player) commandSource);
 		} else if (args[0].equalsIgnoreCase("stats")) {
 			Player player = (Player) commandSource;
 			IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
