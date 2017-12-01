@@ -691,6 +691,7 @@ public class VanilaMessaging implements IPlayerMessage {
 
 			if (t.getOriginal().get(NKeys.MENU_INVENTORY).isPresent()) {
 				event.setCancelled(true);
+				t.setCustom(ItemStack.empty());
 			}
 
 			if (t.getOriginal().get(NKeys.SKILLTREE_CONTROLLS).isPresent()) {
