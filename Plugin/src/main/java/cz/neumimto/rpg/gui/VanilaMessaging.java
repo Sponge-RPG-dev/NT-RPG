@@ -736,12 +736,12 @@ public class VanilaMessaging implements IPlayerMessage {
 							Gui.moveSkillTreeMenu(character);
 						} else {
 							SkillTree tree = character.getPrimaryClass().getConfigClass().getSkillTree();
+							event.setCancelled(true);
 							Gui.displaySkillDetailsInventoryMenu(character, tree, command);
 						}
 						break;
 
 				}
-				event.setCancelled(true);
 			}
 		}
 	}
