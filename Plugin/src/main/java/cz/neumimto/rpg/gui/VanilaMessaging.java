@@ -667,7 +667,6 @@ public class VanilaMessaging implements IPlayerMessage {
 
 	@Listener
 	public void onOptionSelect(ClickInventoryEvent event, @First(typeFilter = Player.class) Player player) {
-		System.out.println(event.getClass());
 		//todo inventory.getPlugin
 
 		Iterator<SlotTransaction> iterator = event.getTransactions().iterator();
@@ -735,7 +734,10 @@ public class VanilaMessaging implements IPlayerMessage {
 						} else {
 							SkillTree tree = character.getPrimaryClass().getConfigClass().getSkillTree();
 							event.setCancelled(true);
-							Gui.displaySkillDetailsInventoryMenu(character, tree, command);
+							Sponge.getScheduler().createTaskBuilder()
+									.execute(() -> Gui.displaySkillDetailsInventoryMenu(character, tree, command))
+									.submit(plugin);
+
 						}
 
 				}
