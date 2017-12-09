@@ -699,24 +699,35 @@ public class VanilaMessaging implements IPlayerMessage {
 				switch (command) {
 					case "Up":
 						viewModel.getLocation().key-=1;
-						Gui.moveSkillTreeMenu(character);
+						Sponge.getScheduler().createTaskBuilder()
+								.execute(() -> Gui.moveSkillTreeMenu(character))
+								.submit(plugin);
+
 						break;
 					case "Down":
 						viewModel.getLocation().key+=1;
-						Gui.moveSkillTreeMenu(character);
+						Sponge.getScheduler().createTaskBuilder()
+								.execute(() -> Gui.moveSkillTreeMenu(character))
+								.submit(plugin);
 						break;
 					case "Right":
 						viewModel.getLocation().value+=1;
-						Gui.moveSkillTreeMenu(character);
+						Sponge.getScheduler().createTaskBuilder()
+								.execute(() -> Gui.moveSkillTreeMenu(character))
+								.submit(plugin);
 						break;
 					case "Left":
 						viewModel.getLocation().value-=1;
-						Gui.moveSkillTreeMenu(character);
+						Sponge.getScheduler().createTaskBuilder()
+								.execute(() -> Gui.moveSkillTreeMenu(character))
+								.submit(plugin);
 						break;
 					case "mode":
 						viewModel.setInteractiveMode(viewModel.getInteractiveMode().opposite());
 						//just redraw
-						Gui.moveSkillTreeMenu(character);
+						Sponge.getScheduler().createTaskBuilder()
+								.execute(() -> Gui.moveSkillTreeMenu(character))
+								.submit(plugin);
 						break;
 					default:
 						if (viewModel.getInteractiveMode() == SkillTreeViewModel.InteractiveMode.FAST) {
@@ -730,7 +741,9 @@ public class VanilaMessaging implements IPlayerMessage {
 								player.sendMessage(Text.of(data.value.bind(data.key.message)));
 							}
 							//redraw
-							Gui.moveSkillTreeMenu(character);
+							Sponge.getScheduler().createTaskBuilder()
+									.execute(() -> Gui.moveSkillTreeMenu(character))
+									.submit(plugin);
 						} else {
 							SkillTree tree = character.getPrimaryClass().getConfigClass().getSkillTree();
 							event.setCancelled(true);
