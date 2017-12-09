@@ -2,7 +2,16 @@ package cz.neumimto.rpg.skills;
 
 import com.typesafe.config.Config;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.TextHelper;
+import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.utils.Utils;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +85,38 @@ public class PropertySkill extends AbstractSkill{
             }
 
         }
+    }
+
+    @Override
+    public List<ItemStack> configurationToItemStacks(SkillData skillData) {
+        PropertySkillData data = (PropertySkillData) skillData;
+        List<ItemStack> arrayList = new ArrayList<>();
+        for (Wrapper wrapper : data.properties) {
+            ItemStack is = ItemStack.of(ItemTypes.PAPER, 1);
+            List<Text> lore = new ArrayList<>();
+            is.offer(Keys.DISPLAY_NAME, TextHelper.makeText(Utils.configNodeToReadableString(wrapper.propertyName), TextColors.GREEN));
+            lore.add(Text.builder(Localization.SKILL_LEVEL)
+                    .style(TextStyles.BOLD)
+                    .color(TextColors.GOLD)
+                    .append(
+                            Text.builder(": " + wrapper.level)
+                                    .style(TextStyles.BOLD)
+                                    .color(TextColors.GREEN)
+                                    .build()
+                    ).build());
+            lore.add(Text.builder(Utils.configNodeToReadableString(wrapper.propertyName))
+                    .style(TextStyles.BOLD)
+                    .color(TextColors.GOLD)
+                    .append(
+                            Text.builder(": " + (wrapper.value < 0 ? "-" : "+") + wrapper.value)
+                                    .style(TextStyles.BOLD)
+                                    .color(wrapper.value < 0 ? TextColors.RED : TextColors.GREEN)
+                                    .build()
+
+                ).build());
+            is.offer(Keys.ITEM_LORE, lore);
+        }
+        return arrayList;
     }
 
     @Override

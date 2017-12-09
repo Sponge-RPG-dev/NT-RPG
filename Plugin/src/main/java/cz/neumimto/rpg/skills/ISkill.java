@@ -148,8 +148,11 @@ public interface ISkill extends IEffectSourceProvider {
 					of.offer(Keys.DISPLAY_NAME, Text.builder(s1).build());
 					of.offer(new MenuInventoryData(true));
 					of.offer(Keys.ITEM_LORE, Arrays.asList(
-							Text.builder(Localization.SKILL_VALUE_STARTS_AT.replaceAll("%1", String.valueOf(init))).build(),
-							Text.builder(Localization.SKILL_VALUE_PER_LEVEL.replaceAll("%1", String.valueOf(lbonus))).build()
+							Text.builder(Localization.SKILL_VALUE_STARTS_AT.replaceAll("%1", String.valueOf(init)))
+									.style(TextStyles.BOLD).color(TextColors.GOLD).build(),
+							Text.builder(Localization.SKILL_VALUE_PER_LEVEL.replaceAll("%1", String.valueOf(lbonus)))
+									.style(TextStyles.BOLD).color(TextColors.GREEN)
+									.build()
 					));
 					a.add(of);
 				}

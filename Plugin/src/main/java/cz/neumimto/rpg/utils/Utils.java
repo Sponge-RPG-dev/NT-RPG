@@ -187,7 +187,8 @@ public class Utils {
 
 	public static Predicate<BlockRayHit<World>> SKILL_TARGET_BLOCK_FILTER =
 			(Predicate<BlockRayHit<World>>)
-					a -> !isTransparent(a.getExtent().getBlockType(a.getBlockX(), a.getBlockY(), a.getBlockZ()));
+					a -> !isTransparent(a.getExtent()
+							.getBlockType(a.getBlockX(), a.getBlockY(), a.getBlockZ()));
 
 	public static void hideProjectile(Projectile projectile) {
 		projectile.offer(Keys.INVISIBLE, true);
