@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.skills;
 
+import cz.neumimto.rpg.gui.GuiHelper;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
@@ -40,7 +41,7 @@ public class SkillItemIcon {
 	}
 
 	public ItemStack toItemStack() {
-		ItemStack of = ItemStack.of(itemType == null ? ItemTypes.STONE : itemType, 1);
+		ItemStack of = GuiHelper.itemStack(itemType == null ? ItemTypes.STONE : itemType);
 		of.offer(Keys.DISPLAY_NAME, Text.of(skill.getName()));
 		return of;
 	}

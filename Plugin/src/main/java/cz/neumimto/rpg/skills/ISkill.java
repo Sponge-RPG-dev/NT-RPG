@@ -144,7 +144,7 @@ public interface ISkill extends IEffectSourceProvider {
 					String s1 = Utils.configNodeToReadableString(s.getKey());
 					Float init = s.getValue();
 					Float lbonus = nodes.get(s.getKey() + "_levelbonus");
-					ItemStack of = ItemStack.of(ItemTypes.PAPER, 1);
+					ItemStack of = GuiHelper.itemStack(ItemTypes.PAPER);
 					of.offer(Keys.DISPLAY_NAME, Text.builder(s1).build());
 					of.offer(new MenuInventoryData(true));
 					of.offer(Keys.ITEM_LORE, Arrays.asList(
@@ -175,17 +175,20 @@ public interface ISkill extends IEffectSourceProvider {
 		List<Text> lore = new ArrayList<>();
 
 		String desc = getDescription();
-		String skillTargetType = Localization.SKILL_TYPE_TARGETTED;
+		String skillTargetType = null;
 		if (this instanceof ActiveSkill) {
 			skillTargetType = Localization.SKILL_TYPE_ACTIVE;
 		} else if (this instanceof PassiveSkill) {
 			skillTargetType = Localization.SKILL_TYPE_PASSIVE;
+		} else if (this instanceof Targetted) {
+			skillTargetType = Localization.SKILL_TYPE_TARGETTED;
 		}
 		if (desc != null) {
 			lore.addAll(TextHelper.splitStringByDelimiter(desc));
 		}
-
-		lore.add(Text.of(skillTargetType, TextColors.DARK_PURPLE, TextStyles.ITALIC));
+		if (skillTargetType != null) {
+			lore.add(Text.of(skillTargetType, TextColors.DARK_PURPLE, TextStyles.ITALIC));
+		}
 		lore.add(Text.EMPTY);
 
 		int minPlayerLevel = skillData.getMinPlayerLevel();

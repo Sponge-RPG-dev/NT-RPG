@@ -4,6 +4,7 @@ import com.typesafe.config.Config;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.gui.GuiHelper;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.data.key.Keys;
@@ -92,7 +93,7 @@ public class PropertySkill extends AbstractSkill{
         PropertySkillData data = (PropertySkillData) skillData;
         List<ItemStack> arrayList = new ArrayList<>();
         for (Wrapper wrapper : data.properties) {
-            ItemStack is = ItemStack.of(ItemTypes.PAPER, 1);
+            ItemStack is = GuiHelper.itemStack(ItemTypes.PAPER);
             List<Text> lore = new ArrayList<>();
             is.offer(Keys.DISPLAY_NAME, TextHelper.makeText(Utils.configNodeToReadableString(wrapper.propertyName), TextColors.GREEN));
             lore.add(Text.builder(Localization.SKILL_LEVEL)

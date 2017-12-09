@@ -21,6 +21,7 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
+import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
@@ -81,13 +82,20 @@ public class GuiHelper {
 		damageTypeToItemStack.put(NDamageType.LIGHTNING, Item.of(ItemTypes.NETHER_STAR));
 	}
 
+	public static ItemStack itemStack(ItemType type) {
+		ItemStack is = ItemStack.of(type, 1);
+		is.offer(Keys.HIDE_ATTRIBUTES, true);
+		is.offer(Keys.HIDE_MISCELLANEOUS, true);
+		return is;
+	}
+
 	public static ItemStack damageTypeToItemStack(DamageType type) {
 		if (type == null)
-			return ItemStack.of(ItemTypes.STONE, 1);
+			return itemStack(ItemTypes.STONE);
 		CatalogTypeItemStackBuilder a = damageTypeToItemStack.get(type);
 		ItemStack is = null;
 		if (a == null) {
-			is = ItemStack.of(ItemTypes.STONE, 1);
+			is = itemStack(ItemTypes.STONE);
 		} else {
 			is = a.toItemStack();
 		}
@@ -108,7 +116,7 @@ public class GuiHelper {
 	}
 
 	private static ItemStack createPropertyCommand(PlayerGroup group) {
-		ItemStack i = ItemStack.of(ItemTypes.BOOK, 1);
+		ItemStack i = itemStack(ItemTypes.BOOK);
 		i.offer(NKeys.MENU_INVENTORY, true);
 		i.offer(Keys.DISPLAY_NAME, Text.of(Localization.ATTRIBUTES, TextColors.DARK_RED));
 		String cc = IoC.get().build(InfoCommand.class).getAliases().iterator().next();
@@ -117,7 +125,7 @@ public class GuiHelper {
 	}
 
 	public static ItemStack createAttributesCommand(PlayerGroup group) {
-		ItemStack i = ItemStack.of(ItemTypes.BOOK, 1);
+		ItemStack i = itemStack(ItemTypes.BOOK);
 		i.offer(NKeys.MENU_INVENTORY, true);
 		i.offer(Keys.DISPLAY_NAME, Text.of(Localization.ATTRIBUTES, TextColors.DARK_RED));
 		String cc = IoC.get().build(InfoCommand.class).getAliases().iterator().next();
@@ -126,7 +134,7 @@ public class GuiHelper {
 	}
 
 	public static ItemStack createDescriptionItem(String description) {
-		ItemStack i = ItemStack.of(ItemTypes.PAPER, 1);
+		ItemStack i = itemStack(ItemTypes.PAPER);
 		i.offer(Keys.DISPLAY_NAME, Text.of(""));
 		i.offer(Keys.HIDE_MISCELLANEOUS, true);
 		i.offer(Keys.HIDE_ATTRIBUTES, true);
@@ -136,29 +144,25 @@ public class GuiHelper {
 	}
 
 	public static ItemStack createArmorCommand(PlayerGroup group) {
-		ItemStack i = ItemStack.of(ItemTypes.DIAMOND_CHESTPLATE, 1);
+		ItemStack i = itemStack(ItemTypes.DIAMOND_CHESTPLATE);
 		i.offer(NKeys.MENU_INVENTORY, true);
 		i.offer(Keys.DISPLAY_NAME, Text.of(Localization.WEAPONS, TextColors.DARK_RED));
 		i.offer(Keys.ITEM_LORE, Collections.singletonList(Text.of(Localization.WEAPONS_MENU_HELP, TextColors.GRAY)));
-		i.offer(Keys.HIDE_MISCELLANEOUS, true);
-		i.offer(Keys.HIDE_ATTRIBUTES, true);
 		i.offer(new InventoryCommandItemMenuData("armor " + group.getName()));
 		return i;
 	}
 
 	public static ItemStack createWeaponCommand(PlayerGroup group) {
-		ItemStack i = ItemStack.of(ItemTypes.DIAMOND_SWORD, 1);
+		ItemStack i = itemStack(ItemTypes.DIAMOND_SWORD);
 		i.offer(NKeys.MENU_INVENTORY, true);
 		i.offer(Keys.DISPLAY_NAME, Text.of(Localization.ARMOR, TextColors.DARK_RED));
 		i.offer(Keys.ITEM_LORE, Collections.singletonList(Text.of(Localization.ARMOR_MENU_HELP, TextColors.GRAY)));
-		i.offer(Keys.HIDE_MISCELLANEOUS, true);
-		i.offer(Keys.HIDE_ATTRIBUTES, true);
 		i.offer(new InventoryCommandItemMenuData("weapons " + group.getName()));
 		return i;
 	}
 
 	public static ItemStack propertyToItemStack(short id, float value) {
-		ItemStack i = ItemStack.of(ItemTypes.BOOK, 1);
+		ItemStack i = itemStack(ItemTypes.BOOK);
 		String nameById = NtRpgPlugin.GlobalScope.propertyService.getNameById(id);
 		nameById = Utils.configNodeToReadableString(nameById);
 		i.offer(Keys.DISPLAY_NAME, TextHelper.makeText(nameById, TextColors.GREEN));
@@ -181,14 +185,14 @@ public class GuiHelper {
 	}
 
 	public static ItemStack back(String command, String displayName) {
-		ItemStack of = ItemStack.of(ItemTypes.PAPER, 1);
+		ItemStack of = itemStack(ItemTypes.PAPER);
 		of.offer(Keys.DISPLAY_NAME, Text.of(displayName, TextColors.WHITE));
 		of.offer(new InventoryCommandItemMenuData(command));
 		return of;
 	}
 
 	public static ItemStack unclickableInterface() {
-		ItemStack of = ItemStack.of(ItemTypes.STAINED_GLASS_PANE, 1);
+		ItemStack of = itemStack(ItemTypes.STAINED_GLASS_PANE);
 		of.offer(new MenuInventoryData(true));
 		of.offer(Keys.DYE_COLOR, DyeColors.YELLOW);
 		of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
@@ -196,7 +200,7 @@ public class GuiHelper {
 	}
 
 	public static ItemStack back(PlayerGroup g) {
-		ItemStack of = ItemStack.of(ItemTypes.PAPER, 1);
+		ItemStack of = itemStack(ItemTypes.PAPER);
 		String l = "class ";
 		if (g.getType() == EffectSourceType.RACE) {
 			l = "race ";
@@ -247,9 +251,7 @@ public class GuiHelper {
 		return i;
 	}
 	public static ItemStack createControlls(/* GameProfile gameProfile*/ String name) {
-		ItemStack of = ItemStack.of(ItemTypes.STONE, 1);
-		of.offer(Keys.HIDE_MISCELLANEOUS, true);
-		of.offer(Keys.HIDE_ATTRIBUTES, true);
+		ItemStack of = itemStack(ItemTypes.STONE);
 		of.offer(Keys.DISPLAY_NAME, Text.of(name));
 		of.offer(new SkillTreeInventoryViewControllsData(name));
 		//of.offer(Keys.SKULL_TYPE, SkullTypes.PLAYER);
@@ -259,9 +261,7 @@ public class GuiHelper {
 	}
 
 	public static ItemStack createSkillTreeInventoryMenuBoundary() {
-		ItemStack of = ItemStack.of(ItemTypes.STAINED_GLASS_PANE, 1);
-		of.offer(Keys.HIDE_MISCELLANEOUS, true);
-		of.offer(Keys.HIDE_ATTRIBUTES, true);
+		ItemStack of = itemStack(ItemTypes.STAINED_GLASS_PANE);
 		of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
 		of.offer(new MenuInventoryData(true));
 		of.offer(Keys.DYE_COLOR, DyeColors.RED);
@@ -269,9 +269,7 @@ public class GuiHelper {
 	}
 
 	public static ItemStack createSkillTreeConfirmButtom() {
-		ItemStack itemStack = ItemStack.of(ItemTypes.KNOWLEDGE_BOOK, 1);
-		itemStack.offer(Keys.HIDE_MISCELLANEOUS, true);
-		itemStack.offer(Keys.HIDE_ATTRIBUTES, true);
+		ItemStack itemStack = itemStack(ItemTypes.KNOWLEDGE_BOOK);
 		itemStack.offer(Keys.DISPLAY_NAME, Text.of(Localization.CONFIRM_SKILL_SELECTION_BUTTON));
 		itemStack.offer(new SkillTreeInventoryViewControllsData("confirm"));
 		return itemStack;
@@ -288,7 +286,7 @@ public class GuiHelper {
 		if (skillData instanceof SkillPathData) {
 			SkillPathData data = (SkillPathData) skillData;
 
-			ItemStack of = ItemStack.of(ItemTypes.PAPER, 1);
+			ItemStack of = itemStack(ItemTypes.PAPER);
 			of.offer(Keys.DISPLAY_NAME, Text.of("Tier " + data.getTier()));
 			of.offer(new MenuInventoryData(true));
 			build.query(new SlotPos(1,0)).offer(of);
@@ -339,7 +337,7 @@ public class GuiHelper {
 	}
 
 	public static ItemStack interactiveModeToitemStack(IActiveCharacter character, SkillTreeViewModel.InteractiveMode interactiveMode) {
-		ItemStack md = ItemStack.of(interactiveMode.getItemType(), 1);
+		ItemStack md = itemStack(interactiveMode.getItemType());
 		List<Text> lore = new ArrayList<>();
 
 		md.offer(new SkillTreeInventoryViewControllsData("mode"));
@@ -359,7 +357,7 @@ public class GuiHelper {
 	}
 
 	public static ItemStack rpgItemTypeToItemStack(ConfigRPGItemType configRPGItemType) {
-		ItemStack q = ItemStack.of(configRPGItemType.getItemType(), 1);
+		ItemStack q = itemStack(configRPGItemType.getItemType());
 		Text lore = Text.builder(Localization.ITEM_DAMAGE)
 				.color(TextColors.GOLD)
 				.style(TextStyles.BOLD)
@@ -370,8 +368,6 @@ public class GuiHelper {
 				.build();
 		q.offer(Keys.ITEM_LORE, Collections.singletonList(lore));
 		q.offer(new MenuInventoryData(true));
-		q.offer(Keys.HIDE_MISCELLANEOUS, true);
-		q.offer(Keys.HIDE_ATTRIBUTES, true);
 		if (configRPGItemType.getDisplayName() != null) {
 			q.offer(Keys.DISPLAY_NAME, Text.of(configRPGItemType.getDisplayName()));
 		}
