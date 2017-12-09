@@ -65,10 +65,12 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
-import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.*;
+import org.spongepowered.api.item.inventory.Container;
+import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.InventoryArchetypes;
+import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.property.SlotPos;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.item.inventory.type.GridInventory;
@@ -664,21 +666,8 @@ public class VanilaMessaging implements IPlayerMessage {
 	}
 
 	@Listener
-	public void dropItme(DropItemEvent.Pre event) {
-		Iterator<ItemStackSnapshot> iterator = event.getDroppedItems().iterator();
-		while (iterator.hasNext()) {
-			ItemStackSnapshot next = iterator.next();
-			boolean present = next.get(NKeys.MENU_INVENTORY).isPresent();
-			if (present)
-				iterator.remove();
-		}
-	}
-
-	@Listener
 	public void onOptionSelect(ClickInventoryEvent event, @First(typeFilter = Player.class) Player player) {
-	/*	if (event.getTargetInventory().getArchetype() == InventoryArchetypes.CHEST ||
-				event.getTargetInventory().getArchetype() == InventoryArchetypes.DOUBLE_CHEST) {
-		*/
+		System.out.println(event);
 		//todo inventory.getPlugin
 
 		Iterator<SlotTransaction> iterator = event.getTransactions().iterator();
