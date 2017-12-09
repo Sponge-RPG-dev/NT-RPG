@@ -341,6 +341,7 @@ public class GuiHelper {
 		List<Text> lore = new ArrayList<>();
 
 		md.offer(new SkillTreeInventoryViewControllsData("mode"));
+		md.offer(new MenuInventoryData(true));
 		lore.add(Text.builder(interactiveMode.getTransltion()).build());
 		lore.add(Text.EMPTY);
 		lore.add(Text.builder("Level: ").color(TextColors.YELLOW)
