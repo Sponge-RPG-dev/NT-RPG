@@ -407,4 +407,10 @@ public class Localization {
 
 	@ConfigValue
 	public static String UNKNOWN_ATTRIBUTE = "Unknown attribute %s";
+
+	@ConfigValue
+	public static String ALREADY_HAS_THIS_CLASS = "Cannot choose a class, which you already have";
+
+	@ConfigValue
+	public static String ALREADY_HAS_THIS_RACE = "Cannot choose a race, which you already have";;
 }

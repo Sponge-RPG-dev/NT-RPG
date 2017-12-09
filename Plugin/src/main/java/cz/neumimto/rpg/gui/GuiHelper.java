@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.gui;
 
 import cz.neumimto.core.ioc.IoC;
-import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.commands.InfoCommand;
@@ -22,7 +21,6 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
@@ -318,7 +316,10 @@ public class GuiHelper {
 			}
 
 		} else {
-			build.query(new SlotPos(1, 1)).offer(damageTypeToItemStack(skillData.getSkill().getDamageType()));
+			DamageType type = skillData.getSkill().getDamageType();
+			if (type != null) {
+				build.query(new SlotPos(1, 1)).offer(damageTypeToItemStack(type));
+			}
 
 			List<ItemStack> itemStacks = skillData.getSkill().configurationToItemStacks(skillData);
 			int m, n, i = 0;

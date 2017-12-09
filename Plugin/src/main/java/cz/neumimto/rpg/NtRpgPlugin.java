@@ -83,8 +83,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -94,6 +92,7 @@ import java.util.concurrent.TimeUnit;
 		@Dependency(id = "nt-core", version = "1.9", optional = false)
 })
 public class NtRpgPlugin {
+
 	public static String workingDir;
 	public static File pluginjar;
 	public static GlobalScope GlobalScope;
@@ -576,7 +575,6 @@ public class NtRpgPlugin {
 						character.getClasses().remove(ExtendedNClass.Default);
 					}
 					GlobalScope.characterService.updatePlayerGroups(character, configClass, i, null, null);
-					player.sendMessage(TextHelper.parse(Localization.PLAYER_CHOOSED_CLASS.replaceAll("%1", configClass.getName())));
 					return CommandResult.success();
 				})
 				.build();

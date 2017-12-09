@@ -19,10 +19,7 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.GroupService;
-import cz.neumimto.rpg.MissingConfigurationException;
-import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.Pair;
+import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
@@ -40,7 +37,10 @@ import cz.neumimto.rpg.events.skills.SkillLearnEvent;
 import cz.neumimto.rpg.events.skills.SkillRefundEvent;
 import cz.neumimto.rpg.events.skills.SkillUpgradeEvent;
 import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.inventory.*;
+import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.RPGItemType;
+import cz.neumimto.rpg.inventory.UserActionType;
+import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.persistance.PlayerDao;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
@@ -61,7 +61,6 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import org.spongepowered.api.text.Text;
@@ -368,6 +367,11 @@ public class CharacterService {
 				args.put("player", character.getPlayer().getName());
 				args.put("uuid", character.getPlayer().getUniqueId().toString());
 				args.put("class", character.getRace().getName());
+				if (character.hasClass(configClass)) {
+					character.getPlayer().sendMessage(TextHelper.parse(Localization.ALREADY_HAS_THIS_CLASS));
+					return;
+				}
+
 				if (character.getNClass(slot) != null && character.getNClass(slot).getExitCommands() != null)
 					Utils.executeCommandBatch(args, character.getNClass(slot).getExitCommands(), character.getPlayer());
 
@@ -392,6 +396,10 @@ public class CharacterService {
 				args.put("player", character.getPlayer().getName());
 				args.put("uuid", character.getPlayer().getUniqueId().toString());
 				args.put("race", character.getRace().getName());
+				if (character.getRace() == race) {
+					character.getPlayer().sendMessage(TextHelper.parse(Localization.ALREADY_HAS_THIS_RACE));
+					return;
+				}
 				if (character.getRace().getExitCommands() != null)
 					Utils.executeCommandBatch(args, character.getRace().getExitCommands(), character.getPlayer());
 
@@ -415,6 +423,8 @@ public class CharacterService {
 			updateMaxHealth(character);
 			updateMaxMana(character);
 		}
+		character.getPlayer().sendMessage(TextHelper.parse(Localization.PLAYER_CHOOSED_CLASS.replaceAll("%1", configClass.getName())));
+
 	}
 
 	public void removeGroupEffects(IActiveCharacter character, PlayerGroup p) {
@@ -433,7 +443,6 @@ public class CharacterService {
 	 * @param character
 	 */
 	public void updateMaxMana(IActiveCharacter character) {
-		IReservable mana = character.getMana();
 		float max_mana = getCharacterProperty(character, DefaultProperties.max_mana) - getCharacterProperty(character, DefaultProperties.reserved_mana);
 		float actreserved = getCharacterProperty(character, DefaultProperties.reserved_mana);
 		float reserved = getCharacterProperty(character, DefaultProperties.reserved_mana_multiplier);

@@ -739,7 +739,6 @@ public class VanilaMessaging implements IPlayerMessage {
 							event.setCancelled(true);
 							Gui.displaySkillDetailsInventoryMenu(character, tree, command);
 						}
-						break;
 
 				}
 			}
@@ -812,6 +811,7 @@ public class VanilaMessaging implements IPlayerMessage {
 
 	@Override
 	public void displaySkillDetailsInventoryMenu(IActiveCharacter character, SkillTree tree, String command) {
+
 		Inventory skillDetailInventoryView = GuiHelper.createSkillDetailInventoryView(character, tree.getId(), tree.getSkills().get(command));
 		character.getPlayer().openInventory(skillDetailInventoryView);
 	}
@@ -867,8 +867,10 @@ public class VanilaMessaging implements IPlayerMessage {
 									itemStack = GuiHelper.skillToItemStack(character, skillById);
 									if (interactiveMode == SkillTreeViewModel.InteractiveMode.DETAILED) {
 										itemStack.offer(new SkillTreeInventoryViewControllsData(skillById.getSkillName()));
+										itemStack.offer(new MenuInventoryData(true));
 									} else {
 										itemStack.offer(new SkillTreeInventoryViewControllsData(skillById.getSkillName()));
+										itemStack.offer(new MenuInventoryData(true));
 									}
 								}
 							}
