@@ -667,7 +667,7 @@ public class VanilaMessaging implements IPlayerMessage {
 
 	@Listener
 	public void onOptionSelect(ClickInventoryEvent event, @First(typeFilter = Player.class) Player player) {
-		System.out.println(event);
+		System.out.println(event.getClass());
 		//todo inventory.getPlugin
 
 		Iterator<SlotTransaction> iterator = event.getTransactions().iterator();
