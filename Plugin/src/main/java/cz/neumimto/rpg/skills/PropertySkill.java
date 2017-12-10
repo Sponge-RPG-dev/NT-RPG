@@ -24,6 +24,7 @@ public class PropertySkill extends AbstractSkill{
     public PropertySkill(String name) {
         super();
         setName(name);
+        setIcon(ItemTypes.BLAZE_POWDER);
     }
 
     @Override

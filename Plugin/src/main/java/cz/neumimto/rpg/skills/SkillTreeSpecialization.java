@@ -6,12 +6,16 @@ import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.jboss.logging.Logger;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.service.permission.SubjectData;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Tristate;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by NeumimTo on 16.8.17.
@@ -26,6 +30,7 @@ public class SkillTreeSpecialization extends PassiveSkill {
         setName(name);
         SkillSettings settings = new SkillSettings();
         addSkillType(SkillType.PATH);
+        setIcon(ItemTypes.BOOK);
         super.setSettings(settings);
     }
 
@@ -121,6 +126,14 @@ public class SkillTreeSpecialization extends PassiveSkill {
         } catch (ConfigException e) {
             //logger.info("Found SkillPath in the tree \"" + skillTree.getId() + "\" but no permissions defined, setting to 1");
         }
+        try {
+            String a = c.getString("ItemIcon");
+            Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, a);
+            type.ifPresent(this::setIcon);
+        } catch (ConfigException e) {
+
+        }
+
         pdata.setCombination(null);
         pdata.setMaxSkillLevel(1);
     }
