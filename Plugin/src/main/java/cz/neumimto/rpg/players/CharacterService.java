@@ -372,7 +372,7 @@ public class CharacterService {
 				}
 
 				if (character.getNClass(slot) != null && character.getNClass(slot).getExitCommands() != null)
-					Utils.executeCommandBatch(args, character.getNClass(slot).getExitCommands(), character.getPlayer());
+					Utils.executeCommandBatch(args, character.getNClass(slot).getExitCommands());
 
 
 				removeGroupEffects(character, character.getNClass(slot));
@@ -381,7 +381,7 @@ public class CharacterService {
 
 				args.put("class", character.getRace().getName());
 				if (character.getNClass(slot) != null && character.getNClass(slot).getEnterCommands() != null)
-					Utils.executeCommandBatch(args, character.getNClass(slot).getEnterCommands(), character.getPlayer());
+					Utils.executeCommandBatch(args, character.getNClass(slot).getEnterCommands());
 				character.getPlayer().sendMessage(TextHelper.parse(Localization.PLAYER_CHOOSED_CLASS,configClass.getName()));
 			}
 		}
@@ -401,7 +401,7 @@ public class CharacterService {
 					return;
 				}
 				if (character.getRace().getExitCommands() != null)
-					Utils.executeCommandBatch(args, character.getRace().getExitCommands(), character.getPlayer());
+					Utils.executeCommandBatch(args, character.getRace().getExitCommands());
 
 				removeGroupEffects(character, character.getRace());
 				character.setRace(race);
@@ -410,7 +410,7 @@ public class CharacterService {
 
 				args.put("race", character.getRace().getName());
 				if (character.getRace().getExitCommands() != null)
-					Utils.executeCommandBatch(args, character.getRace().getEnterCommands(), character.getPlayer());
+					Utils.executeCommandBatch(args, character.getRace().getEnterCommands());
 				character.getPlayer().sendMessage(TextHelper.parse(Localization.PLAYER_CHOOSED_RACE, configClass.getName()));
 			}
 		}

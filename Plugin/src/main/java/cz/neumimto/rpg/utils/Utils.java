@@ -20,16 +20,18 @@ package cz.neumimto.rpg.utils;
 
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
+import cz.neumimto.rpg.Console;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.NDamageType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.property.entity.EyeLocationProperty;
 import org.spongepowered.api.entity.Entity;
@@ -61,7 +63,7 @@ public class Utils {
 	public static String LineSeparator = System.getProperty("line.separator");
 	public static String Tab = "\t";
 	private static GlobalScope globalScope = NtRpgPlugin.GlobalScope;
-
+	private static Logger logger = LoggerFactory.getLogger(Utils.class);
 
 	public static void applyOnNearbyPartyMembers(IActiveCharacter character, int distance, Consumer<IActiveCharacter> c) {
 		double k = Math.pow(distance, 2);
@@ -294,12 +296,17 @@ public class Utils {
 		return a;
 	}
 
-	public static void executeCommandBatch(Map<String,String> variables, List<String> commandTemplates, CommandSource sender ) {
+	public static void executeCommandBatch(Map<String,String> variables, List<String> commandTemplates) {
 		for (String commandTemplate : commandTemplates) {
 			for (Map.Entry<String, String> entry : variables.entrySet()) {
 				commandTemplate = commandTemplate.replaceAll("\\{\\{"+entry.getKey()+"}}",entry.getValue());
 			}
-			Sponge.getCommandManager().process(sender, commandTemplate);
+			try {
+				logger.info(Console.GREEN_BOLD + " Running Command (as a console): " + Console.YELLOW + commandTemplate);
+				Sponge.getCommandManager().process(Sponge.getServer().getConsole(), commandTemplate);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

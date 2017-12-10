@@ -5,14 +5,14 @@ import com.typesafe.config.ConfigException;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.utils.Utils;
 import org.jboss.logging.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.service.permission.SubjectData;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.util.Tristate;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -59,9 +59,11 @@ public class SkillTreeSpecialization extends PassiveSkill {
         SkillData skillData = skillInfo.getSkillData();
         SkillPathData pdata = (SkillPathData) skillData;
 
-        SubjectData transientSubjectData = c.getPlayer().getTransientSubjectData();
-        for (String perm : pdata.getPermissions()) {
-            transientSubjectData.setPermission(SubjectData.GLOBAL_CONTEXT, perm, Tristate.TRUE);
+        if (pdata.getEnterCommands() != null) {
+            Map<String, String> args = new HashMap<>();
+            args.put("player", c.getPlayer().getName());
+            args.put("uuid", c.getPlayer().getUniqueId().toString());
+            Utils.executeCommandBatch(args, pdata.getEnterCommands());
         }
 
         for (Map.Entry<String, Integer> entry : pdata.getSkillBonus().entrySet()) {
@@ -76,9 +78,12 @@ public class SkillTreeSpecialization extends PassiveSkill {
         ExtendedSkillInfo skillInfo = c.getSkillInfo(this);
         SkillData skillData = skillInfo.getSkillData();
         SkillPathData pdata = (SkillPathData) skillData;
-        SubjectData transientSubjectData = c.getPlayer().getTransientSubjectData();
-        for (String perm : pdata.getPermissions()) {
-            transientSubjectData.setPermission(SubjectData.GLOBAL_CONTEXT, perm, Tristate.FALSE);
+
+        if (pdata.getEnterCommands() != null) {
+            Map<String, String> args = new HashMap<>();
+            args.put("player", c.getPlayer().getName());
+            args.put("uuid", c.getPlayer().getUniqueId().toString());
+            Utils.executeCommandBatch(args, pdata.getExitCommands());
         }
     }
 
@@ -92,13 +97,20 @@ public class SkillTreeSpecialization extends PassiveSkill {
     public <T extends SkillData> void loadSkillData(T skillData, SkillTree skillTree, SkillLoadingErrors logger, Config c) {
         SkillPathData pdata = (SkillPathData) skillData;
         try {
-            List<String> permissions = c.getStringList("permissions");
-            pdata.getPermissions().addAll(permissions);
+            List<String> ec = c.getStringList("EnterCommands");
+            pdata.getEnterCommands().addAll(ec);
         } catch (ConfigException e) {
-            logger.log("Found SkillPath in the tree \"" + skillTree.getId() + "\" but no permissions defined");
+
         }
         try {
-            int tier = c.getInt("tier");
+            List<String> ec = c.getStringList("ExitCommands");
+            pdata.getExitCommands().addAll(ec);
+        } catch (ConfigException e) {
+
+        }
+
+        try {
+            int tier = c.getInt("Tier");
             pdata.setTier(tier);
         } catch (ConfigException e) {
             logger.log("Found SkillPath in the tree \"" + skillTree.getId() + "\" but no tier defined, setting to 0");
@@ -115,8 +127,8 @@ public class SkillTreeSpecialization extends PassiveSkill {
             List<? extends Config> skillBonus = c.getConfigList("SkillBonus");
             for (Config s : skillBonus) {
                 try {
-                    String skill = s.getString("skill");
-                    int levels = s.getInt("levels");
+                    String skill = s.getString("Skill");
+                    int levels = s.getInt("Levels");
                     pdata.addSkillBonus(skill, levels);
                 } catch (ConfigException e) {
                     logger.log("Found SkillPath.SkillBonus in the tree \"" + skillTree.getId() + "\" missing \"skill\" or \"level\" configuration node");

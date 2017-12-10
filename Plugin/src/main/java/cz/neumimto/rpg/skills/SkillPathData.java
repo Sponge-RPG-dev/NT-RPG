@@ -1,38 +1,66 @@
 package cz.neumimto.rpg.skills;
 
-import cz.neumimto.rpg.skills.SkillData;
-
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by NeumimTo on 16.8.17.
  */
 public class SkillPathData extends SkillData {
 
-    private Set<String> permissions = new HashSet<>();
+    private List<String> enterCommands  = new ArrayList<>();
+    private List<String> exitCommands  = new ArrayList<>();
     private int tier;
     private int skillPointsRequired;
     private Map<String, Integer> skillBonus = new HashMap<>();
+
     public SkillPathData(String name) {
         super(name);
     }
 
-    public Set<String> getPermissions() {
-        return permissions;
+    public List<String> getEnterCommands() {
+        return enterCommands;
     }
 
-    public void setPermissions(Set<String> permissions) {
-        this.permissions = permissions;
+    public void ListEnterCommands(List<String> enterCommands) {
+        this.enterCommands = enterCommands;
+    }
+
+    public List<String> getExitCommands() {
+        return exitCommands;
+    }
+
+    public void ListExitCommands(List<String> exitCommands) {
+        this.exitCommands = exitCommands;
     }
 
     public int getTier() {
         return tier;
     }
 
+    public void setEnterCommands(List<String> enterCommands) {
+        this.enterCommands = enterCommands;
+    }
+
+    public void setExitCommands(List<String> exitCommands) {
+        this.exitCommands = exitCommands;
+    }
+
     public void setTier(int tier) {
+        this.tier = tier;
+    }
+
+    public void setSkillPointsRequired(int skillPointsRequired) {
+        this.skillPointsRequired = skillPointsRequired;
+    }
+
+    public void setSkillBonus(Map<String, Integer> skillBonus) {
+        this.skillBonus = skillBonus;
+    }
+
+    public void ListTier(int tier) {
         this.tier = tier;
     }
 
@@ -40,7 +68,7 @@ public class SkillPathData extends SkillData {
         return skillPointsRequired;
     }
 
-    public void setSkillPointsRequired(int skillPointsRequired) {
+    public void ListSkillPointsRequired(int skillPointsRequired) {
         this.skillPointsRequired = skillPointsRequired;
     }
 
