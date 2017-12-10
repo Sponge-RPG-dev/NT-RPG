@@ -632,7 +632,7 @@ public class NtRpgPlugin {
 						IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
 						Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data
 								= GlobalScope.characterService.characterLearnskill(character, iSkill, character.getPrimaryClass().getConfigClass().getSkillTree());
-						player.sendMessage(Text.of(data.value.bind(data.key.message)));
+						player.sendMessage(data.value.bind(data.key.message));
 					});
 					return CommandResult.empty();
 				})
@@ -648,7 +648,7 @@ public class NtRpgPlugin {
 						Player player = (Player) src;
 						IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
 						Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data = GlobalScope.characterService.upgradeSkill(character, iSkill);
-						player.sendMessage(Text.of(data.value.bind(data.key.message)));
+						player.sendMessage(data.value.bind(data.key.message));
 					});
 					return CommandResult.success();
 				})

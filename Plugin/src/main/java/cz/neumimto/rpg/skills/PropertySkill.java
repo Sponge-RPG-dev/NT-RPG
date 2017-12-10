@@ -63,9 +63,7 @@ public class PropertySkill extends AbstractSkill{
                 character.addProperty(property.level, property.value * i);
             }
         }
-
     }
-
 
     @Override
     public <T extends SkillData> void loadSkillData(T skillData, SkillTree context, SkillLoadingErrors errors, Config c) {
@@ -116,6 +114,7 @@ public class PropertySkill extends AbstractSkill{
 
                 ).build());
             is.offer(Keys.ITEM_LORE, lore);
+            arrayList.add(is);
         }
         return arrayList;
     }

@@ -1,9 +1,10 @@
 package cz.neumimto.rpg.utils;
 
+import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.Localization;
+import org.spongepowered.api.text.Text;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -38,15 +39,8 @@ public enum SkillTreeActionResult {
 			}
 		}
 
-		public String bind(String t) {
-			Iterator<String> iterator = variables.iterator();
-			int i = 1;
-			while (iterator.hasNext()) {
-				String next = iterator.next();
-				t = t.replaceAll("%" + i, next);
-				i++;
-			}
-			return t;
+		public Text bind(String t) {
+			return TextHelper.parse(t, variables);
 		}
 	}
 }

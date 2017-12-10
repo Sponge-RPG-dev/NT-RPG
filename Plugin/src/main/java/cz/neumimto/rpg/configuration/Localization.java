@@ -34,22 +34,22 @@ public class Localization {
 	public static String NO_HP = "Not enough hp";
 
 	@ConfigValue
-	public static String SKILL_UPGRADED_BROADCAST = "%1 has upgraded skill %2";
+	public static String SKILL_UPGRADED_BROADCAST = "%s has upgraded skill %s";
 
 	@ConfigValue
-	public static String SKILL_LEARNED_BROADCAST = "%1 has learned %2";
+	public static String SKILL_LEARNED_BROADCAST = "%s has learned %s";
 
 	@ConfigValue
-	public static String SKILL_UPGRADED = "You've upgraded skill %1 to level %2";
+	public static String SKILL_UPGRADED = "You've upgraded skill %s to level %d";
 
 	@ConfigValue
-	public static String SKILL_LEARNED = "You've learned skill %1";
+	public static String SKILL_LEARNED = "You've learned skill %s";
 
 	@ConfigValue
-	public static String WEAPON_EQUIPED = "You have equiped weapon %1";
+	public static String WEAPON_EQUIPED = "You have equiped weapon %s";
 
 	@ConfigValue
-	public static String WEAPON_CANT_BE_EQUIPED = "You are not trained to use %1";
+	public static String WEAPON_CANT_BE_EQUIPED = "You are not trained to use %s";
 
 	@ConfigValue
 	public static String CHARACTER_CREATION = "";
@@ -85,13 +85,13 @@ public class Localization {
 	public static String PLAYER_CANT_CHANGE_RACE = "You can't change race";
 
 	@ConfigValue
-	public static String PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE = "Player %1 has learned skill %2";
+	public static String PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE = "Player %s has learned skill %s";
 
 	@ConfigValue
-	public static String PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE = "Player %1 has upgraded skill %2 to level %3";
+	public static String PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE = "Player %s has upgraded skill %s to level %d";
 
 	@ConfigValue
-	public static String PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE = "Player %1 has has refunded skill %2";
+	public static String PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE = "Player %s has has refunded skill %s";
 
 	@ConfigValue
 	public static String PLAYER_IS_SILENCED = "You can't use this skill, you are silenced.";
@@ -136,7 +136,7 @@ public class Localization {
 	public static String PLAYER_MSG_ON_JOIN_PARTY = "You have joined party";
 
 	@ConfigValue
-	public static String PARTY_MSG_ON_PLAYER_JOIN = "%1 has joined your party";
+	public static String PARTY_MSG_ON_PLAYER_JOIN = "%s has joined your party";
 
 	@ConfigValue
 	public static String NON_EXISTING_CHARACTER = "Selected character does not exist";
@@ -400,10 +400,10 @@ public class Localization {
 	public static String SKILL_LEVEL = "Skill Level";
 
 	@ConfigValue
-	public static String SKILL_VALUE_STARTS_AT = "Value: %1";
+	public static String SKILL_VALUE_STARTS_AT = "Value";
 
 	@ConfigValue
-	public static String SKILL_VALUE_PER_LEVEL = "Value per skill level: %1";
+	public static String SKILL_VALUE_PER_LEVEL = "Value per skill level";
 
 	@ConfigValue
 	public static String UNKNOWN_ATTRIBUTE = "Unknown attribute %s";

@@ -63,7 +63,6 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.equipment.EquipmentType;
-import org.spongepowered.api.text.Text;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -306,7 +305,7 @@ public class CharacterService {
 
 	public void initActiveCharacter(IActiveCharacter character) {
 		logger.info("Initializing character " + character.getCharacterBase().getId());
-		character.getPlayer().sendMessage(Text.of(Localization.CURRENT_CHARACTER.replaceAll("%1", character.getName())));
+		character.getPlayer().sendMessage(TextHelper.parse(Localization.CURRENT_CHARACTER,character.getName()));
 		addDefaultEffects(character);
 		Set<BaseCharacterAttribute> baseCharacterAttribute = character.getCharacterBase().getBaseCharacterAttribute();
 		for (BaseCharacterAttribute at : baseCharacterAttribute) {
@@ -383,6 +382,7 @@ public class CharacterService {
 				args.put("class", character.getRace().getName());
 				if (character.getNClass(slot) != null && character.getNClass(slot).getEnterCommands() != null)
 					Utils.executeCommandBatch(args, character.getNClass(slot).getEnterCommands(), character.getPlayer());
+				character.getPlayer().sendMessage(TextHelper.parse(Localization.PLAYER_CHOOSED_CLASS,configClass.getName()));
 			}
 		}
 
@@ -411,6 +411,7 @@ public class CharacterService {
 				args.put("race", character.getRace().getName());
 				if (character.getRace().getExitCommands() != null)
 					Utils.executeCommandBatch(args, character.getRace().getEnterCommands(), character.getPlayer());
+				character.getPlayer().sendMessage(TextHelper.parse(Localization.PLAYER_CHOOSED_RACE, configClass.getName()));
 			}
 		}
 
@@ -423,7 +424,6 @@ public class CharacterService {
 			updateMaxHealth(character);
 			updateMaxMana(character);
 		}
-		character.getPlayer().sendMessage(TextHelper.parse(Localization.PLAYER_CHOOSED_CLASS.replaceAll("%1", configClass.getName())));
 
 	}
 

@@ -729,10 +729,10 @@ public class VanilaMessaging implements IPlayerMessage {
 							SkillTree tree = character.getPrimaryClass().getConfigClass().getSkillTree();
 							if (character.getSkill(command) == null) {
 								Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data = characterService.characterLearnskill(character, iSkill, tree);
-								player.sendMessage(Text.of(data.value.bind(data.key.message)));
+								player.sendMessage(data.value.bind(data.key.message));
 							} else {
 								Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data = characterService.upgradeSkill(character, iSkill);
-								player.sendMessage(Text.of(data.value.bind(data.key.message)));
+								player.sendMessage(data.value.bind(data.key.message));
 							}
 							//redraw
 							Sponge.getScheduler().createTaskBuilder()
