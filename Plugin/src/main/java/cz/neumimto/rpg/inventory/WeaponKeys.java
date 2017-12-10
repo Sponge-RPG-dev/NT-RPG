@@ -7,7 +7,7 @@ public class WeaponKeys {
 
     public static String SWORDS = "SWORD";
     public static String AXES = "AXE";
-    public static String SHOVELS = "SHOVELS";
+    public static String SPADES = "SPADES";
     public static String PICKAXES = "PICKAXE";
     public static String HOES = "HOE";
     public static String BOWS = "BOW";

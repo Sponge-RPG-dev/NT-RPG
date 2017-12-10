@@ -103,7 +103,7 @@ public class Localization {
 	public static String CHARACTER_DOES_NOT_HAVE_SKILL = "You dont have this skill";
 
 	@ConfigValue
-	public static String ON_COOLDOWN = "%1 has %2 seconds of cooldown";
+	public static String ON_COOLDOWN = "%s has %d seconds of cooldown";
 
 	@ConfigValue
 	public static String CANT_USE_PASSIVE_SKILL = "You can't use passive skill";
@@ -157,7 +157,7 @@ public class Localization {
 	public static String CURRENT_CHARACTER = "Selected character: %s";
 
 	@ConfigValue
-	public static String CHARACTER_GAINED_POINTS = "You've gained %1 skillpoints and 2% attribute points";
+	public static String CHARACTER_GAINED_POINTS = "You've gained %d skillpoints and 2d attribute points";
 
 	@ConfigValue
 	public static String NON_EXISTING_GLOBAL_EFFECT = "The effect with given name does not exists";
@@ -169,13 +169,13 @@ public class Localization {
 	public static String NO_ACCESS_TO_SKILL = "You dont have access to this skill.";
 
 	@ConfigValue
-	public static String CAST_SKILL_ON_RIGHTLICK = "Casts skill %1 on rightclick";
+	public static String CAST_SKILL_ON_RIGHTLICK = "Casts skill %s on rightclick";
 
 	@ConfigValue
 	public static String EMPTY_HAND_REQUIRED = "An empty hand is required";
 
 	@ConfigValue
-	public static String CAST_SKILl_ON_LEFTCLICK = "Casts skill %1 on rightclick";
+	public static String CAST_SKILl_ON_LEFTCLICK = "Casts skill %s on rightclick";
 
 	@ConfigValue
 	public static String ITEM_SKILLBIND_FOOTER = "For casting bounded skills you must have access :n to the skills via command /skill";
@@ -190,16 +190,16 @@ public class Localization {
 	public static String NOT_LEARNED_SKILL = "You have to learn the skill first before spending skillpoints";
 
 	@ConfigValue
-	public static String SKILL_REQUIRES_HIGHER_LEVEL = "Upgrading the skill %1 requires at least level %2";
+	public static String SKILL_REQUIRES_HIGHER_LEVEL = "Upgrading the skill %s requires at least level %s";
 
 	@ConfigValue
-	public static String SKILL_IS_ON_MAX_LEVEL = "The skill %1 is on its maximal level.";
+	public static String SKILL_IS_ON_MAX_LEVEL = "The skill %s is on its maximal level.";
 
 	@ConfigValue
-	public static String SKILL_NOT_IN_A_TREE = "The skill %1 is not accessible from your skill tree";
+	public static String SKILL_NOT_IN_A_TREE = "The skill %s is not accessible from your skill tree";
 
 	@ConfigValue
-	public static String MISSING_SKILL_DEPENDENCIES = "The skill %1 requires [%2] and at least one of [%3]";
+	public static String MISSING_SKILL_DEPENDENCIES = "The skill %s requires [%s] and at least one of [%s]";
 
 	@ConfigValue
 	public static String SKILL_ALREADY_LEARNED = "You've already learned this skill";
@@ -238,7 +238,7 @@ public class Localization {
 	public static String CHARM = "Charm";
 
 	@ConfigValue
-	public static String RACE_AND_CLASS_CONFLICT = "Race %1 can't become %2";
+	public static String RACE_AND_CLASS_CONFLICT = "Race %s can't become %s";
 
 	@ConfigValue
 	public static String ARGUMENT_MUST_BE_POSITIVE_INT = "Argument must be positive integer";
@@ -301,13 +301,13 @@ public class Localization {
 	public static String CONFIRM = "Confirm";
 
 	@ConfigValue
-	public static String SKILL_CONFLICTS = "Skill %1 conflicts with %2";
+	public static String SKILL_CONFLICTS = "Skill %s conflicts with %s";
 
 	@ConfigValue
 	public static String RUNE_LIST = "Runes";
 
 	@ConfigValue
-	public static String RUNEWORD_ITEMS_MENU_TOOLTIP = "List of items, which can be used for crafting %1";
+	public static String RUNEWORD_ITEMS_MENU_TOOLTIP = "List of items, which can be used for crafting %s";
 
 	@ConfigValue
 	public static String RUNEWORD_ITEMS_MENU = "Allowed Items";

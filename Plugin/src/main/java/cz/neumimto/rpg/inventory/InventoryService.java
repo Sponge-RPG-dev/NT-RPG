@@ -146,7 +146,7 @@ public class InventoryService {
 				writer.println("ItemGroups:[");
 				addDefaultItemsToGroup(writer, WeaponKeys.SWORDS, "swords_damage_mult");
 				addDefaultItemsToGroup(writer, WeaponKeys.AXES, "axes_damage_mult");
-				addDefaultItemsToGroup(writer, WeaponKeys.SHOVELS, "shovels_damage_mult");
+				addDefaultItemsToGroup(writer, WeaponKeys.SPADES, "spades_damage_mult");
 				addDefaultItemsToGroup(writer, WeaponKeys.PICKAXES, "pickaxes_damage_mult");
 				addDefaultItemsToGroup(writer, WeaponKeys.HOES, "hoes_damage_mult");
 				addDefaultItemsToGroup(writer, WeaponKeys.BOWS, "bows_meele_damage_mult");

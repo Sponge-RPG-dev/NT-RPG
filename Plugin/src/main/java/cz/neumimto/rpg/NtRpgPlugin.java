@@ -415,10 +415,6 @@ public class NtRpgPlugin {
 				.arguments(GenericArguments.remainingJoinedStrings(TextHelper.parse("args")))
 				.executor((src, args) -> {
 					String[] a = args.<String>getOne("args").get().split(" ");
-					if (a.length == 1) {
-						src.sendMessage(TextHelper.parse("js[s/a/g] skilltree [r,a]"));
-						return CommandResult.empty();
-					}
 					if (a[1].equalsIgnoreCase("js")) {
 						if (!PluginConfig.DEBUG) {
 							src.sendMessage(TextHelper.parse("Reloading is allowed only in debug mode"));
@@ -444,6 +440,9 @@ public class NtRpgPlugin {
 						}
 					} else if (a[1].equalsIgnoreCase("skilltree")) {
 						IoC.get().build(SkillService.class).reloadSkillTrees();
+					} else {
+						src.sendMessage(TextHelper.parse("js[s/a/g] skilltree [r,a]"));
+						return CommandResult.empty();
 					}
 					return CommandResult.success();
 				})
