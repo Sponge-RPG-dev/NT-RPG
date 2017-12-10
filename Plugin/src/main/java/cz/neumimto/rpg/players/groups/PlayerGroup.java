@@ -40,7 +40,7 @@ public class PlayerGroup implements IEffectSourceProvider {
 	private boolean showsInMenu = true;
 	private Set<ItemType> canCraft = new HashSet<>();
 	private Set<ItemType> allowedArmor = new HashSet<>();
-	private HashMap<ItemType, TreeSet<ConfigRPGItemType>> weapons = new HashMap<>();
+	private HashMap<ItemType, Set<ConfigRPGItemType>> weapons = new HashMap<>();
 	private Set<PlayerGroupPermission> permissions = new TreeSet<>();
 	private Map<Integer, Float> propLevelBonus = new HashMap<>();
 	private ItemType itemType;
@@ -112,14 +112,14 @@ public class PlayerGroup implements IEffectSourceProvider {
 		return allowedArmor;
 	}
 
-	public Map<ItemType, TreeSet<ConfigRPGItemType>> getWeapons() {
+	public Map<ItemType, Set<ConfigRPGItemType>> getWeapons() {
 		return weapons;
 	}
 
 	public void addWeapon(ConfigRPGItemType item) {
-		TreeSet<ConfigRPGItemType> configRPGItemTypes = weapons.get(item.getItemType());
+		Set<ConfigRPGItemType> configRPGItemTypes = weapons.get(item.getItemType());
 		if (configRPGItemTypes == null) {
-			configRPGItemTypes = new TreeSet<>();
+			configRPGItemTypes = new HashSet<>();
 			weapons.put(item.getItemType(), configRPGItemTypes);
 		}
 		configRPGItemTypes.add(item);
@@ -195,5 +195,13 @@ public class PlayerGroup implements IEffectSourceProvider {
 
 	public List<String> getEnterCommands() {
 		return enterCommands;
+	}
+
+	@Override
+	public String toString() {
+		return "PlayerGroup{" +
+				"name='" + name + '\'' +
+				", playerGroupType=" + playerGroupType +
+				'}';
 	}
 }

@@ -122,7 +122,7 @@ public class PluginConfig {
 
 	@ConfigValue
 	@Comment(content = {"Whenever global chat message will be displayed if any player chooses a skill tree path"})
-	public static boolean PLAYER_CHOOSED_SKILLTREE_PATH_GLOBAL_MESSAGE;
+	public static boolean PLAYER_CHOOSED_SKILLTREE_SPECIALIZATIon_GLOBAL_MESSAGE;
 
 	@ConfigValue
 	@Comment(content = {"Whenever a player is able to refund skills, representing root of the path of specialization on any skilltree"})

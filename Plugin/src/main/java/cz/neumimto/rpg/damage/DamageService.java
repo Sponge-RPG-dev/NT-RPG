@@ -197,8 +197,8 @@ public class DamageService {
 		Set<Double> list = new TreeSet<>();
 
 		for (ConfigClass aClass : classes) {
-			Map<ItemType, TreeSet<ConfigRPGItemType>> weapons = aClass.getWeapons();
-			for (TreeSet<ConfigRPGItemType> configRPGItemTypes : weapons.values()) {
+			Map<ItemType, Set<ConfigRPGItemType>> weapons = aClass.getWeapons();
+			for (Set<ConfigRPGItemType> configRPGItemTypes : weapons.values()) {
 				configRPGItemTypes
 						.stream()
 						.map(ConfigRPGItemType::getDamage)
@@ -210,8 +210,8 @@ public class DamageService {
 
 
 		for (Race aClass : races) {
-			Map<ItemType, TreeSet<ConfigRPGItemType>> weapons = aClass.getWeapons();
-			for (TreeSet<ConfigRPGItemType> configRPGItemTypes : weapons.values()) {
+			Map<ItemType, Set<ConfigRPGItemType>> weapons = aClass.getWeapons();
+			for (Set<ConfigRPGItemType> configRPGItemTypes : weapons.values()) {
 				configRPGItemTypes
 						.stream()
 						.map(ConfigRPGItemType::getDamage)

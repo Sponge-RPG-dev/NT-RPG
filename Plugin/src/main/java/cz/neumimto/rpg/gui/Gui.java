@@ -208,4 +208,8 @@ public class Gui {
 	public static void displaySkillDetailsInventoryMenu(IActiveCharacter character, SkillTree tree, String command) {
 		getMessageTypeOf(character).displaySkillDetailsInventoryMenu(character, tree, command);
 	}
+
+	public static void displayInitialProperties(PlayerGroup byName, Player commandSource) {
+		getMessageTypeOf(commandSource).displayInitialProperties(byName, commandSource);
+	}
 }

@@ -327,7 +327,7 @@ public class BasicListener {
 
 			finalDamage = event1.getDamage();
 			double target_resistence = damageService.getEntityResistance(targetchar, type);
-
+			finalDamage *= target_resistence;
 			SkillDamageEventLate event2 = new SkillDamageEventLate(caster, targetchar, skill, finalDamage, target_resistence, type);
 			event2.setCause(causeStackManager.getCurrentCause());
 

@@ -273,7 +273,7 @@ public class GroupDao {
 						itemName = split[2];
 					}
 				}
-				ConfigRPGItemType t = new ConfigRPGItemType(type,itemName);
+				ConfigRPGItemType t = new ConfigRPGItemType(type,itemName, group, damage);
 				t.setDamage(damage);
 				group.addWeapon(t);
 			}

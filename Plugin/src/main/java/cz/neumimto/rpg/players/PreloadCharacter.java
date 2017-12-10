@@ -350,7 +350,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Map<ItemType, TreeSet<ConfigRPGItemType>> getAllowedWeapons() {
+	public Map<ItemType, RPGItemWrapper> getAllowedWeapons() {
 		return Collections.emptyMap();
 	}
 

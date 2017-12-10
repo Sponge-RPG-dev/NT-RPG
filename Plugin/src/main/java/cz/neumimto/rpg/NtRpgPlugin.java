@@ -92,6 +92,7 @@ import java.util.concurrent.TimeUnit;
 		@Dependency(id = "nt-core", version = "1.9", optional = false)
 })
 public class NtRpgPlugin {
+
 	public static String workingDir;
 	public static File pluginjar;
 	public static GlobalScope GlobalScope;
@@ -159,6 +160,7 @@ public class NtRpgPlugin {
 		long start = System.nanoTime();
 		IoC ioc = IoC.get();
 		asyncExecutor = Sponge.getGame().getScheduler().createAsyncExecutor(NtRpgPlugin.this);
+
 		ioc.registerInterfaceImplementation(Logger.class, logger);
 		Game game = Sponge.getGame();
 		Optional<PluginContainer> gui = game.getPluginManager().getPlugin("MinecraftGUIServer");
@@ -413,10 +415,6 @@ public class NtRpgPlugin {
 				.arguments(GenericArguments.remainingJoinedStrings(TextHelper.parse("args")))
 				.executor((src, args) -> {
 					String[] a = args.<String>getOne("args").get().split(" ");
-					if (a.length == 1) {
-						src.sendMessage(TextHelper.parse("js[s/a/g] skilltree [r,a]"));
-						return CommandResult.empty();
-					}
 					if (a[1].equalsIgnoreCase("js")) {
 						if (!PluginConfig.DEBUG) {
 							src.sendMessage(TextHelper.parse("Reloading is allowed only in debug mode"));
@@ -442,6 +440,9 @@ public class NtRpgPlugin {
 						}
 					} else if (a[1].equalsIgnoreCase("skilltree")) {
 						IoC.get().build(SkillService.class).reloadSkillTrees();
+					} else {
+						src.sendMessage(TextHelper.parse("js[s/a/g] skilltree [r,a]"));
+						return CommandResult.empty();
 					}
 					return CommandResult.success();
 				})
@@ -573,7 +574,6 @@ public class NtRpgPlugin {
 						character.getClasses().remove(ExtendedNClass.Default);
 					}
 					GlobalScope.characterService.updatePlayerGroups(character, configClass, i, null, null);
-					player.sendMessage(TextHelper.parse(Localization.PLAYER_CHOOSED_CLASS.replaceAll("%1", configClass.getName())));
 					return CommandResult.success();
 				})
 				.build();
@@ -631,7 +631,7 @@ public class NtRpgPlugin {
 						IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
 						Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data
 								= GlobalScope.characterService.characterLearnskill(character, iSkill, character.getPrimaryClass().getConfigClass().getSkillTree());
-						player.sendMessage(Text.of(data.value.bind(data.key.message)));
+						player.sendMessage(data.value.bind(data.key.message));
 					});
 					return CommandResult.empty();
 				})
@@ -647,7 +647,7 @@ public class NtRpgPlugin {
 						Player player = (Player) src;
 						IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
 						Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data = GlobalScope.characterService.upgradeSkill(character, iSkill);
-						player.sendMessage(Text.of(data.value.bind(data.key.message)));
+						player.sendMessage(data.value.bind(data.key.message));
 					});
 					return CommandResult.success();
 				})
@@ -702,7 +702,7 @@ public class NtRpgPlugin {
 							player.sendMessage(Text.of(Localization.ALREADY_CUURENT_CHARACTER));
 							return;
 						}
-						asyncExecutor.schedule(() -> {
+						asyncExecutor.execute(() -> {
 							List<CharacterBase> playersCharacters = GlobalScope.characterService.getPlayersCharacters(player.getUniqueId());
 							boolean b = false;
 							for (CharacterBase playersCharacter : playersCharacters) {
@@ -716,7 +716,7 @@ public class NtRpgPlugin {
 							}
 							if (!b)
 								player.sendMessage(Text.of(Localization.NON_EXISTING_CHARACTER));
-						},0,TimeUnit.SECONDS);
+						});
 					});
 					return CommandResult.success();
 				})

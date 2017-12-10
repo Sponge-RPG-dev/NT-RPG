@@ -69,12 +69,13 @@ public class RpgListener {
 			Player player = retardedOptional.get();
 			if (!event.getCharacterBases().isEmpty()) {
 				if (PluginConfig.PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR || event.getCharacterBases().size() == 1) {
-					Sponge.getScheduler().createTaskBuilder().async().execute(() -> {
+
+					NtRpgPlugin.asyncExecutor.execute(() -> {
 						final IActiveCharacter character = characterService.buildActiveCharacterAsynchronously(player, event.getCharacterBases().get(0));
 						Sponge.getScheduler().createTaskBuilder().execute(() -> {
 							characterService.setActiveCharacter(event.getPlayer(), character);
 						}).submit(plugin);
-					}).submit(plugin);
+					});
 				} else {
 					Gui.invokeCharacterMenu(player, event.getCharacterBases());
 				}
