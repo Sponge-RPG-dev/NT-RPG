@@ -125,6 +125,13 @@ public class GroupService {
 		return groupDao.getRaces().containsKey(s.toLowerCase());
 	}
 
+	public Set<PlayerGroup> getAll() {
+		Set<PlayerGroup> set = new HashSet<>();
+		set.addAll(getRaces());
+		set.addAll(getClasses());
+		return set;
+
+	}
 
 	public Collection<ConfigClass> getClasses() {
 		return groupDao.getClasses().values();

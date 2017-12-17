@@ -18,15 +18,10 @@
 
 package cz.neumimto.rpg.gui;
 
-import com.google.common.collect.ImmutableMap;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.GroupService;
-import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.Pair;
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.commands.CommandChoose;
+import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.CommandPermissions;
 import cz.neumimto.rpg.configuration.Localization;
@@ -154,17 +149,9 @@ public class VanilaMessaging implements IPlayerMessage {
 			.style(TextStyles.BOLD)
 			.build();
 
-	private static final TextTemplate cooldown = TextTemplate.of(
-			SKILLNAME,
-			TextColors.GRAY, TextStyles.NONE, Localization.ON_COOLDOWN,
-			TIMELEFT
-	);
-
 	@Override
 	public void sendCooldownMessage(IActiveCharacter player, String message, double cooldown) {
-		Text.Builder builder = VanilaMessaging.cooldown.apply(ImmutableMap.of(timeleft, Text.of(cooldown),
-				skillname, Text.of(message)));
-		player.getPlayer().sendMessage(builder.build());
+		player.getPlayer().sendMessage(TextHelper.parse(Localization.ON_COOLDOWN, Arg.arg("skill", message).with("time", cooldown)));
 	}
 
 	@Override
@@ -192,7 +179,7 @@ public class VanilaMessaging implements IPlayerMessage {
 			String name1 = character.getRace().getName();
 			Text.Builder b = Text.builder();
 			b.append(Text.builder(" [").color(TextColors.DARK_GRAY).build())
-					.append(Text.builder("SELECT").color(TextColors.GREEN).onClick(TextActions.runCommand("/" + "show" + " character " + name)).build())
+					.append(Text.builder("SELECT").color(TextColors.GREEN).build())
 					.append(Text.builder("] - ").color(TextColors.DARK_GRAY).build());
 			b.append(Text.of(name));
 			if (character.getPrimaryClass() != ExtendedNClass.Default) {
@@ -262,7 +249,6 @@ public class VanilaMessaging implements IPlayerMessage {
 		content.add(Text.builder().append(Text.of("Attribute points: ", TextColors.GREEN))
 				.append(Text.of(character.getCharacterBase().getAttributePoints(), TextColors.AQUA))
 				.append(Text.of(String.format("(%s)", character.getCharacterBase().getUsedAttributePoints(), TextColors.GRAY))).toText());
-		Player player = character.getPlayer();
 
 		builder.contents(content);
 		builder.sendTo(character.getPlayer());
@@ -273,8 +259,8 @@ public class VanilaMessaging implements IPlayerMessage {
 	public void showClassInfo(IActiveCharacter character, ConfigClass cc) {
 		Inventory i = createPlayerGroupView(cc);
 
-		ItemStack of = ItemStack.of(ItemTypes.DIAMOND, 1);
-		of.offer(new InventoryCommandItemMenuData("choose class " + cc.getName()));
+		ItemStack of = GuiHelper.itemStack(ItemTypes.DIAMOND);
+		of.offer(new InventoryCommandItemMenuData("character set class " + cc.getName()));
 		of.offer(Keys.DISPLAY_NAME, Text.of(Localization.CONFIRM));
 		i.query(new SlotPos(8, 0)).offer(of);
 
@@ -300,14 +286,13 @@ public class VanilaMessaging implements IPlayerMessage {
 			builder.padding(Text.builder("=").color(TextColors.DARK_GRAY).build());
 			GroupService s = IoC.get().build(GroupService.class);
 			String current = player.getName();
-			CommandChoose build1 = IoC.get().build(CommandChoose.class);
-			String s1 = build1.getAliases().get(0);
+
 			list.forEach(a -> {
 				Text.Builder b = Text.builder(" -")
 						.color(TextColors.GRAY);
 				if (!a.getCharacterName().equalsIgnoreCase(current)) {
 					b.append(Text.builder(" [").color(TextColors.DARK_GRAY).build())
-							.append(Text.builder("SELECT").color(TextColors.GREEN).onClick(TextActions.runCommand("/" + s1 + " character " + a.getCharacterName())).build())
+							.append(Text.builder("SELECT").color(TextColors.GREEN).onClick(TextActions.runCommand("/character switch " + a.getCharacterName())).build())
 							.append(Text.builder("] - ").color(TextColors.DARK_GRAY).build());
 				} else {
 					b.append(Text.builder(" [").color(TextColors.DARK_GRAY).build())
@@ -376,7 +361,7 @@ public class VanilaMessaging implements IPlayerMessage {
 			if (cc == default_) {
 				continue;
 			}
-			if (!cc.isShowsInMenu() && !character.getPlayer().hasPermission("ntrpg.showsEverything")) {
+			if (!cc.isShowsInMenu() && !character.getPlayer().hasPermission("ntrpg.admin")) {
 				continue;
 			}
 			i.offer(createItemRepresentingGroup(cc));
@@ -385,18 +370,15 @@ public class VanilaMessaging implements IPlayerMessage {
 	}
 
 	private ItemStack createItemRepresentingGroup(PlayerGroup p) {
-		String s1 = infoCommand.getAliases().iterator().next();
-		ItemStack s = ItemStack.of(p.getItemType(), 1);
+		ItemStack s = GuiHelper.itemStack(p.getItemType());
 		s.offer(new MenuInventoryData(true));
 		s.offer(Keys.DISPLAY_NAME, Text.of(p.getName(), TextColors.DARK_PURPLE));
 		s.offer(Keys.ITEM_LORE, getItemLore(p.getDescription()));
-		s.offer(Keys.HIDE_MISCELLANEOUS, true);
-		s.offer(Keys.HIDE_ATTRIBUTES, true);
-		String l = " race ";
+		String l = "race ";
 		if (p.getType() == EffectSourceType.CLASS) {
-			l = " class ";
+			l = "class ";
 		}
-		s.offer(new InventoryCommandItemMenuData(s1 + l + p.getName()));
+		s.offer(new InventoryCommandItemMenuData(l + p.getName()));
 		return s;
 	}
 
@@ -420,14 +402,8 @@ public class VanilaMessaging implements IPlayerMessage {
 				rows.get(4).add(type);
 			}
 		}
-		ItemStack of = ItemStack.of(ItemTypes.PAPER, 1);
-		String l = "class";
-		if (g instanceof Race) {
-			l = "race";
-		}
-		of.offer(new MenuInventoryData(true));
-		of.offer(Keys.DISPLAY_NAME, Text.of(Localization.BACK, TextColors.WHITE));
-		of.offer(new InventoryCommandItemMenuData("show " + l + " " + g.getName()));
+
+		ItemStack of = GuiHelper.back(g);
 		i.query(new SlotPos(0, 0)).offer(of);
 
 		int x = 2;
@@ -435,9 +411,7 @@ public class VanilaMessaging implements IPlayerMessage {
 		for (List<ItemType> row : rows) {
 			y = 0;
 			for (ItemType type : row) {
-				ItemStack armor = ItemStack.of(type, 1);
-				armor.offer(Keys.HIDE_ATTRIBUTES, true);
-				armor.offer(Keys.HIDE_MISCELLANEOUS, true);
+				ItemStack armor = GuiHelper.itemStack(type);
 				armor.offer(new MenuInventoryData(true));
 				i.query(new SlotPos(x, y)).offer(armor);
 				y++;
@@ -450,36 +424,18 @@ public class VanilaMessaging implements IPlayerMessage {
 	@Override
 	public void displayGroupWeapon(PlayerGroup g, Player target) {
 		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
-		List<List<ItemType>> rows = new ArrayList<>(5);
-		for (int ki = 0; ki <= 5; ki++) {
-			rows.add(new ArrayList<>());
-		}
+
 
 		ItemStack of = back(g);
 		i.query(new SlotPos(0, 0)).offer(of);
 
 		TreeSet<ConfigRPGItemType> treeSet = new TreeSet<>();
-		for (Map.Entry<ItemType, TreeSet<ConfigRPGItemType>> entry : g.getWeapons().entrySet()) {
+		for (Map.Entry<ItemType, Set<ConfigRPGItemType>> entry : g.getWeapons().entrySet()) {
 			treeSet.addAll(entry.getValue());
 		}
 
 		for (ConfigRPGItemType configRPGItemType : treeSet) {
-			ItemStack q = ItemStack.of(configRPGItemType.getItemType(), 1);
-			Text lore = Text.builder(Localization.ITEM_DAMAGE)
-					.color(TextColors.GOLD)
-					.style(TextStyles.BOLD)
-					.append(Text.builder(" " + configRPGItemType.getDamage())
-							.style(TextStyles.BOLD)
-							.color(damageService.getColorByDamage(configRPGItemType.getDamage()))
-							.build())
-					.build();
-			q.offer(Keys.ITEM_LORE, Collections.singletonList(lore));
-			q.offer(new MenuInventoryData(true));
-			q.offer(Keys.HIDE_MISCELLANEOUS, true);
-			q.offer(Keys.HIDE_ATTRIBUTES, true);
-			if (configRPGItemType.getDisplayName() != null) {
-				q.offer(Keys.DISPLAY_NAME, Text.of(configRPGItemType.getDisplayName()));
-			}
+			ItemStack q = GuiHelper.rpgItemTypeToItemStack(configRPGItemType);
 			i.offer(q);
 		}
 
@@ -490,8 +446,8 @@ public class VanilaMessaging implements IPlayerMessage {
 	public void sendRaceInfo(IActiveCharacter target, Race race) {
 		Inventory i = createPlayerGroupView(race);
 		if ((target.getRace() == null || target.getRace() == Race.Default) || PluginConfig.PLAYER_CAN_CHANGE_RACE) {
-			ItemStack of = ItemStack.of(ItemTypes.DIAMOND, 1);
-			of.offer(new InventoryCommandItemMenuData("choose race " + race.getName()));
+			ItemStack of = GuiHelper.itemStack(ItemTypes.DIAMOND);
+			of.offer(new InventoryCommandItemMenuData("character set race " + race.getName()));
 			of.offer(Keys.DISPLAY_NAME, Text.of(Localization.CONFIRM));
 			i.query(new SlotPos(8, 0)).offer(of);
 		}
@@ -532,26 +488,26 @@ public class VanilaMessaging implements IPlayerMessage {
 		String cmd = infoCommand.getAliases().get(0);
 		if (linkToRWList) {
 			if (character.getPlayer().hasPermission(CommandPermissions.SHOW_RUNEWORD_LIST)) {
-				i.query(new SlotPos(0, 0)).offer(back(cmd + " runes", Localization.RUNE_LIST));
+				i.query(new SlotPos(0, 0)).offer(back("runes", Localization.RUNE_LIST));
 			}
 		}
 
 		List<ItemStack> commands = new ArrayList<>();
 		if (!rw.getAllowedItems().isEmpty()) {
-			ItemStack is = ItemStack.of(ItemTypes.IRON_PICKAXE, 1);
+			ItemStack is = GuiHelper.itemStack(ItemTypes.IRON_PICKAXE);
 			is.offer(Keys.DISPLAY_NAME, Text.of(Localization.RUNEWORD_ITEMS_MENU));
 			is.offer(Keys.ITEM_LORE,
 					Collections.singletonList(
-							ItemStackUtils.stringToItemTooltip(Localization.RUNEWORD_ITEMS_MENU_TOOLTIP
-									.replaceAll("%1", rw.getName()))
+							TextHelper.parse(Localization.RUNEWORD_ITEMS_MENU_TOOLTIP
+									, Arg.arg("runeword", rw.getName()))
 					)
 			);
-			is.offer(new InventoryCommandItemMenuData(cmd + " runeword " + rw.getName() + " allowed-items"));
+			is.offer(new InventoryCommandItemMenuData("runeword " + rw.getName() + " allowed-items"));
 			commands.add(is);
 		}
 
 		if (!rw.getAllowedGroups().isEmpty()) {
-			ItemStack is = ItemStack.of(ItemTypes.LEATHER_HELMET, 1);
+			ItemStack is = GuiHelper.itemStack(ItemTypes.LEATHER_HELMET);
 			is.offer(Keys.DISPLAY_NAME, Text.of(Localization.RUNEWORD_ALLOWED_GROUPS_MENU));
 			is.offer(Keys.ITEM_LORE,
 					Collections.singletonList(
@@ -560,12 +516,12 @@ public class VanilaMessaging implements IPlayerMessage {
 					)
 			);
 			is.offer(Keys.HIDE_ATTRIBUTES, true);
-			is.offer(new InventoryCommandItemMenuData(cmd + " runeword " + rw.getName() + " allowed-groups"));
+			is.offer(new InventoryCommandItemMenuData("runeword " + rw.getName() + " allowed-groups"));
 			commands.add(is);
 		}
 
 		if (!rw.getAllowedGroups().isEmpty()) {
-			ItemStack is = ItemStack.of(ItemTypes.REDSTONE, 1);
+			ItemStack is = GuiHelper.itemStack(ItemTypes.REDSTONE);
 			is.offer(Keys.DISPLAY_NAME, Text.of(Localization.RUNEWORD_BLOCKED_GROUPS_MENU));
 			is.offer(Keys.ITEM_LORE,
 					Collections.singletonList(
@@ -573,7 +529,7 @@ public class VanilaMessaging implements IPlayerMessage {
 									.replaceAll("%1", rw.getName()))
 					)
 			);
-			is.offer(new InventoryCommandItemMenuData(cmd + " runeword " + rw.getName() + " blocked-groups"));
+			is.offer(new InventoryCommandItemMenuData("runeword " + rw.getName() + " blocked-groups"));
 			commands.add(is);
 		}
 
@@ -625,12 +581,11 @@ public class VanilaMessaging implements IPlayerMessage {
 	@Override
 	public void displayRunewordAllowedItems(IActiveCharacter character, RuneWord rw) {
 		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
-		String cmd = infoCommand.getAliases().get(0);
-		i.query(new SlotPos(0, 0)).offer(back(cmd + " runeword " + rw.getName(), Localization.RUNEWORD_DETAILS_MENU));
+		i.query(new SlotPos(0, 0)).offer(back("runeword " + rw.getName(), Localization.RUNEWORD_DETAILS_MENU));
 		int x = 1;
 		int y = 2;
 		for (ItemType type : rw.getAllowedItems()) {
-			i.query(new SlotPos(x, y)).offer(ItemStack.of(type, 1));
+			i.query(new SlotPos(x, y)).offer(GuiHelper.itemStack(type));
 			if (x == 7) {
 				x = 1;
 				y++;
@@ -644,7 +599,7 @@ public class VanilaMessaging implements IPlayerMessage {
 	private Inventory displayGroupRequirements(IActiveCharacter character, RuneWord rw, Set<PlayerGroup> groups) {
 		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
 		String cmd = infoCommand.getAliases().get(0);
-		i.query(new SlotPos(0, 0)).offer(back(cmd + " runeword " + rw.getName(), Localization.RUNEWORD_DETAILS_MENU));
+		i.query(new SlotPos(0, 0)).offer(back("runeword " + rw.getName(), Localization.RUNEWORD_DETAILS_MENU));
 
 		List<ItemStack> list = new ArrayList<>();
 		for (PlayerGroup playerGroup : groups) {
@@ -682,23 +637,18 @@ public class VanilaMessaging implements IPlayerMessage {
 	}
 
 	private ItemStack createAttributeItem(ICharacterAttribute key, Integer value) {
-		ItemStack of = ItemStack.of(key.getItemRepresentation(), 1);
+		ItemStack of = GuiHelper.itemStack(key.getItemRepresentation());
 		of.offer(Keys.DISPLAY_NAME, Text.of(TextColors.DARK_RED, key.getName()));
 		List<Text> lore = new ArrayList<>();
 		of.offer(new MenuInventoryData(true));
 		lore.add(Text.of(Localization.INITIAL_VALUE + ": " + value, TextColors.WHITE));
 		lore.addAll(getItemLore(key.getDescription()));
 		of.offer(Keys.ITEM_LORE, lore);
-		of.offer(Keys.HIDE_ATTRIBUTES, true);
-		of.offer(Keys.HIDE_MISCELLANEOUS, true);
 		return of;
 	}
 
 	@Listener
 	public void onOptionSelect(ClickInventoryEvent event, @First(typeFilter = Player.class) Player player) {
-	/*	if (event.getTargetInventory().getArchetype() == InventoryArchetypes.CHEST ||
-				event.getTargetInventory().getArchetype() == InventoryArchetypes.DOUBLE_CHEST) {
-		*/
 		//todo inventory.getPlugin
 
 		Iterator<SlotTransaction> iterator = event.getTransactions().iterator();
@@ -720,6 +670,7 @@ public class VanilaMessaging implements IPlayerMessage {
 
 			if (t.getOriginal().get(NKeys.MENU_INVENTORY).isPresent()) {
 				event.setCancelled(true);
+				t.setCustom(ItemStack.empty());
 			}
 
 			if (t.getOriginal().get(NKeys.SKILLTREE_CONTROLLS).isPresent()) {
@@ -730,24 +681,35 @@ public class VanilaMessaging implements IPlayerMessage {
 				switch (command) {
 					case "Up":
 						viewModel.getLocation().key-=1;
-						Gui.moveSkillTreeMenu(character);
+						Sponge.getScheduler().createTaskBuilder()
+								.execute(() -> Gui.moveSkillTreeMenu(character))
+								.submit(plugin);
+
 						break;
 					case "Down":
 						viewModel.getLocation().key+=1;
-						Gui.moveSkillTreeMenu(character);
+						Sponge.getScheduler().createTaskBuilder()
+								.execute(() -> Gui.moveSkillTreeMenu(character))
+								.submit(plugin);
 						break;
 					case "Right":
 						viewModel.getLocation().value+=1;
-						Gui.moveSkillTreeMenu(character);
+						Sponge.getScheduler().createTaskBuilder()
+								.execute(() -> Gui.moveSkillTreeMenu(character))
+								.submit(plugin);
 						break;
 					case "Left":
 						viewModel.getLocation().value-=1;
-						Gui.moveSkillTreeMenu(character);
+						Sponge.getScheduler().createTaskBuilder()
+								.execute(() -> Gui.moveSkillTreeMenu(character))
+								.submit(plugin);
 						break;
 					case "mode":
 						viewModel.setInteractiveMode(viewModel.getInteractiveMode().opposite());
 						//just redraw
-						Gui.moveSkillTreeMenu(character);
+						Sponge.getScheduler().createTaskBuilder()
+								.execute(() -> Gui.moveSkillTreeMenu(character))
+								.submit(plugin);
 						break;
 					default:
 						if (viewModel.getInteractiveMode() == SkillTreeViewModel.InteractiveMode.FAST) {
@@ -755,21 +717,25 @@ public class VanilaMessaging implements IPlayerMessage {
 							SkillTree tree = character.getPrimaryClass().getConfigClass().getSkillTree();
 							if (character.getSkill(command) == null) {
 								Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data = characterService.characterLearnskill(character, iSkill, tree);
-								player.sendMessage(Text.of(data.value.bind(data.key.message)));
+								player.sendMessage(data.value.bind(data.key.message));
 							} else {
 								Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data = characterService.upgradeSkill(character, iSkill);
-								player.sendMessage(Text.of(data.value.bind(data.key.message)));
+								player.sendMessage(data.value.bind(data.key.message));
 							}
 							//redraw
-							Gui.moveSkillTreeMenu(character);
+							Sponge.getScheduler().createTaskBuilder()
+									.execute(() -> Gui.moveSkillTreeMenu(character))
+									.submit(plugin);
 						} else {
 							SkillTree tree = character.getPrimaryClass().getConfigClass().getSkillTree();
-							Gui.displaySkillDetailsInventoryMenu(character, tree, command);
+							event.setCancelled(true);
+							Sponge.getScheduler().createTaskBuilder()
+									.execute(() -> Gui.displaySkillDetailsInventoryMenu(character, tree, command))
+									.submit(plugin);
+
 						}
-						break;
 
 				}
-				event.setCancelled(true);
 			}
 		}
 	}
@@ -840,8 +806,15 @@ public class VanilaMessaging implements IPlayerMessage {
 
 	@Override
 	public void displaySkillDetailsInventoryMenu(IActiveCharacter character, SkillTree tree, String command) {
+
 		Inventory skillDetailInventoryView = GuiHelper.createSkillDetailInventoryView(character, tree.getId(), tree.getSkills().get(command));
 		character.getPlayer().openInventory(skillDetailInventoryView);
+	}
+
+	@Override
+	public void displayInitialProperties(PlayerGroup g, Player p) {
+		ItemStack back = GuiHelper.back(g);
+
 	}
 
 	private void createSkillTreeView(IActiveCharacter character, Inventory skillTreeInventoryViewTemplate, SkillTree skillTree) {
@@ -875,22 +848,24 @@ public class VanilaMessaging implements IPlayerMessage {
 						ItemStack itemStack = null;
 						if (id > 0) {
 							if (conn.containsKey(id)) {
-								itemStack = ItemStack.of(ItemTypes.STICK, 1);
+								itemStack = GuiHelper.itemStack(ItemTypes.STICK);
 								itemStack.offer(Keys.DISPLAY_NAME, Text.of(conn.get(id)));
 								itemStack.offer(new MenuInventoryData(true));
 							} else {
 								SkillData skillById = skillTree.getSkillById(id);
 
 								if (skillById == null) {
-									itemStack = ItemStack.of(ItemTypes.BARRIER, 1);
+									itemStack = GuiHelper.itemStack(ItemTypes.BARRIER);
 									itemStack.offer(Keys.DISPLAY_NAME, Text.of("UNKNOWN SKILL ID: " + id));
 									itemStack.offer(new MenuInventoryData(true));
 								} else {
 									itemStack = GuiHelper.skillToItemStack(character, skillById);
 									if (interactiveMode == SkillTreeViewModel.InteractiveMode.DETAILED) {
 										itemStack.offer(new SkillTreeInventoryViewControllsData(skillById.getSkillName()));
+										itemStack.offer(new MenuInventoryData(true));
 									} else {
 										itemStack.offer(new SkillTreeInventoryViewControllsData(skillById.getSkillName()));
+										itemStack.offer(new MenuInventoryData(true));
 									}
 								}
 							}

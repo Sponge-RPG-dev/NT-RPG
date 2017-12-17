@@ -20,12 +20,15 @@ package cz.neumimto.rpg.utils;
 
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
+import cz.neumimto.rpg.Console;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.NDamageType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
@@ -60,7 +63,7 @@ public class Utils {
 	public static String LineSeparator = System.getProperty("line.separator");
 	public static String Tab = "\t";
 	private static GlobalScope globalScope = NtRpgPlugin.GlobalScope;
-
+	private static Logger logger = LoggerFactory.getLogger(Utils.class);
 
 	public static void applyOnNearbyPartyMembers(IActiveCharacter character, int distance, Consumer<IActiveCharacter> c) {
 		double k = Math.pow(distance, 2);
@@ -186,7 +189,8 @@ public class Utils {
 
 	public static Predicate<BlockRayHit<World>> SKILL_TARGET_BLOCK_FILTER =
 			(Predicate<BlockRayHit<World>>)
-					a -> !isTransparent(a.getExtent().getBlockType(a.getBlockX(), a.getBlockY(), a.getBlockZ()));
+					a -> !isTransparent(a.getExtent()
+							.getBlockType(a.getBlockX(), a.getBlockY(), a.getBlockZ()));
 
 	public static void hideProjectile(Projectile projectile) {
 		projectile.offer(Keys.INVISIBLE, true);
@@ -290,6 +294,20 @@ public class Utils {
 		String a =  t.replaceAll("_"," ");
 		a = a.substring(0, 1).toUpperCase() + a.substring(1);
 		return a;
+	}
+
+	public static void executeCommandBatch(Map<String,String> variables, List<String> commandTemplates) {
+		for (String commandTemplate : commandTemplates) {
+			for (Map.Entry<String, String> entry : variables.entrySet()) {
+				commandTemplate = commandTemplate.replaceAll("\\{\\{"+entry.getKey()+"}}",entry.getValue());
+			}
+			try {
+				logger.info(Console.GREEN_BOLD + " Running Command (as a console): " + Console.YELLOW + commandTemplate);
+				Sponge.getCommandManager().process(Sponge.getServer().getConsole(), commandTemplate);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	static {

@@ -18,7 +18,9 @@
 
 package cz.neumimto.rpg.players;
 
+import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.PluginConfig;
+import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.inventory.*;
@@ -30,10 +32,7 @@ import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.StartingPoint;
+import cz.neumimto.rpg.skills.*;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
@@ -46,6 +45,7 @@ import org.spongepowered.api.text.chat.ChatType;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -62,7 +62,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	private transient Map<String, IEffectContainer<Object, IEffect<Object>>> effects = new HashMap<>();
 	private transient Click click = new Click();
 	private transient Set<ItemType> allowedArmorIds = new HashSet<>();
-	private transient Map<ItemType, TreeSet<ConfigRPGItemType>> allowedWeapons = new HashMap<>();
+	private transient Map<ItemType, RPGItemWrapper> allowedWeapons = new HashMap<>();
 	private transient Map<EntityType, Double> projectileDamage = new HashMap<>();
 	private transient Party party;
 	private Map<String, ExtendedSkillInfo> skills = new HashMap<>();
@@ -93,10 +93,9 @@ public class ActiveCharacter implements IActiveCharacter {
 		characterProperties = new float[PropertyService.LAST_ID];
 		characterPropertiesLevel = new float[PropertyService.LAST_ID];
 		equipedArmor = new HashMap<>();
-		ExtendedNClass cl = new ExtendedNClass();
+		ExtendedNClass cl = new ExtendedNClass(this);
 		cl.setPrimary(true);
 		cl.setConfigClass(ConfigClass.Default);
-		cl.setExperiences(0);
 		this.base = base;
 		classes.add(cl);
 		slotsToReinitialize = new ArrayList<>();
@@ -341,7 +340,7 @@ public class ActiveCharacter implements IActiveCharacter {
 		//classes.clear();
 
 		if (slot == 0) {
-			primary = new ExtendedNClass();
+			primary = new ExtendedNClass(this);
 			primary.setConfigClass(nclass);
 			primary.setPrimary(true);
 			classes.add(primary);
@@ -351,6 +350,7 @@ public class ActiveCharacter implements IActiveCharacter {
 			cc = new CharacterClass();
 			cc.setCharacterBase(getCharacterBase());
 			cc.setName(nclass.getName());
+			getCharacterBase().getCharacterClasses().add(cc);
 		}
 		Double aDouble = cc.getExperiences();
 		if (aDouble == null) {
@@ -360,7 +360,6 @@ public class ActiveCharacter implements IActiveCharacter {
 				cc.setSkillPoints(PluginConfig.SKILLPOINTS_ON_START);
 			}
 			cc.setExperiences(0D);
-			getCharacterBase().getCharacterClasses().add(cc);
 		} else {
 			//  primary.setStacks(getCharacterBase().getStacks());
 			primary.setExperiences(aDouble);
@@ -390,25 +389,7 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	//todo global config option to set stacking strategies. Take higher value/sum values
 	private void mergeWeapons(PlayerGroup g) {
-		for (Map.Entry<ItemType, TreeSet<ConfigRPGItemType>> entry : g.getWeapons().entrySet()) {
-			TreeSet<ConfigRPGItemType> treeSet = allowedWeapons.get(entry.getKey());
-			if (treeSet == null) {
-				treeSet = new TreeSet<>();
-				treeSet.addAll(entry.getValue());
-				allowedWeapons.put(entry.getKey(), treeSet);
-			} else {
-				TreeSet<ConfigRPGItemType> value = entry.getValue();
-				for (ConfigRPGItemType configRPGItemType : value) {
-					for (ConfigRPGItemType rpgItemType : treeSet) {
-						if (configRPGItemType.equals(rpgItemType)) {
-							rpgItemType.setDamage(Math.max(rpgItemType.getDamage(),configRPGItemType.getDamage()));
-						}
-					}
-				}
-			}
-		}
-
-
+		mergeWeapons(g.getWeapons());
 		for (Map.Entry<EntityType, Double> e : g.getProjectileDamage().entrySet()) {
 			if (getBaseProjectileDamage(e.getKey()) < e.getValue()) {
 				projectileDamage.put(e.getKey(), e.getValue());
@@ -416,12 +397,24 @@ public class ActiveCharacter implements IActiveCharacter {
 		}
 	}
 
+	private void mergeWeapons(Map<ItemType, Set<ConfigRPGItemType>> map) {
+		for (Map.Entry<ItemType, Set<ConfigRPGItemType>> toAdd : map.entrySet()) {
+			RPGItemWrapper wrapper = allowedWeapons.get(toAdd.getKey());
+			if (wrapper == null) {
+				wrapper = RPGItemWrapper.createFromSet(toAdd.getValue());
+				allowedWeapons.put(toAdd.getKey(), wrapper);
+			} else {
+				wrapper.addItems(toAdd.getValue());
+			}
+		}
+	}
+
 	@Override
 	public double getBaseWeaponDamage(RPGItemType weaponItemType) {
-		TreeSet<ConfigRPGItemType> treeSet = getAllowedWeapons().get(weaponItemType.getItemType());
-		if (treeSet == null || treeSet.isEmpty())
+		RPGItemWrapper wrapper = getAllowedWeapons().get(weaponItemType.getItemType());
+		if (wrapper == null)
 			return 0D;
-		for (ConfigRPGItemType configRPGItemType : treeSet) {
+		for (ConfigRPGItemType configRPGItemType : wrapper.getItems()) {
 			if (weaponItemType.getDisplayName() == null) {
 				if (configRPGItemType.getDisplayName() == null) {
 					//todo check if the displayname is reserved
@@ -447,10 +440,28 @@ public class ActiveCharacter implements IActiveCharacter {
 	public IActiveCharacter updateItemRestrictions() {
 		allowedWeapons.clear();
 
-		allowedWeapons.putAll(getRace().getWeapons());
 
-		//   mergeWeapons(getGuild());
+		Map<ItemType, Set<ConfigRPGItemType>> weapons = getRace().getWeapons();
+		allowedWeapons.putAll(weapons.entrySet().stream()
+				.collect(Collectors.toMap(Map.Entry::getKey, e -> RPGItemWrapper.createFromSet(e.getValue()))));
+
+
+
+		//mergeWeapons(getGuild());
 		mergeWeapons(getPrimaryClass().getConfigClass());
+		//could be problematic, but its not called too often
+		for (ExtendedSkillInfo extendedSkillInfo : getSkills().values()) {
+			if (extendedSkillInfo.getSkill().getType() == EffectSourceType.ITEM_ACCESS_SKILL) {
+				ItemAccessSkill.ItemAccessSkillData skillData = (ItemAccessSkill.ItemAccessSkillData) extendedSkillInfo.getSkillData();
+				Map<Integer, Map<ItemType,Set<ConfigRPGItemType>>> items = skillData.getItems();
+				for (Map.Entry<Integer, Map<ItemType, Set<ConfigRPGItemType>>> ent : items.entrySet()) {
+					if (ent.getKey() <= getLevel()) {
+						mergeWeapons(ent.getValue());
+					}
+				}
+
+			}
+		}
 		//mergeWeapons(getRace());
 		allowedArmorIds.clear();
 		allowedArmorIds.addAll(getRace().getAllowedArmor());
@@ -471,27 +482,13 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	@Override
 	public boolean canUse(RPGItemType weaponItemType) {
-		TreeSet<ConfigRPGItemType> treeSet = getAllowedWeapons().get(weaponItemType.getItemType());
-		if (treeSet == null || treeSet.isEmpty())
-			return false;
-		for (ConfigRPGItemType configRPGItemType : treeSet) {
-			if (weaponItemType.getDisplayName() == null) {
-				if (configRPGItemType.getDisplayName() == null) {
-					//todo check if the displayname is reserved
-					return true; //null is first, if both null => can use unnamed item
-				}
-			} else {
-				if (weaponItemType.getDisplayName().equalsIgnoreCase(configRPGItemType.getDisplayName())) {
-					return true;
-				}
-			}
-		}
-		return false;
+		RPGItemWrapper set = getAllowedWeapons().get(weaponItemType.getItemType());
+		return set != null && set.containsItem(weaponItemType);
 	}
 
 
 	@Override
-	public Map<ItemType, TreeSet<ConfigRPGItemType>> getAllowedWeapons() {
+	public Map<ItemType, RPGItemWrapper> getAllowedWeapons() {
 		return allowedWeapons;
 	}
 
@@ -539,7 +536,7 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	@Override
 	public void sendMessage(String message) {
-		pl.sendMessage(Text.of(message));
+		pl.sendMessage(TextHelper.parse(message));
 	}
 
 	@Override
@@ -795,5 +792,13 @@ public class ActiveCharacter implements IActiveCharacter {
 		if (o == null || getClass() != o.getClass()) return false;
 		ActiveCharacter that = (ActiveCharacter) o;
 		return that.getCharacterBase().getId().equals(this.getCharacterBase().getId());
+	}
+
+	@Override
+	public String toString() {
+		return "ActiveCharacter{" +
+				"uuid=" + pl.getUniqueId() +
+				" name=" + getName() +
+				'}';
 	}
 }

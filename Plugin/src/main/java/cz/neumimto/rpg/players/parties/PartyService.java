@@ -20,6 +20,8 @@ package cz.neumimto.rpg.players.parties;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.Arg;
+import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.events.party.PartyInviteEvent;
 import cz.neumimto.rpg.events.party.PartyJoinEvent;
@@ -27,6 +29,7 @@ import cz.neumimto.rpg.events.party.PartyLeaveEvent;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.text.Text;
 
 /**
  * Created by NeumimTo on 2.9.2015.
@@ -75,13 +78,14 @@ public class PartyService {
 
 		if (party.getInvites().contains(character.getPlayer().getUniqueId()))
 			party.getInvites().remove(character.getPlayer().getUniqueId());
-		String msg = Localization.PARTY_MSG_ON_PLAYER_JOIN.replaceAll("%1", character.getPlayer().getName());
 		PartyJoinEvent event = new PartyJoinEvent(character, party);
 		if (event.isCancelled())
 			return;
-		party.getPlayers().stream().forEach(i -> Gui.sendMessage(character, msg));
+		Text msg = TextHelper.parse(Localization.PARTY_MSG_ON_PLAYER_JOIN, Arg.arg("player", character.getPlayer().getName()));
+		character.getPlayer().sendMessage(TextHelper.parse(Localization.PLAYER_MSG_ON_JOIN_PARTY));
+		party.getPlayers().stream().forEach(i -> i.getPlayer().sendMessage(msg));
 		party.addPlayer(character);
 		character.setParty(party);
-		Gui.sendMessage(character, Localization.PLAYER_MSG_ON_JOIN_PARTY);
+
 	}
 }

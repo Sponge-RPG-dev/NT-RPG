@@ -102,4 +102,6 @@ public interface IPlayerMessage {
 	void moveSkillTreeMenu(IActiveCharacter character);
 
 	void displaySkillDetailsInventoryMenu(IActiveCharacter character, SkillTree tree, String command);
+
+	void displayInitialProperties(PlayerGroup byName, Player player);
 }

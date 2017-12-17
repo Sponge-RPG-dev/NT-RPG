@@ -55,7 +55,7 @@ public class Gui {
 	}
 
 	public static IPlayerMessage getMessageTypeOf(IActiveCharacter player) {
-		if (player.isUsingGuiMod())
+		if (player == null || player.isUsingGuiMod())
 			return mod;
 		return vanilla;
 	}
@@ -207,5 +207,9 @@ public class Gui {
 
 	public static void displaySkillDetailsInventoryMenu(IActiveCharacter character, SkillTree tree, String command) {
 		getMessageTypeOf(character).displaySkillDetailsInventoryMenu(character, tree, command);
+	}
+
+	public static void displayInitialProperties(PlayerGroup byName, Player commandSource) {
+		getMessageTypeOf(commandSource).displayInitialProperties(byName, commandSource);
 	}
 }

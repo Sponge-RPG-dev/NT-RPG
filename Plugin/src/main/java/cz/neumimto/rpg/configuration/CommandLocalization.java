@@ -29,22 +29,66 @@ public class CommandLocalization {
 
 
 	@ConfigValue
+	public static String COMMAND_ADMIN_ENCHANT = "&2Enchants held item with custom enchantment";
+	@ConfigValue
+	public static String COMMAND_ADMIN_DESC = "&2Access to administration commands";
+
+	@ConfigValue
+	public static String COMMAND_ADMIN_EXEC_SKILL_DESC = "&2Executes a skill, bypasses restrictions such as mana cost, skill access ... ";
+
+	@ConfigValue
+	public static String COMMAND_ADMIN_ENCHANT_ADD = "&2Adds enchant to the held item";
+
+	@ConfigValue
+	public static String COMMAND_ADMIN_SOCKET = "&2Inserts sockets into held item";
+
+	@ConfigValue
+	public static String COMMAND_ADMIN_RUNE = "&2Creates a rune";;
+
+	@ConfigValue
+	public static String COMMAND_ADMIN_RUNEWORD = "&2Tries to insert runeword into held item";
+
+	@ConfigValue
+	public static String COMMAND_ADMIN_EXP_ADD  = "&2Adds experience to specific player and class";
+
+	@ConfigValue
+	public static String COMMAND_ADMIN_RELOAD  = "&2Reloads specific resource";
+
+	@ConfigValue
+	public static String COMMAND_BIND_DESC = "&2Binds skill to an item";
+
+	@ConfigValue
+	public static String COMMAND_MP_DESC = "&2Displays current mana";
+
+	@ConfigValue
+	public static String COMMAND_HP_DESC = "&2Health";
+
+	@ConfigValue
+	public static String COMMAND_SKILL_REFUND = "Refund a skill, refunding gives back skillpoints. Depending on server's settings class specialization may not be refunded";
+
+	@ConfigValue
+	public static String COMMAND_SKILL_UPGRADE = "Level up a skill";
+
+	@ConfigValue
+	public static String COMMAND_SKILL_LEARN = "Learn a new skill";
+
+	@ConfigValue
+	public static String COMMAND_ATTRIBUTE = "Spends attribute points to improve character's attributes";
+
+	@ConfigValue
 	public static String PLAYERINFO_HELP = "Shows info about player";
 
 	@ConfigValue
 	public static String PLAYERINFO_DESC = "Shows info about player";
 
 	@ConfigValue
-	public static String COMMAND_CHOOSEGROUP_USAGE = "/choose {class|race} [name]";
+	public static String COMMAND_ADMIN_EFFECT_ADD = "Applies effect to a player";
 
 	@ConfigValue
 	public static String PLAYERINFO_USAGE = "/info {character|player|race(s)|guild(s)|class(es)|runes} [name]";
 
 	@ConfigValue
 	public static String COMMAND_CHOOSE_DESC = "Allows you to choose a class and a race for your character.";
-
-	@ConfigValue
-	public static String COMMAND_CREATE_USAGE = "/create character [name]";
 
 	@ConfigValue
 	public static String COMMAND_CREATE_DESCRIPTION = "Allows you to create a new character";
@@ -69,4 +113,16 @@ public class CommandLocalization {
 
 	@ConfigValue
 	public static String COMMAND_SET_HEALTHSCALE_DESCRIPTION = "Sets healthscale for currently choosen character, persistant between restarts";
+
+	@ConfigValue
+	public static String COMMAND_CLASSES_DESC = "Displays list of avalaible classes";
+
+	@ConfigValue
+	public static String COMMAND_CLASSES_RACE = "Displays list of avalaible races";
+
+	@ConfigValue
+	public static String COMMAND_RACE_DESC = "Displays detailed informations about a race";
+
+	@ConfigValue
+	public static String COMMAND_CLASS_DESC = "Displays detailed informations about a class";
 }

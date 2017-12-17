@@ -19,13 +19,14 @@
 package cz.neumimto.rpg.skills;
 
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.rpg.Arg;
+import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
-import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 
@@ -48,7 +49,7 @@ public abstract class AbstractSkill implements ISkill {
 	protected CharacterService characterService;
 	private Set<ISkillType> skillTypes = new HashSet<>();
 	private String lore;
-	private DamageType damagetype = DamageTypes.MAGIC;
+	private DamageType damagetype;
 	private int id;
 	protected ItemType itemType;
 
@@ -69,24 +70,31 @@ public abstract class AbstractSkill implements ISkill {
 	@Override
 	public void skillLearn(IActiveCharacter IActiveCharacter) {
 		if (PluginConfig.PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE) {
-			Text t = Text.of(Localization.PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE.replace("%1", IActiveCharacter.getName()).replace("%2", getName()));
-			game.getServer().getOnlinePlayers().stream().forEach(p -> p.sendMessage(t));
+			Text t = TextHelper.parse(Localization.PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE,
+					Arg.arg("%player%", IActiveCharacter.getName())
+							.with("skill", getName()));
+			game.getServer().getOnlinePlayers().forEach(p -> p.sendMessage(t));
 		}
 	}
 
 	@Override
 	public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
 		if (PluginConfig.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE) {
-			Text t = Text.of(Localization.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE.replace("%1", IActiveCharacter.getName()).replace("%2", getName()).replace("%3", level + ""));
-			game.getServer().getOnlinePlayers().stream().forEach(p -> p.sendMessage(t));
+			Text t = TextHelper.parse(Localization.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE,
+					Arg.arg("%player%", IActiveCharacter.getName())
+							.with("skill", getName())
+							.with("%level%", level));
+			game.getServer().getOnlinePlayers().forEach(p -> p.sendMessage(t));
 		}
 	}
 
 	@Override
 	public void skillRefund(IActiveCharacter IActiveCharacter) {
 		if (PluginConfig.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE) {
-			Text t = Text.of(Localization.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE.replace("%1", IActiveCharacter.getName()).replace("%2", getName()));
-			game.getServer().getOnlinePlayers().stream().forEach(p -> p.sendMessage(t));
+			Text t = TextHelper.parse(Localization.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE,
+					Arg.arg("%player%", IActiveCharacter.getName())
+							.with("skill", getName()));
+			game.getServer().getOnlinePlayers().forEach(p -> p.sendMessage(t));
 		}
 	}
 

@@ -18,4 +18,13 @@ public class CharacterChangeClassEvent extends CharacterChangeGroupEvent {
 	public int getSlot() {
 		return slot;
 	}
+
+	@Override
+	public String toString() {
+		return "CharacterChangeClassEvent{" +
+				"slot=" + slot +
+				"New=" + getNew() +
+				"Old=" + getOld() +
+				'}';
+	}
 }

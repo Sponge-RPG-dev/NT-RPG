@@ -117,12 +117,12 @@ public class PluginConfig {
 	@Comment(content = {"If a player chooses a race and a class, where both those groups define damage value for one specific weapon, or projectile" +
 			" this option specifies how the weapon damage will be calculated.",
 			"1 = sum",
-			"2 = take higher value"})
+			"2 = take highest value"})
 	public static int WEAPON_MERGE_STRTATEGY = 2;
 
 	@ConfigValue
 	@Comment(content = {"Whenever global chat message will be displayed if any player chooses a skill tree path"})
-	public static boolean PLAYER_CHOOSED_SKILLTREE_PATH_GLOBAL_MESSAGE;
+	public static boolean PLAYER_CHOOSED_SKILLTREE_SPECIALIZATIon_GLOBAL_MESSAGE;
 
 	@ConfigValue
 	@Comment(content = {"Whenever a player is able to refund skills, representing root of the path of specialization on any skilltree"})
@@ -146,5 +146,7 @@ public class PluginConfig {
 	@Comment(content = {"Time interval in milliseconds, defines maximal interval between two clicks (E/Q/RMB/LMB/S)"})
 	public static long CLICK_COMBO_MAX_INVERVAL_BETWEEN_ACTIONS = 1250;
 
-
+	@ConfigValue
+	@Comment(content = {"If true then class is validated against character's race.allowedClasses parameter "})
+	public static boolean VALIDATE_RACE_DURING_CLASS_SELECTION = true;
 }

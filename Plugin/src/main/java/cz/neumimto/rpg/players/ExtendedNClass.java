@@ -27,7 +27,7 @@ public class ExtendedNClass {
 	public static ExtendedNClass Default;
 
 	static {
-		Default = new ExtendedNClass() {
+		Default = new ExtendedNClass(null) {
 			@Override
 			public boolean takesExp() {
 				return false;
@@ -38,13 +38,18 @@ public class ExtendedNClass {
 	}
 
 	private ConfigClass configClass;
-	private double experiences;
 	private double experiencesFromLevel;
 	private int slot;
 	private int level;
+	private ActiveCharacter activeCharacter;
+
+	public ExtendedNClass(ActiveCharacter activeCharacter) {
+		this.activeCharacter = activeCharacter;
+	}
+
 
 	public boolean takesExp() {
-		return experiences <= configClass.getTotalExp();
+		return getExperiences() <= configClass.getTotalExp();
 	}
 
 	public ConfigClass getConfigClass() {
@@ -56,11 +61,11 @@ public class ExtendedNClass {
 	}
 
 	public double getExperiences() {
-		return experiences;
+		return activeCharacter.getCharacterBase().getCharacterClass(getConfigClass()).getExperiences();
 	}
 
 	public void setExperiences(double experiences) {
-		this.experiences = experiences;
+		activeCharacter.getCharacterBase().getCharacterClass(getConfigClass()).setExperiences(experiences);
 	}
 
 	public boolean isPrimary() {

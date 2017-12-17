@@ -273,7 +273,7 @@ public class GroupDao {
 						itemName = split[2];
 					}
 				}
-				ConfigRPGItemType t = new ConfigRPGItemType(type,itemName);
+				ConfigRPGItemType t = new ConfigRPGItemType(type,itemName, group, damage);
 				t.setDamage(damage);
 				group.addWeapon(t);
 			}
@@ -332,6 +332,27 @@ public class GroupDao {
 			group.setDescription("");
 			logger.warn(" - Missing configuration \"Description\", setting an empty string as default");
 
+		}
+
+		try {
+			Config commands = c.getConfig("Commands");
+			try {
+				List<String> enter = commands.getStringList("enter");
+				group.setEnterCommands(enter);
+			} catch (ConfigException e) {
+				group.setEnterCommands(new ArrayList<>());
+				logger.warn(" - Missing configuration \"Commands.enter\", skipping");
+			}
+
+			try {
+				List<String> exit = commands.getStringList("exit");
+				group.setExitCommands(exit);
+			} catch (ConfigException e) {
+				group.setExitCommands(new ArrayList<>());
+				logger.warn(" - Missing configuration \"Commands.exit\", skipping");
+			}
+		} catch (ConfigException e) {
+			logger.warn(" - Missing configuration \"Commands\", skipping");
 		}
 
 		try {
