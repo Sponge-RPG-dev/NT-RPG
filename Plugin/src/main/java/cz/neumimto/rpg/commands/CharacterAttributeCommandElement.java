@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.commands;
 
+import cz.neumimto.rpg.Arg;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.Localization;
@@ -29,7 +30,7 @@ public class CharacterAttributeCommandElement extends CommandElement {
         String next = args.next();
         ICharacterAttribute attribute = NtRpgPlugin.GlobalScope.propertyService.getAttribute(next);
         if (attribute == null) {
-            throw args.createError(TextHelper.parse(Localization.UNKNOWN_ATTRIBUTE, next));
+            throw args.createError(TextHelper.parse(Localization.UNKNOWN_ATTRIBUTE, Arg.arg("attribute", next)));
         }
         return attribute;
     }

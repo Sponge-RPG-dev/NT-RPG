@@ -1,11 +1,11 @@
 package cz.neumimto.rpg.utils;
 
+import cz.neumimto.rpg.Arg;
+import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.Localization;
 import org.spongepowered.api.text.Text;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
 
 /**
  * Created by NeumimTo on 31.12.2015.
@@ -31,21 +31,14 @@ public enum SkillTreeActionResult {
 	}
 
 	public static class Data {
-		public List<String> variables = new ArrayList<>();
+		private final Map<String, Object> variables;
 
-		public Data(String... variables) {
-			for (String s : variables) {
-				this.variables.add(s);
-			}
+		public Data(Map<String, Object> variables) {
+			this.variables = variables;
 		}
 
 		public Text bind(String t) {
-			Iterator<String> iterator = variables.iterator();
-			while (iterator.hasNext()) {
-				String next = iterator.next();
-				t = t.replace("%s", next);
-			}
-			return Text.of(t);
+			return TextHelper.parse(t, Arg.arg(variables));
 		}
 	}
 }

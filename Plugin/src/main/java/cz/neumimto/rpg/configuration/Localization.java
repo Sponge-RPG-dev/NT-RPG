@@ -34,34 +34,16 @@ public class Localization {
 	public static String NO_HP = "Not enough hp";
 
 	@ConfigValue
-	public static String SKILL_UPGRADED_BROADCAST = "%s has upgraded skill %s";
+	public static String SKILL_UPGRADED = "You've upgraded skill %skill% to level %level%";
 
 	@ConfigValue
-	public static String SKILL_LEARNED_BROADCAST = "%s has learned %s";
-
-	@ConfigValue
-	public static String SKILL_UPGRADED = "You've upgraded skill %s to level %d";
-
-	@ConfigValue
-	public static String SKILL_LEARNED = "You've learned skill %s";
-
-	@ConfigValue
-	public static String WEAPON_EQUIPED = "You have equiped weapon %s";
-
-	@ConfigValue
-	public static String WEAPON_CANT_BE_EQUIPED = "You are not trained to use %s";
-
-	@ConfigValue
-	public static String CHARACTER_CREATION = "";
+	public static String SKILL_LEARNED = "You've learned skill %skill%";
 
 	@ConfigValue
 	public static String SPEED_BOOST_APPLY = "speed boost applied";
 
 	@ConfigValue
 	public static String SPEED_BOOST_EXPIRE = "speed boost expired";
-
-	@ConfigValue
-	public static String LOADING_CHARACTERS = "Preloading characters, please wait";
 
 	@ConfigValue
 	public static String PLAYER_IS_OFFLINE_MSG = "The player is offline";
@@ -85,46 +67,25 @@ public class Localization {
 	public static String PLAYER_CANT_CHANGE_RACE = "You can't change race";
 
 	@ConfigValue
-	public static String PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE = "Player %s has learned skill %s";
+	public static String PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE = "Player %player% has learned skill %skill%";
 
 	@ConfigValue
-	public static String PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE = "Player %s has upgraded skill %s to level %d";
+	public static String PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE = "Player %player% has upgraded skill %skill% to level %skill%";
 
 	@ConfigValue
-	public static String PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE = "Player %s has has refunded skill %s";
+	public static String PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE = "Player %player% has has refunded skill %skill%";
 
 	@ConfigValue
 	public static String PLAYER_IS_SILENCED = "You can't use this skill, you are silenced.";
 
 	@ConfigValue
-	public static String SKILL_DOES_NOT_EXIST = "This skill does not exists";
-
-	@ConfigValue
 	public static String CHARACTER_DOES_NOT_HAVE_SKILL = "You dont have this skill";
 
 	@ConfigValue
-	public static String ON_COOLDOWN = "%s has %d seconds of cooldown";
+	public static String ON_COOLDOWN = "%skill% has %time% seconds of cooldown";
 
 	@ConfigValue
 	public static String CANT_USE_PASSIVE_SKILL = "You can't use passive skill";
-
-	@ConfigValue
-	public static String SKILL_SETTINGS_LORESECTION_NAME = "Progression";
-
-	@ConfigValue
-	public static String LORESECTION_MAX_PLAYER_LEVEL = "Required level";
-
-	@ConfigValue
-	public static String LORESECTION_MAX_SKILL_LEVEL = "Max. skill level";
-
-	@ConfigValue
-	public static String LORESECTION_CONFCLICTS = "Conflicting";
-
-	@ConfigValue
-	public static String LORESECTION_SOFT_DEPENDS = "Partially depending";
-
-	@ConfigValue
-	public static String LORESECTION_HARD_DEPENDS = "Depending";
 
 	@ConfigValue
 	public static String ALREADY_IN_PARTY = "You are already in party";
@@ -142,10 +103,16 @@ public class Localization {
 	public static String NON_EXISTING_CHARACTER = "Selected character does not exist";
 
 	@ConfigValue
-	public static String PLAYER_CHOOSED_CLASS = "You've chosen class %s";
+	public static String PLAYER_CHOOSED_CLASS = "You've chosen class %class%";
 
 	@ConfigValue
-	public static String PLAYER_CHOOSED_RACE = "You've chosen race %s";
+	public static String UNKNOWN_CLASS = "Class %class% does not exist";
+
+	@ConfigValue
+	public static String PLAYER_CHOOSED_RACE = "You've chosen race %race%";
+
+	@ConfigValue
+	public static String UNKNOWN_RACE = "Race %race% does not exist";;
 
 	@ConfigValue
 	public static String ALREADY_CUURENT_CHARACTER = "This character has been already activated";
@@ -154,13 +121,10 @@ public class Localization {
 	public static String NO_TARGET = "No target";
 
 	@ConfigValue
-	public static String CURRENT_CHARACTER = "Selected character: %s";
+	public static String CURRENT_CHARACTER = "Selected character: %character%";
 
 	@ConfigValue
-	public static String CHARACTER_GAINED_POINTS = "You've gained %d skillpoints and 2d attribute points";
-
-	@ConfigValue
-	public static String NON_EXISTING_GLOBAL_EFFECT = "The effect with given name does not exists";
+	public static String CHARACTER_GAINED_POINTS = "You've gained %skillpoints% skillpoints and %attributes% attribute points";
 
 	@ConfigValue
 	public static String NO_ITEM_IN_HAND = "An item in hand is required for this action";
@@ -169,13 +133,13 @@ public class Localization {
 	public static String NO_ACCESS_TO_SKILL = "You dont have access to this skill.";
 
 	@ConfigValue
-	public static String CAST_SKILL_ON_RIGHTLICK = "Casts skill %s on rightclick";
+	public static String CAST_SKILL_ON_RIGHTLICK = "&8Casts skill &2%skill%&8  on rightclick";
 
 	@ConfigValue
 	public static String EMPTY_HAND_REQUIRED = "An empty hand is required";
 
 	@ConfigValue
-	public static String CAST_SKILl_ON_LEFTCLICK = "Casts skill %s on rightclick";
+	public static String CAST_SKILl_ON_LEFTCLICK = "&8Casts skill &2%skill%&8  on rightclick";
 
 	@ConfigValue
 	public static String ITEM_SKILLBIND_FOOTER = "For casting bounded skills you must have access :n to the skills via command /skill";
@@ -190,19 +154,19 @@ public class Localization {
 	public static String NOT_LEARNED_SKILL = "You have to learn the skill first before spending skillpoints";
 
 	@ConfigValue
-	public static String SKILL_REQUIRES_HIGHER_LEVEL = "Upgrading the skill %s requires at least level %s";
+	public static String SKILL_REQUIRES_HIGHER_LEVEL = "Upgrading the skill %skill% requires at least level %level%";
 
 	@ConfigValue
-	public static String SKILL_IS_ON_MAX_LEVEL = "The skill %s is on its maximal level.";
+	public static String SKILL_IS_ON_MAX_LEVEL = "The skill %skill% is on its maximal level - %level%.";
 
 	@ConfigValue
-	public static String SKILL_NOT_IN_A_TREE = "The skill %s is not accessible from your skill tree";
+	public static String SKILL_NOT_IN_A_TREE = "The skill %skill% is not accessible from your skill tree";
 
 	@ConfigValue
-	public static String MISSING_SKILL_DEPENDENCIES = "The skill %s requires [%s] and at least one of [%s]";
+	public static String MISSING_SKILL_DEPENDENCIES = "The skill %skill% requires [%hard%] and at least one of [%soft%]";
 
 	@ConfigValue
-	public static String SKILL_ALREADY_LEARNED = "You've already learned this skill";
+	public static String SKILL_ALREADY_LEARNED = "You've already learned the skill %skill% ";
 
 	@ConfigValue
 	public static String SKILLBIND = "Bind";
@@ -214,22 +178,10 @@ public class Localization {
 	public static String SOCKET = "Socketed Item";
 
 	@ConfigValue
-	public static String CLASS_INVENTORYMENU_FOOTER = "Rightclick for more info, Leftclick for skilltree";
-
-	@ConfigValue
 	public static String UNKNOWN_RUNE_NAME = "You can work with unknown types of runes. The rune has been probably removed";
 
 	@ConfigValue
 	public static String RUNEWORD = "Runeword";
-
-	@ConfigValue
-	public static String RESTRICTED_CLASSES = "Restricted classes";
-
-	@ConfigValue
-	public static String ALLOWED_CLASSES = "Allowed classes";
-
-	@ConfigValue
-	public static String MIN_LEVEL = "Min. level";
 
 	@ConfigValue
 	public static String CHARM_INFO = "Keep in your hotbar to gain bonus";
@@ -238,43 +190,10 @@ public class Localization {
 	public static String CHARM = "Charm";
 
 	@ConfigValue
-	public static String RACE_AND_CLASS_CONFLICT = "Race %s can't become %s";
-
-	@ConfigValue
-	public static String ARGUMENT_MUST_BE_POSITIVE_INT = "Argument must be positive integer";
-
-	@ConfigValue
-	public static String RACE_IS_REQUIRED = "You have to choose character's race.";
-
-	@ConfigValue
 	public static String SOCKET_HELP = "Interact with weapon to imbue the rune";
 
 	@ConfigValue
 	public static String SOCKET_CANCELLED = "Socketing cancelled";
-
-	@ConfigValue
-	public static String MAX_LEVEL = "Max. Level";
-
-	@ConfigValue
-	public static String HELMETS = "Helmets";
-
-	@ConfigValue
-	public static String CHESTPLATES = "Chestplates";
-
-	@ConfigValue
-	public static String LEGGINGS = "Leggings";
-
-	@ConfigValue
-	public static String BOOTS = "Boots";
-
-	@ConfigValue
-	public static String ALLOWED_ARMOR = "Armor";
-
-	@ConfigValue
-	public static String ATTRIBUTE_POINTS_PER_LEVEL = "APPL";
-
-	@ConfigValue
-	public static String TOTAL_EXP = "Total exp. amount";
 
 	@ConfigValue
 	public static String WEAPONS = "Weapons";
@@ -301,13 +220,13 @@ public class Localization {
 	public static String CONFIRM = "Confirm";
 
 	@ConfigValue
-	public static String SKILL_CONFLICTS = "Skill %s conflicts with %s";
+	public static String SKILL_CONFLICTS = "Skill %skill% conflicts with %conflict%";
 
 	@ConfigValue
 	public static String RUNE_LIST = "Runes";
 
 	@ConfigValue
-	public static String RUNEWORD_ITEMS_MENU_TOOLTIP = "List of items, which can be used for crafting %s";
+	public static String RUNEWORD_ITEMS_MENU_TOOLTIP = "List of items, which can be used for crafting %runeword%";
 
 	@ConfigValue
 	public static String RUNEWORD_ITEMS_MENU = "Allowed Items";
@@ -317,12 +236,6 @@ public class Localization {
 
 	@ConfigValue
 	public static String RUNEWORD_ALLOWED_GROUPS_MENU_TOOLTIP = "At least one of them character has to have";
-
-	@ConfigValue
-	public static String RUNEWORD_REQUIRED_GROUPS_MENU = "Required Races and Classes";
-
-	@ConfigValue
-	public static String RUNEWORD_REQUIRED_GROUPS_MENU_TOOLTIP = "All of them has to character have";
 
 	@ConfigValue
 	public static String RUNEWORD_BLOCKED_GROUPS_MENU = "Blocked Races and Classes";
@@ -364,7 +277,7 @@ public class Localization {
 	public static String NO_PARTYMEMBERS = "No nearby partymembers!";
 
 	@ConfigValue
-	public static String PLAYER_CHOOSED_SKILLTREE_PATH_GLOBAL_MESSAGE_CONTENT = "Player $1 choosed $2";
+	public static String PLAYER_CHOOSED_SKILLTREE_PATH_GLOBAL_MESSAGE_CONTENT = "Player %player%, character %character% choosed %path%";
 
 	@ConfigValue
 	public static String SKILL_TYPE_TARGETTED = "Targetted";
@@ -406,11 +319,20 @@ public class Localization {
 	public static String SKILL_VALUE_PER_LEVEL = "Value per skill level";
 
 	@ConfigValue
-	public static String UNKNOWN_ATTRIBUTE = "Unknown attribute %s";
+	public static String UNKNOWN_ATTRIBUTE = "Unknown attribute %attribute%";
 
 	@ConfigValue
 	public static String ALREADY_HAS_THIS_CLASS = "Cannot choose a class, which you already have";
 
 	@ConfigValue
-	public static String ALREADY_HAS_THIS_RACE = "Cannot choose a race, which you already have";;
+	public static String ALREADY_HAS_THIS_RACE = "Cannot choose a race, which you already have";
+
+	@ConfigValue
+	public static String UNKNOWN_SKILL = "Unknown Skill %skill%";
+
+	@ConfigValue
+	public static String RACE_CANNOT_BECOME_CLASS =	"&CRace %race cannot become %class%";
+
+	@ConfigValue
+	public static String RACE_NOT_SELECTED = "&CYou have to select race before class";
 }

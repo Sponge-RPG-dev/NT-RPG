@@ -1,7 +1,9 @@
 package cz.neumimto.rpg.commands;
 
+import cz.neumimto.rpg.Arg;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.TextHelper;
+import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
 import org.spongepowered.api.command.CommandSource;
@@ -30,11 +32,11 @@ public class LearnedSkillCommandElement extends CommandElement {
         String skilllc = args.next().toLowerCase();
         ISkill skill = NtRpgPlugin.GlobalScope.skillService.getSkill(skilllc);
         if (skill == null) {
-            throw args.createError(TextHelper.parse("&CUnknown skill &C%s", skilllc));
+            throw args.createError(TextHelper.parse(Localization.UNKNOWN_SKILL, Arg.arg("skill", skilllc)));
         }
         IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) source);
         if (!character.hasSkill(skill.getName())) {
-            throw args.createError(TextHelper.parse("&CYou don't have skill %s", skill.getName()));
+            throw args.createError(TextHelper.parse(Localization.CHARACTER_DOES_NOT_HAVE_SKILL, Arg.arg("skill", skill.getName())));
         }
         return skill;
     }

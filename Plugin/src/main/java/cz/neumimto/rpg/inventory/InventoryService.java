@@ -24,7 +24,9 @@ import com.typesafe.config.ConfigFactory;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.Arg;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectService;
@@ -553,11 +555,15 @@ public class InventoryService {
 		lore.add(Text.of(LORE_FIRSTLINE, Localization.SKILLBIND));
 		is.offer(Keys.DISPLAY_NAME, Text.of(TextColors.GOLD, TextStyles.ITALIC, left != null ? left.getName() + " «-" : "", right != null ? "-» " + right.getName() : ""));
 		if (right != null) {
-			lore.add(Text.of(TextColors.RED, Localization.CAST_SKILL_ON_RIGHTLICK.replaceAll("%1", right.getName())));
+			Text text = TextHelper.parse(Localization.CAST_SKILL_ON_RIGHTLICK,
+					Arg.arg("skill", right.getName()));
+			lore.add(text);
 			lore = makeDesc(right, lore);
 		}
 		if (left != null) {
-			lore.add(Text.of(TextColors.RED, Localization.CAST_SKILl_ON_LEFTCLICK.replaceAll("%1", left.getName())));
+			Text text = TextHelper.parse(Localization.CAST_SKILl_ON_LEFTCLICK,
+					Arg.arg("skill", left.getName()));
+			lore.add(text);
 			lore = makeDesc(left, lore);
 		}
 		for (String a : Localization.ITEM_SKILLBIND_FOOTER.split(":n")) {

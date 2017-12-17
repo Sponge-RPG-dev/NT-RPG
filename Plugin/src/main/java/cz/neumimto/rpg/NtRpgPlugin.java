@@ -605,7 +605,8 @@ public class NtRpgPlugin {
 								(character.getRace() != Race.Default && PluginConfig.PLAYER_CAN_CHANGE_RACE)) {
 							if (PluginConfig.PLAYER_CAN_CHANGE_RACE) {
 								GlobalScope.characterService.updatePlayerGroups(character, null, 0, r, null);
-								src.sendMessage(TextHelper.parse(Localization.PLAYER_CHOOSED_RACE, r.getName()));
+								src.sendMessage(TextHelper.parse(Localization.PLAYER_CHOOSED_RACE,
+										Arg.arg("race", r.getName())));
 								return ;
 							}
 							src.sendMessage(TextHelper.parse(Localization.PLAYER_CANT_CHANGE_RACE));
@@ -747,12 +748,13 @@ public class NtRpgPlugin {
 					args.<ISkill>getOne(TextHelper.parse("skill")).ifPresent(iSkill -> {
 						ExtendedSkillInfo info = character.getSkillInfo(iSkill.getName());
 						if (info == ExtendedSkillInfo.Empty || info == null) {
-							src.sendMessage(TextHelper.parse(Localization.CHARACTER_DOES_NOT_HAVE_SKILL));
+
+							src.sendMessage(TextHelper.parse(Localization.CHARACTER_DOES_NOT_HAVE_SKILL
+							, Arg.arg("skill", iSkill.getName())));
 						}
 						SkillResult sk = GlobalScope.skillService.executeSkill(character, info);
 						switch (sk) {
 							case ON_COOLDOWN:
-								Gui.sendMessage(character, Localization.ON_COOLDOWN);
 								break;
 							case NO_MANA:
 								Gui.sendMessage(character, Localization.NO_MANA);

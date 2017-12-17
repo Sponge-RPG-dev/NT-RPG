@@ -22,6 +22,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.configuration.CommandPermissions;
 import cz.neumimto.rpg.configuration.Localization;
@@ -105,7 +106,7 @@ public class InfoCommand extends CommandBase {
 				printPlayerInfo(commandSource, args, player);
 				return CommandResult.success();
 			} else {
-				commandSource.sendMessage(Text.of(Localization.PLAYER_IS_OFFLINE_MSG));
+				commandSource.sendMessage(TextHelper.parse(Localization.PLAYER_IS_OFFLINE_MSG));
 			}
 		} else if (args[0].equalsIgnoreCase("character")) {
 			if (!(commandSource instanceof Player)) {

@@ -18,14 +18,10 @@
 
 package cz.neumimto.rpg.gui;
 
-import com.google.common.collect.ImmutableMap;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.GroupService;
-import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.Pair;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.CommandPermissions;
 import cz.neumimto.rpg.configuration.Localization;
@@ -153,17 +149,9 @@ public class VanilaMessaging implements IPlayerMessage {
 			.style(TextStyles.BOLD)
 			.build();
 
-	private static final TextTemplate cooldown = TextTemplate.of(
-			SKILLNAME,
-			TextColors.GRAY, TextStyles.NONE, Localization.ON_COOLDOWN,
-			TIMELEFT
-	);
-
 	@Override
 	public void sendCooldownMessage(IActiveCharacter player, String message, double cooldown) {
-		Text.Builder builder = VanilaMessaging.cooldown.apply(ImmutableMap.of(timeleft, Text.of(cooldown),
-				skillname, Text.of(message)));
-		player.getPlayer().sendMessage(builder.build());
+		player.getPlayer().sendMessage(TextHelper.parse(Localization.ON_COOLDOWN, Arg.arg("skill", message).with("time", cooldown)));
 	}
 
 	@Override
@@ -510,8 +498,8 @@ public class VanilaMessaging implements IPlayerMessage {
 			is.offer(Keys.DISPLAY_NAME, Text.of(Localization.RUNEWORD_ITEMS_MENU));
 			is.offer(Keys.ITEM_LORE,
 					Collections.singletonList(
-							ItemStackUtils.stringToItemTooltip(Localization.RUNEWORD_ITEMS_MENU_TOOLTIP
-									.replaceAll("%1", rw.getName()))
+							TextHelper.parse(Localization.RUNEWORD_ITEMS_MENU_TOOLTIP
+									, Arg.arg("runeword", rw.getName()))
 					)
 			);
 			is.offer(new InventoryCommandItemMenuData("runeword " + rw.getName() + " allowed-items"));

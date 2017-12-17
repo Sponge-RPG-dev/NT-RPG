@@ -1,7 +1,9 @@
 package cz.neumimto.rpg.commands;
 
+import cz.neumimto.rpg.Arg;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.TextHelper;
+import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
@@ -41,21 +43,23 @@ public class PlayerClassCommandElement extends CommandElement {
         String clazz = args.next();
         ConfigClass configClass = NtRpgPlugin.GlobalScope.groupService.getNClass(clazz);
         if (configClass == null) {
-            throw args.createError(TextHelper.parse("&CUnknown class %s", clazz));
+            throw args.createError(TextHelper.parse(Localization.UNKNOWN_CLASS, Arg.arg("class",clazz)));
         }
         IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) source);
 
         if (validate && PluginConfig.VALIDATE_RACE_DURING_CLASS_SELECTION) {
             Race race = character.getRace();
             if (race == Race.Default) {
-                throw args.createError(TextHelper.parse("&CYou have to select race before class"));
+                throw args.createError(TextHelper.parse(Localization.RACE_NOT_SELECTED));
             }
             if (!race.getAllowedClasses().contains(configClass)) {
-                throw args.createError(TextHelper.parse("&CRace %s cannot become %s", race.getName(), configClass.getName()));
+                throw args.createError(TextHelper.parse(Localization.RACE_CANNOT_BECOME_CLASS,
+                        Arg.arg("race", race.getName()).with("class", configClass.getName())));
             }
         }
         if (!source.hasPermission("ntrpg.groups."+configClass.getName().toLowerCase())) {
-            throw args.createError(TextHelper.parse("&CNo permission ntrpg.groups.%s", configClass.getName().toLowerCase()));
+            throw args.createError(TextHelper.parse("&CNo permission ntrpg.groups.%class%",
+                    Arg.arg("class", configClass.getName().toLowerCase())));
         }
         return configClass;
     }
