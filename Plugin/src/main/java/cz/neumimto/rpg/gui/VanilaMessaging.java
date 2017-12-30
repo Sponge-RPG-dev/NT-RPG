@@ -261,8 +261,13 @@ public class VanilaMessaging implements IPlayerMessage {
 
 		ItemStack of = GuiHelper.itemStack(ItemTypes.DIAMOND);
 		of.offer(new InventoryCommandItemMenuData("character set class " + cc.getName()));
-		of.offer(Keys.DISPLAY_NAME, Text.of(Localization.CONFIRM));
+		of.offer(Keys.DISPLAY_NAME, TextHelper.parse(Localization.CONFIRM));
 		i.query(new SlotPos(8, 0)).offer(of);
+
+		ItemStack tree = GuiHelper.itemStack(ItemTypes.SAPLING);
+		tree.offer(Keys.DISPLAY_NAME, TextHelper.parse(Localization.SKILLTREE));
+		tree.offer(new InventoryCommandItemMenuData("skilltree " + cc.getName()));
+		i.query(new SlotPos(4,3)).offer(tree);
 
 		character.getPlayer().openInventory(i);
 	}
