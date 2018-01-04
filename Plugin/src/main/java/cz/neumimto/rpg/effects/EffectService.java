@@ -184,7 +184,7 @@ public class EffectService {
 		}
 	}
 
-	public void removeEffectContainer(IEffectContainer<?, IEffect<?>> container, IEffectConsumer consumer) {
+	public <T, E extends IEffect<T>> void removeEffectContainer(IEffectContainer<T, E> container, IEffectConsumer consumer) {
 		container.forEach(a -> removeEffect(a, consumer));
 	}
 

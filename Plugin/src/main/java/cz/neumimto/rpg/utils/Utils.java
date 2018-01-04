@@ -281,9 +281,18 @@ public class Utils {
 	}
 
 	public static Pattern REGEXP_NUMBER = Pattern.compile("-?\\d+");
+	public static Pattern REGEXP_CLASS_MEMBER = Pattern.compile("^[a-z_]\\w*$");
 
 	public static String extractNumber(String string) {
 		Matcher matcher = REGEXP_NUMBER.matcher(string);
+		if (matcher.find()) {
+			return matcher.group();
+		}
+		return null;
+	}
+
+	public static String extractClassMember(String string) {
+		Matcher matcher = REGEXP_CLASS_MEMBER.matcher(string);
 		if (matcher.find()) {
 			return matcher.group();
 		}

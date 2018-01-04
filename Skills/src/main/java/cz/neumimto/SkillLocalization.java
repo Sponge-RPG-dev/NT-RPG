@@ -221,4 +221,11 @@ public class SkillLocalization {
 
 	@ConfigValue
 	public static String SKILL_ICEBOLT_LORE = "";
+
+	@ConfigValue
+	public static String SKILL_SHADOWRUN_LORE = "";
+
+	@ConfigValue
+	public static String SKILL_SHADOWRUN_DESC = "Speed and invisibility, may be casted only in shadow. Attacking, casting a spell, or taking non-fall damage breaks the invisibily. :n " +
+			"If the caster attacks an entity in shadows the attack will deal additional physical damage.";
 }

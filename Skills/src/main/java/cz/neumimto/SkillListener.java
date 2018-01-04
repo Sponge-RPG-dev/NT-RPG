@@ -14,10 +14,12 @@ import cz.neumimto.events.StunApplyEvent;
 import cz.neumimto.model.BashModel;
 import cz.neumimto.model.CriticalEffectModel;
 import cz.neumimto.model.PotionEffectModel;
+import cz.neumimto.model.ShadowRunModel;
 import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.effects.common.positive.Invisibility;
 import cz.neumimto.rpg.entities.EntityService;
@@ -32,6 +34,7 @@ import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.utils.XORShiftRnd;
 import cz.neumimto.skills.active.GrapplingHook;
+import cz.neumimto.skills.active.ShadowRun;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
@@ -48,6 +51,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.action.CollideEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
+import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.filter.IsCancelled;
@@ -118,13 +122,30 @@ public class SkillListener {
 	}
 
 	@Listener
+	@SuppressWarnings("unchecked")
 	public void onEntityDamage(INEntityDamageEvent event) {
+		//invis
 		if (event.getTarget().hasEffect(Invisibility.name)) {
 			effectService.removeEffectContainer(event.getTarget().getEffect(Invisibility.name), event.getTarget());
 		}
 		if (event.getSource().hasEffect(Invisibility.name)) {
 			effectService.removeEffectContainer(event.getTarget().getEffect(Invisibility.name), event.getSource());
 		}
+
+
+		//shadowrun
+		if (event.getTarget().hasEffect(ShadowRunEffect.name)) {
+			effectService.removeEffectContainer(event.getTarget().getEffect(ShadowRunEffect.name), event.getTarget());
+		}
+		if (event.getSource().hasEffect(ShadowRunEffect.name) && event.getType() != DamageTypes.FALL) {
+			IEffectContainer<ShadowRunModel, ShadowRunEffect> container = event.getSource().getEffect(ShadowRunEffect.name);
+			if (event.getType() == DamageTypes.ATTACK) {
+				ShadowRunModel stackedValue = container.getStackedValue();
+				event.setDamage(stackedValue.damage + event.getDamage() * stackedValue.attackmult);
+			}
+			effectService.removeEffectContainer(container, event.getSource());
+		}
+
 	}
 
 	@Listener
