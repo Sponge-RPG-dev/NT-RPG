@@ -280,7 +280,7 @@ public class Utils {
 		return Character.toUpperCase(str.charAt(0)) + str.substring(1);
 	}
 
-	public static Pattern REGEXP_NUMBER = Pattern.compile("-?\\d+");
+	public static Pattern REGEXP_NUMBER = Pattern.compile("[-+]?\\d+([\\.,]\\d+)?");
 	public static Pattern REGEXP_CLASS_MEMBER = Pattern.compile("^[a-z_]\\w*$");
 
 	public static String extractNumber(String string) {

@@ -110,7 +110,7 @@ public class Tests {
 		}});
 		when(character.getRace()).thenReturn(race);
 
-		ExtendedNClass nClass = new ExtendedNClass();
+		ExtendedNClass nClass = new ExtendedNClass(character);
 
 		ConfigClass c = new ConfigClass("b");
 
@@ -146,7 +146,6 @@ public class Tests {
 		Assert.assertTrue(permissionsToRemove.contains("class2"));
 		Assert.assertTrue(permissionsToRemove.contains("class4"));
 	}
-
 
 	@Test
 	public void k() {
