@@ -15,7 +15,7 @@ public class CustomItem {
 
 	private int slot;
 	protected CustomItemData customItemData;
-	protected Map<IGlobalEffect, String> effects = new HashMap<>();
+	protected Map<IGlobalEffect, Map<String, String>> effects = new HashMap<>();
 
 	public int getSlot() {
 		return slot;
@@ -35,7 +35,7 @@ public class CustomItem {
 		effects = NtRpgPlugin.GlobalScope.inventorySerivce.getItemEffects(customItemData);
 	}
 
-	public Map<IGlobalEffect, String> getEffects() {
+	public Map<IGlobalEffect, Map<String, String>> getEffects() {
 		return effects;
 	}
 }

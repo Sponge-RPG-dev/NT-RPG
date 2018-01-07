@@ -21,6 +21,9 @@ package cz.neumimto.rpg.effects.common.global;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.effects.common.positive.DamageBonus;
+import cz.neumimto.rpg.effects.model.EffectModelFactory;
+
+import java.util.Map;
 
 /**
  * Created by NeumimTo on 6.8.2015.
@@ -34,8 +37,8 @@ public class DamageBonusGlobal implements IGlobalEffect<DamageBonus> {
 	}
 
 	@Override
-	public DamageBonus construct(IEffectConsumer consumer, long duration, String value) {
-		return new DamageBonus(consumer, duration, value);
+	public DamageBonus construct(IEffectConsumer consumer, long duration, Map<String, String> value) {
+		return new DamageBonus(consumer, duration, EffectModelFactory.create(DamageBonus.class, value, Float.class));
 	}
 
 	@Override

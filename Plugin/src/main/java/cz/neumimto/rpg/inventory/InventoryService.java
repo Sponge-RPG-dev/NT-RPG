@@ -399,7 +399,7 @@ public class InventoryService {
 
 				Armor armor1 = character.getEquipedArmor().get(EquipmentTypes.CHESTPLATE);
 				if (armor1 != null) {
-					effectService.removeGlobalEffectsAsEnchantments(armor1.getEffects(), character, armor1);
+					effectService.removeGlobalEffectsAsEnchantments(armor1.getEffects().keySet(), character, armor1);
 				}
 				character.getEquipedArmor().put(EquipmentTypes.CHESTPLATE, armor);
 				effectService.applyGlobalEffectsAsEnchantments(armor.getEffects(), character, armor);
@@ -420,7 +420,7 @@ public class InventoryService {
 
 				Armor armor1 = character.getEquipedArmor().get(EquipmentTypes.HEADWEAR);
 				if (armor1 != null) {
-					effectService.removeGlobalEffectsAsEnchantments(armor1.getEffects(), character, armor1);
+					effectService.removeGlobalEffectsAsEnchantments(armor1.getEffects().keySet(), character, armor1);
 				}
 				character.getEquipedArmor().put(EquipmentTypes.HEADWEAR, armor);
 				effectService.applyGlobalEffectsAsEnchantments(armor.getEffects(), character, armor);
@@ -438,7 +438,7 @@ public class InventoryService {
 				Armor armor = getBoots(character);
 				Armor armor1 = character.getEquipedArmor().get(EquipmentTypes.BOOTS);
 				if (armor1 != null) {
-					effectService.removeGlobalEffectsAsEnchantments(armor1.getEffects(), character, armor1);
+					effectService.removeGlobalEffectsAsEnchantments(armor1.getEffects().keySet(), character, armor1);
 				}
 				character.getEquipedArmor().put(EquipmentTypes.BOOTS, armor);
 				effectService.applyGlobalEffectsAsEnchantments(armor.getEffects(), character, armor);
@@ -457,7 +457,7 @@ public class InventoryService {
 
 				Armor armor1 = character.getEquipedArmor().get(EquipmentTypes.LEGGINGS);
 				if (armor1 != null) {
-					effectService.removeGlobalEffectsAsEnchantments(armor1.getEffects(), character, armor1);
+					effectService.removeGlobalEffectsAsEnchantments(armor1.getEffects().keySet(), character, armor1);
 				}
 				character.getEquipedArmor().put(EquipmentTypes.LEGGINGS, armor);
 				effectService.applyGlobalEffectsAsEnchantments(armor.getEffects(), character, armor);
@@ -915,18 +915,19 @@ public class InventoryService {
 		return data;
 	}
 
-	public Map<IGlobalEffect, String> getItemEffects(ItemStack is) {
+	public Map<IGlobalEffect, Map<String, String>> getItemEffects(ItemStack is) {
 		CustomItemData itemData = getItemData(is);
 		return getItemEffects(itemData);
 	}
 
-	public Map<IGlobalEffect, String> getItemEffects(CustomItemData itemData) {
+	public Map<IGlobalEffect, Map<String, String>> getItemEffects(CustomItemData itemData) {
 		return itemData.enchantements().get().entrySet()
 				.stream()
 				.collect(Collectors.toMap(
 						e -> effectService.getGlobalEffect(e.getKey()),
 						Map.Entry::getValue
 				));
+
 	}
 
 

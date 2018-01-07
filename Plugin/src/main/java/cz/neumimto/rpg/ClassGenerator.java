@@ -5,14 +5,13 @@ import cz.neumimto.rpg.effects.IGlobalEffect;
 import javassist.CannotCompileException;
 import jdk.internal.dynalink.beans.StaticClass;
 import org.objectweb.asm.*;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.util.CheckClassAdapter;
 import org.spongepowered.api.event.Event;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -88,6 +87,7 @@ public class ClassGenerator implements Opcodes {
 			mv.visitVarInsn(ALOAD, 1);
 			mv.visitVarInsn(LLOAD, 2);
 			mv.visitVarInsn(ALOAD, 4);
+
 			mv.visitMethodInsn(INVOKESPECIAL, toPath(cls), "<init>", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JLjava/lang/String;)V", false);
 			mv.visitInsn(ARETURN);
 			Label l1 = new Label();
@@ -138,6 +138,7 @@ public class ClassGenerator implements Opcodes {
 			mv.visitVarInsn(ALOAD, 1);
 			mv.visitVarInsn(LLOAD, 2);
 			mv.visitVarInsn(ALOAD, 4);
+
 			mv.visitMethodInsn(INVOKEVIRTUAL, getCannonicalGlobalName(cls), "construct", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JLjava/lang/String;)L" + toPath(cls) + ";", false);
 			mv.visitInsn(ARETURN);
 			Label l1 = new Label();
@@ -256,10 +257,6 @@ public class ClassGenerator implements Opcodes {
 				mv.visitLocalVariable("data", "Ljava/util/Map;", "Ljava/util/Map<Ljava/lang/String;Ljava/lang/String;>;", l0, l3, 1);
 				mv.visitLocalVariable("model", "L"+modelName+";", null, l1, l3, 2);
 
-			//	mv.visitLocalVariable("this", "Lcz/neumimto/rpg/effects/model/TestModelMapper;", null, l0, l3, 0);
-			//	mv.visitLocalVariable("data", "Ljava/util/Map;", "Ljava/util/Map<Ljava/lang/String;Ljava/lang/String;>;", l0, l3, 1);
-			//	mv.visitLocalVariable("model", "L"+modelName+";", null, l1, l3, 2);
-
 				mv.visitMaxs(4, 3);
 				mv.visitEnd();
 			}
@@ -274,7 +271,6 @@ public class ClassGenerator implements Opcodes {
 		mv.visitLabel(label);
 		mv.visitLineNumber(lineNumber, label);
 		mv.visitVarInsn(ALOAD, 2);
-		//mv.visitMethodInsn(INVOKEVIRTUAL, classNameWithPackage, "getCache", "()Ljava/util/Map;", false);
 
 		mv.visitFieldInsn(GETSTATIC, "cz/neumimto/rpg/effects/model/EffectModelMapper", "typeMapperMap", "Ljava/util/Map;");
         mv.visitLdcInsn(Type.getType("L"+fieldTzpe+";"));
@@ -294,7 +290,6 @@ public class ClassGenerator implements Opcodes {
 		mv.visitLineNumber(lineNumber, label);
 		mv.visitVarInsn(ALOAD, 2);
 
-		//mv.visitMethodInsn(INVOKEVIRTUAL, classNameWithPackage, "getCache", "()Ljava/util/Map;", false);
 		mv.visitFieldInsn(GETSTATIC, "cz/neumimto/rpg/effects/model/EffectModelMapper", "typeMapperMap", "Ljava/util/Map;");
 
         mv.visitFieldInsn(GETSTATIC, typeSignature[0], "TYPE", "Ljava/lang/Class;");
@@ -309,7 +304,8 @@ public class ClassGenerator implements Opcodes {
 		mv.visitFieldInsn(PUTFIELD, modelClassNameWithPackage, fieldName, typeSignature[2]);
 	}
 
-	public IGlobalEffect<? extends IEffect> generateGlobalEffect(Class<? extends IEffect<?>> cls) throws CannotCompileException, IllegalAccessException, InstantiationException {
+	public IGlobalEffect<? extends IEffect> generateGlobalEffect(Class<? extends IEffect<?>> cls)
+            throws CannotCompileException, IllegalAccessException, InstantiationException {
 		Generate annotation = cls.getAnnotation(Generate.class);
 		String id = null;
 		try {
@@ -496,6 +492,30 @@ public class ClassGenerator implements Opcodes {
 
 		return cw.toByteArray();
 	}
+
+    public static String getSignature(Method m){
+        String sig;
+        try {
+            Field gSig = Method.class.getDeclaredField("signature");
+            gSig.setAccessible(true);
+            sig = (String) gSig.get(m);
+            if(sig!=null) return sig;
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+
+        StringBuilder sb = new StringBuilder("(");
+        for(Class<?> c : m.getParameterTypes())
+            sb.append((sig=Array.newInstance(c, 0).toString())
+                    .substring(1, sig.indexOf('@')));
+        return sb.append(')')
+                .append(
+                        m.getReturnType()==void.class?"V":
+                                (sig= Array.newInstance(m.getReturnType(), 0).toString()).substring(1, sig.indexOf('@'))
+                )
+                .toString();
+    }
+
 
 	@Retention(RetentionPolicy.RUNTIME)
 	public @interface Generate {

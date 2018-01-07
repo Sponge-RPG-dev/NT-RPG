@@ -268,7 +268,7 @@ public class EffectService {
 	 * @param consumer
 	 * @param value
 	 */
-	public void applyGlobalEffectAsEnchantment(IGlobalEffect effect, IEffectConsumer consumer, String value, IEffectSourceProvider effectSourceType) {
+	public void applyGlobalEffectAsEnchantment(IGlobalEffect effect, IEffectConsumer consumer, Map<String, String> value, IEffectSourceProvider effectSourceType) {
 		IEffect construct = effect.construct(consumer, unlimited_duration, value);
 		addEffect(construct, consumer, effectSourceType);
 	}
@@ -279,18 +279,18 @@ public class EffectService {
 	 * @param map
 	 * @param consumer
 	 */
-	public void applyGlobalEffectsAsEnchantments(Map<IGlobalEffect, String> map, IEffectConsumer consumer, IEffectSourceProvider effectSourceType) {
+	public void applyGlobalEffectsAsEnchantments(Map<IGlobalEffect, Map<String, String>> map, IEffectConsumer consumer, IEffectSourceProvider effectSourceType) {
 		map.forEach((e, l) ->
 				applyGlobalEffectAsEnchantment(e, consumer, l, effectSourceType)
 		);
 	}
 
 
-	public void removeGlobalEffectsAsEnchantments(Map<IGlobalEffect, String> itemEffects, IActiveCharacter character, IEffectSourceProvider effectSourceProvider) {
+	public void removeGlobalEffectsAsEnchantments(Collection<IGlobalEffect> itemEffects, IActiveCharacter character, IEffectSourceProvider effectSourceProvider) {
 		if (PluginConfig.DEBUG) {
 			character.sendMessage(itemEffects.size() + " added echn. effects to remove queue.");
 		}
-		itemEffects.forEach((e, l) -> {
+		itemEffects.forEach((e) -> {
 			removeEffect(e.getName(), character, effectSourceProvider);
 		});
 	}

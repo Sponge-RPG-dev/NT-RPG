@@ -56,7 +56,7 @@ public class EffectModelFactory {
     }
 
 
-    private static Class<?> getModelType(Class effect) {
+    public static Class<?> getModelType(Class effect) {
         Constructor c = null;
         for (Constructor<?> constructor : effect.getConstructors()) {
             if (constructor.getAnnotation(Inject.class) != null  ||
@@ -79,7 +79,7 @@ public class EffectModelFactory {
         return parameter.getType();
     }
 
-    private static boolean hasInjectParam(Constructor constructor) {
+    public static boolean hasInjectParam(Constructor constructor) {
         for (Parameter parameter : constructor.getParameters()) {
             if (parameter.getAnnotation(Inject.class) != null) {
                 return true;
@@ -87,6 +87,7 @@ public class EffectModelFactory {
         }
         return false;
     }
+
 
 
 

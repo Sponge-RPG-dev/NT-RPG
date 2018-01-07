@@ -53,16 +53,12 @@ public class Charm extends HotbarObject {
 	@Override
 	public void onUnEquip(IActiveCharacter character) {
 		if (effects != null) {
-			NtRpgPlugin.GlobalScope.effectService.removeGlobalEffectsAsEnchantments(effects, character, this);
+			NtRpgPlugin.GlobalScope.effectService.removeGlobalEffectsAsEnchantments(effects.keySet(), character, this);
 		}
 		NtRpgPlugin.GlobalScope.damageService.recalculateCharacterWeaponDamage(character);
 	}
 
-	public Map<IGlobalEffect, String> getEffects() {
-		return effects;
-	}
-
-	public void setEffects(Map<IGlobalEffect, String> effects) {
+	public void setEffects(Map<IGlobalEffect, Map<String, String>> effects) {
 		this.effects = effects;
 	}
 
