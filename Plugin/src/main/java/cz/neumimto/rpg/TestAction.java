@@ -23,7 +23,6 @@ import org.spongepowered.api.world.World;
  * Created by NeumimTo on 29.10.2016.
  * When unit tests are not enough.
  *
- * @see cz.neumimto.rpg.commands.CommandAdmin - test.action
  */
 @Singleton
 public class TestAction implements IEffectSourceProvider {
@@ -40,8 +39,12 @@ public class TestAction implements IEffectSourceProvider {
 		IGlobalEffect globalEffect1 = effectService.getGlobalEffect("All skills");
 
 		CustomItemData itemData = inventoryService.getItemData(itemStack);
-		itemData.getEnchantements().put(globalEffect.getName(), "+10%");
-		itemData.getEnchantements().put(globalEffect1.getName(), "+5");
+		EffectParams effectParams = new EffectParams();
+		effectParams.put(globalEffect.getName(), "+10%");
+		itemData.getEnchantements().put(globalEffect.getName(), effectParams);
+		EffectParams effectParams1 = new EffectParams();
+		effectParams.put(globalEffect1.getName(), "+5");
+		itemData.getEnchantements().put(globalEffect1.getName(), effectParams1);
 		itemStack.offer(itemData);
 		inventoryService.setItemLevel(itemStack, 5);
 		itemData.setSocketCount(4);
@@ -55,7 +58,9 @@ public class TestAction implements IEffectSourceProvider {
 
 
 		CustomItemData itemData = inventoryService.getItemData(itemStack);
-		itemData.getEnchantements().put(globalEffect.getName(), "+3%");
+		EffectParams effectParams1 = new EffectParams();
+		effectParams1.put(globalEffect.getName(), "+3%");
+		itemData.getEnchantements().put(globalEffect.getName(), effectParams1);
 		itemStack.offer(itemData);
 		inventoryService.setItemLevel(itemStack, 10);
 		inventoryService.setItemRarity(itemStack, Text.builder(Localization.CHARM).color(TextColors.GOLD).style(TextStyles.BOLD).build());

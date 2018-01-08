@@ -2,6 +2,7 @@ package cz.neumimto.rpg.inventory;
 
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IGlobalEffect;
@@ -58,7 +59,7 @@ public class Charm extends HotbarObject {
 		NtRpgPlugin.GlobalScope.damageService.recalculateCharacterWeaponDamage(character);
 	}
 
-	public void setEffects(Map<IGlobalEffect, Map<String, String>> effects) {
+	public void setEffects(Map<IGlobalEffect, EffectParams> effects) {
 		this.effects = effects;
 	}
 

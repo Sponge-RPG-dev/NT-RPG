@@ -1,5 +1,6 @@
 package cz.neumimto.effects.positive;
 
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.model.ShadowRunModel;
 import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.NtRpgPlugin;
@@ -12,6 +13,7 @@ import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
+
 
 @ClassGenerator.Generate(id = "name")
 public class ShadowRunEffect extends EffectBase<ShadowRunModel> {
@@ -27,8 +29,10 @@ public class ShadowRunEffect extends EffectBase<ShadowRunModel> {
         setPeriod(20);
     }
 
-    public ShadowRunEffect(IEffectConsumer consumer, long duration, String value) {
-        this(consumer, duration, ShadowRunModel.parse(value));
+    public ShadowRunEffect(IEffectConsumer consumer, long duration, @Inject ShadowRunModel value) {
+        this(consumer, value);
+        setDuration(duration);
+        setValue(value);
     }
 
     @Override

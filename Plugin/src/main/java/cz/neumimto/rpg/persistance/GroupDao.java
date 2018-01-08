@@ -23,6 +23,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
@@ -368,12 +369,28 @@ public class GroupDao {
 		try {
 
 
-			List<String> effects = c.getStringList("Effects");
-			for (String effect : effects) {
-				String[] split = effect.split(":");
-				IGlobalEffect globalEffect = effectService.getGlobalEffect(split[0].trim());
-				String value = split.length == 2 ? split[1] : "";
-				group.getEffects().put(globalEffect, value);
+			Config effects = c.getConfig("Effects");
+			for (Map.Entry<String, ConfigValue> entry : effects.root().entrySet()) {
+					String effectName = entry.getKey();
+					ConfigValueType type = entry.getValue().valueType();
+					EffectParams value = new EffectParams();
+					IGlobalEffect globalEffect = effectService.getGlobalEffect(effectName);
+					switch (type) {
+						case NULL:
+							break;
+						case STRING:
+							value.put(effectName, entry.getValue().render());
+							break;
+						case LIST:
+							ConfigList list = (ConfigList) entry.getValue();
+							List<Object> unwrapped = list.unwrapped();
+							for (Object o : unwrapped) {
+								String k = o.toString();
+								String[] split = k.split(":");
+								value.put(split[0], split[1]);
+							}
+					}
+					group.getEffects().put(globalEffect, value);
 			}
 		} catch (ConfigException e) {
 			logger.warn(" - Missing configuration \"Effects\", skipping");

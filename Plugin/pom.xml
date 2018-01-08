@@ -55,6 +55,11 @@
             <artifactId>NTCore</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.github.NeumimTo</groupId>
+            <artifactId>IoC</artifactId>
+            <version>55a0991e84</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
@@ -73,6 +78,10 @@
             <groupId>org.spongepowered</groupId>
             <artifactId>spongeapi</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId></groupId>
+            <artifactId></artifactId>
         </dependency>
 
 

@@ -228,11 +228,11 @@ public class RWService {
 			String s = text.toPlain();
 			RuneWord rw = combinations.get(s);
 			if (rw != null) {
-				if (rw.getAllowedItems().contains(i.getItem())) {
+				if (rw.getAllowedItems().contains(i.getType())) {
 					if (rw.getAllowedItems().isEmpty()) {
 						return reBuildRuneword(i, rw);
 					} else {
-						if (rw.getAllowedItems().contains(i.getItem())) {
+						if (rw.getAllowedItems().contains(i.getType())) {
 							return reBuildRuneword(i, rw);
 						}
 					}
@@ -245,7 +245,7 @@ public class RWService {
 	public ItemStack reBuildRuneword(ItemStack i, RuneWord rw) {
 		if (rw == null) {
 			if (PluginConfig.AUTOREMOVE_NONEXISTING_RUNEWORDS) {
-				i.offer(Keys.DISPLAY_NAME, Text.of(i.getItem().getName()));
+				i.offer(Keys.DISPLAY_NAME, Text.of(i.getType().getName()));
 				i.offer(Keys.ITEM_LORE, Collections.<Text>emptyList());
 				i.offer(new CustomItemData());
 			}
@@ -263,7 +263,7 @@ public class RWService {
 
 	public boolean canBeInserted(RuneWordTemplate template, ItemStack itemStack) {
 		List<String> allowedItems = template.getAllowedItems();
-		ItemType i = itemStack.getItem();
+		ItemType i = itemStack.getType();
 		if (allowedItems.contains(itemStack.toString())) {
 			return true;
 		}
@@ -319,10 +319,8 @@ public class RWService {
 	}
 
 	public CustomItemData toCustomItemData(RuneWord runeword) {
-		return new CustomItemData(runeword.getMinLevel(),
-				runeword.getAllowedGroups().stream().map(PlayerGroup::getName).collect(Collectors.toList()),
-				toMap(runeword.getEffects()),
-				Text.builder(Localization.RUNEWORD).style(TextStyles.BOLD).color(InventoryService.RUNEWORD_LORE).build(), 0);
+		//todo 1.0.10
+		return null;
 	}
 
 	private Map<String, String> toMap(Map<IGlobalEffect, String> a) {

@@ -279,7 +279,7 @@ public class EffectService {
 	 * @param map
 	 * @param consumer
 	 */
-	public void applyGlobalEffectsAsEnchantments(Map<IGlobalEffect, Map<String, String>> map, IEffectConsumer consumer, IEffectSourceProvider effectSourceType) {
+	public void applyGlobalEffectsAsEnchantments(Map<IGlobalEffect, EffectParams> map, IEffectConsumer consumer, IEffectSourceProvider effectSourceType) {
 		map.forEach((e, l) ->
 				applyGlobalEffectAsEnchantment(e, consumer, l, effectSourceType)
 		);

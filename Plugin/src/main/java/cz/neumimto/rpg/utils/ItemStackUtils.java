@@ -188,7 +188,7 @@ public class ItemStackUtils {
 	}
 
 	public static boolean isItemSkillBind(ItemStack is) {
-		if (is.getItem() != InventoryService.ITEM_SKILL_BIND) {
+		if (is.getType() != InventoryService.ITEM_SKILL_BIND) {
 			return false;
 		}
 		Optional<List<Text>> texts = is.get(Keys.ITEM_LORE);

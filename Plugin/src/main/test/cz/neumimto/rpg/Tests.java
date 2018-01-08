@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
 @RunWith(PowerMockRunner.class)
 public class Tests {
 
-	// @Test
+	 @Test
 	public void testConfig() throws NoSuchFieldException, IllegalAccessException {
 		ResourceLoader.raceDir = new File("./src/main/test/testfiles/races");
 		ResourceLoader.guildsDir = new File("./src/main/test/testfiles/guilds");

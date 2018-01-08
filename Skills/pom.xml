@@ -33,6 +33,12 @@
             <artifactId>NTCore</artifactId>
         </dependency>
         <dependency>
+            <groupId>cz.neumimto.rpg</groupId>
+            <artifactId>NT-RPG</artifactId>
+            <version>1.0.10</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.spongepowered</groupId>
             <artifactId>spongeapi</artifactId>
         </dependency>
@@ -47,13 +53,6 @@
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>cz.neumimto.rpg</groupId>
-            <artifactId>NT-RPG</artifactId>
-            <version>1.0.10</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

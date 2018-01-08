@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.inventory;
 
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.data.CustomItemData;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -15,7 +16,7 @@ public class CustomItem {
 
 	private int slot;
 	protected CustomItemData customItemData;
-	protected Map<IGlobalEffect, Map<String, String>> effects = new HashMap<>();
+	protected Map<IGlobalEffect, EffectParams> effects = new HashMap<>();
 
 	public int getSlot() {
 		return slot;
@@ -35,7 +36,7 @@ public class CustomItem {
 		effects = NtRpgPlugin.GlobalScope.inventorySerivce.getItemEffects(customItemData);
 	}
 
-	public Map<IGlobalEffect, Map<String, String>> getEffects() {
+	public Map<IGlobalEffect, EffectParams> getEffects() {
 		return effects;
 	}
 }

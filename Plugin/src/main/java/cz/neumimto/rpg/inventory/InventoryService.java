@@ -29,10 +29,7 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.damage.DamageService;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.EffectSourceType;
-import cz.neumimto.rpg.effects.IEffectSource;
-import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.inventory.runewords.RWService;
@@ -697,7 +694,7 @@ public class InventoryService {
 
 
 	public CannotUseItemReson canWear(ItemStack itemStack, IActiveCharacter character) {
-		if (ItemStackUtils.any_armor.contains(itemStack.getItem())) {
+		if (ItemStackUtils.any_armor.contains(itemStack.getType())) {
 			if (!character.canWear(itemStack)) {
 				return CannotUseItemReson.CONFIG;
 			}
@@ -711,7 +708,7 @@ public class InventoryService {
 		if (itemStack == null)
 			return CannotUseItemReson.OK;
 
-		if (ItemStackUtils.weapons.contains(itemStack.getItem())) {
+		if (ItemStackUtils.weapons.contains(itemStack.getType())) {
 			if (!character.canUse(RPGItemType.from(itemStack))) {
 				return CannotUseItemReson.CONFIG;
 			}
@@ -800,9 +797,9 @@ public class InventoryService {
 		}
 	}
 
-	public ItemStack setEnchantments(Map<String, String> effects, ItemStack itemStack) {
+	public ItemStack setEnchantments(Map<String, EffectParams> effects, ItemStack itemStack) {
 		CustomItemData itemData = getItemData(itemStack);
-		Map<String, String> map = new HashMap<>();
+		Map<String, EffectParams> map = new HashMap<>();
 		map.putAll(itemData.getEnchantements());
 		map.putAll(effects);
 		itemData.setEnchantements(map);
@@ -831,50 +828,10 @@ public class InventoryService {
 		Optional<CustomItemData> customItemData = is.get(CustomItemData.class);
 		CustomItemData data = customItemData.orElse(new CustomItemData());
 		Value<Text> rarity = data.rarity();
-		Text text = rarity.get();
-		List<Text> lore = new ArrayList<>();
-		if (!text.toPlain().isEmpty()) {
-			lore.add(text);
-		}
-		int k = data.getSocketCount();
-		if (k > 0) {
-			String s = "";
-			while (k > 0) {
-				s += "{@}";
-				k--;
-			}
-			lore.add(Text.builder(s).color(SOCKET_COLOR).build());
-		}
-		if (data.itemLevel().get() > 0) {
-			lore.add(Text.builder(Localization.ITEM_LEVEL + ": " + data.itemLevel().get()).color(LEVEL_COLOR).build());
-		}
 
-		Map<String, String> map = data.enchantements().get();
-		if (!map.isEmpty()) {
-			lore.add(Text.EMPTY);
-			for (Map.Entry<String, String> entry : map.entrySet()) {
-				Text t = null;
-				if (entry.getKey() == null) {
-					t = Text.builder(entry.getValue()).color(ENCHANTMENT_COLOR).build();
-				} else {
-					t = Text.builder(entry.getKey()).color(ENCHANTMENT_COLOR)
-							.append(Text.builder(": ").color(DELIMITER).style(TextStyles.BOLD).build())
-							.append(Text.builder(entry.getValue()).color(ENCHANTMENT_COLOR).build())
-							.build();
-				}
-				lore.add(t);
-			}
-		}
-		List<String> u = data.groupRestricitons().get();
-		if (!u.isEmpty()) {
-			lore.add(Text.EMPTY);
+		//TODO 1.0.10
 
-			for (String a : u) {
-				Text t = Text.builder(a).color(RESTRICTIONS).build();
-				lore.add(t);
-			}
-		}
-		is.offer(Keys.ITEM_LORE, lore);
+
 		return is;
 	}
 
@@ -885,42 +842,16 @@ public class InventoryService {
 		}
 		CustomItemData data = new CustomItemData();
 		Optional<List<Text>> texts = itemStack.get(Keys.ITEM_LORE);
-
-		if (texts.isPresent()) {
-			for (Text text : texts.get()) {
-				if (text.getColor() == ENCHANTMENT_COLOR) {
-					String s = text.toPlainSingle();
-					IGlobalEffect globalEffect = effectService.getGlobalEffect(s);
-					if (globalEffect != null) {
-						String a = null;
-						ImmutableList<Text> children = text.getChildren();
-						if (children.size() > 0) {
-							Text text1 = children.get(children.size() - 1);
-							a = text.toPlainSingle();
-						}
-						data.getEnchantements().put(globalEffect.getName(), a);
-					}
-				} else if (text.getColor() == LEVEL_COLOR) {
-					String s = text.toPlain();
-					String s1 = Utils.extractNumber(s);
-					if (s1 != null) {
-						data.setItemLevel(Integer.parseInt(s1));
-					}
-				}
-
-			}
-			itemStack.offer(data);
-		}
-
+		//TODO 1.0.10
 		return data;
 	}
 
-	public Map<IGlobalEffect, Map<String, String>> getItemEffects(ItemStack is) {
+	public Map<IGlobalEffect, EffectParams> getItemEffects(ItemStack is) {
 		CustomItemData itemData = getItemData(is);
 		return getItemEffects(itemData);
 	}
 
-	public Map<IGlobalEffect, Map<String, String>> getItemEffects(CustomItemData itemData) {
+	public Map<IGlobalEffect, EffectParams> getItemEffects(CustomItemData itemData) {
 		return itemData.enchantements().get().entrySet()
 				.stream()
 				.collect(Collectors.toMap(

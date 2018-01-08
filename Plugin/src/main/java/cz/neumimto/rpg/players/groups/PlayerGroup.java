@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.players.groups;
 
+import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.effects.IGlobalEffect;
@@ -46,7 +47,7 @@ public class PlayerGroup implements IEffectSourceProvider {
 	private ItemType itemType;
 	private String description;
 	private Map<ICharacterAttribute, Integer> startingAttributes = new HashMap<>();
-	private Map<IGlobalEffect, String> effects = new HashMap<>();
+	private Map<IGlobalEffect, EffectParams> effects = new HashMap<>();
 
 	protected cz.neumimto.rpg.effects.IEffectSource playerGroupType;
 	private Map<EntityType, Double> projectileDamage = new HashMap<>();
@@ -169,11 +170,11 @@ public class PlayerGroup implements IEffectSourceProvider {
 		return playerGroupType;
 	}
 
-	public Map<IGlobalEffect, String> getEffects() {
+	public Map<IGlobalEffect, EffectParams> getEffects() {
 		return effects;
 	}
 
-	public void setEffects(Map<IGlobalEffect, String> effects) {
+	public void setEffects(Map<IGlobalEffect, EffectParams> effects) {
 		this.effects = effects;
 	}
 

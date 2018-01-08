@@ -27,6 +27,7 @@ import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.configuration.Settings;
+import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.gui.Gui;
@@ -271,14 +272,8 @@ public class NtRpgPlugin {
 					Player player = (Player) src;
 					if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
 						ItemStack itemStack = player.getItemInHand(HandTypes.MAIN_HAND).get();
-						CustomItemData itemData = NtRpgPlugin.GlobalScope.inventorySerivce.getItemData(itemStack);
-						Map<String, String> map = new HashMap<>();
-						map.putAll(itemData.getEnchantements());
 
-						String message = args.<String>getOne("args").orElse("");
-						map.put(effect.getName(), message);
 
-						itemStack = NtRpgPlugin.GlobalScope.inventorySerivce.setEnchantments(map, itemStack);
 						player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
 						player.sendMessage(TextHelper.parse("Enchantment " + effect.getName() + " added"));
 					} else {
@@ -465,7 +460,7 @@ public class NtRpgPlugin {
 					Long k  = args.<Long>getOne("duration").get();
 						IGlobalEffect effect1 = args.<IGlobalEffect>getOne("data").get();
 					IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
-					GlobalScope.effectService.addEffect(effect1.construct(character, k, data), character, InternalEffectSourceProvider.INSTANCE);
+					//GlobalScope.effectService.addEffect(effect1.construct(character, k, data), character, InternalEffectSourceProvider.INSTANCE);
 					return CommandResult.success();
 				})
 				.build();

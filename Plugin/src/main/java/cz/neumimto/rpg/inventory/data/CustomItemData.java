@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.inventory.data;
 
+import cz.neumimto.rpg.effects.EffectParams;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
@@ -25,11 +26,11 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 
 	private Integer itemLevel;
 	private List<String> restrictions;
-	private Map<String, String> enchantements;
+	private Map<String, EffectParams> enchantements;
 	private Text rarity;
 	private Integer socketCount;
 
-	public CustomItemData(Integer itemLevel, List<String> restrictions, Map<String, String> enchantements,
+	public CustomItemData(Integer itemLevel, List<String> restrictions, Map<String, EffectParams> enchantements,
 						  Text rarity, Integer socketCount) {
 		this.itemLevel = itemLevel;
 		this.restrictions = restrictions;
@@ -80,11 +81,11 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 		this.restrictions = restrictions;
 	}
 
-	public Map<String, String> getEnchantements() {
+	public Map<String, EffectParams> getEnchantements() {
 		return enchantements;
 	}
 
-	public void setEnchantements(Map<String, String> enchantements) {
+	public void setEnchantements(Map<String, EffectParams> enchantements) {
 		this.enchantements = enchantements;
 	}
 
@@ -112,7 +113,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 		return Sponge.getRegistry().getValueFactory().createValue(NKeys.CUSTOM_ITEM_DATA_SOCKET_COUNT, itemLevel);
 	}
 
-	public MapValue<String, String> enchantements() {
+	public MapValue<String, EffectParams> enchantements() {
 		return Sponge.getRegistry().getValueFactory().createMapValue(NKeys.CUSTOM_ITEM_DATA_ENCHANTEMENTS, enchantements);
 	}
 
@@ -151,7 +152,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 		}
 		if (view.contains(NKeys.CUSTOM_ITEM_DATA_ENCHANTEMENTS.getQuery())) {
 			Optional map = view.getMap(NKeys.CUSTOM_ITEM_DATA_ENCHANTEMENTS.getQuery());
-			enchantements = (Map<String, String>) map.orElseGet(() -> new HashMap<>());
+			enchantements = (Map<String, EffectParams>) map.orElseGet(() -> new HashMap<>());
 		}
 
 		if (view.contains(NKeys.CUSTOM_ITEM_DATA_ITEM_LEVEL.getQuery())) {
@@ -212,11 +213,11 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 
 		private Integer itemLevel;
 		private List<String> restrictions;
-		private Map<String, String> enchantements;
+		private Map<String, EffectParams> enchantements;
 		private Text rarity;
 		private Integer socketCount;
 
-		public Immutable(Integer itemLevel, List<String> restrictions, Map<String, String> enchantements,
+		public Immutable(Integer itemLevel, List<String> restrictions, Map<String, EffectParams> enchantements,
 						 Text rarity, Integer socketCount) {
 			this.itemLevel = itemLevel;
 			this.restrictions = restrictions;
@@ -250,7 +251,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 			return Sponge.getRegistry().getValueFactory().createValue(NKeys.CUSTOM_ITEM_DATA_SOCKET_COUNT, itemLevel).asImmutable();
 		}
 
-		public ImmutableMapValue<String, String> enchantements() {
+		public ImmutableMapValue<String, EffectParams> enchantements() {
 			return Sponge.getRegistry().getValueFactory().createMapValue(NKeys.CUSTOM_ITEM_DATA_ENCHANTEMENTS, enchantements).asImmutable();
 		}
 

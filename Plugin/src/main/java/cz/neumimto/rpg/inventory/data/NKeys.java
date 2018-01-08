@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.inventory.data;
 
 import com.google.common.reflect.TypeToken;
+import cz.neumimto.rpg.effects.EffectParams;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.key.KeyFactory;
@@ -68,10 +69,10 @@ public class NKeys {
 					"ntrpg custom item socket count"
 			);
 
-	public static final Key<MapValue<String, String>> CUSTOM_ITEM_DATA_ENCHANTEMENTS = KeyFactory.makeMapKey(
-			new TypeToken<Map<String, String>>() {
+	public static final Key<MapValue<String, EffectParams>> CUSTOM_ITEM_DATA_ENCHANTEMENTS = KeyFactory.makeMapKey(
+			new TypeToken<Map<String, EffectParams>>() {
 			},
-			new TypeToken<MapValue<String, String>>() {
+			new TypeToken<MapValue<String, EffectParams>>() {
 			},
 			DataQuery.of('.', "ntrpg:customitemdataenchantements"),
 			"ntrpg:custom_idem_data_enchantements",
