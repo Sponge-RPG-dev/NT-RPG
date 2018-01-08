@@ -381,14 +381,13 @@ public class GroupDao {
 						case STRING:
 							value.put(effectName, entry.getValue().render());
 							break;
-						case LIST:
-							ConfigList list = (ConfigList) entry.getValue();
-							List<Object> unwrapped = list.unwrapped();
-							for (Object o : unwrapped) {
-								String k = o.toString();
-								String[] split = k.split(":");
-								value.put(split[0], split[1]);
+						case OBJECT:
+							ConfigObject object = (ConfigObject) entry.getValue();
+							Map<String, Object> unwrapped1 = object.unwrapped();
+							for (Map.Entry<String, Object> stringObjectEntry : unwrapped1.entrySet()) {
+								value.put(stringObjectEntry.getKey(), stringObjectEntry.getValue() != null ? stringObjectEntry.getValue().toString() : null);
 							}
+
 					}
 					group.getEffects().put(globalEffect, value);
 			}

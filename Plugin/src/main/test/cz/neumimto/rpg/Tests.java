@@ -1,6 +1,8 @@
 package cz.neumimto.rpg;
 
 
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import cz.neumimto.rpg.persistance.GroupDao;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.ExtendedNClass;
@@ -34,30 +36,6 @@ import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
 public class Tests {
-
-	 @Test
-	public void testConfig() throws NoSuchFieldException, IllegalAccessException {
-		ResourceLoader.raceDir = new File("./src/main/test/testfiles/races");
-		ResourceLoader.guildsDir = new File("./src/main/test/testfiles/guilds");
-		ResourceLoader.classDir = new File("./src/main/test/testfiles/classes");
-		GroupDao dao = new GroupDao();
-		dao.loadGuilds();
-		dao.loadRaces();
-
-		SkillService sk = mock(SkillService.class);
-		when(sk.getSkillTrees()).thenReturn(new HashMap<String, SkillTree>() {
-			{
-				put("test", SkillTree.Default);
-			}
-		});
-		Field f = dao.getClass().getDeclaredField("skillService");
-		f.setAccessible(true);
-		f.set(dao, sk);
-		dao.loadNClasses();
-		Assert.assertTrue(ResourceLoader.raceDir.listFiles().length == dao.getRaces().size());
-		Assert.assertTrue(ResourceLoader.guildsDir.listFiles().length == dao.getGuilds().size());
-		Assert.assertTrue(dao.getClasses().get("test").getLevels().length == 99);
-	}
 
 
 	/* @Test
