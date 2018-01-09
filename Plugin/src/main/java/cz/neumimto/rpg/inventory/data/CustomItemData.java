@@ -267,12 +267,30 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 
 	@Override
 	public Optional<CustomItemData> fill(DataHolder dataHolder, MergeFunction overlap) {
-		return Optional.empty();
+		Optional<CustomItemData> a = dataHolder.get(CustomItemData.class);
+		if (a.isPresent()) {
+			CustomItemData otherData = a.get();
+			CustomItemData finalData = overlap.merge(this, otherData);
+			this.itemLevel = finalData.itemLevel;
+			this.attributeRequirements = finalData.attributeRequirements;
+			this.attributeBonus = finalData.attributeBonus;
+			this.propertyBonus = finalData.propertyBonus;
+			this.effects = finalData.effects;
+			this.sockets = finalData.sockets;
+			this.allowedGroups = finalData.allowedGroups;
+			this.rarity = finalData.rarity;
+			this.type = finalData.type;
+			this.itemLevel = finalData.itemLevel;
+			this.sectionDelimiter = finalData.sectionDelimiter;
+			this.durability = finalData.durability;
+			this.damageMinMax = finalData.damageMinMax;
+		}
+		return Optional.of(this);
 	}
 
 	@Override
 	public Optional<CustomItemData> from(DataContainer container) {
-		return Optional.empty();
+		return from(container);
 	}
 
 	@Override
@@ -572,8 +590,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 					NKeys.ITEM_LORE_DURABILITY,
 					NKeys.ITEM_SECTION_DELIMITER,
 					NKeys.ITEM_DAMAGE)) {
-				Optional<CustomItemData> customItemData = Optional.of(
-
+				return Optional.of(
 						new CustomItemData(
 								(Map<String, Integer>) container.get(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS.getQuery()).orElse(new HashMap<>()),
 								(Map<String, Integer>) container.get(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS.getQuery()).orElse(new HashMap<>()),
@@ -589,7 +606,6 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 								(Pair<Double, Double>) container.get(NKeys.ITEM_DAMAGE.getQuery()).orElse(new Pair<>(0, 0))
 						)
 				);
-				return customItemData;
 			}
 			return Optional.empty();
 		}
