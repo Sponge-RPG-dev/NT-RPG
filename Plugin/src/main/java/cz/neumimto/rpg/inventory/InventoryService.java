@@ -24,14 +24,14 @@ import com.typesafe.config.ConfigFactory;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.Arg;
-import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.TextHelper;
+import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.data.CustomItemData;
+import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
@@ -39,10 +39,13 @@ import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.PropertyService;
+import cz.neumimto.rpg.reloading.Reload;
+import cz.neumimto.rpg.reloading.ReloadService;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import cz.neumimto.rpg.utils.Utils;
+import javafx.scene.text.TextBuilder;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
@@ -68,6 +71,7 @@ import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyle;
 import org.spongepowered.api.text.format.TextStyles;
+import org.spongepowered.api.util.Color;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -127,12 +131,32 @@ public class InventoryService {
 
 	private Map<UUID, InventoryMenu> inventoryMenus = new HashMap<>();
 	private Map<String, ItemGroup> itemGroups = new HashMap<>();
+	private TextColor effectName;
+	private TextColor doubleColon;
+	private TextColor value;
+	private TextColor effectSettings;
+	private TextColor listColor;
+	private TextColor effectsSectioncolor;
+	private Text effectSection;
 
 
 	@PostProcess(priority = 3000)
 	public void init() {
 		NORMAL_RARITY = Text.of(Localization.NORMAL_RARITY);
 		loadItemGroups();
+		setupColor();
+	}
+
+	@Reload(on = ReloadService.PLUGIN_CONFIG)
+	public void setupColor() {
+		effectName = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_NAME_COLOR).get();
+		doubleColon = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_COLON_COLOR).get();
+		value = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_VALUE_COLOR).get();
+		effectSettings = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_SETTING_NAME_COLOR).get();
+		listColor = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_SETTING_DASH_COLOR).get();
+		effectsSectioncolor = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_SECTION_COLOR).get();
+		effectSection = Text.builder(Localization.ITEM_EFFECTS_SECTION).color(effectsSectioncolor).build();
+
 	}
 
 	private void loadItemGroups() {
@@ -800,7 +824,7 @@ public class InventoryService {
 	public ItemStack setEnchantments(Map<String, EffectParams> effects, ItemStack itemStack) {
 		CustomItemData itemData = getItemData(itemStack);
 		Map<String, EffectParams> map = new HashMap<>();
-		map.putAll(itemData.getEnchantements());
+		map.putAll(itemData.effects());
 		map.putAll(effects);
 		itemData.setEnchantements(map);
 		itemStack.offer(itemData);
@@ -812,27 +836,87 @@ public class InventoryService {
 			return itemStack;
 		}
 		CustomItemData itemData = getItemData(itemStack);
-		itemData.setRarity(rarity);
+		itemStack.offer(NKeys.ITEM_RARITY, rarity);
 		itemStack.offer(itemData);
 		return updateLore(itemStack);
 	}
 
 	public ItemStack setItemLevel(ItemStack itemStack, int level) {
 		CustomItemData item = getItemData(itemStack);
-		item.setItemLevel(level);
-		itemStack.offer(item);
+		itemStack.offer(NKeys.ITEM_LEVEL, level);
 		return updateLore(itemStack);
 	}
 
 	public ItemStack updateLore(ItemStack is) {
-		Optional<CustomItemData> customItemData = is.get(CustomItemData.class);
-		CustomItemData data = customItemData.orElse(new CustomItemData());
-		Value<Text> rarity = data.rarity();
+		Optional<CustomItemData> o = is.get(CustomItemData.class);
+		if (!o.isPresent()) {
+			is.offer(new CustomItemData());
+		}
+		List<Text> texts = new ArrayList<>();
 
-		//TODO 1.0.10
+		is.get(NKeys.ITEM_TYPE).ifPresent(a -> texts.add(a));
+		is.get(NKeys.ITEM_RARITY).ifPresent(a -> texts.add(a));
 
+		is.get(NKeys.ITEM_DAMAGE).ifPresent(a -> {
+			TextHelper.parse(Localization.ITEM_DAMAGE);
+		});
+
+		NKeys.ITEM_DAMAGE;
+		NKeys.ITEM_LEVEL;
+
+		NKeys.ITEM_PLAYER_ALLOWED_GROUPS;
+
+		NKeys.ITEM_ATTRIBUTE_REQUIREMENTS;
+		//
+		NKeys.ITEM_ATTRIBUTE_BONUS;
+		//
+		NKeys.ITEM_PROPERTY_BONUS;
+		//
+		NKeys.ITEM_EFFECTS;
+		//
+		NKeys.ITEM_SOCKETS;
+		//
+		NKeys.ITEM_LORE_DURABILITY;
 
 		return is;
+	}
+
+	private void createateItemHeader(ItemStack is, List<Text> t) {
+
+	}
+
+	private void createDelimiter(ItemStack is, List<Text> t, Text section) {
+		Pair<Text, Text> textTextPair = is.get(NKeys.ITEM_SECTION_DELIMITER)
+				.orElse(new Pair<>(Text.builder("======[ ").build(), Text.builder(" )======").build()));
+		t.add(Text.builder().append(textTextPair.key).append(section).append(textTextPair.value).build());
+	}
+
+	private void updateEffects(ItemStack is, List<Text> t) {
+		is.get(NKeys.ITEM_EFFECTS).ifPresent(a -> {
+			createDelimiter(is, t, effectSection);
+			Text.Builder builder = Text.builder();
+			for (Map.Entry<String, EffectParams> entry : a.entrySet()) {
+				if (entry.getValue() == null) {
+					builder.append(Text.builder(entry.getKey()).color(this.effectName).append(Text.NEW_LINE).build());
+				} else if (entry.getValue().size() == 1) {
+					builder.append(Text.builder(entry.getKey()).color(this.effectName)
+							.append(Text.builder(": ").color(this.doubleColon).build())
+							.append(Text.builder(entry.getValue().get(entry.getKey())).color(this.value).build())
+							.append(Text.NEW_LINE).build());
+				} else {
+					builder.append(Text.builder(entry.getKey()).color(this.effectName).build());
+					for (Map.Entry<String, String> q : entry.getValue().entrySet()) {
+						builder
+							.append(Text.NEW_LINE)
+							.append(Text.builder("  - " + q.getKey()).color(this.effectSettings)
+									.append(Text.builder(": ").color(this.doubleColon).build())
+									.append(Text.builder(q.getValue()).color(this.value).build())
+							.append(Text.NEW_LINE).build());
+					}
+				}
+			}
+			t.add(builder.build());
+		});
 	}
 
 	public CustomItemData getItemData(ItemStack itemStack) {
@@ -852,20 +936,13 @@ public class InventoryService {
 	}
 
 	public Map<IGlobalEffect, EffectParams> getItemEffects(CustomItemData itemData) {
-		return itemData.enchantements().get().entrySet()
+		return itemData.effects().get().entrySet()
 				.stream()
 				.collect(Collectors.toMap(
 						e -> effectService.getGlobalEffect(e.getKey()),
 						Map.Entry::getValue
 				));
 
-	}
-
-
-	public void setSocketCount(ItemStack itemStack, int i) {
-		CustomItemData itemData = getItemData(itemStack);
-		itemData.setSocketCount(i);
-		itemStack.offer(itemData);
 	}
 
 	public void addReservedItemname(String k) {

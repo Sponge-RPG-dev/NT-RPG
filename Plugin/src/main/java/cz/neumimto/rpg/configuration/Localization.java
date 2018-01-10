@@ -335,4 +335,7 @@ public class Localization {
 
 	@ConfigValue
 	public static String RACE_NOT_SELECTED = "&CYou have to select race before class";
+
+	@ConfigValue
+	public static String ITEM_EFFECTS_SECTION = "Effects";
 }
