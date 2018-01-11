@@ -170,4 +170,7 @@ public class PluginConfig {
 
 	@ConfigValue
 	public static String ITEM_LORE_EFFECT_SECTION_COLOR = TextColors.GREEN.getName();
+
+	@ConfigValue
+	public static String ITEM_LORE_RARITY_COLOR = TextColors.DARK_GRAY.getName();
 }

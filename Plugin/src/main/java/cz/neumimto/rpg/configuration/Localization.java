@@ -337,5 +337,13 @@ public class Localization {
 	public static String RACE_NOT_SELECTED = "&CYou have to select race before class";
 
 	@ConfigValue
-	public static String ITEM_EFFECTS_SECTION = "Effects";
+	public static String ITEM_EFFECTS_SECTION = "&9Effects";
+
+	@ConfigValue
+	public static String ITEM_RARITY_SECTION = "&8Rarity: ";
+
+	@ConfigValue
+	public static String ITEM_DAMAGE_SECTION = "&8Damage: ";
+
+	public static String ITEM_LEVEL_SECTION = "&8Level: ";
 }

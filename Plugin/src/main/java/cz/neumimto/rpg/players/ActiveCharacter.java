@@ -87,6 +87,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	private transient Map<EquipmentType, Armor> equipedArmor;
 	private transient int selected;
 	private transient Map<String, SkillTreeViewModel> skillTreeViewLocation;
+	private Set<SkillTreeSpecialization> specs = new HashSet<>();
 
 	public ActiveCharacter(Player pl, CharacterBase base) {
 		this.pl = pl;
@@ -780,6 +781,21 @@ public class ActiveCharacter implements IActiveCharacter {
 		return null;
 	}
 
+	@Override
+	public void addSkillTreeSpecialization(SkillTreeSpecialization specialization) {
+		this.specs.add(specialization);
+	}
+
+	@Override
+	public void removeSkillTreeSpecialization(SkillTreeSpecialization specialization) {
+		if (hasSkillTreeSpecialization(specialization))
+			specs.remove(specialization);
+	}
+
+	@Override
+	public boolean hasSkillTreeSpecialization(SkillTreeSpecialization specialization) {
+		return specs.contains(specialization);
+	}
 
 	@Override
 	public int hashCode() {

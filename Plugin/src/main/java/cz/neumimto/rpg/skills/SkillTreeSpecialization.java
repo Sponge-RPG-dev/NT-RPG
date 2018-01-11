@@ -50,6 +50,7 @@ public class SkillTreeSpecialization extends PassiveSkill {
                             .with("path", getName()));
             game.getServer().getOnlinePlayers().forEach(p -> p.sendMessage(t));
         }
+        onCharacterInit(IActiveCharacter, 1);
     }
 
     @Override

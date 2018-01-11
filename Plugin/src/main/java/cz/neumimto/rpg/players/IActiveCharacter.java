@@ -29,6 +29,7 @@ import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.SkillTreeSpecialization;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
@@ -256,4 +257,10 @@ public interface IActiveCharacter extends IEntity<Player> {
 	Map<String, SkillTreeViewModel> getSkillTreeViewLocation();
 
 	SkillTreeViewModel getLastTimeInvokedSkillTreeView();
+
+	void addSkillTreeSpecialization(SkillTreeSpecialization specialization);
+
+	void removeSkillTreeSpecialization(SkillTreeSpecialization specialization);
+
+	boolean hasSkillTreeSpecialization(SkillTreeSpecialization specialization);
 }

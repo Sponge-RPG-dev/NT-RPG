@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.inventory;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.UnmodifiableIterator;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import cz.neumimto.core.ioc.Inject;
@@ -38,20 +38,20 @@ import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.PropertyService;
+import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.reloading.Reload;
 import cz.neumimto.rpg.reloading.ReloadService;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import cz.neumimto.rpg.utils.Utils;
-import javafx.scene.text.TextBuilder;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
-import org.spongepowered.api.data.value.mutable.ListValue;
-import org.spongepowered.api.data.value.mutable.Value;
+import org.spongepowered.api.data.value.mutable.MapValue;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
@@ -69,9 +69,7 @@ import org.spongepowered.api.item.inventory.type.CarriedInventory;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.format.TextStyle;
 import org.spongepowered.api.text.format.TextStyles;
-import org.spongepowered.api.util.Color;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -90,17 +88,6 @@ public class InventoryService {
 
 
 	public static ItemType ITEM_SKILL_BIND = ItemTypes.BLAZE_POWDER;
-
-	public static TextColor LORE_FIRSTLINE = TextColors.AQUA;
-	public static TextColor SOCKET_COLOR = TextColors.GRAY;
-	public static TextColor ENCHANTMENT_COLOR = TextColors.BLUE;
-	public static TextColor LEVEL_COLOR = TextColors.DARK_GRAY;
-	public static TextColor RESTRICTIONS = TextColors.LIGHT_PURPLE;
-	public static TextColor DELIMITER = TextColors.GRAY;
-	public static TextColor LORE_COLOR = TextColors.GOLD;
-	public static TextColor RUNEWORD_NAME = TextColors.DARK_RED;
-	public static TextColor RUNEWORD_LORE = TextColors.RED;
-	public static TextStyle LORE_STYLE = TextStyles.ITALIC;
 
 	public static Pattern REGEXP_NUMBER = Pattern.compile("-?\\d+");
 
@@ -127,17 +114,25 @@ public class InventoryService {
 	@Inject
 	private PropertyService propertyService;
 
+	@Inject
+	private GroupService groupService;
+
 	private Set<String> reservedItemNames = new HashSet<>();
 
 	private Map<UUID, InventoryMenu> inventoryMenus = new HashMap<>();
 	private Map<String, ItemGroup> itemGroups = new HashMap<>();
+
 	private TextColor effectName;
 	private TextColor doubleColon;
 	private TextColor value;
 	private TextColor effectSettings;
 	private TextColor listColor;
-	private TextColor effectsSectioncolor;
+
+
 	private Text effectSection;
+	private Text rarity;
+	private Text damage;
+	private Text level;
 
 
 	@PostProcess(priority = 3000)
@@ -154,9 +149,11 @@ public class InventoryService {
 		value = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_VALUE_COLOR).get();
 		effectSettings = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_SETTING_NAME_COLOR).get();
 		listColor = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_SETTING_DASH_COLOR).get();
-		effectsSectioncolor = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_SECTION_COLOR).get();
-		effectSection = Text.builder(Localization.ITEM_EFFECTS_SECTION).color(effectsSectioncolor).build();
 
+		effectSection = TextHelper.parse(Localization.ITEM_EFFECTS_SECTION);
+		rarity = TextHelper.parse(Localization.ITEM_RARITY_SECTION);
+		damage = TextHelper.parse(Localization.ITEM_DAMAGE_SECTION);
+		level = TextHelper.parse(Localization.ITEM_LEVEL_SECTION);
 	}
 
 	private void loadItemGroups() {
@@ -741,30 +738,36 @@ public class InventoryService {
 	}
 
 	private CannotUseItemReson checkRestrictions(IActiveCharacter character, CustomItemData itemData) {
-		ListValue<String> strings = itemData.groupRestricitons();
-		if (strings.isEmpty())
+		MapValue<String, Integer> strings = itemData.allowedGroups();
+		if (strings.size() == 0)
 			return CannotUseItemReson.OK;
 		int k = 0;
 
-		for (String string : strings) {
-			if (string.contains(character.getRace().getName())) {
-				k++;
-				continue;
-			}
-			for (ExtendedNClass extendedNClass : character.getClasses()) {
-				k++;
-				if (string.contains(extendedNClass.getConfigClass().getName())) {
-					continue;
+		UnmodifiableIterator<Map.Entry<String, Integer>> it = strings.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry<String, Integer> next = it.next();
+			Race race = groupService.getRace(next.getKey());
+			if (race != null) {
+				if (character.getRace() != race) {
+					return CannotUseItemReson.LORE;
+				}
+				if (next.getValue() != null && character.getLevel() < next.getValue()) {
+					return CannotUseItemReson.LEVEL;
+				}
+			} else {
+				for (ExtendedNClass extendedNClass : character.getClasses()) {
+					if (extendedNClass.getConfigClass().getName().equalsIgnoreCase(next.getKey())) {
+						if (next.getValue() != null && character.getLevel() < extendedNClass.getLevel()) {
+							return CannotUseItemReson.LEVEL;
+						}
+						k++;
+						continue;
+					}
 				}
 			}
 		}
-
 		if (strings.size() == k) {
-			if (character.getPrimaryClass().getLevel() < itemData.itemLevel().get()) {
-				return CannotUseItemReson.OK;
-			} else {
-				return CannotUseItemReson.LEVEL;
-			}
+			return CannotUseItemReson.OK;
 		} else {
 			return CannotUseItemReson.LORE;
 		}
@@ -858,7 +861,7 @@ public class InventoryService {
 		is.get(NKeys.ITEM_RARITY).ifPresent(a -> texts.add(a));
 
 		is.get(NKeys.ITEM_DAMAGE).ifPresent(a -> {
-			TextHelper.parse(Localization.ITEM_DAMAGE);
+			TextHelper.parse(Localization.ITEM_DAMAGE_INFO);
 		});
 
 		NKeys.ITEM_DAMAGE;
@@ -881,13 +884,71 @@ public class InventoryService {
 		return is;
 	}
 
-	private void createateItemHeader(ItemStack is, List<Text> t) {
+	private void createItemMetaSection(ItemStack is, List<Text> t) {
+		is.get(NKeys.ITEM_TYPE).ifPresent(a -> {
+			createDelimiter(is, t, a);
+			Text.Builder builder = Text.builder();
+			is.get(NKeys.ITEM_RARITY).ifPresent(r -> {
+				builder.append(Text.builder().append(rarity).append(r).append(Text.NEW_LINE).build());
+			});
+			is.get(NKeys.ITEM_DAMAGE).ifPresent(r -> {
+				if (r.value == null) {
+					builder.append(Text.builder()
+							.append(damage)
+							.append(Text.builder(String.valueOf(r.key))
+								.color(damageService.getColorByDamage(r.key))
+								.build())
+							.append(Text.NEW_LINE)
+							.build());
+				} else {
+					builder.append(Text.builder()
+							.append(damage)
+							.append(Text.builder(String.valueOf(r.key))
+									.color(damageService.getColorByDamage(r.key))
+									.build())
+							.append(Text.builder(" - ").color(TextColors.GRAY).build())
+							.append(Text.builder(String.valueOf(r.value))
+									.color(damageService.getColorByDamage(r.value))
+									.build())
+							.append(Text.NEW_LINE).build());
+				}
+			});
+			is.get(NKeys.ITEM_LEVEL).ifPresent(r -> {
+				builder.append(Text.builder().append(level).append(Text.builder(String.valueOf(r)).color(TextColors.YELLOW).build()).append(Text.NEW_LINE).build());
+			});
+			is.get(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS).ifPresent(r -> {
+				int k = 0;
+				for (Map.Entry<String, Integer> e : r.entrySet()) {
+					ICharacterAttribute attribute = propertyService.getAttribute(e.getKey());
+					String name = attribute.getName();
+					int charsToRead = 3;
+					if (name.startsWith("&")) {
+						charsToRead = 5;
+					}
+					Text q = null;
+					if (name.length() > charsToRead) {
+						q = TextHelper.parse(name.substring(0, charsToRead) + ": ");
+					} else {
+						q = TextHelper.parse(name + ": ");
+					}
 
+					builder.append(Text.builder()
+							.append(q)
+							.append(Text.builder(e.getValue() + " ").color(TextColors.WHITE).build())
+							.build());
+					k++;
+					if (k % 3 == 0) {
+						builder.append(Text.EMPTY);
+					}
+				}
+			});
+			t.add(builder.build());
+		});
 	}
 
 	private void createDelimiter(ItemStack is, List<Text> t, Text section) {
 		Pair<Text, Text> textTextPair = is.get(NKeys.ITEM_SECTION_DELIMITER)
-				.orElse(new Pair<>(Text.builder("======[ ").build(), Text.builder(" )======").build()));
+				.orElse(new Pair<>(Text.builder("=======[ ").build(), Text.builder(" )=======").build()));
 		t.add(Text.builder().append(textTextPair.key).append(section).append(textTextPair.value).build());
 	}
 

@@ -32,6 +32,7 @@ import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.SkillTreeSpecialization;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectType;
@@ -643,5 +644,20 @@ public class PreloadCharacter implements IActiveCharacter {
 	@Override
 	public SkillTreeViewModel getLastTimeInvokedSkillTreeView() {
 		return null;
+	}
+
+	@Override
+	public void addSkillTreeSpecialization(SkillTreeSpecialization specialization) {
+
+	}
+
+	@Override
+	public void removeSkillTreeSpecialization(SkillTreeSpecialization specialization) {
+
+	}
+
+	@Override
+	public boolean hasSkillTreeSpecialization(SkillTreeSpecialization specialization) {
+		return false;
 	}
 }
