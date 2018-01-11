@@ -30,7 +30,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
     private Map<String, Integer> attributeBonus;
     private Map<String, Float> propertyBonus;
     private Map<String, EffectParams> effects;
-    private Map<String, String> sockets;
+    private Map<Text, Text> sockets;
     private Map<String, Integer> allowedGroups;
     private Text rarity;
     private Text type;
@@ -41,7 +41,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 
 	public CustomItemData(Map<String, Integer> attributeRequirements, Map<String, Integer> attributeBonus,
 						  Map<String, Float> propertyBonus, Map<String, EffectParams> effects,
-						  Map<String, String> sockets, Map<String, Integer> allowedGroups, Text rarity, Text type,
+						  Map<Text, Text> sockets, Map<String, Integer> allowedGroups, Text rarity, Text type,
 						  Integer itemLevel, Pair<Text, Text> sectionDelimiter, Pair<Integer, Integer> durability,
 						  Pair<Double, Double> damageMinMax) {
 		this.attributeRequirements = attributeRequirements;
@@ -128,7 +128,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 				.createMapValue(NKeys.ITEM_EFFECTS, this.effects);
 	}
 
-	public MapValue<String, String> sockets() {
+	public MapValue<Text, Text> sockets() {
 		return Sponge.getRegistry().getValueFactory()
 				.createMapValue(NKeys.ITEM_SOCKETS, this.sockets);
 	}
@@ -185,7 +185,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 		return effects;
 	}
 
-	private Map<String, String> getSockets() {
+	private Map<Text, Text> getSockets() {
 		return sockets;
 	}
 
@@ -233,7 +233,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 		this.effects = effects;
 	}
 
-	private void setSockets(Map<String, String> sockets) {
+	private void setSockets(Map<Text, Text> sockets) {
 		this.sockets = sockets;
 	}
 
@@ -343,7 +343,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 		private Map<String, Integer> attributeBonus;
 		private Map<String, Float> propertyBonus;
 		private Map<String, EffectParams> effects;
-		private Map<String, String> sockets;
+		private Map<Text, Text> sockets;
 		private Map<String, Integer> allowedGroups;
 		private Pair<Text, Text> sectionDelimiter;
 		private Pair<Integer, Integer> durability;
@@ -353,10 +353,10 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 		private Integer itemLevel;
 
 		public Immutable(Map<String, Integer> attributeRequirements, Map<String, Integer> attributeBonus,
-							  Map<String, Float> propertyBonus, Map<String, EffectParams> effects,
-							  Map<String, String> sockets, Map<String, Integer> allowedGroups, Text rarity, Text type,
-							  Integer itemLevel, Pair<Text, Text> sectionDelimiter, Pair<Integer, Integer> durability,
-							  Pair<Double, Double> damageMinMax) {
+						 Map<String, Float> propertyBonus, Map<String, EffectParams> effects,
+						 Map<Text, Text> sockets, Map<String, Integer> allowedGroups, Text rarity, Text type,
+						 Integer itemLevel, Pair<Text, Text> sectionDelimiter, Pair<Integer, Integer> durability,
+						 Pair<Double, Double> damageMinMax) {
 			this.attributeRequirements = attributeRequirements;
 			this.attributeBonus = attributeBonus;
 			this.propertyBonus = propertyBonus;
@@ -432,7 +432,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 					.asImmutable();
 		}
 
-		public ImmutableMapValue<String, String> sockets() {
+		public ImmutableMapValue<Text, Text> sockets() {
 			return Sponge.getRegistry().getValueFactory()
 					.createMapValue(NKeys.ITEM_SOCKETS, this.sockets).asImmutable();
 		}
@@ -489,7 +489,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 			return effects;
 		}
 
-		private Map<String, String> getSockets() {
+		private Map<Text, Text> getSockets() {
 			return sockets;
 		}
 
@@ -596,7 +596,7 @@ public class CustomItemData extends AbstractData<CustomItemData, CustomItemData.
 								(Map<String, Integer>) container.get(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS.getQuery()).orElse(new HashMap<>()),
 								(Map<String, Float>) container.get(NKeys.ITEM_ATTRIBUTE_BONUS.getQuery()).orElse(new HashMap<>()),
 								(Map<String, EffectParams>) container.get(NKeys.ITEM_EFFECTS.getQuery()).orElse(new HashMap<>()),
-								(Map<String, String>) container.get(NKeys.ITEM_SOCKETS.getQuery()).orElse(new HashMap<>()),
+								(Map<Text, Text>) container.get(NKeys.ITEM_SOCKETS.getQuery()).orElse(new HashMap<>()),
 								(Map<String, Integer>) container.get(NKeys.ITEM_PLAYER_ALLOWED_GROUPS.getQuery()).orElse(new HashMap<>()),
 								(Text) container.get(NKeys.ITEM_RARITY.getQuery()).orElse(Text.EMPTY),
 								(Text) container.get(NKeys.ITEM_TYPE.getQuery()).orElse(Text.EMPTY),

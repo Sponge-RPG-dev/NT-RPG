@@ -345,5 +345,15 @@ public class Localization {
 	@ConfigValue
 	public static String ITEM_DAMAGE_SECTION = "&8Damage: ";
 
+	@ConfigValue
 	public static String ITEM_LEVEL_SECTION = "&8Level: ";
+
+	@ConfigValue
+	public static String ITEM_SOCKETS_SECTION = "&8Sockets: ";
+
+	@ConfigValue
+	public static String ITEM_SOCKETS_SECTION_COLONS = "&8:";
+
+	@ConfigValue
+	public static String ITEM_ATTRIBUTES_SECTIO = "&aAttributes";
 }

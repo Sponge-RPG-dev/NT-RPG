@@ -133,7 +133,10 @@ public class InventoryService {
 	private Text rarity;
 	private Text damage;
 	private Text level;
-
+	private Text sockets;
+	private Text socketcolon;
+	private Text attributes;
+	private List<ItemLoreSections> loreOrder;
 
 	@PostProcess(priority = 3000)
 	public void init() {
@@ -154,6 +157,10 @@ public class InventoryService {
 		rarity = TextHelper.parse(Localization.ITEM_RARITY_SECTION);
 		damage = TextHelper.parse(Localization.ITEM_DAMAGE_SECTION);
 		level = TextHelper.parse(Localization.ITEM_LEVEL_SECTION);
+		sockets = TextHelper.parse(Localization.ITEM_SOCKETS_SECTION);
+		socketcolon = TextHelper.parse(Localization.ITEM_SOCKETS_SECTION_COLONS);
+		attributes = TextHelper.parse(Localization.ITEM_ATTRIBUTES_SECTIO);
+		loreOrder = PluginConfig.ITEM_LORE_ORDER;
 	}
 
 	private void loadItemGroups() {
@@ -398,7 +405,7 @@ public class InventoryService {
 		CustomItemData itemData = getItemData(itemStack);
 		Armor armor = new Armor(itemStack, armorType);
 		armor.setEffects(getItemEffects(itemStack));
-		armor.setLevel(itemData.itemLevel().get());
+		armor.setLevel(itemData.level().get());
 		return armor;
 	}
 
@@ -535,7 +542,7 @@ public class InventoryService {
 		w.setItemData(getItemData(is));
 		List<Text> texts = a.get();
 		CustomItemData itemData = w.getCustomItemData();
-		w.setLevel(itemData.itemLevel().get());
+		w.setLevel(itemData.level().get());
 		w.setEffects(getItemEffects(is));
 		return w;
 	}
@@ -803,37 +810,6 @@ public class InventoryService {
 		}
 	}
 
-
-	/**
-	 * Rarity
-	 * ItemLevel/sockets
-	 * <p>
-	 * Enchantments
-	 * <p>
-	 * Restrictions
-	 * <p>
-	 * Lore
-	 *
-	 * @param itemStack
-	 * @param restrictions
-	 */
-	public void setRestrictions(ItemStack itemStack, List<String> restrictions, int level) {
-		CustomItemData itemData = getItemData(itemStack);
-		if (restrictions.isEmpty()) {
-			//todo
-		}
-	}
-
-	public ItemStack setEnchantments(Map<String, EffectParams> effects, ItemStack itemStack) {
-		CustomItemData itemData = getItemData(itemStack);
-		Map<String, EffectParams> map = new HashMap<>();
-		map.putAll(itemData.effects());
-		map.putAll(effects);
-		itemData.setEnchantements(map);
-		itemStack.offer(itemData);
-		return updateLore(itemStack);
-	}
-
 	public ItemStack setItemRarity(ItemStack itemStack, Text rarity) {
 		if (!getItemRarityTypes().contains(rarity.toPlain())) {
 			return itemStack;
@@ -857,31 +833,75 @@ public class InventoryService {
 		}
 		List<Text> texts = new ArrayList<>();
 
-		is.get(NKeys.ITEM_TYPE).ifPresent(a -> texts.add(a));
-		is.get(NKeys.ITEM_RARITY).ifPresent(a -> texts.add(a));
-
-		is.get(NKeys.ITEM_DAMAGE).ifPresent(a -> {
-			TextHelper.parse(Localization.ITEM_DAMAGE_INFO);
-		});
-
-		NKeys.ITEM_DAMAGE;
-		NKeys.ITEM_LEVEL;
-
-		NKeys.ITEM_PLAYER_ALLOWED_GROUPS;
-
-		NKeys.ITEM_ATTRIBUTE_REQUIREMENTS;
-		//
-		NKeys.ITEM_ATTRIBUTE_BONUS;
-		//
-		NKeys.ITEM_PROPERTY_BONUS;
-		//
-		NKeys.ITEM_EFFECTS;
-		//
-		NKeys.ITEM_SOCKETS;
-		//
-		NKeys.ITEM_LORE_DURABILITY;
-
+		for (ItemLoreSections itemLoreSections : loreOrder) {
+			switch (itemLoreSections) {
+				case META:
+					createItemMetaSection(is,texts);
+					break;
+				case EFFECTS:
+					createEffectsSection(is,texts);
+					break;
+				case SOCKETS:
+					createItemSocketsSection(is, texts);
+					break;
+				case ATTRIBUTES:
+					createAttributesSection(is, texts);
+					break;
+			}
+		}
 		return is;
+	}
+
+
+	private void createAttributesSection(ItemStack is, List<Text> t) {
+		is.get(NKeys.ITEM_ATTRIBUTE_BONUS).ifPresent(a -> {
+			if (a.isEmpty())
+				return;
+			createDelimiter(is, t, attributes);
+			Text.Builder builder = Text.builder();
+			attributeMapToItemLorePart(a,builder);
+		});
+	}
+
+
+	private void attributeMapToItemLorePart(Map<String, Integer> a, Text.Builder builder) {
+		int k = 0;
+		for (Map.Entry<String, Integer> e : a.entrySet()) {
+			ICharacterAttribute attribute = propertyService.getAttribute(e.getKey());
+			String name = attribute.getName();
+			int charsToRead = 3;
+			if (name.startsWith("&")) {
+				charsToRead = 5;
+			}
+			Text q = null;
+			if (name.length() > charsToRead) {
+				q = TextHelper.parse(name.substring(0, charsToRead) + ": ");
+			} else {
+				q = TextHelper.parse(name + ": ");
+			}
+
+			builder.append(Text.builder()
+					.append(q)
+					.append(Text.builder(e.getValue() + " ").color(TextColors.WHITE).build())
+					.build());
+			k++;
+			if (k % 3 == 0) {
+				builder.append(Text.EMPTY);
+			}
+		}
+	}
+
+	private void createItemSocketsSection(ItemStack is, List<Text> t) {
+		is.get(NKeys.ITEM_SOCKETS).ifPresent(a -> {
+			if (a.isEmpty())
+				return;
+			createDelimiter(is, t, sockets);
+			Text.Builder builder = Text.builder();
+			for (Map.Entry<Text, Text> stringStringEntry : a.entrySet()) {
+				builder.append(stringStringEntry.getKey()).append(socketcolon).append(stringStringEntry.getValue()).append(Text.NEW_LINE);
+			}
+			t.add(builder.build());
+		});
 	}
 
 	private void createItemMetaSection(ItemStack is, List<Text> t) {
@@ -917,30 +937,7 @@ public class InventoryService {
 				builder.append(Text.builder().append(level).append(Text.builder(String.valueOf(r)).color(TextColors.YELLOW).build()).append(Text.NEW_LINE).build());
 			});
 			is.get(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS).ifPresent(r -> {
-				int k = 0;
-				for (Map.Entry<String, Integer> e : r.entrySet()) {
-					ICharacterAttribute attribute = propertyService.getAttribute(e.getKey());
-					String name = attribute.getName();
-					int charsToRead = 3;
-					if (name.startsWith("&")) {
-						charsToRead = 5;
-					}
-					Text q = null;
-					if (name.length() > charsToRead) {
-						q = TextHelper.parse(name.substring(0, charsToRead) + ": ");
-					} else {
-						q = TextHelper.parse(name + ": ");
-					}
-
-					builder.append(Text.builder()
-							.append(q)
-							.append(Text.builder(e.getValue() + " ").color(TextColors.WHITE).build())
-							.build());
-					k++;
-					if (k % 3 == 0) {
-						builder.append(Text.EMPTY);
-					}
-				}
+				attributeMapToItemLorePart(r,builder);
 			});
 			t.add(builder.build());
 		});
@@ -952,7 +949,7 @@ public class InventoryService {
 		t.add(Text.builder().append(textTextPair.key).append(section).append(textTextPair.value).build());
 	}
 
-	private void updateEffects(ItemStack is, List<Text> t) {
+	private void createEffectsSection(ItemStack is, List<Text> t) {
 		is.get(NKeys.ITEM_EFFECTS).ifPresent(a -> {
 			createDelimiter(is, t, effectSection);
 			Text.Builder builder = Text.builder();

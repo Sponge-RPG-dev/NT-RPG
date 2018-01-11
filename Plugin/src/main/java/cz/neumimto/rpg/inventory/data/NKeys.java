@@ -137,10 +137,10 @@ public class NKeys {
 			"ntrpg:item_effects",
 			"Item effects");
 
-	public static Key<MapValue<String, String>> ITEM_SOCKETS = KeyFactory.makeMapKey(
-			new TypeToken<Map<String, String>>() {
+	public static Key<MapValue<Text, Text>> ITEM_SOCKETS = KeyFactory.makeMapKey(
+			new TypeToken<Map<Text, Text>>() {
 			},
-			new TypeToken<MapValue<String, String>>() {
+			new TypeToken<MapValue<Text, Text>>() {
 			},
 			DataQuery.of(".", "ntrpg:itemsockets"),
 			"ntrpg:item_sockets",

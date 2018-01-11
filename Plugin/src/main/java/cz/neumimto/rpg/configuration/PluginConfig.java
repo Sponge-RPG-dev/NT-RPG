@@ -21,6 +21,7 @@ package cz.neumimto.rpg.configuration;
 import cz.neumimto.configuration.Comment;
 import cz.neumimto.configuration.ConfigValue;
 import cz.neumimto.configuration.ConfigurationContainer;
+import cz.neumimto.rpg.inventory.ItemLoreSections;
 import org.spongepowered.api.text.format.TextColors;
 
 import java.util.Arrays;
@@ -173,4 +174,7 @@ public class PluginConfig {
 
 	@ConfigValue
 	public static String ITEM_LORE_RARITY_COLOR = TextColors.DARK_GRAY.getName();
+
+	@ConfigValue
+	public static List<ItemLoreSections> ITEM_LORE_ORDER = Arrays.asList(ItemLoreSections.values());
 }
