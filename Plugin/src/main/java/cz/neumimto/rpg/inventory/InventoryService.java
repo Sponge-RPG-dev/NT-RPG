@@ -18,7 +18,6 @@
 
 package cz.neumimto.rpg.inventory;
 
-import com.google.common.collect.UnmodifiableIterator;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import cz.neumimto.core.ioc.Inject;
@@ -30,8 +29,10 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.inventory.data.NKeys;
+import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemRarityData;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
@@ -51,7 +52,6 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
-import org.spongepowered.api.data.value.mutable.MapValue;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
@@ -78,7 +78,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * Created by NeumimTo on 22.7.2015.
@@ -402,10 +401,7 @@ public class InventoryService {
 	}
 
 	private Armor getArmor(ItemStack itemStack, IEffectSource armorType) {
-		CustomItemData itemData = getItemData(itemStack);
 		Armor armor = new Armor(itemStack, armorType);
-		armor.setEffects(getItemEffects(itemStack));
-		armor.setLevel(itemData.level().get());
 		return armor;
 	}
 
@@ -535,15 +531,7 @@ public class InventoryService {
 
 	public Weapon buildHotbarWeapon(IActiveCharacter character, ItemStack is) {
 		Weapon w = new Weapon(is);
-		Optional<List<Text>> a = is.get(Keys.ITEM_LORE);
-		if (!a.isPresent()) {
-			return w;
-		}
-		w.setItemData(getItemData(is));
-		List<Text> texts = a.get();
-		CustomItemData itemData = w.getCustomItemData();
-		w.setLevel(itemData.level().get());
-		w.setEffects(getItemEffects(is));
+
 		return w;
 	}
 
@@ -577,7 +565,7 @@ public class InventoryService {
 		} else {
 			lore = new ArrayList<>();
 		}
-		lore.add(Text.of(LORE_FIRSTLINE, Localization.SKILLBIND));
+		//lore.add(Text.of(LORE_FIRSTLINE, Localization.SKILLBIND));
 		is.offer(Keys.DISPLAY_NAME, Text.of(TextColors.GOLD, TextStyles.ITALIC, left != null ? left.getName() + " «-" : "", right != null ? "-» " + right.getName() : ""));
 		if (right != null) {
 			Text text = TextHelper.parse(Localization.CAST_SKILL_ON_RIGHTLICK,
@@ -727,8 +715,7 @@ public class InventoryService {
 				return CannotUseItemReson.CONFIG;
 			}
 		}
-		CustomItemData itemData = getItemData(itemStack);
-		return checkRestrictions(character, itemData);
+		return checkRestrictions(character, itemStack);
 
 	}
 
@@ -741,16 +728,14 @@ public class InventoryService {
 				return CannotUseItemReson.CONFIG;
 			}
 		}
-		return checkRestrictions(character, getItemData(itemStack));
+		return checkRestrictions(character,itemStack);
 	}
 
-	private CannotUseItemReson checkRestrictions(IActiveCharacter character, CustomItemData itemData) {
-		MapValue<String, Integer> strings = itemData.allowedGroups();
-		if (strings.size() == 0)
+	private CannotUseItemReson checkGroupRequirements(IActiveCharacter character, Map<String, Integer> a) {
+		if (a.isEmpty())
 			return CannotUseItemReson.OK;
 		int k = 0;
-
-		UnmodifiableIterator<Map.Entry<String, Integer>> it = strings.entrySet().iterator();
+		Iterator<Map.Entry<String, Integer>> it = a.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry<String, Integer> next = it.next();
 			Race race = groupService.getRace(next.getKey());
@@ -773,11 +758,47 @@ public class InventoryService {
 				}
 			}
 		}
-		if (strings.size() == k) {
+		if (a.size() == k) {
 			return CannotUseItemReson.OK;
 		} else {
 			return CannotUseItemReson.LORE;
 		}
+	}
+
+	private CannotUseItemReson checkAttributeRequirements(IActiveCharacter character, Map<String, Integer> a) {
+		if (a.isEmpty())
+			return CannotUseItemReson.OK;
+		for (Map.Entry<String, Integer> q : a.entrySet()) {
+			ICharacterAttribute attribute = propertyService.getAttribute(q.getKey());
+			if (attribute == null)
+				continue;
+			Integer attributeValue = character.getAttributeValue(attribute);
+			if (attributeValue == null || attributeValue < q.getValue())
+				return CannotUseItemReson.ATTRIBUTE;
+
+		}
+		return CannotUseItemReson.OK;
+	}
+
+	private CannotUseItemReson checkRestrictions(IActiveCharacter character, ItemStack is) {
+		Optional<Map<String, Integer>> a = is.get(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS);
+		if (a.isPresent()) {
+			Map<String, Integer> stringIntegerMap = a.get();
+			CannotUseItemReson cannotUseItemReson = checkAttributeRequirements(character, stringIntegerMap);
+
+			if (CannotUseItemReson.OK != cannotUseItemReson) {
+				return cannotUseItemReson;
+			}
+		}
+		Optional<Map<String, Integer>> q = is.get(NKeys.ITEM_PLAYER_ALLOWED_GROUPS);
+		if (q.isPresent()) {
+			Map<String, Integer> w = a.get();
+			CannotUseItemReson cannotUseItemReson = checkGroupRequirements(character, w);
+			if (CannotUseItemReson.OK != cannotUseItemReson) {
+				return cannotUseItemReson;
+			}
+		}
+		return CannotUseItemReson.OK;
 	}
 
 
@@ -814,23 +835,16 @@ public class InventoryService {
 		if (!getItemRarityTypes().contains(rarity.toPlain())) {
 			return itemStack;
 		}
-		CustomItemData itemData = getItemData(itemStack);
-		itemStack.offer(NKeys.ITEM_RARITY, rarity);
-		itemStack.offer(itemData);
+		itemStack.offer(new ItemRarityData(rarity));
 		return updateLore(itemStack);
 	}
 
 	public ItemStack setItemLevel(ItemStack itemStack, int level) {
-		CustomItemData item = getItemData(itemStack);
-		itemStack.offer(NKeys.ITEM_LEVEL, level);
+		itemStack.offer(new ItemLevelData(level));
 		return updateLore(itemStack);
 	}
 
 	public ItemStack updateLore(ItemStack is) {
-		Optional<CustomItemData> o = is.get(CustomItemData.class);
-		if (!o.isPresent()) {
-			is.offer(new CustomItemData());
-		}
 		List<Text> texts = new ArrayList<>();
 
 		for (ItemLoreSections itemLoreSections : loreOrder) {
@@ -849,6 +863,7 @@ public class InventoryService {
 					break;
 			}
 		}
+		is.offer(Keys.ITEM_LORE, texts);
 		return is;
 	}
 
@@ -977,30 +992,23 @@ public class InventoryService {
 		});
 	}
 
-	public CustomItemData getItemData(ItemStack itemStack) {
-		Optional<CustomItemData> opt = itemStack.get(CustomItemData.class);
-		if (opt.isPresent()) {
-			return opt.get();
-		}
-		CustomItemData data = new CustomItemData();
-		Optional<List<Text>> texts = itemStack.get(Keys.ITEM_LORE);
-		//TODO 1.0.10
-		return data;
-	}
-
 	public Map<IGlobalEffect, EffectParams> getItemEffects(ItemStack is) {
-		CustomItemData itemData = getItemData(is);
-		return getItemEffects(itemData);
+		Optional<Map<String, EffectParams>> q = is.get(NKeys.ITEM_EFFECTS);
+		if (q.isPresent()) {
+			return getItemEffects(q.get());
+		}
+		return Collections.emptyMap();
 	}
 
-	public Map<IGlobalEffect, EffectParams> getItemEffects(CustomItemData itemData) {
-		return itemData.effects().get().entrySet()
-				.stream()
-				.collect(Collectors.toMap(
-						e -> effectService.getGlobalEffect(e.getKey()),
-						Map.Entry::getValue
-				));
-
+	private Map<IGlobalEffect, EffectParams> getItemEffects(Map<String, EffectParams> stringEffectParamsMap) {
+		Map<IGlobalEffect, EffectParams> map = new HashMap<>();
+		for (Map.Entry<String, EffectParams> w : stringEffectParamsMap.entrySet()) {
+			IGlobalEffect globalEffect = effectService.getGlobalEffect(w.getKey());
+			if (globalEffect != null) {
+				map.put(globalEffect, w.getValue());
+			}
+		}
+		return map;
 	}
 
 	public void addReservedItemname(String k) {
@@ -1010,4 +1018,22 @@ public class InventoryService {
 	public Set<String> getReservedItemNames() {
 		return reservedItemNames;
 	}
+
+	public int getItemLevel(ItemStack itemStack) {
+		Optional<Integer> integer = itemStack.get(NKeys.ITEM_LEVEL);
+		if (integer.isPresent())
+			return integer.get();
+		return 0;
+	}
+
+	public ItemStack addEffectsToItemStack(ItemStack is, String effectName, EffectParams effectParams) {
+		EffectsData effectsData = is.getOrCreate(EffectsData.class).get();
+		Optional<Map<String, EffectParams>> q = effectsData.get(NKeys.ITEM_EFFECTS);
+		Map<String, EffectParams> w = q.orElse(new HashMap<>());
+		w.put(effectName, effectParams);
+		effectsData.set(NKeys.ITEM_EFFECTS, w);
+		is.offer(effectsData);
+		return updateLore(is);
+	}
+
 }

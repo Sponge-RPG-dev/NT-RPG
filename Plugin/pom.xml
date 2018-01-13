@@ -79,10 +79,6 @@
             <artifactId>spongeapi</artifactId>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId></groupId>
-            <artifactId></artifactId>
-        </dependency>
 
 
     </dependencies>

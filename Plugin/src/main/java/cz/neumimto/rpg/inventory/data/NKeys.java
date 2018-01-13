@@ -3,7 +3,6 @@ package cz.neumimto.rpg.inventory.data;
 import com.google.common.reflect.TypeToken;
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.effects.EffectParams;
-import cz.neumimto.rpg.effects.model.mappers.SingleValueModelMapper;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.key.KeyFactory;
@@ -199,4 +198,6 @@ public class NKeys {
 			"ntrpg:item_damage",
 			"Item damage"
 	);
+
+
 }

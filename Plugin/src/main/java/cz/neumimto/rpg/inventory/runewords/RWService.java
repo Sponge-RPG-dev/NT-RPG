@@ -7,14 +7,14 @@ import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.Pair;
-import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.events.RebuildRunewordEvent;
 import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.inventory.data.CustomItemData;
+import cz.neumimto.rpg.inventory.data.NKeys;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemSocketsData;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
@@ -80,7 +80,7 @@ public class RWService {
 		if (!p.exists()) {
 			try {
 				p.createNewFile();
-				Files.write(p.toPath(), "Runes:{},\nRuneWords:{}".getBytes());
+				Files.write(p.toPath(), "Runes:{},\nRuneWords:[]".getBytes());
 				return;
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -181,28 +181,16 @@ public class RWService {
 
 	public ItemStack toItemStack(Rune r) {
 		XORShiftRnd rnd = new XORShiftRnd();
-		int i = rnd.nextInt(allowedRuneItemTypes.size());
-		ItemType type = allowedRuneItemTypes.get(i);
-		ItemStack.Builder builder = ItemStack.builder();
-		ItemStack stack = builder.quantity(1).itemType(type).build();
-		stack.offer(Keys.DISPLAY_NAME, Text.of(TextColors.GOLD, r.getName()));
-		stack.offer(Keys.ITEM_LORE, Arrays.asList(Text.of(InventoryService.LORE_FIRSTLINE, Localization.RUNE),
-				Text.of(TextColors.DARK_GRAY, Localization.RUNE_FOOTER)));
-		return stack;
+
+		return null;
 	}
 
 
 	public ItemStack createSockets(ItemStack itemStack, int i) {
-		List<Text> arr = new ArrayList<>();
-		arr.clear();
-		arr.add(0, Text.of(InventoryService.LORE_FIRSTLINE, Localization.SOCKET));
-		String s = "";
-		while (i > 0) {
-			s += "{@}";
-			i--;
-		}
-		arr.add(1, Text.of(InventoryService.SOCKET_COLOR, s));
-		itemStack.offer(Keys.ITEM_LORE, arr);
+		Optional<Map<Text, Text>> textTextMap = itemStack.get(NKeys.ITEM_SOCKETS);
+		Optional<ItemSocketsData> orCreate = itemStack.getOrCreate(ItemSocketsData.class);
+		//orCreate.get().set(NKeys.ITEM_SOCKETS, )
+		inventoryService.updateLore(itemStack);
 		return itemStack;
 	}
 
@@ -247,7 +235,7 @@ public class RWService {
 			if (PluginConfig.AUTOREMOVE_NONEXISTING_RUNEWORDS) {
 				i.offer(Keys.DISPLAY_NAME, Text.of(i.getType().getName()));
 				i.offer(Keys.ITEM_LORE, Collections.<Text>emptyList());
-				i.offer(new CustomItemData());
+				//i.offer(new CustomItemData());
 			}
 			return i;
 		}
@@ -317,12 +305,6 @@ public class RWService {
 
 		return true;
 	}
-
-	public CustomItemData toCustomItemData(RuneWord runeword) {
-		//todo 1.0.10
-		return null;
-	}
-
 	private Map<String, String> toMap(Map<IGlobalEffect, String> a) {
 		Map<String, String> map = new HashMap<>();
 		if (a != null) {
@@ -334,34 +316,7 @@ public class RWService {
 	}
 
 	public void refreshItemLore(ItemStack itemStack, RuneWord runeword) {
-		CustomItemData data = toCustomItemData(runeword);
-		itemStack.offer(data);
-		itemStack.offer(Keys.DISPLAY_NAME, Text.builder(runeword.getName()).style(TextStyles.BOLD).color(InventoryService.RUNEWORD_NAME).build());
 
-		inventoryService.updateLore(itemStack);
-		List<Text> arrayList = itemStack.get(Keys.ITEM_LORE).get();
-		arrayList.add(1,
-				Text.builder(
-						runeword.getRunes().stream().map(Rune::getName).collect(Collectors.joining())
-				).color(TextColors.GRAY).style(TextStyles.ITALIC).build());
-		arrayList.add(Text.EMPTY);
-		itemStack.offer(Keys.ITEM_LORE, arrayList);
-		if (runeword.getLore() != null) {
-			setLore(itemStack, runeword);
-		}
-	}
-
-	public ItemStack setRestrictions(ItemStack itemStack, RuneWord runeWord) {
-		List<Text> arrayList = itemStack.get(Keys.ITEM_LORE).get();
-		arrayList.add(
-				Text.builder(runeWord.getAllowedGroups().stream()
-						.map(PlayerGroup::getName)
-						.collect(Collectors.joining(" ")))
-						.color(InventoryService.RESTRICTIONS)
-						.build()
-		);
-		itemStack.offer(Keys.ITEM_LORE, arrayList);
-		return itemStack;
 	}
 
 	private ItemStack setLore(ItemStack itemStack, RuneWord runeWord) {

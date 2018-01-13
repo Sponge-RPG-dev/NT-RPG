@@ -3,8 +3,8 @@ package cz.neumimto.rpg.inventory;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IGlobalEffect;
-import cz.neumimto.rpg.inventory.data.CustomItemData;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,9 +15,9 @@ import java.util.Map;
 public class CustomItem {
 
 	private int slot;
-	protected CustomItemData customItemData;
+	private int level;
 	protected Map<IGlobalEffect, EffectParams> effects = new HashMap<>();
-
+	protected ItemStackSnapshot itemStack;
 	public int getSlot() {
 		return slot;
 	}
@@ -26,14 +26,15 @@ public class CustomItem {
 		this.slot = slot;
 	}
 
-	public CustomItemData getCustomItemData() {
-		return customItemData;
-	}
-
 	//todo move to some kind of builder/service
 	public CustomItem(ItemStack itemStack) {
-		customItemData = NtRpgPlugin.GlobalScope.inventorySerivce.getItemData(itemStack);
-		effects = NtRpgPlugin.GlobalScope.inventorySerivce.getItemEffects(customItemData);
+		this.itemStack = itemStack.createSnapshot();
+		this.effects = NtRpgPlugin.GlobalScope.inventorySerivce.getItemEffects(itemStack);
+		this.level = NtRpgPlugin.GlobalScope.inventorySerivce.getItemLevel(itemStack);
+	}
+
+	public int getLevel() {
+		return level;
 	}
 
 	public Map<IGlobalEffect, EffectParams> getEffects() {

@@ -18,6 +18,8 @@
 
 package cz.neumimto.rpg;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.inject.Inject;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.FindPersistenceContextEvent;
@@ -29,13 +31,12 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.configuration.Settings;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IGlobalEffect;
-import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
+import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
-import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
+import cz.neumimto.rpg.inventory.data.manipulators.*;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.listeners.DebugListener;
@@ -77,6 +78,7 @@ import org.spongepowered.api.text.serializer.TextSerializers;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -128,21 +130,77 @@ public class NtRpgPlugin {
 				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
 
 
-		DataRegistration.<CustomItemData, CustomItemData.Immutable>builder()
-				.dataClass(CustomItemData.class)
-				.immutableClass(CustomItemData.Immutable.class)
-				.builder(new CustomItemData.Builder())
-				.manipulatorId("ntrpg-customitemdata")
-				.dataName("CustomItemData")
+		DataRegistration.<EffectsData, EffectsData.Immutable>builder()
+				.dataClass(EffectsData.class)
+				.immutableClass(EffectsData.Immutable.class)
+				.builder(new EffectsData.Builder())
+				.manipulatorId("ntrpg-effectsitemdata")
+				.dataName("EffectsData")
 				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
 
 
-		DataRegistration.<CustomItemData, CustomItemData.Immutable>builder()
-				.dataClass(SkillTreeInventoryViewControllsData.class)
-				.immutableClass(SkillTreeInventoryViewControllsData.Immutable.class)
-				.builder(new SkillTreeInventoryViewControllsData.Builder())
-				.manipulatorId("ntrpg-stivcd")
-				.dataName("SkillTreeInventoryViewControllsData")
+		DataRegistration.<ItemAttributesData, ItemAttributesData.Immutable>builder()
+				.dataClass(ItemAttributesData.class)
+				.immutableClass(ItemAttributesData.Immutable.class)
+				.builder(new ItemAttributesData.Builder())
+				.manipulatorId("ntrpg-effectsitemdata")
+				.dataName("ItemAttributesData")
+				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
+
+		DataRegistration.<ItemLevelData, ItemLevelData.Immutable>builder()
+				.dataClass(ItemLevelData.class)
+				.immutableClass(ItemLevelData.Immutable.class)
+				.builder(new ItemLevelData.Builder())
+				.manipulatorId("ntrpg-effectsitemdata")
+				.dataName("ItemLevelData")
+				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
+
+		DataRegistration.<ItemRarityData, ItemRarityData.Immutable>builder()
+				.dataClass(ItemRarityData.class)
+				.immutableClass(ItemRarityData.Immutable.class)
+				.builder(new ItemRarityData.Builder())
+				.manipulatorId("ntrpg-effectsitemdata")
+				.dataName("ItemRarityData")
+				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
+
+		DataRegistration.<ItemSocketsData, ItemSocketsData.Immutable>builder()
+				.dataClass(ItemSocketsData.class)
+				.immutableClass(ItemSocketsData.Immutable.class)
+				.builder(new ItemSocketsData.Builder())
+				.manipulatorId("ntrpg-effectsitemdata")
+				.dataName("ItemSocketsData")
+				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
+
+		DataRegistration.<LoreDamageData, LoreDamageData.Immutable>builder()
+				.dataClass(LoreDamageData.class)
+				.immutableClass(LoreDamageData.Immutable.class)
+				.builder(new LoreDamageData.Builder())
+				.manipulatorId("ntrpg-effectsitemdata")
+				.dataName("LoreDamageData")
+				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
+
+		DataRegistration.<LoreDurabilityData, LoreDurabilityData.Immutable>builder()
+				.dataClass(LoreDurabilityData.class)
+				.immutableClass(LoreDurabilityData.Immutable.class)
+				.builder(new LoreDurabilityData.Builder())
+				.manipulatorId("ntrpg-effectsitemdata")
+				.dataName("LoreDurabilityData")
+				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
+
+		DataRegistration.<MinimalItemRequirementsData, MinimalItemRequirementsData.Immutable>builder()
+				.dataClass(MinimalItemRequirementsData.class)
+				.immutableClass(MinimalItemRequirementsData.Immutable.class)
+				.builder(new MinimalItemRequirementsData.Builder())
+				.manipulatorId("ntrpg-effectsitemdata")
+				.dataName("MinimalItemRequirementsData")
+				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
+
+		DataRegistration.<SectionDelimiterData, SectionDelimiterData.Immutable>builder()
+				.dataClass(SectionDelimiterData.class)
+				.immutableClass(SectionDelimiterData.Immutable.class)
+				.builder(new SectionDelimiterData.Builder())
+				.manipulatorId("ntrpg-effectsitemdata")
+				.dataName("SectionDelimiterData")
 				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
 
 	}
@@ -256,9 +314,10 @@ public class NtRpgPlugin {
 				.build();
 
 		// ===========================================================
-		// ==================        ENCHANTS       ==================
+		// ==================        ITEM       ==================
 		// ===========================================================
 
+		Gson gson = new Gson();
 		CommandSpec enchantAdd = CommandSpec.builder()
 				.description(TextSerializers
 						.FORMATTING_CODE
@@ -273,9 +332,21 @@ public class NtRpgPlugin {
 					if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
 						ItemStack itemStack = player.getItemInHand(HandTypes.MAIN_HAND).get();
 
-
-						player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
-						player.sendMessage(TextHelper.parse("Enchantment " + effect.getName() + " added"));
+						Optional<String> params = args.getOne("params");
+						String s = params.get();
+						try {
+							EffectParams map = gson.fromJson(s, EffectParams.class);
+							GlobalScope.inventorySerivce.addEffectsToItemStack(itemStack, effect.getName(), map);
+							player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
+							player.sendMessage(TextHelper.parse("Enchantment " + effect.getName() + " added"));
+						} catch (JsonSyntaxException e) {
+							Class<?> modelType = EffectModelFactory.getModelType(effect.getClass());
+							Map<String, String> q = new HashMap<>();
+							for (Field field : modelType.getDeclaredFields()) {
+								q.put(field.getName(), field.getType().getName());
+							}
+							throw new RuntimeException("Expected: " + gson.toJson(q));
+						}
 					} else {
 						player.sendMessage(TextSerializers.FORMATTING_CODE.deserialize(Localization.NO_ITEM_IN_HAND));
 					}
@@ -291,7 +362,7 @@ public class NtRpgPlugin {
 								.deserialize(CommandLocalization.COMMAND_ADMIN_ENCHANT))
 				.arguments(
 						new GlobalEffectCommandElement(TextHelper.parse("effect")),
-						GenericArguments.remainingJoinedStrings(TextHelper.parse("args")))
+						GenericArguments.remainingJoinedStrings(TextHelper.parse("params")))
 				.child(enchantAdd, "add", "e")
 				.build();
 

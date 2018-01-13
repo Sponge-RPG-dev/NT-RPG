@@ -1,8 +1,11 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.SkillLocalization;
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.ShadowRunEffect;
+import cz.neumimto.model.ShadowRunModel;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.*;
@@ -14,6 +17,9 @@ import java.util.Optional;
 
 @ResourceLoader.Skill
 public class ShadowRun extends ActiveSkill {
+
+    @Inject
+    private EffectService effectService;
 
     public ShadowRun() {
         setName("ShadowRun");
@@ -42,8 +48,14 @@ public class ShadowRun extends ActiveSkill {
             long duration = getLongNodeValue(info, SkillNodes.DURATION);
             double damage = getDoubleNodeValue(info, SkillNodes.DAMAGE);
             double attackmult = getDoubleNodeValue(info, SkillNodes.MULTIPLIER);
-            double walkspeed = getDoubleNodeValue(info, "walk-speed");
-            IEffect effect = new ShadowRunEffect(character, duration, damage, attackmult, walkspeed);
+            float walkspeed = getFloatNodeValue(info, "walk-speed");
+            ShadowRunModel model = new ShadowRunModel();
+            model.duration = duration;
+            model.damage = damage;
+            model.attackmult = attackmult;
+            model.walkspeed = walkspeed;
+            IEffect effect = new ShadowRunEffect(character, model.duration, model);
+            effectService.addEffect(effect, character, this);
         }
         return SkillResult.CANCELLED;
     }
