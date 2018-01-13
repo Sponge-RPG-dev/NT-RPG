@@ -960,7 +960,8 @@ public class InventoryService {
 
 	private void createDelimiter(ItemStack is, List<Text> t, Text section) {
 		Pair<Text, Text> textTextPair = is.get(NKeys.ITEM_SECTION_DELIMITER)
-				.orElse(new Pair<>(Text.builder("=======[ ").build(), Text.builder(" )=======").build()));
+				.orElse(new Pair<>(Text.builder("=======[ ").color(TextColors.WHITE).build(),
+						Text.builder(" ]=======").color(TextColors.WHITE).build()));
 		t.add(Text.builder().append(textTextPair.key).append(section).append(textTextPair.value).build());
 	}
 

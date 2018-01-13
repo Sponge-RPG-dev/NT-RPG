@@ -230,14 +230,12 @@ public class ClassGenerator implements Opcodes {
 					if (type.isPrimitive()) {
 						this.effectModelFactory_putFieldPrimitive(	mv,
 																	line,
-																	classNameWithPackage,
 																	modelName,
 																	strings,
 																	fieldName);
 					} else {
 						this.effectModelFactory_putFieldObjectType(	mv,
 																	line,
-																	classNameWithPackage,
 																	modelName,
 																	type.getName().replaceAll("\\.", "/"),
 																	fieldName);
@@ -266,7 +264,7 @@ public class ClassGenerator implements Opcodes {
 
 	}
 
-	private void effectModelFactory_putFieldObjectType(MethodVisitor mv, int lineNumber, String classNameWithPackage, String modelClassNameWithPackage, String fieldTzpe, String fieldname) {
+	private void effectModelFactory_putFieldObjectType(MethodVisitor mv, int lineNumber, String modelClassNameWithPackage, String fieldTzpe, String fieldname) {
 		Label label = new Label();
 		mv.visitLabel(label);
 		mv.visitLineNumber(lineNumber, label);
@@ -284,7 +282,7 @@ public class ClassGenerator implements Opcodes {
 		mv.visitFieldInsn(PUTFIELD, modelClassNameWithPackage, fieldname, "L"+fieldTzpe+";");
 	}
 
-	private void effectModelFactory_putFieldPrimitive(MethodVisitor mv, int lineNumber, String classNameWithPackage, String modelClassNameWithPackage, String[] typeSignature, String fieldName) {
+	private void effectModelFactory_putFieldPrimitive(MethodVisitor mv, int lineNumber, String modelClassNameWithPackage, String[] typeSignature, String fieldName) {
 		Label label = new Label();
 		mv.visitLabel(label);
 		mv.visitLineNumber(lineNumber, label);

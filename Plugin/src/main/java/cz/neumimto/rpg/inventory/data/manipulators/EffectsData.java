@@ -30,12 +30,12 @@ public class EffectsData extends AbstractData<EffectsData, EffectsData.Immutable
 
     public EffectsData(Map<String, EffectParams> effects) {
        this.effects = effects;
-           registerGettersAndSetters();
+       registerGettersAndSetters();
     }
 
 
     public EffectsData() {
-        this(Collections.emptyMap());
+        this(new HashMap<>());
     }
 
     @Override
@@ -176,9 +176,22 @@ public class EffectsData extends AbstractData<EffectsData, EffectsData.Immutable
         @SuppressWarnings("unchecked")
         protected Optional<EffectsData> buildContent(DataView container) throws InvalidDataException {
             if (container.contains(NKeys.ITEM_EFFECTS)) {
-                return Optional.of(
-                        new EffectsData((Map<String, EffectParams>) container.get(NKeys.ITEM_EFFECTS.getQuery()).orElse(new HashMap<>()))
-                        );
+
+                EffectsData effectsData = new EffectsData();
+                Map<String, Map> map = (Map<String, Map>) container.getMap(NKeys.ITEM_EFFECTS.getQuery()).get();
+                for (Map.Entry<String, Map> q : map.entrySet()) {
+                    EffectParams params = new EffectParams();
+                    params.putAll(q.getValue());
+                    effectsData.effects().put(q.getKey(), params);
+                }
+
+                container.getSerializable(NKeys.ITEM_EFFECTS.getQuery(), EffectsData.class)
+                        .ifPresent(a -> {
+                    effectsData.set(NKeys.ITEM_EFFECTS, a.effects);
+                });
+
+
+                return Optional.of(effectsData);
             }
             return Optional.empty();
         }

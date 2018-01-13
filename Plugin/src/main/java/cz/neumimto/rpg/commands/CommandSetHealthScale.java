@@ -7,7 +7,6 @@ import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.configuration.CommandPermissions;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import org.spongepowered.api.Game;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -18,9 +17,6 @@ import org.spongepowered.api.entity.living.player.Player;
  */
 @ResourceLoader.Command
 public class CommandSetHealthScale extends CommandBase {
-
-	@Inject
-	private Game game;
 
 	@Inject
 	private CharacterService characterService;

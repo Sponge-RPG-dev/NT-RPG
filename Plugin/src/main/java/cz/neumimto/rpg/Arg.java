@@ -10,7 +10,7 @@ public class Arg {
         private Map<String, Object> map = new HashMap<>();
 
 
-        public static Arg arg(Map<String, Object> map) {
+        public static Arg arg(final Map<String, Object> map) {
             Arg args = new Arg();
             for (Map.Entry<String, Object> stringObjectEntry : map.entrySet()) {
                 args.with(stringObjectEntry.getKey(), stringObjectEntry.getValue());

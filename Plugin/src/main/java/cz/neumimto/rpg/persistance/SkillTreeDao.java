@@ -23,12 +23,9 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.utils.Utils;
 import org.slf4j.Logger;
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.item.ItemType;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -92,25 +89,25 @@ public class SkillTreeDao {
 
                         int i = 0;
                         int j = 0;
-                        String num = "";
+                        StringBuilder num = new StringBuilder();
                         for (String s : asciiMap) {
                             for (char c1 : s.toCharArray()) {
                                 if (Character.isDigit(c1)){
-                                    num += c1;
+                                    num.append(c1);
                                     continue;
                                 } else if (c1 == 'X') {
                                     skillTree.setCenter(new Pair<>(i,j));
                                     j++;
                                     continue;
                                 }
-                                if (!num.equals("")) {
-                                    array[i][j] = Short.parseShort(num);
+                                if (!num.toString().equals("")) {
+                                    array[i][j] = Short.parseShort(num.toString());
                                     j++;
                                 }
                                 if (SkillService.SKILL_CONNECTION_TYPES.keySet().contains(c1)){
                                     array[i][j] = SkillService.SKILL_CONNECTION_TYPES.get(c1).value;
                                 }
-                                num = "";
+                                num = new StringBuilder();
                                 j++;
                             }
                             j=0;

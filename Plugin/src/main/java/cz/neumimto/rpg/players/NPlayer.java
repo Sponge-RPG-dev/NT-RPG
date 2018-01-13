@@ -20,8 +20,6 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.configuration.PluginConfig;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Vector;
 
 /**
@@ -33,8 +31,6 @@ public class NPlayer implements INPlayer {
 
 	private final Vector<CharacterBase> characters = new Vector<>(PluginConfig.PLAYER_MAX_CHARS, 1);
 	private IActiveCharacter activeIActiveCharacter;
-	private Map<String, Long> cooldowns = new HashMap<>();
-
 
 	public IActiveCharacter getActiveActiveCharacter() {
 		return activeIActiveCharacter;

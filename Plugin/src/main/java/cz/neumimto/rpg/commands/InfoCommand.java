@@ -44,8 +44,6 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -177,22 +175,6 @@ public class InfoCommand extends CommandBase {
 		return CommandResult.success();
 	}
 
-	private void printList(CommandSource commandSource, Collection<? extends PlayerGroup> group, String nextcmd) {
-		Text.Builder builder = Text.builder();
-		List<Text> texts = new ArrayList<>();
-		for (PlayerGroup g : group) {
-			if (!g.showsInMenu()) {
-				continue;
-			}
-			texts.add(builder.append(Text.of(g.getName() + ", "))
-					.onHover(TextActions.showText(Text.of("Get more info on click")))
-					.onClick(TextActions.runCommand(Text.of("/" + getAliases().get(0)) + " race " + g.getName()))
-					.build());
-
-			builder.removeAll();
-		}
-		commandSource.sendMessage(Text.join(texts));
-	}
 
 	private void printPlayerInfo(CommandSource commandSource, String[] args, Player player) {
 		NtRpgPlugin.asyncExecutor.execute(() -> {

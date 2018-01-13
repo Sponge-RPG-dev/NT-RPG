@@ -340,7 +340,7 @@ public class NtRpgPlugin {
 							player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
 							player.sendMessage(TextHelper.parse("Enchantment " + effect.getName() + " added"));
 						} catch (JsonSyntaxException e) {
-							Class<?> modelType = EffectModelFactory.getModelType(effect.getClass());
+							Class<?> modelType = EffectModelFactory.getModelType(effect.asEffectClass());
 							Map<String, String> q = new HashMap<>();
 							for (Field field : modelType.getDeclaredFields()) {
 								q.put(field.getName(), field.getType().getName());
@@ -360,9 +360,6 @@ public class NtRpgPlugin {
 						TextSerializers
 								.FORMATTING_CODE
 								.deserialize(CommandLocalization.COMMAND_ADMIN_ENCHANT))
-				.arguments(
-						new GlobalEffectCommandElement(TextHelper.parse("effect")),
-						GenericArguments.remainingJoinedStrings(TextHelper.parse("params")))
 				.child(enchantAdd, "add", "e")
 				.build();
 

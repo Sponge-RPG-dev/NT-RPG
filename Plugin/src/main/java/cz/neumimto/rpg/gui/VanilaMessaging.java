@@ -555,11 +555,11 @@ public class VanilaMessaging implements IPlayerMessage {
 			} else {
 				ItemStack is = ItemStack.of(rwService.getAllowedRuneItemTypes().get(0), rw.getRunes().size());
 				is.offer(new MenuInventoryData(true));
-				String s = null;
+				StringBuilder s = null;
 				for (Rune rune : rw.getRunes()) {
-					s += rune.getName();
+					s.append(rune.getName());
 				}
-				is.offer(Keys.DISPLAY_NAME, Text.of(s, TextColors.GOLD));
+				is.offer(Keys.DISPLAY_NAME, Text.of(s.toString(), TextColors.GOLD));
 				i.query(new SlotPos(x, y)).offer(is);
 			}
 		}
