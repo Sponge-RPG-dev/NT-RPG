@@ -968,28 +968,24 @@ public class InventoryService {
 	private void createEffectsSection(ItemStack is, List<Text> t) {
 		is.get(NKeys.ITEM_EFFECTS).ifPresent(a -> {
 			createDelimiter(is, t, effectSection);
-			Text.Builder builder = Text.builder();
 			for (Map.Entry<String, EffectParams> entry : a.entrySet()) {
 				if (entry.getValue() == null) {
-					builder.append(Text.builder(entry.getKey()).color(this.effectName).append(Text.NEW_LINE).build());
+					t.add(Text.builder(entry.getKey()).color(this.effectName).append(Text.NEW_LINE).build());
 				} else if (entry.getValue().size() == 1) {
-					builder.append(Text.builder(entry.getKey()).color(this.effectName)
+					t.add(Text.builder(entry.getKey()).color(this.effectName)
 							.append(Text.builder(": ").color(this.doubleColon).build())
 							.append(Text.builder(entry.getValue().get(entry.getKey())).color(this.value).build())
-							.append(Text.NEW_LINE).build());
+							.build());
 				} else {
-					builder.append(Text.builder(entry.getKey()).color(this.effectName).build());
+					t.add(Text.builder(entry.getKey()).color(this.effectName).build());
 					for (Map.Entry<String, String> q : entry.getValue().entrySet()) {
-						builder
-							.append(Text.NEW_LINE)
-							.append(Text.builder("  - " + q.getKey()).color(this.effectSettings)
+						t.add(Text.builder("  - " + q.getKey()).color(this.effectSettings)
 									.append(Text.builder(": ").color(this.doubleColon).build())
 									.append(Text.builder(q.getValue()).color(this.value).build())
-							.append(Text.NEW_LINE).build());
+							.build());
 					}
 				}
 			}
-			t.add(builder.build());
 		});
 	}
 

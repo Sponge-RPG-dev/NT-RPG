@@ -22,9 +22,10 @@ import java.util.Optional;
 
 /**
  * Created by NeumimTo on 12.1.2018.
+ * /nadmin enchant add bash {"damage":"10","chance":"1%"}
  */
 public class EffectsData extends AbstractData<EffectsData, EffectsData.Immutable> {
-    
+
     private Map<String, EffectParams> effects;
     
 
@@ -196,5 +197,4 @@ public class EffectsData extends AbstractData<EffectsData, EffectsData.Immutable
             return Optional.empty();
         }
     }
-
 }
