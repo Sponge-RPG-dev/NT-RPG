@@ -1,61 +1,62 @@
 package cz.neumimto.rpg.inventory.data.manipulators;
 
-import cz.neumimto.rpg.Pair;
+import cz.neumimto.rpg.inventory.SocketType;
 import cz.neumimto.rpg.inventory.data.NKeys;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.DataManipulatorBuilder;
-import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableData;
-import org.spongepowered.api.data.manipulator.mutable.common.AbstractData;
+import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableMappedData;
+import org.spongepowered.api.data.manipulator.mutable.common.AbstractMappedData;
 import org.spongepowered.api.data.merge.MergeFunction;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.api.data.persistence.InvalidDataException;
-import org.spongepowered.api.data.value.immutable.ImmutableMapValue;
-import org.spongepowered.api.data.value.mutable.MapValue;
 import org.spongepowered.api.text.Text;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 13.1.2018.
  */
-public class ItemSocketsData extends AbstractData<ItemSocketsData, ItemSocketsData.Immutable> {
+public class ItemSocketsData extends AbstractMappedData<SocketType, Text, ItemSocketsData, ItemSocketsData.Immutable> {
 
-    private Map<Text, Text> sockets;
 
     public ItemSocketsData() {
-        this(Collections.emptyMap());
+        this(new HashMap<>());
     }
 
-    public ItemSocketsData(Map<Text, Text> sockets) {
-        this.sockets = sockets;
-        registerGettersAndSetters();
+    public ItemSocketsData(Map<SocketType, Text> sockets) {
+        super(sockets, NKeys.ITEM_SOCKETS);
+    }
+
+
+    @Override
+    public Optional<Text> get(SocketType key) {
+        return Optional.of(getValue().get(key));
     }
 
     @Override
-    protected void registerGettersAndSetters() {
-        registerKeyValue(NKeys.ITEM_SOCKETS, this::sockets);
-
-        registerFieldGetter(NKeys.ITEM_SOCKETS, this::getSockets);
-
-        registerFieldSetter(NKeys.ITEM_SOCKETS, this::setSockets);
+    public Set<SocketType> getMapKeys() {
+        return getValue().keySet();
     }
 
-    public MapValue<Text, Text> sockets() {
-        return Sponge.getRegistry().getValueFactory()
-                .createMapValue(NKeys.ITEM_SOCKETS, this.sockets);
+    @Override
+    public ItemSocketsData put(SocketType key, Text value) {
+        getValue().put(key, value);
+        return this;
     }
 
-    public Map<Text, Text> getSockets() {
-        return sockets;
+    @Override
+    public ItemSocketsData putAll(Map<? extends SocketType, ? extends Text> map) {
+        getValue().putAll(map);
+        return this;
     }
 
-    private void setSockets(Map<Text, Text> sockets) {
-        this.sockets = sockets;
+    @Override
+    public ItemSocketsData remove(SocketType key) {
+        if (getValue().containsKey(key))
+            getValue().remove(key);
+        return this;
     }
 
     @Override
@@ -64,74 +65,47 @@ public class ItemSocketsData extends AbstractData<ItemSocketsData, ItemSocketsDa
         if (a.isPresent()) {
             ItemSocketsData otherData = a.get();
             ItemSocketsData finalData = overlap.merge(this, otherData);
-            this.sockets = finalData.sockets;
+            this.setValue(finalData.getValue());
         }
         return Optional.of(this);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Optional<ItemSocketsData> from(DataContainer container) {
         if (!container.contains(NKeys.ITEM_SOCKETS)) {
             return Optional.empty();
         }
 
-        sockets = (Map<Text, Text>) container.getMap(NKeys.ITEM_SOCKETS.getQuery()).get();
+        setValue((Map<SocketType, Text>) container.getMap(NKeys.ITEM_SOCKETS.getQuery()).get());
         return Optional.of(this);
     }
 
     @Override
     public ItemSocketsData copy() {
-        return new ItemSocketsData(sockets);
+        return new ItemSocketsData(getValue());
     }
 
     @Override
-    public ItemSocketsData.Immutable asImmutable() {
-        return new ItemSocketsData.Immutable(sockets);
+    public Immutable asImmutable() {
+        return new Immutable(getValue());
     }
 
     @Override
     public int getContentVersion() {
-        return ItemSocketsData.Builder.CONTENT_VERSION;
+        return Builder.CONTENT_VERSION;
     }
 
-    @Override
-    public DataContainer toContainer() {
-        DataContainer dataContainer = super.toContainer();
-        dataContainer.set(NKeys.ITEM_SOCKETS, sockets);
-        return dataContainer;
-    }
 
-    public class Immutable extends AbstractImmutableData<Immutable, ItemSocketsData> {
+    public class Immutable extends AbstractImmutableMappedData<SocketType, Text, Immutable, ItemSocketsData> {
 
-        private Map<Text, Text> sockets;
-
-
-        public Immutable(Map<Text, Text> sockets) {
-            this.sockets = sockets;
-            registerGetters();
+        public Immutable(Map<SocketType, Text> sockets) {
+            super(sockets, NKeys.ITEM_SOCKETS);
         }
 
 
         public Immutable() {
             this(Collections.emptyMap());
-        }
-
-        @Override
-        protected void registerGetters() {
-            registerKeyValue(NKeys.ITEM_SOCKETS, this::sockets);
-
-            registerFieldGetter(NKeys.ITEM_SOCKETS, this::getsockets);
-        }
-
-        public ImmutableMapValue<Text, Text> sockets() {
-            return Sponge.getRegistry().getValueFactory()
-                    .createMapValue(NKeys.ITEM_SOCKETS, this.sockets)
-                    .asImmutable();
-        }
-
-
-        private Map<Text, Text> getsockets() {
-            return sockets;
         }
 
         @Override
@@ -142,17 +116,17 @@ public class ItemSocketsData extends AbstractData<ItemSocketsData, ItemSocketsDa
         @Override
         public DataContainer toContainer() {
             DataContainer dataContainer = super.toContainer();
-            dataContainer.set(NKeys.ITEM_SOCKETS, sockets);
+            dataContainer.set(NKeys.ITEM_SOCKETS,getValue());
             return dataContainer;
         }
 
         @Override
         public ItemSocketsData asMutable() {
-            return new ItemSocketsData(sockets);
+            return new ItemSocketsData(getValue());
         }
     }
 
-    public static class Builder extends AbstractDataBuilder<ItemSocketsData> implements DataManipulatorBuilder<ItemSocketsData, Immutable> {
+    public static class Builder extends AbstractDataBuilder<ItemSocketsData> implements DataManipulatorBuilder<ItemSocketsData, ItemSocketsData.Immutable> {
         public static final int CONTENT_VERSION = 1;
 
         public Builder() {
@@ -173,12 +147,18 @@ public class ItemSocketsData extends AbstractData<ItemSocketsData, ItemSocketsDa
         @SuppressWarnings("unchecked")
         protected Optional<ItemSocketsData> buildContent(DataView container) throws InvalidDataException {
             if (container.contains(NKeys.ITEM_SOCKETS)) {
-                return Optional.of(
-                        new ItemSocketsData((Map<Text, Text>) container.get(NKeys.ITEM_SOCKETS.getQuery()).orElse(new Pair<>(0D,0D)))
-                );
+
+                Map<SocketType, Text> map = (Map<SocketType, Text>) container.getMap(NKeys.ITEM_SOCKETS.getQuery()).get();
+                ItemSocketsData socketsData = new ItemSocketsData(map);
+
+                container.getSerializable(NKeys.ITEM_SOCKETS.getQuery(), ItemSocketsData.class)
+                .ifPresent(a -> {
+                    socketsData.set(NKeys.ITEM_SOCKETS, a.getValue());
+                });
+
+                return Optional.of(socketsData);
             }
             return Optional.empty();
         }
     }
-
 }

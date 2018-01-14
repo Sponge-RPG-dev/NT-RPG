@@ -335,10 +335,30 @@ public class NtRpgPlugin {
 						Optional<String> params = args.getOne("params");
 						String s = params.get();
 						try {
-							EffectParams map = gson.fromJson(s, EffectParams.class);
-							GlobalScope.inventorySerivce.addEffectsToItemStack(itemStack, effect.getName(), map);
-							player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
-							player.sendMessage(TextHelper.parse("Enchantment " + effect.getName() + " added"));
+							if (s.equals("?")) {
+								Class<?> modelType = EffectModelFactory.getModelType(effect.asEffectClass());
+								if (Number.class.isAssignableFrom(modelType) || modelType.isPrimitive()) {
+									player.sendMessage(Text.of("Expected: " + modelType.getTypeName()));
+								} else {
+									Map<String, String> q = new HashMap<>();
+									for (Field field : modelType.getDeclaredFields()) {
+										q.put(field.getName(), field.getType().getName());
+									}
+									player.sendMessage(Text.of("Expected: " + gson.toJson(q)));
+								}
+							} else {
+								EffectParams map = null;
+								Class<?> modelType = EffectModelFactory.getModelType(effect.asEffectClass());
+								if (Number.class.isAssignableFrom(modelType) || modelType.isPrimitive()) {
+									map = new EffectParams();
+									map.put(effect.asEffectClass().getName(), s);
+								} else {
+									map = gson.fromJson(s, EffectParams.class);
+								}
+								GlobalScope.inventorySerivce.addEffectsToItemStack(itemStack, effect.getName(), map);
+								player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
+								player.sendMessage(TextHelper.parse("Enchantment " + effect.getName() + " added"));
+							}
 						} catch (JsonSyntaxException e) {
 							Class<?> modelType = EffectModelFactory.getModelType(effect.asEffectClass());
 							Map<String, String> q = new HashMap<>();

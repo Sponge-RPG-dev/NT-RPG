@@ -7,59 +7,57 @@ import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.DataManipulatorBuilder;
-import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableData;
-import org.spongepowered.api.data.manipulator.mutable.common.AbstractData;
+import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableMappedData;
+import org.spongepowered.api.data.manipulator.mutable.common.AbstractMappedData;
 import org.spongepowered.api.data.merge.MergeFunction;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 import org.spongepowered.api.data.value.immutable.ImmutableMapValue;
-import org.spongepowered.api.data.value.mutable.MapValue;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 12.1.2018.
  * /nadmin enchant add bash {"damage":"10","chance":"1%"}
  */
-public class EffectsData extends AbstractData<EffectsData, EffectsData.Immutable> {
-
-    private Map<String, EffectParams> effects;
-    
-
-    public EffectsData(Map<String, EffectParams> effects) {
-       this.effects = effects;
-       registerGettersAndSetters();
-    }
+public class EffectsData extends AbstractMappedData<String, EffectParams, EffectsData, EffectsData.Immutable> {
 
 
     public EffectsData() {
         this(new HashMap<>());
     }
 
+    public EffectsData(Map<String, EffectParams> effects) {
+        super(effects, NKeys.ITEM_EFFECTS);
+    }
+
     @Override
-    protected void registerGettersAndSetters() {
-        registerKeyValue(NKeys.ITEM_EFFECTS, this::effects);
-
-        registerFieldGetter(NKeys.ITEM_EFFECTS, this::getEffects);
-
-        registerFieldSetter(NKeys.ITEM_EFFECTS, this::setEffects);
+    public Optional<EffectParams> get(String key) {
+        return Optional.of(getValue().get(key));
     }
 
-    public MapValue<String, EffectParams> effects() {
-        return Sponge.getRegistry().getValueFactory()
-                .createMapValue(NKeys.ITEM_EFFECTS, this.effects);
+    @Override
+    public Set<String> getMapKeys() {
+        return getValue().keySet();
     }
 
-
-    private Map<String, EffectParams> getEffects() {
-        return effects;
+    @Override
+    public EffectsData put(String key, EffectParams value) {
+        getValue().put(key, value);
+        return this;
     }
 
-    private void setEffects(Map<String, EffectParams> effects) {
-        this.effects = effects;
+    @Override
+    public EffectsData putAll(Map<? extends String, ? extends EffectParams> map) {
+        getValue().putAll(map);
+        return this;
+    }
+
+    @Override
+    public EffectsData remove(String key) {
+        if (getValue().containsKey(key))
+            getValue().remove(key);
+        return this;
     }
 
     @Override
@@ -68,7 +66,7 @@ public class EffectsData extends AbstractData<EffectsData, EffectsData.Immutable
         if (a.isPresent()) {
             EffectsData otherData = a.get();
             EffectsData finalData = overlap.merge(this, otherData);
-            this.effects = finalData.effects;
+            this.setValue(finalData.getValue());
         }
         return Optional.of(this);
     }
@@ -79,40 +77,34 @@ public class EffectsData extends AbstractData<EffectsData, EffectsData.Immutable
             return Optional.empty();
         }
 
-        effects = (Map<String, EffectParams>) container.getMap(NKeys.ITEM_EFFECTS.getQuery()).get();
+        setValue((Map<String, EffectParams>) container.getMap(NKeys.ITEM_EFFECTS.getQuery()).get());
         return Optional.of(this);
     }
 
     @Override
     public EffectsData copy() {
-        return new EffectsData(effects);
+        return new EffectsData(getValue());
     }
 
     @Override
-    public EffectsData.Immutable asImmutable() {
-        return new EffectsData.Immutable(effects);
+    public Immutable asImmutable() {
+        return new Immutable(getValue());
     }
 
     @Override
     public int getContentVersion() {
-        return EffectsData.Builder.CONTENT_VERSION;
+        return Builder.CONTENT_VERSION;
     }
 
-    @Override
-    public DataContainer toContainer() {
-        DataContainer dataContainer = super.toContainer();
-        dataContainer.set(NKeys.ITEM_EFFECTS,effects);
-        return dataContainer;
-    }
 
-    public class Immutable extends AbstractImmutableData<Immutable, EffectsData> {
+    public class Immutable extends AbstractImmutableMappedData<String, EffectParams, Immutable, EffectsData> {
 
         private Map<String, EffectParams> effects;
 
 
         public Immutable(Map<String, EffectParams> effects) {
+            super(effects, NKeys.ITEM_EFFECTS);
             this.effects = effects;
-            registerGetters();
         }
 
 
@@ -120,12 +112,6 @@ public class EffectsData extends AbstractData<EffectsData, EffectsData.Immutable
             this(Collections.emptyMap());
         }
 
-        @Override
-        protected void registerGetters() {
-            registerKeyValue(NKeys.ITEM_EFFECTS, this::effects);
-
-            registerFieldGetter(NKeys.ITEM_EFFECTS, this::getEffects);
-        }
 
         public ImmutableMapValue<String, EffectParams> effects() {
             return Sponge.getRegistry().getValueFactory()
@@ -183,12 +169,12 @@ public class EffectsData extends AbstractData<EffectsData, EffectsData.Immutable
                 for (Map.Entry<String, Map> q : map.entrySet()) {
                     EffectParams params = new EffectParams();
                     params.putAll(q.getValue());
-                    effectsData.effects().put(q.getKey(), params);
+                    effectsData.getValue().put(q.getKey(), params);
                 }
 
                 container.getSerializable(NKeys.ITEM_EFFECTS.getQuery(), EffectsData.class)
                         .ifPresent(a -> {
-                    effectsData.set(NKeys.ITEM_EFFECTS, a.effects);
+                    effectsData.set(NKeys.ITEM_EFFECTS, a.getValue());
                 });
 
 

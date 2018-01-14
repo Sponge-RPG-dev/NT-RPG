@@ -23,7 +23,10 @@ import com.typesafe.config.ConfigFactory;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.*;
+import cz.neumimto.rpg.Arg;
+import cz.neumimto.rpg.GroupService;
+import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
@@ -911,11 +914,13 @@ public class InventoryService {
 			if (a.isEmpty())
 				return;
 			createDelimiter(is, t, sockets);
-			Text.Builder builder = Text.builder();
-			for (Map.Entry<Text, Text> stringStringEntry : a.entrySet()) {
-				builder.append(stringStringEntry.getKey()).append(socketcolon).append(stringStringEntry.getValue()).append(Text.NEW_LINE);
+			for (Map.Entry<SocketType, Text> stringStringEntry : a.entrySet()) {
+				t.add(Text.builder()
+						.append(TextHelper.parse(Localization.SOCKET_TYPES.get(stringStringEntry.getKey())))
+						.append(socketcolon)
+						.append(stringStringEntry.getValue())
+						.build());
 			}
-			t.add(builder.build());
 		});
 	}
 
@@ -927,23 +932,23 @@ public class InventoryService {
 				builder.append(Text.builder().append(rarity).append(r).append(Text.NEW_LINE).build());
 			});
 			is.get(NKeys.ITEM_DAMAGE).ifPresent(r -> {
-				if (r.value == null) {
+				if (r.max == 0) {
 					builder.append(Text.builder()
 							.append(damage)
-							.append(Text.builder(String.valueOf(r.key))
-								.color(damageService.getColorByDamage(r.key))
+							.append(Text.builder(String.valueOf(r.min))
+								.color(damageService.getColorByDamage(r.min))
 								.build())
 							.append(Text.NEW_LINE)
 							.build());
 				} else {
 					builder.append(Text.builder()
 							.append(damage)
-							.append(Text.builder(String.valueOf(r.key))
-									.color(damageService.getColorByDamage(r.key))
+							.append(Text.builder(String.valueOf(r.min))
+									.color(damageService.getColorByDamage(r.min))
 									.build())
 							.append(Text.builder(" - ").color(TextColors.GRAY).build())
-							.append(Text.builder(String.valueOf(r.value))
-									.color(damageService.getColorByDamage(r.value))
+							.append(Text.builder(String.valueOf(r.max))
+									.color(damageService.getColorByDamage(r.max))
 									.build())
 							.append(Text.NEW_LINE).build());
 				}
@@ -959,10 +964,9 @@ public class InventoryService {
 	}
 
 	private void createDelimiter(ItemStack is, List<Text> t, Text section) {
-		Pair<Text, Text> textTextPair = is.get(NKeys.ITEM_SECTION_DELIMITER)
-				.orElse(new Pair<>(Text.builder("=======[ ").color(TextColors.WHITE).build(),
-						Text.builder(" ]=======").color(TextColors.WHITE).build()));
-		t.add(Text.builder().append(textTextPair.key).append(section).append(textTextPair.value).build());
+		LoreSectionDelimiter loreSectionDelimiter = is.get(NKeys.ITEM_SECTION_DELIMITER)
+				.orElse(new LoreSectionDelimiter(LoreSectionDelimiter.defaultFirstPart, LoreSectionDelimiter.defaultSecondPart));
+		t.add(Text.builder().append(loreSectionDelimiter.firstPart).append(section).append(loreSectionDelimiter.secondPart).build());
 	}
 
 	private void createEffectsSection(ItemStack is, List<Text> t) {

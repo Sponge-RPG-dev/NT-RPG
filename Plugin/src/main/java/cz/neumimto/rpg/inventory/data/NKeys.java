@@ -1,8 +1,11 @@
 package cz.neumimto.rpg.inventory.data;
 
 import com.google.common.reflect.TypeToken;
-import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.effects.EffectParams;
+import cz.neumimto.rpg.inventory.ItemDamage;
+import cz.neumimto.rpg.inventory.LoreDurability;
+import cz.neumimto.rpg.inventory.LoreSectionDelimiter;
+import cz.neumimto.rpg.inventory.SocketType;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.key.KeyFactory;
@@ -136,10 +139,10 @@ public class NKeys {
 			"ntrpg:item_effects",
 			"Item effects");
 
-	public static Key<MapValue<Text, Text>> ITEM_SOCKETS = KeyFactory.makeMapKey(
-			new TypeToken<Map<Text, Text>>() {
+	public static Key<MapValue<SocketType, Text>> ITEM_SOCKETS = KeyFactory.makeMapKey(
+			new TypeToken<Map<SocketType, Text>>() {
 			},
-			new TypeToken<MapValue<Text, Text>>() {
+			new TypeToken<MapValue<SocketType, Text>>() {
 			},
 			DataQuery.of(".", "ntrpg:itemsockets"),
 			"ntrpg:item_sockets",
@@ -169,10 +172,10 @@ public class NKeys {
 			"Item level"
 			);
 
-	public static Key<Value<Pair<Integer, Integer>>> ITEM_LORE_DURABILITY = KeyFactory.makeSingleKey(
-			new TypeToken<Pair<Integer, Integer>>() {
+	public static Key<Value<LoreDurability>> ITEM_LORE_DURABILITY = KeyFactory.makeSingleKey(
+			new TypeToken<LoreDurability>() {
 			},
-			new TypeToken<Value<Pair<Integer, Integer>>>() {
+			new TypeToken<Value<LoreDurability>>() {
 			},
 			DataQuery.of('.', "ntrpg:itemloredurability"),
 			"ntrpg:item_loredurability",
@@ -180,19 +183,19 @@ public class NKeys {
 	);
 
 
-	public static Key<Value<Pair<Text, Text>>> ITEM_SECTION_DELIMITER  = KeyFactory.makeSingleKey(
-			new TypeToken<Pair<Text, Text>>() {
+	public static Key<Value<LoreSectionDelimiter>> ITEM_SECTION_DELIMITER  = KeyFactory.makeSingleKey(
+			new TypeToken<LoreSectionDelimiter>() {
 			},
-			new TypeToken<Value<Pair<Text, Text>>>() {
+			new TypeToken<Value<LoreSectionDelimiter>>() {
 			},
 			DataQuery.of('.', "ntrpg:itemsectiondelimiter"),
 			"ntrpg:item_section_delimiter",
 			"Item section delimiter"
 	);
-	public static Key<Value<Pair<Double, Double>>> ITEM_DAMAGE = KeyFactory.makeSingleKey(
-			new TypeToken<Pair<Double, Double>>() {
+	public static Key<Value<ItemDamage>> ITEM_DAMAGE = KeyFactory.makeSingleKey(
+			new TypeToken<ItemDamage>() {
 			},
-			new TypeToken<Value<Pair<Double, Double>>>() {
+			new TypeToken<Value<ItemDamage>>() {
 			},
 			DataQuery.of('.', "ntrpg:itemdamage"),
 			"ntrpg:item_damage",

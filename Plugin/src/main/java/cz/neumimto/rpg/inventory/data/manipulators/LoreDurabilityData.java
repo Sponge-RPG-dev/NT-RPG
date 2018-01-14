@@ -1,14 +1,14 @@
 package cz.neumimto.rpg.inventory.data.manipulators;
 
-import cz.neumimto.rpg.Pair;
+import cz.neumimto.rpg.inventory.LoreDurability;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.DataManipulatorBuilder;
-import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableData;
-import org.spongepowered.api.data.manipulator.mutable.common.AbstractData;
+import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableSingleData;
+import org.spongepowered.api.data.manipulator.mutable.common.AbstractSingleData;
 import org.spongepowered.api.data.merge.MergeFunction;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.api.data.persistence.InvalidDataException;
@@ -20,13 +20,10 @@ import java.util.Optional;
 /**
  * Created by NeumimTo on 13.1.2018.
  */
-public class LoreDurabilityData extends AbstractData<LoreDurabilityData, LoreDurabilityData.Immutable> {
-
-    private Pair<Integer, Integer> durability;
-
+public class LoreDurabilityData extends AbstractSingleData<LoreDurability, LoreDurabilityData, LoreDurabilityData.Immutable> {
 
     public LoreDurabilityData(int min, int max) {
-        this(new Pair<>(min, max));
+        this(new LoreDurability(min, max));
     }
 
 
@@ -34,31 +31,8 @@ public class LoreDurabilityData extends AbstractData<LoreDurabilityData, LoreDur
         this(0, 0);
     }
 
-    public LoreDurabilityData(Pair<Integer, Integer> durability) {
-        this.durability = durability;
-        registerGettersAndSetters();
-    }
-
-    @Override
-    protected void registerGettersAndSetters() {
-        registerKeyValue(NKeys.ITEM_LORE_DURABILITY, this::durability);
-
-        registerFieldGetter(NKeys.ITEM_LORE_DURABILITY, this::getDamage);
-
-        registerFieldSetter(NKeys.ITEM_LORE_DURABILITY, this::setDamage);
-    }
-
-    public Value<Pair<Integer, Integer>> durability() {
-        return Sponge.getRegistry().getValueFactory()
-                .createValue(NKeys.ITEM_LORE_DURABILITY, this.durability);
-    }
-
-    public Pair<Integer, Integer> getDamage() {
-        return durability;
-    }
-
-    private void setDamage(Pair<Integer, Integer> durability) {
-        this.durability = durability;
+    public LoreDurabilityData(LoreDurability durability) {
+        super(durability, NKeys.ITEM_LORE_DURABILITY);
     }
 
     @Override
@@ -67,7 +41,7 @@ public class LoreDurabilityData extends AbstractData<LoreDurabilityData, LoreDur
         if (a.isPresent()) {
             LoreDurabilityData otherData = a.get();
             LoreDurabilityData finalData = overlap.merge(this, otherData);
-            this.durability = finalData.durability;
+            this.setValue(finalData.getValue());
         }
         return Optional.of(this);
     }
@@ -78,18 +52,23 @@ public class LoreDurabilityData extends AbstractData<LoreDurabilityData, LoreDur
             return Optional.empty();
         }
 
-        durability = (Pair<Integer, Integer>) container.get(NKeys.ITEM_LORE_DURABILITY.getQuery()).get();
+        setValue((LoreDurability) container.get(NKeys.ITEM_LORE_DURABILITY.getQuery()).get());
         return Optional.of(this);
     }
 
     @Override
     public LoreDurabilityData copy() {
-        return new LoreDurabilityData(durability);
+        return new LoreDurabilityData(getValue());
+    }
+
+    @Override
+    protected Value<LoreDurability> getValueGetter() {
+        return Sponge.getRegistry().getValueFactory().createValue(NKeys.ITEM_LORE_DURABILITY, getValue());
     }
 
     @Override
     public LoreDurabilityData.Immutable asImmutable() {
-        return new LoreDurabilityData.Immutable(durability);
+        return new LoreDurabilityData.Immutable(getValue());
     }
 
     @Override
@@ -100,42 +79,22 @@ public class LoreDurabilityData extends AbstractData<LoreDurabilityData, LoreDur
     @Override
     public DataContainer toContainer() {
         DataContainer dataContainer = super.toContainer();
-        dataContainer.set(NKeys.ITEM_LORE_DURABILITY, durability);
+        dataContainer.set(NKeys.ITEM_LORE_DURABILITY, getValue());
         return dataContainer;
     }
 
-    public class Immutable extends AbstractImmutableData<Immutable, LoreDurabilityData> {
+    public class Immutable extends AbstractImmutableSingleData<LoreDurability, Immutable, LoreDurabilityData> {
 
-        private Pair<Integer, Integer> durability;
-
-
-        public Immutable(Pair<Integer, Integer> durability) {
-            this.durability = durability;
-            registerGetters();
+        public Immutable(LoreDurability durability) {
+            super(durability, NKeys.ITEM_LORE_DURABILITY);
         }
 
 
         public Immutable() {
-            this(new Pair<>(0,0));
-        }
-
-        @Override
-        protected void registerGetters() {
-            registerKeyValue(NKeys.ITEM_LORE_DURABILITY, this::durability);
-
-            registerFieldGetter(NKeys.ITEM_LORE_DURABILITY, this::getdurability);
-        }
-
-        public ImmutableValue<Pair<Integer, Integer>> durability() {
-            return Sponge.getRegistry().getValueFactory()
-                    .createValue(NKeys.ITEM_LORE_DURABILITY, this.durability)
-                    .asImmutable();
+            this(new LoreDurability(0,0));
         }
 
 
-        private Pair<Integer, Integer> getdurability() {
-            return durability;
-        }
 
         @Override
         public int getContentVersion() {
@@ -145,13 +104,18 @@ public class LoreDurabilityData extends AbstractData<LoreDurabilityData, LoreDur
         @Override
         public DataContainer toContainer() {
             DataContainer dataContainer = super.toContainer();
-            dataContainer.set(NKeys.ITEM_LORE_DURABILITY, durability);
+            dataContainer.set(NKeys.ITEM_LORE_DURABILITY, getValue());
             return dataContainer;
         }
 
         @Override
+        protected ImmutableValue<?> getValueGetter() {
+            return Sponge.getRegistry().getValueFactory().createValue(NKeys.ITEM_LORE_DURABILITY, getValue()).asImmutable();
+        }
+
+        @Override
         public LoreDurabilityData asMutable() {
-            return new LoreDurabilityData(durability);
+            return new LoreDurabilityData(getValue());
         }
     }
 
@@ -176,9 +140,17 @@ public class LoreDurabilityData extends AbstractData<LoreDurabilityData, LoreDur
         @SuppressWarnings("unchecked")
         protected Optional<LoreDurabilityData> buildContent(DataView container) throws InvalidDataException {
             if (container.contains(NKeys.ITEM_LORE_DURABILITY)) {
-                return Optional.of(
-                        new LoreDurabilityData((Pair<Integer, Integer>) container.get(NKeys.ITEM_LORE_DURABILITY.getQuery()).orElse(new Pair<>(0D,0D)))
-                );
+
+                LoreDurabilityData data = new LoreDurabilityData();
+                LoreDurability t = (LoreDurability) container.get(NKeys.ITEM_LORE_DURABILITY.getQuery()).get();
+                data.setValue(t);
+                container.getSerializable(NKeys.ITEM_LORE_DURABILITY.getQuery(), LoreDurabilityData.class)
+                        .ifPresent(a -> {
+                            data.set(NKeys.ITEM_LORE_DURABILITY, a.getValue());
+                        });
+
+
+                return Optional.of(data);
             }
             return Optional.empty();
         }
