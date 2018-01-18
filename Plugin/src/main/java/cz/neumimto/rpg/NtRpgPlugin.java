@@ -34,6 +34,7 @@ import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.SocketType;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.manipulators.*;
@@ -202,6 +203,15 @@ public class NtRpgPlugin {
 				.manipulatorId("ntrpg-effectsitemdata")
 				.dataName("SectionDelimiterData")
 				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
+
+		DataRegistration.<SectionDelimiterData, SectionDelimiterData.Immutable>builder()
+				.dataClass(ItemStackUpgradeData.class)
+				.immutableClass(ItemStackUpgradeData.Immutable.class)
+				.builder(new ItemStackUpgradeData.Builder())
+				.manipulatorId("ntrpg-itemstackupgrade")
+				.dataName("ItemStackUpgrade")
+				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
+
 
 	}
 
@@ -393,14 +403,14 @@ public class NtRpgPlugin {
 								.FORMATTING_CODE
 								.deserialize(CommandLocalization.COMMAND_ADMIN_SOCKET))
 				.arguments(
-						GenericArguments.onlyOne(GenericArguments.integer(TextHelper.parse("count")))
+						new SocketTypeCommandElement(TextHelper.parse("type"))
 				)
 				.executor((src, args) -> {
 					Player player = (Player) src;
-					Integer count = args.<Integer>getOne("count").orElse(1);
+					SocketType type = args.<SocketType>getOne("type").orElse(SocketType.ANY);
 					Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
 					if (itemInHand.isPresent()) {
-						ItemStack itemStack = NtRpgPlugin.GlobalScope.runewordService.createSockets(itemInHand.get(), count);
+						ItemStack itemStack = NtRpgPlugin.GlobalScope.runewordService.createSocket(itemInHand.get(), type);
 						player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
 					}
 					return CommandResult.success();

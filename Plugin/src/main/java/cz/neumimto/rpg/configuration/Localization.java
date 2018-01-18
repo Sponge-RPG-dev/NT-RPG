@@ -369,4 +369,6 @@ public class Localization {
 		put(SocketType.RUNE, "&8Rune");
 	}};
 
+	@ConfigValue
+	public static String SOCKET_EMPTY = "&8 < empty > ";
 }

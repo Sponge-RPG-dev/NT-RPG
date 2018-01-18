@@ -332,7 +332,6 @@ public class VanilaMessaging implements IPlayerMessage {
 
 		List<Text> content = new ArrayList<>();
 		List<Rune> r = new ArrayList<>(rwService.getRunes().values());
-		Collections.sort(r, (o1, o2) -> (int) (o1.getSpawnchance() - o2.getSpawnchance()));
 		for (Rune rune : r) {
 			LiteralText.Builder b = Text.builder(rune.getName()).color(TextColors.GOLD);
 			if (rune.getLore() != null) {

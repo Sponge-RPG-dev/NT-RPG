@@ -32,10 +32,12 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.inventory.data.ItemSocket;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemRarityData;
+import cz.neumimto.rpg.inventory.runewords.ItemUpgrade;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
@@ -50,7 +52,6 @@ import cz.neumimto.rpg.reloading.ReloadService;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.utils.ItemStackUtils;
-import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
@@ -65,7 +66,6 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
-import org.spongepowered.api.item.inventory.equipment.EquipmentInventory;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypes;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
@@ -670,25 +670,29 @@ public class InventoryService {
 						return;
 					}
 					runeitem = slot.peek().get();
-					if (runeitem.get(Keys.DISPLAY_NAME).isPresent()) {
-						name = runeitem.get(Keys.DISPLAY_NAME).get().toPlain();
+					if (runeitem.get(NKeys.ITEMSTACK_UPGRADE).isPresent() ) {
+						ItemUpgrade itemUpgrade = runeitem.get(NKeys.ITEMSTACK_UPGRADE).get();
+						if (itemUpgrade.getSocketType() == SocketType.RUNE) {
+							name = itemUpgrade.getName();
+						}
 					}
-					r.r = rwService.getRune(name);
-					if (r.r == null) {
+					r.itemUpgrade = rwService.getRune(name);
+					if (r.itemUpgrade == null) {
 						Gui.sendMessage(character, Localization.UNKNOWN_RUNE_NAME);
 						character.setCurrentRune(-1);
 						return;
 					}
-					ItemStack i = rwService.insertRune(itemStack, r.getRune().getName());
+					
+					ItemStack i = rwService.insertRune(itemStack, r.getRune());
 					CarriedInventory<? extends Carrier> inventory = character.getPlayer().getInventory();
 					Inventory query = inventory.query(Hotbar.class).query(new SlotIndex(character.getCurrentRune()));
 					query.clear();
 					character.getPlayer().setItemInHand(HandTypes.MAIN_HAND, i);
-					List<Text> texts = i.get(Keys.ITEM_LORE).get();
-					if (!rwService.hasEmptySocket(texts)) {
-						RuneWord rw = rwService.runeWordByCombinationAfterInsert(texts);
+					if (!rwService.hasEmptySocket(i)) {
+						RuneWord rw = rwService.runeWordByCombinationAfterInsert(i);
 						i = rwService.reBuildRuneword(i, rw);
-						if (rwService.canUse(rw, character)) {
+
+						if (canUse(i, character)) {
 							character.getPlayer().setItemInHand(HandTypes.MAIN_HAND, i);
 						} else {
 							character.getPlayer().setItemInHand(HandTypes.MAIN_HAND, null);
@@ -701,16 +705,7 @@ public class InventoryService {
 			}
 		}
 	}
-
-	public void reinitializePlayerInventory(IActiveCharacter character) {
-		Inventory i = character.getPlayer().getInventory();
-		EquipmentInventory inventory = character.getPlayer().getInventory().query(EquipmentInventory.class);
-		for (Integer integer : character.getSlotsToReinitialize()) {
-			//todo
-		}
-		character.getSlotsToReinitialize().clear();
-	}
-
+	
 
 	public CannotUseItemReson canWear(ItemStack itemStack, IActiveCharacter character) {
 		if (ItemStackUtils.any_armor.contains(itemStack.getType())) {
@@ -821,19 +816,6 @@ public class InventoryService {
 				Localization.SKILLBIND));
 
 	}
-
-
-	//todo
-	private void initializeSlots(IActiveCharacter character) {
-		for (Integer integer : character.getSlotsToReinitialize()) {
-			if (Utils.isHotbar(integer)) {
-				initializeHotbar(character, integer);
-			} else {
-				// initializeArmor(character, integer);
-			}
-		}
-	}
-
 	public ItemStack setItemRarity(ItemStack itemStack, Text rarity) {
 		if (!getItemRarityTypes().contains(rarity.toPlain())) {
 			return itemStack;
@@ -910,16 +892,21 @@ public class InventoryService {
 	}
 
 	private void createItemSocketsSection(ItemStack is, List<Text> t) {
-		is.get(NKeys.ITEM_SOCKETS).ifPresent(a -> {
+		is.get(NKeys.ITEM_STACK_UPGRADE_CONTAINER).ifPresent(a -> {
 			if (a.isEmpty())
 				return;
 			createDelimiter(is, t, sockets);
-			for (Map.Entry<SocketType, Text> stringStringEntry : a.entrySet()) {
+			for (ItemSocket itemSocket : a) {
+				SocketType type = itemSocket.getType();
 				t.add(Text.builder()
-						.append(TextHelper.parse(Localization.SOCKET_TYPES.get(stringStringEntry.getKey())))
+						.append(TextHelper.parse(Localization.SOCKET_TYPES.get(type)))
 						.append(socketcolon)
-						.append(stringStringEntry.getValue())
-						.build());
+						.append(itemSocket.getContent() == null ? TextHelper.parse(Localization.SOCKET_EMPTY) : TextHelper.parse(itemSocket.getContent().getName()))
+						.build()
+				);
+				for (Map.Entry<String, Integer> entry : itemSocket.getContent().getAttributes().entrySet())){
+
+				}
 			}
 		});
 	}

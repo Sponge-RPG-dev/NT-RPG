@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.inventory.runewords;
 
-import com.google.common.base.Splitter;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
@@ -10,11 +9,13 @@ import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.EffectSourceType;
-import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.events.RebuildRunewordEvent;
 import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.SocketType;
+import cz.neumimto.rpg.inventory.data.ItemSocket;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemSocketsData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemStackUpgradeData;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
@@ -24,12 +25,12 @@ import cz.neumimto.rpg.utils.XORShiftRnd;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.key.KeyFactory;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.value.mutable.ListValue;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.format.TextStyles;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,7 +69,7 @@ public class RWService {
 	@Inject
 	private GroupService groupService;
 
-	private Map<String, RuneWord> runewords = new HashMap();
+	private Map<String, RuneWord> runewords = new HashMap<>();
 	private Map<String, RuneWord> combinations = new HashMap<>();
 	private Map<String, Rune> runes = new HashMap<>();
 	private List<ItemType> allowedRuneItemTypes = new ArrayList<>();
@@ -95,9 +96,7 @@ public class RWService {
 		}
 		for (String s : PluginConfig.ALLOWED_RUNES_ITEMTYPES) {
 			Optional<ItemType> type = Sponge.getGame().getRegistry().getType(ItemType.class, s);
-			if (type.isPresent()) {
-				allowedRuneItemTypes.add(type.get());
-			}
+			type.ifPresent(itemType -> allowedRuneItemTypes.add(itemType));
 		}
 	}
 
@@ -127,40 +126,36 @@ public class RWService {
 		return runewords.get(name.toLowerCase());
 	}
 
-	public List<Text> addRune(List<Text> lore, Rune rune) {
-		if (!hasEmptySocket(lore))
-			return lore;
-		String s = lore.get(1).toPlain();
-		s = s.replaceFirst(socket.pattern(), rune.getName() + " ");
-		lore.set(1, Text.of(s));
-		return lore;
+	public int getSocketCount(ItemStack itemStack) {
+		Optional<List<ItemSocket>> itemSockets = itemStack.get(NKeys.ITEM_STACK_UPGRADE_CONTAINER);
+		return itemSockets.map(List::size).orElse(0);
 	}
 
-
-	public int getSocketCount(List<Text> lore) {
-		if (lore.size() < 2)
-			return 0;
-		String s = lore.get(1).toPlain();
-		int c = 0;
-		Matcher matcher = socket.matcher(s);
-		while (matcher.find())
-			c++;
-		return c;
-	}
-
-	public boolean hasEmptySocket(List<Text> lore) {
-		if (lore.size() < 2)
+	public boolean hasEmptySocket(ItemStack itemStack) {
+		Optional<List<ItemSocket>> itemSockets = itemStack.get(NKeys.ITEM_STACK_UPGRADE_CONTAINER);
+		if (!itemSockets.isPresent())
 			return false;
-		String s = lore.get(1).toPlain();
-		Matcher matcher = socket.matcher(s);
-		return matcher.find();
+		List<ItemSocket> itemSockets1 = itemSockets.get();
+		for (ItemSocket itemSocket : itemSockets1) {
+			if (itemSocket.getContent() == null) {
+				return true;
+			}
+		}
+		return false;
 	}
 
-	public RuneWord runeWordByCombinationAfterInsert(List<Text> lore) {
-		if (lore.size() < 2)
-			return null;
-		String s = lore.get(1).toPlain();
-		return combinations.get(s);
+	public RuneWord runeWordByCombinationAfterInsert(ItemStack itemStack) {
+		StringBuilder runes = new StringBuilder();
+		for (ItemSocket itemSocket : itemStack.get(NKeys.ITEM_STACK_UPGRADE_CONTAINER).get()) {
+			if (itemSocket.getType() != SocketType.RUNE || itemSocket.getType() != SocketType.ANY) {
+				return null;
+			}
+			if (itemSocket.getContent() == null) {
+				return null;
+			}
+			runes.append(itemSocket.getContent().getName());
+		}
+		return combinations.get(runes.toString());
 	}
 
 	public boolean existsRune(String rune) {
@@ -171,7 +166,7 @@ public class RWService {
 		return runewords.containsKey(rw.toLowerCase());
 	}
 
-	public Rune getRune(String rune) {
+	public ItemUpgrade getRune(String rune) {
 		return runes.get(rune.toLowerCase());
 	}
 
@@ -179,42 +174,66 @@ public class RWService {
 		return runes;
 	}
 
-	public ItemStack toItemStack(Rune r) {
+	public ItemStack toItemStack(ItemUpgrade r) {
 		XORShiftRnd rnd = new XORShiftRnd();
-
+		int i = rnd.nextInt(allowedRuneItemTypes.size() - 1);
+		ItemType itemType = allowedRuneItemTypes.get(i);
+		ItemStack of = ItemStack.of(itemType,1);
+		of.offer(Keys.HIDE_ATTRIBUTES, true);
+		of.offer(Keys.HIDE_MISCELLANEOUS, true);
+		of.offer(new ItemStackUpgradeData(r));
 		return null;
 	}
 
 
-	public ItemStack createSockets(ItemStack itemStack, int i) {
-		Optional<Map<Text, Text>> textTextMap = itemStack.get(NKeys.ITEM_SOCKETS);
-		Optional<ItemSocketsData> orCreate = itemStack.getOrCreate(ItemSocketsData.class);
-		//orCreate.get().set(NKeys.ITEM_SOCKETS, )
+	public ItemStack createSocket(ItemStack itemStack, SocketType type) {
+		Optional<ItemSocketsData> opt = itemStack.getOrCreate(ItemSocketsData.class);
+		ItemSocketsData itemSocketsData = opt.orElse(new ItemSocketsData());
+		ListValue<ItemSocket> listValue = itemSocketsData.getListValue();
+		listValue.add(new ItemSocket(type));
+		itemStack.offer(itemSocketsData);
 		inventoryService.updateLore(itemStack);
 		return itemStack;
 	}
 
-	public ItemStack insertRune(ItemStack itemStack, String currentRune) {
-		Optional<List<Text>> texts = itemStack.get(Keys.ITEM_LORE);
-		List<Text> t = texts.get();
-		Text text = t.get(1);
-		String s = text.toPlain();
-		String s1 = s.replaceFirst("\\{@\\}", currentRune);
-		t.set(1, Text.of(TextColors.RED, s1));
-		itemStack.offer(Keys.ITEM_LORE, t);
+	public ItemStack insertRune(ItemStack itemStack, ItemUpgrade insertItemUpgrade) {
+		Optional<List<ItemSocket>> opt = itemStack.get(NKeys.ITEM_STACK_UPGRADE_CONTAINER);
+		if (opt.isPresent()) {
+			List<ItemSocket> itemSockets = opt.get();
+			for (ItemSocket itemSocket : itemSockets) {
+				if (itemSocket.getContent() == null && itemSocket.getType() == SocketType.ANY || itemSocket.getType() == SocketType.RUNE) {
+					itemSocket.setContent(insertItemUpgrade);
+					itemStack.offer(NKeys.ITEM_STACK_UPGRADE_CONTAINER, itemSockets);
+					break;
+				}
+			}
+		} else {
+			return itemStack;
+		}
 		return itemStack;
 	}
 
-	public ItemStack findRuneword(ItemStack i) {
-		Optional<List<Text>> texts = i.get(Keys.ITEM_LORE);
-		if (texts.isPresent()) {
-			List<Text> t = texts.get();
-			if (t.size() < 2) {
-				return i;
+	public String getCurrentRuneCombination(ItemStack i) {
+		Optional<List<ItemSocket>> itemSockets = i.get(NKeys.ITEM_STACK_UPGRADE_CONTAINER);
+		if (!itemSockets.isPresent())
+			return null;
+		List<ItemSocket> sockets = itemSockets.get();
+		StringBuilder builder = new StringBuilder();
+		for (ItemSocket itemSocket : sockets) {
+			if (itemSocket.getType() != SocketType.RUNE || itemSocket.getType() != SocketType.ANY || itemSocket.getContent() == null) {
+				builder = null;
+				break;
 			}
-			Text text = t.get(1);
-			String s = text.toPlain();
-			RuneWord rw = combinations.get(s);
+			builder.append(itemSocket.getContent().getName());
+		}
+		return builder != null ? builder.toString() : null;
+	}
+
+	public ItemStack findRuneword(ItemStack i) {
+		String combination = getCurrentRuneCombination(i);
+		if (combination == null)
+			return i;
+			RuneWord rw = combinations.get(combination);
 			if (rw != null) {
 				if (rw.getAllowedItems().contains(i.getType())) {
 					if (rw.getAllowedItems().isEmpty()) {
@@ -226,7 +245,6 @@ public class RWService {
 					}
 				}
 			}
-		}
 		return i;
 	}
 
@@ -241,7 +259,7 @@ public class RWService {
 		}
 		i.offer(Keys.HIDE_ATTRIBUTES, true);
 		i.offer(Keys.HIDE_MISCELLANEOUS, true);
-		refreshItemLore(i, rw);
+		inventoryService.updateLore(i);
 		RebuildRunewordEvent event = new RebuildRunewordEvent(rw, i);
 		Sponge.getEventManager().post(event);
 		i = event.getItemStack();
@@ -269,64 +287,6 @@ public class RWService {
 		}
 
 		return false;
-	}
-
-	public boolean canUse(RuneWord rw, IActiveCharacter character) {
-		if (rw == null) {
-			return true;
-		}
-		if (character.isStub())
-			return false;
-
-		if (rw.getMinLevel() > 0 && character.getPrimaryClass() == null) {
-			return false;
-		}
-
-		if (rw.getMinLevel() > character.getPrimaryClass().getLevel()) {
-			return false;
-		}
-
-		for (PlayerGroup playerGroup : rw.getAllowedGroups()) {
-
-			if (playerGroup.getType() == EffectSourceType.RACE) {
-
-				if (character.getRace() == playerGroup) {
-					return false;
-				}
-			} else if (playerGroup.getType() == EffectSourceType.CLASS)
-
-				for (ExtendedNClass extendedNClass : character.getClasses()) {
-					if (extendedNClass.getConfigClass() == playerGroup) {
-						return false;
-					}
-				}
-
-		}
-
-		return true;
-	}
-	private Map<String, String> toMap(Map<IGlobalEffect, String> a) {
-		Map<String, String> map = new HashMap<>();
-		if (a != null) {
-			for (Map.Entry<IGlobalEffect, String> q : a.entrySet()) {
-				map.put(q.getKey().getName(), q.getValue());
-			}
-		}
-		return map;
-	}
-
-	public void refreshItemLore(ItemStack itemStack, RuneWord runeword) {
-
-	}
-
-	private ItemStack setLore(ItemStack itemStack, RuneWord runeWord) {
-		List<Text> arrayList = itemStack.get(Keys.ITEM_LORE).get();
-		Iterable<String> a = Splitter.fixedLength(10).split(runeWord.getLore());
-		for (String s : a) {
-			arrayList.add(Text.builder(s).color(TextColors.GOLD).style(TextStyles.ITALIC).build());
-		}
-		itemStack.offer(Keys.ITEM_LORE, arrayList);
-		return itemStack;
 	}
 
 	public List<ItemType> getAllowedRuneItemTypes() {

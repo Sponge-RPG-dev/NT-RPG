@@ -27,7 +27,6 @@ public class RWDao {
 		for (String a : runes.keySet()) {
 			Rune r = new Rune();
 			r.setName(a);
-			r.setSpawnchance(0);
 			s.add(r);
 		}
 		return s;
