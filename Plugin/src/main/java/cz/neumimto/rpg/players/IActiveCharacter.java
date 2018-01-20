@@ -20,7 +20,10 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.IEntityType;
-import cz.neumimto.rpg.inventory.*;
+import cz.neumimto.rpg.inventory.Armor;
+import cz.neumimto.rpg.inventory.HotbarObject;
+import cz.neumimto.rpg.inventory.RPGItemType;
+import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
@@ -34,7 +37,6 @@ import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 
 import java.util.List;
@@ -108,9 +110,9 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	double getBaseWeaponDamage(RPGItemType type);
 
-	Set<ItemType> getAllowedArmor();
+	Set<RPGItemType> getAllowedArmor();
 
-	boolean canWear(ItemStack armor);
+	boolean canWear(RPGItemType armor);
 
 	Map<ItemType, RPGItemWrapper> getAllowedWeapons();
 

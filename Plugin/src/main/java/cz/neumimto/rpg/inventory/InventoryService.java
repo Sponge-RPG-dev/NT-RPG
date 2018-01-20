@@ -28,18 +28,16 @@ import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.Localization;
-import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.inventory.data.ItemSocket;
+import cz.neumimto.rpg.gui.ItemLoreBuilderService;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemRarityData;
 import cz.neumimto.rpg.inventory.runewords.ItemUpgrade;
 import cz.neumimto.rpg.inventory.runewords.RWService;
-import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExtendedNClass;
@@ -47,8 +45,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
-import cz.neumimto.rpg.reloading.Reload;
-import cz.neumimto.rpg.reloading.ReloadService;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.utils.ItemStackUtils;
@@ -70,7 +66,6 @@ import org.spongepowered.api.item.inventory.equipment.EquipmentTypes;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
@@ -124,45 +119,11 @@ public class InventoryService {
 	private Map<UUID, InventoryMenu> inventoryMenus = new HashMap<>();
 	private Map<String, ItemGroup> itemGroups = new HashMap<>();
 
-	private TextColor effectName;
-	private TextColor doubleColon;
-	private TextColor value;
-	private TextColor effectSettings;
-	private TextColor listColor;
-
-
-	private Text effectSection;
-	private Text rarity;
-	private Text damage;
-	private Text level;
-	private Text sockets;
-	private Text socketcolon;
-	private Text attributes;
-	private List<ItemLoreSections> loreOrder;
-
 	@PostProcess(priority = 3000)
 	public void init() {
 		NORMAL_RARITY = Text.of(Localization.NORMAL_RARITY);
 		loadItemGroups();
-		setupColor();
-	}
 
-	@Reload(on = ReloadService.PLUGIN_CONFIG)
-	public void setupColor() {
-		effectName = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_NAME_COLOR).get();
-		doubleColon = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_COLON_COLOR).get();
-		value = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_VALUE_COLOR).get();
-		effectSettings = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_SETTING_NAME_COLOR).get();
-		listColor = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_SETTING_DASH_COLOR).get();
-
-		effectSection = TextHelper.parse(Localization.ITEM_EFFECTS_SECTION);
-		rarity = TextHelper.parse(Localization.ITEM_RARITY_SECTION);
-		damage = TextHelper.parse(Localization.ITEM_DAMAGE_SECTION);
-		level = TextHelper.parse(Localization.ITEM_LEVEL_SECTION);
-		sockets = TextHelper.parse(Localization.ITEM_SOCKETS_SECTION);
-		socketcolon = TextHelper.parse(Localization.ITEM_SOCKETS_SECTION_COLONS);
-		attributes = TextHelper.parse(Localization.ITEM_ATTRIBUTES_SECTIO);
-		loreOrder = PluginConfig.ITEM_LORE_ORDER;
 	}
 
 	private void loadItemGroups() {
@@ -526,8 +487,8 @@ public class InventoryService {
 		Optional<Text> text = is.get(Keys.DISPLAY_NAME);
 		if (text.isPresent()) {
 			String s = text.get().toPlain();
-			Rune rune1 = rwService.getRune(s);
-			rune.r = rune1;
+			ItemUpgrade itemUpgrade = rwService.getRune(s);
+			rune.itemUpgrade = itemUpgrade;
 		}
 		return rune;
 	}
@@ -692,7 +653,7 @@ public class InventoryService {
 						RuneWord rw = rwService.runeWordByCombinationAfterInsert(i);
 						i = rwService.reBuildRuneword(i, rw);
 
-						if (canUse(i, character)) {
+						if (canUse(i, character) == CannotUseItemReson.OK) {
 							character.getPlayer().setItemInHand(HandTypes.MAIN_HAND, i);
 						} else {
 							character.getPlayer().setItemInHand(HandTypes.MAIN_HAND, null);
@@ -709,7 +670,7 @@ public class InventoryService {
 
 	public CannotUseItemReson canWear(ItemStack itemStack, IActiveCharacter character) {
 		if (ItemStackUtils.any_armor.contains(itemStack.getType())) {
-			if (!character.canWear(itemStack)) {
+			if (!character.canWear(RPGItemType.from(itemStack))) {
 				return CannotUseItemReson.CONFIG;
 			}
 		}
@@ -723,6 +684,10 @@ public class InventoryService {
 
 		if (ItemStackUtils.weapons.contains(itemStack.getType())) {
 			if (!character.canUse(RPGItemType.from(itemStack))) {
+				return CannotUseItemReson.CONFIG;
+			}
+		} else if (ItemStackUtils.any_armor.contains(itemStack.getType())) {
+			if (!character.canWear(RPGItemType.from(itemStack))) {
 				return CannotUseItemReson.CONFIG;
 			}
 		}
@@ -831,154 +796,11 @@ public class InventoryService {
 
 	public ItemStack updateLore(ItemStack is) {
 		List<Text> texts = new ArrayList<>();
-
-		for (ItemLoreSections itemLoreSections : loreOrder) {
-			switch (itemLoreSections) {
-				case META:
-					createItemMetaSection(is,texts);
-					break;
-				case EFFECTS:
-					createEffectsSection(is,texts);
-					break;
-				case SOCKETS:
-					createItemSocketsSection(is, texts);
-					break;
-				case ATTRIBUTES:
-					createAttributesSection(is, texts);
-					break;
-			}
-		}
-		is.offer(Keys.ITEM_LORE, texts);
+		ItemLoreBuilderService.ItemLoreBuilder itemLoreBuilder = ItemLoreBuilderService.create(is, new ArrayList<Text>());
+		is.offer(Keys.ITEM_LORE, itemLoreBuilder.buildLore());
 		return is;
 	}
 
-
-	private void createAttributesSection(ItemStack is, List<Text> t) {
-		is.get(NKeys.ITEM_ATTRIBUTE_BONUS).ifPresent(a -> {
-			if (a.isEmpty())
-				return;
-			createDelimiter(is, t, attributes);
-			Text.Builder builder = Text.builder();
-			attributeMapToItemLorePart(a,builder);
-		});
-	}
-
-
-	private void attributeMapToItemLorePart(Map<String, Integer> a, Text.Builder builder) {
-		int k = 0;
-		for (Map.Entry<String, Integer> e : a.entrySet()) {
-			ICharacterAttribute attribute = propertyService.getAttribute(e.getKey());
-			String name = attribute.getName();
-			int charsToRead = 3;
-			if (name.startsWith("&")) {
-				charsToRead = 5;
-			}
-			Text q = null;
-			if (name.length() > charsToRead) {
-				q = TextHelper.parse(name.substring(0, charsToRead) + ": ");
-			} else {
-				q = TextHelper.parse(name + ": ");
-			}
-
-			builder.append(Text.builder()
-					.append(q)
-					.append(Text.builder(e.getValue() + " ").color(TextColors.WHITE).build())
-					.build());
-			k++;
-			if (k % 3 == 0) {
-				builder.append(Text.EMPTY);
-			}
-		}
-	}
-
-	private void createItemSocketsSection(ItemStack is, List<Text> t) {
-		is.get(NKeys.ITEM_STACK_UPGRADE_CONTAINER).ifPresent(a -> {
-			if (a.isEmpty())
-				return;
-			createDelimiter(is, t, sockets);
-			for (ItemSocket itemSocket : a) {
-				SocketType type = itemSocket.getType();
-				t.add(Text.builder()
-						.append(TextHelper.parse(Localization.SOCKET_TYPES.get(type)))
-						.append(socketcolon)
-						.append(itemSocket.getContent() == null ? TextHelper.parse(Localization.SOCKET_EMPTY) : TextHelper.parse(itemSocket.getContent().getName()))
-						.build()
-				);
-				for (Map.Entry<String, Integer> entry : itemSocket.getContent().getAttributes().entrySet())){
-
-				}
-			}
-		});
-	}
-
-	private void createItemMetaSection(ItemStack is, List<Text> t) {
-		is.get(NKeys.ITEM_TYPE).ifPresent(a -> {
-			createDelimiter(is, t, a);
-			Text.Builder builder = Text.builder();
-			is.get(NKeys.ITEM_RARITY).ifPresent(r -> {
-				builder.append(Text.builder().append(rarity).append(r).append(Text.NEW_LINE).build());
-			});
-			is.get(NKeys.ITEM_DAMAGE).ifPresent(r -> {
-				if (r.max == 0) {
-					builder.append(Text.builder()
-							.append(damage)
-							.append(Text.builder(String.valueOf(r.min))
-								.color(damageService.getColorByDamage(r.min))
-								.build())
-							.append(Text.NEW_LINE)
-							.build());
-				} else {
-					builder.append(Text.builder()
-							.append(damage)
-							.append(Text.builder(String.valueOf(r.min))
-									.color(damageService.getColorByDamage(r.min))
-									.build())
-							.append(Text.builder(" - ").color(TextColors.GRAY).build())
-							.append(Text.builder(String.valueOf(r.max))
-									.color(damageService.getColorByDamage(r.max))
-									.build())
-							.append(Text.NEW_LINE).build());
-				}
-			});
-			is.get(NKeys.ITEM_LEVEL).ifPresent(r -> {
-				builder.append(Text.builder().append(level).append(Text.builder(String.valueOf(r)).color(TextColors.YELLOW).build()).append(Text.NEW_LINE).build());
-			});
-			is.get(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS).ifPresent(r -> {
-				attributeMapToItemLorePart(r,builder);
-			});
-			t.add(builder.build());
-		});
-	}
-
-	private void createDelimiter(ItemStack is, List<Text> t, Text section) {
-		LoreSectionDelimiter loreSectionDelimiter = is.get(NKeys.ITEM_SECTION_DELIMITER)
-				.orElse(new LoreSectionDelimiter(LoreSectionDelimiter.defaultFirstPart, LoreSectionDelimiter.defaultSecondPart));
-		t.add(Text.builder().append(loreSectionDelimiter.firstPart).append(section).append(loreSectionDelimiter.secondPart).build());
-	}
-
-	private void createEffectsSection(ItemStack is, List<Text> t) {
-		is.get(NKeys.ITEM_EFFECTS).ifPresent(a -> {
-			createDelimiter(is, t, effectSection);
-			for (Map.Entry<String, EffectParams> entry : a.entrySet()) {
-				if (entry.getValue() == null) {
-					t.add(Text.builder(entry.getKey()).color(this.effectName).append(Text.NEW_LINE).build());
-				} else if (entry.getValue().size() == 1) {
-					t.add(Text.builder(entry.getKey()).color(this.effectName)
-							.append(Text.builder(": ").color(this.doubleColon).build())
-							.append(Text.builder(entry.getValue().get(entry.getKey())).color(this.value).build())
-							.build());
-				} else {
-					t.add(Text.builder(entry.getKey()).color(this.effectName).build());
-					for (Map.Entry<String, String> q : entry.getValue().entrySet()) {
-						t.add(Text.builder("  - " + q.getKey()).color(this.effectSettings)
-									.append(Text.builder(": ").color(this.doubleColon).build())
-									.append(Text.builder(q.getValue()).color(this.value).build())
-							.build());
-					}
-				}
-			}
-		});
-	}
 
 	public Map<IGlobalEffect, EffectParams> getItemEffects(ItemStack is) {
 		Optional<Map<String, EffectParams>> q = is.get(NKeys.ITEM_EFFECTS);

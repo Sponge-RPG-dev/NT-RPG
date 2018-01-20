@@ -22,7 +22,10 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.inventory.*;
+import cz.neumimto.rpg.inventory.Armor;
+import cz.neumimto.rpg.inventory.HotbarObject;
+import cz.neumimto.rpg.inventory.RPGItemType;
+import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
@@ -41,7 +44,6 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatType;
@@ -341,12 +343,12 @@ public class PreloadCharacter implements IActiveCharacter {
 
 
 	@Override
-	public Set<ItemType> getAllowedArmor() {
+	public Set<RPGItemType> getAllowedArmor() {
 		return Collections.emptySet();
 	}
 
 	@Override
-	public boolean canWear(ItemStack armor) {
+	public boolean canWear(RPGItemType armor) {
 		return false;
 	}
 

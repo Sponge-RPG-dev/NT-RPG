@@ -37,7 +37,6 @@ import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import org.spongepowered.api.text.Text;
@@ -61,7 +60,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	private transient Player pl;
 	private transient Map<String, IEffectContainer<Object, IEffect<Object>>> effects = new HashMap<>();
 	private transient Click click = new Click();
-	private transient Set<ItemType> allowedArmorIds = new HashSet<>();
+	private transient Set<RPGItemType> allowedArmorIds = new HashSet<>();
 	private transient Map<ItemType, RPGItemWrapper> allowedWeapons = new HashMap<>();
 	private transient Map<EntityType, Double> projectileDamage = new HashMap<>();
 	private transient Party party;
@@ -465,20 +464,23 @@ public class ActiveCharacter implements IActiveCharacter {
 		}
 		//mergeWeapons(getRace());
 		allowedArmorIds.clear();
+
 		allowedArmorIds.addAll(getRace().getAllowedArmor());
-		//   allowedArmorIds.addAll(getGuild().getAllowedArmor());
+
+		//allowedArmorIds.addAll(getGuild().getAllowedArmor());
+
 		allowedArmorIds.addAll(getPrimaryClass().getConfigClass().getAllowedArmor());
 		return this;
 	}
 
 	@Override
-	public Set<ItemType> getAllowedArmor() {
+	public Set<RPGItemType> getAllowedArmor() {
 		return allowedArmorIds;
 	}
 
 	@Override
-	public boolean canWear(ItemStack armor) {
-		return getAllowedArmor().contains(armor.getItem());
+	public boolean canWear(RPGItemType armor) {
+		return getAllowedArmor().contains(armor);
 	}
 
 	@Override
