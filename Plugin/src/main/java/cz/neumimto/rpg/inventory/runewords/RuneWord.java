@@ -12,7 +12,7 @@ import java.util.*;
 public class RuneWord {
 
 	private String name;
-	private List<Rune> runes = new ArrayList<>();
+	private List<ItemUpgrade> runes = new ArrayList<>();
 	private int minLevel;
 	private Set<PlayerGroup> allowedGroups = new HashSet<>();
 
@@ -29,11 +29,11 @@ public class RuneWord {
 		this.name = name;
 	}
 
-	public List<Rune> getRunes() {
+	public List<ItemUpgrade> getRunes() {
 		return runes;
 	}
 
-	public void setRunes(List<Rune> runes) {
+	public void setRunes(List<ItemUpgrade> runes) {
 		this.runes = runes;
 	}
 

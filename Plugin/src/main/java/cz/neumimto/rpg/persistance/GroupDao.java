@@ -27,6 +27,7 @@ import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
+import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.groups.*;
 import cz.neumimto.rpg.players.properties.PropertyService;
@@ -248,9 +249,10 @@ public class GroupDao {
 		try {
 			List<String> list = c.getStringList("AllowedArmor");
 			list.stream().forEach(a -> {
-				Optional<ItemType> type = game.getRegistry().getType(ItemType.class, a);
+				String[] k = a.split(";");
+				Optional<ItemType> type = game.getRegistry().getType(ItemType.class, k[0]);
 				if (type.isPresent()) {
-					group.getAllowedArmor().add(type.get());
+					group.getAllowedArmor().add(new RPGItemType(type.get(), k.length == 1 ? null : k[1]));
 				} else logger.warn("Defined invalid itemtype  " + a + " in " + group.getName());
 			});
 		} catch (ConfigException e) {

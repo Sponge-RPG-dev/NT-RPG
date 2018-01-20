@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.commands;
 
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.inventory.runewords.Rune;
+import cz.neumimto.rpg.inventory.runewords.ItemUpgrade;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.ArgumentParseException;
 import org.spongepowered.api.command.args.CommandArgs;
@@ -26,7 +26,7 @@ public class RuneCommandElement extends CommandElement {
     @Override
     protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
         String skilllc = args.next();
-        Rune rune = NtRpgPlugin.GlobalScope.runewordService.getRune(skilllc);
+        ItemUpgrade rune = NtRpgPlugin.GlobalScope.runewordService.getRune(skilllc);
         if (rune == null) {
             throw args.createError(TextSerializers.FORMATTING_CODE.deserialize("&CUnknown rune &C\"" + skilllc + "\""));
         }

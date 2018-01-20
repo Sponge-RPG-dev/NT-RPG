@@ -159,7 +159,7 @@ public class CharacterService {
 	}
 
 	public void updateArmorRestrictions(IActiveCharacter character) {
-		Set<ItemType> allowedArmor = character.updateItemRestrictions().getAllowedArmor();
+		Set<RPGItemType> allowedArmor = character.updateItemRestrictions().getAllowedArmor();
 
 		EventCharacterArmorPostUpdate event = new EventCharacterArmorPostUpdate(character, allowedArmor);
 		game.getEventManager().post(event);

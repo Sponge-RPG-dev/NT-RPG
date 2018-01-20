@@ -32,10 +32,12 @@ import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.effects.common.def.ManaBarNotifier;
 import cz.neumimto.rpg.inventory.CannotUseItemReson;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
+import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
+import cz.neumimto.rpg.inventory.runewords.ItemUpgrade;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
@@ -334,9 +336,6 @@ public class VanilaMessaging implements IPlayerMessage {
 		List<Rune> r = new ArrayList<>(rwService.getRunes().values());
 		for (Rune rune : r) {
 			LiteralText.Builder b = Text.builder(rune.getName()).color(TextColors.GOLD);
-			if (rune.getLore() != null) {
-				b.append(Text.of(" - " + rune.getLore(), TextColors.WHITE, TextStyles.ITALIC));
-			}
 			content.add(b.build());
 		}
 		builder.contents(content);
@@ -389,18 +388,18 @@ public class VanilaMessaging implements IPlayerMessage {
 	@Override
 	public void displayGroupArmor(PlayerGroup g, Player target) {
 		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
-		List<List<ItemType>> rows = new ArrayList<>(5);
+		List<List<RPGItemType>> rows = new ArrayList<>(5);
 		for (int ki = 0; ki <= 5; ki++) {
 			rows.add(new ArrayList<>());
 		}
-		for (ItemType type : g.getAllowedArmor()) {
-			if (ItemStackUtils.isHelmet(type)) {
+		for (RPGItemType type : g.getAllowedArmor()) {
+			if (ItemStackUtils.isHelmet(type.getItemType())) {
 				rows.get(0).add(type);
-			} else if (ItemStackUtils.isChestplate(type)) {
+			} else if (ItemStackUtils.isChestplate(type.getItemType())) {
 				rows.get(1).add(type);
-			} else if (ItemStackUtils.isLeggings(type)) {
+			} else if (ItemStackUtils.isLeggings(type.getItemType())) {
 				rows.get(2).add(type);
-			} else if (ItemStackUtils.isBoots(type)) {
+			} else if (ItemStackUtils.isBoots(type.getItemType())) {
 				rows.get(3).add(type);
 			} else {
 				rows.get(4).add(type);
@@ -412,10 +411,13 @@ public class VanilaMessaging implements IPlayerMessage {
 
 		int x = 2;
 		int y = 0;
-		for (List<ItemType> row : rows) {
+		for (List<RPGItemType> row : rows) {
 			y = 0;
-			for (ItemType type : row) {
-				ItemStack armor = GuiHelper.itemStack(type);
+			for (RPGItemType type : row) {
+				ItemStack armor = GuiHelper.itemStack(type.getItemType());
+				if (type.getDisplayName() != null) {
+					armor.offer(Keys.DISPLAY_NAME, Text.of(type.getDisplayName()));
+				}
 				armor.offer(new MenuInventoryData(true));
 				i.query(new SlotPos(x, y)).offer(armor);
 				y++;
@@ -545,7 +547,7 @@ public class VanilaMessaging implements IPlayerMessage {
 			int x = 1;
 			int y = 4;
 			if (rw.getRunes().size() <= 7) {
-				for (Rune rune : rw.getRunes()) {
+				for (ItemUpgrade rune : rw.getRunes()) {
 					ItemStack is = rwService.toItemStack(rune);
 					is.offer(new MenuInventoryData(true));
 					i.query(new SlotPos(x, y)).offer(is);
@@ -555,7 +557,7 @@ public class VanilaMessaging implements IPlayerMessage {
 				ItemStack is = ItemStack.of(rwService.getAllowedRuneItemTypes().get(0), rw.getRunes().size());
 				is.offer(new MenuInventoryData(true));
 				StringBuilder s = null;
-				for (Rune rune : rw.getRunes()) {
+				for (ItemUpgrade rune : rw.getRunes()) {
 					s.append(rune.getName());
 				}
 				is.offer(Keys.DISPLAY_NAME, Text.of(s.toString(), TextColors.GOLD));

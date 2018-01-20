@@ -18,10 +18,10 @@
 
 package cz.neumimto.rpg.events.character;
 
+import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.impl.AbstractEvent;
-import org.spongepowered.api.item.ItemType;
 
 import java.util.Set;
 
@@ -30,10 +30,10 @@ import java.util.Set;
  */
 public class EventCharacterArmorPostUpdate extends AbstractEvent {
 	IActiveCharacter character;
-	Set<ItemType> armor;
+	Set<RPGItemType> armor;
 	private Cause cause = null;
 
-	public EventCharacterArmorPostUpdate(IActiveCharacter character, Set<ItemType> allowedArmor) {
+	public EventCharacterArmorPostUpdate(IActiveCharacter character, Set<RPGItemType> allowedArmor) {
 		this.character = character;
 		this.armor = allowedArmor;
 	}
@@ -42,7 +42,7 @@ public class EventCharacterArmorPostUpdate extends AbstractEvent {
 		return character;
 	}
 
-	public Set<ItemType> getArmor() {
+	public Set<RPGItemType> getArmor() {
 		return armor;
 	}
 

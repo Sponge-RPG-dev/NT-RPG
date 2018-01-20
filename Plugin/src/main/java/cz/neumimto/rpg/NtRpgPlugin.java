@@ -31,6 +31,7 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.configuration.Settings;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.InventoryService;
@@ -365,7 +366,7 @@ public class NtRpgPlugin {
 								} else {
 									map = gson.fromJson(s, EffectParams.class);
 								}
-								GlobalScope.inventorySerivce.addEffectsToItemStack(itemStack, effect.getName(), map);
+								itemStack = GlobalScope.inventorySerivce.addEffectsToItemStack(itemStack, effect.getName(), map);
 								player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
 								player.sendMessage(TextHelper.parse("Enchantment " + effect.getName() + " added"));
 							}
@@ -556,9 +557,10 @@ public class NtRpgPlugin {
 					Player player = args.<Player>getOne("player").get();
 					String data = args.<String>getOne("data").get();
 					Long k  = args.<Long>getOne("duration").get();
-						IGlobalEffect effect1 = args.<IGlobalEffect>getOne("data").get();
+					IGlobalEffect effect1 = args.<IGlobalEffect>getOne("data").get();
 					IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
-					//GlobalScope.effectService.addEffect(effect1.construct(character, k, data), character, InternalEffectSourceProvider.INSTANCE);
+					EffectParams params = gson.fromJson(data, EffectParams.class);
+					GlobalScope.effectService.addEffect(effect1.construct(character, k, params), character, InternalEffectSourceProvider.INSTANCE);
 					return CommandResult.success();
 				})
 				.build();

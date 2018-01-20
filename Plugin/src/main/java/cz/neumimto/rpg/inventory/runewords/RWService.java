@@ -8,7 +8,6 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.events.RebuildRunewordEvent;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.SocketType;
@@ -16,16 +15,12 @@ import cz.neumimto.rpg.inventory.data.ItemSocket;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemSocketsData;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemStackUpgradeData;
-import cz.neumimto.rpg.players.ExtendedNClass;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import cz.neumimto.rpg.utils.Utils;
 import cz.neumimto.rpg.utils.XORShiftRnd;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.data.key.KeyFactory;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.value.mutable.ListValue;
 import org.spongepowered.api.item.ItemType;
@@ -38,7 +33,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -104,7 +98,10 @@ public class RWService {
 		template.getEffects().keySet().stream().filter(Utils.not(effectService::isGlobalEffect)).forEach(e -> logger.warn("Runeword " + template + " defined non existing global effect:" + e));
 		RuneWord rw = new RuneWord();
 		rw.setName(template.getName());
-		rw.setRunes(template.getRunes().stream()./*filter(this::existsRune).*/map(this::getRune).collect(Collectors.toList()));
+		rw.setRunes(template.getRunes()
+				.stream()/*filter(this::existsRune).*/
+				.map(this::getRune)
+				.collect(Collectors.toList()));
 		rw.setMinLevel(template.getMinLevel());
 
 		rw.setAllowedItems(template.getAllowedItems()
@@ -300,7 +297,7 @@ public class RWService {
 	public void registerRuneword(RuneWord runeWord) {
 		runewords.put(runeWord.getName(), runeWord);
 		if (runeWord.getRunes() != null && !runeWord.getRunes().isEmpty()) {
-			combinations.put(runeWord.getRunes().stream().map(Rune::getName).collect(Collectors.joining("")), runeWord);
+			combinations.put(runeWord.getRunes().stream().map(ItemUpgrade::getName).collect(Collectors.joining("")), runeWord);
 		}
 	}
 
