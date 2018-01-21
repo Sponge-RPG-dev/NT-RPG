@@ -6,59 +6,45 @@ import cz.neumimto.rpg.inventory.SocketType;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ItemUpgrade {
+/**
+ * Created by NeumimTo on 21.1.2018.
+ */
+public class ItemUpgrade extends HashMap<String, Object> {
 
-    String name;
-    Map<String, EffectParams> map;
-    Map<String, Integer> attributes;
-    private SocketType socketType;
+    public static final String NAME = "NAME";
+    public static final String SOCKET_TYPE = "SOCKET_TYPE";
+    public static final String TYPE = "TYPE";
+    public static final String EFFECTS = "EFFECTS";
+    public static final String ATTRIBUTES = "ATTRIBUTES";
 
     public SocketType getSocketType() {
-        return socketType;
+        String s = (String) get(SOCKET_TYPE);
+        return s == null ? null : SocketType.valueOf(s);
     }
 
     public void setSocketType(SocketType socketType) {
-        this.socketType = socketType;
+        put(SOCKET_TYPE, socketType.name());
     }
 
     public String getName() {
-        return name;
+        return (String) get(NAME);
     }
 
     protected void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean hasAnyEffects() {
-        return map != null;
+        put(NAME, name);
     }
 
     public void addEffect(String k, EffectParams v) {
-        if (map == null)
-            map = new HashMap<>();
-        map.put(k, v);
+        Map<String, EffectParams> a = (Map<String, EffectParams>) get(EFFECTS);
+        if (a == null) {
+            a = new HashMap<>();
+            put(EFFECTS, a);
+        }
+        a.put(k, v);
     }
 
-
-    public void addAttribute(String k, EffectParams v) {
-        if (map == null)
-            map = new HashMap<>();
-        map.put(k, v);
+    public Map<String, EffectParams> getEffects() {
+        return (Map<String, EffectParams>) get(EFFECTS);
     }
 
-    public Map<String, EffectParams> getMap() {
-        return map;
-    }
-
-    public void setMap(Map<String, EffectParams> map) {
-        this.map = map;
-    }
-
-    public Map<String, Integer> getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(Map<String, Integer> attributes) {
-        this.attributes = attributes;
-    }
 }

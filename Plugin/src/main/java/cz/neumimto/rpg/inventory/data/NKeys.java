@@ -80,15 +80,15 @@ public class NKeys {
 				.build();
 		ITEM_EFFECTS = Key.builder()
 				.type(new TypeToken<MapValue<String, EffectParams>>() {})
-				.name("Item Effects")
-				.query(DataQuery.of(".","item_effects"))
 				.id("nt-rpg:item_effects")
+				.name("Item Effects")
+				.query(DataQuery.of('.', "ntrpg.itemeffects"))
 				.build();
 		ITEM_STACK_UPGRADE_CONTAINER = Key.builder()
 				.type(new TypeToken<ListValue<ItemSocket>>() {})
-				.query(DataQuery.of("ntrpg:itemsockets"))
-				.name("Item sockets")
-				.id("ntrpgitemstackupgradecontainer")
+				.id("nt-rpg:item_sockets")
+				.name("Item Sockets")
+				.query(DataQuery.of(".", "ntrpg.itemsockets"))
 				.build();
 		ITEM_PLAYER_ALLOWED_GROUPS = Key.builder()
 				.type(new TypeToken<MapValue<String, Integer>>() {})

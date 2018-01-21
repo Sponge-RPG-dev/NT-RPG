@@ -108,7 +108,6 @@ public class NtRpgPlugin {
 	@ConfigDir(sharedRoot = false)
 	private Path config;
 
-
 	@Inject
 	public Logger logger;
 
@@ -133,13 +132,13 @@ public class NtRpgPlugin {
 				.dataName("MenuItem")
 				.buildAndRegister(plugin);
 
-		DataRegistration.<EffectsData, EffectsData.Immutable>builder()
-				.manipulatorId("item_effects")
+
+		DataRegistration.builder()
 				.dataName("Item Effects")
+				.manipulatorId("item_effects")
 				.dataClass(EffectsData.class)
-				.dataImplementation(EffectsData.class)
 				.immutableClass(EffectsData.Immutable.class)
-				.builder(new EffectsData.Builder())
+				.builder(new EffectsData.EffectDataBuilder())
 				.buildAndRegister(plugin);
 
 
@@ -167,13 +166,14 @@ public class NtRpgPlugin {
 				.dataName("ItemRarityData")
 				.buildAndRegister(plugin);
 
-		DataRegistration.<ItemSocketsData, ItemSocketsData.Immutable>builder()
+		DataRegistration.builder()
+				.dataName("Item Sockets")
+				.manipulatorId("item_sockets")
 				.dataClass(ItemSocketsData.class)
 				.immutableClass(ItemSocketsData.Immutable.class)
 				.builder(new ItemSocketsData.Builder())
-				.manipulatorId("ntrpg-effectssocketdata")
-				.dataName("ItemSocketsData")
 				.buildAndRegister(plugin);
+
 
 		DataRegistration.<LoreDamageData, LoreDamageData.Immutable>builder()
 				.dataClass(LoreDamageData.class)

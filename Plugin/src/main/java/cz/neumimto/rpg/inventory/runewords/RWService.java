@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.value.mutable.ListValue;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
@@ -147,7 +146,7 @@ public class RWService {
 			if (itemSocket.getType() != SocketType.RUNE || itemSocket.getType() != SocketType.ANY) {
 				return null;
 			}
-			if (itemSocket.getContent() == null) {
+			if (itemSocket.getContent() == null || itemSocket.getContent().isEmpty()) {
 				return null;
 			}
 			runes.append(itemSocket.getContent().getName());
@@ -178,16 +177,18 @@ public class RWService {
 		ItemStack of = ItemStack.of(itemType,1);
 		of.offer(Keys.HIDE_ATTRIBUTES, true);
 		of.offer(Keys.HIDE_MISCELLANEOUS, true);
-		of.offer(new ItemStackUpgradeData(r));
-		return null;
+		ItemUpgrade itemUpgrade = new ItemUpgrade();
+		itemUpgrade.setName(r.getName());
+		itemUpgrade.setSocketType(SocketType.RUNE);
+		of.offer(new ItemStackUpgradeData(itemUpgrade));
+		return of;
 	}
 
 
 	public ItemStack createSocket(ItemStack itemStack, SocketType type) {
 		Optional<ItemSocketsData> opt = itemStack.getOrCreate(ItemSocketsData.class);
 		ItemSocketsData itemSocketsData = opt.orElse(new ItemSocketsData());
-		ListValue<ItemSocket> listValue = itemSocketsData.getListValue();
-		listValue.add(new ItemSocket(type));
+		itemSocketsData.addElement(new ItemSocket(type, new ItemUpgrade()));
 		itemStack.offer(itemSocketsData);
 		inventoryService.updateLore(itemStack);
 		return itemStack;

@@ -10,8 +10,9 @@ public class ItemSocket {
     public ItemSocket() {
     }
 
-    public ItemSocket(SocketType type) {
+    public ItemSocket(SocketType type, ItemUpgrade content) {
         this.type = type;
+        this.content = content;
     }
 
     public SocketType getType() {
@@ -29,6 +30,4 @@ public class ItemSocket {
     public void setContent(ItemUpgrade content) {
         this.content = content;
     }
-
-
 }

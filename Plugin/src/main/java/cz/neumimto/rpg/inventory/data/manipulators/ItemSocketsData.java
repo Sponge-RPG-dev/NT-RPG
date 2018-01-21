@@ -13,7 +13,6 @@ import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,14 +43,17 @@ public class ItemSocketsData extends AbstractListData<ItemSocket, ItemSocketsDat
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Optional<ItemSocketsData> from(DataContainer container) {
-        if (!container.contains(NKeys.ITEM_STACK_UPGRADE_CONTAINER)) {
+        return from((DataView) container);
+    }
+
+    public Optional<ItemSocketsData> from(DataView view) {
+        if (view.contains(NKeys.ITEM_STACK_UPGRADE_CONTAINER.getQuery())) {
+            setValue((List<ItemSocket>) view.getList(NKeys.ITEM_STACK_UPGRADE_CONTAINER.getQuery()).get());
+            return Optional.of(this);
+        } else {
             return Optional.empty();
         }
-
-        setValue((List<ItemSocket>) container.getMap(NKeys.ITEM_STACK_UPGRADE_CONTAINER.getQuery()).get());
-        return Optional.of(this);
     }
 
     @Override
@@ -66,46 +68,42 @@ public class ItemSocketsData extends AbstractListData<ItemSocket, ItemSocketsDat
 
     @Override
     public int getContentVersion() {
-        return Builder.CONTENT_VERSION;
+        return 1;
+    }
+
+    @Override
+    public DataContainer toContainer() {
+        return super.toContainer()
+                .set(NKeys.ITEM_STACK_UPGRADE_CONTAINER.getQuery(), getValue());
     }
 
 
     public class Immutable extends AbstractImmutableListData<ItemSocket, Immutable, ItemSocketsData> {
 
-        public Immutable(List<ItemSocket> sockets) {
-            super(sockets, NKeys.ITEM_STACK_UPGRADE_CONTAINER);
-        }
 
-
-        public Immutable() {
-            this(Collections.emptyList());
-        }
-
-        @Override
-        public int getContentVersion() {
-            return ItemSocketsData.Builder.CONTENT_VERSION;
-        }
-
-        @Override
-        public DataContainer toContainer() {
-            DataContainer dataContainer = super.toContainer();
-            dataContainer.set(NKeys.ITEM_STACK_UPGRADE_CONTAINER,getValue());
-            return dataContainer;
+        public Immutable(List<ItemSocket> value) {
+            super(value, NKeys.ITEM_STACK_UPGRADE_CONTAINER);
         }
 
         @Override
         public ItemSocketsData asMutable() {
             return new ItemSocketsData(getValue());
         }
+
+        @Override
+        public int getContentVersion() {
+            return 1;
+        }
+
+        @Override
+        public DataContainer toContainer() {
+            return super.toContainer().set(NKeys.ITEM_STACK_UPGRADE_CONTAINER.getQuery(), getValue());
+        }
     }
 
-    public static class Builder extends AbstractDataBuilder<ItemSocketsData>
-            implements DataManipulatorBuilder<ItemSocketsData, ItemSocketsData.Immutable> {
-
-        public static final int CONTENT_VERSION = 1;
-
+    public static class Builder extends AbstractDataBuilder<ItemSocketsData> implements DataManipulatorBuilder<ItemSocketsData, Immutable> {
         public Builder() {
-            super(ItemSocketsData.class, CONTENT_VERSION);
+            super(ItemSocketsData.class, 1);
         }
 
         @Override
@@ -115,25 +113,13 @@ public class ItemSocketsData extends AbstractListData<ItemSocket, ItemSocketsDat
 
         @Override
         public Optional<ItemSocketsData> createFrom(DataHolder dataHolder) {
+
             return create().fill(dataHolder);
         }
 
         @Override
-        @SuppressWarnings("unchecked")
         protected Optional<ItemSocketsData> buildContent(DataView container) throws InvalidDataException {
-            if (container.contains(NKeys.ITEM_STACK_UPGRADE_CONTAINER)) {
-
-                List<ItemSocket> map = (List<ItemSocket>) container.getMap(NKeys.ITEM_STACK_UPGRADE_CONTAINER.getQuery()).get();
-                ItemSocketsData socketsData = new ItemSocketsData(map);
-
-                container.getSerializable(NKeys.ITEM_STACK_UPGRADE_CONTAINER.getQuery(), ItemSocketsData.class)
-                .ifPresent(a -> {
-                    socketsData.set(NKeys.ITEM_STACK_UPGRADE_CONTAINER, a.getValue());
-                });
-
-                return Optional.of(socketsData);
-            }
-            return Optional.empty();
+            return create().from(container);
         }
     }
 }
