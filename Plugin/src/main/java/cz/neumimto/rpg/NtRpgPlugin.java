@@ -38,6 +38,7 @@ import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.SocketType;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
+import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.manipulators.*;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
@@ -114,29 +115,27 @@ public class NtRpgPlugin {
 
 	@Listener
 	public void preinit(GamePreInitializationEvent e) {
-
+		new NKeys();
 		DataRegistration.<InventoryCommandItemMenuData, InventoryCommandItemMenuData.Immutable>builder()
 				.dataClass(InventoryCommandItemMenuData.class)
 				.immutableClass(InventoryCommandItemMenuData.Immutable.class)
 				.builder(new InventoryCommandItemMenuData.Builder())
-				.manipulatorId("ntrpg-custominventory")
+				.manipulatorId("nt-rpg-custominventory")
 				.dataName("CustomInventory")
 				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
-
 		DataRegistration.<MenuInventoryData, MenuInventoryData.Immutable>builder()
 				.dataClass(MenuInventoryData.class)
 				.immutableClass(MenuInventoryData.Immutable.class)
 				.builder(new MenuInventoryData.Builder())
-				.manipulatorId("ntrpg-menuinventory")
+				.manipulatorId("nt-rpg-menuinventory")
 				.dataName("MenuItem")
 				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
-
 
 		DataRegistration.<EffectsData, EffectsData.Immutable>builder()
 				.dataClass(EffectsData.class)
 				.immutableClass(EffectsData.Immutable.class)
 				.builder(new EffectsData.Builder())
-				.manipulatorId("ntrpg-effectsitemdata")
+				.manipulatorId("item_effects")
 				.dataName("EffectsData")
 				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
 
@@ -145,7 +144,7 @@ public class NtRpgPlugin {
 				.dataClass(ItemAttributesData.class)
 				.immutableClass(ItemAttributesData.Immutable.class)
 				.builder(new ItemAttributesData.Builder())
-				.manipulatorId("ntrpg-effectsitemdata")
+				.manipulatorId("ntrpg-itemattributes")
 				.dataName("ItemAttributesData")
 				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
 
@@ -153,7 +152,7 @@ public class NtRpgPlugin {
 				.dataClass(ItemLevelData.class)
 				.immutableClass(ItemLevelData.Immutable.class)
 				.builder(new ItemLevelData.Builder())
-				.manipulatorId("ntrpg-effectsitemdata")
+				.manipulatorId("ntrpg-itemleveldata")
 				.dataName("ItemLevelData")
 				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
 
@@ -161,7 +160,7 @@ public class NtRpgPlugin {
 				.dataClass(ItemRarityData.class)
 				.immutableClass(ItemRarityData.Immutable.class)
 				.builder(new ItemRarityData.Builder())
-				.manipulatorId("ntrpg-effectsitemdata")
+				.manipulatorId("ntrpg-rarity")
 				.dataName("ItemRarityData")
 				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
 
@@ -169,7 +168,7 @@ public class NtRpgPlugin {
 				.dataClass(ItemSocketsData.class)
 				.immutableClass(ItemSocketsData.Immutable.class)
 				.builder(new ItemSocketsData.Builder())
-				.manipulatorId("ntrpg-effectsitemdata")
+				.manipulatorId("ntrpg-effectssocketdata")
 				.dataName("ItemSocketsData")
 				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
 
@@ -177,7 +176,7 @@ public class NtRpgPlugin {
 				.dataClass(LoreDamageData.class)
 				.immutableClass(LoreDamageData.Immutable.class)
 				.builder(new LoreDamageData.Builder())
-				.manipulatorId("ntrpg-effectsitemdata")
+				.manipulatorId("ntrpg-loredamage")
 				.dataName("LoreDamageData")
 				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
 
@@ -185,7 +184,7 @@ public class NtRpgPlugin {
 				.dataClass(LoreDurabilityData.class)
 				.immutableClass(LoreDurabilityData.Immutable.class)
 				.builder(new LoreDurabilityData.Builder())
-				.manipulatorId("ntrpg-effectsitemdata")
+				.manipulatorId("ntrpg-loredurability")
 				.dataName("LoreDurabilityData")
 				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
 
@@ -193,7 +192,7 @@ public class NtRpgPlugin {
 				.dataClass(MinimalItemRequirementsData.class)
 				.immutableClass(MinimalItemRequirementsData.Immutable.class)
 				.builder(new MinimalItemRequirementsData.Builder())
-				.manipulatorId("ntrpg-effectsitemdata")
+				.manipulatorId("ntrpg-minimalrequirements")
 				.dataName("MinimalItemRequirementsData")
 				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
 
@@ -201,18 +200,17 @@ public class NtRpgPlugin {
 				.dataClass(SectionDelimiterData.class)
 				.immutableClass(SectionDelimiterData.Immutable.class)
 				.builder(new SectionDelimiterData.Builder())
-				.manipulatorId("ntrpg-effectsitemdata")
+				.manipulatorId("ntrpg-sectiondelimiter")
 				.dataName("SectionDelimiterData")
 				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
 
-		DataRegistration.<SectionDelimiterData, SectionDelimiterData.Immutable>builder()
+		DataRegistration.<ItemStackUpgradeData, ItemStackUpgradeData.Immutable>builder()
 				.dataClass(ItemStackUpgradeData.class)
 				.immutableClass(ItemStackUpgradeData.Immutable.class)
 				.builder(new ItemStackUpgradeData.Builder())
 				.manipulatorId("ntrpg-itemstackupgrade")
 				.dataName("ItemStackUpgrade")
 				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
-
 
 	}
 

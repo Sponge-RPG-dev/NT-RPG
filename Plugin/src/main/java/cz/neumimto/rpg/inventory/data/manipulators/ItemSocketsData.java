@@ -99,7 +99,9 @@ public class ItemSocketsData extends AbstractListData<ItemSocket, ItemSocketsDat
         }
     }
 
-    public static class Builder extends AbstractDataBuilder<ItemSocketsData> implements DataManipulatorBuilder<ItemSocketsData, ItemSocketsData.Immutable> {
+    public static class Builder extends AbstractDataBuilder<ItemSocketsData>
+            implements DataManipulatorBuilder<ItemSocketsData, ItemSocketsData.Immutable> {
+
         public static final int CONTENT_VERSION = 1;
 
         public Builder() {

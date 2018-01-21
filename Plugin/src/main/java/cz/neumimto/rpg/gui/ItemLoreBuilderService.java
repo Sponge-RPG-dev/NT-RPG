@@ -189,7 +189,9 @@ public class ItemLoreBuilderService {
             for (Map.Entry<String, EffectParams> entry : a.entrySet()) {
                 if (entry.getValue() == null) {
                     t.add(Text.builder(entry.getKey()).color(effectName).append(Text.NEW_LINE).build());
-                } else if (entry.getValue().size() == 1) {
+                } else if (entry.getValue().size() == 1
+                        && entry.getKey()
+                        .equalsIgnoreCase(entry.getValue().entrySet().stream().findFirst().get().getKey())) {
                     t.add(Text.builder(entry.getKey()).color(effectName)
                             .append(Text.builder(": ").color(doubleColon).build())
                             .append(Text.builder(entry.getValue().get(entry.getKey())).color(value).build())

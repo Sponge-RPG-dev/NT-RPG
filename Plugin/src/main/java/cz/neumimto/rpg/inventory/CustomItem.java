@@ -3,6 +3,7 @@ package cz.neumimto.rpg.inventory;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IGlobalEffect;
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 
@@ -29,8 +30,14 @@ public class CustomItem {
 	//todo move to some kind of builder/service
 	public CustomItem(ItemStack itemStack) {
 		this.itemStack = itemStack.createSnapshot();
-		this.effects = NtRpgPlugin.GlobalScope.inventorySerivce.getItemEffects(itemStack);
-		this.level = NtRpgPlugin.GlobalScope.inventorySerivce.getItemLevel(itemStack);
+		if (itemStack.getType() == ItemTypes.NONE) {
+			this.effects = new HashMap<>();
+			this.level = 0;
+		} else {
+			this.effects = NtRpgPlugin.GlobalScope.inventorySerivce.getItemEffects(itemStack);
+			this.level = NtRpgPlugin.GlobalScope.inventorySerivce.getItemLevel(itemStack);
+		}
+
 	}
 
 	public int getLevel() {

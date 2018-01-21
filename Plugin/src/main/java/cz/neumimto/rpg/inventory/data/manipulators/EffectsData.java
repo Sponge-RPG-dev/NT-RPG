@@ -142,7 +142,9 @@ public class EffectsData extends AbstractMappedData<String, EffectParams, Effect
         }
     }
 
-    public static class Builder extends AbstractDataBuilder<EffectsData> implements DataManipulatorBuilder<EffectsData, EffectsData.Immutable> {
+    public static class Builder extends AbstractDataBuilder<EffectsData>
+            implements DataManipulatorBuilder<EffectsData, EffectsData.Immutable> {
+
         public static final int CONTENT_VERSION = 1;
 
         public Builder() {

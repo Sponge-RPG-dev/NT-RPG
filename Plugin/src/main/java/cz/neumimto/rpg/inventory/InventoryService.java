@@ -795,9 +795,10 @@ public class InventoryService {
 	}
 
 	public ItemStack updateLore(ItemStack is) {
-		List<Text> texts = new ArrayList<>();
 		ItemLoreBuilderService.ItemLoreBuilder itemLoreBuilder = ItemLoreBuilderService.create(is, new ArrayList<Text>());
 		is.offer(Keys.ITEM_LORE, itemLoreBuilder.buildLore());
+		is.offer(Keys.HIDE_MISCELLANEOUS, true);
+		is.offer(Keys.HIDE_ATTRIBUTES, true);
 		return is;
 	}
 

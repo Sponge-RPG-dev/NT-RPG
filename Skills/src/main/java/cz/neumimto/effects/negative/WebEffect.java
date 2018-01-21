@@ -6,7 +6,6 @@ import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.world.BlockChangeFlag;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -43,8 +42,7 @@ public class WebEffect extends EffectBase<Long> {
 				if (location.getExtent().getBlock(vector3i).getType() == BlockTypes.AIR) {
 					location.getExtent().setBlock(
 							vector3i,
-							build,
-							BlockChangeFlag.NONE
+							build
 					);
 
 				}
@@ -63,8 +61,7 @@ public class WebEffect extends EffectBase<Long> {
 			if (block.getType() == BlockTypes.WEB) {
 				location.getExtent().setBlock(
 						vector3i,
-						build,
-						BlockChangeFlag.NONE
+						build
 				);
 			}
 		}
