@@ -80,8 +80,8 @@ public class NKeys {
 				.build();
 		ITEM_EFFECTS = Key.builder()
 				.type(new TypeToken<MapValue<String, EffectParams>>() {})
-				.name("ItemEffects")
-				.query(DataQuery.of("itemeffects"))
+				.name("Item Effects")
+				.query(DataQuery.of(".","item_effects"))
 				.id("nt-rpg:item_effects")
 				.build();
 		ITEM_STACK_UPGRADE_CONTAINER = Key.builder()

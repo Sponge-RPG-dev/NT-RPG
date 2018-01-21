@@ -72,6 +72,7 @@ public class EffectsData extends AbstractMappedData<String, EffectParams, Effect
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Optional<EffectsData> from(DataContainer container) {
         if (!container.contains(NKeys.ITEM_EFFECTS)) {
             return Optional.empty();
@@ -183,6 +184,7 @@ public class EffectsData extends AbstractMappedData<String, EffectParams, Effect
                 return Optional.of(effectsData);
             }
             return Optional.empty();
+
         }
     }
 }
