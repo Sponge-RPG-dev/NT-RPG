@@ -122,8 +122,10 @@ public class ItemLoreBuilderService {
                             .append(itemSocket.getContent() == null ? TextHelper.parse(Localization.SOCKET_EMPTY) : TextHelper.parse(itemSocket.getContent().getName()))
                             .build()
                     );
-                    itemEffectsToTextList(itemSocket.getContent().getMap());
-
+                    Map<String, EffectParams> effects = itemSocket.getContent().getEffects();
+                    if (effects != null) {
+                        itemEffectsToTextList(effects);
+                    }
                 }
             });
         }

@@ -251,7 +251,6 @@ public class RWService {
 			if (PluginConfig.AUTOREMOVE_NONEXISTING_RUNEWORDS) {
 				i.offer(Keys.DISPLAY_NAME, Text.of(i.getType().getName()));
 				i.offer(Keys.ITEM_LORE, Collections.<Text>emptyList());
-				//i.offer(new CustomItemData());
 			}
 			return i;
 		}
