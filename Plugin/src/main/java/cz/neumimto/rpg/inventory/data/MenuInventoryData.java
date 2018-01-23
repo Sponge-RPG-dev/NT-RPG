@@ -35,21 +35,25 @@ public class MenuInventoryData extends AbstractBooleanData<MenuInventoryData, Me
 		return Optional.of(this);
 	}
 
+
 	@Override
 	public Optional<MenuInventoryData> from(DataContainer container) {
-		Optional<Boolean> s = container.getBoolean(NKeys.MENU_INVENTORY.getQuery());
-		if (s.isPresent()) {
-			setValue(s.get());
+		return from((DataView) container);
+	}
+
+	public Optional<MenuInventoryData> from(DataView view) {
+		if (view.contains(NKeys.MENU_INVENTORY.getQuery())) {
+			setValue(view.getBoolean(NKeys.MENU_INVENTORY.getQuery()).get());
 			return Optional.of(this);
 		}
 		return Optional.empty();
+
 	}
+
 
 	@Override
 	public DataContainer toContainer() {
-		DataContainer container = super.toContainer();
-		container.set(NKeys.MENU_INVENTORY, getValue());
-		return container;
+		return super.toContainer().set(NKeys.MENU_INVENTORY, getValue());
 	}
 
 	@Override
@@ -100,7 +104,7 @@ public class MenuInventoryData extends AbstractBooleanData<MenuInventoryData, Me
 
 		@Override
 		protected Optional<MenuInventoryData> buildContent(DataView container) throws InvalidDataException {
-			return create().from(container.getContainer());
+			return create().from(container);
 		}
 	}
 }

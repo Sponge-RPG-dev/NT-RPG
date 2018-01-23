@@ -38,16 +38,18 @@ public class NKeys {
 	public NKeys() {
 		COMMAND = Key.builder()
 				.type(new TypeToken<Value<String>>() {})
-				.name("Command")
-				.query(DataQuery.of("ntrpg:command"))
-				.id("ntrpgcommand")
+				.name("Custom Inventory Command")
+				.query(DataQuery.of(".", "ntrpg.inventory.command"))
+				.id("nt-rpg:custom_inventory_command")
 				.build();
+
 		MENU_INVENTORY = Key.builder()
 				.type(new TypeToken<Value<Boolean>>() {	})
-				.query(DataQuery.of("ntrpg:menuinventory"))
+				.query(DataQuery.of(".", "ntrpg.inventory.menu"))
 				.name("Inventory menu")
-				.id("ntrpginventory")
+				.id("nt-rpg:menu_inventory")
 				.build();
+
 		 SKILLTREE_CONTROLLS = Key.builder()
 				.type(new TypeToken<Value<String>>() {})
 				.query(DataQuery.of( "ntrpg:skilltreecontrolls"))

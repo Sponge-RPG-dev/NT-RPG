@@ -118,18 +118,19 @@ public class NtRpgPlugin {
 	public void preinit(GamePreInitializationEvent e) {
 		new NKeys();
 		DataRegistration.<InventoryCommandItemMenuData, InventoryCommandItemMenuData.Immutable>builder()
+				.manipulatorId("custom_inventory_command")
+				.dataName("Custom Inventory Command")
 				.dataClass(InventoryCommandItemMenuData.class)
 				.immutableClass(InventoryCommandItemMenuData.Immutable.class)
-				.builder(new InventoryCommandItemMenuData.Builder())
-				.manipulatorId("nt-rpg-custominventory")
-				.dataName("CustomInventory")
+				.builder(new InventoryCommandItemMenuData.InventoryCommandItemMenuDataBuilder())
 				.buildAndRegister(plugin);
+
 		DataRegistration.<MenuInventoryData, MenuInventoryData.Immutable>builder()
+				.manipulatorId("menu_inventory")
+				.dataName("Menu Item")
 				.dataClass(MenuInventoryData.class)
 				.immutableClass(MenuInventoryData.Immutable.class)
 				.builder(new MenuInventoryData.Builder())
-				.manipulatorId("nt-rpg-menuinventory")
-				.dataName("MenuItem")
 				.buildAndRegister(plugin);
 
 

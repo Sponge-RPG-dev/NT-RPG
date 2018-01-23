@@ -19,39 +19,34 @@ import java.util.Optional;
  * Created by NeumiMTo on 13.11.2016.
  */
 public class InventoryCommandItemMenuData extends AbstractSingleData<String, InventoryCommandItemMenuData, InventoryCommandItemMenuData.Immutable> {
-	public InventoryCommandItemMenuData(String s) {
-		super(s, NKeys.COMMAND);
-	}
 
-	@Override
-	protected Value<?> getValueGetter() {
-		return Sponge.getRegistry().getValueFactory().createValue(NKeys.COMMAND, getValue());
+	public InventoryCommandItemMenuData(String value) {
+		super(value, NKeys.COMMAND);
 	}
 
 	@Override
 	public Optional<InventoryCommandItemMenuData> fill(DataHolder dataHolder, MergeFunction overlap) {
-		Optional<InventoryCommandItemMenuData> data_ = dataHolder.get(InventoryCommandItemMenuData.class);
-		if (data_.isPresent()) {
-			InventoryCommandItemMenuData data = data_.get();
-			InventoryCommandItemMenuData finalData = overlap.merge(this, data);
-			setValue(finalData.getValue());
+		Optional<InventoryCommandItemMenuData> otherData_ = dataHolder.get(InventoryCommandItemMenuData.class);
+		if (otherData_.isPresent()) {
+			InventoryCommandItemMenuData otherData = otherData_.get();
+			InventoryCommandItemMenuData finalData = overlap.merge(this, otherData);
+			finalData.setValue(otherData.getValue());
 		}
 		return Optional.of(this);
 	}
 
 	@Override
 	public Optional<InventoryCommandItemMenuData> from(DataContainer container) {
-		Optional<Object> s = container.get(NKeys.COMMAND.getQuery());
-		if (s.isPresent()) {
-			setValue((String) s.get());
+		return from((DataView) container);
+	}
+
+	public Optional<InventoryCommandItemMenuData> from(DataView view) {
+		if (view.contains(NKeys.COMMAND.getQuery())) {
+			setValue(view.getString(NKeys.COMMAND.getQuery()).get());
 			return Optional.of(this);
 		}
 		return Optional.empty();
-	}
 
-	@Override
-	public DataContainer toContainer() {
-		return super.toContainer().set(NKeys.COMMAND, getValue());
 	}
 
 	@Override
@@ -60,8 +55,13 @@ public class InventoryCommandItemMenuData extends AbstractSingleData<String, Inv
 	}
 
 	@Override
+	protected Value<?> getValueGetter() {
+		return Sponge.getRegistry().getValueFactory().createValue(NKeys.COMMAND, getValue());
+	}
+
+	@Override
 	public Immutable asImmutable() {
-		return new Immutable(getValue());
+		return new InventoryCommandItemMenuData.Immutable(getValue());
 	}
 
 	@Override
@@ -69,9 +69,17 @@ public class InventoryCommandItemMenuData extends AbstractSingleData<String, Inv
 		return 1;
 	}
 
+	@Override
+	public DataContainer toContainer() {
+		return super.toContainer()
+				.set(NKeys.COMMAND.getQuery(), getValue());
+	}
+
 	public static class Immutable extends AbstractImmutableSingleData<String, Immutable, InventoryCommandItemMenuData> {
-		public Immutable(String s) {
-			super(s, NKeys.COMMAND);
+
+
+		public Immutable(String value) {
+			super(value, NKeys.COMMAND);
 		}
 
 		@Override
@@ -85,18 +93,19 @@ public class InventoryCommandItemMenuData extends AbstractSingleData<String, Inv
 		}
 
 		@Override
-		public DataContainer toContainer() {
-			return super.toContainer().set(NKeys.COMMAND, getValue());
-		}
-
-		@Override
 		public int getContentVersion() {
 			return 1;
 		}
+
+		@Override
+		public DataContainer toContainer() {
+			return super.toContainer().set(NKeys.COMMAND.getQuery(), getValue());
+		}
 	}
 
-	public static class Builder extends AbstractDataBuilder<InventoryCommandItemMenuData> implements DataManipulatorBuilder<InventoryCommandItemMenuData, Immutable> {
-		public Builder() {
+	public static class InventoryCommandItemMenuDataBuilder extends AbstractDataBuilder<InventoryCommandItemMenuData>
+			implements DataManipulatorBuilder<InventoryCommandItemMenuData, Immutable> {
+		public InventoryCommandItemMenuDataBuilder() {
 			super(InventoryCommandItemMenuData.class, 1);
 		}
 
@@ -112,8 +121,7 @@ public class InventoryCommandItemMenuData extends AbstractSingleData<String, Inv
 
 		@Override
 		protected Optional<InventoryCommandItemMenuData> buildContent(DataView container) throws InvalidDataException {
-			return create().from(container.getContainer());
+			return create().from(container);
 		}
 	}
-
 }
