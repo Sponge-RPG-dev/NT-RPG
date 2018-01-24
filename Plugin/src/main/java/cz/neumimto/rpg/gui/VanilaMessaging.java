@@ -70,6 +70,7 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.property.SlotPos;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.api.service.pagination.PaginationList;
@@ -264,12 +265,12 @@ public class VanilaMessaging implements IPlayerMessage {
 		ItemStack of = GuiHelper.itemStack(ItemTypes.DIAMOND);
 		of.offer(new InventoryCommandItemMenuData("character set class " + cc.getName()));
 		of.offer(Keys.DISPLAY_NAME, TextHelper.parse(Localization.CONFIRM));
-		i.query(new SlotPos(8, 0)).offer(of);
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 0))).offer(of);
 
 		ItemStack tree = GuiHelper.itemStack(ItemTypes.SAPLING);
 		tree.offer(Keys.DISPLAY_NAME, TextHelper.parse(Localization.SKILLTREE));
 		tree.offer(new InventoryCommandItemMenuData("skilltree " + cc.getName()));
-		i.query(new SlotPos(4,3)).offer(tree);
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(4,3))).offer(tree);
 
 		character.getPlayer().openInventory(i);
 	}
@@ -407,7 +408,7 @@ public class VanilaMessaging implements IPlayerMessage {
 		}
 
 		ItemStack of = GuiHelper.back(g);
-		i.query(new SlotPos(0, 0)).offer(of);
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(of);
 
 		int x = 2;
 		int y = 0;
@@ -419,7 +420,7 @@ public class VanilaMessaging implements IPlayerMessage {
 					armor.offer(Keys.DISPLAY_NAME, Text.of(type.getDisplayName()));
 				}
 				armor.offer(new MenuInventoryData(true));
-				i.query(new SlotPos(x, y)).offer(armor);
+				i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(x, y))).offer(armor);
 				y++;
 			}
 			x++;
@@ -433,7 +434,7 @@ public class VanilaMessaging implements IPlayerMessage {
 
 
 		ItemStack of = back(g);
-		i.query(new SlotPos(0, 0)).offer(of);
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(of);
 
 		TreeSet<ConfigRPGItemType> treeSet = new TreeSet<>();
 		for (Map.Entry<ItemType, Set<ConfigRPGItemType>> entry : g.getWeapons().entrySet()) {
@@ -455,7 +456,7 @@ public class VanilaMessaging implements IPlayerMessage {
 			ItemStack of = GuiHelper.itemStack(ItemTypes.DIAMOND);
 			of.offer(new InventoryCommandItemMenuData("character set race " + race.getName()));
 			of.offer(Keys.DISPLAY_NAME, Text.of(Localization.CONFIRM));
-			i.query(new SlotPos(8, 0)).offer(of);
+			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 0))).offer(of);
 		}
 		target.getPlayer().openInventory(i);
 	}
@@ -469,14 +470,14 @@ public class VanilaMessaging implements IPlayerMessage {
 	@Override
 	public void displayAttributes(Player player, PlayerGroup group) {
 		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
-		i.query(new SlotPos(0, 0)).offer(back(group));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back(group));
 
 		int x = 1;
 		int y = 1;
 		for (Map.Entry<ICharacterAttribute, Integer> a : group.getStartingAttributes().entrySet()) {
 			ICharacterAttribute key = a.getKey();
 			Integer value = a.getValue();
-			i.query(new SlotPos(x, y)).offer(createAttributeItem(key, value));
+			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(x, y))).offer(createAttributeItem(key, value));
 			//somehow format them in square-like structure
 			if (x == 7) {
 				x = 1;
@@ -494,7 +495,7 @@ public class VanilaMessaging implements IPlayerMessage {
 		String cmd = infoCommand.getAliases().get(0);
 		if (linkToRWList) {
 			if (character.getPlayer().hasPermission(CommandPermissions.SHOW_RUNEWORD_LIST)) {
-				i.query(new SlotPos(0, 0)).offer(back("runes", Localization.RUNE_LIST));
+				i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back("runes", Localization.RUNE_LIST));
 			}
 		}
 
@@ -540,7 +541,7 @@ public class VanilaMessaging implements IPlayerMessage {
 		}
 
 		for (int q = 0; q < commands.size(); q++) {
-			i.query(new SlotPos(q + 2, 2)).offer(commands.get(q));
+			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(q + 2, 2))).offer(commands.get(q));
 		}
 
 		if (character.getPlayer().hasPermission(CommandPermissions.SWOW_RUNEWORD_COMBINATION)) {
@@ -550,7 +551,7 @@ public class VanilaMessaging implements IPlayerMessage {
 				for (ItemUpgrade rune : rw.getRunes()) {
 					ItemStack is = rwService.toItemStack(rune);
 					is.offer(new MenuInventoryData(true));
-					i.query(new SlotPos(x, y)).offer(is);
+					i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(x, y))).offer(is);
 					x++;
 				}
 			} else {
@@ -561,7 +562,7 @@ public class VanilaMessaging implements IPlayerMessage {
 					s.append(rune.getName());
 				}
 				is.offer(Keys.DISPLAY_NAME, Text.of(s.toString(), TextColors.GOLD));
-				i.query(new SlotPos(x, y)).offer(is);
+				i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(x, y))).offer(is);
 			}
 		}
 
@@ -587,11 +588,11 @@ public class VanilaMessaging implements IPlayerMessage {
 	@Override
 	public void displayRunewordAllowedItems(IActiveCharacter character, RuneWord rw) {
 		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
-		i.query(new SlotPos(0, 0)).offer(back("runeword " + rw.getName(), Localization.RUNEWORD_DETAILS_MENU));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back("runeword " + rw.getName(), Localization.RUNEWORD_DETAILS_MENU));
 		int x = 1;
 		int y = 2;
 		for (ItemType type : rw.getAllowedItems()) {
-			i.query(new SlotPos(x, y)).offer(GuiHelper.itemStack(type));
+			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(x, y))).offer(GuiHelper.itemStack(type));
 			if (x == 7) {
 				x = 1;
 				y++;
@@ -605,7 +606,7 @@ public class VanilaMessaging implements IPlayerMessage {
 	private Inventory displayGroupRequirements(IActiveCharacter character, RuneWord rw, Set<PlayerGroup> groups) {
 		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
 		String cmd = infoCommand.getAliases().get(0);
-		i.query(new SlotPos(0, 0)).offer(back("runeword " + rw.getName(), Localization.RUNEWORD_DETAILS_MENU));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back("runeword " + rw.getName(), Localization.RUNEWORD_DETAILS_MENU));
 
 		List<ItemStack> list = new ArrayList<>();
 		for (PlayerGroup playerGroup : groups) {
@@ -614,7 +615,7 @@ public class VanilaMessaging implements IPlayerMessage {
 		int x = 1;
 		int y = 2;
 		for (ItemStack itemStack : list) {
-			i.query(new SlotPos(x, y)).offer(itemStack);
+			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(x, y))).offer(itemStack);
 			if (x == 7) {
 				x = 1;
 				y++;
@@ -840,12 +841,12 @@ public class VanilaMessaging implements IPlayerMessage {
 		int rows = skillTreeMap.length;
 		SkillTreeViewModel.InteractiveMode interactiveMode = skillTreeViewModel.getInteractiveMode();
 		ItemStack md = GuiHelper.interactiveModeToitemStack(character, interactiveMode);
-		skillTreeInventoryViewTemplate.query(new SlotPos(8,1)).clear();
-		skillTreeInventoryViewTemplate.query(new SlotPos(8,1)).offer(md);
+		skillTreeInventoryViewTemplate.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8,1))).clear();
+		skillTreeInventoryViewTemplate.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8,1))).offer(md);
 		for (int k = -3; k <= 3; k++) { //x
 			for (int l = -3; l <= 3; l++) { //y
 				SlotPos slotPos = new SlotPos(l + 3, k + 3);
-				Inventory query = skillTreeInventoryViewTemplate.query(slotPos);
+				Inventory query = skillTreeInventoryViewTemplate.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(slotPos)));
 				query.clear();
 				if (x + k >= 0 && x + k < rows) {
 					if (l + y >= 0 && l + y < columns) {
@@ -884,13 +885,13 @@ public class VanilaMessaging implements IPlayerMessage {
 					} else if (l + y == -1 || l + y == columns +1) {
 					//	SlotPos slotPos = new SlotPos(l + 3, k + 3);
 						skillTreeInventoryViewTemplate
-								.query(slotPos)
+								.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(slotPos)))
 								.offer(GuiHelper.createSkillTreeInventoryMenuBoundary());
 					}
 				} else if (x+k == -1 || x + k == rows +1) {
 					//SlotPos slotPos = new SlotPos(l + 3, k + 3);
 					skillTreeInventoryViewTemplate
-							.query(slotPos)
+							.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(slotPos)))
 							.offer(GuiHelper.createSkillTreeInventoryMenuBoundary());
 				}
 			}

@@ -27,10 +27,13 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.property.SlotPos;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
+import org.spongepowered.common.item.inventory.query.operation.InventoryPropertyQueryOperation;
+import org.spongepowered.common.item.inventory.query.operation.LensQueryOperation;
 
 import java.util.*;
 
@@ -107,11 +110,13 @@ public class GuiHelper {
 	public static Inventory createPlayerGroupView(PlayerGroup group) {
 		Inventory.Builder builder = Inventory.builder();
 		Inventory i = builder.of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
-		i.query(new SlotPos(2, 2)).offer(createWeaponCommand(group));
-		i.query(new SlotPos(3, 2)).offer(createArmorCommand(group));
-		i.query(new SlotPos(2, 3)).offer(createAttributesCommand(group));
-		i.query(new SlotPos(3, 3)).offer(createPropertyCommand(group));
-		i.query(new SlotPos(0, 0)).offer(createDescriptionItem(group.getDescription()));
+
+
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(2,2))).offer(createWeaponCommand(group));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(3, 2))).offer(createArmorCommand(group));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(2, 3))).offer(createAttributesCommand(group));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(3, 3))).offer(createPropertyCommand(group));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(createDescriptionItem(group.getDescription()));
 		return i;
 	}
 
@@ -220,12 +225,12 @@ public class GuiHelper {
 				.of(InventoryArchetypes.DOUBLE_CHEST)
 				.build(plugin);
 
-		i.query(new SlotPos(7, 0)).offer(unclickableInterface());
-		i.query(new SlotPos(7, 1)).offer(unclickableInterface());
-		i.query(new SlotPos(7, 2)).offer(unclickableInterface());
-		i.query(new SlotPos(7, 3)).offer(unclickableInterface());
-		i.query(new SlotPos(7, 4)).offer(unclickableInterface());
-		i.query(new SlotPos(7, 5)).offer(unclickableInterface());
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 0))).offer(unclickableInterface());
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 1))).offer(unclickableInterface());
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 2))).offer(unclickableInterface());
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 3))).offer(unclickableInterface());
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 4))).offer(unclickableInterface());
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 5))).offer(unclickableInterface());
 
 
 
@@ -241,12 +246,11 @@ public class GuiHelper {
 		ItemStack md = interactiveModeToitemStack(character, model.getInteractiveMode());
 
 
-		i.query(new SlotPos(8, 1)).set(md);
-
-		i.query(new SlotPos(8, 2)).offer(createControlls(/*HEAD_ARROW_UP*/ "Up"));
-		i.query(new SlotPos(8, 3)).offer(createControlls(/*HEAD_ARROW_DOWN*/ "Down"));
-		i.query(new SlotPos(8, 4)).offer(createControlls(/*HEAD_ARROW_RIGHT*/ "Right"));
-		i.query(new SlotPos(8, 5)).offer(createControlls(/*HEAD_ARROW_LEFT*/ "Left"));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 1))).set(md);
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 2))).offer(createControlls(/*HEAD_ARROW_UP*/ "Up"));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 3))).offer(createControlls(/*HEAD_ARROW_DOWN*/ "Down"));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 4))).offer(createControlls(/*HEAD_ARROW_RIGHT*/ "Right"));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 5))).offer(createControlls(/*HEAD_ARROW_LEFT*/ "Left"));
 
 		return i;
 	}
@@ -281,7 +285,7 @@ public class GuiHelper {
 			 	.build(plugin);
 
 		ItemStack back = back("skilltree", Localization.SKILLTREE);
-		build.query(new SlotPos(0,0)).offer(back);
+		build.query(new InventoryPropertyQueryOperation(new SlotPos(0,0))).offer(back);
 
 		if (skillData instanceof SkillPathData) {
 			SkillPathData data = (SkillPathData) skillData;
@@ -289,7 +293,7 @@ public class GuiHelper {
 			ItemStack of = itemStack(ItemTypes.PAPER);
 			of.offer(Keys.DISPLAY_NAME, Text.of("Tier " + data.getTier()));
 			of.offer(new MenuInventoryData(true));
-			build.query(new SlotPos(1,0)).offer(of);
+			build.query(new InventoryPropertyQueryOperation(new SlotPos(1,0))).offer(of);
 
 			SkillService skillService = IoC.get().build(SkillService.class);
 
@@ -303,7 +307,7 @@ public class GuiHelper {
 							.builder(String.format("%+d",entry.getValue()) + " | " + entry.getKey())
 							.color(entry.getValue() < 0 ? TextColors.RED : TextColors.DARK_GREEN)
 							.build());
-					build.query(new SlotPos(j,i)).offer(itemStack);
+					build.query(new InventoryPropertyQueryOperation(new SlotPos(j,i))).offer(itemStack);
 					if (j > 8) {
 						j = 0;
 						i++;
@@ -316,7 +320,7 @@ public class GuiHelper {
 		} else {
 			DamageType type = skillData.getSkill().getDamageType();
 			if (type != null) {
-				build.query(new SlotPos(1, 1)).offer(damageTypeToItemStack(type));
+				build.query(new InventoryPropertyQueryOperation(new SlotPos(1, 1))).offer(damageTypeToItemStack(type));
 			}
 
 			List<ItemStack> itemStacks = skillData.getSkill().configurationToItemStacks(skillData);
@@ -327,7 +331,7 @@ public class GuiHelper {
 					if (i > itemStacks.size() -1) {
 						return build;
 					}
-					build.query(new SlotPos(m, n)).offer(itemStacks.get(i));
+					build.query(new InventoryPropertyQueryOperation(new SlotPos(m, n))).offer(itemStacks.get(i));
 					i++;
 				}
 			}
