@@ -3,7 +3,7 @@ package cz.neumimto.skills.active;
 import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.BurningPrescenseEffect;
-import cz.neumimto.model.BurningpresenseModel;
+import cz.neumimto.model.BPModel;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -41,14 +41,14 @@ public class BurningPrescense extends ActiveSkill {
 		if (character.hasEffect(BurningPrescenseEffect.name)) {
 			effectService.removeEffectContainer(character.getEffect(BurningPrescenseEffect.name), character);
 		} else {
-			BurningpresenseModel model = getBPModel(info, character);
+			BPModel model = getBPModel(info, character);
 			model.duration = -1;
 		}
 		return SkillResult.OK;
 	}
 
-	private BurningpresenseModel getBPModel(ExtendedSkillInfo info, IActiveCharacter character) {
-		BurningpresenseModel model = new BurningpresenseModel();
+	private BPModel getBPModel(ExtendedSkillInfo info, IActiveCharacter character) {
+		BPModel model = new BPModel();
 		model.period = getIntNodeValue(info, SkillNodes.PERIOD);
 		model.radius = getLongNodeValue(info, SkillNodes.RADIUS);
 		model.damage = getIntNodeValue(info, SkillNodes.DAMAGE);

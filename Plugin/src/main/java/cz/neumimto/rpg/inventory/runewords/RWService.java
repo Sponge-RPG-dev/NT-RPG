@@ -172,15 +172,12 @@ public class RWService {
 
 	public ItemStack toItemStack(ItemUpgrade r) {
 		XORShiftRnd rnd = new XORShiftRnd();
-		int i = rnd.nextInt(allowedRuneItemTypes.size() - 1);
+		int i = rnd.nextInt(allowedRuneItemTypes.size());
 		ItemType itemType = allowedRuneItemTypes.get(i);
 		ItemStack of = ItemStack.of(itemType,1);
 		of.offer(Keys.HIDE_ATTRIBUTES, true);
 		of.offer(Keys.HIDE_MISCELLANEOUS, true);
-		ItemUpgrade itemUpgrade = new ItemUpgrade();
-		itemUpgrade.setName(r.getName());
-		itemUpgrade.setSocketType(SocketType.RUNE);
-		of.offer(new ItemStackUpgradeData(itemUpgrade));
+		of.offer(new ItemStackUpgradeData(r));
 		return of;
 	}
 

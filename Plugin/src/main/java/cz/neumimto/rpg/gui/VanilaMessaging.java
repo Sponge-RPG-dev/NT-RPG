@@ -879,7 +879,7 @@ public class VanilaMessaging implements IPlayerMessage {
 						}
 						if (itemStack != null) {
 							skillTreeInventoryViewTemplate
-									.query(slotPos)
+									.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(slotPos)))
 									.offer(itemStack);
 						}
 					} else if (l + y == -1 || l + y == columns +1) {

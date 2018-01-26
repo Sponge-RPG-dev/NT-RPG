@@ -285,7 +285,7 @@ public class GuiHelper {
 			 	.build(plugin);
 
 		ItemStack back = back("skilltree", Localization.SKILLTREE);
-		build.query(new InventoryPropertyQueryOperation(new SlotPos(0,0))).offer(back);
+		build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0,0))).offer(back);
 
 		if (skillData instanceof SkillPathData) {
 			SkillPathData data = (SkillPathData) skillData;
@@ -293,7 +293,7 @@ public class GuiHelper {
 			ItemStack of = itemStack(ItemTypes.PAPER);
 			of.offer(Keys.DISPLAY_NAME, Text.of("Tier " + data.getTier()));
 			of.offer(new MenuInventoryData(true));
-			build.query(new InventoryPropertyQueryOperation(new SlotPos(1,0))).offer(of);
+			build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(1,0))).offer(of);
 
 			SkillService skillService = IoC.get().build(SkillService.class);
 
@@ -307,7 +307,7 @@ public class GuiHelper {
 							.builder(String.format("%+d",entry.getValue()) + " | " + entry.getKey())
 							.color(entry.getValue() < 0 ? TextColors.RED : TextColors.DARK_GREEN)
 							.build());
-					build.query(new InventoryPropertyQueryOperation(new SlotPos(j,i))).offer(itemStack);
+					build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(j,i))).offer(itemStack);
 					if (j > 8) {
 						j = 0;
 						i++;
@@ -320,7 +320,7 @@ public class GuiHelper {
 		} else {
 			DamageType type = skillData.getSkill().getDamageType();
 			if (type != null) {
-				build.query(new InventoryPropertyQueryOperation(new SlotPos(1, 1))).offer(damageTypeToItemStack(type));
+				build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(1, 1))).offer(damageTypeToItemStack(type));
 			}
 
 			List<ItemStack> itemStacks = skillData.getSkill().configurationToItemStacks(skillData);
@@ -331,7 +331,7 @@ public class GuiHelper {
 					if (i > itemStacks.size() -1) {
 						return build;
 					}
-					build.query(new InventoryPropertyQueryOperation(new SlotPos(m, n))).offer(itemStacks.get(i));
+					build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(m, n))).offer(itemStacks.get(i));
 					i++;
 				}
 			}

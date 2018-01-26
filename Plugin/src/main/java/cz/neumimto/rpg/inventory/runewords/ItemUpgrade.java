@@ -17,6 +17,13 @@ public class ItemUpgrade extends HashMap<String, Object> {
     public static final String EFFECTS = "EFFECTS";
     public static final String ATTRIBUTES = "ATTRIBUTES";
 
+    public ItemUpgrade() {
+    }
+
+    public ItemUpgrade(Map<? extends String, ?> m) {
+        super(m);
+    }
+
     public SocketType getSocketType() {
         String s = (String) get(SOCKET_TYPE);
         return s == null ? null : SocketType.valueOf(s);
@@ -30,7 +37,7 @@ public class ItemUpgrade extends HashMap<String, Object> {
         return (String) get(NAME);
     }
 
-    protected void setName(String name) {
+    public void setName(String name) {
         put(NAME, name);
     }
 
@@ -46,5 +53,6 @@ public class ItemUpgrade extends HashMap<String, Object> {
     public Map<String, EffectParams> getEffects() {
         return (Map<String, EffectParams>) get(EFFECTS);
     }
+
 
 }

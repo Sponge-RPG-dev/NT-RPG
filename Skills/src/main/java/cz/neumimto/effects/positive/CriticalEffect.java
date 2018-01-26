@@ -21,21 +21,4 @@ public class CriticalEffect extends EffectBase<CriticalEffectModel> {
 		setStackable(true, null);
 		setDuration(duration);
 	}
-
-	public CriticalEffect(IEffectConsumer consumer, long duration, String value) {
-		super(name, consumer);
-		CriticalEffectModel model = new CriticalEffectModel();
-
-		String[] split = value.split(", ");
-		if (split.length > 0) {
-			model.chance = Integer.parseInt(Utils.extractNumber(split[0]));
-			model.mult = 2;
-			if (split.length > 1) {
-				model.mult = Float.parseFloat(Utils.extractNumber(split[1]));
-			}
-		}
-		setValue(model);
-		setDuration(duration);
-		setStackable(true, null);
-	}
 }

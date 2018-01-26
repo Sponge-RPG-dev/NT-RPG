@@ -40,6 +40,7 @@ import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.manipulators.*;
+import cz.neumimto.rpg.inventory.runewords.ItemUpgrade;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.listeners.DebugListener;
@@ -209,11 +210,11 @@ public class NtRpgPlugin {
 				.buildAndRegister(plugin);
 
 		DataRegistration.<ItemStackUpgradeData, ItemStackUpgradeData.Immutable>builder()
+				.manipulatorId("itemstack-upgrade")
+				.dataName("ItemStack Upgrade")
 				.dataClass(ItemStackUpgradeData.class)
 				.immutableClass(ItemStackUpgradeData.Immutable.class)
 				.builder(new ItemStackUpgradeData.Builder())
-				.manipulatorId("ntrpg-itemstackupgrade")
-				.dataName("ItemStackUpgrade")
 				.buildAndRegister(plugin);
 
 	}
@@ -435,7 +436,13 @@ public class NtRpgPlugin {
 				.executor((src, args) -> {
 					Rune runee = args.<Rune>getOne("rune").get();
 					Player player = (Player) src;
-					ItemStack is = NtRpgPlugin.GlobalScope.runewordService.toItemStack(runee);
+					ItemUpgrade itemUpgrade = new ItemUpgrade();
+					itemUpgrade.setSocketType(SocketType.RUNE);
+					itemUpgrade.addEffect("bash", new EffectParams(){{
+						put("chance","12.5%");
+					}});
+					itemUpgrade.setName("El");
+					ItemStack is = NtRpgPlugin.GlobalScope.runewordService.toItemStack(itemUpgrade);
 					player.getInventory().offer(is);
 					return CommandResult.success();
 				})
