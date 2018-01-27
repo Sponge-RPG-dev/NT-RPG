@@ -137,19 +137,6 @@ public class InventoryListener {
 		inventoryService.initializeHotbar(character, hotbar.getSelectedSlotIndex());
 	}
 
-	//@Listener
-	public void onItemMove(ClickInventoryEvent event, @First(typeFilter = Player.class) Player pl) {
-		IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());
-		if (character.isStub()) {
-			return;
-		}
-		for (SlotTransaction slotTransaction : event.getTransactions()) {
-			Slot i = slotTransaction.getSlot();
-			int index = ((SlotAdapter) i).getOrdinal();
-			character.getSlotsToReinitialize().add(index);
-		}
-	}
-
 	@Listener
 	public void onArmorInteract(InteractItemEvent event, @First(typeFilter = Player.class) Player player) {
 		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());

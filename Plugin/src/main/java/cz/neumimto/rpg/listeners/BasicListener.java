@@ -64,9 +64,15 @@ import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.InteractEntityEvent;
 import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
 import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.world.chunk.UnloadChunkEvent;
-import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.*;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
+import org.spongepowered.api.item.inventory.property.SlotPos;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
+import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 
 import java.util.Optional;
 
@@ -371,6 +377,19 @@ public class BasicListener {
 				d = experienceService.getLoggingExperiences(type);
 				if (d != null) {
 					characterService.addExperiences(character, d, ExperienceSource.LOGGING);
+				}
+			}
+		}
+	}
+
+	@Listener
+	public void onItemForge(ClickInventoryEvent event, @First Player player) {
+		Container i = event.getTargetInventory();
+		if (i.getArchetype() == InventoryArchetypes.ANVIL) {
+			for (SlotTransaction slotTransaction : event.getTransactions()) {
+				if (slotTransaction.getSlot().parent().getArchetype() == InventoryArchetypes.ANVIL) {
+					Slot slot = slotTransaction.getSlot();
+					slot.offer(ItemStack.of(ItemTypes.ACACIA_BOAT, 1));
 				}
 			}
 		}

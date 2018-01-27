@@ -194,7 +194,7 @@ public class Localization {
 	public static String CHARM = "Charm";
 
 	@ConfigValue
-	public static String SOCKET_HELP = "Interact with weapon to imbue the rune";
+	public static String SOCKET_HELP = "Use anvil to imbue socket";
 
 	@ConfigValue
 	public static String SOCKET_CANCELLED = "Socketing cancelled";

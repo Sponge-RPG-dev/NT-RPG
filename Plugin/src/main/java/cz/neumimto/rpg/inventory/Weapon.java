@@ -72,18 +72,14 @@ public class Weapon extends Charm {
 
 	@Override
 	public void onRightClick(IActiveCharacter character) {
-		if (character.isSocketing()) {
-			NtRpgPlugin.GlobalScope.inventorySerivce.insertRune(character);
-		} else if (!current) {
+		if (!current) {
 			NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character, this);
 		}
 	}
 
 	@Override
 	public void onLeftClick(IActiveCharacter character) {
-		if (character.isSocketing()) {
-			NtRpgPlugin.GlobalScope.inventorySerivce.cancelSocketing(character);
-		} else if (!current) {
+		if (!current) {
 			NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character, this);
 		}
 	}

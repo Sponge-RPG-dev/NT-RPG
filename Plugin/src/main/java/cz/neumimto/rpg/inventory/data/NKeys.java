@@ -5,6 +5,7 @@ import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.inventory.ItemDamage;
 import cz.neumimto.rpg.inventory.LoreDurability;
 import cz.neumimto.rpg.inventory.LoreSectionDelimiter;
+import cz.neumimto.rpg.inventory.SocketType;
 import cz.neumimto.rpg.inventory.runewords.ItemUpgrade;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.key.Key;
@@ -35,7 +36,7 @@ public class NKeys {
 	public static Key<Value<LoreDurability>> ITEM_LORE_DURABILITY = null;
 	public static Key<Value<LoreSectionDelimiter>> ITEM_SECTION_DELIMITER = null;
 	public static Key<Value<ItemDamage>> ITEM_DAMAGE = null;
-	public static Key<Value<ItemUpgrade>> ITEMSTACK_UPGRADE = null;
+	public static Key<Value<SocketType>> ITEMSTACK_UPGRADE = null;
 
 	public NKeys() {
 		COMMAND = Key.builder()
@@ -144,7 +145,7 @@ public class NKeys {
 				.build();
 
 		ITEMSTACK_UPGRADE = Key.builder()
-				.type(new TypeToken<Value<ItemUpgrade>>() {})
+				.type(new TypeToken<Value<SocketType>>() {})
 				.query(DataQuery.of(".","ntrpg.item.upgrade"))
 				.name("itemstack upgrade")
 				.id("ntrpgitemupgrade")

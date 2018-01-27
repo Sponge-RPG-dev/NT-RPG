@@ -1,12 +1,16 @@
 package cz.neumimto.rpg.inventory;
 
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.TextHelper;
+import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.inventory.runewords.ItemUpgrade;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.text.chat.ChatType;
+import org.spongepowered.api.text.chat.ChatTypes;
 
 /**
  * Created by NeumimTo on 2.1.2016.
@@ -22,7 +26,7 @@ public class HotbarRune extends HotbarObject {
 
 	@Override
 	public void onRightClick(IActiveCharacter character) {
-		NtRpgPlugin.GlobalScope.inventorySerivce.startSocketing(character);
+		character.sendMessage(ChatTypes.SYSTEM, TextHelper.parse(Localization.SOCKET_HELP));
 	}
 
 	@Override

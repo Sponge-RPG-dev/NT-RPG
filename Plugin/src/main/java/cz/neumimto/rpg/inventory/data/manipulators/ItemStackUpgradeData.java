@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.inventory.data.manipulators;
 
+import cz.neumimto.rpg.inventory.SocketType;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.runewords.ItemUpgrade;
 import org.spongepowered.api.Sponge;
@@ -19,15 +20,15 @@ import java.sql.BatchUpdateException;
 import java.util.Map;
 import java.util.Optional;
 
-public class ItemStackUpgradeData extends AbstractSingleData<ItemUpgrade, ItemStackUpgradeData, ItemStackUpgradeData.Immutable> {
+public class ItemStackUpgradeData extends AbstractSingleData<SocketType, ItemStackUpgradeData, ItemStackUpgradeData.Immutable> {
 
     
-    public ItemStackUpgradeData(ItemUpgrade value) {
+    public ItemStackUpgradeData(SocketType value) {
         super(value, NKeys.ITEMSTACK_UPGRADE);
     }
 
     @Override
-    protected Value<ItemUpgrade> getValueGetter() {
+    protected Value<SocketType> getValueGetter() {
         return Sponge.getRegistry().getValueFactory().createValue(NKeys.ITEMSTACK_UPGRADE, getValue());
     }
 
@@ -52,8 +53,8 @@ public class ItemStackUpgradeData extends AbstractSingleData<ItemUpgrade, ItemSt
         if (!container.contains(NKeys.ITEMSTACK_UPGRADE)) {
             return Optional.empty();
         }
-        Map<?, ?> map = container.getMap(NKeys.ITEMSTACK_UPGRADE.getQuery()).get();
-        setValue(new ItemUpgrade((Map<? extends String, ?>) map));
+
+        setValue((SocketType) container.get(NKeys.ITEMSTACK_UPGRADE.getQuery()).get());
         return Optional.of(this);
     }
 
@@ -79,10 +80,10 @@ public class ItemStackUpgradeData extends AbstractSingleData<ItemUpgrade, ItemSt
         return Builder.CONTENT_VERSION;
     }
 
-    public static class Immutable extends AbstractImmutableSingleData<ItemUpgrade, Immutable, ItemStackUpgradeData> {
+    public static class Immutable extends AbstractImmutableSingleData<SocketType, Immutable, ItemStackUpgradeData> {
 
 
-        public Immutable(ItemUpgrade value) {
+        public Immutable(SocketType value) {
             super(value, NKeys.ITEMSTACK_UPGRADE);
         }
 
@@ -99,7 +100,7 @@ public class ItemStackUpgradeData extends AbstractSingleData<ItemUpgrade, ItemSt
         }
 
         @Override
-        protected ImmutableValue<ItemUpgrade> getValueGetter() {
+        protected ImmutableValue<SocketType> getValueGetter() {
             return Sponge.getRegistry().getValueFactory().createValue(NKeys.ITEMSTACK_UPGRADE, getValue()).asImmutable();
         }
 
@@ -119,7 +120,7 @@ public class ItemStackUpgradeData extends AbstractSingleData<ItemUpgrade, ItemSt
 
         @Override
         public ItemStackUpgradeData create() {
-            return new ItemStackUpgradeData(new ItemUpgrade());
+            return new ItemStackUpgradeData(SocketType.RUNE);
         }
 
         @Override

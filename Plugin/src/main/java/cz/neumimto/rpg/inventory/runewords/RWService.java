@@ -170,7 +170,7 @@ public class RWService {
 		return runes;
 	}
 
-	public ItemStack toItemStack(ItemUpgrade r) {
+	public ItemStack toItemStack(SocketType r) {
 		XORShiftRnd rnd = new XORShiftRnd();
 		int i = rnd.nextInt(allowedRuneItemTypes.size());
 		ItemType itemType = allowedRuneItemTypes.get(i);

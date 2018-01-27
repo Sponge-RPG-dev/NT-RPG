@@ -442,7 +442,7 @@ public class NtRpgPlugin {
 						put("chance","12.5%");
 					}});
 					itemUpgrade.setName("El");
-					ItemStack is = NtRpgPlugin.GlobalScope.runewordService.toItemStack(itemUpgrade);
+					ItemStack is = NtRpgPlugin.GlobalScope.runewordService.toItemStack(SocketType.RUNE);
 					player.getInventory().offer(is);
 					return CommandResult.success();
 				})
