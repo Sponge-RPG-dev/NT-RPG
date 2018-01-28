@@ -40,7 +40,6 @@ import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.manipulators.*;
-import cz.neumimto.rpg.inventory.runewords.ItemUpgrade;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.listeners.DebugListener;
@@ -436,13 +435,8 @@ public class NtRpgPlugin {
 				.executor((src, args) -> {
 					Rune runee = args.<Rune>getOne("rune").get();
 					Player player = (Player) src;
-					ItemUpgrade itemUpgrade = new ItemUpgrade();
-					itemUpgrade.setSocketType(SocketType.RUNE);
-					itemUpgrade.addEffect("bash", new EffectParams(){{
-						put("chance","12.5%");
-					}});
-					itemUpgrade.setName("El");
-					ItemStack is = NtRpgPlugin.GlobalScope.runewordService.toItemStack(SocketType.RUNE);
+
+					ItemStack is = NtRpgPlugin.GlobalScope.runewordService.createRune(SocketType.RUNE, runee.getName());
 					player.getInventory().offer(is);
 					return CommandResult.success();
 				})

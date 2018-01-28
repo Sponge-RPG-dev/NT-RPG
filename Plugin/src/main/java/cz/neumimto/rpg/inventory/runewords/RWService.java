@@ -6,6 +6,8 @@ import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.Pair;
+import cz.neumimto.rpg.TextHelper;
+import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.events.RebuildRunewordEvent;
@@ -123,35 +125,21 @@ public class RWService {
 	}
 
 	public int getSocketCount(ItemStack itemStack) {
-		Optional<List<ItemSocket>> itemSockets = itemStack.get(NKeys.ITEM_STACK_UPGRADE_CONTAINER);
+		Optional<List<Text>> itemSockets = itemStack.get(NKeys.ITEM_SOCKET_CONTAINER);
 		return itemSockets.map(List::size).orElse(0);
 	}
 
 	public boolean hasEmptySocket(ItemStack itemStack) {
-		Optional<List<ItemSocket>> itemSockets = itemStack.get(NKeys.ITEM_STACK_UPGRADE_CONTAINER);
+		Optional<List<Text>> itemSockets = itemStack.get(NKeys.ITEM_SOCKET_CONTAINER);
 		if (!itemSockets.isPresent())
 			return false;
-		List<ItemSocket> itemSockets1 = itemSockets.get();
-		for (ItemSocket itemSocket : itemSockets1) {
-			if (itemSocket.getContent() == null) {
+		List<Text> itemSockets1 = itemSockets.get();
+		for (Text itemSocket : itemSockets1) {
+			if (itemSocket.toPlain().equalsIgnoreCase(Localization.SOCKET_EMPTY)) {
 				return true;
 			}
 		}
 		return false;
-	}
-
-	public RuneWord runeWordByCombinationAfterInsert(ItemStack itemStack) {
-		StringBuilder runes = new StringBuilder();
-		for (ItemSocket itemSocket : itemStack.get(NKeys.ITEM_STACK_UPGRADE_CONTAINER).get()) {
-			if (itemSocket.getType() != SocketType.RUNE || itemSocket.getType() != SocketType.ANY) {
-				return null;
-			}
-			if (itemSocket.getContent() == null || itemSocket.getContent().isEmpty()) {
-				return null;
-			}
-			runes.append(itemSocket.getContent().getName());
-		}
-		return combinations.get(runes.toString());
 	}
 
 	public boolean existsRune(String rune) {
@@ -170,7 +158,10 @@ public class RWService {
 		return runes;
 	}
 
-	public ItemStack toItemStack(SocketType r) {
+	public ItemStack createRune(SocketType r, String name) {
+		ItemUpgrade rune = getRune(name);
+		if (rune == null)
+			return ItemStack.empty();
 		XORShiftRnd rnd = new XORShiftRnd();
 		int i = rnd.nextInt(allowedRuneItemTypes.size());
 		ItemType itemType = allowedRuneItemTypes.get(i);
@@ -178,38 +169,51 @@ public class RWService {
 		of.offer(Keys.HIDE_ATTRIBUTES, true);
 		of.offer(Keys.HIDE_MISCELLANEOUS, true);
 		of.offer(new ItemStackUpgradeData(r));
+		of.offer(Keys.DISPLAY_NAME, TextHelper.parse(rune.getName()));
 		return of;
 	}
 
 
 	public ItemStack createSocket(ItemStack itemStack, SocketType type) {
 		Optional<ItemSocketsData> opt = itemStack.getOrCreate(ItemSocketsData.class);
-		ItemSocketsData itemSocketsData = opt.orElse(new ItemSocketsData());
-		itemSocketsData.addElement(new ItemSocket(type, new ItemUpgrade()));
-		itemStack.offer(itemSocketsData);
+		ItemSocketsData socketsData = opt.get();
+
+		socketsData.getSockets().add(type);
+		socketsData.getContent().add(TextHelper.parse(Localization.SOCKET_EMPTY));
+
+		itemStack.offer(socketsData);
+
 		inventoryService.updateLore(itemStack);
 		return itemStack;
 	}
 
-	public ItemStack insertRune(ItemStack itemStack, ItemUpgrade insertItemUpgrade) {
-		Optional<List<ItemSocket>> opt = itemStack.get(NKeys.ITEM_STACK_UPGRADE_CONTAINER);
+	public ItemStack insertRune(ItemStack itemStack, ItemStack rune) {
+		Optional<ItemSocketsData> itemSocketsData = itemStack.get(ItemSocketsData.class);
+		if (itemSocketsData.isPresent()) {
+			return itemStack;
+		}
+		ItemSocketsData socketsData = itemSocketsData.get();
+
+
+		Optional<List<ItemSocket>> opt = itemStack.get(NKeys.ITEM_SOCKET_CONTAINER);
 		if (opt.isPresent()) {
 			List<ItemSocket> itemSockets = opt.get();
 			for (ItemSocket itemSocket : itemSockets) {
 				if (itemSocket.getContent() == null && itemSocket.getType() == SocketType.ANY || itemSocket.getType() == SocketType.RUNE) {
-					itemSocket.setContent(insertItemUpgrade);
-					itemStack.offer(NKeys.ITEM_STACK_UPGRADE_CONTAINER, itemSockets);
+
+					itemStack.offer(NKeys.ITEM_SOCKET_CONTAINER, itemSockets);
 					break;
 				}
 			}
 		} else {
 			return itemStack;
 		}
+
 		return itemStack;
 	}
 
 	public String getCurrentRuneCombination(ItemStack i) {
-		Optional<List<ItemSocket>> itemSockets = i.get(NKeys.ITEM_STACK_UPGRADE_CONTAINER);
+		Optional<List<ItemSocket>> itemSockets = i.get(NKeys.ITEM_SOCKET_CONTAINER);
 		if (!itemSockets.isPresent())
 			return null;
 		List<ItemSocket> sockets = itemSockets.get();
@@ -301,4 +305,18 @@ public class RWService {
 	public Map<String, RuneWord> getRunewords() {
 		return runewords;
 	}
+
+	public boolean isRune(ItemStack rune) {
+		Optional<Text> text = rune.get(NKeys.ITEM_TYPE);
+		if (text.isPresent()) {
+			String s = text.get().toPlain().toLowerCase();
+			for (SocketType type : SocketType.values()) {
+				if (s.contains(type.name().toLowerCase()))
+					return true;
+			}
+
+		}
+		return false;
+	}
+
 }

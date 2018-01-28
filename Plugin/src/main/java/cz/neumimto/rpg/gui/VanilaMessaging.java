@@ -549,7 +549,7 @@ public class VanilaMessaging implements IPlayerMessage {
 			int y = 4;
 			if (rw.getRunes().size() <= 7) {
 				for (ItemUpgrade rune : rw.getRunes()) {
-					/*ItemStack is = rwService.toItemStack(rune);
+					/*ItemStack is = rwService.createRune(rune);
 					is.offer(new MenuInventoryData(true));
 					i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(x, y))).offer(is);
 					x++;

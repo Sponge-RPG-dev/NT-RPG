@@ -71,6 +71,7 @@ public class ItemLoreBuilderService {
             this.is = is;
             this.t = t;
         }
+
         public void createAttributesSection() {
             is.get(NKeys.ITEM_ATTRIBUTE_BONUS).ifPresent(a -> {
                 if (a.isEmpty())
@@ -110,7 +111,7 @@ public class ItemLoreBuilderService {
         }
 
         public void createItemSocketsSection() {
-            is.get(NKeys.ITEM_STACK_UPGRADE_CONTAINER).ifPresent(a -> {
+            is.get(NKeys.ITEM_SOCKET_CONTAINER).ifPresent(a -> {
                 if (a.isEmpty())
                     return;
                 createDelimiter(sockets);
@@ -210,7 +211,14 @@ public class ItemLoreBuilderService {
             }
         }
 
+        private void createItemTypeFirstLine() {
+            is.get(NKeys.ITEM_TYPE).ifPresent(a -> {
+                t.add(Text.builder("[ ").append(a).append(Text.builder(" ]").build()).build());
+            });
+        }
+
         public List<Text> buildLore() {
+            createItemTypeFirstLine();
             for (ItemLoreSections itemLoreSections : loreOrder) {
                 switch (itemLoreSections) {
                     case META:

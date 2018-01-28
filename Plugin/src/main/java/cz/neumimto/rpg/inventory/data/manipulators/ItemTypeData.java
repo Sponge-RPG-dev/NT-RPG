@@ -18,38 +18,39 @@ import org.spongepowered.api.text.Text;
 import java.util.Optional;
 
 /**
- * Created by NeumimTo on 13.1.2018.
+ * Created by NeumimTo on 28.1.2018.
  */
-public class ItemRarityData extends AbstractSingleData<Text, ItemRarityData, ItemRarityData.Immutable> {
+public class ItemTypeData extends AbstractSingleData<Text, ItemTypeData, ItemTypeData.Immutable> {
 
-    public ItemRarityData() {
+    public ItemTypeData() {
         this(Text.EMPTY);
     }
 
-    public ItemRarityData(Text rarity) {
-        super(rarity, NKeys.ITEM_RARITY);
+    public ItemTypeData(Text rarity) {
+        super(rarity, NKeys.ITEM_TYPE);
         registerGettersAndSetters();
     }
 
     @Override
-    public Optional<ItemRarityData> fill(DataHolder dataHolder, MergeFunction overlap) {
-        Optional<ItemRarityData> a = dataHolder.get(ItemRarityData.class);
+    public Optional<ItemTypeData> fill(DataHolder dataHolder, MergeFunction overlap) {
+        Optional<ItemTypeData> a = dataHolder.get(ItemTypeData.class);
         if (a.isPresent()) {
-            ItemRarityData otherData = a.get();
-            ItemRarityData finalData = overlap.merge(this, otherData);
+            ItemTypeData otherData = a.get();
+            ItemTypeData finalData = overlap.merge(this, otherData);
             setValue(finalData.getValue());
         }
         return Optional.of(this);
     }
 
+
     @Override
-    public Optional<ItemRarityData> from(DataContainer container) {
+    public Optional<ItemTypeData> from(DataContainer container) {
         return from((DataView) container);
     }
 
-    public Optional<ItemRarityData> from(DataView view) {
-        if (view.contains(NKeys.ITEM_RARITY.getQuery())) {
-            setValue((Text) view.get(NKeys.ITEM_RARITY.getQuery()).get());
+    public Optional<ItemTypeData> from(DataView view) {
+        if (view.contains(NKeys.ITEM_TYPE.getQuery())) {
+            setValue((Text) view.get(NKeys.ITEM_TYPE.getQuery()).get());
             return Optional.of(this);
         } else {
             return Optional.empty();
@@ -57,37 +58,37 @@ public class ItemRarityData extends AbstractSingleData<Text, ItemRarityData, Ite
     }
 
     @Override
-    public ItemRarityData copy() {
-        return new ItemRarityData(getValue());
+    public ItemTypeData copy() {
+        return new ItemTypeData(getValue());
     }
 
     @Override
     protected Value<Text> getValueGetter() {
-        return Sponge.getRegistry().getValueFactory().createValue(NKeys.ITEM_RARITY, getValue());
+        return Sponge.getRegistry().getValueFactory().createValue(NKeys.ITEM_TYPE, getValue());
     }
 
     @Override
-    public ItemRarityData.Immutable asImmutable() {
-        return new ItemRarityData.Immutable(getValue());
+    public ItemTypeData.Immutable asImmutable() {
+        return new ItemTypeData.Immutable(getValue());
     }
 
     @Override
     public int getContentVersion() {
-        return ItemRarityData.Builder.CONTENT_VERSION;
+        return ItemTypeData.Builder.CONTENT_VERSION;
     }
 
     @Override
     public DataContainer toContainer() {
         DataContainer dataContainer = super.toContainer();
-        dataContainer.set(NKeys.ITEM_RARITY, getValue());
+        dataContainer.set(NKeys.ITEM_TYPE, getValue());
         return dataContainer;
     }
 
-    public class Immutable extends AbstractImmutableSingleData<Text, Immutable, ItemRarityData> {
+    public class Immutable extends AbstractImmutableSingleData<Text, Immutable, ItemTypeData> {
 
 
         public Immutable(Text rarity) {
-            super(rarity, NKeys.ITEM_RARITY);
+            super(rarity, NKeys.ITEM_TYPE);
             registerGetters();
         }
 
@@ -97,46 +98,46 @@ public class ItemRarityData extends AbstractSingleData<Text, ItemRarityData, Ite
 
         @Override
         public int getContentVersion() {
-            return ItemRarityData.Builder.CONTENT_VERSION;
+            return ItemTypeData.Builder.CONTENT_VERSION;
         }
 
         @Override
         public DataContainer toContainer() {
             DataContainer dataContainer = super.toContainer();
-            dataContainer.set(NKeys.ITEM_RARITY, getValue());
+            dataContainer.set(NKeys.ITEM_TYPE, getValue());
             return dataContainer;
         }
 
         @Override
         protected ImmutableValue<Text> getValueGetter() {
-            return Sponge.getRegistry().getValueFactory().createValue(NKeys.ITEM_RARITY, getValue()).asImmutable();
+            return Sponge.getRegistry().getValueFactory().createValue(NKeys.ITEM_TYPE, getValue()).asImmutable();
         }
 
         @Override
-        public ItemRarityData asMutable() {
-            return new ItemRarityData(getValue());
+        public ItemTypeData asMutable() {
+            return new ItemTypeData(getValue());
         }
     }
 
-    public static class Builder extends AbstractDataBuilder<ItemRarityData> implements DataManipulatorBuilder<ItemRarityData, ItemRarityData.Immutable> {
+    public static class Builder extends AbstractDataBuilder<ItemTypeData> implements DataManipulatorBuilder<ItemTypeData, Immutable> {
         public static final int CONTENT_VERSION = 1;
 
         public Builder() {
-            super(ItemRarityData.class, CONTENT_VERSION);
+            super(ItemTypeData.class, CONTENT_VERSION);
         }
 
         @Override
-        public ItemRarityData create() {
-            return new ItemRarityData();
+        public ItemTypeData create() {
+            return new ItemTypeData();
         }
 
         @Override
-        public Optional<ItemRarityData> createFrom(DataHolder dataHolder) {
+        public Optional<ItemTypeData> createFrom(DataHolder dataHolder) {
             return create().fill(dataHolder);
         }
 
         @Override
-        protected Optional<ItemRarityData> buildContent(DataView container) throws InvalidDataException {
+        protected Optional<ItemTypeData> buildContent(DataView container) throws InvalidDataException {
             return create().from(container);
         }
     }

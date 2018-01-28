@@ -6,7 +6,6 @@ import cz.neumimto.rpg.inventory.ItemDamage;
 import cz.neumimto.rpg.inventory.LoreDurability;
 import cz.neumimto.rpg.inventory.LoreSectionDelimiter;
 import cz.neumimto.rpg.inventory.SocketType;
-import cz.neumimto.rpg.inventory.runewords.ItemUpgrade;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.value.mutable.ListValue;
@@ -28,7 +27,8 @@ public class NKeys {
 	public static Key<MapValue<String, Float>> ITEM_PROPERTY_BONUS = null;
 	public static Key<MapValue<String, EffectParams>> ITEM_EFFECTS = null;
 
-	public static Key<ListValue<ItemSocket>> ITEM_STACK_UPGRADE_CONTAINER = null;
+	public static Key<ListValue<SocketType>> ITEM_SOCKET_CONTAINER = null;
+	public static Key<ListValue<Text>> ITEM_SOCKET_CONTAINER_CONTENT = null;
 
 	public static Key<MapValue<String, Integer>> ITEM_PLAYER_ALLOWED_GROUPS = null;
 	public static Key<Value<Text>> ITEM_TYPE = null;
@@ -55,7 +55,7 @@ public class NKeys {
 
 		 SKILLTREE_CONTROLLS = Key.builder()
 				.type(new TypeToken<Value<String>>() {})
-				.query(DataQuery.of( "ntrpg:skilltreecontrolls"))
+				.query(DataQuery.of(".", "ntrpg.skilltreecontrolls"))
 			    .id("ntrpgskilltreecontrolls")
 				.name("Skilltree controls")
 			 .build();
@@ -66,6 +66,14 @@ public class NKeys {
 				.id("ntrpgitemrarity")
 				.name("Item rarity")
 				.build();
+
+		ITEM_TYPE = Key.builder()
+				.type(new TypeToken<Value<Text>>() {})
+				.query(DataQuery.of(".", "ntrpg.item.type"))
+				.id("nt-rpg:item_type")
+				.name("Item type")
+				.build();
+
 
 		ITEM_ATTRIBUTE_REQUIREMENTS = Key.builder()
 				.type(new TypeToken<MapValue<String, Integer>>() {})
@@ -95,11 +103,18 @@ public class NKeys {
 				.query(DataQuery.of('.', "ntrpg.itemeffects"))
 				.build();
 
-		ITEM_STACK_UPGRADE_CONTAINER = Key.builder()
-				.type(new TypeToken<ListValue<ItemSocket>>() {})
-				.id("nt-rpg:item_sockets")
-				.name("Item Sockets")
-				.query(DataQuery.of(".", "ntrpg.itemsockets"))
+		ITEM_SOCKET_CONTAINER = Key.builder()
+				.type(new TypeToken<ListValue<SocketType>>() {})
+				.id("nt-rpg:item_socket_container")
+				.name("Item Socket Container")
+				.query(DataQuery.of(".", "ntrpg.item.sockets.container"))
+				.build();
+
+		ITEM_SOCKET_CONTAINER_CONTENT = Key.builder()
+				.type(new TypeToken<ListValue<Text>>() {})
+				.id("nt-rpg:item_sockets_content")
+				.name("Item Socket Content")
+				.query(DataQuery.of(".", "ntrpg.item.sockets.content"))
 				.build();
 
 		ITEM_PLAYER_ALLOWED_GROUPS = Key.builder()

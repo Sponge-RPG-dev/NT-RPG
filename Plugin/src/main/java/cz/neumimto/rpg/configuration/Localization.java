@@ -370,5 +370,5 @@ public class Localization {
 	}};
 
 	@ConfigValue
-	public static String SOCKET_EMPTY = "&8 < empty > ";
+	public static String SOCKET_EMPTY = "&8 < empty %s socket> ";
 }

@@ -19,7 +19,10 @@
 package cz.neumimto.rpg.listeners;
 
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.rpg.*;
+import cz.neumimto.rpg.IEntity;
+import cz.neumimto.rpg.IEntityType;
+import cz.neumimto.rpg.NEventContextKeys;
+import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.damage.ISkillDamageSource;
@@ -29,6 +32,7 @@ import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.events.*;
 import cz.neumimto.rpg.exp.ExperienceService;
 import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -66,11 +70,9 @@ import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEv
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.world.chunk.UnloadChunkEvent;
-import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.*;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
-import org.spongepowered.api.item.inventory.property.SlotPos;
+import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 
@@ -81,6 +83,9 @@ import java.util.Optional;
  */
 @ResourceLoader.ListenerClass
 public class BasicListener {
+
+	@Inject
+	private RWService rwService;
 
 	@Inject
 	private CharacterService characterService;
@@ -389,7 +394,35 @@ public class BasicListener {
 			for (SlotTransaction slotTransaction : event.getTransactions()) {
 				if (slotTransaction.getSlot().parent().getArchetype() == InventoryArchetypes.ANVIL) {
 					Slot slot = slotTransaction.getSlot();
-					slot.offer(ItemStack.of(ItemTypes.ACACIA_BOAT, 1));
+					Optional<SlotIndex> inventoryProperty = slot.getInventoryProperty(SlotIndex.class);
+					if (inventoryProperty.isPresent()) {
+						SlotIndex slotIndex = inventoryProperty.get();
+						Integer value = slotIndex.getValue();
+						if (value == 0 || value == 1) {
+							Inventory first = i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(1)));
+							Inventory second = i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(0)));
+							Optional<ItemStack> peek = first.peek();
+							Optional<ItemStack> peek2 = first.peek();
+							if (peek.isPresent() && peek2.isPresent()) {
+								ItemStack sockets = peek.get();
+								ItemStack rune = peek2.get();
+								if (rwService.hasEmptySocket(sockets) && rwService.isRune(rune)) {
+									i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(2)))
+											.set(rwService.insertRune(sockets, rune));
+								} else {
+									i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(2)))
+											.set(ItemStack.empty());
+								}
+							} else {
+								i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(2)))
+										.set(ItemStack.empty());
+							}
+						} else if (value == 2) {
+							i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.lessThanOrEqual(1)))
+									.set(ItemStack.empty());
+
+						}
+					}
 				}
 			}
 		}
