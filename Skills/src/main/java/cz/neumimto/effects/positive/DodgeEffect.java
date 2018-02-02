@@ -14,10 +14,6 @@ public class DodgeEffect extends EffectBase<Float> {
 
 	public static final String name = "Dodge";
 
-	public DodgeEffect(IEffectConsumer consumer, long duration, String value) {
-		this(consumer, duration, Float.parseFloat(Utils.extractNumber(value)));
-	}
-
 	public DodgeEffect(IEffectConsumer character, long duration, float chance) {
 		super(name, character);
 		setValue(chance);

@@ -35,7 +35,7 @@ public class ClassGenerator implements Opcodes {
 		signaturedictionary.put(Long.class,     new String[]{"java/lang/Long","longValue", "J"});
 		signaturedictionary.put(long.class,     new String[]{"java/lang/Long","longValue", "J"});
 
-		signaturedictionary.put(String.class,     new String[]{"java/lang/String","toString", "Ljava/lang/String;"});
+		signaturedictionary.put(String.class,   new String[]{"java/lang/String","toString", "Ljava/lang/String;"});
 	}
 
 	private String packagee = "cz/neumimto/rpg/asm/";

@@ -22,10 +22,6 @@ public class ElementalResistanceEffect extends EffectBase<Float> {
 		setDuration(duration);
 	}
 
-	public ElementalResistanceEffect(IEffectConsumer character, long duration, String level) {
-		this(character, Float.parseFloat(level), duration);
-	}
-
 	@Override
 	public void onApply() {
 		super.onApply();

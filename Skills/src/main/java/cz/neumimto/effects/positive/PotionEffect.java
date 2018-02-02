@@ -1,5 +1,6 @@
 package cz.neumimto.effects.positive;
 
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.model.PotionEffectModel;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.EffectContainer;

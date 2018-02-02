@@ -19,8 +19,4 @@ public class LightningResistanceEffect extends SingleResistanceValueEffect {
 		super(name, consumer, DefaultProperties.lightning_damage_protection_mult, value);
 		setDuration(duration);
 	}
-
-	public LightningResistanceEffect(IActiveCharacter character, long duration, String level) {
-		this(character, duration, Float.parseFloat(Utils.extractNumber(level)));
-	}
 }

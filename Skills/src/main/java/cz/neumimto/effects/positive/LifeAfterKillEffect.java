@@ -10,10 +10,10 @@ import cz.neumimto.rpg.utils.Utils;
 public class LifeAfterKillEffect extends EffectBase<Float> {
 	public static final String name = "Life after each kill";
 
-	public LifeAfterKillEffect(IEffectConsumer character, long duration, String healedAmount) {
+	public LifeAfterKillEffect(IEffectConsumer character, long duration, float healedAmount) {
 		super(name, character);
 		setDuration(duration);
-		setValue(Float.parseFloat(Utils.extractNumber(healedAmount)));
+		setValue(healedAmount);
 		setStackable(true, new FloatEffectStackingStrategy());
 	}
 }

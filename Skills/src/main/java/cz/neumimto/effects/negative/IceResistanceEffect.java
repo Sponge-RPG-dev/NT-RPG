@@ -20,7 +20,4 @@ public class IceResistanceEffect extends SingleResistanceValueEffect {
 		setDuration(duration);
 	}
 
-	public IceResistanceEffect(IActiveCharacter character, long duration, String level) {
-		this(character, duration, Float.parseFloat(Utils.extractNumber(level)));
-	}
 }

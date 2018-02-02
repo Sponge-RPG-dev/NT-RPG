@@ -16,10 +16,6 @@ public class EnderPearlEffect extends EffectBase<Long> {
 
 	public static final String name = "Ender Pearl";
 
-	public EnderPearlEffect(IEffectConsumer consumer, long duration, String value) {
-		this(consumer, duration, Long.parseLong(Utils.extractNumber(value)) * 1000);
-	}
-
 	public EnderPearlEffect(IEffectConsumer consumer, long duration, Long value) {
 		super(name, consumer);
 		setDuration(duration);

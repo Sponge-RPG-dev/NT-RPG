@@ -1,5 +1,6 @@
 package cz.neumimto.effects.positive;
 
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.model.CriticalEffectModel;
 import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
@@ -15,7 +16,7 @@ public class CriticalEffect extends EffectBase<CriticalEffectModel> {
 
 	public static final String name = "Critical";
 
-	public CriticalEffect(IActiveCharacter consumer, long duration, CriticalEffectModel model) {
+	public CriticalEffect(IActiveCharacter consumer, long duration, @Inject CriticalEffectModel model) {
 		super(name, consumer);
 		setValue(model);
 		setStackable(true, null);
