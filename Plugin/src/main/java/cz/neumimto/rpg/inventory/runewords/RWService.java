@@ -12,7 +12,9 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.events.RebuildRunewordEvent;
 import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.ItemUpgradeTransactionResult;
 import cz.neumimto.rpg.inventory.SocketType;
+import cz.neumimto.rpg.inventory.data.DataConstants;
 import cz.neumimto.rpg.inventory.data.ItemSocket;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemSocketsData;
@@ -43,7 +45,6 @@ import java.util.stream.Collectors;
 @Singleton
 public class RWService {
 
-	private final Pattern socket = Pattern.compile("\\{@\\}");
 	private final Path file = Paths.get(NtRpgPlugin.workingDir, "Runes.conf");
 
 	@Inject
@@ -125,17 +126,13 @@ public class RWService {
 	}
 
 	public int getSocketCount(ItemStack itemStack) {
-		Optional<List<Text>> itemSockets = itemStack.get(NKeys.ITEM_SOCKET_CONTAINER);
-		return itemSockets.map(List::size).orElse(0);
+		return itemStack.get(NKeys.ITEM_SOCKET_CONTAINER).orElse(Collections.emptyList()).size();
 	}
 
 	public boolean hasEmptySocket(ItemStack itemStack) {
-		Optional<List<Text>> itemSockets = itemStack.get(NKeys.ITEM_SOCKET_CONTAINER);
-		if (!itemSockets.isPresent())
-			return false;
-		List<Text> itemSockets1 = itemSockets.get();
-		for (Text itemSocket : itemSockets1) {
-			if (itemSocket.toPlain().equalsIgnoreCase(Localization.SOCKET_EMPTY)) {
+		List<Text> texts = itemStack.get(NKeys.ITEM_SOCKET_CONTAINER_CONTENT).orElse(Collections.emptyList());
+		for (Text text : texts) {
+			if (DataConstants.EMPTY_SOCKET.equals(text)) {
 				return true;
 			}
 		}
@@ -187,30 +184,35 @@ public class RWService {
 		return itemStack;
 	}
 
-	public ItemStack insertRune(ItemStack itemStack, ItemStack rune) {
+	public ItemUpgradeTransactionResult insertRune(ItemStack itemStack, ItemStack rune) {
 		Optional<ItemSocketsData> itemSocketsData = itemStack.get(ItemSocketsData.class);
-		if (itemSocketsData.isPresent()) {
-			return itemStack;
+		if (!itemSocketsData.isPresent()) {
+			return ItemUpgradeTransactionResult.NO_EMPTY_SOCKET;
+		}
+		Optional<SocketType> runeSocketType = rune.get(NKeys.ITEMSTACK_UPGRADE);
+		if (!runeSocketType.isPresent()) {
+			return ItemUpgradeTransactionResult.NOT_VALID_UPGRADE;
 		}
 		ItemSocketsData socketsData = itemSocketsData.get();
+		SocketType type = runeSocketType.get();
 
+		Optional<List<SocketType>> optionalSocketTypes = itemStack.get(NKeys.ITEM_SOCKET_CONTAINER);
+		int iter = 0;
+		if (optionalSocketTypes.isPresent()) {
+			List<Text> content = itemStack.get(NKeys.ITEM_SOCKET_CONTAINER_CONTENT).get();
+			List<SocketType> socketTypes = optionalSocketTypes.get();
 
-		Optional<List<ItemSocket>> opt = itemStack.get(NKeys.ITEM_SOCKET_CONTAINER);
-		if (opt.isPresent()) {
-			List<ItemSocket> itemSockets = opt.get();
-			for (ItemSocket itemSocket : itemSockets) {
-				if (itemSocket.getContent() == null && itemSocket.getType() == SocketType.ANY || itemSocket.getType() == SocketType.RUNE) {
-
-					itemStack.offer(NKeys.ITEM_SOCKET_CONTAINER, itemSockets);
-					break;
+			for (SocketType socketType : socketTypes) {
+				if ((type == SocketType.ANY || socketType == type || socketType == SocketType.ANY)
+						&& content.get(iter).equals(DataConstants.EMPTY_SOCKET)) {
+					
 				}
+				iter++;
 			}
-		} else {
-			return itemStack;
 		}
-
-		return itemStack;
+		return ItemUpgradeTransactionResult.OK;
 	}
+
 
 	public String getCurrentRuneCombination(ItemStack i) {
 		Optional<List<ItemSocket>> itemSockets = i.get(NKeys.ITEM_SOCKET_CONTAINER);

@@ -10,6 +10,7 @@ import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.inventory.ItemLoreSections;
 import cz.neumimto.rpg.inventory.LoreSectionDelimiter;
 import cz.neumimto.rpg.inventory.SocketType;
+import cz.neumimto.rpg.inventory.data.DataConstants;
 import cz.neumimto.rpg.inventory.data.ItemSocket;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
@@ -21,8 +22,10 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by NeumimTo on 20.1.2018.
@@ -115,18 +118,19 @@ public class ItemLoreBuilderService {
                 if (a.isEmpty())
                     return;
                 createDelimiter(sockets);
-                for (ItemSocket itemSocket : a) {
-                    SocketType type = itemSocket.getType();
+                List<Text> texts = is.get(NKeys.ITEM_SOCKET_CONTAINER_CONTENT).get(); // should be always present
+
+                int iter = 0;
+                for (SocketType type : a) {
+                    Text text = texts.get(iter);
+                    Text value = DataConstants.EMPTY_SOCKET.equals(text) ? TextHelper.parse(Localization.SOCKET_EMPTY) : text;
+
                     t.add(Text.builder()
-                            .append(TextHelper.parse(Localization.SOCKET_TYPES.get(type)))
-                            .append(socketcolon)
-                            .append(itemSocket.getContent() == null ? TextHelper.parse(Localization.SOCKET_EMPTY) : TextHelper.parse(itemSocket.getContent().getName()))
-                            .build()
-                    );
-                    Map<String, EffectParams> effects = itemSocket.getContent().getEffects();
-                    if (effects != null) {
-                        itemEffectsToTextList(effects);
-                    }
+                    .append(TextHelper.parse(Localization.SOCKET_TYPES.get(type)))
+                       .append(socketcolon)
+                       .append(value)
+                    .build());
+                    iter ++;
                 }
             });
         }
