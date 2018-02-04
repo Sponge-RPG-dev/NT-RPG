@@ -162,8 +162,8 @@ public class NKeys {
 		ITEMSTACK_UPGRADE = Key.builder()
 				.type(new TypeToken<Value<SocketType>>() {})
 				.query(DataQuery.of(".","ntrpg.item.upgrade"))
-				.name("itemstack upgrade")
-				.id("ntrpgitemupgrade")
+				.name("ItemStack Upgrade")
+				.id("nt-rpg:itemstack_upgrade")
 				.build();
 	}
 }

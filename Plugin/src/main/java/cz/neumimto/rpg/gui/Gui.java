@@ -212,4 +212,5 @@ public class Gui {
 	public static void displayInitialProperties(PlayerGroup byName, Player commandSource) {
 		getMessageTypeOf(commandSource).displayInitialProperties(byName, commandSource);
 	}
+
 }

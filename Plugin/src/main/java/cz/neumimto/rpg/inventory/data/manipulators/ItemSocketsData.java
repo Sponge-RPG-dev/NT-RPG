@@ -99,7 +99,8 @@ public class ItemSocketsData extends AbstractData<ItemSocketsData, ItemSocketsDa
     public Optional<ItemSocketsData> from(DataView view) {
         if (view.contains(NKeys.ITEM_SOCKET_CONTAINER.getQuery())
                 && view.contains(NKeys.ITEM_SOCKET_CONTAINER_CONTENT.getQuery())) {
-            this.sockets = (List<SocketType>) view.getList(NKeys.ITEM_SOCKET_CONTAINER.getQuery()).get();
+            this.sockets = ((List<String>) view.getList(NKeys.ITEM_SOCKET_CONTAINER.getQuery()).get())
+            .stream().map(SocketType::valueOf).collect(java.util.stream.Collectors.toList());
             this.content = (List<Text>) view.getList(NKeys.ITEM_SOCKET_CONTAINER_CONTENT.getQuery()).get();
             return Optional.of(this);
         } else {
@@ -125,7 +126,7 @@ public class ItemSocketsData extends AbstractData<ItemSocketsData, ItemSocketsDa
     @Override
     public DataContainer toContainer() {
         return super.toContainer()
-                .set(NKeys.ITEM_SOCKET_CONTAINER.getQuery(), sockets)
+                .set(NKeys.ITEM_SOCKET_CONTAINER.getQuery(), sockets.stream().map(SocketType::name).collect(java.util.stream.Collectors.toList()))
                 .set(NKeys.ITEM_SOCKET_CONTAINER_CONTENT.getQuery(), content);
     }
 

@@ -8,7 +8,12 @@ import cz.neumimto.core.ioc.Singleton;
 import org.slf4j.Logger;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by NeumimTo on 29.10.2015.
@@ -23,8 +28,8 @@ public class RWDao {
 		Set<Rune> s = new HashSet<>();
 		Config config = ConfigFactory.parseFile(p);
 		logger.info("Loading runes from " + p.getName());
-		ConfigObject runes = config.getObject("Runes");
-		for (String a : runes.keySet()) {
+		List<String> runes = config.getStringList("Runes");
+		for (String a : runes) {
 			Rune r = new Rune();
 			r.setName(a);
 			s.add(r);

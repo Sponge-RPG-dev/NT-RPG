@@ -24,7 +24,17 @@ import com.google.inject.Inject;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.FindPersistenceContextEvent;
 import cz.neumimto.core.ioc.IoC;
-import cz.neumimto.rpg.commands.*;
+import cz.neumimto.rpg.commands.AnyPlayerGroupCommandElement;
+import cz.neumimto.rpg.commands.AnySkillCommandElement;
+import cz.neumimto.rpg.commands.CharacterAttributeCommandElement;
+import cz.neumimto.rpg.commands.GlobalEffectCommandElement;
+import cz.neumimto.rpg.commands.LearnedSkillCommandElement;
+import cz.neumimto.rpg.commands.PartyMemberCommandElement;
+import cz.neumimto.rpg.commands.PlayerClassCommandElement;
+import cz.neumimto.rpg.commands.RaceCommandElement;
+import cz.neumimto.rpg.commands.RuneCommandElement;
+import cz.neumimto.rpg.commands.SocketTypeCommandElement;
+import cz.neumimto.rpg.commands.UnlearnedSkillCommandElement;
 import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
@@ -39,14 +49,27 @@ import cz.neumimto.rpg.inventory.SocketType;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
-import cz.neumimto.rpg.inventory.data.manipulators.*;
+import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemAttributesData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemRarityData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemSocketsData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemStackUpgradeData;
+import cz.neumimto.rpg.inventory.data.manipulators.LoreDamageData;
+import cz.neumimto.rpg.inventory.data.manipulators.LoreDurabilityData;
+import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemRequirementsData;
+import cz.neumimto.rpg.inventory.data.manipulators.SectionDelimiterData;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.listeners.DebugListener;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.players.*;
+import cz.neumimto.rpg.players.ActiveCharacter;
+import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.players.ExtendedNClass;
+import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
@@ -54,7 +77,13 @@ import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.scripting.JSLoader;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ActiveSkill;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.utils.FileUtils;
 import cz.neumimto.rpg.utils.SkillTreeActionResult;
 import org.slf4j.Logger;
@@ -87,7 +116,11 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -209,7 +242,7 @@ public class NtRpgPlugin {
 				.buildAndRegister(plugin);
 
 		DataRegistration.<ItemStackUpgradeData, ItemStackUpgradeData.Immutable>builder()
-				.manipulatorId("itemstack-upgrade")
+				.manipulatorId("itemstack_upgrade")
 				.dataName("ItemStack Upgrade")
 				.dataClass(ItemStackUpgradeData.class)
 				.immutableClass(ItemStackUpgradeData.Immutable.class)

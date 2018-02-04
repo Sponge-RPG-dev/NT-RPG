@@ -9,13 +9,14 @@ import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
+import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.events.RebuildRunewordEvent;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.ItemUpgradeTransactionResult;
 import cz.neumimto.rpg.inventory.SocketType;
 import cz.neumimto.rpg.inventory.data.DataConstants;
-import cz.neumimto.rpg.inventory.data.ItemSocket;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemSocketsData;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemStackUpgradeData;
@@ -35,8 +36,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -77,7 +83,7 @@ public class RWService {
 		if (!p.exists()) {
 			try {
 				p.createNewFile();
-				Files.write(p.toPath(), "Runes:{},\nRuneWords:[]".getBytes());
+				Files.write(p.toPath(), "Runes:[],\nRuneWords:[]".getBytes());
 				return;
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -184,7 +190,7 @@ public class RWService {
 		return itemStack;
 	}
 
-	public ItemUpgradeTransactionResult insertRune(ItemStack itemStack, ItemStack rune) {
+	public ItemUpgradeTransactionResult insertToNextEmptySocket(ItemStack itemStack, ItemStack rune) {
 		Optional<ItemSocketsData> itemSocketsData = itemStack.get(ItemSocketsData.class);
 		if (!itemSocketsData.isPresent()) {
 			return ItemUpgradeTransactionResult.NO_EMPTY_SOCKET;
@@ -205,29 +211,57 @@ public class RWService {
 			for (SocketType socketType : socketTypes) {
 				if ((type == SocketType.ANY || socketType == type || socketType == SocketType.ANY)
 						&& content.get(iter).equals(DataConstants.EMPTY_SOCKET)) {
-					
+					//
+					content.set(iter, rune.get(Keys.DISPLAY_NAME).get());
+					itemStack.offer(NKeys.ITEM_SOCKET_CONTAINER_CONTENT, content);
+					//
+					Map<IGlobalEffect, EffectParams> itemEffects = inventoryService.getItemEffects(rune);
+					for (Map.Entry<IGlobalEffect, EffectParams> entry : itemEffects.entrySet()) {
+						entry.getValue().put(DataConstants.ITEM_EFFECT_SOCKET_ID_REF, String.valueOf(iter));
+						inventoryService.addEffectsToItemStack(itemStack, entry.getKey().getName() ,entry.getValue());
+					}
+					inventoryService.updateLore(itemStack);
+					return ItemUpgradeTransactionResult.OK;
 				}
 				iter++;
 			}
 		}
-		return ItemUpgradeTransactionResult.OK;
+		return ItemUpgradeTransactionResult.NO_EMPTY_SOCKET;
 	}
 
-
-	public String getCurrentRuneCombination(ItemStack i) {
-		Optional<List<ItemSocket>> itemSockets = i.get(NKeys.ITEM_SOCKET_CONTAINER);
-		if (!itemSockets.isPresent())
+	/**
+	 *
+	 * @param itemstack having {@link cz.neumimto.rpg.inventory.data.manipulators.ItemSocketsData}
+	 * @return rune combination or null if there is at least one jewel or gem in the socket container
+	 */
+	public String getCurrentRuneCombination(ItemStack itemstack) {
+		Optional<List<SocketType>> socketTypes = itemstack.get(NKeys.ITEM_SOCKET_CONTAINER);
+		if (!socketTypes.isPresent())
 			return null;
-		List<ItemSocket> sockets = itemSockets.get();
+		List<SocketType> sockets = socketTypes.get();
+
+		List<Text> content = itemstack.get(NKeys.ITEM_SOCKET_CONTAINER_CONTENT).get();
+
+		int id = 0;
 		StringBuilder builder = new StringBuilder();
-		for (ItemSocket itemSocket : sockets) {
-			if (itemSocket.getType() != SocketType.RUNE || itemSocket.getType() != SocketType.ANY || itemSocket.getContent() == null) {
-				builder = null;
-				break;
+		for (SocketType socket : sockets) {
+			switch (socket) {
+				case RUNE:
+					builder.append(content.get(id).toPlain());
+					break;
+				case ANY:
+					String s = content.get(id).toPlain();
+					if (runes.containsKey(s)) {
+						builder.append(s);
+					} else return null;
+					break;
+				default:
+					return null;
 			}
-			builder.append(itemSocket.getContent().getName());
+			id++;
 		}
-		return builder != null ? builder.toString() : null;
+
+		return builder.toString();
 	}
 
 	public ItemStack findRuneword(ItemStack i) {
