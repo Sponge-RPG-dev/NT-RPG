@@ -11,7 +11,6 @@ import cz.neumimto.rpg.inventory.ItemLoreSections;
 import cz.neumimto.rpg.inventory.LoreSectionDelimiter;
 import cz.neumimto.rpg.inventory.SocketType;
 import cz.neumimto.rpg.inventory.data.DataConstants;
-import cz.neumimto.rpg.inventory.data.ItemSocket;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.reloading.Reload;
@@ -22,10 +21,9 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by NeumimTo on 20.1.2018.
@@ -63,7 +61,7 @@ public class ItemLoreBuilderService {
         sockets = TextHelper.parse(Localization.ITEM_SOCKETS_SECTION);
         socketcolon = TextHelper.parse(Localization.ITEM_SOCKETS_SECTION_COLONS);
         attributes = TextHelper.parse(Localization.ITEM_ATTRIBUTES_SECTIO);
-        loreOrder = PluginConfig.ITEM_LORE_ORDER;
+        loreOrder = PluginConfig.ITEM_LORE_ORDER.stream().map(ItemLoreSections::valueOf).collect(Collectors.toList());
     }
 
     public static class ItemLoreBuilder {

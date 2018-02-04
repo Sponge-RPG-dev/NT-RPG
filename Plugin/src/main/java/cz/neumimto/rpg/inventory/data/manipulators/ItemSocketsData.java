@@ -101,7 +101,7 @@ public class ItemSocketsData extends AbstractData<ItemSocketsData, ItemSocketsDa
                 && view.contains(NKeys.ITEM_SOCKET_CONTAINER_CONTENT.getQuery())) {
             this.sockets = ((List<String>) view.getList(NKeys.ITEM_SOCKET_CONTAINER.getQuery()).get())
             .stream().map(SocketType::valueOf).collect(java.util.stream.Collectors.toList());
-            this.content = (List<Text>) view.getList(NKeys.ITEM_SOCKET_CONTAINER_CONTENT.getQuery()).get();
+            this.content = view.getSerializableList(NKeys.ITEM_SOCKET_CONTAINER_CONTENT.getQuery(), Text.class).get();
             return Optional.of(this);
         } else {
             return Optional.empty();
@@ -177,7 +177,7 @@ public class ItemSocketsData extends AbstractData<ItemSocketsData, ItemSocketsDa
         public DataContainer toContainer() {
             return super.toContainer()
                     .set(NKeys.ITEM_SOCKET_CONTAINER.getQuery(), sockets.stream().map(SocketType::name).collect(java.util.stream.Collectors.toList()))
-                    .set(NKeys.ITEM_SOCKET_CONTAINER_CONTENT.getQuery(), content);
+                    .set(NKeys.ITEM_SOCKET_CONTAINER_CONTENT.getQuery(), ItemSocketsData.this.getContent());
         }
 
         public List<SocketType> getSockets() {

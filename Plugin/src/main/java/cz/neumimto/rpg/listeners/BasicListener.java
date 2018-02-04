@@ -81,9 +81,11 @@ import org.spongepowered.api.item.inventory.BlockCarrier;
 import org.spongepowered.api.item.inventory.Container;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
+import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -127,16 +129,19 @@ public class BasicListener {
 
     @Listener(order = Order.BEFORE_POST)
     public void onAttack(InteractEntityEvent.Primary event) {
-        if (event.isCancelled())
+        if (event.isCancelled()) {
             return;
-        if (!Utils.isLivingEntity(event.getTargetEntity()))
+        }
+        if (!Utils.isLivingEntity(event.getTargetEntity())) {
             return;
+        }
         Optional<Player> first = event.getCause().first(Player.class);
         IActiveCharacter character = null;
         if (first.isPresent()) {
             character = characterService.getCharacter(first.get().getUniqueId());
-            if (character.isStub())
+            if (character.isStub()) {
                 return;
+            }
             Hotbar query = first.get().getInventory().query(Hotbar.class);
             inventoryService.onLeftClick(character, query.getSelectedSlotIndex());
         }
@@ -168,8 +173,9 @@ public class BasicListener {
                 return;
             } else {
                 IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());
-                if (character.isStub())
+                if (character.isStub()) {
                     return;
+                }
                 inventoryService.onRightClick(character, 0);
             }
         }
@@ -182,8 +188,9 @@ public class BasicListener {
         if (first.isPresent()) {
             Player pl = first.get();
             IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());
-            if (character.isStub())
+            if (character.isStub()) {
                 return;
+            }
             Hotbar h = pl.getInventory().query(Hotbar.class);
             inventoryService.onLeftClick(character, h.getSelectedSlotIndex());
         }
@@ -198,8 +205,9 @@ public class BasicListener {
             event.setCancelled(true); //restrict armor equip on rightclick
             return;
         }
-        if (character.isStub())
+        if (character.isStub()) {
             return;
+        }
         Hotbar h = pl.getInventory().query(Hotbar.class);
         inventoryService.onRightClick(character, h.getSelectedSlotIndex());
     }
@@ -253,7 +261,8 @@ public class BasicListener {
                 }
                 newdamage *= damageService.getEntityBonusDamage(entity, entityDamageSource.getType());
                 if (entityDamageSource.getType() == DamageTypes.ATTACK) {
-                    INEntityWeaponDamageEvent e = new INEntityWeaponDamageEvent(entityService.get(source), entityService.get(targetEntity), newdamage);
+                    INEntityWeaponDamageEvent e =
+                            new INEntityWeaponDamageEvent(entityService.get(source), entityService.get(targetEntity), newdamage);
                     Sponge.getGame().getEventManager().post(e);
                     if (e.isCancelled() || e.getDamage() <= 0) {
                         event.setCancelled(true);
@@ -265,20 +274,21 @@ public class BasicListener {
             //todo
             //defende
                 /*
-		        if (targetEntity.getHotbarObjectType() == EntityTypes.PLAYER) {
+                if (targetEntity.getHotbarObjectType() == EntityTypes.PLAYER) {
                     IActiveCharacter tcharacter = characterService.getCharacter(targetEntity.getUniqueId());
                     double armor = tcharacter.getArmorValue();
                     final double damagefactor = damageService.DamageArmorReductionFactor.apply(newdamage, armor);
                     event.setBaseDamage(ce.getDamage());
-                    event.setDamage(DamageModifier.builder().cause(Cause.ofNullable(null)).type(DamageModifierTypes.ARMOR).build(), input -> input * ce.getDamagefactor());
+                    event.setDamage(DamageModifier.builder().cause(Cause.ofNullable(null)).type(DamageModifierTypes.ARMOR).build(), input -> input
+                    * ce.getDamagefactor());
                 }*/
         }
     }
 
     @Listener
     public void onIndirectEntityDamage(DamageEntityEvent event,
-                                       @First(typeFilter = IndirectEntityDamageSource.class)
-                                               IndirectEntityDamageSource indirectEntityDamageSource) {
+            @First(typeFilter = IndirectEntityDamageSource.class)
+                    IndirectEntityDamageSource indirectEntityDamageSource) {
 
         Projectile projectile = (Projectile) indirectEntityDamageSource.getSource();
         IEntity shooter = entityService.get((Entity) projectile.getShooter());
@@ -312,8 +322,8 @@ public class BasicListener {
 
     @Listener
     public void onSkillDamage(DamageEntityEvent event,
-                              @First(typeFilter = ISkillDamageSource.class)
-                                      ISkillDamageSource iSkillDamageSource) {
+            @First(typeFilter = ISkillDamageSource.class)
+                    ISkillDamageSource iSkillDamageSource) {
         IEntity caster = iSkillDamageSource.getCaster();
         ISkill skill = iSkillDamageSource.getSkill();
         DamageType type = iSkillDamageSource.getType();
@@ -368,8 +378,9 @@ public class BasicListener {
         Entity type = event.getTargetEntity();
         if (type.getType() == EntityTypes.PLAYER) {
             IActiveCharacter character = characterService.getCharacter(type.getUniqueId());
-            if (character.isStub())
+            if (character.isStub()) {
                 return;
+            }
             characterService.respawnCharacter(character, event.getTargetEntity());
 
         }
@@ -405,33 +416,34 @@ public class BasicListener {
         if (i.getArchetype() == InventoryArchetypes.ANVIL) {
             if (i instanceof BlockCarrier) {
                 BlockCarrier b = (BlockCarrier) i;
-
-                    if (isSocketingViable(b.getLocation())) {
-                        Optional<ItemStack> peek = event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(0))).peek();
-                        Optional<ItemStack> peek1 = event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(1))).peek();
-                        if (peek.isPresent() && peek1.isPresent()) {
-                            ItemStack rune = peek1.get();
-                            if (!rwService.isRune(rune)) {
-                                event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(2))).set(ItemStack.empty());
-                                return;
-                            }
-                            ItemStack itemStack = peek.get();
-                            ItemStack copy = itemStack.copy();
-                            ItemUpgradeTransactionResult result = rwService.insertToNextEmptySocket(copy, rune);
-                            if (result != ItemUpgradeTransactionResult.OK) {
-                                event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(2))).set(ItemStack.empty());
-                            } else {
-                                event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(2))).set(copy);
-                            }
-                        } else {
+                //on item insert
+                if (isSocketingViable(b.getLocation())) {
+                    Optional<ItemStack> peek = event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(0))).peek();
+                    Optional<ItemStack> peek1 = event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(1))).peek();
+                    if (peek.isPresent() && peek1.isPresent()) {
+                        ItemStack rune = peek1.get();
+                        if (!rwService.isRune(rune)) {
                             event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(2))).set(ItemStack.empty());
+                            return;
                         }
+                        ItemStack itemStack = peek.get();
+                        ItemStack copy = itemStack.copy();
+                        ItemUpgradeTransactionResult result = rwService.insertToNextEmptySocket(copy, rune);
+                        if (result != ItemUpgradeTransactionResult.OK) {
+                            event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(2))).set(ItemStack.empty());
+                        } else {
+                            event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(2))).set(copy);
+                        }
+                    } else {
+                        event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(2))).set(ItemStack.empty());
                     }
+                }
+                for (SlotTransaction slotTransaction : event.getTransactions()) {
+                    Slot slot = slotTransaction.getSlot();
                 }
             }
         }
-
-
+    }
 
 
     private boolean isSocketingViable(Location<World> location) {

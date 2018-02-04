@@ -24,10 +24,11 @@ import cz.neumimto.configuration.ConfigurationContainer;
 import cz.neumimto.rpg.inventory.ItemLoreSections;
 import org.spongepowered.api.text.format.TextColors;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -176,5 +177,5 @@ public class PluginConfig {
 	public static String ITEM_LORE_RARITY_COLOR = TextColors.DARK_GRAY.getName();
 
 	@ConfigValue
-	public static List<ItemLoreSections> ITEM_LORE_ORDER = Arrays.asList(ItemLoreSections.values());
+	public static List<String> ITEM_LORE_ORDER = Stream.of(ItemLoreSections.values()).map(ItemLoreSections::name).collect(Collectors.toList());
 }
