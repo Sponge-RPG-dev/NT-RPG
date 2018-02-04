@@ -126,7 +126,8 @@ public class ItemSocketsData extends AbstractData<ItemSocketsData, ItemSocketsDa
     @Override
     public DataContainer toContainer() {
         return super.toContainer()
-                .set(NKeys.ITEM_SOCKET_CONTAINER.getQuery(), sockets.stream().map(SocketType::name).collect(java.util.stream.Collectors.toList()))
+                .set(NKeys.ITEM_SOCKET_CONTAINER.getQuery(),
+                        sockets.stream().map(SocketType::name).collect(java.util.stream.Collectors.toList()))
                 .set(NKeys.ITEM_SOCKET_CONTAINER_CONTENT.getQuery(), content);
     }
 
@@ -175,8 +176,8 @@ public class ItemSocketsData extends AbstractData<ItemSocketsData, ItemSocketsDa
         @Override
         public DataContainer toContainer() {
             return super.toContainer()
-                    .set(NKeys.ITEM_SOCKET_CONTAINER.getQuery(), sockets)
-                    .set(NKeys.ITEM_SOCKET_CONTAINER_CONTENT, content);
+                    .set(NKeys.ITEM_SOCKET_CONTAINER.getQuery(), sockets.stream().map(SocketType::name).collect(java.util.stream.Collectors.toList()))
+                    .set(NKeys.ITEM_SOCKET_CONTAINER_CONTENT.getQuery(), content);
         }
 
         public List<SocketType> getSockets() {
