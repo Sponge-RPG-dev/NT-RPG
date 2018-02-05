@@ -473,9 +473,6 @@ public class InventoryService {
 		if (ItemStackUtils.isCharm(is)) {
 			return buildCharm(character, is);
 		}
-		if (ItemStackUtils.isItemRune(is)) {
-			return new HotbarRune(is);
-		}
 		ItemGroup itemGroup = getItemGroup(is);
 		if (itemGroup != null) {
 			return buildHotbarWeapon(character, is);
@@ -490,16 +487,6 @@ public class InventoryService {
 		return charm;
 	}
 
-	private HotbarRune buildHotbarRune(ItemStack is) {
-		HotbarRune rune = new HotbarRune(is);
-		Optional<Text> text = is.get(Keys.DISPLAY_NAME);
-		if (text.isPresent()) {
-			String s = text.get().toPlain();
-			ItemUpgrade itemUpgrade = rwService.getRune(s);
-			rune.itemUpgrade = itemUpgrade;
-		}
-		return rune;
-	}
 
 	public Weapon buildHotbarWeapon(IActiveCharacter character, ItemStack is) {
 		Weapon w = new Weapon(is);
