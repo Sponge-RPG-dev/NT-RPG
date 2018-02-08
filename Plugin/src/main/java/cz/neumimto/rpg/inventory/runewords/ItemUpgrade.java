@@ -1,7 +1,9 @@
 package cz.neumimto.rpg.inventory.runewords;
 
 import cz.neumimto.rpg.effects.EffectParams;
-import cz.neumimto.rpg.inventory.SocketType;
+import cz.neumimto.rpg.inventory.sockets.SocketType;
+import cz.neumimto.rpg.inventory.sockets.SocketTypes;
+import org.spongepowered.api.Sponge;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,11 +28,11 @@ public class ItemUpgrade extends HashMap<String, Object> {
 
     public SocketType getSocketType() {
         String s = (String) get(SOCKET_TYPE);
-        return s == null ? null : SocketType.valueOf(s);
+        return s == null ? null : Sponge.getRegistry().getType(SocketType.class, s).get();
     }
 
     public void setSocketType(SocketType socketType) {
-        put(SOCKET_TYPE, socketType.name());
+        put(SOCKET_TYPE, socketType.getId());
     }
 
     public String getName() {

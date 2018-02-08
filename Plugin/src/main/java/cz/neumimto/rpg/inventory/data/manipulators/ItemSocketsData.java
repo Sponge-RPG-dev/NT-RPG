@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.inventory.data.manipulators;
 
-import cz.neumimto.rpg.inventory.SocketType;
+import cz.neumimto.rpg.inventory.sockets.SocketType;
+import cz.neumimto.rpg.inventory.sockets.SocketTypes;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
@@ -18,7 +19,9 @@ import org.spongepowered.api.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by NeumimTo on 13.1.2018.
@@ -100,7 +103,13 @@ public class ItemSocketsData extends AbstractData<ItemSocketsData, ItemSocketsDa
         if (view.contains(NKeys.ITEM_SOCKET_CONTAINER.getQuery())
                 && view.contains(NKeys.ITEM_SOCKET_CONTAINER_CONTENT.getQuery())) {
             this.sockets = ((List<String>) view.getList(NKeys.ITEM_SOCKET_CONTAINER.getQuery()).get())
-            .stream().map(SocketType::valueOf).collect(java.util.stream.Collectors.toList());
+                        .stream()
+                            .map(a -> {
+                                SocketType type = Sponge.getRegistry().getType(SocketType.class, a).orElse(null);
+                                return type;
+                            })
+                            .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
             this.content = view.getSerializableList(NKeys.ITEM_SOCKET_CONTAINER_CONTENT.getQuery(), Text.class).get();
             return Optional.of(this);
         } else {
@@ -127,7 +136,7 @@ public class ItemSocketsData extends AbstractData<ItemSocketsData, ItemSocketsDa
     public DataContainer toContainer() {
         return super.toContainer()
                 .set(NKeys.ITEM_SOCKET_CONTAINER.getQuery(),
-                        sockets.stream().map(SocketType::name).collect(java.util.stream.Collectors.toList()))
+                        sockets.stream().map(SocketType::getId).collect(Collectors.toList()))
                 .set(NKeys.ITEM_SOCKET_CONTAINER_CONTENT.getQuery(), content);
     }
 
@@ -176,7 +185,7 @@ public class ItemSocketsData extends AbstractData<ItemSocketsData, ItemSocketsDa
         @Override
         public DataContainer toContainer() {
             return super.toContainer()
-                    .set(NKeys.ITEM_SOCKET_CONTAINER.getQuery(), sockets.stream().map(SocketType::name).collect(java.util.stream.Collectors.toList()))
+                    .set(NKeys.ITEM_SOCKET_CONTAINER.getQuery(), sockets.stream().map(SocketType::getId).collect(java.util.stream.Collectors.toList()))
                     .set(NKeys.ITEM_SOCKET_CONTAINER_CONTENT.getQuery(), ItemSocketsData.this.getContent());
         }
 

@@ -1,12 +1,16 @@
 package cz.neumimto.rpg.inventory.data.manipulators;
 
-import cz.neumimto.rpg.inventory.SocketType;
+import cz.neumimto.rpg.inventory.sockets.SocketType;
 import cz.neumimto.rpg.inventory.data.NKeys;
+import cz.neumimto.rpg.inventory.sockets.SocketTypes;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.DataManipulatorBuilder;
+import org.spongepowered.api.data.manipulator.immutable.ImmutableVariantData;
+import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableSingleCatalogData;
 import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableSingleEnumData;
+import org.spongepowered.api.data.manipulator.mutable.common.AbstractSingleCatalogData;
 import org.spongepowered.api.data.manipulator.mutable.common.AbstractSingleEnumData;
 import org.spongepowered.api.data.merge.MergeFunction;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
@@ -15,11 +19,11 @@ import org.spongepowered.api.data.persistence.InvalidDataException;
 import java.util.Optional;
 
 
-public class ItemStackUpgradeData extends AbstractSingleEnumData<SocketType, ItemStackUpgradeData, ItemStackUpgradeData.Immutable> {
+public class ItemStackUpgradeData extends AbstractSingleCatalogData<SocketType, ItemStackUpgradeData, ItemStackUpgradeData.Immutable> {
 
 
     public ItemStackUpgradeData(SocketType value) {
-        super(value, NKeys.ITEMSTACK_UPGRADE, SocketType.ANY);
+        super(value, NKeys.ITEMSTACK_UPGRADE);
     }
 
     @Override
@@ -28,7 +32,7 @@ public class ItemStackUpgradeData extends AbstractSingleEnumData<SocketType, Ite
         if (a.isPresent()) {
            ItemStackUpgradeData otherData = a.get();
            ItemStackUpgradeData finalData = overlap.merge(this, otherData);
-            setValue(finalData.getValue());
+           setValue(finalData.getValue());
         }
         return Optional.of(this);
     }
@@ -43,15 +47,8 @@ public class ItemStackUpgradeData extends AbstractSingleEnumData<SocketType, Ite
             return Optional.empty();
         }
 
-        setValue(SocketType.valueOf((String) container.get(cz.neumimto.rpg.inventory.data.NKeys.ITEMSTACK_UPGRADE.getQuery()).get()));
+        setValue((SocketType) container.get(NKeys.ITEMSTACK_UPGRADE.getQuery()).get());
         return Optional.of(this);
-    }
-
-    @Override
-    public DataContainer toContainer() {
-        DataContainer dataContainer = super.toContainer();
-        dataContainer.set(NKeys.ITEMSTACK_UPGRADE.getQuery(), getValue().name());
-        return dataContainer;
     }
 
     @Override
@@ -69,11 +66,11 @@ public class ItemStackUpgradeData extends AbstractSingleEnumData<SocketType, Ite
         return Builder.CONTENT_VERSION;
     }
 
-    public static class Immutable extends AbstractImmutableSingleEnumData<SocketType, Immutable, ItemStackUpgradeData> {
+    public static class Immutable extends AbstractImmutableSingleCatalogData<SocketType, Immutable, ItemStackUpgradeData> {
 
 
         public Immutable(SocketType value) {
-            super(value,SocketType.ANY, NKeys.ITEMSTACK_UPGRADE);
+            super(value, SocketTypes.ANY, NKeys.ITEMSTACK_UPGRADE);
         }
 
         @Override
@@ -81,12 +78,6 @@ public class ItemStackUpgradeData extends AbstractSingleEnumData<SocketType, Ite
             return Builder.CONTENT_VERSION;
         }
 
-        @Override
-        public DataContainer toContainer() {
-            DataContainer dataContainer = super.toContainer();
-            dataContainer.set(NKeys.ITEMSTACK_UPGRADE, getValue());
-            return dataContainer;
-        }
 
         @Override
         public ItemStackUpgradeData asMutable() {
@@ -104,7 +95,7 @@ public class ItemStackUpgradeData extends AbstractSingleEnumData<SocketType, Ite
 
         @Override
         public ItemStackUpgradeData create() {
-            return new ItemStackUpgradeData(SocketType.RUNE);
+            return new ItemStackUpgradeData(SocketTypes.RUNE);
         }
 
         @Override

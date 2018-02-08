@@ -14,7 +14,8 @@ import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.events.RebuildRunewordEvent;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.ItemUpgradeTransactionResult;
-import cz.neumimto.rpg.inventory.SocketType;
+import cz.neumimto.rpg.inventory.sockets.SocketType;
+import cz.neumimto.rpg.inventory.sockets.SocketTypes;
 import cz.neumimto.rpg.inventory.data.DataConstants;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemSocketsData;
@@ -208,7 +209,7 @@ public class RWService {
         int iter = 0;
 
         for (SocketType socketType : socketTypes) {
-            if ((type == SocketType.ANY || socketType == type || socketType == SocketType.ANY)
+            if ((type == SocketTypes.ANY || socketType == type || socketType == SocketTypes.ANY)
                     && content.get(iter).equals(DataConstants.EMPTY_SOCKET)) {
                 //
                 content.set(iter, rune.get(Keys.DISPLAY_NAME).get());
@@ -243,21 +244,19 @@ public class RWService {
 
         int id = 0;
         StringBuilder builder = new StringBuilder();
+
         for (SocketType socket : sockets) {
-            switch (socket) {
-                case RUNE:
-                    builder.append(content.get(id).toPlain());
-                    break;
-                case ANY:
-                    String s = content.get(id).toPlain();
-                    if (runes.containsKey(s)) {
-                        builder.append(s);
-                    } else {
-                        return null;
-                    }
-                    break;
-                default:
+            if (socket.equals(SocketTypes.RUNE)) {
+                builder.append(content.get(id).toPlain());
+            } else if (socket.equals(SocketTypes.ANY)) {
+                String s = content.get(id).toPlain();
+                if (runes.containsKey(s)) {
+                    builder.append(s);
+                } else {
                     return null;
+                }
+            } else {
+                return null;
             }
             id++;
         }

@@ -33,7 +33,6 @@ import cz.neumimto.rpg.commands.PartyMemberCommandElement;
 import cz.neumimto.rpg.commands.PlayerClassCommandElement;
 import cz.neumimto.rpg.commands.RaceCommandElement;
 import cz.neumimto.rpg.commands.RuneCommandElement;
-import cz.neumimto.rpg.commands.SocketTypeCommandElement;
 import cz.neumimto.rpg.commands.UnlearnedSkillCommandElement;
 import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.configuration.Localization;
@@ -45,7 +44,9 @@ import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.inventory.SocketType;
+import cz.neumimto.rpg.inventory.sockets.SocketType;
+import cz.neumimto.rpg.inventory.sockets.SocketTypeRegistry;
+import cz.neumimto.rpg.inventory.sockets.SocketTypes;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
@@ -98,6 +99,7 @@ import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.GameRegistryEvent;
 import org.spongepowered.api.event.game.state.GamePostInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -106,8 +108,10 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.SpongeExecutorService;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -130,6 +134,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(id = "nt-rpg", version = Version.VERSION, name = "NT-Rpg", dependencies = {
 		@Dependency(id = "nt-core", version = "1.9", optional = false)
 })
+@Resource
 public class NtRpgPlugin {
 
 	public static String workingDir;
@@ -249,6 +254,15 @@ public class NtRpgPlugin {
 				.builder(new ItemStackUpgradeData.Builder())
 				.buildAndRegister(plugin);
 
+		Sponge.getRegistry().registerModule(SocketType.class, new SocketTypeRegistry());
+	}
+
+	@Listener
+	public void postInit(GameRegistryEvent.Register<SocketType> event) {
+		event.register(SocketTypes.ANY);
+		event.register(SocketTypes.GEM);
+		event.register(SocketTypes.JEWEL);
+		event.register(SocketTypes.RUNE);
 	}
 
 	@Listener
@@ -439,17 +453,22 @@ public class NtRpgPlugin {
 								.FORMATTING_CODE
 								.deserialize(CommandLocalization.COMMAND_ADMIN_SOCKET))
 				.arguments(
-						new SocketTypeCommandElement(TextHelper.parse("type"))
+						GenericArguments.catalogedElement(Text.of("type"), SocketType.class)
 				)
 				.executor((src, args) -> {
 					Player player = (Player) src;
-					SocketType type = args.<SocketType>getOne("type").orElse(SocketType.ANY);
-					Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
-					if (itemInHand.isPresent()) {
-						ItemStack itemStack = NtRpgPlugin.GlobalScope.runewordService.createSocket(itemInHand.get(), type);
-						player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
+					Optional<SocketType> type = args.getOne("type");
+					if (type.isPresent()) {
+						Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
+						if (itemInHand.isPresent()) {
+							ItemStack itemStack = NtRpgPlugin.GlobalScope.runewordService.createSocket(itemInHand.get(), type.get());
+							player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
+							return CommandResult.builder().affectedItems(1).build();
+						}
+						src.sendMessage(Text.builder(Localization.NO_ITEM_IN_HAND).color(TextColors.RED).build());
+						return CommandResult.empty();
 					}
-					return CommandResult.success();
+					return CommandResult.empty();
 				})
 				.build();
 
@@ -469,7 +488,7 @@ public class NtRpgPlugin {
 					Rune runee = args.<Rune>getOne("rune").get();
 					Player player = (Player) src;
 
-					ItemStack is = NtRpgPlugin.GlobalScope.runewordService.createRune(SocketType.RUNE, runee.getName());
+					ItemStack is = NtRpgPlugin.GlobalScope.runewordService.createRune(SocketTypes.RUNE, runee.getName());
 					player.getInventory().offer(is);
 					return CommandResult.success();
 				})

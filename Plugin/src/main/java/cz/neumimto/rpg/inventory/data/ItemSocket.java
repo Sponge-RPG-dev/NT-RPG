@@ -1,25 +1,25 @@
 package cz.neumimto.rpg.inventory.data;
 
-import cz.neumimto.rpg.inventory.SocketType;
+import cz.neumimto.rpg.inventory.sockets.SocketTypes;
 import cz.neumimto.rpg.inventory.runewords.ItemUpgrade;
 
 public class ItemSocket {
-    private SocketType type;
+    private SocketTypes type;
     private ItemUpgrade content;
 
     public ItemSocket() {
     }
 
-    public ItemSocket(SocketType type, ItemUpgrade content) {
+    public ItemSocket(SocketTypes type, ItemUpgrade content) {
         this.type = type;
         this.content = content;
     }
 
-    public SocketType getType() {
+    public SocketTypes getType() {
         return type;
     }
 
-    public void setType(SocketType type) {
+    public void setType(SocketTypes type) {
         this.type = type;
     }
 

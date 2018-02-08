@@ -20,7 +20,8 @@ package cz.neumimto.rpg.configuration;
 
 import cz.neumimto.configuration.ConfigValue;
 import cz.neumimto.configuration.ConfigurationContainer;
-import cz.neumimto.rpg.inventory.SocketType;
+import cz.neumimto.rpg.inventory.sockets.SocketType;
+import cz.neumimto.rpg.inventory.sockets.SocketTypes;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -363,10 +364,10 @@ public class Localization {
 
 	@ConfigValue
 	public static Map<SocketType, String> SOCKET_TYPES = new HashMap<SocketType, String>() {{
-		put(SocketType.ANY, "&8Any");
-		put(SocketType.GEM, "&8Gem");
-		put(SocketType.JEWEL, "&8Jewel");
-		put(SocketType.RUNE, "&8Rune");
+		put(SocketTypes.ANY, "&8Any");
+		put(SocketTypes.GEM, "&8Gem");
+		put(SocketTypes.JEWEL, "&8Jewel");
+		put(SocketTypes.RUNE, "&8Rune");
 	}};
 
 	@ConfigValue
