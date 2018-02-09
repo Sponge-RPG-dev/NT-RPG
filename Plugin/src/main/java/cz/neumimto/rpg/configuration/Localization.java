@@ -363,11 +363,11 @@ public class Localization {
 	public static String ITEM_ATTRIBUTES_SECTIO = "&aAttributes";
 
 	@ConfigValue
-	public static Map<SocketType, String> SOCKET_TYPES = new HashMap<SocketType, String>() {{
-		put(SocketTypes.ANY, "&8Any");
-		put(SocketTypes.GEM, "&8Gem");
-		put(SocketTypes.JEWEL, "&8Jewel");
-		put(SocketTypes.RUNE, "&8Rune");
+	public static Map<String, String> SOCKET_TYPES = new HashMap<String, String>() {{
+		put(SocketTypes.ANY.getId(), "&8Any");
+		put(SocketTypes.GEM.getId(), "&8Gem");
+		put(SocketTypes.JEWEL.getId(), "&8Jewel");
+		put(SocketTypes.RUNE.getId(), "&8Rune");
 	}};
 
 	@ConfigValue
