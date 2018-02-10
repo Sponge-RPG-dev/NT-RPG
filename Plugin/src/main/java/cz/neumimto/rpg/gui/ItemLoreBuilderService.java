@@ -52,7 +52,7 @@ public class ItemLoreBuilderService {
         effectName = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_NAME_COLOR).get();
         doubleColon = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_COLON_COLOR).get();
         value = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_VALUE_COLOR).get();
-        effectSettings = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_SETTING_NAME_COLOR).get();
+        effectSettings = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_SECTION_COLOR).get();
 
         effectSection = TextHelper.parse(Localization.ITEM_EFFECTS_SECTION);
         rarity = TextHelper.parse(Localization.ITEM_RARITY_SECTION);
@@ -117,9 +117,7 @@ public class ItemLoreBuilderService {
                 createDelimiter(ItemLoreBuilderService.sockets);
                 for (int i = 0; i < sockets.size(); i++) {
                     if (DataConstants.EMPTY_SOCKET.equals(content.get(i))) {
-                        t.add(Text.builder().append(TextHelper.parse(String.format(Localization.SOCKET_EMPTY, sockets.get(i).getName()))).color(TextColors
-                                .DARK_GRAY)
-                                .build());
+                        t.add(Text.builder().append(TextHelper.parse(String.format(Localization.SOCKET_EMPTY, sockets.get(i).getName())))                                .build());
                     } else {
                         t.add(Text.builder("- ").color(TextColors.DARK_RED).append(content).build());
                     }

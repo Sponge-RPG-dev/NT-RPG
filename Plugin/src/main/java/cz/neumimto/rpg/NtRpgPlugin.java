@@ -419,6 +419,7 @@ public class NtRpgPlugin {
 									map = gson.fromJson(s, EffectParams.class);
 								}
 								itemStack = GlobalScope.inventorySerivce.addEffectsToItemStack(itemStack, effect.getName(), map);
+								itemStack = GlobalScope.inventorySerivce.updateLore(itemStack);
 								player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
 								player.sendMessage(TextHelper.parse("Enchantment " + effect.getName() + " added"));
 							}

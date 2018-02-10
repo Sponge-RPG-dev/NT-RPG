@@ -353,13 +353,10 @@ public class Localization {
 	public static String ITEM_LEVEL_SECTION = "&8Level: ";
 
 	@ConfigValue
-	public static String ITEM_SOCKETS_SECTION = "&8Sockets";
+	public static String ITEM_SOCKETS_SECTION = "&6Sockets";
 
 	@ConfigValue
-	public static String ITEM_SOCKETS_SECTION_COLONS = "&8:";
-
-	@ConfigValue
-	public static String ITEM_ATTRIBUTES_SECTIO = "&aAttributes";
+	public static String ITEM_ATTRIBUTES_SECTIO = "&6Attributes";
 
 	@ConfigValue
 	public static Map<String, String> SOCKET_TYPES = new HashMap<String, String>() {{

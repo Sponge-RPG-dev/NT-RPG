@@ -156,7 +156,7 @@ public class PluginConfig {
 	public static boolean VALIDATE_RACE_DURING_CLASS_SELECTION = true;
 
 	@ConfigValue
-	public static String ITEM_LORE_EFFECT_NAME_COLOR = TextColors.DARK_GRAY.getName();
+	public static String ITEM_LORE_EFFECT_NAME_COLOR = TextColors.BLUE.getName();
 
 	@ConfigValue
 	public static String ITEM_LORE_EFFECT_COLON_COLOR = TextColors.DARK_GRAY.getName();
@@ -165,13 +165,7 @@ public class PluginConfig {
 	public static String ITEM_LORE_EFFECT_VALUE_COLOR = TextColors.LIGHT_PURPLE.getName();
 
 	@ConfigValue
-	public static String ITEM_LORE_EFFECT_SETTING_NAME_COLOR = TextColors.DARK_GRAY.getName();
-
-	@ConfigValue
-	public static String ITEM_LORE_EFFECT_SETTING_DASH_COLOR = TextColors.DARK_GRAY.getName();
-
-	@ConfigValue
-	public static String ITEM_LORE_EFFECT_SECTION_COLOR = TextColors.GREEN.getName();
+	public static String ITEM_LORE_EFFECT_SECTION_COLOR = TextColors.BLUE.getName();
 
 	@ConfigValue
 	public static String ITEM_LORE_RARITY_COLOR = TextColors.DARK_GRAY.getName();
