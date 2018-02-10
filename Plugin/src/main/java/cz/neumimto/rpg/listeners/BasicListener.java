@@ -37,7 +37,6 @@ import cz.neumimto.rpg.events.SkillDamageEvent;
 import cz.neumimto.rpg.events.SkillDamageEventLate;
 import cz.neumimto.rpg.exp.ExperienceService;
 import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.inventory.ItemUpgradeTransactionResult;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExperienceSource;
@@ -75,17 +74,9 @@ import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.InteractEntityEvent;
 import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
 import org.spongepowered.api.event.filter.cause.First;
-import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.world.chunk.UnloadChunkEvent;
-import org.spongepowered.api.item.inventory.BlockCarrier;
-import org.spongepowered.api.item.inventory.Container;
-import org.spongepowered.api.item.inventory.InventoryArchetypes;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
-import org.spongepowered.api.item.inventory.property.SlotIndex;
-import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
-import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -410,6 +401,7 @@ public class BasicListener {
 
 
     //TODO sponge bug as of 7.1-BETA-15
+    /*
     @Listener
     public void onItemForge(ClickInventoryEvent event, @First Player player) {
         Container i = event.getTargetInventory();
@@ -421,6 +413,7 @@ public class BasicListener {
                     Optional<ItemStack> peek = event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(0))).peek();
                     Optional<ItemStack> peek1 = event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(1))).peek();
                     if (peek.isPresent() && peek1.isPresent()) {
+
                         ItemStack rune = peek1.get();
                         if (!rwService.isRune(rune)) {
                             event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(2))).set(ItemStack.empty());
@@ -444,6 +437,7 @@ public class BasicListener {
             }
         }
     }
+    */
 
 
     private boolean isSocketingViable(Location<World> location) {

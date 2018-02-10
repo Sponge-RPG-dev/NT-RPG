@@ -44,9 +44,6 @@ import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.inventory.sockets.SocketType;
-import cz.neumimto.rpg.inventory.sockets.SocketTypeRegistry;
-import cz.neumimto.rpg.inventory.sockets.SocketTypes;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
@@ -62,6 +59,9 @@ import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemRequirementsData;
 import cz.neumimto.rpg.inventory.data.manipulators.SectionDelimiterData;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
+import cz.neumimto.rpg.inventory.sockets.SocketType;
+import cz.neumimto.rpg.inventory.sockets.SocketTypeRegistry;
+import cz.neumimto.rpg.inventory.sockets.SocketTypes;
 import cz.neumimto.rpg.listeners.DebugListener;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
@@ -76,6 +76,7 @@ import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.PropertyService;
+import cz.neumimto.rpg.players.properties.attributes.AttributeRegistry;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.skills.ActiveSkill;
@@ -111,7 +112,6 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
-import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -127,6 +127,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Resource;
 
 /**
  * Created by NeumimTo on 29.4.2015.
@@ -255,6 +257,7 @@ public class NtRpgPlugin {
 				.buildAndRegister(plugin);
 
 		Sponge.getRegistry().registerModule(SocketType.class, new SocketTypeRegistry());
+		Sponge.getRegistry().registerModule(ICharacterAttribute.class, new AttributeRegistry());
 	}
 
 	@Listener

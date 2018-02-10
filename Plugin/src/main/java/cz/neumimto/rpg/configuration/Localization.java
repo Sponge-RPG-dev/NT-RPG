@@ -20,7 +20,6 @@ package cz.neumimto.rpg.configuration;
 
 import cz.neumimto.configuration.ConfigValue;
 import cz.neumimto.configuration.ConfigurationContainer;
-import cz.neumimto.rpg.inventory.sockets.SocketType;
 import cz.neumimto.rpg.inventory.sockets.SocketTypes;
 
 import java.util.HashMap;
@@ -354,7 +353,7 @@ public class Localization {
 	public static String ITEM_LEVEL_SECTION = "&8Level: ";
 
 	@ConfigValue
-	public static String ITEM_SOCKETS_SECTION = "&8Sockets: ";
+	public static String ITEM_SOCKETS_SECTION = "&8Sockets";
 
 	@ConfigValue
 	public static String ITEM_SOCKETS_SECTION_COLONS = "&8:";

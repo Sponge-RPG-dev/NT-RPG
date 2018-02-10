@@ -9,10 +9,10 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.inventory.ItemLoreSections;
 import cz.neumimto.rpg.inventory.LoreSectionDelimiter;
-import cz.neumimto.rpg.inventory.sockets.SocketType;
-import cz.neumimto.rpg.inventory.sockets.SocketTypes;
 import cz.neumimto.rpg.inventory.data.DataConstants;
 import cz.neumimto.rpg.inventory.data.NKeys;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemSocketsData;
+import cz.neumimto.rpg.inventory.sockets.SocketType;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.reloading.Reload;
 import cz.neumimto.rpg.reloading.ReloadService;
@@ -41,7 +41,6 @@ public class ItemLoreBuilderService {
     private static Text damage;
     private static Text level;
     private static Text sockets;
-    private static Text socketcolon;
     private static Text attributes;
     private static List<ItemLoreSections> loreOrder;
 
@@ -60,7 +59,6 @@ public class ItemLoreBuilderService {
         damage = TextHelper.parse(Localization.ITEM_DAMAGE_SECTION);
         level = TextHelper.parse(Localization.ITEM_LEVEL_SECTION);
         sockets = TextHelper.parse(Localization.ITEM_SOCKETS_SECTION);
-        socketcolon = TextHelper.parse(Localization.ITEM_SOCKETS_SECTION_COLONS);
         attributes = TextHelper.parse(Localization.ITEM_ATTRIBUTES_SECTIO);
         loreOrder = PluginConfig.ITEM_LORE_ORDER.stream().map(ItemLoreSections::valueOf).collect(Collectors.toList());
     }
@@ -113,23 +111,18 @@ public class ItemLoreBuilderService {
         }
 
         public void createItemSocketsSection() {
-            is.get(NKeys.ITEM_SOCKET_CONTAINER).ifPresent(a -> {
-                if (a.isEmpty())
-                    return;
-                createDelimiter(sockets);
-                List<Text> texts = is.get(NKeys.ITEM_SOCKET_CONTAINER_CONTENT).get(); // should be always present
-
-                int iter = 0;
-                for (SocketType type : a) {
-                    Text text = texts.get(iter);
-                    Text value = DataConstants.EMPTY_SOCKET.equals(text) ? TextHelper.parse(Localization.SOCKET_EMPTY) : text;
-
-                    t.add(Text.builder()
-                    .append(TextHelper.parse(Localization.SOCKET_TYPES.get(type)))
-                       .append(socketcolon)
-                       .append(value)
-                    .build());
-                    iter ++;
+            is.get(ItemSocketsData.class).ifPresent(a -> {
+                List<SocketType> sockets = a.getSockets();
+                List<Text> content = a.getContent();
+                createDelimiter(ItemLoreBuilderService.sockets);
+                for (int i = 0; i < sockets.size(); i++) {
+                    if (DataConstants.EMPTY_SOCKET.equals(content.get(i))) {
+                        t.add(Text.builder().append(TextHelper.parse(String.format(Localization.SOCKET_EMPTY, sockets.get(i).getName()))).color(TextColors
+                                .DARK_GRAY)
+                                .build());
+                    } else {
+                        t.add(Text.builder("- ").color(TextColors.DARK_RED).append(content).build());
+                    }
                 }
             });
         }
