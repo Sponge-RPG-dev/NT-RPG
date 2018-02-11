@@ -6,7 +6,6 @@ import cz.neumimto.rpg.inventory.ItemDamage;
 import cz.neumimto.rpg.inventory.LoreDurability;
 import cz.neumimto.rpg.inventory.LoreSectionDelimiter;
 import cz.neumimto.rpg.inventory.sockets.SocketType;
-import cz.neumimto.rpg.inventory.sockets.SocketTypes;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.value.mutable.ListValue;
@@ -54,16 +53,16 @@ public class NKeys {
 				.id("nt-rpg:menu_inventory")
 				.build();
 
-		 SKILLTREE_CONTROLLS = Key.builder()
+		SKILLTREE_CONTROLLS = Key.builder()
 				.type(new TypeToken<Value<String>>() {})
-				.query(DataQuery.of(".", "ntrpg.skilltreecontrolls"))
-			    .id("ntrpgskilltreecontrolls")
+				.id("nt-rpg:skilltree_controlls")
+				.query(DataQuery.of(".", "ntrpg.skilltree.controlls"))
 				.name("Skilltree controls")
-			 .build();
+			 	.build();
 
 		ITEM_RARITY = Key.builder()
 				.type(new TypeToken<Value<Text>>() {})
-				.query(DataQuery.of( "ntrpg:itemrarity"))
+				.query(DataQuery.of("ntrpg:itemrarity"))
 				.id("ntrpgitemrarity")
 				.name("Item rarity")
 				.build();
@@ -146,7 +145,7 @@ public class NKeys {
 				.id("ntrpgdurability")
 				.build();
 
-		ITEM_SECTION_DELIMITER  = Key.builder()
+		ITEM_SECTION_DELIMITER = Key.builder()
 				.type(new TypeToken<Value<LoreSectionDelimiter>>() {})
 				.query(DataQuery.of("ntrpg:itemsectiondelimiter"))
 				.name("Item section delimiter")

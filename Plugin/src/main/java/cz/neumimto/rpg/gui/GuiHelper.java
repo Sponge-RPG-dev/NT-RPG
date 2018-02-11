@@ -1,5 +1,8 @@
 package cz.neumimto.rpg.gui;
 
+import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Block;
+import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Item;
+
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.TextHelper;
@@ -14,7 +17,12 @@ import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.NDamageType;
+import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillPathData;
+import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.skills.SkillTree;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
@@ -32,13 +40,13 @@ import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
-import org.spongepowered.common.item.inventory.query.operation.InventoryPropertyQueryOperation;
-import org.spongepowered.common.item.inventory.query.operation.LensQueryOperation;
 
-import java.util.*;
-
-import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Block;
-import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Item;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by ja on 29.12.2016.
@@ -244,13 +252,11 @@ public class GuiHelper {
 		}
 
 		ItemStack md = interactiveModeToitemStack(character, model.getInteractiveMode());
-
-
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 1))).set(md);
-		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 2))).offer(createControlls(/*HEAD_ARROW_UP*/ "Up"));
-		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 3))).offer(createControlls(/*HEAD_ARROW_DOWN*/ "Down"));
-		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 4))).offer(createControlls(/*HEAD_ARROW_RIGHT*/ "Right"));
-		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 5))).offer(createControlls(/*HEAD_ARROW_LEFT*/ "Left"));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 2))).offer(createControlls(/*HEAD_ARROW_UP*/ "u"));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 3))).offer(createControlls(/*HEAD_ARROW_DOWN*/ "d"));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 4))).offer(createControlls(/*HEAD_ARROW_RIGHT*/ "r"));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 5))).offer(createControlls(/*HEAD_ARROW_LEFT*/ "l"));
 
 		return i;
 	}
@@ -258,6 +264,7 @@ public class GuiHelper {
 		ItemStack of = itemStack(ItemTypes.STONE);
 		of.offer(Keys.DISPLAY_NAME, Text.of(name));
 		of.offer(new SkillTreeInventoryViewControllsData(name));
+		of.offer(new MenuInventoryData(true));
 		//of.offer(Keys.SKULL_TYPE, SkullTypes.PLAYER);
 		//of.offer(Keys.REPRESENTED_PLAYER, gameProfile);
 

@@ -49,7 +49,13 @@ import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.EntityUniverse;
 import org.spongepowered.common.event.damage.SpongeDamageSourceBuilder;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -206,8 +212,6 @@ public class Utils {
 	 * @param player
 	 */
 	public static void resetPlayerToDefault(Player player) {
-		player.offer(Keys.MAX_HEALTH, 20d);
-		player.offer(Keys.HEALTH, 20d);
 		player.offer(Keys.WALKING_SPEED, PropertyService.WALKING_SPEED);
 	}
 

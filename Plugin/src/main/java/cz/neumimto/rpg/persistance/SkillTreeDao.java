@@ -18,12 +18,28 @@
 
 package cz.neumimto.rpg.persistance;
 
-import com.typesafe.config.*;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigException;
+import com.typesafe.config.ConfigFactory;
+import com.typesafe.config.ConfigObject;
+import com.typesafe.config.ConfigValue;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.gui.SkillTreeInterfaceModel;
+import cz.neumimto.rpg.skills.CharacterAttributeSkill;
+import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.ItemAccessSkill;
+import cz.neumimto.rpg.skills.PropertySkill;
+import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillLoadingErrors;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.SkillTree;
+import cz.neumimto.rpg.skills.SkillTreeSpecialization;
+import cz.neumimto.rpg.skills.StartingPoint;
 import cz.neumimto.rpg.utils.Utils;
 import org.slf4j.Logger;
 
@@ -104,8 +120,9 @@ public class SkillTreeDao {
                                     array[i][j] = Short.parseShort(num.toString());
                                     j++;
                                 }
-                                if (SkillService.SKILL_CONNECTION_TYPES.keySet().contains(c1)){
-                                    array[i][j] = SkillService.SKILL_CONNECTION_TYPES.get(c1).value;
+                                SkillTreeInterfaceModel guiModelByCharacter = skillService.getGuiModelByCharacter(c1);
+                                if (guiModelByCharacter != null){
+                                    array[i][j] = guiModelByCharacter.getId();
                                 }
                                 num = new StringBuilder();
                                 j++;

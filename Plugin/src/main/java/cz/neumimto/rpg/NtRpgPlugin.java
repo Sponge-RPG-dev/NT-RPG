@@ -47,6 +47,7 @@ import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
+import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
 import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemAttributesData;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
@@ -254,6 +255,14 @@ public class NtRpgPlugin {
 				.dataClass(ItemStackUpgradeData.class)
 				.immutableClass(ItemStackUpgradeData.Immutable.class)
 				.builder(new ItemStackUpgradeData.Builder())
+				.buildAndRegister(plugin);
+
+		DataRegistration.<ItemStackUpgradeData, ItemStackUpgradeData.Immutable>builder()
+				.manipulatorId("skilltree_controlls")
+				.dataName("SkillTree Controll Buttons")
+				.dataClass(SkillTreeInventoryViewControllsData.class)
+				.immutableClass(SkillTreeInventoryViewControllsData.Immutable.class)
+				.builder(new SkillTreeInventoryViewControllsData.Builder())
 				.buildAndRegister(plugin);
 
 		Sponge.getRegistry().registerModule(SocketType.class, new SocketTypeRegistry());
@@ -568,7 +577,7 @@ public class NtRpgPlugin {
 				.arguments(GenericArguments.remainingJoinedStrings(TextHelper.parse("args")))
 				.executor((src, args) -> {
 					String[] a = args.<String>getOne("args").get().split(" ");
-					if (a[1].equalsIgnoreCase("js")) {
+					if (a[0].equalsIgnoreCase("js")) {
 						if (!PluginConfig.DEBUG) {
 							src.sendMessage(TextHelper.parse("Reloading is allowed only in debug mode"));
 							return CommandResult.success();
@@ -591,7 +600,7 @@ public class NtRpgPlugin {
 							}
 							i++;
 						}
-					} else if (a[1].equalsIgnoreCase("skilltree")) {
+					} else if (a[0].equalsIgnoreCase("skilltree")) {
 						IoC.get().build(SkillService.class).reloadSkillTrees();
 					} else {
 						src.sendMessage(TextHelper.parse("js[s/a/g] skilltree [r,a]"));

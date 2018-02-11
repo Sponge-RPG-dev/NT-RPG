@@ -18,16 +18,30 @@
 
 package cz.neumimto.rpg.gui;
 
+import static cz.neumimto.rpg.gui.GuiHelper.back;
+import static cz.neumimto.rpg.gui.GuiHelper.createPlayerGroupView;
+import static cz.neumimto.rpg.gui.GuiHelper.getItemLore;
+
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.*;
+import cz.neumimto.rpg.Arg;
+import cz.neumimto.rpg.GroupService;
+import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.Pair;
+import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.CommandPermissions;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
-import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.effects.EffectSourceType;
+import cz.neumimto.rpg.effects.EffectStatusType;
+import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.effects.common.def.ManaBarNotifier;
 import cz.neumimto.rpg.inventory.CannotUseItemReson;
@@ -43,7 +57,11 @@ import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.persistance.DirectAccessDao;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
-import cz.neumimto.rpg.players.*;
+import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.players.ExtendedNClass;
+import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
@@ -85,17 +103,24 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
-
-import static cz.neumimto.rpg.gui.GuiHelper.*;
 
 /**
  * Created by NeumimTo on 6.8.2015.
  */
 @Singleton
 @ResourceLoader.ListenerClass
-public class VanilaMessaging implements IPlayerMessage {
+public class VanillaMessaging implements IPlayerMessage {
 
 	@Inject
 	private Game game;
@@ -123,6 +148,7 @@ public class VanilaMessaging implements IPlayerMessage {
 
 	@Inject
 	private SkillService skillService;
+
 
 	@Override
 	public boolean isClientSideGui() {
@@ -686,27 +712,27 @@ public class VanilaMessaging implements IPlayerMessage {
 				IActiveCharacter character = characterService.getCharacter(player);
 				ConfigClass clazz = character.getPrimaryClass().getConfigClass();
 				SkillTreeViewModel viewModel = character.getSkillTreeViewLocation().get(clazz.getSkillTree().getId());
-				switch (command) {
-					case "Up":
+				switch (command.toLowerCase()) {
+					case "u":
 						viewModel.getLocation().key-=1;
 						Sponge.getScheduler().createTaskBuilder()
 								.execute(() -> Gui.moveSkillTreeMenu(character))
 								.submit(plugin);
 
 						break;
-					case "Down":
+					case "d":
 						viewModel.getLocation().key+=1;
 						Sponge.getScheduler().createTaskBuilder()
 								.execute(() -> Gui.moveSkillTreeMenu(character))
 								.submit(plugin);
 						break;
-					case "Right":
+					case "r":
 						viewModel.getLocation().value+=1;
 						Sponge.getScheduler().createTaskBuilder()
 								.execute(() -> Gui.moveSkillTreeMenu(character))
 								.submit(plugin);
 						break;
-					case "Left":
+					case "l":
 						viewModel.getLocation().value-=1;
 						Sponge.getScheduler().createTaskBuilder()
 								.execute(() -> Gui.moveSkillTreeMenu(character))
@@ -832,22 +858,18 @@ public class VanilaMessaging implements IPlayerMessage {
 		int y = skillTree.getCenter().value + skillTreeViewModel.getLocation().value; //y
 		int x = skillTree.getCenter().key + skillTreeViewModel.getLocation().key; //x
 
-		//TODO make this configurable
-		Map<Short, String> conn = new HashMap<>();
-		conn.put(Short.MAX_VALUE, "|");
-		conn.put((short)(Short.MAX_VALUE - 1), "-");
-		conn.put((short)(Short.MAX_VALUE - 2), "--");
-		conn.put((short)(Short.MAX_VALUE - 3), "/");
 		int columns = skillTreeMap[0].length;
 		int rows = skillTreeMap.length;
+
 		SkillTreeViewModel.InteractiveMode interactiveMode = skillTreeViewModel.getInteractiveMode();
 		ItemStack md = GuiHelper.interactiveModeToitemStack(character, interactiveMode);
 		skillTreeInventoryViewTemplate.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8,1))).clear();
 		skillTreeInventoryViewTemplate.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8,1))).offer(md);
+
 		for (int k = -3; k <= 3; k++) { //x
 			for (int l = -3; l <= 3; l++) { //y
 				SlotPos slotPos = new SlotPos(l + 3, k + 3);
-				Inventory query = skillTreeInventoryViewTemplate.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(slotPos)));
+				Inventory query = skillTreeInventoryViewTemplate.query(QueryOperationTypes.INVENTORY_PROPERTY.of(slotPos));
 				query.clear();
 				if (x + k >= 0 && x + k < rows) {
 					if (l + y >= 0 && l + y < columns) {
@@ -855,10 +877,9 @@ public class VanilaMessaging implements IPlayerMessage {
 						short id = skillTreeMap[x+k][l+y];
 						ItemStack itemStack = null;
 						if (id > 0) {
-							if (conn.containsKey(id)) {
-								itemStack = GuiHelper.itemStack(ItemTypes.STICK);
-								itemStack.offer(Keys.DISPLAY_NAME, Text.of(conn.get(id)));
-								itemStack.offer(new MenuInventoryData(true));
+							SkillTreeInterfaceModel guiModelById = skillService.getGuiModelById(id);
+							if (guiModelById != null) {
+								itemStack = guiModelById.toItemStack();
 							} else {
 								SkillData skillById = skillTree.getSkillById(id);
 
@@ -878,21 +899,23 @@ public class VanilaMessaging implements IPlayerMessage {
 								}
 							}
 						}
-						if (itemStack != null) {
-							skillTreeInventoryViewTemplate
-									.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(slotPos)))
-									.offer(itemStack);
+						if (itemStack == null) {
+							itemStack = ItemStack.of(ItemTypes.GLASS_PANE, 1);
+							itemStack.offer(new MenuInventoryData(true));
 						}
+						skillTreeInventoryViewTemplate
+								.query(QueryOperationTypes.INVENTORY_PROPERTY.of(slotPos))
+								.offer(itemStack);
 					} else if (l + y == -1 || l + y == columns +1) {
 					//	SlotPos slotPos = new SlotPos(l + 3, k + 3);
 						skillTreeInventoryViewTemplate
-								.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(slotPos)))
+								.query(QueryOperationTypes.INVENTORY_PROPERTY.of(slotPos))
 								.offer(GuiHelper.createSkillTreeInventoryMenuBoundary());
 					}
 				} else if (x+k == -1 || x + k == rows +1) {
 					//SlotPos slotPos = new SlotPos(l + 3, k + 3);
 					skillTreeInventoryViewTemplate
-							.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(slotPos)))
+							.query(QueryOperationTypes.INVENTORY_PROPERTY.of(slotPos))
 							.offer(GuiHelper.createSkillTreeInventoryMenuBoundary());
 				}
 			}

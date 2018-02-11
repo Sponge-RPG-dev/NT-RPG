@@ -5,9 +5,7 @@ import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.DataManipulatorBuilder;
-import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableBooleanData;
 import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableSingleData;
-import org.spongepowered.api.data.manipulator.mutable.common.AbstractBooleanData;
 import org.spongepowered.api.data.manipulator.mutable.common.AbstractSingleData;
 import org.spongepowered.api.data.merge.MergeFunction;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
@@ -21,39 +19,34 @@ import java.util.Optional;
  * Created by NeumimTo on 8.10.2017.
  */
 public class SkillTreeInventoryViewControllsData extends AbstractSingleData<String, SkillTreeInventoryViewControllsData, SkillTreeInventoryViewControllsData.Immutable> {
-    public SkillTreeInventoryViewControllsData(String s) {
-        super(s, NKeys.SKILLTREE_CONTROLLS);
-    }
 
-    @Override
-    protected Value<?> getValueGetter() {
-        return Sponge.getRegistry().getValueFactory().createValue(NKeys.SKILLTREE_CONTROLLS, getValue());
+    public SkillTreeInventoryViewControllsData(String value) {
+        super(value, NKeys.SKILLTREE_CONTROLLS);
     }
 
     @Override
     public Optional<SkillTreeInventoryViewControllsData> fill(DataHolder dataHolder, MergeFunction overlap) {
-        Optional<SkillTreeInventoryViewControllsData> data_ = dataHolder.get(SkillTreeInventoryViewControllsData.class);
-        if (data_.isPresent()) {
-            SkillTreeInventoryViewControllsData data = data_.get();
-            SkillTreeInventoryViewControllsData finalData = overlap.merge(this, data);
-            setValue(finalData.getValue());
+        Optional<SkillTreeInventoryViewControllsData> otherData_ = dataHolder.get(SkillTreeInventoryViewControllsData.class);
+        if (otherData_.isPresent()) {
+            SkillTreeInventoryViewControllsData otherData = otherData_.get();
+            SkillTreeInventoryViewControllsData finalData = overlap.merge(this, otherData);
+            finalData.setValue(otherData.getValue());
         }
         return Optional.of(this);
     }
 
     @Override
     public Optional<SkillTreeInventoryViewControllsData> from(DataContainer container) {
-        Optional<Object> s = container.get(NKeys.SKILLTREE_CONTROLLS.getQuery());
-        if (s.isPresent()) {
-            setValue((String) s.get());
+        return from((DataView) container);
+    }
+
+    public Optional<SkillTreeInventoryViewControllsData> from(DataView view) {
+        if (view.contains(NKeys.SKILLTREE_CONTROLLS.getQuery())) {
+            setValue(view.getString(NKeys.SKILLTREE_CONTROLLS.getQuery()).get());
             return Optional.of(this);
         }
         return Optional.empty();
-    }
 
-    @Override
-    public DataContainer toContainer() {
-        return super.toContainer().set(NKeys.SKILLTREE_CONTROLLS, getValue());
     }
 
     @Override
@@ -62,18 +55,31 @@ public class SkillTreeInventoryViewControllsData extends AbstractSingleData<Stri
     }
 
     @Override
+    protected Value<?> getValueGetter() {
+        return Sponge.getRegistry().getValueFactory().createValue(NKeys.SKILLTREE_CONTROLLS, getValue());
+    }
+
+    @Override
     public Immutable asImmutable() {
-        return new Immutable(getValue());
+        return new SkillTreeInventoryViewControllsData.Immutable(getValue());
     }
 
     @Override
     public int getContentVersion() {
-        return 1;
+        return Builder.CONTENT_VERSION;
+    }
+
+    @Override
+    public DataContainer toContainer() {
+        return super.toContainer()
+                .set(NKeys.SKILLTREE_CONTROLLS.getQuery(), getValue());
     }
 
     public static class Immutable extends AbstractImmutableSingleData<String, Immutable, SkillTreeInventoryViewControllsData> {
-        public Immutable(String s) {
-            super(s, NKeys.SKILLTREE_CONTROLLS);
+
+
+        public Immutable(String value) {
+            super(value, NKeys.SKILLTREE_CONTROLLS);
         }
 
         @Override
@@ -87,17 +93,19 @@ public class SkillTreeInventoryViewControllsData extends AbstractSingleData<Stri
         }
 
         @Override
-        public DataContainer toContainer() {
-            return super.toContainer().set(NKeys.SKILLTREE_CONTROLLS, getValue());
+        public int getContentVersion() {
+            return Builder.CONTENT_VERSION;
         }
 
         @Override
-        public int getContentVersion() {
-            return 1;
+        public DataContainer toContainer() {
+            return super.toContainer().set(NKeys.SKILLTREE_CONTROLLS.getQuery(), getValue());
         }
     }
 
-    public static class Builder extends AbstractDataBuilder<SkillTreeInventoryViewControllsData> implements DataManipulatorBuilder<SkillTreeInventoryViewControllsData, Immutable> {
+    public static class Builder extends AbstractDataBuilder<SkillTreeInventoryViewControllsData>
+            implements DataManipulatorBuilder<SkillTreeInventoryViewControllsData, Immutable> {
+        protected static int CONTENT_VERSION = 1;
         public Builder() {
             super(SkillTreeInventoryViewControllsData.class, 1);
         }
@@ -114,8 +122,7 @@ public class SkillTreeInventoryViewControllsData extends AbstractSingleData<Stri
 
         @Override
         protected Optional<SkillTreeInventoryViewControllsData> buildContent(DataView container) throws InvalidDataException {
-            return create().from(container.getContainer());
+            return create().from(container);
         }
     }
-
 }

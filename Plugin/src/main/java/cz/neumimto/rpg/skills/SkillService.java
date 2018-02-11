@@ -25,21 +25,23 @@ import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.events.skills.SkillPostUsageEvent;
 import cz.neumimto.rpg.events.skills.SkillPrepareEvent;
 import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.gui.SkillTreeInterfaceModel;
 import cz.neumimto.rpg.persistance.SkillTreeDao;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
+import cz.neumimto.rpg.reloading.Reload;
+import cz.neumimto.rpg.reloading.ReloadService;
 import cz.neumimto.rpg.scripting.JSLoader;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.manipulator.mutable.entity.HealthData;
+import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.text.format.TextColors;
@@ -85,9 +87,39 @@ public class SkillService {
 
 	private Map<String, SkillTree> skillTrees = new ConcurrentHashMap<>();
 
-	public static Map<java.lang.Character, Pair<ItemStack, Short>> SKILL_CONNECTION_TYPES = new HashMap<>();
+	private Map<Character, SkillTreeInterfaceModel> guiModelByCharacter = new HashMap<>();
+
+	private Map<Short, SkillTreeInterfaceModel> guiModelById = new HashMap<>();
 
 	private static int id = 0;
+
+	@PostProcess(priority = 300)
+	public void load() {
+		initGuis();
+		skillTrees.putAll(skillTreeDao.getAll());
+		createSkillsDefaults();
+	}
+
+
+
+	@Reload(on = ReloadService.PLUGIN_CONFIG)
+	public void initGuis() {
+		int i = 0;
+
+		for (String str : PluginConfig.SKILLTREE_RELATIONS) {
+			String[] split = str.split(",");
+
+			short k = (short) (Short.MAX_VALUE - i);
+			SkillTreeInterfaceModel model = new SkillTreeInterfaceModel(Integer.parseInt(split[3]),
+					Sponge.getRegistry().getType(ItemType.class,split[1]).orElse(ItemTypes.STICK),
+					split[2], k);
+
+			guiModelById.put(k, model);
+			guiModelByCharacter.put(split[0].charAt(0), model);
+			i++;
+		}
+	}
+
 
 	public void addSkill(ISkill ISkill) {
 		if (ISkill.getName() == null) {
@@ -185,12 +217,7 @@ public class SkillService {
 	}
 
 
-	@PostProcess(priority = 300)
-	public void load() {
-		initGuis();
-		skillTrees.putAll(skillTreeDao.getAll());
-		createSkillsDefaults();
-	}
+
 
 	public void initIcons() {
 		Properties properties = new Properties();
@@ -268,20 +295,7 @@ public class SkillService {
 		Gui.displayCurrentClicks(character, combo);
 	}
 
-	public void initGuis() {
-		ItemStack vertical = ItemStack.of(ItemTypes.STICK,1);
-		vertical.offer(Keys.DISPLAY_NAME, Text.of("|"));
-		ItemStack horizontal = ItemStack.of(ItemTypes.STICK,1);
-		vertical.offer(Keys.DISPLAY_NAME, Text.of("-"));
-		ItemStack d45 = ItemStack.of(ItemTypes.STICK,1);
-		vertical.offer(Keys.DISPLAY_NAME, Text.of("\\"));
-		ItemStack d45i = ItemStack.of(ItemTypes.STICK,1);
-		vertical.offer(Keys.DISPLAY_NAME, Text.of("/"));
-		SKILL_CONNECTION_TYPES.put('|', new Pair<>(vertical,Short.MAX_VALUE));
-		SKILL_CONNECTION_TYPES.put('-', new Pair<>(horizontal,(short)(Short.MAX_VALUE - 1)));
-		SKILL_CONNECTION_TYPES.put('\\', new Pair<>(d45,(short)(Short.MAX_VALUE -2)));
-		SKILL_CONNECTION_TYPES.put('/', new Pair<>(d45i,(short)(Short.MAX_VALUE -3)));
-	}
+
 
 	public void reloadSkillTrees() {
 		try {
@@ -316,5 +330,13 @@ public class SkillService {
 		} catch (Exception e) {
 			//todo
 		}
+	}
+
+	public SkillTreeInterfaceModel getGuiModelByCharacter(Character character) {
+		return guiModelByCharacter.get(character);
+	}
+
+	public SkillTreeInterfaceModel getGuiModelById(Short k) {
+		return guiModelById.get(k);
 	}
 }
