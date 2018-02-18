@@ -121,10 +121,10 @@ public class PluginConfig {
 
 	@ConfigValue
 	@Comment(content = {"If a player chooses a race and a class, where both those groups define damage value for one specific weapon, or projectile" +
-			" this option specifies how the weapon damage will be calculated.",
-			"1 = sum",
+			" this option specifies how the weapon damage will be calculated."+
+			"1 = sum"+
 			"2 = take highest value"})
-	public static int WEAPON_MERGE_STRTATEGY = 2;
+	public static int WEAPON_MERGE_STRATEGY = 2;
 
 	@ConfigValue
 	@Comment(content = {"Whenever global chat message will be displayed if any player chooses a skill tree path"})
@@ -139,13 +139,13 @@ public class PluginConfig {
 	public static boolean SHIFT_CANCELS_COMBO = false;
 
 	@ConfigValue
-	@Comment(content = {"Recognizes pressing Q key (/throwing an item out of inventory) as the click combo option 'Q'"
-			, " This action has priority over throwing item out of the inventoryinventory. Click combo may not start whit this action"})
+	@Comment(content = {"Recognizes pressing Q key (/throwing an item out of inventory) as the click combo option 'Q'"+
+			 " This action has priority over throwing item out of the inventory. Click combo may not start whit this action"})
 	public static boolean ENABLED_Q;
 
 	@ConfigValue
-	@Comment(content = {"Recognizes pressing E key (/opening player inventory) as the click combo option 'E'"
-			, " This action has priority over opening players' inventory. Click combo may not start whit this action"})
+	@Comment(content = {"Recognizes pressing E key (/opening player inventory) as the click combo option 'E'"+
+			 " This action has priority over opening players' inventory. Click combo may not start whit this action"})
 	public static boolean ENABLED_E;
 
 	@ConfigValue
@@ -175,11 +175,12 @@ public class PluginConfig {
 	public static List<String> ITEM_LORE_ORDER = Stream.of(ItemLoreSections.values()).map(ItemLoreSections::name).collect(Collectors.toList());
 
 	@Comment(content = {
-						"Configuration for gui skilltrees representing relations between individual skills.",
-						"Formatting: Char,ItemType,display name,itemDamage",
-						"If you want to use character such as \\ you have to escape them by \\\\",
-						"Then you can use the characters to build visual representation of the skilltree"
+						"Configuration for gui skilltrees representing relations between individual skills."+
+						"Formatting: Char,ItemType,display name,itemDamage"+
+						"If you want to use character such as \\ you have to escape them by \\\\"+
+						"Then you can reference the characters to build visual representation of the skilltree in the ascii maps"
 	})
+	@ConfigValue
 	public static List<String> SKILLTREE_RELATIONS = new ArrayList<String>() {{
 		add("|,minecraft:stick,|,0");
 		add("/,minecraft:stick,/,0");
