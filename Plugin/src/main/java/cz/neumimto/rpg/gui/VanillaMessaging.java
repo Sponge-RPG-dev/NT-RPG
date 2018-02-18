@@ -77,6 +77,7 @@ import cz.neumimto.rpg.utils.model.CharacterListModel;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.filter.cause.First;
@@ -866,10 +867,11 @@ public class VanillaMessaging implements IPlayerMessage {
 		skillTreeInventoryViewTemplate.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8,1))).clear();
 		skillTreeInventoryViewTemplate.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8,1))).offer(md);
 
+
 		for (int k = -3; k <= 3; k++) { //x
 			for (int l = -3; l <= 3; l++) { //y
-				SlotPos slotPos = new SlotPos(l + 3, k + 3);
-				Inventory query = skillTreeInventoryViewTemplate.query(QueryOperationTypes.INVENTORY_PROPERTY.of(slotPos));
+				Inventory query = skillTreeInventoryViewTemplate
+						.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(l + 3, k + 3)));
 				query.clear();
 				if (x + k >= 0 && x + k < rows) {
 					if (l + y >= 0 && l + y < columns) {
@@ -900,23 +902,20 @@ public class VanillaMessaging implements IPlayerMessage {
 							}
 						}
 						if (itemStack == null) {
-							itemStack = ItemStack.of(ItemTypes.GLASS_PANE, 1);
+							itemStack = ItemStack.of(ItemTypes.STAINED_GLASS_PANE, 1);
+							itemStack.offer(Keys.DISPLAY_NAME, Text.EMPTY);
+							itemStack.offer(Keys.DYE_COLOR, DyeColors.GRAY);
+							itemStack.offer(Keys.HIDE_MISCELLANEOUS, true);
 							itemStack.offer(new MenuInventoryData(true));
 						}
-						skillTreeInventoryViewTemplate
-								.query(QueryOperationTypes.INVENTORY_PROPERTY.of(slotPos))
-								.offer(itemStack);
-					} else if (l + y == -1 || l + y == columns +1) {
+						query.offer(itemStack);
+					} else if (l + y == -1 || l + y == columns) {
 					//	SlotPos slotPos = new SlotPos(l + 3, k + 3);
-						skillTreeInventoryViewTemplate
-								.query(QueryOperationTypes.INVENTORY_PROPERTY.of(slotPos))
-								.offer(GuiHelper.createSkillTreeInventoryMenuBoundary());
+						query.offer(GuiHelper.createSkillTreeInventoryMenuBoundary());
 					}
-				} else if (x+k == -1 || x + k == rows +1) {
+				} else if ((x+k == -1 || x + k == rows)) {
 					//SlotPos slotPos = new SlotPos(l + 3, k + 3);
-					skillTreeInventoryViewTemplate
-							.query(QueryOperationTypes.INVENTORY_PROPERTY.of(slotPos))
-							.offer(GuiHelper.createSkillTreeInventoryMenuBoundary());
+					query.offer(GuiHelper.createSkillTreeInventoryMenuBoundary());
 				}
 			}
 		}

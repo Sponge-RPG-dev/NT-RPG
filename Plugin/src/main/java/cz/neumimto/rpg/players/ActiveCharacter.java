@@ -402,7 +402,6 @@ public class ActiveCharacter implements IActiveCharacter {
 		return getCharacterBase().getCharacterCooldowns().containsKey(thing);
 	}
 
-	//todo global config option to set stacking strategies. Take higher value/sum values
 	private void mergeWeapons(PlayerGroup g) {
 		mergeWeapons(g.getWeapons());
 		for (Map.Entry<EntityType, Double> e : g.getProjectileDamage().entrySet()) {
