@@ -22,6 +22,7 @@ import cz.neumimto.configuration.Comment;
 import cz.neumimto.configuration.ConfigValue;
 import cz.neumimto.configuration.ConfigurationContainer;
 import cz.neumimto.rpg.inventory.ItemLoreSections;
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.text.format.TextColors;
 
 import java.util.ArrayList;
@@ -174,12 +175,7 @@ public class PluginConfig {
 	@ConfigValue
 	public static List<String> ITEM_LORE_ORDER = Stream.of(ItemLoreSections.values()).map(ItemLoreSections::name).collect(Collectors.toList());
 
-	@Comment(content = {
-						"Configuration for gui skilltrees representing relations between individual skills."+
-						"Formatting: Char,ItemType,display name,itemDamage"+
-						"If you want to use character such as \\ you have to escape them by \\\\"+
-						"Then you can reference the characters to build visual representation of the skilltree in the ascii maps"
-	})
+
 	@ConfigValue
 	public static List<String> SKILLTREE_RELATIONS = new ArrayList<String>() {{
 		add("|,minecraft:stick,|,0");
