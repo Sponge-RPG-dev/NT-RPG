@@ -305,9 +305,11 @@ public class SkillService {
 				SkillTree skillTree = skillTrees.get(s.getKey());
 				if (skillTree == null) {
 					skillTrees.put(s.getValue().getId(), s.getValue());
+					logger.info("Found new Skilltree " + s.getValue().getId());
 				} else {
 					skillTree.setSkillTreeMap(s.getValue().getSkillTreeMap());
 					skillTree.setCenter(s.getValue().getCenter());
+					logger.info("Refreshed skilltree view for " + s.getValue().getId());
 				}
 			}
 
@@ -328,7 +330,7 @@ public class SkillService {
 			}
 			*/
 		} catch (Exception e) {
-			//todo
+			logger.warning("Failed to reload skilltrees: " + e.getMessage());
 		}
 	}
 

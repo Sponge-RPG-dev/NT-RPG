@@ -909,12 +909,11 @@ public class VanillaMessaging implements IPlayerMessage {
 							itemStack.offer(new MenuInventoryData(true));
 						}
 						query.offer(itemStack);
-					} else if (l + y == -1 || l + y == columns) {
+					} else {
 					//	SlotPos slotPos = new SlotPos(l + 3, k + 3);
 						query.offer(GuiHelper.createSkillTreeInventoryMenuBoundary());
 					}
-				} else if ((x+k == -1 || x + k == rows)) {
-					//SlotPos slotPos = new SlotPos(l + 3, k + 3);
+				} else {
 					query.offer(GuiHelper.createSkillTreeInventoryMenuBoundary());
 				}
 			}

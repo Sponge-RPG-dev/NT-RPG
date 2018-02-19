@@ -311,6 +311,9 @@ public class SkillTreeDao {
         SkillData info = tree.getSkills().get(name);
         if (info == null) {
             ISkill skill = skillService.getSkill(name);
+            if (skill == null) {
+                throw new IllegalStateException("Could not find a skill " + name + " referenced in the skilltree " + tree.getId());
+            }
             info = skill.constructSkillData();
             info.setSkill(skill);
             tree.getSkills().put(name, info);
