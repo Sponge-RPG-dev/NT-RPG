@@ -2,6 +2,7 @@ package cz.neumimto.rpg.inventory.data;
 
 import com.google.common.reflect.TypeToken;
 import cz.neumimto.rpg.effects.EffectParams;
+import cz.neumimto.rpg.gui.SkillTreeControllsButton;
 import cz.neumimto.rpg.inventory.ItemDamage;
 import cz.neumimto.rpg.inventory.LoreDurability;
 import cz.neumimto.rpg.inventory.LoreSectionDelimiter;
@@ -20,7 +21,7 @@ public class NKeys {
 
 	public static Key<Value<String>> COMMAND = null;
 	public static Key<Value<Boolean>> MENU_INVENTORY = null;
-	public static Key<Value<String>> SKILLTREE_CONTROLLS = null;
+	public static Key<Value<SkillTreeControllsButton>> SKILLTREE_CONTROLLS = null;
 	public static Key<Value<Text>> ITEM_RARITY = null;
 	public static Key<MapValue<String, Integer>> ITEM_ATTRIBUTE_REQUIREMENTS = null;
 	public static Key<MapValue<String, Integer>> ITEM_ATTRIBUTE_BONUS = null;
@@ -37,6 +38,7 @@ public class NKeys {
 	public static Key<Value<LoreSectionDelimiter>> ITEM_SECTION_DELIMITER = null;
 	public static Key<Value<ItemDamage>> ITEM_DAMAGE = null;
 	public static Key<Value<SocketType>> ITEMSTACK_UPGRADE = null;
+	public static Key<Value<String>> SKILLTREE_NODE;
 
 	public NKeys() {
 		COMMAND = Key.builder()
@@ -54,11 +56,18 @@ public class NKeys {
 				.build();
 
 		SKILLTREE_CONTROLLS = Key.builder()
-				.type(new TypeToken<Value<String>>() {})
+				.type(new TypeToken<Value<SkillTreeControllsButton>>() {})
 				.id("nt-rpg:skilltree_controlls")
 				.query(DataQuery.of(".", "ntrpg.skilltree.controlls"))
 				.name("Skilltree controls")
 			 	.build();
+
+		SKILLTREE_NODE = Key.builder()
+				.type(new TypeToken<Value<String>>() {})
+				.id("nt-rpg:skilltree_node")
+				.query(DataQuery.of(".", "ntrpg.skilltree.node"))
+				.name("Skilltree node")
+				.build();
 
 		ITEM_RARITY = Key.builder()
 				.type(new TypeToken<Value<Text>>() {})

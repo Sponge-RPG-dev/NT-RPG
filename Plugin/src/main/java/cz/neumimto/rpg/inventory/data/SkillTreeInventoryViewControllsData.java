@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.inventory.data;
 
+import cz.neumimto.rpg.gui.SkillTreeControllsButton;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
@@ -18,9 +19,9 @@ import java.util.Optional;
 /**
  * Created by NeumimTo on 8.10.2017.
  */
-public class SkillTreeInventoryViewControllsData extends AbstractSingleData<String, SkillTreeInventoryViewControllsData, SkillTreeInventoryViewControllsData.Immutable> {
+public class SkillTreeInventoryViewControllsData extends AbstractSingleData<SkillTreeControllsButton, SkillTreeInventoryViewControllsData, SkillTreeInventoryViewControllsData.Immutable> {
 
-    public SkillTreeInventoryViewControllsData(String value) {
+    public SkillTreeInventoryViewControllsData(SkillTreeControllsButton value) {
         super(value, NKeys.SKILLTREE_CONTROLLS);
     }
 
@@ -42,7 +43,7 @@ public class SkillTreeInventoryViewControllsData extends AbstractSingleData<Stri
 
     public Optional<SkillTreeInventoryViewControllsData> from(DataView view) {
         if (view.contains(NKeys.SKILLTREE_CONTROLLS.getQuery())) {
-            setValue(view.getString(NKeys.SKILLTREE_CONTROLLS.getQuery()).get());
+            setValue(SkillTreeControllsButton.valueOf(view.getString(NKeys.SKILLTREE_CONTROLLS.getQuery()).get()));
             return Optional.of(this);
         }
         return Optional.empty();
@@ -72,13 +73,13 @@ public class SkillTreeInventoryViewControllsData extends AbstractSingleData<Stri
     @Override
     public DataContainer toContainer() {
         return super.toContainer()
-                .set(NKeys.SKILLTREE_CONTROLLS.getQuery(), getValue());
+                .set(NKeys.SKILLTREE_CONTROLLS.getQuery(), getValue().name());
     }
 
-    public static class Immutable extends AbstractImmutableSingleData<String, Immutable, SkillTreeInventoryViewControllsData> {
+    public static class Immutable extends AbstractImmutableSingleData<SkillTreeControllsButton, Immutable, SkillTreeInventoryViewControllsData> {
 
 
-        public Immutable(String value) {
+        public Immutable(SkillTreeControllsButton value) {
             super(value, NKeys.SKILLTREE_CONTROLLS);
         }
 
@@ -112,7 +113,7 @@ public class SkillTreeInventoryViewControllsData extends AbstractSingleData<Stri
 
         @Override
         public SkillTreeInventoryViewControllsData create() {
-            return new SkillTreeInventoryViewControllsData("");
+            return new SkillTreeInventoryViewControllsData(SkillTreeControllsButton.NORTH);
         }
 
         @Override

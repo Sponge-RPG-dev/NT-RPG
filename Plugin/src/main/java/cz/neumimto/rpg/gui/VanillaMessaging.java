@@ -24,6 +24,7 @@ import static cz.neumimto.rpg.gui.GuiHelper.getItemLore;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.Arg;
 import cz.neumimto.rpg.GroupService;
@@ -51,6 +52,7 @@ import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
+import cz.neumimto.rpg.inventory.data.manipulators.SkillTreeNode;
 import cz.neumimto.rpg.inventory.runewords.ItemUpgrade;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.Rune;
@@ -66,6 +68,8 @@ import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
+import cz.neumimto.rpg.reloading.Reload;
+import cz.neumimto.rpg.reloading.ReloadService;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillService;
@@ -103,6 +107,7 @@ import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
+import org.spongepowered.api.util.Direction;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -149,6 +154,24 @@ public class VanillaMessaging implements IPlayerMessage {
 
 	@Inject
 	private SkillService skillService;
+
+
+	public static Map<SkillTreeControllsButton, SkillTreeInterfaceModel> controlls;
+
+	@Reload(on = ReloadService.PLUGIN_CONFIG)
+	@PostProcess
+	public void load() {
+		controlls = new HashMap<>();
+		for (String a : PluginConfig.SKILLTREE_BUTTON_CONTROLLS) {
+			String[] split = a.split(",");
+
+			SkillTreeControllsButton key = SkillTreeControllsButton.valueOf(split[0].toUpperCase());
+			ItemType type = Sponge.getRegistry().getType(ItemType.class, split[1]).orElse(ItemTypes.BARRIER);
+
+			controlls.put(key, new SkillTreeInterfaceModel(Integer.parseInt(split[3]),type,split[2], (short)0));
+
+		}
+	}
 
 
 	@Override
@@ -709,37 +732,37 @@ public class VanillaMessaging implements IPlayerMessage {
 			}
 
 			if (t.getOriginal().get(NKeys.SKILLTREE_CONTROLLS).isPresent()) {
-				String command = t.getOriginal().get(NKeys.SKILLTREE_CONTROLLS).get();
+				SkillTreeControllsButton command = t.getOriginal().get(NKeys.SKILLTREE_CONTROLLS).get();
 				IActiveCharacter character = characterService.getCharacter(player);
 				ConfigClass clazz = character.getPrimaryClass().getConfigClass();
 				SkillTreeViewModel viewModel = character.getSkillTreeViewLocation().get(clazz.getSkillTree().getId());
-				switch (command.toLowerCase()) {
-					case "u":
+				switch (command) {
+					case NORTH:
 						viewModel.getLocation().key-=1;
 						Sponge.getScheduler().createTaskBuilder()
 								.execute(() -> Gui.moveSkillTreeMenu(character))
 								.submit(plugin);
 
 						break;
-					case "d":
+					case SOUTH:
 						viewModel.getLocation().key+=1;
 						Sponge.getScheduler().createTaskBuilder()
 								.execute(() -> Gui.moveSkillTreeMenu(character))
 								.submit(plugin);
 						break;
-					case "r":
+					case WEST:
 						viewModel.getLocation().value+=1;
 						Sponge.getScheduler().createTaskBuilder()
 								.execute(() -> Gui.moveSkillTreeMenu(character))
 								.submit(plugin);
 						break;
-					case "l":
+					case EAST:
 						viewModel.getLocation().value-=1;
 						Sponge.getScheduler().createTaskBuilder()
 								.execute(() -> Gui.moveSkillTreeMenu(character))
 								.submit(plugin);
 						break;
-					case "mode":
+					case MODE:
 						viewModel.setInteractiveMode(viewModel.getInteractiveMode().opposite());
 						//just redraw
 						Sponge.getScheduler().createTaskBuilder()
@@ -747,10 +770,12 @@ public class VanillaMessaging implements IPlayerMessage {
 								.submit(plugin);
 						break;
 					default:
+						String node = t.getOriginal().get(NKeys.SKILLTREE_NODE).get();
 						if (viewModel.getInteractiveMode() == SkillTreeViewModel.InteractiveMode.FAST) {
-							ISkill iSkill = skillService.getSkill(command);
+
+							ISkill iSkill = skillService.getSkill(node);
 							SkillTree tree = character.getPrimaryClass().getConfigClass().getSkillTree();
-							if (character.getSkill(command) == null) {
+							if (character.getSkill(node) == null) {
 								Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data = characterService.characterLearnskill(character, iSkill, tree);
 								player.sendMessage(data.value.bind(data.key.message));
 							} else {
@@ -765,7 +790,7 @@ public class VanillaMessaging implements IPlayerMessage {
 							SkillTree tree = character.getPrimaryClass().getConfigClass().getSkillTree();
 							event.setCancelled(true);
 							Sponge.getScheduler().createTaskBuilder()
-									.execute(() -> Gui.displaySkillDetailsInventoryMenu(character, tree, command))
+									.execute(() -> Gui.displaySkillDetailsInventoryMenu(character, tree, node))
 									.submit(plugin);
 
 						}
@@ -891,13 +916,9 @@ public class VanillaMessaging implements IPlayerMessage {
 									itemStack.offer(new MenuInventoryData(true));
 								} else {
 									itemStack = GuiHelper.skillToItemStack(character, skillById);
-									if (interactiveMode == SkillTreeViewModel.InteractiveMode.DETAILED) {
-										itemStack.offer(new SkillTreeInventoryViewControllsData(skillById.getSkillName()));
-										itemStack.offer(new MenuInventoryData(true));
-									} else {
-										itemStack.offer(new SkillTreeInventoryViewControllsData(skillById.getSkillName()));
-										itemStack.offer(new MenuInventoryData(true));
-									}
+									itemStack.offer(new SkillTreeInventoryViewControllsData(SkillTreeControllsButton.NODE));
+									itemStack.offer(new MenuInventoryData(true));
+									itemStack.offer(new SkillTreeNode(skillById.getSkill().getName()));
 								}
 							}
 						}

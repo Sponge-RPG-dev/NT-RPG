@@ -23,6 +23,7 @@ import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.XORShiftRnd;
+import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 
@@ -73,14 +74,14 @@ public class Weapon extends Charm {
 	@Override
 	public void onRightClick(IActiveCharacter character) {
 		if (!current) {
-			NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character, this);
+			NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character, this, character.getPlayer().getItemInHand(HandTypes.MAIN_HAND).orElse(null));
 		}
 	}
 
 	@Override
 	public void onLeftClick(IActiveCharacter character) {
 		if (!current) {
-			NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character, this);
+			NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character, this, character.getPlayer().getItemInHand(HandTypes.OFF_HAND).orElse(null));
 		}
 	}
 

@@ -53,22 +53,12 @@ import java.util.UUID;
  */
 public class GuiHelper {
 
-
 	private static NtRpgPlugin plugin;
-
-	public static GameProfile HEAD_ARROW_DOWN;
-	public static GameProfile HEAD_ARROW_UP;
-	public static GameProfile HEAD_ARROW_LEFT;
-	public static GameProfile HEAD_ARROW_RIGHT;
 
 	public static Map<DamageType, CatalogTypeItemStackBuilder> damageTypeToItemStack = new HashMap<>();
 
 	static {
 		plugin = IoC.get().build(NtRpgPlugin.class);
-		HEAD_ARROW_DOWN = GameProfile.of(UUID.fromString("f14aa295-a1b0-4edd-974c-e1e00d9a1e39"));
-		HEAD_ARROW_UP = GameProfile.of(UUID.fromString("96f198b9-1e67-4b68-bbd1-c5213797e58a"));
-		HEAD_ARROW_LEFT = GameProfile.of(UUID.fromString("4d35f021-81b6-44ee-a711-8d8462174124"));
-		HEAD_ARROW_RIGHT = GameProfile.of(UUID.fromString("1f961930-4e97-47b7-a5a1-2cc5150f3764"));
 
 		damageTypeToItemStack.put(DamageTypes.ATTACK, Item.of(ItemTypes.STONE_SWORD));
 		damageTypeToItemStack.put(DamageTypes.CONTACT, Item.of(ItemTypes.CACTUS));
@@ -253,22 +243,19 @@ public class GuiHelper {
 
 		ItemStack md = interactiveModeToitemStack(character, model.getInteractiveMode());
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 1))).set(md);
-		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 2))).offer(createControlls(/*HEAD_ARROW_UP*/ "u"));
-		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 3))).offer(createControlls(/*HEAD_ARROW_DOWN*/ "d"));
-		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 4))).offer(createControlls(/*HEAD_ARROW_RIGHT*/ "r"));
-		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 5))).offer(createControlls(/*HEAD_ARROW_LEFT*/ "l"));
+
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 2))).offer(createControlls(SkillTreeControllsButton.NORTH));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 3))).offer(createControlls(SkillTreeControllsButton.SOUTH));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 4))).offer(createControlls(SkillTreeControllsButton.WEST));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 5))).offer(createControlls(SkillTreeControllsButton.EAST));
 
 		return i;
 	}
-	public static ItemStack createControlls(/* GameProfile gameProfile*/ String name) {
-		ItemStack of = itemStack(ItemTypes.STONE);
-		of.offer(Keys.DISPLAY_NAME, Text.of(name));
-		of.offer(new SkillTreeInventoryViewControllsData(name));
-		of.offer(new MenuInventoryData(true));
-		//of.offer(Keys.SKULL_TYPE, SkullTypes.PLAYER);
-		//of.offer(Keys.REPRESENTED_PLAYER, gameProfile);
-
-		return of;
+	public static ItemStack createControlls(SkillTreeControllsButton button) {
+		ItemStack itemStack = VanillaMessaging.controlls.get(button).toItemStack();
+		itemStack.offer(new SkillTreeInventoryViewControllsData(button));
+		itemStack.offer(new MenuInventoryData(true));
+		return itemStack;
 	}
 
 	public static ItemStack createSkillTreeInventoryMenuBoundary() {
@@ -282,7 +269,7 @@ public class GuiHelper {
 	public static ItemStack createSkillTreeConfirmButtom() {
 		ItemStack itemStack = itemStack(ItemTypes.KNOWLEDGE_BOOK);
 		itemStack.offer(Keys.DISPLAY_NAME, Text.of(Localization.CONFIRM_SKILL_SELECTION_BUTTON));
-		itemStack.offer(new SkillTreeInventoryViewControllsData("confirm"));
+		itemStack.offer(new SkillTreeInventoryViewControllsData(SkillTreeControllsButton.CONFIRM));
 		return itemStack;
 	}
 
@@ -351,7 +338,7 @@ public class GuiHelper {
 		ItemStack md = itemStack(interactiveMode.getItemType());
 		List<Text> lore = new ArrayList<>();
 
-		md.offer(new SkillTreeInventoryViewControllsData("mode"));
+		md.offer(new SkillTreeInventoryViewControllsData(SkillTreeControllsButton.MODE));
 		md.offer(new MenuInventoryData(true));
 		lore.add(Text.builder(interactiveMode.getTransltion()).build());
 		lore.add(Text.EMPTY);

@@ -48,16 +48,7 @@ import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
-import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemAttributesData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemRarityData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemSocketsData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemStackUpgradeData;
-import cz.neumimto.rpg.inventory.data.manipulators.LoreDamageData;
-import cz.neumimto.rpg.inventory.data.manipulators.LoreDurabilityData;
-import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemRequirementsData;
-import cz.neumimto.rpg.inventory.data.manipulators.SectionDelimiterData;
+import cz.neumimto.rpg.inventory.data.manipulators.*;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.inventory.sockets.SocketType;
@@ -266,6 +257,14 @@ public class NtRpgPlugin {
 				.dataClass(SkillTreeInventoryViewControllsData.class)
 				.immutableClass(SkillTreeInventoryViewControllsData.Immutable.class)
 				.builder(new SkillTreeInventoryViewControllsData.Builder())
+				.buildAndRegister(plugin);
+
+		DataRegistration.<ItemStackUpgradeData, ItemStackUpgradeData.Immutable>builder()
+				.manipulatorId("skilltree_node")
+				.dataName("SkillTree Node")
+				.dataClass(SkillTreeNode.class)
+				.immutableClass(SkillTreeNode.Immutable.class)
+				.builder(new SkillTreeNode.Builder())
 				.buildAndRegister(plugin);
 
 		Sponge.getRegistry().registerModule(SocketType.class, new SocketTypeRegistry());

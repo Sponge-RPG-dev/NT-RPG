@@ -574,13 +574,14 @@ public class InventoryService {
 		}
 	}
 
-	protected void changeEquipedWeapon(IActiveCharacter character, Weapon changeTo) {
+	protected void changeEquipedWeapon(IActiveCharacter character, Weapon changeTo, ItemStack itemStack) {
 		unEquipWeapon(character);
 
 		int slot = ((Hotbar) character.getPlayer().getInventory().query(Hotbar.class)).getSelectedSlotIndex();
 		character.setHotbarSlot(slot, changeTo);
 		changeTo.current = true;
 		changeTo.setSlot(slot);
+		changeTo.setEffects(getItemEffects(itemStack));
 		character.setMainHand(changeTo);
 		changeTo.onEquip(character);
 		damageService.recalculateCharacterWeaponDamage(character, changeTo.getItemType());
