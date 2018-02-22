@@ -45,7 +45,10 @@ public class EffectsData extends AbstractMappedData<String, EffectParams, Effect
 
     public Optional<EffectsData> from(DataView view) {
         if (view.contains(NKeys.ITEM_EFFECTS.getQuery())) {
-            setValue((Map<String, EffectParams>) view.getMap(NKeys.ITEM_EFFECTS.getQuery()).get());
+            Map<String, Map> stringMapMap = (Map<String, Map>) view.getMap(NKeys.ITEM_EFFECTS.getQuery()).get();
+            Map<String, EffectParams> paramsMap = new HashMap<>();
+            stringMapMap.entrySet().stream().forEach(w -> paramsMap.put(w.getKey(), new EffectParams(w.getValue())));
+            setValue(paramsMap);
             return Optional.of(this);
         } else {
             return Optional.empty();

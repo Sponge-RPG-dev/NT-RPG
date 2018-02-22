@@ -99,8 +99,6 @@ public class InventoryListener {
 		if (character.isStub()) {
 			return;
 		}
-		if (player.get(Keys.GAME_MODE).get() != GameModes.SURVIVAL)
-			return;
 
 		for (SlotTransaction slotTransaction : event.getTransactions()) {
 			Slot i = slotTransaction.getSlot();

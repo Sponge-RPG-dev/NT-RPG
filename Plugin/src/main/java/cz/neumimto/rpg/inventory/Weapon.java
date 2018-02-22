@@ -59,7 +59,7 @@ public class Weapon extends Charm {
 		if (maxDamage != 0D) {
 			return minDamage + rnd.nextDouble(maxDamage - minDamage);
 		}
-		return 0D;
+		return minDamage;
 	}
 
 
