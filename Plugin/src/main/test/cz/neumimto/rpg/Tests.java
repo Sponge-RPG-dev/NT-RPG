@@ -3,6 +3,8 @@ package cz.neumimto.rpg;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.persistance.GroupDao;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.ExtendedNClass;
@@ -11,6 +13,7 @@ import cz.neumimto.rpg.players.groups.PlayerGroupPermission;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.SkillTree;
+import javassist.CannotCompileException;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.junit.Assert;
 import org.junit.Test;
@@ -132,6 +135,14 @@ public class Tests {
 		Assert.assertTrue(is16);
 		is16 = x == (x >> 4) << 4;
 		Assert.assertTrue(is16);
+	}
+
+
+	@Test
+	public void w() throws IllegalAccessException, CannotCompileException, InstantiationException {
+		ClassGenerator classGenerator = new ClassGenerator();
+		IGlobalEffect<? extends IEffect> iGlobalEffect = classGenerator.generateGlobalEffect(TestEffect.class);
+
 	}
 }
 

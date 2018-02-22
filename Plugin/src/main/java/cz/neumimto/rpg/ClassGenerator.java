@@ -2,6 +2,7 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import javassist.CannotCompileException;
 import jdk.internal.dynalink.beans.StaticClass;
 import org.objectweb.asm.*;
@@ -75,9 +76,10 @@ public class ClassGenerator implements Opcodes {
 			mv.visitMaxs(1, 1);
 			mv.visitEnd();
 		}
+
 		{
 
-			mv = cw.visitMethod(ACC_PUBLIC, "construct", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JLjava/lang/String;)L" + toPath(cls) + ";", null, null);
+			mv = cw.visitMethod(ACC_PUBLIC, "construct", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JLjava/util/Map;)L" + toPath(cls) + ";", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JLjava/util/Map<Ljava/lang/String;Ljava/lang/String;>;)L"+toPath(cls)+";", null);
 			mv.visitCode();
 			Label l0 = new Label();
 			mv.visitLabel(l0);
@@ -86,9 +88,28 @@ public class ClassGenerator implements Opcodes {
 			mv.visitInsn(DUP);
 			mv.visitVarInsn(ALOAD, 1);
 			mv.visitVarInsn(LLOAD, 2);
+			mv.visitLdcInsn(Type.getType("L"+toPath(cls)+";"));
 			mv.visitVarInsn(ALOAD, 4);
 
-			mv.visitMethodInsn(INVOKESPECIAL, toPath(cls), "<init>", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JLjava/lang/String;)V", false);
+			Class<?> modelType = EffectModelFactory.getModelType(cls);
+			mv.visitLdcInsn(Type.getType("L"+toPath(modelType)+";"));
+
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "cz/neumimto/rpg/effects/model/EffectModelFactory", "create", "(Ljava/lang/Class;Ljava/util/Map;Ljava/lang/Class;)Ljava/lang/Object;", false);
+			mv.visitTypeInsn(Opcodes.CHECKCAST, toPath(cls));
+
+			String[] strings = signaturedictionary.get(modelType);
+			if (strings == null) {
+				mv.visitMethodInsn(Opcodes.INVOKESTATIC, "cz/neumimto/rpg/effects/model/EffectModelFactory", "create", "(Ljava/lang/Class;Ljava/util/Map;Ljava/lang/Class;)Ljava/lang/Object;", false);
+				mv.visitTypeInsn(Opcodes.CHECKCAST, toPath(modelType));
+				mv.visitMethodInsn(Opcodes.INVOKESPECIAL, toPath(cls), "<init>", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JL" + toPath(modelType) + ";)V", false);
+				//
+			} else {
+				mv.visitTypeInsn(Opcodes.CHECKCAST, strings[0]);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, strings[0], strings[1], strings[2].length() == 1 ? "()"+strings[2] : strings[2], false);
+				mv.visitMethodInsn(Opcodes.INVOKESPECIAL, toPath(cls), "<init>", "(Lcz/neumimto/rpg/effects/IEffectConsumer;J"+strings[2]+")V", false);
+
+			}
+
 			mv.visitInsn(ARETURN);
 			Label l1 = new Label();
 			mv.visitLabel(l1);
@@ -129,7 +150,7 @@ public class ClassGenerator implements Opcodes {
 			mv.visitEnd();
 		}
 		{
-			mv = cw.visitMethod(ACC_PUBLIC + ACC_BRIDGE + ACC_SYNTHETIC, "construct", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JLjava/lang/String;)Lcz/neumimto/rpg/effects/IEffect;", null, null);
+			mv = cw.visitMethod(ACC_PUBLIC + ACC_BRIDGE + ACC_SYNTHETIC, "construct", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JLjava/util/Map;)Lcz/neumimto/rpg/effects/IEffect;", null, null);
 			mv.visitCode();
 			Label l0 = new Label();
 			mv.visitLabel(l0);
@@ -139,7 +160,7 @@ public class ClassGenerator implements Opcodes {
 			mv.visitVarInsn(LLOAD, 2);
 			mv.visitVarInsn(ALOAD, 4);
 
-			mv.visitMethodInsn(INVOKEVIRTUAL, getCannonicalGlobalName(cls), "construct", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JLjava/lang/String;)L" + toPath(cls) + ";", false);
+			mv.visitMethodInsn(INVOKEVIRTUAL, getCannonicalGlobalName(cls), "construct", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JLjava/util/Map;)L" + toPath(cls) + ";", false);
 			mv.visitInsn(ARETURN);
 			Label l1 = new Label();
 			mv.visitLabel(l1);
