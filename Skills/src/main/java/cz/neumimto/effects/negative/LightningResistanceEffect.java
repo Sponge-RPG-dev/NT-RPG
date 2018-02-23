@@ -1,5 +1,6 @@
 package cz.neumimto.effects.negative;
 
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.SingleResistanceValueEffect;
 import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.IEffectConsumer;
