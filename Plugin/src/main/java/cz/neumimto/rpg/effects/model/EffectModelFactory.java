@@ -34,6 +34,8 @@ public class EffectModelFactory {
 
     @SuppressWarnings("unchecked")
     public static <T> T create(Class<? extends IEffect> effect, Map<String, String> data, Class<T> expectedType) {
+        if (expectedType == Void.class)
+            return null;
         if (effectmappers.containsKey(effect)) {
             return (T) effectmappers.get(effect).parse(data);
         }

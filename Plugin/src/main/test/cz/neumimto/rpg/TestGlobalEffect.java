@@ -2,8 +2,8 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.effects.common.def.ClickComboActionEvent;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
-import cz.neumimto.rpg.TestEffect;
 
 import java.util.Map;
 
@@ -11,7 +11,7 @@ public class TestGlobalEffect implements IGlobalEffect<TestEffect> {
 
     @Override
     public TestEffect construct(IEffectConsumer consumer, long duration, Map<String, String> data) {
-        return new TestEffect(consumer, duration, EffectModelFactory.create(TestEffect.class, data, TestModel.class));
+        return new TestEffect(consumer, duration, EffectModelFactory.create(TestEffect.class, data, Float.class));
     }
 
     @Override

@@ -41,7 +41,7 @@ public class ManaRegeneration extends EffectBase {
 	private static final String remove = "You've lost mana regenartion.";
 	IActiveCharacter character;
 
-	public ManaRegeneration(IEffectConsumer character, long duration, String value) {
+	public ManaRegeneration(IEffectConsumer character, long duration, Void value) {
 		super(name, character);
 		this.character = (IActiveCharacter) character;
 		setPeriod(PluginConfig.MANA_REGENERATION_RATE);

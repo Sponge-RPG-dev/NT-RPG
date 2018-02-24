@@ -27,7 +27,7 @@ public class ClickComboActionEvent extends EffectBase implements IEffectContaine
 
 	private IActiveCharacter character;
 
-	public ClickComboActionEvent(IEffectConsumer t, double duration, String value) {
+	public ClickComboActionEvent(IEffectConsumer t, double duration, float value) {
 		this(t);
 	}
 

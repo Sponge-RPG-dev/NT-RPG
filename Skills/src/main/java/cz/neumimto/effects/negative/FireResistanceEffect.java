@@ -19,9 +19,5 @@ public class FireResistanceEffect extends SingleResistanceValueEffect {
 		super(name, consumer, DefaultProperties.fire_damage_protection_mult, percentage);
 		setDuration(duration);
 	}
-
-	public FireResistanceEffect(IActiveCharacter character, long duration, String level) {
-		this(character, duration, Float.parseFloat(Utils.extractNumber(level)));
-	}
 }
 

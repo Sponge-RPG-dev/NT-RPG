@@ -53,7 +53,7 @@ public class ClassGenerator implements Opcodes {
 	}
 
 	private byte[] generateEffectClass(Class<? extends IEffect<?>> cls, String id) {
-		ClassWriter cv = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+		ClassWriter cv = new ClassWriter(ClassWriter.COMPUTE_FRAMES + ClassWriter.COMPUTE_FRAMES);
 		ClassVisitor cw = new CheckClassAdapter(cv);
 		MethodVisitor mv;
 
@@ -98,16 +98,15 @@ public class ClassGenerator implements Opcodes {
 			mv.visitTypeInsn(Opcodes.CHECKCAST, toPath(cls));
 
 			String[] strings = signaturedictionary.get(modelType);
+			int i = 0, i1 = 0;
 			if (strings == null) {
 				mv.visitMethodInsn(Opcodes.INVOKESTATIC, "cz/neumimto/rpg/effects/model/EffectModelFactory", "create", "(Ljava/lang/Class;Ljava/util/Map;Ljava/lang/Class;)Ljava/lang/Object;", false);
-				mv.visitTypeInsn(Opcodes.CHECKCAST, toPath(modelType));
+			//	mv.visitTypeInsn(Opcodes.CHECKCAST, toPath(modelType));
 				mv.visitMethodInsn(Opcodes.INVOKESPECIAL, toPath(cls), "<init>", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JL" + toPath(modelType) + ";)V", false);
-				//
 			} else {
-				mv.visitTypeInsn(Opcodes.CHECKCAST, strings[0]);
+			//	mv.visitTypeInsn(Opcodes.CHECKCAST, strings[0]);
 				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, strings[0], strings[1], strings[2].length() == 1 ? "()"+strings[2] : strings[2], false);
 				mv.visitMethodInsn(Opcodes.INVOKESPECIAL, toPath(cls), "<init>", "(Lcz/neumimto/rpg/effects/IEffectConsumer;J"+strings[2]+")V", false);
-
 			}
 
 			mv.visitInsn(ARETURN);
@@ -117,7 +116,7 @@ public class ClassGenerator implements Opcodes {
 			mv.visitLocalVariable("consumer", "Lcz/neumimto/rpg/effects/IEffectConsumer;", null, l0, l1, 1);
 			mv.visitLocalVariable("duration", "J", null, l0, l1, 2);
 			mv.visitLocalVariable("value", "Ljava/lang/String;", null, l0, l1, 4);
-			mv.visitMaxs(6, 5);
+			mv.visitMaxs(8, 5);
 			mv.visitEnd();
 		}
 
