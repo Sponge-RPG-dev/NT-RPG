@@ -6,7 +6,15 @@ import cz.neumimto.effects.EnderPearlEffect;
 import cz.neumimto.effects.ManaDrainEffect;
 import cz.neumimto.effects.ResoluteTechniqueEffect;
 import cz.neumimto.effects.negative.StunEffect;
-import cz.neumimto.effects.positive.*;
+import cz.neumimto.effects.positive.AlchemyEffect;
+import cz.neumimto.effects.positive.Bash;
+import cz.neumimto.effects.positive.CriticalEffect;
+import cz.neumimto.effects.positive.DamageToMana;
+import cz.neumimto.effects.positive.DampenEffect;
+import cz.neumimto.effects.positive.DodgeEffect;
+import cz.neumimto.effects.positive.LifeAfterKillEffect;
+import cz.neumimto.effects.positive.PotionEffect;
+import cz.neumimto.effects.positive.ShadowRunEffect;
 import cz.neumimto.events.CriticalStrikeEvent;
 import cz.neumimto.events.DamageDodgedEvent;
 import cz.neumimto.events.ManaDrainEvent;
@@ -184,9 +192,9 @@ public class SkillListener {
 			long cooldown = (long) (reduced * (float) stackedValue.cooldown);
 			if (stackedValue.lasttime + cooldown <= time) {
 				int rnd = random.nextInt(100);
-				if (rnd <= stackedValue.chance) {
+				if (rnd >= stackedValue.chance) {
 					StunEffect stunEffect = new StunEffect(event.getTarget(), stackedValue.stunDuration);
-					if (stackedValue.damage > 0) {
+					if (stackedValue.damage != 0) {
 						event.setDamage(event.getDamage() + stackedValue.damage);
 					}
 					if (!game.getEventManager().post(new StunApplyEvent(event.getSource(), event.getTarget(), stunEffect))) {

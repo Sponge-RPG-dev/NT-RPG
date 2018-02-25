@@ -138,49 +138,7 @@ public class ClassGenerator implements Opcodes {
 			mv.visitEnd();
 		}
 
-	/*	{
 
-			mv = cw.visitMethod(ACC_PUBLIC, "construct", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JLjava/util/Map;)L" + toPath(cls) + ";", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JLjava/util/Map<Ljava/lang/String;Ljava/lang/String;>;)L"+toPath(cls)+";", null);
-			mv.visitCode();
-			Label l0 = new Label();
-			mv.visitLabel(l0);
-			mv.visitLineNumber(38, l0);
-			mv.visitTypeInsn(NEW, toPath(cls));
-			mv.visitInsn(DUP);
-			mv.visitVarInsn(ALOAD, 1);
-			mv.visitVarInsn(LLOAD, 2);
-			mv.visitLdcInsn(Type.getType("L"+toPath(cls)+";"));
-			mv.visitVarInsn(ALOAD, 4);
-
-			Class<?> modelType = EffectModelFactory.getModelType(cls);
-			mv.visitLdcInsn(Type.getType("L"+toPath(modelType)+";"));
-
-			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "cz/neumimto/rpg/effects/model/EffectModelFactory", "create", "(Ljava/lang/Class;Ljava/util/Map;Ljava/lang/Class;)Ljava/lang/Object;", false);
-			mv.visitTypeInsn(Opcodes.CHECKCAST, toPath(cls));
-
-			String[] strings = signaturedictionary.get(modelType);
-
-			if (strings == null) {
-				mv.visitMethodInsn(Opcodes.INVOKESTATIC, "cz/neumimto/rpg/effects/model/EffectModelFactory", "create", "(Ljava/lang/Class;Ljava/util/Map;Ljava/lang/Class;)Ljava/lang/Object;", false);
-			//	mv.visitTypeInsn(Opcodes.CHECKCAST, toPath(modelType));
-				mv.visitMethodInsn(Opcodes.INVOKESPECIAL, toPath(cls), "<init>", "(Lcz/neumimto/rpg/effects/IEffectConsumer;JL" + toPath(modelType) + ";)V", false);
-			} else {
-			//	mv.visitTypeInsn(Opcodes.CHECKCAST, strings[0]);
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, strings[0], strings[1], strings[2].length() == 1 ? "()"+strings[2] : strings[2], false);
-				mv.visitMethodInsn(Opcodes.INVOKESPECIAL, toPath(cls), "<init>", "(Lcz/neumimto/rpg/effects/IEffectConsumer;J"+strings[2]+")V", false);
-			}
-
-			mv.visitInsn(ARETURN);
-			Label l1 = new Label();
-			mv.visitLabel(l1);
-			mv.visitLocalVariable("this", "L" + getCannonicalGlobalName(cls) + ";", null, l0, l1, 0);
-			mv.visitLocalVariable("consumer", "Lcz/neumimto/rpg/effects/IEffectConsumer;", null, l0, l1, 1);
-			mv.visitLocalVariable("duration", "J", null, l0, l1, 2);
-			mv.visitLocalVariable("value", "Ljava/lang/String;", null, l0, l1, 4);
-			mv.visitMaxs(8, 5);
-			mv.visitEnd();
-		}
-*/
 		{
 			mv = cw.visitMethod(ACC_PUBLIC, "getName", "()Ljava/lang/String;", null, null);
 			mv.visitCode();
