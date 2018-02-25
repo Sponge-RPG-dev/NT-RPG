@@ -102,17 +102,31 @@ public class ClassGenerator implements Opcodes {
 			mv.visitVarInsn(LLOAD, 2);
 			mv.visitLdcInsn(Type.getType("L"+toPath(cls)+";"));
 			mv.visitVarInsn(ALOAD, 4);
-			mv.visitLdcInsn(Type.getType("L"+toPath(cls)+";"));
-			mv.visitMethodInsn(INVOKESTATIC, "cz/neumimto/rpg/effects/model/EffectModelFactory",
-					"create",
-					"(Ljava/lang/Class;Ljava/util/Map;Ljava/lang/Class;)Ljava/lang/Object;", false);
-			Class<?> modelType = EffectModelFactory.getModelType(cls);
-			mv.visitTypeInsn(CHECKCAST, toPath(modelType));
 
-			mv.visitMethodInsn(INVOKESPECIAL, toPath(cls),
-					"<init>",
-					"(Lcz/neumimto/rpg/effects/IEffectConsumer;JL"+toPath(modelType)+";)V",
-					false);
+			Class<?> modelType = EffectModelFactory.getModelType(cls);
+			if (!(modelType.isPrimitive() || Number.class.isAssignableFrom(modelType))) {
+				mv.visitLdcInsn(Type.getType("L" + toPath(cls) + ";"));
+				mv.visitMethodInsn(INVOKESTATIC, "cz/neumimto/rpg/effects/model/EffectModelFactory",
+						"create",
+						"(Ljava/lang/Class;Ljava/util/Map;Ljava/lang/Class;)Ljava/lang/Object;", false);
+
+				mv.visitTypeInsn(CHECKCAST, toPath(modelType));
+
+				mv.visitMethodInsn(INVOKESPECIAL, toPath(cls),
+						"<init>",
+						"(Lcz/neumimto/rpg/effects/IEffectConsumer;JL" + toPath(modelType) + ";)V",
+						false);
+
+			} else {
+				String[] strings = signaturedictionary.get(modelType);
+				mv.visitLdcInsn(Type.getType("L"+strings[0]+";"));
+				mv.visitMethodInsn(INVOKESTATIC, "cz/neumimto/rpg/effects/model/EffectModelFactory", "create",
+						"(Ljava/lang/Class;Ljava/util/Map;Ljava/lang/Class;)Ljava/lang/Object;", false);
+				mv.visitTypeInsn(CHECKCAST, strings[0]);
+				mv.visitMethodInsn(INVOKEVIRTUAL, strings[0], strings[1], "()"+strings[2], false);
+				mv.visitMethodInsn(INVOKESPECIAL, toPath(cls), "<init>", "(Lcz/neumimto/rpg/effects/IEffectConsumer;J"+strings[2]+")V",
+						false);
+			}
 			mv.visitInsn(ARETURN);
 			Label l1 = new Label();
 			mv.visitLabel(l1);
