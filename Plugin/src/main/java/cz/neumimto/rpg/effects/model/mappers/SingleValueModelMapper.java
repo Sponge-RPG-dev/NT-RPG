@@ -90,4 +90,15 @@ public abstract class SingleValueModelMapper extends EffectModelMapper {
     }
 
 
+    public static class Void extends EffectModelMapper {
+
+        public Void() {
+            super(Void.class);
+        }
+
+        @Override
+        public Object parse(Map<String, String> map) {
+            return null;
+        }
+    }
 }

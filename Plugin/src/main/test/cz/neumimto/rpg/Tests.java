@@ -1,18 +1,20 @@
 package cz.neumimto.rpg;
 
 
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IGlobalEffect;
-import cz.neumimto.rpg.persistance.GroupDao;
+import cz.neumimto.rpg.effects.TestEffectFloat;
+import cz.neumimto.rpg.effects.TestEffectModel;
+import cz.neumimto.rpg.effects.TestEffectStr;
+import cz.neumimto.rpg.effects.TestEffectVoid0;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroupPermission;
 import cz.neumimto.rpg.players.groups.Race;
-import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.skills.SkillTree;
 import javassist.CannotCompileException;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.junit.Assert;
@@ -22,20 +24,18 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import javax.script.ScriptEngine;
+import javax.script.ScriptException;
 
 @RunWith(PowerMockRunner.class)
 public class Tests {
@@ -141,7 +141,34 @@ public class Tests {
 	@Test
 	public void w() throws IllegalAccessException, CannotCompileException, InstantiationException {
 		ClassGenerator classGenerator = new ClassGenerator();
-		IGlobalEffect<? extends IEffect> iGlobalEffect = classGenerator.generateGlobalEffect(TestEffect.class);
+		IGlobalEffect iGlobalEffect = classGenerator.generateGlobalEffect(TestEffectStr.class);
+		Map<String, String> k = new HashMap<>();
+		k.put(iGlobalEffect.getName(), "test");
+		IEffect construct = iGlobalEffect.construct(null, -1, k);
+		assert construct.getValue().equals(k.get(iGlobalEffect.getName()));
+
+		iGlobalEffect = classGenerator.generateGlobalEffect(TestEffectModel.class);
+		k = new HashMap<>();
+		k.put(iGlobalEffect.getName(), "test");
+		k.put("l", "15");
+		k.put("v", "13.5");
+		construct = iGlobalEffect.construct(null, -1, k);
+		TestModel model = (TestModel) construct.getValue();
+		assert model.w == null;
+		assert model.l == 15;
+		assert model.v == 13.5D;
+
+		iGlobalEffect = classGenerator.generateGlobalEffect(TestEffectVoid0.class);
+		construct = iGlobalEffect.construct(null, -1, null);
+		assert construct.getValue() == null;
+
+		iGlobalEffect = classGenerator.generateGlobalEffect(TestEffectFloat.class);
+		k = new HashMap<>();
+		k.put(TestEffectFloat.name, "12.5");
+		construct = iGlobalEffect.construct(null, -1, k);
+		assert ((float)construct.getValue()) == 12.5f;
+
+
 
 	}
 }

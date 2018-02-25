@@ -21,15 +21,17 @@ public class EffectModelFactory {
         typeMappers.put(int.class, new SingleValueModelMapper.Int(Integer.class));
         typeMappers.put(Integer.class, new SingleValueModelMapper.Int(Integer.class));
         
-        typeMappers.put(float.class, new SingleValueModelMapper.Int(Float.class));
-        typeMappers.put(Float.class, new SingleValueModelMapper.Int(Float.class));
+        typeMappers.put(float.class, new SingleValueModelMapper.Float(Float.class));
+        typeMappers.put(Float.class, new SingleValueModelMapper.Float(Float.class));
         
-        typeMappers.put(double.class, new SingleValueModelMapper.Int(Double.class));
-        typeMappers.put(Double.class, new SingleValueModelMapper.Int(Double.class));
+        typeMappers.put(double.class, new SingleValueModelMapper.Double(Double.class));
+        typeMappers.put(Double.class, new SingleValueModelMapper.Double(Double.class));
 
         typeMappers.put(long.class, new SingleValueModelMapper.Long(Long.class));
         typeMappers.put(Long.class, new SingleValueModelMapper.Long(Long.class));
-        typeMappers.put(String.class, new SingleValueModelMapper.Int(String.class));
+
+        typeMappers.put(String.class, new SingleValueModelMapper.Str(String.class));
+        typeMappers.put(Void.class, new SingleValueModelMapper.Void());
     }
 
     @SuppressWarnings("unchecked")
