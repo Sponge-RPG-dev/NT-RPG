@@ -581,7 +581,14 @@ public class InventoryService {
 		character.setHotbarSlot(slot, changeTo);
 		changeTo.current = true;
 		changeTo.setSlot(slot);
-		changeTo.setEffects(getItemEffects(itemStack));
+		if (itemStack == null) {
+			changeTo.setEffects(Collections.emptyMap());
+			changeTo.setItemType(new RPGItemType());
+		} else {
+			changeTo.setEffects(getItemEffects(itemStack));
+			changeTo.setItemType(RPGItemType.from(itemStack));
+		}
+
 		character.setMainHand(changeTo);
 		changeTo.onEquip(character);
 		damageService.recalculateCharacterWeaponDamage(character, changeTo.getItemType());

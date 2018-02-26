@@ -18,8 +18,4 @@ public class ManacostReduction extends EffectBase<Double> {
 		setValue(value);
 		setStackable(true, new DoubleEffectStackingStrategy());
 	}
-
-	public ManacostReduction(IActiveCharacter character, long duration, String value) {
-		this(character, duration, Double.parseDouble(value));
-	}
 }

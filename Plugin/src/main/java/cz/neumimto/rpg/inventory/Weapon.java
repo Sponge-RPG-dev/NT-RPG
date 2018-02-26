@@ -101,6 +101,10 @@ public class Weapon extends Charm {
 		this.maxDamage = maxDamage;
 	}
 
+	public void setItemType(RPGItemType itemType) {
+		this.itemType = itemType;
+	}
+
 	@Override
 	public IEffectSource getType() {
 		return EffectSourceType.WEAPON;
