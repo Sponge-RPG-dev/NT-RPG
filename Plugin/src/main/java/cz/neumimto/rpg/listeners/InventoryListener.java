@@ -41,8 +41,11 @@ import org.spongepowered.api.event.item.inventory.*;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
+import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.common.item.inventory.adapter.impl.slots.SlotAdapter;
+
+import java.util.Optional;
 
 
 /**
@@ -102,14 +105,15 @@ public class InventoryListener {
 
 		for (SlotTransaction slotTransaction : event.getTransactions()) {
 			Slot i = slotTransaction.getSlot();
-			int index = ((SlotAdapter) i).getOrdinal();
-			if (Utils.isHotbar(index)) {
+			Optional<SlotIndex> inventoryProperty = i.getInventoryProperty(SlotIndex.class);
+			Integer value = inventoryProperty.get().getValue();
+			if (Utils.isHotbar(value)) {
 				ItemStack a = slotTransaction.getFinal().createStack();
 				if (inventoryService.canUse(a, character) != CannotUseItemReson.OK) {
 					event.setCancelled(true);
 					return;
 				} else {
-					inventoryService.initializeHotbar(character, index, a);
+					inventoryService.initializeHotbar(character, value, a);
 				}
 			}
 		}
