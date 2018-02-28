@@ -23,13 +23,15 @@ import org.spongepowered.api.world.extent.Extent;
 public class StunEffect extends ShapedEffectDecorator<Location<World>> {
 
 	public static final String name = "Stun";
+	private static final Vector3d vec3d = new Vector3d(0,2,0);
+	private static final long tickRate = 50L;
 
 	private static ParticleEffect particleEffect = ParticleEffect.builder()
 			.quantity(8)
 			.type(ParticleTypes.CRITICAL_HIT)
 			.build();
 
-	public StunEffect(IEffectConsumer consumer, long duration, String value) {
+	public StunEffect(IEffectConsumer consumer, long duration, Void value) {
 		this(consumer, duration);
 	}
 
@@ -47,14 +49,14 @@ public class StunEffect extends ShapedEffectDecorator<Location<World>> {
 	@Override
 	public void onTick() {
 		super.onTick();
-		if (getLastTickTime() <= System.currentTimeMillis() - 50L) {
+		if (getLastTickTime() <= System.currentTimeMillis() - tickRate) {
 			getConsumer().getEntity().setLocation(getValue());
 		}
 	}
 
 	@Override
 	public void draw(Vector3d vec) {
-		Location<Extent> add = getConsumer().getLocation().add(vec).add(0, 2, 0);
+		Location<Extent> add = getConsumer().getLocation().add(vec).add(vec3d);
 		World extent = getConsumer().getEntity().getLocation().getExtent();
 		extent.spawnParticles(particleEffect, add.getPosition());
 
