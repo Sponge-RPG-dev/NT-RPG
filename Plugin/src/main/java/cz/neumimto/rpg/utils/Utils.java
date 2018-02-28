@@ -274,13 +274,6 @@ public class Utils {
 		}
 	}
 
-	private static final int lbh = 0;
-	public static final int hbh = 8;
-
-	public static boolean isHotbar(int index) {
-		return index >= lbh && index <= hbh;
-	}
-
 	public static String capitalizeFirst(String str) {
 		return Character.toUpperCase(str.charAt(0)) + str.substring(1);
 	}

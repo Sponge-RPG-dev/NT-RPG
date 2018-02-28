@@ -18,8 +18,7 @@ public class Bash extends EffectBase<BashModel> {
 
 	public Bash(IEffectConsumer consumer, long duration, @Inject BashModel value) {
 		super(name, consumer);
-		BashModel model = new BashModel();
-		setValue(model);
+		setValue(value);
 		setDuration(duration);
 		setStackable(true, null);
 	}

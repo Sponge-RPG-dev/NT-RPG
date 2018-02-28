@@ -133,7 +133,7 @@ public class InventoryListener {
             return;
         }
 
-		Hotbar hotbar = character.getPlayer().getInventory().query(Hotbar.class);
+		Hotbar hotbar = character.getPlayer().getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
 		HotbarObject hotbarObject = character.getHotbar()[hotbar.getSelectedSlotIndex()];
 		if (hotbarObject == HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
 			return;

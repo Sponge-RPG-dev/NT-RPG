@@ -591,7 +591,7 @@ public class InventoryService {
 
 		character.setMainHand(changeTo);
 		changeTo.onEquip(character);
-		damageService.recalculateCharacterWeaponDamage(character, changeTo.getItemType());
+		//damageService.recalculateCharacterWeaponDamage(character, changeTo.getItemType());
 	}
 
 	private void unEquipWeapon(IActiveCharacter character) {

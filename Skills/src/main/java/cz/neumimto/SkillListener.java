@@ -192,7 +192,7 @@ public class SkillListener {
 			long cooldown = (long) (reduced * (float) stackedValue.cooldown);
 			if (stackedValue.lasttime + cooldown <= time) {
 				int rnd = random.nextInt(100);
-				if (rnd >= stackedValue.chance) {
+				if (rnd <= stackedValue.chance) {
 					StunEffect stunEffect = new StunEffect(event.getTarget(), stackedValue.stunDuration);
 					if (stackedValue.damage != 0) {
 						event.setDamage(event.getDamage() + stackedValue.damage);
