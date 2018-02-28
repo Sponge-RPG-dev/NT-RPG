@@ -76,8 +76,9 @@ public class SpeedBoost extends EffectBase {
 	@Override
 	public void onApply() {
 		super.onApply();
-		character.setProperty(DefaultProperties.walk_speed, getGlobalScope().characterService.getCharacterProperty(character, DefaultProperties.walk_speed) + speedbonus);
-		getGlobalScope().characterService.updateWalkSpeed(character);
+		getConsumer().setProperty(DefaultProperties.walk_speed,
+				getGlobalScope().characterService.getCharacterProperty(getConsumer(), DefaultProperties.walk_speed) + speedbonus);
+		getGlobalScope().characterService.updateWalkSpeed(getConsumer());
 		Location<World> location = getConsumer().getLocation();
 
 		ParticleEffect build = ParticleEffect.builder()
@@ -97,8 +98,9 @@ public class SpeedBoost extends EffectBase {
 	@Override
 	public void onRemove() {
 		super.onRemove();
-		character.setProperty(DefaultProperties.walk_speed, getGlobalScope().characterService.getCharacterProperty(character, DefaultProperties.walk_speed) - speedbonus);
-		getGlobalScope().characterService.updateWalkSpeed(character);
+		getConsumer().setProperty(DefaultProperties.walk_speed,
+				getGlobalScope().characterService.getCharacterProperty(getConsumer(), DefaultProperties.walk_speed) - speedbonus);
+		getGlobalScope().characterService.updateWalkSpeed(getConsumer());
 		getConsumer().sendMessage(Localization.SPEED_BOOST_EXPIRE);
 	}
 

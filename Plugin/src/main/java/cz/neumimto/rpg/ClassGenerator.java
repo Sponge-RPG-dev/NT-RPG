@@ -360,9 +360,10 @@ public class ClassGenerator implements Opcodes {
 	public Object generateDynamicListener(Map<StaticClass, Set<Consumer<? extends Event>>> map) {
 		Object o = null;
 		try {
-			byte[] b = generateDynamicListenerbc(map);
-			o = loadClass("cz.neumimto.rpg.listeners.DynamicListener", b);
-			Class<?> listener = Class.forName("cz.neumimto.rpg.listeners.DynamicListener");
+		    String name = "DynamicListener"+System.currentTimeMillis();
+			byte[] b = generateDynamicListenerbc(map, name);
+			o = loadClass("cz.neumimto.rpg.listeners."+name, b);
+			Class<?> listener = Class.forName("cz.neumimto.rpg.listeners."+name);
 			o = listener.newInstance();
 			for (Field field : listener.getDeclaredFields()) {
 				if (Set.class.isAssignableFrom(field.getType())) {
@@ -372,7 +373,10 @@ public class ClassGenerator implements Opcodes {
 					Class<? extends Event> event = (Class<? extends Event>) type.getActualTypeArguments()[0];
 					map.entrySet().stream()
 							.filter(m -> m.getKey().getRepresentedClass() == event)
-							.forEach(a -> s.addAll(a.getValue()));
+							.forEach(a -> {
+
+								boolean b1 = s.addAll(a.getValue());
+							});
 				}
 			}
 		} catch (Exception e) {
@@ -416,16 +420,15 @@ public class ClassGenerator implements Opcodes {
 		}
 	}
 
-	private byte[] generateDynamicListenerbc(Map<StaticClass, Set<Consumer<? extends Event>>> set) throws Exception {
+	private byte[] generateDynamicListenerbc(Map<StaticClass, Set<Consumer<? extends Event>>> set, String name) throws Exception {
 
 		ClassWriter cw = new ClassWriter(0);
 		FieldVisitor fv;
 		MethodVisitor mv;
 		AnnotationVisitor av0;
+		cw.visit(52, ACC_PUBLIC + ACC_SUPER, "cz/neumimto/rpg/listeners/"+name, null, "java/lang/Object", null);
 
-		cw.visit(52, ACC_PUBLIC + ACC_SUPER, "cz/neumimto/rpg/listeners/DynamicListener", null, "java/lang/Object", null);
-
-		cw.visitSource("DynamicListener.java", null);
+		cw.visitSource(name+".java", null);
 
 		{
 			av0 = cw.visitAnnotation("Lcz/neumimto/rpg/ResourceLoader$ListenerClass;", true);
@@ -434,8 +437,8 @@ public class ClassGenerator implements Opcodes {
 		cw.visitInnerClass("cz/neumimto/ResourceLoader$ListenerClass", "cz/neumimto/rpg/ResourceLoader", "ListenerClass", ACC_PUBLIC + ACC_STATIC + ACC_ANNOTATION + ACC_ABSTRACT + ACC_INTERFACE);
 
 		for (StaticClass e : set.keySet()) {
-			String name = e.getRepresentedClass().getSimpleName().substring(0, 1).toLowerCase() + e.getRepresentedClass().getSimpleName().substring(1) + "s";
-			fv = cw.visitField(ACC_PUBLIC, name, "Ljava/util/Set;", "Ljava/util/Set<Ljava/util/function/Consumer<L" + toPath(e.getRepresentedClass()) + ";>;>;", null);
+			String name2 = e.getRepresentedClass().getSimpleName().substring(0, 1).toLowerCase() + e.getRepresentedClass().getSimpleName().substring(1) + "s";
+			fv = cw.visitField(ACC_PUBLIC, name2, "Ljava/util/Set;", "Ljava/util/Set<Ljava/util/function/Consumer<L" + toPath(e.getRepresentedClass()) + ";>;>;", null);
 			fv.visitEnd();
 		}
 		int i = 19;
@@ -457,22 +460,22 @@ public class ClassGenerator implements Opcodes {
 				mv.visitTypeInsn(NEW, "java/util/HashSet");
 				mv.visitInsn(DUP);
 				mv.visitMethodInsn(INVOKESPECIAL, "java/util/HashSet", "<init>", "()V", false);
-				String name = e.getSimpleName().substring(0, 1).toLowerCase() + e.getSimpleName().substring(1) + "s";
-				mv.visitFieldInsn(PUTFIELD, "cz/neumimto/rpg/listeners/DynamicListener", name, "Ljava/util/Set;");
+				String namee = e.getSimpleName().substring(0, 1).toLowerCase() + e.getSimpleName().substring(1) + "s";
+				mv.visitFieldInsn(PUTFIELD, "cz/neumimto/rpg/listeners/"+name+"", namee, "Ljava/util/Set;");
 			}
 			mv.visitInsn(RETURN);
 			Label l3 = new Label();
 			mv.visitLabel(l3);
-			mv.visitLocalVariable("this", "Lcz/neumimto/rpg/listeners/DynamicListener;", null, l0, l3, 0);
+			mv.visitLocalVariable("this", "Lcz/neumimto/rpg/listeners/"+name+";", null, l0, l3, 0);
 			mv.visitMaxs(3, 1);
 			mv.visitEnd();
 		}
 		{
 			for (StaticClass a : set.keySet()) {
 				Class<?> e = a.getRepresentedClass();
-				String name = "on" + e.getSimpleName();
+				String namee = "on" + e.getSimpleName();
 				String name1 = e.getSimpleName().substring(0, 1).toLowerCase() + e.getSimpleName().substring(1) + "s";
-				mv = cw.visitMethod(ACC_PUBLIC, name, "(L" + toPath(e) + ";)V", null, null);
+				mv = cw.visitMethod(ACC_PUBLIC, namee, "(L" + toPath(e) + ";)V", null, null);
 				{
 					av0 = mv.visitAnnotation("Lorg/spongepowered/api/event/Listener;", true);
 					av0.visitEnum("order", "Lorg/spongepowered/api/event/Order;", "BEFORE_POST");
@@ -483,7 +486,7 @@ public class ClassGenerator implements Opcodes {
 					i += 3;
 					mv.visitLineNumber(i, l0);
 					mv.visitVarInsn(ALOAD, 0);
-					mv.visitFieldInsn(GETFIELD, "cz/neumimto/rpg/listeners/DynamicListener", name1, "Ljava/util/Set;");
+					mv.visitFieldInsn(GETFIELD, "cz/neumimto/rpg/listeners/"+name+"", name1, "Ljava/util/Set;");
 					mv.visitMethodInsn(INVOKEINTERFACE, "java/util/Set", "iterator", "()Ljava/util/Iterator;", true);
 					mv.visitVarInsn(ASTORE, 2);
 					Label l1 = new Label();
@@ -517,7 +520,7 @@ public class ClassGenerator implements Opcodes {
 					Label l5 = new Label();
 					mv.visitLabel(l5);
 					mv.visitLocalVariable("it", "Ljava/util/function/Consumer;", "Ljava/util/function/Consumer<L" + toPath(e) + ";>;", l3, l4, 3);
-					mv.visitLocalVariable("this", "Lcz/neumimto/rpg/listeners/DynamicListener;", null, l0, l5, 0);
+					mv.visitLocalVariable("this", "Lcz/neumimto/rpg/listeners/"+name+";", null, l0, l5, 0);
 					mv.visitLocalVariable("event", "L" + toPath(e) + ";", null, l0, l5, 1);
 					mv.visitMaxs(2, 4);
 					mv.visitEnd();

@@ -98,7 +98,7 @@ public class EffectService {
 	@PostProcess(priority = 1000)
 	public void run() {
 		game.getScheduler().createTaskBuilder().name("EffectTask")
-				.delay(10L, TimeUnit.MILLISECONDS).interval(TICK_PERIOD, TimeUnit.MILLISECONDS)
+				.delay(5L, TimeUnit.MILLISECONDS).interval(TICK_PERIOD, TimeUnit.MILLISECONDS)
 				.execute(() -> {
 					for (IEffect pendingRemoval : pendingRemovals) {
 						removeEffectContainer(pendingRemoval.getEffectContainer(), pendingRemoval, pendingRemoval.getConsumer());

@@ -121,8 +121,8 @@ function registerGlobalEffects() {
 }
 
 function generateListener() {
-    log("generateListener")
     if (!events.isEmpty()) {
+        log("generateListener")
         IoC.build(JSLoader.class).generateDynamicListener(events);
     }
     events.clear();

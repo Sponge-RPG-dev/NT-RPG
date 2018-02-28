@@ -67,6 +67,7 @@ import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -1169,8 +1170,8 @@ public class CharacterService {
 	 *
 	 * @see PropertyService#loadMaximalServerPropertyValues()
 	 */
-	public float getCharacterProperty(IActiveCharacter character, int index) {
-		return Math.min(propertyService.getMaxPropertyValue(index), character.getProperty(index));
+	public float getCharacterProperty(IEffectConsumer consumer, int index) {
+		return Math.min(propertyService.getMaxPropertyValue(index), consumer.getProperty(index));
 	}
 
 	public void setHeathscale(IActiveCharacter character, double i) {

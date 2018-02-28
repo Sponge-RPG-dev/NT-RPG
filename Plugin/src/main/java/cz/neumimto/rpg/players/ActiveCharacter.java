@@ -42,6 +42,7 @@ import cz.neumimto.rpg.skills.ItemAccessSkill;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillTreeSpecialization;
 import cz.neumimto.rpg.skills.StartingPoint;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
@@ -182,7 +183,7 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	@Override
 	public void setCharacterLevelProperties(float[] arr) {
-
+		this.characterPropertiesLevel = arr;
 	}
 
 	@Override
@@ -298,6 +299,7 @@ public class ActiveCharacter implements IActiveCharacter {
 			}
 		}
 	}
+
 
 	@Override
 	public Player getPlayer() {

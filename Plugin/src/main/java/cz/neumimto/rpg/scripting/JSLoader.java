@@ -31,6 +31,7 @@ import cz.neumimto.rpg.utils.FileUtils;
 import jdk.internal.dynalink.beans.StaticClass;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Event;
 
 import javax.script.*;
@@ -63,6 +64,8 @@ public class JSLoader {
 
 	@Inject
 	private ResourceLoader resourceLoader;
+
+	private static Object listener;
 
 	@PostProcess(priority = 2)
 	public void initEngine() {
@@ -118,8 +121,13 @@ public class JSLoader {
 	}
 
 	public void generateDynamicListener(Map<StaticClass, Set<Consumer<? extends Event>>> set) {
-		Object o = classGenerator.generateDynamicListener(set);
-		ioc.build(Game.class).getEventManager().registerListeners(ioc.build(NtRpgPlugin.class), o);
+		if (listener != null) {
+			logger.info("Found JS listener: " + listener.getClass().getSimpleName() + " Unregistering");
+			Sponge.getGame().getEventManager().unregisterListeners(listener);
+		}
+		listener = classGenerator.generateDynamicListener(set);
+		logger.info("Registering js listener: " + listener.getClass().getSimpleName());
+		Sponge.getGame().getEventManager().registerListeners(ioc.build(NtRpgPlugin.class), listener);
 	}
 
 	public void reloadSkills() {
