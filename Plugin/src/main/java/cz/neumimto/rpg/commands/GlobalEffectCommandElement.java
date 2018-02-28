@@ -38,7 +38,17 @@ public class GlobalEffectCommandElement extends CommandElement {
         return NtRpgPlugin.GlobalScope.effectService.getGlobalEffects()
                 .keySet()
                 .stream()
-                .map(a -> a.replaceAll("_", " "))
+                .map(a -> a.replaceAll(" ", "_"))
+                .filter(a -> {
+                    try {
+                        if (a.toLowerCase().startsWith(args.next())) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    } catch (ArgumentParseException e) {}
+                    return true;
+                })
                 .collect(Collectors.toList());
     }
 

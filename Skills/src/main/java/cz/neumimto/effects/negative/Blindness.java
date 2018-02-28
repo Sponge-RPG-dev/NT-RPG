@@ -20,15 +20,11 @@ public class Blindness extends EffectBase<Long> implements IEffectContainer<Long
 
 	public static final String name = "Blindness";
 
-	public Blindness(IEffectConsumer consumer, long duration, String value) {
-		this(consumer, duration);
+	public Blindness(IEffectConsumer consumer, long duration, Void value) {
+		super(name, consumer);
 		setValue(duration);
 		setDuration(duration);
 		getPotions().add(getEffect());
-	}
-
-	public Blindness(IEffectConsumer consumer, long duration) {
-		super(name, consumer);
 	}
 
 

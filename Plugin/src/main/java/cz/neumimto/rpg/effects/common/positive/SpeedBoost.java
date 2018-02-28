@@ -61,10 +61,6 @@ public class SpeedBoost extends EffectBase {
 	private IActiveCharacter character;
 
 
-	public SpeedBoost(IEffectConsumer consumer, long duration, String speedbonus) {
-		this(consumer, duration, Float.parseFloat(speedbonus));
-	}
-
 	public SpeedBoost(IEffectConsumer consumer, long duration, float speedbonus) {
 		super(name, consumer);
 		setDuration(duration);

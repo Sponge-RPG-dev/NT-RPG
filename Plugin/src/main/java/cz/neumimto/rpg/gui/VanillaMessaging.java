@@ -18,34 +18,58 @@
 
 package cz.neumimto.rpg.gui;
 
+import static cz.neumimto.rpg.gui.GuiHelper.back;
+import static cz.neumimto.rpg.gui.GuiHelper.createPlayerGroupView;
+import static cz.neumimto.rpg.gui.GuiHelper.getItemLore;
+
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.*;
+import cz.neumimto.rpg.Arg;
+import cz.neumimto.rpg.GroupService;
+import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.Pair;
+import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.CommandPermissions;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
-import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.effects.EffectSourceType;
+import cz.neumimto.rpg.effects.EffectStatusType;
+import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.effects.common.def.ManaBarNotifier;
 import cz.neumimto.rpg.inventory.CannotUseItemReson;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
+import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
+import cz.neumimto.rpg.inventory.data.manipulators.SkillTreeNode;
+import cz.neumimto.rpg.inventory.runewords.ItemUpgrade;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.persistance.DirectAccessDao;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
-import cz.neumimto.rpg.players.*;
+import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.players.ExtendedNClass;
+import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
+import cz.neumimto.rpg.reloading.Reload;
+import cz.neumimto.rpg.reloading.ReloadService;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillService;
@@ -57,6 +81,7 @@ import cz.neumimto.rpg.utils.model.CharacterListModel;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.filter.cause.First;
@@ -68,6 +93,7 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.property.SlotPos;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.api.service.pagination.PaginationList;
@@ -81,18 +107,26 @@ import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
+import org.spongepowered.api.util.Direction;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
-
-import static cz.neumimto.rpg.gui.GuiHelper.*;
 
 /**
  * Created by NeumimTo on 6.8.2015.
  */
 @Singleton
 @ResourceLoader.ListenerClass
-public class VanilaMessaging implements IPlayerMessage {
+public class VanillaMessaging implements IPlayerMessage {
 
 	@Inject
 	private Game game;
@@ -120,6 +154,25 @@ public class VanilaMessaging implements IPlayerMessage {
 
 	@Inject
 	private SkillService skillService;
+
+
+	public static Map<SkillTreeControllsButton, SkillTreeInterfaceModel> controlls;
+
+	@Reload(on = ReloadService.PLUGIN_CONFIG)
+	@PostProcess
+	public void load() {
+		controlls = new HashMap<>();
+		for (String a : PluginConfig.SKILLTREE_BUTTON_CONTROLLS) {
+			String[] split = a.split(",");
+
+			SkillTreeControllsButton key = SkillTreeControllsButton.valueOf(split[0].toUpperCase());
+			ItemType type = Sponge.getRegistry().getType(ItemType.class, split[1]).orElse(ItemTypes.BARRIER);
+
+			controlls.put(key, new SkillTreeInterfaceModel(Integer.parseInt(split[3]),type,split[2], (short)0));
+
+		}
+	}
+
 
 	@Override
 	public boolean isClientSideGui() {
@@ -261,8 +314,13 @@ public class VanilaMessaging implements IPlayerMessage {
 
 		ItemStack of = GuiHelper.itemStack(ItemTypes.DIAMOND);
 		of.offer(new InventoryCommandItemMenuData("character set class " + cc.getName()));
-		of.offer(Keys.DISPLAY_NAME, Text.of(Localization.CONFIRM));
-		i.query(new SlotPos(8, 0)).offer(of);
+		of.offer(Keys.DISPLAY_NAME, TextHelper.parse(Localization.CONFIRM));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 0))).offer(of);
+
+		ItemStack tree = GuiHelper.itemStack(ItemTypes.SAPLING);
+		tree.offer(Keys.DISPLAY_NAME, TextHelper.parse(Localization.SKILLTREE));
+		tree.offer(new InventoryCommandItemMenuData("skilltree " + cc.getName()));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(4,3))).offer(tree);
 
 		character.getPlayer().openInventory(i);
 	}
@@ -327,12 +385,8 @@ public class VanilaMessaging implements IPlayerMessage {
 
 		List<Text> content = new ArrayList<>();
 		List<Rune> r = new ArrayList<>(rwService.getRunes().values());
-		Collections.sort(r, (o1, o2) -> (int) (o1.getSpawnchance() - o2.getSpawnchance()));
 		for (Rune rune : r) {
 			LiteralText.Builder b = Text.builder(rune.getName()).color(TextColors.GOLD);
-			if (rune.getLore() != null) {
-				b.append(Text.of(" - " + rune.getLore(), TextColors.WHITE, TextStyles.ITALIC));
-			}
 			content.add(b.build());
 		}
 		builder.contents(content);
@@ -385,18 +439,18 @@ public class VanilaMessaging implements IPlayerMessage {
 	@Override
 	public void displayGroupArmor(PlayerGroup g, Player target) {
 		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
-		List<List<ItemType>> rows = new ArrayList<>(5);
+		List<List<RPGItemType>> rows = new ArrayList<>(5);
 		for (int ki = 0; ki <= 5; ki++) {
 			rows.add(new ArrayList<>());
 		}
-		for (ItemType type : g.getAllowedArmor()) {
-			if (ItemStackUtils.isHelmet(type)) {
+		for (RPGItemType type : g.getAllowedArmor()) {
+			if (ItemStackUtils.isHelmet(type.getItemType())) {
 				rows.get(0).add(type);
-			} else if (ItemStackUtils.isChestplate(type)) {
+			} else if (ItemStackUtils.isChestplate(type.getItemType())) {
 				rows.get(1).add(type);
-			} else if (ItemStackUtils.isLeggings(type)) {
+			} else if (ItemStackUtils.isLeggings(type.getItemType())) {
 				rows.get(2).add(type);
-			} else if (ItemStackUtils.isBoots(type)) {
+			} else if (ItemStackUtils.isBoots(type.getItemType())) {
 				rows.get(3).add(type);
 			} else {
 				rows.get(4).add(type);
@@ -404,16 +458,19 @@ public class VanilaMessaging implements IPlayerMessage {
 		}
 
 		ItemStack of = GuiHelper.back(g);
-		i.query(new SlotPos(0, 0)).offer(of);
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(of);
 
 		int x = 2;
 		int y = 0;
-		for (List<ItemType> row : rows) {
+		for (List<RPGItemType> row : rows) {
 			y = 0;
-			for (ItemType type : row) {
-				ItemStack armor = GuiHelper.itemStack(type);
+			for (RPGItemType type : row) {
+				ItemStack armor = GuiHelper.itemStack(type.getItemType());
+				if (type.getDisplayName() != null) {
+					armor.offer(Keys.DISPLAY_NAME, Text.of(type.getDisplayName()));
+				}
 				armor.offer(new MenuInventoryData(true));
-				i.query(new SlotPos(x, y)).offer(armor);
+				i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(x, y))).offer(armor);
 				y++;
 			}
 			x++;
@@ -427,7 +484,7 @@ public class VanilaMessaging implements IPlayerMessage {
 
 
 		ItemStack of = back(g);
-		i.query(new SlotPos(0, 0)).offer(of);
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(of);
 
 		TreeSet<ConfigRPGItemType> treeSet = new TreeSet<>();
 		for (Map.Entry<ItemType, Set<ConfigRPGItemType>> entry : g.getWeapons().entrySet()) {
@@ -449,7 +506,7 @@ public class VanilaMessaging implements IPlayerMessage {
 			ItemStack of = GuiHelper.itemStack(ItemTypes.DIAMOND);
 			of.offer(new InventoryCommandItemMenuData("character set race " + race.getName()));
 			of.offer(Keys.DISPLAY_NAME, Text.of(Localization.CONFIRM));
-			i.query(new SlotPos(8, 0)).offer(of);
+			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 0))).offer(of);
 		}
 		target.getPlayer().openInventory(i);
 	}
@@ -463,14 +520,14 @@ public class VanilaMessaging implements IPlayerMessage {
 	@Override
 	public void displayAttributes(Player player, PlayerGroup group) {
 		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
-		i.query(new SlotPos(0, 0)).offer(back(group));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back(group));
 
 		int x = 1;
 		int y = 1;
 		for (Map.Entry<ICharacterAttribute, Integer> a : group.getStartingAttributes().entrySet()) {
 			ICharacterAttribute key = a.getKey();
 			Integer value = a.getValue();
-			i.query(new SlotPos(x, y)).offer(createAttributeItem(key, value));
+			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(x, y))).offer(createAttributeItem(key, value));
 			//somehow format them in square-like structure
 			if (x == 7) {
 				x = 1;
@@ -488,7 +545,7 @@ public class VanilaMessaging implements IPlayerMessage {
 		String cmd = infoCommand.getAliases().get(0);
 		if (linkToRWList) {
 			if (character.getPlayer().hasPermission(CommandPermissions.SHOW_RUNEWORD_LIST)) {
-				i.query(new SlotPos(0, 0)).offer(back("runes", Localization.RUNE_LIST));
+				i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back("runes", Localization.RUNE_LIST));
 			}
 		}
 
@@ -534,28 +591,29 @@ public class VanilaMessaging implements IPlayerMessage {
 		}
 
 		for (int q = 0; q < commands.size(); q++) {
-			i.query(new SlotPos(q + 2, 2)).offer(commands.get(q));
+			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(q + 2, 2))).offer(commands.get(q));
 		}
 
 		if (character.getPlayer().hasPermission(CommandPermissions.SWOW_RUNEWORD_COMBINATION)) {
 			int x = 1;
 			int y = 4;
 			if (rw.getRunes().size() <= 7) {
-				for (Rune rune : rw.getRunes()) {
-					ItemStack is = rwService.toItemStack(rune);
+				for (ItemUpgrade rune : rw.getRunes()) {
+					/*ItemStack is = rwService.createRune(rune);
 					is.offer(new MenuInventoryData(true));
-					i.query(new SlotPos(x, y)).offer(is);
+					i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(x, y))).offer(is);
 					x++;
+					*/
 				}
 			} else {
 				ItemStack is = ItemStack.of(rwService.getAllowedRuneItemTypes().get(0), rw.getRunes().size());
 				is.offer(new MenuInventoryData(true));
-				String s = null;
-				for (Rune rune : rw.getRunes()) {
-					s += rune.getName();
+				StringBuilder s = null;
+				for (ItemUpgrade rune : rw.getRunes()) {
+					s.append(rune.getName());
 				}
-				is.offer(Keys.DISPLAY_NAME, Text.of(s, TextColors.GOLD));
-				i.query(new SlotPos(x, y)).offer(is);
+				is.offer(Keys.DISPLAY_NAME, Text.of(s.toString(), TextColors.GOLD));
+				i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(x, y))).offer(is);
 			}
 		}
 
@@ -581,11 +639,11 @@ public class VanilaMessaging implements IPlayerMessage {
 	@Override
 	public void displayRunewordAllowedItems(IActiveCharacter character, RuneWord rw) {
 		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
-		i.query(new SlotPos(0, 0)).offer(back("runeword " + rw.getName(), Localization.RUNEWORD_DETAILS_MENU));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back("runeword " + rw.getName(), Localization.RUNEWORD_DETAILS_MENU));
 		int x = 1;
 		int y = 2;
 		for (ItemType type : rw.getAllowedItems()) {
-			i.query(new SlotPos(x, y)).offer(GuiHelper.itemStack(type));
+			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(x, y))).offer(GuiHelper.itemStack(type));
 			if (x == 7) {
 				x = 1;
 				y++;
@@ -599,7 +657,7 @@ public class VanilaMessaging implements IPlayerMessage {
 	private Inventory displayGroupRequirements(IActiveCharacter character, RuneWord rw, Set<PlayerGroup> groups) {
 		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
 		String cmd = infoCommand.getAliases().get(0);
-		i.query(new SlotPos(0, 0)).offer(back("runeword " + rw.getName(), Localization.RUNEWORD_DETAILS_MENU));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back("runeword " + rw.getName(), Localization.RUNEWORD_DETAILS_MENU));
 
 		List<ItemStack> list = new ArrayList<>();
 		for (PlayerGroup playerGroup : groups) {
@@ -608,7 +666,7 @@ public class VanilaMessaging implements IPlayerMessage {
 		int x = 1;
 		int y = 2;
 		for (ItemStack itemStack : list) {
-			i.query(new SlotPos(x, y)).offer(itemStack);
+			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(x, y))).offer(itemStack);
 			if (x == 7) {
 				x = 1;
 				y++;
@@ -674,37 +732,37 @@ public class VanilaMessaging implements IPlayerMessage {
 			}
 
 			if (t.getOriginal().get(NKeys.SKILLTREE_CONTROLLS).isPresent()) {
-				String command = t.getOriginal().get(NKeys.SKILLTREE_CONTROLLS).get();
+				SkillTreeControllsButton command = t.getOriginal().get(NKeys.SKILLTREE_CONTROLLS).get();
 				IActiveCharacter character = characterService.getCharacter(player);
 				ConfigClass clazz = character.getPrimaryClass().getConfigClass();
 				SkillTreeViewModel viewModel = character.getSkillTreeViewLocation().get(clazz.getSkillTree().getId());
 				switch (command) {
-					case "Up":
+					case NORTH:
 						viewModel.getLocation().key-=1;
 						Sponge.getScheduler().createTaskBuilder()
 								.execute(() -> Gui.moveSkillTreeMenu(character))
 								.submit(plugin);
 
 						break;
-					case "Down":
+					case SOUTH:
 						viewModel.getLocation().key+=1;
 						Sponge.getScheduler().createTaskBuilder()
 								.execute(() -> Gui.moveSkillTreeMenu(character))
 								.submit(plugin);
 						break;
-					case "Right":
+					case WEST:
 						viewModel.getLocation().value+=1;
 						Sponge.getScheduler().createTaskBuilder()
 								.execute(() -> Gui.moveSkillTreeMenu(character))
 								.submit(plugin);
 						break;
-					case "Left":
+					case EAST:
 						viewModel.getLocation().value-=1;
 						Sponge.getScheduler().createTaskBuilder()
 								.execute(() -> Gui.moveSkillTreeMenu(character))
 								.submit(plugin);
 						break;
-					case "mode":
+					case MODE:
 						viewModel.setInteractiveMode(viewModel.getInteractiveMode().opposite());
 						//just redraw
 						Sponge.getScheduler().createTaskBuilder()
@@ -712,10 +770,12 @@ public class VanilaMessaging implements IPlayerMessage {
 								.submit(plugin);
 						break;
 					default:
+						String node = t.getOriginal().get(NKeys.SKILLTREE_NODE).get();
 						if (viewModel.getInteractiveMode() == SkillTreeViewModel.InteractiveMode.FAST) {
-							ISkill iSkill = skillService.getSkill(command);
+
+							ISkill iSkill = skillService.getSkill(node);
 							SkillTree tree = character.getPrimaryClass().getConfigClass().getSkillTree();
-							if (character.getSkill(command) == null) {
+							if (character.getSkill(node) == null) {
 								Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data = characterService.characterLearnskill(character, iSkill, tree);
 								player.sendMessage(data.value.bind(data.key.message));
 							} else {
@@ -730,7 +790,7 @@ public class VanilaMessaging implements IPlayerMessage {
 							SkillTree tree = character.getPrimaryClass().getConfigClass().getSkillTree();
 							event.setCancelled(true);
 							Sponge.getScheduler().createTaskBuilder()
-									.execute(() -> Gui.displaySkillDetailsInventoryMenu(character, tree, command))
+									.execute(() -> Gui.displaySkillDetailsInventoryMenu(character, tree, node))
 									.submit(plugin);
 
 						}
@@ -824,22 +884,19 @@ public class VanilaMessaging implements IPlayerMessage {
 		int y = skillTree.getCenter().value + skillTreeViewModel.getLocation().value; //y
 		int x = skillTree.getCenter().key + skillTreeViewModel.getLocation().key; //x
 
-		//TODO make this configurable
-		Map<Short, String> conn = new HashMap<>();
-		conn.put(Short.MAX_VALUE, "|");
-		conn.put((short)(Short.MAX_VALUE - 1), "-");
-		conn.put((short)(Short.MAX_VALUE - 2), "--");
-		conn.put((short)(Short.MAX_VALUE - 3), "/");
 		int columns = skillTreeMap[0].length;
 		int rows = skillTreeMap.length;
+
 		SkillTreeViewModel.InteractiveMode interactiveMode = skillTreeViewModel.getInteractiveMode();
 		ItemStack md = GuiHelper.interactiveModeToitemStack(character, interactiveMode);
-		skillTreeInventoryViewTemplate.query(new SlotPos(8,1)).clear();
-		skillTreeInventoryViewTemplate.query(new SlotPos(8,1)).offer(md);
+		skillTreeInventoryViewTemplate.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8,1))).clear();
+		skillTreeInventoryViewTemplate.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8,1))).offer(md);
+
+
 		for (int k = -3; k <= 3; k++) { //x
 			for (int l = -3; l <= 3; l++) { //y
-				SlotPos slotPos = new SlotPos(l + 3, k + 3);
-				Inventory query = skillTreeInventoryViewTemplate.query(slotPos);
+				Inventory query = skillTreeInventoryViewTemplate
+						.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(l + 3, k + 3)));
 				query.clear();
 				if (x + k >= 0 && x + k < rows) {
 					if (l + y >= 0 && l + y < columns) {
@@ -847,10 +904,9 @@ public class VanilaMessaging implements IPlayerMessage {
 						short id = skillTreeMap[x+k][l+y];
 						ItemStack itemStack = null;
 						if (id > 0) {
-							if (conn.containsKey(id)) {
-								itemStack = GuiHelper.itemStack(ItemTypes.STICK);
-								itemStack.offer(Keys.DISPLAY_NAME, Text.of(conn.get(id)));
-								itemStack.offer(new MenuInventoryData(true));
+							SkillTreeInterfaceModel guiModelById = skillService.getGuiModelById(id);
+							if (guiModelById != null) {
+								itemStack = guiModelById.toItemStack();
 							} else {
 								SkillData skillById = skillTree.getSkillById(id);
 
@@ -860,32 +916,26 @@ public class VanilaMessaging implements IPlayerMessage {
 									itemStack.offer(new MenuInventoryData(true));
 								} else {
 									itemStack = GuiHelper.skillToItemStack(character, skillById);
-									if (interactiveMode == SkillTreeViewModel.InteractiveMode.DETAILED) {
-										itemStack.offer(new SkillTreeInventoryViewControllsData(skillById.getSkillName()));
-										itemStack.offer(new MenuInventoryData(true));
-									} else {
-										itemStack.offer(new SkillTreeInventoryViewControllsData(skillById.getSkillName()));
-										itemStack.offer(new MenuInventoryData(true));
-									}
+									itemStack.offer(new SkillTreeInventoryViewControllsData(SkillTreeControllsButton.NODE));
+									itemStack.offer(new MenuInventoryData(true));
+									itemStack.offer(new SkillTreeNode(skillById.getSkill().getName()));
 								}
 							}
 						}
-						if (itemStack != null) {
-							skillTreeInventoryViewTemplate
-									.query(slotPos)
-									.offer(itemStack);
+						if (itemStack == null) {
+							itemStack = ItemStack.of(ItemTypes.STAINED_GLASS_PANE, 1);
+							itemStack.offer(Keys.DISPLAY_NAME, Text.EMPTY);
+							itemStack.offer(Keys.DYE_COLOR, DyeColors.GRAY);
+							itemStack.offer(Keys.HIDE_MISCELLANEOUS, true);
+							itemStack.offer(new MenuInventoryData(true));
 						}
-					} else if (l + y == -1 || l + y == columns +1) {
+						query.offer(itemStack);
+					} else {
 					//	SlotPos slotPos = new SlotPos(l + 3, k + 3);
-						skillTreeInventoryViewTemplate
-								.query(slotPos)
-								.offer(GuiHelper.createSkillTreeInventoryMenuBoundary());
+						query.offer(GuiHelper.createSkillTreeInventoryMenuBoundary());
 					}
-				} else if (x+k == -1 || x + k == rows +1) {
-					//SlotPos slotPos = new SlotPos(l + 3, k + 3);
-					skillTreeInventoryViewTemplate
-							.query(slotPos)
-							.offer(GuiHelper.createSkillTreeInventoryMenuBoundary());
+				} else {
+					query.offer(GuiHelper.createSkillTreeInventoryMenuBoundary());
 				}
 			}
 		}

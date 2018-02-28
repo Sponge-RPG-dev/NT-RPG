@@ -21,9 +21,16 @@ package cz.neumimto.rpg.configuration;
 import cz.neumimto.configuration.Comment;
 import cz.neumimto.configuration.ConfigValue;
 import cz.neumimto.configuration.ConfigurationContainer;
+import cz.neumimto.rpg.inventory.ItemLoreSections;
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+import org.spongepowered.api.text.format.TextColors;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -115,10 +122,10 @@ public class PluginConfig {
 
 	@ConfigValue
 	@Comment(content = {"If a player chooses a race and a class, where both those groups define damage value for one specific weapon, or projectile" +
-			" this option specifies how the weapon damage will be calculated.",
-			"1 = sum",
+			" this option specifies how the weapon damage will be calculated."+
+			"1 = sum"+
 			"2 = take highest value"})
-	public static int WEAPON_MERGE_STRTATEGY = 2;
+	public static int WEAPON_MERGE_STRATEGY = 2;
 
 	@ConfigValue
 	@Comment(content = {"Whenever global chat message will be displayed if any player chooses a skill tree path"})
@@ -133,13 +140,13 @@ public class PluginConfig {
 	public static boolean SHIFT_CANCELS_COMBO = false;
 
 	@ConfigValue
-	@Comment(content = {"Recognizes pressing Q key (/throwing an item out of inventory) as the click combo option 'Q'"
-			, " This action has priority over throwing item out of the inventoryinventory. Click combo may not start whit this action"})
+	@Comment(content = {"Recognizes pressing Q key (/throwing an item out of inventory) as the click combo option 'Q'"+
+			 " This action has priority over throwing item out of the inventory. Click combo may not start whit this action"})
 	public static boolean ENABLED_Q;
 
 	@ConfigValue
-	@Comment(content = {"Recognizes pressing E key (/opening player inventory) as the click combo option 'E'"
-			, " This action has priority over opening players' inventory. Click combo may not start whit this action"})
+	@Comment(content = {"Recognizes pressing E key (/opening player inventory) as the click combo option 'E'"+
+			 " This action has priority over opening players' inventory. Click combo may not start whit this action"})
 	public static boolean ENABLED_E;
 
 	@ConfigValue
@@ -149,4 +156,39 @@ public class PluginConfig {
 	@ConfigValue
 	@Comment(content = {"If true then class is validated against character's race.allowedClasses parameter "})
 	public static boolean VALIDATE_RACE_DURING_CLASS_SELECTION = true;
+
+	@ConfigValue
+	public static String ITEM_LORE_EFFECT_NAME_COLOR = TextColors.BLUE.getName();
+
+	@ConfigValue
+	public static String ITEM_LORE_EFFECT_COLON_COLOR = TextColors.DARK_GRAY.getName();
+
+	@ConfigValue
+	public static String ITEM_LORE_EFFECT_VALUE_COLOR = TextColors.LIGHT_PURPLE.getName();
+
+	@ConfigValue
+	public static String ITEM_LORE_EFFECT_SECTION_COLOR = TextColors.BLUE.getName();
+
+	@ConfigValue
+	public static String ITEM_LORE_RARITY_COLOR = TextColors.DARK_GRAY.getName();
+
+	@ConfigValue
+	public static List<String> ITEM_LORE_ORDER = Stream.of(ItemLoreSections.values()).map(ItemLoreSections::name).collect(Collectors.toList());
+
+
+	@ConfigValue
+	public static List<String> SKILLTREE_RELATIONS = new ArrayList<String>() {{
+		add("|,minecraft:stick,|,0");
+		add("/,minecraft:stick,/,0");
+		add("\\\\,minecraft:stick,\\\\,0");
+		add("-,minecraft:stick,-,0");
+	}};
+
+	@ConfigValue
+	public static List<String> SKILLTREE_BUTTON_CONTROLLS = new ArrayList<String>() {{
+		add("North,minecraft:diamond_hoe,Up,1");
+		add("West,minecraft:diamond_hoe,Right,2");
+		add("East,minecraft:diamond_hoe,Down,3");
+		add("South,minecraft:diamond_hoe,Left,4");
+	}};
 }

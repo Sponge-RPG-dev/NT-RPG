@@ -20,6 +20,10 @@ package cz.neumimto.rpg.configuration;
 
 import cz.neumimto.configuration.ConfigValue;
 import cz.neumimto.configuration.ConfigurationContainer;
+import cz.neumimto.rpg.inventory.sockets.SocketTypes;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by NeumimTo on 31.1.2015.
@@ -190,7 +194,7 @@ public class Localization {
 	public static String CHARM = "Charm";
 
 	@ConfigValue
-	public static String SOCKET_HELP = "Interact with weapon to imbue the rune";
+	public static String SOCKET_HELP = "Use anvil to imbue socket";
 
 	@ConfigValue
 	public static String SOCKET_CANCELLED = "Socketing cancelled";
@@ -335,4 +339,33 @@ public class Localization {
 
 	@ConfigValue
 	public static String RACE_NOT_SELECTED = "&CYou have to select race before class";
+
+	@ConfigValue
+	public static String ITEM_EFFECTS_SECTION = "&9Effects";
+
+	@ConfigValue
+	public static String ITEM_RARITY_SECTION = "&8Rarity: ";
+
+	@ConfigValue
+	public static String ITEM_DAMAGE_SECTION = "&8Damage: ";
+
+	@ConfigValue
+	public static String ITEM_LEVEL_SECTION = "&8Level: ";
+
+	@ConfigValue
+	public static String ITEM_SOCKETS_SECTION = "&6Sockets";
+
+	@ConfigValue
+	public static String ITEM_ATTRIBUTES_SECTIO = "&6Attributes";
+
+	@ConfigValue
+	public static Map<String, String> SOCKET_TYPES = new HashMap<String, String>() {{
+		put(SocketTypes.ANY.getId(), "&8Any");
+		put(SocketTypes.GEM.getId(), "&8Gem");
+		put(SocketTypes.JEWEL.getId(), "&8Jewel");
+		put(SocketTypes.RUNE.getId(), "&8Rune");
+	}};
+
+	@ConfigValue
+	public static String SOCKET_EMPTY = "&8 < empty %s socket> ";
 }

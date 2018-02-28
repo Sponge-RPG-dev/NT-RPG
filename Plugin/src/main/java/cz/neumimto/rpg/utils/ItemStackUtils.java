@@ -188,7 +188,7 @@ public class ItemStackUtils {
 	}
 
 	public static boolean isItemSkillBind(ItemStack is) {
-		if (is.getItem() != InventoryService.ITEM_SKILL_BIND) {
+		if (is.getType() != InventoryService.ITEM_SKILL_BIND) {
 			return false;
 		}
 		Optional<List<Text>> texts = is.get(Keys.ITEM_LORE);
@@ -239,9 +239,7 @@ public class ItemStackUtils {
 	}
 
 	public static boolean hasSockets(ItemStack itemStack) {
-		Optional<List<Text>> a = itemStack.get(Keys.ITEM_LORE);
-		if (!a.isPresent()) return false;
-		return globalScope.runewordService.getSocketCount(a.get()) > 0;
+		return globalScope.runewordService.getSocketCount(itemStack) > 0;
 	}
 
 	/**

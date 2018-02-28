@@ -9,11 +9,11 @@ import org.spongepowered.api.effect.potion.PotionEffect;
  * Created by NeumimTo on 3.6.2017.
  */
 @ClassGenerator.Generate(id = "name")
-public class WatherBreathingEffect extends EffectBase<Object> {
+public class WaterBreathing extends EffectBase<Object> {
 
 	public static final String name = "Water Breathing";
 
-	public WatherBreathingEffect(IEffectConsumer consumer, long duration, String nll) {
+	public WaterBreathing(IEffectConsumer consumer, long duration, String nll) {
 		super(name, consumer);
 		setDuration(duration);
 		setPeriod(2000L);

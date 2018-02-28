@@ -51,7 +51,7 @@ public class Gui {
 	public static IPlayerMessage mod;
 
 	static {
-		vanilla = IoC.get().build(VanilaMessaging.class);
+		vanilla = IoC.get().build(VanillaMessaging.class);
 	}
 
 	public static IPlayerMessage getMessageTypeOf(IActiveCharacter player) {
@@ -212,4 +212,5 @@ public class Gui {
 	public static void displayInitialProperties(PlayerGroup byName, Player commandSource) {
 		getMessageTypeOf(commandSource).displayInitialProperties(byName, commandSource);
 	}
+
 }

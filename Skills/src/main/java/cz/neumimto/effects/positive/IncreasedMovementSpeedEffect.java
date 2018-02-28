@@ -22,10 +22,6 @@ public class IncreasedMovementSpeedEffect extends EffectBase<Float> {
 		setStackable(true, new FloatEffectStackingStrategy());
 	}
 
-	public IncreasedMovementSpeedEffect(IEffectConsumer character, long duration, String level) {
-		this(character, duration, Float.parseFloat(Utils.extractNumber(level)) / 100);
-	}
-
 	@Override
 	public void onApply() {
 		getConsumer().setProperty(DefaultProperties.walk_speed, getConsumer().getProperty(DefaultProperties.walk_speed) + getValue());

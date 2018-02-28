@@ -5,7 +5,6 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import org.spongepowered.api.Game;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -20,8 +19,6 @@ public class CommandHP extends CommandBase {
 	@Inject
 	private CharacterService characterService;
 
-	@Inject
-	private Game game;
 
 
 	public CommandHP() {

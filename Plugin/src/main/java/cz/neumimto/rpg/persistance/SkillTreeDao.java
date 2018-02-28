@@ -18,17 +18,30 @@
 
 package cz.neumimto.rpg.persistance;
 
-import com.typesafe.config.*;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigException;
+import com.typesafe.config.ConfigFactory;
+import com.typesafe.config.ConfigObject;
+import com.typesafe.config.ConfigValue;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.inventory.ConfigRPGItemType;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.gui.SkillTreeInterfaceModel;
+import cz.neumimto.rpg.skills.CharacterAttributeSkill;
+import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.ItemAccessSkill;
+import cz.neumimto.rpg.skills.PropertySkill;
+import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillLoadingErrors;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.SkillTree;
+import cz.neumimto.rpg.skills.SkillTreeSpecialization;
+import cz.neumimto.rpg.skills.StartingPoint;
 import cz.neumimto.rpg.utils.Utils;
 import org.slf4j.Logger;
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.item.ItemType;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -92,25 +105,26 @@ public class SkillTreeDao {
 
                         int i = 0;
                         int j = 0;
-                        String num = "";
+                        StringBuilder num = new StringBuilder();
                         for (String s : asciiMap) {
                             for (char c1 : s.toCharArray()) {
                                 if (Character.isDigit(c1)){
-                                    num += c1;
+                                    num.append(c1);
                                     continue;
                                 } else if (c1 == 'X') {
                                     skillTree.setCenter(new Pair<>(i,j));
                                     j++;
                                     continue;
                                 }
-                                if (!num.equals("")) {
-                                    array[i][j] = Short.parseShort(num);
+                                if (!num.toString().equals("")) {
+                                    array[i][j] = Short.parseShort(num.toString());
                                     j++;
                                 }
-                                if (SkillService.SKILL_CONNECTION_TYPES.keySet().contains(c1)){
-                                    array[i][j] = SkillService.SKILL_CONNECTION_TYPES.get(c1).value;
+                                SkillTreeInterfaceModel guiModelByCharacter = skillService.getGuiModelByCharacter(c1);
+                                if (guiModelByCharacter != null){
+                                    array[i][j] = guiModelByCharacter.getId();
                                 }
-                                num = "";
+                                num = new StringBuilder();
                                 j++;
                             }
                             j=0;
@@ -297,6 +311,9 @@ public class SkillTreeDao {
         SkillData info = tree.getSkills().get(name);
         if (info == null) {
             ISkill skill = skillService.getSkill(name);
+            if (skill == null) {
+                throw new IllegalStateException("Could not find a skill " + name + " referenced in the skilltree " + tree.getId());
+            }
             info = skill.constructSkillData();
             info.setSkill(skill);
             tree.getSkills().put(name, info);

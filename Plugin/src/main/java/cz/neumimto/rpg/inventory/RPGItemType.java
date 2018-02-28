@@ -46,7 +46,9 @@ public class RPGItemType {
 	public boolean equals(Object obj) {
 		if (obj == null)
 			return false;
-		if (obj instanceof RPGItemType) {
+		if (obj == this)
+			return true;
+		if (!(obj instanceof RPGItemType)) {
 			return false;
 		}
 		RPGItemType that = (RPGItemType) obj;

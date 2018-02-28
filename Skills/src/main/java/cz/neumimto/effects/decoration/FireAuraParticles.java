@@ -17,7 +17,7 @@ public class FireAuraParticles extends EffectBase {
 
 	private STAGE stage;
 
-	public FireAuraParticles(IEffectConsumer character, long duration, String damage) {
+	public FireAuraParticles(IEffectConsumer character, long duration, Void unsuded) {
 		super(name, character);
 		setDuration(duration);
 		stage = STAGE.A;

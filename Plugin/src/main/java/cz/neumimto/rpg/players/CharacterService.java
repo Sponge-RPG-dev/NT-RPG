@@ -159,7 +159,7 @@ public class CharacterService {
 	}
 
 	public void updateArmorRestrictions(IActiveCharacter character) {
-		Set<ItemType> allowedArmor = character.updateItemRestrictions().getAllowedArmor();
+		Set<RPGItemType> allowedArmor = character.updateItemRestrictions().getAllowedArmor();
 
 		EventCharacterArmorPostUpdate event = new EventCharacterArmorPostUpdate(character, allowedArmor);
 		game.getEventManager().post(event);
@@ -432,7 +432,7 @@ public class CharacterService {
 
 	public void removeGroupEffects(IActiveCharacter character, PlayerGroup p) {
 		if (p == null) return;
-		effectService.removeGlobalEffectsAsEnchantments(p.getEffects(), character, p);
+		effectService.removeGlobalEffectsAsEnchantments(p.getEffects().keySet(), character, p);
 	}
 
 	public void applyGroupEffects(IActiveCharacter character, PlayerGroup p) {
@@ -991,7 +991,7 @@ public class CharacterService {
 			return 2;
 		Set<IGlobalEffect> effects = event.getLastItem().getEffects().keySet();
 		effects.forEach(g -> effectService.removeEffect(g.getName(), character, weapon));
-		Map<IGlobalEffect, String> toadd = event.getNewItem().getEffects();
+		Map<IGlobalEffect, EffectParams> toadd = event.getNewItem().getEffects();
 		effectService.applyGlobalEffectsAsEnchantments(toadd, character, weapon);
 		return 0;
 	}

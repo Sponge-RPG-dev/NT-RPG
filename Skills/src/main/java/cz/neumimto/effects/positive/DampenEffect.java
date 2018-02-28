@@ -15,10 +15,6 @@ public class DampenEffect extends EffectBase<Double> {
 
 	public static final String name = "Dampen";
 
-	public DampenEffect(IEffectConsumer consumer, long duration, String value) {
-		this(consumer, duration, Double.parseDouble(Utils.extractNumber(value)));
-	}
-
 	public DampenEffect(IEffectConsumer consumer, long duration, double value) {
 		super(name, consumer);
 		setDuration(duration);

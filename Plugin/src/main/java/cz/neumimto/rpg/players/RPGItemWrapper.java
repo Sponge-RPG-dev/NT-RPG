@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.players;
 
+import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -11,18 +12,33 @@ public class RPGItemWrapper {
 
     private Set<ConfigRPGItemType> items = new HashSet<>();
 
-    private double maxDamage;
+    private double damage;
 
     public void addItem(ConfigRPGItemType type) {
-        maxDamage = Math.max(maxDamage, type.getDamage());
-        items.add(type);
+        switch (PluginConfig.WEAPON_MERGE_STRATEGY) {
+            case 2:
+                damage = Math.max(damage, type.getDamage());
+                items.add(type);
+                break;
+            case 1:
+                items.add(type);
+                damage = items.stream().mapToDouble(ConfigRPGItemType::getDamage).sum();
+        }
     }
 
     public void removeItem(ConfigRPGItemType type) {
-        if (items.contains(type))
+        if (items.contains(type)) {
             items.remove(type);
-        maxDamage = items.stream().mapToDouble(ConfigRPGItemType::getDamage)
-                .max().orElse(0D);
+            switch (PluginConfig.WEAPON_MERGE_STRATEGY) {
+                case 2:
+                    damage = items.stream().mapToDouble(ConfigRPGItemType::getDamage)
+                            .max().orElse(0D);
+                    break;
+                case 1:
+                    damage = items.stream().mapToDouble(ConfigRPGItemType::getDamage).sum();
+                    break;
+            }
+        }
     }
 
     public boolean containsItem(ItemStack is) {
@@ -47,8 +63,8 @@ public class RPGItemWrapper {
         return items;
     }
 
-    public double getMaxDamage() {
-        return maxDamage;
+    public double getDamage() {
+        return damage;
     }
 
     public static RPGItemWrapper createFromSet(Set<ConfigRPGItemType> types) {

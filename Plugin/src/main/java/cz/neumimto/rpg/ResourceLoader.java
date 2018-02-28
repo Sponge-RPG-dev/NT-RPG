@@ -165,7 +165,7 @@ public class ResourceLoader {
 			try {
 				loadClass(clazz);
 			} catch (Exception e) {
-				logger.warn("Could not load the class [" + className + "]", e.getCause());
+				logger.warn("Could not load the class [" + className + "]" + e.getMessage());
 			}
 
 		}

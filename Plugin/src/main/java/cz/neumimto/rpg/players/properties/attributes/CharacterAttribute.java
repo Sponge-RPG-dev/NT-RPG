@@ -9,6 +9,7 @@ import java.util.Map;
 /**
  * Created by fs on 14.1.16.
  */
+
 public abstract class CharacterAttribute implements ICharacterAttribute {
 
 	private String name;

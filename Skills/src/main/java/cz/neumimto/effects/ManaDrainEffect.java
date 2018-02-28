@@ -19,7 +19,4 @@ public class ManaDrainEffect extends EffectBase<Float> {
 		setValue(value);
 	}
 
-	public ManaDrainEffect(IActiveCharacter character, long duration, String value) {
-		this(character, duration, Float.parseFloat(Utils.extractNumber(value)));
-	}
 }

@@ -41,6 +41,7 @@ import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
+import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.blockray.BlockRay;
 import org.spongepowered.api.util.blockray.BlockRayHit;
@@ -49,7 +50,13 @@ import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.EntityUniverse;
 import org.spongepowered.common.event.damage.SpongeDamageSourceBuilder;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -206,8 +213,6 @@ public class Utils {
 	 * @param player
 	 */
 	public static void resetPlayerToDefault(Player player) {
-		player.offer(Keys.MAX_HEALTH, 20d);
-		player.offer(Keys.HEALTH, 20d);
 		player.offer(Keys.WALKING_SPEED, PropertyService.WALKING_SPEED);
 	}
 
@@ -269,21 +274,23 @@ public class Utils {
 		}
 	}
 
-	private static final int lbh = 0;
-	public static final int hbh = 8;
-
-	public static boolean isHotbar(int index) {
-		return index >= lbh && index <= hbh;
-	}
-
 	public static String capitalizeFirst(String str) {
 		return Character.toUpperCase(str.charAt(0)) + str.substring(1);
 	}
 
-	public static Pattern REGEXP_NUMBER = Pattern.compile("-?\\d+");
+	public static Pattern REGEXP_NUMBER = Pattern.compile("[-+]?\\d+([\\.,]\\d+)?");
+	public static Pattern REGEXP_CLASS_MEMBER = Pattern.compile("^[a-z_]\\w*$");
 
 	public static String extractNumber(String string) {
 		Matcher matcher = REGEXP_NUMBER.matcher(string);
+		if (matcher.find()) {
+			return matcher.group();
+		}
+		return null;
+	}
+
+	public static String extractClassMember(String string) {
+		Matcher matcher = REGEXP_CLASS_MEMBER.matcher(string);
 		if (matcher.find()) {
 			return matcher.group();
 		}

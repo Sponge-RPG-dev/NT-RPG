@@ -14,7 +14,7 @@
 
     <artifactId>NT-RPG</artifactId>
     <groupId>cz.neumimto.rpg</groupId>
-    <version>1.0.10</version>
+    <version>1.0.11-SNAPSHOT</version>
 
     <properties>
         <timestamp>${maven.build.timestamp}</timestamp>
@@ -53,6 +53,11 @@
         <dependency>
             <groupId>com.github.NeumimTo</groupId>
             <artifactId>NTCore</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.NeumimTo</groupId>
+            <artifactId>IoC</artifactId>
+            <version>55a0991e84</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

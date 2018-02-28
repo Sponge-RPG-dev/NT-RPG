@@ -1,5 +1,6 @@
 package cz.neumimto.effects.negative;
 
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
@@ -13,17 +14,11 @@ public class DOTFireDamageEffect extends EffectBase {
 
 	private double damage;
 
-	public DOTFireDamageEffect(IEffectConsumer consumer, double damage, long period, long duration) {
+	public DOTFireDamageEffect(IEffectConsumer consumer, long duration, @Inject DotDamageEffectModel model) {
 		super(name, consumer);
 		setDuration(duration);
-		setPeriod(period);
-	}
-
-	public DOTFireDamageEffect(IEffectConsumer character, long duration, String damage) {
-		super(name, character);
-		setDuration(duration);
-		setPeriod(1000L);
-		this.damage = Double.parseDouble(Utils.extractNumber(damage));
+		setPeriod(model.period);
+		this.damage = model.damage;
 	}
 
 	@Override

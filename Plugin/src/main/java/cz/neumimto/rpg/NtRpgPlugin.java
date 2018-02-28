@@ -18,40 +18,70 @@
 
 package cz.neumimto.rpg;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.inject.Inject;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.FindPersistenceContextEvent;
 import cz.neumimto.core.ioc.IoC;
-import cz.neumimto.rpg.commands.*;
+import cz.neumimto.rpg.commands.AnyPlayerGroupCommandElement;
+import cz.neumimto.rpg.commands.AnySkillCommandElement;
+import cz.neumimto.rpg.commands.CharacterAttributeCommandElement;
+import cz.neumimto.rpg.commands.GlobalEffectCommandElement;
+import cz.neumimto.rpg.commands.LearnedSkillCommandElement;
+import cz.neumimto.rpg.commands.PartyMemberCommandElement;
+import cz.neumimto.rpg.commands.PlayerClassCommandElement;
+import cz.neumimto.rpg.commands.RaceCommandElement;
+import cz.neumimto.rpg.commands.RuneCommandElement;
+import cz.neumimto.rpg.commands.UnlearnedSkillCommandElement;
 import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.configuration.Settings;
+import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
+import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
+import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
+import cz.neumimto.rpg.inventory.data.manipulators.*;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
+import cz.neumimto.rpg.inventory.sockets.SocketType;
+import cz.neumimto.rpg.inventory.sockets.SocketTypeRegistry;
+import cz.neumimto.rpg.inventory.sockets.SocketTypes;
 import cz.neumimto.rpg.listeners.DebugListener;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.players.*;
+import cz.neumimto.rpg.players.ActiveCharacter;
+import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.players.ExtendedNClass;
+import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.PropertyService;
+import cz.neumimto.rpg.players.properties.attributes.AttributeRegistry;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.scripting.JSLoader;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ActiveSkill;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.utils.FileUtils;
 import cz.neumimto.rpg.utils.SkillTreeActionResult;
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
@@ -59,11 +89,13 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.ConfigDir;
+import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.data.DataRegistration;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.GameRegistryEvent;
 import org.spongepowered.api.event.game.state.GamePostInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -72,18 +104,26 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.SpongeExecutorService;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Resource;
 
 /**
  * Created by NeumimTo on 29.4.2015.
@@ -91,6 +131,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(id = "nt-rpg", version = Version.VERSION, name = "NT-Rpg", dependencies = {
 		@Dependency(id = "nt-core", version = "1.9", optional = false)
 })
+@Resource
 public class NtRpgPlugin {
 
 	public static String workingDir;
@@ -102,48 +143,140 @@ public class NtRpgPlugin {
 	@ConfigDir(sharedRoot = false)
 	private Path config;
 
-
 	@Inject
 	public Logger logger;
 
+	@Inject
+	PluginContainer plugin;
 
 	@Listener
 	public void preinit(GamePreInitializationEvent e) {
-
+		new NKeys();
 		DataRegistration.<InventoryCommandItemMenuData, InventoryCommandItemMenuData.Immutable>builder()
+				.manipulatorId("custom_inventory_command")
+				.dataName("Custom Inventory Command")
 				.dataClass(InventoryCommandItemMenuData.class)
 				.immutableClass(InventoryCommandItemMenuData.Immutable.class)
-				.builder(new InventoryCommandItemMenuData.Builder())
-				.manipulatorId("ntrpg-custominventory")
-				.dataName("CustomInventory")
-				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
+				.builder(new InventoryCommandItemMenuData.InventoryCommandItemMenuDataBuilder())
+				.buildAndRegister(plugin);
 
 		DataRegistration.<MenuInventoryData, MenuInventoryData.Immutable>builder()
+				.manipulatorId("menu_inventory")
+				.dataName("Menu Item")
 				.dataClass(MenuInventoryData.class)
 				.immutableClass(MenuInventoryData.Immutable.class)
 				.builder(new MenuInventoryData.Builder())
-				.manipulatorId("ntrpg-menuinventory")
-				.dataName("MenuItem")
-				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
+				.buildAndRegister(plugin);
 
 
-		DataRegistration.<CustomItemData, CustomItemData.Immutable>builder()
-				.dataClass(CustomItemData.class)
-				.immutableClass(CustomItemData.Immutable.class)
-				.builder(new CustomItemData.Builder())
-				.manipulatorId("ntrpg-customitemdata")
-				.dataName("CustomItemData")
-				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
+		DataRegistration.builder()
+				.dataName("Item Effects")
+				.manipulatorId("item_effects")
+				.dataClass(EffectsData.class)
+				.immutableClass(EffectsData.Immutable.class)
+				.builder(new EffectsData.EffectDataBuilder())
+				.buildAndRegister(plugin);
 
 
-		DataRegistration.<CustomItemData, CustomItemData.Immutable>builder()
+		DataRegistration.<ItemAttributesData, ItemAttributesData.Immutable>builder()
+				.dataClass(ItemAttributesData.class)
+				.immutableClass(ItemAttributesData.Immutable.class)
+				.builder(new ItemAttributesData.Builder())
+				.manipulatorId("ntrpg-itemattributes")
+				.dataName("ItemAttributesData")
+				.buildAndRegister(plugin);
+
+		DataRegistration.<ItemLevelData, ItemLevelData.Immutable>builder()
+				.dataClass(ItemLevelData.class)
+				.immutableClass(ItemLevelData.Immutable.class)
+				.builder(new ItemLevelData.Builder())
+				.manipulatorId("ntrpg-itemleveldata")
+				.dataName("ItemLevelData")
+				.buildAndRegister(plugin);
+
+		DataRegistration.<ItemRarityData, ItemRarityData.Immutable>builder()
+				.dataClass(ItemRarityData.class)
+				.immutableClass(ItemRarityData.Immutable.class)
+				.builder(new ItemRarityData.Builder())
+				.manipulatorId("ntrpg-rarity")
+				.dataName("ItemRarityData")
+				.buildAndRegister(plugin);
+
+		DataRegistration.builder()
+				.dataName("Item Sockets")
+				.manipulatorId("item_sockets")
+				.dataClass(ItemSocketsData.class)
+				.immutableClass(ItemSocketsData.Immutable.class)
+				.builder(new ItemSocketsData.Builder())
+				.buildAndRegister(plugin);
+
+
+		DataRegistration.<LoreDamageData, LoreDamageData.Immutable>builder()
+				.dataClass(LoreDamageData.class)
+				.immutableClass(LoreDamageData.Immutable.class)
+				.builder(new LoreDamageData.Builder())
+				.manipulatorId("ntrpg-loredamage")
+				.dataName("LoreDamageData")
+				.buildAndRegister(plugin);
+
+		DataRegistration.<LoreDurabilityData, LoreDurabilityData.Immutable>builder()
+				.dataClass(LoreDurabilityData.class)
+				.immutableClass(LoreDurabilityData.Immutable.class)
+				.builder(new LoreDurabilityData.Builder())
+				.manipulatorId("ntrpg-loredurability")
+				.dataName("LoreDurabilityData")
+				.buildAndRegister(plugin);
+
+		DataRegistration.<MinimalItemRequirementsData, MinimalItemRequirementsData.Immutable>builder()
+				.dataClass(MinimalItemRequirementsData.class)
+				.immutableClass(MinimalItemRequirementsData.Immutable.class)
+				.builder(new MinimalItemRequirementsData.Builder())
+				.manipulatorId("ntrpg-minimalrequirements")
+				.dataName("MinimalItemRequirementsData")
+				.buildAndRegister(plugin);
+
+		DataRegistration.<SectionDelimiterData, SectionDelimiterData.Immutable>builder()
+				.dataClass(SectionDelimiterData.class)
+				.immutableClass(SectionDelimiterData.Immutable.class)
+				.builder(new SectionDelimiterData.Builder())
+				.manipulatorId("ntrpg-sectiondelimiter")
+				.dataName("SectionDelimiterData")
+				.buildAndRegister(plugin);
+
+		DataRegistration.<ItemStackUpgradeData, ItemStackUpgradeData.Immutable>builder()
+				.manipulatorId("itemstack_upgrade")
+				.dataName("ItemStack Upgrade")
+				.dataClass(ItemStackUpgradeData.class)
+				.immutableClass(ItemStackUpgradeData.Immutable.class)
+				.builder(new ItemStackUpgradeData.Builder())
+				.buildAndRegister(plugin);
+
+		DataRegistration.<ItemStackUpgradeData, ItemStackUpgradeData.Immutable>builder()
+				.manipulatorId("skilltree_controlls")
+				.dataName("SkillTree Controll Buttons")
 				.dataClass(SkillTreeInventoryViewControllsData.class)
 				.immutableClass(SkillTreeInventoryViewControllsData.Immutable.class)
 				.builder(new SkillTreeInventoryViewControllsData.Builder())
-				.manipulatorId("ntrpg-stivcd")
-				.dataName("SkillTreeInventoryViewControllsData")
-				.buildAndRegister(Sponge.getPluginManager().getPlugin("nt-rpg").get());
+				.buildAndRegister(plugin);
 
+		DataRegistration.<ItemStackUpgradeData, ItemStackUpgradeData.Immutable>builder()
+				.manipulatorId("skilltree_node")
+				.dataName("SkillTree Node")
+				.dataClass(SkillTreeNode.class)
+				.immutableClass(SkillTreeNode.Immutable.class)
+				.builder(new SkillTreeNode.Builder())
+				.buildAndRegister(plugin);
+
+		Sponge.getRegistry().registerModule(SocketType.class, new SocketTypeRegistry());
+		Sponge.getRegistry().registerModule(ICharacterAttribute.class, new AttributeRegistry());
+	}
+
+	@Listener
+	public void postInit(GameRegistryEvent.Register<SocketType> event) {
+		event.register(SocketTypes.ANY);
+		event.register(SocketTypes.GEM);
+		event.register(SocketTypes.JEWEL);
+		event.register(SocketTypes.RUNE);
 	}
 
 	@Listener
@@ -255,9 +388,10 @@ public class NtRpgPlugin {
 				.build();
 
 		// ===========================================================
-		// ==================        ENCHANTS       ==================
+		// ==================        ITEM       ==================
 		// ===========================================================
 
+		Gson gson = new Gson();
 		CommandSpec enchantAdd = CommandSpec.builder()
 				.description(TextSerializers
 						.FORMATTING_CODE
@@ -271,16 +405,43 @@ public class NtRpgPlugin {
 					Player player = (Player) src;
 					if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
 						ItemStack itemStack = player.getItemInHand(HandTypes.MAIN_HAND).get();
-						CustomItemData itemData = NtRpgPlugin.GlobalScope.inventorySerivce.getItemData(itemStack);
-						Map<String, String> map = new HashMap<>();
-						map.putAll(itemData.getEnchantements());
 
-						String message = args.<String>getOne("args").orElse("");
-						map.put(effect.getName(), message);
-
-						itemStack = NtRpgPlugin.GlobalScope.inventorySerivce.setEnchantments(map, itemStack);
-						player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
-						player.sendMessage(TextHelper.parse("Enchantment " + effect.getName() + " added"));
+						Optional<String> params = args.getOne("params");
+						String s = params.get();
+						try {
+							if (s.equals("?")) {
+								Class<?> modelType = EffectModelFactory.getModelType(effect.asEffectClass());
+								if (Number.class.isAssignableFrom(modelType) || modelType.isPrimitive()) {
+									player.sendMessage(Text.of("Expected: " + modelType.getTypeName()));
+								} else {
+									Map<String, String> q = new HashMap<>();
+									for (Field field : modelType.getDeclaredFields()) {
+										q.put(field.getName(), field.getType().getName());
+									}
+									player.sendMessage(Text.of("Expected: " + gson.toJson(q)));
+								}
+							} else {
+								EffectParams map = null;
+								Class<?> modelType = EffectModelFactory.getModelType(effect.asEffectClass());
+								if (Number.class.isAssignableFrom(modelType) || modelType.isPrimitive()) {
+									map = new EffectParams();
+									map.put(effect.asEffectClass().getName(), s);
+								} else {
+									map = gson.fromJson(s, EffectParams.class);
+								}
+								itemStack = GlobalScope.inventorySerivce.addEffectsToItemStack(itemStack, effect.getName(), map);
+								itemStack = GlobalScope.inventorySerivce.updateLore(itemStack);
+								player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
+								player.sendMessage(TextHelper.parse("Enchantment " + effect.getName() + " added"));
+							}
+						} catch (JsonSyntaxException e) {
+							Class<?> modelType = EffectModelFactory.getModelType(effect.asEffectClass());
+							Map<String, String> q = new HashMap<>();
+							for (Field field : modelType.getDeclaredFields()) {
+								q.put(field.getName(), field.getType().getName());
+							}
+							throw new RuntimeException("Expected: " + gson.toJson(q));
+						}
 					} else {
 						player.sendMessage(TextSerializers.FORMATTING_CODE.deserialize(Localization.NO_ITEM_IN_HAND));
 					}
@@ -294,9 +455,6 @@ public class NtRpgPlugin {
 						TextSerializers
 								.FORMATTING_CODE
 								.deserialize(CommandLocalization.COMMAND_ADMIN_ENCHANT))
-				.arguments(
-						new GlobalEffectCommandElement(TextHelper.parse("effect")),
-						GenericArguments.remainingJoinedStrings(TextHelper.parse("args")))
 				.child(enchantAdd, "add", "e")
 				.build();
 
@@ -310,17 +468,22 @@ public class NtRpgPlugin {
 								.FORMATTING_CODE
 								.deserialize(CommandLocalization.COMMAND_ADMIN_SOCKET))
 				.arguments(
-						GenericArguments.onlyOne(GenericArguments.integer(TextHelper.parse("count")))
+						GenericArguments.catalogedElement(Text.of("type"), SocketType.class)
 				)
 				.executor((src, args) -> {
 					Player player = (Player) src;
-					Integer count = args.<Integer>getOne("count").orElse(1);
-					Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
-					if (itemInHand.isPresent()) {
-						ItemStack itemStack = NtRpgPlugin.GlobalScope.runewordService.createSockets(itemInHand.get(), count);
-						player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
+					Optional<SocketType> type = args.getOne("type");
+					if (type.isPresent()) {
+						Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
+						if (itemInHand.isPresent()) {
+							ItemStack itemStack = NtRpgPlugin.GlobalScope.runewordService.createSocket(itemInHand.get(), type.get());
+							player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
+							return CommandResult.builder().affectedItems(1).build();
+						}
+						src.sendMessage(Text.builder(Localization.NO_ITEM_IN_HAND).color(TextColors.RED).build());
+						return CommandResult.empty();
 					}
-					return CommandResult.success();
+					return CommandResult.empty();
 				})
 				.build();
 
@@ -339,7 +502,8 @@ public class NtRpgPlugin {
 				.executor((src, args) -> {
 					Rune runee = args.<Rune>getOne("rune").get();
 					Player player = (Player) src;
-					ItemStack is = NtRpgPlugin.GlobalScope.runewordService.toItemStack(runee);
+
+					ItemStack is = NtRpgPlugin.GlobalScope.runewordService.createRune(SocketTypes.RUNE, runee.getName());
 					player.getInventory().offer(is);
 					return CommandResult.success();
 				})
@@ -415,7 +579,7 @@ public class NtRpgPlugin {
 				.arguments(GenericArguments.remainingJoinedStrings(TextHelper.parse("args")))
 				.executor((src, args) -> {
 					String[] a = args.<String>getOne("args").get().split(" ");
-					if (a[1].equalsIgnoreCase("js")) {
+					if (a[0].equalsIgnoreCase("js")) {
 						if (!PluginConfig.DEBUG) {
 							src.sendMessage(TextHelper.parse("Reloading is allowed only in debug mode"));
 							return CommandResult.success();
@@ -438,7 +602,7 @@ public class NtRpgPlugin {
 							}
 							i++;
 						}
-					} else if (a[1].equalsIgnoreCase("skilltree")) {
+					} else if (a[0].equalsIgnoreCase("skilltree")) {
 						IoC.get().build(SkillService.class).reloadSkillTrees();
 					} else {
 						src.sendMessage(TextHelper.parse("js[s/a/g] skilltree [r,a]"));
@@ -463,9 +627,10 @@ public class NtRpgPlugin {
 					Player player = args.<Player>getOne("player").get();
 					String data = args.<String>getOne("data").get();
 					Long k  = args.<Long>getOne("duration").get();
-						IGlobalEffect effect1 = args.<IGlobalEffect>getOne("data").get();
+					IGlobalEffect effect1 = args.<IGlobalEffect>getOne("data").get();
 					IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
-					GlobalScope.effectService.addEffect(effect1.construct(character, k, data), character, InternalEffectSourceProvider.INSTANCE);
+					EffectParams params = gson.fromJson(data, EffectParams.class);
+					GlobalScope.effectService.addEffect(effect1.construct(character, k, params), character, InternalEffectSourceProvider.INSTANCE);
 					return CommandResult.success();
 				})
 				.build();

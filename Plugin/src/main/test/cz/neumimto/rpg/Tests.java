@@ -1,14 +1,21 @@
 package cz.neumimto.rpg;
 
 
-import cz.neumimto.rpg.persistance.GroupDao;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.effects.TestEffectFloat;
+import cz.neumimto.rpg.effects.TestEffectModel;
+import cz.neumimto.rpg.effects.TestEffectStr;
+import cz.neumimto.rpg.effects.TestEffectVoid0;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroupPermission;
 import cz.neumimto.rpg.players.groups.Race;
-import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.skills.SkillTree;
+import javassist.CannotCompileException;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.junit.Assert;
 import org.junit.Test;
@@ -17,47 +24,21 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import javax.script.ScriptEngine;
+import javax.script.ScriptException;
 
 @RunWith(PowerMockRunner.class)
 public class Tests {
-
-	// @Test
-	public void testConfig() throws NoSuchFieldException, IllegalAccessException {
-		ResourceLoader.raceDir = new File("./src/main/test/testfiles/races");
-		ResourceLoader.guildsDir = new File("./src/main/test/testfiles/guilds");
-		ResourceLoader.classDir = new File("./src/main/test/testfiles/classes");
-		GroupDao dao = new GroupDao();
-		dao.loadGuilds();
-		dao.loadRaces();
-
-		SkillService sk = mock(SkillService.class);
-		when(sk.getSkillTrees()).thenReturn(new HashMap<String, SkillTree>() {
-			{
-				put("test", SkillTree.Default);
-			}
-		});
-		Field f = dao.getClass().getDeclaredField("skillService");
-		f.setAccessible(true);
-		f.set(dao, sk);
-		dao.loadNClasses();
-		Assert.assertTrue(ResourceLoader.raceDir.listFiles().length == dao.getRaces().size());
-		Assert.assertTrue(ResourceLoader.guildsDir.listFiles().length == dao.getGuilds().size());
-		Assert.assertTrue(dao.getClasses().get("test").getLevels().length == 99);
-	}
 
 
 	/* @Test
@@ -110,7 +91,7 @@ public class Tests {
 		}});
 		when(character.getRace()).thenReturn(race);
 
-		ExtendedNClass nClass = new ExtendedNClass();
+		ExtendedNClass nClass = new ExtendedNClass(character);
 
 		ConfigClass c = new ConfigClass("b");
 
@@ -147,7 +128,6 @@ public class Tests {
 		Assert.assertTrue(permissionsToRemove.contains("class4"));
 	}
 
-
 	@Test
 	public void k() {
 		int x = -256;
@@ -155,6 +135,41 @@ public class Tests {
 		Assert.assertTrue(is16);
 		is16 = x == (x >> 4) << 4;
 		Assert.assertTrue(is16);
+	}
+
+
+	@Test
+	public void w() throws IllegalAccessException, CannotCompileException, InstantiationException {
+		ClassGenerator classGenerator = new ClassGenerator();
+		IGlobalEffect iGlobalEffect = classGenerator.generateGlobalEffect(TestEffectStr.class);
+		Map<String, String> k = new HashMap<>();
+		k.put(iGlobalEffect.getName(), "test");
+		IEffect construct = iGlobalEffect.construct(null, -1, k);
+		assert construct.getValue().equals(k.get(iGlobalEffect.getName()));
+
+		iGlobalEffect = classGenerator.generateGlobalEffect(TestEffectModel.class);
+		k = new HashMap<>();
+		k.put(iGlobalEffect.getName(), "test");
+		k.put("l", "15");
+		k.put("v", "13.5");
+		construct = iGlobalEffect.construct(null, -1, k);
+		TestModel model = (TestModel) construct.getValue();
+		assert model.w == null;
+		assert model.l == 15;
+		assert model.v == 13.5D;
+
+		iGlobalEffect = classGenerator.generateGlobalEffect(TestEffectVoid0.class);
+		construct = iGlobalEffect.construct(null, -1, null);
+		assert construct.getValue() == null;
+
+		iGlobalEffect = classGenerator.generateGlobalEffect(TestEffectFloat.class);
+		k = new HashMap<>();
+		k.put(TestEffectFloat.name, "12.5");
+		construct = iGlobalEffect.construct(null, -1, k);
+		assert ((float)construct.getValue()) == 12.5f;
+
+
+
 	}
 }
 

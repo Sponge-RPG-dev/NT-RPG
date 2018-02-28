@@ -1,13 +1,16 @@
 package cz.neumimto.rpg.players.properties.attributes;
 
+import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.util.annotation.CatalogedBy;
 
 import java.util.Map;
 
 /**
  * Created by NeumimTo on 14.1.16.
  */
-public interface ICharacterAttribute {
+@CatalogedBy(Attributes.class)
+public interface ICharacterAttribute extends CatalogType {
 
 	String getName();
 

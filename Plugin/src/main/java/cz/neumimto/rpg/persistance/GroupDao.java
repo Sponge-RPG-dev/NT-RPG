@@ -23,9 +23,11 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
+import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.groups.*;
 import cz.neumimto.rpg.players.properties.PropertyService;
@@ -247,9 +249,10 @@ public class GroupDao {
 		try {
 			List<String> list = c.getStringList("AllowedArmor");
 			list.stream().forEach(a -> {
-				Optional<ItemType> type = game.getRegistry().getType(ItemType.class, a);
+				String[] k = a.split(";");
+				Optional<ItemType> type = game.getRegistry().getType(ItemType.class, k[0]);
 				if (type.isPresent()) {
-					group.getAllowedArmor().add(type.get());
+					group.getAllowedArmor().add(new RPGItemType(type.get(), k.length == 1 ? null : k[1]));
 				} else logger.warn("Defined invalid itemtype  " + a + " in " + group.getName());
 			});
 		} catch (ConfigException e) {
@@ -368,12 +371,27 @@ public class GroupDao {
 		try {
 
 
-			List<String> effects = c.getStringList("Effects");
-			for (String effect : effects) {
-				String[] split = effect.split(":");
-				IGlobalEffect globalEffect = effectService.getGlobalEffect(split[0].trim());
-				String value = split.length == 2 ? split[1] : "";
-				group.getEffects().put(globalEffect, value);
+			Config effects = c.getConfig("Effects");
+			for (Map.Entry<String, ConfigValue> entry : effects.root().entrySet()) {
+					String effectName = entry.getKey();
+					ConfigValueType type = entry.getValue().valueType();
+					EffectParams value = new EffectParams();
+					IGlobalEffect globalEffect = effectService.getGlobalEffect(effectName);
+					switch (type) {
+						case NULL:
+							break;
+						case STRING:
+							value.put(effectName, entry.getValue().render());
+							break;
+						case OBJECT:
+							ConfigObject object = (ConfigObject) entry.getValue();
+							Map<String, Object> unwrapped1 = object.unwrapped();
+							for (Map.Entry<String, Object> stringObjectEntry : unwrapped1.entrySet()) {
+								value.put(stringObjectEntry.getKey(), stringObjectEntry.getValue() != null ? stringObjectEntry.getValue().toString() : null);
+							}
+
+					}
+					group.getEffects().put(globalEffect, value);
 			}
 		} catch (ConfigException e) {
 			logger.warn(" - Missing configuration \"Effects\", skipping");

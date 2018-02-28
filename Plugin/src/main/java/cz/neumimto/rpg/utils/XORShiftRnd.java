@@ -20,8 +20,8 @@ public class XORShiftRnd {
 		return (out < 0) ? -out : out;
 	}
 
-	public double nextDouble(long max) {
-		long out = nextLong() % max;
+	public double nextDouble(double max) {
+		double out = nextInt() % max;
 		return (out < 0) ? -out * 0.01d : out * 0.01d;  //.00 precision is enough
 	}
 

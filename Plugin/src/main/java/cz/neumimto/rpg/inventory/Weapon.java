@@ -21,8 +21,9 @@ package cz.neumimto.rpg.inventory;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
-import cz.neumimto.rpg.inventory.data.CustomItemData;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.utils.XORShiftRnd;
+import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 
@@ -32,13 +33,15 @@ import org.spongepowered.api.item.inventory.ItemStack;
 public class Weapon extends Charm {
 
 	public static Weapon EmptyHand;
-	protected double damage;
+	protected double minDamage;
+	protected double maxDamage;
 	protected boolean current;
 	private RPGItemType itemType;
-	private int level;
 
+	private static XORShiftRnd rnd;
 	static {
 		EmptyHand = new Weapon(ItemStack.empty());
+		rnd = new XORShiftRnd();
 	}
 
 	public Weapon(ItemStack itemStack) {
@@ -51,17 +54,14 @@ public class Weapon extends Charm {
 		return itemType;
 	}
 
-	public void setDamage(float f) {
-		this.damage = f;
-	}
 
 	public double getDamage() {
-		return damage;
+		if (maxDamage != 0D) {
+			return minDamage + rnd.nextDouble(maxDamage - minDamage);
+		}
+		return minDamage;
 	}
 
-	public void setDamage(double damage) {
-		this.damage = damage;
-	}
 
 	public boolean isShield() {
 		return getItemType() == ItemTypes.SHIELD;
@@ -73,32 +73,36 @@ public class Weapon extends Charm {
 
 	@Override
 	public void onRightClick(IActiveCharacter character) {
-		if (character.isSocketing()) {
-			NtRpgPlugin.GlobalScope.inventorySerivce.insertRune(character);
-		} else if (!current) {
-			NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character, this);
+		if (!current) {
+			NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character, this, character.getPlayer().getItemInHand(HandTypes.MAIN_HAND).orElse(null));
 		}
 	}
 
 	@Override
 	public void onLeftClick(IActiveCharacter character) {
-		if (character.isSocketing()) {
-			NtRpgPlugin.GlobalScope.inventorySerivce.cancelSocketing(character);
-		} else if (!current) {
-			NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character, this);
+		if (!current) {
+			NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character, this, character.getPlayer().getItemInHand(HandTypes.OFF_HAND).orElse(null));
 		}
 	}
 
-	public void setItemData(CustomItemData i) {
-		customItemData = i;
+	public double getMinDamage() {
+		return minDamage;
 	}
 
-	public int getLevel() {
-		return level;
+	public void setMinDamage(double minDamage) {
+		this.minDamage = minDamage;
 	}
 
-	public void setLevel(int level) {
-		this.level = level;
+	public double getMaxDamage() {
+		return maxDamage;
+	}
+
+	public void setMaxDamage(double maxDamage) {
+		this.maxDamage = maxDamage;
+	}
+
+	public void setItemType(RPGItemType itemType) {
+		this.itemType = itemType;
 	}
 
 	@Override

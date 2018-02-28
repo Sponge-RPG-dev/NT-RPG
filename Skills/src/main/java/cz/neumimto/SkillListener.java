@@ -6,7 +6,15 @@ import cz.neumimto.effects.EnderPearlEffect;
 import cz.neumimto.effects.ManaDrainEffect;
 import cz.neumimto.effects.ResoluteTechniqueEffect;
 import cz.neumimto.effects.negative.StunEffect;
-import cz.neumimto.effects.positive.*;
+import cz.neumimto.effects.positive.AlchemyEffect;
+import cz.neumimto.effects.positive.Bash;
+import cz.neumimto.effects.positive.CriticalEffect;
+import cz.neumimto.effects.positive.DamageToMana;
+import cz.neumimto.effects.positive.DampenEffect;
+import cz.neumimto.effects.positive.DodgeEffect;
+import cz.neumimto.effects.positive.LifeAfterKillEffect;
+import cz.neumimto.effects.positive.PotionEffect;
+import cz.neumimto.effects.positive.ShadowRunEffect;
 import cz.neumimto.events.CriticalStrikeEvent;
 import cz.neumimto.events.DamageDodgedEvent;
 import cz.neumimto.events.ManaDrainEvent;
@@ -14,6 +22,7 @@ import cz.neumimto.events.StunApplyEvent;
 import cz.neumimto.model.BashModel;
 import cz.neumimto.model.CriticalEffectModel;
 import cz.neumimto.model.PotionEffectModel;
+import cz.neumimto.model.ShadowRunModel;
 import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
@@ -48,6 +57,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.action.CollideEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
+import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.filter.IsCancelled;
@@ -118,13 +128,30 @@ public class SkillListener {
 	}
 
 	@Listener
+	@SuppressWarnings("unchecked")
 	public void onEntityDamage(INEntityDamageEvent event) {
+		//invis
 		if (event.getTarget().hasEffect(Invisibility.name)) {
 			effectService.removeEffectContainer(event.getTarget().getEffect(Invisibility.name), event.getTarget());
 		}
 		if (event.getSource().hasEffect(Invisibility.name)) {
 			effectService.removeEffectContainer(event.getTarget().getEffect(Invisibility.name), event.getSource());
 		}
+
+
+		//shadowrun
+		if (event.getTarget().hasEffect(ShadowRunEffect.name)) {
+			effectService.removeEffectContainer(event.getTarget().getEffect(ShadowRunEffect.name), event.getTarget());
+		}
+		if (event.getSource().hasEffect(ShadowRunEffect.name) && event.getType() != DamageTypes.FALL) {
+			IEffectContainer<ShadowRunModel, ShadowRunEffect> container = event.getSource().getEffect(ShadowRunEffect.name);
+			if (event.getType() == DamageTypes.ATTACK) {
+				ShadowRunModel stackedValue = container.getStackedValue();
+				event.setDamage(stackedValue.damage + event.getDamage() * stackedValue.attackmult);
+			}
+			effectService.removeEffectContainer(container, event.getSource());
+		}
+
 	}
 
 	@Listener
@@ -167,7 +194,7 @@ public class SkillListener {
 				int rnd = random.nextInt(100);
 				if (rnd <= stackedValue.chance) {
 					StunEffect stunEffect = new StunEffect(event.getTarget(), stackedValue.stunDuration);
-					if (stackedValue.damage > 0) {
+					if (stackedValue.damage != 0) {
 						event.setDamage(event.getDamage() + stackedValue.damage);
 					}
 					if (!game.getEventManager().post(new StunApplyEvent(event.getSource(), event.getTarget(), stunEffect))) {

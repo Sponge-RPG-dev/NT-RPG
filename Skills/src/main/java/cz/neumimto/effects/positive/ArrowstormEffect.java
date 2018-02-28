@@ -37,13 +37,6 @@ public class ArrowstormEffect extends EffectBase implements IEffectContainer {
 		setPeriod(period);
 	}
 
-	public ArrowstormEffect(IEffectConsumer consumer, long duration, String data) {
-		super(name, consumer);
-		setDuration(duration);
-		setDuration(-1L);
-		setPeriod(Integer.parseInt(Utils.extractNumber(data)));
-	}
-
 	@Override
 	public void onTick() {
 		if (arrows != 0) {

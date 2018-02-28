@@ -4,6 +4,7 @@ import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
 import cz.neumimto.Decorator;
 import cz.neumimto.Utils;
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.VectorUtils;
 import cz.neumimto.rpg.effects.IEffectConsumer;
@@ -72,6 +73,7 @@ public class PortalEffect extends ShapedEffectDecorator {
 			.build();
 	private PortalState portalState;
 
+	@Inject
 	public PortalEffect(IEffectConsumer consumer, long duration, String location) {
 		this(consumer, duration, Utils.locationFromString(location));
 	}

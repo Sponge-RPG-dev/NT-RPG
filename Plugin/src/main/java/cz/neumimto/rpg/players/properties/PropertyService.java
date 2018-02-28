@@ -110,16 +110,16 @@ public class PropertyService {
 	@PostProcess(priority = 2000)
 	public void dump() {
 		Path path = Paths.get(NtRpgPlugin.workingDir + File.separator + "properties_dump.info");
-		String s = "";
+		StringBuilder s = new StringBuilder();
 		List<String> l = new ArrayList<>(idMap.keySet());
 		if (PluginConfig.DEBUG)
 			logger.info(" - found " + l.size() + " Properties");
-		Collections.sort(l, Collator.getInstance());
+		l.sort(Collator.getInstance());
 		for (String s1 : l) {
-			s += s1 + Utils.LineSeparator;
+			s.append(s1).append(Utils.LineSeparator);
 		}
 		try {
-			Files.write(path, s.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+			Files.write(path, s.toString().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

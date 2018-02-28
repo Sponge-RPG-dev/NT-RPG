@@ -89,7 +89,7 @@ public class TestUtils {
 		when(character.getPlayer()).thenReturn(player);
 		CharacterBase characterBase = buildCharacterBase(uuid);
 		when(character.getCharacterBase()).thenReturn(characterBase);
-		ExtendedNClass k = new ExtendedNClass();
+		ExtendedNClass k = new ExtendedNClass(character);
 		k.setConfigClass(new ConfigClass("test"));
 		when(character.getPrimaryClass()).thenReturn(k);
 		return character;

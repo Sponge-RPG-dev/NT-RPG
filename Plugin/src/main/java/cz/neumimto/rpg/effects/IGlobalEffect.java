@@ -18,12 +18,14 @@
 
 package cz.neumimto.rpg.effects;
 
+import java.util.Map;
+
 /**
  * Created by NeumimTo.
  */
 public interface IGlobalEffect<T extends IEffect> {
 
-	T construct(IEffectConsumer consumer, long duration, String data);
+	T construct(IEffectConsumer consumer, long duration, Map<String, String> data);
 
 	String getName();
 

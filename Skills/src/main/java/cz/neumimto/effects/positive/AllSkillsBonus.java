@@ -19,10 +19,6 @@ public class AllSkillsBonus extends EffectBase<Integer> {
 		setValue(value);
 	}
 
-	public AllSkillsBonus(IEffectConsumer character, long duration, String value) {
-		this(character, duration, Integer.parseInt(Utils.extractNumber(value)));
-	}
-
 	@Override
 	public void onApply() {
 		getConsumer().setProperty(DefaultProperties.all_skills_bonus, getConsumer().getProperty(DefaultProperties.all_skills_bonus) + getValue());

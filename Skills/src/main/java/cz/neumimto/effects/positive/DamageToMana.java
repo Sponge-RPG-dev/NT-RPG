@@ -18,8 +18,4 @@ public class DamageToMana extends EffectBase<Double> {
 		setValue(percentage);
 		setStackable(true, new DoubleEffectStackingStrategy());
 	}
-
-	public DamageToMana(IEffectConsumer character, long duration, String value) {
-		this(character, duration, Double.parseDouble(Utils.extractNumber(value)));
-	}
 }

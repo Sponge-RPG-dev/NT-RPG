@@ -41,8 +41,12 @@ import org.spongepowered.api.event.item.inventory.*;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
+import org.spongepowered.api.item.inventory.property.SlotIndex;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.common.item.inventory.adapter.impl.slots.SlotAdapter;
+
+import java.util.Optional;
 
 
 /**
@@ -99,19 +103,19 @@ public class InventoryListener {
 		if (character.isStub()) {
 			return;
 		}
-		if (player.get(Keys.GAME_MODE).get() != GameModes.SURVIVAL)
-			return;
 
 		for (SlotTransaction slotTransaction : event.getTransactions()) {
 			Slot i = slotTransaction.getSlot();
-			int index = ((SlotAdapter) i).getOrdinal();
-			if (Utils.isHotbar(index)) {
+			Hotbar hotbar = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
+			if (hotbar.containsInventory(i)) {
 				ItemStack a = slotTransaction.getFinal().createStack();
 				if (inventoryService.canUse(a, character) != CannotUseItemReson.OK) {
 					event.setCancelled(true);
 					return;
 				} else {
-					inventoryService.initializeHotbar(character, index, a);
+                    Optional<SlotIndex> inventoryProperty = i.getInventoryProperty(SlotIndex.class);
+                    Integer value = inventoryProperty.get().getValue();
+					inventoryService.initializeHotbar(character, value, a);
 				}
 			}
 		}
@@ -129,25 +133,12 @@ public class InventoryListener {
             return;
         }
 
-		Hotbar hotbar = character.getPlayer().getInventory().query(Hotbar.class);
+		Hotbar hotbar = character.getPlayer().getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
 		HotbarObject hotbarObject = character.getHotbar()[hotbar.getSelectedSlotIndex()];
 		if (hotbarObject == HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
 			return;
 		}
 		inventoryService.initializeHotbar(character, hotbar.getSelectedSlotIndex());
-	}
-
-	//@Listener
-	public void onItemMove(ClickInventoryEvent event, @First(typeFilter = Player.class) Player pl) {
-		IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());
-		if (character.isStub()) {
-			return;
-		}
-		for (SlotTransaction slotTransaction : event.getTransactions()) {
-			Slot i = slotTransaction.getSlot();
-			int index = ((SlotAdapter) i).getOrdinal();
-			character.getSlotsToReinitialize().add(index);
-		}
 	}
 
 	@Listener
