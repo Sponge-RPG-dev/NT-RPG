@@ -74,7 +74,7 @@ function registerEventListener(eventclass, consumer) {
     var cls = events.get(eventclass);
     if (cls == null) {
         cls = new HashSet();
-        events.put(eventclass, new HashSet());
+        events.put(eventclass, cls);
     }
     cls.add(consumer);
 }
