@@ -13,20 +13,19 @@ import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 import org.spongepowered.api.data.value.immutable.ImmutableValue;
 import org.spongepowered.api.data.value.mutable.Value;
-import org.spongepowered.api.text.Text;
 
 import java.util.Optional;
 
 /**
  * Created by NeumimTo on 13.1.2018.
  */
-public class ItemRarityData extends AbstractSingleData<Text, ItemRarityData, ItemRarityData.Immutable> {
+public class ItemRarityData extends AbstractSingleData<Integer, ItemRarityData, ItemRarityData.Immutable> {
 
     public ItemRarityData() {
-        this(Text.EMPTY);
+        this(0);
     }
 
-    public ItemRarityData(Text rarity) {
+    public ItemRarityData(Integer rarity) {
         super(rarity, NKeys.ITEM_RARITY);
         registerGettersAndSetters();
     }
@@ -49,7 +48,7 @@ public class ItemRarityData extends AbstractSingleData<Text, ItemRarityData, Ite
 
     public Optional<ItemRarityData> from(DataView view) {
         if (view.contains(NKeys.ITEM_RARITY.getQuery())) {
-            setValue((Text) view.get(NKeys.ITEM_RARITY.getQuery()).get());
+            setValue((Integer) view.get(NKeys.ITEM_RARITY.getQuery()).get());
             return Optional.of(this);
         } else {
             return Optional.empty();
@@ -62,7 +61,7 @@ public class ItemRarityData extends AbstractSingleData<Text, ItemRarityData, Ite
     }
 
     @Override
-    protected Value<Text> getValueGetter() {
+    protected Value<Integer> getValueGetter() {
         return Sponge.getRegistry().getValueFactory().createValue(NKeys.ITEM_RARITY, getValue());
     }
 
@@ -83,16 +82,16 @@ public class ItemRarityData extends AbstractSingleData<Text, ItemRarityData, Ite
         return dataContainer;
     }
 
-    public class Immutable extends AbstractImmutableSingleData<Text, Immutable, ItemRarityData> {
+    public class Immutable extends AbstractImmutableSingleData<Integer, Immutable, ItemRarityData> {
 
 
-        public Immutable(Text rarity) {
+        public Immutable(Integer rarity) {
             super(rarity, NKeys.ITEM_RARITY);
             registerGetters();
         }
 
         public Immutable() {
-            this(Text.EMPTY);
+            this(0);
         }
 
         @Override
@@ -108,7 +107,7 @@ public class ItemRarityData extends AbstractSingleData<Text, ItemRarityData, Ite
         }
 
         @Override
-        protected ImmutableValue<Text> getValueGetter() {
+        protected ImmutableValue<Integer> getValueGetter() {
             return Sponge.getRegistry().getValueFactory().createValue(NKeys.ITEM_RARITY, getValue()).asImmutable();
         }
 

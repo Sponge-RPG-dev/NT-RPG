@@ -27,7 +27,6 @@ import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
@@ -37,14 +36,16 @@ import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.cause.Root;
-import org.spongepowered.api.event.item.inventory.*;
+import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
+import org.spongepowered.api.event.item.inventory.DropItemEvent;
+import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
+import org.spongepowered.api.event.item.inventory.InteractItemEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
-import org.spongepowered.common.item.inventory.adapter.impl.slots.SlotAdapter;
 
 import java.util.Optional;
 
@@ -114,8 +115,10 @@ public class InventoryListener {
 					return;
 				} else {
                     Optional<SlotIndex> inventoryProperty = i.getInventoryProperty(SlotIndex.class);
-                    Integer value = inventoryProperty.get().getValue();
-					inventoryService.initializeHotbar(character, value, a);
+                    if (inventoryProperty.isPresent()) {
+						Integer value = inventoryProperty.get().getValue();
+						inventoryService.initializeHotbar(character, value, a);
+					}
 				}
 			}
 		}

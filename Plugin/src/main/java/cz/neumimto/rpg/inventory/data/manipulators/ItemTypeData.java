@@ -27,7 +27,7 @@ public class ItemTypeData extends AbstractSingleData<Text, ItemTypeData, ItemTyp
     }
 
     public ItemTypeData(Text rarity) {
-        super(rarity, NKeys.ITEM_TYPE);
+        super(rarity, NKeys.ITEM_META_HEADER);
         registerGettersAndSetters();
     }
 
@@ -49,8 +49,8 @@ public class ItemTypeData extends AbstractSingleData<Text, ItemTypeData, ItemTyp
     }
 
     public Optional<ItemTypeData> from(DataView view) {
-        if (view.contains(NKeys.ITEM_TYPE.getQuery())) {
-            setValue((Text) view.get(NKeys.ITEM_TYPE.getQuery()).get());
+        if (view.contains(NKeys.ITEM_META_HEADER.getQuery())) {
+            setValue((Text) view.get(NKeys.ITEM_META_HEADER.getQuery()).get());
             return Optional.of(this);
         } else {
             return Optional.empty();
@@ -64,7 +64,7 @@ public class ItemTypeData extends AbstractSingleData<Text, ItemTypeData, ItemTyp
 
     @Override
     protected Value<Text> getValueGetter() {
-        return Sponge.getRegistry().getValueFactory().createValue(NKeys.ITEM_TYPE, getValue());
+        return Sponge.getRegistry().getValueFactory().createValue(NKeys.ITEM_META_HEADER, getValue());
     }
 
     @Override
@@ -80,7 +80,7 @@ public class ItemTypeData extends AbstractSingleData<Text, ItemTypeData, ItemTyp
     @Override
     public DataContainer toContainer() {
         DataContainer dataContainer = super.toContainer();
-        dataContainer.set(NKeys.ITEM_TYPE, getValue());
+        dataContainer.set(NKeys.ITEM_META_HEADER, getValue());
         return dataContainer;
     }
 
@@ -88,7 +88,7 @@ public class ItemTypeData extends AbstractSingleData<Text, ItemTypeData, ItemTyp
 
 
         public Immutable(Text rarity) {
-            super(rarity, NKeys.ITEM_TYPE);
+            super(rarity, NKeys.ITEM_META_HEADER);
             registerGetters();
         }
 
@@ -104,13 +104,13 @@ public class ItemTypeData extends AbstractSingleData<Text, ItemTypeData, ItemTyp
         @Override
         public DataContainer toContainer() {
             DataContainer dataContainer = super.toContainer();
-            dataContainer.set(NKeys.ITEM_TYPE, getValue());
+            dataContainer.set(NKeys.ITEM_META_HEADER, getValue());
             return dataContainer;
         }
 
         @Override
         protected ImmutableValue<Text> getValueGetter() {
-            return Sponge.getRegistry().getValueFactory().createValue(NKeys.ITEM_TYPE, getValue()).asImmutable();
+            return Sponge.getRegistry().getValueFactory().createValue(NKeys.ITEM_META_HEADER, getValue()).asImmutable();
         }
 
         @Override

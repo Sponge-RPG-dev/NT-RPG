@@ -22,7 +22,6 @@ import cz.neumimto.configuration.Comment;
 import cz.neumimto.configuration.ConfigValue;
 import cz.neumimto.configuration.ConfigurationContainer;
 import cz.neumimto.rpg.inventory.ItemLoreSections;
-import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.text.format.TextColors;
 
 import java.util.ArrayList;
@@ -172,6 +171,10 @@ public class PluginConfig {
 	@ConfigValue
 	public static String ITEM_LORE_RARITY_COLOR = TextColors.DARK_GRAY.getName();
 
+
+	@ConfigValue
+	public static String ITEM_LORE_GROUP_MIN_LEVEL_COLOR = TextColors.DARK_PURPLE.getName();
+
 	@ConfigValue
 	public static List<String> ITEM_LORE_ORDER = Stream.of(ItemLoreSections.values()).map(ItemLoreSections::name).collect(Collectors.toList());
 
@@ -191,4 +194,13 @@ public class PluginConfig {
 		add("East,minecraft:diamond_hoe,Down,3");
 		add("South,minecraft:diamond_hoe,Left,4");
 	}};
+
+	@ConfigValue
+	public static List<String> ITEM_RARITY = new ArrayList<String>() {{
+		add("0,Common");
+		add("1,&9Rare");
+		add("2,&eUnique");
+		add("3,&5Legendary");
+	}};
+
 }

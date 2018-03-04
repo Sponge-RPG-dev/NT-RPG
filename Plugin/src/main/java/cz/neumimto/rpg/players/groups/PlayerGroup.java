@@ -28,15 +28,21 @@ import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.text.format.TextColor;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by NeumimTo on 27.12.2014.
  */
 public class PlayerGroup implements IEffectSourceProvider {
 	private final String name;
-	private String chatPrefix, chatSufix;
 	private Map<Integer, Float> propBonus = new HashMap<>();
 	private ItemStack info;
 	private boolean showsInMenu = true;
@@ -49,7 +55,7 @@ public class PlayerGroup implements IEffectSourceProvider {
 	private String description;
 	private Map<ICharacterAttribute, Integer> startingAttributes = new HashMap<>();
 	private Map<IGlobalEffect, EffectParams> effects = new HashMap<>();
-
+	private TextColor preferedColor;
 	protected cz.neumimto.rpg.effects.IEffectSource playerGroupType;
 	private Map<EntityType, Double> projectileDamage = new HashMap<>();
 	private List<String> exitCommands;
@@ -64,22 +70,6 @@ public class PlayerGroup implements IEffectSourceProvider {
 
 	public String getName() {
 		return name;
-	}
-
-	public String getChatPrefix() {
-		return chatPrefix;
-	}
-
-	public void setChatPrefix(String chatPrefix) {
-		this.chatPrefix = chatPrefix;
-	}
-
-	public String getChatSufix() {
-		return chatSufix;
-	}
-
-	public void setChatSufix(String chatSufix) {
-		this.chatSufix = chatSufix;
 	}
 
 	public ItemStack getInfo() {
@@ -197,6 +187,14 @@ public class PlayerGroup implements IEffectSourceProvider {
 
 	public List<String> getEnterCommands() {
 		return enterCommands;
+	}
+
+	public TextColor getPreferedColor() {
+		return preferedColor;
+	}
+
+	public void setPreferedColor(TextColor preferedColor) {
+		this.preferedColor = preferedColor;
 	}
 
 	@Override

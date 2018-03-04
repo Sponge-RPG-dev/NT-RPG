@@ -4,5 +4,6 @@ public enum ItemLoreSections {
     META,
     EFFECTS,
     ATTRIBUTES,
-    SOCKETS
+    SOCKETS,
+    REQUIREMENTS
 }

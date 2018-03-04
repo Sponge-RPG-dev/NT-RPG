@@ -125,4 +125,7 @@ public class CommandLocalization {
 
 	@ConfigValue
 	public static String COMMAND_CLASS_DESC = "Displays detailed informations about a class";
+
+	@ConfigValue
+	public static String COMMAND_ADMIN_RARITY = "Sets rarity of current item type";
 }

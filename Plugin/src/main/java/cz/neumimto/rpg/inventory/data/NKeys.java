@@ -22,7 +22,7 @@ public class NKeys {
 	public static Key<Value<String>> COMMAND = null;
 	public static Key<Value<Boolean>> MENU_INVENTORY = null;
 	public static Key<Value<SkillTreeControllsButton>> SKILLTREE_CONTROLLS = null;
-	public static Key<Value<Text>> ITEM_RARITY = null;
+	public static Key<Value<Integer>> ITEM_RARITY = null;
 	public static Key<MapValue<String, Integer>> ITEM_ATTRIBUTE_REQUIREMENTS = null;
 	public static Key<MapValue<String, Integer>> ITEM_ATTRIBUTE_BONUS = null;
 	public static Key<MapValue<String, Float>> ITEM_PROPERTY_BONUS = null;
@@ -32,7 +32,7 @@ public class NKeys {
 	public static Key<ListValue<Text>> ITEM_SOCKET_CONTAINER_CONTENT = null;
 
 	public static Key<MapValue<String, Integer>> ITEM_PLAYER_ALLOWED_GROUPS = null;
-	public static Key<Value<Text>> ITEM_TYPE = null;
+	public static Key<Value<Text>> ITEM_META_HEADER = null;
 	public static Key<Value<Integer>> ITEM_LEVEL = null;
 	public static Key<Value<LoreDurability>> ITEM_LORE_DURABILITY = null;
 	public static Key<Value<LoreSectionDelimiter>> ITEM_SECTION_DELIMITER = null;
@@ -70,13 +70,13 @@ public class NKeys {
 				.build();
 
 		ITEM_RARITY = Key.builder()
-				.type(new TypeToken<Value<Text>>() {})
+				.type(new TypeToken<Value<Integer>>() {})
 				.query(DataQuery.of("ntrpg:itemrarity"))
 				.id("ntrpgitemrarity")
 				.name("Item rarity")
 				.build();
 
-		ITEM_TYPE = Key.builder()
+		ITEM_META_HEADER = Key.builder()
 				.type(new TypeToken<Value<Text>>() {})
 				.query(DataQuery.of(".", "ntrpg.item.type"))
 				.id("nt-rpg:item_type")
@@ -133,7 +133,7 @@ public class NKeys {
 				.id("ntrpgitemplayerallowedgroups")
 				.build();
 
-		ITEM_TYPE = Key.builder()
+		ITEM_META_HEADER = Key.builder()
 				.type(new TypeToken<Value<Text>>() {})
 				.query(DataQuery.of( "ntrpg:itemtype"))
 				.name("Item type")

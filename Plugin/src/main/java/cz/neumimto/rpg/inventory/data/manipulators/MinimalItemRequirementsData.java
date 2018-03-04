@@ -37,7 +37,7 @@ public class MinimalItemRequirementsData extends AbstractData<MinimalItemRequire
 
 
     public MinimalItemRequirementsData() {
-        this(Collections.emptyMap(), Collections.emptyMap());
+        this(new HashMap<>(), new HashMap<>());
     }
 
     @Override

@@ -368,4 +368,10 @@ public class Localization {
 
 	@ConfigValue
 	public static String SOCKET_EMPTY = "&8 < empty %s socket> ";
+
+	@ConfigValue
+	public static String UNKNOWN_RARITY = "&7Unknown rarity";
+
+	@ConfigValue
+	public static String ITEM_REQUIREMENTS_SECTION = "&4 Requirements";
 }

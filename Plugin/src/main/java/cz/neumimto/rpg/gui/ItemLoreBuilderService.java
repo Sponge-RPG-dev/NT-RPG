@@ -13,6 +13,7 @@ import cz.neumimto.rpg.inventory.data.DataConstants;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemSocketsData;
 import cz.neumimto.rpg.inventory.sockets.SocketType;
+import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.reloading.Reload;
 import cz.neumimto.rpg.reloading.ReloadService;
@@ -21,9 +22,13 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -36,15 +41,17 @@ public class ItemLoreBuilderService {
     private static TextColor doubleColon;
     private static TextColor value;
     private static TextColor effectSettings;
+    private static TextColor groupMinLevelColor;
     private static Text effectSection;
     private static Text rarity;
     private static Text damage;
     private static Text level;
     private static Text sockets;
     private static Text attributes;
+    private static Text requirements;
     private static List<ItemLoreSections> loreOrder;
-
-
+    private static Map<Integer, Text> rarityMap = new HashMap<>();
+    private static Text unknownRarity;
 
     @PostProcess(priority = 3000)
     @Reload(on = ReloadService.PLUGIN_CONFIG)
@@ -53,6 +60,7 @@ public class ItemLoreBuilderService {
         doubleColon = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_COLON_COLOR).get();
         value = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_VALUE_COLOR).get();
         effectSettings = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_SECTION_COLOR).get();
+        groupMinLevelColor = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_GROUP_MIN_LEVEL_COLOR).get();
 
         effectSection = TextHelper.parse(Localization.ITEM_EFFECTS_SECTION);
         rarity = TextHelper.parse(Localization.ITEM_RARITY_SECTION);
@@ -60,7 +68,16 @@ public class ItemLoreBuilderService {
         level = TextHelper.parse(Localization.ITEM_LEVEL_SECTION);
         sockets = TextHelper.parse(Localization.ITEM_SOCKETS_SECTION);
         attributes = TextHelper.parse(Localization.ITEM_ATTRIBUTES_SECTIO);
+        requirements = TextHelper.parse(Localization.ITEM_REQUIREMENTS_SECTION);
         loreOrder = PluginConfig.ITEM_LORE_ORDER.stream().map(ItemLoreSections::valueOf).collect(Collectors.toList());
+
+        for (String s : PluginConfig.ITEM_RARITY) {
+            String[] split = s.split(",");
+            Integer i = Integer.parseInt(split[0]);
+            Text t = TextHelper.parse(split[1]);
+            rarityMap.put(i, t);
+        }
+        unknownRarity = TextHelper.parse(Localization.UNKNOWN_RARITY);
     }
 
     public static class ItemLoreBuilder {
@@ -77,13 +94,12 @@ public class ItemLoreBuilderService {
                 if (a.isEmpty())
                     return;
                 createDelimiter(attributes);
-                Text.Builder builder = Text.builder();
-                attributeMapToItemLorePart(a,builder);
+                attributeMapToItemLorePart(a);
             });
         }
 
 
-        public void attributeMapToItemLorePart(Map<String, Integer> a, Text.Builder builder) {
+        public void attributeMapToItemLorePart(Map<String, Integer> a) {
             int k = 0;
             for (Map.Entry<String, Integer> e : a.entrySet()) {
                 ICharacterAttribute attribute = NtRpgPlugin.GlobalScope.propertyService.getAttribute(e.getKey());
@@ -99,13 +115,13 @@ public class ItemLoreBuilderService {
                     q = TextHelper.parse(name + ": ");
                 }
 
-                builder.append(Text.builder()
+                t.add(Text.builder()
                         .append(q)
                         .append(Text.builder(e.getValue() + " ").color(TextColors.WHITE).build())
                         .build());
                 k++;
                 if (k % 3 == 0) {
-                    builder.append(Text.EMPTY);
+                    t.add(Text.EMPTY);
                 }
             }
         }
@@ -126,15 +142,14 @@ public class ItemLoreBuilderService {
         }
 
         public void createItemMetaSection() {
-            is.get(NKeys.ITEM_TYPE).ifPresent(a -> {
+            is.get(NKeys.ITEM_META_HEADER).ifPresent(a -> {
                 createDelimiter(a);
-                Text.Builder builder = Text.builder();
                 is.get(NKeys.ITEM_RARITY).ifPresent(r -> {
-                    builder.append(Text.builder().append(rarity).append(r).append(Text.NEW_LINE).build());
+                    t.add(Text.builder().append(rarity).append(translateRarity(r)).append(Text.NEW_LINE).build());
                 });
                 is.get(NKeys.ITEM_DAMAGE).ifPresent(r -> {
                     if (r.max == 0) {
-                        builder.append(Text.builder()
+                        t.add(Text.builder()
                                 .append(damage)
                                 .append(Text.builder(String.valueOf(r.min))
                                         .color(NtRpgPlugin.GlobalScope.damageService.getColorByDamage(r.min))
@@ -142,7 +157,7 @@ public class ItemLoreBuilderService {
                                 .append(Text.NEW_LINE)
                                 .build());
                     } else {
-                        builder.append(Text.builder()
+                        t.add(Text.builder()
                                 .append(damage)
                                 .append(Text.builder(String.valueOf(r.min))
                                         .color(NtRpgPlugin.GlobalScope.damageService.getColorByDamage(r.min))
@@ -155,18 +170,65 @@ public class ItemLoreBuilderService {
                     }
                 });
                 is.get(NKeys.ITEM_LEVEL).ifPresent(r -> {
-                    builder.append(Text.builder().append(level)
+                    t.add(Text.builder().append(level)
                             .append(Text.builder(String.valueOf(r))
                                     .color(TextColors.YELLOW)
                                     .build())
                             .append(Text.NEW_LINE)
                             .build());
                 });
-                is.get(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS).ifPresent(r -> {
-                    attributeMapToItemLorePart(r,builder);
-                });
-                t.add(builder.build());
+
+
             });
+        }
+
+        private void createRequirements() {
+            Optional<Map<String, Integer>> groups = is.get(NKeys.ITEM_PLAYER_ALLOWED_GROUPS);
+            Optional<Map<String, Integer>> attr = is.get(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS);
+            if (groups.isPresent() || attr.isPresent()) {
+                createDelimiter(requirements);
+                groupsToItemLore(groups.orElse(Collections.emptyMap()));
+                attributeMapToItemLorePart(attr.orElse(Collections.emptyMap()));
+            }
+        }
+
+        private void groupsToItemLore(Map<String, Integer> r) {
+            for (Map.Entry<String, Integer> stringIntegerEntry : r.entrySet()) {
+                Integer value = stringIntegerEntry.getValue();
+                String group = stringIntegerEntry.getKey();
+                PlayerGroup byName = NtRpgPlugin.GlobalScope.groupService.getByName(group);
+                if (byName != null) {
+                    if (value > 0) {
+                        t.add(
+                                Text.builder("* ")
+                                        .color(TextColors.DARK_RED)
+                                        .style(TextStyles.BOLD)
+                                .append(Text.builder(byName.getName())
+                                .color(byName.getPreferedColor())
+                                .append(Text.builder(": ").color(TextColors.GRAY).style(TextStyles.BOLD).build())
+                                .append(Text.builder(String.valueOf(value)).color(groupMinLevelColor).build())
+                                .build())
+                        .build());
+                    } else {
+                        t.add(
+                                Text.builder("* ")
+                                        .color(TextColors.DARK_RED)
+                                        .style(TextStyles.BOLD)
+                                        .append(Text.builder(byName.getName())
+                                                .color(byName.getPreferedColor())
+                                                .build())
+                                        .build());
+                    }
+                }
+            }
+        }
+
+        private Text translateRarity(Integer r) {
+            Text text = rarityMap.get(r);
+            if (text == null) {
+                text = unknownRarity;
+            }
+            return text;
         }
 
         public void createDelimiter(Text section) {
@@ -205,14 +267,9 @@ public class ItemLoreBuilderService {
             }
         }
 
-        private void createItemTypeFirstLine() {
-            is.get(NKeys.ITEM_TYPE).ifPresent(a -> {
-                t.add(Text.builder("[ ").append(a).append(Text.builder(" ]").build()).build());
-            });
-        }
+
 
         public List<Text> buildLore() {
-            createItemTypeFirstLine();
             for (ItemLoreSections itemLoreSections : loreOrder) {
                 switch (itemLoreSections) {
                     case META:
@@ -226,6 +283,9 @@ public class ItemLoreBuilderService {
                         break;
                     case ATTRIBUTES:
                         createAttributesSection();
+                        break;
+                    case REQUIREMENTS:
+                        createRequirements();
                         break;
                 }
             }

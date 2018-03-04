@@ -48,7 +48,18 @@ import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
-import cz.neumimto.rpg.inventory.data.manipulators.*;
+import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemAttributesData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemRarityData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemSocketsData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemStackUpgradeData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemTypeData;
+import cz.neumimto.rpg.inventory.data.manipulators.LoreDamageData;
+import cz.neumimto.rpg.inventory.data.manipulators.LoreDurabilityData;
+import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemRequirementsData;
+import cz.neumimto.rpg.inventory.data.manipulators.SectionDelimiterData;
+import cz.neumimto.rpg.inventory.data.manipulators.SkillTreeNode;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.inventory.sockets.SocketType;
@@ -80,8 +91,6 @@ import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.utils.FileUtils;
 import cz.neumimto.rpg.utils.SkillTreeActionResult;
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
-import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
@@ -89,7 +98,6 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.ConfigDir;
-import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.data.DataRegistration;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
@@ -116,6 +124,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -265,6 +274,14 @@ public class NtRpgPlugin {
 				.dataClass(SkillTreeNode.class)
 				.immutableClass(SkillTreeNode.Immutable.class)
 				.builder(new SkillTreeNode.Builder())
+				.buildAndRegister(plugin);
+
+		DataRegistration.<ItemTypeData, ItemTypeData.Immutable>builder()
+				.manipulatorId("item_type_data")
+				.dataName("Item Type data")
+				.dataClass(ItemTypeData.class)
+				.immutableClass(ItemTypeData.Immutable.class)
+				.builder(new ItemTypeData.Builder())
 				.buildAndRegister(plugin);
 
 		Sponge.getRegistry().registerModule(SocketType.class, new SocketTypeRegistry());
@@ -510,6 +527,111 @@ public class NtRpgPlugin {
 				.build();
 
 		// ===========================================================
+		// =================          RARITY        ==================
+		// ===========================================================
+
+		CommandSpec rarity = CommandSpec.builder()
+				.description(
+						TextSerializers
+								.FORMATTING_CODE
+								.deserialize(CommandLocalization.COMMAND_ADMIN_RARITY))
+				.arguments(
+						GenericArguments.integer(TextHelper.parse("level"))
+				)
+				.executor((src, args) -> {
+					Integer integer = args.<Integer>getOne("level").get();
+					Set<Integer> i = new HashSet<>();
+					for (String s : PluginConfig.ITEM_RARITY) {
+						i.add(Integer.parseInt(s.split(",")[0]));
+					}
+					if (!i.contains(integer)) {
+						src.sendMessage(Text.builder("Unknown rarity value").color(TextColors.RED).build());
+						return CommandResult.empty();
+					}
+
+
+					Player player = (Player) src;
+
+					Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
+					if (!itemInHand.isPresent()) {
+						src.sendMessage(Text.builder("No item in main hand").color(TextColors.RED).build());
+						return CommandResult.empty();
+					}
+
+					ItemStack itemStack = itemInHand.get();
+
+					GlobalScope.inventorySerivce.setItemRarity(itemInHand.get(), integer);
+					GlobalScope.inventorySerivce.createItemMetaSectionIfMissing(itemStack);
+					GlobalScope.inventorySerivce.updateLore(itemStack);
+					player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
+					return CommandResult.success();
+				})
+				.build();
+
+		// ===========================================================
+		// =================          META        ==================
+		// ===========================================================
+
+		CommandSpec meta = CommandSpec.builder()
+				.description(
+						TextSerializers
+								.FORMATTING_CODE
+								.deserialize(CommandLocalization.COMMAND_ADMIN_RARITY))
+				.arguments(
+						GenericArguments.text(Text.of("meta"), TextSerializers.FORMATTING_CODE,true)
+				)
+				.executor((src, args) -> {
+					Text meta1 = args.<Text>getOne("meta").get();
+					Player player = (Player) src;
+					Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
+					if (!itemInHand.isPresent()) {
+						src.sendMessage(Text.builder("No item in main hand").color(TextColors.RED).build());
+						return CommandResult.empty();
+					}
+					ItemStack itemStack = itemInHand.get();
+
+					GlobalScope.inventorySerivce.createItemMeta(itemStack, meta1);
+					GlobalScope.inventorySerivce.updateLore(itemStack);
+					player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
+					return CommandResult.success();
+				})
+				.build();
+
+		// ===========================================================
+		// ==================    ITEM restrictions  ==================
+		// ===========================================================
+
+		CommandSpec rst = CommandSpec.builder()
+				.description(
+						TextSerializers
+								.FORMATTING_CODE
+								.deserialize(CommandLocalization.COMMAND_ADMIN_RARITY))
+				.arguments(
+						new AnyPlayerGroupCommandElement(Text.of("group")),
+						GenericArguments.integer(Text.of("level"))
+				)
+				.executor((src, args) -> {
+
+					Player player = (Player) src;
+					Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
+					if (!itemInHand.isPresent()) {
+						src.sendMessage(Text.builder("No item in main hand").color(TextColors.RED).build());
+						return CommandResult.empty();
+					}
+					ItemStack itemStack = itemInHand.get();
+					PlayerGroup group = args.<PlayerGroup>getOne("group").get();
+					Integer integer = args.<Integer>getOne("level").orElse(0);
+
+					GlobalScope.inventorySerivce.addGroupRestriction(itemStack, group, integer);
+					GlobalScope.inventorySerivce.createItemMetaSectionIfMissing(itemStack);
+					GlobalScope.inventorySerivce.updateLore(itemStack);
+					player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
+					return CommandResult.success();
+				})
+				.build();
+
+
+		// ===========================================================
 		// ==================           RW          ==================
 		// ===========================================================
 
@@ -653,6 +775,9 @@ public class NtRpgPlugin {
 				.child(exp, "experiences", "exp")
 				.child(effect, "effect", "ef")
 				.child(reload, "reload")
+				.child(rarity, "rarity", "rrty")
+				.child(meta, "itemmeta", "imeta","imt")
+				.child(rst, "grouprequirements","gr")
 				.build();
 
 		Sponge.getCommandManager().register(this, adminRoot, "nadmin", "na");

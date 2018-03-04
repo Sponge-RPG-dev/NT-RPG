@@ -40,11 +40,13 @@ import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemRarityData;
-import cz.neumimto.rpg.inventory.runewords.ItemUpgrade;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemTypeData;
+import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemRequirementsData;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
@@ -714,13 +716,6 @@ public class InventoryService {
 				Localization.SKILLBIND));
 
 	}
-	public ItemStack setItemRarity(ItemStack itemStack, Text rarity) {
-		if (!getItemRarityTypes().contains(rarity.toPlain())) {
-			return itemStack;
-		}
-		itemStack.offer(new ItemRarityData(rarity));
-		return updateLore(itemStack);
-	}
 
 	public ItemStack setItemLevel(ItemStack itemStack, int level) {
 		itemStack.offer(new ItemLevelData(level));
@@ -778,5 +773,43 @@ public class InventoryService {
 		effectsData.set(NKeys.ITEM_EFFECTS, w);
 		is.offer(effectsData);
 		return is;
+	}
+
+	public void createItemMetaSectionIfMissing(ItemStack itemStack) {
+		Optional<Text> text = itemStack.get(NKeys.ITEM_META_HEADER);
+		if (!text.isPresent()) {
+			itemStack.offer(new ItemTypeData(TextHelper.parse("&3Meta")));
+		}
+	}
+
+	public void setItemRarity(ItemStack itemStack, Integer integer) {
+		Optional<ItemRarityData> orCreate = itemStack.getOrCreate(ItemRarityData.class);
+		ItemRarityData itemRarityData = orCreate.get();
+		itemRarityData.set(NKeys.ITEM_RARITY, integer);
+		itemStack.offer(itemRarityData);
+	}
+
+	public void createItemMeta(ItemStack itemStack, Text meta) {
+		Optional<ItemTypeData> orCreate = itemStack.getOrCreate(ItemTypeData.class);
+		ItemTypeData data = orCreate.get();
+		data.set(NKeys.ITEM_META_HEADER, meta);
+		itemStack.offer(data);
+	}
+
+	public void setItemRestrictions(ItemStack itemStack, Map<String, Integer> classReq, Map<String, Integer> attrreq) {
+		Optional<MinimalItemRequirementsData> orCreate = itemStack.getOrCreate(MinimalItemRequirementsData.class);
+		MinimalItemRequirementsData data = orCreate.get();
+		data.set(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS, attrreq);
+		data.set(NKeys.ITEM_PLAYER_ALLOWED_GROUPS, classReq);
+		itemStack.offer(data);
+	}
+
+	public void addGroupRestriction(ItemStack itemStack, PlayerGroup clazz, int level) {
+		Optional<MinimalItemRequirementsData> orCreate = itemStack.getOrCreate(MinimalItemRequirementsData.class);
+		MinimalItemRequirementsData data = orCreate.get();
+		Map<String, Integer> map = data.get(NKeys.ITEM_PLAYER_ALLOWED_GROUPS).orElse(new HashMap<>());
+		map.put(clazz.getName(), level);
+		data.set(NKeys.ITEM_PLAYER_ALLOWED_GROUPS, map);
+		itemStack.offer(data);
 	}
 }
