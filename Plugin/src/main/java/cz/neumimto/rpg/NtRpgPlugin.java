@@ -886,7 +886,7 @@ public class NtRpgPlugin {
 							return;
 						}
 
-						if (!src.hasPermission("ntrpg.groups" + r.getName().toLowerCase())) {
+						if (!src.hasPermission("ntrpg.groups." + r.getName().toLowerCase())) {
 							src.sendMessage(TextHelper.parse(Localization.NO_PERMISSIONS));
 							return;
 						}
