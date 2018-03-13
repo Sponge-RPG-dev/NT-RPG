@@ -884,6 +884,10 @@ public class VanillaMessaging implements IPlayerMessage {
 		int y = skillTree.getCenter().value + skillTreeViewModel.getLocation().value; //y
 		int x = skillTree.getCenter().key + skillTreeViewModel.getLocation().key; //x
 
+		if (skillTreeMap == null) {
+			throw new IllegalStateException("No AsciiMap defined for skilltree: " + skillTree.getId());
+		}
+
 		int columns = skillTreeMap[0].length;
 		int rows = skillTreeMap.length;
 
