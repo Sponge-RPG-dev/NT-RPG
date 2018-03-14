@@ -13,6 +13,7 @@ import org.spongepowered.api.boss.ServerBossBar;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -57,7 +58,8 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 			ExtendedNClass extendedNClass = first.get();
 
 			expCurrentSession += exps;
-			serverBossBar.setName(Text.of(Utils.capitalizeFirst(classname) + " Level: " + extendedNClass.getLevel() + " +" + expCurrentSession + "  " + extendedNClass.getExperiencesFromLevel() + "/" + extendedNClass.getConfigClass().getLevels()[extendedNClass.getLevel()]));
+			DecimalFormat df = new DecimalFormat("#.00");
+			serverBossBar.setName(Text.of(Utils.capitalizeFirst(classname) + " Level: " + extendedNClass.getLevel() + " +" + df.format(expCurrentSession) + "  " + df.format(extendedNClass.getExperiencesFromLevel()) + "/" + extendedNClass.getConfigClass().getLevels()[extendedNClass.getLevel()]));
 			serverBossBar.setPercent((float) Utils.getPercentage(extendedNClass.getExperiencesFromLevel(), extendedNClass.getConfigClass().getLevels()[extendedNClass.getLevel()]) / 100);
 			serverBossBar.setVisible(true);
 			setLastTickTime(System.currentTimeMillis());

@@ -26,7 +26,7 @@ public class ExperienceService {
 	@Inject
 	private ExperienceDAO experienceDAO;
 
-	@PostProcess
+	@PostProcess(priority = 2)
 	public void load() {
 		Map<String, Double> experiencesForMinerals = experienceDAO.getExperiencesForMinerals();
 

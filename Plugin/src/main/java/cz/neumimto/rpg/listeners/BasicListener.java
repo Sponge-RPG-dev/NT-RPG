@@ -386,7 +386,7 @@ public class BasicListener {
 
         IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
         for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
-            BlockType type = transaction.getFinal().getState().getType();
+            BlockType type = transaction.getOriginal().getState().getType();
             Double d = experienceService.getMinningExperiences(type);
             if (d != null) {
                 characterService.addExperiences(character, d, ExperienceSource.MINING);
