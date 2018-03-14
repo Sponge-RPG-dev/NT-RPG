@@ -157,7 +157,7 @@ public class GroupDao {
 				try {
 					List<String> experienceSources = c.getStringList("ExperienceSources");
 					HashSet<ExperienceSource> objects = new HashSet<>();
-					experienceSources.forEach(a -> objects.add(ExperienceSource.valueOf(a)));
+					experienceSources.forEach(a -> objects.add(ExperienceSource.valueOf(a.toUpperCase())));
 					configClass.setExperienceSources(objects);
 				} catch (ConfigException e) {
 					logger.warn(" - Missing configuration \"ExperienceSources\", skipping");
