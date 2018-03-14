@@ -3,12 +3,12 @@ package cz.neumimto.rpg.gui;
 import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.manipulator.mutable.item.DurabilityData;
 import org.spongepowered.api.data.property.item.UseLimitProperty;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.common.data.property.store.item.UseLimitPropertyStore;
+
+import java.util.Optional;
 
 /**
  * Created by NeumimTo on 11.2.2018.
@@ -32,9 +32,11 @@ public class SkillTreeInterfaceModel {
         of.offer(Keys.HIDE_MISCELLANEOUS, true);
         of.offer(Keys.HIDE_ATTRIBUTES, true);
         of.offer(Keys.HIDE_UNBREAKABLE, true);
-        of.offer(Keys.UNBREAKABLE, true);
-        UseLimitProperty useLimitProperty = of.getProperty(UseLimitProperty.class).get();
-        of.offer(Keys.ITEM_DURABILITY, useLimitProperty.getValue() - damage);
+        Optional<UseLimitProperty> itemdamage = of.getProperty(UseLimitProperty.class);
+        itemdamage.ifPresent(useLimitProperty -> {
+            of.offer(Keys.ITEM_DURABILITY, useLimitProperty.getValue() - damage);
+            of.offer(Keys.UNBREAKABLE, true);
+        });
         of.offer(Keys.DISPLAY_NAME, name);
         of.offer(new MenuInventoryData(true));
         return of;
