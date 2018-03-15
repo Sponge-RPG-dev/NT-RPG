@@ -23,11 +23,7 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.inventory.Armor;
-import cz.neumimto.rpg.inventory.ConfigRPGItemType;
-import cz.neumimto.rpg.inventory.HotbarObject;
-import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.Weapon;
+import cz.neumimto.rpg.inventory.*;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
@@ -36,13 +32,7 @@ import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.ItemAccessSkill;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillTreeSpecialization;
-import cz.neumimto.rpg.skills.StartingPoint;
-import org.spongepowered.api.Sponge;
+import cz.neumimto.rpg.skills.*;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
@@ -53,13 +43,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatType;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -456,10 +440,10 @@ public class ActiveCharacter implements IActiveCharacter {
 	public IActiveCharacter updateItemRestrictions() {
 		allowedWeapons.clear();
 
-
 		Map<ItemType, Set<ConfigRPGItemType>> weapons = getRace().getWeapons();
 		allowedWeapons.putAll(weapons.entrySet().stream()
 				.collect(Collectors.toMap(Map.Entry::getKey, e -> RPGItemWrapper.createFromSet(e.getValue()))));
+
 
 
 
@@ -486,6 +470,26 @@ public class ActiveCharacter implements IActiveCharacter {
 		//allowedArmorIds.addAll(getGuild().getAllowedArmor());
 
 		allowedArmorIds.addAll(getPrimaryClass().getConfigClass().getAllowedArmor());
+		
+		getProjectileDamages().clear();
+		
+		getProjectileDamages().putAll(getRace().getProjectileDamage());
+
+		for (ExtendedNClass extendedNClass : getClasses()) {
+			ConfigClass configClass = extendedNClass.getConfigClass();
+			Map<EntityType, Double> projectileDamage = configClass.getProjectileDamage();
+			for (Map.Entry<EntityType, Double> entityType : projectileDamage.entrySet()) {
+				Double aDouble = getProjectileDamages().get(entityType.getKey());
+				if (aDouble == null) {
+					getProjectileDamages().put(entityType.getKey(), entityType.getValue());
+				} else if (PluginConfig.WEAPON_MERGE_STRATEGY == 1) {
+					getProjectileDamages().put(entityType.getKey(), aDouble + entityType.getValue());
+				} else if (PluginConfig.WEAPON_MERGE_STRATEGY == 2) {
+					getProjectileDamages().put(entityType.getKey(), Math.max(aDouble, entityType.getValue()));
+				}
+			}
+		}
+		
 		return this;
 	}
 
