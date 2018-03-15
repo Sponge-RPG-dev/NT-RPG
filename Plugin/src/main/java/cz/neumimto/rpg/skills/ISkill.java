@@ -239,4 +239,6 @@ public interface ISkill extends IEffectSourceProvider {
 		is.offer(Keys.DISPLAY_NAME, Text.builder(getName()).color(character.hasSkill(this.getName()) ? TextColors.GREEN : TextColors.GRAY).style(TextStyles.BOLD).build());
 		return is;
 	}
+
+	void setIcon(ItemType icon);
 }

@@ -210,6 +210,7 @@ public abstract class AbstractSkill implements ISkill {
 		return itemType;
 	}
 
+	@Override
 	public void setIcon(ItemType icon) {
 		if (this.icon == null)
 			this.icon = new SkillItemIcon(this);

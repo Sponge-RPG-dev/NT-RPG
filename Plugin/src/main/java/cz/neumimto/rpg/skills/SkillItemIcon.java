@@ -20,10 +20,13 @@ package cz.neumimto.rpg.skills;
 
 import cz.neumimto.rpg.gui.GuiHelper;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.property.item.UseLimitProperty;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
+
+import java.util.Optional;
 
 /**
  * Created by ja on 31.8.2015.
@@ -33,6 +36,7 @@ public class SkillItemIcon {
 	public String skillName;
 
 	public ISkill skill;
+	public int damage;
 
 	public SkillItemIcon(ISkill skill) {
 		this.skillName = skill.getName();
@@ -43,6 +47,13 @@ public class SkillItemIcon {
 	public ItemStack toItemStack() {
 		ItemStack of = GuiHelper.itemStack(itemType == null ? ItemTypes.STONE : itemType);
 		of.offer(Keys.DISPLAY_NAME, Text.of(skill.getName()));
+		if (damage > 0) {
+			Optional<UseLimitProperty> itemdamage = of.getProperty(UseLimitProperty.class);
+			itemdamage.ifPresent(useLimitProperty -> {
+				of.offer(Keys.ITEM_DURABILITY, useLimitProperty.getValue() - damage);
+				of.offer(Keys.UNBREAKABLE, true);
+			});
+		}
 		return of;
 	}
 

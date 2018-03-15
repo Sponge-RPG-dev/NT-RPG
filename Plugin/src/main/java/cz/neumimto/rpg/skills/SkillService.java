@@ -23,6 +23,7 @@ import com.google.gson.GsonBuilder;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.Console;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.PluginConfig;
@@ -56,6 +57,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
@@ -95,9 +97,10 @@ public class SkillService {
 
 	@PostProcess(priority = 300)
 	public void load() {
-		initGuis();
+
 		skillTrees.putAll(skillTreeDao.getAll());
 		createSkillsDefaults();
+		initGuis();
 	}
 
 
@@ -118,6 +121,7 @@ public class SkillService {
 			guiModelByCharacter.put(split[0].charAt(0), model);
 			i++;
 		}
+		reloadIcons();
 	}
 
 
@@ -214,32 +218,6 @@ public class SkillService {
 			return SkillResult.NO_MANA;
 		}
 		return SkillResult.NO_HP;
-	}
-
-
-
-
-	public void initIcons() {
-		Properties properties = new Properties();
-		File f = new File(NtRpgPlugin.workingDir, "Icons.properties");
-		if (!f.exists()) {
-			try {
-				f.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		try (FileInputStream stream = new FileInputStream(f)) {
-			properties.load(stream);
-			for (Map.Entry<Object, Object> l : properties.entrySet()) {
-				String skillname = (String) l.getKey();
-				String url = (String) l.getValue();
-
-				getSkill(skillname).setIconURL(url);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public void deleteConfFile() {
@@ -340,5 +318,43 @@ public class SkillService {
 
 	public SkillTreeInterfaceModel getGuiModelById(Short k) {
 		return guiModelById.get(k);
+	}
+
+	public void reloadIcons() {
+		Properties properties = new Properties();
+		File f = new File(NtRpgPlugin.workingDir, "Icons.properties");
+		if (!f.exists()) {
+			try {
+				f.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		try (FileInputStream stream = new FileInputStream(f)) {
+			properties.load(stream);
+			for (Map.Entry<Object, Object> l : properties.entrySet()) {
+				String skillname = (String) l.getKey();
+				String value = (String) l.getValue();
+				String[] split = value.split(";");
+				ISkill skill = getSkill(skillname);
+				SkillItemIcon icon = skill.getIcon();
+				if (icon == null) {
+					icon = new SkillItemIcon(skill);
+				}
+				Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, split[0]);
+				if (!type.isPresent()) {
+					logger.warning("Item Type defined in Icons.properties " + split[0] + " is unknown");
+				} else {
+					icon.itemType = type.get();
+					if (split.length == 1) {
+						logger.info("Missing item damage argument in Icons.properties " + Console.RED + split[0] +  Console.RESET + " skillName=itemType;itemDamage");
+					} else {
+						icon.damage = Integer.parseInt(split[1]);
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
