@@ -191,8 +191,8 @@ public class PluginConfig {
 	public static List<String> SKILLTREE_BUTTON_CONTROLLS = new ArrayList<String>() {{
 		add("North,minecraft:diamond_hoe,Up,1");
 		add("West,minecraft:diamond_hoe,Right,2");
-		add("East,minecraft:diamond_hoe,Down,3");
-		add("South,minecraft:diamond_hoe,Left,4");
+		add("East,minecraft:diamond_hoe,Left,3");
+		add("South,minecraft:diamond_hoe,Down,4");
 	}};
 
 	@ConfigValue
