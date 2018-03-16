@@ -82,6 +82,8 @@ public class InventoryListener {
 	@Listener
 	public void onInventoryOpen(InteractInventoryEvent.Close event, @First(typeFilter = {Player.class}) Player player) {
 		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+		if (character == null)
+			return;
 		if (!character.isStub()) {
 			character.setOpenInventory(false);
 		}
@@ -91,6 +93,8 @@ public class InventoryListener {
 	@Listener
 	public void onInventoryOpen(InteractInventoryEvent.Open event, @First(typeFilter = {Player.class}) Player player) {
 		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+		if (character == null)
+			return;
 		if (!character.isStub()) {
 			character.setOpenInventory(true);
 		}
