@@ -21,6 +21,7 @@ import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
+import org.spongepowered.api.event.cause.entity.damage.source.IndirectEntityDamageSource;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.user.BanUserEvent;
@@ -92,7 +93,7 @@ public class EntityLifecycleListener {
 
 
 	@Listener
-	public void onEntityDespawn(DestructEntityEvent event) {
+	public void onEntityDespawn(DestructEntityEvent.Death event) {
 		Entity targetEntity = event.getTargetEntity();
 		if (targetEntity.getType() == EntityTypes.PLAYER) {
 			IActiveCharacter character = characterService.getCharacter(targetEntity.getUniqueId());
@@ -106,19 +107,29 @@ public class EntityLifecycleListener {
 				return;
 			}
 
-			Optional<EntityDamageSource> first = event.getCause().first(EntityDamageSource.class);
-			if (first.isPresent()) {
+			Entity source = null;
+			Optional<IndirectEntityDamageSource> ieds = event.getCause().first(IndirectEntityDamageSource.class);
+			if (ieds.isPresent()) {
+				source = ieds.get().getIndirectSource();
+			} else {
+				Optional<EntityDamageSource> first = event.getCause().first(EntityDamageSource.class);
+				if (first.isPresent()) {
+					EntityDamageSource eds = first.get();
+					source = eds.getSource();
+				}
+			}
 
-				EntityDamageSource entityDamageSource = first.get();
-				if (!Utils.isLivingEntity(entityDamageSource.getSource())) {
+
+			if (source != null) {
+
+				if (!Utils.isLivingEntity(source)) {
 					return;
 				}
 				double exp = entityService.getExperiences(targetEntity.getType());
-				//todo share in party
-				IEntity source = entityService.get(entityDamageSource.getSource());
 
-				if (source.getType() == IEntityType.CHARACTER) {
-					IActiveCharacter character = (IActiveCharacter) source;
+				IActiveCharacter character = characterService.getCharacter(source.getUniqueId());
+				ExperienceSource experienceSource = targetEntity.getType() == EntityTypes.PLAYER ? ExperienceSource.PVP : ExperienceSource.PVE;
+				if (character != null) {
 					if (character.hasParty()) {
 						exp *= PluginConfig.PARTY_EXPERIENCE_MULTIPLIER;
 						double dist = Math.pow(PluginConfig.PARTY_EXPERIENCE_SHARE_DISTANCE, 2);
@@ -131,17 +142,18 @@ public class EntityLifecycleListener {
 						}
 						exp /= set.size();
 						for (IActiveCharacter character1 : set) {
-							characterService.addExperiences(character1, exp, ExperienceSource.PVE);
+							characterService.addExperiences(character1, exp, experienceSource);
 						}
 					} else {
-						characterService.addExperiences(character, exp, ExperienceSource.PVE);
+						characterService.addExperiences(character, exp, experienceSource);
 					}
 				}
 			}
+
 			Optional<SkillDamageSource> sds = event.getCause().first(SkillDamageSource.class);
 			if (sds.isPresent()) {
-				SkillDamageSource source = sds.get();
-				IEntity caster = source.getCaster();
+				SkillDamageSource skillDamageSource = sds.get();
+				IEntity caster = skillDamageSource.getCaster();
 				if (caster.getType() == IEntityType.CHARACTER) {
 					double exp = entityService.getExperiences(event.getTargetEntity().getType());
 					characterService.addExperiences((IActiveCharacter) caster, exp, ExperienceSource.PVE);
