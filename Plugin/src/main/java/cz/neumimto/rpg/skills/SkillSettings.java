@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public class SkillSettings {
 	public static final String bonus = "_levelbonus";
-	private Map<String, Float> settingsMap = new HashMap<>();
+	private Map<String, Float> skillSettings = new HashMap<>();
 	private Map<String, String> objMap = new HashMap<>();
 
 	public void addNode(ISkillNode n, float val, float levelbonux) {
@@ -39,11 +39,11 @@ public class SkillSettings {
 	}
 
 	public boolean hasNode(String s) {
-		return settingsMap.containsKey(s) || objMap.containsKey(s);
+		return skillSettings.containsKey(s) || objMap.containsKey(s);
 	}
 
 	public Map.Entry<String, Float> getFloatNodeEntry(String entry) {
-		for (Map.Entry<String, Float> stringFloatEntry : settingsMap.entrySet()) {
+		for (Map.Entry<String, Float> stringFloatEntry : skillSettings.entrySet()) {
 			if (stringFloatEntry.getKey().equalsIgnoreCase(entry))
 				return stringFloatEntry;
 		}
@@ -55,7 +55,7 @@ public class SkillSettings {
 	}
 
 	public void addNode(String s, float val) {
-		settingsMap.put(s.toLowerCase(), val);
+		skillSettings.put(s.toLowerCase(), val);
 	}
 
 	public void addObjectNode(String k, String v) {
@@ -76,7 +76,7 @@ public class SkillSettings {
 	}
 
 	public float getNodeValue(String s) {
-		return settingsMap.get(s.toLowerCase());
+		return skillSettings.get(s.toLowerCase());
 	}
 
 	public float getLevelNodeValue(ISkillNode n, int level) {
@@ -88,6 +88,6 @@ public class SkillSettings {
 	}
 
 	public Map<String, Float> getNodes() {
-		return settingsMap;
+		return skillSettings;
 	}
 }

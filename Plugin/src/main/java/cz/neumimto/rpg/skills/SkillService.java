@@ -220,16 +220,6 @@ public class SkillService {
 		return SkillResult.NO_HP;
 	}
 
-	public void deleteConfFile() {
-		Path path = Paths.get(NtRpgPlugin.workingDir + "/skills-nodelist.conf");
-		if (Files.exists(path))
-			try {
-				Files.delete(path);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-	}
-
 	public void createSkillsDefaults() {
 		Path path = Paths.get(NtRpgPlugin.workingDir + "/skills-nodelist.conf");
 		try {
@@ -245,6 +235,9 @@ public class SkillService {
 				.setPrettyPrinting()
 				.create();
 		Map<String, SkillSettings> result = new HashMap<>();
+
+		
+
 		try (PrintWriter writer = new PrintWriter(path.toFile())) {
 			skills.values()
 					.stream()

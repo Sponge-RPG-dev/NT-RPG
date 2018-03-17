@@ -95,7 +95,7 @@ public class MinimalItemRequirementsData extends AbstractData<MinimalItemRequire
 
     @Override
     public Optional<MinimalItemRequirementsData> from(DataContainer container) {
-        if (!container.contains(NKeys.ITEM_ATTRIBUTE_BONUS) && !container.contains(NKeys.ITEM_PROPERTY_BONUS)) {
+        if (!container.contains(NKeys.ITEM_ATTRIBUTE_BONUS) || !container.contains(NKeys.ITEM_PROPERTY_BONUS)) {
             return Optional.empty();
         }
         this.attributeRequirements  = (Map<String, Integer>) container.getMap(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS.getQuery()).get();
@@ -121,8 +121,8 @@ public class MinimalItemRequirementsData extends AbstractData<MinimalItemRequire
     @Override
     public DataContainer toContainer() {
         DataContainer dataContainer = super.toContainer();
-        dataContainer.set(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS,attributeRequirements);
-        dataContainer.set(NKeys.ITEM_PLAYER_ALLOWED_GROUPS,allowedGroups);
+        dataContainer.set(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS.getQuery(),attributeRequirements);
+        dataContainer.set(NKeys.ITEM_PLAYER_ALLOWED_GROUPS.getQuery(),allowedGroups);
         return dataContainer;
     }
 
@@ -184,8 +184,8 @@ public class MinimalItemRequirementsData extends AbstractData<MinimalItemRequire
         @Override
         public DataContainer toContainer() {
             DataContainer dataContainer = super.toContainer();
-            dataContainer.set(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS,attributeRequirements);
-            dataContainer.set(NKeys.ITEM_PLAYER_ALLOWED_GROUPS,allowedGroups);
+            dataContainer.set(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS.getQuery(),attributeRequirements);
+            dataContainer.set(NKeys.ITEM_PLAYER_ALLOWED_GROUPS.getQuery(),allowedGroups);
             return dataContainer;
         }
     }
@@ -210,18 +210,7 @@ public class MinimalItemRequirementsData extends AbstractData<MinimalItemRequire
         @Override
         @SuppressWarnings("unchecked")
         protected Optional<MinimalItemRequirementsData> buildContent(DataView container) throws InvalidDataException {
-            if (container.contains(
-                    NKeys.ITEM_ATTRIBUTE_REQUIREMENTS,
-                    NKeys.ITEM_PLAYER_ALLOWED_GROUPS
-            )) {
-                return Optional.of(
-                        new MinimalItemRequirementsData(
-                                (Map<String, Integer>) container.get(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS.getQuery()).orElse(new HashMap<>()),
-                                (Map<String, Integer>) container.get(NKeys.ITEM_PLAYER_ALLOWED_GROUPS.getQuery()).orElse(new HashMap<>())
-                        )
-                );
-            }
-            return Optional.empty();
+            return create().from((DataContainer) container);
         }
     }
 }

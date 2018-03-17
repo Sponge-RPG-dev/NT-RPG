@@ -41,6 +41,7 @@ import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemRarityData;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemTypeData;
+import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemGroupRequirementsData;
 import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemRequirementsData;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.players.CharacterService;
@@ -690,7 +691,7 @@ public class InventoryService {
 		}
 		Optional<Map<String, Integer>> q = is.get(NKeys.ITEM_PLAYER_ALLOWED_GROUPS);
 		if (q.isPresent()) {
-			Map<String, Integer> w = a.get();
+			Map<String, Integer> w = q.get();
 			CannotUseItemReson cannotUseItemReson = checkGroupRequirements(character, w);
 			if (CannotUseItemReson.OK != cannotUseItemReson) {
 				return cannotUseItemReson;
@@ -805,8 +806,8 @@ public class InventoryService {
 	}
 
 	public void addGroupRestriction(ItemStack itemStack, PlayerGroup clazz, int level) {
-		Optional<MinimalItemRequirementsData> orCreate = itemStack.getOrCreate(MinimalItemRequirementsData.class);
-		MinimalItemRequirementsData data = orCreate.get();
+		Optional<MinimalItemGroupRequirementsData> orCreate = itemStack.getOrCreate(MinimalItemGroupRequirementsData.class);
+		MinimalItemGroupRequirementsData data = orCreate.get();
 		Map<String, Integer> map = data.get(NKeys.ITEM_PLAYER_ALLOWED_GROUPS).orElse(new HashMap<>());
 		map.put(clazz.getName(), level);
 		data.set(NKeys.ITEM_PLAYER_ALLOWED_GROUPS, map);
