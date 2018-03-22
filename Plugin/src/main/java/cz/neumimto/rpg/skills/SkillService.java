@@ -192,9 +192,9 @@ public class SkillService {
 		if (character.getHealth().getValue() > hpcost) {
 			if (character.getMana().getValue() >= manacost) {
 				SkillResult result = esi.getSkill().onPreUse(character);
-				if (result == SkillResult.CANCELLED)
-					return SkillResult.CANCELLED;
-				if (result == SkillResult.OK) {
+				if (result != SkillResult.CANCELLED)
+					return result;
+				else {
 					float newCd = skillSettings.getLevelNodeValue(SkillNodes.COOLDOWN, level);
 					SkillPostUsageEvent eventt = new SkillPostUsageEvent(character, hpcost, manacost, newCd);
 					game.getEventManager().post(eventt);

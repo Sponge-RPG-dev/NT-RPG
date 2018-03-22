@@ -43,7 +43,7 @@ public abstract class Targetted extends ActiveSkill implements ITargetted {
 			if (event.isCancelled()) {
 				return SkillResult.CANCELLED;
 			}
-			castOn(event.getTarget(), event.getCharacter(), info);
+			return castOn(event.getTarget(), event.getCharacter(), info);
 		}
 		return SkillResult.NO_TARGET;
 	}
