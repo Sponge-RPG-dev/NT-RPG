@@ -47,6 +47,7 @@ public enum SkillType implements ISkillType {
 	LIGHTNING(UNDEFINED),
 	ICE(UNDEFINED),
 	DRAIN(TRUE),
+	CANNOT_BE_SELF_CASTED(UNDEFINED),
 	/**
 	 * Do not use this one in custom skills
 	 */
