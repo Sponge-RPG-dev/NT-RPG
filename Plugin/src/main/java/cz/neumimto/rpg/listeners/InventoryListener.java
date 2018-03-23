@@ -114,10 +114,7 @@ public class InventoryListener {
 			Hotbar hotbar = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
 			if (hotbar.containsInventory(i)) {
 				ItemStack a = slotTransaction.getFinal().createStack();
-				if (inventoryService.canUse(a, character) != CannotUseItemReson.OK) {
-					event.setCancelled(true);
-					return;
-				} else {
+				if (inventoryService.canUse(a, character) == CannotUseItemReson.OK) {
                     Optional<SlotIndex> inventoryProperty = i.getInventoryProperty(SlotIndex.class);
                     if (inventoryProperty.isPresent()) {
 						Integer value = inventoryProperty.get().getValue();

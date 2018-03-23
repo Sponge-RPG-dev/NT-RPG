@@ -1,10 +1,15 @@
 package cz.neumimto.rpg.inventory;
 
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.inventory.data.NKeys;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
+
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by NeumimTo on 5.10.17.
@@ -39,6 +44,7 @@ public class RPGItemType {
 				itemType.displayName = name;
 			}
 		}
+
 		return itemType;
 	}
 

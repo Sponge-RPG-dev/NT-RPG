@@ -252,11 +252,49 @@ public class InventoryService {
 		Hotbar hotbar = character.getPlayer().getInventory().query(Hotbar.class);
 		int slot = 0;
 		for (Inventory inventory : hotbar) {
+			Optional<Slot> slot1 = hotbar.getSlot(new SlotIndex(slot));
 			initializeHotbar(character, slot, null, (Slot) inventory, hotbar);
 			slot++;
 		}
 
 	}
+
+	public void initializeSlot(IActiveCharacter character, Slot slot) {
+		Optional<ItemStack> peek = slot.peek();
+		Optional<SlotIndex> inventoryProperty = slot.getInventoryProperty(SlotIndex.class);
+		if (!peek.isPresent()) {
+			SlotIndex slotIndex = inventoryProperty.get();
+			Integer i = slotIndex.getValue();
+			markHotbarSlotAsEmpty(character, i);
+			return;
+		}
+		initializeHotbarSlotWith(character, slot, peek.get());
+	}
+
+	public void markHotbarSlotAsEmpty(IActiveCharacter character, Integer slot) {
+		HotbarObject hotbarObject = character.getHotbar()[slot];
+		if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
+			hotbarObject.onUnEquip(character);
+		}
+	}
+
+	public void initializeHotbarSlotWith(IActiveCharacter character, Slot slot, ItemStack itemStack) {
+		Optional<ItemStack> peek = slot.peek();
+		if (peek.isPresent())
+			return;
+		Integer idx = slot.getInventoryProperty(SlotIndex.class).get().getValue();
+
+		if (ItemStackUtils.isWeapon(itemStack.getType())) {
+			RPGItemType from = RPGItemType.from(itemStack);
+			if (character.canUse(from) && checkRestrictions(character, itemStack) == CannotUseItemReson.OK) {
+				character.setHotbarSlot(idx, getHotbarObject(character, itemStack));
+			} else {
+				character.setHotbarSlot(idx, HotbarObject.EMPTYHAND_OR_CONSUMABLE);
+			}
+		}
+
+	}
+
 
 	public void initializeHotbar(IActiveCharacter character, int slot) {
 		initializeHotbar(character, slot, null);
@@ -271,6 +309,7 @@ public class InventoryService {
 			initializeHotbar(character, slot, toPickup, slot1.get(), hotbar);
 		}
 	}
+
 
 	public void initializeHotbar(IActiveCharacter character, int slot, ItemStack toPickup, Slot s, Hotbar hotbar) {
 		if (hotbar == null) {
