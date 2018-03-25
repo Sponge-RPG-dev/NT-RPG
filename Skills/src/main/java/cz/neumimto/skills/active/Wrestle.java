@@ -9,7 +9,14 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ActiveSkill;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.NDamageType;
+import cz.neumimto.rpg.skills.SkillModifier;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.SkillType;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
@@ -19,7 +26,7 @@ import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
  * Created by NeumimTo on 7.7.2017.
  */
 @ResourceLoader.Skill
-public class Wrestle extends Targetted {
+public class Wrestle extends ActiveSkill {
 
 	@Inject
 	private EffectService effectService;
@@ -42,15 +49,15 @@ public class Wrestle extends Targetted {
 	}
 
 	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info) {
+	public SkillResult cast(IActiveCharacter source, ExtendedSkillInfo info, SkillModifier modifier) {
 		int intNodeValue = getIntNodeValue(info, SkillNodes.RADIUS);
 		float floatNodeValue = getFloatNodeValue(info, SkillNodes.DAMAGE);
 		long duration = getLongNodeValue(info, SkillNodes.DURATION);
-		for (Entity entity : target.getNearbyEntities(intNodeValue)) {
+		for (Entity entity : source.getPlayer().getNearbyEntities(intNodeValue)) {
 			if (Utils.isLivingEntity(entity)) {
 				Living l = (Living) entity;
 				if (Utils.canDamage(source, l)) {
-					IEffectConsumer t = entityService.get(target);
+					IEffectConsumer t = entityService.get(l);
 					StunEffect stunEffect = new StunEffect(t, duration);
 					effectService.addEffect(stunEffect, t, this);
 					if (floatNodeValue > 0) {

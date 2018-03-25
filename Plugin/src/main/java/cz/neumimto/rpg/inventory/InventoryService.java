@@ -28,6 +28,7 @@ import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.EffectService;
@@ -44,6 +45,8 @@ import cz.neumimto.rpg.inventory.data.manipulators.ItemTypeData;
 import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemGroupRequirementsData;
 import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemRequirementsData;
 import cz.neumimto.rpg.inventory.runewords.RWService;
+import cz.neumimto.rpg.inventory.slotparsers.DefaultSlotIterator;
+import cz.neumimto.rpg.inventory.slotparsers.SlotIterator;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -51,21 +54,21 @@ import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
+import cz.neumimto.rpg.reloading.Reload;
+import cz.neumimto.rpg.reloading.ReloadService;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.utils.ItemStackUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypes;
-import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
@@ -94,6 +97,7 @@ import java.util.regex.Pattern;
 @Singleton
 public class InventoryService {
 
+	private static Logger logger = LoggerFactory.getLogger(InventoryService.class);
 
 	public static ItemType ITEM_SKILL_BIND = ItemTypes.BLAZE_POWDER;
 
@@ -125,6 +129,8 @@ public class InventoryService {
 	@Inject
 	private GroupService groupService;
 
+	private SlotIterator slotIterator;
+
 	private Set<String> reservedItemNames = new HashSet<>();
 
 	private Map<UUID, InventoryMenu> inventoryMenus = new HashMap<>();
@@ -134,7 +140,21 @@ public class InventoryService {
 	public void init() {
 		NORMAL_RARITY = Text.of(Localization.NORMAL_RARITY);
 		loadItemGroups();
+		initInventoryInitializator();
+	}
 
+	@Reload(on = ReloadService.PLUGIN_CONFIG)
+	public void initInventoryInitializator() {
+		String s = PluginConfig.EQUIPED_SLOT_RESOLVE_SRATEGY;
+		Optional<SlotIterator> type = Sponge.getRegistry().getType(SlotIterator.class, s);
+		if (type.isPresent()) {
+			slotIterator = type.get();
+		} else {
+			logger.warn("Unknown EQUIPED_SLOT_RESOLVE_SRATEGY, value should be one of " +
+					Sponge.getRegistry().getAllOf(SlotIterator.class).stream
+					().map(SlotIterator::getId));
+			slotIterator = new DefaultSlotIterator();
+		}
 	}
 
 	private void loadItemGroups() {
@@ -231,139 +251,10 @@ public class InventoryService {
 		writer.println("\t}");
 	}
 
-	public ItemStack getHelpItem(List<String> lore, ItemType type) {
-		ItemStack.Builder builder = ItemStack.builder();
-		builder.quantity(1).itemType(type);
-		return builder.build();
-	}
-
-	public Map<UUID, InventoryMenu> getInventoryMenus() {
-		return inventoryMenus;
-	}
-
-	public void addInventoryMenu(UUID uuid, InventoryMenu menu) {
-		if (!inventoryMenus.containsKey(uuid))
-			inventoryMenus.put(uuid, menu);
-	}
-
 	public void initializeHotbar(IActiveCharacter character) {
 		if (character.isStub())
 			return;
-		Hotbar hotbar = character.getPlayer().getInventory().query(Hotbar.class);
-		int slot = 0;
-		for (Inventory inventory : hotbar) {
-			Optional<Slot> slot1 = hotbar.getSlot(new SlotIndex(slot));
-			initializeHotbar(character, slot, null, (Slot) inventory, hotbar);
-			slot++;
-		}
-
-	}
-
-	public void initializeSlot(IActiveCharacter character, Slot slot) {
-		Optional<ItemStack> peek = slot.peek();
-		Optional<SlotIndex> inventoryProperty = slot.getInventoryProperty(SlotIndex.class);
-		if (!peek.isPresent()) {
-			SlotIndex slotIndex = inventoryProperty.get();
-			Integer i = slotIndex.getValue();
-			markHotbarSlotAsEmpty(character, i);
-			return;
-		}
-		initializeHotbarSlotWith(character, slot, peek.get());
-	}
-
-	public void markHotbarSlotAsEmpty(IActiveCharacter character, Integer slot) {
-		HotbarObject hotbarObject = character.getHotbar()[slot];
-		if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
-			hotbarObject.onUnEquip(character);
-		}
-	}
-
-	public void initializeHotbarSlotWith(IActiveCharacter character, Slot slot, ItemStack itemStack) {
-		Optional<ItemStack> peek = slot.peek();
-		if (peek.isPresent())
-			return;
-		Integer idx = slot.getInventoryProperty(SlotIndex.class).get().getValue();
-
-		if (ItemStackUtils.isWeapon(itemStack.getType())) {
-			RPGItemType from = RPGItemType.from(itemStack);
-			if (character.canUse(from) && checkRestrictions(character, itemStack) == CannotUseItemReson.OK) {
-				character.setHotbarSlot(idx, getHotbarObject(character, itemStack));
-			} else {
-				character.setHotbarSlot(idx, HotbarObject.EMPTYHAND_OR_CONSUMABLE);
-			}
-		}
-
-	}
-
-
-	public void initializeHotbar(IActiveCharacter character, int slot) {
-		initializeHotbar(character, slot, null);
-	}
-
-	public void initializeHotbar(IActiveCharacter character, int slot, ItemStack toPickup) {
-		Player player = character.getPlayer();
-		Hotbar hotbar = player.getInventory().query(Hotbar.class);
-
-		Optional<Slot> slot1 = hotbar.getSlot(new SlotIndex(slot));
-		if (slot1.isPresent()) {
-			initializeHotbar(character, slot, toPickup, slot1.get(), hotbar);
-		}
-	}
-
-
-	public void initializeHotbar(IActiveCharacter character, int slot, ItemStack toPickup, Slot s, Hotbar hotbar) {
-		if (hotbar == null) {
-			hotbar = character.getPlayer().getInventory().query(Hotbar.class);
-		}
-		int selectedSlotIndex = hotbar.getSelectedSlotIndex();
-		Optional<ItemStack> peek = s.peek();
-		if (!peek.isPresent()) {
-			//picking up an item
-			if (character.getHotbar()[slot] != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
-				HotbarObject hotbarObject = character.getHotbar()[slot];
-				hotbarObject.onUnEquip(character);
-				character.getHotbar()[slot] = HotbarObject.EMPTYHAND_OR_CONSUMABLE;
-			}
-			if (toPickup != null) {
-				HotbarObject o = getHotbarObject(character, toPickup);
-				if (o != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
-					o.setSlot(slot);
-					if (o.getType() == EffectSourceType.WEAPON && slot == selectedSlotIndex) {
-						o.onRightClick(character); //simulate player interaction to equip the weapon
-					} else if (o.getType() == EffectSourceType.CHARM) {
-						o.onEquip(character);
-					}
-					character.getHotbar()[slot] = o;
-				}
-			}
-		} else {
-			if (character.getHotbar()[slot] != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
-				character.getHotbar()[slot].onUnEquip(character);
-			}
-			ItemStack i = peek.get();
-			HotbarObject hotbarObject = getHotbarObject(character, i);
-			if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
-				hotbarObject.setSlot(slot);
-				character.getHotbar()[slot] = hotbarObject;
-				CannotUseItemReson reason = canUse(i, character);
-				if (reason != CannotUseItemReson.OK) {
-					ItemStack itemStack = s.poll().get();
-					dropItem(character, itemStack, reason);
-					character.getHotbar()[slot] = HotbarObject.EMPTYHAND_OR_CONSUMABLE;
-					return;
-				}
-				if (hotbarObject.getHotbarObjectType() == HotbarObjectTypes.CHARM) {
-					hotbarObject.onEquip(character);
-				} else if (hotbarObject.getHotbarObjectType() == HotbarObjectTypes.WEAPON && slot == selectedSlotIndex) {
-					hotbarObject.onRightClick(character); //simulate player interaction to equip the weapon
-					((Weapon) hotbarObject).setCurrent(true);
-				}
-
-			} else {
-				character.getHotbar()[slot] = HotbarObject.EMPTYHAND_OR_CONSUMABLE;
-			}
-
-		}
+		slotIterator.initializeHotbar(character);
 	}
 
 	protected Armor getHelmet(IActiveCharacter character) {
@@ -506,7 +397,7 @@ public class InventoryService {
 		Gui.sendCannotUseItemNotification(character, is, reason);
 	}
 
-	protected HotbarObject getHotbarObject(IActiveCharacter character, ItemStack is) {
+	public HotbarObject getHotbarObject(IActiveCharacter character, ItemStack is) {
 		if (is == null)
 			return HotbarObject.EMPTYHAND_OR_CONSUMABLE;
 		if (ItemStackUtils.isItemSkillBind(is)) {

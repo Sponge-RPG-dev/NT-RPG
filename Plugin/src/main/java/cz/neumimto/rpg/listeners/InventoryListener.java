@@ -43,11 +43,8 @@ import org.spongepowered.api.event.item.inventory.InteractItemEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
-import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
-
-import java.util.Optional;
 
 
 /**
@@ -108,19 +105,11 @@ public class InventoryListener {
 		if (character.isStub()) {
 			return;
 		}
-
+		Hotbar hotbar = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
 		for (SlotTransaction slotTransaction : event.getTransactions()) {
 			Slot i = slotTransaction.getSlot();
-			Hotbar hotbar = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
 			if (hotbar.containsInventory(i)) {
-				ItemStack a = slotTransaction.getFinal().createStack();
-				if (inventoryService.canUse(a, character) == CannotUseItemReson.OK) {
-                    Optional<SlotIndex> inventoryProperty = i.getInventoryProperty(SlotIndex.class);
-                    if (inventoryProperty.isPresent()) {
-						Integer value = inventoryProperty.get().getValue();
-						inventoryService.initializeHotbar(character, value, a);
-					}
-				}
+				inventoryService.initializeHotbar(character);
 			}
 		}
 	}
@@ -142,7 +131,7 @@ public class InventoryListener {
 		if (hotbarObject == HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
 			return;
 		}
-		inventoryService.initializeHotbar(character, hotbar.getSelectedSlotIndex());
+		inventoryService.initializeHotbar(character);
 	}
 
 	@Listener
