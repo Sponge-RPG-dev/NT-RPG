@@ -63,6 +63,8 @@ import cz.neumimto.rpg.inventory.data.manipulators.SectionDelimiterData;
 import cz.neumimto.rpg.inventory.data.manipulators.SkillTreeNode;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
+import cz.neumimto.rpg.inventory.slotparsers.DefaultSlotIterator;
+import cz.neumimto.rpg.inventory.slotparsers.SlotIterator;
 import cz.neumimto.rpg.inventory.sockets.SocketType;
 import cz.neumimto.rpg.inventory.sockets.SocketTypeRegistry;
 import cz.neumimto.rpg.inventory.sockets.SocketTypes;
@@ -315,6 +317,11 @@ public class NtRpgPlugin {
 		event.getClasses().add(CharacterSkill.class);
 		event.getClasses().add(CharacterClass.class);
 
+	}
+
+	@Listener
+	public void postInit1(GameRegistryEvent.Register<SlotIterator> event) {
+		event.register(IoC.get().build(DefaultSlotIterator.class));
 	}
 
 	@Listener

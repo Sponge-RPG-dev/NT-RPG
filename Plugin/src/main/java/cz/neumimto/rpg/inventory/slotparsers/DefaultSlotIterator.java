@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.inventory.slotparsers;
 
-import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.inventory.CannotUseItemReson;
 import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.HotbarObjectTypes;
@@ -19,11 +19,11 @@ import java.util.Optional;
  */
 public class DefaultSlotIterator extends SlotIterator {
 
+    @Inject
     private InventoryService inventoryService;
 
     public DefaultSlotIterator() {
         super("slot_order");
-        inventoryService = IoC.get().build(InventoryService.class);
     }
 
     @Override
