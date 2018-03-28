@@ -13,25 +13,25 @@ import java.util.Optional;
 /**
  * Created by NeumimTo on 25.3.2018.
  */
-public class SlotIteratorRegistry implements AdditionalCatalogRegistryModule<SlotIterator> {
+public class PlayerInvHandlerRegistry implements AdditionalCatalogRegistryModule<PlayerInvHandler> {
 
-    @RegisterCatalog(SlotIterator.class)
-    private final Map<String, SlotIterator> SlotIterators = Maps.newHashMap();
+    @RegisterCatalog(PlayerInvHandler.class)
+    private final Map<String, PlayerInvHandler> SlotIterators = Maps.newHashMap();
 
 
     @Override
-    public void registerAdditionalCatalog(SlotIterator extraCatalog) {
+    public void registerAdditionalCatalog(PlayerInvHandler extraCatalog) {
         checkArgument(!SlotIterators.containsKey(extraCatalog.getId()));
         SlotIterators.put(extraCatalog.getId(), extraCatalog);
     }
 
     @Override
-    public Optional<SlotIterator> getById(String id) {
+    public Optional<PlayerInvHandler> getById(String id) {
         return Optional.of(SlotIterators.get(id.toLowerCase()));
     }
 
     @Override
-    public Collection<SlotIterator> getAll() {
+    public Collection<PlayerInvHandler> getAll() {
         return SlotIterators.values();
     }
 }

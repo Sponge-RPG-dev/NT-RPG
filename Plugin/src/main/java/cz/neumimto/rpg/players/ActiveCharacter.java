@@ -23,7 +23,11 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.inventory.*;
+import cz.neumimto.rpg.inventory.Armor;
+import cz.neumimto.rpg.inventory.ConfigRPGItemType;
+import cz.neumimto.rpg.inventory.HotbarObject;
+import cz.neumimto.rpg.inventory.RPGItemType;
+import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
@@ -32,7 +36,12 @@ import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.ItemAccessSkill;
+import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillTreeSpecialization;
+import cz.neumimto.rpg.skills.StartingPoint;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
@@ -43,7 +52,13 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatType;
 
 import java.lang.ref.WeakReference;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -87,6 +102,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	private transient int selected;
 	private transient Map<String, SkillTreeViewModel> skillTreeViewLocation;
 	private Set<SkillTreeSpecialization> specs = new HashSet<>();
+	private boolean[] denySlotInteractionArr;
 
 	public ActiveCharacter(Player pl, CharacterBase base) {
 		this.pl = pl;
@@ -100,6 +116,7 @@ public class ActiveCharacter implements IActiveCharacter {
 		classes.add(cl);
 		slotsToReinitialize = new ArrayList<>();
 		skillTreeViewLocation = new HashMap<>();
+		denySlotInteractionArr = new boolean[9];
 	}
 
 	@Override
@@ -817,6 +834,16 @@ public class ActiveCharacter implements IActiveCharacter {
 	@Override
 	public boolean hasSkillTreeSpecialization(SkillTreeSpecialization specialization) {
 		return specs.contains(specialization);
+	}
+
+	@Override
+	public boolean[] getDenyHotbarSlotInteractions() {
+		return denySlotInteractionArr;
+	}
+
+	@Override
+	public void setDenyHotbarSlotInteractions(boolean[] arr) {
+		this.denySlotInteractionArr = arr;
 	}
 
 	@Override

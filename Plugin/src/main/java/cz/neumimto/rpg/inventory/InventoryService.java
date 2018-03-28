@@ -21,6 +21,7 @@ package cz.neumimto.rpg.inventory;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.Arg;
@@ -45,8 +46,8 @@ import cz.neumimto.rpg.inventory.data.manipulators.ItemTypeData;
 import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemGroupRequirementsData;
 import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemRequirementsData;
 import cz.neumimto.rpg.inventory.runewords.RWService;
-import cz.neumimto.rpg.inventory.slotparsers.DefaultSlotIterator;
-import cz.neumimto.rpg.inventory.slotparsers.SlotIterator;
+import cz.neumimto.rpg.inventory.slotparsers.DefaultPlayerInvHandler;
+import cz.neumimto.rpg.inventory.slotparsers.PlayerInvHandler;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -90,6 +91,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Created by NeumimTo on 22.7.2015.
@@ -129,7 +131,7 @@ public class InventoryService {
 	@Inject
 	private GroupService groupService;
 
-	private SlotIterator slotIterator;
+	private PlayerInvHandler playerInvHandler;
 
 	private Set<String> reservedItemNames = new HashSet<>();
 
@@ -146,14 +148,14 @@ public class InventoryService {
 	@Reload(on = ReloadService.PLUGIN_CONFIG)
 	public void initInventoryInitializator() {
 		String s = PluginConfig.EQUIPED_SLOT_RESOLVE_SRATEGY;
-		Optional<SlotIterator> type = Sponge.getRegistry().getType(SlotIterator.class, s);
+		Optional<PlayerInvHandler> type = Sponge.getRegistry().getType(PlayerInvHandler.class, s);
 		if (type.isPresent()) {
-			slotIterator = type.get();
+			playerInvHandler = type.get();
 		} else {
 			logger.warn("Unknown EQUIPED_SLOT_RESOLVE_SRATEGY, value should be one of " +
-					Sponge.getRegistry().getAllOf(SlotIterator.class).stream
-					().map(SlotIterator::getId));
-			slotIterator = new DefaultSlotIterator();
+					Sponge.getRegistry().getAllOf(PlayerInvHandler.class).stream
+					().map(PlayerInvHandler::getId).collect(Collectors.joining(", ")));
+			playerInvHandler = IoC.get().build(DefaultPlayerInvHandler.class);
 		}
 	}
 
@@ -254,7 +256,7 @@ public class InventoryService {
 	public void initializeHotbar(IActiveCharacter character) {
 		if (character.isStub())
 			return;
-		slotIterator.initializeHotbar(character);
+		playerInvHandler.initializeHotbar(character);
 	}
 
 	protected Armor getHelmet(IActiveCharacter character) {

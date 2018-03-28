@@ -28,11 +28,9 @@ import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.cause.Root;
@@ -68,8 +66,6 @@ public class InventoryListener {
 	@Listener
 	public void onInventoryClose(InteractInventoryEvent.Close event, @First(typeFilter = {Player.class}) Player player) {
 		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-		if (player.get(Keys.GAME_MODE).get() == GameModes.CREATIVE)
-			return;
 		inventoryService.initializeHotbar(character);
 		inventoryService.initializeArmor(character);
 		damageService.recalculateCharacterWeaponDamage(character);

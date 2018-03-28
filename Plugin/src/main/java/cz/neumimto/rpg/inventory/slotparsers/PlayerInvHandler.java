@@ -7,12 +7,12 @@ import org.spongepowered.api.CatalogType;
 /**
  * Created by NeumimTo on 25.3.2018.
  */
-public abstract class SlotIterator implements CatalogType {
+public abstract class PlayerInvHandler implements CatalogType {
 
     private final String name;
     private final String id;
 
-    public SlotIterator(String name) {
+    public PlayerInvHandler(String name) {
         this.id = name.toLowerCase();
         this.name = name;
     }
@@ -20,6 +20,8 @@ public abstract class SlotIterator implements CatalogType {
     public abstract void initializeHotbar(IActiveCharacter character);
 
     public abstract void initializeArmor(IActiveCharacter character);
+
+    public abstract void changeActiveHotbarSlot(IActiveCharacter character, int slot);
 
     @Override
     public String getName() {
