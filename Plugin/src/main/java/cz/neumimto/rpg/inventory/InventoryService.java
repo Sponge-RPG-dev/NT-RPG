@@ -498,17 +498,17 @@ public class InventoryService {
 
 	//todo event
 	public void onRightClick(IActiveCharacter character, int slot) {
-		HotbarObject hotbarObject = character.getHotbar()[slot];
-		if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
-			hotbarObject.onRightClick(character);
+		if (character.isStub()) {
+			return;
 		}
+		playerInvHandler.onRightClick(character, slot);
 	}
 
 	public void onLeftClick(IActiveCharacter character, int slot) {
-		HotbarObject hotbarObject = character.getHotbar()[slot];
-		if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
-			hotbarObject.onLeftClick(character);
+		if (character.isStub()) {
+			return;
 		}
+		playerInvHandler.onLeftClick(character, slot);
 	}
 
 	protected void changeEquipedWeapon(IActiveCharacter character, Weapon changeTo, ItemStack itemStack) {

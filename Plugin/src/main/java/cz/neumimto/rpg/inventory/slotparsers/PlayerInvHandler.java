@@ -40,4 +40,8 @@ public abstract class PlayerInvHandler implements CatalogType {
         SocketType that = (SocketType) o;
         return getId().equals(that.getId());
     }
+
+    public abstract void onRightClick(IActiveCharacter character, int slot);
+
+    public abstract void onLeftClick(IActiveCharacter character, int slot);
 }

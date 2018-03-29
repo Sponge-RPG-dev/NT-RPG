@@ -107,15 +107,43 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
             HotbarObject hotbarObject = character.getHotbar()[slot];
             if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
                 if (hotbarObject.getHotbarObjectType() == HotbarObjectTypes.WEAPON) {
-                    Optional<ItemStack> itemInHand = character.getPlayer().getItemInHand(HandTypes.MAIN_HAND);
-                    ItemStack itemStack = itemInHand.get().copy();
-                    character.getPlayer().setItemInHand(HandTypes.MAIN_HAND, null);
-                    ItemStackUtils.dropItem(character.getPlayer(), itemStack);
+                   dropItemFromMainHand(character);
                 }
                 character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, TextHelper.parse(Localization.CANNOT_USE_ITEM_GENERIC));
             }
         } else {
             character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Text.of(""));
         }
+    }
+
+    @Override
+    public void onRightClick(IActiveCharacter character, int slot) {
+        if (!character.getDenyHotbarSlotInteractions()[slot]) {
+            HotbarObject hotbarObject = character.getHotbar()[slot];
+            if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
+                hotbarObject.onRightClick(character);
+            }
+        } else {
+            dropItemFromMainHand(character);
+        }
+    }
+
+    @Override
+    public void onLeftClick(IActiveCharacter character, int slot) {
+        if (!character.getDenyHotbarSlotInteractions()[slot]) {
+            HotbarObject hotbarObject = character.getHotbar()[slot];
+            if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
+                hotbarObject.onLeftClick(character);
+            }
+        } else {
+            dropItemFromMainHand(character);
+        }
+    }
+
+    protected void dropItemFromMainHand(IActiveCharacter character) {
+        Optional<ItemStack> itemInHand = character.getPlayer().getItemInHand(HandTypes.MAIN_HAND);
+        ItemStack itemStack = itemInHand.get().copy();
+        character.getPlayer().setItemInHand(HandTypes.MAIN_HAND, null);
+        ItemStackUtils.dropItem(character.getPlayer(), itemStack);
     }
 }
