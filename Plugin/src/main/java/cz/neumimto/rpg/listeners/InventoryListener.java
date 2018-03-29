@@ -140,4 +140,11 @@ public class InventoryListener {
 			event.setCancelled(true);
 		}
 	}
+
+	@Listener
+	public void onMouseScroll(ChangeInventoryEvent.Held event, @Root Player player) {
+		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+		Hotbar hotbar = player.getInventory().query(Hotbar.class);
+		inventoryService.changeActiveHotbarSlot(character, hotbar.getSelectedSlotIndex());
+	}
 }

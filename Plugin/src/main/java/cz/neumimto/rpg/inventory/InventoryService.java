@@ -138,15 +138,11 @@ public class InventoryService {
 	private Map<UUID, InventoryMenu> inventoryMenus = new HashMap<>();
 	private Map<String, ItemGroup> itemGroups = new HashMap<>();
 
+	@Reload(on = ReloadService.PLUGIN_CONFIG)
 	@PostProcess(priority = 3000)
 	public void init() {
 		NORMAL_RARITY = Text.of(Localization.NORMAL_RARITY);
 		loadItemGroups();
-		initInventoryInitializator();
-	}
-
-	@Reload(on = ReloadService.PLUGIN_CONFIG)
-	public void initInventoryInitializator() {
 		String s = PluginConfig.EQUIPED_SLOT_RESOLVE_SRATEGY;
 		Optional<PlayerInvHandler> type = Sponge.getRegistry().getType(PlayerInvHandler.class, s);
 		if (type.isPresent()) {
@@ -257,6 +253,12 @@ public class InventoryService {
 		if (character.isStub())
 			return;
 		playerInvHandler.initializeHotbar(character);
+	}
+
+	public void changeActiveHotbarSlot(IActiveCharacter character, int slot) {
+		if (character.isStub())
+			return;
+		playerInvHandler.changeActiveHotbarSlot(character, slot);
 	}
 
 	protected Armor getHelmet(IActiveCharacter character) {

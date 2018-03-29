@@ -64,17 +64,18 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
                 CannotUseItemReson reason = NtRpgPlugin.GlobalScope.inventorySerivce.canUse(itemStack1, character);
                 //cannot use
                 if (reason != CannotUseItemReson.OK) {
-                    character.getHotbar()[slot] = HotbarObject.EMPTYHAND_OR_CONSUMABLE;
+                    character.getHotbar()[slot] = hotbarObject0;
                     character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, TextHelper.parse(Localization.PLAYER_CANT_USE_HOTBAR_ITEMS));
-                    character.getDenyHotbarSlotInteractions()[slot] = false;
+                    character.getDenyHotbarSlotInteractions()[slot] = true;
                     return;
                 } else {
-                    character.getDenyHotbarSlotInteractions()[slot] = true;
+                    character.getDenyHotbarSlotInteractions()[slot] = false;
                 }
 
                 //charm is active anywhere in the hotbar
                 if (hotbarObject0.getHotbarObjectType() == HotbarObjectTypes.CHARM) {
                     hotbarObject0.onEquip(character);
+                    character.getDenyHotbarSlotInteractions()[slot] = false;
                 } else if (hotbarObject0.getHotbarObjectType() == HotbarObjectTypes.WEAPON && slot == selectedSlotIndex) {
                     //weapon active only if item is in hand
                     hotbarObject0.onRightClick(character); //simulate player interaction to equip the weapon
