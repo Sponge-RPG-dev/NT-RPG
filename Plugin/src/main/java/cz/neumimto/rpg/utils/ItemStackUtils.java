@@ -18,6 +18,74 @@
 
 package cz.neumimto.rpg.utils;
 
+import static org.spongepowered.api.item.ItemTypes.APPLE;
+import static org.spongepowered.api.item.ItemTypes.BAKED_POTATO;
+import static org.spongepowered.api.item.ItemTypes.BLAZE_ROD;
+import static org.spongepowered.api.item.ItemTypes.BOW;
+import static org.spongepowered.api.item.ItemTypes.BREAD;
+import static org.spongepowered.api.item.ItemTypes.CARROT;
+import static org.spongepowered.api.item.ItemTypes.CHAINMAIL_BOOTS;
+import static org.spongepowered.api.item.ItemTypes.CHAINMAIL_CHESTPLATE;
+import static org.spongepowered.api.item.ItemTypes.CHAINMAIL_HELMET;
+import static org.spongepowered.api.item.ItemTypes.CHAINMAIL_LEGGINGS;
+import static org.spongepowered.api.item.ItemTypes.CHICKEN;
+import static org.spongepowered.api.item.ItemTypes.COOKED_BEEF;
+import static org.spongepowered.api.item.ItemTypes.COOKED_CHICKEN;
+import static org.spongepowered.api.item.ItemTypes.COOKED_FISH;
+import static org.spongepowered.api.item.ItemTypes.COOKED_MUTTON;
+import static org.spongepowered.api.item.ItemTypes.COOKED_RABBIT;
+import static org.spongepowered.api.item.ItemTypes.COOKIE;
+import static org.spongepowered.api.item.ItemTypes.DIAMOND_AXE;
+import static org.spongepowered.api.item.ItemTypes.DIAMOND_BOOTS;
+import static org.spongepowered.api.item.ItemTypes.DIAMOND_CHESTPLATE;
+import static org.spongepowered.api.item.ItemTypes.DIAMOND_HELMET;
+import static org.spongepowered.api.item.ItemTypes.DIAMOND_HOE;
+import static org.spongepowered.api.item.ItemTypes.DIAMOND_LEGGINGS;
+import static org.spongepowered.api.item.ItemTypes.DIAMOND_PICKAXE;
+import static org.spongepowered.api.item.ItemTypes.DIAMOND_SHOVEL;
+import static org.spongepowered.api.item.ItemTypes.DIAMOND_SWORD;
+import static org.spongepowered.api.item.ItemTypes.FISH;
+import static org.spongepowered.api.item.ItemTypes.GOLDEN_APPLE;
+import static org.spongepowered.api.item.ItemTypes.GOLDEN_AXE;
+import static org.spongepowered.api.item.ItemTypes.GOLDEN_BOOTS;
+import static org.spongepowered.api.item.ItemTypes.GOLDEN_CHESTPLATE;
+import static org.spongepowered.api.item.ItemTypes.GOLDEN_HELMET;
+import static org.spongepowered.api.item.ItemTypes.GOLDEN_HOE;
+import static org.spongepowered.api.item.ItemTypes.GOLDEN_LEGGINGS;
+import static org.spongepowered.api.item.ItemTypes.GOLDEN_PICKAXE;
+import static org.spongepowered.api.item.ItemTypes.GOLDEN_SHOVEL;
+import static org.spongepowered.api.item.ItemTypes.GOLDEN_SWORD;
+import static org.spongepowered.api.item.ItemTypes.IRON_AXE;
+import static org.spongepowered.api.item.ItemTypes.IRON_BOOTS;
+import static org.spongepowered.api.item.ItemTypes.IRON_CHESTPLATE;
+import static org.spongepowered.api.item.ItemTypes.IRON_HELMET;
+import static org.spongepowered.api.item.ItemTypes.IRON_HOE;
+import static org.spongepowered.api.item.ItemTypes.IRON_LEGGINGS;
+import static org.spongepowered.api.item.ItemTypes.IRON_PICKAXE;
+import static org.spongepowered.api.item.ItemTypes.IRON_SHOVEL;
+import static org.spongepowered.api.item.ItemTypes.IRON_SWORD;
+import static org.spongepowered.api.item.ItemTypes.LEATHER_BOOTS;
+import static org.spongepowered.api.item.ItemTypes.LEATHER_CHESTPLATE;
+import static org.spongepowered.api.item.ItemTypes.LEATHER_HELMET;
+import static org.spongepowered.api.item.ItemTypes.LEATHER_LEGGINGS;
+import static org.spongepowered.api.item.ItemTypes.MELON;
+import static org.spongepowered.api.item.ItemTypes.POISONOUS_POTATO;
+import static org.spongepowered.api.item.ItemTypes.PORKCHOP;
+import static org.spongepowered.api.item.ItemTypes.POTATO;
+import static org.spongepowered.api.item.ItemTypes.POTION;
+import static org.spongepowered.api.item.ItemTypes.ROTTEN_FLESH;
+import static org.spongepowered.api.item.ItemTypes.STICK;
+import static org.spongepowered.api.item.ItemTypes.STONE_AXE;
+import static org.spongepowered.api.item.ItemTypes.STONE_HOE;
+import static org.spongepowered.api.item.ItemTypes.STONE_PICKAXE;
+import static org.spongepowered.api.item.ItemTypes.STONE_SHOVEL;
+import static org.spongepowered.api.item.ItemTypes.STONE_SWORD;
+import static org.spongepowered.api.item.ItemTypes.WOODEN_AXE;
+import static org.spongepowered.api.item.ItemTypes.WOODEN_HOE;
+import static org.spongepowered.api.item.ItemTypes.WOODEN_PICKAXE;
+import static org.spongepowered.api.item.ItemTypes.WOODEN_SHOVEL;
+import static org.spongepowered.api.item.ItemTypes.WOODEN_SWORD;
+
 import com.flowpowered.math.TrigMath;
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
@@ -25,7 +93,6 @@ import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.inventory.ItemRestriction;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.item.EnchantmentData;
@@ -39,11 +106,13 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.regex.Pattern;
-
-import static org.spongepowered.api.item.ItemTypes.*;
 
 /**
  * Created by NeumimTo on 27.3.2015.
@@ -132,13 +201,9 @@ public class ItemStackUtils {
 
 	public static Set<ItemType> any_armor = new HashSet<>();
 
-	public static Map<String, ItemRestriction> restrictionMap = new HashMap<>();
-
-	protected static String ID = "id";
-	protected static String QUANTITY = "quantity";
 	protected static String DAMAGE = "damage";
 	protected static String DISPLAY_NAME = "name";
-	protected static String LORE = "lore";
+
 	protected static GlobalScope globalScope = NtRpgPlugin.GlobalScope;
 	private static BiFunction<String, String, String> formatedConfig = (k, v) -> Utils.newLine(k + ": " + v + ";");
 	private static Pattern pattern = Pattern.compile("\\((.*?)\\)");
@@ -204,38 +269,8 @@ public class ItemStackUtils {
 		return false;
 	}
 
-	private static void createProperty(StringBuilder builder, String value, String key) {
-		if (key != null)
-			builder.append(value).append(":").append(key).append(";");
-	}
-
-	private static void createProperty(StringBuilder builder, String value, Text key) {
-		if (key != null)
-			createProperty(builder, value, key.toString());
-	}
-
-	private static void createProperty(StringBuilder b, String value, int key) {
-		createProperty(b, value, String.valueOf(key));
-	}
-
-
 	public static boolean isConsumable(ItemType type) {
 		return consumables.contains(type);
-	}
-
-	public static boolean isItemRune(ItemStack is) {
-		Optional<List<Text>> texts = is.get(Keys.ITEM_LORE);
-		if (texts.isPresent()) {
-			List<Text> a = texts.get();
-			if (a.size() >= 1) {
-				Text text = a.get(0);
-				String s = text.toPlain();
-				if (s.equalsIgnoreCase(Localization.RUNE)) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	public static boolean hasSockets(ItemStack itemStack) {
@@ -263,15 +298,6 @@ public class ItemStackUtils {
 			}
 		}
 		return false;
-	}
-
-	public static int getItemLevel(Text text) {
-		String s = text.toPlain();
-		String[] split = s.split(":");
-		if (split.length > 1) {
-			return Integer.parseInt(split[1]);
-		}
-		return 0;
 	}
 
 	public static void dropItem(Player p, ItemStack itemStack) {
