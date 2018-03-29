@@ -253,7 +253,10 @@ public class InventoryService {
 		writer.println("\t\tItems:[");
 		for (ItemType type : Sponge.getGame().getRegistry().getAllOf(ItemType.class)) {
 			if (type.getId().toUpperCase().contains(id)) {
-				writer.println("\t\t\t\"" +type.getId() + "\"");
+			    if (id.equalsIgnoreCase(WeaponKeys.AXES) && type.getId().toUpperCase().contains(WeaponKeys.PICKAXES)) {
+                    continue;
+                }
+                writer.println("\t\t\t\"" +type.getId() + "\"");
 			}
 		}
 		writer.println("\t\t]");
