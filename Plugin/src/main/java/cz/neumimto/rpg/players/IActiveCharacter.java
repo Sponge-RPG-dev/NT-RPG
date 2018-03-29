@@ -265,4 +265,8 @@ public interface IActiveCharacter extends IEntity<Player> {
 	void removeSkillTreeSpecialization(SkillTreeSpecialization specialization);
 
 	boolean hasSkillTreeSpecialization(SkillTreeSpecialization specialization);
+
+	boolean[] getDenyHotbarSlotInteractions();
+
+	void setDenyHotbarSlotInteractions(boolean[] arr);
 }

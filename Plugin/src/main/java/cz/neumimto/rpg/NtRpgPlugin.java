@@ -63,6 +63,9 @@ import cz.neumimto.rpg.inventory.data.manipulators.SectionDelimiterData;
 import cz.neumimto.rpg.inventory.data.manipulators.SkillTreeNode;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
+import cz.neumimto.rpg.inventory.slotparsers.DefaultPlayerInvHandler;
+import cz.neumimto.rpg.inventory.slotparsers.PlayerInvHandler;
+import cz.neumimto.rpg.inventory.slotparsers.PlayerInvHandlerRegistry;
 import cz.neumimto.rpg.inventory.sockets.SocketType;
 import cz.neumimto.rpg.inventory.sockets.SocketTypeRegistry;
 import cz.neumimto.rpg.inventory.sockets.SocketTypes;
@@ -298,6 +301,7 @@ public class NtRpgPlugin {
 
 		Sponge.getRegistry().registerModule(SocketType.class, new SocketTypeRegistry());
 		Sponge.getRegistry().registerModule(ICharacterAttribute.class, new AttributeRegistry());
+		Sponge.getRegistry().registerModule(PlayerInvHandler.class, new PlayerInvHandlerRegistry());
 	}
 
 	@Listener
@@ -315,6 +319,11 @@ public class NtRpgPlugin {
 		event.getClasses().add(CharacterSkill.class);
 		event.getClasses().add(CharacterClass.class);
 
+	}
+
+	@Listener
+	public void postInit1(GameRegistryEvent.Register<PlayerInvHandler> event) {
+		event.register(IoC.get().build(DefaultPlayerInvHandler.class));
 	}
 
 	@Listener

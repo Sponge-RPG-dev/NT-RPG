@@ -9,7 +9,12 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.SkillType;
+import cz.neumimto.rpg.skills.Targetted;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.item.ItemTypes;
 
@@ -42,7 +47,7 @@ public class Bandage extends Targetted {
 		if (iEntity.isFriendlyTo(source)) {
 			float floatNodeValue = getFloatNodeValue(info, SkillNodes.HEALED_AMOUNT);
 			entityService.healEntity(iEntity, floatNodeValue, this);
-			Decorator.healEffect(iEntity.getLocation());
+			Decorator.healEffect(iEntity.getEntity().getLocation().add(0,1,0));
 			if (iEntity.hasEffect(Bleeding.name)) {
 				effectService.removeEffectContainer(iEntity.getEffect(Bleeding.name), iEntity);
 			}

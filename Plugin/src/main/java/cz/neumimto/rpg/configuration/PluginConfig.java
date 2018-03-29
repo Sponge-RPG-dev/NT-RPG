@@ -203,4 +203,6 @@ public class PluginConfig {
 		add("3,&5Legendary");
 	}};
 
+	@ConfigValue
+	public static String EQUIPED_SLOT_RESOLVE_SRATEGY = "slot_order";
 }

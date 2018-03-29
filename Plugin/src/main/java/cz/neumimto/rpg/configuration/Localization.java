@@ -374,4 +374,10 @@ public class Localization {
 
 	@ConfigValue
 	public static String ITEM_REQUIREMENTS_SECTION = "&4 Requirements";
+
+	@ConfigValue
+	public static String PLAYER_CANT_USE_HOTBAR_ITEMS = "&4Hotbar contains items, which you are unable to use";
+
+	@ConfigValue
+	public static String CANNOT_USE_ITEM_GENERIC = "&4You cannot use this item";
 }

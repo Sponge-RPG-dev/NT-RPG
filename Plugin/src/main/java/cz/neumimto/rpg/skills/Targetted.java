@@ -21,8 +21,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.entity.living.Living;
 
-import static cz.neumimto.rpg.utils.Utils.getTargettedEntity;
-
 public abstract class Targetted extends ActiveSkill implements ITargetted {
 
 
@@ -36,10 +34,12 @@ public abstract class Targetted extends ActiveSkill implements ITargetted {
 	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
 		int range = (int) info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.RANGE, info.getTotalLevel());
 		Living l = getTargettedEntity(character, range);
-		if (l == null && getDamageType() == null && !getSkillTypes().contains(SkillType.CANNOT_BE_SELF_CASTED)) {
-			l = character.getEntity();
-		} else {
-			return SkillResult.NO_TARGET;
+		if (l == null) {
+		 	if (getDamageType() == null && !getSkillTypes().contains(SkillType.CANNOT_BE_SELF_CASTED)) {
+				l = character.getEntity();
+			} else {
+		 		return SkillResult.NO_TARGET;
+			}
 		}
 		if (getDamageType() != null && !Utils.canDamage(character, l)) {
 			return SkillResult.CANCELLED;
