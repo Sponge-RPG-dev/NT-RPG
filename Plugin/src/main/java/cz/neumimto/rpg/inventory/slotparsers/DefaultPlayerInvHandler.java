@@ -107,7 +107,7 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
             HotbarObject hotbarObject = character.getHotbar()[slot];
             if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
                 if (hotbarObject.getHotbarObjectType() == HotbarObjectTypes.WEAPON) {
-                   dropItemFromMainHand(character);
+                   dropItemFromMainHand(character, slot);
                 }
                 character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, TextHelper.parse(Localization.CANNOT_USE_ITEM_GENERIC));
             }
@@ -118,32 +118,34 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
 
     @Override
     public void onRightClick(IActiveCharacter character, int slot) {
+        HotbarObject hotbarObject = character.getHotbar()[slot];
         if (!character.getDenyHotbarSlotInteractions()[slot]) {
-            HotbarObject hotbarObject = character.getHotbar()[slot];
             if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
                 hotbarObject.onRightClick(character);
             }
-        } else {
-            dropItemFromMainHand(character);
+        } else if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE && hotbarObject.getHotbarObjectType() == HotbarObjectTypes.WEAPON) {
+            dropItemFromMainHand(character, slot);
         }
     }
 
     @Override
     public void onLeftClick(IActiveCharacter character, int slot) {
+        HotbarObject hotbarObject = character.getHotbar()[slot];
         if (!character.getDenyHotbarSlotInteractions()[slot]) {
-            HotbarObject hotbarObject = character.getHotbar()[slot];
             if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
                 hotbarObject.onLeftClick(character);
             }
-        } else {
-            dropItemFromMainHand(character);
+        } else if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE && hotbarObject.getHotbarObjectType() == HotbarObjectTypes.WEAPON) {
+            dropItemFromMainHand(character, slot);
         }
     }
 
-    protected void dropItemFromMainHand(IActiveCharacter character) {
+    protected void dropItemFromMainHand(IActiveCharacter character, int slot) {
+        character.getHotbar()[slot] = HotbarObject.EMPTYHAND_OR_CONSUMABLE;
         Optional<ItemStack> itemInHand = character.getPlayer().getItemInHand(HandTypes.MAIN_HAND);
         ItemStack itemStack = itemInHand.get().copy();
         character.getPlayer().setItemInHand(HandTypes.MAIN_HAND, null);
         ItemStackUtils.dropItem(character.getPlayer(), itemStack);
+
     }
 }
