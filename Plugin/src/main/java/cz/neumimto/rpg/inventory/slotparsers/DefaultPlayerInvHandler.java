@@ -4,9 +4,12 @@ import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.inventory.Armor;
 import cz.neumimto.rpg.inventory.CannotUseItemReson;
 import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.HotbarObjectTypes;
+import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.ItemStackUtils;
@@ -15,6 +18,7 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
+import org.spongepowered.api.item.inventory.equipment.EquipmentTypes;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
 
@@ -26,8 +30,13 @@ import java.util.Optional;
 @Singleton
 public class DefaultPlayerInvHandler extends PlayerInvHandler {
 
+    protected InventoryService inventoryService;
+    protected EffectService effectService;
+
     public DefaultPlayerInvHandler() {
         super("persisted_slot_order");
+        inventoryService = NtRpgPlugin.GlobalScope.inventorySerivce;
+        effectService = NtRpgPlugin.GlobalScope.effectService;
     }
 
     @Override
@@ -56,12 +65,12 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
         if (peek.isPresent()) {
             ItemStack itemStack1 = peek.get();
 
-            HotbarObject hotbarObject0 = NtRpgPlugin.GlobalScope.inventorySerivce.getHotbarObject(character, itemStack1);
+            HotbarObject hotbarObject0 = inventoryService.getHotbarObject(character, itemStack1);
 
             if (hotbarObject0 != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
                 hotbarObject0.setSlot(slot);
                 character.getHotbar()[slot] = hotbarObject0;
-                CannotUseItemReson reason = NtRpgPlugin.GlobalScope.inventorySerivce.canUse(itemStack1, character);
+                CannotUseItemReson reason = inventoryService.canUse(itemStack1, character);
                 //cannot use
                 if (reason != CannotUseItemReson.OK) {
                     character.getHotbar()[slot] = hotbarObject0;
@@ -98,7 +107,84 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
 
     @Override
     public void initializeArmor(IActiveCharacter character) {
+        Optional<ItemStack> chestplate = character.getPlayer().getChestplate();
+        ItemStack is = null;
+        if (chestplate.isPresent()) {
+            is = chestplate.get();
+            CannotUseItemReson reason = inventoryService.canWear(is, character);
+            if (reason != CannotUseItemReson.OK) {
+                character.getPlayer().setChestplate(null);
+                inventoryService.dropItem(character, is, reason);
+            } else {
 
+                Armor armor = inventoryService.getChestplate(character);
+
+                Armor armor1 = character.getEquipedArmor().get(EquipmentTypes.CHESTPLATE);
+                if (armor1 != null) {
+                    NtRpgPlugin.GlobalScope.effectService.removeGlobalEffectsAsEnchantments(armor1.getEffects().keySet(), character, armor1);
+                }
+                character.getEquipedArmor().put(EquipmentTypes.CHESTPLATE, armor);
+                NtRpgPlugin.GlobalScope.effectService.applyGlobalEffectsAsEnchantments(armor.getEffects(), character, armor);
+
+            }
+        }
+
+        Optional<ItemStack> helmet = character.getPlayer().getHelmet();
+        if (helmet.isPresent()) {
+            is = helmet.get();
+            CannotUseItemReson reason = inventoryService.canWear(is, character);
+            if (reason != CannotUseItemReson.OK) {
+                character.getPlayer().setHelmet(null);
+                inventoryService.dropItem(character, is, reason);
+            } else {
+
+                Armor armor = inventoryService.getHelmet(character);
+
+                Armor armor1 = character.getEquipedArmor().get(EquipmentTypes.HEADWEAR);
+                if (armor1 != null) {
+                    NtRpgPlugin.GlobalScope.effectService.removeGlobalEffectsAsEnchantments(armor1.getEffects().keySet(), character, armor1);
+                }
+                character.getEquipedArmor().put(EquipmentTypes.HEADWEAR, armor);
+                NtRpgPlugin.GlobalScope.effectService.applyGlobalEffectsAsEnchantments(armor.getEffects(), character, armor);
+
+            }
+        }
+        Optional<ItemStack> boots = character.getPlayer().getBoots();
+        if (boots.isPresent()) {
+            is = boots.get();
+            CannotUseItemReson reason = inventoryService.canWear(is, character);
+            if (reason != CannotUseItemReson.OK) {
+                character.getPlayer().setBoots(null);
+                inventoryService.dropItem(character, is, reason);
+            } else {
+                Armor armor = inventoryService.getBoots(character);
+                Armor armor1 = character.getEquipedArmor().get(EquipmentTypes.BOOTS);
+                if (armor1 != null) {
+                    NtRpgPlugin.GlobalScope.effectService.removeGlobalEffectsAsEnchantments(armor1.getEffects().keySet(), character, armor1);
+                }
+                character.getEquipedArmor().put(EquipmentTypes.BOOTS, armor);
+                NtRpgPlugin.GlobalScope.effectService.applyGlobalEffectsAsEnchantments(armor.getEffects(), character, armor);
+            }
+        }
+        Optional<ItemStack> leggings = character.getPlayer().getLeggings();
+        if (leggings.isPresent()) {
+            is = leggings.get();
+            CannotUseItemReson reason = inventoryService.canWear(is, character);
+            if (reason != CannotUseItemReson.OK) {
+                character.getPlayer().setLeggings(null);
+
+                inventoryService.dropItem(character, is, reason);
+            } else {
+                Armor armor = inventoryService.getLeggings(character);
+
+                Armor armor1 = character.getEquipedArmor().get(EquipmentTypes.LEGGINGS);
+                if (armor1 != null) {
+                    NtRpgPlugin.GlobalScope.effectService.removeGlobalEffectsAsEnchantments(armor1.getEffects().keySet(), character, armor1);
+                }
+                character.getEquipedArmor().put(EquipmentTypes.LEGGINGS, armor);
+                NtRpgPlugin.GlobalScope.effectService.applyGlobalEffectsAsEnchantments(armor.getEffects(), character, armor);
+            }
+        }
     }
 
     @Override
@@ -146,6 +232,5 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
         ItemStack itemStack = itemInHand.get().copy();
         character.getPlayer().setItemInHand(HandTypes.MAIN_HAND, null);
         ItemStackUtils.dropItem(character.getPlayer(), itemStack);
-
     }
 }

@@ -57,7 +57,6 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
-import org.spongepowered.api.item.inventory.equipment.EquipmentTypes;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
@@ -114,6 +113,7 @@ public class InventoryService {
 	private Set<String> reservedItemNames = new HashSet<>();
 
 	private Map<UUID, InventoryMenu> inventoryMenus = new HashMap<>();
+
 	private Map<String, ItemGroup> itemGroups = new HashMap<>();
 
 	@Reload(on = ReloadService.PLUGIN_CONFIG)
@@ -254,7 +254,7 @@ public class InventoryService {
 		playerInvHandler.changeActiveHotbarSlot(character, slot);
 	}
 
-	protected Armor getHelmet(IActiveCharacter character) {
+	public Armor getHelmet(IActiveCharacter character) {
 		if (character.isStub()) {
 			return Armor.NONE;
 		}
@@ -266,7 +266,7 @@ public class InventoryService {
 		return Armor.NONE;
 	}
 
-	protected Armor getChestplate(IActiveCharacter character) {
+	public Armor getChestplate(IActiveCharacter character) {
 		if (character.isStub()) {
 			return Armor.NONE;
 		}
@@ -278,7 +278,7 @@ public class InventoryService {
 		return Armor.NONE;
 	}
 
-	protected Armor getLeggings(IActiveCharacter character) {
+	public Armor getLeggings(IActiveCharacter character) {
 		if (character.isStub()) {
 			return Armor.NONE;
 		}
@@ -290,7 +290,7 @@ public class InventoryService {
 		return Armor.NONE;
 	}
 
-	protected Armor getBoots(IActiveCharacter character) {
+	public Armor getBoots(IActiveCharacter character) {
 		if (character.isStub()) {
 			return Armor.NONE;
 		}
@@ -303,93 +303,15 @@ public class InventoryService {
 	}
 
 	private Armor getArmor(ItemStack itemStack, IEffectSource armorType) {
-		Armor armor = new Armor(itemStack, armorType);
-		return armor;
+		return new Armor(itemStack, armorType);
 	}
 
 	public void initializeArmor(IActiveCharacter character) {
-		Optional<ItemStack> chestplate = character.getPlayer().getChestplate();
-		ItemStack is = null;
-		if (chestplate.isPresent()) {
-			is = chestplate.get();
-			CannotUseItemReson reason = canWear(is, character);
-			if (reason != CannotUseItemReson.OK) {
-				character.getPlayer().setChestplate(null);
-				dropItem(character, is, reason);
-			} else {
-
-				Armor armor = getChestplate(character);
-
-				Armor armor1 = character.getEquipedArmor().get(EquipmentTypes.CHESTPLATE);
-				if (armor1 != null) {
-					effectService.removeGlobalEffectsAsEnchantments(armor1.getEffects().keySet(), character, armor1);
-				}
-				character.getEquipedArmor().put(EquipmentTypes.CHESTPLATE, armor);
-				effectService.applyGlobalEffectsAsEnchantments(armor.getEffects(), character, armor);
-
-			}
-		}
-
-		Optional<ItemStack> helmet = character.getPlayer().getHelmet();
-		if (helmet.isPresent()) {
-			is = helmet.get();
-			CannotUseItemReson reason = canWear(is, character);
-			if (reason != CannotUseItemReson.OK) {
-				character.getPlayer().setHelmet(null);
-				dropItem(character, is, reason);
-			} else {
-
-				Armor armor = getHelmet(character);
-
-				Armor armor1 = character.getEquipedArmor().get(EquipmentTypes.HEADWEAR);
-				if (armor1 != null) {
-					effectService.removeGlobalEffectsAsEnchantments(armor1.getEffects().keySet(), character, armor1);
-				}
-				character.getEquipedArmor().put(EquipmentTypes.HEADWEAR, armor);
-				effectService.applyGlobalEffectsAsEnchantments(armor.getEffects(), character, armor);
-
-			}
-		}
-		Optional<ItemStack> boots = character.getPlayer().getBoots();
-		if (boots.isPresent()) {
-			is = boots.get();
-			CannotUseItemReson reason = canWear(is, character);
-			if (reason != CannotUseItemReson.OK) {
-				character.getPlayer().setBoots(null);
-				dropItem(character, is, reason);
-			} else {
-				Armor armor = getBoots(character);
-				Armor armor1 = character.getEquipedArmor().get(EquipmentTypes.BOOTS);
-				if (armor1 != null) {
-					effectService.removeGlobalEffectsAsEnchantments(armor1.getEffects().keySet(), character, armor1);
-				}
-				character.getEquipedArmor().put(EquipmentTypes.BOOTS, armor);
-				effectService.applyGlobalEffectsAsEnchantments(armor.getEffects(), character, armor);
-			}
-		}
-		Optional<ItemStack> leggings = character.getPlayer().getLeggings();
-		if (leggings.isPresent()) {
-			is = leggings.get();
-			CannotUseItemReson reason = canWear(is, character);
-			if (reason != CannotUseItemReson.OK) {
-				character.getPlayer().setLeggings(null);
-
-				dropItem(character, is, reason);
-			} else {
-				Armor armor = getLeggings(character);
-
-				Armor armor1 = character.getEquipedArmor().get(EquipmentTypes.LEGGINGS);
-				if (armor1 != null) {
-					effectService.removeGlobalEffectsAsEnchantments(armor1.getEffects().keySet(), character, armor1);
-				}
-				character.getEquipedArmor().put(EquipmentTypes.LEGGINGS, armor);
-				effectService.applyGlobalEffectsAsEnchantments(armor.getEffects(), character, armor);
-			}
-		}
+		playerInvHandler.initializeArmor(character);
 	}
 
 
-	private void dropItem(IActiveCharacter character, ItemStack is, CannotUseItemReson reason) {
+	public void dropItem(IActiveCharacter character, ItemStack is, CannotUseItemReson reason) {
 		ItemStackUtils.dropItem(character.getPlayer(), is);
 		Gui.sendCannotUseItemNotification(character, is, reason);
 	}
