@@ -216,7 +216,7 @@ public class InventoryService {
 			} else {
 				logger.warn(Console.RED + "Could not find item type " + Console.YELLOW + armor + Console.RED + ".");
 				logger.warn(Console.RED + " - Is the mod loaded and is the name correct?");
-				logger.warn(Console.YELLOW + " - Mod items has to be in the format: " + Console.GREEN+ "modid:my_item");
+				logger.warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN+ "\"modid:my_item\"");
 			}
 		}
 	}
