@@ -25,6 +25,7 @@ import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.Arg;
+import cz.neumimto.rpg.Console;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.TextHelper;
@@ -171,6 +172,8 @@ public class InventoryService {
 				addDefaultItemsToGroup(writer, WeaponKeys.BOWS, "bows_meele_damage_mult");
 				addDefaultItemsToGroup(writer, WeaponKeys.STAFF, "staffs_damage_mult");
 				writer.println("]");
+				writer.println("ModdedArmor:[");
+				writer.println("]");
 				writer.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -206,6 +209,16 @@ public class InventoryService {
 			addItemGroup(itemGroup);
 		}
 
+		for (String armor : c.getStringList("ModdedArmor")) {
+			Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, armor);
+			if (type.isPresent()) {
+				ItemStackUtils.any_armor.add(type.get());
+			} else {
+				logger.warn(Console.RED + "Could not find item type " + Console.YELLOW + armor + Console.RED + ".");
+				logger.warn(Console.RED + " - Is the mod loaded and is the name correct?");
+				logger.warn(Console.YELLOW + " - Mod items has to be in the format: " + Console.GREEN+ "modid:my_item");
+			}
+		}
 	}
 
 	public void addItemGroup(ItemGroup itemGroup) {
