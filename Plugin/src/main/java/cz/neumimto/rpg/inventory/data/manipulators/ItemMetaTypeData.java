@@ -23,6 +23,8 @@ public class ItemMetaTypeData extends AbstractSingleCatalogData<ItemMetaType, It
 
     public ItemMetaTypeData(ItemMetaType value) {
         super(value, NKeys.ITEM_META_TYPE);
+        registerFieldGetter(NKeys.ITEM_META_TYPE, this::getValueGetter);
+        registerFieldSetter(NKeys.ITEM_META_TYPE, this::setValue);
     }
 
     @Override
@@ -61,6 +63,11 @@ public class ItemMetaTypeData extends AbstractSingleCatalogData<ItemMetaType, It
     }
 
     @Override
+    public DataContainer toContainer() {
+        return super.toContainer().set(NKeys.ITEM_META_TYPE.getQuery(), getValue());
+    }
+
+    @Override
     public int getContentVersion() {
         return Builder.CONTENT_VERSION;
     }
@@ -70,6 +77,7 @@ public class ItemMetaTypeData extends AbstractSingleCatalogData<ItemMetaType, It
 
         public Immutable(ItemMetaType value) {
             super(value, ItemMetaTypes.CHARM, NKeys.ITEM_META_TYPE);
+            registerFieldGetter(NKeys.ITEM_META_TYPE, this::getValueGetter);
         }
 
         @Override
@@ -81,6 +89,11 @@ public class ItemMetaTypeData extends AbstractSingleCatalogData<ItemMetaType, It
         @Override
         public ItemMetaTypeData asMutable() {
             return new ItemMetaTypeData(getValue());
+        }
+
+        @Override
+        public DataContainer toContainer() {
+            return super.toContainer().set(NKeys.ITEM_META_TYPE.getQuery(), getValue());
         }
     }
 

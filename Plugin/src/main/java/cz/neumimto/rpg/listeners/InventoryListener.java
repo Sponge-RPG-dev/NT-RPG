@@ -28,6 +28,7 @@ import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.utils.ItemStackUtils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
@@ -117,6 +118,9 @@ public class InventoryListener {
 
 
 	private boolean shouldProceedInitialization(ItemStackSnapshot itemStackSnapshot) {
+		if (ItemStackUtils.isWeapon(itemStackSnapshot.getType())) {
+			return true;
+		}
 		if (itemStackSnapshot.get(NKeys.ITEM_META_HEADER).isPresent()) {
 			return true;
 		}

@@ -6,12 +6,8 @@ import cz.neumimto.rpg.effects.CommonEffectTypes;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.ShapedEffectDecorator;
 import cz.neumimto.rpg.gui.ParticleDecorator;
-import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
-import org.spongepowered.api.entity.EntityType;
-import org.spongepowered.api.entity.EntityTypes;
-import org.spongepowered.api.entity.living.monster.Monster;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.Extent;
@@ -43,6 +39,7 @@ public class StunEffect extends ShapedEffectDecorator<Location<World>> {
 		setPrinterCount(1);
 		addEffectType(CommonEffectTypes.SILENCE);
 		addEffectType(CommonEffectTypes.STUN);
+		setStackable(false, null);
 	}
 
 

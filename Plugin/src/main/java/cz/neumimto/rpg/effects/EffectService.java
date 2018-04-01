@@ -27,8 +27,14 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Game;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 /**
  * Created by NeumimTo on 17.1.2015.
@@ -73,28 +79,6 @@ public class EffectService {
 	}
 
 
-	/**
-	 * Attempts to remove all references of given object from the scheduler
-	 * Wont call onRemove
-	 *
-	 * @param effect
-	 */
-	public void purgeEffect(IEffect effect) {
-		if (effect.requiresRegister()) {
-			try {
-				pendingRemovals.remove(effect);
-				pendingAdditions.remove(effect);
-				effectSet.remove(effect);
-				IEffectConsumer consumer = effect.getConsumer();
-				if (consumer != null) {
-					consumer.removeEffect(effect);
-				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
-	}
-
 	@PostProcess(priority = 1000)
 	public void run() {
 		game.getScheduler().createTaskBuilder().name("EffectTask")
@@ -123,9 +107,7 @@ public class EffectService {
 						}
 					}
 
-					for (IEffect pendingAddition : pendingAdditions) {
-						effectSet.add(pendingAddition);
-					}
+					effectSet.addAll(pendingAdditions);
 					pendingAdditions.clear();
 				}).submit(plugin);
 	}
@@ -155,15 +137,20 @@ public class EffectService {
 	 * @param consumer
 	 */
 	@SuppressWarnings("unchecked")
-	public void addEffect(IEffect iEffect, IEffectConsumer consumer, IEffectSourceProvider effectSourceProvider) {
-		IEffectContainer eff = consumer.getEffect(iEffect.getName());
+	public void addEffect(IEffect iEffect, IEffectConsumer consumer, IEffectSourceProvider effectSourceProvider) { IEffectContainer eff = consumer.getEffect(iEffect.getName());
 		if (eff == null) {
 			eff = iEffect.constructEffectContainer();
 			consumer.addEffect(eff);
 			iEffect.onApply();
 		} else if (eff.isStackable()) {
 			eff.stackEffect(iEffect, effectSourceProvider);
+		} else {
+			eff.forEach((Consumer<IEffect>) this::stopEffect); //there should be always only one
+			//on remove will be called one tick later.
+			eff.getEffects().add(iEffect);
+			iEffect.onApply();
 		}
+
 		iEffect.setEffectContainer(eff);
 		iEffect.setEffectSourceProvider(effectSourceProvider);
 		if (iEffect.requiresRegister())
@@ -201,6 +188,8 @@ public class EffectService {
 			if (container.getEffects().isEmpty()) {
 				consumer.removeEffect(container);
 			}
+		} else {
+
 		}
 		iEffect.setConsumer(null);
 	}
