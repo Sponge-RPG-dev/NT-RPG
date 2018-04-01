@@ -24,15 +24,30 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.*;
+import cz.neumimto.rpg.Arg;
+import cz.neumimto.rpg.Console;
+import cz.neumimto.rpg.GroupService;
+import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
-import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.effects.EffectParams;
+import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.effects.EffectSourceType;
+import cz.neumimto.rpg.effects.IEffectSource;
+import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.ItemLoreBuilderService;
 import cz.neumimto.rpg.inventory.data.NKeys;
-import cz.neumimto.rpg.inventory.data.manipulators.*;
+import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaHeader;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaTypeData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemRarityData;
+import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemGroupRequirementsData;
+import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemRequirementsData;
+import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.slotparsers.DefaultPlayerInvHandler;
 import cz.neumimto.rpg.inventory.slotparsers.PlayerInvHandler;
@@ -66,7 +81,15 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -558,15 +581,6 @@ public class InventoryService {
 
 	}
 
-	public Set<String> getItemRarityTypes() {
-		return new HashSet<>(Arrays.asList(Localization.RUNEWORD,
-				Localization.SOCKET,
-				Localization.RUNE,
-				Localization.CHARM,
-				Localization.SKILLBIND));
-
-	}
-
 	public ItemStack setItemLevel(ItemStack itemStack, int level) {
 		itemStack.offer(new ItemLevelData(level));
 		return updateLore(itemStack);
@@ -628,7 +642,7 @@ public class InventoryService {
 	public void createItemMetaSectionIfMissing(ItemStack itemStack) {
 		Optional<Text> text = itemStack.get(NKeys.ITEM_META_HEADER);
 		if (!text.isPresent()) {
-			itemStack.offer(new ItemTypeData(TextHelper.parse("&3Meta")));
+			itemStack.offer(new ItemMetaHeader(TextHelper.parse("&3Meta")));
 		}
 	}
 
@@ -640,8 +654,8 @@ public class InventoryService {
 	}
 
 	public void createItemMeta(ItemStack itemStack, Text meta) {
-		Optional<ItemTypeData> orCreate = itemStack.getOrCreate(ItemTypeData.class);
-		ItemTypeData data = orCreate.get();
+		Optional<ItemMetaHeader> orCreate = itemStack.getOrCreate(ItemMetaHeader.class);
+		ItemMetaHeader data = orCreate.get();
 		data.set(NKeys.ITEM_META_HEADER, meta);
 		itemStack.offer(data);
 	}
@@ -662,4 +676,11 @@ public class InventoryService {
 		data.set(NKeys.ITEM_PLAYER_ALLOWED_GROUPS, map);
 		itemStack.offer(data);
 	}
+
+	public void setItemMetaType(ItemStack itemStack, ItemMetaType metaType) {
+		ItemMetaTypeData orCreate = itemStack.getOrCreate(ItemMetaTypeData.class).orElse(new ItemMetaTypeData(metaType));
+		orCreate.set(NKeys.ITEM_META_TYPE, metaType);
+		itemStack.offer(orCreate);
+	}
+
 }

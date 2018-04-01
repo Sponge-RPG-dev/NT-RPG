@@ -1,5 +1,8 @@
 package cz.neumimto.rpg.inventory.slotparsers;
 
+import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.sockets.SocketType;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.CatalogType;
@@ -13,7 +16,7 @@ public abstract class PlayerInvHandler implements CatalogType {
     private final String id;
 
     public PlayerInvHandler(String name) {
-        this.id = name.toLowerCase();
+        this.id = "nt-rpg:" + name.toLowerCase();
         this.name = name;
     }
 
@@ -44,4 +47,13 @@ public abstract class PlayerInvHandler implements CatalogType {
     public abstract void onRightClick(IActiveCharacter character, int slot);
 
     public abstract void onLeftClick(IActiveCharacter character, int slot);
+
+
+    protected InventoryService inventoryService() {
+        return NtRpgPlugin.GlobalScope.inventorySerivce;
+    }
+
+    protected EffectService effectService() {
+        return NtRpgPlugin.GlobalScope.effectService;
+    }
 }

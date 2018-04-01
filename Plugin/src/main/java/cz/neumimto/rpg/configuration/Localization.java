@@ -359,6 +359,9 @@ public class Localization {
 	public static String ITEM_ATTRIBUTES_SECTIO = "&6Attributes";
 
 	@ConfigValue
+	public static String ITEM_META_TYPE_NAME = "&8Type: ";
+
+	@ConfigValue
 	public static Map<String, String> SOCKET_TYPES = new HashMap<String, String>() {{
 		put(SocketTypes.ANY.getId(), "&8Any");
 		put(SocketTypes.GEM.getId(), "&8Gem");
@@ -380,4 +383,5 @@ public class Localization {
 
 	@ConfigValue
 	public static String CANNOT_USE_ITEM_GENERIC = "&4You cannot use this item";
+
 }

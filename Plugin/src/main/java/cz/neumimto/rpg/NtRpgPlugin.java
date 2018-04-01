@@ -51,16 +51,20 @@ import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
 import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemAttributesData;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaHeader;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaTypeData;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemRarityData;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemSocketsData;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemStackUpgradeData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemTypeData;
 import cz.neumimto.rpg.inventory.data.manipulators.LoreDamageData;
 import cz.neumimto.rpg.inventory.data.manipulators.LoreDurabilityData;
 import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemGroupRequirementsData;
 import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemRequirementsData;
 import cz.neumimto.rpg.inventory.data.manipulators.SectionDelimiterData;
 import cz.neumimto.rpg.inventory.data.manipulators.SkillTreeNode;
+import cz.neumimto.rpg.inventory.items.ItemMetaType;
+import cz.neumimto.rpg.inventory.items.ItemMetaTypeRegistry;
+import cz.neumimto.rpg.inventory.items.ItemMetaTypes;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.inventory.slotparsers.DefaultPlayerInvHandler;
@@ -280,16 +284,16 @@ public class NtRpgPlugin {
 				.builder(new SkillTreeNode.Builder())
 				.buildAndRegister(plugin);
 
-		DataRegistration.<ItemTypeData, ItemTypeData.Immutable>builder()
+		DataRegistration.<ItemMetaHeader, ItemMetaHeader.Immutable>builder()
 				.manipulatorId("item_type_data")
 				.dataName("Item Type data")
-				.dataClass(ItemTypeData.class)
-				.immutableClass(ItemTypeData.Immutable.class)
-				.builder(new ItemTypeData.Builder())
+				.dataClass(ItemMetaHeader.class)
+				.immutableClass(ItemMetaHeader.Immutable.class)
+				.builder(new ItemMetaHeader.Builder())
 				.buildAndRegister(plugin);
 
 
-		DataRegistration.<ItemTypeData, ItemTypeData.Immutable>builder()
+		DataRegistration.<ItemMetaHeader, ItemMetaHeader.Immutable>builder()
 				.manipulatorId("item_minimal_group_requirements")
 				.dataName("Item group requirements")
 				.dataClass(MinimalItemGroupRequirementsData.class)
@@ -297,11 +301,20 @@ public class NtRpgPlugin {
 				.builder(new MinimalItemGroupRequirementsData.Builder())
 				.buildAndRegister(plugin);
 
+		DataRegistration.<ItemMetaHeader, ItemMetaHeader.Immutable>builder()
+				.manipulatorId("item_meta_type")
+				.dataName("Item meta type")
+				.dataClass(ItemMetaTypeData.class)
+				.immutableClass(ItemMetaTypeData.Immutable.class)
+				.builder(new ItemMetaTypeData.Builder())
+				.buildAndRegister(plugin);
+
 
 
 		Sponge.getRegistry().registerModule(SocketType.class, new SocketTypeRegistry());
 		Sponge.getRegistry().registerModule(ICharacterAttribute.class, new AttributeRegistry());
 		Sponge.getRegistry().registerModule(PlayerInvHandler.class, new PlayerInvHandlerRegistry());
+		Sponge.getRegistry().registerModule(ItemMetaType.class, new ItemMetaTypeRegistry());
 	}
 
 	@Listener
@@ -318,12 +331,17 @@ public class NtRpgPlugin {
 		event.getClasses().add(BaseCharacterAttribute.class);
 		event.getClasses().add(CharacterSkill.class);
 		event.getClasses().add(CharacterClass.class);
-
 	}
 
 	@Listener
 	public void postInit1(GameRegistryEvent.Register<PlayerInvHandler> event) {
-		event.register(IoC.get().build(DefaultPlayerInvHandler.class));
+		event.register(new DefaultPlayerInvHandler());
+	}
+
+	@Listener
+	public void postInit2(GameRegistryEvent.Register<ItemMetaType> event) {
+		event.register(ItemMetaTypes.CHARM);
+		event.register(ItemMetaTypes.RUNEWORD);
 	}
 
 	@Listener
@@ -617,6 +635,36 @@ public class NtRpgPlugin {
 					return CommandResult.success();
 				})
 				.build();
+		// ===========================================================
+		// ==================    ITEM type  ==================
+		// ===========================================================
+		CommandSpec mt = CommandSpec.builder()
+				.description(
+						TextSerializers
+								.FORMATTING_CODE
+								.deserialize(CommandLocalization.COMMAND_ADMIN_ITEM_TYPE))
+				.arguments(
+						GenericArguments.catalogedElement(Text.of("type"), ItemMetaType.class)
+				)
+				.executor((src, args) -> {
+					Player player = (Player) src;
+					Optional<ItemMetaType> type = args.getOne("type");
+					if (type.isPresent()) {
+						Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
+						if (itemInHand.isPresent()) {
+							ItemStack itemStack = itemInHand.get();
+							GlobalScope.inventorySerivce.createItemMetaSectionIfMissing(itemStack);
+							GlobalScope.inventorySerivce.setItemMetaType(itemStack, type.get());
+							GlobalScope.inventorySerivce.updateLore(itemStack);
+							player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
+							return CommandResult.builder().affectedItems(1).build();
+						}
+						src.sendMessage(Text.builder(Localization.NO_ITEM_IN_HAND).color(TextColors.RED).build());
+						return CommandResult.empty();
+					}
+					return CommandResult.empty();
+				})
+				.build();
 
 		// ===========================================================
 		// ==================    ITEM restrictions  ==================
@@ -800,6 +848,7 @@ public class NtRpgPlugin {
 				.child(rarity, "rarity", "rrty")
 				.child(meta, "itemmeta", "imeta","imt")
 				.child(rst, "grouprequirements","gr")
+				.child(mt, "itemType", "it", "type")
 				.build();
 
 		Sponge.getCommandManager().register(this, adminRoot, "nadmin", "na");

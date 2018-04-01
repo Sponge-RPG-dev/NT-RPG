@@ -728,7 +728,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Weapon getOffHand() {
+	public HotbarObject getOffHand() {
 		return offHand;
 	}
 

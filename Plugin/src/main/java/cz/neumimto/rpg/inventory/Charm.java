@@ -10,7 +10,6 @@ import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.item.inventory.ItemStack;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -18,18 +17,9 @@ import java.util.Map;
  */
 public class Charm extends HotbarObject {
 
-
-	private Map<ItemRestriction, Object> restrictionSet = new HashMap<>();
-
-
 	public Charm(ItemStack itemStack) {
 		super(itemStack);
 		type = HotbarObjectTypes.CHARM;
-	}
-
-
-	public Map<ItemRestriction, Object> getRestrictions() {
-		return restrictionSet;
 	}
 
 	@Override

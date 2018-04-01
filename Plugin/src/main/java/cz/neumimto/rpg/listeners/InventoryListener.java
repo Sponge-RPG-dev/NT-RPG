@@ -25,6 +25,7 @@ import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.CannotUseItemReson;
 import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Game;
@@ -39,6 +40,7 @@ import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
 import org.spongepowered.api.event.item.inventory.InteractItemEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
@@ -106,12 +108,29 @@ public class InventoryListener {
 		Hotbar hotbar = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
 		for (SlotTransaction slotTransaction : event.getTransactions()) {
 			Slot i = slotTransaction.getSlot();
-			if (hotbar.containsInventory(i)) {
+			if (hotbar.containsInventory(i) && shouldProceedInitialization(slotTransaction.getFinal())) {
+
 				inventoryService.initializeHotbar(character);
 			}
 		}
 	}
 
+
+	private boolean shouldProceedInitialization(ItemStackSnapshot itemStackSnapshot) {
+		if (itemStackSnapshot.get(NKeys.ITEM_META_HEADER).isPresent()) {
+			return true;
+		}
+		if (itemStackSnapshot.get(NKeys.ITEM_EFFECTS).isPresent()) {
+			return true;
+		}
+		if (itemStackSnapshot.get(NKeys.ITEM_ATTRIBUTE_BONUS).isPresent()) {
+			return true;
+		}
+		if (itemStackSnapshot.get(NKeys.ITEM_PLAYER_ALLOWED_GROUPS).isPresent()) {
+			return true;
+		}
+		return false;
+	}
 
     @Listener
     public void onItemDrop(DropItemEvent event, @Root Entity entity) {

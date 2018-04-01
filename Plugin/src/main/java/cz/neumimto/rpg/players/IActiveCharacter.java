@@ -174,7 +174,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setMainHand(Weapon mainHand);
 
-	Weapon getOffHand();
+	HotbarObject getOffHand();
 
 	void setOffHand(Weapon offHand);
 

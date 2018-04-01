@@ -93,6 +93,9 @@ import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.data.NKeys;
+import cz.neumimto.rpg.inventory.items.ItemMetaType;
+import cz.neumimto.rpg.inventory.items.ItemMetaTypes;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.item.EnchantmentData;
@@ -287,17 +290,8 @@ public class ItemStackUtils {
 	}
 
 	public static boolean isCharm(ItemStack is) {
-		Optional<List<Text>> texts = is.get(Keys.ITEM_LORE);
-		if (texts.isPresent()) {
-			List<Text> texts1 = texts.get();
-			if (texts1.size() > 1) {
-				String s = texts1.get(1).toPlain();
-				if (s.equalsIgnoreCase(Localization.CHARM)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		Optional<ItemMetaType> itemMetaType = is.get(NKeys.ITEM_META_TYPE);
+		return itemMetaType.map(itemMetaType1 -> itemMetaType1.getId().equalsIgnoreCase(ItemMetaTypes.CHARM.getId())).orElse(false);
 	}
 
 	public static void dropItem(Player p, ItemStack itemStack) {

@@ -560,7 +560,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Weapon getOffHand() {
+	public HotbarObject getOffHand() {
 		return Weapon.EmptyHand;
 	}
 

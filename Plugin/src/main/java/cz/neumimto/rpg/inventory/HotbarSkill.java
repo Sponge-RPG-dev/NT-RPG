@@ -10,7 +10,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 /**
  * Created by NeumimTo on 31.12.2015.
  */
-public class HotbarSkill extends HotbarObject {
+public class HotbarSkill extends Weapon {
 	ISkill right_skill;
 	ISkill left_skill;
 
