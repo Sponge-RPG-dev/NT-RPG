@@ -90,12 +90,12 @@ public class SkillData {
 		this.maxSkillLevel = maxSkillLevel;
 	}
 	
-	public int getLevelGap() {
+	public int getlevelGap() {
 		return levelGap;
 	}
 	
-	public void setLevelGap(int LevelGap) {
-		this.LevelGap = LevelGap;
+	public void setlevelGap(int levelGap) {
+		this.levelGap = levelGap;
 	}
 
 	public Set<SkillData> getSoftDepends() {
