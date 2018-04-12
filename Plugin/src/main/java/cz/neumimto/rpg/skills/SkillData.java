@@ -32,6 +32,7 @@ public class SkillData {
 	private SkillSettings skillSettings;
 	private int minPlayerLevel;
 	private int maxSkillLevel;
+	private int levelGap;
 	private Set<SkillData> softDepends = new HashSet<>();
 	private Set<SkillData> hardDepends = new HashSet<>();
 	private Set<SkillData> conflicts = new HashSet<>();
@@ -87,6 +88,14 @@ public class SkillData {
 
 	public void setMaxSkillLevel(int maxSkillLevel) {
 		this.maxSkillLevel = maxSkillLevel;
+	}
+	
+	public int getLevelGap() {
+		return levelGap;
+	}
+	
+	public void setLevelGap(int LevelGap) {
+		this.LevelGap = LevelGap;
 	}
 
 	public Set<SkillData> getSoftDepends() {
