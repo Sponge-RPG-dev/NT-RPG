@@ -23,7 +23,6 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.CannotUseItemReson;
-import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.players.CharacterService;
@@ -130,10 +129,7 @@ public class InventoryListener {
 		if (itemStackSnapshot.get(NKeys.ITEM_ATTRIBUTE_BONUS).isPresent()) {
 			return true;
 		}
-		if (itemStackSnapshot.get(NKeys.ITEM_PLAYER_ALLOWED_GROUPS).isPresent()) {
-			return true;
-		}
-		return false;
+		return itemStackSnapshot.get(NKeys.ITEM_PLAYER_ALLOWED_GROUPS).isPresent();
 	}
 
     @Listener

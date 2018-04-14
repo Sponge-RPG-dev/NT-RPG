@@ -1,24 +1,29 @@
 package cz.neumimto.rpg.inventory.slotparsers;
 
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.inventory.Armor;
 import cz.neumimto.rpg.inventory.CannotUseItemReson;
-import cz.neumimto.rpg.inventory.HotbarObject;
-import cz.neumimto.rpg.inventory.HotbarObjectTypes;
 import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.ItemStackUtils;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.type.HandTypes;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypes;
+import org.spongepowered.api.item.inventory.property.SlotIndex;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -31,6 +36,31 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
     public DefaultPlayerInvHandler() {
         super("slot_order");
     }
+
+
+    @Listener
+    public void onInventoryEquip(ClickInventoryEvent event)
+
+    @Override
+    public void initHandler() {
+        Sponge.getEventManager().registerListeners(NtRpgPlugin.GlobalScope.plugin, this);
+    }
+
+    @Override
+    public void initializeCharacterInventory(IActiveCharacter character) {
+        List<Integer> inventoryEquipQueue = character.getCharacterBase().getInventoryEquipSlotOrder();
+        inventoryEquipQueue.stream().forEach(index -> {
+            Slot query = character.getPlayer().getInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(index)));
+            if (checkForSlot(character, query)) {
+                initializeItemStack(character, query);
+            }
+        });
+
+        character.getPlayer().getInventory().slots().forEach(slot -> {
+            slot.getInventoryProperty(SlotIndex.class).get().getValue();
+        });
+    }
+
 
     @Override
     public void initializeHotbar(IActiveCharacter character) {

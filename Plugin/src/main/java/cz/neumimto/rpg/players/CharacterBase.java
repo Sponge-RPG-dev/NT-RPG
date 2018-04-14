@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.TimestampEntity;
+import cz.neumimto.rpg.persistance.converters.IntList;
 import cz.neumimto.rpg.persistance.converters.MapSL2Json;
 import cz.neumimto.rpg.persistance.converters.UUID2String;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
@@ -99,6 +100,9 @@ public class CharacterBase extends TimestampEntity {
 
 	@Transient
 	private Map<String, Integer> cachedAttributes = new HashMap<>();
+
+	@Convert(converter = IntList.class)
+	private List<Integer> inventoryEquipSlotOrder = new ArrayList();
 
 	private Integer X;
 
@@ -305,6 +309,13 @@ public class CharacterBase extends TimestampEntity {
 		return null;
 	}
 
+	public List<Integer> getInventoryEquipSlotOrder() {
+		return inventoryEquipSlotOrder;
+	}
+
+	public void setInventoryEquipSlotOrder(List<Integer> inventoryEquipSlotOrder) {
+		this.inventoryEquipSlotOrder = inventoryEquipSlotOrder;
+	}
 
 	public MessageType getMessageType() {
 		return messageType;
@@ -321,4 +332,5 @@ public class CharacterBase extends TimestampEntity {
 	public void setHealthScale(Double healthScale) {
 		this.healthScale = healthScale;
 	}
+
 }

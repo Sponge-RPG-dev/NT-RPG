@@ -19,7 +19,6 @@
 package cz.neumimto.rpg.events.character;
 
 import cz.neumimto.rpg.events.CancellableEvent;
-import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
 
