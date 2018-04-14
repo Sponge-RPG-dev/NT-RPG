@@ -215,4 +215,8 @@ public class PluginConfig {
 	public static List<Integer> ACCESSORIES_SLOTS = new ArrayList<Integer>() {{
 		add(10); //todo
 	}};
+
+	@ConfigValue
+	@Comment(content = "Player may put standard item into accessory slot")
+	public static boolean ACCESSORIES_BLOCK_JUNK_ITEMS = true;
 }
