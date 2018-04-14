@@ -8,10 +8,8 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
-import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
-import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 
@@ -51,32 +49,6 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
         character.getPlayer().getInventory().slots().forEach(slot -> {
             slot.getInventoryProperty(SlotIndex.class).get().getValue();
         });
-    }
-
-
-    @Override
-    public void initializeHotbar(IActiveCharacter character) {
-        Hotbar hotbar = character.getPlayer().getInventory().query(Hotbar.class);
-        int slot = 0;
-        for (Inventory inventory : hotbar) {
-            initializeHotbar(character, slot, (Slot) inventory, hotbar);
-            slot++;
-        }
-    }
-
-    protected void initializeSecondHand(IActiveCharacter character) {
-        HotbarObject offHand = character.getOffHand();
-        if (offHand != null) {
-            offHand.onUnEquip(character);
-        }
-        Optional<ItemStack> itemInHand = character.getPlayer().getItemInHand(HandTypes.OFF_HAND);
-        if (itemInHand.isPresent()) {
-            ItemStack itemStack = itemInHand.get();
-            HotbarObject hotbarObject = inventoryService().getHotbarObject(character, itemStack);
-            if (hotbarObject != null) {
-
-            }
-        }
     }
 
 
