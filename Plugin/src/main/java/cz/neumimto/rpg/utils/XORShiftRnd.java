@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.utils;
 
-
+//todo move this to ntcore
 public class XORShiftRnd {
 
 	private long l;

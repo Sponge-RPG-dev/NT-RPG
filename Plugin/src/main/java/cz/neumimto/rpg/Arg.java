@@ -5,7 +5,7 @@ import java.util.Map;
 
 /**
  * Created by NeumimTo on 16.12.2017.
- */
+ *///todo move this to ntcore
 public class Arg {
         private Map<String, Object> map = new HashMap<>();
 
