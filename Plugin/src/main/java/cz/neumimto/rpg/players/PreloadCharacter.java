@@ -22,7 +22,6 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.inventory.Armor;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.players.groups.ConfigClass;
@@ -47,7 +46,13 @@ import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatType;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by NeumimTo on 23.7.2015.
@@ -115,16 +120,6 @@ public class PreloadCharacter implements IActiveCharacter {
 
 	@Override
 	public void setInvulnerable(boolean b) {
-
-	}
-
-	@Override
-	public HotbarObject[] getHotbar() {
-		return objects;
-	}
-
-	@Override
-	public void setHotbarSlot(int i, HotbarObject o) {
 
 	}
 
@@ -550,11 +545,6 @@ public class PreloadCharacter implements IActiveCharacter {
 	@Override
 	public void setMainHand(Weapon mainHand) {
 
-	}
-
-	@Override
-	public HotbarObject getOffHand() {
-		return Weapon.EmptyHand;
 	}
 
 	@Override

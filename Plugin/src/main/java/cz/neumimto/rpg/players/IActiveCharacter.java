@@ -20,9 +20,7 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.IEntityType;
-import cz.neumimto.rpg.inventory.Armor;
 import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
@@ -169,14 +167,6 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setPendingPartyInvite(Party party);
 
-	Weapon getMainHand();
-
-	void setMainHand(Weapon mainHand);
-
-	HotbarObject getOffHand();
-
-	void setOffHand(Weapon offHand);
-
 	boolean canUse(RPGItemType weaponItemType);
 
 	double getWeaponDamage();
@@ -198,10 +188,6 @@ public interface IActiveCharacter extends IEntity<Player> {
 	boolean isInvulnerable();
 
 	void setInvulnerable(boolean b);
-
-	HotbarObject[] getHotbar();
-
-	void setHotbarSlot(int i, HotbarObject o);
 
 	default boolean isSocketing() {
 		return getCurrentRune() > 0;
