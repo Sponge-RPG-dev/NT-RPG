@@ -1,10 +1,12 @@
 package cz.neumimto.rpg.inventory.slotparsers;
 
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.CannotUseItemReson;
+import cz.neumimto.rpg.inventory.CustomItem;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.sockets.SocketType;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -88,6 +90,12 @@ public abstract class PlayerInvHandler implements CatalogType {
         if (o == null || getClass() != o.getClass()) return false;
         SocketType that = (SocketType) o;
         return getId().equals(that.getId());
+    }
+
+    public boolean onMainInventoryInteract(IActiveCharacter character, int slot) {
+        if (PluginConfig.ACCESSORIES_SLOTS.contains(slot)) {
+            CustomItem customItem = character.getAccessory(slot);
+        }
     }
 
     public abstract void onRightClick(IActiveCharacter character, int slot);

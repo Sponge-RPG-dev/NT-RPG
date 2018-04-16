@@ -4,12 +4,11 @@ import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -22,10 +21,6 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
     public DefaultPlayerInvHandler() {
         super("slot_order");
     }
-
-
-    @Listener
-    public void onInventoryEquip(ClickInventoryEvent event)
 
     @Override
     public void initHandler() {
@@ -48,6 +43,7 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
     }
 
 
+
     @Override
     public void onRightClick(IActiveCharacter character, int slot) {
 
@@ -58,4 +54,17 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
 
     }
 
+    protected void updateEquipOrder(IActiveCharacter character, int curent) {
+        List<Integer> inventoryEquipSlotOrder = character.getCharacterBase().getInventoryEquipSlotOrder();
+        Iterator<Integer> iterator = inventoryEquipSlotOrder.iterator();
+        while (iterator.hasNext()) {
+            Integer next = iterator.next();
+            if (next.equals(curent)) {
+                iterator.remove();
+                break;
+            }
+        }
+        inventoryEquipSlotOrder.add(curent);
+        //save or no?
+    }
 }
