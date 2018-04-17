@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.inventory;
+package cz.neumimto.rpg.inventory.items.types;
 
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.EffectParams;
@@ -24,7 +24,6 @@ public class CustomItem implements IEffectSourceProvider{
 	protected Map<IGlobalEffect, EffectParams> effects = new HashMap<>();
 	protected ItemStackSnapshot itemStack;
 	private final IEffectSource effectSource;
-	private ItemMetaType itemMetaType;
 
 	public int getSlot() {
 		return slot;
