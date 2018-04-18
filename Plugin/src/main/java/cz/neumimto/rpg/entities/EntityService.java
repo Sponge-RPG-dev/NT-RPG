@@ -136,7 +136,7 @@ public class EntityService {
 		}
 		SkillHealEvent event = null;
 		if (entity.getHealth().getValue() + healedamount > entity.getHealth().getMaxValue()) {
-			healedamount = (float) (entity.getHealth().getMaxValue() - (entity.getHealth().getValue() + healedamount));
+			healedamount = (float) ((entity.getHealth().getValue() + healedamount) - entity.getHealth().getMaxValue());
 		}
 		event = new SkillHealEvent(entity, healedamount, skill);
 		Sponge.getGame().getEventManager().post(event);
