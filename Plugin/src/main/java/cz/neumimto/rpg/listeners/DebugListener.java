@@ -17,6 +17,7 @@
  */
 package cz.neumimto.rpg.listeners;
 
+import cz.neumimto.rpg.TextHelper;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
@@ -26,7 +27,15 @@ import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource
 import org.spongepowered.api.event.cause.entity.damage.source.IndirectEntityDamageSource;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.event.filter.cause.Root;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
+import org.spongepowered.api.event.network.ClientConnectionEvent;
+import org.spongepowered.api.item.inventory.property.SlotIndex;
+import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.text.Text;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by NeumimTo on 22.12.2015.
@@ -40,10 +49,10 @@ public class DebugListener {
 
 		Entity source = entityDamageSource.getSource();
 		if (source.getType() == EntityTypes.PLAYER) {
-			((Player) source).sendMessage(Text.of(">> " + event.getFinalDamage()));
+			((Player) source).sendMessage(Text.of("[Debug] >> " + event.getFinalDamage()));
 		}
 		if (targetEntity.getType() == EntityTypes.PLAYER) {
-			((Player) targetEntity).sendMessage(Text.of("<< " + event.getFinalDamage()));
+			((Player) targetEntity).sendMessage(Text.of("[Debug] << " + event.getFinalDamage()));
 		}
 	}
 
@@ -53,10 +62,26 @@ public class DebugListener {
 
 		Entity source = entityDamageSource.getIndirectSource();
 		if (source.getType() == EntityTypes.PLAYER) {
-			((Player) source).sendMessage(Text.of(">> " + event.getFinalDamage()));
+			((Player) source).sendMessage(Text.of("[Debug] >> " + event.getFinalDamage()));
 		}
 		if (targetEntity.getType() == EntityTypes.PLAYER) {
-			((Player) targetEntity).sendMessage(Text.of("<< " + event.getFinalDamage()));
+			((Player) targetEntity).sendMessage(Text.of("[Debug] << " + event.getFinalDamage()));
+		}
+	}
+
+	@Listener(order = Order.LAST)
+	public void onPlayerJoin(ClientConnectionEvent.Join event) {
+		event.getTargetEntity().sendMessage(TextHelper.parse("&4-=====================-"));
+		event.getTargetEntity().sendMessage(TextHelper.parse("&a Debug logging Enabled-"));
+		event.getTargetEntity().sendMessage(TextHelper.parse("&4-=====================-"));
+	}
+
+	@Listener(order = Order.LAST)
+	public void onClick(ClickInventoryEvent event, @Root Player player) {
+		List<SlotTransaction> transactions = event.getTransactions();
+		for (SlotTransaction transaction : transactions) {
+			Optional<SlotIndex> inventoryProperty = transaction.getSlot().getInventoryProperty(SlotIndex.class);
+			inventoryProperty.ifPresent(slotIndex -> player.sendMessage(TextHelper.parse("[Debug] Clicked slot index:" + slotIndex.getValue())));
 		}
 	}
 }
