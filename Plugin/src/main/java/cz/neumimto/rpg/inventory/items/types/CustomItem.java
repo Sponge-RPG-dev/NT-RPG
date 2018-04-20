@@ -44,7 +44,6 @@ public class CustomItem implements IEffectSourceProvider{
 			this.effects = NtRpgPlugin.GlobalScope.inventorySerivce.getItemEffects(itemStack);
 			this.level = NtRpgPlugin.GlobalScope.inventorySerivce.getItemLevel(itemStack);
 		}
-
 	}
 
 	public int getLevel() {

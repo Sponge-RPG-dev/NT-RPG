@@ -204,7 +204,7 @@ public class PluginConfig {
 	}};
 
 	@ConfigValue
-	public static String EQUIPED_SLOT_RESOLVE_SRATEGY = "nt-rpg:slot_order";
+	public static String EQUIPED_SLOT_RESOLVE_SRATEGY = "nt-rpg:persisted_slot_order";
 
 	@ConfigValue
 	@Comment(content = "1 - Drops item out of player inventory, 2 - Drops items only from hotbar, 3 - Only warning")

@@ -53,9 +53,7 @@ public abstract class PlayerInvHandler implements CatalogType {
 
     protected boolean checkForSlot(IActiveCharacter character, Slot slot) {
         Optional<ItemStack> peek = slot.peek();
-        if (peek.isPresent())
-            return checkForItem(character, peek.get());
-        return false;
+        return peek.filter(itemStack -> checkForItem(character, itemStack)).isPresent();
     }
 
     protected boolean checkForItem(IActiveCharacter character, ItemStack itemStack) {

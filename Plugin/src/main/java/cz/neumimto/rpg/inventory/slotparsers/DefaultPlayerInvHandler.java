@@ -19,7 +19,7 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
     
     
     public DefaultPlayerInvHandler() {
-        super("slot_order");
+        super("persisted_slot_order");
     }
 
     @Override
