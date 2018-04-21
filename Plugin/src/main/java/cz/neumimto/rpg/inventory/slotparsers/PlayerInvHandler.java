@@ -8,11 +8,10 @@ import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.CannotUseItemReson;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
-import cz.neumimto.rpg.inventory.sockets.SocketType;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.CatalogType;
+import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.Slot;
 
 import java.util.Map;
 import java.util.Optional;
@@ -51,7 +50,7 @@ public abstract class PlayerInvHandler implements CatalogType {
     public abstract void initializeCharacterInventory(IActiveCharacter character);
 
 
-    protected boolean checkForSlot(IActiveCharacter character, Slot slot) {
+    protected boolean checkForSlot(IActiveCharacter character, Inventory slot) {
         Optional<ItemStack> peek = slot.peek();
         return peek.filter(itemStack -> checkForItem(character, itemStack)).isPresent();
     }
@@ -61,14 +60,12 @@ public abstract class PlayerInvHandler implements CatalogType {
         return cannotUseItemReson == CannotUseItemReson.OK;
     }
 
-    protected void initializeItemStack(IActiveCharacter character, Slot query) {
+    protected void initializeItemStack(IActiveCharacter character, Inventory query) {
         Map<IGlobalEffect, EffectParams> itemEffects = inventoryService().getItemEffects(query.peek().get());
         effectService().applyGlobalEffectsAsEnchantments(itemEffects, character, null); //todo
     }
 
     public abstract void initializeHotbar(IActiveCharacter character);
-
-    public abstract void initializeArmor(IActiveCharacter character);
 
     public abstract void changeActiveHotbarSlot(IActiveCharacter character, int slot);
 
@@ -82,17 +79,12 @@ public abstract class PlayerInvHandler implements CatalogType {
         return id;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SocketType that = (SocketType) o;
-        return getId().equals(that.getId());
-    }
-
     public boolean onMainInventoryInteract(IActiveCharacter character, int slot) {
         if (PluginConfig.ACCESSORIES_SLOTS.contains(slot)) {
-            CustomItem customItem = character.getAccessory(slot);
+            CustomItem customItem = character.getEquipedInventorySlots().get(slot);
+            if (customItem == null) {
+
+            }
         }
     }
 

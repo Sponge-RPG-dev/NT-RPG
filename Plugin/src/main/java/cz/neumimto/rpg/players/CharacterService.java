@@ -1001,10 +1001,10 @@ public class CharacterService {
             return 1;
         }*/
 
-		Weapon armor1 = character.getEquipedArmor().get(type);
+		Weapon armor1 = character.getEquipedInventorySlots().get(type);
 		if (armor1 != null) {
 			armor1.getEffects().keySet().forEach(g -> effectService.removeEffect(g.getName(), character, armor));
-			character.getEquipedArmor().remove(type);
+			character.getEquipedInventorySlots().remove(type);
 		}
 		if (armor != null) {
 			effectService.applyGlobalEffectsAsEnchantments(armor.getEffects(), character, armor);

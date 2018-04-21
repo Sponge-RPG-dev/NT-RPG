@@ -23,7 +23,7 @@ import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.Weapon;
+import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
@@ -42,17 +42,10 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatType;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 23.7.2015.
@@ -60,7 +53,6 @@ import java.util.UUID;
 public class PreloadCharacter implements IActiveCharacter {
 
 	static float[] characterProperties = new float[PropertyService.LAST_ID];
-	private static HotbarObject[] objects = new HotbarObject[9];
 	IReservable mana = new Mana(this);
 	UUID uuid;
 	Health health = new HealthStub(this);
@@ -76,21 +68,6 @@ public class PreloadCharacter implements IActiveCharacter {
 	@Override
 	public boolean isFriendlyTo(IActiveCharacter character) {
 		return false;
-	}
-
-	@Override
-	public boolean isSocketing() {
-		return false;
-	}
-
-	@Override
-	public int getCurrentRune() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void setCurrentRune(int is) {
-
 	}
 
 	@Override
@@ -124,7 +101,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Map<EquipmentType, Armor> getEquipedArmor() {
+	public Map<Integer, CustomItem> getEquipedInventorySlots() {
 		return Collections.emptyMap();
 	}
 
@@ -538,21 +515,6 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Weapon getMainHand() {
-		return Weapon.EmptyHand;
-	}
-
-	@Override
-	public void setMainHand(Weapon mainHand) {
-
-	}
-
-	@Override
-	public void setOffHand(Weapon offHand) {
-
-	}
-
-	@Override
 	public boolean isUsingGuiMod() {
 		return isusinggui;
 	}
@@ -582,15 +544,6 @@ public class PreloadCharacter implements IActiveCharacter {
 		return getPlayer();
 	}
 
-	@Override
-	public void setOpenInventory(boolean b) {
-
-	}
-
-	@Override
-	public boolean hasOpenInventory() {
-		return false;
-	}
 
 	@Override
 	public MessageType getPreferedMessageType() {
@@ -617,10 +570,6 @@ public class PreloadCharacter implements IActiveCharacter {
 
 	}
 
-	@Override
-	public void updateSelectedHotbarSlot() {
-
-	}
 
 	@Override
 	public boolean isDetached() {
@@ -653,12 +602,8 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public boolean[] getDenyHotbarSlotInteractions() {
-		return new boolean[0];
+	public Set<Integer> getSlotsCannotBeEquiped() {
+		return Collections.emptySet();
 	}
 
-	@Override
-	public void setDenyHotbarSlotInteractions(boolean[] arr) {
-
-	}
 }

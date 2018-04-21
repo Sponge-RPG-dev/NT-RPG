@@ -25,7 +25,7 @@ import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.Weapon;
+import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
@@ -39,8 +39,6 @@ import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.inventory.entity.Hotbar;
-import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatType;
 
@@ -54,41 +52,51 @@ import java.util.stream.Collectors;
  */
 
 public class ActiveCharacter implements IActiveCharacter {
+
+	private transient Player pl;
+	private CharacterBase base;
+
 	private transient float[] characterProperties;
 	private transient float[] characterPropertiesLevel;
+
 	private transient boolean invulnerable;
+	private transient boolean silenced = false;
+	private transient boolean isusingguimod;
+
 	private IReservable mana = new Mana(this);
 	private IReservable health = new Health(this);
-	private transient Player pl;
+
+	private Race race = Race.Default;
+	private Guild guild;
+
+	private transient Party party;
+
 	private transient Map<String, IEffectContainer<Object, IEffect<Object>>> effects = new HashMap<>();
+	private Map<String, ExtendedSkillInfo> skills = new HashMap<>();
+	private transient Set<ExtendedNClass> classes = new HashSet<>();
+
+	private transient ExtendedNClass primary;
+
 	private transient Click click = new Click();
 	private transient Set<RPGItemType> allowedArmorIds = new HashSet<>();
 	private transient Map<ItemType, RPGItemWrapper> allowedWeapons = new HashMap<>();
 	private transient Map<EntityType, Double> projectileDamage = new HashMap<>();
-	private transient Party party;
-	private Map<String, ExtendedSkillInfo> skills = new HashMap<>();
-	private Race race = Race.Default;
-	private Guild guild;
-	private transient Set<ExtendedNClass> classes = new HashSet<>();
-	private transient ExtendedNClass primary;
-	private transient Weapon mainHand = Weapon.EmptyHand;
-	private transient Weapon offHand = Weapon.EmptyHand;
-	private CharacterBase base;
-	private transient boolean silenced = false;
-	private transient boolean isusingguimod;
+
+
 	private transient WeakReference<Party> pendingPartyInvite = new WeakReference<Party>(null);
 	private transient double weaponDamage;
 	private transient double armorvalue;
+
 	private transient DamageType preferedDamageType = null;
-	private transient int socketing;
 	private transient Map<String, Integer> transientAttributes = new HashMap<>();
-	private transient boolean openedinv = false;
+
 	private transient List<Integer> slotsToReinitialize;
-	private transient Map<EquipmentType, Armor> equipedArmor;
-	private transient int selected;
-	private transient Map<String, SkillTreeViewModel> skillTreeViewLocation;
+	private transient Map<Integer, CustomItem> equipedArmor;
+	private Set<Integer> denySlotInteractionArr;
+
 	private Set<SkillTreeSpecialization> specs = new HashSet<>();
-	private boolean[] denySlotInteractionArr;
+
+	private transient Map<String, SkillTreeViewModel> skillTreeViewLocation;
 
 	public ActiveCharacter(Player pl, CharacterBase base) {
 		this.pl = pl;
@@ -102,19 +110,8 @@ public class ActiveCharacter implements IActiveCharacter {
 		classes.add(cl);
 		slotsToReinitialize = new ArrayList<>();
 		skillTreeViewLocation = new HashMap<>();
-		denySlotInteractionArr = new boolean[9];
+		denySlotInteractionArr = new HashSet<>();
 	}
-
-	@Override
-	public int getCurrentRune() {
-		return socketing;
-	}
-
-	@Override
-	public void setCurrentRune(int is) {
-		socketing = is;
-	}
-
 
 	public boolean isSilenced() {
 		return silenced;
@@ -250,7 +247,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Map<EquipmentType, CustomItem> getEquipedArmor() {
+	public Map<Integer, CustomItem> getEquipedInventorySlots() {
 		return equipedArmor;
 	}
 
@@ -695,16 +692,6 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public void setOpenInventory(boolean b) {
-		this.openedinv = b;
-	}
-
-	@Override
-	public boolean hasOpenInventory() {
-		return openedinv;
-	}
-
-	@Override
 	public MessageType getPreferedMessageType() {
 		return getCharacterBase().getMessageType();
 	}
@@ -732,17 +719,6 @@ public class ActiveCharacter implements IActiveCharacter {
 	@Override
 	public void setSlotsToReinitialize(List<Integer> slotsToReinitialize) {
 		this.slotsToReinitialize = slotsToReinitialize;
-	}
-
-	@Override
-	public int getSelectedHotbarSlot() {
-		return selected;
-	}
-
-	@Override
-	public void updateSelectedHotbarSlot() {
-		Hotbar hotbar = getPlayer().getInventory().query(Hotbar.class);
-		selected = hotbar.getSelectedSlotIndex();
 	}
 
 	@Override
@@ -794,13 +770,8 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public boolean[] getDenyHotbarSlotInteractions() {
+	public Set<Integer> getSlotsCannotBeEquiped() {
 		return denySlotInteractionArr;
-	}
-
-	@Override
-	public void setDenyHotbarSlotInteractions(boolean[] arr) {
-		this.denySlotInteractionArr = arr;
 	}
 
 	@Override

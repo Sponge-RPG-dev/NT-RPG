@@ -35,7 +35,6 @@ import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 
 import java.util.List;
 import java.util.Map;
@@ -76,7 +75,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setHealth(IReservable health);
 
-	Map<EquipmentType, CustomItem> getEquipedArmor();
+	Map<Integer, CustomItem> getEquipedInventorySlots();
 
 	double getExperiencs();
 
@@ -190,14 +189,6 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setInvulnerable(boolean b);
 
-	default boolean isSocketing() {
-		return getCurrentRune() > 0;
-	}
-
-	int getCurrentRune();
-
-	void setCurrentRune(int slot);
-
 	@Override
 	double getHp();
 
@@ -212,7 +203,6 @@ public interface IActiveCharacter extends IEntity<Player> {
 	@Override
 	Player getEntity();
 
-
 	@Override
 	void sendMessage(String message);
 
@@ -221,10 +211,6 @@ public interface IActiveCharacter extends IEntity<Player> {
 	void setCharacterLevelProperties(float[] arr);
 
 	Map<String, Integer> getTransientAttributes();
-
-	void setOpenInventory(boolean b);
-
-	boolean hasOpenInventory();
 
 	MessageType getPreferedMessageType();
 
@@ -236,11 +222,6 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setSlotsToReinitialize(List<Integer> slotsToReinitialize);
 
-	default int getSelectedHotbarSlot() {
-		return -1;
-	}
-
-	void updateSelectedHotbarSlot();
 
 	Map<String, SkillTreeViewModel> getSkillTreeViewLocation();
 
@@ -252,7 +233,6 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	boolean hasSkillTreeSpecialization(SkillTreeSpecialization specialization);
 
-	boolean[] getDenyHotbarSlotInteractions();
+	Set<Integer> getSlotsCannotBeEquiped();
 
-	void setDenyHotbarSlotInteractions(boolean[] arr);
 }

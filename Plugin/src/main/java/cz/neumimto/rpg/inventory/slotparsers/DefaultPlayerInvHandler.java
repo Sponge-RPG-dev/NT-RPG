@@ -2,8 +2,10 @@ package cz.neumimto.rpg.inventory.slotparsers;
 
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
@@ -36,10 +38,25 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
                 initializeItemStack(character, query);
             }
         });
+        character.getSlotsCannotBeEquiped().clear();
 
-        character.getPlayer().getInventory().slots().forEach(slot -> {
-            slot.getInventoryProperty(SlotIndex.class).get().getValue();
-        });
+        Iterator<Integer> iterator = character.getCharacterBase().getInventoryEquipSlotOrder().iterator();
+
+        Integer slot = null;
+        while (iterator.hasNext()) {
+            slot = iterator.next();
+            if (!PluginConfig.ACCESSORIES_SLOTS.contains(slot)) {
+                iterator.remove();
+                continue;
+            }
+            Inventory query = character.getPlayer().getInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(slot)));
+            if (checkForSlot(character, query)) {
+                initializeItemStack(character, query);
+                updateEquipOrder(character, slot);
+            } else {
+                character.getSlotsCannotBeEquiped().add(slot);
+            }
+        }
     }
 
 
@@ -65,6 +82,5 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
             }
         }
         inventoryEquipSlotOrder.add(curent);
-        //save or no?
     }
 }
