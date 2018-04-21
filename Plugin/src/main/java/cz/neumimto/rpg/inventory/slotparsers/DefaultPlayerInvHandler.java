@@ -32,12 +32,13 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
     @Override
     public void initializeCharacterInventory(IActiveCharacter character) {
         List<Integer> inventoryEquipQueue = character.getCharacterBase().getInventoryEquipSlotOrder();
-        inventoryEquipQueue.stream().forEach(index -> {
+        inventoryEquipQueue.forEach(index -> {
             Slot query = character.getPlayer().getInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(index)));
             if (checkForSlot(character, query)) {
                 initializeItemStack(character, query);
             }
         });
+
         character.getSlotsCannotBeEquiped().clear();
 
         Iterator<Integer> iterator = character.getCharacterBase().getInventoryEquipSlotOrder().iterator();

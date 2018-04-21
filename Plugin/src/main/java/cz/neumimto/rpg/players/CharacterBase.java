@@ -28,8 +28,32 @@ import cz.neumimto.rpg.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.skills.ISkill;
 
-import javax.persistence.*;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 /**
  * Created by NeumimTo on 27.1.2015.
@@ -102,7 +126,7 @@ public class CharacterBase extends TimestampEntity {
 	private Map<String, Integer> cachedAttributes = new HashMap<>();
 
 	@Convert(converter = IntList.class)
-	private List<Integer> inventoryEquipSlotOrder = new ArrayList();
+	private List<Integer> inventoryEquipSlotOrder;
 
 	private Integer X;
 

@@ -3,6 +3,7 @@ package cz.neumimto.rpg.persistance.converters;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.AttributeConverter;
@@ -24,6 +25,9 @@ public class IntList implements AttributeConverter<List, String> {
 
     @Override
     public List<Integer> convertToEntityAttribute(String s) {
+        if (s == null) {
+            return new ArrayList<>();
+        }
         return gson.fromJson(s, new TypeToken<List<Integer>>(){}.getType());
     }
 }
