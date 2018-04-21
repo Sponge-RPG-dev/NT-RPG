@@ -213,7 +213,14 @@ public class PluginConfig {
 	@ConfigValue
 	@Comment(content = "Additional inventory slots which will be recognized for accessories, may not be hotbar slots")
 	public static List<Integer> ACCESSORIES_SLOTS = new ArrayList<Integer>() {{
-		add(10); //todo
+		add(5);
+		add(6);
+		add(7);
+		add(8);
+		add(45);
+		add(9);
+		add(10);
+		add(11);
 	}};
 
 	@ConfigValue

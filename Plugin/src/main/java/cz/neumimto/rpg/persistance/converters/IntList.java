@@ -3,12 +3,13 @@ package cz.neumimto.rpg.persistance.converters;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
 import java.util.List;
 
-@Converter
-public class IntList implements AttributeConverter<List<Integer>, String> {
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
+
+@Converter(autoApply = true)
+public class IntList implements AttributeConverter<List, String> {
 
     private static Gson gson;
 
@@ -17,7 +18,7 @@ public class IntList implements AttributeConverter<List<Integer>, String> {
     }
 
     @Override
-    public String convertToDatabaseColumn(List<Integer> vector2is) {
+    public String convertToDatabaseColumn(List vector2is) {
         return gson.toJson(vector2is);
     }
 
