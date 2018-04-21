@@ -4,6 +4,7 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.text.Text;
 
 import java.util.Objects;
@@ -45,6 +46,20 @@ public class RPGItemType {
 		return itemType;
 	}
 
+	public static RPGItemType from(ItemStackSnapshot itemStack) {
+		RPGItemType itemType = new RPGItemType();
+		itemType.itemType = itemStack.getType();
+		Text text = itemStack.get(Keys.DISPLAY_NAME).orElse(null);
+		if (text != null) {
+			String name = text.toPlain();
+			if (NtRpgPlugin.GlobalScope.inventorySerivce.getReservedItemNames().contains(name.toLowerCase())) {
+				itemType.displayName = name;
+			}
+		}
+
+		return itemType;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(itemType, displayName);
@@ -63,7 +78,9 @@ public class RPGItemType {
 		if (getItemType().equals(that.getItemType())) {
 			if (getDisplayName() == null && that.getDisplayName() == null)
 				return true;
-			return getDisplayName() != null && getDisplayName().equalsIgnoreCase(that.getDisplayName());
+			if (getDisplayName() != null && getDisplayName().equalsIgnoreCase(that.getDisplayName())) {
+				return true;
+			}
 		}
 		return false;
 	}

@@ -19,19 +19,33 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.*;
+import cz.neumimto.rpg.Arg;
+import cz.neumimto.rpg.GroupService;
+import cz.neumimto.rpg.MissingConfigurationException;
+import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.Pair;
+import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
-import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.common.def.ClickComboActionEvent;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.events.*;
+import cz.neumimto.rpg.events.CancellableEvent;
+import cz.neumimto.rpg.events.CharacterAttributeChange;
+import cz.neumimto.rpg.events.CharacterChangeClassEvent;
+import cz.neumimto.rpg.events.CharacterChangeGroupEvent;
+import cz.neumimto.rpg.events.CharacterEvent;
+import cz.neumimto.rpg.events.CharacterGainedLevelEvent;
+import cz.neumimto.rpg.events.CharacterInitializedEvent;
 import cz.neumimto.rpg.events.character.CharacterWeaponUpdateEvent;
 import cz.neumimto.rpg.events.character.EventCharacterArmorPostUpdate;
 import cz.neumimto.rpg.events.character.PlayerDataPreloadComplete;
-import cz.neumimto.rpg.events.character.WeaponEquipEvent;
 import cz.neumimto.rpg.events.party.PartyInviteEvent;
 import cz.neumimto.rpg.events.skills.SkillLearnEvent;
 import cz.neumimto.rpg.events.skills.SkillRefundEvent;
@@ -40,7 +54,6 @@ import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.UserActionType;
-import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.persistance.PlayerDao;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
@@ -53,7 +66,12 @@ import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.skills.SkillTree;
+import cz.neumimto.rpg.skills.SkillTreeSpecialization;
 import cz.neumimto.rpg.utils.SkillTreeActionResult;
 import cz.neumimto.rpg.utils.Utils;
 import org.slf4j.Logger;
@@ -62,9 +80,17 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -145,7 +171,7 @@ public class CharacterService {
 		if (character.getCharacterBase().getHealthScale() != null) {
 			pl.offer(Keys.HEALTH_SCALE, character.getCharacterBase().getHealthScale());
 		}
-		inventoryService.initializeHotbar(character);
+		inventoryService.initializeCharacterInventory(character);
 		return true;
 	}
 
@@ -324,7 +350,7 @@ public class CharacterService {
 
 		damageService.recalculateCharacterWeaponDamage(character);
 
-		inventoryService.initializeHotbar(character);
+		inventoryService.initializeCharacterInventory(character);
 
 		updateMaxHealth(character);
 		updateWalkSpeed(character);
@@ -976,42 +1002,6 @@ public class CharacterService {
 		putInSaveQueue(character.getCharacterBase());
 	}
 
-	public int equipWeapon(IActiveCharacter character, Weapon weapon, boolean isOffhand) {
-		if (!character.canUse(weapon.getItemType())) {
-			return 1;
-		}
-		WeaponEquipEvent event = null;
-		if (isOffhand) {
-			event = new WeaponEquipEvent(character, weapon, character.getOffHand());
-		} else {
-			event = new WeaponEquipEvent(character, weapon, character.getMainHand());
-		}
-		game.getEventManager().post(event);
-		if (event.isCancelled())
-			return 2;
-		Set<IGlobalEffect> effects = event.getLastItem().getEffects().keySet();
-		effects.forEach(g -> effectService.removeEffect(g.getName(), character, weapon));
-		Map<IGlobalEffect, EffectParams> toadd = event.getNewItem().getEffects();
-		effectService.applyGlobalEffectsAsEnchantments(toadd, character, weapon);
-		return 0;
-	}
-
-	public int changeEquipedArmor(IActiveCharacter character, EquipmentType type, Weapon armor) {
-		/*if (!character.canWear(armor.getItemType())) {
-            return 1;
-        }*/
-
-		Weapon armor1 = character.getEquipedInventorySlots().get(type);
-		if (armor1 != null) {
-			armor1.getEffects().keySet().forEach(g -> effectService.removeEffect(g.getName(), character, armor));
-			character.getEquipedInventorySlots().remove(type);
-		}
-		if (armor != null) {
-			effectService.applyGlobalEffectsAsEnchantments(armor.getEffects(), character, armor);
-		}
-
-		return 0;
-	}
 
 	public boolean canUseItemType(IActiveCharacter character, RPGItemType type) {
 		return character.canUse(type);
@@ -1147,13 +1137,10 @@ public class CharacterService {
 		applyGroupEffects(character, character.getRace());
 
 
-		character.updateSelectedHotbarSlot();
 		character.getMana().setValue(0);
-		inventoryService.cancelSocketing(character);
 		addDefaultEffects(character);
 
-		inventoryService.initializeHotbar(character);
-		inventoryService.initializeArmor(character);
+		inventoryService.initializeCharacterInventory(character);
 		updateAll(character).run();
 
 		damageService.recalculateCharacterWeaponDamage(character);

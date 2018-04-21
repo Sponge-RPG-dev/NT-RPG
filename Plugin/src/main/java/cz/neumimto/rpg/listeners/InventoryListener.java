@@ -20,31 +20,21 @@ package cz.neumimto.rpg.listeners;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.CannotUseItemReson;
 import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.utils.ItemStackUtils;
-import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.cause.Root;
-import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
 import org.spongepowered.api.event.item.inventory.InteractItemEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.ItemStackSnapshot;
-import org.spongepowered.api.item.inventory.Slot;
-import org.spongepowered.api.item.inventory.entity.Hotbar;
-import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
-import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 
 
 /**
@@ -59,77 +49,9 @@ public class InventoryListener {
 	@Inject
 	private CharacterService characterService;
 
-	@Inject
-	private DamageService damageService;
-
-	@Inject
-	private Game game;
-
 	@Listener
 	public void onInventoryClose(InteractInventoryEvent.Close event, @First(typeFilter = {Player.class}) Player player) {
-		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-		if (character == null) //Sponge bugs - it fires close event when player disconnects
-			return;
-		inventoryService.initializeHotbar(character);
-		inventoryService.initializeArmor(character);
-		damageService.recalculateCharacterWeaponDamage(character);
-	}
-
-	/* Tempoar */
-	@Listener
-	public void onInventoryOpen(InteractInventoryEvent.Close event, @First(typeFilter = {Player.class}) Player player) {
-		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-		if (character == null)
-			return;
-		if (!character.isStub()) {
-			character.setOpenInventory(false);
-		}
-
-	}
-
-	@Listener
-	public void onInventoryOpen(InteractInventoryEvent.Open event, @First(typeFilter = {Player.class}) Player player) {
-		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-		if (character == null)
-			return;
-		if (!character.isStub()) {
-			character.setOpenInventory(true);
-		}
-	}
-
-
-	@Listener
-	public void onItemPickup(ChangeInventoryEvent.Pickup event, @First(typeFilter = {Player.class}) Player player) {
-
-		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-		if (character.isStub()) {
-			return;
-		}
-		Hotbar hotbar = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
-		for (SlotTransaction slotTransaction : event.getTransactions()) {
-			Slot i = slotTransaction.getSlot();
-			if (hotbar.containsInventory(i) && shouldProceedInitialization(slotTransaction.getFinal())) {
-
-				inventoryService.initializeHotbar(character);
-			}
-		}
-	}
-
-
-	private boolean shouldProceedInitialization(ItemStackSnapshot itemStackSnapshot) {
-		if (ItemStackUtils.isWeapon(itemStackSnapshot.getType())) {
-			return true;
-		}
-		if (itemStackSnapshot.get(NKeys.ITEM_META_HEADER).isPresent()) {
-			return true;
-		}
-		if (itemStackSnapshot.get(NKeys.ITEM_EFFECTS).isPresent()) {
-			return true;
-		}
-		if (itemStackSnapshot.get(NKeys.ITEM_ATTRIBUTE_BONUS).isPresent()) {
-			return true;
-		}
-		return itemStackSnapshot.get(NKeys.ITEM_PLAYER_ALLOWED_GROUPS).isPresent();
+		//todo
 	}
 
     @Listener
@@ -139,16 +61,8 @@ public class InventoryListener {
         IActiveCharacter character = characterService.getCharacter(entity.getUniqueId());
         if (character.isStub())
             return;
-        if (character.hasOpenInventory()) {
-            return;
-        }
 
-		Hotbar hotbar = character.getPlayer().getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
-		HotbarObject hotbarObject = character.getHotbar()[hotbar.getSelectedSlotIndex()];
-		if (hotbarObject == HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
-			return;
-		}
-		inventoryService.initializeHotbar(character);
+		//todo
 	}
 
 	@Listener
@@ -160,12 +74,5 @@ public class InventoryListener {
 			Gui.sendCannotUseItemNotification(character, is, reason);
 			event.setCancelled(true);
 		}
-	}
-
-	@Listener
-	public void onMouseScroll(ChangeInventoryEvent.Held event, @Root Player player) {
-		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-		Hotbar hotbar = player.getInventory().query(Hotbar.class);
-		inventoryService.changeActiveHotbarSlot(character, hotbar.getSelectedSlotIndex());
 	}
 }

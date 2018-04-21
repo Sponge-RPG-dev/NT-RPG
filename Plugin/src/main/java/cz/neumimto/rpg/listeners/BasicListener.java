@@ -30,7 +30,11 @@ import cz.neumimto.rpg.damage.ISkillDamageSource;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.events.*;
+import cz.neumimto.rpg.events.CharacterWeaponDamageEvent;
+import cz.neumimto.rpg.events.INEntityWeaponDamageEvent;
+import cz.neumimto.rpg.events.ProjectileHitEvent;
+import cz.neumimto.rpg.events.SkillDamageEvent;
+import cz.neumimto.rpg.events.SkillDamageEventLate;
 import cz.neumimto.rpg.exp.ExperienceService;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.runewords.RWService;
@@ -229,11 +233,11 @@ public class BasicListener {
                 if (entityDamageSource.getType() == DamageTypes.ATTACK) {
                     INEntityWeaponDamageEvent e;
                     Hotbar hotbar = character.getPlayer().getInventory().query(Hotbar.class);
-                    if (hotbar.getSelectedSlotIndex() != character.getSelectedHotbarSlot()) {
+                /*    if (hotbar.getSelectedSlotIndex() != character.getSelectedHotbarSlot()) {
                         character.updateSelectedHotbarSlot();
                         damageService.recalculateCharacterWeaponDamage(character);
                     }
-                    newdamage = character.getWeaponDamage();
+                  */  newdamage = character.getWeaponDamage();
                     newdamage *= damageService.getEntityBonusDamage(character, entityDamageSource.getType());
                     e = new CharacterWeaponDamageEvent(character, entityService.get(targetEntity), newdamage);
                     Sponge.getGame().getEventManager().post(e);

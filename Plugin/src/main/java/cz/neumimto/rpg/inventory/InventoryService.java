@@ -34,8 +34,6 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.EffectSourceType;
-import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.ItemLoreBuilderService;
@@ -71,7 +69,6 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
@@ -265,129 +262,15 @@ public class InventoryService {
 		writer.println("\t}");
 	}
 
-	public void initializeHotbar(IActiveCharacter character) {
-		if (character == null || character.isStub())
-			return;
-		playerInvHandler.initializeHotbar(character);
-	}
-
-	public void changeActiveHotbarSlot(IActiveCharacter character, int slot) {
+	public void initializeCharacterInventory(IActiveCharacter character) {
 		if (character.isStub())
 			return;
-		playerInvHandler.changeActiveHotbarSlot(character, slot);
+		playerInvHandler.initializeCharacterInventory(character);
 	}
-
-	public Armor getHelmet(IActiveCharacter character) {
-		if (character.isStub()) {
-			return Armor.NONE;
-		}
-		Optional<ItemStack> leggings = character.getPlayer().getHelmet();
-		if (leggings.isPresent()) {
-			ItemStack itemStack = leggings.get();
-			return getArmor(itemStack, EffectSourceType.HELMET);
-		}
-		return Armor.NONE;
-	}
-
-	public Armor getChestplate(IActiveCharacter character) {
-		if (character.isStub()) {
-			return Armor.NONE;
-		}
-		Optional<ItemStack> leggings = character.getPlayer().getChestplate();
-		if (leggings.isPresent()) {
-			ItemStack itemStack = leggings.get();
-			return getArmor(itemStack, EffectSourceType.CHESTPLATE);
-		}
-		return Armor.NONE;
-	}
-
-	public Armor getLeggings(IActiveCharacter character) {
-		if (character.isStub()) {
-			return Armor.NONE;
-		}
-		Optional<ItemStack> leggings = character.getPlayer().getLeggings();
-		if (leggings.isPresent()) {
-			ItemStack itemStack = leggings.get();
-			return getArmor(itemStack, EffectSourceType.LEGGINGS);
-		}
-		return Armor.NONE;
-	}
-
-	public Armor getBoots(IActiveCharacter character) {
-		if (character.isStub()) {
-			return Armor.NONE;
-		}
-		Optional<ItemStack> leggings = character.getPlayer().getBoots();
-		if (leggings.isPresent()) {
-			ItemStack itemStack = leggings.get();
-			return getArmor(itemStack, EffectSourceType.BOOTS);
-		}
-		return Armor.NONE;
-	}
-
-	private Armor getArmor(ItemStack itemStack, IEffectSource armorType) {
-		return new Armor(itemStack, armorType);
-	}
-
-	public void initializeArmor(IActiveCharacter character) {
-		playerInvHandler.initializeArmor(character);
-	}
-
 
 	public void dropItem(IActiveCharacter character, ItemStack is, CannotUseItemReson reason) {
 		ItemStackUtils.dropItem(character.getPlayer(), is);
 		Gui.sendCannotUseItemNotification(character, is, reason);
-	}
-
-	public HotbarObject getHotbarObject(IActiveCharacter character, ItemStack is) {
-		if (is == null)
-			return HotbarObject.EMPTYHAND_OR_CONSUMABLE;
-		if (ItemStackUtils.isItemSkillBind(is)) {
-			return buildHotbarSkill(character, is);
-		}
-		if (ItemStackUtils.isCharm(is)) {
-			return buildCharm(character, is);
-		}
-		ItemGroup itemGroup = getItemGroup(is);
-		if (itemGroup != null) {
-			return buildHotbarWeapon(character, is);
-		}
-		return HotbarObject.EMPTYHAND_OR_CONSUMABLE;
-	}
-
-	private Charm buildCharm(IActiveCharacter character, ItemStack is) {
-		Charm charm = new Charm(is);
-		charm.setEffects(getItemEffects(is));
-
-		return charm;
-	}
-
-
-	public Weapon buildHotbarWeapon(IActiveCharacter character, ItemStack is) {
-		Weapon w = new Weapon(is);
-
-		return w;
-	}
-
-	public HotbarSkill buildHotbarSkill(IActiveCharacter character, ItemStack is) {
-		HotbarSkill skill = new HotbarSkill(is);
-		Optional<Text> text = is.get(Keys.DISPLAY_NAME);
-		if (text.isPresent()) {
-			String s = text.get().toPlain();
-			String[] split = s.split("-");
-			for (String s1 : split) {
-				if (s1.isEmpty())
-					continue;
-				if (s1.endsWith("«")) {
-					String substring = s1.substring(0, s1.length() - 2);
-					skill.left_skill = skillService.getSkill(substring);
-				} else if (s1.startsWith("»")) {
-					String substring = s1.substring(2);
-					skill.right_skill = skillService.getSkill(substring);
-				}
-			}
-		}
-		return skill;
 	}
 
 	public void createHotbarSkill(ItemStack is, ISkill right, ISkill left) {
@@ -449,10 +332,10 @@ public class InventoryService {
 		playerInvHandler.onLeftClick(character, slot);
 	}
 
-	protected void changeEquipedWeapon(IActiveCharacter character, Weapon changeTo, ItemStack itemStack) {
+	/*protected void changeEquipedWeapon(IActiveCharacter character, Weapon changeTo, ItemStack itemStack) {
 		unEquipWeapon(character);
 
-		int slot = ((Hotbar) character.getPlayer().getInventory().query(Hotbar.class)).getSelectedSlotIndex();
+		int slot = ((Hotbar) character.getCharacter().getInventory().query(Hotbar.class)).getSelectedSlotIndex();
 		character.setHotbarSlot(slot, changeTo);
 		changeTo.current = true;
 		changeTo.setSlot(slot);
@@ -474,7 +357,7 @@ public class InventoryService {
 		mainHand.current = false;
 		mainHand.onUnEquip(character);
 	}
-	
+	*/
 
 	public CannotUseItemReson canWear(ItemStack itemStack, IActiveCharacter character) {
 		if (ItemStackUtils.any_armor.contains(itemStack.getType())) {
@@ -570,15 +453,6 @@ public class InventoryService {
 			}
 		}
 		return CannotUseItemReson.OK;
-	}
-
-
-	public void cancelSocketing(IActiveCharacter character) {
-		if (character.isSocketing()) {
-			Gui.sendMessage(character, Localization.SOCKET_CANCELLED);
-		}
-		character.setCurrentRune(-1);
-
 	}
 
 	public ItemStack setItemLevel(ItemStack itemStack, int level) {

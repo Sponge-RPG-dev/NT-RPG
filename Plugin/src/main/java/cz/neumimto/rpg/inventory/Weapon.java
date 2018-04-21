@@ -18,36 +18,29 @@
 
 package cz.neumimto.rpg.inventory;
 
-import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.EffectSourceType;
-import cz.neumimto.rpg.effects.IEffectSource;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.utils.XORShiftRnd;
-import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 /**
  * Created by NeumimTo on 31.1.2015.
  */
-public class Weapon extends Charm {
+public class Weapon extends CustomItem {
 
-	public static Weapon EmptyHand;
 	protected double minDamage;
 	protected double maxDamage;
-	protected boolean current;
 	private RPGItemType itemType;
-
 	private static XORShiftRnd rnd;
+
 	static {
-		EmptyHand = new Weapon(ItemStack.empty());
 		rnd = new XORShiftRnd();
 	}
 
 	public Weapon(ItemStack itemStack) {
-		super(itemStack);
+		super(itemStack, EffectSourceType.WEAPON);
 		this.itemType = RPGItemType.from(itemStack);
-		type = HotbarObjectTypes.WEAPON;
 	}
 
 	public RPGItemType getItemType() {
@@ -65,24 +58,6 @@ public class Weapon extends Charm {
 
 	public boolean isShield() {
 		return getItemType() == ItemTypes.SHIELD;
-	}
-
-	public void setCurrent(boolean current) {
-		this.current = current;
-	}
-
-	@Override
-	public void onRightClick(IActiveCharacter character) {
-		if (!current) {
-			NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character, this, character.getPlayer().getItemInHand(HandTypes.MAIN_HAND).orElse(null));
-		}
-	}
-
-	@Override
-	public void onLeftClick(IActiveCharacter character) {
-		if (!current) {
-			NtRpgPlugin.GlobalScope.inventorySerivce.changeEquipedWeapon(character, this, character.getPlayer().getItemInHand(HandTypes.OFF_HAND).orElse(null));
-		}
 	}
 
 	public double getMinDamage() {
@@ -105,8 +80,4 @@ public class Weapon extends Charm {
 		this.itemType = itemType;
 	}
 
-	@Override
-	public IEffectSource getType() {
-		return EffectSourceType.WEAPON;
-	}
 }

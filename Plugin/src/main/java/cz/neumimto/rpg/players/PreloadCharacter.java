@@ -45,7 +45,13 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatType;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by NeumimTo on 23.7.2015.
@@ -261,7 +267,7 @@ public class PreloadCharacter implements IActiveCharacter {
 			if (player.isPresent()) {
 				this.player = player.get();
 			} else {
-				throw new PlayerNotInGameException(String.format("Player object with uuid=%s has not been constructed yet. Calling PreloadCharacter.getPlayer in a wrong state"), this);
+				throw new PlayerNotInGameException(String.format("Player object with uuid=%s has not been constructed yet. Calling PreloadCharacter.getCharacter in a wrong state"), this);
 			}
 		}
 		return this.player;

@@ -29,6 +29,9 @@ public abstract class PlayerInvHandler implements CatalogType {
         this.name = name;
     }
 
+    /**
+     * Called after loading main plugin config
+     */
     public abstract void initHandler();
 
     /**
@@ -65,10 +68,6 @@ public abstract class PlayerInvHandler implements CatalogType {
         effectService().applyGlobalEffectsAsEnchantments(itemEffects, character, null); //todo
     }
 
-    public abstract void initializeHotbar(IActiveCharacter character);
-
-    public abstract void changeActiveHotbarSlot(IActiveCharacter character, int slot);
-
     @Override
     public String getName() {
         return name;
@@ -86,6 +85,7 @@ public abstract class PlayerInvHandler implements CatalogType {
 
             }
         }
+        return false;
     }
 
     public abstract void onRightClick(IActiveCharacter character, int slot);

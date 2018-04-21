@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.events.character;
 
 import cz.neumimto.rpg.events.CancellableEvent;
+import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
 
@@ -27,26 +28,17 @@ import cz.neumimto.rpg.scripting.JsBinding;
  */
 @JsBinding(JsBinding.Type.CLASS)
 public class WeaponEquipEvent extends CancellableEvent {
-	final IActiveCharacter player;
-	final HotbarObject newItem;
-	final HotbarObject lastItem;
 
-	public WeaponEquipEvent(IActiveCharacter player, HotbarObject newItem, HotbarObject currentWeapon) {
+	final IActiveCharacter player;
+	final Weapon newItem;
+
+	public WeaponEquipEvent(IActiveCharacter player, Weapon newItem) {
 		this.player = player;
 		this.newItem = newItem;
-		this.lastItem = currentWeapon;
 	}
 
-	public IActiveCharacter getPlayer() {
+	public IActiveCharacter getCharacter() {
 		return player;
-	}
-
-	public HotbarObject getNewItem() {
-		return newItem;
-	}
-
-	public HotbarObject getLastItem() {
-		return lastItem;
 	}
 
 }
