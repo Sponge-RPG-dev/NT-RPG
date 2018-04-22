@@ -76,7 +76,7 @@ public class DebugListener {
 		event.getTargetEntity().sendMessage(TextHelper.parse("&4-=====================-"));
 	}
 
-	@Listener(order = Order.LAST)
+	@Listener(order = Order.FIRST)
 	public void onClick(ClickInventoryEvent event, @Root Player player) {
 		List<SlotTransaction> transactions = event.getTransactions();
 		for (SlotTransaction transaction : transactions) {

@@ -20,21 +20,25 @@ package cz.neumimto.rpg.listeners;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.inventory.CannotUseItemReson;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.utils.ItemStackUtils;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.cause.Root;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
 import org.spongepowered.api.event.item.inventory.InteractItemEvent;
-import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.property.SlotIndex;
+import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
+
+import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -68,11 +72,27 @@ public class InventoryListener {
 	@Listener
 	public void onArmorInteract(InteractItemEvent event, @First(typeFilter = Player.class) Player player) {
 		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+		if (ItemStackUtils.any_armor.contains(event.getItemStack().getType())) {
+			event.setCancelled(true);
+		}
+		/*
 		ItemStack is = event.getItemStack().createStack();
 		CannotUseItemReson reason = inventoryService.canWear(is, character);
 		if (reason != CannotUseItemReson.OK) {
 			Gui.sendCannotUseItemNotification(character, is, reason);
 			event.setCancelled(true);
+		}
+		*/
+	}
+
+	@Listener
+	public void onClick(ClickInventoryEvent event, @Root Player player) {
+		List<SlotTransaction> transactions = event.getTransactions();
+		for (SlotTransaction transaction : transactions) {
+			Optional<SlotIndex> inventoryProperty = transaction.getSlot().getInventoryProperty(SlotIndex.class);
+			if (inventoryProperty.isPresent()) {
+				inventoryService.processSlotInteraction(transaction.getSlot(), player);
+			}
 		}
 	}
 }

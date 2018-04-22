@@ -12,6 +12,8 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.Slot;
+import org.spongepowered.api.item.inventory.property.SlotIndex;
 
 import java.util.Map;
 import java.util.Optional;
@@ -63,9 +65,22 @@ public abstract class PlayerInvHandler implements CatalogType {
         return cannotUseItemReson == CannotUseItemReson.OK;
     }
 
+    /**
+     * A method which
+     * - adds enchantments to entity effects cache
+     * - todo: apply attribute bonuses
+     *
+     * @param character player
+     * @param query Slot having an item to be equipied
+     */
     protected void initializeItemStack(IActiveCharacter character, Inventory query) {
         Map<IGlobalEffect, EffectParams> itemEffects = inventoryService().getItemEffects(query.peek().get());
         effectService().applyGlobalEffectsAsEnchantments(itemEffects, character, null); //todo
+    }
+
+    protected void deInitializeItemStack(IActiveCharacter character, Inventory query) {
+        Map<IGlobalEffect, EffectParams> itemEffects = inventoryService().getItemEffects(query.peek().get());
+        effectService().removeGlobalEffectsAsEnchantments(itemEffects.keySet(), character, null);
     }
 
     @Override
@@ -78,11 +93,27 @@ public abstract class PlayerInvHandler implements CatalogType {
         return id;
     }
 
-    public boolean onMainInventoryInteract(IActiveCharacter character, int slot) {
-        if (PluginConfig.ACCESSORIES_SLOTS.contains(slot)) {
-            CustomItem customItem = character.getEquipedInventorySlots().get(slot);
+    /**
+     * @param character character instance
+     * @param slot id of clicked slot
+     * @return true if the click inventory event shall be cancelled
+     */
+    public boolean processSlotInteraction(IActiveCharacter character, Slot slot) {
+        Optional<SlotIndex> inventoryProperty = slot.getInventoryProperty(SlotIndex.class);
+        Integer value = inventoryProperty.get().getValue();
+        if (PluginConfig.ACCESSORIES_SLOTS.contains(value)) {
+            CustomItem customItem = character.getEquipedInventorySlots().get(value);
             if (customItem == null) {
+                //Slot had no item before
+                boolean b = checkForSlot(character, slot);
+                if (!b)
+                    return false;
 
+                initializeItemStack(character, slot);
+                return true;
+            } else if (slot.peek().isPresent()) {
+                deInitializeItemStack(character, slot);
+                return true;
             }
         }
         return false;
@@ -100,4 +131,6 @@ public abstract class PlayerInvHandler implements CatalogType {
     protected EffectService effectService() {
         return NtRpgPlugin.GlobalScope.effectService;
     }
+
+
 }

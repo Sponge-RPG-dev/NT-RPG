@@ -66,9 +66,11 @@ import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
@@ -455,6 +457,20 @@ public class InventoryService {
 		return CannotUseItemReson.OK;
 	}
 
+	/**
+	 *
+	 * @param slot clicked slot
+	 * @param player who clicked a slot
+	 * @return true to cancell the event
+	 */
+	public boolean processSlotInteraction(Slot slot, Player player) {
+		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+		if (character.isStub()) {
+			return true;
+		}
+		return playerInvHandler.processSlotInteraction(character, slot);
+	}
+
 	public ItemStack setItemLevel(ItemStack itemStack, int level) {
 		itemStack.offer(new ItemLevelData(level));
 		return updateLore(itemStack);
@@ -556,5 +572,6 @@ public class InventoryService {
 		orCreate.set(NKeys.ITEM_META_TYPE, metaType);
 		itemStack.offer(orCreate);
 	}
+
 
 }
