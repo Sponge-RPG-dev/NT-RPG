@@ -105,15 +105,14 @@ public abstract class PlayerInvHandler implements CatalogType {
             CustomItem customItem = character.getEquipedInventorySlots().get(value);
             if (customItem == null) {
                 //Slot had no item before
-                boolean b = checkForSlot(character, slot);
-                if (!b)
-                    return false;
+                if (!checkForSlot(character, slot))
+                    return true;
 
                 initializeItemStack(character, slot);
-                return true;
+                return false;
             } else if (slot.peek().isPresent()) {
                 deInitializeItemStack(character, slot);
-                return true;
+                return false;
             }
         }
         return false;
