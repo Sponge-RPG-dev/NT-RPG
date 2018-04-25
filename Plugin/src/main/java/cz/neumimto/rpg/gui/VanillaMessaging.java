@@ -310,7 +310,7 @@ public class VanillaMessaging implements IPlayerMessage {
 					"c.name,d.name,d.experiences) " +
 					"from CharacterBase c left join c.characterClasses d " +
 					"where c.uuid = :id order by c.updated desc";
-			Map map = new HashMap<>();
+			Map<String, Object> map = new HashMap<>();
 			map.put("id", player.getPlayer().getUniqueId());
 			List<CharacterListModel> list = build.findList(CharacterListModel.class, query, map);
 			List<Text> content = new ArrayList<Text>();

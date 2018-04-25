@@ -926,8 +926,6 @@ public class NtRpgPlugin {
 								(character.getRace() != Race.Default && PluginConfig.PLAYER_CAN_CHANGE_RACE)) {
 							if (PluginConfig.PLAYER_CAN_CHANGE_RACE) {
 								GlobalScope.characterService.updatePlayerGroups(character, null, 0, r, null);
-								src.sendMessage(TextHelper.parse(Localization.PLAYER_CHOOSED_RACE,
-										Arg.arg("race", r.getName())));
 								return ;
 							}
 							src.sendMessage(TextHelper.parse(Localization.PLAYER_CANT_CHANGE_RACE));
