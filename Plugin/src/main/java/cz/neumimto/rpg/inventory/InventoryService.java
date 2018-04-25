@@ -24,27 +24,18 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.Arg;
-import cz.neumimto.rpg.Console;
-import cz.neumimto.rpg.GroupService;
-import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.TextHelper;
+import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.ItemLoreBuilderService;
 import cz.neumimto.rpg.inventory.data.NKeys;
-import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaHeader;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaTypeData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemRarityData;
-import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemGroupRequirementsData;
-import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemRequirementsData;
+import cz.neumimto.rpg.inventory.data.manipulators.*;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.slotparsers.DefaultPlayerInvHandler;
@@ -80,15 +71,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -137,6 +120,7 @@ public class InventoryService {
 	private Map<UUID, InventoryMenu> inventoryMenus = new HashMap<>();
 
 	private Map<String, ItemGroup> itemGroups = new HashMap<>();
+	private Map<Integer, SlotEffectSource> slotEffectSourceMap = new HashMap<>();
 
 	@Reload(on = ReloadService.PLUGIN_CONFIG)
 	@PostProcess(priority = 3000)
@@ -153,6 +137,7 @@ public class InventoryService {
 					().map(PlayerInvHandler::getId).collect(Collectors.joining(", ")));
 			playerInvHandler = IoC.get().build(DefaultPlayerInvHandler.class);
 		}
+		PluginConfig.ACCESSORIES_SLOTS.stream().map(SlotEffectSource::new).forEach(a -> slotEffectSourceMap.put(a.getSlotId(),a));
 	}
 
 	private void loadItemGroups() {
@@ -574,4 +559,7 @@ public class InventoryService {
 	}
 
 
+	public IEffectSource getEffectSourceBySlotId(Integer value) {
+		return slotEffectSourceMap.get(value);
+	}
 }

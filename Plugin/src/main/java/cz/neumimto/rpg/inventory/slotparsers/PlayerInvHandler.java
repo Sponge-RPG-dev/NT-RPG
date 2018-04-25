@@ -2,10 +2,9 @@ package cz.neumimto.rpg.inventory.slotparsers;
 
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.PluginConfig;
-import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.CannotUseItemReson;
+import cz.neumimto.rpg.inventory.CustomItemFactory;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -15,7 +14,6 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -73,15 +71,18 @@ public abstract class PlayerInvHandler implements CatalogType {
      * @param character player
      * @param query Slot having an item to be equipied
      */
-    protected void initializeItemStack(IActiveCharacter character, Inventory query) {
-        Map<IGlobalEffect, EffectParams> itemEffects = inventoryService().getItemEffects(query.peek().get());
-        effectService().applyGlobalEffectsAsEnchantments(itemEffects, character, null); //todo
+    protected CustomItem initializeItemStack(IActiveCharacter character, Inventory query) {
+        ItemStack itemStack = query.peek().get();
+        CustomItem customItem = CustomItemFactory.createCustomItem(itemStack, query.getInventoryProperty(SlotIndex.class).get().getValue());
+        effectService().applyGlobalEffectsAsEnchantments(customItem.getEffects(), character, customItem); //todo
+        return customItem;
     }
 
     protected void deInitializeItemStack(IActiveCharacter character, Inventory query) {
-        Map<IGlobalEffect, EffectParams> itemEffects = inventoryService().getItemEffects(query.peek().get());
-        effectService().removeGlobalEffectsAsEnchantments(itemEffects.keySet(), character, null);
+        CustomItem item = character.getEquipedInventorySlots().get(query.getInventoryProperty(SlotIndex.class).get().getValue());
+        effectService().removeGlobalEffectsAsEnchantments(item.getEffects().keySet(), character, item);
     }
+
 
     @Override
     public String getName() {
@@ -103,16 +104,28 @@ public abstract class PlayerInvHandler implements CatalogType {
         Integer value = inventoryProperty.get().getValue();
         if (PluginConfig.ACCESSORIES_SLOTS.contains(value)) {
             CustomItem customItem = character.getEquipedInventorySlots().get(value);
-            if (customItem == null) {
-                //Slot had no item before
-                if (!checkForSlot(character, slot))
+            //item has been taken away from the slot
+            if (!slot.peek().isPresent()) {
+                if (customItem != null) {
+                    character.getEquipedInventorySlots().put(value, null);
+                    deInitializeItemStack(character, slot);
+                }
+                return false;
+            } else {
+                ItemStack itemStack = slot.peek().get();
+                if (!checkForItem(character, itemStack)) {
                     return true;
+                }
 
-                initializeItemStack(character, slot);
-                return false;
-            } else if (slot.peek().isPresent()) {
-                deInitializeItemStack(character, slot);
-                return false;
+                //no item before
+                if (customItem == null) {
+                    CustomItem ci = initializeItemStack(character, slot);
+                    character.getEquipedInventorySlots().put(value, ci);
+                } else {
+                    deInitializeItemStack(character, slot);
+                    CustomItem ci = initializeItemStack(character, slot);
+                    character.getEquipedInventorySlots().put(value, ci);
+                }
             }
         }
         return false;

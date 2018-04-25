@@ -1,13 +1,11 @@
 package cz.neumimto.rpg.inventory.items.types;
 
-import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
-import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 
@@ -17,7 +15,7 @@ import java.util.Map;
 /**
  * Created by NeumimTo on 26.2.2017.
  */
-public class CustomItem implements IEffectSourceProvider{
+public class CustomItem implements IEffectSourceProvider {
 
 	private int slot;
 	private int level;
@@ -37,13 +35,6 @@ public class CustomItem implements IEffectSourceProvider{
 	public CustomItem(ItemStack itemStack, IEffectSource effectSource) {
 		this.itemStack = itemStack.createSnapshot();
 		this.effectSource = effectSource;
-		if (itemStack.getType() == ItemTypes.NONE) {
-			this.effects = new HashMap<>();
-			this.level = 0;
-		} else {
-			this.effects = NtRpgPlugin.GlobalScope.inventorySerivce.getItemEffects(itemStack);
-			this.level = NtRpgPlugin.GlobalScope.inventorySerivce.getItemLevel(itemStack);
-		}
 	}
 
 	public int getLevel() {
@@ -54,6 +45,14 @@ public class CustomItem implements IEffectSourceProvider{
 		return effects;
 	}
 
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	public void setEffects(Map<IGlobalEffect, EffectParams> effects) {
+		this.effects = effects;
+	}
 
 	@Override
 	public IEffectSource getType() {

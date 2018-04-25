@@ -30,7 +30,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.cause.Root;
-import org.spongepowered.api.event.filter.type.Exclude;
+import org.spongepowered.api.event.filter.type.Include;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
@@ -80,22 +80,26 @@ public class InventoryListener {
 		ItemStack is = event.getItemStack().createStack();
 		CannotUseItemReson reason = inventoryService.canWear(is, character);
 		if (reason != CannotUseItemReson.OK) {
-			Gui.sendCannotUseItemNotification(character, is, reason);
+			Gui.sendeiCannotUseItemNotification(character, is, reason);
 			event.setCancelled(true);
 		}
 		*/
 	}
 
 	@Listener
-	@Exclude({ClickInventoryEvent.Drop.class, ClickInventoryEvent.NumberPress.class})
+	@Include({
+			ClickInventoryEvent.Primary.class,
+			ClickInventoryEvent.Secondary.class,
+			ClickInventoryEvent.Creative.class,
+			ClickInventoryEvent.Middle.class
+	})
 	public void onClick(ClickInventoryEvent event, @Root Player player) {
 		List<SlotTransaction> transactions = event.getTransactions();
 		for (SlotTransaction transaction : transactions) {
 			Optional<SlotIndex> inventoryProperty = transaction.getSlot().getInventoryProperty(SlotIndex.class);
 			if (inventoryProperty.isPresent()) {
-
-				boolean cancell = inventoryService.processSlotInteraction(transaction.getSlot(), player);
-				event.setCancelled(cancell);
+				boolean cancel = inventoryService.processSlotInteraction(transaction.getSlot(), player);
+				event.setCancelled(cancel);
 			}
 		}
 	}
