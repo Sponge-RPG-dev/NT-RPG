@@ -27,8 +27,7 @@ import cz.neumimto.configuration.ConfigurationContainer;
 @ConfigurationContainer(path = "{WorkingDir}", filename = "CommandLocalization.conf")
 public class CommandLocalization {
 
-
-	@ConfigValue
+    @ConfigValue
 	public static String COMMAND_ADMIN_ENCHANT = "&2Enchants held item with custom enchantment";
 	@ConfigValue
 	public static String COMMAND_ADMIN_DESC = "&2Access to administration commands";
@@ -43,7 +42,7 @@ public class CommandLocalization {
 	public static String COMMAND_ADMIN_SOCKET = "&2Inserts sockets into held item";
 
 	@ConfigValue
-	public static String COMMAND_ADMIN_RUNE = "&2Creates a rune";;
+	public static String COMMAND_ADMIN_RUNE = "&2Creates a rune";
 
 	@ConfigValue
 	public static String COMMAND_ADMIN_RUNEWORD = "&2Tries to insert runeword into held item";
@@ -128,4 +127,10 @@ public class CommandLocalization {
 
 	@ConfigValue
 	public static String COMMAND_ADMIN_RARITY = "Sets rarity of current item type";
+
+	@ConfigValue
+	public static String COMMAND_ADMIN_ITEM_TYPE = "&2Sets item type";
+
+	@ConfigValue
+	public static String COMMAND_CHARACTE_LIST = "&2Lists all your characters";
 }

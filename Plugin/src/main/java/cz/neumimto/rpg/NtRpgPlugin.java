@@ -1000,6 +1000,15 @@ public class NtRpgPlugin {
 				})
 				.build();
 
+		CommandSpec cslist = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_CHARACTE_LIST))
+				.executor((src, args) -> {
+					IActiveCharacter character = GlobalScope.characterService.getCharacter(((Player) src).getUniqueId());
+					Gui.sendListOfCharacters(character, character.getCharacterBase());
+					return CommandResult.success();
+				})
+				.build();
+
 		CommandSpec characterRoot = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE
 						.deserialize(CommandLocalization.COMMAND_CHOOSE_DESC))
@@ -1008,6 +1017,7 @@ public class NtRpgPlugin {
 				.child(cskill, "skill", "s","sk")
 				.child(cattribute, "attribute", "attr", "a")
 				.child(cswitch, "switch")
+				.child(cslist, "list")
 				.build();
 
 		Sponge.getCommandManager().register(this, characterRoot, "character", "char", "nc");
