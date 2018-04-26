@@ -210,18 +210,6 @@ public class PluginConfig {
 	@Comment(content = "1 - Drops item out of player inventory, 2 - Drops items only from hotbar, 3 - Only warning")
 	public static Integer PLAYER_IS_UNABLE_TO_USE_ITEM_RESOLVE_STRATEGY = 1;
 
-	@ConfigValue
-	@Comment(content = "Additional inventory slots which will be recognized for accessories, may not be hotbar slots")
-	public static List<Integer> ACCESSORIES_SLOTS = new ArrayList<Integer>() {{
-		add(5);
-		add(6);
-		add(7);
-		add(8);
-		add(45);
-		add(9);
-		add(10);
-		add(11);
-	}};
 
 	@ConfigValue
 	@Comment(content = "Player may put standard item into accessory slot")

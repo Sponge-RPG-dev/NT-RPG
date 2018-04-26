@@ -39,6 +39,8 @@ import cz.neumimto.rpg.gui.ItemLoreBuilderService;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.manipulators.*;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
+import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtype;
+import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtypes;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.slotparsers.DefaultPlayerInvHandler;
 import cz.neumimto.rpg.inventory.slotparsers.PlayerInvHandler;
@@ -139,7 +141,6 @@ public class InventoryService {
 					().map(PlayerInvHandler::getId).collect(Collectors.joining(", ")));
 			playerInvHandler = IoC.get().build(DefaultPlayerInvHandler.class);
 		}
-		PluginConfig.ACCESSORIES_SLOTS.stream().map(SlotEffectSource::new).forEach(a -> slotEffectSourceMap.put(a.getSlotId(),a));
 	}
 
 	private void loadItemGroups() {
@@ -151,6 +152,17 @@ public class InventoryService {
 				writer.println("ReservedItemNames:[]");
 				writer.println("ItemGroups:[");
 				writer.println("]");
+				writer.println("InventorySlots:[");
+				writer.println(5); //Vanilla Armor Slots
+				writer.println(6); //Vanilla Armor Slots
+				writer.println(7); //Vanilla Armor Slots
+				writer.println(8); //Vanilla Armor Slots
+
+				writer.println(45); //Vanilla Offhand Slot
+				writer.println("9;ANY");  //Vanilla top-row left corner slots, just an example
+				writer.println("10;ANY"); //Vanilla top-row left corner slots, just an example
+				writer.println("11;ANY"); //Vanilla top-row left corner slots, just an example
+				writer.println("]");
 				writer.println("ModdedArmor:[");
 				writer.println("]");
 				writer.close();
@@ -161,8 +173,11 @@ public class InventoryService {
 
 		Config c = ConfigFactory.parseFile(path.toFile());
 		reservedItemNames.addAll(c.getStringList("ReservedItemNames"));
-		Config itemGroups = c.getConfig("ItemGroups");
 
+		Config slots = c.getConfig("InventorySlots");
+		loadSlotSettings(slots);
+
+		Config itemGroups = c.getConfig("ItemGroups");
 		loadItemGroups(itemGroups, null);
 
 		for (String armor : c.getStringList("ModdedArmor")) {
@@ -173,6 +188,23 @@ public class InventoryService {
 				logger.warn(Console.RED + "Could not find item type " + Console.YELLOW + armor + Console.RED + ".");
 				logger.warn(Console.RED + " - Is the mod loaded and is the name correct?");
 				logger.warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN+ "\"modid:my_item\"");
+			}
+		}
+	}
+
+	private void loadSlotSettings(Config slots) {
+		for (Map.Entry<String, ConfigValue> entry : slots.entrySet()) {
+			String render = entry.getValue().render();
+			String[] split = render.split(";");
+			if (split.length == 1) {
+				SlotEffectSource slotEffectSource = new SlotEffectSource(Integer.parseInt(split[0]), ItemSubtypes.ANY);
+				slotEffectSourceMap.put(slotEffectSource.getSlotId(), slotEffectSource);
+			} else {
+				//will break in api 8
+				ItemSubtype itemSubtype = new ItemSubtype(split[1]);
+				Sponge.getRegistry().register(ItemSubtype.class, itemSubtype);
+				SlotEffectSource slotEffectSource = new SlotEffectSource(Integer.parseInt(split[0]), Sponge.getRegistry().getType(ItemSubtype.class, itemSubtype.getId()).get());
+				slotEffectSourceMap.put(slotEffectSource.getSlotId(), slotEffectSource);
 			}
 		}
 	}
