@@ -7,6 +7,9 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.text.Text;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import java.util.Objects;
 
 /**
@@ -15,8 +18,10 @@ import java.util.Objects;
 public class RPGItemType {
 	private ItemType itemType;
 	private String displayName;
+	private Map<String, ItemGroup> parents = new HashMap<>();
 
 	public RPGItemType() {
+
 	}
 
 	public RPGItemType(ItemType itemType, String displayName) {
@@ -60,6 +65,10 @@ public class RPGItemType {
 		return itemType;
 	}
 
+	public Map<String, ItemGroup> getParents() {
+		return parents;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(itemType, displayName);
@@ -78,9 +87,7 @@ public class RPGItemType {
 		if (getItemType().equals(that.getItemType())) {
 			if (getDisplayName() == null && that.getDisplayName() == null)
 				return true;
-			if (getDisplayName() != null && getDisplayName().equalsIgnoreCase(that.getDisplayName())) {
-				return true;
-			}
+			return getDisplayName() != null && getDisplayName().equalsIgnoreCase(that.getDisplayName());
 		}
 		return false;
 	}

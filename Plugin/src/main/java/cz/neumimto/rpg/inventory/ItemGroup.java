@@ -1,6 +1,8 @@
 package cz.neumimto.rpg.inventory;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -9,9 +11,11 @@ import java.util.Set;
 public class ItemGroup {
     private Set<RPGItemType> itemTypes = new HashSet<>();
     private int damageMultPropertyId;
-    private final String groupName;
+    private String groupName;
+    private ItemGroup directParent;
+    private Map<String, ItemGroup> allParents = new HashMap<>();
 
-    public ItemGroup(String groupName) {
+    public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
 
@@ -34,4 +38,15 @@ public class ItemGroup {
     public void setDamageMultPropertyId(int damageMultPropertyId) {
         this.damageMultPropertyId = damageMultPropertyId;
     }
+
+    public boolean isRoot() {
+        return directParent == null;
+    }
+
+    public void addItemType(RPGItemType rpgItemType) {
+        rpgItemType.getParents().put(groupName, this);
+        rpgItemType.getParents().putAll(allParents);
+        itemTypes.add(rpgItemType);
+    }
+
 }

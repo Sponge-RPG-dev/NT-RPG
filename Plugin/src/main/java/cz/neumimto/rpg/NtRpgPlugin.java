@@ -43,6 +43,9 @@ import cz.neumimto.rpg.inventory.data.manipulators.*;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.inventory.items.ItemMetaTypeRegistry;
 import cz.neumimto.rpg.inventory.items.ItemMetaTypes;
+import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtype;
+import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtypeRegistry;
+import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtypes;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.inventory.slotparsers.DefaultPlayerInvHandler;
@@ -271,12 +274,19 @@ public class NtRpgPlugin {
 				.builder(new ItemMetaTypeData.Builder())
 				.buildAndRegister(plugin);
 
-
+		DataRegistration.<ItemMetaHeader, ItemMetaHeader.Immutable>builder()
+				.manipulatorId("item_meta_subtype")
+				.dataName("Item meta subtype")
+				.dataClass(ItemSubtypeData.class)
+				.immutableClass(ItemSubtypeData.Immutable.class)
+				.builder(new ItemSubtypeData.Builder())
+				.buildAndRegister(plugin);
 
 		Sponge.getRegistry().registerModule(SocketType.class, new SocketTypeRegistry());
 		Sponge.getRegistry().registerModule(ICharacterAttribute.class, new AttributeRegistry());
 		Sponge.getRegistry().registerModule(PlayerInvHandler.class, new PlayerInvHandlerRegistry());
 		Sponge.getRegistry().registerModule(ItemMetaType.class, new ItemMetaTypeRegistry());
+		Sponge.getRegistry().registerModule(ItemSubtype.class, new ItemSubtypeRegistry());
 	}
 
 	@Listener
@@ -304,6 +314,11 @@ public class NtRpgPlugin {
 	public void postInit2(GameRegistryEvent.Register<ItemMetaType> event) {
 		event.register(ItemMetaTypes.CHARM);
 		event.register(ItemMetaTypes.RUNEWORD);
+	}
+
+	@Listener
+	public void postInit3(GameRegistryEvent.Register<ItemSubtype> event) {
+		event.register(ItemSubtypes.ANY);
 	}
 
 	@Listener

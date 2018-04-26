@@ -20,6 +20,8 @@ package cz.neumimto.rpg.inventory;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import com.typesafe.config.ConfigValue;
+import com.typesafe.config.ConfigValueType;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.PostProcess;
@@ -148,13 +150,6 @@ public class InventoryService {
 				PrintWriter writer = new PrintWriter(f);
 				writer.println("ReservedItemNames:[]");
 				writer.println("ItemGroups:[");
-				addDefaultItemsToGroup(writer, WeaponKeys.SWORDS, "swords_damage_mult");
-				addDefaultItemsToGroup(writer, WeaponKeys.AXES, "axes_damage_mult");
-				addDefaultItemsToGroup(writer, WeaponKeys.SPADES, "spades_damage_mult");
-				addDefaultItemsToGroup(writer, WeaponKeys.PICKAXES, "pickaxes_damage_mult");
-				addDefaultItemsToGroup(writer, WeaponKeys.HOES, "hoes_damage_mult");
-				addDefaultItemsToGroup(writer, WeaponKeys.BOWS, "bows_meele_damage_mult");
-				addDefaultItemsToGroup(writer, WeaponKeys.STAFF, "staffs_damage_mult");
 				writer.println("]");
 				writer.println("ModdedArmor:[");
 				writer.println("]");
@@ -166,32 +161,9 @@ public class InventoryService {
 
 		Config c = ConfigFactory.parseFile(path.toFile());
 		reservedItemNames.addAll(c.getStringList("ReservedItemNames"));
-		for (Config itemGroups : c.getConfigList("ItemGroups")) {
-			List<String> items = itemGroups.getStringList("Items");
-			String groupName = itemGroups.getString("ItemGroupName");
-			ItemGroup itemGroup = new ItemGroup(groupName);
-			for (String item : items) {
-				ItemType type = Sponge.getRegistry().getType(ItemType.class, item).orElse(null);
-				if (type == null) {
-					String[] split = item.split(";");
-					if (split.length > 2) {
-						addReservedItemname(split[2]);
-						Optional<ItemType> type1 = Sponge.getRegistry().getType(ItemType.class, split[0]);
-						if (type1.isPresent()) {
-							RPGItemType rpgItemType = new RPGItemType(type1.get(), split[2]);
-							itemGroup.getItemTypes().add(rpgItemType);
-						}
-					}
-				} else {
-					RPGItemType rpgItemType = new RPGItemType(type, null);
-					itemGroup.getItemTypes().add(rpgItemType);
-				}
-			}
-			String damageMultPropertyId = itemGroups.getString("DamageMultPropertyId");
-			int idByName = propertyService.getIdByName(damageMultPropertyId);
-			itemGroup.setDamageMultPropertyId(idByName);
-			addItemGroup(itemGroup);
-		}
+		Config itemGroups = c.getConfig("ItemGroups");
+
+		loadItemGroups(itemGroups, null);
 
 		for (String armor : c.getStringList("ModdedArmor")) {
 			Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, armor);
@@ -203,6 +175,35 @@ public class InventoryService {
 				logger.warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN+ "\"modid:my_item\"");
 			}
 		}
+	}
+
+	private ItemGroup loadItemGroups(Config itemGroups, ItemGroup parent) {
+		ItemGroup itemGroup = new ItemGroup();
+
+
+		for (Map.Entry<String, ConfigValue> entry : itemGroups.root().entrySet()) {
+			ConfigValueType type = entry.getValue().valueType();
+			String nodeName = entry.getKey();
+			switch (type) {
+				case STRING:
+					String render = entry.getValue().render();
+					String[] split = render.split(";");
+					Optional<ItemType> itemtype = Sponge.getRegistry().getType(ItemType.class, split[0]);
+					if (!itemtype.isPresent()) {
+						logger.warn(Console.RED + "Could not find item type " + Console.YELLOW + split[0] + Console.RED + ", defined in ItemGroups.conf.");
+						logger.warn(Console.RED + " - Is the mod loaded and is the name correct?");
+						logger.warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN+ "\"modid:my_item\"");
+						continue;
+					}
+					RPGItemType itemType = new RPGItemType(itemtype.get(), split[1]);
+					itemGroup.addItemType(itemType);
+					break;
+				case LIST:
+					loadItemGroups(itemGroups.getConfig(nodeName), itemGroup);
+
+			}
+		}
+		return itemGroup;
 	}
 
 	public void addItemGroup(ItemGroup itemGroup) {

@@ -7,6 +7,7 @@ import cz.neumimto.rpg.inventory.ItemDamage;
 import cz.neumimto.rpg.inventory.LoreDurability;
 import cz.neumimto.rpg.inventory.LoreSectionDelimiter;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
+import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.inventory.sockets.SocketType;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.key.Key;
@@ -41,6 +42,8 @@ public class NKeys {
 	public static Key<Value<SocketType>> ITEMSTACK_UPGRADE = null;
 	public static Key<Value<String>> SKILLTREE_NODE = null;
 	public static Key<Value<ItemMetaType>> ITEM_META_TYPE = null;
+	public static Key<Value<ItemSubtype>> ITEM_META_SUBTYPE = null;
+
 
 	public NKeys() {
 		COMMAND = Key.builder()
@@ -91,6 +94,14 @@ public class NKeys {
 				.id("nt-rpg:item_type")
 				.name("Item type")
 				.build();
+
+		ITEM_META_SUBTYPE = Key.builder()
+				.type(new TypeToken<Value<ItemSubtype>>() {})
+				.query(DataQuery.of(".", "ntrpg.item.subtype"))
+				.id("nt-rpg:item_subtype")
+				.name("Item subtype")
+				.build();
+
 
 		ITEM_ATTRIBUTE_REQUIREMENTS = Key.builder()
 				.type(new TypeToken<MapValue<String, Integer>>() {})
