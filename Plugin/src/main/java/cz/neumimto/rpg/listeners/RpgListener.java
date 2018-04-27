@@ -69,7 +69,6 @@ public class RpgListener {
 			Player player = retardedOptional.get();
 			if (!event.getCharacterBases().isEmpty()) {
 				if (PluginConfig.PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR || event.getCharacterBases().size() == 1) {
-
 					NtRpgPlugin.asyncExecutor.execute(() -> {
 						final IActiveCharacter character = characterService.buildActiveCharacterAsynchronously(player, event.getCharacterBases().get(0));
 						Sponge.getScheduler().createTaskBuilder().execute(() -> {

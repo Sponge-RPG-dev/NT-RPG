@@ -66,6 +66,8 @@ public class InventoryListener {
 	@Listener
 	public void onInventoryClose(InteractInventoryEvent.Close event, @First(typeFilter = {Player.class}) Player player) {
 		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+		if (character == null) //Sponge bugs - it fires close event when player disconnects
+			return;
 		inventoryService.initializeHotbar(character);
 		inventoryService.initializeArmor(character);
 		damageService.recalculateCharacterWeaponDamage(character);

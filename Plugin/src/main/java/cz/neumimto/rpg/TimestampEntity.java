@@ -43,4 +43,20 @@ public abstract class TimestampEntity {
 	public void onUpdate() {
 		updated = System.currentTimeMillis();
 	}
+
+	public Long getUpdated() {
+		return updated;
+	}
+
+	public void setUpdated(Long updated) {
+		this.updated = updated;
+	}
+
+	public Long getCreated() {
+		return created;
+	}
+
+	public void setCreated(Long created) {
+		this.created = created;
+	}
 }
