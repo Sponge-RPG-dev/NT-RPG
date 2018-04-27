@@ -1,15 +1,12 @@
 package cz.neumimto.rpg.inventory;
 
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.inventory.data.NKeys;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
 
 /**
  * Created by NeumimTo on 5.10.17.
@@ -49,6 +46,11 @@ public class RPGItemType {
 	}
 
 	@Override
+	public int hashCode() {
+		return Objects.hash(itemType, displayName);
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == null)
 			return false;
@@ -61,9 +63,7 @@ public class RPGItemType {
 		if (getItemType().equals(that.getItemType())) {
 			if (getDisplayName() == null && that.getDisplayName() == null)
 				return true;
-			if (getDisplayName() != null && getDisplayName().equalsIgnoreCase(that.getDisplayName())) {
-				return true;
-			}
+			return getDisplayName() != null && getDisplayName().equalsIgnoreCase(that.getDisplayName());
 		}
 		return false;
 	}

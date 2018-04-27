@@ -204,5 +204,5 @@ public class PluginConfig {
 	}};
 
 	@ConfigValue
-	public static String EQUIPED_SLOT_RESOLVE_SRATEGY = "slot_order";
+	public static String EQUIPED_SLOT_RESOLVE_SRATEGY = "nt-rpg:persisted_slot_order";
 }

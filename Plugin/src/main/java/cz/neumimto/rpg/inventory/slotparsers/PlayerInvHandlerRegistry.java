@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.inventory.slotparsers;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import com.google.common.collect.Maps;
 import org.spongepowered.api.registry.AdditionalCatalogRegistryModule;
 import org.spongepowered.api.registry.util.RegisterCatalog;
@@ -9,6 +7,8 @@ import org.spongepowered.api.registry.util.RegisterCatalog;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Created by NeumimTo on 25.3.2018.
@@ -27,7 +27,7 @@ public class PlayerInvHandlerRegistry implements AdditionalCatalogRegistryModule
 
     @Override
     public Optional<PlayerInvHandler> getById(String id) {
-        return Optional.of(SlotIterators.get(id.toLowerCase()));
+        return Optional.ofNullable(SlotIterators.get(id.toLowerCase()));
     }
 
     @Override
