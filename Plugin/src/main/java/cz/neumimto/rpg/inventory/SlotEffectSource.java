@@ -17,7 +17,7 @@ public class SlotEffectSource implements IEffectSource {
         return slotId;
     }
 
-    public ItemSubtype getItemSubtype() {
+    public ItemSubtype getAcceptsItemSubtype() {
         return itemSubtype;
     }
 

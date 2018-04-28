@@ -2,7 +2,7 @@ package cz.neumimto.rpg.inventory.slotparsers;
 
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.configuration.PluginConfig;
+import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.item.inventory.Inventory;
@@ -46,7 +46,8 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
         Integer slot = null;
         while (iterator.hasNext()) {
             slot = iterator.next();
-            if (!PluginConfig.ACCESSORIES_SLOTS.contains(slot)) {
+            IEffectSource slotSource = inventoryService().getEffectSourceBySlotId(slot);
+            if (slotSource == null) {
                 iterator.remove();
                 continue;
             }

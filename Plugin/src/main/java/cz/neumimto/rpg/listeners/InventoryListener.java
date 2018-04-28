@@ -91,7 +91,8 @@ public class InventoryListener {
 			ClickInventoryEvent.Primary.class,
 			ClickInventoryEvent.Secondary.class,
 			ClickInventoryEvent.Creative.class,
-			ClickInventoryEvent.Middle.class
+			ClickInventoryEvent.Middle.class,
+			ClickInventoryEvent.Shift.class
 	})
 	public void onClick(ClickInventoryEvent event, @Root Player player) {
 		List<SlotTransaction> transactions = event.getTransactions();

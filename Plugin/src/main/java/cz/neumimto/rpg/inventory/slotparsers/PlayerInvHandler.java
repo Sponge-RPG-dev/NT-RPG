@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.inventory.slotparsers;
 
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.inventory.CannotUseItemReson;
 import cz.neumimto.rpg.inventory.CustomItemFactory;
@@ -102,7 +101,7 @@ public abstract class PlayerInvHandler implements CatalogType {
     public boolean processSlotInteraction(IActiveCharacter character, Slot slot) {
         Optional<SlotIndex> inventoryProperty = slot.getInventoryProperty(SlotIndex.class);
         Integer value = inventoryProperty.get().getValue();
-        if (PluginConfig.ACCESSORIES_SLOTS.contains(value)) {
+        if (inventoryService().getEffectSourceBySlotId(value) != null) {
             CustomItem customItem = character.getEquipedInventorySlots().get(value);
             //item has been taken away from the slot
             if (!slot.peek().isPresent()) {

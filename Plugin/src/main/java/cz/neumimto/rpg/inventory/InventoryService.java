@@ -20,8 +20,6 @@ package cz.neumimto.rpg.inventory;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import com.typesafe.config.ConfigValue;
-import com.typesafe.config.ConfigValueType;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.PostProcess;
@@ -152,17 +150,31 @@ public class InventoryService {
 				writer.println("ReservedItemNames:[]");
 				writer.println("ItemGroups:[");
 				writer.println("]");
-				writer.println("InventorySlots:[");
-				writer.println(5); //Vanilla Armor Slots
-				writer.println(6); //Vanilla Armor Slots
-				writer.println(7); //Vanilla Armor Slots
-				writer.println(8); //Vanilla Armor Slots
-
-				writer.println(45); //Vanilla Offhand Slot
-				writer.println("9;ANY");  //Vanilla top-row left corner slots, just an example
-				writer.println("10;ANY"); //Vanilla top-row left corner slots, just an example
-				writer.println("11;ANY"); //Vanilla top-row left corner slots, just an example
+				writer.println("ItemMetaSubtypes:[");
 				writer.println("]");
+				writer.println("#List of inventory slots to be handled by the plugin");
+				writer.println("#To get desired slotId run plugin with DEBUG enabled and interact with desired slots");
+				writer.println("#Format is slotId;ItemMetaSubtype");
+				writer.println("#Eventually you can tell the plugin to apply some filters to defined slots");
+				writer.println("#If you define a line such as \"9;RING\", it means that players might put into slot with slotid 9 only itemstacks having nbt tag nt-rpg:item_subtype");
+				writer.println("#The filters have to be defined in the section \"ItemMetaSubtypes\" ");
+				writer.println("#You will not need those filters if: ");
+				writer.println("# - You have a forge mod, which is already doing some checks for items before its equiped");
+				writer.println("# - You have a vanilla server and you are not interested in this filter feature, or you wish not to have any additional slots");
+				writer.println("# ");
+				writer.println("#If you install any forge mod later, then you have to reconfigure this section, slotids might shift, it depends on mod load order and some sponge magic");
+				writer.println("InventorySlots:[");
+				writer.println("\t5"); //Vanilla Armor Slots
+				writer.println("\t6"); //Vanilla Armor Slots
+				writer.println("\t7"); //Vanilla Armor Slots
+				writer.println("\t8"); //Vanilla Armor Slots
+				writer.println("\t45"); //Vanilla Offhand Slot
+				writer.println("\t9;ANY");  //Vanilla top-row left corner slots, just an example
+				writer.println("\t10;ANY"); //Vanilla top-row left corner slots, just an example
+				writer.println("\t11;ANY"); //Vanilla top-row left corner slots, just an example
+				writer.println("]");
+				writer.println("#List of modded armors item types, which is the player able to equip into vanilla armor slots");
+				writer.println("#The format is \"modId:itemname\"");
 				writer.println("ModdedArmor:[");
 				writer.println("]");
 				writer.close();
@@ -174,10 +186,10 @@ public class InventoryService {
 		Config c = ConfigFactory.parseFile(path.toFile());
 		reservedItemNames.addAll(c.getStringList("ReservedItemNames"));
 
-		Config slots = c.getConfig("InventorySlots");
-		loadSlotSettings(slots);
+		List<String> inventorySlots = c.getStringList("InventorySlots");
+		loadSlotSettings(inventorySlots);
 
-		Config itemGroups = c.getConfig("ItemGroups");
+		List<? extends Config> itemGroups = c.getConfigList("ItemGroups");
 		loadItemGroups(itemGroups, null);
 
 		for (String armor : c.getStringList("ModdedArmor")) {
@@ -192,10 +204,9 @@ public class InventoryService {
 		}
 	}
 
-	private void loadSlotSettings(Config slots) {
-		for (Map.Entry<String, ConfigValue> entry : slots.entrySet()) {
-			String render = entry.getValue().render();
-			String[] split = render.split(";");
+	private void loadSlotSettings(List<String> slots) {
+		for (String str : slots) {
+			String[] split = str.split(";");
 			if (split.length == 1) {
 				SlotEffectSource slotEffectSource = new SlotEffectSource(Integer.parseInt(split[0]), ItemSubtypes.ANY);
 				slotEffectSourceMap.put(slotEffectSource.getSlotId(), slotEffectSource);
@@ -209,10 +220,10 @@ public class InventoryService {
 		}
 	}
 
-	private ItemGroup loadItemGroups(Config itemGroups, ItemGroup parent) {
+	private ItemGroup loadItemGroups(List<? extends Config> itemGroups, ItemGroup parent) {
 		ItemGroup itemGroup = new ItemGroup();
 
-
+/*
 		for (Map.Entry<String, ConfigValue> entry : itemGroups.root().entrySet()) {
 			ConfigValueType type = entry.getValue().valueType();
 			String nodeName = entry.getKey();
@@ -235,6 +246,7 @@ public class InventoryService {
 
 			}
 		}
+		*/
 		return itemGroup;
 	}
 
