@@ -69,8 +69,6 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -145,42 +143,7 @@ public class InventoryService {
 		Path path = Paths.get(NtRpgPlugin.workingDir+"/ItemGroups.conf");
 		File f = path.toFile();
 		if (!f.exists()) {
-			try {
-				PrintWriter writer = new PrintWriter(f);
-				writer.println("ReservedItemNames:[]");
-				writer.println("ItemGroups:[");
-				writer.println("]");
-				writer.println("ItemMetaSubtypes:[");
-				writer.println("]");
-				writer.println("#List of inventory slots to be handled by the plugin");
-				writer.println("#To get desired slotId run plugin with DEBUG enabled and interact with desired slots");
-				writer.println("#Format is slotId;ItemMetaSubtype");
-				writer.println("#Eventually you can tell the plugin to apply some filters to defined slots");
-				writer.println("#If you define a line such as \"9;RING\", it means that players might put into slot with slotid 9 only itemstacks having nbt tag nt-rpg:item_subtype");
-				writer.println("#The filters have to be defined in the section \"ItemMetaSubtypes\" ");
-				writer.println("#You will not need those filters if: ");
-				writer.println("# - You have a forge mod, which is already doing some checks for items before its equiped");
-				writer.println("# - You have a vanilla server and you are not interested in this filter feature, or you wish not to have any additional slots");
-				writer.println("# ");
-				writer.println("#If you install any forge mod later, then you have to reconfigure this section, slotids might shift, it depends on mod load order and some sponge magic");
-				writer.println("InventorySlots:[");
-				writer.println("\t5"); //Vanilla Armor Slots
-				writer.println("\t6"); //Vanilla Armor Slots
-				writer.println("\t7"); //Vanilla Armor Slots
-				writer.println("\t8"); //Vanilla Armor Slots
-				writer.println("\t45"); //Vanilla Offhand Slot
-				writer.println("\t9;ANY");  //Vanilla top-row left corner slots, just an example
-				writer.println("\t10;ANY"); //Vanilla top-row left corner slots, just an example
-				writer.println("\t11;ANY"); //Vanilla top-row left corner slots, just an example
-				writer.println("]");
-				writer.println("#List of modded armors item types, which is the player able to equip into vanilla armor slots");
-				writer.println("#The format is \"modId:itemname\"");
-				writer.println("ModdedArmor:[");
-				writer.println("]");
-				writer.close();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
+
 		}
 
 		Config c = ConfigFactory.parseFile(path.toFile());
@@ -230,31 +193,6 @@ public class InventoryService {
 	private ItemGroup loadItemGroups(List<? extends Config> itemGroups, ItemGroup parent) {
 		ItemGroup itemGroup = new ItemGroup();
 
-/*
-		for (Map.Entry<String, ConfigValue> entry : itemGroups.root().entrySet()) {
-			ConfigValueType type = entry.getValue().valueType();
-			String nodeName = entry.getKey();
-			switch (type) {
-				case STRING:
-					String render = entry.getValue().render();
-					String[] split = render.split(";");
-					Optional<ItemType> itemtype = Sponge.getRegistry().getType(ItemType.class, split[0]);
-					if (!itemtype.isPresent()) {
-						logger.warn(Console.RED + "Could not find item type " + Console.YELLOW + split[0] + Console.RED + ", defined in ItemGroups.conf.");
-						logger.warn(Console.RED + " - Is the mod loaded and is the name correct?");
-						logger.warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN+ "\"modid:my_item\"");
-						continue;
-					}
-					RPGItemType itemType = new RPGItemType(itemtype.get(), split[1]);
-					itemGroup.addItemType(itemType);
-					break;
-				case LIST:
-					loadItemGroups(itemGroups.getConfig(nodeName), itemGroup);
-
-			}
-		}
-		*/
-		return itemGroup;
 	}
 
 	public void addItemGroup(ItemGroup itemGroup) {
@@ -282,24 +220,6 @@ public class InventoryService {
 			}
 		}
 		return null;
-	}
-
-	private void addDefaultItemsToGroup(PrintWriter writer, String id, String damageMultProperty) {
-		writer.println("\t{");
-		writer.println("\t\tItemGroupName:"+id);
-		writer.println("\t\tItems:[");
-		for (ItemType type : Sponge.getGame().getRegistry().getAllOf(ItemType.class)) {
-			if (type.getId().toUpperCase().contains(id)) {
-			    if (id.equalsIgnoreCase(WeaponKeys.AXES) && type.getId().toUpperCase().contains(WeaponKeys.PICKAXES)) {
-                    continue;
-                }
-                writer.println("\t\t\t\"" +type.getId() + "\"");
-			}
-		}
-		writer.println("\t\t]");
-
-		writer.println("\t\tDamageMultPropertyId:"+damageMultProperty);
-		writer.println("\t}");
 	}
 
 	public void initializeCharacterInventory(IActiveCharacter character) {
