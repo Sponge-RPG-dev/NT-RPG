@@ -186,6 +186,11 @@ public class InventoryService {
 		Config c = ConfigFactory.parseFile(path.toFile());
 		reservedItemNames.addAll(c.getStringList("ReservedItemNames"));
 
+		List<String> itemMetaSubtypes = c.getStringList("ItemMetaSubtypes");
+
+		//will break in api 8
+		itemMetaSubtypes.stream().map(ItemSubtype::new).forEach(a -> Sponge.getRegistry().register(ItemSubtype.class, a));
+
 		List<String> inventorySlots = c.getStringList("InventorySlots");
 		loadSlotSettings(inventorySlots);
 
@@ -211,10 +216,12 @@ public class InventoryService {
 				SlotEffectSource slotEffectSource = new SlotEffectSource(Integer.parseInt(split[0]), ItemSubtypes.ANY);
 				slotEffectSourceMap.put(slotEffectSource.getSlotId(), slotEffectSource);
 			} else {
-				//will break in api 8
-				ItemSubtype itemSubtype = new ItemSubtype(split[1]);
-				Sponge.getRegistry().register(ItemSubtype.class, itemSubtype);
-				SlotEffectSource slotEffectSource = new SlotEffectSource(Integer.parseInt(split[0]), Sponge.getRegistry().getType(ItemSubtype.class, itemSubtype.getId()).get());
+				Optional<ItemSubtype> type = Sponge.getRegistry().getType(ItemSubtype.class, split[1]);
+				if (!type.isPresent()) {
+					type = Optional.of(ItemSubtypes.ANY);
+					logger.error("Could not find subtype " + split[1]);
+				}
+				SlotEffectSource slotEffectSource = new SlotEffectSource(Integer.parseInt(split[0]), type.get());
 				slotEffectSourceMap.put(slotEffectSource.getSlotId(), slotEffectSource);
 			}
 		}
@@ -279,6 +286,7 @@ public class InventoryService {
 
 	private void addDefaultItemsToGroup(PrintWriter writer, String id, String damageMultProperty) {
 		writer.println("\t{");
+		writer.println("\t\tItemGroupName:"+id);
 		writer.println("\t\tItems:[");
 		for (ItemType type : Sponge.getGame().getRegistry().getAllOf(ItemType.class)) {
 			if (type.getId().toUpperCase().contains(id)) {
@@ -289,7 +297,7 @@ public class InventoryService {
 			}
 		}
 		writer.println("\t\t]");
-		writer.println("\t\tItemGroupName:"+id);
+
 		writer.println("\t\tDamageMultPropertyId:"+damageMultProperty);
 		writer.println("\t}");
 	}

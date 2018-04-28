@@ -21,7 +21,7 @@ public class ItemSubtypeRegistry implements AdditionalCatalogRegistryModule<Item
 
     @Override
     public Optional<ItemSubtype> getById(String id) {
-        return Optional.of(types.get(id.toLowerCase()));
+        return Optional.ofNullable(types.get(id.toLowerCase()));
     }
 
     @Override
