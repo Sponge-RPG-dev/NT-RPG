@@ -74,7 +74,7 @@ public class GuiHelper {
 		damageTypeToItemStack.put(DamageTypes.VOID, Block.of(BlockTypes.PORTAL));
 		damageTypeToItemStack.put(DamageTypes.MAGIC, Item.of(ItemTypes.ENCHANTED_BOOK));
 
-		damageTypeToItemStack.put(NDamageType.ICE, Block.of(BlockTypes.FROSTED_ICE));
+		damageTypeToItemStack.put(NDamageType.ICE, Block.of(BlockTypes.ICE));
 		damageTypeToItemStack.put(NDamageType.MAGICAL, Item.of(ItemTypes.ENCHANTED_BOOK));
 		damageTypeToItemStack.put(NDamageType.MEELE_CRITICAL, Item.of(ItemTypes.DIAMOND_SWORD));
 		damageTypeToItemStack.put(NDamageType.PHYSICAL, Item.of(ItemTypes.IRON_NUGGET));
