@@ -20,8 +20,6 @@ package cz.neumimto.rpg.utils;
 
 import static org.spongepowered.api.item.ItemTypes.APPLE;
 import static org.spongepowered.api.item.ItemTypes.BAKED_POTATO;
-import static org.spongepowered.api.item.ItemTypes.BLAZE_ROD;
-import static org.spongepowered.api.item.ItemTypes.BOW;
 import static org.spongepowered.api.item.ItemTypes.BREAD;
 import static org.spongepowered.api.item.ItemTypes.CARROT;
 import static org.spongepowered.api.item.ItemTypes.CHAINMAIL_BOOTS;
@@ -35,35 +33,20 @@ import static org.spongepowered.api.item.ItemTypes.COOKED_FISH;
 import static org.spongepowered.api.item.ItemTypes.COOKED_MUTTON;
 import static org.spongepowered.api.item.ItemTypes.COOKED_RABBIT;
 import static org.spongepowered.api.item.ItemTypes.COOKIE;
-import static org.spongepowered.api.item.ItemTypes.DIAMOND_AXE;
 import static org.spongepowered.api.item.ItemTypes.DIAMOND_BOOTS;
 import static org.spongepowered.api.item.ItemTypes.DIAMOND_CHESTPLATE;
 import static org.spongepowered.api.item.ItemTypes.DIAMOND_HELMET;
-import static org.spongepowered.api.item.ItemTypes.DIAMOND_HOE;
 import static org.spongepowered.api.item.ItemTypes.DIAMOND_LEGGINGS;
-import static org.spongepowered.api.item.ItemTypes.DIAMOND_PICKAXE;
-import static org.spongepowered.api.item.ItemTypes.DIAMOND_SHOVEL;
-import static org.spongepowered.api.item.ItemTypes.DIAMOND_SWORD;
 import static org.spongepowered.api.item.ItemTypes.FISH;
 import static org.spongepowered.api.item.ItemTypes.GOLDEN_APPLE;
-import static org.spongepowered.api.item.ItemTypes.GOLDEN_AXE;
 import static org.spongepowered.api.item.ItemTypes.GOLDEN_BOOTS;
 import static org.spongepowered.api.item.ItemTypes.GOLDEN_CHESTPLATE;
 import static org.spongepowered.api.item.ItemTypes.GOLDEN_HELMET;
-import static org.spongepowered.api.item.ItemTypes.GOLDEN_HOE;
 import static org.spongepowered.api.item.ItemTypes.GOLDEN_LEGGINGS;
-import static org.spongepowered.api.item.ItemTypes.GOLDEN_PICKAXE;
-import static org.spongepowered.api.item.ItemTypes.GOLDEN_SHOVEL;
-import static org.spongepowered.api.item.ItemTypes.GOLDEN_SWORD;
-import static org.spongepowered.api.item.ItemTypes.IRON_AXE;
 import static org.spongepowered.api.item.ItemTypes.IRON_BOOTS;
 import static org.spongepowered.api.item.ItemTypes.IRON_CHESTPLATE;
 import static org.spongepowered.api.item.ItemTypes.IRON_HELMET;
-import static org.spongepowered.api.item.ItemTypes.IRON_HOE;
 import static org.spongepowered.api.item.ItemTypes.IRON_LEGGINGS;
-import static org.spongepowered.api.item.ItemTypes.IRON_PICKAXE;
-import static org.spongepowered.api.item.ItemTypes.IRON_SHOVEL;
-import static org.spongepowered.api.item.ItemTypes.IRON_SWORD;
 import static org.spongepowered.api.item.ItemTypes.LEATHER_BOOTS;
 import static org.spongepowered.api.item.ItemTypes.LEATHER_CHESTPLATE;
 import static org.spongepowered.api.item.ItemTypes.LEATHER_HELMET;
@@ -74,17 +57,6 @@ import static org.spongepowered.api.item.ItemTypes.PORKCHOP;
 import static org.spongepowered.api.item.ItemTypes.POTATO;
 import static org.spongepowered.api.item.ItemTypes.POTION;
 import static org.spongepowered.api.item.ItemTypes.ROTTEN_FLESH;
-import static org.spongepowered.api.item.ItemTypes.STICK;
-import static org.spongepowered.api.item.ItemTypes.STONE_AXE;
-import static org.spongepowered.api.item.ItemTypes.STONE_HOE;
-import static org.spongepowered.api.item.ItemTypes.STONE_PICKAXE;
-import static org.spongepowered.api.item.ItemTypes.STONE_SHOVEL;
-import static org.spongepowered.api.item.ItemTypes.STONE_SWORD;
-import static org.spongepowered.api.item.ItemTypes.WOODEN_AXE;
-import static org.spongepowered.api.item.ItemTypes.WOODEN_HOE;
-import static org.spongepowered.api.item.ItemTypes.WOODEN_PICKAXE;
-import static org.spongepowered.api.item.ItemTypes.WOODEN_SHOVEL;
-import static org.spongepowered.api.item.ItemTypes.WOODEN_SWORD;
 
 import com.flowpowered.math.TrigMath;
 import com.flowpowered.math.imaginary.Quaterniond;
@@ -122,58 +94,7 @@ import java.util.regex.Pattern;
  */
 public class ItemStackUtils {
 	/*If you want to add custom type of sword/axe/armor... via mod or resourcepack(remodeled potatoes) put them into these collections */
-	public static Set<ItemType> swords = new HashSet<ItemType>() {{
-		add(DIAMOND_SWORD);
-		add(GOLDEN_SWORD);
-		add(IRON_SWORD);
-		add(STONE_SWORD);
-		add(WOODEN_SWORD);
-	}};
 
-	public static Set<ItemType> shovels = new HashSet<ItemType>() {{
-		add(DIAMOND_SHOVEL);
-		add(GOLDEN_SHOVEL);
-		add(IRON_SHOVEL);
-		add(STONE_SHOVEL);
-		add(WOODEN_SHOVEL);
-	}};
-
-	public static Set<ItemType> axes = new HashSet<ItemType>() {{
-		add(DIAMOND_AXE);
-		add(GOLDEN_AXE);
-		add(IRON_AXE);
-		add(STONE_AXE);
-		add(WOODEN_AXE);
-	}};
-	public static Set<ItemType> pickaxes = new HashSet<ItemType>() {{
-		add(DIAMOND_PICKAXE);
-		add(GOLDEN_PICKAXE);
-		add(IRON_PICKAXE);
-		add(STONE_PICKAXE);
-		add(WOODEN_PICKAXE);
-	}};
-	public static Set<ItemType> hoes = new HashSet<ItemType>() {{
-		add(DIAMOND_HOE);
-		add(GOLDEN_HOE);
-		add(IRON_HOE);
-		add(STONE_HOE);
-		add(WOODEN_HOE);
-	}};
-	public static Set<ItemType> bows = new HashSet<ItemType>() {{
-		add(BOW);
-	}};
-	public static Set<ItemType> staffs = new HashSet<ItemType>() {{
-		add(BLAZE_ROD);
-		add(STICK);
-	}};
-	public static Set<ItemType> weapons = new HashSet<ItemType>() {{
-		addAll(swords);
-		addAll(axes);
-		addAll(bows);
-		addAll(pickaxes);
-		addAll(hoes);
-		addAll(shovels);
-	}};
 	public static Set<ItemType> consumables = new HashSet<ItemType>() {{
 		addAll(Arrays.asList(APPLE,
 				GOLDEN_APPLE,
@@ -210,34 +131,6 @@ public class ItemStackUtils {
 	protected static GlobalScope globalScope = NtRpgPlugin.GlobalScope;
 	private static BiFunction<String, String, String> formatedConfig = (k, v) -> Utils.newLine(k + ": " + v + ";");
 	private static Pattern pattern = Pattern.compile("\\((.*?)\\)");
-
-	public static boolean isSword(ItemType type) {
-		return swords.contains(type);
-	}
-
-	public static boolean isAxe(ItemType type) {
-		return axes.contains(type);
-	}
-
-	public static boolean isPickaxe(ItemType type) {
-		return pickaxes.contains(type);
-	}
-
-	public static boolean isHoe(ItemType type) {
-		return hoes.contains(type);
-	}
-
-	public static boolean isBow(ItemType type) {
-		return bows.contains(type);
-	}
-
-	public static boolean isWeapon(ItemType type) {
-		return weapons.contains(type);
-	}
-
-	public static boolean isStaff(ItemType type) {
-		return staffs.contains(type);
-	}
 
 	public static boolean isHelmet(ItemType type) {
 		return helmet.contains(type);
@@ -317,24 +210,6 @@ public class ItemStackUtils {
 		any_armor.addAll(boots);
 	}
 
-	public static boolean checkType(ItemType i, String item) {
-		if (item.equalsIgnoreCase("sword")) {
-			return swords.contains(i);
-		}
-		if (item.equalsIgnoreCase("axe")) {
-			return axes.contains(i);
-		}
-		if (item.equalsIgnoreCase("pickaxe")) {
-			return pickaxes.contains(i);
-		}
-		if (item.equalsIgnoreCase("hoe")) {
-			return hoes.contains(i);
-		}
-		if (item.equalsIgnoreCase("staff")) {
-			return staffs.contains(i);
-		}
-		return false;
-	}
 
 	public static Text stringToItemTooltip(String string) {
 		return Text.of(TextColors.GOLD, TextStyles.ITALIC, string);

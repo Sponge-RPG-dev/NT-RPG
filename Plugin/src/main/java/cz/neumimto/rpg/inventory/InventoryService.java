@@ -24,7 +24,11 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.*;
+import cz.neumimto.rpg.Arg;
+import cz.neumimto.rpg.Console;
+import cz.neumimto.rpg.GroupService;
+import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
@@ -35,7 +39,13 @@ import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.ItemLoreBuilderService;
 import cz.neumimto.rpg.inventory.data.NKeys;
-import cz.neumimto.rpg.inventory.data.manipulators.*;
+import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaHeader;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaTypeData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemRarityData;
+import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemGroupRequirementsData;
+import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemRequirementsData;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtypes;
@@ -71,7 +81,15 @@ import org.spongepowered.api.text.format.TextStyles;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -113,6 +131,12 @@ public class InventoryService {
 	@Inject
 	private GroupService groupService;
 
+	@Inject
+	private NtRpgPlugin plugin;
+
+	@Inject
+	private ItemService itemService;
+
 	private PlayerInvHandler playerInvHandler;
 
 	private Set<String> reservedItemNames = new HashSet<>();
@@ -143,7 +167,7 @@ public class InventoryService {
 		Path path = Paths.get(NtRpgPlugin.workingDir+"/ItemGroups.conf");
 		File f = path.toFile();
 		if (!f.exists()) {
-
+			Sponge.getAssetManager().getAsset(plugin,"config/defaults/ItemGroups.conf");
 		}
 
 		Config c = ConfigFactory.parseFile(path.toFile());
@@ -195,13 +219,6 @@ public class InventoryService {
 
 	}
 
-	public void addItemGroup(ItemGroup itemGroup) {
-		itemGroups.put(itemGroup.getGroupName(), itemGroup);
-	}
-
-	public ItemGroup getItemGroup(ItemStack itemStack) {
-		return getItemGroup(RPGItemType.from(itemStack));
-	}
 
 	public ItemGroup getItemGroup(RPGItemType itemType) {
 		for (ItemGroup itemGroup : itemGroups.values()) {
@@ -319,28 +336,25 @@ public class InventoryService {
 	}
 	*/
 
+	//TODO: ItemGroups.conf add armor section
 	public CannotUseItemReson canWear(ItemStack itemStack, IActiveCharacter character) {
-		if (ItemStackUtils.any_armor.contains(itemStack.getType())) {
-			if (!character.canWear(RPGItemType.from(itemStack))) {
-				return CannotUseItemReson.CONFIG;
-			}
+		RPGItemType itemType = itemService.getFromItemStack(itemStack);
+		if (!character.canWear(itemType)) {
+			return CannotUseItemReson.CONFIG;
 		}
 		return checkRestrictions(character, itemStack);
-
 	}
 
 	public CannotUseItemReson canUse(ItemStack itemStack, IActiveCharacter character) {
 		if (itemStack == null)
 			return CannotUseItemReson.OK;
 
-		if (ItemStackUtils.weapons.contains(itemStack.getType())) {
-			if (!character.canUse(RPGItemType.from(itemStack))) {
-				return CannotUseItemReson.CONFIG;
-			}
-		} else if (ItemStackUtils.any_armor.contains(itemStack.getType())) {
-			if (!character.canWear(RPGItemType.from(itemStack))) {
-				return CannotUseItemReson.CONFIG;
-			}
+		RPGItemType itemType = itemService.getFromItemStack(itemStack);
+		if (itemType == null) {
+			return CannotUseItemReson.OK; //??
+		}
+		if (!character.canUse(itemType)) {
+			return CannotUseItemReson.CONFIG;
 		}
 		return checkRestrictions(character,itemStack);
 	}
