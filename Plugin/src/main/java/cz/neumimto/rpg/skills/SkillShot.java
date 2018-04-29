@@ -21,11 +21,12 @@ package cz.neumimto.rpg.skills;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.utils.TriConsumer;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.projectile.Projectile;
+import org.spongepowered.api.event.entity.DamageEntityEvent;
 
 import java.util.Optional;
-import java.util.function.BiConsumer;
 
 /**
  * Created by NeumimTo on 12.3.2015.
@@ -51,6 +52,6 @@ public abstract class SkillShot extends ActiveSkill {
 
 	protected abstract Class<Projectile> getProjectile(IActiveCharacter character, ExtendedSkillInfo info);
 
-	protected abstract BiConsumer<IEntity, IEntity> getHitConsumer();
+	protected abstract TriConsumer<DamageEntityEvent, IEntity, IEntity> getHitConsumer();
 
 }

@@ -286,8 +286,9 @@ public class BasicListener {
         IEntity target = entityService.get(event.getTargetEntity());
         ProjectileProperties projectileProperties = ProjectileProperties.cache.get(projectile);
         if (projectileProperties != null) {
+            event.setCancelled(true);
             ProjectileProperties.cache.remove(projectile);
-            projectileProperties.consumer.accept(shooter, target);
+            projectileProperties.consumer.accept(event, shooter, target);
             return;
         }
 
@@ -326,7 +327,7 @@ public class BasicListener {
             }
         }
         IEntity targetchar = entityService.get(event.getTargetEntity());
-        double finalDamage = event.getBaseDamage() * damageService.getEntityBonusDamage(caster, type);
+        double finalDamage = event.getOriginalDamage() * damageService.getEntityBonusDamage(caster, type);
 
 
         try (CauseStackManager.StackFrame frame = causeStackManager.pushCauseFrame()) {

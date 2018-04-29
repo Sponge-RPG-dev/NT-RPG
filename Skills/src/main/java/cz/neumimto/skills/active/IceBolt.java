@@ -77,7 +77,7 @@ public class IceBolt extends ActiveSkill {
 		int slowamplf = getIntNodeValue(info, SkillNodes.AMPFLIER);
 
 
-		projectileProperties.onHit((caster, target) -> {
+		projectileProperties.onHit((event, caster, target) -> {
 			target.getEntity().damage(projectileProperties.getDamage(), build.build());
 			effectService.addEffect(new SlowPotion(caster, slowduration, slowamplf), caster, this);
 		});

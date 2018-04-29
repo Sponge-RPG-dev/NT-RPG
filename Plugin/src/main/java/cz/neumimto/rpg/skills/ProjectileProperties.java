@@ -19,11 +19,12 @@
 package cz.neumimto.rpg.skills;
 
 import cz.neumimto.rpg.IEntity;
+import cz.neumimto.rpg.utils.TriConsumer;
 import org.spongepowered.api.entity.projectile.Projectile;
+import org.spongepowered.api.event.entity.DamageEntityEvent;
 
 import java.util.Map;
 import java.util.WeakHashMap;
-import java.util.function.BiConsumer;
 
 /**
  * Created by NeumimTo on 15.1.2015.
@@ -37,7 +38,7 @@ public class ProjectileProperties {
     };*/
 
 	public static Map<Projectile, ProjectileProperties> cache = new WeakHashMap<>();
-	public BiConsumer<IEntity, IEntity> consumer;
+	public TriConsumer<DamageEntityEvent, IEntity, IEntity> consumer;
 	//protected Projectile t;
 	private double damage;
 	// private long lifetime;
@@ -50,12 +51,12 @@ public class ProjectileProperties {
 		this.caster = caster;
 	}
 
-	public void onHit(BiConsumer<IEntity, IEntity> consumer) {
+	public void onHit(TriConsumer<DamageEntityEvent, IEntity, IEntity> consumer) {
 		this.consumer = consumer;
 	}
 
-	public void process(IEntity target) {
-		consumer.accept(caster, target);
+	public void process(DamageEntityEvent event, IEntity target) {
+		consumer.accept(event, caster, target);
 	}
 
 	public double getDamage() {
