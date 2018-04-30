@@ -43,10 +43,5 @@ public class ItemGroup {
         return directParent == null;
     }
 
-    public void addItemType(RPGItemType rpgItemType) {
-        rpgItemType.getParents().put(groupName, this);
-        rpgItemType.getParents().putAll(allParents);
-        itemTypes.add(rpgItemType);
-    }
 
 }

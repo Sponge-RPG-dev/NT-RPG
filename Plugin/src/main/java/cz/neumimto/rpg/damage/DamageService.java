@@ -25,10 +25,7 @@ import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.inventory.ConfigRPGItemType;
-import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.inventory.ItemGroup;
-import cz.neumimto.rpg.inventory.RPGItemType;
+import cz.neumimto.rpg.inventory.*;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
@@ -66,6 +63,10 @@ public class DamageService {
 
 	@Inject
 	private InventoryService inventoryService;
+
+	@Inject
+	private ItemService itemService;
+
 
 	public BiFunction<Double, Double, Double> DamageArmorReductionFactor = (damage, armor) -> armor / (armor + 10 * damage);
 
@@ -115,7 +116,7 @@ public class DamageService {
 		if (itemStack == null) {
 			character.setWeaponDamage(0);
 		} else {
-			recalculateCharacterWeaponDamage(character, RPGItemType.from(itemStack));
+			recalculateCharacterWeaponDamage(character, itemService.getFromItemStack(itemStack));
 		}
 	}
 

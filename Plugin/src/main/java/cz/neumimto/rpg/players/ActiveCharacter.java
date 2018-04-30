@@ -407,12 +407,12 @@ public class ActiveCharacter implements IActiveCharacter {
 			return 0D;
 		for (ConfigRPGItemType configRPGItemType : wrapper.getItems()) {
 			if (weaponItemType.getDisplayName() == null) {
-				if (configRPGItemType.getDisplayName() == null) {
+				if (configRPGItemType.getRpgItemType().getDisplayName() == null) {
 					//todo check if the displayname is reserved
 					return wrapper.getDamage(); //null is first, if both null => can use unnamed item
 				}
 			} else {
-				if (weaponItemType.getDisplayName().equalsIgnoreCase(configRPGItemType.getDisplayName())) {
+				if (weaponItemType.getDisplayName().equalsIgnoreCase(configRPGItemType.getRpgItemType().getDisplayName())) {
 					return wrapper.getDamage();
 				}
 			}

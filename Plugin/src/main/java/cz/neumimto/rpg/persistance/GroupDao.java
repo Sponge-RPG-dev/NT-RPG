@@ -27,6 +27,7 @@ import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
+import cz.neumimto.rpg.inventory.ItemService;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.groups.*;
@@ -71,6 +72,9 @@ public class GroupDao {
 
 	@Inject
 	SkillService skillService;
+
+	@Inject
+	ItemService itemService;
 
 	private Map<String, Race> races = new HashMap<>();
 	private Map<String, ConfigClass> classes = new HashMap<>();
@@ -255,7 +259,7 @@ public class GroupDao {
 				String[] k = a.split(";");
 				Optional<ItemType> type = game.getRegistry().getType(ItemType.class, k[0]);
 				if (type.isPresent()) {
-					group.getAllowedArmor().add(new RPGItemType(type.get(), k.length == 1 ? null : k[1]));
+					group.getAllowedArmor().add(itemService.getnew RPGItemType(type.get(), k.length == 1 ? null : k[1]));
 				} else logger.warn("Defined invalid itemtype  " + a + " in " + group.getName());
 			});
 		} catch (ConfigException e) {
@@ -269,6 +273,7 @@ public class GroupDao {
 				String s = split[0];
 				double damage = 0;
 				String itemName = null;
+
 				ItemType type = game.getRegistry().getType(ItemType.class, s).orElse(null);
 				if (type == null) {
 					logger.error(" - Unknown item type " + s);
@@ -279,8 +284,8 @@ public class GroupDao {
 						itemName = split[2];
 					}
 				}
-				ConfigRPGItemType t = new ConfigRPGItemType(type, itemName, group, damage);
-				t.setDamage(damage);
+				RPGItemType rpgitemType = itemService.getByItemTypeAndName(type, itemName);
+				ConfigRPGItemType t = new ConfigRPGItemType(rpgitemType, group, damage);
 				group.addWeapon(t);
 			}
 
