@@ -19,16 +19,13 @@
 package cz.neumimto.rpg.inventory;
 
 import com.typesafe.config.Config;
+import com.typesafe.config.ConfigException;
 import com.typesafe.config.ConfigFactory;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.Arg;
-import cz.neumimto.rpg.Console;
-import cz.neumimto.rpg.GroupService;
-import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.TextHelper;
+import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
@@ -39,13 +36,7 @@ import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.ItemLoreBuilderService;
 import cz.neumimto.rpg.inventory.data.NKeys;
-import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaHeader;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaTypeData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemRarityData;
-import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemGroupRequirementsData;
-import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemRequirementsData;
+import cz.neumimto.rpg.inventory.data.manipulators.*;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtypes;
@@ -81,15 +72,7 @@ import org.spongepowered.api.text.format.TextStyles;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -196,6 +179,57 @@ public class InventoryService {
 		}
 	}
 
+	private void loadItemGroups(List<? extends Config> itemGroups, WeaponClass parent) {
+		for (Config itemGroup : itemGroups) {
+			String weaponClass = null;
+			try {
+				weaponClass = itemGroup.getString("WeaponClass");
+			} catch (ConfigException e) {
+				logger.error("Could not read \"WeaponClass\" node, skipping. This is a critical miss configuration, some items will not be recognized as weapons");
+				continue;
+			}
+			logger.info(" - Loading weaponClass" + weaponClass);
+			WeaponClass weapons = new WeaponClass(weaponClass);
+			weapons.setParent(parent);
+
+			try {
+				logger.info("  - Readong \"Items\" config section" + weaponClass);
+				List<String> items = itemGroup.getStringList("Items");
+				for (String item : items) {
+					String[] split = item.split(";");
+					Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, split[0]);
+					if (!type.isPresent()) {
+						logger.warn(Console.RED + "Could not find item type " + Console.YELLOW + split[0] + Console.RED + " defined in ItemGroups.conf.");
+						logger.warn(Console.RED + " - Is the mod loaded and is the name correct?");
+						logger.warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN+ "\"modid:my_item\"");
+					} else {
+						ItemType itemType = type.get();
+						String name = null;
+						if (split.length > 1) {
+							name = split[1];
+						}
+						itemService.registerItemType(itemType, name, weapons);
+					}
+				}
+			} catch (ConfigException e) {
+				try {
+					loadItemGroups(itemGroup.getConfigList("WeaponClass"), weapons);
+				} catch (ConfigException ee) {
+					logger.error("Could not read nested configuration for weapon class" + weaponClass + "This is a critical miss configuration, some items will not be recognized as weapons" );
+				}
+			}
+
+			try {
+				List<String> properties = itemGroup.getStringList("Properties");
+				for (String property : properties) {
+					itemService.registerProperty(weapons, property.toLowerCase());
+				}
+			} catch (ConfigException e) {
+				logger.error("Properties configuration section not found, skipping");
+			}
+		}
+	}
+
 	private void loadSlotSettings(List<String> slots) {
 		for (String str : slots) {
 			String[] split = str.split(";");
@@ -212,11 +246,6 @@ public class InventoryService {
 				slotEffectSourceMap.put(slotEffectSource.getSlotId(), slotEffectSource);
 			}
 		}
-	}
-
-	private ItemGroup loadItemGroups(List<? extends Config> itemGroups, ItemGroup parent) {
-		ItemGroup itemGroup = new ItemGroup();
-
 	}
 
 

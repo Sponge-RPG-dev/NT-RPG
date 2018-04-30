@@ -8,11 +8,18 @@ import java.util.Set;
  */
 public class WeaponClass {
 
-    public Set<WeaponClass> subClass = new HashSet<>();
+    private final String name;
 
-    public Set<RPGItemType> items = new HashSet<>();
+    private Set<WeaponClass> subClass = new HashSet<>();
 
-    public Set<String> properties = new HashSet<>();
+    private Set<RPGItemType> items = new HashSet<>();
+
+    private Set<String> properties = new HashSet<>();
+    private WeaponClass parent;
+
+    public WeaponClass(String name) {
+        this.name = name;
+    }
 
     public Set<WeaponClass> getSubClass() {
         return subClass;
@@ -36,5 +43,13 @@ public class WeaponClass {
 
     public void setProperties(Set<String> properties) {
         this.properties = properties;
+    }
+
+    public void setParent(WeaponClass parent) {
+        this.parent = parent;
+    }
+
+    public WeaponClass getParent() {
+        return parent;
     }
 }

@@ -1,6 +1,8 @@
 package cz.neumimto.rpg.inventory;
 
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.players.properties.PropertyService;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.item.ItemType;
@@ -8,11 +10,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.text.Text;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 
 /**
@@ -20,6 +18,10 @@ import java.util.TreeSet;
  */
 @Singleton
 public class ItemService {
+
+    @Inject
+    private PropertyService propertyService;
+
 
     private Map<ItemType, Set<RPGItemType>> itemTypes = new HashMap<>();
     private Map<String, RPGItemType> itemTypeNameMaps = new HashMap<>();
@@ -66,7 +68,16 @@ public class ItemService {
     public void registerItemType(ItemType itemType, String itemName, WeaponClass weaponClass) {
         Set<RPGItemType> rpgItemTypes = itemTypes.computeIfAbsent(itemType, k -> new TreeSet<>(new RPGItemTypeComparator()));
         RPGItemType type = new RPGItemType(itemType, itemName, weaponClass);
+        weaponClass.getItems().add(type);
         rpgItemTypes.add(type);
+    }
+
+    public void registerProperty(WeaponClass weaponClass, String property) {
+        Short aShort = PropertyService.getAndIncrement.get();
+        propertyService.registerProperty(property, aShort);
+        if (property.endsWith("_mult")) {
+            propertyService.registerDefaultValue(aShort, 1.0f);
+        }
     }
 
     private static class RPGItemTypeComparator implements Comparator<RPGItemType> {
