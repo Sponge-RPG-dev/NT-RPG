@@ -6,6 +6,8 @@ import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.gui.GuiHelper;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.properties.DefaultProperties;
+import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.item.ItemTypes;
@@ -21,10 +23,13 @@ import java.util.function.BiFunction;
 
 public class PropertySkill extends AbstractSkill{
 
+    private PropertyService propertyService;
+
     public PropertySkill(String name) {
         super();
         setName(name);
         setIcon(ItemTypes.BLAZE_POWDER);
+        propertyService = NtRpgPlugin.GlobalScope.propertyService;
     }
 
     @Override
@@ -62,6 +67,13 @@ public class PropertySkill extends AbstractSkill{
         for (Wrapper property : skillData.properties) {
             if (fc.apply(property.level, skill.getTotalLevel())) {
                 character.addProperty(property.level, property.value * i);
+                if (property.propertyId == DefaultProperties.max_health) {
+                    characterService.updateMaxHealth(character);
+                } else if (property.propertyId == DefaultProperties.walk_speed) {
+                    characterService.updateWalkSpeed(character);
+                } else if (property.propertyId == DefaultProperties.max_mana) {
+                    characterService.updateMaxMana(character);
+                }
             }
         }
     }
