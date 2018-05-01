@@ -31,6 +31,7 @@ public class Basher extends PassiveSkill {
 		settings.addNode(SkillNodes.DAMAGE, 10, 10);
 		settings.addNode(SkillNodes.CHANCE, 0.1f, 0.005f);
 		settings.addNode(SkillNodes.PERIOD, 2500, -100);
+		settings.addNode(SkillNodes.DURATION, 1000, 50f);
 		super.settings = settings;
 		setDamageType(DamageTypes.ATTACK);
 		addSkillType(SkillType.PHYSICAL);
