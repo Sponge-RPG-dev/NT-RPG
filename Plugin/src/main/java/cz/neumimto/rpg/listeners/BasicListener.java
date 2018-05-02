@@ -30,11 +30,7 @@ import cz.neumimto.rpg.damage.ISkillDamageSource;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.events.CharacterWeaponDamageEvent;
-import cz.neumimto.rpg.events.INEntityWeaponDamageEvent;
-import cz.neumimto.rpg.events.ProjectileHitEvent;
-import cz.neumimto.rpg.events.SkillDamageEvent;
-import cz.neumimto.rpg.events.SkillDamageEventLate;
+import cz.neumimto.rpg.events.*;
 import cz.neumimto.rpg.exp.ExperienceService;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.runewords.RWService;
@@ -74,6 +70,7 @@ import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.InteractEntityEvent;
 import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
 import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.event.world.chunk.UnloadChunkEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
@@ -278,7 +275,7 @@ public class BasicListener {
 
     @Listener
     public void onIndirectEntityDamage(DamageEntityEvent event,
-            @First(typeFilter = IndirectEntityDamageSource.class)
+            @Root(typeFilter = IndirectEntityDamageSource.class)
                     IndirectEntityDamageSource indirectEntityDamageSource) {
 
         Projectile projectile = (Projectile) indirectEntityDamageSource.getSource();
@@ -314,7 +311,7 @@ public class BasicListener {
 
     @Listener
     public void onSkillDamage(DamageEntityEvent event,
-            @First(typeFilter = ISkillDamageSource.class)
+            @Root(typeFilter = ISkillDamageSource.class)
                     ISkillDamageSource iSkillDamageSource) {
         IEntity caster = iSkillDamageSource.getCaster();
         ISkill skill = iSkillDamageSource.getSkill();

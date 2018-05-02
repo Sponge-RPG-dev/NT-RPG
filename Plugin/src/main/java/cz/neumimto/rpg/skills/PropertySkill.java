@@ -93,7 +93,6 @@ public class PropertySkill extends AbstractSkill{
                 data.properties.add(wrapper);
             } catch (NullPointerException e) {
                 errors.log("Unknown property name %s in %s", name, context.getId());
-                continue;
             }
 
         }
