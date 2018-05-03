@@ -14,13 +14,12 @@ import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.events.RebuildRunewordEvent;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.ItemUpgradeTransactionResult;
-import cz.neumimto.rpg.inventory.sockets.SocketType;
-import cz.neumimto.rpg.inventory.sockets.SocketTypes;
 import cz.neumimto.rpg.inventory.data.DataConstants;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemSocketsData;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemStackUpgradeData;
-import cz.neumimto.rpg.utils.ItemStackUtils;
+import cz.neumimto.rpg.inventory.sockets.SocketType;
+import cz.neumimto.rpg.inventory.sockets.SocketTypes;
 import cz.neumimto.rpg.utils.Utils;
 import cz.neumimto.rpg.utils.XORShiftRnd;
 import org.slf4j.Logger;
@@ -36,13 +35,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -288,7 +281,7 @@ public class RWService {
         if (rw == null) {
             if (PluginConfig.AUTOREMOVE_NONEXISTING_RUNEWORDS) {
                 i.offer(Keys.DISPLAY_NAME, Text.of(i.getType().getName()));
-                i.offer(Keys.ITEM_LORE, Collections.<Text>emptyList());
+                i.offer(Keys.ITEM_LORE, Collections.emptyList());
             }
             return i;
         }
@@ -302,27 +295,6 @@ public class RWService {
     }
 
 
-    public boolean canBeInserted(RuneWordTemplate template, ItemStack itemStack) {
-        List<String> allowedItems = template.getAllowedItems();
-        ItemType i = itemStack.getType();
-        if (allowedItems.contains(itemStack.toString())) {
-            return true;
-        }
-        for (String allowedItem : allowedItems) {
-            if (allowedItem.startsWith("any")) {
-                String[] split = allowedItem.split(" ");
-                if (split.length == 1) {
-                    return true;
-                }
-                if (split.length == 2) {
-                    return ItemStackUtils.checkType(i, split[1]);
-                }
-
-            }
-        }
-
-        return false;
-    }
 
     public List<ItemType> getAllowedRuneItemTypes() {
         return allowedRuneItemTypes;
