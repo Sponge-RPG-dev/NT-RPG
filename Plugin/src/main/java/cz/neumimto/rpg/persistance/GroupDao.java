@@ -259,10 +259,15 @@ public class GroupDao {
 				String[] k = a.split(";");
 				Optional<ItemType> type = game.getRegistry().getType(ItemType.class, k[0]);
 				if (type.isPresent()) {
-					String w = k.length == 1 ? null : k[0];
-					RPGItemType rpgitemType = itemService.getByItemTypeAndName(type.get(), w);
-					group.getAllowedArmor().add(rpgitemType);
-				} else logger.warn("Defined invalid itemtype  " + a + " in " + group.getName());
+					RPGItemType rpgitemType = itemService.getArmorByItemType(type.get());
+					if (rpgitemType == null) {
+						logger.warn("Unknown Armor type " + k[0] + " Check your ItemGroups.conf");
+					} else {
+						group.getAllowedArmor().add(rpgitemType);
+					}
+				} else {
+					logger.warn("Defined invalid itemtype  " + a + " in " + group.getName());
+				}
 			});
 		} catch (ConfigException e) {
 			logger.warn(" - Missing configuration \"AllowedArmor\", skipping");

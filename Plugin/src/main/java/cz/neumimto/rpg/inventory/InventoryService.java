@@ -167,10 +167,10 @@ public class InventoryService {
 		List<? extends Config> itemGroups = c.getConfigList("ItemGroups");
 		loadItemGroups(itemGroups, null);
 
-		for (String armor : c.getStringList("ModdedArmor")) {
+		for (String armor : c.getStringList("Armor")) {
 			Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, armor);
 			if (type.isPresent()) {
-				ItemStackUtils.any_armor.add(type.get());
+				itemService.registerItemArmorType(type.get());
 			} else {
 				logger.warn(Console.RED + "Could not find item type " + Console.YELLOW + armor + Console.RED + ".");
 				logger.warn(Console.RED + " - Is the mod loaded and is the name correct?");

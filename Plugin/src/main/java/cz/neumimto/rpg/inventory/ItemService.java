@@ -24,7 +24,7 @@ public class ItemService {
 
 
     private Map<ItemType, Set<RPGItemType>> itemTypes = new HashMap<>();
-    private Map<String, RPGItemType> itemTypeNameMaps = new HashMap<>();
+    private Map<ItemType, RPGItemType> armor = new HashMap<>();
 
     public RPGItemType getByConfigString(String k) {
         String[] split = k.split(";");
@@ -74,10 +74,19 @@ public class ItemService {
 
     public void registerProperty(WeaponClass weaponClass, String property) {
         Short aShort = PropertyService.getAndIncrement.get();
+        weaponClass.getProperties().add(property);
         propertyService.registerProperty(property, aShort);
         if (property.endsWith("_mult")) {
             propertyService.registerDefaultValue(aShort, 1.0f);
         }
+    }
+
+    public void registerItemArmorType(ItemType type) {
+        armor.put(type, new RPGItemType(type,null, null));
+    }
+
+    public RPGItemType getArmorByItemType(ItemType type) {
+        return armor.get(type);
     }
 
     private static class RPGItemTypeComparator implements Comparator<RPGItemType> {
