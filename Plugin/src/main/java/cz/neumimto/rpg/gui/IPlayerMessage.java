@@ -97,7 +97,7 @@ public interface IPlayerMessage {
 
 	void sendCannotUseItemNotification(IActiveCharacter character, ItemStack is, CannotUseItemReson reason);
 
-	void openSkillTreeMenu(IActiveCharacter player, SkillTree skillTree);
+	void openSkillTreeMenu(IActiveCharacter player);
 
 	void moveSkillTreeMenu(IActiveCharacter character);
 

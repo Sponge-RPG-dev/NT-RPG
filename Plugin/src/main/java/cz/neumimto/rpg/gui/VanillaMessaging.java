@@ -18,31 +18,17 @@
 
 package cz.neumimto.rpg.gui;
 
-import static cz.neumimto.rpg.gui.GuiHelper.back;
-import static cz.neumimto.rpg.gui.GuiHelper.createPlayerGroupView;
-import static cz.neumimto.rpg.gui.GuiHelper.getItemLore;
-
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.Arg;
-import cz.neumimto.rpg.GroupService;
-import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.Pair;
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.TextHelper;
+import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.CommandPermissions;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.EffectSourceType;
-import cz.neumimto.rpg.effects.EffectStatusType;
-import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.effects.common.def.ManaBarNotifier;
 import cz.neumimto.rpg.inventory.CannotUseItemReson;
@@ -59,11 +45,7 @@ import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.persistance.DirectAccessDao;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
-import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.ExtendedNClass;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.SkillTreeViewModel;
+import cz.neumimto.rpg.players.*;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
@@ -108,17 +90,10 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+
+import static cz.neumimto.rpg.gui.GuiHelper.*;
 
 /**
  * Created by NeumimTo on 6.8.2015.
@@ -840,7 +815,8 @@ public class VanillaMessaging implements IPlayerMessage {
 	}
 
 	@Override
-	public void openSkillTreeMenu(IActiveCharacter player, SkillTree skillTree) {
+	public void openSkillTreeMenu(IActiveCharacter player) {
+		SkillTree skillTree = player.getLastTimeInvokedSkillTreeView().getSkillTree();
 		if (player.getSkillTreeViewLocation().get(skillTree.getId()) == null){
 			SkillTreeViewModel skillTreeViewModel = new SkillTreeViewModel();
 			for (SkillTreeViewModel treeViewModel : player.getSkillTreeViewLocation().values()) {
@@ -850,7 +826,7 @@ public class VanillaMessaging implements IPlayerMessage {
 			skillTreeViewModel.setSkillTree(skillTree);
 		}
 		Inventory skillTreeInventoryViewTemplate = GuiHelper.createSkillTreeInventoryViewTemplate(player, skillTree);
-		createSkillTreeView(player, skillTreeInventoryViewTemplate, skillTree);
+		createSkillTreeView(player, skillTreeInventoryViewTemplate);
 		player.getPlayer().openInventory(skillTreeInventoryViewTemplate);
 
 	}
@@ -859,7 +835,7 @@ public class VanillaMessaging implements IPlayerMessage {
 	public void moveSkillTreeMenu(IActiveCharacter character) {
 		Optional<Container> openInventory = character.getPlayer().getOpenInventory();
 		if (openInventory.isPresent()) {
-			createSkillTreeView(character, openInventory.get().query(GridInventory.class).first(), character.getPrimaryClass().getConfigClass().getSkillTree());
+			createSkillTreeView(character, openInventory.get().query(GridInventory.class).first());
 		}
 	}
 
@@ -876,9 +852,10 @@ public class VanillaMessaging implements IPlayerMessage {
 
 	}
 
-	private void createSkillTreeView(IActiveCharacter character, Inventory skillTreeInventoryViewTemplate, SkillTree skillTree) {
+	private void createSkillTreeView(IActiveCharacter character, Inventory skillTreeInventoryViewTemplate) {
 
 		SkillTreeViewModel skillTreeViewModel = character.getLastTimeInvokedSkillTreeView();
+		SkillTree skillTree = skillTreeViewModel.getSkillTree();
 		short[][] skillTreeMap = skillTreeViewModel.getSkillTree().getSkillTreeMap();
 		int y = skillTree.getCenter().value + skillTreeViewModel.getLocation().value; //y
 		int x = skillTree.getCenter().key + skillTreeViewModel.getLocation().key; //x

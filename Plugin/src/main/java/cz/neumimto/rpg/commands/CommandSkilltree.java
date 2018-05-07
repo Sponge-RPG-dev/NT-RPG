@@ -21,12 +21,14 @@ package cz.neumimto.rpg.commands;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.ConfigClass;
-import org.spongepowered.api.command.CommandException;
+import cz.neumimto.rpg.skills.SkillTree;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
@@ -48,20 +50,35 @@ public class CommandSkilltree extends CommandBase {
 	}
 
 	@Override
-	public CommandResult process(CommandSource commandSource, String s) throws CommandException {
+	public CommandResult process(CommandSource commandSource, String s) {
 		Player p =(Player) commandSource;
 		IActiveCharacter character = characterService.getCharacter(p);
+		if (character.isStub()) {
+			character.getPlayer().sendMessage(TextHelper.parse(Localization.CHARACTER_IS_REQUIRED));
+			return CommandResult.empty();
+		}
 		ConfigClass configClass;
 		if ("".equals(s.trim()) ) {
 			configClass = character.getPrimaryClass().getConfigClass();
 		} else {
 			configClass = groupService.getNClass(s);
 		}
-		if (configClass == null) {
+		if (configClass == null || configClass == ConfigClass.Default) {
 			Gui.sendMessage(character, Localization.NON_EXISTING_GROUP);
 			return CommandResult.builder().build();
 		}
-		Gui.openSkillTreeMenu(character, configClass.getSkillTree());
+		SkillTree skillTree = configClass.getSkillTree();
+		for (SkillTreeViewModel treeViewModel : character.getSkillTreeViewLocation().values()) {
+			treeViewModel.setCurrent(false);
+		}
+		if (character.getSkillTreeViewLocation().get(skillTree.getId()) == null){
+			SkillTreeViewModel skillTreeViewModel = new SkillTreeViewModel();
+			character.getSkillTreeViewLocation().put(skillTree.getId(), skillTreeViewModel);
+			skillTreeViewModel.setSkillTree(skillTree);
+		} else {
+			character.getSkillTreeViewLocation().get(skillTree.getId()).setCurrent(true);
+		}
+		Gui.openSkillTreeMenu(character);
 		return CommandResult.success();
 	}
 }

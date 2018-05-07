@@ -76,8 +76,8 @@ public class Gui {
 		getMessageTypeOf(player).sendCooldownMessage(player, skillname, cooldown);
 	}
 
-	public static void openSkillTreeMenu(IActiveCharacter player, SkillTree skillTree) {
-		getMessageTypeOf(player).openSkillTreeMenu(player, skillTree);
+	public static void openSkillTreeMenu(IActiveCharacter player) {
+		getMessageTypeOf(player).openSkillTreeMenu(player);
 	}
 
 	public static void sendEffectStatus(IActiveCharacter player, EffectStatusType type, IEffect effect) {

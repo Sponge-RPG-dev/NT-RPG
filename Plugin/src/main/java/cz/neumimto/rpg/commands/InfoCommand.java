@@ -32,11 +32,13 @@ import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.SkillTreeViewModel;
+import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.skills.SkillTree;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
@@ -83,7 +85,7 @@ public class InfoCommand extends CommandBase {
 	}
 
 	@Override
-	public CommandResult process(CommandSource commandSource, String s) throws CommandException {
+	public CommandResult process(CommandSource commandSource, String s) {
 		final String[] args = s.split(" ");
 		if (args.length == 0) {
 			commandSource.sendMessage(getUsage(commandSource));
@@ -168,7 +170,29 @@ public class InfoCommand extends CommandBase {
 			}
 		} else if (args[0].equalsIgnoreCase("skilltree")) {
 			IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
-			Gui.openSkillTreeMenu(character, character.getPrimaryClass().getConfigClass().getSkillTree());
+			SkillTree skillTree = character.getPrimaryClass().getConfigClass().getSkillTree();
+			if (args.length == 2) {
+				for (ConfigClass configClass : groupService.getClasses()) {
+					if (configClass.getName().equalsIgnoreCase(args[1])) {
+						skillTree = configClass.getSkillTree();
+					}
+				}
+			}
+			if (skillTree == SkillTree.Default) {
+				commandSource.sendMessage(Text.of(TextColors.RED, "Unknown class, or the class has no skilltree defined"));
+				return CommandResult.empty();
+			}
+			for (SkillTreeViewModel treeViewModel : character.getSkillTreeViewLocation().values()) {
+				treeViewModel.setCurrent(false);
+			}
+			if (character.getSkillTreeViewLocation().get(skillTree.getId()) == null){
+				SkillTreeViewModel skillTreeViewModel = new SkillTreeViewModel();
+				character.getSkillTreeViewLocation().put(skillTree.getId(), skillTreeViewModel);
+				skillTreeViewModel.setSkillTree(skillTree);
+			} else {
+				character.getSkillTreeViewLocation().get(skillTree.getId()).setCurrent(true);
+			}
+			Gui.openSkillTreeMenu(character);
 		} else {
 			commandSource.sendMessage(getUsage(commandSource));
 		}
