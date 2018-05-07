@@ -125,7 +125,7 @@ public class EntityLifecycleListener {
 				if (!Utils.isLivingEntity(source)) {
 					return;
 				}
-				double exp = entityService.getExperiences(targetEntity.getType());
+				double exp = entityService.getExperiences(targetEntity);
 
 				IActiveCharacter character = characterService.getCharacter(source.getUniqueId());
 				ExperienceSource experienceSource = targetEntity.getType() == EntityTypes.PLAYER ? ExperienceSource.PVP : ExperienceSource.PVE;
@@ -155,7 +155,7 @@ public class EntityLifecycleListener {
 				SkillDamageSource skillDamageSource = sds.get();
 				IEntity caster = skillDamageSource.getCaster();
 				if (caster.getType() == IEntityType.CHARACTER) {
-					double exp = entityService.getExperiences(event.getTargetEntity().getType());
+					double exp = entityService.getExperiences(event.getTargetEntity());
 					characterService.addExperiences((IActiveCharacter) caster, exp, ExperienceSource.PVE);
 				}
 			}

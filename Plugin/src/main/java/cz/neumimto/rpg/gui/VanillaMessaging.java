@@ -708,8 +708,7 @@ public class VanillaMessaging implements IPlayerMessage {
 			if (t.getOriginal().get(NKeys.SKILLTREE_CONTROLLS).isPresent()) {
 				SkillTreeControllsButton command = t.getOriginal().get(NKeys.SKILLTREE_CONTROLLS).get();
 				IActiveCharacter character = characterService.getCharacter(player);
-				ConfigClass clazz = character.getPrimaryClass().getConfigClass();
-				SkillTreeViewModel viewModel = character.getSkillTreeViewLocation().get(clazz.getSkillTree().getId());
+				SkillTreeViewModel viewModel = character.getLastTimeInvokedSkillTreeView();
 				switch (command) {
 					case NORTH:
 						viewModel.getLocation().key-=1;
@@ -823,6 +822,7 @@ public class VanillaMessaging implements IPlayerMessage {
 				treeViewModel.setCurrent(false);
 			}
 			player.getSkillTreeViewLocation().put(skillTree.getId(), skillTreeViewModel);
+			skillTreeViewModel.setSkillTree(skillTree);
 		}
 		Inventory skillTreeInventoryViewTemplate = GuiHelper.createSkillTreeInventoryViewTemplate(player, skillTree);
 		createSkillTreeView(player, skillTreeInventoryViewTemplate, skillTree);
@@ -854,7 +854,7 @@ public class VanillaMessaging implements IPlayerMessage {
 	private void createSkillTreeView(IActiveCharacter character, Inventory skillTreeInventoryViewTemplate, SkillTree skillTree) {
 
 		SkillTreeViewModel skillTreeViewModel = character.getLastTimeInvokedSkillTreeView();
-		short[][] skillTreeMap = skillTree.getSkillTreeMap();
+		short[][] skillTreeMap = skillTreeViewModel.getSkillTree().getSkillTreeMap();
 		int y = skillTree.getCenter().value + skillTreeViewModel.getLocation().value; //y
 		int x = skillTree.getCenter().key + skillTreeViewModel.getLocation().key; //x
 

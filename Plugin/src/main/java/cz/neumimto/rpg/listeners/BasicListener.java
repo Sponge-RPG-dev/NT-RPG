@@ -245,7 +245,7 @@ public class BasicListener {
                 }
             } else {
                 if (!PluginConfig.OVERRIDE_MOBS) {
-                    newdamage = entityService.getMobDamage(source.getType());
+                    newdamage = entityService.getMobDamage(source);
                 }
                 newdamage *= damageService.getEntityBonusDamage(entity, entityDamageSource.getType());
                 if (entityDamageSource.getType() == DamageTypes.ATTACK) {
@@ -295,7 +295,7 @@ public class BasicListener {
             projectileDamage = damageService.getCharacterProjectileDamage(c, projectile.getType());
         } else if (shooter.getType() == IEntityType.MOB) {
             if (!PluginConfig.OVERRIDE_MOBS) {
-                projectileDamage = entityService.getMobDamage(shooter.getEntity().getType());
+                projectileDamage = entityService.getMobDamage(shooter.getEntity());
             }
         }
 

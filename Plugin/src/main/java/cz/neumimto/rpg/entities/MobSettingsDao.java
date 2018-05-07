@@ -1,22 +1,20 @@
 package cz.neumimto.rpg.entities;
 
+import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.utils.Utils;
+import ninja.leaping.configurate.SimpleConfigurationNode;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
+import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.entity.living.Living;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
-import java.util.Properties;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.List;
 
 /**
  * Created by NeumimTo on 20.12.2015.
@@ -24,65 +22,55 @@ import java.util.stream.Stream;
 @Singleton
 public class MobSettingsDao {
 
-	public Map<EntityType, Double> getDamages() {
-		File properties = createDefaults("MobDamage.properties");
-		Properties prop = load(properties);
-		return getMap(prop);
+	private RootMobConfig cache;
+
+	@PostProcess(priority = 9)
+	public void load() {
+		cache = createDefaults("MobSettings.conf");
 	}
 
-	private Map<EntityType, Double> getMap(Properties prop) {
-		Stream<Map.Entry<Object, Object>> stream = prop.entrySet().stream();
-		return stream.collect(Collectors.toMap(
-				e -> Sponge.getGame().getRegistry().getType(EntityType.class, (String) e.getKey()).get(),
-				e -> Double.parseDouble((String) e.getValue())));
-	}
-
-
-	public Map<EntityType, Double> getHealth() {
-		File properties = createDefaults("MobHealth.properties");
-		Properties prop = load(properties);
-		return getMap(prop);
-	}
-
-	public Map<EntityType, Double> getExperiences() {
-		File properties = createDefaults("MobExperiences.properties");
-		Properties prop = load(properties);
-		return getMap(prop);
-	}
-
-	private Properties load(File properties) {
-		Properties prop = new Properties();
-		try (FileInputStream stream = new FileInputStream(properties)) {
-			prop.load(stream);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return prop;
-	}
-
-	private File createDefaults(String s) {
+	private RootMobConfig createDefaults(String s) {
 		File properties = new File(NtRpgPlugin.workingDir, s);
 		if (!properties.exists()) {
 			Collection<EntityType> types = Sponge.getGame().getRegistry().getAllOf(EntityType.class);
-			try {
-				properties.createNewFile();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			try (FileOutputStream stream = new FileOutputStream(properties)) {
-				types.stream().filter(e -> Living.class.isAssignableFrom(e.getEntityClass())).filter(e -> !Human.class.isAssignableFrom(e.getEntityClass())).forEach(a -> {
-					try {
+			List<EntityType> livingEntities = new ArrayList<>();
 
-						stream.write((a.getName() + " : 10" + Utils.LineSeparator).getBytes());
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				});
-				stream.flush();
-			} catch (IOException e) {
-				e.printStackTrace();
+			types.stream()
+					.filter(e -> Living.class.isAssignableFrom(e.getEntityClass()))
+					.filter(e -> !Human.class.isAssignableFrom(e.getEntityClass()))
+					.forEach(livingEntities::add);
+
+			String defaultDimmensionName = "world";
+
+			RootMobConfig rootMobConfig = new RootMobConfig();
+			MobsConfig overWorldMobConfig = new MobsConfig();
+			for (EntityType livingEntity : livingEntities) {
+				overWorldMobConfig.getDamage().put(livingEntity, 10D);
+				overWorldMobConfig.getExperiences().put(livingEntity, 10D);
+				overWorldMobConfig.getHealth().put(livingEntity, 10D);
+			}
+			rootMobConfig.getDimmensions().put(defaultDimmensionName, overWorldMobConfig);
+
+			try {
+				ObjectMapper.BoundInstance configMapper = ObjectMapper.forObject(rootMobConfig);
+				HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(properties.toPath()).build();
+				SimpleConfigurationNode scn = SimpleConfigurationNode.root();
+				configMapper.serialize(scn);
+				hcl.save(scn);
+			} catch (Exception e) {
+				throw new RuntimeException("Could not create file " + s);
 			}
 		}
-		return properties;
+		try {
+			ObjectMapper<RootMobConfig> mapper = ObjectMapper.forClass(RootMobConfig.class);
+			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(properties.toPath()).build();
+			return mapper.bind(new RootMobConfig()).populate(hcl.load());
+		} catch (Exception e) {
+			throw new RuntimeException("Could not load file " + s);
+		}
+	}
+
+	public RootMobConfig getCache() {
+		return cache;
 	}
 }

@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.entities;
 
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.configuration.PluginConfig;
@@ -11,16 +10,15 @@ import cz.neumimto.rpg.events.skills.SkillHealEvent;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.ISkill;
+import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -29,10 +27,10 @@ import java.util.UUID;
 @Singleton
 public class EntityService {
 
+	@Inject
+	private Logger logger;
+
 	private HashMap<UUID, IMob> entityHashMap = new HashMap<>();
-	private Map<EntityType, Double> entityDamages = new HashMap<>();
-	private Map<EntityType, Double> entityHealth = new HashMap<>();
-	private Map<EntityType, Double> entityExperiences = new HashMap<>();
 
 	@Inject
 	private CharacterService service;
@@ -56,9 +54,15 @@ public class EntityService {
 			iEntity.setExperiences(-1);
 			iEntity.attach((Living) id);
 			entityHashMap.put(id.getUniqueId(), iEntity);
-			if (!PluginConfig.OVERRIDE_MOBS) {
-				id.offer(Keys.MAX_HEALTH, entityHealth.get(id.getType()));
-				id.offer(Keys.HEALTH, entityHealth.get(id.getType()));
+			MobsConfig dimmension = dao.getCache().getDimmension(id.getLocation().getExtent().getName());
+			if (!PluginConfig.OVERRIDE_MOBS && dimmension != null) {
+				Double aDouble = dimmension.getHealth().get(id.getType());
+				if (aDouble == null) {
+					logger.warn("No max health configured for " + id.getType().getId() + " in world " + id.getLocation().getExtent().getName());
+				} else {
+					id.offer(Keys.MAX_HEALTH, aDouble);
+					id.offer(Keys.HEALTH, aDouble);
+				}
 			}
 		}
 
@@ -82,31 +86,32 @@ public class EntityService {
 		}
 	}
 
-	public double getMobDamage(EntityType type) {
-		Double d = entityDamages.get(type);
-		if (d == null) return 0;
-		return d;
+	public double getMobDamage(Entity type) {
+		MobsConfig dimmension = dao.getCache().getDimmension(type.getLocation().getExtent().getName());
+		if (dimmension != null) {
+			Double aDouble = dimmension.getDamage().get(type.getType());
+			if (aDouble == null) {
+				logger.warn("No max experience drop configured for " + type.getType().getId()
+						+ " in world " + type.getLocation().getExtent().getName());
+				aDouble = 0D;
+			}
+			return aDouble;
+		}
+		return 0;
 	}
 
-	public double getMobHealth(EntityType type) {
-		Double d = entityHealth.get(type);
-		if (d == null) return 0;
-		return d;
-	}
-
-	@PostProcess(priority = 10)
-	public void load() {
-
-		this.entityDamages.putAll(dao.getDamages());
-		this.entityHealth.putAll(dao.getHealth());
-		this.entityExperiences.putAll(dao.getExperiences());
-
-	}
-
-	public double getExperiences(EntityType type) {
-		Double d = entityExperiences.get(type);
-		if (d == null) return 0;
-		return d;
+	public double getExperiences(Entity type) {
+		MobsConfig dimmension = dao.getCache().getDimmension(type.getLocation().getExtent().getName());
+		if (dimmension != null) {
+			Double aDouble = dimmension.getExperiences().get(type.getType());
+			if (aDouble == null) {
+				logger.warn("No max experience drop configured for " + type.getType().getId()
+						+ " in world " + type.getLocation().getExtent().getName());
+				aDouble = 0D;
+			}
+			return aDouble;
+		}
+		return 0;
 	}
 
 	public float getEntityProperty(IEffectConsumer entity, int id) {

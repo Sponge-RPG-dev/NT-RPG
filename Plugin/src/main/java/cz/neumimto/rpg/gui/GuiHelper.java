@@ -231,13 +231,6 @@ public class GuiHelper {
 
 
 		SkillTreeViewModel model = character.getSkillTreeViewLocation().get(skillTree.getId());
-		if (model == null) {
-			model = new SkillTreeViewModel();
-			for (SkillTreeViewModel treeViewModel : character.getSkillTreeViewLocation().values()) {
-				treeViewModel.setCurrent(false);
-			}
-			character.getSkillTreeViewLocation().put(skillTree.getId(), model);
-		}
 
 		ItemStack md = interactiveModeToitemStack(character, model.getInteractiveMode());
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 1))).set(md);
