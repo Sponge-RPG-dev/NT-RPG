@@ -153,7 +153,7 @@ public class GuiHelper {
 		return i;
 	}
 
-	public static ItemStack propertyToItemStack(short id, float value) {
+	public static ItemStack propertyToItemStack(int id, float value) {
 		ItemStack i = itemStack(ItemTypes.BOOK);
 		String nameById = NtRpgPlugin.GlobalScope.propertyService.getNameById(id);
 		nameById = Utils.configNodeToReadableString(nameById);

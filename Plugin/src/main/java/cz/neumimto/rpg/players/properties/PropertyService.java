@@ -50,9 +50,9 @@ import java.util.function.Supplier;
 public class PropertyService {
 
 	public static final double WALKING_SPEED = 0.1d;
-	public static short LAST_ID = 0;
-	public static final Supplier<Short> getAndIncrement = () -> {
-		short t = new Short(LAST_ID);
+	public static int LAST_ID = 0;
+	public static final Supplier<Integer> getAndIncrement = () -> {
+		int t = new Integer(LAST_ID);
 		LAST_ID++;
 		return t;
 	};
@@ -60,15 +60,15 @@ public class PropertyService {
 	@Inject
 	private Logger logger;
 
-	private Map<String, Short> idMap = new HashMap<>();
-	private Map<Short, String> nameMap = new HashMap<>();
+	private Map<String, Integer> idMap = new HashMap<>();
+	private Map<Integer, String> nameMap = new HashMap<>();
 
 	private Map<Integer, Float> defaults = new HashMap<>();
 	private Map<String, ICharacterAttribute> attributes = new HashMap<>();
 
 	private float[] maxValues;
 
-	public void registerProperty(String name, short id) {
+	public void registerProperty(String name, int id) {
 		if (PluginConfig.DEBUG)
 			logger.info("Found property " + name + "; assigned id: " + id);
 		idMap.put(name, id);
@@ -79,7 +79,7 @@ public class PropertyService {
 		return idMap.get(name);
 	}
 
-	public String getNameById(Short id) {
+	public String getNameById(Integer id) {
 		return nameMap.get(id);
 	}
 
@@ -184,13 +184,13 @@ public class PropertyService {
 	}
 
 	public void process(Class<?> container) {
-		short value;
+		int value;
 		for (Field f : container.getDeclaredFields()) {
 			if (f.isAnnotationPresent(Property.class)) {
 				Property p = f.getAnnotation(Property.class);
 				value = PropertyService.getAndIncrement.get();
 				try {
-					f.setShort(null, value);
+					f.setInt(null, value);
 				} catch (IllegalAccessException e) {
 					e.printStackTrace();
 					continue;
@@ -216,9 +216,6 @@ public class PropertyService {
 		return maxValues[index];
 	}
 
-	public float getMaxPropertyValue(short index) {
-		return maxValues[index];
-	}
 
 
 }

@@ -56,9 +56,9 @@ import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
@@ -70,6 +70,7 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -82,7 +83,8 @@ import java.util.stream.Collectors;
 @Singleton
 public class InventoryService {
 
-	private static Logger logger = LoggerFactory.getLogger(InventoryService.class);
+    @Inject
+	private Logger logger;
 
 	public static ItemType ITEM_SKILL_BIND = ItemTypes.BLAZE_POWDER;
 
@@ -130,7 +132,7 @@ public class InventoryService {
 	private Map<Integer, SlotEffectSource> slotEffectSourceMap = new HashMap<>();
 
 	@Reload(on = ReloadService.PLUGIN_CONFIG)
-	@PostProcess(priority = 3000)
+	@PostProcess(priority = 100)
 	public void init() {
 		NORMAL_RARITY = Text.of(Localization.NORMAL_RARITY);
 		loadItemGroups();
@@ -150,32 +152,42 @@ public class InventoryService {
 		Path path = Paths.get(NtRpgPlugin.workingDir+"/ItemGroups.conf");
 		File f = path.toFile();
 		if (!f.exists()) {
-			Sponge.getAssetManager().getAsset(plugin,"config/defaults/ItemGroups.conf");
+			Optional<Asset> asset = Sponge.getAssetManager().getAsset(plugin, "ItemGroups.conf");
+			Asset asset1 = asset.get();
+			try {
+				asset1.copyToFile(f.toPath());
+			} catch (IOException e) {
+				throw new IllegalStateException("Could not create ItemGroups.conf file", e);
+			}
 		}
 
-		Config c = ConfigFactory.parseFile(path.toFile());
-		reservedItemNames.addAll(c.getStringList("ReservedItemNames"));
+		try {
+			Config c = ConfigFactory.parseFile(path.toFile());
+			reservedItemNames.addAll(c.getStringList("ReservedItemNames"));
 
-		List<String> itemMetaSubtypes = c.getStringList("ItemMetaSubtypes");
+			List<String> itemMetaSubtypes = c.getStringList("ItemMetaSubtypes");
 
-		//will break in api 8
-		itemMetaSubtypes.stream().map(ItemSubtype::new).forEach(a -> Sponge.getRegistry().register(ItemSubtype.class, a));
+			//will break in api 8
+			itemMetaSubtypes.stream().map(ItemSubtype::new).forEach(a -> Sponge.getRegistry().register(ItemSubtype.class, a));
 
-		List<String> inventorySlots = c.getStringList("InventorySlots");
-		loadSlotSettings(inventorySlots);
+			List<String> inventorySlots = c.getStringList("InventorySlots");
+			loadSlotSettings(inventorySlots);
 
-		List<? extends Config> itemGroups = c.getConfigList("ItemGroups");
-		loadItemGroups(itemGroups, null);
+			List<? extends Config> itemGroups = c.getConfigList("ItemGroups");
+			loadItemGroups(itemGroups, null);
 
-		for (String armor : c.getStringList("Armor")) {
-			Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, armor);
-			if (type.isPresent()) {
-				itemService.registerItemArmorType(type.get());
-			} else {
-				logger.warn(Console.RED + "Could not find item type " + Console.YELLOW + armor + Console.RED + ".");
-				logger.warn(Console.RED + " - Is the mod loaded and is the name correct?");
-				logger.warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN+ "\"modid:my_item\"");
+			for (String armor : c.getStringList("Armor")) {
+				Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, armor);
+				if (type.isPresent()) {
+					itemService.registerItemArmorType(type.get());
+				} else {
+					logger.warn(Console.RED + "Could not find item type " + Console.YELLOW + armor + Console.RED + ".");
+					logger.warn(Console.RED + " - Is the mod loaded and is the name correct?");
+					logger.warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN+ "\"modid:my_item\"");
+				}
 			}
+		} catch (ConfigException e) {
+			throw new RuntimeException("Could not read ItemGroups.conf ", e);
 		}
 	}
 
@@ -193,7 +205,7 @@ public class InventoryService {
 			weapons.setParent(parent);
 
 			try {
-				logger.info("  - Readong \"Items\" config section" + weaponClass);
+				logger.info("  - Reading \"Items\" config section" + weaponClass);
 				List<String> items = itemGroup.getStringList("Items");
 				for (String item : items) {
 					String[] split = item.split(";");
@@ -213,9 +225,9 @@ public class InventoryService {
 				}
 			} catch (ConfigException e) {
 				try {
-					loadItemGroups(itemGroup.getConfigList("WeaponClass"), weapons);
+					loadItemGroups(itemGroup.getConfigList("Items"), weapons);
 				} catch (ConfigException ee) {
-					logger.error("Could not read nested configuration for weapon class" + weaponClass + "This is a critical miss configuration, some items will not be recognized as weapons" );
+					logger.error("Could not read nested configuration for weapon class " + weaponClass + "This is a critical miss configuration, some items will not be recognized as weapons" );
 				}
 			}
 

@@ -73,11 +73,14 @@ public class ItemService {
     }
 
     public void registerProperty(WeaponClass weaponClass, String property) {
-        Short aShort = PropertyService.getAndIncrement.get();
-        weaponClass.getProperties().add(property);
-        propertyService.registerProperty(property, aShort);
+        int val = PropertyService.getAndIncrement.get();
+
+        propertyService.registerProperty(property, val);
         if (property.endsWith("_mult")) {
-            propertyService.registerDefaultValue(aShort, 1.0f);
+            propertyService.registerDefaultValue(val, 1.0f);
+            weaponClass.getProperties().add(val);
+        } else {
+            weaponClass.getPropertiesMults().add(val);
         }
     }
 

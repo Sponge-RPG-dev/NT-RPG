@@ -290,10 +290,10 @@ public class GroupDao {
 					if (split.length == 3) {
 						itemName = split[2];
 					}
+					RPGItemType rpgitemType = itemService.getByItemTypeAndName(type, itemName);
+					ConfigRPGItemType t = new ConfigRPGItemType(rpgitemType, group, damage);
+					group.addWeapon(t);
 				}
-				RPGItemType rpgitemType = itemService.getByItemTypeAndName(type, itemName);
-				ConfigRPGItemType t = new ConfigRPGItemType(rpgitemType, group, damage);
-				group.addWeapon(t);
 			}
 
 		} catch (ConfigException e) {

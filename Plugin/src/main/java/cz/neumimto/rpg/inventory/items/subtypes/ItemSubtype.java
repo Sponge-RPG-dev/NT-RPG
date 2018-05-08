@@ -8,7 +8,7 @@ public class ItemSubtype implements CatalogType {
     private final String id;
 
     public ItemSubtype(String name) {
-        this.id = "nt-rpg:" + name.toLowerCase();
+        this.id = name.toLowerCase();
         this.name = name;
     }
 

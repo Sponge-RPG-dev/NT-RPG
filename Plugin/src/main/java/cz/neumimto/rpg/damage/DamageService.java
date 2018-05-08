@@ -20,12 +20,14 @@ package cz.neumimto.rpg.damage;
 
 import com.google.common.collect.Lists;
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.inventory.*;
+import cz.neumimto.rpg.inventory.ConfigRPGItemType;
+import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.ItemService;
+import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
@@ -38,7 +40,6 @@ import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
@@ -70,21 +71,21 @@ public class DamageService {
 
 	public BiFunction<Double, Double, Double> DamageArmorReductionFactor = (damage, armor) -> armor / (armor + 10 * damage);
 
-
-	private Map<ItemType, Integer> map = new HashMap<>();
-
 	public double getCharacterItemDamage(IActiveCharacter character, RPGItemType type) {
 		if (character.isStub() || type == null)
 			return 1;
-		double base = character.getBaseWeaponDamage(type) +
-				characterService.getCharacterProperty(character, DefaultProperties.weapon_damage_bonus);
-		if (map.containsKey(type.getItemType())) {
-			base += characterService.getCharacterProperty(character, map.get(type.getItemType()));
-		} else return 1;
+		double base = character.getBaseWeaponDamage(type);
 
-		ItemGroup itemGroup = inventoryService.getItemGroup(type);
-		if (itemGroup != null) {
-			base *= characterService.getCharacterProperty(character, itemGroup.getDamageMultPropertyId());
+		for (Integer i : type.getWeaponClass().getProperties()) {
+			base += characterService.getCharacterProperty(character, i);
+		}
+
+		if (!type.getWeaponClass().getPropertiesMults().isEmpty()) {
+			double totalMult = 0;
+			for (Integer integer : type.getWeaponClass().getPropertiesMults()) {
+				totalMult += characterService.getCharacterProperty(character, integer);
+			}
+			base *= totalMult;
 		}
 		return base;
 	}
@@ -152,33 +153,6 @@ public class DamageService {
 		if (source == NDamageType.ICE)
 			return entityService.getEntityProperty(entity, DefaultProperties.ice_damage_bonus_mult);
 		return 0;
-	}
-
-	@PostProcess(priority = 6)
-	public void buildPropertiesMap() {
-		map.put(ItemTypes.DIAMOND_SWORD, DefaultProperties.diamond_sword_bonus_damage);
-		map.put(ItemTypes.GOLDEN_SWORD, DefaultProperties.golden_sword_bonus_damage);
-		map.put(ItemTypes.IRON_SWORD, DefaultProperties.iron_sword_bonus_damage);
-		map.put(ItemTypes.WOODEN_SWORD, DefaultProperties.wooden_sword_bonus_damage);
-
-		map.put(ItemTypes.DIAMOND_AXE, DefaultProperties.diamond_axe_bonus_damage);
-		map.put(ItemTypes.GOLDEN_AXE, DefaultProperties.golden_axe_bonus_damage);
-		map.put(ItemTypes.IRON_AXE, DefaultProperties.iron_axe_bonus_damage);
-		map.put(ItemTypes.WOODEN_AXE, DefaultProperties.wooden_axe_bonus_damage);
-
-		map.put(ItemTypes.DIAMOND_PICKAXE, DefaultProperties.diamond_pickaxe_bonus_damage);
-		map.put(ItemTypes.GOLDEN_PICKAXE, DefaultProperties.golden_pickaxe_bonus_damage);
-		map.put(ItemTypes.IRON_PICKAXE, DefaultProperties.iron_pickaxe_bonus_damage);
-		map.put(ItemTypes.WOODEN_PICKAXE, DefaultProperties.wooden_pickaxe_bonus_damage);
-
-
-		map.put(ItemTypes.DIAMOND_HOE, DefaultProperties.diamond_hoe_bonus_damage);
-		map.put(ItemTypes.GOLDEN_HOE, DefaultProperties.golden_hoe_bonus_damage);
-		map.put(ItemTypes.IRON_HOE, DefaultProperties.iron_hoe_bonus_damage);
-		map.put(ItemTypes.WOODEN_HOE, DefaultProperties.wooden_hoe_bonus_damage);
-
-		map.put(ItemTypes.BOW, DefaultProperties.bow_meele_bonus_damage);
-
 	}
 
 

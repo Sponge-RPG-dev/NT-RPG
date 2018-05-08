@@ -66,75 +66,6 @@ public class DefaultProperties {
 	@Property(name = "cooldown_reduce", default_ = 1)
 	public static int cooldown_reduce;
 
-	@Property(name = "diamond_sword_bonus_damage", default_ = 0)
-	public static int diamond_sword_bonus_damage;
-
-	@Property(name = "golden_sword_bonus_damage", default_ = 0)
-	public static int golden_sword_bonus_damage;
-
-	@Property(name = "iron_sword_bonus_damage", default_ = 0)
-	public static int iron_sword_bonus_damage;
-
-	@Property(name = "wooden_sword_bonus_damage")
-	public static int wooden_sword_bonus_damage;
-
-	@Property(name = "diamond_axe_bonus_damage")
-	public static int diamond_axe_bonus_damage;
-
-	@Property(name = "golden_axe_bonus_damage")
-	public static int golden_axe_bonus_damage;
-
-	@Property(name = "iron_axe_bonus_damage")
-	public static int iron_axe_bonus_damage;
-
-	@Property(name = "wooden_axe_bonus_damage")
-	public static int wooden_axe_bonus_damage;
-
-	@Property(name = "diamond_pickaxe_bonus_damage")
-	public static int diamond_pickaxe_bonus_damage;
-
-	@Property(name = "golden_pickaxe_bonus_damage")
-	public static int golden_pickaxe_bonus_damage;
-
-	@Property(name = "iron_pickaxe_bonus_damage")
-	public static int iron_pickaxe_bonus_damage;
-
-	@Property(name = "wooden_pickaxe_bonus_damage")
-	public static int wooden_pickaxe_bonus_damage;
-
-	@Property(name = "diamond_hoe_bonus_damage")
-	public static int diamond_hoe_bonus_damage;
-
-	@Property(name = "golden_hoe_bonus_damage")
-	public static int golden_hoe_bonus_damage;
-
-	@Property(name = "iron_hoe_bonus_damage")
-	public static int iron_hoe_bonus_damage;
-
-	@Property(name = "wooden_hoe_bonus_damage")
-	public static int wooden_hoe_bonus_damage;
-
-	@Property(name = "swords_damage_mult", default_ = 1)
-	public static int swords_damage_mult;
-
-	@Property(name = "axes_damage_mult", default_ = 1)
-	public static int axes_damage_mult;
-
-	@Property(name = "spades_damage_mult", default_ = 1)
-	public static int spades_damage_mult;
-
-	@Property(name = "pickaxes_damage_mult", default_ = 1)
-	public static int pickaxes_damage_mult;
-
-	@Property(name = "hoes_damage_mult", default_ = 1)
-	public static int hoes_damage_mult;
-
-	@Property(name = "bows_meele_damage_mult", default_ = 1)
-	public static int bows_meele_damage_mult;
-
-	@Property(name = "bow_meele_bonus_damage", default_ = 0)
-	public static int bow_meele_bonus_damage;
-
 	@Property(name = "fire_damage_bonus_mult", default_ = 1)
 	public static int fire_damage_bonus_mult;
 
@@ -170,9 +101,6 @@ public class DefaultProperties {
 
 	@Property(name = "ice_damage_bonus_mult", default_ = 1)
 	public static int ice_damage_bonus_mult;
-
-	@Property(name = "staffs_damage_mult", default_ = 1)
-	public static int staffs_damage_mult;
 
 	@Property
 	public static int all_skills_bonus;

@@ -13,10 +13,13 @@ public class WeaponClass {
     private Set<WeaponClass> subClass = new HashSet<>();
 
     private Set<RPGItemType> items = new HashSet<>();
-
-    private Set<String> properties = new HashSet<>();
+        
     private WeaponClass parent;
-
+    
+    private Set<Integer> properties = new HashSet<>();
+    
+    private Set<Integer> propertiesMults = new HashSet<>();
+    
     public WeaponClass(String name) {
         this.name = name;
     }
@@ -37,11 +40,11 @@ public class WeaponClass {
         this.items = items;
     }
 
-    public Set<String> getProperties() {
+    public Set<Integer> getProperties() {
         return properties;
     }
 
-    public void setProperties(Set<String> properties) {
+    public void setProperties(Set<Integer> properties) {
         this.properties = properties;
     }
 
@@ -51,5 +54,13 @@ public class WeaponClass {
 
     public WeaponClass getParent() {
         return parent;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Set<Integer> getPropertiesMults() {
+        return propertiesMults;
     }
 }
