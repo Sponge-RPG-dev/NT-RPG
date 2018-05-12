@@ -116,9 +116,9 @@ public class Localization {
 	public static String PLAYER_CHOOSED_RACE = "You've chosen race %race%";
 
 	@ConfigValue
-	public static String UNKNOWN_RACE = "Race %race% does not exist";;
+	public static String UNKNOWN_RACE = "Race %race% does not exist";
 
-	@ConfigValue
+    @ConfigValue
 	public static String ALREADY_CUURENT_CHARACTER = "This character has been already activated";
 
 	@ConfigValue
@@ -379,9 +379,11 @@ public class Localization {
 	public static String ITEM_REQUIREMENTS_SECTION = "&4 Requirements";
 
 	@ConfigValue
-	public static String PLAYER_CANT_USE_HOTBAR_ITEMS = "&4Hotbar contains items, which you are unable to use";
-
-	@ConfigValue
 	public static String CANNOT_USE_ITEM_GENERIC = "&4You cannot use this item";
 
+	@ConfigValue
+    public static String RACES_MENU_TEXT = "&l&6[ &eRaces &6]";
+
+	@ConfigValue
+	public static String CLASSES_MENU_TEXT = "&l&6[ &eClasses &6]";
 }

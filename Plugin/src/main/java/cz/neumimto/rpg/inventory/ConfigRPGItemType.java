@@ -5,7 +5,7 @@ import cz.neumimto.rpg.effects.IEffectSourceProvider;
 /**
  * Created by fs on 5.10.17.
  */
-public final class ConfigRPGItemType {
+public final class ConfigRPGItemType implements Comparable<ConfigRPGItemType>{
 
 	public final double damage;
 	public final IEffectSourceProvider fromParent;
@@ -27,5 +27,14 @@ public final class ConfigRPGItemType {
 
 	public RPGItemType getRpgItemType() {
 		return rpgItemType;
+	}
+
+	@Override
+	public int compareTo(ConfigRPGItemType o) {
+		double i = o.damage - damage;
+		if (i == 0) {
+			i = 1;
+		}
+		return (int) i;
 	}
 }

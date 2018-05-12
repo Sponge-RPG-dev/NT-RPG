@@ -40,7 +40,7 @@ public class ItemService {
     public RPGItemType getByItemTypeAndName(ItemType itemType, String itemName) {
         Set<RPGItemType> rpgItemTypes = itemTypes.get(itemType);
         if (rpgItemTypes == null) {
-            throw new RuntimeException("Unknown item type" + itemType);
+            return null;
         }
         for (RPGItemType rpgItemType : rpgItemTypes) {
             if (itemName == null && rpgItemType.getDisplayName() == null) {
@@ -85,11 +85,23 @@ public class ItemService {
     }
 
     public void registerItemArmorType(ItemType type) {
-        armor.put(type, new RPGItemType(type,null, null));
+        RPGItemType rpgItemType = new RPGItemType(type, null, WeaponClass.ARMOR);
+        WeaponClass.ARMOR.getItems().add(rpgItemType);
+        Set<RPGItemType> rpgItemTypes = itemTypes.computeIfAbsent(type, k -> new TreeSet<>(new RPGItemTypeComparator()));
+        rpgItemTypes.add(rpgItemType);
+        armor.put(type, rpgItemType);
     }
 
     public RPGItemType getArmorByItemType(ItemType type) {
         return armor.get(type);
+    }
+
+    public RPGItemType getArmorFromItemStack(ItemStack itemStack) {
+        return armor.get(itemStack.getType());
+    }
+
+    public RPGItemType getArmorFromItemStack(ItemStackSnapshot itemStack) {
+        return armor.get(itemStack.getType());
     }
 
     private static class RPGItemTypeComparator implements Comparator<RPGItemType> {

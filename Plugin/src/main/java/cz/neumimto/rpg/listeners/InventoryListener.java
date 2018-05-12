@@ -20,10 +20,10 @@ package cz.neumimto.rpg.listeners;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.inventory.*;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.utils.ItemStackUtils;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
@@ -35,6 +35,7 @@ import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
 import org.spongepowered.api.event.item.inventory.InteractItemEvent;
+import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 
@@ -54,6 +55,10 @@ public class InventoryListener {
 	@Inject
 	private CharacterService characterService;
 
+	@Inject
+	private ItemService itemService;
+
+
 	@Listener
 	public void onInventoryClose(InteractInventoryEvent.Close event, @First(typeFilter = {Player.class}) Player player) {
 		//todo
@@ -71,19 +76,23 @@ public class InventoryListener {
 	}
 
 	@Listener
-	public void onArmorInteract(InteractItemEvent event, @First(typeFilter = Player.class) Player player) {
+	public void onHotbarInteract(InteractItemEvent event, @First(typeFilter = Player.class) Player player) {
 		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-		if (ItemStackUtils.any_armor.contains(event.getItemStack().getType())) {
-			event.setCancelled(true);
+
+		RPGItemType rpgItemType = itemService.getFromItemStack(event.getItemStack());
+		if (rpgItemType != null) {
+			ItemStack stack = event.getItemStack().createStack();
+			CannotUseItemReson reason;
+			if (rpgItemType.getWeaponClass() == WeaponClass.ARMOR) {
+				reason = inventoryService.canWear(stack, character);
+			} else {
+				reason = inventoryService.canUse(stack, character);
+			}
+			if (reason != CannotUseItemReson.OK) {
+				Gui.sendCannotUseItemNotification(character, stack, reason);
+				event.setCancelled(true);
+			}
 		}
-		/*
-		ItemStack is = event.getItemStack().createStack();
-		CannotUseItemReson reason = inventoryService.canWear(is, character);
-		if (reason != CannotUseItemReson.OK) {
-			Gui.sendeiCannotUseItemNotification(character, is, reason);
-			event.setCancelled(true);
-		}
-		*/
 	}
 
 	@Listener

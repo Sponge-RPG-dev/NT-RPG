@@ -26,6 +26,7 @@ import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.item.inventory.property.SlotPos;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.text.Text;
@@ -95,8 +96,11 @@ public class GuiHelper {
 	}
 
 	public static Inventory createPlayerGroupView(PlayerGroup group) {
-		Inventory.Builder builder = Inventory.builder();
-		Inventory i = builder.of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
+		Inventory.Builder builder = Inventory
+				.builder();
+		Inventory i = builder.of(InventoryArchetypes.DOUBLE_CHEST)
+				.property(InventoryTitle.of(Text.of(group.getName(), group.getPreferedColor(), TextStyles.BOLD)))
+				.build(plugin);
 
 
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(2,2))).offer(createWeaponCommand(group));

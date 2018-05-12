@@ -8,6 +8,8 @@ import java.util.Set;
  */
 public class WeaponClass {
 
+    public static final WeaponClass ARMOR = new WeaponClass("Armor");
+
     private final String name;
 
     private Set<WeaponClass> subClass = new HashSet<>();

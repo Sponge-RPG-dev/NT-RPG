@@ -74,6 +74,7 @@ import org.spongepowered.api.item.inventory.Container;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.item.inventory.property.SlotPos;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
@@ -373,17 +374,18 @@ public class VanillaMessaging implements IPlayerMessage {
 
 	@Override
 	public void showAvalaibleClasses(IActiveCharacter character) {
-		displayCommonMenu(character, groupService.getClasses(), ConfigClass.Default);
+		displayCommonMenu(character, groupService.getClasses(), ConfigClass.Default, TextHelper.parse(Localization.CLASSES_MENU_TEXT));
 	}
 
 	@Override
 	public void sendListOfRaces(IActiveCharacter character) {
-		displayCommonMenu(character, groupService.getRaces(), Race.Default);
+		displayCommonMenu(character, groupService.getRaces(), Race.Default, TextHelper.parse(Localization.RACES_MENU_TEXT));
 	}
 
-	private void displayCommonMenu(IActiveCharacter character, Collection<? extends PlayerGroup> g, PlayerGroup default_) {
+	private void displayCommonMenu(IActiveCharacter character, Collection<? extends PlayerGroup> g, PlayerGroup default_, Text invHeader) {
 		Inventory i = Inventory.builder()
 				.of(InventoryArchetypes.DOUBLE_CHEST)
+				.property(InventoryTitle.of(invHeader))
 				.build(plugin);
 		for (PlayerGroup cc : g) {
 			if (cc == default_) {

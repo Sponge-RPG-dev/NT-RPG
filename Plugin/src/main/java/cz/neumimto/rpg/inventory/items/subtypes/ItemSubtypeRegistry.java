@@ -24,6 +24,7 @@ public class ItemSubtypeRegistry implements AdditionalCatalogRegistryModule<Item
         return Optional.ofNullable(types.get(id.toLowerCase()));
     }
 
+
     @Override
     public Collection<ItemSubtype> getAll() {
         return types.values();

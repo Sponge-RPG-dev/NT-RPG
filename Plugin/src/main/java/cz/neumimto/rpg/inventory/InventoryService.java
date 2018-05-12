@@ -59,6 +59,7 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
+import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
@@ -377,14 +378,19 @@ public class InventoryService {
 	}
 	*/
 
-	//TODO: ItemGroups.conf add armor section
 	public CannotUseItemReson canWear(ItemStack itemStack, IActiveCharacter character) {
+		if (itemStack == null)
+			return CannotUseItemReson.OK;
 		RPGItemType itemType = itemService.getFromItemStack(itemStack);
+		if (itemType == null) {
+			return CannotUseItemReson.OK; //ItemStack was not recognized as a managed item type. Player may use it
+		}
 		if (!character.canWear(itemType)) {
 			return CannotUseItemReson.CONFIG;
 		}
 		return checkRestrictions(character, itemStack);
 	}
+
 
 	public CannotUseItemReson canUse(ItemStack itemStack, IActiveCharacter character) {
 		if (itemStack == null)
@@ -392,7 +398,7 @@ public class InventoryService {
 
 		RPGItemType itemType = itemService.getFromItemStack(itemStack);
 		if (itemType == null) {
-			return CannotUseItemReson.OK; //??
+			return CannotUseItemReson.OK; //ItemStack was not recognized as a managed item type. Player may use it
 		}
 		if (!character.canUse(itemType)) {
 			return CannotUseItemReson.CONFIG;
@@ -449,7 +455,7 @@ public class InventoryService {
 		return CannotUseItemReson.OK;
 	}
 
-	private CannotUseItemReson checkRestrictions(IActiveCharacter character, ItemStack is) {
+	private CannotUseItemReson checkRestrictions(IActiveCharacter character, DataHolder is) {
 		Optional<Map<String, Integer>> a = is.get(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS);
 		if (a.isPresent()) {
 			Map<String, Integer> stringIntegerMap = a.get();
