@@ -100,7 +100,9 @@ public abstract class PlayerInvHandler implements CatalogType {
 
     protected void deInitializeItemStack(IActiveCharacter character, Inventory query) {
         CustomItem item = character.getEquipedInventorySlots().get(query.getInventoryProperty(SlotIndex.class).get().getValue());
-        effectService().removeGlobalEffectsAsEnchantments(item.getEffects().keySet(), character, item);
+        if (item != null) {
+            effectService().removeGlobalEffectsAsEnchantments(item.getEffects().keySet(), character, item);
+        }
     }
 
 
