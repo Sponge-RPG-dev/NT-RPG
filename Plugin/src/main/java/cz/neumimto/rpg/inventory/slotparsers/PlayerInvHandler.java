@@ -5,6 +5,9 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.inventory.CannotUseItemReson;
 import cz.neumimto.rpg.inventory.CustomItemFactory;
 import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.ItemService;
+import cz.neumimto.rpg.inventory.RPGItemType;
+import cz.neumimto.rpg.inventory.WeaponClass;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.CatalogType;
@@ -54,13 +57,31 @@ public abstract class PlayerInvHandler implements CatalogType {
 
     protected boolean checkForSlot(IActiveCharacter character, Inventory slot) {
         Optional<ItemStack> peek = slot.peek();
-        return peek.filter(itemStack -> checkForItem(character, itemStack)).isPresent();
+        if (peek.isPresent()) {
+            ItemStack itemStack = peek.get();
+            RPGItemType fromItemStack = itemService().getFromItemStack(itemStack);
+            if (fromItemStack == null) {
+                return true;
+            }
+            if (fromItemStack.getWeaponClass() == WeaponClass.ARMOR) {
+                return checkForItem(character, itemStack, fromItemStack);
+            } else {
+                return checkForArmorItem(character, itemStack, fromItemStack);
+            }
+        }
+        return true;
     }
 
-    protected boolean checkForItem(IActiveCharacter character, ItemStack itemStack) {
-        CannotUseItemReson cannotUseItemReson = inventoryService().canUse(itemStack, character);
+    protected boolean checkForItem(IActiveCharacter character, ItemStack itemStack, RPGItemType itemType) {
+        CannotUseItemReson cannotUseItemReson = inventoryService().canUse(itemStack, character, itemType);
         return cannotUseItemReson == CannotUseItemReson.OK;
     }
+
+    protected boolean checkForArmorItem(IActiveCharacter character, ItemStack itemStack, RPGItemType itemType) {
+        CannotUseItemReson cannotUseItemReson = inventoryService().canWear(itemStack, character, itemType);
+        return cannotUseItemReson == CannotUseItemReson.OK;
+    }
+
 
     /**
      * A method which
@@ -112,9 +133,17 @@ public abstract class PlayerInvHandler implements CatalogType {
                 return false;
             } else {
                 ItemStack itemStack = slot.peek().get();
-                if (!checkForItem(character, itemStack)) {
-                    return true;
+                RPGItemType fromItemStack = itemService().getFromItemStack(itemStack);
+                if (fromItemStack == null)
+                    return false;
+                boolean canUse = false;
+                if (fromItemStack.getWeaponClass() == WeaponClass.ARMOR) {
+                    canUse = checkForArmorItem(character, itemStack, fromItemStack);
+                } else {
+                    canUse = checkForItem(character, itemStack, fromItemStack);
                 }
+                if (!canUse)
+                    return true;
 
                 //no item before
                 if (customItem == null) {
@@ -137,6 +166,10 @@ public abstract class PlayerInvHandler implements CatalogType {
 
     protected InventoryService inventoryService() {
         return NtRpgPlugin.GlobalScope.inventorySerivce;
+    }
+
+    protected ItemService itemService() {
+        return NtRpgPlugin.GlobalScope.itemService;
     }
 
     protected EffectService effectService() {

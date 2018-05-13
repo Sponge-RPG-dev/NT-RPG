@@ -21,7 +21,11 @@ package cz.neumimto.rpg.listeners;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.inventory.*;
+import cz.neumimto.rpg.inventory.CannotUseItemReson;
+import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.ItemService;
+import cz.neumimto.rpg.inventory.RPGItemType;
+import cz.neumimto.rpg.inventory.WeaponClass;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.entity.Entity;
@@ -84,9 +88,9 @@ public class InventoryListener {
 			ItemStack stack = event.getItemStack().createStack();
 			CannotUseItemReson reason;
 			if (rpgItemType.getWeaponClass() == WeaponClass.ARMOR) {
-				reason = inventoryService.canWear(stack, character);
+				reason = inventoryService.canWear(stack, character, rpgItemType);
 			} else {
-				reason = inventoryService.canUse(stack, character);
+				reason = inventoryService.canUse(stack, character, rpgItemType);
 			}
 			if (reason != CannotUseItemReson.OK) {
 				Gui.sendCannotUseItemNotification(character, stack, reason);
