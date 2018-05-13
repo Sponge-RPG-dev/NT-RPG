@@ -3,15 +3,18 @@ package cz.neumimto.rpg.inventory.slotparsers;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.IEffectSource;
+import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by NeumimTo on 26.3.2018.
@@ -65,12 +68,24 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
 
     @Override
     public void onRightClick(IActiveCharacter character, int slot) {
-
+        onHandInteract(character, slot);
     }
 
     @Override
     public void onLeftClick(IActiveCharacter character, int slot) {
+        onHandInteract(character, slot);
+    }
 
+    protected void onHandInteract(IActiveCharacter character, int slot) {
+        Inventory query = character.getPlayer().getInventory();
+        Inventory theslot = query.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(slot)));
+        Optional<ItemStack> peek = theslot.peek();
+        if (!peek.isPresent()) {
+            CustomItem customItem = character.getEquipedInventorySlots().get(slot);
+            if (customItem != null) {
+                deInitializeItemStack(character, theslot);
+            }
+        }
     }
 
     protected void updateEquipOrder(IActiveCharacter character, int curent) {
