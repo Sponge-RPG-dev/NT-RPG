@@ -65,6 +65,8 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
                 character.getSlotsCannotBeEquiped().add(slot);
             }
         }
+
+        adjustDamage(character);
     }
 
 
@@ -107,6 +109,8 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
             CustomItem customItem = initializeItemStack(character, theslot);
             character.setMainHand(customItem, slot);
         }
+
+        adjustDamage(character);
     }
 
     protected void updateEquipOrder(IActiveCharacter character, int curent) {
@@ -120,5 +124,10 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
             }
         }
         inventoryEquipSlotOrder.add(curent);
+    }
+
+
+    protected void adjustDamage(IActiveCharacter character) {
+        damageService().recalculateCharacterWeaponDamage(character);
     }
 }

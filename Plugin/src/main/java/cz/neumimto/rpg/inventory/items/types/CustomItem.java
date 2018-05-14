@@ -4,6 +4,7 @@ import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -22,6 +23,7 @@ public class CustomItem implements IEffectSourceProvider {
 	protected Map<IGlobalEffect, EffectParams> effects = new HashMap<>();
 	protected ItemStackSnapshot itemStack;
 	private final IEffectSource effectSource;
+	private RPGItemType rpgItemType;
 
 	public int getSlot() {
 		return slot;
@@ -31,9 +33,10 @@ public class CustomItem implements IEffectSourceProvider {
 		this.slot = slot;
 	}
 
-	public CustomItem(ItemStack itemStack, IEffectSource effectSource) {
+	public CustomItem(ItemStack itemStack, IEffectSource effectSource, RPGItemType rpgItemType) {
 		this.itemStack = itemStack.createSnapshot();
 		this.effectSource = effectSource;
+		this.rpgItemType = rpgItemType;
 	}
 
 	public int getLevel() {

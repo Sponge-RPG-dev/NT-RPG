@@ -28,19 +28,18 @@ import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.ItemService;
 import cz.neumimto.rpg.inventory.RPGItemType;
+import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.skills.NDamageType;
-import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 
@@ -106,18 +105,18 @@ public class DamageService {
 		if (character.isStub()) {
 			return;
 		}
-		ItemStack i = character.getPlayer().getItemInHand(HandTypes.MAIN_HAND).orElse(null);
-		recalculateCharacterWeaponDamage(character, i);
+		CustomItem mainHand = character.getMainHand();
+		recalculateCharacterWeaponDamage(character, mainHand);
 	}
 
-	public void recalculateCharacterWeaponDamage(IActiveCharacter character, ItemStack itemStack) {
+	public void recalculateCharacterWeaponDamage(IActiveCharacter character, CustomItem mainHand) {
 		if (character.isStub()) {
 			return;
 		}
-		if (itemStack == null) {
+		if (mainHand == null) {
 			character.setWeaponDamage(0);
 		} else {
-			recalculateCharacterWeaponDamage(character, itemService.getFromItemStack(itemStack));
+			recalculateCharacterWeaponDamage(character, mainHand);
 		}
 	}
 

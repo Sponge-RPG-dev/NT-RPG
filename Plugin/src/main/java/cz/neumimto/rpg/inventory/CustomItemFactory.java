@@ -18,10 +18,13 @@ public class CustomItemFactory {
 
     private static InventoryService inventoryService;
 
+    private static ItemService itemService;
+
     @PostProcess
     public void initBuilder() {
         builder = new CustomItemBuilder();
         inventoryService = NtRpgPlugin.GlobalScope.inventorySerivce;
+        itemService = NtRpgPlugin.GlobalScope.itemService;
         //I should create InjectStatic/Inject lazy some day.
     }
 
@@ -29,7 +32,8 @@ public class CustomItemFactory {
     public static class CustomItemBuilder {
 
         public CustomItem create(ItemStack itemStack, Integer value) {
-            CustomItem customItem = new CustomItem(itemStack, inventoryService.getEffectSourceBySlotId(value));
+
+            CustomItem customItem = new CustomItem(itemStack, inventoryService.getEffectSourceBySlotId(value), itemService.getFromItemStack(itemStack));
             if (itemStack.getType() == ItemTypes.NONE) {
                 customItem.setEffects(new HashMap<>());
                 customItem.setLevel(0);
