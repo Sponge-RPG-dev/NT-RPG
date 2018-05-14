@@ -783,6 +783,11 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
+	public int getMainHandSlotId() {
+		return mainHandSlotId;
+	}
+
+	@Override
 	public void setMainHand(CustomItem customItem, int slot) {
 		this.mainHand = customItem;
 		this.mainHandSlotId = slot;

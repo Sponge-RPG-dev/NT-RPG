@@ -617,6 +617,11 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
+	public int getMainHandSlotId() {
+		return -1;
+	}
+
+	@Override
 	public CustomItem getOffHand() {
 		return null;
 	}

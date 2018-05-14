@@ -191,6 +191,8 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	CustomItem getMainHand();
 
+	int getMainHandSlotId();
+
 	void setMainHand(CustomItem customItem, int slot);
 
 	CustomItem getOffHand();

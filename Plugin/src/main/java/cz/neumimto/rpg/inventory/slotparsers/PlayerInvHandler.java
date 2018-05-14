@@ -116,7 +116,7 @@ public abstract class PlayerInvHandler implements CatalogType {
 
     /**
      * @param character character instance
-     * @param slot id of clicked slot
+     * @param slot id of clicked slot, the slot is NOT in hotbar row
      * @return true if the click inventory event shall be cancelled
      */
     public boolean processSlotInteraction(IActiveCharacter character, Slot slot) {

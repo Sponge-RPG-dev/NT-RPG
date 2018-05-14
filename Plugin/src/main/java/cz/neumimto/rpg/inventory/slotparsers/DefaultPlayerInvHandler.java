@@ -82,34 +82,37 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
     }
 
     protected void onHandInteract(IActiveCharacter character, int slot) {
-        Inventory query = character.getPlayer().getInventory();
-        Inventory theslot = query.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(slot)));
-        Optional<ItemStack> peek = theslot.peek();
-        if (!peek.isPresent()) {
-            CustomItem customItem = character.getMainHand();
-            if (customItem != null) {
-                deInitializeItemStack(character, theslot);
-            }
-            character.setMainHand(null, -1);
-            return;
-        }
-        ItemStack itemStack = peek.get();
-        RPGItemType fromItemStack = itemService().getFromItemStack(itemStack);
-        if (fromItemStack == null)
-            return;
-        CannotUseItemReson cannotUseItemReson = inventoryService().canUse(itemStack, character, fromItemStack);
-        if (cannotUseItemReson != CannotUseItemReson.OK) {
-            CustomItem customItem = character.getMainHand();
-            if (customItem != null) {
-                deInitializeItemStack(character, theslot);
-                character.setMainHand(null, -1);
-            }
-            Gui.sendCannotUseItemNotification(character, itemStack, cannotUseItemReson);
-        } else {
-            CustomItem customItem = initializeItemStack(character, theslot);
-            character.setMainHand(customItem, slot);
-        }
+        int mainHandSlotId = character.getMainHandSlotId();
 
+        if (slot != mainHandSlotId) {
+            Inventory query = character.getPlayer().getInventory();
+            Inventory theslot = query.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(slot)));
+            Optional<ItemStack> peek = theslot.peek();
+            if (!peek.isPresent()) {
+                CustomItem customItem = character.getMainHand();
+                if (customItem != null) {
+                    deInitializeItemStack(character, theslot);
+                }
+                character.setMainHand(null, -1);
+                return;
+            }
+            ItemStack itemStack = peek.get();
+            RPGItemType fromItemStack = itemService().getFromItemStack(itemStack);
+            if (fromItemStack == null)
+                return;
+            CannotUseItemReson cannotUseItemReson = inventoryService().canUse(itemStack, character, fromItemStack);
+            if (cannotUseItemReson != CannotUseItemReson.OK) {
+                CustomItem customItem = character.getMainHand();
+                if (customItem != null) {
+                    deInitializeItemStack(character, theslot);
+                    character.setMainHand(null, -1);
+                }
+                Gui.sendCannotUseItemNotification(character, itemStack, cannotUseItemReson);
+            } else {
+                CustomItem customItem = initializeItemStack(character, theslot);
+                character.setMainHand(customItem, slot);
+            }
+        }
         adjustDamage(character);
     }
 
