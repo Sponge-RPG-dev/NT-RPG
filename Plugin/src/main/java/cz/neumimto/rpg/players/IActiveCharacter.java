@@ -189,6 +189,14 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setInvulnerable(boolean b);
 
+	CustomItem getMainHand();
+
+	void setMainHand(CustomItem customItem, int slot);
+
+	CustomItem getOffHand();
+
+	void setOffHand(CustomItem customItem);
+
 	@Override
 	double getHp();
 

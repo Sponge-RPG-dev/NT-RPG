@@ -3,6 +3,9 @@ package cz.neumimto.rpg.inventory.slotparsers;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.IEffectSource;
+import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.inventory.CannotUseItemReson;
+import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Sponge;
@@ -81,10 +84,28 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
         Inventory theslot = query.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(slot)));
         Optional<ItemStack> peek = theslot.peek();
         if (!peek.isPresent()) {
-            CustomItem customItem = character.getEquipedInventorySlots().get(slot);
+            CustomItem customItem = character.getMainHand();
             if (customItem != null) {
                 deInitializeItemStack(character, theslot);
             }
+            character.setMainHand(null, -1);
+            return;
+        }
+        ItemStack itemStack = peek.get();
+        RPGItemType fromItemStack = itemService().getFromItemStack(itemStack);
+        if (fromItemStack == null)
+            return;
+        CannotUseItemReson cannotUseItemReson = inventoryService().canUse(itemStack, character, fromItemStack);
+        if (cannotUseItemReson != CannotUseItemReson.OK) {
+            CustomItem customItem = character.getMainHand();
+            if (customItem != null) {
+                deInitializeItemStack(character, theslot);
+                character.setMainHand(null, -1);
+            }
+            Gui.sendCannotUseItemNotification(character, itemStack, cannotUseItemReson);
+        } else {
+            CustomItem customItem = initializeItemStack(character, theslot);
+            character.setMainHand(customItem, slot);
         }
     }
 

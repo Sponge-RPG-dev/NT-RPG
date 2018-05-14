@@ -97,6 +97,9 @@ public class ActiveCharacter implements IActiveCharacter {
 	private Set<SkillTreeSpecialization> specs = new HashSet<>();
 
 	private transient Map<String, SkillTreeViewModel> skillTreeViewLocation;
+	private CustomItem offHand;
+	private int mainHandSlotId;
+	private CustomItem mainHand;
 
 	public ActiveCharacter(Player pl, CharacterBase base) {
 		this.pl = pl;
@@ -772,6 +775,27 @@ public class ActiveCharacter implements IActiveCharacter {
 	@Override
 	public Set<Integer> getSlotsCannotBeEquiped() {
 		return denySlotInteractionArr;
+	}
+
+	@Override
+	public CustomItem getMainHand() {
+		return mainHand;
+	}
+
+	@Override
+	public void setMainHand(CustomItem customItem, int slot) {
+		this.mainHand = customItem;
+		this.mainHandSlotId = slot;
+	}
+
+	@Override
+	public CustomItem getOffHand() {
+		return offHand;
+	}
+
+	@Override
+	public void setOffHand(CustomItem customItem) {
+		this.offHand = customItem;
 	}
 
 	@Override

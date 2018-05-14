@@ -31,7 +31,6 @@ public class CustomItem implements IEffectSourceProvider {
 		this.slot = slot;
 	}
 
-	//todo move to some kind of builder/service
 	public CustomItem(ItemStack itemStack, IEffectSource effectSource) {
 		this.itemStack = itemStack.createSnapshot();
 		this.effectSource = effectSource;
