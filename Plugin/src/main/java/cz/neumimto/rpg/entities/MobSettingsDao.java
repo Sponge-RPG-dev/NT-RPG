@@ -10,6 +10,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.entity.living.Living;
+import org.spongepowered.api.world.storage.WorldProperties;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,8 +41,6 @@ public class MobSettingsDao {
 					.filter(e -> !Human.class.isAssignableFrom(e.getEntityClass()))
 					.forEach(livingEntities::add);
 
-			String defaultDimmensionName = "world";
-
 			RootMobConfig rootMobConfig = new RootMobConfig();
 			MobsConfig overWorldMobConfig = new MobsConfig();
 			for (EntityType livingEntity : livingEntities) {
@@ -49,7 +48,11 @@ public class MobSettingsDao {
 				overWorldMobConfig.getExperiences().put(livingEntity, 10D);
 				overWorldMobConfig.getHealth().put(livingEntity, 10D);
 			}
-			rootMobConfig.getDimmensions().put(defaultDimmensionName, overWorldMobConfig);
+			Collection<WorldProperties> allWorldProperties = Sponge.getServer().getAllWorldProperties();
+			for (WorldProperties allWorldProperty : allWorldProperties) {
+				rootMobConfig.getDimmensions().put(allWorldProperty.getWorldName(), overWorldMobConfig);
+			}
+
 
 			try {
 				ObjectMapper.BoundInstance configMapper = ObjectMapper.forObject(rootMobConfig);
