@@ -30,7 +30,6 @@ import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
-import org.spongepowered.api.item.inventory.Container;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.text.Text;
@@ -79,13 +78,14 @@ public class DebugListener {
 
 	@Listener(order = Order.FIRST)
 	public void onClick(ClickInventoryEvent event, @Root Player player) {
-		Optional<Container> openInventory = player.getOpenInventory();
-		if (openInventory.isPresent()) {
-			List<SlotTransaction> transactions = event.getTransactions();
-			for (SlotTransaction transaction : transactions) {
-				Optional<SlotIndex> inventoryProperty = transaction.getSlot().getInventoryProperty(SlotIndex.class);
-				inventoryProperty.ifPresent(slotIndex -> player.sendMessage(TextHelper.parse("[Debug] Clicked slot index:" + slotIndex.getValue())));
+		List<SlotTransaction> transactions = event.getTransactions();
+		for (SlotTransaction transaction : transactions) {
+			Optional<SlotIndex> inventoryProperty = transaction.getSlot().transform().getInventoryProperty(SlotIndex.class);
+			if (!inventoryProperty.isPresent()) {
+				inventoryProperty = transaction.getSlot().getInventoryProperty(SlotIndex.class);
 			}
+			inventoryProperty.ifPresent(slotIndex -> player.sendMessage(TextHelper.parse("[Debug] ID:" + slotIndex.getValue()
+					+ ", Container: " + transaction.getSlot().parent().getClass().getName())));
 		}
 	}
 }
