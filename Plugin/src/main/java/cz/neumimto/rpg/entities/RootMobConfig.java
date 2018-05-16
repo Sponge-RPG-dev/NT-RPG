@@ -24,7 +24,7 @@ public class RootMobConfig {
     }
 
     public MobsConfig getDimmension(String worldName) {
-        return dimmensions.get(worldName.toLowerCase());
+        return dimmensions.get(worldName);
     }
 
     public void setDimmensions(Map<String, MobsConfig> dimmensions) {

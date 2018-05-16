@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.entities;
 
-import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.ResourceLoader;
 import ninja.leaping.configurate.SimpleConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
@@ -10,6 +10,8 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.entity.living.Living;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import java.io.File;
@@ -21,12 +23,13 @@ import java.util.List;
  * Created by NeumimTo on 20.12.2015.
  */
 @Singleton
+@ResourceLoader.ListenerClass
 public class MobSettingsDao {
 
 	private RootMobConfig cache;
 
-	@PostProcess(priority = 9)
-	public void load() {
+	@Listener
+	public void load(GameStartedServerEvent event) {
 		cache = createDefaults("MobSettings.conf");
 	}
 
