@@ -21,10 +21,12 @@ package cz.neumimto.rpg.events.skills;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.events.CancellableEvent;
+import cz.neumimto.rpg.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 7.8.2015.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class SkillHealEvent extends CancellableEvent {
 	private IEntity character;
 	private double amount;

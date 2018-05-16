@@ -21,10 +21,12 @@ package cz.neumimto.rpg.events.party;
 import cz.neumimto.rpg.events.CancellableEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.parties.Party;
+import cz.neumimto.rpg.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 11.8.2015.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class PartyInviteEvent extends CancellableEvent {
 	private final Party party;
 	private IActiveCharacter character;

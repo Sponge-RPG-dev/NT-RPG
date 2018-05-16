@@ -21,6 +21,7 @@ package cz.neumimto.rpg.events.character;
 import cz.neumimto.rpg.NEventContextKeys;
 import cz.neumimto.rpg.events.CancellableEvent;
 import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.scripting.JsBinding;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.EventContext;
 
@@ -30,6 +31,7 @@ import java.util.UUID;
 /**
  * Created by NeumimTo on 10.7.2015.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class PlayerDataPreloadComplete extends CancellableEvent {
 	private UUID player;
 	private List<CharacterBase> characterBases;

@@ -21,10 +21,12 @@ package cz.neumimto.rpg.events.character;
 import cz.neumimto.rpg.events.CancellableEvent;
 import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 12.2.2015.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class WeaponEquipEvent extends CancellableEvent {
 	final IActiveCharacter player;
 	final Weapon newItem;

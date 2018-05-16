@@ -17,7 +17,9 @@
 package cz.neumimto.rpg.events.character;
 
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.scripting.JsBinding;
 
+@JsBinding(JsBinding.Type.CLASS)
 public class PlayerCombatEvent extends CharacterEvent {
 
 	private final cz.neumimto.rpg.players.IActiveCharacter target;

@@ -18,11 +18,13 @@
 
 package cz.neumimto.rpg.events.character;
 
+import cz.neumimto.rpg.scripting.JsBinding;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 /**
  * Created by NeumimTo on 13.3.2015.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class WeaponSwitchEvent extends CharacterEvent {
 
 	public WeaponSwitchEvent(cz.neumimto.rpg.players.IActiveCharacter IActiveCharacter, ItemStack newWeapon) {

@@ -18,7 +18,6 @@
 
 package cz.neumimto.rpg.events;
 
-import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import org.spongepowered.api.event.Cancellable;
 import org.spongepowered.api.event.cause.Cause;

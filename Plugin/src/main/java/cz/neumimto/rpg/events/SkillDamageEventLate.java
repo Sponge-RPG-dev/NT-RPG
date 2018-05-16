@@ -1,12 +1,14 @@
 package cz.neumimto.rpg.events;
 
 import cz.neumimto.rpg.IEntity;
+import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.ISkill;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 
 /**
  * Created by ja on 18.6.2017.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class SkillDamageEventLate extends CancellableEvent {
 	IEntity caster;
 	IEntity target;

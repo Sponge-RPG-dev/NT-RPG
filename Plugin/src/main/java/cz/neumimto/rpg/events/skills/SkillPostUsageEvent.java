@@ -20,10 +20,12 @@ package cz.neumimto.rpg.events.skills;
 
 import cz.neumimto.rpg.events.CancellableEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 7.8.2015.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class SkillPostUsageEvent extends CancellableEvent {
 	private IActiveCharacter character;
 	private double hpcost;

@@ -17,9 +17,11 @@ package cz.neumimto.rpg.events.skills;
 
 import cz.neumimto.rpg.events.CancellableEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.ISkill;
 import org.spongepowered.api.entity.living.Living;
 
+@JsBinding(JsBinding.Type.CLASS)
 public class SkillFindTargetEvent extends CancellableEvent {
 	private IActiveCharacter character;
 	private Living target;

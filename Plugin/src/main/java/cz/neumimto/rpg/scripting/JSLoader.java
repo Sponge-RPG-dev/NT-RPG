@@ -30,7 +30,6 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.utils.FileUtils;
 import jdk.internal.dynalink.beans.StaticClass;
 import org.slf4j.Logger;
-import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Event;
 
@@ -41,6 +40,7 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -66,6 +66,8 @@ public class JSLoader {
 	private ResourceLoader resourceLoader;
 
 	private static Object listener;
+
+	private Map<Class<?>, JsBinding.Type> dataToBind = new HashMap<>();
 
 	@PostProcess(priority = 2)
 	public void initEngine() {
@@ -110,6 +112,10 @@ public class JSLoader {
 			Bindings bindings = new SimpleBindings();
 			bindings.put("IoC", ioc);
 			bindings.put("Bindings", new BindingsHelper(engine));
+			for (Map.Entry<Class<?>, JsBinding.Type> objectTypeEntry : dataToBind.entrySet()) {
+				Object o = objectTypeEntry.getValue() == JsBinding.Type.CLASS ? objectTypeEntry.getKey() : objectTypeEntry.getKey().newInstance();
+				bindings.put(objectTypeEntry.getKey().getSimpleName(), o);
+			}
 			bindings.put("Folder", scripts_root.toString());
 			bindings.put("GlobalScope", ioc.build(GlobalScope.class));
 			engine.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
@@ -195,5 +201,8 @@ public class JSLoader {
 		}
 	}
 
+	public Map<Class<?>, JsBinding.Type> getDataToBind() {
+		return dataToBind;
+	}
 }
 

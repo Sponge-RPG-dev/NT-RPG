@@ -19,11 +19,13 @@
 package cz.neumimto.rpg.events.character;
 
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.scripting.JsBinding;
 import org.spongepowered.api.entity.living.player.Player;
 
 /**
  * Created by NeumimTo on 13.3.2015.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class CharacterDamageEntityEvent extends CharacterEvent {
 	private Player damaged;
 	private double damage;

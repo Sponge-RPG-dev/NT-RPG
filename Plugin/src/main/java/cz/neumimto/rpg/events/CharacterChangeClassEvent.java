@@ -2,10 +2,12 @@ package cz.neumimto.rpg.events;
 
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
+import cz.neumimto.rpg.scripting.JsBinding;
 
 /**
  * Created by ja on 29.4.2017.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class CharacterChangeClassEvent extends CharacterChangeGroupEvent {
 
 	private final int slot;

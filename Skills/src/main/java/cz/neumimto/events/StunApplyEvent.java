@@ -3,10 +3,12 @@ package cz.neumimto.events;
 import cz.neumimto.effects.negative.StunEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.events.CancellableEvent;
+import cz.neumimto.rpg.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 5.7.2017.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class StunApplyEvent extends CancellableEvent {
 
 	private final IEffectConsumer source;

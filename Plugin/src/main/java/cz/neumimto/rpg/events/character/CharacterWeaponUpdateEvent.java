@@ -1,17 +1,17 @@
 package cz.neumimto.rpg.events.character;
 
 import cz.neumimto.rpg.events.CancellableEvent;
-import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.RPGItemWrapper;
+import cz.neumimto.rpg.scripting.JsBinding;
 import org.spongepowered.api.item.ItemType;
 
 import java.util.Map;
-import java.util.TreeSet;
 
 /**
  * Created by NeumimTo on 10.10.2015.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class CharacterWeaponUpdateEvent extends CancellableEvent {
 	private final IActiveCharacter character;
 	private final Map<ItemType, RPGItemWrapper> allowedArmor;

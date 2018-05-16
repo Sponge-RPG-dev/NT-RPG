@@ -2,10 +2,12 @@ package cz.neumimto.rpg.events;
 
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 27.12.2015.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class CharacterGainedLevelEvent extends CharacterEvent {
 	private final ExtendedNClass aClass;
 	private final int level;

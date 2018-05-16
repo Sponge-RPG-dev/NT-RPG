@@ -1,11 +1,13 @@
 package cz.neumimto.rpg.events;
 
 import cz.neumimto.rpg.IEntity;
+import cz.neumimto.rpg.scripting.JsBinding;
 import org.spongepowered.api.entity.projectile.Projectile;
 
 /**
  * Created by NeumimTo on 17.6.2017.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class ProjectileHitEvent extends CancellableEvent {
 
 	private IEntity shooter;

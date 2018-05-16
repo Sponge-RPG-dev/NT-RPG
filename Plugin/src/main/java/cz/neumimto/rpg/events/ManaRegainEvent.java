@@ -1,11 +1,13 @@
 package cz.neumimto.rpg.events;
 
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.scripting.JsBinding;
 
 
 /**
  * Created by NeumimTo on 9.8.2015.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class ManaRegainEvent extends CancellableEvent {
 	private IActiveCharacter character;
 	private double newVal;

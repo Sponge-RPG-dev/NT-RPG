@@ -33,6 +33,8 @@ import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.players.properties.PropertyContainer;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
+import cz.neumimto.rpg.scripting.JSLoader;
+import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import javassist.CannotCompileException;
@@ -216,11 +218,14 @@ public class ResourceLoader {
 		if (clazz.isAnnotationPresent(Attribute.class)) {
 			propertyService.registerAttribute((ICharacterAttribute) clazz.newInstance());
 		}
+		if (clazz.isAnnotationPresent(JsBinding.class)) {
+			IoC.get().build(JSLoader.class).getDataToBind().put(clazz, clazz.getAnnotation(JsBinding.class).value());
+		}
 		//Effects
 		if (IEffect.class.isAssignableFrom(clazz)) {
 			ClassGenerator.Generate a = clazz.getAnnotation(ClassGenerator.Generate.class);
 			if (a != null) {
-				Class c = (Class<? extends IEffect>) clazz;
+				Class c = clazz;
 				IGlobalEffect iGlobalEffect = classGenerator.generateGlobalEffect(c);
 				if (iGlobalEffect == null) {
 					return;

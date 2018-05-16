@@ -3,10 +3,12 @@ package cz.neumimto.events;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.events.CancellableEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 7.7.2017.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class ManaDrainEvent extends CancellableEvent {
 	private final IEntity source;
 	private final IActiveCharacter target;

@@ -20,11 +20,13 @@ package cz.neumimto.rpg.events.skills;
 
 import cz.neumimto.rpg.events.CancellableEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.ISkill;
 
 /**
  * Created by NeumimTo on 26.7.2015.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class SkillUpgradeEvent extends CancellableEvent {
 	IActiveCharacter character;
 	ISkill skill;

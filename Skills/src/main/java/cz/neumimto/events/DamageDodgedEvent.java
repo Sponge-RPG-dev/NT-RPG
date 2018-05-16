@@ -4,10 +4,12 @@ import cz.neumimto.effects.positive.DodgeEffect;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.events.CancellableEvent;
+import cz.neumimto.rpg.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 6.7.2017.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class DamageDodgedEvent extends CancellableEvent {
 	private final IEntity source;
 	private final IEntity target;

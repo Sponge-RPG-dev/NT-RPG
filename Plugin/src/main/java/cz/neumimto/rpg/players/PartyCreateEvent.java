@@ -19,10 +19,12 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.events.CancellableEvent;
+import cz.neumimto.rpg.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 11.8.2015.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class PartyCreateEvent extends CancellableEvent {
 	private ActiveCharacter character;
 
