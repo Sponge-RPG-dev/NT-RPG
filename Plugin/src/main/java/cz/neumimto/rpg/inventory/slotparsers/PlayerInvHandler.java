@@ -122,7 +122,7 @@ public abstract class PlayerInvHandler implements CatalogType {
     public boolean processSlotInteraction(IActiveCharacter character, Slot slot) {
         Optional<SlotIndex> inventoryProperty = slot.getInventoryProperty(SlotIndex.class);
         Integer value = inventoryProperty.get().getValue();
-        if (inventoryService().getEffectSourceBySlotId(value) != null) {
+        if (inventoryService().getEffectSourceBySlotId(slot) != null) {
             CustomItem customItem = character.getEquipedInventorySlots().get(value);
             //item has been taken away from the slot
             if (!slot.peek().isPresent()) {

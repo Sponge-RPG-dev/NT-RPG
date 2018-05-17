@@ -25,11 +25,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.Arg;
-import cz.neumimto.rpg.Console;
-import cz.neumimto.rpg.GroupService;
-import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.TextHelper;
+import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
@@ -40,13 +36,7 @@ import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.ItemLoreBuilderService;
 import cz.neumimto.rpg.inventory.data.NKeys;
-import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaHeader;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaTypeData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemRarityData;
-import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemGroupRequirementsData;
-import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemRequirementsData;
+import cz.neumimto.rpg.inventory.data.manipulators.*;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtypes;
@@ -76,6 +66,7 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
+import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
@@ -84,15 +75,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -148,7 +131,7 @@ public class InventoryService {
 	private Map<UUID, InventoryMenu> inventoryMenus = new HashMap<>();
 
 	private Map<String, ItemGroup> itemGroups = new HashMap<>();
-	private Map<Integer, SlotEffectSource> slotEffectSourceMap = new HashMap<>();
+	private Map<Class<?>, ManagedInventory> managedInventories = new HashMap<>();
 
 	@Reload(on = ReloadService.PLUGIN_CONFIG)
 	@PostProcess(priority = 100)
@@ -189,8 +172,15 @@ public class InventoryService {
 			//will break in api 8
 			itemMetaSubtypes.stream().map(ItemSubtype::new).forEach(a -> Sponge.getRegistry().register(ItemSubtype.class, a));
 
-			List<String> inventorySlots = c.getStringList("InventorySlots");
-			loadSlotSettings(inventorySlots);
+			List<? extends Config> inventorySlots = c.getConfigList("InventorySlots");
+			for (Config inventorySlot : inventorySlots) {
+				try {
+					loadInventorySettings(inventorySlot);
+				} catch (ClassNotFoundException e) {
+					logger.error("Inventory Class not found", e);
+					continue;
+				}
+			}
 
 			List<? extends Config> itemGroups = c.getConfigList("ItemGroups");
 			loadItemGroups(itemGroups, null);
@@ -261,12 +251,17 @@ public class InventoryService {
 		}
 	}
 
-	private void loadSlotSettings(List<String> slots) {
-		for (String str : slots) {
+	private void loadInventorySettings(Config slots) throws ClassNotFoundException {
+		String aClass = slots.getString("type");
+		Class<?> aClass1 = Class.forName(aClass);
+
+		HashMap<Integer, SlotEffectSource> slotEffectSourceHashMap = new HashMap<>();
+		ManagedInventory managedInventory = new ManagedInventory(aClass1, slotEffectSourceHashMap);
+		for (String str : slots.getStringList("slots")) {
 			String[] split = str.split(";");
 			if (split.length == 1) {
 				SlotEffectSource slotEffectSource = new SlotEffectSource(Integer.parseInt(split[0]), ItemSubtypes.ANY);
-				slotEffectSourceMap.put(slotEffectSource.getSlotId(), slotEffectSource);
+				slotEffectSourceHashMap.put(slotEffectSource.getSlotId(), slotEffectSource);
 			} else {
 				Optional<ItemSubtype> type = Sponge.getRegistry().getType(ItemSubtype.class, split[1]);
 				if (!type.isPresent()) {
@@ -274,9 +269,10 @@ public class InventoryService {
 					logger.error("Could not find subtype " + split[1]);
 				}
 				SlotEffectSource slotEffectSource = new SlotEffectSource(Integer.parseInt(split[0]), type.get());
-				slotEffectSourceMap.put(slotEffectSource.getSlotId(), slotEffectSource);
+				slotEffectSourceHashMap.put(slotEffectSource.getSlotId(), slotEffectSource);
 			}
 		}
+		managedInventories.put(managedInventory.getType(), managedInventory);
 	}
 
 
@@ -608,7 +604,18 @@ public class InventoryService {
 	}
 
 
-	public IEffectSource getEffectSourceBySlotId(Integer value) {
-		return slotEffectSourceMap.get(value);
+	public IEffectSource getEffectSourceBySlotId(Class<?> type, Integer value) {
+		return managedInventories.get(type).getSlotEffectSourceHashMap().get(value);
+	}
+
+	public IEffectSource getEffectSourceBySlotId(Slot slot) {
+		Slot transform = slot.transform();
+		Class type = transform.parent().getClass();
+		SlotIndex index = slot.getInventoryProperty(SlotIndex.class).get();
+		return managedInventories.get(type).getSlotEffectSourceHashMap().get(index.getValue());
+	}
+
+	public ManagedInventory getManagedInventory(Class<?> type) {
+		return managedInventories.get(type);
 	}
 }

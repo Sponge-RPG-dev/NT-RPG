@@ -85,7 +85,7 @@ public class DebugListener {
 				inventoryProperty = transaction.getSlot().getInventoryProperty(SlotIndex.class);
 			}
 			inventoryProperty.ifPresent(slotIndex -> player.sendMessage(TextHelper.parse("[Debug] ID:" + slotIndex.getValue()
-					+ ", Container: " + transaction.getSlot().parent().getClass().getName())));
+					+ ", Container: " + transaction.getSlot().transform().parent().getClass().getName())));
 		}
 	}
 }
