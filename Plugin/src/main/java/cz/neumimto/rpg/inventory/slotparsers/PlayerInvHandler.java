@@ -3,7 +3,12 @@ package cz.neumimto.rpg.inventory.slotparsers;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.inventory.*;
+import cz.neumimto.rpg.inventory.CannotUseItemReson;
+import cz.neumimto.rpg.inventory.CustomItemFactory;
+import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.ItemService;
+import cz.neumimto.rpg.inventory.RPGItemType;
+import cz.neumimto.rpg.inventory.WeaponClass;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.CatalogType;
@@ -38,9 +43,8 @@ public abstract class PlayerInvHandler implements CatalogType {
      *  - Player changes world
      *  - Player gain level
      *  - Player learn/upgrade skill
-     *  - Player changes weapon
-     *  - Player changes hotbar slot
-     *  - Player changes armor/accessories
+     *  - Player changes weapon x
+     *  - Player changes armor/accessories x
      *
      *  Item init order is in a way player equiped items
      *  @see cz.neumimto.rpg.players.CharacterBase#inventoryEquipSlotOrder
@@ -51,7 +55,7 @@ public abstract class PlayerInvHandler implements CatalogType {
     public abstract void initializeCharacterInventory(IActiveCharacter character);
 
 
-    protected boolean checkForSlot(IActiveCharacter character, Inventory slot) {
+    protected boolean checkForSlot(IActiveCharacter character, Slot slot) {
         Optional<ItemStack> peek = slot.peek();
         if (peek.isPresent()) {
             ItemStack itemStack = peek.get();

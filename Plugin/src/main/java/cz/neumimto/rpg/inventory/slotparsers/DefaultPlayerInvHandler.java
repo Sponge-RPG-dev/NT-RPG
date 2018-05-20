@@ -7,8 +7,10 @@ import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.CannotUseItemReson;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
+import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
@@ -37,32 +39,25 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
 
     @Override
     public void initializeCharacterInventory(IActiveCharacter character) {
-        List<Integer> inventoryEquipQueue = character.getCharacterBase().getInventoryEquipSlotOrder();
-        inventoryEquipQueue.forEach(index -> {
-            Slot query = character.getPlayer().getInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(index)));
-            if (checkForSlot(character, query)) {
-                initializeItemStack(character, query);
-            }
-        });
-
-        character.getSlotsCannotBeEquiped().clear();
-
-        Iterator<Integer> iterator = character.getCharacterBase().getInventoryEquipSlotOrder().iterator();
-
-        Integer slot = null;
-        while (iterator.hasNext()) {
-            slot = iterator.next();
-            IEffectSource slotSource = inventoryService().getEffectSourceBySlotId(slot);
+        List<EquipedSlot> inventoryEquipQueue = character.getCharacterBase().getInventoryEquipSlotOrder();
+        Player player = character.getPlayer();
+        Iterator<EquipedSlot> it = inventoryEquipQueue.iterator();
+        EquipedSlot slot = null;
+        while (it.hasNext()) {
+            slot = it.next();
+            IEffectSource slotSource = inventoryService().getEffectSourceBySlotId(slot.getRuntimeInventoryClass(), slot.getSlotIndex());
             if (slotSource == null) {
-                iterator.remove();
+                it.remove();
                 continue;
             }
-            Inventory query = character.getPlayer().getInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(slot)));
+
+            Inventory inv = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(slot.getRuntimeInventoryClass()));
+            Slot query = inv.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(slot.getSlotIndex())));
+
+            deInitializeItemStack(character, query);
             if (checkForSlot(character, query)) {
                 initializeItemStack(character, query);
                 updateEquipOrder(character, slot);
-            } else {
-                character.getSlotsCannotBeEquiped().add(slot);
             }
         }
 
@@ -86,7 +81,7 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
 
         if (slot != mainHandSlotId) {
             Inventory query = character.getPlayer().getInventory();
-            Inventory theslot = query.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(slot)));
+            EquipedSlot theslot = query.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(slot)));
             Optional<ItemStack> peek = theslot.peek();
             if (!peek.isPresent()) {
                 CustomItem customItem = character.getMainHand();
@@ -116,11 +111,11 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
         adjustDamage(character);
     }
 
-    protected void updateEquipOrder(IActiveCharacter character, int curent) {
-        List<Integer> inventoryEquipSlotOrder = character.getCharacterBase().getInventoryEquipSlotOrder();
-        Iterator<Integer> iterator = inventoryEquipSlotOrder.iterator();
+    protected void updateEquipOrder(IActiveCharacter character, EquipedSlot curent) {
+        List<EquipedSlot> inventoryEquipSlotOrder = character.getCharacterBase().getInventoryEquipSlotOrder();
+        Iterator<EquipedSlot> iterator = inventoryEquipSlotOrder.iterator();
         while (iterator.hasNext()) {
-            Integer next = iterator.next();
+            EquipedSlot next = iterator.next();
             if (next.equals(curent)) {
                 iterator.remove();
                 break;

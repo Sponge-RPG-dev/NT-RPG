@@ -24,6 +24,7 @@ import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
+import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
@@ -45,7 +46,13 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatType;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by NeumimTo on 23.7.2015.
@@ -101,7 +108,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Map<Integer, CustomItem> getEquipedInventorySlots() {
+	public Map<EquipedSlot, CustomItem> getEquipedInventorySlots() {
 		return Collections.emptyMap();
 	}
 
@@ -602,7 +609,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Set<Integer> getSlotsCannotBeEquiped() {
+	public Set<EquipedSlot> getSlotsCannotBeEquiped() {
 		return Collections.emptySet();
 	}
 

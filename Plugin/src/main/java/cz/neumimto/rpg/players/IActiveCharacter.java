@@ -22,6 +22,7 @@ import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
+import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
@@ -75,7 +76,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setHealth(IReservable health);
 
-	Map<Integer, CustomItem> getEquipedInventorySlots();
+	Map<EquipedSlot, CustomItem> getEquipedInventorySlots();
 
 	double getExperiencs();
 
@@ -243,6 +244,6 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	boolean hasSkillTreeSpecialization(SkillTreeSpecialization specialization);
 
-	Set<Integer> getSlotsCannotBeEquiped();
+	Set<EquipedSlot> getSlotsCannotBeEquiped();
 
 }
