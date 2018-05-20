@@ -128,7 +128,7 @@ public class CharacterBase extends TimestampEntity {
 	private Map<String, Integer> cachedAttributes = new HashMap<>();
 
 	@Convert(converter = EquipedSlot2Json.class)
-	private List<EquipedSlot> inventoryEquipSlotOrder = new ArrayList<EquipedSlot>();
+	private List<EquipedSlot> inventoryEquipSlotOrder = new ArrayList<>();
 
 	private Integer X;
 

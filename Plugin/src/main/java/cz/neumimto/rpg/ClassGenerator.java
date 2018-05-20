@@ -87,6 +87,7 @@ public class ClassGenerator implements Opcodes {
 			mv.visitEnd();
 		}
 
+
 		{
 			mv = cw.visitMethod(ACC_PUBLIC, "construct",
 					"(Lcz/neumimto/rpg/effects/IEffectConsumer;JLjava/util/Map;)L"+toPath(cls)+";",
