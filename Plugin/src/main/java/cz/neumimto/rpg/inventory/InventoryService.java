@@ -53,7 +53,6 @@ import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtypes;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.slotparsers.DefaultPlayerInvHandler;
 import cz.neumimto.rpg.inventory.slotparsers.PlayerInvHandler;
-import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -174,9 +173,11 @@ public class InventoryService {
 		File f = path.toFile();
 		if (!f.exists()) {
 			Optional<Asset> asset = Sponge.getAssetManager().getAsset(plugin, "ItemGroups.conf");
-			Asset asset1 = asset.get();
+			if (!asset.isPresent()) {
+				throw new IllegalStateException("Could not find an asset ItemGroups.conf");
+			}
 			try {
-				asset1.copyToFile(f.toPath());
+				asset.get().copyToFile(f.toPath());
 			} catch (IOException e) {
 				throw new IllegalStateException("Could not create ItemGroups.conf file", e);
 			}
@@ -197,7 +198,6 @@ public class InventoryService {
 					loadInventorySettings(inventorySlot);
 				} catch (ClassNotFoundException e) {
 					logger.error("Inventory Class not found", e);
-					continue;
 				}
 			}
 
@@ -221,7 +221,7 @@ public class InventoryService {
 
 	private void loadItemGroups(List<? extends Config> itemGroups, WeaponClass parent) {
 		for (Config itemGroup : itemGroups) {
-			String weaponClass = null;
+			String weaponClass;
 			try {
 				weaponClass = itemGroup.getString("WeaponClass");
 			} catch (ConfigException e) {
@@ -458,7 +458,6 @@ public class InventoryService {
 							return CannotUseItemReson.LEVEL;
 						}
 						k++;
-						continue;
 					}
 				}
 			}
@@ -514,10 +513,7 @@ public class InventoryService {
 	 */
 	public boolean processSlotInteraction(Slot slot, Player player) {
 		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-		if (character.isStub()) {
-			return true;
-		}
-		return playerInvHandler.processSlotInteraction(character, slot);
+		return character.isStub() || playerInvHandler.processSlotInteraction(character, slot);
 	}
 
 	public ItemStack setItemLevel(ItemStack itemStack, int level) {
@@ -526,7 +522,7 @@ public class InventoryService {
 	}
 
 	public ItemStack updateLore(ItemStack is) {
-		ItemLoreBuilderService.ItemLoreBuilder itemLoreBuilder = ItemLoreBuilderService.create(is, new ArrayList<Text>());
+		ItemLoreBuilderService.ItemLoreBuilder itemLoreBuilder = ItemLoreBuilderService.create(is, new ArrayList<>());
 		is.offer(Keys.ITEM_LORE, itemLoreBuilder.buildLore());
 		is.offer(Keys.HIDE_MISCELLANEOUS, true);
 		is.offer(Keys.HIDE_ATTRIBUTES, true);
@@ -563,9 +559,7 @@ public class InventoryService {
 
 	public int getItemLevel(ItemStack itemStack) {
 		Optional<Integer> integer = itemStack.get(NKeys.ITEM_LEVEL);
-		if (integer.isPresent())
-			return integer.get();
-		return 0;
+		return integer.orElse(0);
 	}
 
 	public ItemStack addEffectsToItemStack(ItemStack is, String effectName, EffectParams effectParams) {
@@ -627,7 +621,7 @@ public class InventoryService {
 		return managedInventories.get(type).getSlotEffectSourceHashMap().get(value);
 	}
 
-	public IEffectSource getEffectSourceBySlotId(EquipedSlot slot) {
+	public IEffectSource getEffectSourceBySlotId(Slot slot) {
 		Slot transform = slot.transform();
 		Class type = transform.parent().getClass();
 		SlotIndex index = slot.getInventoryProperty(SlotIndex.class).get();
