@@ -10,6 +10,7 @@ import cz.neumimto.rpg.inventory.ItemService;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.WeaponClass;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
+import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.item.inventory.Inventory;
@@ -50,7 +51,7 @@ public abstract class PlayerInvHandler implements CatalogType {
      *  @see cz.neumimto.rpg.players.CharacterBase#inventoryEquipSlotOrder
      *  As last
      *
-     * @param character
+     * @param character The character
      */
     public abstract void initializeCharacterInventory(IActiveCharacter character);
 
@@ -91,9 +92,9 @@ public abstract class PlayerInvHandler implements CatalogType {
      * @param character player
      * @param query Slot having an item to be equipied
      */
-    protected CustomItem initializeItemStack(IActiveCharacter character, Inventory query) {
+    protected CustomItem initializeItemStack(IActiveCharacter character, Slot query) {
         ItemStack itemStack = query.peek().get();
-        CustomItem customItem = CustomItemFactory.createCustomItem(itemStack, query.getInventoryProperty(SlotIndex.class).get().getValue());
+        CustomItem customItem = CustomItemFactory.createCustomItem(itemStack, query);
         effectService().applyGlobalEffectsAsEnchantments(customItem.getEffects(), character, customItem); //todo
         return customItem;
     }
@@ -124,14 +125,14 @@ public abstract class PlayerInvHandler implements CatalogType {
      * @return true if the click inventory event shall be cancelled
      */
     public boolean processSlotInteraction(IActiveCharacter character, Slot slot) {
-        Optional<SlotIndex> inventoryProperty = slot.getInventoryProperty(SlotIndex.class);
-        Integer value = inventoryProperty.get().getValue();
+
+        EquipedSlot equipedSlot = EquipedSlot.from(slot);
         if (inventoryService().getEffectSourceBySlotId(slot) != null) {
-            CustomItem customItem = character.getEquipedInventorySlots().get(value);
+            CustomItem customItem = character.getEquipedInventorySlots().get(equipedSlot);
             //item has been taken away from the slot
             if (!slot.peek().isPresent()) {
                 if (customItem != null) {
-                    character.getEquipedInventorySlots().put(value, null);
+                    character.getEquipedInventorySlots().remove(equipedSlot);
                     deInitializeItemStack(character, slot);
                 }
                 return false;
@@ -140,7 +141,7 @@ public abstract class PlayerInvHandler implements CatalogType {
                 RPGItemType fromItemStack = itemService().getFromItemStack(itemStack);
                 if (fromItemStack == null)
                     return false;
-                boolean canUse = false;
+                boolean canUse;
                 if (fromItemStack.getWeaponClass() == WeaponClass.ARMOR) {
                     canUse = checkForArmorItem(character, itemStack, fromItemStack);
                 } else {
@@ -152,11 +153,11 @@ public abstract class PlayerInvHandler implements CatalogType {
                 //no item before
                 if (customItem == null) {
                     CustomItem ci = initializeItemStack(character, slot);
-                    character.getEquipedInventorySlots().put(value, ci);
+                    character.getEquipedInventorySlots().put(equipedSlot, ci);
                 } else {
                     deInitializeItemStack(character, slot);
                     CustomItem ci = initializeItemStack(character, slot);
-                    character.getEquipedInventorySlots().put(value, ci);
+                    character.getEquipedInventorySlots().put(equipedSlot, ci);
                 }
             }
         }

@@ -1,6 +1,8 @@
 package cz.neumimto.rpg.persistance.model;
 
 import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.Slot;
+import org.spongepowered.api.item.inventory.property.SlotIndex;
 
 /**
  * Created by NeumimTo on 20.5.2018.
@@ -26,6 +28,7 @@ public final class EquipedSlot {
         return className;
     }
 
+    @SuppressWarnings("unchecked")
     public Class<? extends Inventory> getRuntimeInventoryClass() {
         return (Class<? extends Inventory>) runtimeInventoryClass;
     }
@@ -59,5 +62,16 @@ public final class EquipedSlot {
         int result = className.hashCode();
         result = 71 * result + slotIndex;
         return result;
+    }
+
+    public static EquipedSlot from(Slot slot) {
+        Slot transform = slot.transform();
+        Class<? extends Inventory> aClass = transform.parent().getClass();
+        SlotIndex slotIndex = transform.getInventoryProperty(SlotIndex.class).get();
+        return new EquipedSlot(
+                aClass.getName(),
+                slotIndex.getValue(),
+                aClass
+        );
     }
 }

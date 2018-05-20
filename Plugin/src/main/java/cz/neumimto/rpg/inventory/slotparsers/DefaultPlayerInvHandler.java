@@ -81,7 +81,7 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
 
         if (slot != mainHandSlotId) {
             Inventory query = character.getPlayer().getInventory();
-            EquipedSlot theslot = query.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(slot)));
+            Slot theslot = query.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(slot)));
             Optional<ItemStack> peek = theslot.peek();
             if (!peek.isPresent()) {
                 CustomItem customItem = character.getMainHand();
