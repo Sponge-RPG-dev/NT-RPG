@@ -272,26 +272,30 @@ public class InventoryService {
 
 	private void loadInventorySettings(Config slots) throws ClassNotFoundException {
 		String aClass = slots.getString("type");
-		Class<?> aClass1 = Class.forName(aClass);
+		try {
+			Class<?> aClass1 = Class.forName(aClass);
 
-		HashMap<Integer, SlotEffectSource> slotEffectSourceHashMap = new HashMap<>();
-		ManagedInventory managedInventory = new ManagedInventory(aClass1, slotEffectSourceHashMap);
-		for (String str : slots.getStringList("slots")) {
-			String[] split = str.split(";");
-			if (split.length == 1) {
-				SlotEffectSource slotEffectSource = new SlotEffectSource(Integer.parseInt(split[0]), ItemSubtypes.ANY);
-				slotEffectSourceHashMap.put(slotEffectSource.getSlotId(), slotEffectSource);
-			} else {
-				Optional<ItemSubtype> type = Sponge.getRegistry().getType(ItemSubtype.class, split[1]);
-				if (!type.isPresent()) {
-					type = Optional.of(ItemSubtypes.ANY);
-					logger.error("Could not find subtype " + split[1]);
+			HashMap<Integer, SlotEffectSource> slotEffectSourceHashMap = new HashMap<>();
+			ManagedInventory managedInventory = new ManagedInventory(aClass1, slotEffectSourceHashMap);
+			for (String str : slots.getStringList("slots")) {
+				String[] split = str.split(";");
+				if (split.length == 1) {
+					SlotEffectSource slotEffectSource = new SlotEffectSource(Integer.parseInt(split[0]), ItemSubtypes.ANY);
+					slotEffectSourceHashMap.put(slotEffectSource.getSlotId(), slotEffectSource);
+				} else {
+					Optional<ItemSubtype> type = Sponge.getRegistry().getType(ItemSubtype.class, split[1]);
+					if (!type.isPresent()) {
+						type = Optional.of(ItemSubtypes.ANY);
+						logger.error("Could not find subtype " + split[1]);
+					}
+					SlotEffectSource slotEffectSource = new SlotEffectSource(Integer.parseInt(split[0]), type.get());
+					slotEffectSourceHashMap.put(slotEffectSource.getSlotId(), slotEffectSource);
 				}
-				SlotEffectSource slotEffectSource = new SlotEffectSource(Integer.parseInt(split[0]), type.get());
-				slotEffectSourceHashMap.put(slotEffectSource.getSlotId(), slotEffectSource);
 			}
+			managedInventories.put(managedInventory.getType(), managedInventory);
+		} catch (ClassNotFoundException e) {
+			logger.error("Could not find inventory type " + aClass + " defined in ItemGroups.conf.");
 		}
-		managedInventories.put(managedInventory.getType(), managedInventory);
 	}
 
 
