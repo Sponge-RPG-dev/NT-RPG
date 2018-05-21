@@ -146,8 +146,6 @@ public class InventoryService {
 
 	private Set<String> reservedItemNames = new HashSet<>();
 
-	private Map<UUID, InventoryMenu> inventoryMenus = new HashMap<>();
-
 	private Map<String, ItemGroup> itemGroups = new HashMap<>();
 	private Map<Class<?>, ManagedInventory> managedInventories = new HashMap<>();
 

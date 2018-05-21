@@ -161,11 +161,8 @@ public class ItemAccessSkill extends AbstractSkill {
                 itemTypeTreeSetMap.put(type.getRpgItemType().getItemType(), set);
                 items.put(level, itemTypeTreeSetMap);
             } else {
-                Set<ConfigRPGItemType> configRPGItemTypes = itemTypeTreeSetMap.get(type.getRpgItemType().getItemType());
-                if (configRPGItemTypes == null) {
-                    configRPGItemTypes = new HashSet<>();
-                    itemTypeTreeSetMap.put(type.getItemType(), configRPGItemTypes);
-                }
+                Set<ConfigRPGItemType> configRPGItemTypes = itemTypeTreeSetMap
+                        .computeIfAbsent(type.getRpgItemType().getItemType(), k -> new HashSet<>());
                 configRPGItemTypes.add(type);
             }
         }
