@@ -121,8 +121,8 @@ public abstract class PlayerInvHandler implements CatalogType {
      */
     public boolean processSlotInteraction(IActiveCharacter character, Slot slot) {
 
-        EquipedSlot equipedSlot = EquipedSlot.from(slot);
         if (inventoryService().getEffectSourceBySlotId(slot) != null) {
+            EquipedSlot equipedSlot = EquipedSlot.from(slot);
             CustomItem customItem = character.getEquipedInventorySlots().get(equipedSlot);
             //item has been taken away from the slot
             if (!slot.peek().isPresent()) {

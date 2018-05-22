@@ -65,5 +65,11 @@ public class CustomItem implements IEffectSourceProvider {
 		return itemStack.get(NKeys.ITEM_META_TYPE).orElse(null);
 	}
 
+	public ItemStackSnapshot getItemStack() {
+		return itemStack;
+	}
 
+	public RPGItemType getRpgItemType() {
+		return rpgItemType;
+	}
 }

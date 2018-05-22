@@ -78,9 +78,9 @@ public class ItemService {
         propertyService.registerProperty(property, val);
         if (property.endsWith("_mult")) {
             propertyService.registerDefaultValue(val, 1.0f);
-            weaponClass.getProperties().add(val);
-        } else {
             weaponClass.getPropertiesMults().add(val);
+        } else {
+            weaponClass.getProperties().add(val);
         }
     }
 

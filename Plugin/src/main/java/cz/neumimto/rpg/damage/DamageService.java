@@ -116,7 +116,7 @@ public class DamageService {
 		if (mainHand == null) {
 			character.setWeaponDamage(0);
 		} else {
-			recalculateCharacterWeaponDamage(character, mainHand);
+			recalculateCharacterWeaponDamage(character, mainHand.getRpgItemType());
 		}
 	}
 

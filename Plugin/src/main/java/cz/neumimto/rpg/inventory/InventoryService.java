@@ -174,11 +174,7 @@ public class InventoryService {
 
 			List<? extends Config> inventorySlots = c.getConfigList("InventorySlots");
 			for (Config inventorySlot : inventorySlots) {
-				try {
-					loadInventorySettings(inventorySlot);
-				} catch (ClassNotFoundException e) {
-					logger.error("Inventory Class not found", e);
-				}
+				loadInventorySettings(inventorySlot);
 			}
 
 			List<? extends Config> itemGroups = c.getConfigList("ItemGroups");
@@ -274,7 +270,7 @@ public class InventoryService {
 			}
 			managedInventories.put(managedInventory.getType(), managedInventory);
 		} catch (ClassNotFoundException e) {
-			logger.error("Could not find inventory type " + aClass + " defined in ItemGroups.conf.");
+			logger.error(Console.RED + "Could not find inventory type " + Console.GREEN + aClass + Console.RED + " defined in ItemGroups.conf. Is the mod loaded? Is the class name correct? If you are unsure restart plugin with debug mode ON and interact with desired inventory");
 		}
 	}
 
@@ -602,14 +598,20 @@ public class InventoryService {
 
 
 	public IEffectSource getEffectSourceBySlotId(Class<?> type, Integer value) {
-		return managedInventories.get(type).getSlotEffectSourceHashMap().get(value);
+		ManagedInventory managedInventory = managedInventories.get(type);
+		if (managedInventory == null)
+			return null;
+		return managedInventory.getSlotEffectSourceHashMap().get(value);
 	}
 
 	public IEffectSource getEffectSourceBySlotId(Slot slot) {
 		Slot transform = slot.transform();
 		Class type = transform.parent().getClass();
 		SlotIndex index = slot.getInventoryProperty(SlotIndex.class).get();
-		return managedInventories.get(type).getSlotEffectSourceHashMap().get(index.getValue());
+		ManagedInventory managedInventory = managedInventories.get(type);
+		if (managedInventory == null)
+			return null;
+		return managedInventory.getSlotEffectSourceHashMap().get(index.getValue());
 	}
 
 	public ManagedInventory getManagedInventory(Class<?> type) {
