@@ -18,21 +18,17 @@
 
 package cz.neumimto.rpg.effects;
 
-
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.PluginConfig;
+import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.text.Text;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -86,9 +82,7 @@ public class EffectService {
 				.execute(() -> {
 					for (IEffect pendingRemoval : pendingRemovals) {
 						removeEffectContainer(pendingRemoval.getEffectContainer(), pendingRemoval, pendingRemoval.getConsumer());
-						if (effectSet.contains(pendingRemoval)) {
-							effectSet.remove(pendingRemoval);
-						}
+                        effectSet.remove(pendingRemoval);
 					}
 					pendingRemovals.clear();
 					long l = System.currentTimeMillis();
@@ -137,7 +131,16 @@ public class EffectService {
 	 * @param consumer
 	 */
 	@SuppressWarnings("unchecked")
-	public void addEffect(IEffect iEffect, IEffectConsumer consumer, IEffectSourceProvider effectSourceProvider) { IEffectContainer eff = consumer.getEffect(iEffect.getName());
+	public void addEffect(IEffect iEffect, IEffectConsumer consumer, IEffectSourceProvider effectSourceProvider) {
+		IEffectContainer eff = consumer.getEffect(iEffect.getName());
+		if (PluginConfig.DEBUG) {
+			IEffectConsumer consumer1 = iEffect.getConsumer();
+			if (consumer1 instanceof ActiveCharacter) {
+				ActiveCharacter chara = (ActiveCharacter) consumer1;
+				chara.getPlayer().sendMessage(Text.of("Adding effect: " + iEffect.getName() +
+						" container: "  + (eff == null ? "null" : eff.getEffects().size()) + " provider: " + effectSourceProvider.getType().getClass().getSimpleName() ));
+			}
+		}
 		if (eff == null) {
 			eff = iEffect.constructEffectContainer();
 			consumer.addEffect(eff);
@@ -232,8 +235,7 @@ public class EffectService {
 	 */
 	public void removeGlobalEffect(String name) {
 		name = name.toLowerCase();
-		if (globalEffects.containsKey(name))
-			globalEffects.remove(name);
+        globalEffects.remove(name);
 	}
 
 	/**
@@ -297,9 +299,7 @@ public class EffectService {
 		for (final IEffectContainer<Object, IEffect<Object>> IEffectContainer : character.getEffects()) {
 			for (IEffect<Object> objectIEffect : IEffectContainer.getEffects()) {
 				IEffectContainer.removeStack(objectIEffect);
-				if (effectSet.contains(objectIEffect)) {
-					effectSet.remove(objectIEffect);
-				}
+                effectSet.remove(objectIEffect);
 			}
 		}
 	}
