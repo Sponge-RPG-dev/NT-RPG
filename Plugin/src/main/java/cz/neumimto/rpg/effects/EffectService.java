@@ -168,6 +168,14 @@ public class EffectService {
 	 */
 	public void removeEffect(IEffect iEffect, IEffectConsumer consumer) {
 		IEffectContainer effect = consumer.getEffect(iEffect.getName());
+        if (PluginConfig.DEBUG) {
+            IEffectConsumer consumer1 = iEffect.getConsumer();
+            if (consumer1 instanceof ActiveCharacter) {
+                ActiveCharacter chara = (ActiveCharacter) consumer1;
+                chara.getPlayer().sendMessage(Text.of("Adding effect: " + iEffect.getName() +
+                        " container: "  + (effect == null ? "null" : effect.getEffects().size())));
+            }
+        }
 		if (effect != null) {
 			removeEffectContainer(effect, iEffect, consumer);
 			stopEffect(iEffect);
