@@ -30,11 +30,7 @@ import cz.neumimto.rpg.damage.ISkillDamageSource;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.events.CharacterWeaponDamageEvent;
-import cz.neumimto.rpg.events.INEntityWeaponDamageEvent;
-import cz.neumimto.rpg.events.ProjectileHitEvent;
-import cz.neumimto.rpg.events.SkillDamageEvent;
-import cz.neumimto.rpg.events.SkillDamageEventLate;
+import cz.neumimto.rpg.events.*;
 import cz.neumimto.rpg.exp.ExperienceService;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.runewords.RWService;
@@ -78,6 +74,8 @@ import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.event.world.chunk.UnloadChunkEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
+import org.spongepowered.api.item.inventory.property.SlotIndex;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -134,8 +132,9 @@ public class BasicListener {
             if (character.isStub()) {
                 return;
             }
-            Hotbar query = first.get().getInventory().query(Hotbar.class);
-            inventoryService.onLeftClick(character, query.getSelectedSlotIndex());
+            Hotbar h = character.getPlayer().getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
+            int slotIndex = h.getSelectedSlotIndex();
+            inventoryService.onLeftClick(character, h.getSelectedSlotIndex(), h.getSlot(new SlotIndex(slotIndex)).get());
         }
 
         IEntity entity = entityService.get(event.getTargetEntity());
@@ -168,7 +167,9 @@ public class BasicListener {
                 if (character.isStub()) {
                     return;
                 }
-                inventoryService.onRightClick(character, 0);
+                Hotbar h = pl.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
+                int slotIndex = h.getSelectedSlotIndex();
+                inventoryService.onRightClick(character, 0, h.getSlot(new SlotIndex(slotIndex)).get());
             }
         }
 
@@ -183,8 +184,9 @@ public class BasicListener {
             if (character.isStub()) {
                 return;
             }
-            Hotbar h = pl.getInventory().query(Hotbar.class);
-            inventoryService.onLeftClick(character, h.getSelectedSlotIndex());
+            Hotbar h = pl.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
+            int slotIndex = h.getSelectedSlotIndex();
+            inventoryService.onLeftClick(character, slotIndex, h.getSlot(new SlotIndex(slotIndex)).get());
         }
     }
 
@@ -200,8 +202,9 @@ public class BasicListener {
         if (character.isStub()) {
             return;
         }
-        Hotbar h = pl.getInventory().query(Hotbar.class);
-        inventoryService.onRightClick(character, h.getSelectedSlotIndex());
+        Hotbar h = pl.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
+        int slotIndex = h.getSelectedSlotIndex();
+        inventoryService.onRightClick(character, slotIndex, h.getSlot(new SlotIndex(slotIndex)).get());
     }
 
 

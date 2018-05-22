@@ -3,12 +3,7 @@ package cz.neumimto.rpg.inventory.slotparsers;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.inventory.CannotUseItemReson;
-import cz.neumimto.rpg.inventory.CustomItemFactory;
-import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.inventory.ItemService;
-import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.WeaponClass;
+import cz.neumimto.rpg.inventory.*;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -164,9 +159,9 @@ public abstract class PlayerInvHandler implements CatalogType {
         return false;
     }
 
-    public abstract void onRightClick(IActiveCharacter character, int slot);
+    public abstract void onRightClick(IActiveCharacter character, int slot, Slot hotbarSlot);
 
-    public abstract void onLeftClick(IActiveCharacter character, int slot);
+    public abstract void onLeftClick(IActiveCharacter character, int slot, Slot hotbarSlot);
 
 
     protected InventoryService inventoryService() {

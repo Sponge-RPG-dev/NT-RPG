@@ -67,21 +67,19 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
 
 
     @Override
-    public void onRightClick(IActiveCharacter character, int slot) {
-        onHandInteract(character, slot);
+    public void onRightClick(IActiveCharacter character, int slot, Slot hotbarSlot) {
+        onHandInteract(character, slot, hotbarSlot);
     }
 
     @Override
-    public void onLeftClick(IActiveCharacter character, int slot) {
-        onHandInteract(character, slot);
+    public void onLeftClick(IActiveCharacter character, int slot, Slot hotbarSlot) {
+        onHandInteract(character, slot, hotbarSlot);
     }
 
-    protected void onHandInteract(IActiveCharacter character, int slot) {
+    protected void onHandInteract(IActiveCharacter character, int slot, Slot theslot) {
         int mainHandSlotId = character.getMainHandSlotId();
 
         if (slot != mainHandSlotId) {
-            Inventory query = character.getPlayer().getInventory();
-            Slot theslot = query.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(slot)));
             Optional<ItemStack> peek = theslot.peek();
             if (!peek.isPresent()) {
                 CustomItem customItem = character.getMainHand();
