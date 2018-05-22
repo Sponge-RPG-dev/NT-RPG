@@ -133,7 +133,7 @@ public class EffectService {
 	@SuppressWarnings("unchecked")
 	public void addEffect(IEffect iEffect, IEffectConsumer consumer, IEffectSourceProvider effectSourceProvider) {
 		IEffectContainer eff = consumer.getEffect(iEffect.getName());
-		if (PluginConfig.DEBUG) {
+		if (PluginConfig.DEBUG.isDevelop()) {
 			IEffectConsumer consumer1 = iEffect.getConsumer();
 			if (consumer1 instanceof ActiveCharacter) {
 				ActiveCharacter chara = (ActiveCharacter) consumer1;
@@ -168,7 +168,7 @@ public class EffectService {
 	 */
 	public void removeEffect(IEffect iEffect, IEffectConsumer consumer) {
 		IEffectContainer effect = consumer.getEffect(iEffect.getName());
-        if (PluginConfig.DEBUG) {
+        if (PluginConfig.DEBUG.isDevelop()) {
             IEffectConsumer consumer1 = iEffect.getConsumer();
             if (consumer1 instanceof ActiveCharacter) {
                 ActiveCharacter chara = (ActiveCharacter) consumer1;
@@ -286,7 +286,7 @@ public class EffectService {
 
 
 	public void removeGlobalEffectsAsEnchantments(Collection<IGlobalEffect> itemEffects, IActiveCharacter character, IEffectSourceProvider effectSourceProvider) {
-		if (PluginConfig.DEBUG) {
+		if (PluginConfig.DEBUG.isDevelop()) {
 			character.sendMessage(itemEffects.size() + " added echn. effects to remove queue.");
 		}
 		itemEffects.forEach((e) -> {

@@ -48,7 +48,11 @@ public class PluginConfig {
 	public static boolean REMOVE_PLAYERDATA_AFTER_PERMABAN = false;
 
 	@ConfigValue
-	public static boolean DEBUG = true;
+	@Comment(content = {"Ingame debug output. NONE - recommended level for your production server;" +
+			" BALANCE - useful while you balancing stuff it prints out incoming and ougoing damage or you are setting up inventories," +
+			" DEVELOP - very detailed login, useful only for developers " +
+			"!!!If you encounter any exceptions during server startup you will be asked to provide. logs For the developers are useful only logs created with DEBUG mode set to DEVELOP !!!"})
+	public static DebugLevel DEBUG = DebugLevel.BALANCE;
 
 	@ConfigValue
 	public static int SKILLPOINTS_ON_START = 1;

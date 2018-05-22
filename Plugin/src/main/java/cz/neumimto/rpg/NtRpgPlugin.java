@@ -359,7 +359,7 @@ public class NtRpgPlugin {
 		GlobalScope = ioc.build(GlobalScope.class);
 		rl.loadExternalJars();
 		ioc.postProcess();
-		if (PluginConfig.DEBUG) {
+		if (PluginConfig.DEBUG.isBalance()) {
 			Sponge.getEventManager().registerListeners(this, ioc.build(DebugListener.class));
 		}
 		registerCommands();
@@ -747,7 +747,7 @@ public class NtRpgPlugin {
 				.executor((src, args) -> {
 					String[] a = args.<String>getOne("args").get().split(" ");
 					if (a[0].equalsIgnoreCase("js")) {
-						if (!PluginConfig.DEBUG) {
+						if (!(PluginConfig.DEBUG.isBalance())) {
 							src.sendMessage(TextHelper.parse("Reloading is allowed only in debug mode"));
 							return CommandResult.success();
 						}

@@ -69,7 +69,7 @@ public class PropertyService {
 	private float[] maxValues;
 
 	public void registerProperty(String name, int id) {
-		if (PluginConfig.DEBUG)
+		if (PluginConfig.DEBUG.isDevelop())
 			logger.info("Found property " + name + "; assigned id: " + id);
 		idMap.put(name, id);
 		nameMap.put(id, name);
@@ -112,7 +112,7 @@ public class PropertyService {
 		Path path = Paths.get(NtRpgPlugin.workingDir + File.separator + "properties_dump.info");
 		StringBuilder s = new StringBuilder();
 		List<String> l = new ArrayList<>(idMap.keySet());
-		if (PluginConfig.DEBUG)
+		if (PluginConfig.DEBUG.isDevelop())
 			logger.info(" - found " + l.size() + " Properties");
 		l.sort(Collator.getInstance());
 		for (String s1 : l) {
