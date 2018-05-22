@@ -49,9 +49,9 @@ public class PluginConfig {
 
 	@ConfigValue
 	@Comment(content = {"Ingame debug output. NONE - recommended level for your production server;" +
-			" BALANCE - useful while you balancing stuff it prints out incoming and ougoing damage or you are setting up inventories," +
-			" DEVELOP - very detailed login, useful only for developers " +
-			"!!!If you encounter any exceptions during server startup you will be asked to provide. logs For the developers are useful only logs created with DEBUG mode set to DEVELOP !!!"})
+			" BALANCE - useful while you are balancing stuff it prints out incoming and outgoing damage, or you are setting up inventories," +
+			" DEVELOP - very detailed logging, useful only for developers " +
+			"!!!If you encounter any exceptions during server startup you will be asked to provide logs. For the developers are useful only logs created with DEBUG mode set to DEVELOP !!!"})
 	public static DebugLevel DEBUG = DebugLevel.BALANCE;
 
 	@ConfigValue
