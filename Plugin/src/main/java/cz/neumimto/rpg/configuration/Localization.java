@@ -386,4 +386,7 @@ public class Localization {
 
 	@ConfigValue
 	public static String CLASSES_MENU_TEXT = "&l&6[ &eClasses &6]";
+
+	@ConfigValue
+	public static String LEVEL = "Level";
 }

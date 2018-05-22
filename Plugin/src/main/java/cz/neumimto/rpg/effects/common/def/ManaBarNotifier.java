@@ -11,6 +11,8 @@ import org.spongepowered.api.boss.BossBarOverlays;
 import org.spongepowered.api.boss.ServerBossBar;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -51,7 +53,15 @@ public class ManaBarNotifier extends EffectBase<Object> implements IEffectContai
 					.build();
 			bossBar.addPlayer(player);
 		}
-		bossBar.setName(Text.of("Mana: " + "(" + character.getMana().getValue() + "/" + character.getMana().getMaxValue() + ")"));
+		bossBar.setName(Text.builder("Mana").color(TextColors.BLUE).style(TextStyles.BOLD)
+				.append(Text.builder(": ").color(TextColors.GOLD).style(TextStyles.BOLD).build())
+				.append(Text.builder(String.valueOf(character.getMana().getValue())).color(TextColors.BLUE).build())
+				.append(Text.builder(" / ").color(TextColors.GOLD).style(TextStyles.BOLD).build())
+				.append(Text.builder(String.valueOf(character.getMana().getMaxValue())).color(TextColors.DARK_BLUE).build())
+				.build())
+		;
+
+
 		if (character.getMana().getMaxValue() > 0) {
 			bossBar.setPercent((float) (Utils.getPercentage(character.getMana().getValue(), character.getMana().getMaxValue()) * 0.01f));
 			bossBar.setVisible(true);

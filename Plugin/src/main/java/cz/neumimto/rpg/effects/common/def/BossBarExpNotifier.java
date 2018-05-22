@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.effects.common.def;
 
+import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.CoreEffectTypes;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectContainer;
@@ -12,6 +13,8 @@ import org.spongepowered.api.boss.BossBarOverlays;
 import org.spongepowered.api.boss.ServerBossBar;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 
 import java.text.DecimalFormat;
 import java.util.*;
@@ -59,7 +62,24 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 
 			expCurrentSession += exps;
 			DecimalFormat df = new DecimalFormat("#.00");
-			serverBossBar.setName(Text.of(Utils.capitalizeFirst(classname) + " Level: " + extendedNClass.getLevel() + " +" + df.format(expCurrentSession) + "  " + df.format(extendedNClass.getExperiencesFromLevel()) + "/" + extendedNClass.getConfigClass().getLevels()[extendedNClass.getLevel()]));
+
+
+			serverBossBar.setName(
+					Text.builder(Utils.capitalizeFirst(classname)).color(extendedNClass.getConfigClass().getPreferedColor())
+							.append(Text.builder(Localization.LEVEL+": ").color(TextColors.DARK_GRAY).build())
+							.append(Text.builder(String.valueOf(extendedNClass.getLevel())).color(TextColors.GOLD).build())
+							.append(Text.builder(" +"+df.format(expCurrentSession)).color(TextColors.GREEN).build())
+							.append(Text.builder(" " + df.format(extendedNClass.getExperiencesFromLevel())
+									+ " / "
+									+ extendedNClass.getConfigClass().getLevels()[extendedNClass.getLevel()])
+										.color(TextColors.DARK_GRAY)
+										.style(TextStyles.ITALIC)
+									.build())
+							.build());
+
+
+
+
 			serverBossBar.setPercent((float) Utils.getPercentage(extendedNClass.getExperiencesFromLevel(), extendedNClass.getConfigClass().getLevels()[extendedNClass.getLevel()]) / 100);
 			serverBossBar.setVisible(true);
 			setLastTickTime(System.currentTimeMillis());
