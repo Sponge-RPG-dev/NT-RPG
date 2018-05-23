@@ -111,7 +111,7 @@ import java.util.concurrent.TimeUnit;
  * Created by NeumimTo on 29.4.2015.
  */
 @Plugin(id = "nt-rpg", version = Version.VERSION, name = "NT-Rpg", dependencies = {
-		@Dependency(id = "nt-core", version = "1.9", optional = false)
+		@Dependency(id = "nt-core", version = "1.12", optional = false)
 })
 @Resource
 public class NtRpgPlugin {
