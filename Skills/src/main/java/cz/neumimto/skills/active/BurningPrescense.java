@@ -24,9 +24,9 @@ public class BurningPrescense extends ActiveSkill {
 		setName(SkillLocalization.burningPrescense);
 		setDescription(SkillLocalization.burningPrescense_desc);
 		SkillSettings settings = new SkillSettings();
-		settings.addNode(SkillNodes.CHANCE, 0.1f, 0.005f);
-		settings.addNode(SkillNodes.PERIOD, 2500, -100);
-		settings.addNode(SkillNodes.RADIUS, 2500, -100);
+		settings.addNode(SkillNodes.PERIOD, 1000, -10);
+		settings.addNode(SkillNodes.RADIUS, 3, 0);
+		settings.addNode(SkillNodes.DAMAGE, 5, 1);
 		super.settings = settings;
 		setDamageType(DamageTypes.FIRE);
 		addSkillType(SkillType.AURA);
@@ -43,6 +43,8 @@ public class BurningPrescense extends ActiveSkill {
 		} else {
 			BPModel model = getBPModel(info, character);
 			model.duration = -1;
+			BurningPrescenseEffect eff = new BurningPrescenseEffect(character, -1, model);
+			effectService.addEffect(eff, character, this);
 		}
 		return SkillResult.OK;
 	}
