@@ -84,13 +84,13 @@ public class CharacterClass {
 
 		CharacterClass that = (CharacterClass) o;
 
-		return classId.equals(that.classId);
+		return name.equals(that.name);
 
 	}
 
 	@Override
 	public int hashCode() {
-		return classId != null ? classId.hashCode() : 775701;
+		return classId != null ? classId.hashCode() : name.hashCode();
 	}
 
 

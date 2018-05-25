@@ -496,6 +496,13 @@ public class InventoryService {
 		return character.isStub() || playerInvHandler.processSlotInteraction(character, slot);
 	}
 
+	public void processHotbarItemDispense(Player player) {
+		IActiveCharacter character = characterService.getCharacter(player);
+		if (character.isStub())
+			return;
+		playerInvHandler.processHotbarItemDispense(character);
+	}
+
 	public ItemStack setItemLevel(ItemStack itemStack, int level) {
 		itemStack.offer(new ItemLevelData(level));
 		return updateLore(itemStack);

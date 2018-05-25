@@ -245,7 +245,7 @@ public class VanillaMessaging implements IPlayerMessage {
 			effect = new BossBarExpNotifier(character);
 			effectService.addEffect(effect, character, InternalEffectSourceProvider.INSTANCE);
 		}
-		effect.notifyExpChange(classname, expchange);
+		effect.notifyExpChange(character, classname, expchange);
 	}
 
 	@Override
@@ -387,16 +387,17 @@ public class VanillaMessaging implements IPlayerMessage {
 				.of(InventoryArchetypes.DOUBLE_CHEST)
 				.property(InventoryTitle.of(invHeader))
 				.build(plugin);
+		Player player = character.getPlayer();
 		for (PlayerGroup cc : g) {
 			if (cc == default_) {
 				continue;
 			}
-			if (!cc.isShowsInMenu() && !character.getPlayer().hasPermission("ntrpg.admin")) {
+			if (!cc.isShowsInMenu() && !player.hasPermission("ntrpg.admin")) {
 				continue;
 			}
 			i.offer(createItemRepresentingGroup(cc));
 		}
-		character.getPlayer().openInventory(i);
+		player.openInventory(i);
 	}
 
 	private ItemStack createItemRepresentingGroup(PlayerGroup p) {

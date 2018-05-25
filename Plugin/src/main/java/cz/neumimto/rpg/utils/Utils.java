@@ -67,25 +67,28 @@ public class Utils {
 
 	public static void applyOnNearbyPartyMembers(IActiveCharacter character, int distance, Consumer<IActiveCharacter> c) {
 		double k = Math.pow(distance, 2);
+		Player pl = character.getPlayer();
 		for (IActiveCharacter iActiveCharacter : character.getParty().getPlayers()) {
 			if (iActiveCharacter.getPlayer().getLocation().getPosition()
-					.distanceSquared(character.getPlayer().getLocation().getPosition()) <= k) {
+					.distanceSquared(pl.getLocation().getPosition()) <= k) {
 				c.accept(iActiveCharacter);
 			}
 		}
 	}
 
 	public static void applyOnNearby(IActiveCharacter character, int distance, Consumer<Entity> e) {
-		character.getPlayer().getWorld()
-				.getIntersectingEntities(character.getPlayer(), distance, hit -> hit.getEntity() != character.getPlayer())
+		Player pl = character.getPlayer();
+		pl.getWorld()
+				.getIntersectingEntities(pl, distance, hit -> hit.getEntity() != pl)
 				.stream().map(EntityUniverse.EntityHit::getEntity)
 				.filter(Utils::isLivingEntity)
 				.forEach(e);
 	}
 
 	public static void applyOnNearbyAndSelf(IActiveCharacter character, int distance, Consumer<Entity> e) {
-		character.getPlayer().getWorld()
-				.getIntersectingEntities(character.getPlayer(), distance)
+		Player pl = character.getPlayer();
+		pl.getWorld()
+				.getIntersectingEntities(pl, distance)
 				.stream().map(EntityUniverse.EntityHit::getEntity)
 				.filter(Utils::isLivingEntity)
 				.forEach(e);

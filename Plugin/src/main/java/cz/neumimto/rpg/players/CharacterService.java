@@ -274,8 +274,9 @@ public class CharacterService {
 		if (party.getPlayers().contains(character)) {
 			return 1;
 		}
-		if (party.getInvites().contains(character.getPlayer().getUniqueId())) {
-			party.getInvites().remove(character.getPlayer().getUniqueId());
+		Player player = character.getPlayer();
+		if (party.getInvites().contains(player.getUniqueId())) {
+			party.getInvites().remove(player.getUniqueId());
 			party.addPlayer(character);
 			return 0;
 		}
@@ -355,6 +356,7 @@ public class CharacterService {
 			return;
 		logger.info("Initializing character " + character.getCharacterBase().getId());
 		boolean k = false;
+		Player player = character.getPlayer();
 		if (configClass != null) {
 			CharacterChangeGroupEvent e = new CharacterChangeClassEvent(character, configClass, slot, character.getNClass(slot));
 
@@ -363,11 +365,11 @@ public class CharacterService {
 				k = true;
 				logger.info("Processing class change - " + e);
 				Map<String, String> args = new HashMap<>();
-				args.put("player", character.getPlayer().getName());
-				args.put("uuid", character.getPlayer().getUniqueId().toString());
+				args.put("player", player.getName());
+				args.put("uuid", player.getUniqueId().toString());
 				args.put("class", character.getRace().getName());
 				if (character.hasClass(configClass)) {
-					character.getPlayer().sendMessage(TextHelper.parse(Localization.ALREADY_HAS_THIS_CLASS));
+					player.sendMessage(TextHelper.parse(Localization.ALREADY_HAS_THIS_CLASS));
 					return;
 				}
 
@@ -382,7 +384,7 @@ public class CharacterService {
 				args.put("class", character.getRace().getName());
 				if (character.getNClass(slot) != null && character.getNClass(slot).getEnterCommands() != null)
 					Utils.executeCommandBatch(args, character.getNClass(slot).getEnterCommands());
-				character.getPlayer().sendMessage(TextHelper.parse(Localization.PLAYER_CHOOSED_CLASS,
+				player.sendMessage(TextHelper.parse(Localization.PLAYER_CHOOSED_CLASS,
 						Arg.arg("class",configClass.getName())));
 			}
 		}
@@ -394,11 +396,11 @@ public class CharacterService {
 				k = true;
 				logger.info("Processing race change - " + ev);
 				Map<String, String> args = new HashMap<>();
-				args.put("player", character.getPlayer().getName());
-				args.put("uuid", character.getPlayer().getUniqueId().toString());
+				args.put("player", player.getName());
+				args.put("uuid", player.getUniqueId().toString());
 				args.put("race", character.getRace().getName());
 				if (character.getRace() == race) {
-					character.getPlayer().sendMessage(TextHelper.parse(Localization.ALREADY_HAS_THIS_RACE));
+					player.sendMessage(TextHelper.parse(Localization.ALREADY_HAS_THIS_RACE));
 					return;
 				}
 				if (character.getRace().getExitCommands() != null)
@@ -412,7 +414,7 @@ public class CharacterService {
 				args.put("race", character.getRace().getName());
 				if (character.getRace().getExitCommands() != null)
 					Utils.executeCommandBatch(args, character.getRace().getEnterCommands());
-				character.getPlayer().sendMessage(TextHelper.parse(Localization.PLAYER_CHOOSED_RACE,
+				player.sendMessage(TextHelper.parse(Localization.PLAYER_CHOOSED_RACE,
 						Arg.arg("race", race.getName())));
 			}
 		}
@@ -1125,9 +1127,6 @@ public class CharacterService {
 
 		inventoryService.initializeCharacterInventory(character);
 		updateAll(character).run();
-
-		damageService.recalculateCharacterWeaponDamage(character);
-
 		Sponge.getScheduler().createTaskBuilder().execute(() -> {
 			Double d = character.getEntity().get(Keys.MAX_HEALTH).get();
 			character.getEntity().offer(Keys.HEALTH, d);

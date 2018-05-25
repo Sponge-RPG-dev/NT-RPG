@@ -21,17 +21,13 @@ package cz.neumimto.rpg.listeners;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.inventory.CannotUseItemReson;
-import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.inventory.ItemService;
-import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.WeaponClass;
+import cz.neumimto.rpg.inventory.*;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.entity.MoveEntityEvent;
+import org.spongepowered.api.event.filter.IsCancelled;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.event.filter.type.Include;
@@ -42,6 +38,7 @@ import org.spongepowered.api.event.item.inventory.InteractItemEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
+import org.spongepowered.api.util.Tristate;
 
 import java.util.List;
 import java.util.Optional;
@@ -69,14 +66,13 @@ public class InventoryListener {
 	}
 
     @Listener
-    public void onItemDrop(DropItemEvent event, @Root Entity entity) {
-        if (entity.getType() != EntityTypes.PLAYER)
-            return;
-        IActiveCharacter character = characterService.getCharacter(entity.getUniqueId());
-        if (character.isStub())
-            return;
+	@IsCancelled(Tristate.FALSE)
+	public void onItemDrop(DropItemEvent.Dispense event, @Root Player player) {
+        if (!player.getOpenInventory().isPresent()) {
+        	return;
+		}
 
-		//todo
+        inventoryService.processHotbarItemDispense(player);
 	}
 
 	@Listener
@@ -116,5 +112,13 @@ public class InventoryListener {
 				event.setCancelled(cancel);
 			}
 		}
+	}
+
+	@Listener
+	@IsCancelled(Tristate.FALSE)
+	public void onDimensionTravel(MoveEntityEvent.Teleport.Portal event, @Root Player player) {
+		IActiveCharacter character = characterService.getCharacter(player);
+		if (!character.isStub())
+			characterService.respawnCharacter(character, player);
 	}
 }

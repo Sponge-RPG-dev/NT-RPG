@@ -920,15 +920,16 @@ public class NtRpgPlugin {
 				.arguments(new RaceCommandElement(TextHelper.parse("race")))
 				.permission("ntrpg.player.set.race")
 				.executor((src, args) -> {
-					IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
+					Player pl = (Player) src;
+					IActiveCharacter character = GlobalScope.characterService.getCharacter(pl);
 					if (character.isStub()) {
-						character.getPlayer().sendMessage(TextHelper.parse(Localization.CHARACTER_IS_REQUIRED));
+						pl.sendMessage(TextHelper.parse(Localization.CHARACTER_IS_REQUIRED));
 						return CommandResult.empty();
 					}
 
 					args.<Race>getOne(TextHelper.parse("race")).ifPresent(r -> {
 						if (r == Race.Default) {
-							character.getPlayer().sendMessage(TextHelper.parse(Localization.NON_EXISTING_GROUP));
+							src.sendMessage(TextHelper.parse(Localization.NON_EXISTING_GROUP));
 							return;
 						}
 
@@ -1359,16 +1360,17 @@ public class NtRpgPlugin {
 					Optional<ISkill> lmb = args.getOne("lmb");
 
 					Optional<ISkill> rmb = args.getOne("rmb");
-					IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
+					Player pl = (Player) src;
+					IActiveCharacter character = GlobalScope.characterService.getCharacter(pl);
 					if (!character.getPlayer().getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
 						ISkill r = rmb.orElse(null);
 						ISkill l = lmb.orElse(null);
 
 						ItemStack i = ItemStack.of(InventoryService.ITEM_SKILL_BIND, 1);
 						NtRpgPlugin.GlobalScope.inventorySerivce.createHotbarSkill(i, r, l);
-						character.getPlayer().setItemInHand(HandTypes.MAIN_HAND, i);
+						pl.setItemInHand(HandTypes.MAIN_HAND, i);
 					} else {
-						character.getPlayer().sendMessage(TextHelper.parse(Localization.EMPTY_HAND_REQUIRED));
+						pl.sendMessage(TextHelper.parse(Localization.EMPTY_HAND_REQUIRED));
 					}
 					return CommandResult.success();
 				})

@@ -35,12 +35,7 @@ import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.ItemAccessSkill;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillTreeSpecialization;
-import cz.neumimto.rpg.skills.StartingPoint;
+import cz.neumimto.rpg.skills.*;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
@@ -49,13 +44,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatType;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -125,7 +114,7 @@ public class ActiveCharacter implements IActiveCharacter {
 		classes.add(cl);
 		slotsToReinitialize = new ArrayList<>();
 		skillTreeViewLocation = new HashMap<>();
-		denySlotInteractionArr = new HashSet<cz.neumimto.rpg.persistance.model.EquipedSlot>();
+		denySlotInteractionArr = new HashSet<>();
 	}
 
 	public boolean isSilenced() {

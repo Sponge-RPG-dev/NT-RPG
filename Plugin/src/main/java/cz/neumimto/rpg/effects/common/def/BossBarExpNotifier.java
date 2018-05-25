@@ -11,7 +11,6 @@ import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.boss.BossBarColors;
 import org.spongepowered.api.boss.BossBarOverlays;
 import org.spongepowered.api.boss.ServerBossBar;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
@@ -25,21 +24,17 @@ import java.util.*;
 public class BossBarExpNotifier extends EffectBase<Object> implements IEffectContainer<Object, BossBarExpNotifier> {
 
 	public static final String name = "BossBarExp";
-	private IActiveCharacter character;
-	private Player player;
 	private Map<String, ServerBossBar> bossBarMap = new HashMap<>();
 	private double expCurrentSession;
 
 	public BossBarExpNotifier(IActiveCharacter consumer) {
 		super(name, consumer);
-		this.character = consumer;
-		this.player = consumer.getPlayer();
 		effectTypes.add(CoreEffectTypes.GUI);
 		setPeriod(5000);
 		setDuration(-1);
 	}
 
-	public void notifyExpChange(String clazz, double exps) {
+	public void notifyExpChange(IActiveCharacter character, String clazz, double exps) {
 		final String classname = clazz.toLowerCase();
 		Optional<ExtendedNClass> first = character.getClasses().stream().filter(a -> a.getConfigClass().getName().equalsIgnoreCase(classname)).findFirst();
 		if (first.isPresent()) {
@@ -55,7 +50,7 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 						.createFog(false)
 						.percent(0)
 						.build();
-				serverBossBar.addPlayer(player);
+				serverBossBar.addPlayer(character.getPlayer());
 				bossBarMap.put(classname, serverBossBar);
 			}
 			ExtendedNClass extendedNClass = first.get();
@@ -100,7 +95,7 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 	public void onRemove() {
 		for (ServerBossBar bossBar : bossBarMap.values()) {
 
-			bossBar.removePlayer(player);
+			bossBar.removePlayer(((IActiveCharacter)getConsumer()).getPlayer());
 
 		}
 	}

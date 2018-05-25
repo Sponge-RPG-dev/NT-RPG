@@ -328,8 +328,9 @@ public class SkillListener {
 	public void event(CollideEvent.Impact event, @First(typeFilter = TippedArrow.class) TippedArrow arrow) {
 		if (GrapplingHook.cache.containsKey(arrow.getUniqueId())) {
 			IActiveCharacter character = characterService.getCharacter(((Player) arrow.getShooter()).getUniqueId());
-			Vector3d velocity = character.getPlayer().getLocation().getPosition().sub(event.getImpactPoint().getPosition()).normalize().mul(-2);
 			Player player = character.getPlayer();
+			Vector3d velocity = player.getLocation().getPosition().sub(event.getImpactPoint().getPosition()).normalize().mul(-2);
+
 
 			player.getLocation().getExtent().playSound(SoundTypes.BLOCK_ANVIL_LAND, event.getImpactPoint().getPosition(), 1);
 

@@ -135,7 +135,8 @@ public class EntityLifecycleListener {
 						double dist = Math.pow(PluginConfig.PARTY_EXPERIENCE_SHARE_DISTANCE, 2);
 						Set<IActiveCharacter> set = new HashSet<>();
 						for (IActiveCharacter member : character.getParty().getPlayers()) {
-							if (member.getPlayer().getLocation().getPosition()
+							Player player = member.getPlayer();
+							if (player.getLocation().getPosition()
 									.distanceSquared(character.getPlayer().getLocation().getPosition()) <= dist) {
 								set.add(member);
 							}

@@ -54,7 +54,7 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
             Inventory inv = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(slot.getRuntimeInventoryClass()));
             Slot query = inv.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(slot.getSlotIndex())));
 
-            deInitializeItemStack(character, query);
+            deInitializeItemStack(character, slot);
             if (checkForSlot(character, query)) {
                 initializeItemStack(character, query);
                 updateEquipOrder(character, slot);
@@ -77,13 +77,13 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
 
     protected void onHandInteract(IActiveCharacter character, int slot, Slot theslot) {
         int mainHandSlotId = character.getMainHandSlotId();
-
         if (slot != mainHandSlotId) {
+            EquipedSlot eq = EquipedSlot.from(theslot);
             Optional<ItemStack> peek = theslot.peek();
             if (!peek.isPresent()) {
                 CustomItem customItem = character.getMainHand();
                 if (customItem != null) {
-                    deInitializeItemStack(character, theslot);
+                    deInitializeItemStack(character, eq);
                 }
                 character.setMainHand(null, -1);
                 adjustDamage(character);
@@ -94,7 +94,7 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
             if (fromItemStack == null) {
                 CustomItem customItem = character.getMainHand();
                 if (customItem != null) {
-                    deInitializeItemStack(character, theslot);
+                    deInitializeItemStack(character, eq);
                 }
                 character.setMainHand(null, -1);
                 adjustDamage(character);
@@ -104,7 +104,7 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
             if (cannotUseItemReson != CannotUseItemReson.OK) {
                 CustomItem customItem = character.getMainHand();
                 if (customItem != null) {
-                    deInitializeItemStack(character, theslot);
+                    deInitializeItemStack(character, eq);
                     character.setMainHand(null, -1);
                     adjustDamage(character);
                 }
@@ -131,7 +131,5 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
     }
 
 
-    protected void adjustDamage(IActiveCharacter character) {
-        damageService().recalculateCharacterWeaponDamage(character);
-    }
+
 }
