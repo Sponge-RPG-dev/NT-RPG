@@ -294,11 +294,15 @@ public abstract class PlayerInvHandler implements CatalogType {
         if (handType == HandTypes.OFF_HAND) {
             customItem = character.getOffHand();
             character.setOffHand(null);
-            effectService().removeGlobalEffectsAsEnchantments(customItem.getEffects().keySet(), character, customItem);
+            if (customItem != null) {
+                effectService().removeGlobalEffectsAsEnchantments(customItem.getEffects().keySet(), character, customItem);
+            }
         } else {
             customItem = character.getMainHand();
             character.setMainHand(null, -1);
-            effectService().removeGlobalEffectsAsEnchantments(customItem.getEffects().keySet(), character, customItem);
+            if (customItem != null) {
+                effectService().removeGlobalEffectsAsEnchantments(customItem.getEffects().keySet(), character, customItem);
+            }
         }
 
     }
