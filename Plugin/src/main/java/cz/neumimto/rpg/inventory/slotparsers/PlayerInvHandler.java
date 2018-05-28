@@ -253,19 +253,23 @@ public abstract class PlayerInvHandler implements CatalogType {
             }
         } else {
             RPGItemType fromItemStack = itemService().getFromItemStack(futureMainHand);
-            CannotUseItemReason reason;
-            if (fromItemStack.getWeaponClass() == WeaponClass.SHIELD || fromItemStack.getWeaponClass() == WeaponClass.ARMOR) {
-                reason = inventoryService().canWear(futureOffHand, character, fromItemStack);
+            if (fromItemStack != null) {
+                CannotUseItemReason reason;
+                if (fromItemStack.getWeaponClass() == WeaponClass.SHIELD || fromItemStack.getWeaponClass() == WeaponClass.ARMOR) {
+                    reason = inventoryService().canWear(futureOffHand, character, fromItemStack);
+                } else {
+                    reason = inventoryService().canUse(futureOffHand, character, fromItemStack);
+                }
+                if (reason == CannotUseItemReason.OK) {
+                    deInitializeItemStack(character, HandTypes.MAIN_HAND);
+                    initializeItemStack(character, HandTypes.MAIN_HAND, CustomItemFactory.createCustomItemForHandSlot(futureMainHand, HandTypes.MAIN_HAND));
+                    recalc = true;
+                } else {
+                    Gui.sendCannotUseItemNotification(character, futureMainHand, reason);
+                    return true;
+                }
             } else {
-                reason = inventoryService().canUse(futureOffHand, character, fromItemStack);
-            }
-            if (reason == CannotUseItemReason.OK) {
-                deInitializeItemStack(character, HandTypes.MAIN_HAND);
-                initializeItemStack(character, HandTypes.MAIN_HAND, CustomItemFactory.createCustomItemForHandSlot(futureMainHand, HandTypes.MAIN_HAND));
-                recalc = true;
-            } else {
-                Gui.sendCannotUseItemNotification(character, futureMainHand, reason);
-                return true;
+                deInitializeItemStack(character, HandTypes.OFF_HAND);
             }
         }
         if (futureOffHand == null) {
@@ -293,6 +297,8 @@ public abstract class PlayerInvHandler implements CatalogType {
                     Gui.sendCannotUseItemNotification(character, futureOffHand, reason);
                     return true;
                 }
+            } else {
+                deInitializeItemStack(character, HandTypes.MAIN_HAND);
             }
         }
         if (initializeOffHandSlot(character, futureOffHand)) {
