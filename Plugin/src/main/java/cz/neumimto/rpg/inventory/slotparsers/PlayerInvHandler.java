@@ -103,7 +103,7 @@ public abstract class PlayerInvHandler implements CatalogType {
      * @param query Slot having an item to be equipied
      */
     protected CustomItem initializeItemStack(IActiveCharacter character, Slot query) {
-        ItemStack itemStack = query.peek().get();
+       ItemStack itemStack = query.peek().get();
         CustomItem customItem = CustomItemFactory.createCustomItem(itemStack, query);
         effectService().applyGlobalEffectsAsEnchantments(customItem.getEffects(), character, customItem); //todo
         return customItem;

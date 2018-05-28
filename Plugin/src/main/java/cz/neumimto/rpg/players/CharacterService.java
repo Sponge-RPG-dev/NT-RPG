@@ -481,10 +481,7 @@ public class CharacterService {
 	}
 
 	protected IActiveCharacter deleteCharacterReferences(IActiveCharacter character) {
-		Collection<IEffectContainer<Object, IEffect<Object>>> effects = character.getEffects();
-		effects.stream()
-				.map(IEffectContainer::getEffects)
-				.forEach(a -> a.stream().forEach(e -> effectService.stopEffect(e)));
+		effectService.removeAllEffects(character);
 		if (character.hasParty())
 			character.getParty().removePlayer(character);
 		character.setParty(null);

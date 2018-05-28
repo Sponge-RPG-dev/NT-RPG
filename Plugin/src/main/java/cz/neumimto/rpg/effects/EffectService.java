@@ -38,7 +38,6 @@ import java.util.function.Consumer;
 @Singleton
 public class EffectService {
 
-
 	public static final long TICK_PERIOD = 5L;
 
 	private static final long unlimited_duration = -1;
@@ -59,12 +58,12 @@ public class EffectService {
 	 *
 	 * @param effect
 	 */
-	public void runEffect(IEffect effect) {
+	protected void runEffect(IEffect effect) {
 		pendingAdditions.add(effect);
 	}
 
 	/**
-	 * Stops the effect and calls onRemove
+	 * Puts the effect into the remove queue. onRemove will be called one tick later
 	 *
 	 * @param effect
 	 */
@@ -78,32 +77,39 @@ public class EffectService {
 	@PostProcess(priority = 1000)
 	public void run() {
 		game.getScheduler().createTaskBuilder().name("EffectTask")
-				.delay(5L, TimeUnit.MILLISECONDS).interval(TICK_PERIOD, TimeUnit.MILLISECONDS)
-				.execute(() -> {
-					for (IEffect pendingRemoval : pendingRemovals) {
-						removeEffectContainer(pendingRemoval.getEffectContainer(), pendingRemoval, pendingRemoval.getConsumer());
-                        effectSet.remove(pendingRemoval);
-					}
-					pendingRemovals.clear();
-					long l = System.currentTimeMillis();
-					for (IEffect e : effectSet) {
+				.delay(5L, TimeUnit.MILLISECONDS)
+				.interval(TICK_PERIOD, TimeUnit.MILLISECONDS)
+				.execute(this::schedule)
+				.submit(plugin);
+	}
 
-						if (e.getPeriod() + e.getLastTickTime() <= l) {
-							tickEffect(e, l);
-						}
+	public void schedule() {
+		for (IEffect pendingRemoval : pendingRemovals) {
+			removeEffectContainer(pendingRemoval.getEffectContainer(), pendingRemoval, pendingRemoval.getConsumer());
+			effectSet.remove(pendingRemoval);
+		}
+		pendingRemovals.clear();
+		long l = System.currentTimeMillis();
+		for (IEffect e : effectSet) {
+			if (e.getConsumer() == null || e.getConsumer().isDetached()) {
+				pendingRemovals.add(e);
+				continue;
+			}
+			if (e.getPeriod() + e.getLastTickTime() <= l) {
+				tickEffect(e, l);
+			}
 
-						if (e.getDuration() == unlimited_duration) {
-							continue;
-						}
+			if (e.getDuration() == unlimited_duration) {
+				continue;
+			}
 
-						if (e.getExpireTime() <= l) {
-							removeEffect(e, e.getConsumer());
-						}
-					}
+			if (e.getExpireTime() <= l) {
+				removeEffect(e, e.getConsumer());
+			}
+		}
 
-					effectSet.addAll(pendingAdditions);
-					pendingAdditions.clear();
-				}).submit(plugin);
+		effectSet.addAll(pendingAdditions);
+		pendingAdditions.clear();
 	}
 
 	/**
@@ -125,7 +131,7 @@ public class EffectService {
 
 	/**
 	 * Adds effect to the consumer,
-	 * Effects requiring register are registered into the scheduler
+	 * Effects requiring register are registered into the scheduler one tick later
 	 *
 	 * @param iEffect
 	 * @param consumer
@@ -156,8 +162,9 @@ public class EffectService {
 
 		iEffect.setEffectContainer(eff);
 		iEffect.setEffectSourceProvider(effectSourceProvider);
-		if (iEffect.requiresRegister())
+		if (iEffect.requiresRegister()) {
 			runEffect(iEffect);
+		}
 	}
 
 	/**
@@ -193,16 +200,17 @@ public class EffectService {
 			if (!iEffect.getConsumer().isDetached()) {
 				iEffect.onRemove();
 			}
-			consumer.removeEffect(iEffect);
+			if (!consumer.isDetached())
+				consumer.removeEffect(iEffect);
 		} else if (container.getEffects().contains(iEffect)) {
 			container.removeStack(iEffect);
 			if (container.getEffects().isEmpty()) {
-				consumer.removeEffect(container);
+				if (!consumer.isDetached())
+					consumer.removeEffect(container);
 			}
 		} else {
 
 		}
-		iEffect.setConsumer(null);
 	}
 
 	/**
@@ -304,11 +312,16 @@ public class EffectService {
 	 * Called only in cases when entities dies, or players logs off
 	 */
 	public void removeAllEffects(IEffectConsumer<?> character) {
-		for (final IEffectContainer<Object, IEffect<Object>> IEffectContainer : character.getEffects()) {
-			for (IEffect<Object> objectIEffect : IEffectContainer.getEffects()) {
-				IEffectContainer.removeStack(objectIEffect);
-                effectSet.remove(objectIEffect);
+		Iterator<IEffectContainer<Object, IEffect<Object>>> iterator1 = character.getEffects().iterator();
+		while (iterator1.hasNext()) {
+			IEffectContainer<Object, IEffect<Object>> next = iterator1.next();
+			Iterator<IEffect<Object>> iterator2 = next.getEffects().iterator();
+			while (iterator2.hasNext()) {
+				IEffect<Object> next1 = iterator2.next();
+				pendingRemovals.add(next1);
+				iterator2.remove();
 			}
+			iterator1.remove();
 		}
 	}
 }
