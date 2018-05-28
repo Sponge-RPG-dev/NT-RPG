@@ -68,7 +68,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setMaxHealth(float maxHealth);
 
-	void setHealth(float mana);
+	void setHealth(float maxHealth);
 
 	IReservable getMana();
 
@@ -199,12 +199,6 @@ public interface IActiveCharacter extends IEntity<Player> {
 	CustomItem getOffHand();
 
 	void setOffHand(CustomItem customItem);
-
-	@Override
-	double getHp();
-
-	@Override
-	void setHp(double d);
 
 	@Override
 	default IEntityType getType() {

@@ -450,7 +450,7 @@ public class CharacterService {
 	 * @param character
 	 */
 	public void updateMaxMana(IActiveCharacter character) {
-		float max_mana = getCharacterProperty(character, DefaultProperties.max_mana) - getCharacterProperty(character, DefaultProperties.reserved_mana);
+		float max_mana = character.getCharacterPropertyWithoutLevel(DefaultProperties.max_mana);
 		float actreserved = getCharacterProperty(character, DefaultProperties.reserved_mana);
 		float reserved = getCharacterProperty(character, DefaultProperties.reserved_mana_multiplier);
 		float maxval = max_mana - (actreserved * reserved);

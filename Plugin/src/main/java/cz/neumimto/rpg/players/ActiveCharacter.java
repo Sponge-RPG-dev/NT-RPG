@@ -33,7 +33,6 @@ import cz.neumimto.rpg.players.groups.Guild;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
-import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.*;
 import org.spongepowered.api.Sponge;
@@ -197,22 +196,22 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	@Override
 	public double getMaxMana() {
-		return getProperty(DefaultProperties.max_mana);
+		return getMana().getMaxValue();
 	}
 
 	@Override
 	public void setMaxMana(float mana) {
-		setProperty(DefaultProperties.max_mana, mana);
+		getMana().setMaxValue(mana);
 	}
 
 	@Override
 	public void setMaxHealth(float maxHealth) {
-		setProperty(DefaultProperties.max_health, maxHealth);
+		getHealth().setMaxValue(maxHealth);
 	}
 
 	@Override
-	public void setHealth(float mana) {
-		setProperty(DefaultProperties.max_mana, mana);
+	public void setHealth(float maxHealth) {
+		getHealth().setValue(maxHealth);
 	}
 
 	@Override
@@ -235,16 +234,6 @@ public class ActiveCharacter implements IActiveCharacter {
 		this.health = health;
 	}
 
-
-	@Override
-	public double getHp() {
-		return getHealth().getValue();
-	}
-
-	@Override
-	public void setHp(double d) {
-		setHealth((float) d);
-	}
 
 	@Override
 	public Player getEntity() {
