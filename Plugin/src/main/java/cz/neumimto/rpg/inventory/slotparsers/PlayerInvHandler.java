@@ -8,6 +8,9 @@ import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.CatalogType;
+import org.spongepowered.api.data.type.HandType;
+import org.spongepowered.api.data.type.HandTypes;
+import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
@@ -24,9 +27,20 @@ public abstract class PlayerInvHandler implements CatalogType {
     private final String name;
     private final String id;
 
+    protected Class<?> NMS_PLAYER_INVENTORY;
+    protected int NMS_PLAYER_INVENTORY_OFFHAND_SLOT_ID;
+
     public PlayerInvHandler(String name) {
         this.id = "nt-rpg:" + name.toLowerCase();
         this.name = name;
+        try {
+            //should exist
+            NMS_PLAYER_INVENTORY = Class.forName("net.minecraft.inventory.ContainerPlayer");
+        } catch (ClassNotFoundException e) {
+            NMS_PLAYER_INVENTORY = null;
+            e.printStackTrace();
+        }
+        NMS_PLAYER_INVENTORY_OFFHAND_SLOT_ID = 40;
     }
 
     /**
@@ -195,5 +209,87 @@ public abstract class PlayerInvHandler implements CatalogType {
 
     protected void adjustDamage(IActiveCharacter character) {
         damageService().recalculateCharacterWeaponDamage(character);
+    }
+
+    /**
+     *
+     * @param character
+     * @param futureMainHand
+     * @param futureOffHand
+     * @return True if the event shall be cancelled
+     */
+    public boolean processHotbarSwapHand(IActiveCharacter character, ItemStack futureMainHand, ItemStack futureOffHand) {
+        /* Slot dispense */
+        boolean recalc = false;
+        if (futureMainHand == null) {
+            CustomItem mainHand = character.getMainHand();
+            if (mainHand != null) {
+                deInitializeItemStack(character, HandTypes.MAIN_HAND);
+                recalc = true;
+            }
+        } else {
+            if (initializeOffHandSlot(character, futureOffHand)) {
+                recalc = true;
+            }
+        }
+        if (recalc) {
+            adjustDamage(character);
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @param character
+     * @param futureOffHand
+     * @return True if damage cache should be re-validated
+     */
+    public boolean initializeOffHandSlot(IActiveCharacter character, ItemStack futureOffHand) {
+        CustomItem oh = character.getOffHand();
+        if (oh != null) {
+            deInitializeItemStack(character, HandTypes.OFF_HAND);
+            return true;
+        }
+        if (futureOffHand != null) {
+            RPGItemType fromItemStack = itemService().getFromItemStack(futureOffHand);
+            if (fromItemStack.getWeaponClass() == WeaponClass.SHIELD) {
+                if (character.canWear(fromItemStack)) {
+                    CustomItem customItem = CustomItemFactory.createCustomItemForOffHandSlot(futureOffHand);
+                    initializeItemStack(character, HandTypes.OFF_HAND, customItem);
+                }
+            } else {
+                //TODO only some classes should be able to dualwield with something else than shield
+            }
+        }
+        return false;
+    }
+
+    public void initializeItemStack(IActiveCharacter character, HandType handType, CustomItem customItem) {
+        if (handType == HandTypes.OFF_HAND) {
+            character.setOffHand(customItem);
+        } else {
+            int slotIndex = ((Hotbar)character.getPlayer().getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class))).getSelectedSlotIndex();
+            character.setMainHand(customItem, slotIndex);
+        }
+        effectService().applyGlobalEffectsAsEnchantments(customItem.getEffects(), character, customItem); //todo
+    }
+
+    public void deInitializeItemStack(IActiveCharacter character, HandType handType) {
+        CustomItem customItem;
+        if (handType == HandTypes.OFF_HAND) {
+            customItem = character.getOffHand();
+            character.setOffHand(null);
+        } else {
+            customItem = character.getMainHand();
+            character.setMainHand(null, -1);
+        }
+        effectService().removeGlobalEffectsAsEnchantments(customItem.getEffects().keySet(), character, customItem);
+    }
+
+
+    public boolean booleanisOffHandSlot(Slot slot) {
+        Inventory transform = slot.transform();
+        Inventory parent = transform.parent();
+        return parent.getClass() == NMS_PLAYER_INVENTORY && transform.getInventoryProperty(SlotIndex.class).get().getValue() == NMS_PLAYER_INVENTORY_OFFHAND_SLOT_ID;
     }
 }

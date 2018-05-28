@@ -47,6 +47,19 @@ public class CustomItemFactory {
             return customItem;
         }
 
+        public CustomItem createForOffHandSlot(ItemStack itemStack) {
+
+            CustomItem customItem = new CustomItem(itemStack, SlotEffectSource.OFF_HAND, itemService.getFromItemStack(itemStack));
+            if (itemStack.getType() == ItemTypes.NONE) {
+                customItem.setEffects(new HashMap<>());
+                customItem.setLevel(0);
+            } else {
+                customItem.setEffects(inventoryService.getItemEffects(itemStack));
+                customItem.setLevel(inventoryService.getItemLevel(itemStack));
+            }
+            return customItem;
+        }
+
     }
 
     public static CustomItem createCustomItem(ItemStack is, Slot value) {
@@ -55,6 +68,9 @@ public class CustomItemFactory {
         return builder.create(is, slot.parent(), index.getValue());
     }
 
+    public static CustomItem createCustomItemForOffHandSlot(ItemStack is) {
+        return builder.createForOffHandSlot(is);
+    }
 
 
 }

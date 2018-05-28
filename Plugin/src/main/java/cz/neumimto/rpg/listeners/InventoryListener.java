@@ -24,17 +24,16 @@ import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.*;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.filter.IsCancelled;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.event.filter.type.Include;
-import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
-import org.spongepowered.api.event.item.inventory.DropItemEvent;
-import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
-import org.spongepowered.api.event.item.inventory.InteractItemEvent;
+import org.spongepowered.api.event.item.inventory.*;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
@@ -118,7 +117,20 @@ public class InventoryListener {
 	@IsCancelled(Tristate.FALSE)
 	public void onDimensionTravel(MoveEntityEvent.Teleport.Portal event, @Root Player player) {
 		IActiveCharacter character = characterService.getCharacter(player);
-		if (!character.isStub())
+		if (!character.isStub()) {
 			characterService.respawnCharacter(character, player);
+		}
+	}
+
+
+	@Listener(order = Order.LAST)
+	@IsCancelled(Tristate.FALSE)
+	public void onSwapHands(ChangeInventoryEvent.SwapHand event, @Root Player player) {
+		ItemStack futureMainHand = player.getItemInHand(HandTypes.MAIN_HAND).orElse(null);
+		ItemStack futureOffHand = player.getItemInHand(HandTypes.OFF_HAND).orElse(null);
+		boolean cancel = inventoryService.processHotbarSwapHand(player, futureMainHand, futureOffHand);
+		if (cancel) {
+			event.setCancelled(true);
+		}
 	}
 }

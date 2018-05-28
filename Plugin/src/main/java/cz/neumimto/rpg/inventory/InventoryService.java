@@ -624,4 +624,18 @@ public class InventoryService {
 	public ManagedInventory getManagedInventory(Class<?> type) {
 		return managedInventories.get(type);
 	}
+
+	/**
+	 *
+	 * @param player
+	 * @param futureMainHand
+	 * @param futureOffHand
+	 * @return True if the swap hand event shall be cancelled
+	 */
+	public boolean processHotbarSwapHand(Player player, ItemStack futureMainHand, ItemStack futureOffHand) {
+		IActiveCharacter character = characterService.getCharacter(player);
+		if (character.isStub())
+			return true;
+		return playerInvHandler.processHotbarSwapHand(character, futureMainHand, futureOffHand);
+	}
 }

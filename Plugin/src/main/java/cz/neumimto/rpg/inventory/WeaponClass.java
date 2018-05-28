@@ -10,6 +10,8 @@ public class WeaponClass {
 
     public static final WeaponClass ARMOR = new WeaponClass("Armor");
 
+    public static final WeaponClass SHIELD = new WeaponClass("Shield");
+
     private final String name;
 
     private Set<WeaponClass> subClass = new HashSet<>();
