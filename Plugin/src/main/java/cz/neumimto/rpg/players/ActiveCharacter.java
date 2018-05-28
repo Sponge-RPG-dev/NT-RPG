@@ -36,6 +36,7 @@ import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.*;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
@@ -54,7 +55,7 @@ import java.util.stream.Collectors;
 
 public class ActiveCharacter implements IActiveCharacter {
 
-	private transient Player pl;
+	private transient UUID pl;
 	private CharacterBase base;
 
 	private transient float[] characterProperties;
@@ -103,7 +104,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	private CustomItem mainHand;
 
 	public ActiveCharacter(Player pl, CharacterBase base) {
-		this.pl = pl;
+		this.pl = pl.getUniqueId();
 		characterProperties = new float[PropertyService.LAST_ID];
 		characterPropertiesLevel = new float[PropertyService.LAST_ID];
 		equipedArmor = new HashMap<>();
@@ -282,12 +283,12 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	@Override
 	public Player getPlayer() {
-		return pl;
+		return Sponge.getServer().getPlayer(pl).orElse(null);
 	}
 
 	@Override
 	public void setPlayer(Player pl) {
-		this.pl = pl;
+		this.pl = pl.getUniqueId();
 	}
 
 	@Override
@@ -554,12 +555,12 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	@Override
 	public void sendMessage(String message) {
-		pl.sendMessage(TextHelper.parse(message));
+		getPlayer().sendMessage(TextHelper.parse(message));
 	}
 
 	@Override
 	public void sendMessage(ChatType chatType, Text message) {
-		pl.sendMessage(chatType, Text.of(message));
+		getPlayer().sendMessage(chatType, Text.of(message));
 	}
 
 	@Override
@@ -820,7 +821,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	@Override
 	public String toString() {
 		return "ActiveCharacter{" +
-				"uuid=" + pl.getUniqueId() +
+				"uuid=" + pl +
 				" name=" + getName() +
 				'}';
 	}
