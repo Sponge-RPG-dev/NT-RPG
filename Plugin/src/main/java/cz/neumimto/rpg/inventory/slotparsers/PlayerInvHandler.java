@@ -140,7 +140,15 @@ public abstract class PlayerInvHandler implements CatalogType {
                 ItemStack itemStack = peek.get();
                 RPGItemType fromItemStack = itemService().getFromItemStack(itemStack);
                 if (fromItemStack != null) {
-                    inventoryService().canWear(itemStack, character, fromItemStack);
+                    CannotUseItemReson result;
+                    if (fromItemStack.getWeaponClass() == WeaponClass.ARMOR || fromItemStack.getWeaponClass() == WeaponClass.SHIELD) {
+                        result = inventoryService().canWear(itemStack, character, fromItemStack);
+                    } else {
+                        result = inventoryService().canUse(itemStack, character, fromItemStack);
+                    }
+                    if (result != CannotUseItemReson.OK) {
+                        return true;
+                    }
                 }
                 boolean revalidateCache =  initializeOffHandSlot(character, itemStack);
                 if (revalidateCache) {
