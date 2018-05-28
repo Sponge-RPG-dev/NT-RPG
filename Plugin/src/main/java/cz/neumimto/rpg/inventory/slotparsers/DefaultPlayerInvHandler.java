@@ -4,7 +4,7 @@ import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.inventory.CannotUseItemReson;
+import cz.neumimto.rpg.inventory.CannotUseItemReason;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
@@ -100,15 +100,15 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
                 adjustDamage(character);
                 return;
             }
-            CannotUseItemReson cannotUseItemReson = inventoryService().canUse(itemStack, character, fromItemStack);
-            if (cannotUseItemReson != CannotUseItemReson.OK) {
+            CannotUseItemReason cannotUseItemReason = inventoryService().canUse(itemStack, character, fromItemStack);
+            if (cannotUseItemReason != CannotUseItemReason.OK) {
                 CustomItem customItem = character.getMainHand();
                 if (customItem != null) {
                     deInitializeItemStack(character, eq);
                     character.setMainHand(null, -1);
                     adjustDamage(character);
                 }
-                Gui.sendCannotUseItemNotification(character, itemStack, cannotUseItemReson);
+                Gui.sendCannotUseItemNotification(character, itemStack, cannotUseItemReason);
             } else {
                 CustomItem customItem = initializeItemStack(character, theslot);
                 character.setMainHand(customItem, slot);

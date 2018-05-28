@@ -20,7 +20,7 @@ package cz.neumimto.rpg.gui;
 
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.inventory.CannotUseItemReson;
+import cz.neumimto.rpg.inventory.CannotUseItemReason;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.ExtendedNClass;
@@ -95,7 +95,7 @@ public interface IPlayerMessage {
 
 	void displayMana(IActiveCharacter character);
 
-	void sendCannotUseItemNotification(IActiveCharacter character, ItemStack is, CannotUseItemReson reason);
+	void sendCannotUseItemNotification(IActiveCharacter character, ItemStack is, CannotUseItemReason reason);
 
 	void openSkillTreeMenu(IActiveCharacter player);
 

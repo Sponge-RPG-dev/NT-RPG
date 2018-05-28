@@ -7,6 +7,7 @@ import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtypes;
 public class SlotEffectSource implements IEffectSource {
 
     public static final SlotEffectSource OFF_HAND = new SlotEffectSource(-100, ItemSubtypes.ANY);
+    public static final SlotEffectSource MAIN_HAND = new SlotEffectSource(-99, ItemSubtypes.ANY);
 
     private final int slotId;
     private final ItemSubtype itemSubtype;

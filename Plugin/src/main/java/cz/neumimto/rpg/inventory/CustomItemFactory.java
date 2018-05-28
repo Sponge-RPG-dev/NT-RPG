@@ -4,6 +4,8 @@ import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
+import org.spongepowered.api.data.type.HandType;
+import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -47,9 +49,9 @@ public class CustomItemFactory {
             return customItem;
         }
 
-        public CustomItem createForOffHandSlot(ItemStack itemStack) {
+        public CustomItem createForHandSlot(ItemStack itemStack, HandType handType) {
 
-            CustomItem customItem = new CustomItem(itemStack, SlotEffectSource.OFF_HAND, itemService.getFromItemStack(itemStack));
+            CustomItem customItem = new CustomItem(itemStack, handType == HandTypes.OFF_HAND ? SlotEffectSource.OFF_HAND : SlotEffectSource.MAIN_HAND, itemService.getFromItemStack(itemStack));
             if (itemStack.getType() == ItemTypes.NONE) {
                 customItem.setEffects(new HashMap<>());
                 customItem.setLevel(0);
@@ -68,8 +70,8 @@ public class CustomItemFactory {
         return builder.create(is, slot.parent(), index.getValue());
     }
 
-    public static CustomItem createCustomItemForOffHandSlot(ItemStack is) {
-        return builder.createForOffHandSlot(is);
+    public static CustomItem createCustomItemForHandSlot(ItemStack is, HandType type) {
+        return builder.createForHandSlot(is, type);
     }
 
 

@@ -31,7 +31,7 @@ import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.effects.common.def.ManaBarNotifier;
-import cz.neumimto.rpg.inventory.CannotUseItemReson;
+import cz.neumimto.rpg.inventory.CannotUseItemReason;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
@@ -807,12 +807,12 @@ public class VanillaMessaging implements IPlayerMessage {
 	}
 
 	@Override
-	public void sendCannotUseItemNotification(IActiveCharacter character, ItemStack is, CannotUseItemReson reason) {
-		if (reason == CannotUseItemReson.CONFIG) {
+	public void sendCannotUseItemNotification(IActiveCharacter character, ItemStack is, CannotUseItemReason reason) {
+		if (reason == CannotUseItemReason.CONFIG) {
 			character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Text.of(TextColors.RED, Localization.CANNOT_USE_ITEM_CONFIGURATION_REASON));
-		} else if (reason == CannotUseItemReson.LEVEL) {
+		} else if (reason == CannotUseItemReason.LEVEL) {
 			character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Text.of(TextColors.RED, Localization.CANNOT_USE_ITEM_LEVEL_REASON));
-		} else if (reason == CannotUseItemReson.LORE) {
+		} else if (reason == CannotUseItemReason.LORE) {
 			character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Text.of(TextColors.RED, Localization.CANNOT_USE_ITEM_LORE_REASON));
 		}
 	}

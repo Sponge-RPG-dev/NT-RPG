@@ -23,7 +23,10 @@ import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
-import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.common.def.ClickComboActionEvent;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.entities.EntityService;
@@ -1104,13 +1107,7 @@ public class CharacterService {
 	 * character object is heavy, lets do not recreate its instance just reasign player and effects
 	 */
 	public void respawnCharacter(IActiveCharacter character, Player pl) {
-		Iterator<IEffectContainer<Object, IEffect<Object>>> iterator = character.getEffects().iterator();
-		while (iterator.hasNext()) {
-			IEffectContainer<Object, IEffect<Object>> next = iterator.next();
-			next.forEach(q -> effectService.stopEffect(q));
-			iterator.remove();
-		}
-		assignPlayerToCharacter(pl);
+		effectService.removeAllEffects(character);
 
 		for (ExtendedNClass nClass : character.getClasses()) {
 			applyGroupEffects(character, nClass.getConfigClass());

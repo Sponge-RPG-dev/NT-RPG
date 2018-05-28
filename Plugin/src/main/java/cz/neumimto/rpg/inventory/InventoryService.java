@@ -310,7 +310,7 @@ public class InventoryService {
 		playerInvHandler.initializeCharacterInventory(character);
 	}
 
-	public void dropItem(IActiveCharacter character, ItemStack is, CannotUseItemReson reason) {
+	public void dropItem(IActiveCharacter character, ItemStack is, CannotUseItemReason reason) {
 		ItemStackUtils.dropItem(character.getPlayer(), is);
 		Gui.sendCannotUseItemNotification(character, is, reason);
 	}
@@ -401,34 +401,34 @@ public class InventoryService {
 	}
 	*/
 
-	public CannotUseItemReson canWear(ItemStack itemStack, IActiveCharacter character, RPGItemType type) {
+	public CannotUseItemReason canWear(ItemStack itemStack, IActiveCharacter character, RPGItemType type) {
 		if (itemStack == null )
-			return CannotUseItemReson.OK;
+			return CannotUseItemReason.OK;
 		if (type == null) {
-			return CannotUseItemReson.OK; //ItemStack was not recognized as a managed item type. Player may use it
+			return CannotUseItemReason.OK; //ItemStack was not recognized as a managed item type. Player may use it
 		}
 		if (!character.canWear(type)) {
-			return CannotUseItemReson.CONFIG;
+			return CannotUseItemReason.CONFIG;
 		}
 		return checkRestrictions(character, itemStack);
 	}
 
 
-	public CannotUseItemReson canUse(ItemStack itemStack, IActiveCharacter character, RPGItemType type) {
+	public CannotUseItemReason canUse(ItemStack itemStack, IActiveCharacter character, RPGItemType type) {
 		if (itemStack == null)
-			return CannotUseItemReson.OK;
+			return CannotUseItemReason.OK;
 		if (type == null) {
-			return CannotUseItemReson.OK; //ItemStack was not recognized as a managed item type. Player may use it
+			return CannotUseItemReason.OK; //ItemStack was not recognized as a managed item type. Player may use it
 		}
 		if (!character.canUse(type)) {
-			return CannotUseItemReson.CONFIG;
+			return CannotUseItemReason.CONFIG;
 		}
 		return checkRestrictions(character,itemStack);
 	}
 
-	private CannotUseItemReson checkGroupRequirements(IActiveCharacter character, Map<String, Integer> a) {
+	private CannotUseItemReason checkGroupRequirements(IActiveCharacter character, Map<String, Integer> a) {
 		if (a.isEmpty())
-			return CannotUseItemReson.OK;
+			return CannotUseItemReason.OK;
 		int k = 0;
 		Iterator<Map.Entry<String, Integer>> it = a.entrySet().iterator();
 		while (it.hasNext()) {
@@ -436,16 +436,16 @@ public class InventoryService {
 			Race race = groupService.getRace(next.getKey());
 			if (race != null) {
 				if (character.getRace() != race) {
-					return CannotUseItemReson.LORE;
+					return CannotUseItemReason.LORE;
 				}
 				if (next.getValue() != null && character.getLevel() < next.getValue()) {
-					return CannotUseItemReson.LEVEL;
+					return CannotUseItemReason.LEVEL;
 				}
 			} else {
 				for (ExtendedNClass extendedNClass : character.getClasses()) {
 					if (extendedNClass.getConfigClass().getName().equalsIgnoreCase(next.getKey())) {
 						if (next.getValue() != null && character.getLevel() < extendedNClass.getLevel()) {
-							return CannotUseItemReson.LEVEL;
+							return CannotUseItemReason.LEVEL;
 						}
 						k++;
 					}
@@ -453,46 +453,46 @@ public class InventoryService {
 			}
 		}
 		if (a.size() == k) {
-			return CannotUseItemReson.OK;
+			return CannotUseItemReason.OK;
 		} else {
-			return CannotUseItemReson.LORE;
+			return CannotUseItemReason.LORE;
 		}
 	}
 
-	private CannotUseItemReson checkAttributeRequirements(IActiveCharacter character, Map<String, Integer> a) {
+	private CannotUseItemReason checkAttributeRequirements(IActiveCharacter character, Map<String, Integer> a) {
 		if (a.isEmpty())
-			return CannotUseItemReson.OK;
+			return CannotUseItemReason.OK;
 		for (Map.Entry<String, Integer> q : a.entrySet()) {
 			ICharacterAttribute attribute = propertyService.getAttribute(q.getKey());
 			if (attribute == null)
 				continue;
 			Integer attributeValue = character.getAttributeValue(attribute);
 			if (attributeValue == null || attributeValue < q.getValue())
-				return CannotUseItemReson.ATTRIBUTE;
+				return CannotUseItemReason.ATTRIBUTE;
 
 		}
-		return CannotUseItemReson.OK;
+		return CannotUseItemReason.OK;
 	}
 
-	private CannotUseItemReson checkRestrictions(IActiveCharacter character, DataHolder is) {
+	private CannotUseItemReason checkRestrictions(IActiveCharacter character, DataHolder is) {
 		Optional<Map<String, Integer>> a = is.get(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS);
 		if (a.isPresent()) {
 			Map<String, Integer> stringIntegerMap = a.get();
-			CannotUseItemReson cannotUseItemReson = checkAttributeRequirements(character, stringIntegerMap);
+			CannotUseItemReason cannotUseItemReason = checkAttributeRequirements(character, stringIntegerMap);
 
-			if (CannotUseItemReson.OK != cannotUseItemReson) {
-				return cannotUseItemReson;
+			if (CannotUseItemReason.OK != cannotUseItemReason) {
+				return cannotUseItemReason;
 			}
 		}
 		Optional<Map<String, Integer>> q = is.get(NKeys.ITEM_PLAYER_ALLOWED_GROUPS);
 		if (q.isPresent()) {
 			Map<String, Integer> w = q.get();
-			CannotUseItemReson cannotUseItemReson = checkGroupRequirements(character, w);
-			if (CannotUseItemReson.OK != cannotUseItemReson) {
-				return cannotUseItemReson;
+			CannotUseItemReason cannotUseItemReason = checkGroupRequirements(character, w);
+			if (CannotUseItemReason.OK != cannotUseItemReason) {
+				return cannotUseItemReason;
 			}
 		}
-		return CannotUseItemReson.OK;
+		return CannotUseItemReason.OK;
 	}
 
 	/**

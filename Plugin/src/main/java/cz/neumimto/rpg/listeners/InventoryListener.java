@@ -81,13 +81,13 @@ public class InventoryListener {
 		RPGItemType rpgItemType = itemService.getFromItemStack(event.getItemStack());
 		if (rpgItemType != null) {
 			ItemStack stack = event.getItemStack().createStack();
-			CannotUseItemReson reason;
+			CannotUseItemReason reason;
 			if (rpgItemType.getWeaponClass() == WeaponClass.ARMOR) {
 				reason = inventoryService.canWear(stack, character, rpgItemType);
 			} else {
 				reason = inventoryService.canUse(stack, character, rpgItemType);
 			}
-			if (reason != CannotUseItemReson.OK) {
+			if (reason != CannotUseItemReason.OK) {
 				Gui.sendCannotUseItemNotification(character, stack, reason);
 				event.setCancelled(true);
 			}
