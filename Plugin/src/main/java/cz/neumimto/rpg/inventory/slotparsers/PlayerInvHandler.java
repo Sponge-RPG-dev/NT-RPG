@@ -130,12 +130,13 @@ public abstract class PlayerInvHandler implements CatalogType {
 
     /**
      * @param character character instance
-     * @param slot id of clicked slot, the slot is NOT in hotbar row
+     * @param slot clicked slot, the slot is NOT in hotbar row, the slot might be offhand
      * @return true if the click inventory event shall be cancelled
      */
     public boolean processSlotInteraction(IActiveCharacter character, Slot slot) {
+        if (character.getPlayer().getOpenInventory().isPresent() && isOffHandSlot(slot)) {
 
-        if (inventoryService().getEffectSourceBySlotId(slot) != null) {
+        } else if (inventoryService().getEffectSourceBySlotId(slot) != null) {
             EquipedSlot equipedSlot = EquipedSlot.from(slot);
             CustomItem customItem = character.getEquipedInventorySlots().get(equipedSlot);
             //item has been taken away from the slot
@@ -287,7 +288,7 @@ public abstract class PlayerInvHandler implements CatalogType {
     }
 
 
-    public boolean booleanisOffHandSlot(Slot slot) {
+    public boolean isOffHandSlot(Slot slot) {
         Inventory transform = slot.transform();
         Inventory parent = transform.parent();
         return parent.getClass() == NMS_PLAYER_INVENTORY && transform.getInventoryProperty(SlotIndex.class).get().getValue() == NMS_PLAYER_INVENTORY_OFFHAND_SLOT_ID;
