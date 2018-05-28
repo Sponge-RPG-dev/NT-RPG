@@ -104,6 +104,14 @@ public class ItemService {
         return armor.get(itemStack.getType());
     }
 
+    public void registerShieldType(ItemType type) {
+        RPGItemType rpgItemType = new RPGItemType(type, null, WeaponClass.SHIELD);
+        WeaponClass.SHIELD.getItems().add(rpgItemType);
+        Set<RPGItemType> rpgItemTypes = itemTypes.computeIfAbsent(type, k -> new TreeSet<>(new RPGItemTypeComparator()));
+        rpgItemTypes.add(rpgItemType);
+        armor.put(type, rpgItemType);
+    }
+
     private static class RPGItemTypeComparator implements Comparator<RPGItemType> {
 
         @Override

@@ -35,7 +35,7 @@ public abstract class PlayerInvHandler implements CatalogType {
         this.name = name;
         try {
             //should exist
-            NMS_PLAYER_INVENTORY = Class.forName("net.minecraft.inventory.ContainerPlayer");
+            NMS_PLAYER_INVENTORY = Class.forName("net.minecraft.entity.player.InventoryPlayer");
         } catch (ClassNotFoundException e) {
             NMS_PLAYER_INVENTORY = null;
             e.printStackTrace();
@@ -135,7 +135,21 @@ public abstract class PlayerInvHandler implements CatalogType {
      */
     public boolean processSlotInteraction(IActiveCharacter character, Slot slot) {
         if (character.getPlayer().getOpenInventory().isPresent() && isOffHandSlot(slot)) {
-
+            Optional<ItemStack> peek = slot.peek();
+            if (peek.isPresent()) {
+                ItemStack itemStack = peek.get();
+                RPGItemType fromItemStack = itemService().getFromItemStack(itemStack);
+                if (fromItemStack != null) {
+                    inventoryService().canWear(itemStack, character, fromItemStack);
+                }
+                boolean revalidateCache =  initializeOffHandSlot(character, itemStack);
+                if (revalidateCache) {
+                    adjustDamage(character);
+                }
+            } else {
+                deInitializeItemStack(character, HandTypes.OFF_HAND);
+                adjustDamage(character);
+            }
         } else if (inventoryService().getEffectSourceBySlotId(slot) != null) {
             EquipedSlot equipedSlot = EquipedSlot.from(slot);
             CustomItem customItem = character.getEquipedInventorySlots().get(equipedSlot);
@@ -253,7 +267,7 @@ public abstract class PlayerInvHandler implements CatalogType {
         }
         if (futureOffHand != null) {
             RPGItemType fromItemStack = itemService().getFromItemStack(futureOffHand);
-            if (fromItemStack.getWeaponClass() == WeaponClass.SHIELD) {
+            if (fromItemStack != null && fromItemStack.getWeaponClass() == WeaponClass.SHIELD) {
                 if (character.canWear(fromItemStack)) {
                     CustomItem customItem = CustomItemFactory.createCustomItemForOffHandSlot(futureOffHand);
                     initializeItemStack(character, HandTypes.OFF_HAND, customItem);
@@ -280,11 +294,13 @@ public abstract class PlayerInvHandler implements CatalogType {
         if (handType == HandTypes.OFF_HAND) {
             customItem = character.getOffHand();
             character.setOffHand(null);
+            effectService().removeGlobalEffectsAsEnchantments(customItem.getEffects().keySet(), character, customItem);
         } else {
             customItem = character.getMainHand();
             character.setMainHand(null, -1);
+            effectService().removeGlobalEffectsAsEnchantments(customItem.getEffects().keySet(), character, customItem);
         }
-        effectService().removeGlobalEffectsAsEnchantments(customItem.getEffects().keySet(), character, customItem);
+
     }
 
 

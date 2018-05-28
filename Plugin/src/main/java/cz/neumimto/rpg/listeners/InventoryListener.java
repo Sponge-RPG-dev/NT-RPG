@@ -108,7 +108,8 @@ public class InventoryListener {
 			Optional<SlotIndex> inventoryProperty = transaction.getSlot().getInventoryProperty(SlotIndex.class);
 			if (inventoryProperty.isPresent()) {
 				boolean cancel = inventoryService.processSlotInteraction(transaction.getSlot(), player);
-				event.setCancelled(cancel);
+				if (cancel)
+					event.setCancelled(cancel);
 			}
 		}
 	}

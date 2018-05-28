@@ -190,6 +190,16 @@ public class InventoryService {
 					logger.warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN+ "\"modid:my_item\"");
 				}
 			}
+			for (String shield : c.getStringList("Shields")) {
+				Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, shield);
+				if (type.isPresent()) {
+					itemService.registerShieldType(type.get());
+				} else {
+					logger.warn(Console.RED + "Could not find item type " + Console.YELLOW + shield + Console.RED + ".");
+					logger.warn(Console.RED + " - Is the mod loaded and is the name correct?");
+					logger.warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN+ "\"modid:my_item\"");
+				}
+			}
 		} catch (ConfigException e) {
 			throw new RuntimeException("Could not read ItemGroups.conf ", e);
 		}

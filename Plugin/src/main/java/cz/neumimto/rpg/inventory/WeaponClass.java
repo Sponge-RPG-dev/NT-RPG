@@ -12,6 +12,9 @@ public class WeaponClass {
 
     public static final WeaponClass SHIELD = new WeaponClass("Shield");
 
+    static {
+        SHIELD.parent = ARMOR;
+    }
     private final String name;
 
     private Set<WeaponClass> subClass = new HashSet<>();
