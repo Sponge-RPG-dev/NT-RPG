@@ -89,13 +89,13 @@ public class CharacterBase extends TimestampEntity {
 	@Convert(converter = MapSL2Json.class)
 	private Map<String, Long> characterCooldowns = new HashMap<>();
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "characterBase")
+	@OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "characterBase")
 	private Set<CharacterSkill> characterSkills = new HashSet<>();
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "characterBase")
+	@OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "characterBase")
 	private Set<CharacterClass> characterClasses = new HashSet<>();
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "characterBase")
+	@OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "characterBase")
 	@Access(AccessType.FIELD)
 	private Set<BaseCharacterAttribute> baseCharacterAttribute = new HashSet<>();
 
@@ -105,6 +105,9 @@ public class CharacterBase extends TimestampEntity {
 	@Convert(converter = EquipedSlot2Json.class)
 	@Column(name = "inventory_equip_slot_order", columnDefinition = "TEXT")
 	private List<EquipedSlot> inventoryEquipSlotOrder = new ArrayList<>();
+
+	@Column(name = "marked_for_removal")
+	private Boolean markedForRemoval;
 
 	private Integer X;
 
@@ -335,4 +338,11 @@ public class CharacterBase extends TimestampEntity {
 		this.healthScale = healthScale;
 	}
 
+	public Boolean getMarkedForRemoval() {
+		return markedForRemoval;
+	}
+
+	public void setMarkedForRemoval(Boolean markedForRemoval) {
+		this.markedForRemoval = markedForRemoval;
+	}
 }

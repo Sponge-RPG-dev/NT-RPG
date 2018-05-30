@@ -892,12 +892,11 @@ public class NtRpgPlugin {
 					IActiveCharacter character = characterService.getCharacter(player);
 					if (character.getName().equalsIgnoreCase(a)) {
 						characterService.removeCachedCharacter(player.getUniqueId());
-						characterService.buildDummyChar(player.getUniqueId());
-						characterService.assignPlayerToCharacter(player);
+						characterService.registerDummyChar(characterService.buildDummyChar(player.getUniqueId()));
 					}
 					CompletableFuture.runAsync(() -> {
-						int deleted = characterService.removePlayerCharacter(player.getUniqueId(), a);
-						player.sendMessage(TextHelper.parse(Localization.CHAR_DELETED_FEEDBACK.replaceAll("%num%", ""+deleted)));
+						characterService.markCharacterForRemoval(player.getUniqueId(), a);
+						player.sendMessage(TextHelper.parse(Localization.CHAR_DELETED_FEEDBACK));
 					}, asyncExecutor);
 					return CommandResult.success();
 				})
@@ -1107,6 +1106,7 @@ public class NtRpgPlugin {
 				.child(cattribute, "attribute", "attr", "a")
 				.child(cswitch, "switch")
 				.child(cslist, "list")
+				.child(deleteCharacter, "remove", "rm")
 				.build();
 
 		Sponge.getCommandManager().register(this, characterRoot, "character", "char", "nc");

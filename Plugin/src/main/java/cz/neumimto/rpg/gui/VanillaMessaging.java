@@ -310,7 +310,7 @@ public class VanillaMessaging implements IPlayerMessage {
 			String query = "select new cz.neumimto.rpg.utils.model.CharacterListModel(" +
 					"c.name,d.name,d.experiences) " +
 					"from CharacterBase c left join c.characterClasses d " +
-					"where c.uuid = :id order by c.updated desc";
+					"where c.uuid = :id AND a.markedForRemoval <> true order by c.updated desc";
 			Map<String, Object> map = new HashMap<>();
 			map.put("id", player.getPlayer().getUniqueId());
 			List<CharacterListModel> list = build.findList(CharacterListModel.class, query, map);

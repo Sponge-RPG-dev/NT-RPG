@@ -129,6 +129,9 @@ public class CharacterService {
 		}).submit(plugin);
 	}
 
+	public void registerDummyChar(PreloadCharacter dummy) {
+		characters.put(dummy.getPlayer().getUniqueId(), dummy);
+	}
 
 	public boolean assignPlayerToCharacter(Player pl) {
 		if (pl == null) {
@@ -1171,8 +1174,8 @@ public class CharacterService {
 		return false;
 	}
 
-	public int removePlayerCharacter(UUID player, String charName) {
-		return playerDao.remove(player, charName);
+	public int markCharacterForRemoval(UUID player, String charName) {
+		return playerDao.markCharacterForRemoval(player, charName);
 	}
 }
 

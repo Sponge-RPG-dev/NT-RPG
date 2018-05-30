@@ -391,5 +391,5 @@ public class Localization {
 	public static String LEVEL = "Level";
 
 	@ConfigValue
-	public static String CHAR_DELETED_FEEDBACK = "Deleted %num% characters";
+	public static String CHAR_DELETED_FEEDBACK = "Character deleted";
 }
