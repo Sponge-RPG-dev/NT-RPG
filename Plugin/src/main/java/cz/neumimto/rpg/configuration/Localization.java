@@ -392,4 +392,7 @@ public class Localization {
 
 	@ConfigValue
 	public static String CHAR_DELETED_FEEDBACK = "Character deleted";
+
+	@ConfigValue
+    public static String NO_CHARACTER = "You need a character for this action";
 }

@@ -1171,6 +1171,10 @@ public class NtRpgPlugin {
 				.executor((src, args) -> {
 					final Player player = (Player) src;
 					IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
+					if (character.isStub()) {
+						character.getPlayer().sendMessage(TextHelper.parse(Localization.NO_CHARACTER));
+						return CommandResult.empty();
+					}
 					Gui.displayMana(character);
 					return CommandResult.success();
 				})
