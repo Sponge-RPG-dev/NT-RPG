@@ -55,6 +55,9 @@ import cz.neumimto.rpg.reloading.ReloadService;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.utils.ItemStackUtils;
+import ninja.leaping.configurate.SimpleConfigurationNode;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
+import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
@@ -62,6 +65,8 @@ import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -73,6 +78,7 @@ import org.spongepowered.api.text.format.TextStyles;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -83,6 +89,7 @@ import java.util.stream.Collectors;
  * Created by NeumimTo on 22.7.2015.
  */
 @Singleton
+@ResourceLoader.ListenerClass
 public class InventoryService {
 
     @Inject
@@ -145,6 +152,45 @@ public class InventoryService {
 					Sponge.getRegistry().getAllOf(PlayerInvHandler.class).stream
 					().map(PlayerInvHandler::getId).collect(Collectors.joining(", ")));
 			playerInvHandler = IoC.get().build(DefaultPlayerInvHandler.class);
+		}
+	}
+
+	@Listener
+	//Dump items once game started, so we can assume that registries wont change anymore
+	public void dumpItems(GameStartedServerEvent event) {
+		if (PluginConfig.AUTODISCOVER_ITEMS) {
+			Collection<ItemType> allOf = Sponge.getRegistry().getAllOf(ItemType.class);
+			ItemDumpConfig itemDump = new ItemDumpConfig();
+
+			for (ItemType itemType : allOf) {
+				String id = itemType.getId();
+				Field[] fields = itemDump.getClass().getFields();
+				for (Field field : fields) {
+					if (id.contains(field.getName())) {
+						try {
+							List<ItemType> itemTypes = (List<ItemType>) field.get(itemDump);
+							itemTypes.add(itemType);
+						} catch (IllegalAccessException e) {
+							e.printStackTrace();
+						}
+						continue;
+					}
+				}
+			}
+			try {
+				ObjectMapper.BoundInstance configMapper = ObjectMapper.forObject(itemDump);
+				File properties = new File(NtRpgPlugin.workingDir, "itemDump.conf");
+				if (properties.exists())
+					properties.delete();
+				HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(properties.toPath()).build();
+				SimpleConfigurationNode scn = SimpleConfigurationNode.root();
+				configMapper.serialize(scn);
+				hcl.save(scn);
+			} catch (Exception e) {
+				throw new RuntimeException("Could not write file. ", e);
+			}
+
+
 		}
 	}
 
