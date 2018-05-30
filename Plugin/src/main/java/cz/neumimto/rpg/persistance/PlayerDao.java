@@ -46,7 +46,7 @@ public class PlayerDao extends GenericDao<CharacterBase> {
 	 */
 	public List<CharacterBase> getPlayersCharacters(UUID uuid) {
 		Session session = factory.openSession();
-		Query query = session.createQuery("SELECT a FROM CharacterBase a WHERE a.uuid=:id AND a.markedForRemoval <> true  ORDER BY a.updated DESC");
+		Query query = session.createQuery("SELECT a FROM CharacterBase a WHERE a.uuid=:id AND a.markedForRemoval = null  ORDER BY a.updated DESC");
 		query.setParameter("id", uuid);
 		List list = query.list();
 		session.close();
@@ -83,7 +83,7 @@ public class PlayerDao extends GenericDao<CharacterBase> {
 	public CharacterBase getCharacter(UUID player, String name) {
 		Session s = factory.openSession();
 		s.beginTransaction();
-		Query query = s.createQuery("SELECT a FROM CharacterBase a WHERE a.uuid=:uuid and a.name=:name a.markedForRemoval <> true");
+		Query query = s.createQuery("SELECT a FROM CharacterBase a WHERE a.uuid=:uuid and a.name=:name AND a.markedForRemoval = null");
 		query.setParameter("uuid", player);
 		query.setParameter("name", name);
 		List<CharacterBase> list = query.list();
@@ -96,7 +96,7 @@ public class PlayerDao extends GenericDao<CharacterBase> {
 	public int getCharacterCount(UUID uuid) {
 		Session s = factory.openSession();
 		s.beginTransaction();
-		Query query = s.createQuery("SELECT COUNT(c.id) FROM CharacterBase c WHERE c.uuid=:id a.markedForRemoval <> true");
+		Query query = s.createQuery("SELECT COUNT(c.id) FROM CharacterBase c WHERE c.uuid=:id AND a.markedForRemoval = null");
 		query.setParameter("id", uuid);
 		int i = query.getFirstResult();
 		s.close();
@@ -141,7 +141,7 @@ public class PlayerDao extends GenericDao<CharacterBase> {
 		Transaction transaction = session.beginTransaction();
 		int updatecount;
 		try {
-			query.setParameter("uid", player.toString());
+			query.setParameter("uid", player);
 			query.setParameter("name", charName.toLowerCase());
 			query.setParameter("t", true);
 			updatecount = query.executeUpdate();
