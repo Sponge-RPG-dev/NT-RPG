@@ -877,6 +877,32 @@ public class NtRpgPlugin {
 				})
 				.build();
 
+		// ===========================================================
+		// ==============           CHAR CREATE         ==============
+		// ===========================================================
+		CommandSpec deleteCharacter = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE
+						.deserialize(CommandLocalization.COMMAND_DELETE_DESCRIPTION))
+				.arguments(GenericArguments.remainingJoinedStrings(TextHelper.parse("name")))
+				.permission("ntrpg.player.character.delete")
+				.executor((src, args) -> {
+					String a = args.<String>getOne("name").get();
+					Player player = (Player) src;
+					CharacterService characterService = IoC.get().build(CharacterService.class);
+					IActiveCharacter character = characterService.getCharacter(player);
+					if (character.getName().equalsIgnoreCase(a)) {
+						characterService.removeCachedCharacter(player.getUniqueId());
+						characterService.buildDummyChar(player.getUniqueId());
+						characterService.assignPlayerToCharacter(player);
+					}
+					CompletableFuture.runAsync(() -> {
+						characterService.removePlayerCharacter(player.getUniqueId(), a);
+					}, asyncExecutor);
+					return CommandResult.success();
+				})
+				.build();
+
+
 		CommandSpec setclass = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE
 						.deserialize(CommandLocalization.COMMAND_CHOOSE_DESC))

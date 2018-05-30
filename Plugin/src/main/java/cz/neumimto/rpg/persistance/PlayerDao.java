@@ -134,4 +134,22 @@ public class PlayerDao extends GenericDao<CharacterBase> {
 		tx.commit();
 		session.close();
 	}
+
+	public void remove(UUID player, String charName) {
+		String hql = "delete from CharacterBase where uuid= :uid AND lower(name)= :name";
+		Session session = factory.openSession();
+		Query query = session.createQuery(hql);
+		Transaction transaction = session.beginTransaction();
+		try {
+			query.setString("uid", player.toString());
+			query.setString("name", charName.toLowerCase());
+			query.executeUpdate();
+			// your code end
+
+			transaction.commit();
+		} catch (Throwable t) {
+			transaction.rollback();
+			throw t;
+		}
+	}
 }

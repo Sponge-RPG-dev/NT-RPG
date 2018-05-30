@@ -1170,5 +1170,9 @@ public class CharacterService {
 		}
 		return false;
 	}
+
+	public void removePlayerCharacter(UUID player, String charName) {
+		playerDao.remove(player, charName);
+	}
 }
 
