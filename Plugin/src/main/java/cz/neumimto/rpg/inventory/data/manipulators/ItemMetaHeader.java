@@ -20,23 +20,23 @@ import java.util.Optional;
 /**
  * Created by NeumimTo on 28.1.2018.
  */
-public class ItemTypeData extends AbstractSingleData<Text, ItemTypeData, ItemTypeData.Immutable> {
+public class ItemMetaHeader extends AbstractSingleData<Text, ItemMetaHeader, ItemMetaHeader.Immutable> {
 
-    public ItemTypeData() {
+    public ItemMetaHeader() {
         this(Text.EMPTY);
     }
 
-    public ItemTypeData(Text rarity) {
+    public ItemMetaHeader(Text rarity) {
         super(rarity, NKeys.ITEM_META_HEADER);
         registerGettersAndSetters();
     }
 
     @Override
-    public Optional<ItemTypeData> fill(DataHolder dataHolder, MergeFunction overlap) {
-        Optional<ItemTypeData> a = dataHolder.get(ItemTypeData.class);
+    public Optional<ItemMetaHeader> fill(DataHolder dataHolder, MergeFunction overlap) {
+        Optional<ItemMetaHeader> a = dataHolder.get(ItemMetaHeader.class);
         if (a.isPresent()) {
-            ItemTypeData otherData = a.get();
-            ItemTypeData finalData = overlap.merge(this, otherData);
+            ItemMetaHeader otherData = a.get();
+            ItemMetaHeader finalData = overlap.merge(this, otherData);
             setValue(finalData.getValue());
         }
         return Optional.of(this);
@@ -44,11 +44,11 @@ public class ItemTypeData extends AbstractSingleData<Text, ItemTypeData, ItemTyp
 
 
     @Override
-    public Optional<ItemTypeData> from(DataContainer container) {
+    public Optional<ItemMetaHeader> from(DataContainer container) {
         return from((DataView) container);
     }
 
-    public Optional<ItemTypeData> from(DataView view) {
+    public Optional<ItemMetaHeader> from(DataView view) {
         if (view.contains(NKeys.ITEM_META_HEADER.getQuery())) {
             setValue((Text) view.get(NKeys.ITEM_META_HEADER.getQuery()).get());
             return Optional.of(this);
@@ -58,8 +58,8 @@ public class ItemTypeData extends AbstractSingleData<Text, ItemTypeData, ItemTyp
     }
 
     @Override
-    public ItemTypeData copy() {
-        return new ItemTypeData(getValue());
+    public ItemMetaHeader copy() {
+        return new ItemMetaHeader(getValue());
     }
 
     @Override
@@ -68,13 +68,13 @@ public class ItemTypeData extends AbstractSingleData<Text, ItemTypeData, ItemTyp
     }
 
     @Override
-    public ItemTypeData.Immutable asImmutable() {
-        return new ItemTypeData.Immutable(getValue());
+    public ItemMetaHeader.Immutable asImmutable() {
+        return new ItemMetaHeader.Immutable(getValue());
     }
 
     @Override
     public int getContentVersion() {
-        return ItemTypeData.Builder.CONTENT_VERSION;
+        return ItemMetaHeader.Builder.CONTENT_VERSION;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class ItemTypeData extends AbstractSingleData<Text, ItemTypeData, ItemTyp
         return dataContainer;
     }
 
-    public class Immutable extends AbstractImmutableSingleData<Text, Immutable, ItemTypeData> {
+    public class Immutable extends AbstractImmutableSingleData<Text, Immutable, ItemMetaHeader> {
 
 
         public Immutable(Text rarity) {
@@ -98,7 +98,7 @@ public class ItemTypeData extends AbstractSingleData<Text, ItemTypeData, ItemTyp
 
         @Override
         public int getContentVersion() {
-            return ItemTypeData.Builder.CONTENT_VERSION;
+            return ItemMetaHeader.Builder.CONTENT_VERSION;
         }
 
         @Override
@@ -114,30 +114,30 @@ public class ItemTypeData extends AbstractSingleData<Text, ItemTypeData, ItemTyp
         }
 
         @Override
-        public ItemTypeData asMutable() {
-            return new ItemTypeData(getValue());
+        public ItemMetaHeader asMutable() {
+            return new ItemMetaHeader(getValue());
         }
     }
 
-    public static class Builder extends AbstractDataBuilder<ItemTypeData> implements DataManipulatorBuilder<ItemTypeData, Immutable> {
+    public static class Builder extends AbstractDataBuilder<ItemMetaHeader> implements DataManipulatorBuilder<ItemMetaHeader, Immutable> {
         public static final int CONTENT_VERSION = 1;
 
         public Builder() {
-            super(ItemTypeData.class, CONTENT_VERSION);
+            super(ItemMetaHeader.class, CONTENT_VERSION);
         }
 
         @Override
-        public ItemTypeData create() {
-            return new ItemTypeData();
+        public ItemMetaHeader create() {
+            return new ItemMetaHeader();
         }
 
         @Override
-        public Optional<ItemTypeData> createFrom(DataHolder dataHolder) {
+        public Optional<ItemMetaHeader> createFrom(DataHolder dataHolder) {
             return create().fill(dataHolder);
         }
 
         @Override
-        protected Optional<ItemTypeData> buildContent(DataView container) throws InvalidDataException {
+        protected Optional<ItemMetaHeader> buildContent(DataView container) throws InvalidDataException {
             return create().from(container);
         }
     }

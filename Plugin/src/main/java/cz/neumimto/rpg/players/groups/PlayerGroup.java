@@ -30,13 +30,7 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.format.TextColor;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 27.12.2014.
@@ -109,10 +103,10 @@ public class PlayerGroup implements IEffectSourceProvider {
 	}
 
 	public void addWeapon(ConfigRPGItemType item) {
-		Set<ConfigRPGItemType> configRPGItemTypes = weapons.get(item.getItemType());
+		Set<ConfigRPGItemType> configRPGItemTypes = weapons.get(item.getRpgItemType().getItemType());
 		if (configRPGItemTypes == null) {
 			configRPGItemTypes = new HashSet<>();
-			weapons.put(item.getItemType(), configRPGItemTypes);
+			weapons.put(item.getRpgItemType().getItemType(), configRPGItemTypes);
 		}
 		configRPGItemTypes.add(item);
 	}

@@ -2,22 +2,23 @@ package cz.neumimto.rpg.inventory.slotparsers;
 
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.TextHelper;
-import cz.neumimto.rpg.configuration.Localization;
-import cz.neumimto.rpg.inventory.CannotUseItemReson;
-import cz.neumimto.rpg.inventory.HotbarObject;
-import cz.neumimto.rpg.inventory.HotbarObjectTypes;
-import cz.neumimto.rpg.inventory.Weapon;
+import cz.neumimto.rpg.effects.IEffectSource;
+import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.inventory.CannotUseItemReason;
+import cz.neumimto.rpg.inventory.RPGItemType;
+import cz.neumimto.rpg.inventory.items.types.CustomItem;
+import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.utils.ItemStackUtils;
-import org.spongepowered.api.data.type.HandTypes;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
-import org.spongepowered.api.item.inventory.entity.Hotbar;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.chat.ChatTypes;
+import org.spongepowered.api.item.inventory.property.SlotIndex;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -25,127 +26,110 @@ import java.util.Optional;
  */
 @Singleton
 public class DefaultPlayerInvHandler extends PlayerInvHandler {
-
+    
+    
     public DefaultPlayerInvHandler() {
         super("persisted_slot_order");
     }
 
     @Override
-    public void initializeHotbar(IActiveCharacter character) {
-        Hotbar hotbar = character.getPlayer().getInventory().query(Hotbar.class);
-        int slot = 0;
-        for (Inventory inventory : hotbar) {
-            initializeHotbar(character, slot, (Slot) inventory, hotbar);
-            slot++;
-        }
+    public void initHandler() {
+        Sponge.getEventManager().registerListeners(NtRpgPlugin.GlobalScope.plugin, this);
     }
 
-    //TODO second hand
-    protected void initializeHotbar(IActiveCharacter character, int slot, Slot s, Hotbar hotbar) {
-        int selectedSlotIndex = hotbar.getSelectedSlotIndex();
-        //very stupid but fast
-        Optional<ItemStack> peek = s.peek();
+    @Override
+    public void initializeCharacterInventory(IActiveCharacter character) {
+        List<EquipedSlot> inventoryEquipQueue = character.getCharacterBase().getInventoryEquipSlotOrder();
+        Player player = character.getPlayer();
+        Iterator<EquipedSlot> it = inventoryEquipQueue.iterator();
+        EquipedSlot slot = null;
+        while (it.hasNext()) {
+            slot = it.next();
+            IEffectSource slotSource = inventoryService().getEffectSourceBySlotId(slot.getRuntimeInventoryClass(), slot.getSlotIndex());
+            if (slotSource == null) {
+                it.remove();
+                continue;
+            }
 
-        //unequip
-        HotbarObject hotbarObject = character.getHotbar()[slot];
-        if (hotbarObject != null) {
-            hotbarObject.onUnEquip(character);
+            Inventory inv = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(slot.getRuntimeInventoryClass()));
+            Slot query = inv.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(slot.getSlotIndex())));
+
+            deInitializeItemStack(character, slot);
+            if (checkForSlot(character, query)) {
+                initializeItemStack(character, query);
+                updateEquipOrder(character, slot);
+            }
         }
+        adjustDamage(character);
+    }
 
-        //parse slot
-        if (peek.isPresent()) {
-            ItemStack itemStack1 = peek.get();
 
-            HotbarObject hotbarObject0 = NtRpgPlugin.GlobalScope.inventorySerivce.getHotbarObject(character, itemStack1);
 
-            if (hotbarObject0 != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
-                hotbarObject0.setSlot(slot);
-                character.getHotbar()[slot] = hotbarObject0;
-                CannotUseItemReson reason = NtRpgPlugin.GlobalScope.inventorySerivce.canUse(itemStack1, character);
-                //cannot use
-                if (reason != CannotUseItemReson.OK) {
-                    character.getHotbar()[slot] = hotbarObject0;
-                    character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, TextHelper.parse(Localization.PLAYER_CANT_USE_HOTBAR_ITEMS));
-                    character.getDenyHotbarSlotInteractions()[slot] = true;
-                    return;
-                } else {
-                    character.getDenyHotbarSlotInteractions()[slot] = false;
+    @Override
+    public void onRightClick(IActiveCharacter character, int slot, Slot hotbarSlot) {
+        onHandInteract(character, slot, hotbarSlot);
+    }
+
+    @Override
+    public void onLeftClick(IActiveCharacter character, int slot, Slot hotbarSlot) {
+        onHandInteract(character, slot, hotbarSlot);
+    }
+
+    protected void onHandInteract(IActiveCharacter character, int slot, Slot theslot) {
+        int mainHandSlotId = character.getMainHandSlotId();
+        if (slot != mainHandSlotId) {
+            EquipedSlot eq = EquipedSlot.from(theslot);
+            Optional<ItemStack> peek = theslot.peek();
+            if (!peek.isPresent()) {
+                CustomItem customItem = character.getMainHand();
+                if (customItem != null) {
+                    deInitializeItemStack(character, eq);
                 }
-
-                //charm is active anywhere in the hotbar
-                if (hotbarObject0.getHotbarObjectType() == HotbarObjectTypes.CHARM) {
-                    hotbarObject0.onEquip(character);
-                    character.getDenyHotbarSlotInteractions()[slot] = false;
-                } else if (hotbarObject0.getHotbarObjectType() == HotbarObjectTypes.WEAPON && slot == selectedSlotIndex) {
-                    //weapon active only if item is in hand
-                    hotbarObject0.onRightClick(character); //simulate player interaction to equip the weapon
-                    ((Weapon) hotbarObject0).setCurrent(true);
+                character.setMainHand(null, -1);
+                adjustDamage(character);
+                return;
+            }
+            ItemStack itemStack = peek.get();
+            RPGItemType fromItemStack = itemService().getFromItemStack(itemStack);
+            if (fromItemStack == null) {
+                CustomItem customItem = character.getMainHand();
+                if (customItem != null) {
+                    deInitializeItemStack(character, eq);
                 }
-
+                character.setMainHand(null, -1);
+                adjustDamage(character);
+                return;
+            }
+            CannotUseItemReason cannotUseItemReason = inventoryService().canUse(itemStack, character, fromItemStack);
+            if (cannotUseItemReason != CannotUseItemReason.OK) {
+                CustomItem customItem = character.getMainHand();
+                if (customItem != null) {
+                    deInitializeItemStack(character, eq);
+                    character.setMainHand(null, -1);
+                    adjustDamage(character);
+                }
+                Gui.sendCannotUseItemNotification(character, itemStack, cannotUseItemReason);
             } else {
-                //consumable/non weapon item
-                character.getHotbar()[slot] = HotbarObject.EMPTYHAND_OR_CONSUMABLE;
-                character.getDenyHotbarSlotInteractions()[slot] = false;
+                CustomItem customItem = initializeItemStack(character, theslot);
+                character.setMainHand(customItem, slot);
             }
-
-        } else {
-            //empty slot
-            character.getHotbar()[slot] = HotbarObject.EMPTYHAND_OR_CONSUMABLE;
-            character.getDenyHotbarSlotInteractions()[slot] = false;
-        }
-        // ??
-    }
-
-    @Override
-    public void initializeArmor(IActiveCharacter character) {
-
-    }
-
-    @Override
-    public void changeActiveHotbarSlot(IActiveCharacter character, int slot) {
-        if (character.getDenyHotbarSlotInteractions()[slot]) {
-            HotbarObject hotbarObject = character.getHotbar()[slot];
-            if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
-                if (hotbarObject.getHotbarObjectType() == HotbarObjectTypes.WEAPON) {
-                   dropItemFromMainHand(character, slot);
-                }
-                character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, TextHelper.parse(Localization.CANNOT_USE_ITEM_GENERIC));
-            }
-        } else {
-            character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Text.of(""));
+            adjustDamage(character);
         }
     }
 
-    @Override
-    public void onRightClick(IActiveCharacter character, int slot) {
-        HotbarObject hotbarObject = character.getHotbar()[slot];
-        if (!character.getDenyHotbarSlotInteractions()[slot]) {
-            if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
-                hotbarObject.onRightClick(character);
+    protected void updateEquipOrder(IActiveCharacter character, EquipedSlot curent) {
+        List<EquipedSlot> inventoryEquipSlotOrder = character.getCharacterBase().getInventoryEquipSlotOrder();
+        Iterator<EquipedSlot> iterator = inventoryEquipSlotOrder.iterator();
+        while (iterator.hasNext()) {
+            EquipedSlot next = iterator.next();
+            if (next.equals(curent)) {
+                iterator.remove();
+                break;
             }
-        } else if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE && hotbarObject.getHotbarObjectType() == HotbarObjectTypes.WEAPON) {
-            dropItemFromMainHand(character, slot);
         }
+        inventoryEquipSlotOrder.add(curent);
     }
 
-    @Override
-    public void onLeftClick(IActiveCharacter character, int slot) {
-        HotbarObject hotbarObject = character.getHotbar()[slot];
-        if (!character.getDenyHotbarSlotInteractions()[slot]) {
-            if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE) {
-                hotbarObject.onLeftClick(character);
-            }
-        } else if (hotbarObject != HotbarObject.EMPTYHAND_OR_CONSUMABLE && hotbarObject.getHotbarObjectType() == HotbarObjectTypes.WEAPON) {
-            dropItemFromMainHand(character, slot);
-        }
-    }
 
-    protected void dropItemFromMainHand(IActiveCharacter character, int slot) {
-        character.getHotbar()[slot] = HotbarObject.EMPTYHAND_OR_CONSUMABLE;
-        Optional<ItemStack> itemInHand = character.getPlayer().getItemInHand(HandTypes.MAIN_HAND);
-        ItemStack itemStack = itemInHand.get().copy();
-        character.getPlayer().setItemInHand(HandTypes.MAIN_HAND, null);
-        ItemStackUtils.dropItem(character.getPlayer(), itemStack);
 
-    }
 }

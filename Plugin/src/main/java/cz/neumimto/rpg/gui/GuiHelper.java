@@ -1,8 +1,5 @@
 package cz.neumimto.rpg.gui;
 
-import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Block;
-import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Item;
-
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.TextHelper;
@@ -17,12 +14,7 @@ import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
-import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.NDamageType;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillPathData;
-import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.skills.SkillTree;
+import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
@@ -34,17 +26,17 @@ import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.item.inventory.property.SlotPos;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Block;
+import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Item;
 
 /**
  * Created by ja on 29.12.2016.
@@ -104,8 +96,11 @@ public class GuiHelper {
 	}
 
 	public static Inventory createPlayerGroupView(PlayerGroup group) {
-		Inventory.Builder builder = Inventory.builder();
-		Inventory i = builder.of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
+		Inventory.Builder builder = Inventory
+				.builder();
+		Inventory i = builder.of(InventoryArchetypes.DOUBLE_CHEST)
+				.property(InventoryTitle.of(Text.of(group.getName(), group.getPreferedColor(), TextStyles.BOLD)))
+				.build(plugin);
 
 
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(2,2))).offer(createWeaponCommand(group));
@@ -162,7 +157,7 @@ public class GuiHelper {
 		return i;
 	}
 
-	public static ItemStack propertyToItemStack(short id, float value) {
+	public static ItemStack propertyToItemStack(int id, float value) {
 		ItemStack i = itemStack(ItemTypes.BOOK);
 		String nameById = NtRpgPlugin.GlobalScope.propertyService.getNameById(id);
 		nameById = Utils.configNodeToReadableString(nameById);
@@ -347,7 +342,7 @@ public class GuiHelper {
 	}
 
 	public static ItemStack rpgItemTypeToItemStack(ConfigRPGItemType configRPGItemType) {
-		ItemStack q = itemStack(configRPGItemType.getItemType());
+		ItemStack q = itemStack(configRPGItemType.getRpgItemType().getItemType());
 		Text lore = Text.builder(Localization.ITEM_DAMAGE)
 				.color(TextColors.GOLD)
 				.style(TextStyles.BOLD)
@@ -358,8 +353,8 @@ public class GuiHelper {
 				.build();
 		q.offer(Keys.ITEM_LORE, Collections.singletonList(lore));
 		q.offer(new MenuInventoryData(true));
-		if (configRPGItemType.getDisplayName() != null) {
-			q.offer(Keys.DISPLAY_NAME, Text.of(configRPGItemType.getDisplayName()));
+		if (configRPGItemType.getRpgItemType().getDisplayName() != null) {
+			q.offer(Keys.DISPLAY_NAME, Text.of(configRPGItemType.getRpgItemType().getDisplayName()));
 		}
 		return q;
 	}

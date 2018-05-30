@@ -19,11 +19,13 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.TimestampEntity;
+import cz.neumimto.rpg.persistance.converters.EquipedSlot2Json;
 import cz.neumimto.rpg.persistance.converters.MapSL2Json;
 import cz.neumimto.rpg.persistance.converters.UUID2String;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.skills.ISkill;
 
@@ -87,18 +89,25 @@ public class CharacterBase extends TimestampEntity {
 	@Convert(converter = MapSL2Json.class)
 	private Map<String, Long> characterCooldowns = new HashMap<>();
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "characterBase")
+	@OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "characterBase")
 	private Set<CharacterSkill> characterSkills = new HashSet<>();
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "characterBase")
+	@OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "characterBase")
 	private Set<CharacterClass> characterClasses = new HashSet<>();
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "characterBase")
+	@OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "characterBase")
 	@Access(AccessType.FIELD)
 	private Set<BaseCharacterAttribute> baseCharacterAttribute = new HashSet<>();
 
 	@Transient
 	private Map<String, Integer> cachedAttributes = new HashMap<>();
+
+	@Convert(converter = EquipedSlot2Json.class)
+	@Column(name = "inventory_equip_slot_order", columnDefinition = "TEXT")
+	private List<EquipedSlot> inventoryEquipSlotOrder = new ArrayList<>();
+
+	@Column(name = "marked_for_removal")
+	private Boolean markedForRemoval;
 
 	private Integer X;
 
@@ -305,6 +314,13 @@ public class CharacterBase extends TimestampEntity {
 		return null;
 	}
 
+	public List<EquipedSlot> getInventoryEquipSlotOrder() {
+		return inventoryEquipSlotOrder;
+	}
+
+	public void setInventoryEquipSlotOrder(List<EquipedSlot> inventoryEquipSlotOrder) {
+		this.inventoryEquipSlotOrder = inventoryEquipSlotOrder;
+	}
 
 	public MessageType getMessageType() {
 		return messageType;
@@ -320,5 +336,13 @@ public class CharacterBase extends TimestampEntity {
 
 	public void setHealthScale(Double healthScale) {
 		this.healthScale = healthScale;
+	}
+
+	public Boolean getMarkedForRemoval() {
+		return markedForRemoval;
+	}
+
+	public void setMarkedForRemoval(Boolean markedForRemoval) {
+		this.markedForRemoval = markedForRemoval;
 	}
 }

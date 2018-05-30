@@ -2,11 +2,13 @@ package cz.neumimto.rpg.skills;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.gui.GuiHelper;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
+import cz.neumimto.rpg.inventory.ItemService;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Sponge;
@@ -22,6 +24,10 @@ import java.util.stream.Collectors;
 
 
 public class ItemAccessSkill extends AbstractSkill {
+
+    @Inject
+    private ItemService itemService;
+
     public ItemAccessSkill(String name) {
         super();
         setName(name);
@@ -97,7 +103,7 @@ public class ItemAccessSkill extends AbstractSkill {
                         if (split.length == 3) {
                             itemName = split[2];
                         }
-                        ConfigRPGItemType t = new ConfigRPGItemType(type,itemName, data.getSkill(), damage);
+                        ConfigRPGItemType t = new ConfigRPGItemType(itemService.getByItemTypeAndName(type,itemName), data.getSkill(), damage);
                         data.addItemType(level, t);
                     }
                 }
@@ -152,14 +158,11 @@ public class ItemAccessSkill extends AbstractSkill {
                 itemTypeTreeSetMap = new HashMap<>();
                 Set<ConfigRPGItemType> set = new HashSet<>();
                 set.add(type);
-                itemTypeTreeSetMap.put(type.getItemType(), set);
+                itemTypeTreeSetMap.put(type.getRpgItemType().getItemType(), set);
                 items.put(level, itemTypeTreeSetMap);
             } else {
-                Set<ConfigRPGItemType> configRPGItemTypes = itemTypeTreeSetMap.get(type.getItemType());
-                if (configRPGItemTypes == null) {
-                    configRPGItemTypes = new HashSet<>();
-                    itemTypeTreeSetMap.put(type.getItemType(), configRPGItemTypes);
-                }
+                Set<ConfigRPGItemType> configRPGItemTypes = itemTypeTreeSetMap
+                        .computeIfAbsent(type.getRpgItemType().getItemType(), k -> new HashSet<>());
                 configRPGItemTypes.add(type);
             }
         }

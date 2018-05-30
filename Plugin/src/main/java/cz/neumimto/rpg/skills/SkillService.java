@@ -133,8 +133,7 @@ public class SkillService {
 			}
 			ISkill.setName(simpleName);
 		}
-		if (!PluginConfig.DEBUG) {
-
+		if (!PluginConfig.DEBUG.isBalance()) {
 			if (skills.containsKey(ISkill.getName().toLowerCase()))
 				throw new RuntimeException("Skill " + ISkill.getName() + " already exists");
 		}

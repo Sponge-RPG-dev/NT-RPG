@@ -133,4 +133,7 @@ public class CommandLocalization {
 
 	@ConfigValue
 	public static String COMMAND_CHARACTE_LIST = "&2Lists all your characters";
+
+	@ConfigValue
+	public static String COMMAND_DELETE_DESCRIPTION = "&2Deletes a character";
 }

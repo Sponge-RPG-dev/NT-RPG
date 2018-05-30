@@ -20,10 +20,9 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.IEntityType;
-import cz.neumimto.rpg.inventory.Armor;
-import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.Weapon;
+import cz.neumimto.rpg.inventory.items.types.CustomItem;
+import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
@@ -37,7 +36,6 @@ import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 
 import java.util.List;
 import java.util.Map;
@@ -70,7 +68,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setMaxHealth(float maxHealth);
 
-	void setHealth(float mana);
+	void setHealth(float maxHealth);
 
 	IReservable getMana();
 
@@ -78,7 +76,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setHealth(IReservable health);
 
-	Map<EquipmentType, Armor> getEquipedArmor();
+	Map<EquipedSlot, CustomItem> getEquipedInventorySlots();
 
 	double getExperiencs();
 
@@ -170,14 +168,6 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setPendingPartyInvite(Party party);
 
-	Weapon getMainHand();
-
-	void setMainHand(Weapon mainHand);
-
-	Weapon getOffHand();
-
-	void setOffHand(Weapon offHand);
-
 	boolean canUse(RPGItemType weaponItemType);
 
 	double getWeaponDamage();
@@ -200,23 +190,15 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setInvulnerable(boolean b);
 
-	HotbarObject[] getHotbar();
+	CustomItem getMainHand();
 
-	void setHotbarSlot(int i, HotbarObject o);
+	int getMainHandSlotId();
 
-	default boolean isSocketing() {
-		return getCurrentRune() > 0;
-	}
+	void setMainHand(CustomItem customItem, int slot);
 
-	int getCurrentRune();
+	CustomItem getOffHand();
 
-	void setCurrentRune(int slot);
-
-	@Override
-	double getHp();
-
-	@Override
-	void setHp(double d);
+	void setOffHand(CustomItem customItem);
 
 	@Override
 	default IEntityType getType() {
@@ -226,7 +208,6 @@ public interface IActiveCharacter extends IEntity<Player> {
 	@Override
 	Player getEntity();
 
-
 	@Override
 	void sendMessage(String message);
 
@@ -235,10 +216,6 @@ public interface IActiveCharacter extends IEntity<Player> {
 	void setCharacterLevelProperties(float[] arr);
 
 	Map<String, Integer> getTransientAttributes();
-
-	void setOpenInventory(boolean b);
-
-	boolean hasOpenInventory();
 
 	MessageType getPreferedMessageType();
 
@@ -250,11 +227,6 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setSlotsToReinitialize(List<Integer> slotsToReinitialize);
 
-	default int getSelectedHotbarSlot() {
-		return -1;
-	}
-
-	void updateSelectedHotbarSlot();
 
 	Map<String, SkillTreeViewModel> getSkillTreeViewLocation();
 
@@ -266,7 +238,6 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	boolean hasSkillTreeSpecialization(SkillTreeSpecialization specialization);
 
-	boolean[] getDenyHotbarSlotInteractions();
+	Set<EquipedSlot> getSlotsCannotBeEquiped();
 
-	void setDenyHotbarSlotInteractions(boolean[] arr);
 }

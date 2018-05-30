@@ -24,6 +24,7 @@ import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.ItemService;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.parties.PartyService;
@@ -72,4 +73,7 @@ public class GlobalScope {
 
 	@Inject
 	public PropertyService propertyService;
+
+	@Inject
+	public ItemService itemService;
 }

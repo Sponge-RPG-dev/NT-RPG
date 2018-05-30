@@ -6,15 +6,7 @@ import cz.neumimto.effects.EnderPearlEffect;
 import cz.neumimto.effects.ManaDrainEffect;
 import cz.neumimto.effects.ResoluteTechniqueEffect;
 import cz.neumimto.effects.negative.StunEffect;
-import cz.neumimto.effects.positive.AlchemyEffect;
-import cz.neumimto.effects.positive.Bash;
-import cz.neumimto.effects.positive.CriticalEffect;
-import cz.neumimto.effects.positive.DamageToMana;
-import cz.neumimto.effects.positive.DampenEffect;
-import cz.neumimto.effects.positive.DodgeEffect;
-import cz.neumimto.effects.positive.LifeAfterKillEffect;
-import cz.neumimto.effects.positive.PotionEffect;
-import cz.neumimto.effects.positive.ShadowRunEffect;
+import cz.neumimto.effects.positive.*;
 import cz.neumimto.events.CriticalStrikeEvent;
 import cz.neumimto.events.DamageDodgedEvent;
 import cz.neumimto.events.ManaDrainEvent;
@@ -66,6 +58,7 @@ import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.event.item.inventory.UseItemStackEvent;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.util.Tristate;
 import org.spongepowered.api.world.Location;
@@ -299,17 +292,15 @@ public class SkillListener {
 	@Listener(order = Order.LATE)
 	public void onItemConsumerFinish(UseItemStackEvent.Finish event,
 									 @Root(typeFilter = Player.class) Player player) {
-		Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
-		ItemStack itemStack = itemInHand.get();
+		ItemStackSnapshot itemStack = event.getItemStackInUse();
 		if (itemStack.getType() == ItemTypes.POTION
 				|| itemStack.getType() == ItemTypes.SPLASH_POTION
 				|| itemStack.getType() == ItemTypes.LINGERING_POTION) {
 			IActiveCharacter character = characterService.getCharacter(player);
 			if (character.hasEffect(PotionEffect.name)) {
 				PotionEffect effect = (PotionEffect) character.getEffect(PotionEffect.name);
-				long k = System.currentTimeMillis();
 				PotionEffectModel value = effect.getValue();
-				Optional<PotionEffectData> potionEffectData = itemStack.get(PotionEffectData.class);
+				Optional<PotionEffectData> potionEffectData = itemStack.createStack().get(PotionEffectData.class);
 				if (potionEffectData.isPresent()) {
 					PotionEffectData o = potionEffectData.get();
 					ListValue<org.spongepowered.api.effect.potion.PotionEffect> effects = o.effects();
@@ -337,8 +328,9 @@ public class SkillListener {
 	public void event(CollideEvent.Impact event, @First(typeFilter = TippedArrow.class) TippedArrow arrow) {
 		if (GrapplingHook.cache.containsKey(arrow.getUniqueId())) {
 			IActiveCharacter character = characterService.getCharacter(((Player) arrow.getShooter()).getUniqueId());
-			Vector3d velocity = character.getPlayer().getLocation().getPosition().sub(event.getImpactPoint().getPosition()).normalize().mul(-2);
 			Player player = character.getPlayer();
+			Vector3d velocity = player.getLocation().getPosition().sub(event.getImpactPoint().getPosition()).normalize().mul(-2);
+
 
 			player.getLocation().getExtent().playSound(SoundTypes.BLOCK_ANVIL_LAND, event.getImpactPoint().getPosition(), 1);
 

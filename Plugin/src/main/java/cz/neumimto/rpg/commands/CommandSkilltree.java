@@ -54,7 +54,7 @@ public class CommandSkilltree extends CommandBase {
 		Player p =(Player) commandSource;
 		IActiveCharacter character = characterService.getCharacter(p);
 		if (character.isStub()) {
-			character.getPlayer().sendMessage(TextHelper.parse(Localization.CHARACTER_IS_REQUIRED));
+			p.sendMessage(TextHelper.parse(Localization.CHARACTER_IS_REQUIRED));
 			return CommandResult.empty();
 		}
 		ConfigClass configClass;

@@ -52,6 +52,7 @@ public class ItemLoreBuilderService {
     private static List<ItemLoreSections> loreOrder;
     private static Map<Integer, Text> rarityMap = new HashMap<>();
     private static Text unknownRarity;
+    private static Text metaType;
 
     @PostProcess(priority = 3000)
     @Reload(on = ReloadService.PLUGIN_CONFIG)
@@ -62,6 +63,7 @@ public class ItemLoreBuilderService {
         effectSettings = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_SECTION_COLOR).get();
         groupMinLevelColor = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_GROUP_MIN_LEVEL_COLOR).get();
 
+
         effectSection = TextHelper.parse(Localization.ITEM_EFFECTS_SECTION);
         rarity = TextHelper.parse(Localization.ITEM_RARITY_SECTION);
         damage = TextHelper.parse(Localization.ITEM_DAMAGE_SECTION);
@@ -69,6 +71,8 @@ public class ItemLoreBuilderService {
         sockets = TextHelper.parse(Localization.ITEM_SOCKETS_SECTION);
         attributes = TextHelper.parse(Localization.ITEM_ATTRIBUTES_SECTIO);
         requirements = TextHelper.parse(Localization.ITEM_REQUIREMENTS_SECTION);
+        metaType = TextHelper.parse(Localization.ITEM_META_TYPE_NAME);
+
         loreOrder = PluginConfig.ITEM_LORE_ORDER.stream().map(ItemLoreSections::valueOf).collect(Collectors.toList());
 
         for (String s : PluginConfig.ITEM_RARITY) {
@@ -77,7 +81,9 @@ public class ItemLoreBuilderService {
             Text t = TextHelper.parse(split[1]);
             rarityMap.put(i, t);
         }
+
         unknownRarity = TextHelper.parse(Localization.UNKNOWN_RARITY);
+
     }
 
     public static class ItemLoreBuilder {
@@ -169,6 +175,16 @@ public class ItemLoreBuilderService {
                                 .append(Text.NEW_LINE).build());
                     }
                 });
+                is.get(NKeys.ITEM_META_TYPE).ifPresent(r -> {
+                   t.add(Text.builder()
+                           .append(metaType)
+                           .append(
+                                   Text.builder(r.getName())
+                                   .color(TextColors.GOLD)
+                                   .build()
+                           )
+                   .build());
+                });
                 is.get(NKeys.ITEM_LEVEL).ifPresent(r -> {
                     t.add(Text.builder().append(level)
                             .append(Text.builder(String.valueOf(r))
@@ -177,8 +193,6 @@ public class ItemLoreBuilderService {
                             .append(Text.NEW_LINE)
                             .build());
                 });
-
-
             });
         }
 

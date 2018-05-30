@@ -31,7 +31,7 @@ import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.effects.common.def.ManaBarNotifier;
-import cz.neumimto.rpg.inventory.CannotUseItemReson;
+import cz.neumimto.rpg.inventory.CannotUseItemReason;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
@@ -74,6 +74,7 @@ import org.spongepowered.api.item.inventory.Container;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.item.inventory.property.SlotPos;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
@@ -244,7 +245,7 @@ public class VanillaMessaging implements IPlayerMessage {
 			effect = new BossBarExpNotifier(character);
 			effectService.addEffect(effect, character, InternalEffectSourceProvider.INSTANCE);
 		}
-		effect.notifyExpChange(classname, expchange);
+		effect.notifyExpChange(character, classname, expchange);
 	}
 
 	@Override
@@ -309,8 +310,8 @@ public class VanillaMessaging implements IPlayerMessage {
 			String query = "select new cz.neumimto.rpg.utils.model.CharacterListModel(" +
 					"c.name,d.name,d.experiences) " +
 					"from CharacterBase c left join c.characterClasses d " +
-					"where c.uuid = :id order by c.updated desc";
-			Map map = new HashMap<>();
+					"where c.uuid = :id AND c.markedForRemoval = null order by c.updated desc";
+			Map<String, Object> map = new HashMap<>();
 			map.put("id", player.getPlayer().getUniqueId());
 			List<CharacterListModel> list = build.findList(CharacterListModel.class, query, map);
 			List<Text> content = new ArrayList<Text>();
@@ -373,28 +374,30 @@ public class VanillaMessaging implements IPlayerMessage {
 
 	@Override
 	public void showAvalaibleClasses(IActiveCharacter character) {
-		displayCommonMenu(character, groupService.getClasses(), ConfigClass.Default);
+		displayCommonMenu(character, groupService.getClasses(), ConfigClass.Default, TextHelper.parse(Localization.CLASSES_MENU_TEXT));
 	}
 
 	@Override
 	public void sendListOfRaces(IActiveCharacter character) {
-		displayCommonMenu(character, groupService.getRaces(), Race.Default);
+		displayCommonMenu(character, groupService.getRaces(), Race.Default, TextHelper.parse(Localization.RACES_MENU_TEXT));
 	}
 
-	private void displayCommonMenu(IActiveCharacter character, Collection<? extends PlayerGroup> g, PlayerGroup default_) {
+	private void displayCommonMenu(IActiveCharacter character, Collection<? extends PlayerGroup> g, PlayerGroup default_, Text invHeader) {
 		Inventory i = Inventory.builder()
 				.of(InventoryArchetypes.DOUBLE_CHEST)
+				.property(InventoryTitle.of(invHeader))
 				.build(plugin);
+		Player player = character.getPlayer();
 		for (PlayerGroup cc : g) {
 			if (cc == default_) {
 				continue;
 			}
-			if (!cc.isShowsInMenu() && !character.getPlayer().hasPermission("ntrpg.admin")) {
+			if (!cc.isShowsInMenu() && !player.hasPermission("ntrpg.admin")) {
 				continue;
 			}
 			i.offer(createItemRepresentingGroup(cc));
 		}
-		character.getPlayer().openInventory(i);
+		player.openInventory(i);
 	}
 
 	private ItemStack createItemRepresentingGroup(PlayerGroup p) {
@@ -804,12 +807,12 @@ public class VanillaMessaging implements IPlayerMessage {
 	}
 
 	@Override
-	public void sendCannotUseItemNotification(IActiveCharacter character, ItemStack is, CannotUseItemReson reason) {
-		if (reason == CannotUseItemReson.CONFIG) {
+	public void sendCannotUseItemNotification(IActiveCharacter character, ItemStack is, CannotUseItemReason reason) {
+		if (reason == CannotUseItemReason.CONFIG) {
 			character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Text.of(TextColors.RED, Localization.CANNOT_USE_ITEM_CONFIGURATION_REASON));
-		} else if (reason == CannotUseItemReson.LEVEL) {
+		} else if (reason == CannotUseItemReason.LEVEL) {
 			character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Text.of(TextColors.RED, Localization.CANNOT_USE_ITEM_LEVEL_REASON));
-		} else if (reason == CannotUseItemReson.LORE) {
+		} else if (reason == CannotUseItemReason.LORE) {
 			character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Text.of(TextColors.RED, Localization.CANNOT_USE_ITEM_LORE_REASON));
 		}
 	}

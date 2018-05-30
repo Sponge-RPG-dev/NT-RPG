@@ -18,13 +18,7 @@
 
 package cz.neumimto.rpg.persistance;
 
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigBeanFactory;
-import com.typesafe.config.ConfigException;
-import com.typesafe.config.ConfigFactory;
-import com.typesafe.config.ConfigObject;
-import com.typesafe.config.ConfigValue;
-import com.typesafe.config.ConfigValueType;
+import com.typesafe.config.*;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
@@ -33,13 +27,10 @@ import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
+import cz.neumimto.rpg.inventory.ItemService;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.players.ExperienceSource;
-import cz.neumimto.rpg.players.groups.ConfigClass;
-import cz.neumimto.rpg.players.groups.Guild;
-import cz.neumimto.rpg.players.groups.PlayerGroup;
-import cz.neumimto.rpg.players.groups.PlayerGroupPermission;
-import cz.neumimto.rpg.players.groups.Race;
+import cz.neumimto.rpg.players.groups.*;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.SkillService;
@@ -58,13 +49,8 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Created by NeumimTo on 10.7.2015.
@@ -86,6 +72,9 @@ public class GroupDao {
 
 	@Inject
 	SkillService skillService;
+
+	@Inject
+	ItemService itemService;
 
 	private Map<String, Race> races = new HashMap<>();
 	private Map<String, ConfigClass> classes = new HashMap<>();
@@ -270,8 +259,15 @@ public class GroupDao {
 				String[] k = a.split(";");
 				Optional<ItemType> type = game.getRegistry().getType(ItemType.class, k[0]);
 				if (type.isPresent()) {
-					group.getAllowedArmor().add(new RPGItemType(type.get(), k.length == 1 ? null : k[1]));
-				} else logger.warn("Defined invalid itemtype  " + a + " in " + group.getName());
+					RPGItemType rpgitemType = itemService.getArmorByItemType(type.get());
+					if (rpgitemType == null) {
+						logger.warn("Unknown Armor type " + k[0] + " Check your ItemGroups.conf");
+					} else {
+						group.getAllowedArmor().add(rpgitemType);
+					}
+				} else {
+					logger.warn("Defined invalid itemtype  " + a + " in " + group.getName());
+				}
 			});
 		} catch (ConfigException e) {
 			logger.warn(" - Missing configuration \"AllowedArmor\", skipping");
@@ -284,6 +280,7 @@ public class GroupDao {
 				String s = split[0];
 				double damage = 0;
 				String itemName = null;
+
 				ItemType type = game.getRegistry().getType(ItemType.class, s).orElse(null);
 				if (type == null) {
 					logger.error(" - Unknown item type " + s);
@@ -293,10 +290,10 @@ public class GroupDao {
 					if (split.length == 3) {
 						itemName = split[2];
 					}
+					RPGItemType rpgitemType = itemService.getByItemTypeAndName(type, itemName);
+					ConfigRPGItemType t = new ConfigRPGItemType(rpgitemType, group, damage);
+					group.addWeapon(t);
 				}
-				ConfigRPGItemType t = new ConfigRPGItemType(type,itemName, group, damage);
-				t.setDamage(damage);
-				group.addWeapon(t);
 			}
 
 		} catch (ConfigException e) {

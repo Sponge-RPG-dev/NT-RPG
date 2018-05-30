@@ -10,6 +10,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.Utils;
 import org.jboss.logging.Logger;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.text.Text;
@@ -67,8 +68,9 @@ public class SkillTreeSpecialization extends PassiveSkill {
 
         if (pdata.getEnterCommands() != null) {
             Map<String, String> args = new HashMap<>();
-            args.put("player", c.getPlayer().getName());
-            args.put("uuid", c.getPlayer().getUniqueId().toString());
+            Player pl = c.getPlayer();
+            args.put("player", pl.getName());
+            args.put("uuid", pl.getUniqueId().toString());
             Utils.executeCommandBatch(args, pdata.getEnterCommands());
         }
 
@@ -87,8 +89,9 @@ public class SkillTreeSpecialization extends PassiveSkill {
 
         if (pdata.getEnterCommands() != null) {
             Map<String, String> args = new HashMap<>();
-            args.put("player", c.getPlayer().getName());
-            args.put("uuid", c.getPlayer().getUniqueId().toString());
+            Player player = c.getPlayer();
+            args.put("player", player.getName());
+            args.put("uuid", player.getUniqueId().toString());
             Utils.executeCommandBatch(args, pdata.getExitCommands());
         }
     }

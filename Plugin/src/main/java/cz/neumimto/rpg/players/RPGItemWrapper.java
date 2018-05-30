@@ -3,7 +3,6 @@ package cz.neumimto.rpg.players;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.RPGItemType;
-import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -41,17 +40,13 @@ public class RPGItemWrapper {
         }
     }
 
-    public boolean containsItem(ItemStack is) {
-        return containsItem(RPGItemType.from(is));
-    }
-
     public boolean containsItem(RPGItemType from) {
         for (ConfigRPGItemType item : items) {
-            if (item.getItemType() == from.getItemType()) {
-                if (item.getDisplayName() == null && from.getDisplayName() == null) {
+            if (item.getRpgItemType().getItemType() == from.getItemType()) {
+                if (item.getRpgItemType().getDisplayName() == null && from.getDisplayName() == null) {
                     return true;
                 }
-                if (item.getDisplayName().equalsIgnoreCase(from.getDisplayName())) {
+                if (item.getRpgItemType().getDisplayName().equalsIgnoreCase(from.getDisplayName())) {
                     return true;
                 }
             }

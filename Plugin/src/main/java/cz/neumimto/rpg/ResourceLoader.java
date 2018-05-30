@@ -180,7 +180,7 @@ public class ResourceLoader {
 		if (Modifier.isAbstract(clazz.getModifiers())) {
 			return;
 		}
-		if (PluginConfig.DEBUG)
+		if (PluginConfig.DEBUG.isDevelop())
 			logger.info(" - Checking if theres something to load in a class " + clazz.getName());
 		//Properties
 		Object container = null;
@@ -188,30 +188,30 @@ public class ResourceLoader {
 			ioc.build(clazz);
 		}
 		if (clazz.isAnnotationPresent(ListenerClass.class)) {
-			if (PluginConfig.DEBUG)
+			if (PluginConfig.DEBUG.isDevelop())
 				logger.info("Registering listener" + clazz.getName());
 			container = ioc.build(clazz);
 			ioc.build(Game.class).getEventManager().registerListeners(ioc.build(NtRpgPlugin.class), container);
 		}
 		if (clazz.isAnnotationPresent(Command.class)) {
 			container = ioc.build(clazz);
-			if (PluginConfig.DEBUG)
+			if (PluginConfig.DEBUG.isDevelop())
 				logger.info("registering command class" + clazz.getName());
 			commandService.registerCommand((CommandBase) container);
 		}
 		if (clazz.isAnnotationPresent(Skill.class)) {
 			container = ioc.build(clazz);
-			if (PluginConfig.DEBUG)
+			if (PluginConfig.DEBUG.isDevelop())
 				logger.info("registering skill " + clazz.getName());
 			skillService.addSkill((ISkill) container);
 		}
 		if (clazz.isAnnotationPresent(ConfigurationContainer.class)) {
 			configMapper.loadClass(clazz);
-			if (PluginConfig.DEBUG)
+			if (PluginConfig.DEBUG.isDevelop())
 				logger.info("Found configuration container class", clazz.getName());
 		}
 		if (clazz.isAnnotationPresent(PropertyContainer.class)) {
-			if (PluginConfig.DEBUG)
+			if (PluginConfig.DEBUG.isDevelop())
 				logger.info("Found Property container class" + clazz.getName());
 			propertyService.process(clazz);
 		}

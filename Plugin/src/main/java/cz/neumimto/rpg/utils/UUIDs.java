@@ -23,6 +23,7 @@ import java.util.UUID;
 /**
  * Created by NeumimTo on 23.7.2015.
  */
+//todo move this to ntcore
 public class UUIDs {
 	/*
 	* UUID.randomUUID uses secure random, which is slow and we arent

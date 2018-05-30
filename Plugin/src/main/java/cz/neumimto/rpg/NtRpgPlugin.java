@@ -24,16 +24,7 @@ import com.google.inject.Inject;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.FindPersistenceContextEvent;
 import cz.neumimto.core.ioc.IoC;
-import cz.neumimto.rpg.commands.AnyPlayerGroupCommandElement;
-import cz.neumimto.rpg.commands.AnySkillCommandElement;
-import cz.neumimto.rpg.commands.CharacterAttributeCommandElement;
-import cz.neumimto.rpg.commands.GlobalEffectCommandElement;
-import cz.neumimto.rpg.commands.LearnedSkillCommandElement;
-import cz.neumimto.rpg.commands.PartyMemberCommandElement;
-import cz.neumimto.rpg.commands.PlayerClassCommandElement;
-import cz.neumimto.rpg.commands.RaceCommandElement;
-import cz.neumimto.rpg.commands.RuneCommandElement;
-import cz.neumimto.rpg.commands.UnlearnedSkillCommandElement;
+import cz.neumimto.rpg.commands.*;
 import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
@@ -48,19 +39,13 @@ import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
-import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemAttributesData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemRarityData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemSocketsData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemStackUpgradeData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemTypeData;
-import cz.neumimto.rpg.inventory.data.manipulators.LoreDamageData;
-import cz.neumimto.rpg.inventory.data.manipulators.LoreDurabilityData;
-import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemGroupRequirementsData;
-import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemRequirementsData;
-import cz.neumimto.rpg.inventory.data.manipulators.SectionDelimiterData;
-import cz.neumimto.rpg.inventory.data.manipulators.SkillTreeNode;
+import cz.neumimto.rpg.inventory.data.manipulators.*;
+import cz.neumimto.rpg.inventory.items.ItemMetaType;
+import cz.neumimto.rpg.inventory.items.ItemMetaTypeRegistry;
+import cz.neumimto.rpg.inventory.items.ItemMetaTypes;
+import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtype;
+import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtypeRegistry;
+import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtypes;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.inventory.slotparsers.DefaultPlayerInvHandler;
@@ -73,11 +58,7 @@ import cz.neumimto.rpg.listeners.DebugListener;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.players.ActiveCharacter;
-import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.ExtendedNClass;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.*;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
@@ -86,13 +67,7 @@ import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.AttributeRegistry;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.scripting.JSLoader;
-import cz.neumimto.rpg.skills.ActiveSkill;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.utils.FileUtils;
 import cz.neumimto.rpg.utils.SkillTreeActionResult;
 import org.slf4j.Logger;
@@ -119,6 +94,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -127,22 +103,15 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
-
-import javax.annotation.Resource;
 
 /**
  * Created by NeumimTo on 29.4.2015.
  */
 @Plugin(id = "nt-rpg", version = Version.VERSION, name = "NT-Rpg", dependencies = {
-		@Dependency(id = "nt-core", version = "1.9", optional = false)
+		@Dependency(id = "nt-core", version = "1.12", optional = false)
 })
 @Resource
 public class NtRpgPlugin {
@@ -280,16 +249,16 @@ public class NtRpgPlugin {
 				.builder(new SkillTreeNode.Builder())
 				.buildAndRegister(plugin);
 
-		DataRegistration.<ItemTypeData, ItemTypeData.Immutable>builder()
+		DataRegistration.<ItemMetaHeader, ItemMetaHeader.Immutable>builder()
 				.manipulatorId("item_type_data")
 				.dataName("Item Type data")
-				.dataClass(ItemTypeData.class)
-				.immutableClass(ItemTypeData.Immutable.class)
-				.builder(new ItemTypeData.Builder())
+				.dataClass(ItemMetaHeader.class)
+				.immutableClass(ItemMetaHeader.Immutable.class)
+				.builder(new ItemMetaHeader.Builder())
 				.buildAndRegister(plugin);
 
 
-		DataRegistration.<ItemTypeData, ItemTypeData.Immutable>builder()
+		DataRegistration.<ItemMetaHeader, ItemMetaHeader.Immutable>builder()
 				.manipulatorId("item_minimal_group_requirements")
 				.dataName("Item group requirements")
 				.dataClass(MinimalItemGroupRequirementsData.class)
@@ -297,11 +266,27 @@ public class NtRpgPlugin {
 				.builder(new MinimalItemGroupRequirementsData.Builder())
 				.buildAndRegister(plugin);
 
+		DataRegistration.<ItemMetaHeader, ItemMetaHeader.Immutable>builder()
+				.manipulatorId("item_meta_type")
+				.dataName("Item meta type")
+				.dataClass(ItemMetaTypeData.class)
+				.immutableClass(ItemMetaTypeData.Immutable.class)
+				.builder(new ItemMetaTypeData.Builder())
+				.buildAndRegister(plugin);
 
+		DataRegistration.<ItemMetaHeader, ItemMetaHeader.Immutable>builder()
+				.manipulatorId("item_meta_subtype")
+				.dataName("Item meta subtype")
+				.dataClass(ItemSubtypeData.class)
+				.immutableClass(ItemSubtypeData.Immutable.class)
+				.builder(new ItemSubtypeData.Builder())
+				.buildAndRegister(plugin);
 
 		Sponge.getRegistry().registerModule(SocketType.class, new SocketTypeRegistry());
 		Sponge.getRegistry().registerModule(ICharacterAttribute.class, new AttributeRegistry());
 		Sponge.getRegistry().registerModule(PlayerInvHandler.class, new PlayerInvHandlerRegistry());
+		Sponge.getRegistry().registerModule(ItemMetaType.class, new ItemMetaTypeRegistry());
+		Sponge.getRegistry().registerModule(ItemSubtype.class, new ItemSubtypeRegistry());
 	}
 
 	@Listener
@@ -318,12 +303,22 @@ public class NtRpgPlugin {
 		event.getClasses().add(BaseCharacterAttribute.class);
 		event.getClasses().add(CharacterSkill.class);
 		event.getClasses().add(CharacterClass.class);
-
 	}
 
 	@Listener
 	public void postInit1(GameRegistryEvent.Register<PlayerInvHandler> event) {
-		event.register(IoC.get().build(DefaultPlayerInvHandler.class));
+		event.register(new DefaultPlayerInvHandler());
+	}
+
+	@Listener
+	public void postInit2(GameRegistryEvent.Register<ItemMetaType> event) {
+		event.register(ItemMetaTypes.CHARM);
+		event.register(ItemMetaTypes.RUNEWORD);
+	}
+
+	@Listener
+	public void postInit3(GameRegistryEvent.Register<ItemSubtype> event) {
+		event.register(ItemSubtypes.ANY);
 	}
 
 	@Listener
@@ -364,11 +359,12 @@ public class NtRpgPlugin {
 		GlobalScope = ioc.build(GlobalScope.class);
 		rl.loadExternalJars();
 		ioc.postProcess();
-		if (PluginConfig.DEBUG) {
+		if (PluginConfig.DEBUG.isBalance()) {
 			Sponge.getEventManager().registerListeners(this, ioc.build(DebugListener.class));
 		}
 		registerCommands();
 		IoC.get().build(PropertyService.class).loadMaximalServerPropertyValues();
+
 		double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
 		logger.info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
 	}
@@ -617,6 +613,36 @@ public class NtRpgPlugin {
 					return CommandResult.success();
 				})
 				.build();
+		// ===========================================================
+		// ==================    ITEM type  ==================
+		// ===========================================================
+		CommandSpec mt = CommandSpec.builder()
+				.description(
+						TextSerializers
+								.FORMATTING_CODE
+								.deserialize(CommandLocalization.COMMAND_ADMIN_ITEM_TYPE))
+				.arguments(
+						GenericArguments.catalogedElement(Text.of("type"), ItemMetaType.class)
+				)
+				.executor((src, args) -> {
+					Player player = (Player) src;
+					Optional<ItemMetaType> type = args.getOne("type");
+					if (type.isPresent()) {
+						Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
+						if (itemInHand.isPresent()) {
+							ItemStack itemStack = itemInHand.get();
+							GlobalScope.inventorySerivce.createItemMetaSectionIfMissing(itemStack);
+							GlobalScope.inventorySerivce.setItemMetaType(itemStack, type.get());
+							GlobalScope.inventorySerivce.updateLore(itemStack);
+							player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
+							return CommandResult.builder().affectedItems(1).build();
+						}
+						src.sendMessage(Text.builder(Localization.NO_ITEM_IN_HAND).color(TextColors.RED).build());
+						return CommandResult.empty();
+					}
+					return CommandResult.empty();
+				})
+				.build();
 
 		// ===========================================================
 		// ==================    ITEM restrictions  ==================
@@ -722,7 +748,7 @@ public class NtRpgPlugin {
 				.executor((src, args) -> {
 					String[] a = args.<String>getOne("args").get().split(" ");
 					if (a[0].equalsIgnoreCase("js")) {
-						if (!PluginConfig.DEBUG) {
+						if (!(PluginConfig.DEBUG.isBalance())) {
 							src.sendMessage(TextHelper.parse("Reloading is allowed only in debug mode"));
 							return CommandResult.success();
 						}
@@ -800,6 +826,7 @@ public class NtRpgPlugin {
 				.child(rarity, "rarity", "rrty")
 				.child(meta, "itemmeta", "imeta","imt")
 				.child(rst, "grouprequirements","gr")
+				.child(mt, "itemType", "it", "type")
 				.build();
 
 		Sponge.getCommandManager().register(this, adminRoot, "nadmin", "na");
@@ -851,6 +878,32 @@ public class NtRpgPlugin {
 				})
 				.build();
 
+		// ===========================================================
+		// ==============           CHAR CREATE         ==============
+		// ===========================================================
+		CommandSpec deleteCharacter = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE
+						.deserialize(CommandLocalization.COMMAND_DELETE_DESCRIPTION))
+				.arguments(GenericArguments.remainingJoinedStrings(TextHelper.parse("name")))
+				.permission("ntrpg.player.character.delete")
+				.executor((src, args) -> {
+					String a = args.<String>getOne("name").get();
+					Player player = (Player) src;
+					CharacterService characterService = IoC.get().build(CharacterService.class);
+					IActiveCharacter character = characterService.getCharacter(player);
+					if (character.getName().equalsIgnoreCase(a)) {
+						characterService.removeCachedCharacter(player.getUniqueId());
+						characterService.registerDummyChar(characterService.buildDummyChar(player.getUniqueId()));
+					}
+					CompletableFuture.runAsync(() -> {
+						characterService.markCharacterForRemoval(player.getUniqueId(), a);
+						player.sendMessage(TextHelper.parse(Localization.CHAR_DELETED_FEEDBACK));
+					}, asyncExecutor);
+					return CommandResult.success();
+				})
+				.build();
+
+
 		CommandSpec setclass = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE
 						.deserialize(CommandLocalization.COMMAND_CHOOSE_DESC))
@@ -894,15 +947,16 @@ public class NtRpgPlugin {
 				.arguments(new RaceCommandElement(TextHelper.parse("race")))
 				.permission("ntrpg.player.set.race")
 				.executor((src, args) -> {
-					IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
+					Player pl = (Player) src;
+					IActiveCharacter character = GlobalScope.characterService.getCharacter(pl);
 					if (character.isStub()) {
-						character.getPlayer().sendMessage(TextHelper.parse(Localization.CHARACTER_IS_REQUIRED));
+						pl.sendMessage(TextHelper.parse(Localization.CHARACTER_IS_REQUIRED));
 						return CommandResult.empty();
 					}
 
 					args.<Race>getOne(TextHelper.parse("race")).ifPresent(r -> {
 						if (r == Race.Default) {
-							character.getPlayer().sendMessage(TextHelper.parse(Localization.NON_EXISTING_GROUP));
+							src.sendMessage(TextHelper.parse(Localization.NON_EXISTING_GROUP));
 							return;
 						}
 
@@ -915,8 +969,6 @@ public class NtRpgPlugin {
 								(character.getRace() != Race.Default && PluginConfig.PLAYER_CAN_CHANGE_RACE)) {
 							if (PluginConfig.PLAYER_CAN_CHANGE_RACE) {
 								GlobalScope.characterService.updatePlayerGroups(character, null, 0, r, null);
-								src.sendMessage(TextHelper.parse(Localization.PLAYER_CHOOSED_RACE,
-										Arg.arg("race", r.getName())));
 								return ;
 							}
 							src.sendMessage(TextHelper.parse(Localization.PLAYER_CANT_CHANGE_RACE));
@@ -1055,6 +1107,7 @@ public class NtRpgPlugin {
 				.child(cattribute, "attribute", "attr", "a")
 				.child(cswitch, "switch")
 				.child(cslist, "list")
+				.child(deleteCharacter, "remove", "rm")
 				.build();
 
 		Sponge.getCommandManager().register(this, characterRoot, "character", "char", "nc");
@@ -1119,6 +1172,10 @@ public class NtRpgPlugin {
 				.executor((src, args) -> {
 					final Player player = (Player) src;
 					IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
+					if (character.isStub()) {
+						character.getPlayer().sendMessage(TextHelper.parse(Localization.NO_CHARACTER));
+						return CommandResult.empty();
+					}
 					Gui.displayMana(character);
 					return CommandResult.success();
 				})
@@ -1335,16 +1392,17 @@ public class NtRpgPlugin {
 					Optional<ISkill> lmb = args.getOne("lmb");
 
 					Optional<ISkill> rmb = args.getOne("rmb");
-					IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
+					Player pl = (Player) src;
+					IActiveCharacter character = GlobalScope.characterService.getCharacter(pl);
 					if (!character.getPlayer().getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
 						ISkill r = rmb.orElse(null);
 						ISkill l = lmb.orElse(null);
 
 						ItemStack i = ItemStack.of(InventoryService.ITEM_SKILL_BIND, 1);
 						NtRpgPlugin.GlobalScope.inventorySerivce.createHotbarSkill(i, r, l);
-						character.getPlayer().setItemInHand(HandTypes.MAIN_HAND, i);
+						pl.setItemInHand(HandTypes.MAIN_HAND, i);
 					} else {
-						character.getPlayer().sendMessage(TextHelper.parse(Localization.EMPTY_HAND_REQUIRED));
+						pl.sendMessage(TextHelper.parse(Localization.EMPTY_HAND_REQUIRED));
 					}
 					return CommandResult.success();
 				})

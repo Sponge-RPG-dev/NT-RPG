@@ -23,42 +23,28 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.inventory.Armor;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
-import cz.neumimto.rpg.inventory.HotbarObject;
 import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.Weapon;
+import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
+import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
-import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.ItemAccessSkill;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillTreeSpecialization;
-import cz.neumimto.rpg.skills.StartingPoint;
+import cz.neumimto.rpg.skills.*;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.inventory.entity.Hotbar;
-import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatType;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -67,45 +53,57 @@ import java.util.stream.Collectors;
  */
 
 public class ActiveCharacter implements IActiveCharacter {
+
+	private transient UUID pl;
+	private CharacterBase base;
+
 	private transient float[] characterProperties;
 	private transient float[] characterPropertiesLevel;
+
 	private transient boolean invulnerable;
+	private transient boolean silenced = false;
+	private transient boolean isusingguimod;
+
 	private IReservable mana = new Mana(this);
 	private IReservable health = new Health(this);
-	private transient Player pl;
+
+	private Race race = Race.Default;
+	private Guild guild;
+
+	private transient Party party;
+
 	private transient Map<String, IEffectContainer<Object, IEffect<Object>>> effects = new HashMap<>();
+	private Map<String, ExtendedSkillInfo> skills = new HashMap<>();
+	private transient Set<ExtendedNClass> classes = new HashSet<>();
+
+	private transient ExtendedNClass primary;
+
 	private transient Click click = new Click();
 	private transient Set<RPGItemType> allowedArmorIds = new HashSet<>();
 	private transient Map<ItemType, RPGItemWrapper> allowedWeapons = new HashMap<>();
 	private transient Map<EntityType, Double> projectileDamage = new HashMap<>();
-	private transient Party party;
-	private Map<String, ExtendedSkillInfo> skills = new HashMap<>();
-	private Race race = Race.Default;
-	private Guild guild;
-	private transient Set<ExtendedNClass> classes = new HashSet<>();
-	private transient ExtendedNClass primary;
-	private transient Weapon mainHand = Weapon.EmptyHand;
-	private transient Weapon offHand = Weapon.EmptyHand;
-	private CharacterBase base;
-	private transient boolean silenced = false;
-	private transient boolean isusingguimod;
+
+
 	private transient WeakReference<Party> pendingPartyInvite = new WeakReference<Party>(null);
 	private transient double weaponDamage;
 	private transient double armorvalue;
+
 	private transient DamageType preferedDamageType = null;
-	private transient HotbarObject[] hotbar = new HotbarObject[9];
-	private transient int socketing;
 	private transient Map<String, Integer> transientAttributes = new HashMap<>();
-	private transient boolean openedinv = false;
+
 	private transient List<Integer> slotsToReinitialize;
-	private transient Map<EquipmentType, Armor> equipedArmor;
-	private transient int selected;
-	private transient Map<String, SkillTreeViewModel> skillTreeViewLocation;
+	private transient Map<EquipedSlot, CustomItem> equipedArmor;
+	private Set<EquipedSlot> denySlotInteractionArr;
+
 	private Set<SkillTreeSpecialization> specs = new HashSet<>();
-	private boolean[] denySlotInteractionArr;
+
+	private transient Map<String, SkillTreeViewModel> skillTreeViewLocation;
+	private CustomItem offHand;
+	private int mainHandSlotId;
+	private CustomItem mainHand;
 
 	public ActiveCharacter(Player pl, CharacterBase base) {
-		this.pl = pl;
+		this.pl = pl.getUniqueId();
 		characterProperties = new float[PropertyService.LAST_ID];
 		characterPropertiesLevel = new float[PropertyService.LAST_ID];
 		equipedArmor = new HashMap<>();
@@ -116,27 +114,7 @@ public class ActiveCharacter implements IActiveCharacter {
 		classes.add(cl);
 		slotsToReinitialize = new ArrayList<>();
 		skillTreeViewLocation = new HashMap<>();
-		denySlotInteractionArr = new boolean[9];
-	}
-
-	@Override
-	public int getCurrentRune() {
-		return socketing;
-	}
-
-	@Override
-	public void setCurrentRune(int is) {
-		socketing = is;
-	}
-
-	@Override
-	public HotbarObject[] getHotbar() {
-		return hotbar;
-	}
-
-	@Override
-	public void setHotbarSlot(int i, HotbarObject o) {
-		hotbar[i] = o;
+		denySlotInteractionArr = new HashSet<>();
 	}
 
 	public boolean isSilenced() {
@@ -218,22 +196,22 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	@Override
 	public double getMaxMana() {
-		return getProperty(DefaultProperties.max_mana);
+		return getMana().getMaxValue();
 	}
 
 	@Override
 	public void setMaxMana(float mana) {
-		setProperty(DefaultProperties.max_mana, mana);
+		getMana().setMaxValue(mana);
 	}
 
 	@Override
 	public void setMaxHealth(float maxHealth) {
-		setProperty(DefaultProperties.max_health, maxHealth);
+		getHealth().setMaxValue(maxHealth);
 	}
 
 	@Override
-	public void setHealth(float mana) {
-		setProperty(DefaultProperties.max_mana, mana);
+	public void setHealth(float maxHealth) {
+		getHealth().setValue(maxHealth);
 	}
 
 	@Override
@@ -258,22 +236,12 @@ public class ActiveCharacter implements IActiveCharacter {
 
 
 	@Override
-	public double getHp() {
-		return getHealth().getValue();
-	}
-
-	@Override
-	public void setHp(double d) {
-		setHealth((float) d);
-	}
-
-	@Override
 	public Player getEntity() {
 		return getPlayer();
 	}
 
 	@Override
-	public Map<EquipmentType, Armor> getEquipedArmor() {
+	public Map<EquipedSlot, CustomItem> getEquipedInventorySlots() {
 		return equipedArmor;
 	}
 
@@ -304,12 +272,12 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	@Override
 	public Player getPlayer() {
-		return pl;
+		return Sponge.getServer().getPlayer(pl).orElse(null);
 	}
 
 	@Override
 	public void setPlayer(Player pl) {
-		this.pl = pl;
+		this.pl = pl.getUniqueId();
 	}
 
 	@Override
@@ -433,12 +401,12 @@ public class ActiveCharacter implements IActiveCharacter {
 			return 0D;
 		for (ConfigRPGItemType configRPGItemType : wrapper.getItems()) {
 			if (weaponItemType.getDisplayName() == null) {
-				if (configRPGItemType.getDisplayName() == null) {
+				if (configRPGItemType.getRpgItemType().getDisplayName() == null) {
 					//todo check if the displayname is reserved
 					return wrapper.getDamage(); //null is first, if both null => can use unnamed item
 				}
 			} else {
-				if (weaponItemType.getDisplayName().equalsIgnoreCase(configRPGItemType.getDisplayName())) {
+				if (weaponItemType.getDisplayName().equalsIgnoreCase(configRPGItemType.getRpgItemType().getDisplayName())) {
 					return wrapper.getDamage();
 				}
 			}
@@ -576,12 +544,12 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	@Override
 	public void sendMessage(String message) {
-		pl.sendMessage(TextHelper.parse(message));
+		getPlayer().sendMessage(TextHelper.parse(message));
 	}
 
 	@Override
 	public void sendMessage(ChatType chatType, Text message) {
-		pl.sendMessage(chatType, Text.of(message));
+		getPlayer().sendMessage(chatType, Text.of(message));
 	}
 
 	@Override
@@ -718,36 +686,6 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Weapon getMainHand() {
-		return mainHand;
-	}
-
-	@Override
-	public void setMainHand(Weapon mainHand) {
-		this.mainHand = mainHand;
-	}
-
-	@Override
-	public Weapon getOffHand() {
-		return offHand;
-	}
-
-	@Override
-	public void setOffHand(Weapon offHand) {
-		this.offHand = offHand;
-	}
-
-	@Override
-	public void setOpenInventory(boolean b) {
-		this.openedinv = b;
-	}
-
-	@Override
-	public boolean hasOpenInventory() {
-		return openedinv;
-	}
-
-	@Override
 	public MessageType getPreferedMessageType() {
 		return getCharacterBase().getMessageType();
 	}
@@ -775,17 +713,6 @@ public class ActiveCharacter implements IActiveCharacter {
 	@Override
 	public void setSlotsToReinitialize(List<Integer> slotsToReinitialize) {
 		this.slotsToReinitialize = slotsToReinitialize;
-	}
-
-	@Override
-	public int getSelectedHotbarSlot() {
-		return selected;
-	}
-
-	@Override
-	public void updateSelectedHotbarSlot() {
-		Hotbar hotbar = getPlayer().getInventory().query(Hotbar.class);
-		selected = hotbar.getSelectedSlotIndex();
 	}
 
 	@Override
@@ -837,13 +764,34 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public boolean[] getDenyHotbarSlotInteractions() {
+	public Set<EquipedSlot> getSlotsCannotBeEquiped() {
 		return denySlotInteractionArr;
 	}
 
 	@Override
-	public void setDenyHotbarSlotInteractions(boolean[] arr) {
-		this.denySlotInteractionArr = arr;
+	public CustomItem getMainHand() {
+		return mainHand;
+	}
+
+	@Override
+	public int getMainHandSlotId() {
+		return mainHandSlotId;
+	}
+
+	@Override
+	public void setMainHand(CustomItem customItem, int slot) {
+		this.mainHand = customItem;
+		this.mainHandSlotId = slot;
+	}
+
+	@Override
+	public CustomItem getOffHand() {
+		return offHand;
+	}
+
+	@Override
+	public void setOffHand(CustomItem customItem) {
+		this.offHand = customItem;
 	}
 
 	@Override
@@ -862,7 +810,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	@Override
 	public String toString() {
 		return "ActiveCharacter{" +
-				"uuid=" + pl.getUniqueId() +
+				"uuid=" + pl +
 				" name=" + getName() +
 				'}';
 	}

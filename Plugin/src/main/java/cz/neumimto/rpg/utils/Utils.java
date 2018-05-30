@@ -41,7 +41,6 @@ import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
-import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.blockray.BlockRay;
 import org.spongepowered.api.util.blockray.BlockRayHit;
@@ -50,13 +49,7 @@ import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.EntityUniverse;
 import org.spongepowered.common.event.damage.SpongeDamageSourceBuilder;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -74,25 +67,28 @@ public class Utils {
 
 	public static void applyOnNearbyPartyMembers(IActiveCharacter character, int distance, Consumer<IActiveCharacter> c) {
 		double k = Math.pow(distance, 2);
+		Player pl = character.getPlayer();
 		for (IActiveCharacter iActiveCharacter : character.getParty().getPlayers()) {
 			if (iActiveCharacter.getPlayer().getLocation().getPosition()
-					.distanceSquared(character.getPlayer().getLocation().getPosition()) <= k) {
+					.distanceSquared(pl.getLocation().getPosition()) <= k) {
 				c.accept(iActiveCharacter);
 			}
 		}
 	}
 
 	public static void applyOnNearby(IActiveCharacter character, int distance, Consumer<Entity> e) {
-		character.getPlayer().getWorld()
-				.getIntersectingEntities(character.getPlayer(), distance, hit -> hit.getEntity() != character.getPlayer())
+		Player pl = character.getPlayer();
+		pl.getWorld()
+				.getIntersectingEntities(pl, distance, hit -> hit.getEntity() != pl)
 				.stream().map(EntityUniverse.EntityHit::getEntity)
 				.filter(Utils::isLivingEntity)
 				.forEach(e);
 	}
 
 	public static void applyOnNearbyAndSelf(IActiveCharacter character, int distance, Consumer<Entity> e) {
-		character.getPlayer().getWorld()
-				.getIntersectingEntities(character.getPlayer(), distance)
+		Player pl = character.getPlayer();
+		pl.getWorld()
+				.getIntersectingEntities(pl, distance)
 				.stream().map(EntityUniverse.EntityHit::getEntity)
 				.filter(Utils::isLivingEntity)
 				.forEach(e);
@@ -275,7 +271,7 @@ public class Utils {
 	}
 
 	public static String capitalizeFirst(String str) {
-		return Character.toUpperCase(str.charAt(0)) + str.substring(1);
+		return (Character.toUpperCase(str.charAt(0)) + str.substring(1)).replaceAll("_"," ");
 	}
 
 	public static Pattern REGEXP_NUMBER = Pattern.compile("[-+]?\\d+([\\.,]\\d+)?");

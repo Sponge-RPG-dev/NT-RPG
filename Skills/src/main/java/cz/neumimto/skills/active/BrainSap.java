@@ -57,7 +57,7 @@ public class BrainSap extends Targetted {
     public void onDamage(SkillDamageEventLate event) {
         if (event.isCancelled())
             return;
-        if (event.getSkill().getClass() == this.getClass()) {
+        if (event.getSkill() != null && event.getSkill().getClass() == this.getClass()) {
             IEntity caster = event.getCaster();
             entityService.healEntity(caster, (float) event.getDamage(), this);
         }

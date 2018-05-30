@@ -23,7 +23,10 @@ import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
-import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.common.def.ClickComboActionEvent;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.entities.EntityService;
@@ -31,7 +34,6 @@ import cz.neumimto.rpg.events.*;
 import cz.neumimto.rpg.events.character.CharacterWeaponUpdateEvent;
 import cz.neumimto.rpg.events.character.EventCharacterArmorPostUpdate;
 import cz.neumimto.rpg.events.character.PlayerDataPreloadComplete;
-import cz.neumimto.rpg.events.character.WeaponEquipEvent;
 import cz.neumimto.rpg.events.party.PartyInviteEvent;
 import cz.neumimto.rpg.events.skills.SkillLearnEvent;
 import cz.neumimto.rpg.events.skills.SkillRefundEvent;
@@ -40,7 +42,6 @@ import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.UserActionType;
-import cz.neumimto.rpg.inventory.Weapon;
 import cz.neumimto.rpg.persistance.PlayerDao;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
@@ -62,7 +63,6 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -107,6 +107,7 @@ public class CharacterService {
 	private Logger logger;
 
 	private Map<UUID, NPlayer> playerWrappers = new ConcurrentHashMap<>();
+
 	private Map<UUID, IActiveCharacter> characters = new HashMap<>();
 
 
@@ -128,6 +129,9 @@ public class CharacterService {
 		}).submit(plugin);
 	}
 
+	public void registerDummyChar(PreloadCharacter dummy) {
+		characters.put(dummy.getPlayer().getUniqueId(), dummy);
+	}
 
 	public boolean assignPlayerToCharacter(Player pl) {
 		if (pl == null) {
@@ -145,7 +149,7 @@ public class CharacterService {
 		if (character.getCharacterBase().getHealthScale() != null) {
 			pl.offer(Keys.HEALTH_SCALE, character.getCharacterBase().getHealthScale());
 		}
-		inventoryService.initializeHotbar(character);
+		inventoryService.initializeCharacterInventory(character);
 		return true;
 	}
 
@@ -276,8 +280,9 @@ public class CharacterService {
 		if (party.getPlayers().contains(character)) {
 			return 1;
 		}
-		if (party.getInvites().contains(character.getPlayer().getUniqueId())) {
-			party.getInvites().remove(character.getPlayer().getUniqueId());
+		Player player = character.getPlayer();
+		if (party.getInvites().contains(player.getUniqueId())) {
+			party.getInvites().remove(player.getUniqueId());
 			party.addPlayer(character);
 			return 0;
 		}
@@ -322,9 +327,10 @@ public class CharacterService {
 		applyGroupEffects(character, character.getRace());
 
 
+
+		inventoryService.initializeCharacterInventory(character);
 		damageService.recalculateCharacterWeaponDamage(character);
 
-		inventoryService.initializeHotbar(character);
 
 		updateMaxHealth(character);
 		updateWalkSpeed(character);
@@ -356,6 +362,7 @@ public class CharacterService {
 			return;
 		logger.info("Initializing character " + character.getCharacterBase().getId());
 		boolean k = false;
+		Player player = character.getPlayer();
 		if (configClass != null) {
 			CharacterChangeGroupEvent e = new CharacterChangeClassEvent(character, configClass, slot, character.getNClass(slot));
 
@@ -364,11 +371,11 @@ public class CharacterService {
 				k = true;
 				logger.info("Processing class change - " + e);
 				Map<String, String> args = new HashMap<>();
-				args.put("player", character.getPlayer().getName());
-				args.put("uuid", character.getPlayer().getUniqueId().toString());
+				args.put("player", player.getName());
+				args.put("uuid", player.getUniqueId().toString());
 				args.put("class", character.getRace().getName());
 				if (character.hasClass(configClass)) {
-					character.getPlayer().sendMessage(TextHelper.parse(Localization.ALREADY_HAS_THIS_CLASS));
+					player.sendMessage(TextHelper.parse(Localization.ALREADY_HAS_THIS_CLASS));
 					return;
 				}
 
@@ -383,7 +390,7 @@ public class CharacterService {
 				args.put("class", character.getRace().getName());
 				if (character.getNClass(slot) != null && character.getNClass(slot).getEnterCommands() != null)
 					Utils.executeCommandBatch(args, character.getNClass(slot).getEnterCommands());
-				character.getPlayer().sendMessage(TextHelper.parse(Localization.PLAYER_CHOOSED_CLASS,
+				player.sendMessage(TextHelper.parse(Localization.PLAYER_CHOOSED_CLASS,
 						Arg.arg("class",configClass.getName())));
 			}
 		}
@@ -395,11 +402,11 @@ public class CharacterService {
 				k = true;
 				logger.info("Processing race change - " + ev);
 				Map<String, String> args = new HashMap<>();
-				args.put("player", character.getPlayer().getName());
-				args.put("uuid", character.getPlayer().getUniqueId().toString());
+				args.put("player", player.getName());
+				args.put("uuid", player.getUniqueId().toString());
 				args.put("race", character.getRace().getName());
 				if (character.getRace() == race) {
-					character.getPlayer().sendMessage(TextHelper.parse(Localization.ALREADY_HAS_THIS_RACE));
+					player.sendMessage(TextHelper.parse(Localization.ALREADY_HAS_THIS_RACE));
 					return;
 				}
 				if (character.getRace().getExitCommands() != null)
@@ -413,7 +420,7 @@ public class CharacterService {
 				args.put("race", character.getRace().getName());
 				if (character.getRace().getExitCommands() != null)
 					Utils.executeCommandBatch(args, character.getRace().getEnterCommands());
-				character.getPlayer().sendMessage(TextHelper.parse(Localization.PLAYER_CHOOSED_RACE,
+				player.sendMessage(TextHelper.parse(Localization.PLAYER_CHOOSED_RACE,
 						Arg.arg("race", race.getName())));
 			}
 		}
@@ -446,7 +453,7 @@ public class CharacterService {
 	 * @param character
 	 */
 	public void updateMaxMana(IActiveCharacter character) {
-		float max_mana = getCharacterProperty(character, DefaultProperties.max_mana) - getCharacterProperty(character, DefaultProperties.reserved_mana);
+		float max_mana = character.getCharacterPropertyWithoutLevel(DefaultProperties.max_mana);
 		float actreserved = getCharacterProperty(character, DefaultProperties.reserved_mana);
 		float reserved = getCharacterProperty(character, DefaultProperties.reserved_mana_multiplier);
 		float maxval = max_mana - (actreserved * reserved);
@@ -480,10 +487,7 @@ public class CharacterService {
 	}
 
 	protected IActiveCharacter deleteCharacterReferences(IActiveCharacter character) {
-		Collection<IEffectContainer<Object, IEffect<Object>>> effects = character.getEffects();
-		effects.stream()
-				.map(IEffectContainer::getEffects)
-				.forEach(a -> a.stream().forEach(e -> effectService.stopEffect(e)));
+		effectService.removeAllEffects(character);
 		if (character.hasParty())
 			character.getParty().removePlayer(character);
 		character.setParty(null);
@@ -829,6 +833,10 @@ public class CharacterService {
 			Map<String, Object> map = new HashMap<>();
 			map.put("skill", skill.getName());
 			p.value = new SkillTreeActionResult.Data(map);
+
+			if (skill instanceof PassiveSkill) {
+				inventoryService.initializeCharacterInventory(character);
+			}
 			return p;
 		}
 		SkillLearnEvent event = new SkillLearnEvent(character, skill);
@@ -838,6 +846,7 @@ public class CharacterService {
 			p.value = new SkillTreeActionResult.Data(Collections.EMPTY_MAP);
 			return p;
 		}
+
 
 
 		clazz.setSkillPoints(avalaibleSkillpoints - 1);
@@ -861,6 +870,10 @@ public class CharacterService {
 		p.key = SkillTreeActionResult.LEARNED;
 		Map<String, Object> map = new HashMap<>();
 		map.put("skill", skill.getName());
+
+		if (skill instanceof PassiveSkill) {
+			inventoryService.initializeCharacterInventory(character);
+		}
 
 		p.value = new SkillTreeActionResult.Data(map);
 		return p;
@@ -956,7 +969,7 @@ public class CharacterService {
 	public void updateWalkSpeed(IEffectConsumer entity) {
 		double speed = entityService.getEntityProperty(entity, DefaultProperties.walk_speed);
 		entity.getEntity().offer(Keys.WALKING_SPEED, speed);
-		if (PluginConfig.DEBUG)
+		if (PluginConfig.DEBUG.isBalance())
 			logger.info(entity + " setting walk speed to " + speed);
 	}
 
@@ -976,42 +989,6 @@ public class CharacterService {
 		putInSaveQueue(character.getCharacterBase());
 	}
 
-	public int equipWeapon(IActiveCharacter character, Weapon weapon, boolean isOffhand) {
-		if (!character.canUse(weapon.getItemType())) {
-			return 1;
-		}
-		WeaponEquipEvent event = null;
-		if (isOffhand) {
-			event = new WeaponEquipEvent(character, weapon, character.getOffHand());
-		} else {
-			event = new WeaponEquipEvent(character, weapon, character.getMainHand());
-		}
-		game.getEventManager().post(event);
-		if (event.isCancelled())
-			return 2;
-		Set<IGlobalEffect> effects = event.getLastItem().getEffects().keySet();
-		effects.forEach(g -> effectService.removeEffect(g.getName(), character, weapon));
-		Map<IGlobalEffect, EffectParams> toadd = event.getNewItem().getEffects();
-		effectService.applyGlobalEffectsAsEnchantments(toadd, character, weapon);
-		return 0;
-	}
-
-	public int changeEquipedArmor(IActiveCharacter character, EquipmentType type, Weapon armor) {
-		/*if (!character.canWear(armor.getItemType())) {
-            return 1;
-        }*/
-
-		Weapon armor1 = character.getEquipedArmor().get(type);
-		if (armor1 != null) {
-			armor1.getEffects().keySet().forEach(g -> effectService.removeEffect(g.getName(), character, armor));
-			character.getEquipedArmor().remove(type);
-		}
-		if (armor != null) {
-			effectService.applyGlobalEffectsAsEnchantments(armor.getEffects(), character, armor);
-		}
-
-		return 0;
-	}
 
 	public boolean canUseItemType(IActiveCharacter character, RPGItemType type) {
 		return character.canUse(type);
@@ -1057,6 +1034,7 @@ public class CharacterService {
 				event.getaClass().setLevel(event.getLevel());
 				game.getEventManager().post(event);
 				characterAddPoints(character, aClass.getConfigClass(), event.getSkillpointsPerLevel(), event.getAttributepointsPerLevel());
+				inventoryService.initializeCharacterInventory(character);
 			}
 			groupService.addPermissions(character, character.getRace());
 			groupService.addPermissions(character, character.getPrimaryClass().getConfigClass());
@@ -1132,13 +1110,7 @@ public class CharacterService {
 	 * character object is heavy, lets do not recreate its instance just reasign player and effects
 	 */
 	public void respawnCharacter(IActiveCharacter character, Player pl) {
-		Iterator<IEffectContainer<Object, IEffect<Object>>> iterator = character.getEffects().iterator();
-		while (iterator.hasNext()) {
-			IEffectContainer<Object, IEffect<Object>> next = iterator.next();
-			next.forEach(q -> effectService.stopEffect(q));
-			iterator.remove();
-		}
-		assignPlayerToCharacter(pl);
+		effectService.removeAllEffects(character);
 
 		for (ExtendedNClass nClass : character.getClasses()) {
 			applyGroupEffects(character, nClass.getConfigClass());
@@ -1147,17 +1119,11 @@ public class CharacterService {
 		applyGroupEffects(character, character.getRace());
 
 
-		character.updateSelectedHotbarSlot();
 		character.getMana().setValue(0);
-		inventoryService.cancelSocketing(character);
 		addDefaultEffects(character);
 
-		inventoryService.initializeHotbar(character);
-		inventoryService.initializeArmor(character);
+		inventoryService.initializeCharacterInventory(character);
 		updateAll(character).run();
-
-		damageService.recalculateCharacterWeaponDamage(character);
-
 		Sponge.getScheduler().createTaskBuilder().execute(() -> {
 			Double d = character.getEntity().get(Keys.MAX_HEALTH).get();
 			character.getEntity().offer(Keys.HEALTH, d);
@@ -1206,6 +1172,10 @@ public class CharacterService {
 			return true;
 		}
 		return false;
+	}
+
+	public int markCharacterForRemoval(UUID player, String charName) {
+		return playerDao.markCharacterForRemoval(player, charName);
 	}
 }
 

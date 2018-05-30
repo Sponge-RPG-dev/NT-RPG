@@ -48,7 +48,11 @@ public class PluginConfig {
 	public static boolean REMOVE_PLAYERDATA_AFTER_PERMABAN = false;
 
 	@ConfigValue
-	public static boolean DEBUG = true;
+	@Comment(content = {"Ingame debug output. NONE - recommended level for your production server;" +
+			" BALANCE - useful while you are balancing stuff it prints out incoming and outgoing damage, or you are setting up inventories," +
+			" DEVELOP - very detailed logging, useful only for developers " +
+			"!!!If you encounter any exceptions during server startup you will be asked to provide logs. For the developers are useful only logs created with DEBUG mode set to DEVELOP !!!"})
+	public static DebugLevel DEBUG = DebugLevel.BALANCE;
 
 	@ConfigValue
 	public static int SKILLPOINTS_ON_START = 1;
@@ -205,4 +209,19 @@ public class PluginConfig {
 
 	@ConfigValue
 	public static String EQUIPED_SLOT_RESOLVE_SRATEGY = "nt-rpg:persisted_slot_order";
+/*
+	@ConfigValue
+	@Comment(content = "1 - Drops item out of player inventory, 2 - Drops items only from hotbar, 3 - Only warning")
+	public static Integer PLAYER_IS_UNABLE_TO_USE_ITEM_RESOLVE_STRATEGY = 1;
+
+
+	@ConfigValue
+	@Comment(content = "Player may put standard item into accessory slot")
+	public static boolean ACCESSORIES_BLOCK_JUNK_ITEMS = true;
+
+	*/
+
+	@ConfigValue
+	@Comment(content = "Plugins attempt to create a list of items present on the server, which might fall into categories of weapons/armors/shields. The final list might, or might not be complete.")
+	public static boolean AUTODISCOVER_ITEMS = true;
 }
