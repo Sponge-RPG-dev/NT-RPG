@@ -896,7 +896,8 @@ public class NtRpgPlugin {
 						characterService.assignPlayerToCharacter(player);
 					}
 					CompletableFuture.runAsync(() -> {
-						characterService.removePlayerCharacter(player.getUniqueId(), a);
+						int deleted = characterService.removePlayerCharacter(player.getUniqueId(), a);
+						player.sendMessage(TextHelper.parse(Localization.CHAR_DELETED_FEEDBACK.replaceAll("%num%", ""+deleted)));
 					}, asyncExecutor);
 					return CommandResult.success();
 				})
