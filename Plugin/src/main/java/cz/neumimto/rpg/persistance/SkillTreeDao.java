@@ -18,28 +18,13 @@
 
 package cz.neumimto.rpg.persistance;
 
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigException;
-import com.typesafe.config.ConfigFactory;
-import com.typesafe.config.ConfigObject;
-import com.typesafe.config.ConfigValue;
+import com.typesafe.config.*;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.gui.SkillTreeInterfaceModel;
-import cz.neumimto.rpg.skills.CharacterAttributeSkill;
-import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.ItemAccessSkill;
-import cz.neumimto.rpg.skills.PropertySkill;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillLoadingErrors;
-import cz.neumimto.rpg.skills.SkillNodes;
-import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.skills.SkillSettings;
-import cz.neumimto.rpg.skills.SkillTree;
-import cz.neumimto.rpg.skills.SkillTreeSpecialization;
-import cz.neumimto.rpg.skills.StartingPoint;
+import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.utils.Utils;
 import org.slf4j.Logger;
 
@@ -214,6 +199,13 @@ public class SkillTreeDao {
             } catch (ConfigException e) {
                 info.setMinPlayerLevel(1);
                 logger.warn("Missing \"MinPlayerLevel\" node for a skill \""+info.getSkillName()+"\", setting to 1");
+            }
+
+            try {
+                info.setLevelGap(c.getInt("LevelGap"));
+            } catch (ConfigException e) {
+                info.setLevelGap(1);
+                logger.warn("Missing \"LevelGap\" node for a skill \""+info.getSkillName()+"\", setting to 1");
             }
 
             try {

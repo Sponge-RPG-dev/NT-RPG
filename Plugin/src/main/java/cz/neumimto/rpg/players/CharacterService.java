@@ -720,6 +720,15 @@ public class CharacterService {
 			p.value = new SkillTreeActionResult.Data(map);
 			return p;
 		}
+
+		if (extendedSkillInfo.getLevel() * extendedSkillInfo.getSkillData().getLevelGap() < character.getLevel()) {
+			p.key = SkillTreeActionResult.INSUFFICIENT_LEVEL_GAP;
+			Map<String, Object> map = new HashMap<>();
+			map.put("skill", skill.getName());
+			map.put("level", extendedSkillInfo.getLevel() * extendedSkillInfo.getSkillData().getLevelGap());
+			p.value = new SkillTreeActionResult.Data(map);
+			return p;
+		}
 		SkillUpgradeEvent event = new SkillUpgradeEvent(character, skill, extendedSkillInfo.getLevel() + 1);
 		game.getEventManager().post(event);
 		if (event.isCancelled()) {

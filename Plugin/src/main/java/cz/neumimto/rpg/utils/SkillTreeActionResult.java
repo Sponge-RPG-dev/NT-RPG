@@ -22,8 +22,10 @@ public enum SkillTreeActionResult {
 	LEARNED(Localization.SKILL_LEARNED),
 	SKILL_CONFCLITS(Localization.SKILL_CONFLICTS),
 	UNKNOWN(""),
+	INSUFFICIENT_LEVEL_GAP(Localization.INSUFFICIENT_LEVEL_GAP),
 	NO_ACCESS_TO_SKILL(Localization.NO_ACCESS_TO_SKILL);
-	public String message;
+
+    public String message;
 
 	SkillTreeActionResult(String a) {
 

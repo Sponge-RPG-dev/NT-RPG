@@ -404,4 +404,7 @@ public class Localization {
 
 	@ConfigValue
 	public static String PLAYER_INVITED_TO_PARTY = "%player% &8invited you to the party";
+
+	@ConfigValue
+	public static String INSUFFICIENT_LEVEL_GAP = "You need at least level %level% to be able to upgrade the skill.";
 }

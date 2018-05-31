@@ -41,8 +41,7 @@ public class SkillData {
 	private int relativeX;
 	private int relativeY;
 	private int skillTreeId;
-
-
+	private int levelGap;
 
 
 	public SkillData(String skill) {
@@ -148,4 +147,12 @@ public class SkillData {
 	public int getSkillTreeId() {
 		return skillTreeId;
 	}
+
+    public void setLevelGap(int levelGap) {
+        this.levelGap = levelGap;
+    }
+
+    public int getLevelGap() {
+        return levelGap;
+    }
 }
