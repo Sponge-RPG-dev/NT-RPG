@@ -200,6 +200,14 @@ public class SkillTreeDao {
                 info.setMinPlayerLevel(1);
                 logger.warn("Missing \"MinPlayerLevel\" node for a skill \""+info.getSkillName()+"\", setting to 1");
             }
+/*			
+			try {
+                info.setlevelGap(c.getInt("levelGap"));
+            } catch (ConfigException e) {
+                info.setlevelGap(1);
+                logger.warn("Missing \"MinPlayerLevel\" node for a skill \""+info.getSkillName()+"\", setting to 1");
+            }
+*/
 
             try {
                 info.setLevelGap(c.getInt("LevelGap"));
