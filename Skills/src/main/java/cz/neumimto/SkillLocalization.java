@@ -7,7 +7,7 @@ import cz.neumimto.configuration.ConfigurationContainer;
  * Created by NeumimTo on 23.12.2015.
  */
 
-@ConfigurationContainer(path = "./mods/NtRpg/", filename = "Skillsloc.conf")
+@ConfigurationContainer(path = "{WorkingDir}", filename = "Skillsloc.conf")
 public class SkillLocalization {
 
 	@ConfigValue
@@ -81,13 +81,11 @@ public class SkillLocalization {
 
 	@ConfigValue
 	public static String SKILL_DODGE_LORE = "";
-	;
 
-	@ConfigValue
+    @ConfigValue
 	public static String SKILL_DODGE_DESC = "";
-	;
 
-	@ConfigValue
+    @ConfigValue
 	public static String SKILL_RESOLUTE_TECHNIQUE_DESC = "";
 
 	@ConfigValue
@@ -228,4 +226,10 @@ public class SkillLocalization {
 	@ConfigValue
 	public static String SKILL_SHADOWRUN_DESC = "Speed and invisibility, may be casted only in shadow. Attacking, casting a spell, or taking non-fall damage breaks the invisibily. :n " +
 			"If the caster attacks an entity in shadows the attack will deal additional physical damage.";
+
+	@ConfigValue
+	public static String SKILL_MANASHIELD_LORE = "";
+
+	@ConfigValue
+	public static String SKILL_MANASHIELD_DESC = "Creates a shield which absorbs damage ";
 }

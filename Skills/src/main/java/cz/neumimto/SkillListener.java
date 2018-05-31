@@ -11,10 +11,7 @@ import cz.neumimto.events.CriticalStrikeEvent;
 import cz.neumimto.events.DamageDodgedEvent;
 import cz.neumimto.events.ManaDrainEvent;
 import cz.neumimto.events.StunApplyEvent;
-import cz.neumimto.model.BashModel;
-import cz.neumimto.model.CriticalEffectModel;
-import cz.neumimto.model.PotionEffectModel;
-import cz.neumimto.model.ShadowRunModel;
+import cz.neumimto.model.*;
 import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
@@ -71,6 +68,7 @@ import java.util.function.Consumer;
 /**
  * Created by ja on 21.5.2016.
  */
+@SuppressWarnings("unchecked")
 @ResourceLoader.ListenerClass
 public class SkillListener {
 
@@ -144,11 +142,30 @@ public class SkillListener {
 			}
 			effectService.removeEffectContainer(container, event.getSource());
 		}
-
 	}
 
+	@Listener(order = Order.LAST)
+	@IsCancelled(Tristate.FALSE)
+	public void onEntityDamageLast(INEntityDamageEvent event) {
+		if (event.getTarget().hasEffect(ManaShieldEffect.name)) {
+			IEffectContainer<ManaShieldEffectModel, ManaShieldEffect> effect = event.getTarget().getEffect(ManaShieldEffect.name);
+			if (event.getTarget().getType() == IEntityType.CHARACTER) {
+				IActiveCharacter character = (IActiveCharacter) event.getTarget();
+				double value = character.getMana().getValue();
+				double futuremana = value - effect.getStackedValue().reductionCost;
+				if (futuremana <= 0) {
+					character.getMana().setValue(0);
+					effectService.removeEffectContainer(effect, event.getTarget());
+				} else {
+					character.getMana().setValue(futuremana);
+				}
+			}
+			event.setDamage(event.getDamage() - effect.getStackedValue().reduction);
+		}
+	}
+
+
 	@Listener
-	@SuppressWarnings("unchecked")
 	public void onWeaponDamage(INEntityWeaponDamageEvent event) {
 		if (event.getTarget().hasEffect(DampenEffect.name)) {
 			if (event.getSource().getType() == IEntityType.CHARACTER) {

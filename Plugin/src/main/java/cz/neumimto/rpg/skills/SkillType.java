@@ -48,11 +48,12 @@ public enum SkillType implements ISkillType {
 	ICE(UNDEFINED),
 	DRAIN(TRUE),
 	CANNOT_BE_SELF_CASTED(UNDEFINED),
+	PROTECTION(TRUE),
 	/**
 	 * Do not use this one in custom skills
 	 */
 	PATH(UNDEFINED);
-	;
+
     private Tristate negative;
 
 	SkillType(Tristate negative) {

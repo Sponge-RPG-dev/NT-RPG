@@ -26,7 +26,7 @@ import java.util.function.Consumer;
 @Singleton
 public class ParticleDecorator implements IActionDecorator {
 
-	@Inject
+    @Inject
 	private NtRpgPlugin plugin;
 
 	@Override
@@ -119,6 +119,8 @@ public class ParticleDecorator implements IActionDecorator {
 	public static Vector3d[] smallCircle;
 	public static Vector3d[] tinyCircle;
 
+	public static Vector3d[][] smallCylinder;
+
 	@PostProcess
 	public void initModels() {
 		smallCircle = new Vector3d[15];
@@ -126,6 +128,7 @@ public class ParticleDecorator implements IActionDecorator {
 
 		tinyCircle = new Vector3d[10];
 		fillCircle(ParticleDecorator.tinyCircle, 0.5);
+
 	}
 
 
