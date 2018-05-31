@@ -95,7 +95,7 @@ public class Localization {
 	public static String ALREADY_IN_PARTY = "You are already in party";
 
 	@ConfigValue
-	public static String PARTY_CREATED = "You've created a new party, use /nparty invite {player} to get a new teammembers";
+	public static String PARTY_CREATED = "You've created a new party, use /party invite {player} to get a new teammembers";
 
 	@ConfigValue
 	public static String PLAYER_MSG_ON_JOIN_PARTY = "You have joined party";
@@ -395,4 +395,13 @@ public class Localization {
 
 	@ConfigValue
     public static String NO_CHARACTER = "You need a character for this action";
+
+	@ConfigValue
+	public static String PARTY_CHAT_PREFIX = "&3Party &1>>&r ";
+
+	@ConfigValue
+	public static String PLAYER_INVITED_TO_PARTY_PARTY_MSG = "%player% &8 invited to the party";
+
+	@ConfigValue
+	public static String PLAYER_INVITED_TO_PARTY = "%player% &8invited you to the party";
 }

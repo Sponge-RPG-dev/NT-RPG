@@ -18,8 +18,11 @@
 
 package cz.neumimto.rpg.players.parties;
 
+import cz.neumimto.rpg.TextHelper;
+import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.scoreboard.Team;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
 import java.util.Collections;
@@ -39,12 +42,19 @@ public class Party {
 	public Party(IActiveCharacter leader) {
 		this.leader = leader;
 		addPlayer(leader);
-		Team.Builder tb = Team.builder();
-		team = tb.allowFriendlyFire(false).canSeeFriendlyInvisibles(true).color(TextColors.GREEN).build();
 	}
 
 	public void addPlayer(IActiveCharacter character) {
 		players.add(character);
+		if (team == null) {
+			team = Team.builder()
+					.name(character.getName())
+					.prefix(Text.of(TextColors.GREEN))
+					.allowFriendlyFire(false)
+					.canSeeFriendlyInvisibles(true)
+					.color(TextColors.GREEN)
+					.build();
+		}
 		team.addMember(character.getPlayer().getTeamRepresentation());
 	}
 
@@ -94,6 +104,14 @@ public class Party {
 
 		return leader.equals(party.leader);
 
+	}
+
+	public void sendPartyMessage(Text t) {
+		Text text = Text.builder().append(TextHelper.parse(Localization.PARTY_CHAT_PREFIX)).append(t).build();
+
+		for (IActiveCharacter player : players) {
+			player.getPlayer().sendMessage(t);
+		}
 	}
 
 	@Override

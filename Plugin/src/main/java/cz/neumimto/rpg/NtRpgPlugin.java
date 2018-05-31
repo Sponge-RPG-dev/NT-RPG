@@ -1265,7 +1265,7 @@ public class NtRpgPlugin {
 				.build();
 
 
-		Sponge.getCommandManager().register(this, partyRoot, "party", "np");
+		Sponge.getCommandManager().register(this, partyRoot, "party", "np", "nparty");
 
 		// ===========================================================
 		// =================          Groups         =================

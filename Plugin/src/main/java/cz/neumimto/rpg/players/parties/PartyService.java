@@ -61,6 +61,8 @@ public class PartyService {
 	}
 
 	public void sendPartyInvite(Party party, IActiveCharacter tcharacter) {
+		party.sendPartyMessage(TextHelper.parse(Localization.PLAYER_INVITED_TO_PARTY_PARTY_MSG, Arg.arg("player", tcharacter.getPlayer().getName())));
+		tcharacter.getPlayer().sendMessage(TextHelper.parse(Localization.PLAYER_INVITED_TO_PARTY, Arg.arg("player", tcharacter.getPlayer().getName())));
 		party.getInvites().add(tcharacter.getPlayer().getUniqueId());
 		PartyInviteEvent event = new PartyInviteEvent(party, tcharacter);
 		game.getEventManager().post(event);
@@ -83,7 +85,7 @@ public class PartyService {
 			return;
 		Text msg = TextHelper.parse(Localization.PARTY_MSG_ON_PLAYER_JOIN, Arg.arg("player", player.getName()));
 		player.sendMessage(TextHelper.parse(Localization.PLAYER_MSG_ON_JOIN_PARTY));
-		party.getPlayers().stream().forEach(i -> i.getPlayer().sendMessage(msg));
+		party.sendPartyMessage(msg);
 		party.addPlayer(character);
 		character.setParty(party);
 
