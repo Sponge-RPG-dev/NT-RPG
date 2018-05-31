@@ -39,4 +39,9 @@ public class ItemDumpConfig {
     @Setting
     public List<ItemType> staff = new ArrayList<>();
 
+    @Setting
+    public List<ItemType> hoe = new ArrayList<>();
+
+    @Setting
+    public List<ItemType> bow = new ArrayList<>();
 }
