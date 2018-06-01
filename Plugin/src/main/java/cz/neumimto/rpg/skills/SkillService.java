@@ -97,10 +97,10 @@ public class SkillService {
 
 	@PostProcess(priority = 300)
 	public void load() {
-
+		initGuis();
 		skillTrees.putAll(skillTreeDao.getAll());
 		createSkillsDefaults();
-		initGuis();
+		reloadIcons();
 	}
 
 
@@ -121,7 +121,7 @@ public class SkillService {
 			guiModelByCharacter.put(split[0].charAt(0), model);
 			i++;
 		}
-		reloadIcons();
+
 	}
 
 
