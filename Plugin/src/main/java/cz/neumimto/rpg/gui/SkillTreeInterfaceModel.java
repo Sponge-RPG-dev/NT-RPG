@@ -8,8 +8,6 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 
-import java.util.Optional;
-
 /**
  * Created by NeumimTo on 11.2.2018.
  */
@@ -32,8 +30,7 @@ public class SkillTreeInterfaceModel {
         of.offer(Keys.HIDE_MISCELLANEOUS, true);
         of.offer(Keys.HIDE_ATTRIBUTES, true);
         of.offer(Keys.HIDE_UNBREAKABLE, true);
-        Optional<UseLimitProperty> itemdamage = of.getProperty(UseLimitProperty.class);
-        itemdamage.ifPresent(useLimitProperty -> {
+        of.getProperty(UseLimitProperty.class).ifPresent(useLimitProperty -> {
             of.offer(Keys.ITEM_DURABILITY, useLimitProperty.getValue() - damage);
             of.offer(Keys.UNBREAKABLE, true);
         });

@@ -204,7 +204,7 @@ public class SkillTreeDao {
             try {
                 info.setLevelGap(c.getInt("LevelGap"));
             } catch (ConfigException e) {
-                info.setLevelGap(1);
+                info.setLevelGap(0);
                 logger.warn("Missing \"LevelGap\" node for a skill \""+info.getSkillName()+"\", setting to 1");
             }
 
