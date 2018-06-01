@@ -36,6 +36,8 @@ import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.*;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.type.HandType;
+import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
@@ -82,7 +84,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	private transient Set<RPGItemType> allowedArmorIds = new HashSet<>();
 	private transient Map<ItemType, RPGItemWrapper> allowedWeapons = new HashMap<>();
 	private transient Map<EntityType, Double> projectileDamage = new HashMap<>();
-
+	private transient Set<RPGItemType> allowedOffHandWeapons = new HashSet<>();
 
 	private transient WeakReference<Party> pendingPartyInvite = new WeakReference<Party>(null);
 	private transient double weaponDamage;
@@ -380,6 +382,13 @@ public class ActiveCharacter implements IActiveCharacter {
 				projectileDamage.put(e.getKey(), e.getValue());
 			}
 		}
+		HashMap<ItemType, Set<ConfigRPGItemType>> offHandWeapons = g.getOffHandWeapons();
+		for (Map.Entry<ItemType, Set<ConfigRPGItemType>> e : offHandWeapons.entrySet()) {
+			Set<ConfigRPGItemType> value = e.getValue();
+			for (ConfigRPGItemType configRPGItemType : value) {
+				this.allowedOffHandWeapons.add(configRPGItemType.getRpgItemType());
+			}
+		}
 	}
 
 	private void mergeWeapons(Map<ItemType, Set<ConfigRPGItemType>> map) {
@@ -397,8 +406,9 @@ public class ActiveCharacter implements IActiveCharacter {
 	@Override
 	public double getBaseWeaponDamage(RPGItemType weaponItemType) {
 		RPGItemWrapper wrapper = getAllowedWeapons().get(weaponItemType.getItemType());
-		if (wrapper == null)
+		if (wrapper == null) {
 			return 0D;
+		}
 		for (ConfigRPGItemType configRPGItemType : wrapper.getItems()) {
 			if (weaponItemType.getDisplayName() == null) {
 				if (configRPGItemType.getRpgItemType().getDisplayName() == null) {
@@ -424,11 +434,16 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	public IActiveCharacter updateItemRestrictions() {
 		allowedWeapons.clear();
-
+        allowedOffHandWeapons.clear();
 		Map<ItemType, Set<ConfigRPGItemType>> weapons = getRace().getWeapons();
 		allowedWeapons.putAll(weapons.entrySet().stream()
 				.collect(Collectors.toMap(Map.Entry::getKey, e -> RPGItemWrapper.createFromSet(e.getValue()))));
 
+        for (Set<ConfigRPGItemType> configRPGItemTypes : getRace().getOffHandWeapons().values()) {
+            for (ConfigRPGItemType configRPGItemType : configRPGItemTypes) {
+                allowedOffHandWeapons.add(configRPGItemType.getRpgItemType());
+            }
+        }
 
 
 
@@ -489,9 +504,13 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public boolean canUse(RPGItemType weaponItemType) {
-		RPGItemWrapper set = getAllowedWeapons().get(weaponItemType.getItemType());
-		return set != null && set.containsItem(weaponItemType);
+	public boolean canUse(RPGItemType weaponItemType, HandType h) {
+		if (h == HandTypes.MAIN_HAND) {
+			RPGItemWrapper set = getAllowedWeapons().get(weaponItemType.getItemType());
+			return set != null && set.containsItem(weaponItemType);
+		} else {
+			return allowedOffHandWeapons.contains(weaponItemType);
+		}
 	}
 
 

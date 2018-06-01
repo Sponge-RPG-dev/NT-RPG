@@ -998,11 +998,6 @@ public class CharacterService {
 		putInSaveQueue(character.getCharacterBase());
 	}
 
-
-	public boolean canUseItemType(IActiveCharacter character, RPGItemType type) {
-		return character.canUse(type);
-	}
-
 	public void addExperiences(IActiveCharacter character, double exp, ExperienceSource source) {
 		Set<ExtendedNClass> classes = character.getClasses();
 		for (ExtendedNClass aClass : classes) {

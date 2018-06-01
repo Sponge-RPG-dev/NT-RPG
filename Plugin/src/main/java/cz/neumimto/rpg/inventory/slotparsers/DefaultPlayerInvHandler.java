@@ -10,6 +10,7 @@ import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -100,7 +101,7 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
                 adjustDamage(character);
                 return;
             }
-            CannotUseItemReason cannotUseItemReason = inventoryService().canUse(itemStack, character, fromItemStack);
+            CannotUseItemReason cannotUseItemReason = inventoryService().canUse(itemStack, character, fromItemStack, HandTypes.MAIN_HAND);
             if (cannotUseItemReason != CannotUseItemReason.OK) {
                 CustomItem customItem = character.getMainHand();
                 if (customItem != null) {

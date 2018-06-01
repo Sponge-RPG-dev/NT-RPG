@@ -76,7 +76,7 @@ public abstract class PlayerInvHandler implements CatalogType {
                 return true;
             }
             if (fromItemStack.getWeaponClass() == WeaponClass.ARMOR) {
-                return checkForItem(character, itemStack, fromItemStack);
+                return checkForItem(character, itemStack, fromItemStack, HandTypes.MAIN_HAND);
             } else {
                 return checkForArmorItem(character, itemStack, fromItemStack);
             }
@@ -84,8 +84,8 @@ public abstract class PlayerInvHandler implements CatalogType {
         return true;
     }
 
-    protected boolean checkForItem(IActiveCharacter character, ItemStack itemStack, RPGItemType itemType) {
-        CannotUseItemReason cannotUseItemReason = inventoryService().canUse(itemStack, character, itemType);
+    protected boolean checkForItem(IActiveCharacter character, ItemStack itemStack, RPGItemType itemType, HandType h) {
+        CannotUseItemReason cannotUseItemReason = inventoryService().canUse(itemStack, character, itemType, h);
         return cannotUseItemReason == CannotUseItemReason.OK;
     }
 
@@ -145,7 +145,7 @@ public abstract class PlayerInvHandler implements CatalogType {
                     if (fromItemStack.getWeaponClass() == WeaponClass.ARMOR || fromItemStack.getWeaponClass() == WeaponClass.SHIELD) {
                         result = inventoryService().canWear(itemStack, character, fromItemStack);
                     } else {
-                        result = inventoryService().canUse(itemStack, character, fromItemStack);
+                        result = inventoryService().canUse(itemStack, character, fromItemStack, HandTypes.MAIN_HAND);
                     }
                     if (result != CannotUseItemReason.OK) {
                         return true;
@@ -178,7 +178,7 @@ public abstract class PlayerInvHandler implements CatalogType {
                 if (fromItemStack.getWeaponClass() == WeaponClass.ARMOR) {
                     canUse = checkForArmorItem(character, itemStack, fromItemStack);
                 } else {
-                    canUse = checkForItem(character, itemStack, fromItemStack);
+                    canUse = checkForItem(character, itemStack, fromItemStack, HandTypes.MAIN_HAND);
                 }
                 if (!canUse)
                     return true;
@@ -258,7 +258,7 @@ public abstract class PlayerInvHandler implements CatalogType {
                 if (fromItemStack.getWeaponClass() == WeaponClass.SHIELD || fromItemStack.getWeaponClass() == WeaponClass.ARMOR) {
                     reason = inventoryService().canWear(futureOffHand, character, fromItemStack);
                 } else {
-                    reason = inventoryService().canUse(futureOffHand, character, fromItemStack);
+                    reason = inventoryService().canUse(futureOffHand, character, fromItemStack, HandTypes.MAIN_HAND);
                 }
                 if (reason == CannotUseItemReason.OK) {
                     deInitializeItemStack(character, HandTypes.MAIN_HAND);
@@ -285,16 +285,14 @@ public abstract class PlayerInvHandler implements CatalogType {
                 if (fromItemStack.getWeaponClass() == WeaponClass.SHIELD || fromItemStack.getWeaponClass() == WeaponClass.ARMOR) {
                     reason = inventoryService().canWear(futureOffHand, character, fromItemStack);
                 } else {
-                    //reason = inventoryService().canUse(futureOffHand, character, fromItemStack);
-                    //todo check if the item may be dualwielded
-                    reason = CannotUseItemReason.CONFIG;
+                    reason = inventoryService().canUse(futureOffHand, character, fromItemStack, HandTypes.OFF_HAND);
                 }
                 if (reason == CannotUseItemReason.OK) {
                     deInitializeItemStack(character, HandTypes.OFF_HAND);
                     initializeItemStack(character, HandTypes.OFF_HAND, CustomItemFactory.createCustomItemForHandSlot(futureMainHand, HandTypes.OFF_HAND));
                     recalc = true;
                 } else {
-                    Gui.sendCannotUseItemNotification(character, futureOffHand, reason);
+                    Gui.sendCannotUseItemInOffHandNotification(character, futureOffHand, reason);
                     return true;
                 }
             } else {

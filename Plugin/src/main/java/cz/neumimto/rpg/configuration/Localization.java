@@ -407,4 +407,7 @@ public class Localization {
 
 	@ConfigValue
 	public static String INSUFFICIENT_LEVEL_GAP = "You need at least level %level% to be able to upgrade the skill.";
+
+	@ConfigValue
+	public static String CANNOT_USE_ITEM_CONFIGURATION_REASON_OFFHAND = "&4You are not trained to dual wield with this weapon";
 }

@@ -85,7 +85,7 @@ public class InventoryListener {
 			if (rpgItemType.getWeaponClass() == WeaponClass.ARMOR) {
 				reason = inventoryService.canWear(stack, character, rpgItemType);
 			} else {
-				reason = inventoryService.canUse(stack, character, rpgItemType);
+				reason = inventoryService.canUse(stack, character, rpgItemType, HandTypes.MAIN_HAND);
 			}
 			if (reason != CannotUseItemReason.OK) {
 				Gui.sendCannotUseItemNotification(character, stack, reason);

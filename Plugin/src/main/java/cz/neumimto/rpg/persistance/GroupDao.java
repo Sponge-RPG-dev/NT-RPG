@@ -274,28 +274,25 @@ public class GroupDao {
 		}
 
 		try {
+			List<String> allowedOffHandWeapons = c.getStringList("AllowedOffHandWeapons");
+			for (String allowedWeapon : allowedOffHandWeapons) {
+                ConfigRPGItemType configRPGItemType = weaponFromCSVString(allowedWeapon, group);
+                if (configRPGItemType != null) {
+                    group.addOffHandWeapon(configRPGItemType);
+                }
+			}
+		} catch (ConfigException e) {
+			logger.warn(" - Missing configuration \"AllowedOffHandWeapons\", skipping");
+		}
+
+		try {
 			List<String> allowedWeapons = c.getStringList("AllowedWeapons");
 			for (String allowedWeapon : allowedWeapons) {
-				String[] split = allowedWeapon.split(";");
-				String s = split[0];
-				double damage = 0;
-				String itemName = null;
-
-				ItemType type = game.getRegistry().getType(ItemType.class, s).orElse(null);
-				if (type == null) {
-					logger.error(" - Unknown item type " + s);
-				} else {
-					String s1 = split[1];
-					damage = Double.parseDouble(s1);
-					if (split.length == 3) {
-						itemName = split[2];
-					}
-					RPGItemType rpgitemType = itemService.getByItemTypeAndName(type, itemName);
-					ConfigRPGItemType t = new ConfigRPGItemType(rpgitemType, group, damage);
-					group.addWeapon(t);
-				}
+                ConfigRPGItemType configRPGItemType = weaponFromCSVString(allowedWeapon, group);
+                if (configRPGItemType != null) {
+                    group.addWeapon(configRPGItemType);
+                }
 			}
-
 		} catch (ConfigException e) {
 			logger.warn(" - Missing configuration \"AllowedWeapons\", skipping");
 		}
@@ -425,6 +422,31 @@ public class GroupDao {
 
 		}
 
+	}
+
+	private ConfigRPGItemType weaponFromCSVString(String allowedWeapon, PlayerGroup playerGroup) {
+		String[] split = allowedWeapon.split(";");
+		String s = split[0];
+		double damage = 0;
+		String itemName = null;
+
+		ItemType type = game.getRegistry().getType(ItemType.class, s).orElse(null);
+		if (type == null) {
+			logger.error(" - Unknown item type " + s);
+		} else {
+			String s1 = split[1];
+			damage = Double.parseDouble(s1);
+			if (split.length == 3) {
+				itemName = split[2];
+			}
+			RPGItemType rpgitemType = itemService.getByItemTypeAndName(type, itemName);
+			if (rpgitemType == null) {
+				logger.error(" - Defined weapon " + s + " but its configuration in ItemGroups.conf is missing!");
+				return null;
+			}
+			return new ConfigRPGItemType(rpgitemType, playerGroup, damage);
+		}
+		return null;
 	}
 
 

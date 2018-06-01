@@ -54,6 +54,7 @@ public class PlayerGroup implements IEffectSourceProvider {
 	private Map<EntityType, Double> projectileDamage = new HashMap<>();
 	private List<String> exitCommands;
 	private List<String> enterCommands;
+	private HashMap<ItemType, Set<ConfigRPGItemType>> offHandWeapons = new HashMap<>();
 
 	public PlayerGroup(String name) {
 		this.name = name;
@@ -103,6 +104,19 @@ public class PlayerGroup implements IEffectSourceProvider {
 	}
 
 	public void addWeapon(ConfigRPGItemType item) {
+		Set<ConfigRPGItemType> configRPGItemTypes = weapons.get(item.getRpgItemType().getItemType());
+		if (configRPGItemTypes == null) {
+			configRPGItemTypes = new HashSet<>();
+			weapons.put(item.getRpgItemType().getItemType(), configRPGItemTypes);
+		}
+		configRPGItemTypes.add(item);
+	}
+
+	public HashMap<ItemType, Set<ConfigRPGItemType>> getOffHandWeapons() {
+		return offHandWeapons;
+	}
+
+	public void addOffHandWeapon(ConfigRPGItemType item) {
 		Set<ConfigRPGItemType> configRPGItemTypes = weapons.get(item.getRpgItemType().getItemType());
 		if (configRPGItemTypes == null) {
 			configRPGItemTypes = new HashSet<>();

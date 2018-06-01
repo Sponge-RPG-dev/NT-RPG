@@ -923,4 +923,15 @@ public class VanillaMessaging implements IPlayerMessage {
 			}
 		}
 	}
+
+	@Override
+	public void sendCannotUseItemInOffHandNotification(ItemStack futureOffHand, IActiveCharacter character, CannotUseItemReason reason) {
+		if (reason == CannotUseItemReason.CONFIG) {
+			character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Text.of(TextColors.RED, Localization.CANNOT_USE_ITEM_CONFIGURATION_REASON_OFFHAND));
+		} else if (reason == CannotUseItemReason.LEVEL) {
+			character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Text.of(TextColors.RED, Localization.CANNOT_USE_ITEM_LEVEL_REASON));
+		} else if (reason == CannotUseItemReason.LORE) {
+			character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Text.of(TextColors.RED, Localization.CANNOT_USE_ITEM_LORE_REASON));
+		}
+	}
 }

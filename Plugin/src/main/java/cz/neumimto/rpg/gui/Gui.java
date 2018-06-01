@@ -215,4 +215,7 @@ public class Gui {
 		getMessageTypeOf(commandSource).displayInitialProperties(byName, commandSource);
 	}
 
+	public static void sendCannotUseItemInOffHandNotification(IActiveCharacter character, ItemStack futureOffHand, CannotUseItemReason reason) {
+		getMessageTypeOf(character).sendCannotUseItemInOffHandNotification(futureOffHand, character, reason);
+	}
 }

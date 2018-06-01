@@ -36,6 +36,7 @@ import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillTreeSpecialization;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.type.HandType;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectType;
 import org.spongepowered.api.entity.EntityType;
@@ -142,7 +143,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public boolean canUse(RPGItemType weaponItemType) {
+	public boolean canUse(RPGItemType weaponItemType, HandType type) {
 		return false;
 	}
 
@@ -621,4 +622,6 @@ public class PreloadCharacter implements IActiveCharacter {
 	public void setOffHand(CustomItem customItem) {
 
 	}
+
+
 }

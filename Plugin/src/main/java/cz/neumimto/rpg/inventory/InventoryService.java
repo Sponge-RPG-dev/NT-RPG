@@ -64,6 +64,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.type.HandType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
@@ -460,13 +461,13 @@ public class InventoryService {
 	}
 
 
-	public CannotUseItemReason canUse(ItemStack itemStack, IActiveCharacter character, RPGItemType type) {
+	public CannotUseItemReason canUse(ItemStack itemStack, IActiveCharacter character, RPGItemType type, HandType h) {
 		if (itemStack == null)
 			return CannotUseItemReason.OK;
 		if (type == null) {
 			return CannotUseItemReason.OK; //ItemStack was not recognized as a managed item type. Player may use it
 		}
-		if (!character.canUse(type)) {
+		if (!character.canUse(type, h)) {
 			return CannotUseItemReason.CONFIG;
 		}
 		return checkRestrictions(character,itemStack);

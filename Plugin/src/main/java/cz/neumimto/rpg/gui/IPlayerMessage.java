@@ -104,4 +104,6 @@ public interface IPlayerMessage {
 	void displaySkillDetailsInventoryMenu(IActiveCharacter character, SkillTree tree, String command);
 
 	void displayInitialProperties(PlayerGroup byName, Player player);
+
+    void sendCannotUseItemInOffHandNotification(ItemStack futureOffHand, IActiveCharacter character, CannotUseItemReason reason);
 }
