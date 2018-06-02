@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.inventory.slotparsers;
 
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.IEffectSource;
@@ -7,7 +8,9 @@ import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.CannotUseItemReason;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
+import cz.neumimto.rpg.persistance.DirectAccessDao;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
+import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.type.HandTypes;
@@ -18,17 +21,26 @@ import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by NeumimTo on 26.3.2018.
  */
 @Singleton
 public class DefaultPlayerInvHandler extends PlayerInvHandler {
-    
-    
+
+    @Inject
+    private DirectAccessDao directAccessDao;
+
+    private Set<UUID> saveQuery = new HashSet<>();
+
     public DefaultPlayerInvHandler() {
         super("persisted_slot_order");
     }
@@ -131,6 +143,18 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
         inventoryEquipSlotOrder.add(curent);
     }
 
+    public void updateSlotEquipOrder(CharacterBase characterBase) {
+        UUID charUUid = characterBase.getUuid();
+        if (saveQuery.contains(charUUid)) {
+            saveQuery.remove(charUUid);
+            String hql = "update CharacterBase b set b.inventoryEquipSlotOrder = :slots where b.uuid = :uuid";
+            Map<String, Object> map = new HashMap<>();
+            map.put("uuid", charUUid);
+            map.put("slots", characterBase.getInventoryEquipSlotOrder());
+            directAccessDao.update(hql, map);
+        }
 
+
+    }
 
 }

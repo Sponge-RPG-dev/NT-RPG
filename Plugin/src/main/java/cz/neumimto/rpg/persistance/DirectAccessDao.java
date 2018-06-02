@@ -3,6 +3,7 @@ package cz.neumimto.rpg.persistance;
 import cz.neumimto.core.dao.genericDao.GenericDao;
 import cz.neumimto.core.ioc.Singleton;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.util.List;
@@ -36,5 +37,21 @@ public class DirectAccessDao extends GenericDao {
 		List result = q.list();
 		session.close();
 		return result;
+	}
+
+	public void update(String hql, Map<String, Object> param) {
+		Session session = factory.openSession();
+		Query query = session.createQuery(hql);
+		Transaction transaction = session.beginTransaction();
+		try {
+			for (Map.Entry<String, Object> stringObjectEntry : param.entrySet()) {
+				query.setParameter(stringObjectEntry.getKey(), stringObjectEntry.getValue());
+			}
+			query.executeUpdate();
+			transaction.commit();
+		} catch (Throwable t) {
+			transaction.rollback();
+
+		}
 	}
 }

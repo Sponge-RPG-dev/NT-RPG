@@ -153,4 +153,6 @@ public class PlayerDao extends GenericDao<CharacterBase> {
 		}
 
 	}
+
+
 }
