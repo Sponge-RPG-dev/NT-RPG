@@ -61,7 +61,7 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
                 updateEquipOrder(character, slot);
             }
         }
-        adjustDamage(character);
+        revalidateCaches(character);
     }
 
 
@@ -87,7 +87,7 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
                     deInitializeItemStack(character, eq);
                 }
                 character.setMainHand(null, -1);
-                adjustDamage(character);
+                revalidateCaches(character);
                 return;
             }
             ItemStack itemStack = peek.get();
@@ -98,7 +98,7 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
                     deInitializeItemStack(character, eq);
                 }
                 character.setMainHand(null, -1);
-                adjustDamage(character);
+                revalidateCaches(character);
                 return;
             }
             CannotUseItemReason cannotUseItemReason = inventoryService().canUse(itemStack, character, fromItemStack, HandTypes.MAIN_HAND);
@@ -107,14 +107,14 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
                 if (customItem != null) {
                     deInitializeItemStack(character, eq);
                     character.setMainHand(null, -1);
-                    adjustDamage(character);
+                    revalidateCaches(character);
                 }
                 Gui.sendCannotUseItemNotification(character, itemStack, cannotUseItemReason);
             } else {
                 CustomItem customItem = initializeItemStack(character, theslot);
                 character.setMainHand(customItem, slot);
             }
-            adjustDamage(character);
+            revalidateCaches(character);
         }
     }
 

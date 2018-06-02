@@ -288,7 +288,7 @@ public class InventoryService {
 				try {
 					loadItemGroups(itemGroup.getConfigList("Items"), weapons);
 				} catch (ConfigException ee) {
-					logger.error("Could not read nested configuration for weapon class " + weaponClass + "This is a critical miss configuration, some items will not be recognized as weapons" );
+					logger.error("Could not read nested configuration for weapon class " + weaponClass + "This is a critical miss configuration, some items will not be recognized as weapons");
 				}
 			}
 
@@ -298,7 +298,7 @@ public class InventoryService {
 					itemService.registerProperty(weapons, property.toLowerCase());
 				}
 			} catch (ConfigException e) {
-				logger.error("Properties configuration section not found, skipping");
+				logger.error("Properties configuration section not found, skipping", e);
 			}
 		}
 	}

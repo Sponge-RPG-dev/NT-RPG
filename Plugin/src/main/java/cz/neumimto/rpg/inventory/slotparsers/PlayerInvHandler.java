@@ -151,13 +151,16 @@ public abstract class PlayerInvHandler implements CatalogType {
                         return true;
                     }
                 }
-                boolean revalidateCache =  initializeOffHandSlot(character, itemStack);
+                Boolean revalidateCache =  initializeOffHandSlot(character, itemStack);
+                if (revalidateCache == null) {
+                    return true;
+                }
                 if (revalidateCache) {
-                    adjustDamage(character);
+                    revalidateCaches(character);
                 }
             } else {
                 deInitializeItemStack(character, HandTypes.OFF_HAND);
-                adjustDamage(character);
+                revalidateCaches(character);
             }
         } else if (inventoryService().getEffectSourceBySlotId(slot) != null) {
             EquipedSlot equipedSlot = EquipedSlot.from(slot);
@@ -227,11 +230,11 @@ public abstract class PlayerInvHandler implements CatalogType {
             EquipedSlot equipedSlot = EquipedSlot.from(slot.get());
             deInitializeItemStack(character, equipedSlot);
             character.setMainHand(null, -1);
-            adjustDamage(character);
+            revalidateCaches(character);
         }
     }
 
-    protected void adjustDamage(IActiveCharacter character) {
+    protected void revalidateCaches(IActiveCharacter character) {
         damageService().recalculateCharacterWeaponDamage(character);
     }
 
@@ -299,11 +302,11 @@ public abstract class PlayerInvHandler implements CatalogType {
                 deInitializeItemStack(character, HandTypes.MAIN_HAND);
             }
         }
-        if (initializeOffHandSlot(character, futureOffHand)) {
+        if (Boolean.TRUE.equals(initializeOffHandSlot(character, futureOffHand))) {
             recalc = true;
         }
         if (recalc) {
-            adjustDamage(character);
+            revalidateCaches(character);
         }
         return false;
     }
@@ -312,9 +315,9 @@ public abstract class PlayerInvHandler implements CatalogType {
      *
      * @param character
      * @param futureOffHand
-     * @return True if damage cache should be re-validated
+     * @return True if damage cache should be re-validated, null if item cannto be used in the offhand
      */
-    public boolean initializeOffHandSlot(IActiveCharacter character, ItemStack futureOffHand) {
+    public Boolean initializeOffHandSlot(IActiveCharacter character, ItemStack futureOffHand) {
         CustomItem oh = character.getOffHand();
         if (oh != null) {
             deInitializeItemStack(character, HandTypes.OFF_HAND);
@@ -327,8 +330,8 @@ public abstract class PlayerInvHandler implements CatalogType {
                     CustomItem customItem = CustomItemFactory.createCustomItemForHandSlot(futureOffHand, HandTypes.OFF_HAND);
                     initializeItemStack(character, HandTypes.OFF_HAND, customItem);
                 }
-            } else {
-                //TODO only some classes should be able to dualwield with something else than shield
+            } else if (inventoryService().canUse(futureOffHand, character, fromItemStack, HandTypes.OFF_HAND) != CannotUseItemReason.OK) {
+                return null;
             }
         }
         return false;

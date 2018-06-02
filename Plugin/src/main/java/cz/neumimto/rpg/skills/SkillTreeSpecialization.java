@@ -145,7 +145,6 @@ public class SkillTreeSpecialization extends PassiveSkill {
 
             }
         } catch (ConfigException e) {
-            //logger.info("Found SkillPath in the tree \"" + skillTree.getId() + "\" but no permissions defined, setting to 1");
         }
         try {
             String a = c.getString("ItemIcon");
