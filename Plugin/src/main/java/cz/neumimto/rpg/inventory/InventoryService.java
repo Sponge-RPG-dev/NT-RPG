@@ -25,7 +25,12 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.*;
+import cz.neumimto.rpg.Arg;
+import cz.neumimto.rpg.Console;
+import cz.neumimto.rpg.GroupService;
+import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
@@ -36,7 +41,13 @@ import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.ItemLoreBuilderService;
 import cz.neumimto.rpg.inventory.data.NKeys;
-import cz.neumimto.rpg.inventory.data.manipulators.*;
+import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaHeader;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaTypeData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemRarityData;
+import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemGroupRequirementsData;
+import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemRequirementsData;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtypes;
@@ -82,7 +93,16 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -154,6 +174,7 @@ public class InventoryService {
 					().map(PlayerInvHandler::getId).collect(Collectors.joining(", ")));
 			playerInvHandler = IoC.get().build(DefaultPlayerInvHandler.class);
 		}
+		playerInvHandler.initHandler();
 	}
 
 	@Listener

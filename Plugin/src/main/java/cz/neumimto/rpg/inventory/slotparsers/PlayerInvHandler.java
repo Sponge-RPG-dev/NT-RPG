@@ -4,9 +4,15 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.inventory.*;
+import cz.neumimto.rpg.inventory.CannotUseItemReason;
+import cz.neumimto.rpg.inventory.CustomItemFactory;
+import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.ItemService;
+import cz.neumimto.rpg.inventory.RPGItemType;
+import cz.neumimto.rpg.inventory.WeaponClass;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
+import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.data.type.HandType;
@@ -134,71 +140,7 @@ public abstract class PlayerInvHandler implements CatalogType {
      * @param slot clicked slot, the slot is NOT in hotbar row, the slot might be offhand
      * @return true if the click inventory event shall be cancelled
      */
-    public boolean processSlotInteraction(IActiveCharacter character, Slot slot) {
-        if (character.getPlayer().getOpenInventory().isPresent() && isOffHandSlot(slot)) {
-            Optional<ItemStack> peek = slot.peek();
-            if (peek.isPresent()) {
-                ItemStack itemStack = peek.get();
-                RPGItemType fromItemStack = itemService().getFromItemStack(itemStack);
-                if (fromItemStack != null) {
-                    CannotUseItemReason result;
-                    if (fromItemStack.getWeaponClass() == WeaponClass.ARMOR || fromItemStack.getWeaponClass() == WeaponClass.SHIELD) {
-                        result = inventoryService().canWear(itemStack, character, fromItemStack);
-                    } else {
-                        result = inventoryService().canUse(itemStack, character, fromItemStack, HandTypes.MAIN_HAND);
-                    }
-                    if (result != CannotUseItemReason.OK) {
-                        return true;
-                    }
-                }
-                Boolean revalidateCache =  initializeOffHandSlot(character, itemStack);
-                if (revalidateCache == null) {
-                    return true;
-                }
-                if (revalidateCache) {
-                    revalidateCaches(character);
-                }
-            } else {
-                deInitializeItemStack(character, HandTypes.OFF_HAND);
-                revalidateCaches(character);
-            }
-        } else if (inventoryService().getEffectSourceBySlotId(slot) != null) {
-            EquipedSlot equipedSlot = EquipedSlot.from(slot);
-            CustomItem customItem = character.getEquipedInventorySlots().get(equipedSlot);
-            //item has been taken away from the slot
-            if (!slot.peek().isPresent()) {
-                if (customItem != null) {
-                    character.getEquipedInventorySlots().remove(equipedSlot);
-                    deInitializeItemStack(character, equipedSlot);
-                }
-                return false;
-            } else {
-                ItemStack itemStack = slot.peek().get();
-                RPGItemType fromItemStack = itemService().getFromItemStack(itemStack);
-                if (fromItemStack == null)
-                    return false;
-                boolean canUse;
-                if (fromItemStack.getWeaponClass() == WeaponClass.ARMOR) {
-                    canUse = checkForArmorItem(character, itemStack, fromItemStack);
-                } else {
-                    canUse = checkForItem(character, itemStack, fromItemStack, HandTypes.MAIN_HAND);
-                }
-                if (!canUse)
-                    return true;
-
-                //no item before
-                if (customItem == null) {
-                    CustomItem ci = initializeItemStack(character, slot);
-                    character.getEquipedInventorySlots().put(equipedSlot, ci);
-                } else {
-                    deInitializeItemStack(character, equipedSlot);
-                    CustomItem ci = initializeItemStack(character, slot);
-                    character.getEquipedInventorySlots().put(equipedSlot, ci);
-                }
-            }
-        }
-        return false;
-    }
+    public abstract boolean processSlotInteraction(IActiveCharacter character, Slot slot);
 
     public abstract void onRightClick(IActiveCharacter character, int slot, Slot hotbarSlot);
 
@@ -215,6 +157,10 @@ public abstract class PlayerInvHandler implements CatalogType {
 
     protected EffectService effectService() {
         return NtRpgPlugin.GlobalScope.effectService;
+    }
+
+    protected CharacterService characterService() {
+        return NtRpgPlugin.GlobalScope.characterService;
     }
 
     protected DamageService damageService() {

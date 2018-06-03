@@ -7,6 +7,7 @@ import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.CannotUseItemReason;
 import cz.neumimto.rpg.inventory.RPGItemType;
+import cz.neumimto.rpg.inventory.WeaponClass;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.persistance.DirectAccessDao;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
@@ -15,6 +16,10 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.Order;
+import org.spongepowered.api.event.filter.cause.Root;
+import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
@@ -29,6 +34,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by NeumimTo on 26.3.2018.
@@ -88,6 +94,86 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
         onHandInteract(character, slot, hotbarSlot);
     }
 
+
+    /**
+     * A method which
+     * - adds enchantments to entity effects cache
+     * - todo: apply attribute bonuses
+     *
+     * @param character player
+     * @param slot Slot having an item to be equipied
+     */
+    @Override
+    public boolean processSlotInteraction(IActiveCharacter character, Slot slot) {
+        if (character.getPlayer().getOpenInventory().isPresent() && isOffHandSlot(slot)) {
+            Optional<ItemStack> peek = slot.peek();
+            if (peek.isPresent()) {
+                ItemStack itemStack = peek.get();
+                RPGItemType fromItemStack = itemService().getFromItemStack(itemStack);
+                if (fromItemStack != null) {
+                    CannotUseItemReason result;
+                    if (fromItemStack.getWeaponClass() == WeaponClass.ARMOR || fromItemStack.getWeaponClass() == WeaponClass.SHIELD) {
+                        result = inventoryService().canWear(itemStack, character, fromItemStack);
+                    } else {
+                        result = inventoryService().canUse(itemStack, character, fromItemStack, HandTypes.MAIN_HAND);
+                    }
+                    if (result != CannotUseItemReason.OK) {
+                        return true;
+                    }
+                }
+                Boolean revalidateCache =  initializeOffHandSlot(character, itemStack);
+                if (revalidateCache == null) {
+                    return true;
+                }
+                if (revalidateCache) {
+                    revalidateCaches(character);
+                }
+            } else {
+                deInitializeItemStack(character, HandTypes.OFF_HAND);
+                revalidateCaches(character);
+            }
+        } else if (inventoryService().getEffectSourceBySlotId(slot) != null) {
+            EquipedSlot equipedSlot = EquipedSlot.from(slot);
+            CustomItem customItem = character.getEquipedInventorySlots().get(equipedSlot);
+            //item has been taken away from the slot
+            if (!slot.peek().isPresent()) {
+                if (customItem != null) {
+                    character.getEquipedInventorySlots().remove(equipedSlot);
+                    deInitializeItemStack(character, equipedSlot);
+                }
+                return false;
+            } else {
+                ItemStack itemStack = slot.peek().get();
+                RPGItemType fromItemStack = itemService().getFromItemStack(itemStack);
+                if (fromItemStack == null)
+                    return false;
+                boolean canUse;
+                if (fromItemStack.getWeaponClass() == WeaponClass.ARMOR) {
+                    canUse = checkForArmorItem(character, itemStack, fromItemStack);
+                } else {
+                    canUse = checkForItem(character, itemStack, fromItemStack, HandTypes.MAIN_HAND);
+                }
+                if (!canUse)
+                    return true;
+
+                //no item before
+                if (customItem == null) {
+                    CustomItem ci = initializeItemStack(character, slot);
+                    character.getEquipedInventorySlots().put(equipedSlot, ci);
+                } else {
+                    deInitializeItemStack(character, equipedSlot);
+                    CustomItem ci = initializeItemStack(character, slot);
+                    character.getEquipedInventorySlots().put(equipedSlot, ci);
+                }
+                updateEquipOrder(character, equipedSlot);
+            }
+        }
+
+        return false;
+    }
+
+
+
     protected void onHandInteract(IActiveCharacter character, int slot, Slot theslot) {
         int mainHandSlotId = character.getMainHandSlotId();
         if (slot != mainHandSlotId) {
@@ -141,20 +227,26 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
             }
         }
         inventoryEquipSlotOrder.add(curent);
+        saveQuery.add(character.getCharacterBase().getUuid());
     }
 
     public void updateSlotEquipOrder(CharacterBase characterBase) {
-        UUID charUUid = characterBase.getUuid();
-        if (saveQuery.contains(charUUid)) {
-            saveQuery.remove(charUUid);
+        final UUID charUUid = characterBase.getUuid();
+        saveQuery.remove(charUUid);
+        NtRpgPlugin.asyncExecutor.schedule(() -> {
             String hql = "update CharacterBase b set b.inventoryEquipSlotOrder = :slots where b.uuid = :uuid";
             Map<String, Object> map = new HashMap<>();
             map.put("uuid", charUUid);
             map.put("slots", characterBase.getInventoryEquipSlotOrder());
             directAccessDao.update(hql, map);
-        }
-
-
+        }, 1, TimeUnit.MILLISECONDS);
     }
 
+    @Listener(order = Order.LAST)
+    public void onInventoryClose(InteractInventoryEvent.Close event, @Root Player player) {
+        IActiveCharacter character = characterService().getCharacter(player);
+        if (!character.isStub() && saveQuery.contains(character.getCharacterBase().getUuid())) {
+            updateSlotEquipOrder(character.getCharacterBase());
+        }
+    }
 }
