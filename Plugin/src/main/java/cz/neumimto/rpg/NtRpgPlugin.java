@@ -86,6 +86,8 @@ import org.spongepowered.api.event.game.GameRegistryEvent;
 import org.spongepowered.api.event.game.state.GamePostInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.entity.Hotbar;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
@@ -1380,7 +1382,8 @@ public class NtRpgPlugin {
 						.deserialize(CommandLocalization.COMMAND_BIND_DESC))
 				.permission("ntrpg.player.skillbind")
 				.arguments(
-						GenericArguments.flags().valueFlag(GenericArguments
+						GenericArguments.flags().valueFlag(
+								GenericArguments
 								.string(TextHelper.parse("lmb")), "l")
 								.buildWith(new LearnedSkillCommandElement(TextHelper.parse("lmbskill"))),
 						GenericArguments.flags().valueFlag(GenericArguments
@@ -1400,7 +1403,7 @@ public class NtRpgPlugin {
 
 						ItemStack i = ItemStack.of(InventoryService.ITEM_SKILL_BIND, 1);
 						NtRpgPlugin.GlobalScope.inventorySerivce.createHotbarSkill(i, r, l);
-						pl.setItemInHand(HandTypes.MAIN_HAND, i);
+						pl.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class)).offer(i);
 					} else {
 						pl.sendMessage(TextHelper.parse(Localization.EMPTY_HAND_REQUIRED));
 					}

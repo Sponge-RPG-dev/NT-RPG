@@ -64,7 +64,7 @@ public class MobSettingsDao {
 				configMapper.serialize(scn);
 				hcl.save(scn);
 			} catch (Exception e) {
-				throw new RuntimeException("Could not create file " + s);
+				throw new RuntimeException("Could not create file " + s, e);
 			}
 		}
 		try {
@@ -72,7 +72,7 @@ public class MobSettingsDao {
 			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(properties.toPath()).build();
 			return mapper.bind(new RootMobConfig()).populate(hcl.load());
 		} catch (Exception e) {
-			throw new RuntimeException("Could not load file " + s);
+			throw new RuntimeException("Could not load file " + s, e);
 		}
 	}
 

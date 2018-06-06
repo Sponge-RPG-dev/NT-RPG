@@ -18,22 +18,19 @@ import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.filter.cause.Root;
+import org.spongepowered.api.event.filter.type.Exclude;
+import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
+import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -247,6 +244,21 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
         IActiveCharacter character = characterService().getCharacter(player);
         if (!character.isStub() && saveQuery.contains(character.getCharacterBase().getUuid())) {
             updateSlotEquipOrder(character.getCharacterBase());
+        }
+    }
+
+
+    @Listener
+    @Exclude({
+            ChangeInventoryEvent.Pickup.class,
+            ChangeInventoryEvent.Held.class,
+            ChangeInventoryEvent.SwapHand.class,
+            ChangeInventoryEvent.Transfer.class,
+            ChangeInventoryEvent.Equipment.class
+    })
+    public void onItemGive(ChangeInventoryEvent event, @Root Player player) {
+        if (event.getTargetInventory() instanceof Hotbar) {
+            Cause cause = event.getCause();
         }
     }
 }
