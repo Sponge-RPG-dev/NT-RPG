@@ -21,6 +21,7 @@ package cz.neumimto.rpg.effects;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.entities.PropertyContainer;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.manipulator.mutable.PotionEffectData;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectType;
 import org.spongepowered.api.entity.living.Living;
@@ -116,9 +117,12 @@ public interface IEffectConsumer<T extends Living> extends PropertyContainer {
 	}
 
 	default void addPotionEffect(PotionEffect e) {
-		List<PotionEffect> potionEffects = getEntity().get(Keys.POTION_EFFECTS).get();
-		potionEffects.add(e);
-		getEntity().offer(Keys.POTION_EFFECTS, potionEffects);
+		if (!isDetached()) {
+			T entity = getEntity();
+			PotionEffectData orCreate = entity.getOrCreate(PotionEffectData.class).get();
+			orCreate.addElement(e);
+			entity.offer(orCreate);
+		}
 	}
 
 	void sendMessage(String message);

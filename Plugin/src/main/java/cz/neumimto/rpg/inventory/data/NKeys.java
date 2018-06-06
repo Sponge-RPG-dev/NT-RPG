@@ -41,6 +41,7 @@ public class NKeys {
 	public static Key<Value<ItemDamage>> ITEM_DAMAGE = null;
 	public static Key<Value<SocketType>> ITEMSTACK_UPGRADE = null;
 	public static Key<Value<String>> SKILLTREE_NODE = null;
+	public static Key<Value<String>> SKILLBIND = null;
 	public static Key<Value<ItemMetaType>> ITEM_META_TYPE = null;
 	public static Key<Value<ItemSubtype>> ITEM_META_SUBTYPE = null;
 
@@ -72,6 +73,13 @@ public class NKeys {
 				.id("nt-rpg:skilltree_node")
 				.query(DataQuery.of(".", "ntrpg.skilltree.node"))
 				.name("Skilltree node")
+				.build();
+
+		SKILLBIND = Key.builder()
+				.type(new TypeToken<Value<String>>() {})
+				.id("nt-rpg:skillbind")
+				.query(DataQuery.of(".", "ntrpg.skillbind"))
+				.name("Skillbind")
 				.build();
 
 		ITEM_RARITY = Key.builder()

@@ -22,8 +22,12 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.*;
+import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillService;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -58,6 +62,8 @@ public class InventoryListener {
 	@Inject
 	private ItemService itemService;
 
+	@Inject
+	private SkillService skillService;
 
 	@Listener
 	public void onInventoryClose(InteractInventoryEvent.Close event, @First(typeFilter = {Player.class}) Player player) {
@@ -133,5 +139,27 @@ public class InventoryListener {
 		if (cancel) {
 			event.setCancelled(true);
 		}
+	}
+
+	@Listener(order = Order.LAST)
+	@IsCancelled(Tristate.FALSE)
+	public void onScroll(ChangeInventoryEvent.Held event, @Root Player player) {
+		Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
+		if (itemInHand.isPresent()) {
+			ItemStack itemStack = itemInHand.get();
+			String skill = itemStack.get(NKeys.SKILLBIND).orElse(null);
+			if (skill != null) {
+				IActiveCharacter character = characterService.getCharacter(player);
+				ISkill skill1 = skillService.getSkill(skill);
+				if (skill == null)
+					return;
+				SkillResult skillResult = skillService.executeSkill(character, skill1);
+				if (skillResult == SkillResult.WRONG_DATA) {
+					player.setItemInHand(HandTypes.MAIN_HAND, null);
+				}
+				event.setCancelled(true);
+			}
+		}
+
 	}
 }

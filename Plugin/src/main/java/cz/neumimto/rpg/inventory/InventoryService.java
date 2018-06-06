@@ -25,12 +25,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.Arg;
-import cz.neumimto.rpg.Console;
-import cz.neumimto.rpg.GroupService;
-import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.TextHelper;
+import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
@@ -41,13 +36,7 @@ import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.ItemLoreBuilderService;
 import cz.neumimto.rpg.inventory.data.NKeys;
-import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaHeader;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaTypeData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemRarityData;
-import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemGroupRequirementsData;
-import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemRequirementsData;
+import cz.neumimto.rpg.inventory.data.manipulators.*;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtypes;
@@ -85,24 +74,13 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.format.TextStyles;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -383,50 +361,6 @@ public class InventoryService {
 		Gui.sendCannotUseItemNotification(character, is, reason);
 	}
 
-	public void createHotbarSkill(ItemStack is, ISkill right, ISkill left) {
-		Optional<List<Text>> texts = is.get(Keys.ITEM_LORE);
-		List<Text> lore;
-		if (texts.isPresent()) {
-			lore = texts.get();
-			lore.clear();
-		} else {
-			lore = new ArrayList<>();
-		}
-		//lore.add(Text.of(LORE_FIRSTLINE, Localization.SKILLBIND));
-		is.offer(Keys.DISPLAY_NAME, Text.of(TextColors.GOLD, TextStyles.ITALIC, left != null ? left.getName() + " «-" : "", right != null ? "-» " + right.getName() : ""));
-		if (right != null) {
-			Text text = TextHelper.parse(Localization.CAST_SKILL_ON_RIGHTLICK,
-					Arg.arg("skill", right.getName()));
-			lore.add(text);
-			lore = makeDesc(right, lore);
-		}
-		if (left != null) {
-			Text text = TextHelper.parse(Localization.CAST_SKILl_ON_LEFTCLICK,
-					Arg.arg("skill", left.getName()));
-			lore.add(text);
-			lore = makeDesc(left, lore);
-		}
-		for (String a : Localization.ITEM_SKILLBIND_FOOTER.split(":n")) {
-			lore.add(Text.of(TextColors.DARK_GRAY, a));
-		}
-		ItemStackUtils.createEnchantmentGlow(is);
-		is.offer(Keys.ITEM_LORE, lore);
-	}
-
-	private List<Text> makeDesc(ISkill skill, List<Text> lore) {
-		if (skill.getDescription() != null) {
-			for (String s : skill.getDescription().split(":n")) {
-				lore.add(Text.of(TextColors.GRAY, "- " + s));
-			}
-		}
-		if (skill.getLore() != null) {
-			for (String s : skill.getLore().split(":n")) {
-				lore.add(Text.of(TextColors.GREEN, TextStyles.ITALIC, s));
-			}
-		}
-		return lore;
-	}
-
 	//todo event
 	public void onRightClick(IActiveCharacter character, int slot, Slot hotbarSlot) {
 		if (character.isStub()) {
@@ -441,33 +375,6 @@ public class InventoryService {
 		}
 		playerInvHandler.onLeftClick(character, slot, hotbarSlot);
 	}
-
-	/*protected void changeEquipedWeapon(IActiveCharacter character, Weapon changeTo, ItemStack itemStack) {
-		unEquipWeapon(character);
-
-		int slot = ((Hotbar) character.getCharacter().getInventory().query(Hotbar.class)).getSelectedSlotIndex();
-		character.setHotbarSlot(slot, changeTo);
-		changeTo.current = true;
-		changeTo.setSlot(slot);
-		if (itemStack == null) {
-			changeTo.setEffects(Collections.emptyMap());
-			changeTo.setItemType(new RPGItemType());
-		} else {
-			changeTo.setEffects(getItemEffects(itemStack));
-			changeTo.setItemType(RPGItemType.from(itemStack));
-		}
-
-		character.setMainHand(changeTo);
-		changeTo.onEquip(character);
-		//damageService.recalculateCharacterWeaponDamage(character, changeTo.getItemType());
-	}
-
-	private void unEquipWeapon(IActiveCharacter character) {
-		Weapon mainHand = character.getMainHand();
-		mainHand.current = false;
-		mainHand.onUnEquip(character);
-	}
-	*/
 
 	public CannotUseItemReason canWear(ItemStack itemStack, IActiveCharacter character, RPGItemType type) {
 		if (itemStack == null )
@@ -715,5 +622,14 @@ public class InventoryService {
 		if (character.isStub())
 			return true;
 		return playerInvHandler.processHotbarSwapHand(character, futureMainHand, futureOffHand);
+	}
+
+	public ItemStack createSkillbind(ISkill iSkill) {
+		ItemStack itemStack = ItemStack.of(ItemTypes.PUMPKIN_SEEDS, 1);
+		SkillBindData orCreate = itemStack.getOrCreate(SkillBindData.class).orElse(new SkillBindData(iSkill.getName()));
+		orCreate.set(NKeys.SKILLBIND, iSkill.getName());
+		itemStack.offer(Keys.DISPLAY_NAME, Text.of(iSkill.getName()));
+		itemStack.offer(orCreate);
+		return itemStack;
 	}
 }

@@ -1,8 +1,5 @@
 package cz.neumimto.skills.active;
 
-import static com.flowpowered.math.TrigMath.cos;
-import static com.flowpowered.math.TrigMath.sin;
-
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.SkillLocalization;
@@ -11,22 +8,18 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.common.negative.SlowPotion;
+import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ActiveSkill;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.NDamageType;
-import cz.neumimto.rpg.skills.ProjectileProperties;
-import cz.neumimto.rpg.skills.SkillModifier;
-import cz.neumimto.rpg.skills.SkillNodes;
-import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillSettings;
-import cz.neumimto.rpg.skills.SkillType;
+import cz.neumimto.rpg.skills.*;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Snowball;
 import org.spongepowered.api.world.World;
+
+import static com.flowpowered.math.TrigMath.cos;
+import static com.flowpowered.math.TrigMath.sin;
 
 /**
  * Created by NeumimTo on 11.8.17.
@@ -37,6 +30,9 @@ public class IceBolt extends ActiveSkill {
 	@Inject
 	private EffectService effectService;
 
+	@Inject
+	private EntityService entityService;
+
 	public IceBolt() {
 		setName("Icebolt");
 		setLore(SkillLocalization.SKILL_ICEBOLT_LORE);
@@ -46,7 +42,7 @@ public class IceBolt extends ActiveSkill {
 		skillSettings.addNode(SkillNodes.DAMAGE, 10, 10);
 		skillSettings.addNode(SkillNodes.VELOCITY, 0.5f, .5f);
 		skillSettings.addNode(SkillNodes.DURATION, 750, 15);
-		skillSettings.addNode(SkillNodes.AMPFLIER, 1, 0f);
+		skillSettings.addNode(SkillNodes.AMPLIFIER, 1, 0f);
 		settings = skillSettings;
 		addSkillType(SkillType.SUMMON);
 		addSkillType(SkillType.PROJECTILE);
@@ -73,13 +69,11 @@ public class IceBolt extends ActiveSkill {
 		build.setCaster(character);
 		build.type(getDamageType());
 
-		long slowduration = getLongNodeValue(info, SkillNodes.DURATION);
-		int slowamplf = getIntNodeValue(info, SkillNodes.AMPFLIER);
-
-
 		projectileProperties.onHit((event, caster, target) -> {
+			long slowduration = getLongNodeValue(info, SkillNodes.DURATION);
+			int slowamplf = getIntNodeValue(info, SkillNodes.AMPLIFIER);
 			target.getEntity().damage(projectileProperties.getDamage(), build.build());
-			effectService.addEffect(new SlowPotion(caster, slowduration, slowamplf), caster, this);
+			effectService.addEffect(new SlowPotion(target, slowduration, slowamplf), target, this);
 		});
 		return SkillResult.OK;
 	}

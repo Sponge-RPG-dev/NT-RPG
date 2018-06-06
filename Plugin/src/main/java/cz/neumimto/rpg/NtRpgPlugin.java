@@ -34,7 +34,6 @@ import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
@@ -87,7 +86,6 @@ import org.spongepowered.api.event.game.state.GamePostInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
-import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
@@ -283,6 +281,14 @@ public class NtRpgPlugin {
 				.immutableClass(ItemSubtypeData.Immutable.class)
 				.builder(new ItemSubtypeData.Builder())
 				.buildAndRegister(plugin);
+
+        DataRegistration.<ItemMetaHeader, ItemMetaHeader.Immutable>builder()
+                .manipulatorId("skill_bind")
+                .dataName("SkillBind")
+                .dataClass(SkillBindData.class)
+                .immutableClass(SkillBindData.Immutable.class)
+                .builder(new SkillBindData.Builder())
+                .buildAndRegister(plugin);
 
 		Sponge.getRegistry().registerModule(SocketType.class, new SocketTypeRegistry());
 		Sponge.getRegistry().registerModule(ICharacterAttribute.class, new AttributeRegistry());
@@ -1382,31 +1388,25 @@ public class NtRpgPlugin {
 						.deserialize(CommandLocalization.COMMAND_BIND_DESC))
 				.permission("ntrpg.player.skillbind")
 				.arguments(
-						GenericArguments.flags().valueFlag(
-								GenericArguments
-								.string(TextHelper.parse("lmb")), "l")
-								.buildWith(new LearnedSkillCommandElement(TextHelper.parse("lmbskill"))),
-						GenericArguments.flags().valueFlag(GenericArguments
-								.string(TextHelper.parse("rmb")), "r")
-								.buildWith(new LearnedSkillCommandElement(TextHelper.parse("rmbskill")))
-
+						new LearnedSkillCommandElement(TextHelper.parse("skill"))
 				)
 				.executor((src, args) -> {
-					Optional<ISkill> lmb = args.getOne("lmb");
+                    Optional<ISkill> skill = args.getOne("skill");
+                    if (skill.isPresent()) {
+                        ISkill iSkill = skill.get();
+                        if (!(iSkill instanceof ActiveSkill)) {
 
-					Optional<ISkill> rmb = args.getOne("rmb");
-					Player pl = (Player) src;
-					IActiveCharacter character = GlobalScope.characterService.getCharacter(pl);
-					if (!character.getPlayer().getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
-						ISkill r = rmb.orElse(null);
-						ISkill l = lmb.orElse(null);
+                            return CommandResult.empty();
+                        }
+                        Player pl = (Player) src;
+                        IActiveCharacter character = GlobalScope.characterService.getCharacter(pl);
+                        if (character.isStub()) {
+                            return CommandResult.empty();
+                        }
+                        ItemStack is = NtRpgPlugin.GlobalScope.inventorySerivce.createSkillbind(iSkill);
+                        pl.getInventory().query(Hotbar.class).offer(is);
+                    }
 
-						ItemStack i = ItemStack.of(InventoryService.ITEM_SKILL_BIND, 1);
-						NtRpgPlugin.GlobalScope.inventorySerivce.createHotbarSkill(i, r, l);
-						pl.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class)).offer(i);
-					} else {
-						pl.sendMessage(TextHelper.parse(Localization.EMPTY_HAND_REQUIRED));
-					}
 					return CommandResult.success();
 				})
 				.build();

@@ -37,7 +37,7 @@ public class Slow extends Targetted {
 		if (Utils.canDamage(source, target)) {
 			long duration = getLongNodeValue(info, SkillNodes.DURATION);
 			IEntity iEntity = entityService.get(target);
-			int i = getIntNodeValue(info, SkillNodes.AMPFLIER);
+			int i = getIntNodeValue(info, SkillNodes.AMPLIFIER);
 			SlowPotion effect = new SlowPotion(iEntity, duration, i);
 			effectService.addEffect(effect, iEntity, this);
 			return SkillResult.OK;
