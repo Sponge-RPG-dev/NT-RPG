@@ -36,7 +36,9 @@ public class SkillTeleport extends ActiveSkill {
 	@Override
 	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo extendedSkillInfo, SkillModifier skillModifier) {
 		Player player = character.getPlayer();
-		Optional<BlockRayHit<World>> optHit = BlockRay.from(player).stopFilter(Utils.SKILL_TARGET_BLOCK_FILTER).build().end();
+		double doubleNodeValue = getDoubleNodeValue(extendedSkillInfo, SkillNodes.RANGE);
+
+		Optional<BlockRayHit<World>> optHit = BlockRay.from(player).distanceLimit(doubleNodeValue).stopFilter(Utils.SKILL_TARGET_BLOCK_FILTER).build().end();
 		if (optHit.isPresent()) {
 			Vector3d lookPos = optHit.get().getBlockPosition().toDouble();
 			Location<World> worldLocation = new Location<>(player.getWorld(), lookPos);

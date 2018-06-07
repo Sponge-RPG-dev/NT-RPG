@@ -41,7 +41,7 @@ public class ShadowRun extends ActiveSkill {
     public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
         Location<World> location = character.getPlayer().getLocation();
         World extent = location.getExtent();
-        Optional<GroundLuminanceProperty> property = location.getBlock().getProperty(GroundLuminanceProperty.class);
+        Optional<GroundLuminanceProperty> property = location.add(0,-1,0).getBlock().getProperty(GroundLuminanceProperty.class);
         GroundLuminanceProperty groundLuminanceProperty = property.get();
         double llevel = getDoubleNodeValue(info, "max-light-level");
         if (groundLuminanceProperty.getValue() <= llevel) {

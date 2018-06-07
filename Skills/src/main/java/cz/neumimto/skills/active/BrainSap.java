@@ -14,7 +14,9 @@ import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
+import org.spongepowered.api.event.filter.IsCancelled;
 import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.util.Tristate;
 
 /**
  * Created by NeumimTo on 5.2.2016.
@@ -54,9 +56,8 @@ public class BrainSap extends Targetted {
 	}
 
     @Listener(order = Order.LAST)
+	@IsCancelled(Tristate.TRUE)
     public void onDamage(SkillDamageEventLate event) {
-        if (event.isCancelled())
-            return;
         if (event.getSkill() != null && event.getSkill().getClass() == this.getClass()) {
             IEntity caster = event.getCaster();
             entityService.healEntity(caster, (float) event.getDamage(), this);

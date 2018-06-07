@@ -40,6 +40,7 @@ public class Pandemic extends ActiveSkill {
 		setSettings(settings);
 		addSkillType(SkillType.AOE);
 		addSkillType(SkillType.DISEASE);
+		setDamageType(NDamageType.MAGICAL);
 	}
 
 	@Override

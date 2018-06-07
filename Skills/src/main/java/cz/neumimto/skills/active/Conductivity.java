@@ -1,14 +1,13 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.SkillLocalization;
-import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.*;
 
 /**
  * Created by NeumimTo on 1.8.2017.
  */
-@ResourceLoader.Skill
+//@ResourceLoader.Skill
 public class Conductivity extends ActiveSkill {
 
 	public Conductivity() {

@@ -29,6 +29,7 @@ public class Slow extends Targetted {
 		setDescription(SkillLocalization.SKILL_SLOW_DESC);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DURATION, 5000, 100);
+		settings.addNode(SkillNodes.AMPLIFIER, 1, 2);
 		setSettings(settings);
 	}
 
