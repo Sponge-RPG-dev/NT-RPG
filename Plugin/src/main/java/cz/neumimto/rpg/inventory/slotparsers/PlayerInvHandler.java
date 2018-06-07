@@ -4,12 +4,7 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.inventory.CannotUseItemReason;
-import cz.neumimto.rpg.inventory.CustomItemFactory;
-import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.inventory.ItemService;
-import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.WeaponClass;
+import cz.neumimto.rpg.inventory.*;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.CharacterService;
@@ -110,10 +105,14 @@ public abstract class PlayerInvHandler implements CatalogType {
      * @param query Slot having an item to be equipied
      */
     protected CustomItem initializeItemStack(IActiveCharacter character, Slot query) {
-       ItemStack itemStack = query.peek().get();
-        CustomItem customItem = CustomItemFactory.createCustomItem(itemStack, query);
-        effectService().applyGlobalEffectsAsEnchantments(customItem.getEffects(), character, customItem); //todo
-        return customItem;
+        Optional<ItemStack> oItemStack = query.peek();
+        if (oItemStack.isPresent()) {
+            ItemStack itemStack = oItemStack.get();
+            CustomItem customItem = CustomItemFactory.createCustomItem(itemStack, query);
+            effectService().applyGlobalEffectsAsEnchantments(customItem.getEffects(), character, customItem); //todo
+            return customItem;
+        }
+        return null;
     }
 
     protected void deInitializeItemStack(IActiveCharacter character, EquipedSlot query) {
