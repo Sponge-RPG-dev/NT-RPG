@@ -13,7 +13,6 @@ public class TestModelMapper extends EffectModelMapper {
         super(t);
     }
 
-    //todo  asm-fy this later
     public Object parse(Map<String, String> data) {
         TestModel model = new TestModel();
         //model.q = (String) typeMapperMap.get(String.class).apply(data.get("q"));

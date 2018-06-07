@@ -187,7 +187,7 @@ public class Gui {
 	}
 
 	public static void displayCurrentClicks(IActiveCharacter character, String combo) {
-		character.sendMessage(ChatTypes.ACTION_BAR,
+		character.getPlayer().sendMessage(ChatTypes.ACTION_BAR,
 				Text.builder(combo.replaceAll(".", "$0, "))
 						.color(TextColors.GOLD)
 						.build());

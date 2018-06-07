@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.effects.model.mappers;
 
+import com.google.gson.Gson;
 import cz.neumimto.rpg.effects.model.EffectModelMapper;
 import cz.neumimto.rpg.utils.Utils;
 
@@ -20,7 +21,7 @@ public abstract class SingleValueModelMapper extends EffectModelMapper {
         if (map == null)
             return null;
         if (map.size() != 1)
-            throw new RuntimeException("SingleValueModelMapper but map.size <> 1");
+            throw new RuntimeException("SingleValueModelMapper but map.size <> 1" + new Gson().toJson(map));
         return parseStr(map.values().stream().findFirst().get());
     }
 
