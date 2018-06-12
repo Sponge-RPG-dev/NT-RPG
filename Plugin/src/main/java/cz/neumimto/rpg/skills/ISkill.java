@@ -19,8 +19,8 @@
 package cz.neumimto.rpg.skills;
 
 import com.typesafe.config.Config;
-import cz.neumimto.rpg.TextHelper;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
@@ -148,7 +148,7 @@ public interface ISkill extends IEffectSourceProvider {
 					of.offer(Keys.DISPLAY_NAME, Text.builder(s1).build());
 					of.offer(new MenuInventoryData(true));
 					of.offer(Keys.ITEM_LORE, Arrays.asList(
-							Text.builder(Localization.SKILL_VALUE_STARTS_AT)
+							Text.builder(Localizations.SKILL_VALUE_STARTS_AT)
 									.style(TextStyles.BOLD)
 									.color(TextColors.GOLD)
 									.append(Text.builder(": " + init)
@@ -156,7 +156,7 @@ public interface ISkill extends IEffectSourceProvider {
 									.build())
 								.build()
 									,
-							Text.builder(Localization.SKILL_VALUE_PER_LEVEL)
+							Text.builder(Localizations.SKILL_VALUE_PER_LEVEL)
 									.style(TextStyles.BOLD).color(TextColors.GOLD)
 									.append(Text.builder(": " + lbonus)
 									.color(TextColors.GREEN).style(TextStyles.BOLD)
@@ -186,11 +186,11 @@ public interface ISkill extends IEffectSourceProvider {
 		String desc = getDescription();
 		String skillTargetType = null;
 		if (this instanceof ActiveSkill) {
-			skillTargetType = Localization.SKILL_TYPE_ACTIVE;
+			skillTargetType = Localizations.SKILL_TYPE_ACTIVE;
 		} else if (this instanceof PassiveSkill) {
-			skillTargetType = Localization.SKILL_TYPE_PASSIVE;
+			skillTargetType = Localizations.SKILL_TYPE_PASSIVE;
 		} else if (this instanceof Targetted) {
-			skillTargetType = Localization.SKILL_TYPE_TARGETTED;
+			skillTargetType = Localizations.SKILL_TYPE_TARGETTED;
 		}
 		if (desc != null) {
 			lore.addAll(TextHelper.splitStringByDelimiter(desc));
@@ -210,7 +210,7 @@ public interface ISkill extends IEffectSourceProvider {
 			totalLevel = ei.getTotalLevel();
 		}
 
-		String s = Localization.MIN_PLAYER_LEVEL;
+		String s = Localizations.MIN_PLAYER_LEVEL;
 		if (minPlayerLevel > 0) {
 			lore.add(Text.builder(s).color(TextColors.YELLOW)
 					.append(Text.builder(" " + minPlayerLevel)
@@ -219,14 +219,14 @@ public interface ISkill extends IEffectSourceProvider {
 					.build());
 		}
 
-		s = Localization.MAX_SKILL_LEVEL + " " + maxSkillLevel;
+		s = Localizations.MAX_SKILL_LEVEL + " " + maxSkillLevel;
 		lore.add(Text.builder(s)
 				.color(TextColors.YELLOW)
 				.build());
 
 
 		lore.add(Text.EMPTY);
-		lore.add(Text.builder(Localization.SKILL_LEVEL + " " + currentLevel + " (" + totalLevel + ") ").build());
+		lore.add(Text.builder(Localizations.SKILL_LEVEL + " " + currentLevel + " (" + totalLevel + ") ").build());
 
 		if (getLore() != null) {
 			String[] split = getLore().split(":n");

@@ -25,8 +25,11 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.*;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.Console;
+import cz.neumimto.rpg.GroupService;
+import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectParams;
@@ -140,7 +143,7 @@ public class InventoryService {
 	@Reload(on = ReloadService.PLUGIN_CONFIG)
 	@PostProcess(priority = 100)
 	public void init() {
-		NORMAL_RARITY = Text.of(Localization.NORMAL_RARITY);
+		NORMAL_RARITY = Text.of(Localizations.NORMAL_RARITY);
 		loadItemGroups();
 		String s = PluginConfig.EQUIPED_SLOT_RESOLVE_SRATEGY;
 		Optional<PlayerInvHandler> type = Sponge.getRegistry().getType(PlayerInvHandler.class, s);

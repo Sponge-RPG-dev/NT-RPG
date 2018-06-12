@@ -18,52 +18,12 @@
 
 package cz.neumimto.rpg.utils;
 
-import static org.spongepowered.api.item.ItemTypes.APPLE;
-import static org.spongepowered.api.item.ItemTypes.BAKED_POTATO;
-import static org.spongepowered.api.item.ItemTypes.BREAD;
-import static org.spongepowered.api.item.ItemTypes.CARROT;
-import static org.spongepowered.api.item.ItemTypes.CHAINMAIL_BOOTS;
-import static org.spongepowered.api.item.ItemTypes.CHAINMAIL_CHESTPLATE;
-import static org.spongepowered.api.item.ItemTypes.CHAINMAIL_HELMET;
-import static org.spongepowered.api.item.ItemTypes.CHAINMAIL_LEGGINGS;
-import static org.spongepowered.api.item.ItemTypes.CHICKEN;
-import static org.spongepowered.api.item.ItemTypes.COOKED_BEEF;
-import static org.spongepowered.api.item.ItemTypes.COOKED_CHICKEN;
-import static org.spongepowered.api.item.ItemTypes.COOKED_FISH;
-import static org.spongepowered.api.item.ItemTypes.COOKED_MUTTON;
-import static org.spongepowered.api.item.ItemTypes.COOKED_RABBIT;
-import static org.spongepowered.api.item.ItemTypes.COOKIE;
-import static org.spongepowered.api.item.ItemTypes.DIAMOND_BOOTS;
-import static org.spongepowered.api.item.ItemTypes.DIAMOND_CHESTPLATE;
-import static org.spongepowered.api.item.ItemTypes.DIAMOND_HELMET;
-import static org.spongepowered.api.item.ItemTypes.DIAMOND_LEGGINGS;
-import static org.spongepowered.api.item.ItemTypes.FISH;
-import static org.spongepowered.api.item.ItemTypes.GOLDEN_APPLE;
-import static org.spongepowered.api.item.ItemTypes.GOLDEN_BOOTS;
-import static org.spongepowered.api.item.ItemTypes.GOLDEN_CHESTPLATE;
-import static org.spongepowered.api.item.ItemTypes.GOLDEN_HELMET;
-import static org.spongepowered.api.item.ItemTypes.GOLDEN_LEGGINGS;
-import static org.spongepowered.api.item.ItemTypes.IRON_BOOTS;
-import static org.spongepowered.api.item.ItemTypes.IRON_CHESTPLATE;
-import static org.spongepowered.api.item.ItemTypes.IRON_HELMET;
-import static org.spongepowered.api.item.ItemTypes.IRON_LEGGINGS;
-import static org.spongepowered.api.item.ItemTypes.LEATHER_BOOTS;
-import static org.spongepowered.api.item.ItemTypes.LEATHER_CHESTPLATE;
-import static org.spongepowered.api.item.ItemTypes.LEATHER_HELMET;
-import static org.spongepowered.api.item.ItemTypes.LEATHER_LEGGINGS;
-import static org.spongepowered.api.item.ItemTypes.MELON;
-import static org.spongepowered.api.item.ItemTypes.POISONOUS_POTATO;
-import static org.spongepowered.api.item.ItemTypes.PORKCHOP;
-import static org.spongepowered.api.item.ItemTypes.POTATO;
-import static org.spongepowered.api.item.ItemTypes.POTION;
-import static org.spongepowered.api.item.ItemTypes.ROTTEN_FLESH;
-
 import com.flowpowered.math.TrigMath;
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
@@ -81,13 +41,11 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.regex.Pattern;
+
+import static org.spongepowered.api.item.ItemTypes.*;
 
 /**
  * Created by NeumimTo on 27.3.2015.
@@ -157,9 +115,7 @@ public class ItemStackUtils {
 			List<Text> a = texts.get();
 			if (a.size() > 1) {
 				Text text = a.get(0);
-				if (text.toPlain().equalsIgnoreCase(Localization.SKILLBIND)) {
-					return true;
-				}
+                return text.toPlain().equalsIgnoreCase(Localizations.SKILLBIND);
 			}
 		}
 		return false;

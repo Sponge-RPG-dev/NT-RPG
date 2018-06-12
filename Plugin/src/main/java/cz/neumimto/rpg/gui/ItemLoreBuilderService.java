@@ -2,9 +2,9 @@ package cz.neumimto.rpg.gui;
 
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.TextHelper;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.inventory.ItemLoreSections;
@@ -24,11 +24,7 @@ import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -64,14 +60,14 @@ public class ItemLoreBuilderService {
         groupMinLevelColor = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_GROUP_MIN_LEVEL_COLOR).get();
 
 
-        effectSection = TextHelper.parse(Localization.ITEM_EFFECTS_SECTION);
-        rarity = TextHelper.parse(Localization.ITEM_RARITY_SECTION);
-        damage = TextHelper.parse(Localization.ITEM_DAMAGE_SECTION);
-        level = TextHelper.parse(Localization.ITEM_LEVEL_SECTION);
-        sockets = TextHelper.parse(Localization.ITEM_SOCKETS_SECTION);
-        attributes = TextHelper.parse(Localization.ITEM_ATTRIBUTES_SECTIO);
-        requirements = TextHelper.parse(Localization.ITEM_REQUIREMENTS_SECTION);
-        metaType = TextHelper.parse(Localization.ITEM_META_TYPE_NAME);
+        effectSection = TextHelper.parse(Localizations.ITEM_EFFECTS_SECTION);
+        rarity = TextHelper.parse(Localizations.ITEM_RARITY_SECTION);
+        damage = TextHelper.parse(Localizations.ITEM_DAMAGE_SECTION);
+        level = TextHelper.parse(Localizations.ITEM_LEVEL_SECTION);
+        sockets = TextHelper.parse(Localizations.ITEM_SOCKETS_SECTION);
+        attributes = TextHelper.parse(Localizations.ITEM_ATTRIBUTES_SECTIO);
+        requirements = TextHelper.parse(Localizations.ITEM_REQUIREMENTS_SECTION);
+        metaType = TextHelper.parse(Localizations.ITEM_META_TYPE_NAME);
 
         loreOrder = PluginConfig.ITEM_LORE_ORDER.stream().map(ItemLoreSections::valueOf).collect(Collectors.toList());
 
@@ -82,7 +78,7 @@ public class ItemLoreBuilderService {
             rarityMap.put(i, t);
         }
 
-        unknownRarity = TextHelper.parse(Localization.UNKNOWN_RARITY);
+        unknownRarity = TextHelper.parse(Localizations.UNKNOWN_RARITY);
 
     }
 
@@ -139,7 +135,7 @@ public class ItemLoreBuilderService {
                 createDelimiter(ItemLoreBuilderService.sockets);
                 for (int i = 0; i < sockets.size(); i++) {
                     if (DataConstants.EMPTY_SOCKET.equals(content.get(i))) {
-                        t.add(Text.builder().append(TextHelper.parse(String.format(Localization.SOCKET_EMPTY, sockets.get(i).getName())))                                .build());
+                        t.add(Text.builder().append(TextHelper.parse(String.format(Localizations.SOCKET_EMPTY, sockets.get(i).getName())))                                .build());
                     } else {
                         t.add(Text.builder("- ").color(TextColors.DARK_RED).append(content).build());
                     }

@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.skills;
 
 import com.typesafe.config.Config;
+import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.TextHelper;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.gui.GuiHelper;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
@@ -106,7 +106,7 @@ public class PropertySkill extends AbstractSkill{
             ItemStack is = GuiHelper.itemStack(ItemTypes.PAPER);
             List<Text> lore = new ArrayList<>();
             is.offer(Keys.DISPLAY_NAME, TextHelper.makeText(Utils.configNodeToReadableString(wrapper.propertyName), TextColors.GREEN));
-            lore.add(Text.builder(Localization.SKILL_LEVEL)
+            lore.add(Text.builder(Localizations.SKILL_LEVEL)
                     .style(TextStyles.BOLD)
                     .color(TextColors.GOLD)
                     .append(

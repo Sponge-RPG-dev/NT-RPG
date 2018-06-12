@@ -1,10 +1,10 @@
 package cz.neumimto.rpg.gui;
 
 import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.commands.InfoCommand;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
@@ -114,7 +114,7 @@ public class GuiHelper {
 	private static ItemStack createPropertyCommand(PlayerGroup group) {
 		ItemStack i = itemStack(ItemTypes.BOOK);
 		i.offer(NKeys.MENU_INVENTORY, true);
-		i.offer(Keys.DISPLAY_NAME, Text.of(Localization.ATTRIBUTES, TextColors.DARK_RED));
+		i.offer(Keys.DISPLAY_NAME, Text.of(Localizations.ATTRIBUTES, TextColors.DARK_RED));
 		String cc = IoC.get().build(InfoCommand.class).getAliases().iterator().next();
 		i.offer(new InventoryCommandItemMenuData(cc + " properties-initial " + group.getName()));
 		return i;
@@ -123,7 +123,7 @@ public class GuiHelper {
 	public static ItemStack createAttributesCommand(PlayerGroup group) {
 		ItemStack i = itemStack(ItemTypes.BOOK);
 		i.offer(NKeys.MENU_INVENTORY, true);
-		i.offer(Keys.DISPLAY_NAME, Text.of(Localization.ATTRIBUTES, TextColors.DARK_RED));
+		i.offer(Keys.DISPLAY_NAME, Text.of(Localizations.ATTRIBUTES, TextColors.DARK_RED));
 		String cc = IoC.get().build(InfoCommand.class).getAliases().iterator().next();
 		i.offer(new InventoryCommandItemMenuData(cc + " attributes-initial " + group.getName()));
 		return i;
@@ -142,8 +142,8 @@ public class GuiHelper {
 	public static ItemStack createArmorCommand(PlayerGroup group) {
 		ItemStack i = itemStack(ItemTypes.DIAMOND_CHESTPLATE);
 		i.offer(NKeys.MENU_INVENTORY, true);
-		i.offer(Keys.DISPLAY_NAME, Text.of(Localization.ARMOR, TextColors.DARK_RED));
-		i.offer(Keys.ITEM_LORE, Collections.singletonList(Text.of(Localization.ARMOR_MENU_HELP, TextColors.GRAY)));
+		i.offer(Keys.DISPLAY_NAME, Text.of(Localizations.ARMOR, TextColors.DARK_RED));
+		i.offer(Keys.ITEM_LORE, Collections.singletonList(Text.of(Localizations.ARMOR_MENU_HELP, TextColors.GRAY)));
 		i.offer(new InventoryCommandItemMenuData("armor " + group.getName()));
 		return i;
 	}
@@ -151,8 +151,8 @@ public class GuiHelper {
 	public static ItemStack createWeaponCommand(PlayerGroup group) {
 		ItemStack i = itemStack(ItemTypes.DIAMOND_SWORD);
 		i.offer(NKeys.MENU_INVENTORY, true);
-		i.offer(Keys.DISPLAY_NAME, Text.of(Localization.WEAPONS, TextColors.DARK_RED));
-		i.offer(Keys.ITEM_LORE, Collections.singletonList(Text.of(Localization.WEAPONS_MENU_HELP, TextColors.GRAY)));
+		i.offer(Keys.DISPLAY_NAME, Text.of(Localizations.WEAPONS, TextColors.DARK_RED));
+		i.offer(Keys.ITEM_LORE, Collections.singletonList(Text.of(Localizations.WEAPONS_MENU_HELP, TextColors.GRAY)));
 		i.offer(new InventoryCommandItemMenuData("weapons " + group.getName()));
 		return i;
 	}
@@ -201,7 +201,7 @@ public class GuiHelper {
 		if (g.getType() == EffectSourceType.RACE) {
 			l = "race ";
 		}
-		of.offer(Keys.DISPLAY_NAME, Text.of(Localization.BACK, TextColors.WHITE));
+		of.offer(Keys.DISPLAY_NAME, Text.of(Localizations.BACK, TextColors.WHITE));
 		of.offer(new InventoryCommandItemMenuData(l + g.getName()));
 		return of;
 	}
@@ -254,7 +254,7 @@ public class GuiHelper {
 
 	public static ItemStack createSkillTreeConfirmButtom() {
 		ItemStack itemStack = itemStack(ItemTypes.KNOWLEDGE_BOOK);
-		itemStack.offer(Keys.DISPLAY_NAME, Text.of(Localization.CONFIRM_SKILL_SELECTION_BUTTON));
+		itemStack.offer(Keys.DISPLAY_NAME, Text.of(Localizations.CONFIRM_SKILL_SELECTION_BUTTON));
 		itemStack.offer(new SkillTreeInventoryViewControllsData(SkillTreeControllsButton.CONFIRM));
 		return itemStack;
 	}
@@ -264,7 +264,7 @@ public class GuiHelper {
 				.of(InventoryArchetypes.DOUBLE_CHEST)
 			 	.build(plugin);
 
-		ItemStack back = back("skilltree", Localization.SKILLTREE);
+		ItemStack back = back("skilltree", Localizations.SKILLTREE);
 		build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0,0))).offer(back);
 
 		if (skillData instanceof SkillPathData) {
@@ -343,7 +343,7 @@ public class GuiHelper {
 
 	public static ItemStack rpgItemTypeToItemStack(ConfigRPGItemType configRPGItemType) {
 		ItemStack q = itemStack(configRPGItemType.getRpgItemType().getItemType());
-		Text lore = Text.builder(Localization.ITEM_DAMAGE)
+		Text lore = Text.builder(Localizations.ITEM_DAMAGE)
 				.color(TextColors.GOLD)
 				.style(TextStyles.BOLD)
 				.append(Text.builder(": " + configRPGItemType.getDamage())

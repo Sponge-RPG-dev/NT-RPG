@@ -20,9 +20,9 @@ package cz.neumimto.rpg.players.parties;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.Arg;
-import cz.neumimto.rpg.TextHelper;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.core.localization.Arg;
+import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.events.party.PartyInviteEvent;
 import cz.neumimto.rpg.events.party.PartyJoinEvent;
 import cz.neumimto.rpg.events.party.PartyLeaveEvent;
@@ -61,8 +61,8 @@ public class PartyService {
 	}
 
 	public void sendPartyInvite(Party party, IActiveCharacter tcharacter) {
-		party.sendPartyMessage(TextHelper.parse(Localization.PLAYER_INVITED_TO_PARTY_PARTY_MSG, Arg.arg("player", tcharacter.getPlayer().getName())));
-		tcharacter.getPlayer().sendMessage(TextHelper.parse(Localization.PLAYER_INVITED_TO_PARTY, Arg.arg("player", tcharacter.getPlayer().getName())));
+		party.sendPartyMessage(TextHelper.parse(Localizations.PLAYER_INVITED_TO_PARTY_PARTY_MSG, Arg.arg("player", tcharacter.getPlayer().getName())));
+		tcharacter.getPlayer().sendMessage(TextHelper.parse(Localizations.PLAYER_INVITED_TO_PARTY, Arg.arg("player", tcharacter.getPlayer().getName())));
 		party.getInvites().add(tcharacter.getPlayer().getUniqueId());
 		PartyInviteEvent event = new PartyInviteEvent(party, tcharacter);
 		game.getEventManager().post(event);
@@ -75,7 +75,7 @@ public class PartyService {
 		if (character.isStub())
 			return;
 		if (character.hasParty()) {
-			Gui.sendMessage(character, Localization.ALREADY_IN_PARTY);
+			Gui.sendMessage(character, Localizations.ALREADY_IN_PARTY);
 			return;
 		}
 		Player player = character.getPlayer();
@@ -83,8 +83,8 @@ public class PartyService {
 		PartyJoinEvent event = new PartyJoinEvent(character, party);
 		if (event.isCancelled())
 			return;
-		Text msg = TextHelper.parse(Localization.PARTY_MSG_ON_PLAYER_JOIN, Arg.arg("player", player.getName()));
-		player.sendMessage(TextHelper.parse(Localization.PLAYER_MSG_ON_JOIN_PARTY));
+		Text msg = TextHelper.parse(Localizations.PARTY_MSG_ON_PLAYER_JOIN, Arg.arg("player", player.getName()));
+		player.sendMessage(TextHelper.parse(Localizations.PLAYER_MSG_ON_JOIN_PARTY));
 		party.sendPartyMessage(msg);
 		party.addPlayer(character);
 		character.setParty(party);

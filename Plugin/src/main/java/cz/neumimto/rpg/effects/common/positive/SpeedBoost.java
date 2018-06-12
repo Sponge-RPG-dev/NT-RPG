@@ -20,7 +20,7 @@ package cz.neumimto.rpg.effects.common.positive;
 
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.ClassGenerator;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IGlobalEffect;
@@ -91,7 +91,7 @@ public class SpeedBoost extends EffectBase {
 			location.getExtent().spawnParticles(build, location.getPosition().add(vector3d));
 		}
 
-		getConsumer().sendMessage(Localization.SPEED_BOOST_APPLY);
+		getConsumer().sendMessage(Localizations.SPEED_BOOST_APPLY);
 
 	}
 
@@ -101,7 +101,7 @@ public class SpeedBoost extends EffectBase {
 		getConsumer().setProperty(DefaultProperties.walk_speed,
 				getGlobalScope().characterService.getCharacterProperty(getConsumer(), DefaultProperties.walk_speed) - speedbonus);
 		getGlobalScope().characterService.updateWalkSpeed(getConsumer());
-		getConsumer().sendMessage(Localization.SPEED_BOOST_EXPIRE);
+		getConsumer().sendMessage(Localizations.SPEED_BOOST_EXPIRE);
 	}
 
 	@Override

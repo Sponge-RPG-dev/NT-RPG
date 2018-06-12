@@ -19,7 +19,7 @@
 package cz.neumimto.rpg.skills;
 
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 
@@ -39,7 +39,7 @@ public abstract class PassiveSkill extends AbstractSkill {
 
 	@Override
 	public SkillResult onPreUse(IActiveCharacter character) {
-		character.sendMessage(Localization.CANT_USE_PASSIVE_SKILL);
+		character.sendMessage(Localizations.CANT_USE_PASSIVE_SKILL);
 		return SkillResult.FAIL;
 	}
 
