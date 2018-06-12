@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.skills;
 
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.players.IActiveCharacter;
 
 /**
@@ -31,7 +31,7 @@ public abstract class ActiveSkill extends AbstractSkill {
 		ExtendedSkillInfo info = character.getSkillInfo(this);
 
 		if (character.isSilenced() && !getSkillTypes().contains(SkillType.CAN_CAST_WHILE_SILENCED)) {
-			character.sendMessage(Localization.PLAYER_IS_SILENCED);
+			character.sendMessage(Localizations.PLAYER_IS_SILENCED);
 			return SkillResult.CASTER_SILENCED;
 		}
 		//todo

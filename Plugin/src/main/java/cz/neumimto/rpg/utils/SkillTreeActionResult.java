@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.utils;
 
-import cz.neumimto.rpg.Arg;
-import cz.neumimto.rpg.TextHelper;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.core.localization.Arg;
+import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.configuration.Localizations;
 import org.spongepowered.api.text.Text;
 
 import java.util.Map;
@@ -11,19 +11,19 @@ import java.util.Map;
  * Created by NeumimTo on 31.12.2015.
  */
 public enum SkillTreeActionResult {
-	NO_SKILLPOINTS(Localization.NO_SKILLPOINTS),
-	SKILL_ON_MAX_LEVEL(Localization.SKILL_IS_ON_MAX_LEVEL),
-	NOT_LEARNED_SKILL(Localization.NOT_LEARNED_SKILL),
-	SKILL_REQUIRES_HIGHER_LEVEL(Localization.SKILL_REQUIRES_HIGHER_LEVEL),
-	UPGRADED(Localization.SKILL_UPGRADED),
-	SKILL_IS_NOT_IN_A_TREE(Localization.SKILL_NOT_IN_A_TREE),
-	DOES_NOT_MATCH_CHAIN(Localization.MISSING_SKILL_DEPENDENCIES),
-	ALREADY_LEARNED(Localization.SKILL_ALREADY_LEARNED),
-	LEARNED(Localization.SKILL_LEARNED),
-	SKILL_CONFCLITS(Localization.SKILL_CONFLICTS),
+	NO_SKILLPOINTS(Localizations.NO_SKILLPOINTS),
+	SKILL_ON_MAX_LEVEL(Localizations.SKILL_IS_ON_MAX_LEVEL),
+	NOT_LEARNED_SKILL(Localizations.NOT_LEARNED_SKILL),
+	SKILL_REQUIRES_HIGHER_LEVEL(Localizations.SKILL_REQUIRES_HIGHER_LEVEL),
+	UPGRADED(Localizations.SKILL_UPGRADED),
+	SKILL_IS_NOT_IN_A_TREE(Localizations.SKILL_NOT_IN_A_TREE),
+	DOES_NOT_MATCH_CHAIN(Localizations.MISSING_SKILL_DEPENDENCIES),
+	ALREADY_LEARNED(Localizations.SKILL_ALREADY_LEARNED),
+	LEARNED(Localizations.SKILL_LEARNED),
+	SKILL_CONFCLITS(Localizations.SKILL_CONFLICTS),
 	UNKNOWN(""),
-	INSUFFICIENT_LEVEL_GAP(Localization.INSUFFICIENT_LEVEL_GAP),
-	NO_ACCESS_TO_SKILL(Localization.NO_ACCESS_TO_SKILL);
+	INSUFFICIENT_LEVEL_GAP(Localizations.INSUFFICIENT_LEVEL_GAP),
+	NO_ACCESS_TO_SKILL(Localizations.NO_ACCESS_TO_SKILL);
 
     public String message;
 

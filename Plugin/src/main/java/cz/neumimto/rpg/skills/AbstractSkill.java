@@ -19,9 +19,9 @@
 package cz.neumimto.rpg.skills;
 
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.rpg.Arg;
-import cz.neumimto.rpg.TextHelper;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.core.localization.Arg;
+import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -70,7 +70,7 @@ public abstract class AbstractSkill implements ISkill {
 	@Override
 	public void skillLearn(IActiveCharacter IActiveCharacter) {
 		if (PluginConfig.PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE) {
-			Text t = TextHelper.parse(Localization.PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE,
+			Text t = TextHelper.parse(Localizations.PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE,
 					Arg.arg("%player%", IActiveCharacter.getName())
 							.with("skill", getName()));
 			game.getServer().getOnlinePlayers().forEach(p -> p.sendMessage(t));
@@ -80,7 +80,7 @@ public abstract class AbstractSkill implements ISkill {
 	@Override
 	public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
 		if (PluginConfig.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE) {
-			Text t = TextHelper.parse(Localization.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE,
+			Text t = TextHelper.parse(Localizations.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE,
 					Arg.arg("%player%", IActiveCharacter.getName())
 							.with("skill", getName())
 							.with("%level%", level));
@@ -91,7 +91,7 @@ public abstract class AbstractSkill implements ISkill {
 	@Override
 	public void skillRefund(IActiveCharacter IActiveCharacter) {
 		if (PluginConfig.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE) {
-			Text t = TextHelper.parse(Localization.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE,
+			Text t = TextHelper.parse(Localizations.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE,
 					Arg.arg("%player%", IActiveCharacter.getName())
 							.with("skill", getName()));
 			game.getServer().getOnlinePlayers().forEach(p -> p.sendMessage(t));

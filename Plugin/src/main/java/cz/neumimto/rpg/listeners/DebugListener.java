@@ -17,7 +17,8 @@
  */
 package cz.neumimto.rpg.listeners;
 
-import cz.neumimto.rpg.TextHelper;
+
+import cz.neumimto.core.localization.TextHelper;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;

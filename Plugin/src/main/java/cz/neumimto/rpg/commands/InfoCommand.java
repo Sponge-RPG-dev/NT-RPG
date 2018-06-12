@@ -19,13 +19,13 @@
 package cz.neumimto.rpg.commands;
 
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.configuration.CommandPermissions;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
@@ -100,13 +100,13 @@ public class InfoCommand extends CommandBase {
 			if (o.isPresent()) {
 				Player player = o.get();
 				if (player != commandSource && !player.hasPermission("list.character.others")) {
-					player.sendMessage(Text.of(Localization.NO_PERMISSIONS));
+					player.sendMessage(Text.of(Localizations.NO_PERMISSIONS));
 					return CommandResult.empty();
 				}
 				printPlayerInfo(commandSource, args, player);
 				return CommandResult.success();
 			} else {
-				commandSource.sendMessage(TextHelper.parse(Localization.PLAYER_IS_OFFLINE_MSG));
+				commandSource.sendMessage(TextHelper.parse(Localizations.PLAYER_IS_OFFLINE_MSG));
 			}
 		} else if (args[0].equalsIgnoreCase("character")) {
 			if (!(commandSource instanceof Player)) {
@@ -165,7 +165,7 @@ public class InfoCommand extends CommandBase {
 			if (!character.isStub()) {
 				Gui.sendStatus(character);
 			} else {
-				player.sendMessage(Text.of(Localization.CHARACTER_IS_REQUIRED));
+				player.sendMessage(Text.of(Localizations.CHARACTER_IS_REQUIRED));
 
 			}
 		} else if (args[0].equalsIgnoreCase("skilltree")) {

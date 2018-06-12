@@ -85,7 +85,7 @@
             <dependency>
                 <groupId>com.github.NeumimTo</groupId>
                 <artifactId>NTCore</artifactId>
-                <version>8fadb2391f</version>
+                <version>localizations-SNAPSHOT</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>

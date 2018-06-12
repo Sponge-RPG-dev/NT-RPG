@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.players;
 
-import cz.neumimto.rpg.TextHelper;
+import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffect;

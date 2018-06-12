@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.effects.common.def;
 
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.CoreEffectTypes;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectContainer;
@@ -61,7 +61,7 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 
 			serverBossBar.setName(
 					Text.builder(Utils.capitalizeFirst(classname)).color(extendedNClass.getConfigClass().getPreferedColor())
-							.append(Text.builder(" " + Localization.LEVEL+": ").color(TextColors.DARK_GRAY).build())
+							.append(Text.builder(" " + Localizations.LEVEL+": ").color(TextColors.DARK_GRAY).build())
 							.append(Text.builder(String.valueOf(extendedNClass.getLevel())).color(TextColors.GOLD).build())
 							.append(Text.builder(" +"+df.format(expCurrentSession)).color(TextColors.GREEN).build())
 							.append(Text.builder(" " + df.format(extendedNClass.getExperiencesFromLevel())

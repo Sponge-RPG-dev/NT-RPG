@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.Pair;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.skills.SkillTree;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
@@ -54,8 +54,8 @@ public class SkillTreeViewModel {
     }
 
     public enum InteractiveMode {
-        DETAILED(Localization.INTERACTIVE_SKILLTREE_MOD_DETAILS, ItemTypes.BOOK),
-        FAST(Localization.INTERACTIVE_SKILLTREE_MOD_FAST, ItemTypes.GOLD_NUGGET);
+        DETAILED(Localizations.INTERACTIVE_SKILLTREE_MOD_DETAILS, ItemTypes.BOOK),
+        FAST(Localizations.INTERACTIVE_SKILLTREE_MOD_FAST, ItemTypes.GOLD_NUGGET);
         private String transltion;
         private ItemType type;
 

@@ -3,7 +3,7 @@ package cz.neumimto.rpg.skills;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.gui.GuiHelper;
@@ -124,7 +124,7 @@ public class ItemAccessSkill extends AbstractSkill {
                         .map(a -> {
                             List<Text> texts = a.get(Keys.ITEM_LORE).get();
                             texts.add(Text.EMPTY);
-                            texts.add(Text.builder(Localization.SKILL_LEVEL)
+                            texts.add(Text.builder(Localizations.SKILL_LEVEL)
                                     .color(TextColors.GREEN)
                                     .append(Text.builder(": " + entry.getKey())
                                             .build()

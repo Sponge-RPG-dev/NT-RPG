@@ -13,7 +13,7 @@
 
     <artifactId>NT-RPG</artifactId>
     <groupId>cz.neumimto.rpg</groupId>
-    <version>1.0.11-RC-2</version>
+    <version>1.0.12-SNAPSHOT</version>
 
     <properties>
         <timestamp>${maven.build.timestamp}</timestamp>
