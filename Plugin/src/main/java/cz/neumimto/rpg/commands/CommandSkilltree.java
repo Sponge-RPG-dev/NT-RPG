@@ -19,7 +19,7 @@
 package cz.neumimto.rpg.commands;
 
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.Localizations;
@@ -54,7 +54,7 @@ public class CommandSkilltree extends CommandBase {
 		Player p =(Player) commandSource;
 		IActiveCharacter character = characterService.getCharacter(p);
 		if (character.isStub()) {
-			p.sendMessage(TextHelper.parse(Localizations.CHARACTER_IS_REQUIRED));
+			p.sendMessage(Localizations.CHARACTER_IS_REQUIRED.toText());
 			return CommandResult.empty();
 		}
 		ConfigClass configClass;
@@ -64,7 +64,7 @@ public class CommandSkilltree extends CommandBase {
 			configClass = groupService.getNClass(s);
 		}
 		if (configClass == null || configClass == ConfigClass.Default) {
-			Gui.sendMessage(character, Localizations.NON_EXISTING_GROUP);
+			Gui.sendMessage(character, Localizations.NON_EXISTING_GROUP, Arg.EMPTY);
 			return CommandResult.builder().build();
 		}
 		SkillTree skillTree = configClass.getSkillTree();

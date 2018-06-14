@@ -2,6 +2,7 @@ package cz.neumimto.rpg.gui;
 
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localizations;
@@ -60,14 +61,14 @@ public class ItemLoreBuilderService {
         groupMinLevelColor = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_GROUP_MIN_LEVEL_COLOR).get();
 
 
-        effectSection = TextHelper.parse(Localizations.ITEM_EFFECTS_SECTION);
-        rarity = TextHelper.parse(Localizations.ITEM_RARITY_SECTION);
-        damage = TextHelper.parse(Localizations.ITEM_DAMAGE_SECTION);
-        level = TextHelper.parse(Localizations.ITEM_LEVEL_SECTION);
-        sockets = TextHelper.parse(Localizations.ITEM_SOCKETS_SECTION);
-        attributes = TextHelper.parse(Localizations.ITEM_ATTRIBUTES_SECTIO);
-        requirements = TextHelper.parse(Localizations.ITEM_REQUIREMENTS_SECTION);
-        metaType = TextHelper.parse(Localizations.ITEM_META_TYPE_NAME);
+        effectSection = Localizations.ITEM_EFFECTS_SECTION.toText();
+        rarity = Localizations.ITEM_RARITY_SECTION.toText();
+        damage = Localizations.ITEM_DAMAGE_SECTION.toText();
+        level = Localizations.ITEM_LEVEL_SECTION.toText();
+        sockets = Localizations.ITEM_SOCKETS_SECTION.toText();
+        attributes = Localizations.ITEM_ATTRIBUTES_SECTIO.toText();
+        requirements = Localizations.ITEM_REQUIREMENTS_SECTION.toText();
+        metaType = Localizations.ITEM_META_TYPE_NAME.toText();
 
         loreOrder = PluginConfig.ITEM_LORE_ORDER.stream().map(ItemLoreSections::valueOf).collect(Collectors.toList());
 
@@ -78,7 +79,7 @@ public class ItemLoreBuilderService {
             rarityMap.put(i, t);
         }
 
-        unknownRarity = TextHelper.parse(Localizations.UNKNOWN_RARITY);
+        unknownRarity = Localizations.UNKNOWN_RARITY.toText();
 
     }
 
@@ -135,7 +136,7 @@ public class ItemLoreBuilderService {
                 createDelimiter(ItemLoreBuilderService.sockets);
                 for (int i = 0; i < sockets.size(); i++) {
                     if (DataConstants.EMPTY_SOCKET.equals(content.get(i))) {
-                        t.add(Text.builder().append(TextHelper.parse(String.format(Localizations.SOCKET_EMPTY, sockets.get(i).getName())))                                .build());
+                        t.add(Localizations.SOCKET_EMPTY.toText(Arg.arg("socket", sockets.get(i).getName())));
                     } else {
                         t.add(Text.builder("- ").color(TextColors.DARK_RED).append(content).build());
                     }

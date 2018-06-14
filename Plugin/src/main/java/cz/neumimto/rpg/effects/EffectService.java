@@ -21,6 +21,7 @@ package cz.neumimto.rpg.effects;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.ActiveCharacter;
@@ -295,7 +296,7 @@ public class EffectService {
 
 	public void removeGlobalEffectsAsEnchantments(Collection<IGlobalEffect> itemEffects, IActiveCharacter character, IEffectSourceProvider effectSourceProvider) {
 		if (PluginConfig.DEBUG.isDevelop()) {
-			character.sendMessage(itemEffects.size() + " added echn. effects to remove queue.");
+			character.sendMessage(LocalizableParametrizedText.from(itemEffects.size() + " added echn. effects to remove queue."));
 		}
 		itemEffects.forEach((e) -> {
 			removeEffect(e.getName(), character, effectSourceProvider);

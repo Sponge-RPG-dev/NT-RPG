@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.entities;
 
+import cz.neumimto.core.localization.Arg;
+import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -111,7 +113,7 @@ public class NEntity implements IMob {
 	}
 
 	@Override
-	public void sendMessage(String message) {
+	public void sendMessage(LocalizableParametrizedText message, Arg arg) {
 
 	}
 

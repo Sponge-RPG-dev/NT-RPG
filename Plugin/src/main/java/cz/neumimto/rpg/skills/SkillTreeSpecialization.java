@@ -3,7 +3,6 @@ package cz.neumimto.rpg.skills;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.core.localization.Arg;
-import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -45,7 +44,7 @@ public class SkillTreeSpecialization extends PassiveSkill {
     @Override
     public void skillLearn(IActiveCharacter IActiveCharacter) {
         if (PluginConfig.PLAYER_CHOOSED_SKILLTREE_SPECIALIZATIon_GLOBAL_MESSAGE) {
-            Text t = TextHelper.parse(Localizations.PLAYER_CHOOSED_SKILLTREE_PATH_GLOBAL_MESSAGE_CONTENT,
+            Text t = Localizations.PLAYER_CHOOSED_SKILLTREE_PATH_GLOBAL_MESSAGE_CONTENT.toText(
                     Arg.arg("player", IActiveCharacter.getPlayer().getName())
                             .with("character", IActiveCharacter.getName())
                             .with("path", getName()));

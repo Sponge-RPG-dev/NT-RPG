@@ -20,7 +20,6 @@ package cz.neumimto.rpg.players;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.Arg;
-import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.MissingConfigurationException;
 import cz.neumimto.rpg.NtRpgPlugin;
@@ -348,7 +347,7 @@ public class CharacterService {
 
 	public void initActiveCharacter(IActiveCharacter character) {
 		logger.info("Initializing character " + character.getCharacterBase().getId());
-		character.getPlayer().sendMessage(TextHelper.parse(Localizations.CURRENT_CHARACTER,Arg.arg("character", character.getName())));
+		character.sendMessage(Localizations.CURRENT_CHARACTER, Arg.arg("character", character.getName()));
 		addDefaultEffects(character);
 		Set<BaseCharacterAttribute> baseCharacterAttribute = character.getCharacterBase().getBaseCharacterAttribute();
 		for (BaseCharacterAttribute at : baseCharacterAttribute) {
@@ -412,7 +411,7 @@ public class CharacterService {
 				args.put("uuid", player.getUniqueId().toString());
 				args.put("class", character.getRace().getName());
 				if (character.hasClass(configClass)) {
-					player.sendMessage(TextHelper.parse(Localizations.ALREADY_HAS_THIS_CLASS));
+					player.sendMessage(Localizations.ALREADY_HAS_THIS_CLASS.toText());
 					return;
 				}
 
@@ -427,8 +426,7 @@ public class CharacterService {
 				args.put("class", character.getRace().getName());
 				if (character.getNClass(slot) != null && character.getNClass(slot).getEnterCommands() != null)
 					Utils.executeCommandBatch(args, character.getNClass(slot).getEnterCommands());
-				player.sendMessage(TextHelper.parse(Localizations.PLAYER_CHOOSED_CLASS,
-						Arg.arg("class",configClass.getName())));
+				player.sendMessage(Localizations.PLAYER_CHOOSED_CLASS.toText(Arg.arg("class",configClass.getName())));
 			}
 		}
 
@@ -443,7 +441,7 @@ public class CharacterService {
 				args.put("uuid", player.getUniqueId().toString());
 				args.put("race", character.getRace().getName());
 				if (character.getRace() == race) {
-					player.sendMessage(TextHelper.parse(Localizations.ALREADY_HAS_THIS_RACE));
+					player.sendMessage(Localizations.ALREADY_HAS_THIS_RACE.toText(Arg.arg("race", race.getName())));
 					return;
 				}
 				if (character.getRace().getExitCommands() != null)
@@ -457,8 +455,7 @@ public class CharacterService {
 				args.put("race", character.getRace().getName());
 				if (character.getRace().getExitCommands() != null)
 					Utils.executeCommandBatch(args, character.getRace().getEnterCommands());
-				player.sendMessage(TextHelper.parse(Localizations.PLAYER_CHOOSED_RACE,
-						Arg.arg("race", race.getName())));
+				player.sendMessage(Localizations.PLAYER_CHOOSED_RACE.toText(Arg.arg("race", race.getName())));
 			}
 		}
 
@@ -1030,8 +1027,8 @@ public class CharacterService {
 		CharacterClass cc = character.getCharacterBase().getCharacterClass(clazz);
 		cc.setSkillPoints(cc.getSkillPoints() + skillpoint);
 		character.setAttributePoints(character.getAttributePoints() + attributepoint);
-		character.getPlayer().sendMessage(TextHelper.parse(Localizations.CHARACTER_GAINED_POINTS,
-				Arg.arg("skillpoints", skillpoint).with("attributes", attributepoint)));
+		character.sendMessage(Localizations.CHARACTER_GAINED_POINTS,
+				Arg.arg("skillpoints", skillpoint).with("attributes", attributepoint));
 		putInSaveQueue(character.getCharacterBase());
 	}
 

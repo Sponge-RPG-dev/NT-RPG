@@ -43,17 +43,17 @@ public class PlayerClassCommandElement extends CommandElement {
         String clazz = args.next();
         ConfigClass configClass = NtRpgPlugin.GlobalScope.groupService.getNClass(clazz);
         if (configClass == null) {
-            throw args.createError(TextHelper.parse(Localizations.UNKNOWN_CLASS, Arg.arg("class",clazz)));
+            throw args.createError(Localizations.UNKNOWN_CLASS.toText(Arg.arg("class",clazz)));
         }
         IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) source);
 
         if (validate && PluginConfig.VALIDATE_RACE_DURING_CLASS_SELECTION) {
             Race race = character.getRace();
             if (race == Race.Default) {
-                throw args.createError(TextHelper.parse(Localizations.RACE_NOT_SELECTED));
+                throw args.createError(Localizations.RACE_NOT_SELECTED.toText());
             }
             if (!race.getAllowedClasses().contains(configClass)) {
-                throw args.createError(TextHelper.parse(Localizations.RACE_CANNOT_BECOME_CLASS,
+                throw args.createError(Localizations.RACE_CANNOT_BECOME_CLASS.toText(
                         Arg.arg("race", race.getName()).with("class", configClass.getName())));
             }
         }

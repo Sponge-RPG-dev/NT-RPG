@@ -18,6 +18,8 @@
 
 package cz.neumimto.rpg.gui;
 
+import cz.neumimto.core.localization.Arg;
+import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.inventory.CannotUseItemReason;
@@ -40,7 +42,7 @@ import java.util.List;
 public interface IPlayerMessage {
 	boolean isClientSideGui();
 
-	void sendMessage(IActiveCharacter player, String message);
+	void sendMessage(IActiveCharacter player, LocalizableParametrizedText message, Arg arg);
 
 	void sendCooldownMessage(IActiveCharacter player, String message, double cooldown);
 

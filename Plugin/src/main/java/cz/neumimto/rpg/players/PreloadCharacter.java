@@ -18,6 +18,8 @@
 
 package cz.neumimto.rpg.players;
 
+import cz.neumimto.core.localization.Arg;
+import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.IEffect;
@@ -436,8 +438,8 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public void sendMessage(String message) {
-
+	public void sendMessage(LocalizableParametrizedText message, Arg arg) {
+		getPlayer().sendMessage(message.toText(arg));
 	}
 
 	@Override
@@ -534,6 +536,11 @@ public class PreloadCharacter implements IActiveCharacter {
 	@Override
 	public Player getEntity() {
 		return getPlayer();
+	}
+
+	@Override
+	public void sendMessage(LocalizableParametrizedText message) {
+		getPlayer().sendMessage(message.toText());
 	}
 
 

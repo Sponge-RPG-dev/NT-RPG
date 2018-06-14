@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.skills;
 
 import com.typesafe.config.Config;
+import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectSourceType;
@@ -148,7 +149,7 @@ public interface ISkill extends IEffectSourceProvider {
 					of.offer(Keys.DISPLAY_NAME, Text.builder(s1).build());
 					of.offer(new MenuInventoryData(true));
 					of.offer(Keys.ITEM_LORE, Arrays.asList(
-							Text.builder(Localizations.SKILL_VALUE_STARTS_AT)
+							Text.builder().append(Localizations.SKILL_VALUE_STARTS_AT.toText())
 									.style(TextStyles.BOLD)
 									.color(TextColors.GOLD)
 									.append(Text.builder(": " + init)
@@ -156,7 +157,7 @@ public interface ISkill extends IEffectSourceProvider {
 									.build())
 								.build()
 									,
-							Text.builder(Localizations.SKILL_VALUE_PER_LEVEL)
+							Text.builder().append(Localizations.SKILL_VALUE_PER_LEVEL.toText())
 									.style(TextStyles.BOLD).color(TextColors.GOLD)
 									.append(Text.builder(": " + lbonus)
 									.color(TextColors.GREEN).style(TextStyles.BOLD)
@@ -184,13 +185,13 @@ public interface ISkill extends IEffectSourceProvider {
 		List<Text> lore = new ArrayList<>();
 
 		String desc = getDescription();
-		String skillTargetType = null;
+		Text skillTargetType = null;
 		if (this instanceof ActiveSkill) {
-			skillTargetType = Localizations.SKILL_TYPE_ACTIVE;
+			skillTargetType = Localizations.SKILL_TYPE_ACTIVE.toText();
 		} else if (this instanceof PassiveSkill) {
-			skillTargetType = Localizations.SKILL_TYPE_PASSIVE;
+			skillTargetType = Localizations.SKILL_TYPE_PASSIVE.toText();
 		} else if (this instanceof Targetted) {
-			skillTargetType = Localizations.SKILL_TYPE_TARGETTED;
+			skillTargetType = Localizations.SKILL_TYPE_TARGETTED.toText();
 		}
 		if (desc != null) {
 			lore.addAll(TextHelper.splitStringByDelimiter(desc));
@@ -210,17 +211,17 @@ public interface ISkill extends IEffectSourceProvider {
 			totalLevel = ei.getTotalLevel();
 		}
 
-		String s = Localizations.MIN_PLAYER_LEVEL;
+		Text s = Localizations.MIN_PLAYER_LEVEL.toText();
 		if (minPlayerLevel > 0) {
-			lore.add(Text.builder(s).color(TextColors.YELLOW)
+			lore.add(Text.builder().append(s).color(TextColors.YELLOW)
 					.append(Text.builder(" " + minPlayerLevel)
 							.color(character.getLevel() < minPlayerLevel ? TextColors.RED : TextColors.GREEN)
 							.build())
 					.build());
 		}
 
-		s = Localizations.MAX_SKILL_LEVEL + " " + maxSkillLevel;
-		lore.add(Text.builder(s)
+		s = Localizations.MAX_SKILL_LEVEL.toText(Arg.arg("level", maxSkillLevel));
+		lore.add(Text.builder().append(s)
 				.color(TextColors.YELLOW)
 				.build());
 

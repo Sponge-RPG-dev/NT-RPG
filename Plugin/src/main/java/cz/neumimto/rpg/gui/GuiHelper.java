@@ -184,9 +184,9 @@ public class GuiHelper {
 		return t;
 	}
 
-	public static ItemStack back(String command, String displayName) {
+	public static ItemStack back(String command, Text displayName) {
 		ItemStack of = itemStack(ItemTypes.PAPER);
-		of.offer(Keys.DISPLAY_NAME, Text.of(displayName, TextColors.WHITE));
+		of.offer(Keys.DISPLAY_NAME, displayName);
 		of.offer(new InventoryCommandItemMenuData(command));
 		return of;
 	}
@@ -272,7 +272,7 @@ public class GuiHelper {
 				.of(InventoryArchetypes.DOUBLE_CHEST)
 			 	.build(plugin);
 
-		ItemStack back = back("skilltree", Localizations.SKILLTREE);
+		ItemStack back = back("skilltree", Localizations.SKILLTREE.toText());
 		build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0,0))).offer(back);
 
 		if (skillData instanceof SkillPathData) {
@@ -334,7 +334,7 @@ public class GuiHelper {
 
 		md.offer(new SkillTreeInventoryViewControllsData(SkillTreeControllsButton.MODE));
 		md.offer(new MenuInventoryData(true));
-		lore.add(Text.builder(interactiveMode.getTransltion()).build());
+		lore.add(interactiveMode.getTransltion());
 		lore.add(Text.EMPTY);
 		lore.add(Text.builder("Level: ").color(TextColors.YELLOW)
 				.append(Text.builder(String.valueOf(character.getLevel())).style(TextStyles.BOLD).build())
@@ -351,9 +351,7 @@ public class GuiHelper {
 
 	public static ItemStack rpgItemTypeToItemStack(ConfigRPGItemType configRPGItemType) {
 		ItemStack q = itemStack(configRPGItemType.getRpgItemType().getItemType());
-		Text lore = Text.builder(Localizations.ITEM_DAMAGE)
-				.color(TextColors.GOLD)
-				.style(TextStyles.BOLD)
+		Text lore = Text.builder().append(Localizations.ITEM_DAMAGE.toText())
 				.append(Text.builder(": " + configRPGItemType.getDamage())
 						.style(TextStyles.BOLD)
 						.color(NtRpgPlugin.GlobalScope.damageService.getColorByDamage(configRPGItemType.getDamage()))

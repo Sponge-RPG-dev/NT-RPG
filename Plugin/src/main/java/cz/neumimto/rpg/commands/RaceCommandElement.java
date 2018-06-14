@@ -30,8 +30,7 @@ public class RaceCommandElement extends CommandElement {
         String race = args.next();
         Race r = NtRpgPlugin.GlobalScope.groupService.getRace(race);
         if (r == null) {
-            throw args.createError(TextHelper.parse(Localizations.UNKNOWN_RACE,
-                    Arg.arg("race", race)));
+            throw args.createError(Localizations.UNKNOWN_RACE.toText(Arg.arg("race", race)));
         }
         if (!source.hasPermission("ntrpg.groups."+r.getName().toLowerCase())) {
             throw args.createError(TextHelper.parse("&CNo permission ntrpg.groups.%race%",
