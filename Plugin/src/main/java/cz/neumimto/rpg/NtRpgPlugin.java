@@ -25,6 +25,7 @@ import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.FindPersistenceContextEvent;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.localization.Arg;
+import cz.neumimto.core.localization.LocalizationService;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.commands.*;
 import cz.neumimto.rpg.configuration.CommandLocalization;
@@ -374,6 +375,10 @@ public class NtRpgPlugin {
 		}
 		registerCommands();
 		IoC.get().build(PropertyService.class).loadMaximalServerPropertyValues();
+
+		IoC.get().build(LocalizationService.class).registerClass(Localizations.class);
+		ResourceBundle bundle = ResourceBundle.getBundle("assets.nt-rpg.localizations.localization", Locale.forLanguageTag(PluginConfig.LOCALE));
+		IoC.get().build(LocalizationService.class).loadResourceBundle(bundle);
 
 		double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
 		logger.info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
