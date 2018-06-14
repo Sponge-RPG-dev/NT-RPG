@@ -1,10 +1,10 @@
 package cz.neumimto.rpg.gui;
 
-import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectParams;
@@ -19,6 +19,8 @@ import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.reloading.Reload;
 import cz.neumimto.rpg.reloading.ReloadService;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
@@ -32,6 +34,7 @@ import java.util.stream.Collectors;
  * Created by NeumimTo on 20.1.2018.
  */
 @Singleton
+@ResourceLoader.ListenerClass
 public class ItemLoreBuilderService {
 
     private static TextColor effectName;
@@ -51,7 +54,11 @@ public class ItemLoreBuilderService {
     private static Text unknownRarity;
     private static Text metaType;
 
-    @PostProcess(priority = 3000)
+    @Listener
+    public void pluginInit(GameStartedServerEvent e) {
+        setupColor();
+    }
+
     @Reload(on = ReloadService.PLUGIN_CONFIG)
     public void setupColor() {
         effectName = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_NAME_COLOR).get();

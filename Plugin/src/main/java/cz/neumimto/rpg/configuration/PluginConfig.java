@@ -229,4 +229,7 @@ public class PluginConfig {
 	@ConfigValue
 	@Comment(content = "If set to true plugin will generate first character right after log-in, for a players which do not have one yet. The new character has same name as the player. New players wont have to run command /char c playername<")
 	public static boolean CREATE_FIRST_CHAR_AFTER_LOGIN = true;
+
+	@ConfigValue
+	public static String LOCALE = "en";
 }
