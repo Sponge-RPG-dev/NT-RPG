@@ -22,6 +22,8 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.core.localization.Arg;
+import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.Pair;
@@ -86,12 +88,10 @@ import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.LiteralText;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.TextTemplate;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
 
 import java.util.*;
@@ -163,31 +163,22 @@ public class VanillaMessaging implements IPlayerMessage {
 	}
 
 	@Override
-	public void sendMessage(IActiveCharacter player, String message) {
-		player.sendMessage(message);
+	public void sendMessage(IActiveCharacter player, LocalizableParametrizedText message, Arg arg) {
+		player.sendMessage(message, arg);
 	}
 
 
-	private static final String timeleft = "tl";
-	private static final TextTemplate.Arg TIMELEFT = TextTemplate.arg("tl")
-			.color(TextColors.WHITE)
-			.style(TextStyles.BOLD)
-			.build();
 
 	private static final String skillname = "sk";
-	private static final TextTemplate.Arg SKILLNAME = TextTemplate.arg(skillname)
-			.color(TextColors.WHITE)
-			.style(TextStyles.BOLD)
-			.build();
 
 	@Override
 	public void sendCooldownMessage(IActiveCharacter player, String message, double cooldown) {
-		player.getPlayer().sendMessage(TextHelper.parse(Localizations.ON_COOLDOWN, Arg.arg("skill", message).with("time", cooldown)));
+		player.sendMessage(Localizations.ON_COOLDOWN, Arg.arg("skill", message).with("time", cooldown));
 	}
 
 	@Override
 	public void sendEffectStatus(IActiveCharacter player, EffectStatusType type, IEffect effect) {
-		sendMessage(player, type.toMessage(effect));
+
 	}
 
 	@Override
@@ -226,18 +217,18 @@ public class VanillaMessaging implements IPlayerMessage {
 	}
 
 
-	private String getDetailedCharInfo(IActiveCharacter character) {
+	private Text getDetailedCharInfo(IActiveCharacter character) {
 		Text text = Text.builder("Level").color(TextColors.YELLOW).append(
 				Text.builder("Race").color(TextColors.RED).append(
 						Text.builder("Guild").color(TextColors.AQUA).append(
 								Text.builder("Class").color(TextColors.GOLD).build()
 						).build()).build()).build();
-		return text.toString();
+		return text;
 	}
 
 	@Override
 	public void sendPlayerInfo(IActiveCharacter character, IActiveCharacter target) {
-		character.sendMessage(getDetailedCharInfo(target));
+		character.getPlayer().sendMessage(getDetailedCharInfo(target));
 	}
 
 	@Override
@@ -292,11 +283,11 @@ public class VanillaMessaging implements IPlayerMessage {
 
 		ItemStack of = GuiHelper.itemStack(ItemTypes.DIAMOND);
 		of.offer(new InventoryCommandItemMenuData("character set class " + cc.getName()));
-		of.offer(Keys.DISPLAY_NAME, TextHelper.parse(Localizations.CONFIRM));
+		of.offer(Keys.DISPLAY_NAME, Localizations.CONFIRM.toText());
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 0))).offer(of);
 
 		ItemStack tree = GuiHelper.itemStack(ItemTypes.SAPLING);
-		tree.offer(Keys.DISPLAY_NAME, TextHelper.parse(Localizations.SKILLTREE));
+		tree.offer(Keys.DISPLAY_NAME, Localizations.SKILLTREE.toText());
 		tree.offer(new InventoryCommandItemMenuData("skilltree " + cc.getName()));
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(4,3))).offer(tree);
 
@@ -377,12 +368,12 @@ public class VanillaMessaging implements IPlayerMessage {
 
 	@Override
 	public void showAvalaibleClasses(IActiveCharacter character) {
-		displayCommonMenu(character, groupService.getClasses(), ConfigClass.Default, TextHelper.parse(Localizations.CLASSES_MENU_TEXT));
+		displayCommonMenu(character, groupService.getClasses(), ConfigClass.Default, Localizations.CLASSES_MENU_TEXT.toText());
 	}
 
 	@Override
 	public void sendListOfRaces(IActiveCharacter character) {
-		displayCommonMenu(character, groupService.getRaces(), Race.Default, TextHelper.parse(Localizations.RACES_MENU_TEXT));
+		displayCommonMenu(character, groupService.getRaces(), Race.Default, Localizations.RACES_MENU_TEXT.toText());
 	}
 
 	private void displayCommonMenu(IActiveCharacter character, Collection<? extends PlayerGroup> g, PlayerGroup default_, Text invHeader) {
@@ -525,7 +516,7 @@ public class VanillaMessaging implements IPlayerMessage {
 		String cmd = infoCommand.getAliases().get(0);
 		if (linkToRWList) {
 			if (character.getPlayer().hasPermission(CommandPermissions.SHOW_RUNEWORD_LIST)) {
-				i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back("runes", Localizations.RUNE_LIST));
+				i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back("runes", Localizations.RUNE_LIST.toText()));
 			}
 		}
 
@@ -535,8 +526,7 @@ public class VanillaMessaging implements IPlayerMessage {
 			is.offer(Keys.DISPLAY_NAME, Text.of(Localizations.RUNEWORD_ITEMS_MENU));
 			is.offer(Keys.ITEM_LORE,
 					Collections.singletonList(
-							TextHelper.parse(Localizations.RUNEWORD_ITEMS_MENU_TOOLTIP
-									, Arg.arg("runeword", rw.getName()))
+							Localizations.RUNEWORD_ITEMS_MENU_TOOLTIP.toText(Arg.arg("runeword", rw.getName()))
 					)
 			);
 			is.offer(new InventoryCommandItemMenuData("runeword " + rw.getName() + " allowed-items"));
@@ -548,8 +538,7 @@ public class VanillaMessaging implements IPlayerMessage {
 			is.offer(Keys.DISPLAY_NAME, Text.of(Localizations.RUNEWORD_ALLOWED_GROUPS_MENU));
 			is.offer(Keys.ITEM_LORE,
 					Collections.singletonList(
-							ItemStackUtils.stringToItemTooltip(Localizations.RUNEWORD_ALLOWED_GROUPS_MENU_TOOLTIP
-									.replaceAll("%1", rw.getName()))
+							Localizations.RUNEWORD_ALLOWED_GROUPS_MENU_TOOLTIP.toText(Arg.arg("runeword", rw.getName()))
 					)
 			);
 			is.offer(Keys.HIDE_ATTRIBUTES, true);
@@ -562,8 +551,7 @@ public class VanillaMessaging implements IPlayerMessage {
 			is.offer(Keys.DISPLAY_NAME, Text.of(Localizations.RUNEWORD_BLOCKED_GROUPS_MENU));
 			is.offer(Keys.ITEM_LORE,
 					Collections.singletonList(
-							ItemStackUtils.stringToItemTooltip(Localizations.RUNEWORD_BLOCKED_GROUPS_MENU_TOOLTIP
-									.replaceAll("%1", rw.getName()))
+							Localizations.RUNEWORD_BLOCKED_GROUPS_MENU_TOOLTIP.toText(Arg.arg("runeword", rw.getName()))
 					)
 			);
 			is.offer(new InventoryCommandItemMenuData("runeword " + rw.getName() + " blocked-groups"));
@@ -619,7 +607,7 @@ public class VanillaMessaging implements IPlayerMessage {
 	@Override
 	public void displayRunewordAllowedItems(IActiveCharacter character, RuneWord rw) {
 		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
-		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back("runeword " + rw.getName(), Localizations.RUNEWORD_DETAILS_MENU));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back("runeword " + rw.getName(), Localizations.RUNEWORD_DETAILS_MENU.toText()));
 		int x = 1;
 		int y = 2;
 		for (ItemType type : rw.getAllowedItems()) {
@@ -637,7 +625,7 @@ public class VanillaMessaging implements IPlayerMessage {
 	private Inventory displayGroupRequirements(IActiveCharacter character, RuneWord rw, Set<PlayerGroup> groups) {
 		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
 		String cmd = infoCommand.getAliases().get(0);
-		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back("runeword " + rw.getName(), Localizations.RUNEWORD_DETAILS_MENU));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back("runeword " + rw.getName(), Localizations.RUNEWORD_DETAILS_MENU.toText()));
 
 		List<ItemStack> list = new ArrayList<>();
 		for (PlayerGroup playerGroup : groups) {
@@ -789,11 +777,7 @@ public class VanillaMessaging implements IPlayerMessage {
 		//todo implement
 		//double reservedAmount = character.getHealth().getReservedAmount();
 
-		LiteralText a = Text.builder(Localizations.HEALTH).color(TextColors.GOLD)
-				.append(Text.builder(value + "").color(TextColors.GREEN).build())
-				.append(Text.builder("/").color(TextColors.WHITE).build())
-				//		.append(Text.builder(String.valueOf(maxValue - reservedAmount)).color(TextColors.RED).build())
-				.append(Text.builder(" (" + maxValue + ") ").color(TextColors.GRAY).build()).build();
+		Text a = Localizations.HEALTH.toText(Arg.arg("current", value).with("maxValue", maxValue));
 		character.getPlayer().sendMessage(a);
 	}
 

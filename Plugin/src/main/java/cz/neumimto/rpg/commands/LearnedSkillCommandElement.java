@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.commands;
 
 import cz.neumimto.core.localization.Arg;
-import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -32,11 +31,11 @@ public class LearnedSkillCommandElement extends CommandElement {
         String skilllc = args.next().toLowerCase();
         ISkill skill = NtRpgPlugin.GlobalScope.skillService.getSkill(skilllc);
         if (skill == null) {
-            throw args.createError(TextHelper.parse(Localizations.UNKNOWN_SKILL, Arg.arg("skill", skilllc)));
+            throw args.createError(Localizations.UNKNOWN_SKILL.toText(Arg.arg("skill", skilllc)));
         }
         IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) source);
         if (!character.hasSkill(skill.getName())) {
-            throw args.createError(TextHelper.parse(Localizations.CHARACTER_DOES_NOT_HAVE_SKILL, Arg.arg("skill", skill.getName())));
+            throw args.createError(Localizations.CHARACTER_DOES_NOT_HAVE_SKILL.toText(Arg.arg("skill", skill.getName())));
         }
         return skill;
     }

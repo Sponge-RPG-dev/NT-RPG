@@ -18,7 +18,8 @@
 
 package cz.neumimto.rpg.players;
 
-import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.core.localization.Arg;
+import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffect;
@@ -562,8 +563,8 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public void sendMessage(String message) {
-		getPlayer().sendMessage(TextHelper.parse(message));
+	public void sendMessage(LocalizableParametrizedText message, Arg arg) {
+		getPlayer().sendMessage(message.toText(arg));
 	}
 
 	@Override
@@ -576,7 +577,12 @@ public class ActiveCharacter implements IActiveCharacter {
 		return Collections.unmodifiableMap(skills); //lets use wrapper class instaed of guava's immutable
 	}
 
-	@Override
+    @Override
+    public void sendMessage(LocalizableParametrizedText message) {
+        sendMessage(message, Arg.EMPTY);
+    }
+
+    @Override
 	public void addSkill(String name, ExtendedSkillInfo info) {
 		skills.put(name.toLowerCase(), info);
 	}

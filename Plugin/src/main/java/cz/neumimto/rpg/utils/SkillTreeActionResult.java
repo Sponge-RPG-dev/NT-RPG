@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.utils;
 
 import cz.neumimto.core.localization.Arg;
-import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.configuration.Localizations;
 import org.spongepowered.api.text.Text;
 
@@ -21,13 +21,13 @@ public enum SkillTreeActionResult {
 	ALREADY_LEARNED(Localizations.SKILL_ALREADY_LEARNED),
 	LEARNED(Localizations.SKILL_LEARNED),
 	SKILL_CONFCLITS(Localizations.SKILL_CONFLICTS),
-	UNKNOWN(""),
+	UNKNOWN(LocalizableParametrizedText.from("")),
 	INSUFFICIENT_LEVEL_GAP(Localizations.INSUFFICIENT_LEVEL_GAP),
 	NO_ACCESS_TO_SKILL(Localizations.NO_ACCESS_TO_SKILL);
 
-    public String message;
+    public LocalizableParametrizedText message;
 
-	SkillTreeActionResult(String a) {
+	SkillTreeActionResult(LocalizableParametrizedText a) {
 
 		this.message = a;
 	}
@@ -39,8 +39,8 @@ public enum SkillTreeActionResult {
 			this.variables = variables;
 		}
 
-		public Text bind(String t) {
-			return TextHelper.parse(t, Arg.arg(variables));
+		public Text bind(LocalizableParametrizedText t) {
+			return t.toText(Arg.arg(variables));
 		}
 	}
 }

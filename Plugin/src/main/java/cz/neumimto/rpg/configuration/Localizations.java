@@ -18,11 +18,8 @@
 
 package cz.neumimto.rpg.configuration;
 
+import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.core.localization.Localization;
-import cz.neumimto.rpg.inventory.sockets.SocketTypes;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by NeumimTo on 31.1.2015.
@@ -30,258 +27,253 @@ import java.util.Map;
 @Localization("rpg.main")
 public class Localizations {
 
-    public static String NO_MANA = "Not enough mana";
+    public static LocalizableParametrizedText NO_MANA;
 
-    public static String NO_HP = "Not enough hp";
+    public static LocalizableParametrizedText NO_HP;
 
-    public static String SKILL_UPGRADED = "You've upgraded skill %skill% to level %level%";
+    public static LocalizableParametrizedText SKILL_UPGRADED;
 
-    public static String SKILL_LEARNED = "You've learned skill %skill%";
+    public static LocalizableParametrizedText SKILL_LEARNED;
 
-    public static String SPEED_BOOST_APPLY = "speed boost applied";
+    public static LocalizableParametrizedText SPEED_BOOST_APPLY;
 
-    public static String SPEED_BOOST_EXPIRE = "speed boost expired";
+    public static LocalizableParametrizedText SPEED_BOOST_EXPIRE;
 
-    public static String PLAYER_IS_OFFLINE_MSG = "The player is offline";
+    public static LocalizableParametrizedText PLAYER_IS_OFFLINE_MSG;
 
-    public static String REACHED_CHARACTER_LIMIT = "You've reached character limit";
+    public static LocalizableParametrizedText REACHED_CHARACTER_LIMIT;
 
-    public static String CHARACTER_EXISTS = "Character with same name already exists.";
+    public static LocalizableParametrizedText CHARACTER_EXISTS;
 
-    public static String NON_EXISTING_GROUP = "This group does not exists";
+    public static LocalizableParametrizedText NON_EXISTING_GROUP;
 
-    public static String NO_PERMISSIONS = "You can't do that";
+    public static LocalizableParametrizedText NO_PERMISSIONS;
 
-    public static String CHARACTER_IS_REQUIRED = "You need to create a character for this action";
+    public static LocalizableParametrizedText CHARACTER_IS_REQUIRED;
 
-    public static String PLAYER_CANT_CHANGE_RACE = "You can't change race";
+    public static LocalizableParametrizedText PLAYER_CANT_CHANGE_RACE;
 
-    public static String PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE = "Player %player% has learned skill %skill%";
+    public static LocalizableParametrizedText PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE;
 
-    public static String PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE = "Player %player% has upgraded skill %skill% to level %skill%";
+    public static LocalizableParametrizedText PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE;
 
-    public static String PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE = "Player %player% has has refunded skill %skill%";
+    public static LocalizableParametrizedText PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE;
 
-    public static String PLAYER_IS_SILENCED = "You can't use this skill, you are silenced.";
+    public static LocalizableParametrizedText PLAYER_GAINED_SKILL;
 
-    public static String CHARACTER_DOES_NOT_HAVE_SKILL = "You dont have this skill";
+    public static LocalizableParametrizedText PLAYER_IS_SILENCED;
 
-    public static String ON_COOLDOWN = "%skill% has %time% seconds of cooldown";
+    public static LocalizableParametrizedText CHARACTER_DOES_NOT_HAVE_SKILL;
 
-    public static String CANT_USE_PASSIVE_SKILL = "You can't use passive skill";
+    public static LocalizableParametrizedText ON_COOLDOWN;
 
-    public static String ALREADY_IN_PARTY = "You are already in party";
+    public static LocalizableParametrizedText CANT_USE_PASSIVE_SKILL;
 
-    public static String PARTY_CREATED = "You've created a new party, use /party invite {player} to get a new teammembers";
+    public static LocalizableParametrizedText ALREADY_IN_PARTY;
 
-    public static String PLAYER_MSG_ON_JOIN_PARTY = "You have joined party";
+    public static LocalizableParametrizedText PARTY_CREATED;
 
-    public static String PARTY_MSG_ON_PLAYER_JOIN = "%s has joined your party";
+    public static LocalizableParametrizedText PLAYER_MSG_ON_JOIN_PARTY;
 
-    public static String NON_EXISTING_CHARACTER = "Selected character does not exist";
+    public static LocalizableParametrizedText PARTY_MSG_ON_PLAYER_JOIN;
 
-    public static String PLAYER_CHOOSED_CLASS = "You've chosen class %class%";
+    public static LocalizableParametrizedText NON_EXISTING_CHARACTER;
 
-    public static String UNKNOWN_CLASS = "Class %class% does not exist";
+    public static LocalizableParametrizedText PLAYER_CHOOSED_CLASS;
 
-    public static String PLAYER_CHOOSED_RACE = "You've chosen race %race%";
+    public static LocalizableParametrizedText UNKNOWN_CLASS;
 
-    public static String UNKNOWN_RACE = "Race %race% does not exist";
+    public static LocalizableParametrizedText PLAYER_CHOOSED_RACE;
 
-    public static String ALREADY_CUURENT_CHARACTER = "This character has been already activated";
+    public static LocalizableParametrizedText UNKNOWN_RACE;
 
-    public static String NO_TARGET = "No target";
+    public static LocalizableParametrizedText ALREADY_CUURENT_CHARACTER;
 
-    public static String CURRENT_CHARACTER = "Selected character: %character%";
+    public static LocalizableParametrizedText NO_TARGET;
 
-    public static String CHARACTER_GAINED_POINTS = "You've gained %skillpoints% skillpoints and %attributes% attribute points";
+    public static LocalizableParametrizedText CURRENT_CHARACTER;
 
-    public static String NO_ITEM_IN_HAND = "An item in hand is required for this action";
+    public static LocalizableParametrizedText CHARACTER_GAINED_POINTS;
 
-    public static String NO_ACCESS_TO_SKILL = "You dont have access to this skill.";
+    public static LocalizableParametrizedText NO_ITEM_IN_HAND;
 
-    public static String CAST_SKILL_ON_RIGHTLICK = "&8Casts skill &2%skill%&8  on rightclick";
+    public static LocalizableParametrizedText NO_ACCESS_TO_SKILL;
 
-    public static String EMPTY_HAND_REQUIRED = "An empty hand is required";
+    public static LocalizableParametrizedText CAST_SKILL_ON_RIGHTLICK;
 
-    public static String CAST_SKILl_ON_LEFTCLICK = "&8Casts skill &2%skill%&8  on rightclick";
+    public static LocalizableParametrizedText EMPTY_HAND_REQUIRED;
 
-    public static String ITEM_SKILLBIND_FOOTER = "For casting bounded skills you must have access :n to the skills via command /skill";
+    public static LocalizableParametrizedText CAST_SKILl_ON_LEFTCLICK;
 
-    public static String RUNE = "Rune";
+    public static LocalizableParametrizedText ITEM_SKILLBIND_FOOTER;
 
-    public static String NO_SKILLPOINTS = "You dont have any skillpoints.";
+    public static LocalizableParametrizedText RUNE;
 
-    public static String NOT_LEARNED_SKILL = "You have to learn the skill first before spending skillpoints";
+    public static LocalizableParametrizedText NO_SKILLPOINTS;
 
-    public static String SKILL_REQUIRES_HIGHER_LEVEL = "Upgrading the skill %skill% requires at least level %level%";
+    public static LocalizableParametrizedText NOT_LEARNED_SKILL;
 
-    public static String SKILL_IS_ON_MAX_LEVEL = "The skill %skill% is on its maximal level - %level%.";
+    public static LocalizableParametrizedText SKILL_REQUIRES_HIGHER_LEVEL;
 
-    public static String SKILL_NOT_IN_A_TREE = "The skill %skill% is not accessible from your skill tree";
+    public static LocalizableParametrizedText SKILL_IS_ON_MAX_LEVEL;
 
-    public static String MISSING_SKILL_DEPENDENCIES = "The skill %skill% requires [%hard%] and at least one of [%soft%]";
+    public static LocalizableParametrizedText SKILL_NOT_IN_A_TREE;
 
-    public static String SKILL_ALREADY_LEARNED = "You've already learned the skill %skill% ";
+    public static LocalizableParametrizedText MISSING_SKILL_DEPENDENCIES;
 
-    public static String SKILLBIND = "Bind";
+    public static LocalizableParametrizedText SKILL_ALREADY_LEARNED;
 
-    public static String RUNE_FOOTER = "Can be inserted into socketed items";
+    public static LocalizableParametrizedText SKILLBIND;
 
-    public static String SOCKET = "Socketed Item";
+    public static LocalizableParametrizedText RUNE_FOOTER;
 
-    public static String UNKNOWN_RUNE_NAME = "You can work with unknown types of runes. The rune has been probably removed";
+    public static LocalizableParametrizedText SOCKET;
 
-    public static String RUNEWORD = "Runeword";
+    public static LocalizableParametrizedText UNKNOWN_RUNE_NAME;
 
-    public static String CHARM_INFO = "Keep in your hotbar to gain bonus";
+    public static LocalizableParametrizedText RUNEWORD;
 
-    public static String CHARM = "Charm";
+    public static LocalizableParametrizedText CHARM_INFO;
 
-    public static String SOCKET_HELP = "Use anvil to imbue socket";
+    public static LocalizableParametrizedText CHARM;
 
-    public static String SOCKET_CANCELLED = "Socketing cancelled";
+    public static LocalizableParametrizedText SOCKET_HELP;
 
-    public static String WEAPONS = "Weapons";
+    public static LocalizableParametrizedText SOCKET_CANCELLED;
 
-    public static String ARMOR = "Armor";
+    public static LocalizableParametrizedText WEAPONS;
 
-    public static String WEAPONS_MENU_HELP = "Displays list of allowed weapons and damage values";
+    public static LocalizableParametrizedText ARMOR;
 
-    public static String ARMOR_MENU_HELP = "Displays list of allowed armor";
+    public static LocalizableParametrizedText WEAPONS_MENU_HELP;
 
-    public static String ATTRIBUTES = "Attributes";
+    public static LocalizableParametrizedText ARMOR_MENU_HELP;
 
-    public static String BACK = "Back";
+    public static LocalizableParametrizedText ATTRIBUTES;
 
-    public static String INITIAL_VALUE = "Attributes at start";
+    public static LocalizableParametrizedText BACK;
 
-    public static String CONFIRM = "Confirm";
+    public static LocalizableParametrizedText INITIAL_VALUE;
 
-    public static String SKILL_CONFLICTS = "Skill %skill% conflicts with %conflict%";
+    public static LocalizableParametrizedText CONFIRM;
 
-    public static String RUNE_LIST = "Runes";
+    public static LocalizableParametrizedText SKILL_CONFLICTS;
 
-    public static String RUNEWORD_ITEMS_MENU_TOOLTIP = "List of items, which can be used for crafting %runeword%";
+    public static LocalizableParametrizedText RUNE_LIST;
 
-    public static String RUNEWORD_ITEMS_MENU = "Allowed Items";
+    public static LocalizableParametrizedText RUNEWORD_ITEMS_MENU_TOOLTIP;
 
-    public static String RUNEWORD_ALLOWED_GROUPS_MENU = "Allowed Races or Classes";
+    public static LocalizableParametrizedText RUNEWORD_ITEMS_MENU;
 
-    public static String RUNEWORD_ALLOWED_GROUPS_MENU_TOOLTIP = "At least one of them character has to have";
+    public static LocalizableParametrizedText RUNEWORD_ALLOWED_GROUPS_MENU;
 
-    public static String RUNEWORD_BLOCKED_GROUPS_MENU = "Blocked Races and Classes";
+    public static LocalizableParametrizedText RUNEWORD_ALLOWED_GROUPS_MENU_TOOLTIP;
 
-    public static String RUNEWORD_BLOCKED_GROUPS_MENU_TOOLTIP = "Any of them has to character have";
+    public static LocalizableParametrizedText RUNEWORD_BLOCKED_GROUPS_MENU;
 
-    public static String RUNEWORD_DETAILS_MENU = "Runeword Details";
+    public static LocalizableParametrizedText RUNEWORD_BLOCKED_GROUPS_MENU_TOOLTIP;
 
-    public static String NORMAL_RARITY = "Item";
+    public static LocalizableParametrizedText RUNEWORD_DETAILS_MENU;
 
-    public static String ITEM_LEVEL = "Item level";
+    public static LocalizableParametrizedText NORMAL_RARITY;
 
-    public static String ITEM_RESTRICTION = "Restrictions";
+    public static LocalizableParametrizedText ITEM_LEVEL;
 
-    public static String HEALTH = "Health";
+    public static LocalizableParametrizedText ITEM_RESTRICTION;
 
-    public static String MANA = "Mana";
+    public static LocalizableParametrizedText HEALTH;
 
-    public static String ITEM_DAMAGE = "Item damage";
+    public static LocalizableParametrizedText MANA;
 
-    public static String CANNOT_USE_ITEM_CONFIGURATION_REASON = "You are not trained to use this item";
+    public static LocalizableParametrizedText ITEM_DAMAGE;
 
-    public static String CANNOT_USE_ITEM_LEVEL_REASON = "The item requires higher character level";
+    public static LocalizableParametrizedText CANNOT_USE_ITEM_CONFIGURATION_REASON;
 
-    public static String CANNOT_USE_ITEM_LORE_REASON = "You are not trained to use this item";
+    public static LocalizableParametrizedText CANNOT_USE_ITEM_LEVEL_REASON;
 
-    public static String NO_PARTYMEMBERS = "No nearby partymembers!";
+    public static LocalizableParametrizedText CANNOT_USE_ITEM_LORE_REASON;
 
-    public static String PLAYER_CHOOSED_SKILLTREE_PATH_GLOBAL_MESSAGE_CONTENT = "Player %player%, character %character% choosed %path%";
+    public static LocalizableParametrizedText NO_PARTYMEMBERS;
 
-    public static String SKILL_TYPE_TARGETTED = "Targetted";
+    public static LocalizableParametrizedText PLAYER_CHOOSED_SKILLTREE_PATH_GLOBAL_MESSAGE_CONTENT;
 
-    public static String SKILL_TYPE_ACTIVE = "Active";
+    public static LocalizableParametrizedText SKILL_TYPE_TARGETTED;
 
-    public static String SKILL_TYPE_PASSIVE = "Passive";
+    public static LocalizableParametrizedText SKILL_TYPE_ACTIVE;
 
-    public static String MIN_PLAYER_LEVEL = "Min. Player Level";
+    public static LocalizableParametrizedText SKILL_TYPE_PASSIVE;
 
-    public static String MAX_SKILL_LEVEL = "Max. Skill Level";
+    public static LocalizableParametrizedText MIN_PLAYER_LEVEL;
 
-    public static String CONFIRM_SKILL_SELECTION_BUTTON = "Confirm change";
+    public static LocalizableParametrizedText MAX_SKILL_LEVEL;
 
-    public static String SKILLTREE = "SkillTree";
+    public static LocalizableParametrizedText CONFIRM_SKILL_SELECTION_BUTTON;
 
-    public static String CANCELLED = "Cancelled";
+    public static LocalizableParametrizedText SKILLTREE;
 
-    public static String INTERACTIVE_SKILLTREE_MOD_FAST = "Fast";
+    public static LocalizableParametrizedText CANCELLED;
 
-    public static String INTERACTIVE_SKILLTREE_MOD_DETAILS = "Details";
+    public static LocalizableParametrizedText INTERACTIVE_SKILLTREE_MOD_FAST;
 
-    public static String SKILL_LEVEL = "Skill Level";
+    public static LocalizableParametrizedText INTERACTIVE_SKILLTREE_MOD_DETAILS;
 
-    public static String SKILL_VALUE_STARTS_AT = "Value";
+    public static LocalizableParametrizedText SKILL_LEVEL;
 
-    public static String SKILL_VALUE_PER_LEVEL = "Value per skill level";
+    public static LocalizableParametrizedText SKILL_VALUE_STARTS_AT;
 
-    public static String UNKNOWN_ATTRIBUTE = "Unknown attribute %attribute%";
+    public static LocalizableParametrizedText SKILL_VALUE_PER_LEVEL;
 
-    public static String ALREADY_HAS_THIS_CLASS = "Cannot choose a class, which you already have";
+    public static LocalizableParametrizedText UNKNOWN_ATTRIBUTE;
 
-    public static String ALREADY_HAS_THIS_RACE = "Cannot choose a race, which you already have";
+    public static LocalizableParametrizedText ALREADY_HAS_THIS_CLASS;
 
-    public static String UNKNOWN_SKILL = "Unknown Skill %skill%";
+    public static LocalizableParametrizedText ALREADY_HAS_THIS_RACE;
 
-    public static String RACE_CANNOT_BECOME_CLASS = "&CRace %race cannot become %class%";
+    public static LocalizableParametrizedText UNKNOWN_SKILL;
 
-    public static String RACE_NOT_SELECTED = "&CYou have to select race before class";
+    public static LocalizableParametrizedText RACE_CANNOT_BECOME_CLASS;
 
-    public static String ITEM_EFFECTS_SECTION = "&9Effects";
+    public static LocalizableParametrizedText RACE_NOT_SELECTED;
 
-    public static String ITEM_RARITY_SECTION = "&8Rarity: ";
+    public static LocalizableParametrizedText ITEM_EFFECTS_SECTION;
 
-    public static String ITEM_DAMAGE_SECTION = "&8Damage: ";
+    public static LocalizableParametrizedText ITEM_RARITY_SECTION;
 
-    public static String ITEM_LEVEL_SECTION = "&8Level: ";
+    public static LocalizableParametrizedText ITEM_DAMAGE_SECTION;
 
-    public static String ITEM_SOCKETS_SECTION = "&6Sockets";
+    public static LocalizableParametrizedText ITEM_LEVEL_SECTION;
 
-    public static String ITEM_ATTRIBUTES_SECTIO = "&6Attributes";
+    public static LocalizableParametrizedText ITEM_SOCKETS_SECTION;
 
-    public static String ITEM_META_TYPE_NAME = "&8Type: ";
+    public static LocalizableParametrizedText ITEM_ATTRIBUTES_SECTIO;
 
-    public static Map<String, String> SOCKET_TYPES = new HashMap<String, String>() {{
-        put(SocketTypes.ANY.getId(), "&8Any");
-        put(SocketTypes.GEM.getId(), "&8Gem");
-        put(SocketTypes.JEWEL.getId(), "&8Jewel");
-        put(SocketTypes.RUNE.getId(), "&8Rune");
-    }};
+    public static LocalizableParametrizedText ITEM_META_TYPE_NAME;
 
-    public static String SOCKET_EMPTY = "&8 < empty %s socket> ";
+    public static LocalizableParametrizedText SOCKET_EMPTY;
 
-    public static String UNKNOWN_RARITY = "&7Unknown rarity";
+    public static LocalizableParametrizedText UNKNOWN_RARITY;
 
-    public static String ITEM_REQUIREMENTS_SECTION = "&4 Requirements";
+    public static LocalizableParametrizedText ITEM_REQUIREMENTS_SECTION;
 
-    public static String CANNOT_USE_ITEM_GENERIC = "&4You cannot use this item";
+    public static LocalizableParametrizedText CANNOT_USE_ITEM_GENERIC;
 
-    public static String RACES_MENU_TEXT = "&l&6[ &eRaces &6]";
+    public static LocalizableParametrizedText RACES_MENU_TEXT;
 
-    public static String CLASSES_MENU_TEXT = "&l&6[ &eClasses &6]";
+    public static LocalizableParametrizedText CLASSES_MENU_TEXT;
 
-    public static String LEVEL = "Level";
+    public static LocalizableParametrizedText LEVEL;
 
-    public static String CHAR_DELETED_FEEDBACK = "Character deleted";
+    public static LocalizableParametrizedText CHAR_DELETED_FEEDBACK;
 
-    public static String NO_CHARACTER = "You need a character for this action";
+    public static LocalizableParametrizedText NO_CHARACTER;
 
-    public static String PARTY_CHAT_PREFIX = "&3Party &1>>&r ";
+    public static LocalizableParametrizedText PARTY_CHAT_PREFIX;
 
-    public static String PLAYER_INVITED_TO_PARTY_PARTY_MSG = "%player% &8 invited to the party";
+    public static LocalizableParametrizedText PLAYER_INVITED_TO_PARTY_PARTY_MSG;
 
-    public static String PLAYER_INVITED_TO_PARTY = "%player% &8invited you to the party";
+    public static LocalizableParametrizedText PLAYER_INVITED_TO_PARTY;
 
-    public static String INSUFFICIENT_LEVEL_GAP = "You need at least level %level% to be able to upgrade the skill.";
+    public static LocalizableParametrizedText INSUFFICIENT_LEVEL_GAP;
 
-    public static String CANNOT_USE_ITEM_CONFIGURATION_REASON_OFFHAND = "&4You are not trained to dual wield with this weapon";
+    public static LocalizableParametrizedText CANNOT_USE_ITEM_CONFIGURATION_REASON_OFFHAND;
 }

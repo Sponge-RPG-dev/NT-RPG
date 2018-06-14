@@ -24,6 +24,8 @@ import com.google.inject.Inject;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.FindPersistenceContextEvent;
 import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.core.localization.Arg;
+import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.commands.*;
 import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.configuration.Localizations;
@@ -423,7 +425,7 @@ public class NtRpgPlugin {
 						ActiveSkill askill = (ActiveSkill) skill;
 						askill.cast(character, extendedSkillInfo, null);
 						Long e = System.nanoTime();
-						character.sendMessage("Exec Time: " + TimeUnit.MILLISECONDS.convert(e - l, TimeUnit.NANOSECONDS));
+						character.getPlayer().sendMessage(Text.of("Exec Time: " + TimeUnit.MILLISECONDS.convert(e - l, TimeUnit.NANOSECONDS)));
 					}
 					return CommandResult.success();
 				})
@@ -485,7 +487,7 @@ public class NtRpgPlugin {
 							throw new RuntimeException("Expected: " + gson.toJson(q));
 						}
 					} else {
-						player.sendMessage(TextSerializers.FORMATTING_CODE.deserialize(Localizations.NO_ITEM_IN_HAND));
+						player.sendMessage(Localizations.NO_ITEM_IN_HAND.toText());
 					}
 					return CommandResult.success();
 				})
@@ -522,7 +524,7 @@ public class NtRpgPlugin {
 							player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
 							return CommandResult.builder().affectedItems(1).build();
 						}
-						src.sendMessage(Text.builder(Localizations.NO_ITEM_IN_HAND).color(TextColors.RED).build());
+						src.sendMessage(Localizations.NO_ITEM_IN_HAND.toText());
 						return CommandResult.empty();
 					}
 					return CommandResult.empty();
@@ -645,7 +647,7 @@ public class NtRpgPlugin {
 							player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
 							return CommandResult.builder().affectedItems(1).build();
 						}
-						src.sendMessage(Text.builder(Localizations.NO_ITEM_IN_HAND).color(TextColors.RED).build());
+						src.sendMessage(Localizations.NO_ITEM_IN_HAND.toText());
 						return CommandResult.empty();
 					}
 					return CommandResult.empty();
@@ -861,9 +863,9 @@ public class NtRpgPlugin {
 						CharacterService characterService = IoC.get().build(CharacterService.class);
 						int i = characterService.canCreateNewCharacter(player.getUniqueId(), a);
 						if (i == 1) {
-							src.sendMessage(TextHelper.parse(Localizations.REACHED_CHARACTER_LIMIT));
+							src.sendMessage(Localizations.REACHED_CHARACTER_LIMIT.toText());
 						} else if (i == 2) {
-							src.sendMessage(TextHelper.parse(Localizations.CHARACTER_EXISTS));
+							src.sendMessage(Localizations.CHARACTER_EXISTS.toText());
 						} else if (i == 0) {
 							CharacterBase characterBase = new CharacterBase();
 							characterBase.setName(a);
@@ -905,7 +907,7 @@ public class NtRpgPlugin {
 					}
 					CompletableFuture.runAsync(() -> {
 						characterService.markCharacterForRemoval(player.getUniqueId(), a);
-						player.sendMessage(TextHelper.parse(Localizations.CHAR_DELETED_FEEDBACK));
+						player.sendMessage(Localizations.CHAR_DELETED_FEEDBACK.toText());
 					}, asyncExecutor);
 					return CommandResult.success();
 				})
@@ -920,12 +922,12 @@ public class NtRpgPlugin {
 				.executor((src, args) -> {
 					ConfigClass configClass = args.<ConfigClass>getOne("class").get();
 					if (configClass == ConfigClass.Default) {
-						src.sendMessage(TextHelper.parse(Localizations.NON_EXISTING_GROUP));
+						src.sendMessage(Localizations.NON_EXISTING_GROUP.toText());
 						return CommandResult.empty();
 					}
 
 					if (!src.hasPermission("ntrpg.groups."+configClass.getName().toLowerCase())) {
-						src.sendMessage(TextHelper.parse(Localizations.NO_PERMISSIONS));
+						src.sendMessage(Localizations.NO_PERMISSIONS.toText());
 						return CommandResult.empty();
 					}
 					int i = 0;
@@ -940,7 +942,7 @@ public class NtRpgPlugin {
 					Player player = (Player) src;
 					IActiveCharacter character = GlobalScope.characterService.getCharacter(player.getUniqueId());
 					if (character.isStub()) {
-						player.sendMessage(TextHelper.parse(Localizations.CHARACTER_IS_REQUIRED));
+						player.sendMessage(Localizations.CHARACTER_IS_REQUIRED.toText());
 						return CommandResult.empty();
 					}
 					character.getClasses().remove(ExtendedNClass.Default);
@@ -958,18 +960,18 @@ public class NtRpgPlugin {
 					Player pl = (Player) src;
 					IActiveCharacter character = GlobalScope.characterService.getCharacter(pl);
 					if (character.isStub()) {
-						pl.sendMessage(TextHelper.parse(Localizations.CHARACTER_IS_REQUIRED));
+						pl.sendMessage(Localizations.CHARACTER_IS_REQUIRED.toText());
 						return CommandResult.empty();
 					}
 
 					args.<Race>getOne(TextHelper.parse("race")).ifPresent(r -> {
 						if (r == Race.Default) {
-							src.sendMessage(TextHelper.parse(Localizations.NON_EXISTING_GROUP));
+							src.sendMessage(Localizations.NON_EXISTING_GROUP.toText());
 							return;
 						}
 
 						if (!src.hasPermission("ntrpg.groups." + r.getName().toLowerCase())) {
-							src.sendMessage(TextHelper.parse(Localizations.NO_PERMISSIONS));
+							src.sendMessage(Localizations.NO_PERMISSIONS.toText());
 							return;
 						}
 
@@ -979,7 +981,7 @@ public class NtRpgPlugin {
 								GlobalScope.characterService.updatePlayerGroups(character, null, 0, r, null);
 								return ;
 							}
-							src.sendMessage(TextHelper.parse(Localizations.PLAYER_CANT_CHANGE_RACE));
+							src.sendMessage(Localizations.PLAYER_CANT_CHANGE_RACE.toText());
 						}
 					});
 					return CommandResult.empty();
@@ -1130,28 +1132,26 @@ public class NtRpgPlugin {
 				.arguments(new LearnedSkillCommandElement(TextHelper.parse("skill")))
 				.executor((src, args) -> {
 					IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
-					args.<ISkill>getOne(TextHelper.parse("skill")).ifPresent(iSkill -> {
+					args.<ISkill>getOne(Text.of("skill")).ifPresent(iSkill -> {
 						ExtendedSkillInfo info = character.getSkillInfo(iSkill.getName());
 						if (info == ExtendedSkillInfo.Empty || info == null) {
-
-							src.sendMessage(TextHelper.parse(Localizations.CHARACTER_DOES_NOT_HAVE_SKILL
-							, Arg.arg("skill", iSkill.getName())));
+							src.sendMessage(Localizations.CHARACTER_DOES_NOT_HAVE_SKILL.toText(Arg.arg("skill", iSkill.getName())));
 						}
 						SkillResult sk = GlobalScope.skillService.executeSkill(character, info);
 						switch (sk) {
 							case ON_COOLDOWN:
 								break;
 							case NO_MANA:
-								Gui.sendMessage(character, Localizations.NO_MANA);
+								Gui.sendMessage(character, Localizations.NO_MANA, Arg.EMPTY );
 								break;
 							case NO_HP:
-								Gui.sendMessage(character, Localizations.NO_HP);
+								Gui.sendMessage(character, Localizations.NO_HP, Arg.EMPTY);
 								break;
 							case CASTER_SILENCED:
-								Gui.sendMessage(character, Localizations.PLAYER_IS_SILENCED);
+								Gui.sendMessage(character, Localizations.PLAYER_IS_SILENCED, Arg.EMPTY);
 								break;
 							case NO_TARGET:
-								Gui.sendMessage(character, Localizations.NO_TARGET);
+								Gui.sendMessage(character, Localizations.NO_TARGET, Arg.EMPTY);
 						}
 					});
 					return CommandResult.success();
@@ -1181,7 +1181,7 @@ public class NtRpgPlugin {
 					final Player player = (Player) src;
 					IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
 					if (character.isStub()) {
-						character.getPlayer().sendMessage(TextHelper.parse(Localizations.NO_CHARACTER));
+						character.getPlayer().sendMessage(Localizations.NO_CHARACTER.toText());
 						return CommandResult.empty();
 					}
 					Gui.displayMana(character);
@@ -1202,16 +1202,16 @@ public class NtRpgPlugin {
 				.executor((src, args) -> {
 					IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
 					if (character.isStub()) {
-						Gui.sendMessage(character, Localizations.CHARACTER_IS_REQUIRED);
+						Gui.sendMessage(character, Localizations.CHARACTER_IS_REQUIRED, Arg.EMPTY);
 						return CommandResult.success();
 					}
 					if (character.hasParty()) {
-						Gui.sendMessage(character, Localizations.ALREADY_IN_PARTY);
+						Gui.sendMessage(character, Localizations.ALREADY_IN_PARTY, Arg.EMPTY);
 						return CommandResult.success();
 					}
 					Party party = new Party(character);
 					character.setParty(party);
-					Gui.sendMessage(character, Localizations.PARTY_CREATED);
+					Gui.sendMessage(character, Localizations.PARTY_CREATED, Arg.EMPTY);
 					return CommandResult.success();
 				})
 				.build();
