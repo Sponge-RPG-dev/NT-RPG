@@ -89,7 +89,6 @@ import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.Container;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -97,7 +96,6 @@ import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.item.inventory.property.SlotPos;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
-import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.LiteralText;
@@ -710,8 +708,14 @@ public class VanillaMessaging implements IPlayerMessage {
 
 	@Listener(order = Order.EARLY, beforeModifications = true)
 	public void onOptionSelect(ClickInventoryEvent event, @Root Player player) {
-		//todo inventory.getPlugin
-
+		Optional<InventoryTitle> inventoryProperty = event.getTargetInventory().getInventoryProperty(InventoryTitle.class);
+		if (!inventoryProperty.isPresent())
+			return;
+		InventoryTitle inventoryTitle = inventoryProperty.get();
+		Text value = inventoryTitle.getValue();
+		if (!value.toPlain().equalsIgnoreCase(Localization.SKILLTREE)) {
+			return;
+		}
 		Iterator<SlotTransaction> iterator = event.getTransactions().iterator();
 
 		while (iterator.hasNext()) {
@@ -861,10 +865,13 @@ public class VanillaMessaging implements IPlayerMessage {
 
 	@Override
 	public void moveSkillTreeMenu(IActiveCharacter character) {
-		Optional<Container> openInventory = character.getPlayer().getOpenInventory();
-		if (openInventory.isPresent()) {
-			createSkillTreeView(character, openInventory.get().query(GridInventory.class).first());
-		}
+		Inventory build = Inventory.builder()
+				.of(InventoryArchetypes.DOUBLE_CHEST)
+				.property(InventoryTitle.of(TextHelper.parse(Localization.SKILLTREE)))
+				.build(plugin);
+
+		createSkillTreeView(character, build);
+		character.getPlayer().openInventory(build);
 	}
 
 	@Override
