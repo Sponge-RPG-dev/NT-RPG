@@ -18,17 +18,31 @@
 
 package cz.neumimto.rpg.gui;
 
+import static cz.neumimto.rpg.gui.GuiHelper.back;
+import static cz.neumimto.rpg.gui.GuiHelper.createPlayerGroupView;
+import static cz.neumimto.rpg.gui.GuiHelper.getItemLore;
+
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.*;
+import cz.neumimto.rpg.Arg;
+import cz.neumimto.rpg.GroupService;
+import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.Pair;
+import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.CommandPermissions;
 import cz.neumimto.rpg.configuration.Localization;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
-import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.effects.EffectSourceType;
+import cz.neumimto.rpg.effects.EffectStatusType;
+import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.effects.common.def.ManaBarNotifier;
 import cz.neumimto.rpg.inventory.CannotUseItemReason;
@@ -45,7 +59,11 @@ import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.persistance.DirectAccessDao;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
-import cz.neumimto.rpg.players.*;
+import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.players.ExtendedNClass;
+import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
@@ -66,7 +84,8 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.event.Order;
+import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
@@ -91,10 +110,17 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
-
-import static cz.neumimto.rpg.gui.GuiHelper.*;
 
 /**
  * Created by NeumimTo on 6.8.2015.
@@ -682,8 +708,8 @@ public class VanillaMessaging implements IPlayerMessage {
 		return of;
 	}
 
-	@Listener
-	public void onOptionSelect(ClickInventoryEvent event, @First(typeFilter = Player.class) Player player) {
+	@Listener(order = Order.EARLY, beforeModifications = true)
+	public void onOptionSelect(ClickInventoryEvent event, @Root Player player) {
 		//todo inventory.getPlugin
 
 		Iterator<SlotTransaction> iterator = event.getTransactions().iterator();
@@ -718,33 +744,32 @@ public class VanillaMessaging implements IPlayerMessage {
 						Sponge.getScheduler().createTaskBuilder()
 								.execute(() -> Gui.moveSkillTreeMenu(character))
 								.submit(plugin);
-
-						break;
+						return;
 					case SOUTH:
 						viewModel.getLocation().key+=1;
 						Sponge.getScheduler().createTaskBuilder()
 								.execute(() -> Gui.moveSkillTreeMenu(character))
 								.submit(plugin);
-						break;
+						return;
 					case WEST:
 						viewModel.getLocation().value+=1;
 						Sponge.getScheduler().createTaskBuilder()
 								.execute(() -> Gui.moveSkillTreeMenu(character))
 								.submit(plugin);
-						break;
+						return;
 					case EAST:
 						viewModel.getLocation().value-=1;
 						Sponge.getScheduler().createTaskBuilder()
 								.execute(() -> Gui.moveSkillTreeMenu(character))
 								.submit(plugin);
-						break;
+						return;
 					case MODE:
 						viewModel.setInteractiveMode(viewModel.getInteractiveMode().opposite());
 						//just redraw
 						Sponge.getScheduler().createTaskBuilder()
 								.execute(() -> Gui.moveSkillTreeMenu(character))
 								.submit(plugin);
-						break;
+						return;
 					default:
 						String node = t.getOriginal().get(NKeys.SKILLTREE_NODE).get();
 						if (viewModel.getInteractiveMode() == SkillTreeViewModel.InteractiveMode.FAST) {
