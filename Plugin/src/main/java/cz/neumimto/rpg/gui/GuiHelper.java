@@ -14,6 +14,7 @@ import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
+import cz.neumimto.rpg.listeners.SkillTreeInventoryListener;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
@@ -27,13 +28,16 @@ import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.DyeColors;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.property.AcceptsItems;
 import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.item.inventory.property.SlotPos;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
@@ -224,6 +228,8 @@ public class GuiHelper {
 		Inventory i = Inventory.builder()
 				.of(InventoryArchetypes.DOUBLE_CHEST)
 				.property(InventoryTitle.of(TextHelper.parse(Localization.SKILLTREE)))
+				.property(AcceptsItems.of(Collections.EMPTY_LIST))
+				.listener(ClickInventoryEvent.class, event -> new SkillTreeInventoryListener().onOptionSelect(event, (Player) event.getCause().root()))
 				.build(plugin);
 
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 0))).offer(unclickableInterface());

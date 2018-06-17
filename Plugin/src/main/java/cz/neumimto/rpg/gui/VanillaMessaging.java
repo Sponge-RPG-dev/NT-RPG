@@ -29,7 +29,6 @@ import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.Arg;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.commands.InfoCommand;
@@ -50,7 +49,6 @@ import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
-import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
 import cz.neumimto.rpg.inventory.data.manipulators.SkillTreeNode;
 import cz.neumimto.rpg.inventory.runewords.ItemUpgrade;
@@ -70,12 +68,10 @@ import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.reloading.Reload;
 import cz.neumimto.rpg.reloading.ReloadService;
-import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.SkillTree;
 import cz.neumimto.rpg.utils.ItemStackUtils;
-import cz.neumimto.rpg.utils.SkillTreeActionResult;
 import cz.neumimto.rpg.utils.Utils;
 import cz.neumimto.rpg.utils.model.CharacterListModel;
 import org.spongepowered.api.Game;
@@ -83,19 +79,16 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.Order;
-import org.spongepowered.api.event.filter.cause.Root;
-import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.Container;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.item.inventory.property.SlotPos;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
-import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
+import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.LiteralText;
@@ -112,13 +105,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by NeumimTo on 6.8.2015.
@@ -706,107 +697,6 @@ public class VanillaMessaging implements IPlayerMessage {
 		return of;
 	}
 
-	@Listener(order = Order.EARLY, beforeModifications = true)
-	public void onOptionSelect(ClickInventoryEvent event, @Root Player player) {
-		Optional<InventoryTitle> inventoryProperty = event.getTargetInventory().getInventoryProperty(InventoryTitle.class);
-		if (!inventoryProperty.isPresent())
-			return;
-		InventoryTitle inventoryTitle = inventoryProperty.get();
-		Text value = inventoryTitle.getValue();
-		if (!value.toPlain().equalsIgnoreCase(Localization.SKILLTREE)) {
-			return;
-		}
-		Iterator<SlotTransaction> iterator = event.getTransactions().iterator();
-
-		while (iterator.hasNext()) {
-			SlotTransaction t = iterator.next();
-			Optional<String> s = t.getOriginal().get(NKeys.COMMAND);
-			if (s.isPresent()) {
-				event.setCancelled(true);
-				Sponge.getScheduler().createTaskBuilder()
-						.delay(1L, TimeUnit.MILLISECONDS)
-						.execute(() -> {
-
-							Sponge.getCommandManager().process(player, s.get());
-						})
-						.submit(plugin);
-				return;
-			}
-
-			if (t.getOriginal().get(NKeys.MENU_INVENTORY).isPresent()) {
-				event.setCancelled(true);
-				t.setCustom(ItemStack.empty());
-			}
-
-			if (t.getOriginal().get(NKeys.SKILLTREE_CONTROLLS).isPresent()) {
-				SkillTreeControllsButton command = t.getOriginal().get(NKeys.SKILLTREE_CONTROLLS).get();
-				IActiveCharacter character = characterService.getCharacter(player);
-				SkillTreeViewModel viewModel = character.getLastTimeInvokedSkillTreeView();
-				switch (command) {
-					case NORTH:
-						viewModel.getLocation().key-=1;
-						Sponge.getScheduler().createTaskBuilder()
-								.execute(() -> Gui.moveSkillTreeMenu(character))
-								.submit(plugin);
-						return;
-					case SOUTH:
-						viewModel.getLocation().key+=1;
-						Sponge.getScheduler().createTaskBuilder()
-								.execute(() -> Gui.moveSkillTreeMenu(character))
-								.submit(plugin);
-						return;
-					case WEST:
-						viewModel.getLocation().value+=1;
-						Sponge.getScheduler().createTaskBuilder()
-								.execute(() -> Gui.moveSkillTreeMenu(character))
-								.submit(plugin);
-						return;
-					case EAST:
-						viewModel.getLocation().value-=1;
-						Sponge.getScheduler().createTaskBuilder()
-								.execute(() -> Gui.moveSkillTreeMenu(character))
-								.submit(plugin);
-						return;
-					case MODE:
-						viewModel.setInteractiveMode(viewModel.getInteractiveMode().opposite());
-						//just redraw
-						Sponge.getScheduler().createTaskBuilder()
-								.execute(() -> Gui.moveSkillTreeMenu(character))
-								.submit(plugin);
-						return;
-					default:
-						String node = t.getOriginal().get(NKeys.SKILLTREE_NODE).get();
-						if (viewModel.getInteractiveMode() == SkillTreeViewModel.InteractiveMode.FAST) {
-
-							ISkill iSkill = skillService.getSkill(node);
-							SkillTree tree = character.getPrimaryClass().getConfigClass().getSkillTree();
-							if (character.getSkill(node) == null) {
-								Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data = characterService.characterLearnskill(character, iSkill, tree);
-								player.sendMessage(data.value.bind(data.key.message));
-							} else {
-								Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data = characterService.upgradeSkill(character, iSkill);
-								player.sendMessage(data.value.bind(data.key.message));
-							}
-							//redraw
-							Sponge.getScheduler().createTaskBuilder()
-									.execute(() -> Gui.moveSkillTreeMenu(character))
-									.submit(plugin);
-						} else {
-							SkillTree tree = character.getPrimaryClass().getConfigClass().getSkillTree();
-							event.setCancelled(true);
-							Sponge.getScheduler().createTaskBuilder()
-									.execute(() -> Gui.displaySkillDetailsInventoryMenu(character, tree, node))
-									.submit(plugin);
-
-						}
-
-				}
-			}
-		}
-	}
-
-
-
 
 	@Override
 	public void displayHealth(IActiveCharacter character) {
@@ -863,15 +753,13 @@ public class VanillaMessaging implements IPlayerMessage {
 
 	}
 
+
 	@Override
 	public void moveSkillTreeMenu(IActiveCharacter character) {
-		Inventory build = Inventory.builder()
-				.of(InventoryArchetypes.DOUBLE_CHEST)
-				.property(InventoryTitle.of(TextHelper.parse(Localization.SKILLTREE)))
-				.build(plugin);
-
-		createSkillTreeView(character, build);
-		character.getPlayer().openInventory(build);
+		Optional<Container> openInventory = character.getPlayer().getOpenInventory();
+		if (openInventory.isPresent()) {
+			createSkillTreeView(character, openInventory.get().query(GridInventory.class).first());
+		}
 	}
 
 	@Override

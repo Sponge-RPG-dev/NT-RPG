@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.listeners;
 
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.CannotUseItemReason;
@@ -32,6 +33,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillService;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -53,6 +55,7 @@ import org.spongepowered.api.util.Tristate;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -72,6 +75,9 @@ public class InventoryListener {
 
 	@Inject
 	private SkillService skillService;
+
+	@Inject
+	private NtRpgPlugin plugin;
 
 	@Listener
 	public void onInventoryClose(InteractInventoryEvent.Close event, @First(typeFilter = {Player.class}) Player player) {
@@ -123,8 +129,34 @@ public class InventoryListener {
 			Optional<SlotIndex> inventoryProperty = transaction.getSlot().getInventoryProperty(SlotIndex.class);
 			if (inventoryProperty.isPresent()) {
 				boolean cancel = inventoryService.processSlotInteraction(transaction.getSlot(), player);
-				if (cancel)
+				if (cancel) {
 					event.setCancelled(cancel);
+				}
+			}
+		}
+	}
+
+
+	@Listener
+	public void onInteract(ClickInventoryEvent event, @Root Player player) {
+		for (SlotTransaction t : event.getTransactions()) {
+			Optional<String> s = t.getOriginal().get(NKeys.COMMAND);
+			if (s.isPresent()) {
+				event.setCancelled(true);
+				Sponge.getScheduler().createTaskBuilder()
+						.delay(1L, TimeUnit.MILLISECONDS)
+						.execute(() -> {
+
+							Sponge.getCommandManager().process(player, s.get());
+						})
+						.submit(plugin);
+						return;
+			}
+
+			if (t.getOriginal().get(NKeys.MENU_INVENTORY).isPresent()) {
+				event.setCancelled(true);
+				t.setCustom(ItemStack.empty());
+				return;
 			}
 		}
 	}
