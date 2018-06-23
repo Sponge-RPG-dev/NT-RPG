@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.commands;
 
-import cz.neumimto.rpg.Arg;
+import cz.neumimto.core.localization.Arg;
+import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.TextHelper;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.players.groups.Race;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.ArgumentParseException;
@@ -30,8 +30,7 @@ public class RaceCommandElement extends CommandElement {
         String race = args.next();
         Race r = NtRpgPlugin.GlobalScope.groupService.getRace(race);
         if (r == null) {
-            throw args.createError(TextHelper.parse(Localization.UNKNOWN_RACE,
-                    Arg.arg("race", race)));
+            throw args.createError(Localizations.UNKNOWN_RACE.toText(Arg.arg("race", race)));
         }
         if (!source.hasPermission("ntrpg.groups."+r.getName().toLowerCase())) {
             throw args.createError(TextHelper.parse("&CNo permission ntrpg.groups.%race%",

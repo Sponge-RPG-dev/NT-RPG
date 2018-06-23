@@ -24,9 +24,21 @@ import com.google.inject.Inject;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.FindPersistenceContextEvent;
 import cz.neumimto.core.ioc.IoC;
-import cz.neumimto.rpg.commands.*;
+import cz.neumimto.core.localization.Arg;
+import cz.neumimto.core.localization.LocalizationService;
+import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.commands.AnyPlayerGroupCommandElement;
+import cz.neumimto.rpg.commands.AnySkillCommandElement;
+import cz.neumimto.rpg.commands.CharacterAttributeCommandElement;
+import cz.neumimto.rpg.commands.GlobalEffectCommandElement;
+import cz.neumimto.rpg.commands.LearnedSkillCommandElement;
+import cz.neumimto.rpg.commands.PartyMemberCommandElement;
+import cz.neumimto.rpg.commands.PlayerClassCommandElement;
+import cz.neumimto.rpg.commands.RaceCommandElement;
+import cz.neumimto.rpg.commands.RuneCommandElement;
+import cz.neumimto.rpg.commands.UnlearnedSkillCommandElement;
 import cz.neumimto.rpg.configuration.CommandLocalization;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.configuration.Settings;
 import cz.neumimto.rpg.effects.EffectParams;
@@ -38,7 +50,22 @@ import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
-import cz.neumimto.rpg.inventory.data.manipulators.*;
+import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemAttributesData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaHeader;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaTypeData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemRarityData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemSocketsData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemStackUpgradeData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemSubtypeData;
+import cz.neumimto.rpg.inventory.data.manipulators.LoreDamageData;
+import cz.neumimto.rpg.inventory.data.manipulators.LoreDurabilityData;
+import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemGroupRequirementsData;
+import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemRequirementsData;
+import cz.neumimto.rpg.inventory.data.manipulators.SectionDelimiterData;
+import cz.neumimto.rpg.inventory.data.manipulators.SkillBindData;
+import cz.neumimto.rpg.inventory.data.manipulators.SkillTreeNode;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.inventory.items.ItemMetaTypeRegistry;
 import cz.neumimto.rpg.inventory.items.ItemMetaTypes;
@@ -57,7 +84,11 @@ import cz.neumimto.rpg.listeners.DebugListener;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.players.*;
+import cz.neumimto.rpg.players.ActiveCharacter;
+import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.players.ExtendedNClass;
+import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
@@ -66,7 +97,13 @@ import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.AttributeRegistry;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.scripting.JSLoader;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ActiveSkill;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.utils.FileUtils;
 import cz.neumimto.rpg.utils.SkillTreeActionResult;
 import org.slf4j.Logger;
@@ -94,7 +131,6 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
-import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -103,9 +139,18 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Resource;
 
 /**
  * Created by NeumimTo on 29.4.2015.
@@ -373,6 +418,10 @@ public class NtRpgPlugin {
 		registerCommands();
 		IoC.get().build(PropertyService.class).loadMaximalServerPropertyValues();
 
+		IoC.get().build(LocalizationService.class).registerClass(Localizations.class);
+		ResourceBundle bundle = ResourceBundle.getBundle("assets.nt-rpg.localizations.localization", Locale.forLanguageTag(PluginConfig.LOCALE));
+		IoC.get().build(LocalizationService.class).loadResourceBundle(bundle);
+
 		double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
 		logger.info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
 	}
@@ -423,7 +472,7 @@ public class NtRpgPlugin {
 						ActiveSkill askill = (ActiveSkill) skill;
 						askill.cast(character, extendedSkillInfo, null);
 						Long e = System.nanoTime();
-						character.sendMessage("Exec Time: " + TimeUnit.MILLISECONDS.convert(e - l, TimeUnit.NANOSECONDS));
+						character.getPlayer().sendMessage(Text.of("Exec Time: " + TimeUnit.MILLISECONDS.convert(e - l, TimeUnit.NANOSECONDS)));
 					}
 					return CommandResult.success();
 				})
@@ -485,7 +534,7 @@ public class NtRpgPlugin {
 							throw new RuntimeException("Expected: " + gson.toJson(q));
 						}
 					} else {
-						player.sendMessage(TextSerializers.FORMATTING_CODE.deserialize(Localization.NO_ITEM_IN_HAND));
+						player.sendMessage(Localizations.NO_ITEM_IN_HAND.toText());
 					}
 					return CommandResult.success();
 				})
@@ -522,7 +571,7 @@ public class NtRpgPlugin {
 							player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
 							return CommandResult.builder().affectedItems(1).build();
 						}
-						src.sendMessage(Text.builder(Localization.NO_ITEM_IN_HAND).color(TextColors.RED).build());
+						src.sendMessage(Localizations.NO_ITEM_IN_HAND.toText());
 						return CommandResult.empty();
 					}
 					return CommandResult.empty();
@@ -645,7 +694,7 @@ public class NtRpgPlugin {
 							player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
 							return CommandResult.builder().affectedItems(1).build();
 						}
-						src.sendMessage(Text.builder(Localization.NO_ITEM_IN_HAND).color(TextColors.RED).build());
+						src.sendMessage(Localizations.NO_ITEM_IN_HAND.toText());
 						return CommandResult.empty();
 					}
 					return CommandResult.empty();
@@ -861,9 +910,9 @@ public class NtRpgPlugin {
 						CharacterService characterService = IoC.get().build(CharacterService.class);
 						int i = characterService.canCreateNewCharacter(player.getUniqueId(), a);
 						if (i == 1) {
-							src.sendMessage(TextHelper.parse(Localization.REACHED_CHARACTER_LIMIT));
+							src.sendMessage(Localizations.REACHED_CHARACTER_LIMIT.toText());
 						} else if (i == 2) {
-							src.sendMessage(TextHelper.parse(Localization.CHARACTER_EXISTS));
+							src.sendMessage(Localizations.CHARACTER_EXISTS.toText());
 						} else if (i == 0) {
 							CharacterBase characterBase = new CharacterBase();
 							characterBase.setName(a);
@@ -905,7 +954,7 @@ public class NtRpgPlugin {
 					}
 					CompletableFuture.runAsync(() -> {
 						characterService.markCharacterForRemoval(player.getUniqueId(), a);
-						player.sendMessage(TextHelper.parse(Localization.CHAR_DELETED_FEEDBACK));
+						player.sendMessage(Localizations.CHAR_DELETED_FEEDBACK.toText());
 					}, asyncExecutor);
 					return CommandResult.success();
 				})
@@ -920,12 +969,12 @@ public class NtRpgPlugin {
 				.executor((src, args) -> {
 					ConfigClass configClass = args.<ConfigClass>getOne("class").get();
 					if (configClass == ConfigClass.Default) {
-						src.sendMessage(TextHelper.parse(Localization.NON_EXISTING_GROUP));
+						src.sendMessage(Localizations.NON_EXISTING_GROUP.toText());
 						return CommandResult.empty();
 					}
 
 					if (!src.hasPermission("ntrpg.groups."+configClass.getName().toLowerCase())) {
-						src.sendMessage(TextHelper.parse(Localization.NO_PERMISSIONS));
+						src.sendMessage(Localizations.NO_PERMISSIONS.toText());
 						return CommandResult.empty();
 					}
 					int i = 0;
@@ -940,7 +989,7 @@ public class NtRpgPlugin {
 					Player player = (Player) src;
 					IActiveCharacter character = GlobalScope.characterService.getCharacter(player.getUniqueId());
 					if (character.isStub()) {
-						player.sendMessage(TextHelper.parse(Localization.CHARACTER_IS_REQUIRED));
+						player.sendMessage(Localizations.CHARACTER_IS_REQUIRED.toText());
 						return CommandResult.empty();
 					}
 					character.getClasses().remove(ExtendedNClass.Default);
@@ -958,18 +1007,18 @@ public class NtRpgPlugin {
 					Player pl = (Player) src;
 					IActiveCharacter character = GlobalScope.characterService.getCharacter(pl);
 					if (character.isStub()) {
-						pl.sendMessage(TextHelper.parse(Localization.CHARACTER_IS_REQUIRED));
+						pl.sendMessage(Localizations.CHARACTER_IS_REQUIRED.toText());
 						return CommandResult.empty();
 					}
 
 					args.<Race>getOne(TextHelper.parse("race")).ifPresent(r -> {
 						if (r == Race.Default) {
-							src.sendMessage(TextHelper.parse(Localization.NON_EXISTING_GROUP));
+							src.sendMessage(Localizations.NON_EXISTING_GROUP.toText());
 							return;
 						}
 
 						if (!src.hasPermission("ntrpg.groups." + r.getName().toLowerCase())) {
-							src.sendMessage(TextHelper.parse(Localization.NO_PERMISSIONS));
+							src.sendMessage(Localizations.NO_PERMISSIONS.toText());
 							return;
 						}
 
@@ -979,7 +1028,7 @@ public class NtRpgPlugin {
 								GlobalScope.characterService.updatePlayerGroups(character, null, 0, r, null);
 								return ;
 							}
-							src.sendMessage(TextHelper.parse(Localization.PLAYER_CANT_CHANGE_RACE));
+							src.sendMessage(Localizations.PLAYER_CANT_CHANGE_RACE.toText());
 						}
 					});
 					return CommandResult.empty();
@@ -1070,7 +1119,7 @@ public class NtRpgPlugin {
 						Player player = (Player) src;
 						IActiveCharacter current = GlobalScope.characterService.getCharacter(player);
 						if (current != null && current.getName().equalsIgnoreCase(s)) {
-							player.sendMessage(Text.of(Localization.ALREADY_CUURENT_CHARACTER));
+							player.sendMessage(Text.of(Localizations.ALREADY_CUURENT_CHARACTER));
 							return;
 						}
 						asyncExecutor.execute(() -> {
@@ -1090,7 +1139,7 @@ public class NtRpgPlugin {
 								}
 							}
 							if (!b)
-								player.sendMessage(Text.of(Localization.NON_EXISTING_CHARACTER));
+								player.sendMessage(Text.of(Localizations.NON_EXISTING_CHARACTER));
 						});
 					});
 					return CommandResult.success();
@@ -1130,28 +1179,26 @@ public class NtRpgPlugin {
 				.arguments(new LearnedSkillCommandElement(TextHelper.parse("skill")))
 				.executor((src, args) -> {
 					IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
-					args.<ISkill>getOne(TextHelper.parse("skill")).ifPresent(iSkill -> {
+					args.<ISkill>getOne(Text.of("skill")).ifPresent(iSkill -> {
 						ExtendedSkillInfo info = character.getSkillInfo(iSkill.getName());
 						if (info == ExtendedSkillInfo.Empty || info == null) {
-
-							src.sendMessage(TextHelper.parse(Localization.CHARACTER_DOES_NOT_HAVE_SKILL
-							, Arg.arg("skill", iSkill.getName())));
+							src.sendMessage(Localizations.CHARACTER_DOES_NOT_HAVE_SKILL.toText(Arg.arg("skill", iSkill.getName())));
 						}
 						SkillResult sk = GlobalScope.skillService.executeSkill(character, info);
 						switch (sk) {
 							case ON_COOLDOWN:
 								break;
 							case NO_MANA:
-								Gui.sendMessage(character, Localization.NO_MANA);
+								Gui.sendMessage(character, Localizations.NO_MANA, Arg.EMPTY );
 								break;
 							case NO_HP:
-								Gui.sendMessage(character, Localization.NO_HP);
+								Gui.sendMessage(character, Localizations.NO_HP, Arg.EMPTY);
 								break;
 							case CASTER_SILENCED:
-								Gui.sendMessage(character, Localization.PLAYER_IS_SILENCED);
+								Gui.sendMessage(character, Localizations.PLAYER_IS_SILENCED, Arg.EMPTY);
 								break;
 							case NO_TARGET:
-								Gui.sendMessage(character, Localization.NO_TARGET);
+								Gui.sendMessage(character, Localizations.NO_TARGET, Arg.EMPTY);
 						}
 					});
 					return CommandResult.success();
@@ -1181,7 +1228,7 @@ public class NtRpgPlugin {
 					final Player player = (Player) src;
 					IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
 					if (character.isStub()) {
-						character.getPlayer().sendMessage(TextHelper.parse(Localization.NO_CHARACTER));
+						character.getPlayer().sendMessage(Localizations.NO_CHARACTER.toText());
 						return CommandResult.empty();
 					}
 					Gui.displayMana(character);
@@ -1202,16 +1249,16 @@ public class NtRpgPlugin {
 				.executor((src, args) -> {
 					IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
 					if (character.isStub()) {
-						Gui.sendMessage(character, Localization.CHARACTER_IS_REQUIRED);
+						Gui.sendMessage(character, Localizations.CHARACTER_IS_REQUIRED, Arg.EMPTY);
 						return CommandResult.success();
 					}
 					if (character.hasParty()) {
-						Gui.sendMessage(character, Localization.ALREADY_IN_PARTY);
+						Gui.sendMessage(character, Localizations.ALREADY_IN_PARTY, Arg.EMPTY);
 						return CommandResult.success();
 					}
 					Party party = new Party(character);
 					character.setParty(party);
-					Gui.sendMessage(character, Localization.PARTY_CREATED);
+					Gui.sendMessage(character, Localizations.PARTY_CREATED, Arg.EMPTY);
 					return CommandResult.success();
 				})
 				.build();

@@ -20,7 +20,7 @@ package cz.neumimto.rpg.effects.common.positive;
 
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.ClassGenerator;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IGlobalEffect;
@@ -29,6 +29,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
+import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -91,7 +92,7 @@ public class SpeedBoost extends EffectBase {
 			location.getExtent().spawnParticles(build, location.getPosition().add(vector3d));
 		}
 
-		getConsumer().sendMessage(Localization.SPEED_BOOST_APPLY);
+		getConsumer().sendMessage(ChatTypes.CHAT, Localizations.SPEED_BOOST_APPLY.toText());
 
 	}
 
@@ -101,7 +102,7 @@ public class SpeedBoost extends EffectBase {
 		getConsumer().setProperty(DefaultProperties.walk_speed,
 				getGlobalScope().characterService.getCharacterProperty(getConsumer(), DefaultProperties.walk_speed) - speedbonus);
 		getGlobalScope().characterService.updateWalkSpeed(getConsumer());
-		getConsumer().sendMessage(Localization.SPEED_BOOST_EXPIRE);
+		getConsumer().sendMessage(ChatTypes.CHAT, Localizations.SPEED_BOOST_EXPIRE.toText());
 	}
 
 	@Override

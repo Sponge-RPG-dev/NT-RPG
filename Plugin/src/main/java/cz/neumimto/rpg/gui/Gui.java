@@ -19,7 +19,9 @@
 package cz.neumimto.rpg.gui;
 
 import cz.neumimto.core.ioc.IoC;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.core.localization.Arg;
+import cz.neumimto.core.localization.LocalizableParametrizedText;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.common.def.ClickComboActionEvent;
@@ -70,8 +72,8 @@ public class Gui {
 		return vanilla;
 	}
 
-	public static void sendMessage(IActiveCharacter player, String message) {
-		getMessageTypeOf(player).sendMessage(player, message);
+	public static void sendMessage(IActiveCharacter player, LocalizableParametrizedText message, Arg arg) {
+		getMessageTypeOf(player).sendMessage(player, message, arg);
 	}
 
 	public static void sendCooldownMessage(IActiveCharacter player, String skillname, double cooldown) {
@@ -196,7 +198,7 @@ public class Gui {
 
 	public static void resetCurrentClicks(ClickComboActionEvent clickComboActionEvent, boolean byShift) {
 		clickComboActionEvent.getConsumer().sendMessage(ChatTypes.ACTION_BAR,
-					Text.builder("<"+ Localization.CANCELLED+">")
+					Text.builder("<"+ Localizations.CANCELLED+">")
 							.color(TextColors.DARK_GRAY)
 							.style(TextStyles.ITALIC)
 							.build());

@@ -18,8 +18,7 @@
 
 package cz.neumimto.rpg.players.parties;
 
-import cz.neumimto.rpg.TextHelper;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.scoreboard.Team;
 import org.spongepowered.api.text.Text;
@@ -107,10 +106,9 @@ public class Party {
 	}
 
 	public void sendPartyMessage(Text t) {
-		Text text = Text.builder().append(TextHelper.parse(Localization.PARTY_CHAT_PREFIX)).append(t).build();
-
+		Text text = Text.builder().append(Localizations.PARTY_CHAT_PREFIX.toText()).append(t).build();
 		for (IActiveCharacter player : players) {
-			player.getPlayer().sendMessage(t);
+			player.getPlayer().sendMessage(text);
 		}
 	}
 

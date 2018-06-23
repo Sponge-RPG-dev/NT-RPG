@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.players;
 
+import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.inventory.RPGItemType;
@@ -209,8 +210,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 	@Override
 	Player getEntity();
 
-	@Override
-	void sendMessage(String message);
+	void sendMessage(LocalizableParametrizedText message);
 
 	float[] getCharacterLevelProperties();
 

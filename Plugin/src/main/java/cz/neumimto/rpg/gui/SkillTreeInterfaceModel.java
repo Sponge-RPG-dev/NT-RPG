@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.gui;
 
-import cz.neumimto.rpg.TextHelper;
+import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.property.item.UseLimitProperty;

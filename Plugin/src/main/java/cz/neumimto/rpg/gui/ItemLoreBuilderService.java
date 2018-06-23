@@ -1,10 +1,11 @@
 package cz.neumimto.rpg.gui;
 
-import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.core.localization.Arg;
+import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.TextHelper;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.inventory.ItemLoreSections;
@@ -18,23 +19,22 @@ import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.reloading.Reload;
 import cz.neumimto.rpg.reloading.ReloadService;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * Created by NeumimTo on 20.1.2018.
  */
 @Singleton
+@ResourceLoader.ListenerClass
 public class ItemLoreBuilderService {
 
     private static TextColor effectName;
@@ -54,7 +54,11 @@ public class ItemLoreBuilderService {
     private static Text unknownRarity;
     private static Text metaType;
 
-    @PostProcess(priority = 3000)
+    @Listener
+    public void pluginInit(GameStartedServerEvent e) {
+        setupColor();
+    }
+
     @Reload(on = ReloadService.PLUGIN_CONFIG)
     public void setupColor() {
         effectName = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_NAME_COLOR).get();
@@ -64,14 +68,14 @@ public class ItemLoreBuilderService {
         groupMinLevelColor = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_GROUP_MIN_LEVEL_COLOR).get();
 
 
-        effectSection = TextHelper.parse(Localization.ITEM_EFFECTS_SECTION);
-        rarity = TextHelper.parse(Localization.ITEM_RARITY_SECTION);
-        damage = TextHelper.parse(Localization.ITEM_DAMAGE_SECTION);
-        level = TextHelper.parse(Localization.ITEM_LEVEL_SECTION);
-        sockets = TextHelper.parse(Localization.ITEM_SOCKETS_SECTION);
-        attributes = TextHelper.parse(Localization.ITEM_ATTRIBUTES_SECTIO);
-        requirements = TextHelper.parse(Localization.ITEM_REQUIREMENTS_SECTION);
-        metaType = TextHelper.parse(Localization.ITEM_META_TYPE_NAME);
+        effectSection = Localizations.ITEM_EFFECTS_SECTION.toText();
+        rarity = Localizations.ITEM_RARITY_SECTION.toText();
+        damage = Localizations.ITEM_DAMAGE_SECTION.toText();
+        level = Localizations.ITEM_LEVEL_SECTION.toText();
+        sockets = Localizations.ITEM_SOCKETS_SECTION.toText();
+        attributes = Localizations.ITEM_ATTRIBUTES_SECTIO.toText();
+        requirements = Localizations.ITEM_REQUIREMENTS_SECTION.toText();
+        metaType = Localizations.ITEM_META_TYPE_NAME.toText();
 
         loreOrder = PluginConfig.ITEM_LORE_ORDER.stream().map(ItemLoreSections::valueOf).collect(Collectors.toList());
 
@@ -82,7 +86,7 @@ public class ItemLoreBuilderService {
             rarityMap.put(i, t);
         }
 
-        unknownRarity = TextHelper.parse(Localization.UNKNOWN_RARITY);
+        unknownRarity = Localizations.UNKNOWN_RARITY.toText();
 
     }
 
@@ -139,7 +143,7 @@ public class ItemLoreBuilderService {
                 createDelimiter(ItemLoreBuilderService.sockets);
                 for (int i = 0; i < sockets.size(); i++) {
                     if (DataConstants.EMPTY_SOCKET.equals(content.get(i))) {
-                        t.add(Text.builder().append(TextHelper.parse(String.format(Localization.SOCKET_EMPTY, sockets.get(i).getName())))                                .build());
+                        t.add(Localizations.SOCKET_EMPTY.toText(Arg.arg("socket", sockets.get(i).getName())));
                     } else {
                         t.add(Text.builder("- ").color(TextColors.DARK_RED).append(content).build());
                     }

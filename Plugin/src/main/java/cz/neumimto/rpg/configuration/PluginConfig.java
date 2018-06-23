@@ -224,4 +224,7 @@ public class PluginConfig {
 	@ConfigValue
 	@Comment(content = "Plugins attempt to create a list of items present on the server, which might fall into categories of weapons/armors/shields. The final list might, or might not be complete.")
 	public static boolean AUTODISCOVER_ITEMS = true;
+
+	@ConfigValue
+	public static String LOCALE = "en";
 }

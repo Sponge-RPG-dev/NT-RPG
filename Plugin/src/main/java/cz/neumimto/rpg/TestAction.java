@@ -3,6 +3,8 @@ package cz.neumimto.rpg;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.core.localization.Arg;
+import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.common.stacking.IntegerEffectStackingStrategy;
 import cz.neumimto.rpg.gui.ParticleDecorator;
@@ -75,12 +77,12 @@ public class TestAction implements IEffectSourceProvider {
 
 		@Override
 		public void onApply() {
-			getConsumer().sendMessage("added");
+			getConsumer().sendMessage(LocalizableParametrizedText.from("added"), Arg.EMPTY);
 		}
 
 		@Override
 		public void onRemove() {
-			getConsumer().sendMessage("removed");
+			getConsumer().sendMessage(LocalizableParametrizedText.from("removed"), Arg.EMPTY);
 		}
 
 		@Override
