@@ -19,15 +19,21 @@
 package cz.neumimto.rpg.listeners;
 
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.inventory.*;
+import cz.neumimto.rpg.inventory.CannotUseItemReason;
+import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.ItemService;
+import cz.neumimto.rpg.inventory.RPGItemType;
+import cz.neumimto.rpg.inventory.WeaponClass;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillService;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -37,7 +43,11 @@ import org.spongepowered.api.event.filter.IsCancelled;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.event.filter.type.Include;
-import org.spongepowered.api.event.item.inventory.*;
+import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
+import org.spongepowered.api.event.item.inventory.DropItemEvent;
+import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
+import org.spongepowered.api.event.item.inventory.InteractItemEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
@@ -45,6 +55,7 @@ import org.spongepowered.api.util.Tristate;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -64,6 +75,9 @@ public class InventoryListener {
 
 	@Inject
 	private SkillService skillService;
+
+	@Inject
+	private NtRpgPlugin plugin;
 
 	@Listener
 	public void onInventoryClose(InteractInventoryEvent.Close event, @First(typeFilter = {Player.class}) Player player) {
@@ -108,14 +122,41 @@ public class InventoryListener {
 			ClickInventoryEvent.Middle.class,
 			ClickInventoryEvent.Shift.class
 	})
+	@IsCancelled(Tristate.FALSE)
 	public void onClick(ClickInventoryEvent event, @Root Player player) {
 		List<SlotTransaction> transactions = event.getTransactions();
 		for (SlotTransaction transaction : transactions) {
 			Optional<SlotIndex> inventoryProperty = transaction.getSlot().getInventoryProperty(SlotIndex.class);
 			if (inventoryProperty.isPresent()) {
 				boolean cancel = inventoryService.processSlotInteraction(transaction.getSlot(), player);
-				if (cancel)
+				if (cancel) {
 					event.setCancelled(cancel);
+				}
+			}
+		}
+	}
+
+
+	@Listener
+	public void onInteract(ClickInventoryEvent event, @Root Player player) {
+		for (SlotTransaction t : event.getTransactions()) {
+			Optional<String> s = t.getOriginal().get(NKeys.COMMAND);
+			if (s.isPresent()) {
+				event.setCancelled(true);
+				Sponge.getScheduler().createTaskBuilder()
+						.delay(1L, TimeUnit.MILLISECONDS)
+						.execute(() -> {
+
+							Sponge.getCommandManager().process(player, s.get());
+						})
+						.submit(plugin);
+						return;
+			}
+
+			if (t.getOriginal().get(NKeys.MENU_INVENTORY).isPresent()) {
+				event.setCancelled(true);
+				t.setCustom(ItemStack.empty());
+				return;
 			}
 		}
 	}
