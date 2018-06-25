@@ -22,11 +22,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.inventory.CannotUseItemReason;
-import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.inventory.ItemService;
-import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.WeaponClass;
+import cz.neumimto.rpg.inventory.*;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -43,11 +39,7 @@ import org.spongepowered.api.event.filter.IsCancelled;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.event.filter.type.Include;
-import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
-import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
-import org.spongepowered.api.event.item.inventory.DropItemEvent;
-import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
-import org.spongepowered.api.event.item.inventory.InteractItemEvent;
+import org.spongepowered.api.event.item.inventory.*;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
@@ -117,13 +109,11 @@ public class InventoryListener {
 	@Listener
 	@Include({
 			ClickInventoryEvent.Primary.class,
-			ClickInventoryEvent.Secondary.class,
-			ClickInventoryEvent.Creative.class,
-			ClickInventoryEvent.Middle.class,
-			ClickInventoryEvent.Shift.class
+			ClickInventoryEvent.Secondary.class
 	})
 	@IsCancelled(Tristate.FALSE)
 	public void onClick(ClickInventoryEvent event, @Root Player player) {
+		System.out.println(event.getTransactions().size() + " onCLick");
 		List<SlotTransaction> transactions = event.getTransactions();
 		for (SlotTransaction transaction : transactions) {
 			Optional<SlotIndex> inventoryProperty = transaction.getSlot().getInventoryProperty(SlotIndex.class);
@@ -138,7 +128,12 @@ public class InventoryListener {
 
 
 	@Listener
+	@Include({
+			ClickInventoryEvent.Primary.class,
+			ClickInventoryEvent.Secondary.class
+	})
 	public void onInteract(ClickInventoryEvent event, @Root Player player) {
+		System.out.println(event.getTransactions().size() + " onInteract");
 		for (SlotTransaction t : event.getTransactions()) {
 			Optional<String> s = t.getOriginal().get(NKeys.COMMAND);
 			if (s.isPresent()) {
@@ -155,7 +150,7 @@ public class InventoryListener {
 
 			if (t.getOriginal().get(NKeys.MENU_INVENTORY).isPresent()) {
 				event.setCancelled(true);
-				t.setCustom(ItemStack.empty());
+				//t.setCustom(ItemStack.empty());
 				return;
 			}
 		}

@@ -28,6 +28,7 @@ import org.spongepowered.api.event.cause.entity.damage.source.IndirectEntityDama
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.cause.Root;
+import org.spongepowered.api.event.filter.type.Include;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
@@ -77,7 +78,12 @@ public class DebugListener {
 	}
 
 	@Listener(order = Order.FIRST)
+	@Include({
+			ClickInventoryEvent.Primary.class,
+			ClickInventoryEvent.Secondary.class
+	})
 	public void onClick(ClickInventoryEvent event, @Root Player player) {
+		System.out.println(event.getTransactions().size() + " onClickDebug");
 		List<SlotTransaction> transactions = event.getTransactions();
 		for (SlotTransaction transaction : transactions) {
 			Optional<SlotIndex> inventoryProperty = transaction.getSlot().transform().getInventoryProperty(SlotIndex.class);

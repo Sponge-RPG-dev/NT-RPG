@@ -233,7 +233,7 @@ public class NtRpgPlugin {
 				.builder(new ItemStackUpgradeData.Builder())
 				.buildAndRegister(plugin);
 
-		DataRegistration.<ItemStackUpgradeData, ItemStackUpgradeData.Immutable>builder()
+		DataRegistration.<SkillTreeInventoryViewControllsData, SkillTreeInventoryViewControllsData.Immutable>builder()
 				.manipulatorId("skilltree_controlls")
 				.dataName("SkillTree Controll Buttons")
 				.dataClass(SkillTreeInventoryViewControllsData.class)
@@ -241,7 +241,7 @@ public class NtRpgPlugin {
 				.builder(new SkillTreeInventoryViewControllsData.Builder())
 				.buildAndRegister(plugin);
 
-		DataRegistration.<ItemStackUpgradeData, ItemStackUpgradeData.Immutable>builder()
+		DataRegistration.<SkillTreeNode, SkillTreeNode.Immutable>builder()
 				.manipulatorId("skilltree_node")
 				.dataName("SkillTree Node")
 				.dataClass(SkillTreeNode.class)
@@ -258,7 +258,7 @@ public class NtRpgPlugin {
 				.buildAndRegister(plugin);
 
 
-		DataRegistration.<ItemMetaHeader, ItemMetaHeader.Immutable>builder()
+		DataRegistration.<MinimalItemGroupRequirementsData, MinimalItemGroupRequirementsData.Immutable>builder()
 				.manipulatorId("item_minimal_group_requirements")
 				.dataName("Item group requirements")
 				.dataClass(MinimalItemGroupRequirementsData.class)
@@ -266,7 +266,7 @@ public class NtRpgPlugin {
 				.builder(new MinimalItemGroupRequirementsData.Builder())
 				.buildAndRegister(plugin);
 
-		DataRegistration.<ItemMetaHeader, ItemMetaHeader.Immutable>builder()
+		DataRegistration.<ItemMetaTypeData, ItemMetaTypeData.Immutable>builder()
 				.manipulatorId("item_meta_type")
 				.dataName("Item meta type")
 				.dataClass(ItemMetaTypeData.class)
@@ -274,7 +274,7 @@ public class NtRpgPlugin {
 				.builder(new ItemMetaTypeData.Builder())
 				.buildAndRegister(plugin);
 
-		DataRegistration.<ItemMetaHeader, ItemMetaHeader.Immutable>builder()
+		DataRegistration.<ItemSubtypeData, ItemSubtypeData.Immutable>builder()
 				.manipulatorId("item_meta_subtype")
 				.dataName("Item meta subtype")
 				.dataClass(ItemSubtypeData.class)
@@ -282,7 +282,7 @@ public class NtRpgPlugin {
 				.builder(new ItemSubtypeData.Builder())
 				.buildAndRegister(plugin);
 
-        DataRegistration.<ItemMetaHeader, ItemMetaHeader.Immutable>builder()
+        DataRegistration.<SkillBindData, SkillBindData.Immutable>builder()
                 .manipulatorId("skill_bind")
                 .dataName("SkillBind")
                 .dataClass(SkillBindData.class)

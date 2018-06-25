@@ -38,41 +38,45 @@ public class SkillTreeInventoryListener {
 
     public void onOptionSelect(ClickInventoryEvent event, Player player) {
         Iterator<SlotTransaction> iterator = event.getTransactions().iterator();
-
         if (iterator.hasNext()) {
             SlotTransaction t = iterator.next();
             if (t.getOriginal().get(NKeys.SKILLTREE_CONTROLLS).isPresent()) {
+                event.setCancelled(true);
                 SkillTreeControllsButton command = t.getOriginal().get(NKeys.SKILLTREE_CONTROLLS).get();
                 IActiveCharacter character = characterService.getCharacter(player);
                 SkillTreeViewModel viewModel = character.getLastTimeInvokedSkillTreeView();
                 switch (command) {
                     case NORTH:
                         viewModel.getLocation().key-=1;
-                        Gui.moveSkillTreeMenu(character);
-                        /*Sponge.getScheduler().createTaskBuilder()
+                        Sponge.getScheduler().createTaskBuilder()
                                 .execute(() -> Gui.moveSkillTreeMenu(character))
-                                .submit(plugin);*/
+                                .submit(plugin);
+                        break;
                     case SOUTH:
                         viewModel.getLocation().key+=1;
                         Sponge.getScheduler().createTaskBuilder()
                                 .execute(() -> Gui.moveSkillTreeMenu(character))
                                 .submit(plugin);
+                        break;
                     case WEST:
                         viewModel.getLocation().value+=1;
                         Sponge.getScheduler().createTaskBuilder()
                                 .execute(() -> Gui.moveSkillTreeMenu(character))
                                 .submit(plugin);
+                        break;
                     case EAST:
                         viewModel.getLocation().value-=1;
                         Sponge.getScheduler().createTaskBuilder()
                                 .execute(() -> Gui.moveSkillTreeMenu(character))
                                 .submit(plugin);
+                        break;
                     case MODE:
                         viewModel.setInteractiveMode(viewModel.getInteractiveMode().opposite());
                         //just redraw
                         Sponge.getScheduler().createTaskBuilder()
                                 .execute(() -> Gui.moveSkillTreeMenu(character))
                                 .submit(plugin);
+                        break;
                     default:
                         String node = t.getOriginal().get(NKeys.SKILLTREE_NODE).get();
                         if (viewModel.getInteractiveMode() == SkillTreeViewModel.InteractiveMode.FAST) {

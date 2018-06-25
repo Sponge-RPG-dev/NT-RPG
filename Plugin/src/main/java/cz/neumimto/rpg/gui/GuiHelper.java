@@ -1,8 +1,5 @@
 package cz.neumimto.rpg.gui;
 
-import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Block;
-import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Item;
-
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.TextHelper;
@@ -18,12 +15,7 @@ import cz.neumimto.rpg.listeners.SkillTreeInventoryListener;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
-import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.NDamageType;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillPathData;
-import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.skills.SkillTree;
+import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
@@ -45,11 +37,10 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Block;
+import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Item;
 
 /**
  * Created by ja on 29.12.2016.
@@ -229,7 +220,8 @@ public class GuiHelper {
 				.of(InventoryArchetypes.DOUBLE_CHEST)
 				.property(InventoryTitle.of(TextHelper.parse(Localization.SKILLTREE)))
 				.property(AcceptsItems.of(Collections.EMPTY_LIST))
-				.listener(ClickInventoryEvent.class, event -> new SkillTreeInventoryListener().onOptionSelect(event, (Player) event.getCause().root()))
+				.listener(ClickInventoryEvent.Primary.class, event -> new SkillTreeInventoryListener().onOptionSelect(event, (Player) event.getCause().root()))
+				.listener(ClickInventoryEvent.Secondary.class, event -> new SkillTreeInventoryListener().onOptionSelect(event, (Player) event.getCause().root()))
 				.build(plugin);
 
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 0))).offer(unclickableInterface());
