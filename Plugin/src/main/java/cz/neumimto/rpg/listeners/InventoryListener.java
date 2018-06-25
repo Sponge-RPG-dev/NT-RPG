@@ -113,7 +113,6 @@ public class InventoryListener {
 	})
 	@IsCancelled(Tristate.FALSE)
 	public void onClick(ClickInventoryEvent event, @Root Player player) {
-		System.out.println(event.getTransactions().size() + " onCLick");
 		List<SlotTransaction> transactions = event.getTransactions();
 		for (SlotTransaction transaction : transactions) {
 			Optional<SlotIndex> inventoryProperty = transaction.getSlot().getInventoryProperty(SlotIndex.class);
@@ -133,7 +132,6 @@ public class InventoryListener {
 			ClickInventoryEvent.Secondary.class
 	})
 	public void onInteract(ClickInventoryEvent event, @Root Player player) {
-		System.out.println(event.getTransactions().size() + " onInteract");
 		for (SlotTransaction t : event.getTransactions()) {
 			Optional<String> s = t.getOriginal().get(NKeys.COMMAND);
 			if (s.isPresent()) {

@@ -83,7 +83,6 @@ public class DebugListener {
 			ClickInventoryEvent.Secondary.class
 	})
 	public void onClick(ClickInventoryEvent event, @Root Player player) {
-		System.out.println(event.getTransactions().size() + " onClickDebug");
 		List<SlotTransaction> transactions = event.getTransactions();
 		for (SlotTransaction transaction : transactions) {
 			Optional<SlotIndex> inventoryProperty = transaction.getSlot().transform().getInventoryProperty(SlotIndex.class);
