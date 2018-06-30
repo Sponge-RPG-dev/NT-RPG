@@ -218,7 +218,7 @@ public class GuiHelper {
 	public static Inventory createSkillTreeInventoryViewTemplate(IActiveCharacter character, SkillTree skillTree) {
 		Inventory i = Inventory.builder()
 				.of(InventoryArchetypes.DOUBLE_CHEST)
-				.property(InventoryTitle.of(TextHelper.parse(Localization.SKILLTREE)))
+				.property(InventoryTitle.of(Localizations.SKILLTREE.toText()))
 				.property(AcceptsItems.of(Collections.EMPTY_LIST))
 				.listener(ClickInventoryEvent.Primary.class, event -> new SkillTreeInventoryListener().onOptionSelect(event, (Player) event.getCause().root()))
 				.listener(ClickInventoryEvent.Secondary.class, event -> new SkillTreeInventoryListener().onOptionSelect(event, (Player) event.getCause().root()))
