@@ -825,6 +825,16 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
+	public double getExperienceBonusFor(String name, EntityType type) {
+		double exp = 0;
+		exp += getRace().getExperiencesBonus(name, type);
+		for (ExtendedNClass extendedNClass : getClasses()) {
+			exp += extendedNClass.getConfigClass().getExperiencesBonus(name, type);
+		}
+		return exp;
+	}
+
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;

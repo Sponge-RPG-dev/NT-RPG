@@ -55,6 +55,7 @@ public class PlayerGroup implements IEffectSourceProvider {
 	private List<String> exitCommands;
 	private List<String> enterCommands;
 	private HashMap<ItemType, Set<ConfigRPGItemType>> offHandWeapons = new HashMap<>();
+	private Map<String, Map<EntityType, Double>> experiences = new HashMap<>();
 
 	public PlayerGroup(String name) {
 		this.name = name;
@@ -203,6 +204,23 @@ public class PlayerGroup implements IEffectSourceProvider {
 
 	public void setPreferedColor(TextColor preferedColor) {
 		this.preferedColor = preferedColor;
+	}
+
+	public double getExperiencesBonus(String dimmension, EntityType type) {
+		Map<EntityType, Double> entityTypeDoubleMap = getExperiences().get(dimmension);
+		if (entityTypeDoubleMap == null) {
+			return 0;
+		}
+		Double aDouble = entityTypeDoubleMap.get(type);
+		return aDouble == null ? 0 : aDouble;
+	}
+
+	public Map<String, Map<EntityType, Double>> getExperiences() {
+		return experiences;
+	}
+
+	public void setExperiences(Map<String, Map<EntityType, Double>> experiences) {
+		this.experiences = experiences;
 	}
 
 	@Override
