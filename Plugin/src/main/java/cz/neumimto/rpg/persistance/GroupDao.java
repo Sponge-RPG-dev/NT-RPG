@@ -422,6 +422,18 @@ public class GroupDao {
 
 		}
 
+		try {
+			Map<String, Map<EntityType, Double>> map = new HashMap<>();
+			Config experience = c.getObject("Experiences").toConfig();
+			for (Map.Entry<String, ConfigValue> entry : experience.root().entrySet()) {
+				String dimmension = entry.getKey();
+				ConfigValue value = entry.getValue();
+			}
+
+		} catch (Exception e) {
+
+		}
+
 	}
 
 	private ConfigRPGItemType weaponFromCSVString(String allowedWeapon, PlayerGroup playerGroup) {

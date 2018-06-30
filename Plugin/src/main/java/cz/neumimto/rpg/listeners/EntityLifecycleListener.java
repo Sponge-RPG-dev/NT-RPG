@@ -124,6 +124,7 @@ public class EntityLifecycleListener {
 				double exp = entityService.getExperiences(targetEntity);
 
 				IActiveCharacter character = characterService.getCharacter(source.getUniqueId());
+				exp += character.getExperienceBonusFor(targetEntity.getLocation().getExtent().getName(), targetEntity.getType());
 				ExperienceSource experienceSource = targetEntity.getType() == EntityTypes.PLAYER ? ExperienceSource.PVP : ExperienceSource.PVE;
 				if (character != null) {
 					if (character.hasParty()) {

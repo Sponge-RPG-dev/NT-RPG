@@ -591,6 +591,11 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
+	public double getExperienceBonusFor(String name, EntityType type) {
+		return 0;
+	}
+
+	@Override
 	public void removeSkillTreeSpecialization(SkillTreeSpecialization specialization) {
 
 	}

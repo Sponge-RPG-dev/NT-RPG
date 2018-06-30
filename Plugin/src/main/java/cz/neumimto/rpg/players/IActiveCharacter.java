@@ -241,4 +241,5 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	Set<EquipedSlot> getSlotsCannotBeEquiped();
 
+    double getExperienceBonusFor(String name, EntityType type);
 }
