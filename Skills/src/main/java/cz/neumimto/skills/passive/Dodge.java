@@ -1,18 +1,21 @@
 package cz.neumimto.skills.passive;
 
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.DodgeEffect;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PassiveSkill;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.SkillType;
 
 /**
  * Created by NeumimTo on 6.7.2017.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:dodge")
 public class Dodge extends PassiveSkill {
 
 	@Inject
@@ -20,9 +23,6 @@ public class Dodge extends PassiveSkill {
 
 	public Dodge() {
 		super(DodgeEffect.name);
-		setName("Dodge");
-		setLore(SkillLocalization.SKILL_DODGE_LORE);
-		setDescription(SkillLocalization.SKILL_DODGE_DESC);
 		SkillSettings skillSettings = new SkillSettings();
 		skillSettings.addNode(SkillNodes.CHANCE, 10, 20);
 		super.settings = skillSettings;

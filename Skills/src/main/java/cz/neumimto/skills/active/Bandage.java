@@ -1,7 +1,6 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.Decorator;
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.negative.Bleeding;
 import cz.neumimto.rpg.IEntity;
@@ -21,7 +20,7 @@ import org.spongepowered.api.item.ItemTypes;
 /**
  * Created by NeumimTo on 5.8.2017.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:bandage")
 public class Bandage extends Targetted {
 
 	@Inject
@@ -31,8 +30,6 @@ public class Bandage extends Targetted {
 	private EffectService effectService;
 
 	public Bandage() {
-		setName(SkillLocalization.SKILL_BANDAGE_NAME);
-		setDescription(SkillLocalization.Skill_BANDAGE_DESC);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.HEALED_AMOUNT, 15, 5);
 		setSettings(settings);

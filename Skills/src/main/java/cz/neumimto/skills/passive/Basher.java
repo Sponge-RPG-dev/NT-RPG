@@ -1,6 +1,5 @@
 package cz.neumimto.skills.passive;
 
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.Bash;
 import cz.neumimto.model.BashModel;
@@ -8,13 +7,17 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PassiveSkill;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.SkillType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
 /**
  * Created by NeumimTo on 4.7.2017.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:basher")
 public class Basher extends PassiveSkill {
 
 	@Inject
@@ -25,8 +28,6 @@ public class Basher extends PassiveSkill {
 
 	public Basher() {
 		super(Bash.name);
-		setName("Basher");
-		setDescription(SkillLocalization.basher);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DAMAGE, 10, 10);
 		settings.addNode(SkillNodes.CHANCE, 0.1f, 0.005f);

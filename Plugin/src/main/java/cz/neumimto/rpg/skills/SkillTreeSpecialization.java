@@ -3,6 +3,7 @@ package cz.neumimto.rpg.skills;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.core.localization.Arg;
+import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -29,7 +30,7 @@ public class SkillTreeSpecialization extends PassiveSkill {
 
     public SkillTreeSpecialization(String name) {
         super(null);
-        setName(name);
+        setLocalizableName(TextHelper.parse(name));
         SkillSettings settings = new SkillSettings();
         addSkillType(SkillType.PATH);
         setIcon(ItemTypes.BOOK);

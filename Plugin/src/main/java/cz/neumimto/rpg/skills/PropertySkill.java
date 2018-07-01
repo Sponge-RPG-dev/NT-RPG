@@ -28,7 +28,7 @@ public class PropertySkill extends AbstractSkill{
 
     public PropertySkill(String name) {
         super();
-        setName(name);
+        setLocalizableName(TextHelper.parse(name));
         setIcon(ItemTypes.BLAZE_POWDER);
         propertyService = NtRpgPlugin.GlobalScope.propertyService;
     }

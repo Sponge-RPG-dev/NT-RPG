@@ -5,12 +5,18 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.common.positive.Invisibility;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ActiveSkill;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.SkillModifier;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.SkillType;
 
 /**
  * Created by NeumimTo on 23.12.2015.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:invisibility")
 @ResourceLoader.ListenerClass
 public class SkillInvisibility extends ActiveSkill {
 
@@ -18,7 +24,6 @@ public class SkillInvisibility extends ActiveSkill {
 	private EffectService effectService;
 
 	public SkillInvisibility() {
-		setName("Invisibility");
 		setDamageType(null);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DURATION, 10, 10);

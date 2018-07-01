@@ -1,6 +1,5 @@
 package cz.neumimto.skills.passive;
 
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.DampenEffect;
 import cz.neumimto.rpg.ResourceLoader;
@@ -15,7 +14,7 @@ import cz.neumimto.rpg.skills.SkillType;
 /**
  * Created by NeumimTo on 7.7.2017.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:dampen")
 public class Dampen extends PassiveSkill {
 
 	@Inject
@@ -23,9 +22,6 @@ public class Dampen extends PassiveSkill {
 
 	public Dampen() {
 		super(DampenEffect.name);
-		setName("Dampen");
-		setLore(SkillLocalization.SKILL_DAMPEN_LORE);
-		setDescription(SkillLocalization.SKILL_DAMPEN_DESC);
 		SkillSettings skillSettings = new SkillSettings();
 		skillSettings.addNode("min-mana", 310, -5);
 		super.settings = skillSettings;

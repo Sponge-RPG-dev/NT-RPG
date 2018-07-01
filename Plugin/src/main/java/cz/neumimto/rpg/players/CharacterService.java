@@ -589,7 +589,7 @@ public class CharacterService {
 
 		Map<String, Integer> skills = new HashMap<>();
 		Set<CharacterSkill> characterSkills = characterBase.getCharacterSkills();
-		characterSkills.stream().forEach(characterSkill -> skills.put(characterSkill.getName(), characterSkill.getLevel()));
+		characterSkills.forEach(characterSkill -> skills.put(characterSkill.getCatalogId(), characterSkill.getLevel()));
 		Map<String, Long> cooldowns = characterBase.getCharacterCooldowns();
 
 		long l = System.currentTimeMillis();
@@ -893,7 +893,7 @@ public class CharacterService {
 		skill1.setLevel(1);
 		skill1.setCharacterBase(character.getCharacterBase());
 		skill1.setFromClass(clazz);
-		skill1.setName(skill.getName());
+		skill1.setCatalogId(skill.getId());
 		character.getCharacterBase().getCharacterSkills().add(skill1);
 
 		putInSaveQueue(character.getCharacterBase());
@@ -1041,8 +1041,9 @@ public class CharacterService {
 
 		int level = aClass.getLevel();
 
-		if (!onlyinit)
-				exp = exp * getCharacterProperty(character, DefaultProperties.experiences_mult);
+		if (!onlyinit) {
+			exp = exp * getCharacterProperty(character, DefaultProperties.experiences_mult);
+		}
 		double total = aClass.getExperiences();
 		double lvlexp = aClass.getExperiencesFromLevel();
 		double[] levels = aClass.getConfigClass().getLevels();

@@ -4,22 +4,19 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.properties.attributes.CharacterAttribute;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 
-import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public class CharacterAttributeSkill extends AbstractSkill {
 
     public CharacterAttributeSkill(String name) {
         super();
-        setName(name);
+        setLocalizableName(name);
     }
 
     @Override

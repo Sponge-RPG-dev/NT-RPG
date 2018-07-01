@@ -1,12 +1,17 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.ArrowstormEffect;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ActiveSkill;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.SkillModifier;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.SkillType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.item.ItemTypes;
 
@@ -15,7 +20,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Created by NeumimTo on 4.7.2017.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:arrowstorm")
 public class Arrowstorm extends ActiveSkill {
 
 	@Inject
@@ -23,9 +28,7 @@ public class Arrowstorm extends ActiveSkill {
 
 	public Arrowstorm() {
 		setDamageType(DamageTypes.PROJECTILE);
-		setName("Arrowstorm");
 		setIcon(ItemTypes.ARROW);
-		setDescription(SkillLocalization.Arrowstorm);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DAMAGE, 10, 10);
 		settings.addNode("min-arrows", 35, 1);

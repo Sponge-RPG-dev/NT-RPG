@@ -2,22 +2,25 @@ package cz.neumimto.skills.active;
 
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ActiveSkill;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.SkillModifier;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.SkillType;
 import org.spongepowered.api.data.key.Keys;
 
 /**
  * Created by NeumimTo on 23.12.2015.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:jump")
 public class SkillJump extends ActiveSkill {
 
 	public SkillJump() {
-		setName(SkillLocalization.SKILL_JUMP_NAME);
 		setDamageType(null);
-		setDescription(SkillLocalization.SKILL_JUMP_DESC);
 		SkillSettings skillSettings = new SkillSettings();
 		skillSettings.addNode(SkillNodes.VELOCITY, 2, 2);
 		settings = skillSettings;

@@ -2,7 +2,6 @@ package cz.neumimto.skills.active;
 
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.ResourceLoader;
@@ -10,7 +9,11 @@ import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.Targetted;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleOptions;
 import org.spongepowered.api.entity.living.Living;
@@ -23,15 +26,13 @@ import org.spongepowered.api.world.World;
 /**
  * Created by NeumimTo on 20.8.2017.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:harmtouch")
 public class Harmtouch extends Targetted {
 
 	@Inject
 	private EntityService entityService;
 
 	public Harmtouch() {
-		setName(SkillLocalization.SKILL_HARMTOUCH_NAME);
-		setDescription(SkillLocalization.SKILL_HARMTOUCH_DESC);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DAMAGE, 5000, 100);
 		setSettings(settings);

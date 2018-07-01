@@ -38,6 +38,7 @@ import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.text.Text;
 
 import java.util.List;
 import java.util.Map;
@@ -242,4 +243,8 @@ public interface IActiveCharacter extends IEntity<Player> {
 	Set<EquipedSlot> getSlotsCannotBeEquiped();
 
     double getExperienceBonusFor(String name, EntityType type);
+
+	default void sendMessage(Text t) {
+		getPlayer().sendMessage(t);
+	}
 }

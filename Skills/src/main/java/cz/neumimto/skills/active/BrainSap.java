@@ -1,6 +1,5 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.ResourceLoader;
@@ -9,7 +8,12 @@ import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.events.SkillDamageEventLate;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.SkillType;
+import cz.neumimto.rpg.skills.Targetted;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
@@ -21,8 +25,8 @@ import org.spongepowered.api.util.Tristate;
 /**
  * Created by NeumimTo on 5.2.2016.
  */
-@ResourceLoader.Skill
 @ResourceLoader.ListenerClass
+@ResourceLoader.Skill("ntrpg:brainsap")
 public class BrainSap extends Targetted {
 
 	@Inject
@@ -33,10 +37,7 @@ public class BrainSap extends Targetted {
 		settings.addNode(SkillNodes.COOLDOWN, 1000f, 10f);
 		settings.addNode(SkillNodes.RANGE, 10f, 1f);
 		settings.addNode(SkillNodes.DAMAGE, 10f, 10f);
-		setLore(SkillLocalization.SKILL_BRAINSAP_LORE);
 		super.settings = settings;
-		setName("BrainSap");
-		setDescription(SkillLocalization.SKILL_BRAINSAP_DESC);
 		setIcon(ItemTypes.ENDER_EYE);
 		setDamageType(DamageTypes.MAGIC);
 		addSkillType(SkillType.HEALTH_DRAIN);

@@ -1,26 +1,29 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.Decorator;
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ActiveSkill;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.SkillModifier;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.SkillType;
 import org.spongepowered.api.item.ItemTypes;
 
 /**
  * Created by NeumimTo on 6.8.2017.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:groupheal")
 public class GroupHeal extends ActiveSkill {
 
 	@Inject
 	private EntityService entityService;
 
 	public GroupHeal() {
-		setName(SkillLocalization.SKILL_GROUPHEAL_NAME);
-		setDescription(SkillLocalization.SKILL_GROUPHEAL_DESC);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.RADIUS, 10, 10);
 		settings.addNode(SkillNodes.HEALED_AMOUNT, 10, 10);

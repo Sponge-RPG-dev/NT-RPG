@@ -125,22 +125,15 @@ public class SkillService {
 	}
 
 
-	public void addSkill(ISkill ISkill) {
-		if (ISkill.getName() == null) {
-			String simpleName = ISkill.getClass().getSimpleName();
-			if (simpleName.startsWith("Skill")) {
-				simpleName = simpleName.substring(5, simpleName.length());
-			}
-			ISkill.setName(simpleName);
-		}
+	public ISkill addSkill(ISkill iSkill) {
 		if (!PluginConfig.DEBUG.isBalance()) {
-			if (skills.containsKey(ISkill.getName().toLowerCase()))
-				throw new RuntimeException("Skill " + ISkill.getName() + " already exists");
+			if (skills.containsKey(iSkill.getName().toLowerCase()))
+				throw new RuntimeException("Skill " + iSkill.getName() + " already exists");
 		}
-		ISkill.setId(id);
 		id++;
-		ISkill.init();
-		skills.put(ISkill.getName().toLowerCase().replaceAll(" ", "_"), ISkill);
+		iSkill.init();
+		skills.put(iSkill.getName().toLowerCase().replaceAll(" ", "_"), iSkill);
+		return iSkill;
 	}
 
 

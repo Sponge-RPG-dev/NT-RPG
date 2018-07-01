@@ -30,6 +30,7 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -37,19 +38,25 @@ import java.util.Set;
  * Created by NeumimTo on 12.3.2015.
  */
 public abstract class AbstractSkill implements ISkill {
-	protected String name;
-	protected String description;
+
+	@Inject
+	protected Game game;
+
+	@Inject
+	protected CharacterService characterService;
+
+	private String catalogId;
+
+	protected Text name;
+	protected List<Text> description;
 	protected SkillSettings settings;
 	protected SkillItemIcon icon;
 	protected String url;
-	@Inject
-	protected Game game;
-	@Inject
-	protected CharacterService characterService;
+
 	private Set<ISkillType> skillTypes = new HashSet<>();
-	private String lore;
+	private List<Text> lore;
 	private DamageType damagetype;
-	private int id;
+
 	protected ItemType itemType;
 
 	public AbstractSkill() {
@@ -58,13 +65,19 @@ public abstract class AbstractSkill implements ISkill {
 
 	@Override
 	public String getName() {
-		return name;
+		return name.toPlain();
 	}
 
 	@Override
-	public void setName(String name) {
+	public void setLocalizableName(Text name) {
 		this.name = name;
 	}
+
+	@Override
+	public Text getLocalizableName() {
+		return name;
+	}
+
 
 	@Override
 	public void skillLearn(IActiveCharacter IActiveCharacter) {
@@ -122,11 +135,11 @@ public abstract class AbstractSkill implements ISkill {
 		this.settings = settings;
 	}
 
-	public String getDescription() {
+	public List<Text> getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(List<Text> description) {
 		this.description = description;
 	}
 
@@ -156,11 +169,12 @@ public abstract class AbstractSkill implements ISkill {
 	}
 
 	@Override
-	public String getLore() {
+	public List<Text> getLore() {
 		return lore;
 	}
 
-	public void setLore(String lore) {
+	@Override
+	public void setLore(List<Text> lore) {
 		this.lore = lore;
 	}
 
@@ -193,13 +207,8 @@ public abstract class AbstractSkill implements ISkill {
 	}
 
 	@Override
-	public int getId() {
-		return id;
-	}
-
-	@Override
-	public void setId(int runtimeId) {
-		this.id = runtimeId;
+	public String getId() {
+		return catalogId;
 	}
 
 	@Override

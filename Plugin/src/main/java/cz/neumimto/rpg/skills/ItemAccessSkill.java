@@ -4,6 +4,7 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.localization.Arg;
+import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
@@ -19,7 +20,12 @@ import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -30,7 +36,7 @@ public class ItemAccessSkill extends AbstractSkill {
 
     public ItemAccessSkill(String name) {
         super();
-        setName(name);
+        setLocalizableName(TextHelper.parse(name));
         setIcon(ItemTypes.REDSTONE);
     }
 
