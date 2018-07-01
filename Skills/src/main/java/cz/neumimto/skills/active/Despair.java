@@ -11,7 +11,13 @@ import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ActiveSkill;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.SkillModifier;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.SkillType;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.effect.particle.ParticleEffect;
@@ -27,7 +33,7 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 15.7.2017.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:despair")
 public class Despair extends ActiveSkill {
 
 	@Inject
@@ -37,7 +43,6 @@ public class Despair extends ActiveSkill {
 	private EffectService effectService;
 
 	public Despair() {
-		setName("Despair");
 		setDamageType(DamageTypes.MAGIC);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DURATION, 1000L, 500);

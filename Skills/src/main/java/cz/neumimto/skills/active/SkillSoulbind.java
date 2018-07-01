@@ -1,6 +1,5 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.SoulBindEffect;
 import cz.neumimto.rpg.ResourceLoader;
@@ -8,7 +7,12 @@ import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ActiveSkill;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.SkillModifier;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
@@ -21,7 +25,7 @@ import java.util.UUID;
 /**
  * Created by NeumimTo on 5.2.2016.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:soulbind")
 @ResourceLoader.ListenerClass
 public class SkillSoulbind extends ActiveSkill {
 
@@ -35,10 +39,7 @@ public class SkillSoulbind extends ActiveSkill {
 		settings.addNode(SkillNodes.DURATION, 1000f, 10f);
 		settings.addNode(SkillNodes.COOLDOWN, 1000f, 10f);
 		settings.addNode(SkillNodes.RANGE, 10f, 1f);
-		setLore(SkillLocalization.SKILL_SOULBIND_LORE);
 		super.settings = settings;
-		setName(name);
-		setDescription(SkillLocalization.SKILL_SOULBIND_DESC);
 	}
 
 	@Override

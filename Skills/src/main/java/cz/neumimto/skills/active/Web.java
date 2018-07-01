@@ -1,6 +1,5 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.negative.WebEffect;
 import cz.neumimto.rpg.IEntity;
@@ -8,14 +7,18 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.Targetted;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.item.ItemTypes;
 
 /**
  * Created by NeumimTo on 20.8.2017.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:web")
 public class Web extends Targetted {
 
 	@Inject
@@ -25,8 +28,6 @@ public class Web extends Targetted {
 	EffectService effectService;
 
 	public Web() {
-		setName(SkillLocalization.SKILL_WEB_NAME);
-		setDescription(SkillLocalization.SKILL_WEB_DESC);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DURATION, 5000, 100);
 		setSettings(settings);

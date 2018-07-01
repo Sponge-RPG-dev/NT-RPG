@@ -1,6 +1,5 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.negative.StunEffect;
 import cz.neumimto.rpg.IEntity;
@@ -10,26 +9,28 @@ import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.SkillType;
+import cz.neumimto.rpg.skills.Targetted;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
 /**
  * Created by ja on 20.8.2017.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:stun")
 public class Stun extends Targetted {
 
 	@Inject
 	private EntityService entityService;
 
-
 	@Inject
 	private EffectService effectService;
 
 	public Stun() {
-		setName(SkillLocalization.SKILL_STUN_NAME);
-		setDescription(SkillLocalization.SKILL_STUN_DESC);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DAMAGE, 10, 1);
 		settings.addNode(SkillNodes.DURATION, 4500, 100);

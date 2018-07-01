@@ -1,28 +1,30 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.Decorator;
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.NDamageType;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.SkillType;
+import cz.neumimto.rpg.skills.Targetted;
 import org.spongepowered.api.entity.living.Living;
 
 /**
  * Created by NeumimTo on 29.12.2015.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:lightning")
 public class SkillLightning extends Targetted {
 
 	@Inject
 	EntityService entityService;
 
 	public SkillLightning() {
-		setName("Lightning");
-		setLore(SkillLocalization.SKILL_LIGHTNING_LORE);
-		setDescription(SkillLocalization.SKILL_LIGHTNING_DESC);
 		setDamageType(NDamageType.LIGHTNING);
 		SkillSettings skillSettings = new SkillSettings();
 		skillSettings.addNode(SkillNodes.DAMAGE, 10, 20);

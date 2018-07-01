@@ -5,7 +5,6 @@ import static com.flowpowered.math.TrigMath.sin;
 
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -28,14 +27,11 @@ import org.spongepowered.api.world.World;
 /**
  * Created by NeumimTo on 23.12.2015.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:fireball")
 public class SkillFireball extends ActiveSkill {
 
 	public SkillFireball() {
-		setName("Fireball");
-		setLore(SkillLocalization.SKILL_FIREBALL_LORE);
 		setDamageType(DamageTypes.FIRE);
-		setDescription(SkillLocalization.SKILL_FIREBALL_DESC);
 		SkillSettings skillSettings = new SkillSettings();
 		skillSettings.addNode(SkillNodes.DAMAGE, 10, 10);
 		skillSettings.addNode(SkillNodes.VELOCITY, 1.5f, .5f);

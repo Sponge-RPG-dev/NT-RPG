@@ -1,13 +1,21 @@
 package cz.neumimto.skills.active;
 
+import static com.flowpowered.math.TrigMath.cos;
+import static com.flowpowered.math.TrigMath.sin;
+
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ActiveSkill;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.SkillModifier;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.SkillType;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
@@ -26,13 +34,10 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-import static com.flowpowered.math.TrigMath.cos;
-import static com.flowpowered.math.TrigMath.sin;
-
 /**
  * Created by NeumimTo on 5.8.2017.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:grapplinghook")
 public class GrapplingHook extends ActiveSkill {
 
 	public static Map<UUID, Long> cache = new LinkedHashMap<UUID, Long>() {
@@ -46,8 +51,6 @@ public class GrapplingHook extends ActiveSkill {
 	private NtRpgPlugin plugin;
 
 	public GrapplingHook() {
-		setName(SkillLocalization.GRAPPLING_HOOK_NAME);
-		setDescription(SkillLocalization.GRAPPLING_HOOK_DESC);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.RANGE, 100, 10);
 		setSettings(settings);

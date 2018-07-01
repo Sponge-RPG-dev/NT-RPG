@@ -1,6 +1,5 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.negative.StunEffect;
 import cz.neumimto.rpg.ResourceLoader;
@@ -25,7 +24,7 @@ import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 /**
  * Created by NeumimTo on 7.7.2017.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:wrestle")
 public class Wrestle extends ActiveSkill {
 
 	@Inject
@@ -35,9 +34,6 @@ public class Wrestle extends ActiveSkill {
 	private EntityService entityService;
 
 	public Wrestle() {
-		setName("Wrestle");
-		setDescription(SkillLocalization.SKILL_WRESTLE_DESC);
-		setLore(SkillLocalization.SKILL_WRESTLE_LORE);
 		setDamageType(NDamageType.PHYSICAL);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.RADIUS, 3, 0.5f);

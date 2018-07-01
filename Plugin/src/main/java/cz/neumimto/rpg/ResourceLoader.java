@@ -24,6 +24,9 @@ import cz.neumimto.core.PluginCore;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.core.localization.LocalizationService;
+import cz.neumimto.core.localization.ResourceBundle;
+import cz.neumimto.core.localization.ResourceBundles;
 import cz.neumimto.rpg.commands.CommandBase;
 import cz.neumimto.rpg.commands.CommandService;
 import cz.neumimto.rpg.configuration.PluginConfig;
@@ -49,6 +52,7 @@ import java.lang.reflect.Modifier;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -100,6 +104,9 @@ public class ResourceLoader {
 
 	@Inject
 	private ClassGenerator classGenerator;
+
+	@Inject
+	private LocalizationService localizationService;
 
 	public ResourceLoader() {
 		ConfigMapper.init("NtRPG", Paths.get(NtRpgPlugin.workingDir));
@@ -203,7 +210,13 @@ public class ResourceLoader {
 			container = ioc.build(clazz);
 			if (PluginConfig.DEBUG.isDevelop())
 				logger.info("registering skill " + clazz.getName());
-			skillService.addSkill((ISkill) container);
+			ISkill skill = skillService.addSkill((ISkill) container);
+			Skill sk = clazz.getAnnotation(Skill.class);
+			if (sk.dynamicLocalizationNodes()) {
+				skill.setLocalizableName(localizationService.getText(sk.value()+".name"));
+				skill.setDescription(localizationService.getTextList(sk.value()+".description"));
+				skill.setLore(localizationService.getTextList(sk.value()+".lore"));
+			}
 		}
 		if (clazz.isAnnotationPresent(ConfigurationContainer.class)) {
 			configMapper.loadClass(clazz);
@@ -220,6 +233,12 @@ public class ResourceLoader {
 		}
 		if (clazz.isAnnotationPresent(JsBinding.class)) {
 			IoC.get().build(JSLoader.class).getDataToBind().put(clazz, clazz.getAnnotation(JsBinding.class).value());
+		}
+		if (clazz.isAnnotationPresent(ResourceBundles.class)) {
+			ResourceBundles annotation = clazz.getAnnotation(ResourceBundles.class);
+			for (ResourceBundle resourceBundle : annotation.value()) {
+				localizationService.loadResourceBundle(resourceBundle.value(), Locale.forLanguageTag(PluginConfig.LOCALE));
+			}
 		}
 		//Effects
 		if (IEffect.class.isAssignableFrom(clazz)) {
@@ -248,6 +267,8 @@ public class ResourceLoader {
 
 	@Retention(RetentionPolicy.RUNTIME)
 	public @interface Skill {
+		String value();
+		boolean dynamicLocalizationNodes() default true;
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)

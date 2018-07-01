@@ -1,10 +1,15 @@
 package cz.neumimto.skills.active;
 
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ActiveSkill;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.SkillModifier;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.SkillType;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -20,15 +25,14 @@ import java.util.Optional;
 /**
  * Created by NeumimTo on 29.12.2015.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:teleport")
 public class SkillTeleport extends ActiveSkill {
 
 	public SkillTeleport() {
-		setName("Teleport");
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.RANGE, 20, 20);
 		super.settings = settings;
-		super.setDescription(SkillLocalization.SKILL_TELEPORT_DESC);
+		
 		addSkillType(SkillType.TELEPORT);
 		setIcon(ItemTypes.END_PORTAL_FRAME);
 	}

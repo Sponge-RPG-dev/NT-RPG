@@ -145,7 +145,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -417,10 +416,8 @@ public class NtRpgPlugin {
 		}
 		registerCommands();
 		IoC.get().build(PropertyService.class).loadMaximalServerPropertyValues();
-
 		IoC.get().build(LocalizationService.class).registerClass(Localizations.class);
-		ResourceBundle bundle = ResourceBundle.getBundle("assets.nt-rpg.localizations.localization", Locale.forLanguageTag(PluginConfig.LOCALE));
-		IoC.get().build(LocalizationService.class).loadResourceBundle(bundle);
+		IoC.get().build(LocalizationService.class).loadResourceBundle("assets.nt-rpg.localizations.localization", Locale.forLanguageTag(PluginConfig.LOCALE));
 
 		double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
 		logger.info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");

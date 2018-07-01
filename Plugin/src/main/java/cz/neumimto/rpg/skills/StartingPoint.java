@@ -20,8 +20,10 @@ package cz.neumimto.rpg.skills;
 
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.text.Text;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -29,8 +31,8 @@ import java.util.Set;
  */
 
 public final class StartingPoint extends PassiveSkill {
-	public static final String name = "StartingPoint";
-	public static final SkillData SKILL_DATA = new SkillData(name);
+	public static final Text name = Text.of("StartingPoint");
+	public static final SkillData SKILL_DATA = new SkillData(name.toPlain());
 	private static SkillSettings skillSettings = new SkillSettings();
 
 	public StartingPoint() {
@@ -49,7 +51,7 @@ public final class StartingPoint extends PassiveSkill {
 	}
 
 	@Override
-	public String getDescription() {
+	public List<Text> getDescription() {
 		return "";
 	}
 

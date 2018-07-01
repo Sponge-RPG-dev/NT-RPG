@@ -123,6 +123,11 @@ public class NEntity implements IMob {
 	}
 
 	@Override
+	public void sendMessage(Text t) {
+
+	}
+
+	@Override
 	public float getProperty(int propertyName) {
 		if (properties.containsKey(propertyName)) {
 			return properties.get(propertyName);

@@ -1,6 +1,5 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.negative.PandemicEffect;
 import cz.neumimto.rpg.IEntity;
@@ -10,7 +9,14 @@ import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ActiveSkill;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.NDamageType;
+import cz.neumimto.rpg.skills.SkillModifier;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.SkillType;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
@@ -20,7 +26,7 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 6.8.2017.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:pandemic")
 public class Pandemic extends ActiveSkill {
 
 	@Inject
@@ -30,8 +36,6 @@ public class Pandemic extends ActiveSkill {
 	private EntityService entityService;
 
 	public Pandemic() {
-		setName(SkillLocalization.SKILL_PANDEMIC_NAME);
-		setDescription(SkillLocalization.SKILL_PANDEMIC_DESC);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.RADIUS, 10, 5);
 		settings.addNode(SkillNodes.DURATION, 3000, 500);

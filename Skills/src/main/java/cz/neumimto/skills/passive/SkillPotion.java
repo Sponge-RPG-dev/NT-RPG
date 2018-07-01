@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * Created by NeumimTo on 20.8.2017.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:potion")
 public class SkillPotion extends PassiveSkill {
 
 	private Gson gson = new GsonBuilder().setPrettyPrinting().create();

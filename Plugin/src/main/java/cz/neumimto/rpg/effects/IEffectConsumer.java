@@ -131,6 +131,8 @@ public interface IEffectConsumer<T extends Living> extends PropertyContainer {
 
 	void sendMessage(ChatType chatType, Text message);
 
+	void sendMessage(Text t);
+
 	boolean isDetached();
 
 	default Location<World> getLocation() {

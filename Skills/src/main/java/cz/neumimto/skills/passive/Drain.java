@@ -1,19 +1,22 @@
 package cz.neumimto.skills.passive;
 
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.ManaDrainEffect;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PassiveSkill;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.SkillType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
 /**
  * Created by NeumimTo on 7.7.2017.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:drain")
 public class Drain extends PassiveSkill {
 
 	@Inject
@@ -21,9 +24,6 @@ public class Drain extends PassiveSkill {
 
 	public Drain() {
 		super(ManaDrainEffect.name);
-		setName("Drain");
-		setLore(SkillLocalization.SKILL_DRAIN_LORE);
-		setDescription(SkillLocalization.SKILL_DRAIN_DESC);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.AMOUNT, 1, 1);
 		super.settings = settings;

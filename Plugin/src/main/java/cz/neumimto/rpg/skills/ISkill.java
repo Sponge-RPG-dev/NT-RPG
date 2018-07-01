@@ -20,7 +20,6 @@ package cz.neumimto.rpg.skills;
 
 import com.typesafe.config.Config;
 import cz.neumimto.core.localization.Arg;
-import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
@@ -29,6 +28,7 @@ import cz.neumimto.rpg.gui.GuiHelper;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.Utils;
+import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.item.ItemType;
@@ -38,16 +38,24 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by NeumimTo on 1.1.2015.
  */
-public interface ISkill extends IEffectSourceProvider {
+public interface ISkill extends IEffectSourceProvider, CatalogType {
 
 	String getName();
 
-	void setName(String name);
+	String getId();
+
+	void setLocalizableName(Text name);
+
+	Text getLocalizableName();
 
 	void init();
 
@@ -69,11 +77,11 @@ public interface ISkill extends IEffectSourceProvider {
 
 	void setSettings(SkillSettings settings);
 
-	String getDescription();
+	List<Text> getDescription();
 
-	void setDescription(String description);
+	void setDescription(List<Text> description);
 
-	String getLore();
+	List<Text> getLore();
 
 	boolean showsToPlayers();
 
@@ -82,6 +90,8 @@ public interface ISkill extends IEffectSourceProvider {
 	String getIconURL();
 
 	void setIconURL(String url);
+
+	void setLore(List<Text> lore);
 
 	DamageType getDamageType();
 
@@ -123,10 +133,6 @@ public interface ISkill extends IEffectSourceProvider {
 	default IEffectSource getType() {
 		return EffectSourceType.SKILL;
 	}
-
-	int getId();
-
-	void setId(int runtimeId);
 
     default <T extends SkillData> T constructSkillData() {
     	return (T) new SkillData(getName());
@@ -184,7 +190,7 @@ public interface ISkill extends IEffectSourceProvider {
 
 		List<Text> lore = new ArrayList<>();
 
-		String desc = getDescription();
+		List<Text> desc = getDescription();
 		Text skillTargetType = null;
 		if (this instanceof ActiveSkill) {
 			skillTargetType = Localizations.SKILL_TYPE_ACTIVE.toText();
@@ -194,7 +200,7 @@ public interface ISkill extends IEffectSourceProvider {
 			skillTargetType = Localizations.SKILL_TYPE_TARGETTED.toText();
 		}
 		if (desc != null) {
-			lore.addAll(TextHelper.splitStringByDelimiter(desc));
+			lore.addAll(desc);
 		}
 		if (skillTargetType != null) {
 			lore.add(Text.of(skillTargetType, TextColors.DARK_PURPLE, TextStyles.ITALIC));
@@ -230,10 +236,7 @@ public interface ISkill extends IEffectSourceProvider {
 		lore.add(Text.builder(Localizations.SKILL_LEVEL + " " + currentLevel + " (" + totalLevel + ") ").build());
 
 		if (getLore() != null) {
-			String[] split = getLore().split(":n");
-			for (String ss : split) {
-				lore.add(Text.builder(ss).style(TextStyles.ITALIC).color(TextColors.GOLD).build());
-			}
+			lore.addAll(getLore());
 		}
 
 		is.offer(Keys.ITEM_LORE, lore);

@@ -3,6 +3,7 @@ package cz.neumimto.effects.positive;
 import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
 import cz.neumimto.Decorator;
+import cz.neumimto.SkillLocalization;
 import cz.neumimto.Utils;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ClassGenerator;
@@ -120,7 +121,7 @@ public class PortalEffect extends ShapedEffectDecorator {
 							candidate.setLocation(processChanceToFail(safeLocation.get()));
 							drainMana(manaPerEntity);
 						} else {
-							getConsumer().sendMessage("Teleport location obstructed");
+							getConsumer().sendMessage(SkillLocalization.TELEPORT_LOCATION_OBSTRUCTED);
 							setDuration(0);
 						}
 					}
