@@ -194,10 +194,11 @@ public class InventoryListener {
 			String skill = itemStack.get(NKeys.SKILLBIND).orElse(null);
 			if (skill != null) {
 				IActiveCharacter character = characterService.getCharacter(player);
-				ISkill skill1 = skillService.getSkill(skill);
-				if (skill == null)
+				Optional<ISkill> byId = skillService.getById(skill);
+				if (!byId.isPresent()) {
 					return;
-				SkillResult skillResult = skillService.executeSkill(character, skill1);
+				}
+				SkillResult skillResult = skillService.executeSkill(character, byId.get());
 				if (skillResult == SkillResult.WRONG_DATA) {
 					player.setItemInHand(HandTypes.MAIN_HAND, null);
 				}

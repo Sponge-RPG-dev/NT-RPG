@@ -18,17 +18,34 @@
 
 package cz.neumimto.rpg.persistance;
 
-import com.typesafe.config.*;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigException;
+import com.typesafe.config.ConfigFactory;
+import com.typesafe.config.ConfigObject;
+import com.typesafe.config.ConfigValue;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.gui.SkillTreeInterfaceModel;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.CharacterAttributeSkill;
+import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.ItemAccessSkill;
+import cz.neumimto.rpg.skills.PropertySkill;
+import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillLoadingErrors;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.SkillTree;
+import cz.neumimto.rpg.skills.SkillTreeSpecialization;
+import cz.neumimto.rpg.skills.StartingPoint;
+import cz.neumimto.rpg.utils.CatalogId;
 import cz.neumimto.rpg.utils.Utils;
 import org.slf4j.Logger;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,6 +53,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Created by NeumimTo on 24.7.2015.
@@ -69,7 +88,7 @@ public class SkillTreeDao {
                     logger.warn("Missing \"Name\" skipping to another file");
                     return;
                 }
-                skillTree.getSkills().put(StartingPoint.name, StartingPoint.SKILL_DATA);
+                skillTree.getSkills().put(StartingPoint.name.toPlain(), StartingPoint.SKILL_DATA);
                 try {
                     Config sub = config.getObject("Skills").toConfig();
                     createConfigSkills(sub, skillTree);
@@ -121,8 +140,6 @@ public class SkillTreeDao {
                     logger.error("Could not read ascii map in the skilltree " + skillTree.getId(), ignored);
                     skillTree.setSkillTreeMap(new short[][]{});
                 }
-
-
                 map.put(skillTree.getId(), skillTree);
             });
         } catch (IOException e) {
@@ -133,40 +150,57 @@ public class SkillTreeDao {
 
     private void createConfigSkills(Config sub, SkillTree skillTree) {
         for (Map.Entry<String, ConfigValue> entry : sub.root().entrySet()) {
-            String name = entry.getKey();
-            ISkill skill = skillService.getSkill(name);
-            if (skill == null) {
+            String id = entry.getKey();
+            Optional<ISkill> byId = skillService.getById(id);
+            if (byId.isPresent()) {
                 ConfigObject value = (ConfigObject) entry.getValue();
                 Config c = value.toConfig();
 
                 try {
                     String type = c.getString("type");
+                    String name = c.getString("name");
                     switch (type) {
                         case "specialization":
                         case "spec":
                             SkillTreeSpecialization path = new SkillTreeSpecialization(name);
-                            skillService.addSkill(path);
+                            injectCatalogId(path, id);
+                            skillService.registerAdditionalCatalog(path);
                             break;
                         case "command":
 
                             break;
                         case "item-access":
                             ItemAccessSkill s = new ItemAccessSkill(name);
-                            skillService.addSkill(s);
+                            injectCatalogId(s, id);
+                            skillService.registerAdditionalCatalog(s);
                             break;
                         case "attribute":
                             CharacterAttributeSkill a = new CharacterAttributeSkill(name);
-                            skillService.addSkill(a);
+                            injectCatalogId(a, id);
+                            skillService.registerAdditionalCatalog(a);
                             break;
                         case "property":
                             PropertySkill p = new PropertySkill(name);
-                            skillService.addSkill(p);
+                            injectCatalogId(p, id);
+                            skillService.registerAdditionalCatalog(p);
                             break;
 
                     }
 
                 } catch (ConfigException.Missing ignored) {}
             }
+        }
+    }
+
+    private void injectCatalogId(ISkill skill, String name) {
+        Optional<Field> first = Stream.of(skill.getClass().getFields()).filter(field -> field.isAnnotationPresent(CatalogId.class))
+                .findFirst();
+        Field field = first.get();
+        field.setAccessible(true);
+        try {
+            field.set(skill, name);
+        } catch (IllegalAccessException ignored) {
+            //wonthappen
         }
     }
 
@@ -302,10 +336,9 @@ public class SkillTreeDao {
     private SkillData getSkillInfo(String name, SkillTree tree) {
         SkillData info = tree.getSkills().get(name);
         if (info == null) {
-            ISkill skill = skillService.getSkill(name);
-            if (skill == null) {
-                throw new IllegalStateException("Could not find a skill " + name + " referenced in the skilltree " + tree.getId());
-            }
+            ISkill skill = skillService.getById(name)
+                .orElseThrow(() -> new IllegalStateException("Could not find a skill " + name + " referenced in the skilltree " + tree.getId()));
+
             info = skill.constructSkillData();
             info.setSkill(skill);
             tree.getSkills().put(name, info);

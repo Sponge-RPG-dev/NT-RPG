@@ -296,7 +296,7 @@ public class GuiHelper {
 			int i = 0;
 			int j = 2;
 			for (Map.Entry<String, Integer> entry : data.getSkillBonus().entrySet()) {
-				ISkill skill = skillService.getSkill(entry.getKey());
+				ISkill skill = skillService.getById(entry.getKey()).orElse(null);
 				if (skill != null) {
 					ItemStack itemStack = skillToItemStack(character, character.getSkill(skill.getName()).getSkillData());
 					itemStack.offer(Keys.DISPLAY_NAME, Text

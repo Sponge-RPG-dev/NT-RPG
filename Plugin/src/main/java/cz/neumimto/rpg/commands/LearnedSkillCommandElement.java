@@ -13,9 +13,10 @@ import org.spongepowered.api.command.args.CommandElement;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by NeumimTo on 16.11.2017.
@@ -29,7 +30,7 @@ public class LearnedSkillCommandElement extends CommandElement {
     @Override
     protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
         String skilllc = args.next().toLowerCase();
-        ISkill skill = NtRpgPlugin.GlobalScope.skillService.getSkill(skilllc);
+        ISkill skill = NtRpgPlugin.GlobalScope.skillService.getSkillByLocalizedName(skilllc);
         if (skill == null) {
             throw args.createError(Localizations.UNKNOWN_SKILL.toText(Arg.arg("skill", skilllc)));
         }
