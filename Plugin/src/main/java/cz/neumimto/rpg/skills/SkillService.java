@@ -23,7 +23,6 @@ import com.google.gson.GsonBuilder;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.Console;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.PluginConfig;
@@ -43,22 +42,21 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.manipulator.mutable.entity.HealthData;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.registry.AdditionalCatalogRegistryModule;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
@@ -66,7 +64,7 @@ import java.util.logging.Logger;
  * Created by NeumimTo on 1.1.2015.
  */
 @Singleton
-public class SkillService {
+public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 
 	private Logger logger = Logger.getLogger("SkillService");
 
@@ -85,7 +83,7 @@ public class SkillService {
 	@Inject
 	private CharacterService characterService;
 
-	private Map<String, ISkill> skills = new ConcurrentHashMap<>();
+	private Map<String, ISkill> skills = new HashMap<>();
 
 	private Map<String, SkillTree> skillTrees = new ConcurrentHashMap<>();
 
@@ -94,13 +92,13 @@ public class SkillService {
 	private Map<Short, SkillTreeInterfaceModel> guiModelById = new HashMap<>();
 
 	private static int id = 0;
+	private Map<String, ISkill> skillByNames = new HashMap<>();
 
 	@PostProcess(priority = 300)
 	public void load() {
 		initGuis();
 		skillTrees.putAll(skillTreeDao.getAll());
 		createSkillsDefaults();
-		reloadIcons();
 	}
 
 
@@ -124,27 +122,9 @@ public class SkillService {
 
 	}
 
-
-	public ISkill addSkill(ISkill iSkill) {
-		if (!PluginConfig.DEBUG.isBalance()) {
-			if (skills.containsKey(iSkill.getName().toLowerCase()))
-				throw new RuntimeException("Skill " + iSkill.getName() + " already exists");
-		}
-		id++;
-		iSkill.init();
-		skills.put(iSkill.getName().toLowerCase().replaceAll(" ", "_"), iSkill);
-		return iSkill;
-	}
-
-
-	public ISkill getSkill(String name) {
-		return skills.get(name.toLowerCase().replaceAll(" ", "_"));
-	}
-
 	public Map<String, ISkill> getSkills() {
 		return skills;
 	}
-
 
 	public Map<String, SkillTree> getSkillTrees() {
 		return skillTrees;
@@ -305,41 +285,29 @@ public class SkillService {
 		return guiModelById.get(k);
 	}
 
-	public void reloadIcons() {
-		Properties properties = new Properties();
-		File f = new File(NtRpgPlugin.workingDir, "Icons.properties");
-		if (!f.exists()) {
-			try {
-				f.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+	@Override
+	public void registerAdditionalCatalog(ISkill extraCatalog) {
+		if (extraCatalog.getId() == null) {
+			logger.warning("Cannot register skill " + extraCatalog.getName() + ", " + extraCatalog.getClass().getSimpleName() + " getId() returned"
+					+ " null");
+			return;
 		}
-		try (FileInputStream stream = new FileInputStream(f)) {
-			properties.load(stream);
-			for (Map.Entry<Object, Object> l : properties.entrySet()) {
-				String skillname = (String) l.getKey();
-				String value = (String) l.getValue();
-				String[] split = value.split(";");
-				ISkill skill = getSkill(skillname);
-				SkillItemIcon icon = skill.getIcon();
-				if (icon == null) {
-					icon = new SkillItemIcon(skill);
-				}
-				Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, split[0]);
-				if (!type.isPresent()) {
-					logger.warning("Item Type defined in Icons.properties " + split[0] + " is unknown");
-				} else {
-					icon.itemType = type.get();
-					if (split.length == 1) {
-						logger.info("Missing item damage argument in Icons.properties " + Console.RED + split[0] +  Console.RESET + " skillName=itemType;itemDamage");
-					} else {
-						icon.damage = Integer.parseInt(split[1]);
-					}
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		extraCatalog.init();
+		skills.put(extraCatalog.getId().toLowerCase(), extraCatalog);
+		skillByNames.put(extraCatalog.getLocalizableName().toPlain(), extraCatalog);
+	}
+
+	@Override
+	public Optional<ISkill> getById(String id) {
+		return Optional.ofNullable(skills.get(id.toLowerCase()));
+	}
+
+	@Override
+	public Collection<ISkill> getAll() {
+		return skills.values();
+	}
+
+	public ISkill getSkillByLocalizedName(String name) {
+		return skillByNames.get(name);
 	}
 }

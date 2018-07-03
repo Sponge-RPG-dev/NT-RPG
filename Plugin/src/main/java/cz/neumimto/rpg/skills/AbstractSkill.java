@@ -24,6 +24,7 @@ import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.utils.CatalogId;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.item.ItemType;
@@ -45,6 +46,7 @@ public abstract class AbstractSkill implements ISkill {
 	@Inject
 	protected CharacterService characterService;
 
+	@CatalogId
 	private String catalogId;
 
 	protected Text name;

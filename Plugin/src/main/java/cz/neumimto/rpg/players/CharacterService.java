@@ -630,11 +630,12 @@ public class CharacterService {
 		characterBase.getCharacterCooldowns().clear();
 		for (Map.Entry<String, Integer> stringIntegerEntry : skills.entrySet()) {
 			ExtendedSkillInfo info = new ExtendedSkillInfo();
-			ISkill skill = skillService.getSkill(stringIntegerEntry.getKey());
-			if (skill != null) {
+			Optional<ISkill> skill = skillService.getById(stringIntegerEntry.getKey());
+			if (skill.isPresent()) {
+				ISkill sk = skill.get();
 				info.setLevel(stringIntegerEntry.getValue());
-				info.setSkill(skill);
-				SkillData info1 = character.getPrimaryClass().getConfigClass().getSkillTree().getSkills().get(skill.getName());
+				info.setSkill(sk);
+				SkillData info1 = character.getPrimaryClass().getConfigClass().getSkillTree().getSkills().get(skill.get().getId());
 				if (info1 != null) {
 
 					info.setSkillData(info1);

@@ -47,12 +47,12 @@ public final class StartingPoint extends PassiveSkill {
 
 	@Override
 	public String getName() {
-		return name;
+		return name.toPlain();
 	}
 
 	@Override
 	public List<Text> getDescription() {
-		return "";
+		return Collections.emptyList();
 	}
 
 	@Override

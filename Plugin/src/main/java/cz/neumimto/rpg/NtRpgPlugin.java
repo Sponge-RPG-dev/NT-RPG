@@ -339,6 +339,7 @@ public class NtRpgPlugin {
 		Sponge.getRegistry().registerModule(PlayerInvHandler.class, new PlayerInvHandlerRegistry());
 		Sponge.getRegistry().registerModule(ItemMetaType.class, new ItemMetaTypeRegistry());
 		Sponge.getRegistry().registerModule(ItemSubtype.class, new ItemSubtypeRegistry());
+
 	}
 
 	@Listener
@@ -420,6 +421,8 @@ public class NtRpgPlugin {
 		IoC.get().build(LocalizationService.class).loadResourceBundle("assets.nt-rpg.localizations.localization", Locale.forLanguageTag(PluginConfig.LOCALE));
 
 		double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
+
+		Sponge.getRegistry().registerModule(ISkill.class, IoC.get().build(SkillService.class));
 		logger.info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
 	}
 
