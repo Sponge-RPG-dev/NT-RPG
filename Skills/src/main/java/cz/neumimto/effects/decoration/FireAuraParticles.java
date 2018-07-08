@@ -10,7 +10,7 @@ import org.spongepowered.api.effect.particle.ParticleTypes;
 /**
  * Created by NeumimTo on 11.6.2017.
  */
-@ClassGenerator.Generate(id = "name")
+@ClassGenerator.Generate(id = "name", description = "Does nothing on its own, just periodically draws particles around target")
 public class FireAuraParticles extends EffectBase {
 
 	public static final String name = "Fire particles";

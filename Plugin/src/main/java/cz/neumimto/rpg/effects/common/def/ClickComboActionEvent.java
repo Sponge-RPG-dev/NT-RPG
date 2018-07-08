@@ -16,7 +16,7 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 28.8.2017.
  */
-@ClassGenerator.Generate(id = "name")
+@ClassGenerator.Generate(id = "name", description = "A component which enables click-combos")
 public class ClickComboActionEvent extends EffectBase implements IEffectContainer {
 
 	public static final String name = "ClickCombos";

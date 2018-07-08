@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 27.4.17.
  */
-@ClassGenerator.Generate(id = "name")
+@ClassGenerator.Generate(id = "name", description = "A component which enables default health regeneration")
 public class DefaultHealthRegeneration extends EffectBase implements IEffectContainer {
 
 	public static final String name = "DefaultHealthRegen";

@@ -6,7 +6,7 @@ import cz.neumimto.rpg.TestModel;
 /**
  * Created by NeumimTo on 25.2.2018.
  */
-@ClassGenerator.Generate(id = "name")
+@ClassGenerator.Generate(id = "name",description = "test")
 public class TestEffectModel extends EffectBase<TestModel> {
     public static String name = "Test";
 

@@ -17,7 +17,7 @@ import org.spongepowered.api.util.Color;
 
 import java.util.concurrent.TimeUnit;
 
-@ClassGenerator.Generate(id = "name")
+@ClassGenerator.Generate(id = "name", description = "Redirects all incoming damage to mana")
 public class ManaShieldEffect extends EffectBase<ManaShieldEffectModel> {
 
     public static final String name = "ManaShield";

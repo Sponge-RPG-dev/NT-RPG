@@ -30,7 +30,7 @@ import cz.neumimto.rpg.players.Mana;
 /**
  * Created by ja on 4.9.2015.
  */
-@ClassGenerator.Generate(id = "name")
+@ClassGenerator.Generate(id = "name", description = "An effect which will redirect all skill's mana consumption to the health pool")
 public class BloodMagicEffect extends EffectBase {
 
 	public static String name = "BloodMagic";

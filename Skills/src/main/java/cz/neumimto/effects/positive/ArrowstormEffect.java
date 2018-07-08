@@ -1,5 +1,8 @@
 package cz.neumimto.effects.positive;
 
+import static com.flowpowered.math.TrigMath.cos;
+import static com.flowpowered.math.TrigMath.sin;
+
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.ClassGenerator;
@@ -7,7 +10,6 @@ import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
@@ -18,13 +20,10 @@ import org.spongepowered.api.world.World;
 import java.util.Collections;
 import java.util.Set;
 
-import static com.flowpowered.math.TrigMath.cos;
-import static com.flowpowered.math.TrigMath.sin;
-
 /**
  * Created by NeumimTo on 4.7.2017.
  */
-@ClassGenerator.Generate(id = "name")
+@ClassGenerator.Generate(id = "name", description = "A periodic effect which shoots an arrow in a way the entity is looking at every x ticks")
 public class ArrowstormEffect extends EffectBase implements IEffectContainer {
 
 	public static final String name = "Arrowstorm";

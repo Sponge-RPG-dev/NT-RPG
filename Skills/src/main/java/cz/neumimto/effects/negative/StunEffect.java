@@ -15,7 +15,7 @@ import org.spongepowered.api.world.extent.Extent;
 /**
  * Created by NeumimTo on 5.6.17.
  */
-@ClassGenerator.Generate(id = "name")
+@ClassGenerator.Generate(id = "name", description = "Stuns the target, Stunned entities may not move, nor use skills")
 public class StunEffect extends ShapedEffectDecorator<Location<World>> {
 
 	public static final String name = "Stun";

@@ -14,7 +14,7 @@ import java.util.Set;
  * Created by NeumimTo on 23.12.2015.
  */
 
-@ClassGenerator.Generate(id = "name", inject = false)
+@ClassGenerator.Generate(id = "name", description = "An effect which makes the target invisible (Not by potion effect but by packets")
 public class Invisibility extends EffectBase implements IEffectContainer {
 
 	public static String name = "Invisibility";

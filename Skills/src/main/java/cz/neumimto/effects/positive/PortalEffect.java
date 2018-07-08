@@ -35,7 +35,7 @@ import java.util.Set;
 /**
  * Created by ja on 1.8.2017.
  */
-@ClassGenerator.Generate(id = "name")
+@ClassGenerator.Generate(id = "name", description = "Creates a portal. The portal has to be targetted via teleportation scroll")
 public class PortalEffect extends ShapedEffectDecorator {
 
 	public static final String name = "Portal";

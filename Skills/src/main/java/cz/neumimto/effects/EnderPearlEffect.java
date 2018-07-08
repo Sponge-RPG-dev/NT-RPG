@@ -5,13 +5,12 @@ import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.common.stacking.MinLongStackingStrategy;
-import cz.neumimto.rpg.utils.Utils;
 
 
 /**
  * Created by NeumimTo on 7.8.17.
  */
-@ClassGenerator.Generate(id = "name")
+@ClassGenerator.Generate(id = "name", description = "An effect which allows target to throw and  teleport via ender pearl")
 public class EnderPearlEffect extends EffectBase<Long> {
 
 	public static final String name = "Ender Pearl";

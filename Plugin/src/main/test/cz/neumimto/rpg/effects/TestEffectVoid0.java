@@ -5,7 +5,7 @@ import cz.neumimto.rpg.ClassGenerator;
 /**
  * Created by NeumimTo on 25.2.2018.
  */
-@ClassGenerator.Generate(id = "name")
+@ClassGenerator.Generate(id = "name",description = "test")
 public class TestEffectVoid0 extends EffectBase<Void> {
     public static String name = "Test";
 
