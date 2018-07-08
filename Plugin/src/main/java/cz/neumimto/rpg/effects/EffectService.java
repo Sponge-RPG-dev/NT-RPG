@@ -22,14 +22,29 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
+import cz.neumimto.rpg.ClassGenerator.Generate;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.configuration.EffectSettingDumpConfiguration;
+import cz.neumimto.rpg.configuration.EffectSettingsDumpConfiguration;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import ninja.leaping.configurate.SimpleConfigurationNode;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
+import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.text.Text;
 
-import java.util.*;
+import java.io.File;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -37,6 +52,7 @@ import java.util.function.Consumer;
  * Created by NeumimTo on 17.1.2015.
  */
 @Singleton
+@ResourceLoader.ListenerClass
 public class EffectService {
 
 	public static final long TICK_PERIOD = 5L;
@@ -74,6 +90,30 @@ public class EffectService {
 		}
 	}
 
+	@Listener
+	public void onLoadLate(GameStartingServerEvent event) {
+		EffectSettingsDumpConfiguration c = new EffectSettingsDumpConfiguration();
+		for (Map.Entry<String, IGlobalEffect> effect : globalEffects.entrySet()) {
+			Class aClass = effect.getValue().asEffectClass();
+			if (aClass != null && aClass.isAnnotationPresent(Generate.class)) {
+				Generate meta = (Generate) aClass.getAnnotation(Generate.class);
+				String description = meta.description();
+				String name = effect.getKey();
+				new EffectSettingDumpConfiguration(description, );
+			}
+		}
+
+
+		try {
+			ObjectMapper.BoundInstance configMapper = ObjectMapper.forObject(c);
+			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(new File(NtRpgPlugin.workingDir, "skills.conf").toPath()).build();
+			SimpleConfigurationNode scn = SimpleConfigurationNode.root();
+			configMapper.serialize(scn);
+			hcl.save(scn);
+		} catch (Exception e) {
+			throw new RuntimeException("Could not create file skills.conf", e);
+		}
+	}
 
 	@PostProcess(priority = 1000)
 	public void run() {

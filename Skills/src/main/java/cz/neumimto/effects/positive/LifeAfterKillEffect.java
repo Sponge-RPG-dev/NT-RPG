@@ -4,9 +4,8 @@ import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.common.stacking.FloatEffectStackingStrategy;
-import cz.neumimto.rpg.utils.Utils;
 
-@ClassGenerator.Generate(id = "name")
+@ClassGenerator.Generate(id = "name", description = "Heals the target after each kill")
 public class LifeAfterKillEffect extends EffectBase<Float> {
 	public static final String name = "Life after each kill";
 

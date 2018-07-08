@@ -8,7 +8,8 @@ import cz.neumimto.rpg.effects.IEffectConsumer;
 /**
  * Created by NeumimTo on 17.3.2016.
  */
-@ClassGenerator.Generate(id = "name")
+@ClassGenerator.Generate(id = "name", description = "An effect which silences the target. Silenced target cannot casts spells, unless the skill has"
+		+ " type CAN_CAST_WHILE_SILENCED")
 public class Silence extends EffectBase {
 
 	public static String name = "Silence";

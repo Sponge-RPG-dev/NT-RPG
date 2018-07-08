@@ -23,7 +23,7 @@ import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 /**
  * Created by ja on 5.7.2017.
  */
-@ClassGenerator.Generate(id = "name")
+@ClassGenerator.Generate(id = "name", description = "An effect which periodically damages all enemies around the target")
 public class BurningPrescenseEffect extends EffectBase<BPModel> {
 
 	public static ParticleEffect CASTER_EFFECT = ParticleEffect.builder()

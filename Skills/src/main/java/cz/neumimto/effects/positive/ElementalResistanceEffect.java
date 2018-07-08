@@ -10,7 +10,7 @@ import cz.neumimto.rpg.players.properties.DefaultProperties;
 /**
  * Created by NeumimTo on 29.3.17.
  */
-@ClassGenerator.Generate(id = "name")
+@ClassGenerator.Generate(id = "name", description = "Increases resistance against fire, ice and lightning damage")
 public class ElementalResistanceEffect extends EffectBase<Float> {
 
 	public static final String name = "Elemental Resistance";

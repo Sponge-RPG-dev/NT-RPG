@@ -51,7 +51,7 @@ import org.spongepowered.api.world.World;
  * <p>
  * Global effects can work as item enchantments, and be accessible from commands
  */
-@ClassGenerator.Generate(id = "name", inject = true)
+@ClassGenerator.Generate(id = "name", inject = true, description = "An effect which increases target walk speed")
 public class SpeedBoost extends EffectBase {
 
 	public static final String name = "Speed";

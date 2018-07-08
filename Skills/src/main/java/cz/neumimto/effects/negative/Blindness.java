@@ -15,7 +15,7 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 9.7.2017.
  */
-@ClassGenerator.Generate(id = "name")
+@ClassGenerator.Generate(id = "name", description = "Applies potion effect blindness to the target")
 public class Blindness extends EffectBase<Long> implements IEffectContainer<Long, Blindness> {
 
 	public static final String name = "Blindness";

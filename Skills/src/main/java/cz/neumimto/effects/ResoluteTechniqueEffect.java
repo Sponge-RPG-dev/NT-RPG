@@ -7,7 +7,7 @@ import cz.neumimto.rpg.effects.IEffectConsumer;
 /**
  * Created by NeumimTo on 6.7.2017.
  */
-@ClassGenerator.Generate(id = "name")
+@ClassGenerator.Generate(id = "name", description = "Entity having this effect will never deal critical strike, nor may be stunned")
 public class ResoluteTechniqueEffect extends EffectBase {
 
 	public static final String name = "Resolute Technique";

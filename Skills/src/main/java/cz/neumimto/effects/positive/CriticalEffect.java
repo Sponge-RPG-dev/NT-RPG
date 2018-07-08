@@ -9,7 +9,7 @@ import cz.neumimto.rpg.effects.IEffectConsumer;
 /**
  * Created by NeumimTo on 6.7.2017.
  */
-@ClassGenerator.Generate(id = "name")
+@ClassGenerator.Generate(id = "name", description = "% chance to deal increased damage while attacking")
 public class CriticalEffect extends EffectBase<CriticalEffectModel> {
 
 	public static final String name = "Critical";

@@ -15,7 +15,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 
-@ClassGenerator.Generate(id = "name")
+@ClassGenerator.Generate(id = "name", description = "An invisibility, the next attack will deal increased damage and break the invisibility")
 public class ShadowRunEffect extends EffectBase<ShadowRunModel> {
 
     public static final String name = "ShadowRun";

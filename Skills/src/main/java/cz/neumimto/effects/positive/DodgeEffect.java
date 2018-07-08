@@ -4,12 +4,11 @@ import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.common.stacking.FloatEffectStackingStrategy;
-import cz.neumimto.rpg.utils.Utils;
 
 /**
  * Created by ja on 6.7.2017.
  */
-@ClassGenerator.Generate(id = "name")
+@ClassGenerator.Generate(id = "name", description = "% chance to dodge incoming physical damage")
 public class DodgeEffect extends EffectBase<Float> {
 
 	public static final String name = "Dodge";

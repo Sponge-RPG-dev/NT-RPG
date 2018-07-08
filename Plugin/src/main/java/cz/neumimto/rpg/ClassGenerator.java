@@ -567,5 +567,7 @@ public class ClassGenerator implements Opcodes {
 		@interface Constructor {
 
 		}
+
+		String description();
 	}
 }

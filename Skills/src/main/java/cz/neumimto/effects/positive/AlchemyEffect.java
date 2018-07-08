@@ -7,7 +7,7 @@ import cz.neumimto.rpg.effects.IEffectConsumer;
 /**
  * Created by NeumimTo on 9.7.2017.
  */
-@ClassGenerator.Generate(id = "name")
+@ClassGenerator.Generate(id = "name", description = "A component which allows player to interact with brewning stand block")
 public class AlchemyEffect extends EffectBase {
 
 	public static final String name = "Alchemy";

@@ -33,7 +33,7 @@ import cz.neumimto.rpg.players.properties.DefaultProperties;
 /**
  * Created by NeumimTo on 9.8.2015.
  */
-@ClassGenerator.Generate(id = "name")
+@ClassGenerator.Generate(id = "name",description = "A component which enables mana regeneration")
 public class ManaRegeneration extends EffectBase {
 
 	public static final String name = "DefaultManaRegen";
