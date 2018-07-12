@@ -87,7 +87,7 @@ public final class StartingPoint extends PassiveSkill {
 
 	@Override
 	public SkillSettings getSettings() {
-		return getDefaultSkillSettings();
+		return getSettings();
 	}
 
 	@Override

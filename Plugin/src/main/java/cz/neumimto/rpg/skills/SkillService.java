@@ -214,7 +214,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 			skills.values()
 					.stream()
 					.filter(entry -> entry.getName() != null)
-					.forEach(entry -> result.put(entry.getName(), entry.getDefaultSkillSettings()));
+					.forEach(entry -> result.put(entry.getName(), entry.getSettings()));
 			String s = gson.toJson(result);
 			writer.print(s);
 		} catch (IOException ex) {

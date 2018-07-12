@@ -1,6 +1,5 @@
 package cz.neumimto.attributes;
 
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.rpg.players.properties.attributes.CharacterAttribute;
 import org.spongepowered.api.item.ItemTypes;
 
@@ -9,8 +8,8 @@ import org.spongepowered.api.item.ItemTypes;
  */
 public class Intelligence extends CharacterAttribute {
 	public Intelligence() {
-		setName(SkillLocalization.INT);
-		setDescription(SkillLocalization.INT_DESC);
+		//setName(SkillLocalization.INT);
+		//setDescription(SkillLocalization.INT_DESC);
 		setItemRepresentation(ItemTypes.BOOK);
 	}
 }

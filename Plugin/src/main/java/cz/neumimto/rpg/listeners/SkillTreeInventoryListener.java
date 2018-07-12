@@ -77,7 +77,7 @@ public class SkillTreeInventoryListener {
                         String node = t.getOriginal().get(NKeys.SKILLTREE_NODE).get();
                         if (viewModel.getInteractiveMode() == SkillTreeViewModel.InteractiveMode.FAST) {
 
-                            ISkill iSkill = skillService.getSkill(node);
+                            ISkill iSkill = skillService.getSkillByLocalizedName(node);
                             SkillTree tree = character.getPrimaryClass().getConfigClass().getSkillTree();
                             if (character.getSkill(node) == null) {
                                 Pair<SkillTreeActionResult, SkillTreeActionResult.Data>
