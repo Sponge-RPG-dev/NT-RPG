@@ -2,15 +2,16 @@ package cz.neumimto.rpg.configuration;
 
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by NeumimTo on 8.7.2018.
  */
 @ConfigSerializable
-public class EffectSettingDumpConfiguration {
+public class EffectDumpConfiguration {
     private String description;
-    private Map<String, String> settingNodes;
+    private Map<String, String> settingNodes = new HashMap<>();
 
     public String getDescription() {
         return description;

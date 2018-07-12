@@ -1,6 +1,5 @@
 package cz.neumimto.attributes;
 
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.rpg.players.properties.attributes.CharacterAttribute;
 import org.spongepowered.api.item.ItemTypes;
 
@@ -9,8 +8,8 @@ import org.spongepowered.api.item.ItemTypes;
  */
 public class Agility extends CharacterAttribute {
 	public Agility() {
-		setName(SkillLocalization.AGI);
-		setDescription(SkillLocalization.AGI_DESC);
+		//setName(SkillLocalization.AGI);
+		//setDescription(SkillLocalization.AGI_DESC);
 		setItemRepresentation(ItemTypes.FEATHER);
 	}
 }

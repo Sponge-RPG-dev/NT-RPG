@@ -21,15 +21,17 @@ package cz.neumimto.rpg.effects;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.ClassGenerator.Generate;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.configuration.EffectSettingDumpConfiguration;
-import cz.neumimto.rpg.configuration.EffectSettingsDumpConfiguration;
+import cz.neumimto.rpg.configuration.EffectDumpConfiguration;
 import cz.neumimto.rpg.configuration.PluginConfig;
+import cz.neumimto.rpg.configuration.SkillDumpConfiguration;
+import cz.neumimto.rpg.configuration.SkillsDumpConfiguration;
+import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.skills.ISkill;
 import ninja.leaping.configurate.SimpleConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
@@ -39,14 +41,10 @@ import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.text.Text;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * Created by NeumimTo on 17.1.2015.
@@ -92,21 +90,40 @@ public class EffectService {
 
 	@Listener
 	public void onLoadLate(GameStartingServerEvent event) {
-		EffectSettingsDumpConfiguration c = new EffectSettingsDumpConfiguration();
+		SkillsDumpConfiguration c = new SkillsDumpConfiguration();
 		for (Map.Entry<String, IGlobalEffect> effect : globalEffects.entrySet()) {
 			Class aClass = effect.getValue().asEffectClass();
 			if (aClass != null && aClass.isAnnotationPresent(Generate.class)) {
 				Generate meta = (Generate) aClass.getAnnotation(Generate.class);
 				String description = meta.description();
 				String name = effect.getKey();
-				new EffectSettingDumpConfiguration(description, );
+				EffectDumpConfiguration w = new EffectDumpConfiguration();
+				Class<?> modelType = EffectModelFactory.getModelType(aClass);
+				if (EffectModelFactory.typeMappers.containsKey(modelType)) {
+					w.getSettingNodes().put("value", modelType.getSimpleName());
+				} else {
+					Stream.of(modelType.getFields())
+							.forEach(f -> w.getSettingNodes().put(f.getName(), f.getType().getSimpleName()));
+				}
+				w.setDescription(description);
+				c.getEffects().put(name, w);
 			}
 		}
 
+		for (ISkill skill : NtRpgPlugin.GlobalScope.skillService.getAll()) {
+			SkillDumpConfiguration w = new SkillDumpConfiguration();
+			w.setSkillId(skill.getId());
+			w.getFloatNodes().addAll(skill.getSettings().getNodes().keySet());
+			//skill.getSettings().getObjectNodes()
+			c.getSkills().put(skill.getName(), w);
+		}
 
 		try {
+			File file = new File(NtRpgPlugin.workingDir, "skills.conf");
+			if (file.exists())
+				file.delete();
 			ObjectMapper.BoundInstance configMapper = ObjectMapper.forObject(c);
-			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(new File(NtRpgPlugin.workingDir, "skills.conf").toPath()).build();
+			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(file.toPath()).build();
 			SimpleConfigurationNode scn = SimpleConfigurationNode.root();
 			configMapper.serialize(scn);
 			hcl.save(scn);
@@ -336,7 +353,7 @@ public class EffectService {
 
 	public void removeGlobalEffectsAsEnchantments(Collection<IGlobalEffect> itemEffects, IActiveCharacter character, IEffectSourceProvider effectSourceProvider) {
 		if (PluginConfig.DEBUG.isDevelop()) {
-			character.sendMessage(LocalizableParametrizedText.from(itemEffects.size() + " added echn. effects to remove queue."));
+			character.sendMessage(Text.of(itemEffects.size() + " added echn. effects to remove queue."));
 		}
 		itemEffects.forEach((e) -> {
 			removeEffect(e.getName(), character, effectSourceProvider);
