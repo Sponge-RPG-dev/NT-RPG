@@ -39,7 +39,7 @@ public class Dampen extends PassiveSkill {
 	public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
 		super.skillUpgrade(IActiveCharacter, level);
 
-		double val = getDoubleNodeValue(IActiveCharacter.getSkill(getName()), "min-mana");
+		double val = getDoubleNodeValue(IActiveCharacter.getSkill(getId()), "min-mana");
 		IEffectContainer<Double, DampenEffect> effect = IActiveCharacter.getEffect(DampenEffect.name);
 		effect.updateValue(val, this);
 	}

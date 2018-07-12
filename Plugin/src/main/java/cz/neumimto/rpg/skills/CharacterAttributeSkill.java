@@ -32,7 +32,7 @@ public class CharacterAttributeSkill extends AbstractSkill {
     }
 
     private void assignAll(IActiveCharacter c, int i, BiFunction<Integer, Integer, Boolean> fc) {
-        ExtendedSkillInfo skill = c.getSkill(getName());
+        ExtendedSkillInfo skill = c.getSkill(getId());
         int totalLevel = skill.getTotalLevel();
         CharacterAttributeSkillData skillData = (CharacterAttributeSkillData) skill.getSkillData();
         for (Wrapper wrapper : skillData.wrappers) {

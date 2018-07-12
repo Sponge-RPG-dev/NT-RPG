@@ -424,7 +424,7 @@ public class NtRpgPlugin {
 						Long l = System.nanoTime();
 						ExtendedSkillInfo extendedSkillInfo = new ExtendedSkillInfo();
 						extendedSkillInfo.setLevel(level);
-						SkillData skillData = new SkillData(skill.getName());
+						SkillData skillData = new SkillData(skill.getId());
 						skillData.setSkillSettings(defaultSkillSettings);
 						extendedSkillInfo.setSkillData(skillData);
 						extendedSkillInfo.setSkill(skill);

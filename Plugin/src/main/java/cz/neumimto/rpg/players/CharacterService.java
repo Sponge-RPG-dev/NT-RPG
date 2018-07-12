@@ -34,13 +34,7 @@ import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.common.def.ClickComboActionEvent;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.events.CancellableEvent;
-import cz.neumimto.rpg.events.CharacterAttributeChange;
-import cz.neumimto.rpg.events.CharacterChangeClassEvent;
-import cz.neumimto.rpg.events.CharacterChangeGroupEvent;
-import cz.neumimto.rpg.events.CharacterEvent;
-import cz.neumimto.rpg.events.CharacterGainedLevelEvent;
-import cz.neumimto.rpg.events.CharacterInitializedEvent;
+import cz.neumimto.rpg.events.*;
 import cz.neumimto.rpg.events.character.CharacterWeaponUpdateEvent;
 import cz.neumimto.rpg.events.character.EventCharacterArmorPostUpdate;
 import cz.neumimto.rpg.events.character.PlayerDataPreloadComplete;
@@ -64,13 +58,7 @@ import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.PassiveSkill;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.skills.SkillTree;
-import cz.neumimto.rpg.skills.SkillTreeSpecialization;
+import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.utils.SkillTreeActionResult;
 import cz.neumimto.rpg.utils.Utils;
 import org.slf4j.Logger;
@@ -80,15 +68,7 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -607,7 +587,7 @@ public class CharacterService {
 				if (info1 != null) {
 
 					info.setSkillData(info1);
-					character.addSkill(info.getSkill().getName(), info);
+					character.addSkill(info.getSkill().getId(), info);
 				}
 			}
 		}
@@ -888,7 +868,7 @@ public class CharacterService {
 		einfo.setLevel(1);
 		einfo.setSkill(skill);
 		einfo.setSkillData(skillTree.getSkills().get(skill.getName()));
-		character.addSkill(skill.getName().toLowerCase(), einfo);
+		character.addSkill(skill.getId(), einfo);
 
 		CharacterSkill skill1 = new CharacterSkill();
 		skill1.setLevel(1);
@@ -928,7 +908,7 @@ public class CharacterService {
 		SkillTree skillTree = configClass.getSkillTree();
 		SkillData info = skillTree.getSkills().get(skill.getName());
 		for (SkillData info1 : info.getDepending()) {
-			ExtendedSkillInfo e = character.getSkill(info1.getSkillName());
+			ExtendedSkillInfo e = character.getSkill(info1.getSkill().getId());
 			if (e != null)
 				return 2;
 		}

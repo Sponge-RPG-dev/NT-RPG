@@ -38,11 +38,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 1.1.2015.
@@ -209,7 +205,7 @@ public interface ISkill extends IEffectSourceProvider, CatalogType {
 
 		int minPlayerLevel = skillData.getMinPlayerLevel();
 		int maxSkillLevel = skillData.getMaxSkillLevel();
-		ExtendedSkillInfo ei = character.getSkill(getName());
+		ExtendedSkillInfo ei = character.getSkill(getId());
 		int currentLevel = 0;
 		int totalLevel = 0;
 		if (ei != null) {
