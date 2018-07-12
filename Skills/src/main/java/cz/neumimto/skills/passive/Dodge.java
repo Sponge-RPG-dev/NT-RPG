@@ -6,11 +6,7 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.PassiveSkill;
-import cz.neumimto.rpg.skills.SkillNodes;
-import cz.neumimto.rpg.skills.SkillSettings;
-import cz.neumimto.rpg.skills.SkillType;
+import cz.neumimto.rpg.skills.*;
 
 /**
  * Created by NeumimTo on 6.7.2017.
@@ -38,7 +34,7 @@ public class Dodge extends PassiveSkill {
 
 	@Override
 	public void skillUpgrade(IActiveCharacter character, int level) {
-		ExtendedSkillInfo info = character.getSkill(getName());
+		ExtendedSkillInfo info = character.getSkill(getId());
 		float chance = getFloatNodeValue(info, SkillNodes.CHANCE);
 		IEffectContainer<Float, DodgeEffect> effect = character.getEffect(DodgeEffect.name);
 		effect.updateValue(chance, this);

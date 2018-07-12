@@ -83,7 +83,7 @@ public class SkillTreeInventoryListener {
 
                             ISkill iSkill = skillService.getSkillByLocalizedName(node);
                             SkillTree tree = character.getPrimaryClass().getConfigClass().getSkillTree();
-                            if (character.getSkill(node) == null) {
+                            if (character.getSkill(iSkill.getId()) == null) {
                                 Pair<SkillTreeActionResult, SkillTreeActionResult.Data>
                                         data = characterService.characterLearnskill(character, iSkill, tree);
                                 player.sendMessage(data.value.bind(data.key.message));

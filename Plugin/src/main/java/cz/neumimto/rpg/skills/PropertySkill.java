@@ -63,7 +63,7 @@ public class PropertySkill extends AbstractSkill{
     }
 
     private void add(IActiveCharacter character,  int i, BiFunction<Integer, Integer, Boolean> fc) {
-        ExtendedSkillInfo skill = character.getSkill(getName());
+        ExtendedSkillInfo skill = character.getSkill(getId());
         PropertySkillData skillData = (PropertySkillData) skill.getSkillData();
         for (Wrapper property : skillData.properties) {
             if (fc.apply(property.level, skill.getTotalLevel())) {

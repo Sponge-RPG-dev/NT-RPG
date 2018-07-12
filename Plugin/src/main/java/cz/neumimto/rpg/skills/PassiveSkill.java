@@ -44,7 +44,7 @@ public abstract class PassiveSkill extends AbstractSkill {
 	}
 
 	private void update(IActiveCharacter IActiveCharacter) {
-		ExtendedSkillInfo skill = IActiveCharacter.getSkill(getName());
+		ExtendedSkillInfo skill = IActiveCharacter.getSkill(getId());
 		applyEffect(skill, IActiveCharacter);
 	}
 

@@ -7,12 +7,7 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.NDamageType;
-import cz.neumimto.rpg.skills.PassiveSkill;
-import cz.neumimto.rpg.skills.SkillNodes;
-import cz.neumimto.rpg.skills.SkillSettings;
-import cz.neumimto.rpg.skills.SkillType;
+import cz.neumimto.rpg.skills.*;
 
 /**
  * Created by ja on 6.7.2017.
@@ -42,7 +37,7 @@ public class Critical extends PassiveSkill {
 
 	@Override
 	public void skillUpgrade(IActiveCharacter character, int level) {
-		ExtendedSkillInfo info = character.getSkill(getName());
+		ExtendedSkillInfo info = character.getSkill(getId());
 		IEffectContainer<CriticalEffectModel, CriticalEffect> effect = character.getEffect(CriticalEffect.name);
 		effect.updateValue(getModel(info), this);
 		effect.updateStackedValue();

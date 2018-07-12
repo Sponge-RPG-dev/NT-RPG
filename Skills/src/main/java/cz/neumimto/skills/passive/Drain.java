@@ -6,11 +6,7 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.PassiveSkill;
-import cz.neumimto.rpg.skills.SkillNodes;
-import cz.neumimto.rpg.skills.SkillSettings;
-import cz.neumimto.rpg.skills.SkillType;
+import cz.neumimto.rpg.skills.*;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
 /**
@@ -42,7 +38,7 @@ public class Drain extends PassiveSkill {
 	@Override
 	public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
 		super.skillUpgrade(IActiveCharacter, level);
-		ExtendedSkillInfo skill = IActiveCharacter.getSkill(getName());
+		ExtendedSkillInfo skill = IActiveCharacter.getSkill(getId());
 		float floatNodeValue = getFloatNodeValue(skill, SkillNodes.AMOUNT);
 		IEffectContainer<Float, ManaDrainEffect> container = IActiveCharacter.getEffect(ManaDrainEffect.name);
 		container.updateValue(floatNodeValue, this);

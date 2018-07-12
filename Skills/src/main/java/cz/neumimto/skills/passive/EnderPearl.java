@@ -4,11 +4,7 @@ import cz.neumimto.effects.EnderPearlEffect;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.PassiveSkill;
-import cz.neumimto.rpg.skills.SkillNodes;
-import cz.neumimto.rpg.skills.SkillSettings;
-import cz.neumimto.rpg.skills.SkillType;
+import cz.neumimto.rpg.skills.*;
 
 /**
  * Created by NeumimTo on 7.8.17.
@@ -35,7 +31,7 @@ public class EnderPearl extends PassiveSkill {
 	@Override
 	public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
 		super.skillUpgrade(IActiveCharacter, level);
-		ExtendedSkillInfo skill = IActiveCharacter.getSkill(getName());
+		ExtendedSkillInfo skill = IActiveCharacter.getSkill(getId());
 		long cooldown = getLongNodeValue(skill, SkillNodes.COOLDOWN);
 		IEffectContainer<Long, EnderPearlEffect> container = IActiveCharacter.getEffect(EnderPearlEffect.name);
 		container.updateValue(cooldown, this);

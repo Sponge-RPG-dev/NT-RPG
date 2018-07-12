@@ -290,7 +290,7 @@ public class GuiHelper {
 			for (Map.Entry<String, Integer> entry : data.getSkillBonus().entrySet()) {
 				ISkill skill = skillService.getById(entry.getKey()).orElse(null);
 				if (skill != null) {
-					ItemStack itemStack = skillToItemStack(character, character.getSkill(skill.getName()).getSkillData());
+					ItemStack itemStack = skillToItemStack(character, character.getSkill(skill.getId()).getSkillData());
 					itemStack.offer(Keys.DISPLAY_NAME, Text
 							.builder(String.format("%+d",entry.getValue()) + " | " + entry.getKey())
 							.color(entry.getValue() < 0 ? TextColors.RED : TextColors.DARK_GREEN)
