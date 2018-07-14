@@ -34,7 +34,8 @@ public class SkillSoulbind extends ActiveSkill {
 	@Inject
 	private EffectService effectService;
 
-	public SkillSoulbind() {
+	public void init() {
+		super.init();
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DURATION, 1000f, 10f);
 		settings.addNode(SkillNodes.COOLDOWN, 1000f, 10f);

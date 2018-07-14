@@ -27,7 +27,8 @@ public class Slow extends Targetted {
 	@Inject
 	private EffectService effectService;
 
-	public Slow() {
+	public void init() {
+		super.init();
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DURATION, 5000, 100);
 		settings.addNode(SkillNodes.AMPLIFIER, 1, 2);

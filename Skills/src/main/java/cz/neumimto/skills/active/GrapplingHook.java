@@ -50,7 +50,8 @@ public class GrapplingHook extends ActiveSkill {
 	@Inject
 	private NtRpgPlugin plugin;
 
-	public GrapplingHook() {
+	public void init() {
+		super.init();
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.RANGE, 100, 10);
 		setSettings(settings);

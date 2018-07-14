@@ -25,7 +25,8 @@ public class BurningPrescense extends ActiveSkill {
 	@Inject
 	private EffectService effectService;
 
-	public BurningPrescense() {
+	public void init() {
+		super.init();
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.PERIOD, 1000, -10);
 		settings.addNode(SkillNodes.RADIUS, 3, 0);

@@ -28,7 +28,8 @@ import java.util.Optional;
 @ResourceLoader.Skill("ntrpg:teleport")
 public class SkillTeleport extends ActiveSkill {
 
-	public SkillTeleport() {
+	public void init() {
+		super.init();
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.RANGE, 20, 20);
 		super.settings = settings;

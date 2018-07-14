@@ -23,7 +23,8 @@ public class SkillInvisibility extends ActiveSkill {
 	@Inject
 	private EffectService effectService;
 
-	public SkillInvisibility() {
+	public void init() {
+		super.init();
 		setDamageType(null);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DURATION, 10, 10);

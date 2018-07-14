@@ -26,9 +26,10 @@ public class Arrowstorm extends ActiveSkill {
 	@Inject
 	private EffectService effectService;
 
-	public Arrowstorm() {
+	@Override
+	public void init() {
+		super.init();
 		setDamageType(DamageTypes.PROJECTILE);
-		setIcon(ItemTypes.ARROW);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DAMAGE, 10, 10);
 		settings.addNode("min-arrows", 35, 1);
@@ -38,6 +39,7 @@ public class Arrowstorm extends ActiveSkill {
 		addSkillType(SkillType.PHYSICAL);
 		addSkillType(SkillType.SUMMON);
 		addSkillType(SkillType.PROJECTILE);
+		setIcon(ItemTypes.ARROW);
 	}
 
 	@Override

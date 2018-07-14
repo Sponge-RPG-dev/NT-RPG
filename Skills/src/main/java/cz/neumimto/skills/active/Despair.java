@@ -42,7 +42,8 @@ public class Despair extends ActiveSkill {
 	@Inject
 	private EffectService effectService;
 
-	public Despair() {
+	public void init() {
+		super.init();
 		setDamageType(DamageTypes.MAGIC);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DURATION, 1000L, 500);

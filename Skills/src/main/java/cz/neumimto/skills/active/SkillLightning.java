@@ -24,7 +24,8 @@ public class SkillLightning extends Targetted {
 	@Inject
 	EntityService entityService;
 
-	public SkillLightning() {
+	public void init() {
+		super.init();
 		setDamageType(NDamageType.LIGHTNING);
 		SkillSettings skillSettings = new SkillSettings();
 		skillSettings.addNode(SkillNodes.DAMAGE, 10, 20);

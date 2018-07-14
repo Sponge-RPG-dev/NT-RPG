@@ -26,7 +26,8 @@ public class ShadowRun extends ActiveSkill {
     @Inject
     private EffectService effectService;
 
-    public ShadowRun() {
+    public void init() {
+        super.init();
         addSkillType(SkillType.STEALTH);
         addSkillType(SkillType.MOVEMENT);
         addSkillType(SkillType.ESCAPE);

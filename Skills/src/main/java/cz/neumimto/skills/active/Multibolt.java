@@ -31,7 +31,8 @@ public class Multibolt extends Targetted {
 	@Inject
 	private EffectService effectService;
 
-	public Multibolt() {
+	public void init() {
+		super.init();
 		setDamageType(NDamageType.LIGHTNING);
 		SkillSettings skillSettings = new SkillSettings();
 		skillSettings.addNode(SkillNodes.DAMAGE, 10, 20);

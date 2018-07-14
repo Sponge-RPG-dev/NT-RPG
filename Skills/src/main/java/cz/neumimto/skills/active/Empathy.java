@@ -25,7 +25,8 @@ public class Empathy extends Targetted {
 	@Inject
 	private EntityService entityService;
 
-	public Empathy() {
+	public void init() {
+		super.init();
 		super.settings = new SkillSettings();
 		settings.addNode(SkillNodes.MULTIPLIER, 10, 10);
 		settings.addNode("max-damage", -1, 0);

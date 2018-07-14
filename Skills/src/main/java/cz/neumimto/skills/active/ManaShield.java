@@ -20,7 +20,8 @@ public class ManaShield extends ActiveSkill {
     @Inject
     private EffectService effectService;
 
-    public ManaShield() {
+    public void init() {
+        super.init();
         setDamageType(null);
         SkillSettings skillSettings = new SkillSettings();
         skillSettings.addNode("reduction", 10f, 11f);

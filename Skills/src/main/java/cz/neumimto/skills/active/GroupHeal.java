@@ -23,7 +23,8 @@ public class GroupHeal extends ActiveSkill {
 	@Inject
 	private EntityService entityService;
 
-	public GroupHeal() {
+	public void init() {
+		super.init();
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.RADIUS, 10, 10);
 		settings.addNode(SkillNodes.HEALED_AMOUNT, 10, 10);
