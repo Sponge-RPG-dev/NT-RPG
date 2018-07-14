@@ -23,7 +23,8 @@ public class SkillSpeed extends ActiveSkill {
 	@Inject
 	private EffectService effectService;
 
-	public SkillSpeed() {
+	public void init() {
+		super.init();
 		setDamageType(null);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DURATION, 1000, 1500);

@@ -30,7 +30,8 @@ public class Stun extends Targetted {
 	@Inject
 	private EffectService effectService;
 
-	public Stun() {
+	public void init() {
+		super.init();
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DAMAGE, 10, 1);
 		settings.addNode(SkillNodes.DURATION, 4500, 100);

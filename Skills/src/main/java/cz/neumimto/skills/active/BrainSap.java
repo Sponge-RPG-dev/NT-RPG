@@ -32,7 +32,8 @@ public class BrainSap extends Targetted {
 	@Inject
 	private EntityService entityService;
 
-	public BrainSap() {
+	public void init() {
+		super.init();
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.COOLDOWN, 1000f, 10f);
 		settings.addNode(SkillNodes.RANGE, 10f, 1f);

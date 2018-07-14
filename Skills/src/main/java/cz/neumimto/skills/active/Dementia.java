@@ -28,7 +28,8 @@ public class Dementia extends Targetted {
 	@Inject
 	private EffectService effectService;
 
-	public Dementia() {
+	public void init() {
+		super.init();
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DURATION, 30000, 1500);
 		settings.addNode("skill-level", 1, 2);

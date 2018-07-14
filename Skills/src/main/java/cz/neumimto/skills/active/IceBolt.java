@@ -40,7 +40,8 @@ public class IceBolt extends ActiveSkill {
 	@Inject
 	private EntityService entityService;
 
-	public IceBolt() {
+	public void init() {
+		super.init();
 		setDamageType(NDamageType.ICE);
 		SkillSettings skillSettings = new SkillSettings();
 		skillSettings.addNode(SkillNodes.DAMAGE, 10, 10);

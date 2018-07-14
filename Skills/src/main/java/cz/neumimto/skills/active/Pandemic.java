@@ -35,7 +35,8 @@ public class Pandemic extends ActiveSkill {
 	@Inject
 	private EntityService entityService;
 
-	public Pandemic() {
+	public void init() {
+		super.init();
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.RADIUS, 10, 5);
 		settings.addNode(SkillNodes.DURATION, 3000, 500);

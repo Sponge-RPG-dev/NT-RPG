@@ -30,7 +30,8 @@ import org.spongepowered.api.world.World;
 @ResourceLoader.Skill("ntrpg:fireball")
 public class SkillFireball extends ActiveSkill {
 
-	public SkillFireball() {
+	public void init() {
+		super.init();
 		setDamageType(DamageTypes.FIRE);
 		SkillSettings skillSettings = new SkillSettings();
 		skillSettings.addNode(SkillNodes.DAMAGE, 10, 10);

@@ -40,25 +40,22 @@ import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.utils.CatalogId;
 import javassist.CannotCompileException;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.text.Text;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.stream.Stream;
 
 /**
  * Created by NeumimTo on 27.12.2014.
@@ -221,16 +218,11 @@ public class ResourceLoader {
 				skill.setDescription(localizationService.getTextList(sk.value()+".description"));
 				skill.setLore(localizationService.getTextList(sk.value()+".lore"));
 			}
-
-			Optional<Field> first = Stream.of(skill.getClass().getFields()).filter(field -> field.isAnnotationPresent(CatalogId.class))
-					.findFirst();
-			if (!first.isPresent()) {
-				logger.error("Could not load " + clazz.getName() + ", missing @CatalogId field");
-				return;
+			if (skill.getLocalizableName() == null) {
+				String name = skill.getClass().getSimpleName();
+				name = name.startsWith("Skill") ? name.substring("Skill".length()) : name;
+				skill.setLocalizableName(Text.of(name));
 			}
-			Field field = first.get();
-			field.setAccessible(true);
-			field.set(skill, sk.value());
 			skillService.registerAdditionalCatalog(skill);
 		}
 		if (clazz.isAnnotationPresent(ConfigurationContainer.class)) {

@@ -19,7 +19,8 @@ import org.spongepowered.api.data.key.Keys;
 @ResourceLoader.Skill("ntrpg:jump")
 public class SkillJump extends ActiveSkill {
 
-	public SkillJump() {
+	public void init() {
+		super.init();
 		setDamageType(null);
 		SkillSettings skillSettings = new SkillSettings();
 		skillSettings.addNode(SkillNodes.VELOCITY, 2, 2);

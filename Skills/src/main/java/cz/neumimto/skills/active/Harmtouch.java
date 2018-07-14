@@ -32,7 +32,8 @@ public class Harmtouch extends Targetted {
 	@Inject
 	private EntityService entityService;
 
-	public Harmtouch() {
+	public void init() {
+		super.init();
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DAMAGE, 5000, 100);
 		setSettings(settings);

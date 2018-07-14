@@ -33,7 +33,8 @@ public class Wrestle extends ActiveSkill {
 	@Inject
 	private EntityService entityService;
 
-	public Wrestle() {
+	public void init() {
+		super.init();
 		setDamageType(NDamageType.PHYSICAL);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.RADIUS, 3, 0.5f);

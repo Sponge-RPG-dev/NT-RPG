@@ -16,7 +16,8 @@ import cz.neumimto.rpg.skills.SkillType;
 @ResourceLoader.Skill("ntrpg:conductivity")
 public class Conductivity extends ActiveSkill {
 
-	public Conductivity() {
+	public void init() {
+		super.init();
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DURATION, 10000, 500);
 		settings.addNode(SkillNodes.RADIUS, 10, 1);

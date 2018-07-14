@@ -29,7 +29,8 @@ public class Bandage extends Targetted {
 	@Inject
 	private EffectService effectService;
 
-	public Bandage() {
+	public void init() {
+		super.init();
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.HEALED_AMOUNT, 15, 5);
 		setSettings(settings);

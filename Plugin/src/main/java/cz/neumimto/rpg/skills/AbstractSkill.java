@@ -20,6 +20,7 @@ package cz.neumimto.rpg.skills;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.localization.Arg;
+import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.CharacterService;
@@ -62,8 +63,13 @@ public abstract class AbstractSkill implements ISkill {
 	protected ItemType itemType;
 
 	public AbstractSkill() {
-		icon = new SkillItemIcon(this);
+		ResourceLoader.Skill sk = this.getClass().getAnnotation(ResourceLoader.Skill.class);
+		if (sk != null) {
+			catalogId = sk.value();
+		}
 	}
+
+
 
 	@Override
 	public String getName() {
@@ -124,7 +130,7 @@ public abstract class AbstractSkill implements ISkill {
 
 	@Override
 	public void init() {
-
+		icon = new SkillItemIcon(this);
 	}
 
 	@Override
@@ -205,7 +211,7 @@ public abstract class AbstractSkill implements ISkill {
 
 	@Override
 	public int hashCode() {
-		return name.hashCode() * 77;
+		return catalogId.hashCode() * 77;
 	}
 
 	@Override

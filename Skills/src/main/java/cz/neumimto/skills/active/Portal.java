@@ -23,7 +23,8 @@ public class Portal extends ActiveSkill {
 	private EffectService effectService;
 
 
-	public Portal() {
+	public void init() {
+		super.init();
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.COOLDOWN, 100000, -500);
 		settings.addNode(SkillNodes.MANACOST, 50, 15);

@@ -27,7 +27,8 @@ public class Web extends Targetted {
 	@Inject
 	EffectService effectService;
 
-	public Web() {
+	public void init() {
+		super.init();
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DURATION, 5000, 100);
 		setSettings(settings);

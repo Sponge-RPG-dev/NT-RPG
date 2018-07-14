@@ -25,8 +25,9 @@ public class Astronomy extends ActiveSkill {
 	private static final long start = 14000;
 	private static final long end = 22000; //todo check for night, not possible currently
 
-	public Astronomy() {
-		setSettings(settings);
+	@Override
+	public void init() {
+		super.init();
 		setIcon(ItemTypes.CLOCK);
 		addSkillType(SkillType.CAN_CAST_WHILE_SILENCED);
 		addSkillType(SkillType.UTILITY);

@@ -22,7 +22,8 @@ public class BattleCharge extends ActiveSkill {
 	@Inject
 	private EffectService effectService;
 
-	public BattleCharge() {
+	public void init() {
+		super.init();
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DURATION, 7500, 100);
 		settings.addNode(SkillNodes.RADIUS, 7500, 100);

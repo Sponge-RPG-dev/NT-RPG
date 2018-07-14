@@ -25,7 +25,8 @@ import java.util.Set;
 @ResourceLoader.Skill("ntrpg:megabolt")
 public class SkillMegabolt extends ActiveSkill {
 
-	public SkillMegabolt() {
+	public void init() {
+		super.init();
 		setDamageType(NDamageType.LIGHTNING);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DAMAGE, 10, 10);
