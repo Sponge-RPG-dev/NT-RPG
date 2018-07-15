@@ -1,23 +1,46 @@
 package cz.neumimto.rpg.skills;
 
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigException;
+import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.effects.model.EffectModelFactory;
+import cz.neumimto.rpg.players.IActiveCharacter;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.item.ItemType;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 /**
  * Created by NeumimTo on 15.7.2018.
  */
-public class ConfigPassiveSkill /*extends PassiveSkill */{
-/*
-    public ConfigPassiveSkill(String id) {
+public abstract class ConfigPassiveSkill extends PassiveSkill {
+
+    private final String effectName;
+
+    private IGlobalEffect effect;
+
+    public ConfigPassiveSkill(String id, String effectName) {
         super(id);
-        SkillSettings skillSettings = new SkillSettings();
-        skillSettings.addNode(SkillNodes.CHANCE, 10, 20);
-        skillSettings.addNode(SkillNodes.MULTIPLIER, 10, 20);
-        super.settings = skillSettings;
-        setDamageType(NDamageType.MEELE_CRITICAL);
-        addSkillType(SkillType.PHYSICAL);
+        this.effectName = effectName;
     }
+
+
+    @Override
+    public void init() {
+        super.init();
+        effect = effectService.getGlobalEffect(effectName);
+    }
+
+    public abstract Map<String, String> getModel(ExtendedSkillInfo info);
 
     @Override
     public void applyEffect(ExtendedSkillInfo info, IActiveCharacter character) {
-        CriticalEffectModel model = getModel(info);
+        Map<String, String> model = getModel(info);
+
+        effect.construct(character, -1, )
         CriticalEffect dodgeEffect = new CriticalEffect(character, -1, model);
         effectService.addEffect(dodgeEffect, character, this);
     }
@@ -25,17 +48,17 @@ public class ConfigPassiveSkill /*extends PassiveSkill */{
     @Override
     public void skillUpgrade(IActiveCharacter character, int level) {
         ExtendedSkillInfo info = character.getSkill(getId());
-        IEffectContainer<CriticalEffectModel, CriticalEffect> effect = character.getEffect(CriticalEffect.name);
+        IEffectContainer effect = character.getEffect(effectName);
         effect.updateValue(getModel(info), this);
         effect.updateStackedValue();
     }
-
+/*
     private CriticalEffectModel getModel(ExtendedSkillInfo info) {
         int chance = getIntNodeValue(info, SkillNodes.CHANCE);
         float mult = getFloatNodeValue(info, SkillNodes.MULTIPLIER);
         return new CriticalEffectModel(chance, mult);
     }
-
+    */
     @Override
     public PassiveSkillEffectData constructSkillData() {
         return new PassiveSkillEffectData(getId());
@@ -74,5 +97,5 @@ public class ConfigPassiveSkill /*extends PassiveSkill */{
         }
 
     }
-    */
+
 }
