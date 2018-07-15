@@ -33,7 +33,7 @@ public abstract class PassiveSkill extends AbstractSkill {
 
 	protected String relevantEffectName;
 
-	public PassiveSkill(String relevantEffectName) {
+	public PassiveSkill(String skillId) {
 		this.relevantEffectName = relevantEffectName;
 	}
 

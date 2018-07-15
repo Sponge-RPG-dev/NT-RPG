@@ -99,7 +99,7 @@ public class SkillTreeSpecialization extends PassiveSkill {
 
     @Override
     public SkillPathData constructSkillData() {
-        return new SkillPathData(getName());
+        return new SkillPathData(getId());
     }
 
     @Override

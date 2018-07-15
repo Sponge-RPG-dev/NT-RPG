@@ -6,6 +6,7 @@ import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,6 +59,14 @@ public class EffectFactoryTest {
         assert testModel.v == -1.2;
         assert testModel.q.equalsIgnoreCase("q");
         assert testModel.w == null;
+    }
+
+    @Test
+    public void l() {
+        Class<?> aClass = EffectModelFactory.wrapForPassiveSkill(EffectModelFactory.getModelType(C.class));
+        for (Field field : aClass.getFields()) {
+            System.out.println(field.getName()+"="+field.getType());
+        }
     }
 
 }
