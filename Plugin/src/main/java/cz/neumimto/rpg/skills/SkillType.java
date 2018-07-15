@@ -18,50 +18,67 @@
 
 package cz.neumimto.rpg.skills;
 
-import org.spongepowered.api.util.Tristate;
+import static org.spongepowered.api.util.Tristate.FALSE;
+import static org.spongepowered.api.util.Tristate.TRUE;
+import static org.spongepowered.api.util.Tristate.UNDEFINED;
 
-import static org.spongepowered.api.util.Tristate.*;
+import org.spongepowered.api.util.Tristate;
 
 /**
  * Created by NeumimTo on 26.7.2015.
  */
+//Todo make name translatable
 public enum SkillType implements ISkillType {
-	PHYSICAL(UNDEFINED),
-	HEALING(FALSE),
-	SUMMON(UNDEFINED),
-	PROJECTILE(UNDEFINED),
-	CAN_CAST_WHILE_SILENCED(FALSE),
-	UTILITY(UNDEFINED),
-	HEALTH_DRAIN(TRUE),
-	AURA(UNDEFINED),
-	CURSE(TRUE),
-	AOE(UNDEFINED),
-	DECREASED_RESISTANCE(UNDEFINED),
-	ESCAPE(FALSE),
-	TELEPORT(UNDEFINED),
-	STEALTH(FALSE),
-	MOVEMENT(UNDEFINED),
-	DISEASE(TRUE),
-	FIRE(UNDEFINED),
-	ELEMENTAL(UNDEFINED),
-	LIGHTNING(UNDEFINED),
-	ICE(UNDEFINED),
-	DRAIN(TRUE),
-	CANNOT_BE_SELF_CASTED(UNDEFINED),
-	PROTECTION(TRUE),
+	PHYSICAL(UNDEFINED, "ntrpg:physical","Physical"),
+	HEALING(FALSE, "ntrpg:healing","Healing"),
+	SUMMON(UNDEFINED, "ntrpg:summon","Summon"),
+	PROJECTILE(UNDEFINED,"ntrpg:projectile","Projectile"),
+	CAN_CAST_WHILE_SILENCED(FALSE,"ntrpg:can_cast_while_silenced","Can cast while silenced"),
+	UTILITY(UNDEFINED,"ntrpg:utility","Utility"),
+	HEALTH_DRAIN(TRUE,"ntrpg:health_drain","Health_drain"),
+	AURA(UNDEFINED,"ntrpg:aura","Aura"),
+	CURSE(TRUE,"ntrpg:curse","Curse"),
+	AOE(UNDEFINED,"ntrpg:aoe","Aoe"),
+	DECREASED_RESISTANCE(UNDEFINED,"ntrpg:decreased_resistance","Decreased resistance"),
+	ESCAPE(FALSE,"ntrpg:escape","Escape"),
+	TELEPORT(UNDEFINED,"ntrpg:teleport","Teleport"),
+	STEALTH(FALSE,"ntrpg:stealth","Stealth"),
+	MOVEMENT(UNDEFINED,"ntrpg:movement","Movement"),
+	DISEASE(TRUE,"ntrpg:disease","Disease"),
+	FIRE(UNDEFINED,"ntrpg:fire","Fire"),
+	ELEMENTAL(UNDEFINED,"ntrpg:elemental","Elemental"),
+	LIGHTNING(UNDEFINED,"ntrpg:lightning","Lightning"),
+	ICE(UNDEFINED,"ntrpg:ice","Ice"),
+	DRAIN(TRUE,"ntrpg:drain","Drain"),
+	CANNOT_BE_SELF_CASTED(UNDEFINED,"ntrpg:cannot_be_self_casted","Cannot be self casted"),
+	PROTECTION(TRUE,"ntrpg:protection","Protection"),
 	/**
 	 * Do not use this one in custom skills
 	 */
-	PATH(UNDEFINED);
+	PATH(UNDEFINED,"ntrpg:path","Path");
 
     private Tristate negative;
+	private String id;
+	private String name;
 
-	SkillType(Tristate negative) {
+	SkillType(Tristate negative, String id, String name) {
 		this.negative = negative;
+		this.id = id;
+		this.name = name;
 	}
 
 	@Override
 	public Tristate isNegative() {
 		return negative;
+	}
+
+	@Override
+	public String getId() {
+		return id;
+	}
+
+	@Override
+	public String getName() {
+		return name;
 	}
 }

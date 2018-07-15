@@ -5,6 +5,8 @@ import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import javassist.CannotCompileException;
 import jdk.internal.dynalink.beans.StaticClass;
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.dynamic.DynamicType;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -388,6 +390,7 @@ public class ClassGenerator implements Opcodes {
 	protected Class<?> loadClass(String className, byte[] b) {
 		Class<?> clazz = null;
 		try {
+			//todo create scopes for classloader
 			ClassLoader loader = getClass().getClassLoader();
 			Class<?> cls = Class.forName("java.lang.ClassLoader");
 			java.lang.reflect.Method method = cls.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class);
@@ -556,8 +559,21 @@ public class ClassGenerator implements Opcodes {
                 .toString();
     }
 
+	public Class<?> generateSkillWrapperForBean(Class<?> modelType) {
+		DynamicType.Builder<?> bbBuilder = new ByteBuddy()
+				.subclass(modelType);
+		for (Field field : modelType.getFields()) {
+			Class<?> type = field.getType();
+			String name = field.getName();
+			bbBuilder = bbBuilder.defineField(name+"_levelbonus", type, Modifier.PUBLIC);
+		}
 
-	@Retention(RetentionPolicy.RUNTIME)
+		Class<?> loaded = bbBuilder.make().load(getClass().getClassLoader()).getLoaded();
+		return loaded;
+	}
+
+
+    @Retention(RetentionPolicy.RUNTIME)
 	public @interface Generate {
 		String id();
 
