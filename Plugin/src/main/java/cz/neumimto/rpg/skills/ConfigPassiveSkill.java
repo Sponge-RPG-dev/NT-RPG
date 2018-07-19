@@ -2,10 +2,12 @@ package cz.neumimto.rpg.skills;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.item.ItemType;
 
@@ -21,6 +23,10 @@ public abstract class ConfigPassiveSkill extends PassiveSkill {
     private final String effectName;
 
     private IGlobalEffect effect;
+
+    @Inject
+    private Logger logger;
+
 
     public ConfigPassiveSkill(String id, String effectName) {
         super(id);
@@ -70,7 +76,12 @@ public abstract class ConfigPassiveSkill extends PassiveSkill {
         try {
             List<String> ec = c.getStringList("SkillTypes");
             for (String s : ec) {
-                addSkillType(SkillType.valueOf(s));
+                Optional<SkillType> type = Sponge.getRegistry().getType(SkillType.class, s);
+                if (type.isPresent()) {
+                    addSkillType(type.get());
+                } else {
+                    logger.error("Unknown SkillType \"" + s + "\" defined in \""+ getId() + "\"");
+                }
             }
         } catch (ConfigException e) {
 

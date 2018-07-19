@@ -6,6 +6,7 @@ import org.spongepowered.api.item.ItemType;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @ConfigSerializable
 public class ItemDumpConfig {
 

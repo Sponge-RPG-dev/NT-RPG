@@ -56,7 +56,7 @@ public class SkillData {
 		this.iskill = skill;
 	}
 
-	public String getSkillName() {
+	public String getSkillId() {
 		return skill;
 	}
 
