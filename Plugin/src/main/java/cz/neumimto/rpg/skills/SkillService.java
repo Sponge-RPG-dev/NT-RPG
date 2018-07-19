@@ -131,7 +131,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 	}
 
 	public SkillResult executeSkill(IActiveCharacter character, ISkill skill) {
-		if (character.hasSkill(skill.getName())) {
+		if (character.hasSkill(skill.getId())) {
 			return executeSkill(character, character.getSkillInfo(skill));
 		}
 		return SkillResult.WRONG_DATA;

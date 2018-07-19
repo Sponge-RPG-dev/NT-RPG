@@ -630,9 +630,9 @@ public class InventoryService {
 
 	public ItemStack createSkillbind(ISkill iSkill) {
 		ItemStack itemStack = ItemStack.of(ItemTypes.PUMPKIN_SEEDS, 1);
-		SkillBindData orCreate = itemStack.getOrCreate(SkillBindData.class).orElse(new SkillBindData(iSkill.getName()));
-		orCreate.set(NKeys.SKILLBIND, iSkill.getName());
-		itemStack.offer(Keys.DISPLAY_NAME, Text.of(iSkill.getName()));
+		SkillBindData orCreate = itemStack.getOrCreate(SkillBindData.class).orElse(new SkillBindData(iSkill.getId()));
+		orCreate.set(NKeys.SKILLBIND, iSkill.getId());
+		itemStack.offer(Keys.DISPLAY_NAME, Text.of(iSkill.getLocalizableName()));
 		itemStack.offer(orCreate);
 		return itemStack;
 	}

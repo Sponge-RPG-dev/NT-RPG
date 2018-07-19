@@ -716,7 +716,7 @@ public class CharacterService {
 
 		for (ExtendedNClass aClass : classes) {
 			Map<String, SkillData> skills = aClass.getConfigClass().getSkillTree().getSkills();
-			if (skills.containsKey(skill.getName())) {
+			if (skills.containsKey(skill.getId())) {
 				cc = character.getCharacterBase().getCharacterClass(aClass.getConfigClass());
 				break;
 			}
@@ -819,7 +819,7 @@ public class CharacterService {
 			p.value = new SkillTreeActionResult.Data(map);
 			return p;
 		}
-		SkillData info = skillTree.getSkills().get(skill.getName());
+		SkillData info = skillTree.getSkills().get(skill.getId());
 		if (info == null) {
 			p.key = SkillTreeActionResult.SKILL_IS_NOT_IN_A_TREE;
 			Map<String, Object> map = new HashMap<>();
@@ -836,19 +836,19 @@ public class CharacterService {
 			return p;
 		}
 		for (SkillData skillData : info.getHardDepends()) {
-			if (!character.hasSkill(skillData.getSkillName())) {
+			if (!character.hasSkill(skillData.getSkillId())) {
 				p.key = SkillTreeActionResult.DOES_NOT_MATCH_CHAIN;
 				Map<String, Object> map = new HashMap<>();
 				map.put("skill", skill.getName());
-				map.put("hard", info.getHardDepends().stream().map(SkillData::getSkillName).collect(Collectors.joining(", ")));
-				map.put("soft", info.getSoftDepends().stream().map(SkillData::getSkillName).collect(Collectors.joining(", ")));
+				map.put("hard", info.getHardDepends().stream().map(SkillData::getSkillId).collect(Collectors.joining(", ")));
+				map.put("soft", info.getSoftDepends().stream().map(SkillData::getSkillId).collect(Collectors.joining(", ")));
 				p.value = new SkillTreeActionResult.Data(map);
 				return p;
 			}
 		}
 		boolean hasSkill = info.getSoftDepends().isEmpty();
 		for (SkillData skillData : info.getSoftDepends()) {
-			if (character.hasSkill(skillData.getSkillName())) {
+			if (character.hasSkill(skillData.getSkillId())) {
 				hasSkill = true;
 				break;
 			}
@@ -857,22 +857,22 @@ public class CharacterService {
 			p.key = SkillTreeActionResult.DOES_NOT_MATCH_CHAIN;
 			Map<String, Object> map = new HashMap<>();
 			map.put("skill", skill.getName());
-			map.put("hard", info.getHardDepends().stream().map(SkillData::getSkillName).collect(Collectors.joining(", ")));
-			map.put("soft", info.getSoftDepends().stream().map(SkillData::getSkillName).collect(Collectors.joining(", ")));
+			map.put("hard", info.getHardDepends().stream().map(SkillData::getSkillId).collect(Collectors.joining(", ")));
+			map.put("soft", info.getSoftDepends().stream().map(SkillData::getSkillId).collect(Collectors.joining(", ")));
 			p.value = new SkillTreeActionResult.Data(map);
 			return p;
 		}
 		for (SkillData skillData : info.getConflicts()) {
-			if (character.hasSkill(skillData.getSkillName())) {
+			if (character.hasSkill(skillData.getSkillId())) {
 				Map<String, Object> map = new HashMap<>();
 				map.put("skill", skill.getName());
-				map.put("conflict", skillData.getSkillName());
+				map.put("conflict", skillData.getSkillId());
 				p.value = new SkillTreeActionResult.Data(map);
 				p.key = SkillTreeActionResult.SKILL_CONFCLITS;
 			}
 		}
 
-		if (character.hasSkill(skill.getName())) {
+		if (character.hasSkill(skill.getId())) {
 			p.key = SkillTreeActionResult.ALREADY_LEARNED;
 			Map<String, Object> map = new HashMap<>();
 			map.put("skill", skill.getName());
@@ -899,7 +899,7 @@ public class CharacterService {
 		ExtendedSkillInfo einfo = new ExtendedSkillInfo();
 		einfo.setLevel(1);
 		einfo.setSkill(skill);
-		einfo.setSkillData(skillTree.getSkills().get(skill.getName()));
+		einfo.setSkillData(skillTree.getSkills().get(skill.getId()));
 		character.addSkill(skill.getId(), einfo);
 
 		CharacterSkill skill1 = new CharacterSkill();
@@ -938,7 +938,7 @@ public class CharacterService {
 		if (skillInfo == null)
 			return 1;
 		SkillTree skillTree = configClass.getSkillTree();
-		SkillData info = skillTree.getSkills().get(skill.getName());
+		SkillData info = skillTree.getSkills().get(skill.getId());
 		for (SkillData info1 : info.getDepending()) {
 			ExtendedSkillInfo e = character.getSkill(info1.getSkill().getId());
 			if (e != null)

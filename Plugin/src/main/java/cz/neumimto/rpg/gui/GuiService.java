@@ -20,20 +20,13 @@ package cz.neumimto.rpg.gui;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.utils.FileUtils;
 import org.spongepowered.api.Game;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * Created by NeumimTo on 1.9.2015.
@@ -48,40 +41,6 @@ public class GuiService {
 	private SkillService skillService;
 
 	private Map<String, String> skillIconsUrls = new HashMap<>();
-
-	//@PostProcess(priority = 350)
-	public void createStubSkillIcons() {
-		Properties properties = new Properties();
-		Path prop = Paths.get(NtRpgPlugin.workingDir + "/skillicons.properties");
-		FileUtils.createFileIfNotExists(prop);
-		try {
-			properties.load(new FileInputStream(prop.toFile()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		Path outputdir = Paths.get(NtRpgPlugin.workingDir + "/icons/skills");
-		FileUtils.createDirectoryIfNotExists(outputdir);
-		try (final PrintWriter p = new PrintWriter(new BufferedWriter(new FileWriter(prop.toFile(), true)))) {
-			skillService.getSkills().values().stream().forEach(skill -> {
-				if (!properties.containsKey(skill.getName())) {
-					BufferedImage img = createImageFromText(skill.getName());
-					File file = new File(outputdir + "/" + skill.getName() + ".png");
-					try {
-						ImageIO.write(img, "png", file);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					String uri = file.toPath().toUri().toString();
-					properties.put(skill.getName(), uri);
-					p.println(skill.getName() + "=" + uri);
-				}
-			});
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-		skillIconsUrls = (Map) properties;
-	}
-
 
 	private BufferedImage createImageFromText(String text) {
 		BufferedImage img = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB);
