@@ -92,12 +92,5 @@ public class EffectModelFactory {
         return false;
     }
 
-    public static Class<?> wrapForPassiveSkill(Class<?> modelType) {
-        if (typeMappers.containsKey(modelType)) {
-            return modelType;
-        }
-        return IoC.get().build(ClassGenerator.class).generateSkillWrapperForBean(modelType);
-    }
-
 
 }
