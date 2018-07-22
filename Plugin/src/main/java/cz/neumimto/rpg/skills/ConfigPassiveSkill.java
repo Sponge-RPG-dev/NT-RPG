@@ -3,7 +3,7 @@ package cz.neumimto.rpg.skills;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.item.ItemType;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,12 +28,10 @@ public abstract class ConfigPassiveSkill extends PassiveSkill {
     @Inject
     private Logger logger;
 
-
     public ConfigPassiveSkill(String id, String effectName) {
         super(id);
         this.effectName = effectName;
     }
-
 
     @Override
     public void init() {
@@ -40,35 +39,41 @@ public abstract class ConfigPassiveSkill extends PassiveSkill {
         effect = effectService.getGlobalEffect(effectName);
     }
 
-    public abstract Map<String, String> getModel(ExtendedSkillInfo info);
+    //todo rethink this with asm (?) on the other hand this is not called often its just ugly
+    public Map<String, String> getEffectModel(ExtendedSkillInfo info) {
+        SkillData skillData = info.getSkillData();
+        SkillSettings skillSettings = skillData.getSkillSettings();
+        Map<String, String> model = new HashMap<>();
+        for (Map.Entry<String, Float> entry : skillSettings.getNodes().entrySet()) {
+            if (entry.getKey().endsWith("_levelbonus")) {
+                float val = entry.getValue() * info.getTotalLevel();
+                String substring = entry.getKey().substring(0, entry.getKey().length() - "_levelbonus".length());
+                model.computeIfPresent(substring, (s1, s2) -> String.valueOf(Float.parseFloat(s2) + val));
+            } else {
+                String s = model.get(entry.getKey());
+                model.computeIfPresent(entry.getKey(), (s1, s2) -> String.valueOf(Float.parseFloat(s2) + Float.parseFloat(s)));
+            }
+        }
+        return model;
+    }
 
     @Override
     public void applyEffect(ExtendedSkillInfo info, IActiveCharacter character) {
-        Map<String, String> model = getModel(info);
-
-        effect.construct(character, -1, )
-        CriticalEffect dodgeEffect = new CriticalEffect(character, -1, model);
-        effectService.addEffect(dodgeEffect, character, this);
+        Map<String, String> model = getEffectModel(info);
+        IEffect eff = effect.construct(character, -1, model);
+        effectService.addEffect(eff, character, this);
     }
 
     @Override
     public void skillUpgrade(IActiveCharacter character, int level) {
-        ExtendedSkillInfo info = character.getSkill(getId());
-        IEffectContainer effect = character.getEffect(effectName);
-        effect.updateValue(getModel(info), this);
-        effect.updateStackedValue();
+        effectService.removeEffect(effectName, character, this);
+        applyEffect(character.getSkillInfo(getId()), character);
     }
-/*
-    private CriticalEffectModel getModel(ExtendedSkillInfo info) {
-        int chance = getIntNodeValue(info, SkillNodes.CHANCE);
-        float mult = getFloatNodeValue(info, SkillNodes.MULTIPLIER);
-        return new CriticalEffectModel(chance, mult);
-    }
-    */
-    @Override
-    public PassiveSkillEffectData constructSkillData() {
-        return new PassiveSkillEffectData(getId());
-    }
+
+        @Override
+        public PassiveSkillEffectData constructSkillData() {
+            return new PassiveSkillEffectData(getId());
+        }
 
     @Override
     public <T extends SkillData> void loadSkillData(T skillData, SkillTree context, SkillLoadingErrors errors, Config c) {
@@ -85,10 +90,10 @@ public abstract class ConfigPassiveSkill extends PassiveSkill {
             }
         } catch (ConfigException e) {
 
-        }
-        pdata.setMaxSkillLevel(1);
-        try {
-            String a = c.getString("ItemIcon");
+            }
+            pdata.setMaxSkillLevel(1);
+            try {
+                String a = c.getString("ItemIcon");
             Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, a);
             type.ifPresent(this::setIcon);
         } catch (ConfigException e) {
