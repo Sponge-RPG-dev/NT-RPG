@@ -341,6 +341,15 @@ public class NtRpgPlugin {
 	}
 
 	@Listener
+	public void postInit5(GameRegistryEvent.Register<SkillConfigLoader> event) {
+		event.register(SkillConfigLoaders.ATTRIBUTE);
+		event.register(SkillConfigLoaders.ITEM_ACCESS);
+		event.register(SkillConfigLoaders.PROPERTY);
+		event.register(SkillConfigLoaders.SKILLTREE_PATH);
+	}
+
+
+	@Listener
 	public void onPluginLoad(GamePostInitializationEvent event) {
 		long start = System.nanoTime();
 		IoC ioc = IoC.get();

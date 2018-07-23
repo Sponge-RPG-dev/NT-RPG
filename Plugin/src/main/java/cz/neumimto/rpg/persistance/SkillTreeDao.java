@@ -28,6 +28,7 @@ import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.utils.CatalogId;
 import cz.neumimto.rpg.utils.Utils;
 import org.slf4j.Logger;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.text.Text;
 
 import java.io.IOException;
@@ -143,37 +144,14 @@ public class SkillTreeDao {
                     String type = c.getString("type");
                     String sid = c.getString("id");
                     String name = c.getString("name");
-                    switch (type) {
-                        case "specialization":
-                        case "spec":
-                            SkillTreeSpecialization path = new SkillTreeSpecialization(sid);
-                            path.setLocalizableName(Text.of(name));
-                            injectCatalogId(path, sid);
-                            skillService.registerAdditionalCatalog(path);
-                            break;
-                        case "command":
+                    SkillConfigLoader type1 = Sponge.getRegistry().getType(SkillConfigLoader.class, type)
+                            .orElseThrow(() -> new IllegalArgumentException("Unknown skill type " + type + " in a skiltree " + skillTree.getId()));
 
-                            break;
-                        case "item-access":
-                            ItemAccessSkill s = new ItemAccessSkill(sid);
-                            s.setLocalizableName(Text.of(name));
-                            injectCatalogId(s, sid);
-                            skillService.registerAdditionalCatalog(s);
-                            break;
-                        case "attribute":
-                            CharacterAttributeSkill a = new CharacterAttributeSkill(sid);
-                            a.setLocalizableName(Text.of(name));
-                            injectCatalogId(a, sid);
-                            skillService.registerAdditionalCatalog(a);
-                            break;
-                        case "property":
-                            PropertySkill p = new PropertySkill(sid);
-                            p.setLocalizableName(Text.of(name));
-                            injectCatalogId(p, sid);
-                            skillService.registerAdditionalCatalog(p);
-                            break;
+                    ISkill build = type1.build(name);
+                    build.setLocalizableName(Text.of(name));
+                    injectCatalogId(build, sid);
+                    skillService.registerAdditionalCatalog(build);
 
-                    }
 
                 } catch (ConfigException.Missing ignored) {}
             }
