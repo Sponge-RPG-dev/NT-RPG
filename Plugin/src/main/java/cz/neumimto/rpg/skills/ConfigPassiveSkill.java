@@ -19,7 +19,7 @@ import java.util.Optional;
 /**
  * Created by NeumimTo on 15.7.2018.
  */
-public abstract class ConfigPassiveSkill extends PassiveSkill {
+public class ConfigPassiveSkill extends PassiveSkill {
 
     private final String effectName;
 
@@ -28,9 +28,8 @@ public abstract class ConfigPassiveSkill extends PassiveSkill {
     @Inject
     private Logger logger;
 
-    public ConfigPassiveSkill(String id, String effectName) {
-        super(id);
-        this.effectName = effectName;
+    public ConfigPassiveSkill() {
+
     }
 
     @Override
