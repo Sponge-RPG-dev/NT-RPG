@@ -36,6 +36,7 @@ import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExperienceSource;
+import cz.neumimto.rpg.players.ExperienceSources;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.NDamageType;
@@ -394,11 +395,11 @@ public class BasicListener {
             BlockType type = transaction.getOriginal().getState().getType();
             Double d = experienceService.getMinningExperiences(type);
             if (d != null) {
-                characterService.addExperiences(character, d, ExperienceSource.MINING);
+                characterService.addExperiences(character, d, ExperienceSources.MINING);
             } else {
                 d = experienceService.getLoggingExperiences(type);
                 if (d != null) {
-                    characterService.addExperiences(character, d, ExperienceSource.LOGGING);
+                    characterService.addExperiences(character, d, ExperienceSources.LOGGING);
                 }
             }
         }

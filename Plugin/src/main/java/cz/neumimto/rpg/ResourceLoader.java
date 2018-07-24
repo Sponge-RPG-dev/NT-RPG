@@ -50,10 +50,12 @@ import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Enumeration;
-import java.util.Locale;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -109,9 +111,13 @@ public class ResourceLoader {
 	@Inject
 	private LocalizationService localizationService;
 
+	private Map<String, ResourceClassLoader> classLoaderMap = new HashMap<>();
+	private URLClassLoader configClassLaoder;
+
 	public ResourceLoader() {
 		ConfigMapper.init("NtRPG", Paths.get(NtRpgPlugin.workingDir));
 		configMapper = ConfigMapper.get("NtRPG");
+		configClassLaoder = new URLClassLoader(new URL[]{}, this.getClass().getClassLoader());
 	}
 
 	private static <T> T newInstance(Class<T> excepted, Class<?> clazz) {
@@ -146,7 +152,15 @@ public class ResourceLoader {
 		JarEntry next = null;
 
 		if (!main) {
-			PluginCore.loadJarFile(f);
+			ResourceClassLoader classLoader = classLoaderMap.get(f.getName());
+			if (classLoader == null) {
+				try {
+					classLoader = new ResourceClassLoader(f.toURI().toURL(), (URLClassLoader) this.getClass().getClassLoader());
+					classLoaderMap.put(f.getName(), classLoader);
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		while (entries.hasMoreElements()) {
 			next = entries.nextElement();
@@ -182,11 +196,11 @@ public class ResourceLoader {
 		logger.info("Finished loading of jarfile " + file.getName());
 	}
 
-	public void loadClass(Class<?> clazz) throws IllegalAccessException, CannotCompileException, InstantiationException {
+	public Object loadClass(Class<?> clazz) throws IllegalAccessException, CannotCompileException, InstantiationException {
 		if (clazz.isInterface())
-			return;
+			return null;
 		if (Modifier.isAbstract(clazz.getModifiers())) {
-			return;
+			return null;
 		}
 		if (PluginConfig.DEBUG.isDevelop())
 			logger.info(" - Checking if theres something to load in a class " + clazz.getName());
@@ -254,23 +268,29 @@ public class ResourceLoader {
 				Class c = clazz;
 				IGlobalEffect iGlobalEffect = classGenerator.generateGlobalEffect(c);
 				if (iGlobalEffect == null) {
-					return;
+					return null;
 				}
 				classGenerator.injectGlobalEffectField(c, iGlobalEffect);
 				effectService.registerGlobalEffect(iGlobalEffect);
+				container = iGlobalEffect;
 			}
 		}
 		if (IGlobalEffect.class.isAssignableFrom(clazz)) {
-			IGlobalEffect i = newInstance(IGlobalEffect.class, clazz);
-			effectService.registerGlobalEffect(i);
+			container = newInstance(IGlobalEffect.class, clazz);
+			effectService.registerGlobalEffect((IGlobalEffect) container);
+
 		}
 
+		return container;
+	}
+
+	public URLClassLoader getConfigClassLaoder() {
+		return configClassLaoder;
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
 	public @interface ListenerClass {
 	}
-
 
 	@Retention(RetentionPolicy.RUNTIME)
 	public @interface Skill {

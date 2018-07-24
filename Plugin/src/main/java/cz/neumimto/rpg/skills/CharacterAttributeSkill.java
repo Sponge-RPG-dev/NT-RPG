@@ -2,6 +2,7 @@ package cz.neumimto.rpg.skills;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
+import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -15,9 +16,8 @@ import java.util.function.BiFunction;
 
 public class CharacterAttributeSkill extends AbstractSkill {
 
-    public CharacterAttributeSkill(String name) {
+    public CharacterAttributeSkill() {
         super();
-        setLocalizableName(TextHelper.parse(name));
     }
 
     @Override

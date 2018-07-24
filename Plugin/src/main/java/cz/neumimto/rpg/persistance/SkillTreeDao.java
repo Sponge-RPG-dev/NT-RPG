@@ -143,15 +143,10 @@ public class SkillTreeDao {
                 try {
                     String type = c.getString("type");
                     String sid = c.getString("id");
-                    String name = c.getString("name");
                     SkillConfigLoader type1 = Sponge.getRegistry().getType(SkillConfigLoader.class, type)
                             .orElseThrow(() -> new IllegalArgumentException("Unknown skill type " + type + " in a skiltree " + skillTree.getId()));
 
-                    ISkill build = type1.build(name);
-                    build.setLocalizableName(Text.of(name));
-                    injectCatalogId(build, sid);
-                    skillService.registerAdditionalCatalog(build);
-
+                   type1.build(sid);
 
                 } catch (ConfigException.Missing ignored) {}
             }

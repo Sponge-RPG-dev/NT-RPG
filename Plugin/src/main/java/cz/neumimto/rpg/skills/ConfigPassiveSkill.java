@@ -21,7 +21,7 @@ import java.util.Optional;
  */
 public class ConfigPassiveSkill extends PassiveSkill {
 
-    private final String effectName;
+    private String effectName;
 
     private IGlobalEffect effect;
 
@@ -31,6 +31,7 @@ public class ConfigPassiveSkill extends PassiveSkill {
     public ConfigPassiveSkill() {
 
     }
+
 
     @Override
     public void init() {
@@ -69,10 +70,10 @@ public class ConfigPassiveSkill extends PassiveSkill {
         applyEffect(character.getSkillInfo(getId()), character);
     }
 
-        @Override
-        public PassiveSkillEffectData constructSkillData() {
-            return new PassiveSkillEffectData(getId());
-        }
+    @Override
+    public PassiveSkillEffectData constructSkillData() {
+        return new PassiveSkillEffectData(getId());
+    }
 
     @Override
     public <T extends SkillData> void loadSkillData(T skillData, SkillTree context, SkillLoadingErrors errors, Config c) {
@@ -84,15 +85,15 @@ public class ConfigPassiveSkill extends PassiveSkill {
                 if (type.isPresent()) {
                     addSkillType(type.get());
                 } else {
-                    logger.error("Unknown SkillType \"" + s + "\" defined in \""+ getId() + "\"");
+                    logger.error("Unknown SkillType \"" + s + "\" defined in \"" + getId() + "\"");
                 }
             }
         } catch (ConfigException e) {
 
-            }
-            pdata.setMaxSkillLevel(1);
-            try {
-                String a = c.getString("ItemIcon");
+        }
+        pdata.setMaxSkillLevel(1);
+        try {
+            String a = c.getString("ItemIcon");
             Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, a);
             type.ifPresent(this::setIcon);
         } catch (ConfigException e) {

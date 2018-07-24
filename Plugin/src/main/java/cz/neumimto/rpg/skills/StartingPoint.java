@@ -36,7 +36,7 @@ public final class StartingPoint extends PassiveSkill {
 	private static SkillSettings skillSettings = new SkillSettings();
 
 	public StartingPoint() {
-		super(null);
+		super();
 		setIcon(ItemTypes.WOOL);
 	}
 

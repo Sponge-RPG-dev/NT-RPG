@@ -33,11 +33,14 @@ public abstract class PassiveSkill extends AbstractSkill {
 
 	protected String relevantEffectName;
 
-	public PassiveSkill(String skillId) {
-		this.relevantEffectName = relevantEffectName;
+	public PassiveSkill() {
 	}
 
-	@Override
+	public PassiveSkill(String name) {
+		this.relevantEffectName = name;
+	}
+
+    @Override
 	public SkillResult onPreUse(IActiveCharacter character) {
 		character.sendMessage(Localizations.CANT_USE_PASSIVE_SKILL);
 		return SkillResult.FAIL;

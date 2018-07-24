@@ -346,8 +346,17 @@ public class NtRpgPlugin {
 		event.register(SkillConfigLoaders.ITEM_ACCESS);
 		event.register(SkillConfigLoaders.PROPERTY);
 		event.register(SkillConfigLoaders.SKILLTREE_PATH);
+		event.register(SkillConfigLoaders.EFFECT_PASSIVE_SKILL);
 	}
 
+	@Listener
+	public void postInit6(GameRegistryEvent.Register<ExperienceSource> event) {
+		event.register(ExperienceSources.PVP);
+		event.register(ExperienceSources.PVE);
+		event.register(ExperienceSources.MINING);
+		event.register(ExperienceSources.LOGGING);
+		event.register(ExperienceSources.QUESTING);
+	}
 
 	@Listener
 	public void onPluginLoad(GamePostInitializationEvent event) {
