@@ -4,6 +4,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.players.ExperienceSource;
+import cz.neumimto.rpg.players.ExperienceSources;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
 
@@ -62,9 +63,9 @@ public class ExperienceService {
 
 	public ExperienceSource getExperienceSourceByBlockType(BlockType type) {
 		if (minerals.containsKey(type))
-			return ExperienceSource.MINING;
+			return ExperienceSources.MINING;
 		if (woodenBlocks.containsKey(type))
-			return ExperienceSource.LOGGING;
+			return ExperienceSources.LOGGING;
 		return null;
 	}
 }

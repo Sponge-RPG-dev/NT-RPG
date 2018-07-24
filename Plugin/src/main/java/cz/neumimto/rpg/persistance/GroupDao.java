@@ -66,6 +66,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * Created by NeumimTo on 10.7.2015.
@@ -161,7 +162,10 @@ public class GroupDao {
 				try {
 					List<String> experienceSources = c.getStringList("ExperienceSources");
 					HashSet<ExperienceSource> objects = new HashSet<>();
-					experienceSources.forEach(a -> objects.add(ExperienceSource.valueOf(a.toUpperCase())));
+					experienceSources.forEach(a -> objects.add(Sponge.getRegistry().getType(ExperienceSource.class, a).orElseGet(() -> {
+						logger.info(" - Unknown experience source " + a);
+						return null;
+					})));
 					configClass.setExperienceSources(objects);
 				} catch (ConfigException e) {
 					logger.warn(" - Missing configuration \"ExperienceSources\", skipping");

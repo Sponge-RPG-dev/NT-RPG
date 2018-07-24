@@ -11,6 +11,7 @@ import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExperienceSource;
+import cz.neumimto.rpg.players.ExperienceSources;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.data.key.Keys;
@@ -125,7 +126,7 @@ public class EntityLifecycleListener {
 
 				IActiveCharacter character = characterService.getCharacter(source.getUniqueId());
 				exp += character.getExperienceBonusFor(targetEntity.getLocation().getExtent().getName(), targetEntity.getType());
-				ExperienceSource experienceSource = targetEntity.getType() == EntityTypes.PLAYER ? ExperienceSource.PVP : ExperienceSource.PVE;
+				ExperienceSource experienceSource = targetEntity.getType() == EntityTypes.PLAYER ? ExperienceSources.PVP : ExperienceSources.PVE;
 				if (character != null) {
 					if (character.hasParty()) {
 						exp *= PluginConfig.PARTY_EXPERIENCE_MULTIPLIER;
@@ -154,7 +155,7 @@ public class EntityLifecycleListener {
 				IEntity caster = skillDamageSource.getCaster();
 				if (caster.getType() == IEntityType.CHARACTER) {
 					double exp = entityService.getExperiences(event.getTargetEntity());
-					characterService.addExperiences((IActiveCharacter) caster, exp, ExperienceSource.PVE);
+					characterService.addExperiences((IActiveCharacter) caster, exp, ExperienceSources.PVE);
 				}
 			}
 			entityService.remove(event.getTargetEntity().getUniqueId());

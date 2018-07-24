@@ -28,9 +28,8 @@ public class SkillTreeSpecialization extends PassiveSkill {
 
     public static Logger logger = Logger.getLogger("SkillTreeSpecialization");
 
-    public SkillTreeSpecialization(String name) {
-        super(null);
-        setLocalizableName(TextHelper.parse(name));
+    public SkillTreeSpecialization() {
+        super();
         SkillSettings settings = new SkillSettings();
         addSkillType(SkillType.PATH);
         setIcon(ItemTypes.BOOK);

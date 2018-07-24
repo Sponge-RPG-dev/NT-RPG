@@ -34,9 +34,8 @@ public class ItemAccessSkill extends AbstractSkill {
     @Inject
     private ItemService itemService;
 
-    public ItemAccessSkill(String name) {
+    public ItemAccessSkill() {
         super();
-        setLocalizableName(TextHelper.parse(name));
         setIcon(ItemTypes.REDSTONE);
     }
 

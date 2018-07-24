@@ -18,15 +18,18 @@
 
 package cz.neumimto.rpg;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 
 /**
  * Created by NeumimTo on 27.12.2014.
  */
 public class ResourceClassLoader extends URLClassLoader {
-	public ResourceClassLoader(URLClassLoader parent) {
-		super(parent.getURLs(), parent);
+	public ResourceClassLoader(URL additionalPool, URLClassLoader parent) {
+		super(ArrayUtils.add(parent.getURLs(), additionalPool), parent);
 
 	}
 
