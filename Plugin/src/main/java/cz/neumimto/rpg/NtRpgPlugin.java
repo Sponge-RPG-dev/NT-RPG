@@ -299,6 +299,7 @@ public class NtRpgPlugin {
 		Sponge.getRegistry().registerModule(ItemMetaType.class, new ItemMetaTypeRegistry());
 		Sponge.getRegistry().registerModule(ItemSubtype.class, new ItemSubtypeRegistry());
 		Sponge.getRegistry().registerModule(ISkillType.class, new SkillTypeRegistry());
+		Sponge.getRegistry().registerModule(ExperienceSource.class, new ExperienceSourceRegistry());
 	}
 
 	@Listener
