@@ -7,6 +7,7 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.tree.SkillType;
 
 /**
  * Created by NeumimTo on 6.7.2017.

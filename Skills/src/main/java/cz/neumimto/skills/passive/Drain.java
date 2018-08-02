@@ -7,6 +7,7 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.tree.SkillType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
 /**

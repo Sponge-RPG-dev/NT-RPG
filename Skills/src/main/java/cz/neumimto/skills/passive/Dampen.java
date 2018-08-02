@@ -9,7 +9,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.PassiveSkill;
 import cz.neumimto.rpg.skills.SkillSettings;
-import cz.neumimto.rpg.skills.SkillType;
+import cz.neumimto.rpg.skills.tree.SkillType;
 
 /**
  * Created by NeumimTo on 7.7.2017.

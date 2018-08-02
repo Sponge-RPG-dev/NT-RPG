@@ -21,6 +21,7 @@ package cz.neumimto.rpg.skills;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.skills.utils.SkillModifier;
 import cz.neumimto.rpg.utils.TriConsumer;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.projectile.Projectile;

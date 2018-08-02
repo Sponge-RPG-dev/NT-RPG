@@ -70,6 +70,9 @@ import cz.neumimto.rpg.players.properties.attributes.AttributeRegistry;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.configs.SkillConfigLoader;
+import cz.neumimto.rpg.skills.configs.SkillConfigLoaders;
+import cz.neumimto.rpg.skills.tree.SkillType;
 import cz.neumimto.rpg.utils.FileUtils;
 import cz.neumimto.rpg.utils.SkillTreeActionResult;
 import org.slf4j.Logger;
@@ -114,7 +117,7 @@ import java.util.concurrent.TimeUnit;
  * Created by NeumimTo on 29.4.2015.
  */
 @Plugin(id = "nt-rpg", version = Version.VERSION, name = "NT-Rpg", dependencies = {
-		@Dependency(id = "nt-core", version = "1.12", optional = false)
+		@Dependency(id = "nt-core", version = "1.13", optional = false)
 })
 @Resource
 public class NtRpgPlugin {

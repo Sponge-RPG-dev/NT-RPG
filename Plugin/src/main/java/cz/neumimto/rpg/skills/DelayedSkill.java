@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.skills;
 
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.skills.utils.SkillModifier;
 
 
 public class DelayedSkill extends ActiveSkill {

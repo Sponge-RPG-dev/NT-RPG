@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.skills;
 
+import cz.neumimto.rpg.skills.utils.SkillModifierProcessor;
+
 /**
  * Created by ja on 22.10.2016.
  */

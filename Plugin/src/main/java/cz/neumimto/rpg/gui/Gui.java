@@ -34,7 +34,7 @@ import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.scripting.JsBinding;
-import cz.neumimto.rpg.skills.SkillTree;
+import cz.neumimto.rpg.skills.tree.SkillTree;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;

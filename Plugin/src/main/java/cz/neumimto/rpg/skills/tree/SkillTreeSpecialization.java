@@ -1,12 +1,13 @@
-package cz.neumimto.rpg.skills;
+package cz.neumimto.rpg.skills.tree;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.core.localization.Arg;
-import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.utils.Utils;
 import org.jboss.logging.Logger;
 import org.spongepowered.api.Sponge;

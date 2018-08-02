@@ -37,6 +37,7 @@ import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.reloading.Reload;
 import cz.neumimto.rpg.reloading.ReloadService;
 import cz.neumimto.rpg.scripting.JSLoader;
+import cz.neumimto.rpg.skills.tree.SkillTree;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.manipulator.mutable.entity.HealthData;

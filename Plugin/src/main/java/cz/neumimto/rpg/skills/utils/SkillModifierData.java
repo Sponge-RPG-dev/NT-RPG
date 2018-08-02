@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.skills;
+package cz.neumimto.rpg.skills.utils;
 
 /**
  * Created by fs on 20.10.16.

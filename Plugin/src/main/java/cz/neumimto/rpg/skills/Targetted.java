@@ -18,6 +18,8 @@ package cz.neumimto.rpg.skills;
 
 import cz.neumimto.rpg.events.skills.SkillFindTargetEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.skills.tree.SkillType;
+import cz.neumimto.rpg.skills.utils.SkillModifier;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.entity.living.Living;
 

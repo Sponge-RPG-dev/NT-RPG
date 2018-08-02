@@ -36,6 +36,7 @@ import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.type.HandType;
 import org.spongepowered.api.data.type.HandTypes;
@@ -749,12 +750,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	@Override
 	public boolean isFriendlyTo(IActiveCharacter character) {
 		if (character == this) return true;
-		for (IActiveCharacter iActiveCharacter : getParty().getPlayers()) {
-			if (iActiveCharacter == character) {
-				return true;
-			}
-		}
-		return false;
+		return getParty().getPlayers().contains(character);
 	}
 
 	@Override

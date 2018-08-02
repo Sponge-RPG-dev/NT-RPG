@@ -27,6 +27,8 @@ import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.gui.GuiHelper;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.skills.tree.SkillTree;
+import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.data.key.Keys;

@@ -12,7 +12,7 @@ import cz.neumimto.rpg.skills.NDamageType;
 import cz.neumimto.rpg.skills.PassiveSkill;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillSettings;
-import cz.neumimto.rpg.skills.SkillType;
+import cz.neumimto.rpg.skills.tree.SkillType;
 
 /**
  * Created by ja on 6.7.2017.

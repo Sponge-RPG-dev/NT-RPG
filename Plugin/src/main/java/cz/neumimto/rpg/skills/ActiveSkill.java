@@ -20,6 +20,8 @@ package cz.neumimto.rpg.skills;
 
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.skills.tree.SkillType;
+import cz.neumimto.rpg.skills.utils.SkillModifier;
 
 /**
  * Created by NeumimTo on 26.7.2015.

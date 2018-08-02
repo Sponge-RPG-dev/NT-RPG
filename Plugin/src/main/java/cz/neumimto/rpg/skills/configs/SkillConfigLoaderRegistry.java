@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.skills;
+package cz.neumimto.rpg.skills.configs;
 
 import com.google.common.collect.Maps;
 import org.spongepowered.api.registry.AdditionalCatalogRegistryModule;

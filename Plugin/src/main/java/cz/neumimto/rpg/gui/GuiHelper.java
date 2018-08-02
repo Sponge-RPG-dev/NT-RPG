@@ -16,6 +16,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;

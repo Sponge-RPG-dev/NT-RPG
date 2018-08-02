@@ -9,6 +9,8 @@ import cz.neumimto.rpg.gui.GuiHelper;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
+import cz.neumimto.rpg.skills.tree.SkillTree;
+import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.item.ItemTypes;

@@ -16,9 +16,10 @@
  *     
  */
 
-package cz.neumimto.rpg.skills;
+package cz.neumimto.rpg.skills.tree;
 
 import cz.neumimto.rpg.Pair;
+import cz.neumimto.rpg.skills.SkillData;
 
 import java.util.HashMap;
 import java.util.Map;

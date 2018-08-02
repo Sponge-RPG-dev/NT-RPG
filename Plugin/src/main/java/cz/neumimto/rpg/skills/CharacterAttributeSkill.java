@@ -2,11 +2,11 @@ package cz.neumimto.rpg.skills;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
-import cz.neumimto.core.ioc.IoC;
-import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
+import cz.neumimto.rpg.skills.tree.SkillTree;
+import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
 
 import java.util.HashSet;
 import java.util.List;

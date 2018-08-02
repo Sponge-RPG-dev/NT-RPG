@@ -16,12 +16,13 @@
  *     
  */
 
-package cz.neumimto.rpg.skills;
+package cz.neumimto.rpg.skills.tree;
 
 import static org.spongepowered.api.util.Tristate.FALSE;
 import static org.spongepowered.api.util.Tristate.TRUE;
 import static org.spongepowered.api.util.Tristate.UNDEFINED;
 
+import cz.neumimto.rpg.skills.ISkillType;
 import org.spongepowered.api.util.Tristate;
 
 /**

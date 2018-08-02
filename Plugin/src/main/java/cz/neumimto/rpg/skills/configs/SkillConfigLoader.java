@@ -1,7 +1,8 @@
-package cz.neumimto.rpg.skills;
+package cz.neumimto.rpg.skills.configs;
 
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.skills.ISkill;
 import javassist.CannotCompileException;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;

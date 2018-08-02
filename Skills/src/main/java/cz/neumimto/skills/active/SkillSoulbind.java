@@ -9,7 +9,7 @@ import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ActiveSkill;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.SkillModifier;
+import cz.neumimto.rpg.skills.utils.SkillModifier;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;

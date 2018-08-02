@@ -32,7 +32,7 @@ import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.SkillTreeSpecialization;
+import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
 import org.spongepowered.api.data.type.HandType;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;

@@ -8,7 +8,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.PassiveSkill;
 import cz.neumimto.rpg.skills.SkillSettings;
-import cz.neumimto.rpg.skills.SkillType;
+import cz.neumimto.rpg.skills.tree.SkillType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
 /**

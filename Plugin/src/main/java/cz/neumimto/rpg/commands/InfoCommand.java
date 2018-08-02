@@ -35,7 +35,7 @@ import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.skills.SkillTree;
+import cz.neumimto.rpg.skills.tree.SkillTree;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.command.CommandResult;

@@ -28,7 +28,7 @@ import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.ConfigClass;
-import cz.neumimto.rpg.skills.SkillTree;
+import cz.neumimto.rpg.skills.tree.SkillTree;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;

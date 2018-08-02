@@ -20,7 +20,7 @@ package cz.neumimto.rpg.players.groups;
 
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.players.ExperienceSource;
-import cz.neumimto.rpg.skills.SkillTree;
+import cz.neumimto.rpg.skills.tree.SkillTree;
 import org.spongepowered.api.util.Color;
 
 import java.util.HashSet;

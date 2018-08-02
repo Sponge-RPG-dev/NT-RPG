@@ -1,4 +1,7 @@
-package cz.neumimto.rpg.skills;
+package cz.neumimto.rpg.skills.configs;
+
+import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
 
 public class SkillConfigLoaders {
 

@@ -25,11 +25,13 @@ import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.gui.SkillTreeInterfaceModel;
 import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.configs.SkillConfigLoader;
+import cz.neumimto.rpg.skills.tree.SkillTree;
+import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.utils.CatalogId;
 import cz.neumimto.rpg.utils.Utils;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.text.Text;
 
 import java.io.IOException;
 import java.lang.reflect.Field;

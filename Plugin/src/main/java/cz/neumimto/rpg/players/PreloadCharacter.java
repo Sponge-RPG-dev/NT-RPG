@@ -36,7 +36,7 @@ import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.SkillTreeSpecialization;
+import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.type.HandType;
 import org.spongepowered.api.effect.potion.PotionEffect;

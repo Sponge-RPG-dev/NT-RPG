@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.skills;
+package cz.neumimto.rpg.skills.utils;
 
 import org.spongepowered.api.entity.projectile.Projectile;
 

@@ -59,6 +59,8 @@ import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.tree.SkillTree;
+import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.utils.PermissionUtils;
 import cz.neumimto.rpg.utils.SkillTreeActionResult;
 import cz.neumimto.rpg.utils.Utils;

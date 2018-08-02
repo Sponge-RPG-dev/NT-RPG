@@ -10,7 +10,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.skills.SkillTree;
+import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.utils.SkillTreeActionResult;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
