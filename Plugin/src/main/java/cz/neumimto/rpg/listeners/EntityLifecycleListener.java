@@ -54,7 +54,7 @@ public class EntityLifecycleListener {
 		if (event.isCancelled())
 			return;
 		UUID id = event.getProfile().getUniqueId();
-		characterService.loadPlayerData(id);
+		characterService.loadPlayerData(id, event.getProfile().getName().get());
 	}
 
 	@Listener

@@ -224,4 +224,9 @@ public class PluginConfig {
 	@ConfigValue
 	@Comment(content = "Plugins attempt to create a list of items present on the server, which might fall into categories of weapons/armors/shields. The final list might, or might not be complete.")
 	public static boolean AUTODISCOVER_ITEMS = true;
+
+
+	@ConfigValue
+	@Comment(content = "If set to true plugin will generate first character right after log-in, for a players which do not have one yet. The new character has same name as the player. New players wont have to run command /char c playername<")
+	public static boolean CREATE_FIRST_CHAR_AFTER_LOGIN = true;
 }

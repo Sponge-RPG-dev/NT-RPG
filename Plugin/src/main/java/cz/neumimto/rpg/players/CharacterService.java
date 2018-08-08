@@ -106,6 +106,7 @@ public class CharacterService {
 	private PropertyService propertyService;
 
 
+
 	@Inject
 	private Logger logger;
 
@@ -117,19 +118,47 @@ public class CharacterService {
 	@Inject
 	private EffectService effectService;
 
-	public void loadPlayerData(UUID id) {
+	public void loadPlayerData(UUID id, String playerName) {
 		characters.put(id, buildDummyChar(id));
 		game.getScheduler().createTaskBuilder().name("PlayerDataLoad-" + id).async().execute(() -> {
 			logger.info("Loading player - " + id);
 			long k = System.currentTimeMillis();
-			final List<CharacterBase> playerCharacters = playerDao.getPlayersCharacters(id);
+			List<CharacterBase> playerCharacters = playerDao.getPlayersCharacters(id);
 			logger.info("Finished loading of player " + id + ", loaded " + playerCharacters.size() + " characters   [" + (System.currentTimeMillis() - k) + "]ms");
+			if (playerCharacters.isEmpty() && PluginConfig.CREATE_FIRST_CHAR_AFTER_LOGIN) {
+				CharacterBase characterBase = createCharacterBase(playerName, id);
+				createAndUpdate(characterBase);
+				playerCharacters = Collections.singletonList(characterBase);
+				logger.info("Automatically created character for a player " + id + ", " + playerName);
+			}
+			final List<CharacterBase> playerChars = playerCharacters;
 			game.getScheduler().createTaskBuilder().name("Callback-PlayerDataLoad" + id).execute(() -> {
-				PlayerDataPreloadComplete event = new PlayerDataPreloadComplete(id, playerCharacters);
+				PlayerDataPreloadComplete event = new PlayerDataPreloadComplete(id, playerChars);
 				game.getEventManager().post(event);
 
 			}).submit(plugin);
 		}).submit(plugin);
+	}
+
+	/**
+	 *
+	 * @param name
+	 * @return Initialized CharacterBase in the default state, The entity is not persisted yet
+	 */
+	public CharacterBase createCharacterBase(String name, UUID uuid) {
+		CharacterBase characterBase = new CharacterBase();
+		characterBase.setName(name);
+		characterBase.setRace(Race.Default.getName());
+		characterBase.setPrimaryClass(ConfigClass.Default.getName());
+		CharacterClass characterClass = new CharacterClass();
+		characterClass.setName(ConfigClass.Default.getName());
+		characterClass.setExperiences(0D);
+		characterClass.setCharacterBase(characterBase);
+		characterBase.setAttributePoints(PluginConfig.ATTRIBUTEPOINTS_ON_START);
+		characterBase.getCharacterClasses().add(characterClass);
+		characterBase.setUuid(uuid);
+		characterBase.setAttributePoints(PluginConfig.ATTRIBUTEPOINTS_ON_START);
+		return characterBase;
 	}
 
 	public void registerDummyChar(PreloadCharacter dummy) {
