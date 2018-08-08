@@ -28,7 +28,7 @@ public class SkillActions {
 
     public static SkillAction APPLY_EFFECT = (caster, target, context) -> {
         IGlobalEffect globalEffect = NtRpgPlugin.GlobalScope.effectService.getGlobalEffect((String) context.getParam().get(SkillPipelineContext.EFFECT));
-        globalEffect.construct()
+        //globalEffect.construct()
     };
 
     public static SkillAction BROADCAST_ALL = (caster, target, context) -> {
