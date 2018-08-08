@@ -55,14 +55,17 @@ import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.utils.PermissionUtils;
 import cz.neumimto.rpg.utils.SkillTreeActionResult;
 import cz.neumimto.rpg.utils.Utils;
+import me.lucko.luckperms.api.*;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.service.ProviderRegistration;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -641,7 +644,7 @@ public class CharacterService {
 	public int canCreateNewCharacter(UUID uniqueId, String name) {
 		//todo use db query
 		List<CharacterBase> list = getPlayersCharacters(uniqueId);
-		if (list.size() >= PluginConfig.PLAYER_MAX_CHARS) {
+		if (list.size() >= PermissionUtils.getMaximalCharacterLimit(uniqueId)) {
 			return 1;
 		}
 		if (list.stream().anyMatch(c -> c.getName().equalsIgnoreCase(name))) {
