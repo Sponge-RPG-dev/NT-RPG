@@ -6,6 +6,7 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.pipeline.SkillComponent;
 import cz.neumimto.rpg.skills.utils.F.QuadConsumer;
 import cz.neumimto.rpg.utils.TriConsumer;
@@ -21,6 +22,7 @@ import java.util.Collection;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
+@JsBinding(JsBinding.Type.CONTAINER)
 public class SkillActions {
 
     @SkillComponent(

@@ -5,8 +5,8 @@ import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
-import cz.neumimto.rpg.skills.SkillNodes;
-import cz.neumimto.rpg.skills.utils.F;
+import cz.neumimto.rpg.skills.utils.F.TriFunction;
+import cz.neumimto.rpg.utils.TriConsumer;
 import cz.neumimto.rpg.utils.Utils;
 import org.apache.commons.lang3.NotImplementedException;
 import org.spongepowered.api.data.key.Keys;
@@ -19,18 +19,23 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 @JsBinding(JsBinding.Type.CONTAINER)
 public class SkillTargetProcessors {
 
-    @SkillComponent()
-    public static final F.TriFunction NEARBY_ALLIES = ((caster, context, actions) -> {
-        float radius = context.getSkillInfo().getSkillData()
-                .getSkillSettings()
-                .getLevelNodeValue(SkillNodes.RADIUS, context.getSkillInfo().getTotalLevel());
-        Collection<Entity> nearbyEntities = caster.getEntity().getNearbyEntities(radius);
+    @SkillComponent(
+            value = "Returns a list of nearby allies",
+            usage = "var list = nearby_allies(entity, radius)",
+            params = {
+                    @SkillComponent.Param("entity - allies for the entity"),
+                    @SkillComponent.Param("radius")
+            }
+    )
+    public static final TriFunction<IEntity, Float, List<IEntity>> NEARBY_ALLIES = ((entity, radius) -> {
+        Collection<Entity> nearbyEntities = entity.getEntity().getNearbyEntities(radius);
         List<IEntity> nearby = new ArrayList<>();
-        if (caster.getType() == IEntityType.MOB) {
+        if (entity.getType() == IEntityType.MOB) {
             for (Entity nearbyEntity : nearbyEntities) {
                 if (nearbyEntity.getType() == EntityTypes.PLAYER) {
                     continue;
@@ -44,8 +49,8 @@ public class SkillTargetProcessors {
                 IEntity iEntity = NtRpgPlugin.GlobalScope.entityService.get(nearbyEntity);
                 nearby.add(iEntity);
             }
-        } else if (caster.getType() == IEntityType.CHARACTER) {
-            IActiveCharacter character = (IActiveCharacter) caster;
+        } else if (entity.getType() == IEntityType.CHARACTER) {
+            IActiveCharacter character = (IActiveCharacter) entity;
             for (Entity nearbyEntity : nearbyEntities) {
                 IEntity iEntity = NtRpgPlugin.GlobalScope.entityService.get(nearbyEntity);
                 if (iEntity.isFriendlyTo(character)) {
@@ -53,10 +58,56 @@ public class SkillTargetProcessors {
                 }
             }
         }
+        return nearby;
     });
 
-    @SkillComponent(SkillComponentType.TARGET)
-    public static final TargetProcessor TARGETTED_ENEMY = (((caster, context, actions) -> {
+    @SkillComponent(
+            value = "Returns a list of nearby allies",
+            usage = "for_each_nearby_ally(entity, radius, new Consumer() { apply: function(ally} { ... } )",
+            params = {
+                    @SkillComponent.Param("entity - allies for the entity"),
+                    @SkillComponent.Param("radius"),
+                    @SkillComponent.Param("allyEntity - callback")
+            }
+    )
+    public static final TriConsumer<IEntity, Float, Consumer<IEntity>> FOR_EACH_NEARBY_ALLY = ((entity, radius, consumer) -> {
+        Collection<Entity> nearbyEntities = entity.getEntity().getNearbyEntities(radius);
+        if (entity.getType() == IEntityType.MOB) {
+            for (Entity nearbyEntity : nearbyEntities) {
+                if (nearbyEntity.getType() == EntityTypes.PLAYER) {
+                    continue;
+                }
+                if (!(nearbyEntity instanceof Living)) {
+                    continue;
+                }
+                if (nearbyEntity.get(Keys.TAMED_OWNER).isPresent()) {
+                    continue;
+                }
+                IEntity iEntity = NtRpgPlugin.GlobalScope.entityService.get(nearbyEntity);
+                consumer.accept(iEntity);
+            }
+        } else if (entity.getType() == IEntityType.CHARACTER) {
+            IActiveCharacter character = (IActiveCharacter) entity;
+            for (Entity nearbyEntity : nearbyEntities) {
+                IEntity iEntity = NtRpgPlugin.GlobalScope.entityService.get(nearbyEntity);
+                if (iEntity.isFriendlyTo(character)) {
+                    consumer.accept(iEntity);
+                }
+            }
+        }
+    });
+
+
+    @SkillComponent(
+            value = "Returns current enemy entity in crosshair",
+            usage = "var target = targeted_enemy(entity, range)",
+            params = {
+                    @SkillComponent.Param("entity - An entity which we search for its enemies"),
+                    @SkillComponent.Param("range - Maximal search range"),
+                    @SkillComponent.Param("@returns - An entity instance or null"),
+            }
+    )
+    public static final TriFunction<IEntity, Integer, IEntity> TARGETED_ENEMY = (caster, range) -> {
         if (caster.getType() == IEntityType.MOB) {
 
             Living entity = caster.getEntity();
@@ -67,37 +118,24 @@ public class SkillTargetProcessors {
                     if (!(mtarget instanceof Living)) {
                         return;
                     }
-                    IEntity iEntity = NtRpgPlugin.GlobalScope.entityService.get(mtarget);
-                    SkillPipelineContext skillPipelineContext = new SkillPipelineContext(context);
-                    for (SkillAction action : actions) {
-                        if (!action.process(caster, iEntity, skillPipelineContext)) {
-                            break;
-                        }
-                    }
+                    return NtRpgPlugin.GlobalScope.entityService.get(mtarget);
                 }
             } else {
-                float range = context.getSkillInfo().getSkillData()
-                        .getSkillSettings()
-                        .getLevelNodeValue(SkillNodes.RANGE, context.getSkillInfo().getTotalLevel());
                 Collection<Entity> nearbyEntities = entity.getNearbyEntities(range);
+
                 throw new NotImplementedException(":(");
             }
         } else if (caster.getType() == IEntityType.CHARACTER) {
             IActiveCharacter character = (IActiveCharacter) caster;
-            int range = (int) context.getSkillInfo().getSkillData()
-                    .getSkillSettings()
-                    .getLevelNodeValue(SkillNodes.RANGE, context.getSkillInfo().getTotalLevel());
             Living targettedEntity = Utils.getTargettedEntity(character, range);
             if (targettedEntity != null) {
-                SkillPipelineContext skillPipelineContext = new SkillPipelineContext(context);
-                for (SkillAction action : actions) {
-                    if (!action.process(caster, NtRpgPlugin.GlobalScope.entityService.get(targettedEntity), skillPipelineContext)) {
-                        break;
-                    }
+                if (Utils.canDamage(character, targettedEntity)) {
+                    return NtRpgPlugin.GlobalScope.entityService.get(targettedEntity);
                 }
             }
         }
-    }));
+        return null;
+    };
 
 
     public static TargetProcessor NEARBY_ENEMIES;
