@@ -9,7 +9,7 @@ public interface F {
         void accept(T t, U u, V v, W w);
     }
 
-    interface TriFunction<T, U, V> {
-        V apply(T t, U u);
+    interface TriFunction<T,U,V,R> {
+        R apply(T t, U u, V v);
     }
 }

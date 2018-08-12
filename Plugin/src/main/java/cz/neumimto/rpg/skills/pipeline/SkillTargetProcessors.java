@@ -5,7 +5,6 @@ import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
-import cz.neumimto.rpg.skills.utils.F.TriFunction;
 import cz.neumimto.rpg.utils.TriConsumer;
 import cz.neumimto.rpg.utils.Utils;
 import org.apache.commons.lang3.NotImplementedException;
@@ -19,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 @JsBinding(JsBinding.Type.CONTAINER)
@@ -32,7 +32,7 @@ public class SkillTargetProcessors {
                     @SkillComponent.Param("radius")
             }
     )
-    public static final TriFunction<IEntity, Float, List<IEntity>> NEARBY_ALLIES = ((entity, radius) -> {
+    public static final BiFunction<IEntity, Float, List<IEntity>> NEARBY_ALLIES = ((entity, radius) -> {
         Collection<Entity> nearbyEntities = entity.getEntity().getNearbyEntities(radius);
         List<IEntity> nearby = new ArrayList<>();
         if (entity.getType() == IEntityType.MOB) {
@@ -107,7 +107,7 @@ public class SkillTargetProcessors {
                     @SkillComponent.Param("@returns - An entity instance or null"),
             }
     )
-    public static final TriFunction<IEntity, Integer, IEntity> TARGETED_ENEMY = (caster, range) -> {
+    public static final BiFunction<IEntity, Integer, IEntity> TARGETED_ENEMY = (caster, range) -> {
         if (caster.getType() == IEntityType.MOB) {
 
             Living entity = caster.getEntity();
@@ -116,7 +116,7 @@ public class SkillTargetProcessors {
                 if (target.isPresent()) {
                     Entity mtarget = target.get();
                     if (!(mtarget instanceof Living)) {
-                        return;
+                        return null;
                     }
                     return NtRpgPlugin.GlobalScope.entityService.get(mtarget);
                 }
@@ -137,6 +137,25 @@ public class SkillTargetProcessors {
         return null;
     };
 
+    @SkillComponent(
+            value = "Do action for every nearby enemy",
+            usage = "for_each_nearby_enemy(entity, radius, new Consumer() { apply: function(entity} { .. })",
+            params = {
+                    @SkillComponent.Param("entity - An entity which we search for its enemies"),
+                    @SkillComponent.Param("range - Maximal search range"),
+                    @SkillComponent.Param("@returns - An entity instance or null"),
+            }
+    )
+    public static TriConsumer<IEntity, Float, Consumer<IEntity>> FOR_EACH_NEARBY_ENEMY = ((entity, radius) -> {
+        Collection<Entity> nearbyEntities = entity.getEntity().getNearbyEntities(radius);
+        IActiveCharacter character = (IActiveCharacter) entity;
+        for (Entity nearbyEntity : nearbyEntities) {
+            IEntity iEntity = NtRpgPlugin.GlobalScope.entityService.get(nearbyEntity);
+            if (!iEntity.isFriendlyTo(character)) {
+                nearby.add(iEntity);
+            }
+        }
+        return nearby;
+    });
 
-    public static TargetProcessor NEARBY_ENEMIES;
 }

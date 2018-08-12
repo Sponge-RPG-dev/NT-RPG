@@ -131,4 +131,6 @@ public class SkillActions {
         NtRpgPlugin.GlobalScope.entityService.healEntity(iEntity, aFloat,context.getSkill());
     };
 
+
+
 }
