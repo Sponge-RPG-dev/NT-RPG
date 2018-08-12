@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.skills.scripting;
+package cz.neumimto.rpg.skills.pipeline;
 
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
@@ -10,6 +10,8 @@ public class SkillExecutorContext {
     private ISkill skill;
     private ExtendedSkillInfo skillInfo;
     private Map<String, Object> params;
+    private Map<String, Object> cache;
+
     public SkillExecutorContext(ISkill skill, ExtendedSkillInfo skillInfo, Map<String, Object> params) {
         this.skill = skill;
         this.skillInfo = skillInfo;
@@ -26,5 +28,13 @@ public class SkillExecutorContext {
 
     public Map<String, Object> getParams() {
         return params;
+    }
+
+    public Map<String, Object> getCache() {
+        return cache;
+    }
+
+    public void setCache(Map<String, Object> cache) {
+        this.cache = cache;
     }
 }

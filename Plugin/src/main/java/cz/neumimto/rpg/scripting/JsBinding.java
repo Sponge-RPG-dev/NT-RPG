@@ -13,6 +13,7 @@ public @interface JsBinding {
 
     enum Type {
         CLASS,
-        OBJECT
+        OBJECT,
+        CONTAINER
     }
 }

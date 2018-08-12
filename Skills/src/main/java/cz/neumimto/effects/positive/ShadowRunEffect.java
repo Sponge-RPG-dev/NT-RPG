@@ -7,6 +7,7 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
+import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.utils.XORShiftRnd;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.effect.particle.ParticleEffect;
@@ -15,6 +16,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 
+@JsBinding(JsBinding.Type.CLASS)
 @ClassGenerator.Generate(id = "name", description = "An invisibility, the next attack will deal increased damage and break the invisibility")
 public class ShadowRunEffect extends EffectBase<ShadowRunModel> {
 

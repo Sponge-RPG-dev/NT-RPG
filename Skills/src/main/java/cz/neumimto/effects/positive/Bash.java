@@ -7,10 +7,12 @@ import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 4.7.2017.
  */
+@JsBinding(JsBinding.Type.CLASS)
 @ClassGenerator.Generate(id = "name", description = "An effect, which gives the target % chance to apply stun while attacking to entity")
 public class Bash extends EffectBase<BashModel> {
 

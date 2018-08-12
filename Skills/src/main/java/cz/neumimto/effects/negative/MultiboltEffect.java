@@ -7,12 +7,14 @@ import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.NDamageType;
 import org.spongepowered.api.entity.living.Living;
 
 /**
  * Created by NeumimTo on 6.7.2017.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class MultiboltEffect extends EffectBase<MultiboltModel> {
 
 	private final IEntity source;

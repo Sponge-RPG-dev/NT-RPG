@@ -10,6 +10,7 @@ import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.scripting.JsBinding;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
@@ -23,6 +24,7 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 4.7.2017.
  */
+@JsBinding(JsBinding.Type.CLASS)
 @ClassGenerator.Generate(id = "name", description = "A periodic effect which shoots an arrow in a way the entity is looking at every x ticks")
 public class ArrowstormEffect extends EffectBase implements IEffectContainer {
 

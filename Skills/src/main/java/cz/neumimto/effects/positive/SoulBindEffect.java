@@ -4,6 +4,7 @@ import cz.neumimto.EffectLocalization;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.scripting.JsBinding;
 
 import java.util.Collections;
 import java.util.Set;
@@ -11,6 +12,7 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 6.2.2016.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class SoulBindEffect extends EffectBase implements IEffectContainer {
 
 	private final IEffectConsumer target;

@@ -6,6 +6,7 @@ import cz.neumimto.rpg.effects.CommonEffectTypes;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.ShapedEffectDecorator;
 import cz.neumimto.rpg.gui.ParticleDecorator;
+import cz.neumimto.rpg.scripting.JsBinding;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.world.Location;
@@ -15,6 +16,7 @@ import org.spongepowered.api.world.extent.Extent;
 /**
  * Created by NeumimTo on 5.6.17.
  */
+@JsBinding(JsBinding.Type.CLASS)
 @ClassGenerator.Generate(id = "name", description = "Stuns the target, Stunned entities may not move, nor use skills")
 public class StunEffect extends ShapedEffectDecorator<Location<World>> {
 

@@ -8,6 +8,7 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.gui.ParticleDecorator;
+import cz.neumimto.rpg.scripting.JsBinding;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleOptions;
@@ -17,6 +18,7 @@ import org.spongepowered.api.util.Color;
 
 import java.util.concurrent.TimeUnit;
 
+@JsBinding(JsBinding.Type.CLASS)
 @ClassGenerator.Generate(id = "name", description = "Redirects all incoming damage to mana")
 public class ManaShieldEffect extends EffectBase<ManaShieldEffectModel> {
 

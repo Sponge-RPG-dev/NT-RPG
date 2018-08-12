@@ -4,12 +4,14 @@ import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.entity.living.Living;
 
 /**
  * Created by NeumimTo on 6.8.2017.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class PandemicEffect extends EffectBase {
 
 	public static final String name = "Pandemic";

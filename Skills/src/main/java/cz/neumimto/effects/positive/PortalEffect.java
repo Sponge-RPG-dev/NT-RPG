@@ -12,6 +12,7 @@ import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.ShapedEffectDecorator;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.utils.XORShiftRnd;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
@@ -35,6 +36,7 @@ import java.util.Set;
 /**
  * Created by ja on 1.8.2017.
  */
+@JsBinding(JsBinding.Type.CLASS)
 @ClassGenerator.Generate(id = "name", description = "Creates a portal. The portal has to be targetted via teleportation scroll")
 public class PortalEffect extends ShapedEffectDecorator {
 

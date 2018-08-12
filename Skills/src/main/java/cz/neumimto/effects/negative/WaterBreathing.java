@@ -3,12 +3,14 @@ package cz.neumimto.effects.negative;
 import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.scripting.JsBinding;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectTypes;
 
 /**
  * Created by NeumimTo on 3.6.2017.
  */
+@JsBinding(JsBinding.Type.CLASS)
 @ClassGenerator.Generate(id = "name", description = "An effect which gives water_breathing potion effect to the target")
 public class WaterBreathing extends EffectBase<Object> {
 

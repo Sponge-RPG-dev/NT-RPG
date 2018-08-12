@@ -5,7 +5,9 @@ import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.common.stacking.IntegerEffectStackingStrategy;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
+import cz.neumimto.rpg.scripting.JsBinding;
 
+@JsBinding(JsBinding.Type.CLASS)
 @ClassGenerator.Generate(id = "name",description = "An effect which gives +x bonus points to all skills")
 public class AllSkillsBonus extends EffectBase<Integer> {
 

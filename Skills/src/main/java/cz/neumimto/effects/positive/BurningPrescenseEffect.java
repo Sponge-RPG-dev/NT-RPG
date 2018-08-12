@@ -12,6 +12,7 @@ import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
@@ -23,6 +24,7 @@ import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 /**
  * Created by ja on 5.7.2017.
  */
+@JsBinding(JsBinding.Type.CLASS)
 @ClassGenerator.Generate(id = "name", description = "An effect which periodically damages all enemies around the target")
 public class BurningPrescenseEffect extends EffectBase<BPModel> {
 
