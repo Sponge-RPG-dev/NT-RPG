@@ -52,4 +52,5 @@ public class SkillConfigLoader implements CatalogType {
         }
         return (ISkill) o;
     }
+
 }

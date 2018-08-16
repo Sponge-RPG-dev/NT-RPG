@@ -50,7 +50,9 @@ import java.util.function.Consumer;
  */
 @Singleton
 public class JSLoader {
-	public static ScriptEngine engine;
+
+	private static ScriptEngine engine;
+
 	private static Path scripts_root = Paths.get(NtRpgPlugin.workingDir + "/scripts");
 
 	@Inject
@@ -105,6 +107,7 @@ public class JSLoader {
 				Files.copy(resourceAsStream, path);
 			} catch (IOException e) {
 				e.printStackTrace();
+
 			}
 		}
 
@@ -116,6 +119,7 @@ public class JSLoader {
 				Object o = objectTypeEntry.getValue() == JsBinding.Type.CLASS ? objectTypeEntry.getKey() : objectTypeEntry.getKey().newInstance();
 				bindings.put(objectTypeEntry.getKey().getSimpleName(), o);
 			}
+
 			bindings.put("Folder", scripts_root.toString());
 			bindings.put("GlobalScope", ioc.build(GlobalScope.class));
 			engine.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
@@ -135,6 +139,8 @@ public class JSLoader {
 		logger.info("Registering js listener: " + listener.getClass().getSimpleName());
 		Sponge.getGame().getEventManager().registerListeners(ioc.build(NtRpgPlugin.class), listener);
 	}
+
+
 
 	public void reloadSkills() {
 		Invocable invocable = (Invocable) engine;
@@ -204,5 +210,11 @@ public class JSLoader {
 	public Map<Class<?>, JsBinding.Type> getDataToBind() {
 		return dataToBind;
 	}
+
+	public static ScriptEngine getEngine() {
+		return engine;
+	}
+
+
 }
 

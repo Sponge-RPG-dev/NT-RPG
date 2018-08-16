@@ -352,6 +352,7 @@ public class CharacterService {
 		character.sendMessage(Localizations.CURRENT_CHARACTER, Arg.arg("character", character.getName()));
 		addDefaultEffects(character);
 		Set<BaseCharacterAttribute> baseCharacterAttribute = character.getCharacterBase().getBaseCharacterAttribute();
+
 		for (BaseCharacterAttribute at : baseCharacterAttribute) {
 			ICharacterAttribute attribute = propertyService.getAttribute(at.getName());
 			if (attribute != null) {

@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.skills.configs;
 
 import cz.neumimto.rpg.skills.CharacterAttributeSkill;
+import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.ItemAccessSkill;
 import cz.neumimto.rpg.skills.PropertySkill;
 import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
@@ -14,6 +15,5 @@ public class SkillConfigLoaders {
     public static SkillConfigLoader ATTRIBUTE = new SkillConfigLoader("attribute", CharacterAttributeSkill.class);
 
     public static SkillConfigLoader PROPERTY = new SkillConfigLoader("property", PropertySkill.class);
-
 
 }

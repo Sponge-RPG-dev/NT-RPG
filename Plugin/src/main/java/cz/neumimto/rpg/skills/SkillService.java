@@ -26,6 +26,7 @@ import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.PluginConfig;
+import cz.neumimto.rpg.entities.RootMobConfig;
 import cz.neumimto.rpg.events.skills.SkillPostUsageEvent;
 import cz.neumimto.rpg.events.skills.SkillPrepareEvent;
 import cz.neumimto.rpg.gui.Gui;
@@ -37,7 +38,13 @@ import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.reloading.Reload;
 import cz.neumimto.rpg.reloading.ReloadService;
 import cz.neumimto.rpg.scripting.JSLoader;
+import cz.neumimto.rpg.skills.configs.ScriptSkillModel;
+import cz.neumimto.rpg.skills.configs.SkillBehaviorType;
+import cz.neumimto.rpg.skills.configs.SkillConfigLoader;
+import cz.neumimto.rpg.skills.configs.SkillsDefinition;
 import cz.neumimto.rpg.skills.tree.SkillTree;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
+import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.manipulator.mutable.entity.HealthData;
@@ -49,6 +56,7 @@ import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
@@ -98,10 +106,34 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 	@PostProcess(priority = 300)
 	public void load() {
 		initGuis();
+		loadConfigSkills();
 		skillTrees.putAll(skillTreeDao.getAll());
 		createSkillsDefaults();
 	}
 
+	private void loadConfigSkills() {
+		File file = new File(NtRpgPlugin.workingDir, "Skills.conf");
+		if (file.exists()) {
+
+		} else {
+
+		}
+
+		try {
+			ObjectMapper<SkillsDefinition> mapper = ObjectMapper.forClass(SkillsDefinition.class);
+			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(file.toPath()).build();
+			SkillsDefinition root = mapper.bind(new SkillsDefinition()).populate(hcl.load());
+			for (ScriptSkillModel skill : root.getSkills()) {
+				if (skill.getSkillBehaviorType() == SkillBehaviorType.PASSIVE) {
+
+				} else {
+
+				}
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("Could not load file " + file, e);
+		}
+	}
 
 
 	@Reload(on = ReloadService.PLUGIN_CONFIG)
