@@ -143,19 +143,21 @@ public class SkillTargetProcessors {
             params = {
                     @SkillComponent.Param("entity - An entity which we search for its enemies"),
                     @SkillComponent.Param("range - Maximal search range"),
-                    @SkillComponent.Param("@returns - An entity instance or null"),
+                    @SkillComponent.Param("consumer - callback"),
             }
     )
-    public static TriConsumer<IEntity, Float, Consumer<IEntity>> FOR_EACH_NEARBY_ENEMY = ((entity, radius) -> {
+    public static TriConsumer<IEntity, Float, Consumer<IEntity>> FOR_EACH_NEARBY_ENEMY = ((entity, radius, consumer) -> {
         Collection<Entity> nearbyEntities = entity.getEntity().getNearbyEntities(radius);
         IActiveCharacter character = (IActiveCharacter) entity;
         for (Entity nearbyEntity : nearbyEntities) {
-            IEntity iEntity = NtRpgPlugin.GlobalScope.entityService.get(nearbyEntity);
-            if (!iEntity.isFriendlyTo(character)) {
-                nearby.add(iEntity);
+            if (nearbyEntity instanceof Living) {
+                Living living = (Living) nearbyEntity;
+                IEntity iEntity = NtRpgPlugin.GlobalScope.entityService.get(nearbyEntity);
+                if (!iEntity.isFriendlyTo(character) && Utils.canDamage(character, living)) {
+                    consumer.accept(iEntity);
+                }
             }
         }
-        return nearby;
     });
 
 }
