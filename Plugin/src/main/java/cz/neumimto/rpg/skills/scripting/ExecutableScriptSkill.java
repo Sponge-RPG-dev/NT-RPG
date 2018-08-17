@@ -8,13 +8,11 @@ import cz.neumimto.rpg.skills.ActiveSkill;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.configs.ScriptSkillModel;
-import cz.neumimto.rpg.skills.configs.SkillBehaviorType;
 import cz.neumimto.rpg.skills.utils.SkillModifier;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
 
 import java.io.IOException;
-import java.util.Optional;
 
 public class ExecutableScriptSkill extends ActiveSkill {
 
@@ -35,7 +33,8 @@ public class ExecutableScriptSkill extends ActiveSkill {
     @Override
     public void init() {
         super.init();
-
+        String s = bindScriptToTemplate();
+        executor = JSLoader.getEngine().eval(model.getId() + "_executor");
     }
 
     @Override
@@ -48,9 +47,11 @@ public class ExecutableScriptSkill extends ActiveSkill {
         try {
             String s = asset.readString();
             s = s.replaceAll("\\{\\{skill\\.id}}", model.getId());
-            s = s.replaceAll("\\{\\{userContent}}", model.getScript());
-        } catch (IOException e) {
+            s = s.replaceAll("\\{\\{userScript}}", model.getScript());
+            return s;
+        } catch (IOException  e) {
             e.printStackTrace();
         }
+        return "";
     }
 }
