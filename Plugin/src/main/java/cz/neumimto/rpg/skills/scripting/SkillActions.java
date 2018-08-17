@@ -26,7 +26,7 @@ import java.util.function.Consumer;
 public class SkillActions {
 
     @SkillComponent(
-        value = "Damages an entity, if possible",
+        value = "Damaging an Entity",
         usage = "damage(caster, target, damage, context)",
         params = {
             @SkillComponent.Param("caster - Entity of damage origin"),

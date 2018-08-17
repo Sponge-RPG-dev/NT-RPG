@@ -14,7 +14,9 @@ import org.spongepowered.api.asset.Asset;
 
 import java.io.IOException;
 
-public class ExecutableScriptSkill extends ActiveSkill {
+import javax.script.ScriptException;
+
+public abstract class ExecutableScriptSkill extends ActiveSkill {
 
     ScriptExecutorSkill executor;
 
@@ -33,9 +35,16 @@ public class ExecutableScriptSkill extends ActiveSkill {
     @Override
     public void init() {
         super.init();
-        String s = bindScriptToTemplate();
-        executor = JSLoader.getEngine().eval(model.getId() + "_executor");
+        ScriptSkillModel model = getModel();
+        String s = bindScriptToTemplate(model);
+        try {
+            executor = (ScriptExecutorSkill) JSLoader.getEngine().eval(model.getId() + "_executor");
+        } catch (ScriptException e) {
+            e.printStackTrace();
+        }
     }
+
+    public abstract ScriptSkillModel getModel();
 
     @Override
     public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
