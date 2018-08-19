@@ -3,7 +3,6 @@ package cz.neumimto.rpg.gui;
 import com.flowpowered.math.TrigMath;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.VectorUtils;
@@ -121,7 +120,6 @@ public class ParticleDecorator implements IActionDecorator {
 
 	public static Vector3d[][] smallCylinder;
 
-	@PostProcess
 	public void initModels() {
 		smallCircle = new Vector3d[15];
 		fillCircle(smallCircle, 1.3);

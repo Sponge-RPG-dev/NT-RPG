@@ -13,19 +13,19 @@ import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ActiveSkill;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.utils.SkillModifier;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.tree.SkillType;
+import cz.neumimto.rpg.skills.utils.SkillModifier;
 import cz.neumimto.rpg.utils.Utils;
-import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleOptions;
 import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.util.Color;
 
 import java.util.Set;
@@ -53,7 +53,7 @@ public class Despair extends ActiveSkill {
 		addSkillType(SkillType.AOE);
 		addSkillType(SkillType.ESCAPE);
 		addSkillType(SkillType.STEALTH);
-		setIcon(BlockTypes.END_PORTAL.getItem().get());
+		setIcon(ItemTypes.COAL.getType());
 	}
 
 	@Override

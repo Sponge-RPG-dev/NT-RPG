@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.inventory;
 
-import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
@@ -25,7 +24,6 @@ public class CustomItemFactory {
 
     private static ItemService itemService;
 
-    @PostProcess
     public void initBuilder() {
         builder = new CustomItemBuilder();
         inventoryService = NtRpgPlugin.GlobalScope.inventorySerivce;

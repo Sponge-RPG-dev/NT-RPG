@@ -1,21 +1,14 @@
 package cz.neumimto.rpg.utils;
 
-import static java.lang.Math.*;
+import static java.lang.Math.abs;
+import static java.lang.Math.ceil;
+import static java.lang.Math.min;
 
 /**
  * Created by NeumimTo on 14.03.2016.
  */
 public class PseudoRandomDistribution {
 	public static double[] C = null;
-
-	static {
-		int a = 0;
-		PseudoRandomDistribution p = new PseudoRandomDistribution();
-		for (double i = 0.01; i <= 1; i += 0.01) {
-			C[a] = p.c(i);
-			a++;
-		}
-	}
 
 	private int pmt = 0;
 

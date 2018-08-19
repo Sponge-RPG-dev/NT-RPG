@@ -21,12 +21,10 @@ package cz.neumimto.rpg.skills;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.PluginConfig;
-import cz.neumimto.rpg.entities.RootMobConfig;
 import cz.neumimto.rpg.events.skills.SkillPostUsageEvent;
 import cz.neumimto.rpg.events.skills.SkillPrepareEvent;
 import cz.neumimto.rpg.gui.Gui;
@@ -40,7 +38,6 @@ import cz.neumimto.rpg.reloading.ReloadService;
 import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.skills.configs.ScriptSkillModel;
 import cz.neumimto.rpg.skills.configs.SkillBehaviorType;
-import cz.neumimto.rpg.skills.configs.SkillConfigLoader;
 import cz.neumimto.rpg.skills.configs.SkillsDefinition;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
@@ -102,8 +99,6 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 
 	private static int id = 0;
 	private Map<String, ISkill> skillByNames = new HashMap<>();
-
-	@PostProcess(priority = 300)
 	public void load() {
 		initGuis();
 		loadConfigSkills();

@@ -19,7 +19,6 @@
 package cz.neumimto.rpg.players.properties;
 
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.PluginConfig;
@@ -39,7 +38,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.text.Collator;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.function.Supplier;
 
 /**
@@ -107,8 +112,7 @@ public class PropertyService {
 		return attributes;
 	}
 
-	@PostProcess(priority = 2000)
-	public void dump() {
+	public void init() {
 		Path path = Paths.get(NtRpgPlugin.workingDir + File.separator + "properties_dump.info");
 		StringBuilder s = new StringBuilder();
 		List<String> l = new ArrayList<>(idMap.keySet());

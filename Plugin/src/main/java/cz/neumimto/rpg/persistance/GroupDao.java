@@ -26,7 +26,6 @@ import com.typesafe.config.ConfigObject;
 import com.typesafe.config.ConfigValue;
 import com.typesafe.config.ConfigValueType;
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectParams;
@@ -107,8 +106,6 @@ public class GroupDao {
 		return guilds;
 	}
 
-
-	@PostProcess(priority = 400)
 	public void loadGuilds() {
 		Path path = ResourceLoader.guildsDir.toPath();
 		try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, "*.conf")) {
@@ -123,7 +120,6 @@ public class GroupDao {
 		}
 	}
 
-	@PostProcess(priority = 399)
 	public void loadNClasses() {
 		Path path = ResourceLoader.classDir.toPath();
 		try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, "*.conf")) {
@@ -199,7 +195,6 @@ public class GroupDao {
 		}
 	}
 
-	@PostProcess(priority = 450)
 	public void loadRaces() {
 		Path path = ResourceLoader.raceDir.toPath();
 		try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, "*.conf")) {

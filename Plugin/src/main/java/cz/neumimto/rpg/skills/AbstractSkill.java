@@ -52,7 +52,7 @@ public abstract class AbstractSkill implements ISkill {
 
 	protected Text name;
 	protected List<Text> description;
-	protected SkillSettings settings;
+	protected SkillSettings settings = new SkillSettings();
 	protected SkillItemIcon icon;
 	protected String url;
 

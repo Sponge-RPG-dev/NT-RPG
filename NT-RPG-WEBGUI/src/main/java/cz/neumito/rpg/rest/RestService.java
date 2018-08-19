@@ -6,7 +6,6 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
@@ -25,7 +24,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
-import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -328,7 +326,6 @@ public class RestService {
 		startServer();
 	}
 
-	@PostProcess(priority = 10000)
 	public void init() {
 		service.initIcons();
 		startServer();

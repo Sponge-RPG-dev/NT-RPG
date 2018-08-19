@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.exp;
 
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.ExperienceSources;
@@ -27,7 +26,6 @@ public class ExperienceService {
 	@Inject
 	private ExperienceDAO experienceDAO;
 
-	@PostProcess(priority = 2)
 	public void load() {
 		Map<String, Double> experiencesForMinerals = experienceDAO.getExperiencesForMinerals();
 

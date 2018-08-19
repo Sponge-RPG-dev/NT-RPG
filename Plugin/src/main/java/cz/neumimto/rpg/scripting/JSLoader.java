@@ -20,7 +20,6 @@ package cz.neumimto.rpg.scripting;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
-import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.GlobalScope;
@@ -85,7 +84,6 @@ public class JSLoader {
 
 	private Map<Class<?>, JsBinding.Type> dataToBind = new HashMap<>();
 
-	@PostProcess(priority = 2)
 	public void initEngine() {
 		try {
 			FileUtils.createDirectoryIfNotExists(scripts_root);

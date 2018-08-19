@@ -19,13 +19,16 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.persistance.GroupDao;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.groups.*;
+import cz.neumimto.rpg.players.groups.ConfigClass;
+import cz.neumimto.rpg.players.groups.Guild;
+import cz.neumimto.rpg.players.groups.PlayerGroup;
+import cz.neumimto.rpg.players.groups.PlayerGroupPermission;
+import cz.neumimto.rpg.players.groups.Race;
 import org.slf4j.Logger;
 import org.spongepowered.api.service.permission.SubjectData;
 import org.spongepowered.api.util.Tristate;
@@ -97,7 +100,6 @@ public class GroupService {
 		return groupDao.getGuilds().values();
 	}
 
-	@PostProcess(priority = 401)
 	public void registerPlaceholders() {
 
 		registerClass(ConfigClass.Default);

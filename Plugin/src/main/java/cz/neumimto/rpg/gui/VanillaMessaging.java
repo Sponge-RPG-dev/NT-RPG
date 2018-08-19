@@ -24,7 +24,6 @@ import static cz.neumimto.rpg.gui.GuiHelper.getItemLore;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
-import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
@@ -147,7 +146,6 @@ public class VanillaMessaging implements IPlayerMessage {
 	public static Map<SkillTreeControllsButton, SkillTreeInterfaceModel> controlls;
 
 	@Reload(on = ReloadService.PLUGIN_CONFIG)
-	@PostProcess
 	public void load() {
 		controlls = new HashMap<>();
 		for (String a : PluginConfig.SKILLTREE_BUTTON_CONTROLLS) {

@@ -19,7 +19,6 @@
 package cz.neumimto.rpg.effects;
 
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.ClassGenerator.Generate;
 import cz.neumimto.rpg.NtRpgPlugin;
@@ -36,12 +35,15 @@ import ninja.leaping.configurate.SimpleConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.text.Text;
 
 import java.io.File;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -88,8 +90,7 @@ public class EffectService {
 		}
 	}
 
-	@Listener
-	public void onLoadLate(GameStartingServerEvent event) {
+	public void load() {
 		SkillsDumpConfiguration c = new SkillsDumpConfiguration();
 		for (Map.Entry<String, IGlobalEffect> effect : globalEffects.entrySet()) {
 			Class aClass = effect.getValue().asEffectClass();
@@ -130,16 +131,13 @@ public class EffectService {
 		} catch (Exception e) {
 			throw new RuntimeException("Could not create file skills.conf", e);
 		}
-	}
-
-	@PostProcess(priority = 1000)
-	public void run() {
 		game.getScheduler().createTaskBuilder().name("EffectTask")
 				.delay(5L, TimeUnit.MILLISECONDS)
 				.interval(TICK_PERIOD, TimeUnit.MILLISECONDS)
 				.execute(this::schedule)
 				.submit(plugin);
 	}
+
 
 	public void schedule() {
 		for (IEffect pendingRemoval : pendingRemovals) {

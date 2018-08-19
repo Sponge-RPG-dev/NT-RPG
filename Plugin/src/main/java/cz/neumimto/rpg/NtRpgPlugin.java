@@ -184,6 +184,7 @@ public class NtRpgPlugin {
 	@Inject
 	PluginContainer plugin;
 
+
 	@Listener
 	public void preinit(GamePreInitializationEvent e) {
 		new NKeys();
@@ -453,7 +454,7 @@ public class NtRpgPlugin {
 		IoC.get().build(PropertyService.class).loadMaximalServerPropertyValues();
 		IoC.get().build(LocalizationService.class).registerClass(Localizations.class);
 		IoC.get().build(LocalizationService.class).loadResourceBundle("assets.nt-rpg.localizations.localization", Locale.forLanguageTag(PluginConfig.LOCALE));
-
+		IoC.get().build(Init.class).it();
 		IoC.get().build(LocalizationService.class).registerClass(Localizations.class);
 		ResourceBundle bundle = ResourceBundle.getBundle("assets.nt-rpg.localizations.localization", Locale.forLanguageTag(PluginConfig.LOCALE));
 

@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.inventory.runewords;
 
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.GroupService;
@@ -35,7 +34,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -69,8 +74,6 @@ public class RWService {
     private Map<String, Rune> runes = new HashMap<>();
     private List<ItemType> allowedRuneItemTypes = new ArrayList<>();
 
-
-    @PostProcess(priority = 10000)
     public void load() {
         File p = file.toFile();
         if (!p.exists()) {

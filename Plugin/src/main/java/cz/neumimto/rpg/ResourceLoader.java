@@ -55,7 +55,10 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -111,7 +114,7 @@ public class ResourceLoader {
 	@Inject
 	private LocalizationService localizationService;
 
-	private Map<String, ResourceClassLoader> classLoaderMap = new HashMap<>();
+	private Map<String, URLClassLoader> classLoaderMap = new HashMap<>();
 	private URLClassLoader configClassLaoder;
 
 	public ResourceLoader() {
@@ -152,10 +155,10 @@ public class ResourceLoader {
 		JarEntry next = null;
 
 		if (!main) {
-			ResourceClassLoader classLoader = classLoaderMap.get(f.getName());
+			URLClassLoader classLoader = classLoaderMap.get(f.getName());
 			if (classLoader == null) {
 				try {
-					classLoader = new ResourceClassLoader(f.toURI().toURL(), (URLClassLoader) this.getClass().getClassLoader());
+					classLoader = new URLClassLoader(new URL[]{f.toURI().toURL()}, PluginCore.getClassLoader());
 					classLoaderMap.put(f.getName(), classLoader);
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
@@ -181,15 +184,21 @@ public class ResourceLoader {
 			className = className.replace('/', '.');
 			Class<?> clazz = null;
 			try {
-				clazz = PluginCore.getClassLoader().loadClass(className);
-			} catch (ClassNotFoundException e) {
+				if (!main) {
+					ClassLoader classLoader = classLoaderMap.get(f.getName());
+					clazz = classLoader.loadClass(className);
+					logger.info(classLoader + " loaded class " + clazz.getSimpleName());
+				} else {
+					clazz = Class.forName(className);
+				}
+			} catch (ClassNotFoundException | ExceptionInInitializerError e) {
 				e.printStackTrace();
 				continue;
 			}
 			try {
 				loadClass(clazz);
 			} catch (Exception e) {
-				logger.warn("Could not load the class [" + className + "]" + e.getMessage());
+				logger.warn("Could not load the class [" + className + "]" + e.getMessage(), e);
 			}
 
 		}
