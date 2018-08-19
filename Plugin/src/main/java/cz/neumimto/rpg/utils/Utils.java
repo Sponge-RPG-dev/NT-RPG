@@ -18,6 +18,8 @@
 
 package cz.neumimto.rpg.utils;
 
+import static cz.neumimto.rpg.Log.info;
+
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.Console;
@@ -27,8 +29,6 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.NDamageType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
@@ -49,7 +49,13 @@ import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.EntityUniverse;
 import org.spongepowered.common.event.damage.SpongeDamageSourceBuilder;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -63,7 +69,6 @@ public class Utils {
 	public static String LineSeparator = System.getProperty("line.separator");
 	public static String Tab = "\t";
 	private static GlobalScope globalScope = NtRpgPlugin.GlobalScope;
-	private static Logger logger = LoggerFactory.getLogger(Utils.class);
 
 	public static void applyOnNearbyPartyMembers(IActiveCharacter character, int distance, Consumer<IActiveCharacter> c) {
 		double k = Math.pow(distance, 2);
@@ -305,7 +310,7 @@ public class Utils {
 				commandTemplate = commandTemplate.replaceAll("\\{\\{"+entry.getKey()+"}}",entry.getValue());
 			}
 			try {
-				logger.info(Console.GREEN_BOLD + " Running Command (as a console): " + Console.YELLOW + commandTemplate);
+				info(Console.GREEN_BOLD + " Running Command (as a console): " + Console.YELLOW + commandTemplate);
 				Sponge.getCommandManager().process(Sponge.getServer().getConsole(), commandTemplate);
 			} catch (Exception e) {
 				e.printStackTrace();

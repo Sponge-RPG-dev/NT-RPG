@@ -18,6 +18,9 @@
 
 package cz.neumimto.rpg.skills;
 
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import cz.neumimto.core.ioc.Inject;
@@ -64,15 +67,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
 
 /**
  * Created by NeumimTo on 1.1.2015.
  */
 @Singleton
 public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
-
-	private Logger logger = Logger.getLogger("SkillService");
 
 	@Inject
 	private SkillTreeDao skillTreeDao;
@@ -270,17 +270,17 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 
 	public void reloadSkillTrees() {
 		try {
-			logger.info("Currently its possible to reload ascii maps or add new skill trees");
+			info("Currently its possible to reload ascii maps or add new skill trees");
 			Map<String, SkillTree> all = skillTreeDao.getAll();
 			for (Map.Entry<String, SkillTree> s : all.entrySet()) {
 				SkillTree skillTree = skillTrees.get(s.getKey());
 				if (skillTree == null) {
 					skillTrees.put(s.getValue().getId(), s.getValue());
-					logger.info("Found new Skilltree " + s.getValue().getId());
+					info("Found new Skilltree " + s.getValue().getId());
 				} else {
 					skillTree.setSkillTreeMap(s.getValue().getSkillTreeMap());
 					skillTree.setCenter(s.getValue().getCenter());
-					logger.info("Refreshed skilltree view for " + s.getValue().getId());
+					info("Refreshed skilltree view for " + s.getValue().getId());
 				}
 			}
 
@@ -301,7 +301,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 			}
 			*/
 		} catch (Exception e) {
-			logger.warning("Failed to reload skilltrees: " + e.getMessage());
+			warn("Failed to reload skilltrees: " + e.getMessage());
 		}
 	}
 
@@ -316,7 +316,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 	@Override
 	public void registerAdditionalCatalog(ISkill extraCatalog) {
 		if (extraCatalog.getId() == null) {
-			logger.warning("Cannot register skill " + extraCatalog.getName() + ", " + extraCatalog.getClass().getSimpleName() + " getId() returned"
+			warn("Cannot register skill " + extraCatalog.getName() + ", " + extraCatalog.getClass().getSimpleName() + " getId() returned"
 					+ " null");
 			return;
 		}

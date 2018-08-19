@@ -18,6 +18,8 @@
 
 package cz.neumimto.rpg;
 
+import static cz.neumimto.rpg.Log.info;
+
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.damage.DamageService;
@@ -29,7 +31,6 @@ import cz.neumimto.rpg.players.groups.Guild;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.PlayerGroupPermission;
 import cz.neumimto.rpg.players.groups.Race;
-import org.slf4j.Logger;
 import org.spongepowered.api.service.permission.SubjectData;
 import org.spongepowered.api.util.Tristate;
 
@@ -45,9 +46,6 @@ public class GroupService {
 
 	@Inject
 	private GroupDao groupDao;
-
-	@Inject
-	Logger logger;
 
 	@Inject
 	DamageService damageService;
@@ -162,7 +160,7 @@ public class GroupService {
 	public void setDefaultClass(ConfigClass configClass) {
 		ConfigClass.Default = configClass;
 		ExtendedNClass.Default.setConfigClass(configClass);
-		logger.info("Default class set to \"" + configClass.getName() + "\"");
+		info("Default class set to \"" + configClass.getName() + "\"");
 	}
 
 	public Set<String> getPermissionsToRemove(IActiveCharacter character, PlayerGroup toBeReplaced) {

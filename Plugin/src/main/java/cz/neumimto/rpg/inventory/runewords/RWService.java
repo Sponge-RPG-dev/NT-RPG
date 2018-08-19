@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.inventory.runewords;
 
+import static cz.neumimto.rpg.Log.warn;
+
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.TextHelper;
@@ -21,7 +23,6 @@ import cz.neumimto.rpg.inventory.sockets.SocketType;
 import cz.neumimto.rpg.inventory.sockets.SocketTypes;
 import cz.neumimto.rpg.utils.Utils;
 import cz.neumimto.rpg.utils.XORShiftRnd;
-import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
@@ -56,9 +57,6 @@ public class RWService {
 
     @Inject
     private EffectService effectService;
-
-    @Inject
-    private Logger logger;
 
     @Inject
     private Game game;
@@ -100,7 +98,7 @@ public class RWService {
 
     protected RuneWord getRuneword(RuneWordTemplate template) {
         template.getEffects().keySet().stream().filter(Utils.not(effectService::isGlobalEffect))
-                .forEach(e -> logger.warn("Runeword " + template + " defined non existing global effect:" + e));
+                .forEach(e -> warn("Runeword " + template + " defined non existing global effect:" + e));
         RuneWord rw = new RuneWord();
         rw.setName(template.getName());
         rw.setRunes(template.getRunes()

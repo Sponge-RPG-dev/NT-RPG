@@ -17,6 +17,9 @@
  */
 package cz.neumimto.rpg.players;
 
+import static cz.neumimto.rpg.Log.error;
+import static cz.neumimto.rpg.Log.info;
+
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.Arg;
@@ -34,7 +37,13 @@ import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.common.def.ClickComboActionEvent;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.events.*;
+import cz.neumimto.rpg.events.CancellableEvent;
+import cz.neumimto.rpg.events.CharacterAttributeChange;
+import cz.neumimto.rpg.events.CharacterChangeClassEvent;
+import cz.neumimto.rpg.events.CharacterChangeGroupEvent;
+import cz.neumimto.rpg.events.CharacterEvent;
+import cz.neumimto.rpg.events.CharacterGainedLevelEvent;
+import cz.neumimto.rpg.events.CharacterInitializedEvent;
 import cz.neumimto.rpg.events.character.CharacterWeaponUpdateEvent;
 import cz.neumimto.rpg.events.character.EventCharacterArmorPostUpdate;
 import cz.neumimto.rpg.events.character.PlayerDataPreloadComplete;
@@ -58,22 +67,31 @@ import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.PassiveSkill;
+import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.utils.PermissionUtils;
 import cz.neumimto.rpg.utils.SkillTreeActionResult;
 import cz.neumimto.rpg.utils.Utils;
-import me.lucko.luckperms.api.*;
-import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.service.ProviderRegistration;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -111,11 +129,6 @@ public class CharacterService {
 	@Inject
 	private PropertyService propertyService;
 
-
-
-	@Inject
-	private Logger logger;
-
 	private Map<UUID, NPlayer> playerWrappers = new ConcurrentHashMap<>();
 
 	private Map<UUID, IActiveCharacter> characters = new HashMap<>();
@@ -127,15 +140,15 @@ public class CharacterService {
 	public void loadPlayerData(UUID id, String playerName) {
 		characters.put(id, buildDummyChar(id));
 		game.getScheduler().createTaskBuilder().name("PlayerDataLoad-" + id).async().execute(() -> {
-			logger.info("Loading player - " + id);
+			info("Loading player - " + id);
 			long k = System.currentTimeMillis();
 			List<CharacterBase> playerCharacters = playerDao.getPlayersCharacters(id);
-			logger.info("Finished loading of player " + id + ", loaded " + playerCharacters.size() + " characters   [" + (System.currentTimeMillis() - k) + "]ms");
+			info("Finished loading of player " + id + ", loaded " + playerCharacters.size() + " characters   [" + (System.currentTimeMillis() - k) + "]ms");
 			if (playerCharacters.isEmpty() && PluginConfig.CREATE_FIRST_CHAR_AFTER_LOGIN) {
 				CharacterBase characterBase = createCharacterBase(playerName, id);
 				createAndUpdate(characterBase);
 				playerCharacters = Collections.singletonList(characterBase);
-				logger.info("Automatically created character for a player " + id + ", " + playerName);
+				info("Automatically created character for a player " + id + ", " + playerName);
 			}
 			final List<CharacterBase> playerChars = playerCharacters;
 			game.getScheduler().createTaskBuilder().name("Callback-PlayerDataLoad" + id).execute(() -> {
@@ -176,7 +189,7 @@ public class CharacterService {
 			return false;
 		}
 		if (!characters.containsKey(pl.getUniqueId())) {
-			logger.error("Could not find any character for player " + pl.getName() + " Auth event not fired?");
+			error("Could not find any character for player " + pl.getName() + " Auth event not fired?");
 			return false;
 		}
 		IActiveCharacter character = characters.get(pl.getUniqueId());
@@ -223,9 +236,9 @@ public class CharacterService {
 	public void putInSaveQueue(CharacterBase base) {
 		NtRpgPlugin.asyncExecutor.execute(() -> {
 			Long k = System.currentTimeMillis();
-			logger.info("Saving player " + base.getUuid() + " character " + base.getName());
+			info("Saving player " + base.getUuid() + " character " + base.getName());
 			save(base);
-			logger.info("Saved player " + base.getUuid() + " character " + base.getName() + "[" + (System.currentTimeMillis() - k) + "]ms ");
+			info("Saved player " + base.getUuid() + " character " + base.getName() + "[" + (System.currentTimeMillis() - k) + "]ms ");
 		});
 	}
 
@@ -272,7 +285,7 @@ public class CharacterService {
 	 * @return new character
 	 */
 	public IActiveCharacter setActiveCharacter(UUID uuid, IActiveCharacter character) {
-		logger.info("Setting active character player " + uuid + " character " + character.getName());
+		info("Setting active character player " + uuid + " character " + character.getName());
 		IActiveCharacter activeCharacter = getCharacter(uuid);
 		if (activeCharacter == null) {
 			characters.put(uuid, character);
@@ -348,7 +361,7 @@ public class CharacterService {
 	}
 
 	public void initActiveCharacter(IActiveCharacter character) {
-		logger.info("Initializing character " + character.getCharacterBase().getId());
+		info("Initializing character " + character.getCharacterBase().getId());
 		character.sendMessage(Localizations.CURRENT_CHARACTER, Arg.arg("character", character.getName()));
 		addDefaultEffects(character);
 		Set<BaseCharacterAttribute> baseCharacterAttribute = character.getCharacterBase().getBaseCharacterAttribute();
@@ -399,7 +412,7 @@ public class CharacterService {
 	public void updatePlayerGroups(IActiveCharacter character, ConfigClass configClass, int slot, Race race, Guild guild) {
 		if (character.isStub())
 			return;
-		logger.info("Initializing character " + character.getCharacterBase().getId());
+		info("Initializing character " + character.getCharacterBase().getId());
 		boolean k = false;
 		Player player = character.getPlayer();
 		if (configClass != null) {
@@ -408,7 +421,7 @@ public class CharacterService {
 			game.getEventManager().post(e);
 			if (!e.isCancelled()) {
 				k = true;
-				logger.info("Processing class change - " + e);
+				info("Processing class change - " + e);
 				Map<String, String> args = new HashMap<>();
 				args.put("player", player.getName());
 				args.put("uuid", player.getUniqueId().toString());
@@ -438,7 +451,7 @@ public class CharacterService {
 			game.getEventManager().post(ev);
 			if (!ev.isCancelled()) {
 				k = true;
-				logger.info("Processing race change - " + ev);
+				info("Processing race change - " + ev);
 				Map<String, String> args = new HashMap<>();
 				args.put("player", player.getName());
 				args.put("uuid", player.getUniqueId().toString());
@@ -510,7 +523,7 @@ public class CharacterService {
 		if (maxval <= 0) {
 			maxval = 1;
 		}
-		logger.info("Setting max health " + character.getName() + " to " + maxval);
+		info("Setting max health " + character.getName() + " to " + maxval);
 		character.getHealth().setMaxValue(maxval);
 	}
 
@@ -549,7 +562,7 @@ public class CharacterService {
 	 * @return
 	 */
 	public PreloadCharacter buildDummyChar(UUID uuid) {
-		logger.info("Creating a dummy character for " + uuid);
+		info("Creating a dummy character for " + uuid);
 		return new PreloadCharacter(uuid);
 	}
 
@@ -1017,7 +1030,7 @@ public class CharacterService {
 		double speed = entityService.getEntityProperty(entity, DefaultProperties.walk_speed);
 		entity.getEntity().offer(Keys.WALKING_SPEED, speed);
 		if (PluginConfig.DEBUG.isBalance())
-			logger.info(entity + " setting walk speed to " + speed);
+			info(entity + " setting walk speed to " + speed);
 	}
 
 	/**

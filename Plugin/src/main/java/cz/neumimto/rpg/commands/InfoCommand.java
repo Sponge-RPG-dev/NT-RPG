@@ -36,7 +36,6 @@ import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.tree.SkillTree;
-import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -54,8 +53,6 @@ import java.util.Optional;
 @ResourceLoader.Command
 public class InfoCommand extends CommandBase {
 
-	@Inject
-	private Logger logger;
 
 	@Inject
 	Game game;

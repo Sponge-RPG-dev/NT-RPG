@@ -18,7 +18,8 @@
 
 package cz.neumimto.rpg.players.properties;
 
-import cz.neumimto.core.ioc.Inject;
+import static cz.neumimto.rpg.Log.info;
+
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.PluginConfig;
@@ -26,7 +27,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.utils.Utils;
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -62,9 +62,6 @@ public class PropertyService {
 		return t;
 	};
 
-	@Inject
-	private Logger logger;
-
 	private Map<String, Integer> idMap = new HashMap<>();
 	private Map<Integer, String> nameMap = new HashMap<>();
 
@@ -74,8 +71,7 @@ public class PropertyService {
 	private float[] maxValues;
 
 	public void registerProperty(String name, int id) {
-		if (PluginConfig.DEBUG.isDevelop())
-			logger.info("Found property " + name + "; assigned id: " + id);
+		info("Found property " + name + "; assigned id: " + id, PluginConfig.DEBUG);
 		idMap.put(name, id);
 		nameMap.put(id, name);
 	}
@@ -116,8 +112,7 @@ public class PropertyService {
 		Path path = Paths.get(NtRpgPlugin.workingDir + File.separator + "properties_dump.info");
 		StringBuilder s = new StringBuilder();
 		List<String> l = new ArrayList<>(idMap.keySet());
-		if (PluginConfig.DEBUG.isDevelop())
-			logger.info(" - found " + l.size() + " Properties");
+		info(" - found " + l.size() + " Properties", PluginConfig.DEBUG);
 		l.sort(Collator.getInstance());
 		for (String s1 : l) {
 			s.append(s1).append(Utils.LineSeparator);

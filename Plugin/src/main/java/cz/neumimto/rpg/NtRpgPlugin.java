@@ -18,6 +18,8 @@
 
 package cz.neumimto.rpg;
 
+import static cz.neumimto.rpg.Log.info;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.inject.Inject;
@@ -412,6 +414,7 @@ public class NtRpgPlugin {
 	@Listener
 	public void onPluginLoad(GamePostInitializationEvent event) {
 		long start = System.nanoTime();
+		Log.logger = logger;
 		IoC ioc = IoC.get();
 		asyncExecutor = Sponge.getGame().getScheduler().createAsyncExecutor(NtRpgPlugin.this);
 
@@ -461,7 +464,7 @@ public class NtRpgPlugin {
 		double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
 
 		Sponge.getRegistry().registerModule(ISkill.class, IoC.get().build(SkillService.class));
-		logger.info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
+		info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
 	}
 
 	public void registerCommands() {

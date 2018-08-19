@@ -18,6 +18,10 @@
 
 package cz.neumimto.rpg.persistance;
 
+import static cz.neumimto.rpg.Log.error;
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
+
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
 import com.typesafe.config.ConfigException;
@@ -44,7 +48,6 @@ import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.tree.SkillTree;
-import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.EntityType;
@@ -80,9 +83,6 @@ public class GroupDao {
 
 	@Inject
 	Game game;
-
-	@Inject
-	Logger logger;
 
 	@Inject
 	SkillService skillService;
@@ -124,7 +124,6 @@ public class GroupDao {
 		Path path = ResourceLoader.classDir.toPath();
 		try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, "*.conf")) {
 			stream.forEach(p -> {
-				logger.info("Loading file: " + p.getFileName().toString());
 				Config c = ConfigFactory.parseFile(p.toFile());
 				ConfigClass configClass = new ConfigClass(c.getString("Name"));
 				loadPlayerGroup(c, configClass);
@@ -135,7 +134,7 @@ public class GroupDao {
 						if (k == 0) {
 							configClass.setDefaultClass(aDefault);
 						} else {
-							logger.warn("One default class already loaded, class \"" + configClass.getName() + "\" will be ignored");
+							warn("One default class already loaded, class \"" + configClass.getName() + "\" will be ignored");
 						}
 					}
 				} catch (ConfigException e) {
@@ -145,37 +144,37 @@ public class GroupDao {
 				try {
 					SkillTree skillTree = skillService.getSkillTrees().get(c.getString("SkillTree"));
 					if (skillTree == null) {
-						logger.warn(" - Unknown \"SkillTree\", setting to default value");
+						warn(" - Unknown \"SkillTree\", setting to default value");
 						skillTree = SkillTree.Default;
 					}
 					configClass.setSkillTree(skillTree);
 				} catch (ConfigException e) {
 					configClass.setSkillTree(SkillTree.Default);
-					logger.warn(" - Missing configuration \"SkillTree\", setting to default value");
+					warn(" - Missing configuration \"SkillTree\", setting to default value");
 				}
 
 				try {
 					List<String> experienceSources = c.getStringList("ExperienceSources");
 					HashSet<ExperienceSource> objects = new HashSet<>();
 					experienceSources.forEach(a -> objects.add(Sponge.getRegistry().getType(ExperienceSource.class, a).orElseGet(() -> {
-						logger.info(" - Unknown experience source " + a);
+						info(" - Unknown experience source " + a);
 						return null;
 					})));
 					configClass.setExperienceSources(objects);
 				} catch (ConfigException e) {
-					logger.warn(" - Missing configuration \"ExperienceSources\", skipping");
+					warn(" - Missing configuration \"ExperienceSources\", skipping");
 				}
 
 				try {
 					configClass.setSkillpointsperlevel(c.getInt("SkillPointsPerLevel"));
 				} catch (ConfigException e) {
-					logger.warn(" - Missing configuration \"SkillPointsPerLevel\", skipping");
+					warn(" - Missing configuration \"SkillPointsPerLevel\", skipping");
 				}
 
 				try {
 					configClass.setAttributepointsperlevel(c.getInt("AttributePointsPerLevel"));
 				} catch (ConfigException e) {
-					logger.warn(" - Missing configuration \"AttributePointsPerLevel\", skipping");
+					warn(" - Missing configuration \"AttributePointsPerLevel\", skipping");
 				}
 
 				try {
@@ -184,7 +183,7 @@ public class GroupDao {
 					double last = c.getDouble("ExpLastLevel");
 					initLevelCurve(configClass, maxLevel, first, last);
 				} catch (ConfigException e) {
-					logger.error(" - Missing one of configuration nodes \"MaxLevel\", \"ExpFirstLevel\", \"ExpLastLevel\"");
+					error(" - Missing one of configuration nodes \"MaxLevel\", \"ExpFirstLevel\", \"ExpLastLevel\"");
 					initLevelCurve(configClass, 2, 1, 2); //just some not null values which might cause npes later
 				}
 
@@ -199,7 +198,7 @@ public class GroupDao {
 		Path path = ResourceLoader.raceDir.toPath();
 		try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, "*.conf")) {
 			stream.forEach(p -> {
-				logger.info("Loading file: " + p.getFileName().toString());
+				info("Loading file: " + p.getFileName().toString());
 				Config c = ConfigFactory.parseFile(p.toFile());
 				Race race = new Race(c.getString("Name"));
 				loadPlayerGroup(c, race);
@@ -225,7 +224,7 @@ public class GroupDao {
 			group.setShowsInMenu(c.getBoolean("Wildcard"));
 		} catch (ConfigException e) {
 			group.setShowsInMenu(true);
-			logger.warn(" - Missing configuration \"Wildcard\", setting to true");
+			warn(" - Missing configuration \"Wildcard\", setting to true");
 		}
 
 		int id = 0;
@@ -242,11 +241,11 @@ public class GroupDao {
 					bonus = Float.parseFloat(m.getValue().render());
 					group.getPropBonus().put(id, bonus);
 				} catch (NullPointerException e) {
-					logger.error("Unknown property name \"" + m.getKey() + "\", check out your file properties_dump.info");
+					error("Unknown property name \"" + m.getKey() + "\", check out your file properties_dump.info");
 				}
 			}
 		} catch (ConfigException e) {
-			logger.warn(" - Missing configuration \"BonusProperties\", skipping");
+			warn(" - Missing configuration \"BonusProperties\", skipping");
 		}
 
 		try {
@@ -258,11 +257,11 @@ public class GroupDao {
 					bonus = Float.parseFloat(m.getValue().render());
 					group.getPropLevelBonus().put(id, bonus);
 				} catch (NullPointerException e) {
-					logger.error("Unknown property name \"" + m.getKey() + "\", check out your file properties_dump.info");
+					error("Unknown property name \"" + m.getKey() + "\", check out your file properties_dump.info");
 				}
 			}
 		} catch (ConfigException e) {
-			logger.warn(" - Missing configuration \"BonusPropertiesPerLevel\", skipping");
+			warn(" - Missing configuration \"BonusPropertiesPerLevel\", skipping");
 
 		}
 
@@ -274,16 +273,16 @@ public class GroupDao {
 				if (type.isPresent()) {
 					RPGItemType rpgitemType = itemService.getArmorByItemType(type.get());
 					if (rpgitemType == null) {
-						logger.warn("Unknown Armor type " + k[0] + " Check your ItemGroups.conf");
+						warn("Unknown Armor type " + k[0] + " Check your ItemGroups.conf");
 					} else {
 						group.getAllowedArmor().add(rpgitemType);
 					}
 				} else {
-					logger.warn("Defined invalid itemtype  " + a + " in " + group.getName());
+					warn("Defined invalid itemtype  " + a + " in " + group.getName());
 				}
 			});
 		} catch (ConfigException e) {
-			logger.warn(" - Missing configuration \"AllowedArmor\", skipping");
+			warn(" - Missing configuration \"AllowedArmor\", skipping");
 		}
 
 		try {
@@ -295,7 +294,7 @@ public class GroupDao {
                 }
 			}
 		} catch (ConfigException e) {
-			logger.warn(" - Missing configuration \"AllowedOffHandWeapons\", skipping");
+			warn(" - Missing configuration \"AllowedOffHandWeapons\", skipping");
 		}
 
 		try {
@@ -307,7 +306,7 @@ public class GroupDao {
                 }
 			}
 		} catch (ConfigException e) {
-			logger.warn(" - Missing configuration \"AllowedWeapons\", skipping");
+			warn(" - Missing configuration \"AllowedWeapons\", skipping");
 		}
 
 		try {
@@ -321,7 +320,7 @@ public class GroupDao {
 					Optional<EntityType> type = game.getRegistry().getType(EntityType.class, m.getKey());
 					if (type.isPresent()) {
 						group.getProjectileDamage().put(type.get(), Double.parseDouble(m.getValue().render()));
-					} else logger.warn("Defined invalid projectile type  " + m.getKey() + " in " + group.getName());
+					} else warn("Defined invalid projectile type  " + m.getKey() + " in " + group.getName());
 				}
 			}
 		} catch (ConfigException e) {
@@ -338,7 +337,7 @@ public class GroupDao {
 				group.getStartingAttributes().put(attribute1, i);
 			}
 		} catch (ConfigException e) {
-			logger.warn(" - Missing configuration \"Attributes\", skipping");
+			warn(" - Missing configuration \"Attributes\", skipping");
 		}
 
 		try {
@@ -346,11 +345,11 @@ public class GroupDao {
 			if (menuIcon.isPresent()) {
 				group.setItemType(menuIcon.get());
 			} else {
-				logger.warn(" - Unknown item type in \"MenuIcon\", setting STONE as default");
+				warn(" - Unknown item type in \"MenuIcon\", setting STONE as default");
 				group.setItemType(ItemTypes.STONE);
 			}
 		} catch (ConfigException e) {
-			logger.warn(" - Missing configuration \"MenuIcon\", setting STONE as default");
+			warn(" - Missing configuration \"MenuIcon\", setting STONE as default");
 			group.setItemType(ItemTypes.STONE);
 		}
 
@@ -358,7 +357,7 @@ public class GroupDao {
 			group.setDescription(c.getString("Description"));
 		} catch (ConfigException e) {
 			group.setDescription("");
-			logger.warn(" - Missing configuration \"Description\", setting an empty string as default");
+			warn(" - Missing configuration \"Description\", setting an empty string as default");
 
 		}
 
@@ -381,7 +380,7 @@ public class GroupDao {
 				group.setEnterCommands(enter);
 			} catch (ConfigException e) {
 				group.setEnterCommands(new ArrayList<>());
-				logger.warn(" - Missing configuration \"Commands.enter\", skipping");
+				warn(" - Missing configuration \"Commands.enter\", skipping");
 			}
 
 			try {
@@ -389,10 +388,10 @@ public class GroupDao {
 				group.setExitCommands(exit);
 			} catch (ConfigException e) {
 				group.setExitCommands(new ArrayList<>());
-				logger.warn(" - Missing configuration \"Commands.exit\", skipping");
+				warn(" - Missing configuration \"Commands.exit\", skipping");
 			}
 		} catch (ConfigException e) {
-			logger.warn(" - Missing configuration \"Commands\", skipping");
+			warn(" - Missing configuration \"Commands\", skipping");
 		}
 
 		try {
@@ -402,7 +401,7 @@ public class GroupDao {
 			}
 		} catch (ConfigException e) {
 			group.setPermissions(new HashSet<>());
-			logger.warn(" - Missing configuration \"Permissions\", skipping");
+			warn(" - Missing configuration \"Permissions\", skipping");
 		}
 
 		try {
@@ -431,7 +430,7 @@ public class GroupDao {
 					group.getEffects().put(globalEffect, value);
 			}
 		} catch (ConfigException e) {
-			logger.warn(" - Missing configuration \"Effects\", skipping");
+			warn(" - Missing configuration \"Effects\", skipping");
 
 		}
 
@@ -450,13 +449,13 @@ public class GroupDao {
 						EntityType entityType = type.get();
 						map.get(dimmension).put(entityType, aDouble);
 					} else {
-						logger.error(" - Unknown entity type " + entityId);
+						error(" - Unknown entity type " + entityId);
 					}
 				}
 			}
 			group.setExperiences(map);
 		} catch (Exception e) {
-			logger.info(" - Could not read Experiences node section, skipping");
+			info(" - Could not read Experiences node section, skipping");
 		}
 
 	}
@@ -469,7 +468,7 @@ public class GroupDao {
 
 		ItemType type = game.getRegistry().getType(ItemType.class, s).orElse(null);
 		if (type == null) {
-			logger.error(" - Unknown item type " + s);
+			error(" - Unknown item type " + s);
 		} else {
 			String s1 = split[1];
 			damage = Double.parseDouble(s1);
@@ -478,7 +477,7 @@ public class GroupDao {
 			}
 			RPGItemType rpgitemType = itemService.getByItemTypeAndName(type, itemName);
 			if (rpgitemType == null) {
-				logger.error(" - Defined weapon " + s + " but its configuration in ItemGroups.conf is missing!");
+				error(" - Defined weapon " + s + " but its configuration in ItemGroups.conf is missing!");
 				return null;
 			}
 			return new ConfigRPGItemType(rpgitemType, playerGroup, damage);

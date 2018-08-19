@@ -18,6 +18,10 @@
 
 package cz.neumimto.rpg.persistance;
 
+import static cz.neumimto.rpg.Log.error;
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
+
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import com.typesafe.config.ConfigFactory;
@@ -39,7 +43,6 @@ import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.utils.CatalogId;
 import cz.neumimto.rpg.utils.Utils;
-import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 
 import java.io.IOException;
@@ -63,27 +66,25 @@ public class SkillTreeDao {
     @Inject
     SkillService skillService;
 
-    @Inject
-    Logger logger;
 
     public Map<String, SkillTree> getAll() {
         Path dir = ResourceLoader.skilltreeDir.toPath();
         Map<String, SkillTree> map = new HashMap<>();
         try (DirectoryStream<Path> paths = Files.newDirectoryStream(dir, "*.conf")) {
             paths.forEach(path -> {
-                logger.info("Loading skilltree from a file " + path.getFileName());
+                info("Loading skilltree from a file " + path.getFileName());
                 Config config = ConfigFactory.parseFile(path.toFile());
                 SkillTree skillTree = new SkillTree();
                 try {
                     skillTree.setDescription(config.getString("Description"));
                 } catch (ConfigException e) {
                     skillTree.setDescription("");
-                    logger.warn("Missing \"Description\" node");
+                    warn("Missing \"Description\" node");
                 }
                 try {
                     skillTree.setId(config.getString("Name"));
                 } catch (ConfigException e) {
-                    logger.warn("Missing \"Name\" skipping to another file");
+                    warn("Missing \"Name\" skipping to another file");
                     return;
                 }
                 skillTree.getSkills().put(StartingPoint.name.toPlain(), StartingPoint.SKILL_DATA);
@@ -92,7 +93,7 @@ public class SkillTreeDao {
                     createConfigSkills(sub, skillTree);
                     loadSkills(sub, skillTree);
                 } catch (ConfigException e) {
-                    logger.warn("Missing \"Skills\" section. No skills defined");
+                    warn("Missing \"Skills\" section. No skills defined");
 
                 }
 
@@ -135,7 +136,7 @@ public class SkillTreeDao {
                         skillTree.setSkillTreeMap(array);
                     }
                 } catch (ConfigException | ArrayIndexOutOfBoundsException ignored) {
-                    logger.error("Could not read ascii map in the skilltree " + skillTree.getId(), ignored);
+                    error("Could not read ascii map in the skilltree " + skillTree.getId(), ignored);
                     skillTree.setSkillTreeMap(new short[][]{});
                 }
                 map.put(skillTree.getId(), skillTree);
@@ -192,7 +193,7 @@ public class SkillTreeDao {
                 info.setMaxSkillLevel(c.getInt("MaxSkillLevel"));
             } catch (ConfigException e) {
                 info.setMaxSkillLevel(1);
-                logger.warn("Missing \"MaxSkillLevel\" node for a skill \""+info.getSkillId()+"\", setting to 1");
+                warn("Missing \"MaxSkillLevel\" node for a skill \""+info.getSkillId()+"\", setting to 1");
             }
             try {
                 String combination = c.getString("Combination");
@@ -207,14 +208,14 @@ public class SkillTreeDao {
                 info.setMinPlayerLevel(c.getInt("MinPlayerLevel"));
             } catch (ConfigException e) {
                 info.setMinPlayerLevel(1);
-                logger.warn("Missing \"MinPlayerLevel\" node for a skill \""+info.getSkillId()+"\", setting to 1");
+                warn("Missing \"MinPlayerLevel\" node for a skill \""+info.getSkillId()+"\", setting to 1");
             }
 
             try {
                 info.setLevelGap(c.getInt("LevelGap"));
             } catch (ConfigException e) {
                 info.setLevelGap(0);
-                logger.warn("Missing \"LevelGap\" node for a skill \""+info.getSkillId()+"\", setting to 1");
+                warn("Missing \"LevelGap\" node for a skill \""+info.getSkillId()+"\", setting to 1");
             }
 
             try {
@@ -243,7 +244,7 @@ public class SkillTreeDao {
             try {
                 info.setSkillTreeId(c.getInt("SkillTreeId"));
             } catch (ConfigException ignored) {
-                logger.info(" - Skill " + info.getSkillId() + " missing SkillTreeId, it wont be possible to reference this skill in the ascii map");
+                info(" - Skill " + info.getSkillId() + " missing SkillTreeId, it wont be possible to reference this skill in the ascii map");
             }
 
             try {
@@ -281,7 +282,7 @@ public class SkillTreeDao {
 
             }
             for (String s : errors.getErrors()) {
-                logger.info(s);
+                info(s);
             }
 
 

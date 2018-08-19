@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.entities;
 
+import static cz.neumimto.rpg.Log.warn;
+
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.IEntity;
@@ -10,7 +12,6 @@ import cz.neumimto.rpg.events.skills.SkillHealEvent;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.ISkill;
-import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
@@ -27,8 +28,6 @@ import java.util.UUID;
 @Singleton
 public class EntityService {
 
-	@Inject
-	private Logger logger;
 
 	private HashMap<UUID, IMob> entityHashMap = new HashMap<>();
 
@@ -58,7 +57,7 @@ public class EntityService {
 			if (!PluginConfig.OVERRIDE_MOBS && dimmension != null) {
 				Double aDouble = dimmension.getHealth().get(id.getType());
 				if (aDouble == null) {
-					logger.warn("No max health configured for " + id.getType().getId() + " in world " + id.getLocation().getExtent().getName());
+					warn("No max health configured for " + id.getType().getId() + " in world " + id.getLocation().getExtent().getName());
 				} else {
 					id.offer(Keys.MAX_HEALTH, aDouble);
 					id.offer(Keys.HEALTH, aDouble);
@@ -91,7 +90,7 @@ public class EntityService {
 		if (dimmension != null) {
 			Double aDouble = dimmension.getDamage().get(type.getType());
 			if (aDouble == null) {
-				logger.warn("No max experience drop configured for " + type.getType().getId()
+				warn("No max experience drop configured for " + type.getType().getId()
 						+ " in world " + type.getLocation().getExtent().getName());
 				aDouble = 0D;
 			}
@@ -105,7 +104,7 @@ public class EntityService {
 		if (dimmension != null) {
 			Double aDouble = dimmension.getExperiences().get(type.getType());
 			if (aDouble == null) {
-				logger.warn("No max experience drop configured for " + type.getType().getId()
+				warn("No max experience drop configured for " + type.getType().getId()
 						+ " in world " + type.getLocation().getExtent().getName());
 				aDouble = 0D;
 			}

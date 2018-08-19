@@ -18,6 +18,9 @@
 
 package cz.neumimto.rpg.scripting;
 
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
+
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
@@ -29,7 +32,6 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.skills.pipeline.SkillComponent;
 import cz.neumimto.rpg.utils.FileUtils;
 import jdk.internal.dynalink.beans.StaticClass;
-import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Event;
 
@@ -69,9 +71,6 @@ public class JSLoader {
 	private static Path scripts_root = Paths.get(NtRpgPlugin.workingDir + "/scripts");
 
 	@Inject
-	private Logger logger;
-
-	@Inject
 	private IoC ioc;
 
 	@Inject
@@ -94,16 +93,16 @@ public class JSLoader {
 				reloadSkills();
 				reloadAttributes();
 				generateListener();
-				logger.info("JS resources loaded.");
+				info("JS resources loaded.");
 			} else {
-				logger.error("Could not load nashorn. Library not found on a classpath.");
-				logger.error(" - For SpongeVanilla create a symlink or place nashorn.jar into the sponge/config/nt-core folder");
-				logger.error(" - For SpongeForge create a symlink or place nashorn.jar into the sponge/mods folder");
+				warn("Could not load nashorn. Library not found on a classpath.");
+				warn(" - For SpongeVanilla create a symlink or place nashorn.jar into the sponge/config/nt-core folder");
+				warn(" - For SpongeForge create a symlink or place nashorn.jar into the sponge/mods folder");
 			}
 		} catch (Exception e) {
-			logger.error("Could not load nashorn. Library not found on a classpath.");
-			logger.error(" - For SpongeVanilla create a symlink or place nashorn.jar into the sponge/config/nt-core folder");
-			logger.error(" - For SpongeForge create a symlink or place nashorn.jar into the sponge/mods folder");
+			warn("Could not load nashorn. Library not found on a classpath.");
+			warn(" - For SpongeVanilla create a symlink or place nashorn.jar into the sponge/config/nt-core folder");
+			warn(" - For SpongeForge create a symlink or place nashorn.jar into the sponge/mods folder");
 		}
 	}
 
@@ -178,11 +177,11 @@ public class JSLoader {
 
 	public void generateDynamicListener(Map<StaticClass, Set<Consumer<? extends Event>>> set) {
 		if (listener != null) {
-			logger.info("Found JS listener: " + listener.getClass().getSimpleName() + " Unregistering");
+			info("Found JS listener: " + listener.getClass().getSimpleName() + " Unregistering");
 			Sponge.getGame().getEventManager().unregisterListeners(listener);
 		}
 		listener = classGenerator.generateDynamicListener(set);
-		logger.info("Registering js listener: " + listener.getClass().getSimpleName());
+		info("Registering js listener: " + listener.getClass().getSimpleName());
 		Sponge.getGame().getEventManager().registerListeners(ioc.build(NtRpgPlugin.class), listener);
 	}
 

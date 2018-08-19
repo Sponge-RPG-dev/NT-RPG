@@ -18,6 +18,10 @@
 
 package cz.neumimto.rpg.inventory;
 
+import static cz.neumimto.rpg.Log.error;
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
+
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import com.typesafe.config.ConfigFactory;
@@ -68,7 +72,6 @@ import cz.neumimto.rpg.utils.ItemStackUtils;
 import ninja.leaping.configurate.SimpleConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
-import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
@@ -109,9 +112,6 @@ import java.util.stream.Collectors;
 @Singleton
 @ResourceLoader.ListenerClass
 public class InventoryService {
-
-    @Inject
-	private Logger logger;
 
 	public static ItemType ITEM_SKILL_BIND = ItemTypes.BLAZE_POWDER;
 
@@ -165,7 +165,7 @@ public class InventoryService {
 		if (type.isPresent()) {
 			playerInvHandler = type.get();
 		} else {
-			logger.warn("Unknown EQUIPED_SLOT_RESOLVE_SRATEGY, value should be one of " +
+			warn("Unknown EQUIPED_SLOT_RESOLVE_SRATEGY, value should be one of " +
 					Sponge.getRegistry().getAllOf(PlayerInvHandler.class).stream
 					().map(PlayerInvHandler::getId).collect(Collectors.joining(", ")));
 			playerInvHandler = IoC.get().build(DefaultPlayerInvHandler.class);
@@ -249,9 +249,9 @@ public class InventoryService {
 				if (type.isPresent()) {
 					itemService.registerItemArmorType(type.get());
 				} else {
-					logger.warn(Console.RED + "Could not find item type " + Console.YELLOW + armor + Console.RED + ".");
-					logger.warn(Console.RED + " - Is the mod loaded and is the name correct?");
-					logger.warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN+ "\"modid:my_item\"");
+					warn(Console.RED + "Could not find item type " + Console.YELLOW + armor + Console.RED + ".");
+					warn(Console.RED + " - Is the mod loaded and is the name correct?");
+					warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN+ "\"modid:my_item\"");
 				}
 			}
 			for (String shield : c.getStringList("Shields")) {
@@ -259,9 +259,9 @@ public class InventoryService {
 				if (type.isPresent()) {
 					itemService.registerShieldType(type.get());
 				} else {
-					logger.warn(Console.RED + "Could not find item type " + Console.YELLOW + shield + Console.RED + ".");
-					logger.warn(Console.RED + " - Is the mod loaded and is the name correct?");
-					logger.warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN+ "\"modid:my_item\"");
+					warn(Console.RED + "Could not find item type " + Console.YELLOW + shield + Console.RED + ".");
+					warn(Console.RED + " - Is the mod loaded and is the name correct?");
+					warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN+ "\"modid:my_item\"");
 				}
 			}
 		} catch (ConfigException e) {
@@ -275,23 +275,24 @@ public class InventoryService {
 			try {
 				weaponClass = itemGroup.getString("WeaponClass");
 			} catch (ConfigException e) {
-				logger.error("Could not read \"WeaponClass\" node, skipping. This is a critical miss configuration, some items will not be recognized as weapons");
+				error("Could not read \"WeaponClass\" node, skipping. This is a critical miss configuration, some items will not be recognized " 
+						+ "as weapons");
 				continue;
 			}
-			logger.info(" - Loading weaponClass" + weaponClass);
+			info(" - Loading weaponClass" + weaponClass);
 			WeaponClass weapons = new WeaponClass(weaponClass);
 			weapons.setParent(parent);
 
 			try {
-				logger.info("  - Reading \"Items\" config section" + weaponClass);
+				info("  - Reading \"Items\" config section" + weaponClass);
 				List<String> items = itemGroup.getStringList("Items");
 				for (String item : items) {
 					String[] split = item.split(";");
 					Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, split[0]);
 					if (!type.isPresent()) {
-						logger.warn(Console.RED + "Could not find item type " + Console.YELLOW + split[0] + Console.RED + " defined in ItemGroups.conf.");
-						logger.warn(Console.RED + " - Is the mod loaded and is the name correct?");
-						logger.warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN+ "\"modid:my_item\"");
+						warn(Console.RED + "Could not find item type " + Console.YELLOW + split[0] + Console.RED + " defined in ItemGroups.conf.");
+						warn(Console.RED + " - Is the mod loaded and is the name correct?");
+						warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN+ "\"modid:my_item\"");
 					} else {
 						ItemType itemType = type.get();
 						String name = null;
@@ -305,7 +306,7 @@ public class InventoryService {
 				try {
 					loadItemGroups(itemGroup.getConfigList("Items"), weapons);
 				} catch (ConfigException ee) {
-					logger.error("Could not read nested configuration for weapon class " + weaponClass + "This is a critical miss configuration, some items will not be recognized as weapons");
+					error("Could not read nested configuration for weapon class " + weaponClass + "This is a critical miss configuration, some items will not be recognized as weapons");
 				}
 			}
 
@@ -315,7 +316,7 @@ public class InventoryService {
 					itemService.registerProperty(weapons, property.toLowerCase());
 				}
 			} catch (ConfigException e) {
-				logger.error("Properties configuration section not found, skipping", e);
+				error("Properties configuration section not found, skipping", e);
 			}
 		}
 	}
@@ -336,7 +337,7 @@ public class InventoryService {
 					Optional<ItemSubtype> type = Sponge.getRegistry().getType(ItemSubtype.class, split[1]);
 					if (!type.isPresent()) {
 						type = Optional.of(ItemSubtypes.ANY);
-						logger.error("Could not find subtype " + split[1]);
+						error("Could not find subtype " + split[1]);
 					}
 					SlotEffectSource slotEffectSource = new SlotEffectSource(Integer.parseInt(split[0]), type.get());
 					slotEffectSourceHashMap.put(slotEffectSource.getSlotId(), slotEffectSource);
@@ -344,7 +345,7 @@ public class InventoryService {
 			}
 			managedInventories.put(managedInventory.getType(), managedInventory);
 		} catch (ClassNotFoundException e) {
-			logger.error(Console.RED + "Could not find inventory type " + Console.GREEN + aClass + Console.RED + " defined in ItemGroups.conf. Is the mod loaded? Is the class name correct? If you are unsure restart plugin with debug mode ON and interact with desired inventory");
+			error(Console.RED + "Could not find inventory type " + Console.GREEN + aClass + Console.RED + " defined in ItemGroups.conf. Is the mod loaded? Is the class name correct? If you are unsure restart plugin with debug mode ON and interact with desired inventory");
 		}
 	}
 

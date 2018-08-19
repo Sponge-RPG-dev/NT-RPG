@@ -1,11 +1,13 @@
 package cz.neumimto.rpg.inventory.runewords;
 
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
+
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigObject;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
-import org.slf4j.Logger;
+import cz.neumimto.rpg.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,13 +23,10 @@ import java.util.Set;
 @Singleton
 public class RWDao {
 
-	@Inject
-	private Logger logger;
-
 	public Set<Rune> getAllRunes(File p) {
 		Set<Rune> s = new HashSet<>();
 		Config config = ConfigFactory.parseFile(p);
-		logger.info("Loading runes from " + p.getName());
+		info("Loading runes from " + p.getName());
 		List<String> runes = config.getStringList("Runes");
 		for (String a : runes) {
 			Rune r = new Rune();
@@ -40,7 +39,7 @@ public class RWDao {
 	public Set<RuneWordTemplate> getAllRws(File p) {
 		Set<RuneWordTemplate> s = new HashSet<>();
 		Config configr = ConfigFactory.parseFile(p);
-		logger.info("Loading runewords from " + p.getName());
+		info("Loading runewords from " + p.getName());
 		final String root = "RuneWords";
 
 
@@ -52,7 +51,7 @@ public class RWDao {
 				String name = config.getString("Name");
 				rw.setName(name);
 			} catch (RuntimeException e) {
-				logger.error("Runeword at index: " + s.size() + 1 + " wont be loaded, missing Name node");
+				Log.error("Runeword at index: " + s.size() + 1 + " wont be loaded, missing Name node");
 				continue;
 			}
 
@@ -102,7 +101,7 @@ public class RWDao {
 				runes = config.getStringList("Runes");
 			} catch (RuntimeException e) {
 				runes = new ArrayList<>();
-				logger.warn("Runeword " + rw.getName() + " has no rune combination defined");
+				warn("Runeword " + rw.getName() + " has no rune combination defined");
 			}
 
 

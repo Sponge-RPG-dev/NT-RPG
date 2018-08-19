@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.exp;
 
+import static cz.neumimto.rpg.Log.warn;
+
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.players.ExperienceSource;
@@ -10,15 +12,12 @@ import org.spongepowered.api.block.BlockType;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 /**
  * Created by NeumimTo on 8.4.2017.
  */
 @Singleton
 public class ExperienceService {
-
-	private Logger logger = Logger.getLogger(ExperienceService.class.getName());
 
 	private Map<BlockType, Double> minerals = new HashMap<>();
 	private Map<BlockType, Double> woodenBlocks = new HashMap<>();
@@ -34,7 +33,7 @@ public class ExperienceService {
 			if (type.isPresent()) {
 				minerals.put(type.get(), entry.getValue());
 			} else {
-				logger.warning("Unknown block type: " + entry.getKey());
+				warn("Unknown block type: " + entry.getKey());
 			}
 		}
 
@@ -44,7 +43,7 @@ public class ExperienceService {
 			if (type.isPresent()) {
 				woodenBlocks.put(type.get(), entry.getValue());
 			} else {
-				logger.warning("Unknown block type: " + entry.getKey());
+				warn("Unknown block type: " + entry.getKey());
 			}
 		}
 

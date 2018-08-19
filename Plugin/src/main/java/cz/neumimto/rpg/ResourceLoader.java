@@ -18,6 +18,9 @@
 
 package cz.neumimto.rpg;
 
+import static cz.neumimto.rpg.Log.error;
+import static cz.neumimto.rpg.Log.info;
+
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.configuration.ConfigurationContainer;
 import cz.neumimto.core.PluginCore;
@@ -41,7 +44,6 @@ import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import javassist.CannotCompileException;
-import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.text.Text;
 
@@ -100,8 +102,6 @@ public class ResourceLoader {
 	@Inject
 	private PropertyService propertyService;
 
-	@Inject
-	private Logger logger;
 
 	@Inject
 	private CommandService commandService;
@@ -150,7 +150,7 @@ public class ResourceLoader {
 			e.printStackTrace();
 			return;
 		}
-		logger.info("Loading jarfile " + file.getName());
+		info("Loading jarfile " + file.getName());
 		Enumeration<JarEntry> entries = file.entries();
 		JarEntry next = null;
 
@@ -187,7 +187,7 @@ public class ResourceLoader {
 				if (!main) {
 					ClassLoader classLoader = classLoaderMap.get(f.getName());
 					clazz = classLoader.loadClass(className);
-					logger.info(classLoader + " loaded class " + clazz.getSimpleName());
+					info(classLoader + " loaded class " + clazz.getSimpleName());
 				} else {
 					clazz = Class.forName(className);
 				}
@@ -198,11 +198,11 @@ public class ResourceLoader {
 			try {
 				loadClass(clazz);
 			} catch (Exception e) {
-				logger.warn("Could not load the class [" + className + "]" + e.getMessage(), e);
+				error("Could not load the class [" + className + "]" + e.getMessage(), e);
 			}
 
 		}
-		logger.info("Finished loading of jarfile " + file.getName());
+		info("Finished loading of jarfile " + file.getName());
 	}
 
 	public Object loadClass(Class<?> clazz) throws IllegalAccessException, CannotCompileException, InstantiationException {
@@ -211,29 +211,26 @@ public class ResourceLoader {
 		if (Modifier.isAbstract(clazz.getModifiers())) {
 			return null;
 		}
-		if (PluginConfig.DEBUG.isDevelop())
-			logger.info(" - Checking if theres something to load in a class " + clazz.getName());
+
+		info(" - Checking if theres something to load in a class " + clazz.getName(), PluginConfig.DEBUG);
 		//Properties
 		Object container = null;
 		if (clazz.isAnnotationPresent(Singleton.class)) {
 			ioc.build(clazz);
 		}
 		if (clazz.isAnnotationPresent(ListenerClass.class)) {
-			if (PluginConfig.DEBUG.isDevelop())
-				logger.info("Registering listener" + clazz.getName());
+			info("Registering listener" + clazz.getName(), PluginConfig.DEBUG);
 			container = ioc.build(clazz);
 			ioc.build(Game.class).getEventManager().registerListeners(ioc.build(NtRpgPlugin.class), container);
 		}
 		if (clazz.isAnnotationPresent(Command.class)) {
 			container = ioc.build(clazz);
-			if (PluginConfig.DEBUG.isDevelop())
-				logger.info("registering command class" + clazz.getName());
+			info("registering command class" + clazz.getName(), PluginConfig.DEBUG);
 			commandService.registerCommand((CommandBase) container);
 		}
 		if (clazz.isAnnotationPresent(Skill.class)) {
 			container = ioc.build(clazz);
-			if (PluginConfig.DEBUG.isDevelop())
-				logger.info("registering skill " + clazz.getName());
+			info("registering skill " + clazz.getName(), PluginConfig.DEBUG);
 			ISkill skill = (ISkill) container;
 			Skill sk = clazz.getAnnotation(Skill.class);
 			if (sk.dynamicLocalizationNodes()) {
@@ -250,12 +247,10 @@ public class ResourceLoader {
 		}
 		if (clazz.isAnnotationPresent(ConfigurationContainer.class)) {
 			configMapper.loadClass(clazz);
-			if (PluginConfig.DEBUG.isDevelop())
-				logger.info("Found configuration container class", clazz.getName());
+			info("Found configuration container class " + clazz.getName(), PluginConfig.DEBUG);
 		}
 		if (clazz.isAnnotationPresent(PropertyContainer.class)) {
-			if (PluginConfig.DEBUG.isDevelop())
-				logger.info("Found Property container class" + clazz.getName());
+			info("Found Property container class" + clazz.getName(), PluginConfig.DEBUG);
 			propertyService.process(clazz);
 		}
 		if (clazz.isAnnotationPresent(Attribute.class)) {
