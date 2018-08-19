@@ -130,7 +130,7 @@ public class GroupDao {
 				loadPlayerGroup(c, configClass);
 				long k = classes.values().stream().filter(ConfigClass::isDefaultClass).count();
 				try {
-					boolean aDefault = c.getBoolean("default");
+					boolean aDefault = c.getBoolean("Default");
 					if (aDefault) {
 						if (k == 0) {
 							configClass.setDefaultClass(aDefault);
@@ -363,7 +363,7 @@ public class GroupDao {
 		}
 
 		try {
-			String color = c.getString("color");
+			String color = c.getString("Color");
 			Optional<TextColor> type = Sponge.getRegistry().getType(TextColor.class, color);
 			if (type.isPresent()) {
 				group.setPreferedColor(type.get());
@@ -377,7 +377,7 @@ public class GroupDao {
 		try {
 			Config commands = c.getConfig("Commands");
 			try {
-				List<String> enter = commands.getStringList("enter");
+				List<String> enter = commands.getStringList("Enter");
 				group.setEnterCommands(enter);
 			} catch (ConfigException e) {
 				group.setEnterCommands(new ArrayList<>());
@@ -385,7 +385,7 @@ public class GroupDao {
 			}
 
 			try {
-				List<String> exit = commands.getStringList("exit");
+				List<String> exit = commands.getStringList("Exit");
 				group.setExitCommands(exit);
 			} catch (ConfigException e) {
 				group.setExitCommands(new ArrayList<>());
