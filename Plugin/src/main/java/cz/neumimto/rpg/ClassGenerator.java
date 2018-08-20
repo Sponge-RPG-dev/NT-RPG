@@ -29,6 +29,8 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import static cz.neumimto.rpg.Log.info;
+
 /**
  * Created by NeumimTo on 12.10.15.
  */
@@ -198,8 +200,8 @@ public class ClassGenerator implements Opcodes {
 	public Class<?> createEffectModelMapper(Class<? extends IEffect> cl, Class<?> model) {
 		byte[] bytes = generateEffectMapperClass(cl, model);
 		String className = cl.getSimpleName()+"Mapper";
-		String classNameWithPackage = (packagee+className).replaceAll("/",".");;
-		return loadClass(classNameWithPackage, bytes);
+		String classNameWithPackage = (packagee+className).replaceAll("/",".");
+		return loadClass(classNameWithPackage, bytes, model.getClassLoader());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -342,7 +344,7 @@ public class ClassGenerator implements Opcodes {
 		mv.visitFieldInsn(PUTFIELD, modelClassNameWithPackage, fieldName, typeSignature[2]);
 	}
 
-	public IGlobalEffect<? extends IEffect> generateGlobalEffect(Class<? extends IEffect<?>> cls)
+	public IGlobalEffect<? extends IEffect> generateGlobalEffect(Class<? extends IEffect<?>> cls, ClassLoader classLoader)
             throws CannotCompileException, IllegalAccessException, InstantiationException {
 		Generate annotation = cls.getAnnotation(Generate.class);
 		String id = null;
@@ -353,7 +355,7 @@ public class ClassGenerator implements Opcodes {
 		}
 
 		byte[] b = generateEffectClass(cls, id);
-		Class<?> c = loadClass(getCannonicalGlobalName(cls).replaceAll("/", "."), b);
+		Class<?> c = loadClass(getCannonicalGlobalName(cls).replaceAll("/", "."), b, classLoader);
 		return  (IGlobalEffect) c.newInstance();
 	}
 
@@ -362,7 +364,7 @@ public class ClassGenerator implements Opcodes {
 		try {
 		    String name = "DynamicListener"+System.currentTimeMillis();
 			byte[] b = generateDynamicListenerbc(map, name);
-			o = loadClass("cz.neumimto.rpg.listeners."+name, b);
+			o = loadClass("cz.neumimto.rpg.listeners."+name, b, this.getClass().getClassLoader());
 			Class<?> listener = Class.forName("cz.neumimto.rpg.listeners."+name);
 			o = listener.newInstance();
 			for (Field field : listener.getDeclaredFields()) {
@@ -385,11 +387,11 @@ public class ClassGenerator implements Opcodes {
 		return o;
 	}
 
-	protected Class<?> loadClass(String className, byte[] b) {
+	protected Class<?> loadClass(String className, byte[] b, ClassLoader loader) {
 		Class<?> clazz = null;
 		try {
-			//todo create scopes for classloader
-			ClassLoader loader = getClass().getClassLoader();
+			info("Loading class " + className + " size " + b.length + " using a classloader " + loader.toString());
+			//ClassLoader loader = getClass().getClassLoader();
 			Class<?> cls = Class.forName("java.lang.ClassLoader");
 			java.lang.reflect.Method method = cls.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class);
 

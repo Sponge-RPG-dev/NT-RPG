@@ -44,6 +44,7 @@ import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import javassist.CannotCompileException;
+import org.apache.commons.io.FileUtils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.text.Text;
 
@@ -72,7 +73,7 @@ public class ResourceLoader {
 
 	private final static String INNERCLASS_SEPARATOR = "$";
 
-	public static File classDir, raceDir, guildsDir, addonDir, skilltreeDir;
+	public static File classDir, raceDir, guildsDir, addonDir, skilltreeDir, addonLoadDir;
 
 	private static IoC ioc;
 
@@ -81,6 +82,7 @@ public class ResourceLoader {
 		raceDir = new File(NtRpgPlugin.workingDir + File.separator + "races");
 		guildsDir = new File(NtRpgPlugin.workingDir + File.separator + "guilds");
 		addonDir = new File(NtRpgPlugin.workingDir + File.separator + "addons");
+		addonLoadDir = new File(NtRpgPlugin.workingDir + File.separator + ".deployed");
 		skilltreeDir = new File(NtRpgPlugin.workingDir + File.separator + "skilltrees");
 		classDir.mkdirs();
 		raceDir.mkdirs();
@@ -88,6 +90,13 @@ public class ResourceLoader {
 		skilltreeDir.mkdirs();
 		addonDir.mkdirs();
 		ioc = IoC.get();
+
+		try {
+			FileUtils.deleteDirectory(addonLoadDir);
+			FileUtils.copyDirectory(addonDir, addonLoadDir);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Inject
@@ -121,6 +130,7 @@ public class ResourceLoader {
 		ConfigMapper.init("NtRPG", Paths.get(NtRpgPlugin.workingDir));
 		configMapper = ConfigMapper.get("NtRPG");
 		configClassLaoder = new URLClassLoader(new URL[]{}, this.getClass().getClassLoader());
+
 	}
 
 	private static <T> T newInstance(Class<T> excepted, Class<?> clazz) {
@@ -134,7 +144,7 @@ public class ResourceLoader {
 	}
 
 	public void loadExternalJars() {
-		Path dir = addonDir.toPath();
+		Path dir = addonLoadDir.toPath();
 		for (File f : dir.toFile().listFiles()) {
 			loadJarFile(f, false);
 		}
@@ -158,7 +168,7 @@ public class ResourceLoader {
 			URLClassLoader classLoader = classLoaderMap.get(f.getName());
 			if (classLoader == null) {
 				try {
-					classLoader = new URLClassLoader(new URL[]{f.toURI().toURL()}, PluginCore.getClassLoader());
+					classLoader = new ResourceClassLoader(file.getName().trim(), new URL[]{f.toURI().toURL()}, PluginCore.getClassLoader());
 					classLoaderMap.put(f.getName(), classLoader);
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
@@ -188,24 +198,20 @@ public class ResourceLoader {
 					ClassLoader classLoader = classLoaderMap.get(f.getName());
 					clazz = classLoader.loadClass(className);
 					info(classLoader + " loaded class " + clazz.getSimpleName());
+					loadClass(clazz, classLoader);
 				} else {
 					clazz = Class.forName(className);
+					loadClass(clazz, this.getClass().getClassLoader());
 				}
-			} catch (ClassNotFoundException | ExceptionInInitializerError e) {
-				e.printStackTrace();
-				continue;
-			}
-			try {
-				loadClass(clazz);
 			} catch (Exception e) {
 				error("Could not load the class [" + className + "]" + e.getMessage(), e);
+				continue;
 			}
-
 		}
 		info("Finished loading of jarfile " + file.getName());
 	}
 
-	public Object loadClass(Class<?> clazz) throws IllegalAccessException, CannotCompileException, InstantiationException {
+	public Object loadClass(Class<?> clazz, ClassLoader classLoader) throws IllegalAccessException, CannotCompileException, InstantiationException {
 		if (clazz.isInterface())
 			return null;
 		if (Modifier.isAbstract(clazz.getModifiers())) {
@@ -270,7 +276,7 @@ public class ResourceLoader {
 			ClassGenerator.Generate a = clazz.getAnnotation(ClassGenerator.Generate.class);
 			if (a != null) {
 				Class c = clazz;
-				IGlobalEffect iGlobalEffect = classGenerator.generateGlobalEffect(c);
+				IGlobalEffect iGlobalEffect = classGenerator.generateGlobalEffect(c, classLoader);
 				if (iGlobalEffect == null) {
 					return null;
 				}

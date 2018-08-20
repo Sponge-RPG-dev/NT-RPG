@@ -28,8 +28,6 @@ public abstract class ExecutableScriptSkill extends ActiveSkill {
 
     public ExecutableScriptSkill() {
         this.executor = executor;
-
-
     }
 
     @Override

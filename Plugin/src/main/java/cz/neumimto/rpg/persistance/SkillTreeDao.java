@@ -89,9 +89,9 @@ public class SkillTreeDao {
                 }
                 skillTree.getSkills().put(StartingPoint.name.toPlain(), StartingPoint.SKILL_DATA);
                 try {
-                    Config sub = config.getObject("Skills").toConfig();
-                    createConfigSkills(sub, skillTree);
-                    loadSkills(sub, skillTree);
+                    List<? extends ConfigObject> skills = config.getObjectList("Skills");
+                    createConfigSkills(skills, skillTree);
+                    loadSkills(skills, skillTree);
                 } catch (ConfigException e) {
                     warn("Missing \"Skills\" section. No skills defined");
 
@@ -147,13 +147,13 @@ public class SkillTreeDao {
         return map;
     }
 
-    private void createConfigSkills(Config sub, SkillTree skillTree) {
-        for (Map.Entry<String, ConfigValue> entry : sub.root().entrySet()) {
-            String id = entry.getKey();
+    private void createConfigSkills(List<? extends ConfigObject> sub, SkillTree skillTree) {
+        for (ConfigObject co : sub) {
+            Config c = co.toConfig();
+            String id = c.getString("SkillId");
             Optional<ISkill> byId = skillService.getById(id);
             if (byId.isPresent()) {
-                ConfigObject value = (ConfigObject) entry.getValue();
-                Config c = value.toConfig();
+
 
                 try {
                     String type = c.getString("Type");
@@ -180,14 +180,11 @@ public class SkillTreeDao {
         }
     }
 
-    private void loadSkills(Config sub, SkillTree skillTree) {
-        for (Map.Entry<String, ConfigValue> entry : sub.root().entrySet()) {
+    private void loadSkills(List<? extends ConfigObject> sub, SkillTree skillTree) {
+        for (ConfigObject co : sub) {
 
-            ConfigObject value = (ConfigObject) entry.getValue();
-            Config c = value.toConfig();
-
-
-            SkillData info = getSkillInfo(entry.getKey(), skillTree);
+            Config c = co.toConfig();
+            SkillData info = getSkillInfo(c.getString("SkillId"), skillTree);
 
             try {
                 info.setMaxSkillLevel(c.getInt("MaxSkillLevel"));
