@@ -129,7 +129,8 @@ public class JSLoader {
 			for (Map.Entry<Class<?>, JsBinding.Type> objectTypeEntry : dataToBind.entrySet()) {
 				if (objectTypeEntry.getValue() == JsBinding.Type.CONTAINER) {
 					for (Field field : objectTypeEntry.getKey().getDeclaredFields()) {
-						if (field.isAccessible() && field.isAnnotationPresent(SkillComponent.class)) {
+						field.setAccessible(true);
+						if (field.isAnnotationPresent(SkillComponent.class)) {
 							Object o = field.get(null);
 							String name = field.getName();
 							bindings.put(name.toLowerCase(), o);
@@ -161,8 +162,8 @@ public class JSLoader {
 		for (SkillComponent skillComponent : skillComponents) {
 			buffer.append("###### ").append(skillComponent.value())
 					.append("\n\n")
-					.append("```javascript\n").append(skillComponent.usage()).append("```\n\n")
-					.append("Parameters: \n\n");
+					.append("```javascript\n").append(skillComponent.usage()).append("\n```\n\n")
+					.append("- Parameters: \n\n");
 
 			for (SkillComponent.Param param : skillComponent.params()) {
 				buffer.append("    * ").append(param.value()).append("\n");
