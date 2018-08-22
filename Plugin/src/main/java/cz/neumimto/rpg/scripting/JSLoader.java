@@ -33,6 +33,7 @@ import cz.neumimto.rpg.skills.pipeline.SkillComponent;
 import cz.neumimto.rpg.utils.FileUtils;
 import jdk.internal.dynalink.beans.StaticClass;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.event.Event;
 
 import java.io.File;
@@ -42,15 +43,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.nio.file.*;
+import java.util.*;
 import java.util.function.Consumer;
 
 import javax.script.Bindings;
@@ -78,6 +72,9 @@ public class JSLoader {
 
 	@Inject
 	private ResourceLoader resourceLoader;
+
+	@Inject
+	private NtRpgPlugin ntRpgPlugin;
 
 	private static Object listener;
 
@@ -158,21 +155,28 @@ public class JSLoader {
 		if (file.exists()) {
 			file.delete();
 		}
-		StringBuffer buffer = new StringBuffer();
-		for (SkillComponent skillComponent : skillComponents) {
-			buffer.append("###### ").append(skillComponent.value())
-					.append("\n\n")
-					.append("```javascript\n").append(skillComponent.usage()).append("\n```\n\n")
-					.append("- Parameters: \n\n");
 
-			for (SkillComponent.Param param : skillComponent.params()) {
-				buffer.append("    * ").append(param.value()).append("\n");
-			}
-			buffer.append("\n\n");
-		}
+		Optional<Asset> asset = Sponge.getAssetManager().getAsset(ntRpgPlugin, "templates/function.md");
+		Asset a = asset.get();
 		try {
-			Files.write(file.toPath(), buffer.toString().getBytes());
-		} catch (IOException e) { }
+			file.createNewFile();
+
+			for (SkillComponent skillComponent : skillComponents) {
+				String s = a.readString();
+				s = s.replaceAll("\\{\\{function\\.name}}", skillComponent.value());
+				s = s.replaceAll("\\{\\{function\\.usage}}", skillComponent.usage());
+
+				StringBuilder buffer = new StringBuilder();
+				for (SkillComponent.Param param : skillComponent.params()) {
+					buffer.append("    * ").append(param.value()).append("\n");
+				}
+				s = s.replaceAll("\\{\\{function\\.params}}", buffer.toString());
+				Files.write(file.toPath(), s.getBytes(), StandardOpenOption.APPEND);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 	}
 

@@ -1,0 +1,10 @@
+## Skills
+----
+
+{{skills}}
+
+
+## Effects
+----
+
+{{effects}}

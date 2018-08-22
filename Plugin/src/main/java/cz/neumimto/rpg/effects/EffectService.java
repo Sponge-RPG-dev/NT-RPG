@@ -31,20 +31,25 @@ import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.utils.FileUtils;
 import ninja.leaping.configurate.SimpleConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.asset.Asset;
+import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.text.Text;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -92,35 +97,86 @@ public class EffectService {
 	}
 
 	public void load() {
-		SkillsDumpConfiguration c = new SkillsDumpConfiguration();
-		for (Map.Entry<String, IGlobalEffect> effect : globalEffects.entrySet()) {
-			Class aClass = effect.getValue().asEffectClass();
-			if (aClass != null && aClass.isAnnotationPresent(Generate.class)) {
-				Generate meta = (Generate) aClass.getAnnotation(Generate.class);
-				String description = meta.description();
-				String name = effect.getKey();
-				EffectDumpConfiguration w = new EffectDumpConfiguration();
-				Class<?> modelType = EffectModelFactory.getModelType(aClass);
-				if (EffectModelFactory.typeMappers.containsKey(modelType)) {
-					w.getSettingNodes().put("value", modelType.getSimpleName());
-				} else {
-					Stream.of(modelType.getFields())
-							.forEach(f -> w.getSettingNodes().put(f.getName(), f.getType().getSimpleName()));
-				}
-				w.setDescription(description);
-				c.getEffects().put(name, w);
-			}
+		File file1 = new File(NtRpgPlugin.workingDir, "SkillsAndEffects.md");
+		if (file1.exists()) {
+			file1.delete();
 		}
 
-		for (ISkill skill : NtRpgPlugin.GlobalScope.skillService.getAll()) {
-			SkillDumpConfiguration w = new SkillDumpConfiguration();
-			w.setSkillId(skill.getId());
-			w.getFloatNodes().addAll(skill.getSettings().getNodes().keySet());
-			//skill.getSettings().getObjectNodes()
-			c.getSkills().add(w);
+		try {
+			String finalString = "";
+			file1.createNewFile();
+			Asset asset = Sponge.getAssetManager().getAsset(plugin, "templates/Effect.md").get();
+			for (Map.Entry<String, IGlobalEffect> effect : globalEffects.entrySet()) {
+				String s = asset.readString();
+				Class aClass = effect.getValue().asEffectClass();
+				if (aClass != null && aClass.isAnnotationPresent(Generate.class)) {
+					Generate meta = (Generate) aClass.getAnnotation(Generate.class);
+					String description = meta.description();
+					String name = effect.getKey();
+
+					Class<?> modelType = EffectModelFactory.getModelType(aClass);
+
+					s = s.replaceAll("\\{\\{effect\\.name}}", name);
+					s = s.replaceAll("\\{\\{effect\\.description}}", description);
+
+					if (EffectModelFactory.typeMappers.containsKey(modelType)) {
+						s = s.replaceAll("\\{\\{effect\\.parameter}}", modelType.getSimpleName());
+						s = s.replaceAll("\\{\\{effect\\.parameters}}", "");
+					} else {
+						Field[] fields = modelType.getFields();
+						s = s.replaceAll("\\{\\{effect\\.parameter}}", "");
+						StringBuilder buffer = new StringBuilder();
+						for (Field field : fields) {
+							String fname = field.getName();
+							String type = field.getType().getSimpleName();
+							buffer.append("   * " + fname + " - " + type + "\n\n");
+						}
+						s = s.replaceAll("\\{\\{effect\\.parameters}}", buffer.toString());
+					}
+					finalString += s;
+				}
+			}
+
+			asset = Sponge.getAssetManager().getAsset(plugin, "templates/Skill.md").get();
+			String skills = "";
+			for (ISkill iSkill : NtRpgPlugin.GlobalScope.skillService.getAll()) {
+				String s = asset.readString();
+
+				DamageType damageType = iSkill.getDamageType();
+
+				s = s.replaceAll("\\{\\{skill\\.damageType}}", damageType == null ? "Deals no damage" : damageType.getName());
+
+				List<Text> description = iSkill.getDescription();
+				String desc = "";
+				for (Text text : description) {
+					desc += text.toPlain();
+				}
+				s = s.replaceAll("\\{\\{skill\\.description}}", desc);
+
+				String id = iSkill.getId();
+				s = s.replaceAll("\\{\\{skill\\.id}}", id);
+
+
+				s = s.replaceAll("\\{\\{skill\\.name}}", iSkill.getName());
+
+				SkillSettings defaultSkillSettings = iSkill.getDefaultSkillSettings();
+
+				StringBuilder buffer = new StringBuilder();
+				for (Map.Entry<String, Float> stringFloatEntry : defaultSkillSettings.getNodes().entrySet()) {
+					buffer.append("   * " + stringFloatEntry.getKey() + "\n\n");
+					buffer.append("   * " + stringFloatEntry.getKey() + "_levelbonus\n\n");
+				}
+				s = s.replaceAll("\\{\\{skill\\.parameters}}", buffer.toString());
+				skills += s;
+			}
+			asset = Sponge.getAssetManager().getAsset(plugin, "templates/SE.md").get();
+			String a = asset.readString();
+			Files.write(file1.toPath(), a.replaceAll("\\{\\{effects}}", finalString)
+										  .replaceAll("\\{\\{skills}}", skills).getBytes(), StandardOpenOption.APPEND);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		File file = new File(NtRpgPlugin.workingDir, "Skills.conf");
-		FileUtils.generateConfigFile(c, file);
+
 
 		game.getScheduler().createTaskBuilder().name("EffectTask")
 				.delay(5L, TimeUnit.MILLISECONDS)
