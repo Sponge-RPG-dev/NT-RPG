@@ -2,6 +2,7 @@ package cz.neumimto.rpg;
 
 
 import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.skills.NDamageType;
@@ -9,7 +10,7 @@ import cz.neumimto.rpg.skills.pipeline.SkillTargetProcessors;
 import cz.neumimto.rpg.skills.scripting.SkillActions;
 import cz.neumimto.rpg.skills.tree.SkillType;
 
-@ClassGenerator.Generate(description = "test", id = "name", inject = true)
+@Generate(description = "test", id = "name", inject = true)
 public class EffectTest extends EffectBase {
 
 	public static IGlobalEffect<EffectTest> global = null;

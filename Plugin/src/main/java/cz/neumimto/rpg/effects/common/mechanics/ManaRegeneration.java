@@ -18,13 +18,9 @@
 
 package cz.neumimto.rpg.effects.common.mechanics;
 
-import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.PluginConfig;
-import cz.neumimto.rpg.effects.CoreEffectTypes;
-import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.EffectStatusType;
-import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.events.character.ManaRegainEvent;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -33,7 +29,7 @@ import cz.neumimto.rpg.players.properties.DefaultProperties;
 /**
  * Created by NeumimTo on 9.8.2015.
  */
-@ClassGenerator.Generate(id = "name",description = "A component which enables mana regeneration")
+@Generate(id = "name",description = "A component which enables mana regeneration")
 public class ManaRegeneration extends EffectBase {
 
 	public static final String name = "DefaultManaRegen";

@@ -3,9 +3,9 @@ package cz.neumimto.effects.positive;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.decoration.ParticleSpawner;
 import cz.neumimto.model.ManaShieldEffectModel;
-import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.gui.ParticleDecorator;
 import cz.neumimto.rpg.scripting.JsBinding;
@@ -19,7 +19,7 @@ import org.spongepowered.api.util.Color;
 import java.util.concurrent.TimeUnit;
 
 @JsBinding(JsBinding.Type.CLASS)
-@ClassGenerator.Generate(id = "name", description = "Redirects all incoming damage to mana")
+@Generate(id = "name", description = "Redirects all incoming damage to mana")
 public class ManaShieldEffect extends EffectBase<ManaShieldEffectModel> {
 
     public static final String name = "ManaShield";

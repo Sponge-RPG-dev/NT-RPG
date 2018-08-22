@@ -1,7 +1,7 @@
 package cz.neumimto.effects.positive;
 
-import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.common.stacking.FloatEffectStackingStrategy;
 import cz.neumimto.rpg.entities.PropertyContainer;
@@ -12,7 +12,7 @@ import cz.neumimto.rpg.scripting.JsBinding;
  * Created by NeumimTo on 29.3.17.
  */
 @JsBinding(JsBinding.Type.CLASS)
-@ClassGenerator.Generate(id = "name", description = "Increases resistance against fire, ice and lightning damage")
+@Generate(id = "name", description = "Increases resistance against fire, ice and lightning damage")
 public class ElementalResistanceEffect extends EffectBase<Float> {
 
 	public static final String name = "Elemental Resistance";

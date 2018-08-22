@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.effects.common.def;
 
-import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.gui.Gui;
@@ -16,7 +16,7 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 28.8.2017.
  */
-@ClassGenerator.Generate(id = "name", description = "A component which enables click-combos")
+@Generate(id = "name", description = "A component which enables click-combos")
 public class ClickComboActionEvent extends EffectBase implements IEffectContainer {
 
 	public static final String name = "ClickCombos";

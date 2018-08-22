@@ -34,6 +34,7 @@ import cz.neumimto.rpg.commands.CommandBase;
 import cz.neumimto.rpg.commands.CommandService;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.players.properties.PropertyContainer;
@@ -273,7 +274,7 @@ public class ResourceLoader {
 		}
 		//Effects
 		if (IEffect.class.isAssignableFrom(clazz)) {
-			ClassGenerator.Generate a = clazz.getAnnotation(ClassGenerator.Generate.class);
+			Generate a = clazz.getAnnotation(Generate.class);
 			if (a != null) {
 				Class c = clazz;
 				IGlobalEffect iGlobalEffect = classGenerator.generateGlobalEffect(c, classLoader);

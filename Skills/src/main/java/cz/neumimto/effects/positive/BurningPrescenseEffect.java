@@ -3,14 +3,10 @@ package cz.neumimto.effects.positive;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.model.BPModel;
-import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
-import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.EffectContainer;
-import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.utils.Utils;
@@ -25,7 +21,7 @@ import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
  * Created by ja on 5.7.2017.
  */
 @JsBinding(JsBinding.Type.CLASS)
-@ClassGenerator.Generate(id = "name", description = "An effect which periodically damages all enemies around the target")
+@Generate(id = "name", description = "An effect which periodically damages all enemies around the target")
 public class BurningPrescenseEffect extends EffectBase<BPModel> {
 
 	public static ParticleEffect CASTER_EFFECT = ParticleEffect.builder()

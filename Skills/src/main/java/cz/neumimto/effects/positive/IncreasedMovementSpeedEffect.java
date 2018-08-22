@@ -1,7 +1,7 @@
 package cz.neumimto.effects.positive;
 
-import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.common.stacking.FloatEffectStackingStrategy;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
@@ -11,7 +11,7 @@ import cz.neumimto.rpg.scripting.JsBinding;
  * Created by NeumimTo on 3.7.2017.
  */
 @JsBinding(JsBinding.Type.CLASS)
-@ClassGenerator.Generate(id = "name", description = "Increments walk speed, unlike speedboost effect this one wont apply vanilla potion effect")
+@Generate(id = "name", description = "Increments walk speed, unlike speedboost effect this one wont apply vanilla potion effect")
 public class IncreasedMovementSpeedEffect extends EffectBase<Float> {
 
 	public static final String name = "Movement Speed";

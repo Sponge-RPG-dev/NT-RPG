@@ -20,22 +20,14 @@ package cz.neumimto.rpg.effects;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.ClassGenerator.Generate;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.configuration.EffectDumpConfiguration;
 import cz.neumimto.rpg.configuration.PluginConfig;
-import cz.neumimto.rpg.configuration.SkillDumpConfiguration;
-import cz.neumimto.rpg.configuration.SkillsDumpConfiguration;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillSettings;
-import cz.neumimto.rpg.utils.FileUtils;
-import ninja.leaping.configurate.SimpleConfigurationNode;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
-import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
@@ -43,16 +35,13 @@ import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.text.Text;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 /**
  * Created by NeumimTo on 17.1.2015.

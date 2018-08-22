@@ -6,8 +6,8 @@ import cz.neumimto.Decorator;
 import cz.neumimto.SkillLocalization;
 import cz.neumimto.Utils;
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.VectorUtils;
+import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.ShapedEffectDecorator;
 import cz.neumimto.rpg.gui.Gui;
@@ -37,7 +37,7 @@ import java.util.Set;
  * Created by ja on 1.8.2017.
  */
 @JsBinding(JsBinding.Type.CLASS)
-@ClassGenerator.Generate(id = "name", description = "Creates a portal. The portal has to be targetted via teleportation scroll")
+@Generate(id = "name", description = "Creates a portal. The portal has to be targetted via teleportation scroll")
 public class PortalEffect extends ShapedEffectDecorator {
 
 	public static final String name = "Portal";

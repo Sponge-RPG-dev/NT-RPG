@@ -1,14 +1,14 @@
 package cz.neumimto.effects.positive;
 
 
-import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.common.stacking.DoubleEffectStackingStrategy;
 import cz.neumimto.rpg.scripting.JsBinding;
 
 @JsBinding(JsBinding.Type.CLASS)
-@ClassGenerator.Generate(id = "name", description = "An effect which redirects incoming % of damage to mana pool")
+@Generate(id = "name", description = "An effect which redirects incoming % of damage to mana pool")
 public class DamageToMana extends EffectBase<Double> {
 
 	public static final String name = "Damage to mana";

@@ -1,8 +1,8 @@
 package cz.neumimto.effects.negative;
 
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.CommonEffectTypes;
+import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.ShapedEffectDecorator;
 import cz.neumimto.rpg.gui.ParticleDecorator;
@@ -17,7 +17,7 @@ import org.spongepowered.api.world.extent.Extent;
  * Created by NeumimTo on 5.6.17.
  */
 @JsBinding(JsBinding.Type.CLASS)
-@ClassGenerator.Generate(id = "name", description = "Stuns the target, Stunned entities may not move, nor use skills")
+@Generate(id = "name", description = "Stuns the target, Stunned entities may not move, nor use skills")
 public class StunEffect extends ShapedEffectDecorator<Location<World>> {
 
 	public static final String name = "Stun";

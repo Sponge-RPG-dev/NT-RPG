@@ -1,8 +1,8 @@
 package cz.neumimto.effects;
 
-import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.EffectContainer;
+import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.common.stacking.MinLongStackingStrategy;
 import cz.neumimto.rpg.scripting.JsBinding;
@@ -12,7 +12,7 @@ import cz.neumimto.rpg.scripting.JsBinding;
  * Created by NeumimTo on 7.8.17.
  */
 @JsBinding(JsBinding.Type.CLASS)
-@ClassGenerator.Generate(id = "name", description = "An effect which allows target to throw and  teleport via ender pearl")
+@Generate(id = "name", description = "An effect which allows target to throw and  teleport via ender pearl")
 public class EnderPearlEffect extends EffectBase<Long> {
 
 	public static final String name = "Ender Pearl";

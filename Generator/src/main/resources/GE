@@ -1,0 +1,28 @@
+package {{package}}
+
+import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.IGlobalEffect;
+import {{import.effect}};
+import cz.neumimto.rpg.effects.model.EffectModelFactory;
+
+import java.util.Map;
+
+public class {{effect}}Global implements IGlobalEffect<{{effect}}> {
+	public DamageBonusGlobal() {
+	}
+
+	@Override
+	public DamageBonus construct(IEffectConsumer consumer, long duration, Map<String, String> value) {
+		return new {{effect}}(consumer, duration, EffectModelFactory.create({{effect}}.class, value, {{model}}.class));
+	}
+
+	@Override
+	public String getName() {
+		return {{effect}}.{{effect.nameField}};
+	}
+
+	@Override
+	public Class<{{effect}}> asEffectClass() {
+		return {{effect}}.class;
+	}
+}

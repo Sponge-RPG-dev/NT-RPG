@@ -19,9 +19,9 @@
 package cz.neumimto.rpg.effects.common.positive;
 
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.ParticleDecorator;
@@ -51,7 +51,7 @@ import org.spongepowered.api.world.World;
  * <p>
  * Global effects can work as item enchantments, and be accessible from commands
  */
-@ClassGenerator.Generate(id = "name", inject = true, description = "An effect which increases target walk speed")
+@Generate(id = "name", inject = true, description = "An effect which increases target walk speed")
 public class SpeedBoost extends EffectBase {
 
 	public static final String name = "Speed";

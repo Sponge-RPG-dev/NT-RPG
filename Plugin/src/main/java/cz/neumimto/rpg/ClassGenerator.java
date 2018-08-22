@@ -1,5 +1,6 @@
 package cz.neumimto.rpg;
 
+import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
@@ -16,8 +17,6 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.util.CheckClassAdapter;
 import org.spongepowered.api.event.Event;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -560,17 +559,4 @@ public class ClassGenerator implements Opcodes {
     }
 
 
-    @Retention(RetentionPolicy.RUNTIME)
-	public @interface Generate {
-		String id();
-
-		boolean inject() default false;
-
-		@Retention(RetentionPolicy.RUNTIME)
-		@interface Constructor {
-
-		}
-
-		String description();
-	}
 }
