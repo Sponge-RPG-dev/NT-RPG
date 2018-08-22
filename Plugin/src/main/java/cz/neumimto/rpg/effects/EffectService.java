@@ -31,6 +31,7 @@ import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.utils.FileUtils;
 import ninja.leaping.configurate.SimpleConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
@@ -116,21 +117,11 @@ public class EffectService {
 			w.setSkillId(skill.getId());
 			w.getFloatNodes().addAll(skill.getSettings().getNodes().keySet());
 			//skill.getSettings().getObjectNodes()
-			c.getSkills().put(skill.getName(), w);
+			c.getSkills().add(w);
 		}
+		File file = new File(NtRpgPlugin.workingDir, "Skills.conf");
+		FileUtils.generateConfigFile(c, file);
 
-		try {
-			File file = new File(NtRpgPlugin.workingDir, "skills.conf");
-			if (file.exists())
-				file.delete();
-			ObjectMapper.BoundInstance configMapper = ObjectMapper.forObject(c);
-			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(file.toPath()).build();
-			SimpleConfigurationNode scn = SimpleConfigurationNode.root();
-			configMapper.serialize(scn);
-			hcl.save(scn);
-		} catch (Exception e) {
-			throw new RuntimeException("Could not create file skills.conf", e);
-		}
 		game.getScheduler().createTaskBuilder().name("EffectTask")
 				.delay(5L, TimeUnit.MILLISECONDS)
 				.interval(TICK_PERIOD, TimeUnit.MILLISECONDS)

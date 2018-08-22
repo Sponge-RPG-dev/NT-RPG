@@ -18,15 +18,9 @@
 
 package cz.neumimto.rpg.skills;
 
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.Log.warn;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
-import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.events.skills.SkillPostUsageEvent;
 import cz.neumimto.rpg.events.skills.SkillPrepareEvent;
@@ -39,12 +33,7 @@ import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.reloading.Reload;
 import cz.neumimto.rpg.reloading.ReloadService;
 import cz.neumimto.rpg.scripting.JSLoader;
-import cz.neumimto.rpg.skills.configs.ScriptSkillModel;
-import cz.neumimto.rpg.skills.configs.SkillBehaviorType;
-import cz.neumimto.rpg.skills.configs.SkillsDefinition;
 import cz.neumimto.rpg.skills.tree.SkillTree;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
-import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.manipulator.mutable.entity.HealthData;
@@ -56,17 +45,14 @@ import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
 
 /**
  * Created by NeumimTo on 1.1.2015.
@@ -101,35 +87,8 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 	private Map<String, ISkill> skillByNames = new HashMap<>();
 	public void load() {
 		initGuis();
-		loadConfigSkills();
 		skillTrees.putAll(skillTreeDao.getAll());
-		createSkillsDefaults();
 	}
-
-	private void loadConfigSkills() {
-		File file = new File(NtRpgPlugin.workingDir, "Skills.conf");
-		if (file.exists()) {
-
-		} else {
-
-		}
-
-		try {
-			ObjectMapper<SkillsDefinition> mapper = ObjectMapper.forClass(SkillsDefinition.class);
-			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(file.toPath()).build();
-			SkillsDefinition root = mapper.bind(new SkillsDefinition()).populate(hcl.load());
-			for (ScriptSkillModel skill : root.getSkills()) {
-				if (skill.getSkillBehaviorType() == SkillBehaviorType.PASSIVE) {
-
-				} else {
-
-				}
-			}
-		} catch (Exception e) {
-			throw new RuntimeException("Could not load file " + file, e);
-		}
-	}
-
 
 	@Reload(on = ReloadService.PLUGIN_CONFIG)
 	public void initGuis() {
@@ -218,36 +177,6 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 			return SkillResult.NO_MANA;
 		}
 		return SkillResult.NO_HP;
-	}
-
-	public void createSkillsDefaults() {
-		Path path = Paths.get(NtRpgPlugin.workingDir + "/skills-nodelist.conf");
-		try {
-			if (Files.exists(path)) {
-				Files.delete(path);
-			}
-			Files.createFile(path);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		Gson gson = new GsonBuilder()
-				.setPrettyPrinting()
-				.create();
-		Map<String, SkillSettings> result = new HashMap<>();
-
-		
-
-		try (PrintWriter writer = new PrintWriter(path.toFile())) {
-			skills.values()
-					.stream()
-					.filter(entry -> entry.getName() != null)
-					.forEach(entry -> result.put(entry.getName(), entry.getSettings()));
-			String s = gson.toJson(result);
-			writer.print(s);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
 	}
 
 	public void invokeSkillByCombo(String combo, IActiveCharacter character) {

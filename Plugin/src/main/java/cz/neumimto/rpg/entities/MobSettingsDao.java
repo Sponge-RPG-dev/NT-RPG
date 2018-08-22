@@ -3,6 +3,7 @@ package cz.neumimto.rpg.entities;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.utils.FileUtils;
 import ninja.leaping.configurate.SimpleConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
@@ -55,17 +56,8 @@ public class MobSettingsDao {
 			for (WorldProperties allWorldProperty : allWorldProperties) {
 				rootMobConfig.getDimmensions().put(allWorldProperty.getWorldName(), overWorldMobConfig);
 			}
+			FileUtils.generateConfigFile(rootMobConfig, properties);
 
-
-			try {
-				ObjectMapper.BoundInstance configMapper = ObjectMapper.forObject(rootMobConfig);
-				HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(properties.toPath()).build();
-				SimpleConfigurationNode scn = SimpleConfigurationNode.root();
-				configMapper.serialize(scn);
-				hcl.save(scn);
-			} catch (Exception e) {
-				throw new RuntimeException("Could not create file " + s, e);
-			}
 		}
 		try {
 			ObjectMapper<RootMobConfig> mapper = ObjectMapper.forClass(RootMobConfig.class);

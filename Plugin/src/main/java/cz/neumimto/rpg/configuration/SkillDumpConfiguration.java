@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.configuration;
 
+import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
 import java.util.HashSet;
@@ -7,8 +8,16 @@ import java.util.Set;
 
 @ConfigSerializable
 public class SkillDumpConfiguration {
+
+    @Setting
     private String skillId;
-    private Set<String> floatNodes = new HashSet<>();
+
+    @Setting
+    private Set<String> floatNodes;
+
+    public SkillDumpConfiguration() {
+        this.floatNodes = new HashSet<>();
+    }
 
     public String getSkillId() {
         return skillId;
