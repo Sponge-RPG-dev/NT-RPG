@@ -1,12 +1,5 @@
 package cz.neumimto.rpg;
 
-import com.sun.source.tree.*;
-import com.sun.source.util.Trees;
-import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.TreeInfo;
-
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
@@ -25,7 +18,6 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
     private Filer filerUtils;
     private Elements elementUtils;
     private TypeElement myAnnotationTypeElement;
-    private Trees trees;
 
     private String template =  //fuck it
             "\n" +
@@ -68,7 +60,6 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
         filerUtils = processingEnv.getFiler();
         elementUtils = processingEnv.getElementUtils();
         myAnnotationTypeElement = elementUtils.getTypeElement("cz.neumimto.rpg.effects.Generate");
-        trees = Trees.instance(processingEnv);
     }
 
     @Override
