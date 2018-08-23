@@ -14,11 +14,12 @@ public class ConstructorScanner  extends TreePathScanner<List<MethodTree>, Trees
     private List<MethodTree> methodTrees = new ArrayList<>();
 
     public MethodTree scan(ExecutableElement methodElement, Trees trees) {
-        assert methodElement.getKind() == ElementKind.CONSTRUCTOR;
+        if (methodElement.getKind() != ElementKind.CONSTRUCTOR) {
+            throw new RuntimeException("How did it get there?");
+        }
 
         List<MethodTree> methodTrees = this.scan(trees.getPath(methodElement), trees);
         assert methodTrees.size() == 1;
-
         return methodTrees.get(0);
     }
 
