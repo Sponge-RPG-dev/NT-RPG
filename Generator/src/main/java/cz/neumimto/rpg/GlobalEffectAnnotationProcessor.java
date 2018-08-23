@@ -134,8 +134,7 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
                             _template = _template.replaceAll("%init%", init2);
                         } else {
                             _template = _template.replaceAll("%init%", init4);
-                            Type type = ((JCTree.JCVariableDecl) parameters.get(1)).getType().type;
-                            model = type.toString();
+                            model = parameters.get(1).asType().toString();
                         }
                     } else {
                         if (parameters.get(2).toString().startsWith("Void")) {
