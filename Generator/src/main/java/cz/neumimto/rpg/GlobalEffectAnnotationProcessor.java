@@ -2,6 +2,9 @@ package cz.neumimto.rpg;
 
 import com.sun.source.tree.*;
 import com.sun.source.util.Trees;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.TreeInfo;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
@@ -25,7 +28,6 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
             "\n" +
             "import cz.neumimto.rpg.effects.IEffectConsumer;\n" +
             "import cz.neumimto.rpg.effects.IGlobalEffect;\n" +
-     //       "import %import.effect%;\n" +
             "import cz.neumimto.rpg.effects.model.EffectModelFactory;\n" +
             "\n" +
             "import java.util.Map;\n" +
@@ -53,6 +55,8 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
     private String init2 = "%effect%(consumer, duration)";
     private String init1 = "%effect%(consumer)";
     private String init3 = "%effect%(consumer, duration, EffectModelFactory.create(%effect%.class, value, %model%.class))";
+    private String init4 = "%effect%(consumer, EffectModelFactory.create(%effect%.class, value, %model%.class))";
+
     private String init3_void = "%effect%(consumer, duration, null)";
 
     @Override
@@ -123,17 +127,25 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
                     if (parameters.size() == 1) {
                         _template = _template.replaceAll("%init%", init1);
                     } else if (parameters.size() == 2) {
-                        _template = _template.replaceAll("%init%", init2);
+                        if (parameters.get(1).getKind() == Tree.Kind.PRIMITIVE_TYPE && parameters.get(1).toString().equalsIgnoreCase("long")) {
+                            _template = _template.replaceAll("%init%", init2);
+                        } else {
+                            _template = _template.replaceAll("%init%", init4);
+                            JCTree jcTree = (JCTree) parameters.get(1);
+                            Element element1 = TreeInfo.symbol(jcTree);
+                            Element enclosingElement = element1.getEnclosingElement(); //Now here i would expect package, throws npe
+
+                        }
                     } else {
-                        System.out.println(parameters.get(2).toString());
                         if (parameters.get(2).toString().startsWith("Void")) {
                             _template = _template.replaceAll("%init%", init3_void);
                         } else {
                             _template = _template.replaceAll("%init%", init3);
                             VariableTree tree = parameters.get(2);
-                            System.out.println("ASD");
                             if (tree.getType().getKind() == Tree.Kind.PRIMITIVE_TYPE) {
                                 model = tree.getType().toString();
+                            } else {
+
                             }
                         }
                     }
