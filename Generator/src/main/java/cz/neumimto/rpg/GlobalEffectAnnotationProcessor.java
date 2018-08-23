@@ -11,6 +11,8 @@ import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.PrimitiveType;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.tools.JavaFileObject;
 import java.io.BufferedWriter;
@@ -90,26 +92,26 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
                         }
                     }
 
-                    List<MethodTree> methodTrees = new ArrayList<>();
+                    List<ExecutableElement> methodTrees = new ArrayList<>();
                     for (Element enclosedElement : element.getEnclosedElements()) {
                         if (enclosedElement.getKind() == ElementKind.CONSTRUCTOR) {
-                            ConstructorScanner methodScanner = new ConstructorScanner();
-                            MethodTree methodTree = methodScanner.scan((ExecutableElement) enclosedElement, this.trees);
-                            methodTrees.add(methodTree);
+                            ExecutableElement exec = (ExecutableElement) enclosedElement;
+
+                            methodTrees.add(exec);
                         }
                     }
                     System.out.println(element.getSimpleName() + " found " + methodTrees.size() + " constructors");
-                    MethodTree methodTree = null;
+                    ExecutableElement methodTree = null;
                     if (methodTrees.size() == 1) {
                         methodTree = methodTrees.get(0);
 
                     } else {
                         mt:
-                        for (MethodTree mt : methodTrees) {
-                            List<? extends AnnotationTree> annotations1 = mt.getModifiers().getAnnotations();
-                            for (AnnotationTree annotationTree : annotations1) {
-                                Tree annotationType = annotationTree.getAnnotationType();
-                                if (annotationType.toString().equalsIgnoreCase("Generate.Constructor")) {
+                        for (ExecutableElement mt : methodTrees) {
+                            List<? extends AnnotationMirror> annotations1 = mt.getAnnotationMirrors();
+                            for (AnnotationMirror annotationMirror : annotations1) {
+                                String name = ((QualifiedNameable)annotationMirror.getAnnotationType().asElement()).getQualifiedName().toString();
+                                if (name.contains("Generate.Constructor")) {
                                     methodTree = mt;
                                     break mt;
                                 }
@@ -122,13 +124,13 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
                     }
                     System.out.println("Found valid constructor - " + methodTree);
 
-                    List<? extends VariableTree> parameters = methodTree.getParameters();
+                    List<? extends VariableElement> parameters = methodTree.getParameters();
                     String _template = template;
                     String model = null;
                     if (parameters.size() == 1) {
                         _template = _template.replaceAll("%init%", init1);
                     } else if (parameters.size() == 2) {
-                        if (parameters.get(1).getKind() == Tree.Kind.PRIMITIVE_TYPE && parameters.get(1).toString().equalsIgnoreCase("long")) {
+                        if (parameters.get(1).getKind() == ElementKind.LOCAL_VARIABLE && parameters.get(1).toString().equalsIgnoreCase("long")) {
                             _template = _template.replaceAll("%init%", init2);
                         } else {
                             _template = _template.replaceAll("%init%", init4);
@@ -140,12 +142,12 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
                             _template = _template.replaceAll("%init%", init3_void);
                         } else {
                             _template = _template.replaceAll("%init%", init3);
-                            VariableTree tree = parameters.get(2);
-                            if (tree.getType().getKind() == Tree.Kind.PRIMITIVE_TYPE) {
-                                model = tree.getType().toString();
+                            VariableElement tree = parameters.get(2);
+                            TypeMirror typeMirror = tree.asType();
+                            if (typeMirror instanceof PrimitiveType) {
+                                model = tree.asType().toString().toLowerCase();
                             } else {
-                                Type type = ((JCTree.JCVariableDecl) parameters.get(2)).getType().type;
-                                model = type.toString();
+                                model = tree.asType().toString();
                             }
                         }
                     }
