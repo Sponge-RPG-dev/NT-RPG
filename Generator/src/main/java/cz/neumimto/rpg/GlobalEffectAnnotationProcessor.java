@@ -3,6 +3,7 @@ package cz.neumimto.rpg;
 import com.sun.source.tree.*;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeInfo;
 
@@ -131,10 +132,8 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
                             _template = _template.replaceAll("%init%", init2);
                         } else {
                             _template = _template.replaceAll("%init%", init4);
-                            JCTree jcTree = (JCTree) parameters.get(1);
-                            Element element1 = TreeInfo.symbol(jcTree);
-                            Element enclosingElement = element1.getEnclosingElement(); //Now here i would expect package, throws npe
-
+                            Type type = ((JCTree.JCVariableDecl) parameters.get(1)).getType().type;
+                            model = type.toString();
                         }
                     } else {
                         if (parameters.get(2).toString().startsWith("Void")) {
@@ -145,7 +144,8 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
                             if (tree.getType().getKind() == Tree.Kind.PRIMITIVE_TYPE) {
                                 model = tree.getType().toString();
                             } else {
-
+                                Type type = ((JCTree.JCVariableDecl) parameters.get(2)).getType().type;
+                                model = type.toString();
                             }
                         }
                     }
