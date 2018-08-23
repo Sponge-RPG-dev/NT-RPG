@@ -17,7 +17,7 @@ public class DefaultHealthRegeneration extends EffectBase implements IEffectCont
 
 	public static final String name = "DefaultHealthRegen";
 
-	public DefaultHealthRegeneration(IEffectConsumer character, long duration, String value) {
+	public DefaultHealthRegeneration(IEffectConsumer character, long duration, Void value) {
 		super(name, character);
 	}
 
