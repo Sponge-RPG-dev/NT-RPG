@@ -17,7 +17,7 @@ public class EnderPearlEffect extends EffectBase<Long> {
 
 	public static final String name = "Ender Pearl";
 
-	public EnderPearlEffect(IEffectConsumer consumer, long duration, Long value) {
+	public EnderPearlEffect(IEffectConsumer consumer, long duration, Void value) {
 		super(name, consumer);
 		setDuration(duration);
 		setStackable(true, MinLongStackingStrategy.INSTNCE);

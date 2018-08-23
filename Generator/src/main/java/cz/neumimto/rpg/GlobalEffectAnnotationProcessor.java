@@ -119,6 +119,7 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
 
                     List<? extends VariableTree> parameters = methodTree.getParameters();
                     String _template = template;
+                    String model = null;
                     if (parameters.size() == 1) {
                         _template = _template.replaceAll("%init%", init1);
                     } else if (parameters.size() == 2) {
@@ -129,6 +130,11 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
                             _template = _template.replaceAll("%init%", init3_void);
                         } else {
                             _template = _template.replaceAll("%init%", init3);
+                            VariableTree tree = parameters.get(2);
+                            System.out.println("ASD");
+                            if (tree.getType().getKind() == Tree.Kind.PRIMITIVE_TYPE) {
+                                model = tree.getType().toString();
+                            }
                         }
                     }
 
@@ -143,11 +149,15 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
                             writer.write("package " + elementUtils.getPackageOf(enclosingClass).getQualifiedName() + ";");
                             writer.newLine();
                         }
-                        writer.write(_template
+                        _template = _template
                                     .replaceAll("%effect%", enclosingClass.getSimpleName().toString())
                                     .replaceAll("%import\\.effect%", enclosingClass.getEnclosingElement().getSimpleName().toString())
-                                    .replaceAll("%effect\\.nameField%", fieldName)
-                        );
+                                    .replaceAll("%effect\\.nameField%", fieldName);
+                        if (model != null) {
+                            _template = _template.replaceAll("%model%", model);
+                        }
+
+                        writer.write(_template);
 
                         writer.flush();
                     }
