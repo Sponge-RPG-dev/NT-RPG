@@ -41,20 +41,6 @@ import javax.script.ScriptException;
 public class Tests {
 
 
-	/* @Test
-	 public void testEffectClassGenerator() {
-		 ClassGenerator classGenerator = new ClassGenerator();
-		 IGlobalEffect eff = null;
-		 try {
-			 eff = classGenerator.generateGlobalEffect(SpeedBoost.class);
-			 Assert.assertTrue(eff != null);
-			 classGenerator.injectGlobalEffectField(SpeedBoost.class, eff);
-		 } catch (CannotCompileException | IllegalAccessException | InstantiationException e) {
-			 e.printStackTrace();
-		 }
-		 Assert.assertTrue(SpeedBoost.global == eff);
-	 }
- */
 	@Test
 	public void testDynamicListener() throws Exception {
 		Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
@@ -135,41 +121,6 @@ public class Tests {
 		Assert.assertTrue(is16);
 		is16 = x == (x >> 4) << 4;
 		Assert.assertTrue(is16);
-	}
-
-
-	@Test
-	public void w() throws IllegalAccessException, CannotCompileException, InstantiationException {
-		ClassGenerator classGenerator = new ClassGenerator();
-		IGlobalEffect iGlobalEffect = classGenerator.generateGlobalEffect(TestEffectStr.class);
-		Map<String, String> k = new HashMap<>();
-		k.put(iGlobalEffect.getName(), "test");
-		IEffect construct = iGlobalEffect.construct(null, -1, k);
-		assert construct.getValue().equals(k.get(iGlobalEffect.getName()));
-
-		iGlobalEffect = classGenerator.generateGlobalEffect(TestEffectModel.class);
-		k = new HashMap<>();
-		k.put(iGlobalEffect.getName(), "test");
-		k.put("l", "15");
-		k.put("v", "13.5");
-		construct = iGlobalEffect.construct(null, -1, k);
-		TestModel model = (TestModel) construct.getValue();
-		assert model.w == null;
-		assert model.l == 15;
-		assert model.v == 13.5D;
-
-		iGlobalEffect = classGenerator.generateGlobalEffect(TestEffectVoid0.class);
-		construct = iGlobalEffect.construct(null, -1, null);
-		assert construct.getValue() == null;
-
-		iGlobalEffect = classGenerator.generateGlobalEffect(TestEffectFloat.class);
-		k = new HashMap<>();
-		k.put(TestEffectFloat.name, "12.5");
-		construct = iGlobalEffect.construct(null, -1, k);
-		assert ((float)construct.getValue()) == 12.5f;
-
-
-
 	}
 }
 

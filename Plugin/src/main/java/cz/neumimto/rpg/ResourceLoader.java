@@ -272,24 +272,9 @@ public class ResourceLoader {
 				localizationService.loadResourceBundle(resourceBundle.value(), Locale.forLanguageTag(PluginConfig.LOCALE));
 			}
 		}
-		//Effects
-		if (IEffect.class.isAssignableFrom(clazz)) {
-			Generate a = clazz.getAnnotation(Generate.class);
-			if (a != null) {
-				Class c = clazz;
-				IGlobalEffect iGlobalEffect = classGenerator.generateGlobalEffect(c, classLoader);
-				if (iGlobalEffect == null) {
-					return null;
-				}
-				classGenerator.injectGlobalEffectField(c, iGlobalEffect);
-				effectService.registerGlobalEffect(iGlobalEffect);
-				container = iGlobalEffect;
-			}
-		}
 		if (IGlobalEffect.class.isAssignableFrom(clazz)) {
 			container = newInstance(IGlobalEffect.class, clazz);
 			effectService.registerGlobalEffect((IGlobalEffect) container);
-
 		}
 
 		return container;
