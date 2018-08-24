@@ -20,10 +20,6 @@ public class Silence extends EffectBase {
 		effectTypes.add(CommonEffectTypes.SILENCE);
 	}
 
-	public Silence(IEffectConsumer consumer, long duration, String c) {
-		this(consumer, duration);
-	}
-
 	@Override
 	public String getName() {
 		return name;

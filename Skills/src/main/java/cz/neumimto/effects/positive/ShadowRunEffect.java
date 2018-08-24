@@ -31,12 +31,6 @@ public class ShadowRunEffect extends EffectBase<ShadowRunModel> {
         setPeriod(20);
     }
 
-    public ShadowRunEffect(IEffectConsumer consumer, long duration, @Inject ShadowRunModel value) {
-        this(consumer, value);
-        setDuration(duration);
-        setValue(value);
-    }
-
     @Override
     public void onApply() {
         super.onApply();

@@ -29,10 +29,6 @@ public class StunEffect extends ShapedEffectDecorator<Location<World>> {
 			.type(ParticleTypes.CRITICAL_HIT)
 			.build();
 
-	public StunEffect(IEffectConsumer consumer, long duration, Void value) {
-		this(consumer, duration);
-	}
-
 	public StunEffect(IEffectConsumer consumer, long duration) {
 		super(name, consumer);
 		setValue(consumer.getEntity().getLocation());

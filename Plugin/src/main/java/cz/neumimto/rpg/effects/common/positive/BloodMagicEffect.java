@@ -21,6 +21,7 @@ package cz.neumimto.rpg.effects.common.positive;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.Generate;
+import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.common.mechanics.ManaRegeneration;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.Health;
@@ -38,9 +39,9 @@ public class BloodMagicEffect extends EffectBase {
 	private static String expire = "You have lost " + name;
 	private IActiveCharacter consumer;
 
-	public BloodMagicEffect(IActiveCharacter consumer, long duration, String value) {
+	public BloodMagicEffect(IEffectConsumer consumer, long duration) {
 		super(name, consumer);
-		this.consumer = consumer;
+		this.consumer = (IActiveCharacter) consumer;
 		setDuration(duration);
 		setApplyMessage(apply);
 		setExpireMessage(expire);

@@ -31,6 +31,7 @@ import com.typesafe.config.ConfigValue;
 import com.typesafe.config.ConfigValueType;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.EffectService;
@@ -413,6 +414,10 @@ public class GroupDao {
 					ConfigValueType type = entry.getValue().valueType();
 					EffectParams value = new EffectParams();
 					IGlobalEffect globalEffect = effectService.getGlobalEffect(effectName);
+					if (globalEffect == null) {
+						warn(globalEffect + " not found");
+						continue;
+					}
 					switch (type) {
 						case NULL:
 							break;

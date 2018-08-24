@@ -24,10 +24,6 @@ public class Invisibility extends EffectBase implements IEffectContainer {
 		setDuration(duration);
 	}
 
-	public Invisibility(IEffectConsumer consumer, long duration, String level) {
-		this(consumer, duration);
-	}
-
 	@Override
 	public void onApply() {
 		Living entity = getConsumer().getEntity();

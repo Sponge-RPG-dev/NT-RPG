@@ -76,7 +76,7 @@ public class PortalEffect extends ShapedEffectDecorator {
 			.build();
 	private PortalState portalState;
 
-	@Inject
+	@Generate.Constructor
 	public PortalEffect(IEffectConsumer consumer, long duration, String location) {
 		this(consumer, duration, Utils.locationFromString(location));
 	}

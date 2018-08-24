@@ -109,8 +109,7 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
                             }
                         }
                         if (methodTree == null) {
-                            System.out.println(" - Found multiple constuctors, but none of them annotated via @Generate.Constructor");
-                            return true;
+                            throw new RuntimeException(" -'"+element.getSimpleName()+"' Found multiple constuctors, but none of them annotated via @Generate.Constructor");
                         }
                     }
                     System.out.println("Found valid constructor - " + methodTree);
@@ -170,7 +169,7 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Cannot create globaleffect ", e);
         }
 
 

@@ -3,6 +3,7 @@ package cz.neumimto.rpg.effects.common.mechanics;
 
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.Generate;
+import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.Utils;
@@ -26,9 +27,9 @@ public class CooldownObserver extends EffectBase implements IEffectContainer {
 	private IActiveCharacter character;
 
 
-	public CooldownObserver(IActiveCharacter character, long duration, String value) {
+	public CooldownObserver(IEffectConsumer character, long duration, String value) {
 		super(name, character);
-		this.character = character;
+		this.character = (IActiveCharacter) character;
 		setDuration(duration);
 		String s = Utils.extractNumber(value);
 		long l = 1000;
