@@ -227,8 +227,7 @@ public class ClassGenerator implements Opcodes {
 					map.entrySet().stream()
 							.filter(m -> m.getKey().getRepresentedClass() == event)
 							.forEach(a -> {
-
-								boolean b1 = s.addAll(a.getValue());
+									s.addAll(a.getValue());
 							});
 				}
 			}

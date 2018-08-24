@@ -23,7 +23,7 @@ public class ShadowRunEffect extends EffectBase<ShadowRunModel> {
     public static final String name = "ShadowRun";
     public static XORShiftRnd rnd = new XORShiftRnd();
 
-    public ShadowRunEffect(IEffectConsumer character, ShadowRunModel shadowRunModel) {
+    public ShadowRunEffect(IEffectConsumer character, long duration, ShadowRunModel shadowRunModel) {
         super(name, character);
         setStackable(false, null);
         setValue(shadowRunModel);

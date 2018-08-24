@@ -9,6 +9,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.tools.JavaFileObject;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.*;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
@@ -21,31 +22,31 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
 
     private String template =  //fuck it
             "\n" +
-            "import cz.neumimto.rpg.effects.IEffectConsumer;\n" +
-            "import cz.neumimto.rpg.effects.IGlobalEffect;\n" +
-            "import cz.neumimto.rpg.effects.model.EffectModelFactory;\n" +
-            "\n" +
-            "import java.util.Map;\n" +
-            "\n" +
-            "public class %effect%Global implements IGlobalEffect<%effect%> {\n" +
-            "\tpublic %effect%Global() {\n" +
-            "\t}\n" +
-            "\n" +
-            "\t@Override\n" +
-            "\tpublic %effect% construct(IEffectConsumer consumer, long duration, Map<String, String> value) {\n" +
-            "\t\treturn new %init%;\n" +
-            "\t}\n" +
-            "\n" +
-            "\t@Override\n" +
-            "\tpublic String getName() {\n" +
-            "\t\treturn %effect%.%effect.nameField%;\n" +
-            "\t}\n" +
-            "\n" +
-            "\t@Override\n" +
-            "\tpublic Class<%effect%> asEffectClass() {\n" +
-            "\t\treturn %effect%.class;\n" +
-            "\t}\n" +
-            "}\n";
+                    "import cz.neumimto.rpg.effects.IEffectConsumer;\n" +
+                    "import cz.neumimto.rpg.effects.IGlobalEffect;\n" +
+                    "import cz.neumimto.rpg.effects.model.EffectModelFactory;\n" +
+                    "\n" +
+                    "import java.util.Map;\n" +
+                    "\n" +
+                    "public class %effect%Global implements IGlobalEffect<%effect%> {\n" +
+                    "\tpublic %effect%Global() {\n" +
+                    "\t}\n" +
+                    "\n" +
+                    "\t@Override\n" +
+                    "\tpublic %effect% construct(IEffectConsumer consumer, long duration, Map<String, String> value) {\n" +
+                    "\t\treturn new %init%;\n" +
+                    "\t}\n" +
+                    "\n" +
+                    "\t@Override\n" +
+                    "\tpublic String getName() {\n" +
+                    "\t\treturn %effect%.%effect.nameField%;\n" +
+                    "\t}\n" +
+                    "\n" +
+                    "\t@Override\n" +
+                    "\tpublic Class<%effect%> asEffectClass() {\n" +
+                    "\t\treturn %effect%.class;\n" +
+                    "\t}\n" +
+                    "}\n";
 
     private String init2 = "%effect%(consumer, duration)";
     private String init1 = "%effect%(consumer)";
@@ -101,7 +102,7 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
                         for (ExecutableElement mt : methodTrees) {
                             List<? extends AnnotationMirror> annotations1 = mt.getAnnotationMirrors();
                             for (AnnotationMirror annotationMirror : annotations1) {
-                                String name = ((QualifiedNameable)annotationMirror.getAnnotationType().asElement()).getQualifiedName().toString();
+                                String name = ((QualifiedNameable) annotationMirror.getAnnotationType().asElement()).getQualifiedName().toString();
                                 if (name.contains("Generate.Constructor")) {
                                     methodTree = mt;
                                     break mt;
@@ -109,7 +110,7 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
                             }
                         }
                         if (methodTree == null) {
-                            throw new RuntimeException(" -'"+element.getSimpleName()+"' Found multiple constuctors, but none of them annotated via @Generate.Constructor");
+                            throw new RuntimeException(" -'" + element.getSimpleName() + "' Found multiple constuctors, but none of them annotated via @Generate.Constructor");
                         }
                     }
                     System.out.println("Found valid constructor - " + methodTree);
@@ -117,6 +118,7 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
                     List<? extends VariableElement> parameters = methodTree.getParameters();
                     String _template = template;
                     String model = null;
+                    VariableElement varModel = null;
                     if (parameters.size() == 1) {
                         _template = _template.replaceAll("%init%", init1);
                     } else if (parameters.size() == 2) {
@@ -125,6 +127,7 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
                         } else {
                             _template = _template.replaceAll("%init%", init4);
                             model = parameters.get(1).asType().toString();
+                            varModel = parameters.get(1);
                         }
                     } else {
                         if (parameters.get(2).toString().startsWith("Void")) {
@@ -133,6 +136,7 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
                             _template = _template.replaceAll("%init%", init3);
                             VariableElement tree = parameters.get(2);
                             TypeMirror typeMirror = tree.asType();
+                            varModel = parameters.get(2);
                             if (typeMirror instanceof PrimitiveType) {
                                 model = tree.asType().toString().toLowerCase();
                             } else {
@@ -140,30 +144,23 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
                             }
                         }
                     }
+                    TypeMirror mirror = varModel.asType();
+                    if (varModel.asType() instanceof DeclaredType) {
 
 
-                    TypeElement enclosingClass = (TypeElement) element;
-                    String classname = enclosingClass.getQualifiedName().toString() + "Global";
-
-                    JavaFileObject javaFileObject = filerUtils.createSourceFile(classname);
-                    try (BufferedWriter writer = new BufferedWriter(javaFileObject.openWriter())) {
-                        System.out.println("Generating source code for " + classname);
-                        if (elementUtils.getPackageOf(enclosingClass).getQualifiedName().length() > 0) {
-                            writer.write("package " + elementUtils.getPackageOf(enclosingClass).getQualifiedName() + ";");
-                            writer.newLine();
+                        DeclaredType declaredType = (DeclaredType) varModel.asType();
+                        TypeElement fieldTypeElement = (TypeElement) declaredType.asElement();
+                        List<? extends Element> enclosedElements = fieldTypeElement.getEnclosedElements();
+                        for (Element enclosedElement : enclosedElements) {
+                            if (enclosedElement.getKind() == ElementKind.FIELD) {
+                                //todo
+                            }
                         }
-                        _template = _template
-                                    .replaceAll("%effect%", enclosingClass.getSimpleName().toString())
-                                    .replaceAll("%import\\.effect%", enclosingClass.getEnclosingElement().getSimpleName().toString())
-                                    .replaceAll("%effect\\.nameField%", fieldName);
-                        if (model != null) {
-                            _template = _template.replaceAll("%model%", model);
-                        }
-
-                        writer.write(_template);
-
-                        writer.flush();
                     }
+
+                    generateModelMapper(varModel);
+
+                    generateGlobalEffect(_template, (TypeElement) element, fieldName, model);
 
                 }
             }
@@ -174,6 +171,34 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
 
 
         return true;
+    }
+
+    private void generateGlobalEffect(String _template, TypeElement enclosingClass, String fieldName, String model) throws IOException {
+        String classname = enclosingClass.getQualifiedName().toString() + "Global";
+
+        JavaFileObject javaFileObject = filerUtils.createSourceFile(classname);
+        try (BufferedWriter writer = new BufferedWriter(javaFileObject.openWriter())) {
+            System.out.println("Generating source code for " + classname);
+            if (elementUtils.getPackageOf(enclosingClass).getQualifiedName().length() > 0) {
+                writer.write("package " + elementUtils.getPackageOf(enclosingClass).getQualifiedName() + ";");
+                writer.newLine();
+            }
+            _template = _template
+                    .replaceAll("%effect%", enclosingClass.getSimpleName().toString())
+                    .replaceAll("%import\\.effect%", enclosingClass.getEnclosingElement().getSimpleName().toString())
+                    .replaceAll("%effect\\.nameField%", fieldName);
+            if (model != null) {
+                _template = _template.replaceAll("%model%", model);
+            }
+
+            writer.write(_template);
+
+            writer.flush();
+        }
+    }
+
+    private void generateModelMapper(VariableElement model) {
+
     }
 
 

@@ -3,6 +3,7 @@ package cz.neumimto.rpg.effects.model;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.ClassGenerator;
+import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.model.mappers.SingleValueModelMapper;
 
@@ -63,8 +64,7 @@ public class EffectModelFactory {
     public static Class<?> getModelType(Class effect) {
         Constructor c = null;
         for (Constructor<?> constructor : effect.getConstructors()) {
-            if (constructor.getAnnotation(Inject.class) != null  ||
-                (hasInjectParam(constructor)) ||
+            if (constructor.getAnnotation(Generate.Constructor.class) != null  ||
                 (constructor.getParameterCount() == 3 &&
                         Arrays.stream(effect.getConstructors())
                         .map(Constructor::getParameterCount)
@@ -81,15 +81,6 @@ public class EffectModelFactory {
         }
         Parameter parameter = c.getParameters()[c.getParameters().length-1];
         return parameter.getType();
-    }
-
-    public static boolean hasInjectParam(Constructor constructor) {
-        for (Parameter parameter : constructor.getParameters()) {
-            if (parameter.getAnnotation(Inject.class) != null) {
-                return true;
-            }
-        }
-        return false;
     }
 
 
