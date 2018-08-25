@@ -1,9 +1,7 @@
 package cz.neumimto.rpg.effects.model;
 
-import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.utils.Utils;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -85,14 +83,8 @@ public abstract class EffectModelMapper {
     }
 
     private final Class<?> type;
-    Map<String,Pair<Class<?>, Field>> nameTypeCache = new HashMap<>();
 
     public EffectModelMapper(Class<?> type) {
-        for (Field field : type.getDeclaredFields()) {
-            field.setAccessible(true);
-            nameTypeCache.put(field.getName().toLowerCase(), new Pair<>(field.getType(), field));
-        }
-
         this.type = type;
     }
 
@@ -109,5 +101,26 @@ public abstract class EffectModelMapper {
     }
 
     public abstract Object parse(Map<String, String> map);
+    
+    public double parseDouble(Map<String, String> map, String key) {
+        String s = map.get(key);
+        return s == null ? null : Double.parseDouble(key); 
+    }
+
+    public int parseInt(Map<String, String> map, String key) {
+        String s = map.get(key);
+        return s == null ? null : Integer.parseInt(key);
+    }
+
+    public float parseFloat(Map<String, String> map, String key) {
+        String s = map.get(key);
+        return s == null ? null : Float.parseFloat(key);
+    }
+
+    public long parseLong(Map<String, String> map, String key) {
+        String s = map.get(key);
+        return s == null ? null : Long.parseLong(key);
+    }
+    
 }
 

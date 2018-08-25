@@ -1,8 +1,5 @@
 package cz.neumimto.rpg.effects.model;
 
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.IoC;
-import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.model.mappers.SingleValueModelMapper;
@@ -52,12 +49,8 @@ public class EffectModelFactory {
         if (typeMappers.containsKey(modelType)) {
             return typeMappers.get(modelType);
         }
-        Class<?> mapper = IoC.get().build(ClassGenerator.class).createEffectModelMapper(iEffect, modelType);
-        try {
-            return (EffectModelMapper) mapper.getConstructor(Class.class).newInstance(modelType);
-        } catch (Exception e) {
-            throw new RuntimeException("Could not invoke <init> on: " + mapper, e);
-        }
+        throw new RuntimeException("Could not find a model mapper for a class: " + modelType);
+
     }
 
 

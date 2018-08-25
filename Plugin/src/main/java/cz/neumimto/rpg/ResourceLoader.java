@@ -34,9 +34,9 @@ import cz.neumimto.rpg.commands.CommandBase;
 import cz.neumimto.rpg.commands.CommandService;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.Generate;
-import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.effects.model.EffectModelFactory;
+import cz.neumimto.rpg.effects.model.EffectModelMapper;
 import cz.neumimto.rpg.players.properties.PropertyContainer;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
@@ -276,6 +276,10 @@ public class ResourceLoader {
 			container = newInstance(IGlobalEffect.class, clazz);
 			effectService.registerGlobalEffect((IGlobalEffect) container);
 		}
+		if (clazz.isAssignableFrom(ModelMapper.class)) {
+			EffectModelMapper o = (EffectModelMapper) clazz.newInstance();
+			EffectModelFactory.typeMappers.put(o.getType(), o);
+		}
 
 		return container;
 	}
@@ -300,5 +304,10 @@ public class ResourceLoader {
 
 	@Retention(RetentionPolicy.RUNTIME)
 	public @interface Attribute {
+	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	public @interface ModelMapper {
+
 	}
 }
