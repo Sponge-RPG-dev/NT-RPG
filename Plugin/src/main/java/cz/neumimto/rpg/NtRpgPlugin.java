@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg;
 
+import static cz.neumimto.rpg.Log.error;
 import static cz.neumimto.rpg.Log.info;
 
 import com.google.gson.Gson;
@@ -115,7 +116,9 @@ import cz.neumimto.rpg.skills.configs.SkillConfigLoader;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoaders;
 import cz.neumimto.rpg.skills.tree.SkillType;
 import cz.neumimto.rpg.utils.FileUtils;
+import cz.neumimto.rpg.utils.Placeholders;
 import cz.neumimto.rpg.utils.SkillTreeActionResult;
+import me.rojo8399.placeholderapi.PlaceholderService;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
@@ -165,7 +168,7 @@ import javax.annotation.Resource;
 /**
  * Created by NeumimTo on 29.4.2015.
  */
-@Plugin(id = "nt-rpg", version = Version.VERSION, name = "NT-Rpg", dependencies = {
+@Plugin(id = "nt-rpg", version = cz.neumimto.rpg.Version.VERSION, name = "NT-Rpg", dependencies = {
 		@Dependency(id = "nt-core", version = "1.13", optional = false)
 })
 @Resource
@@ -464,6 +467,19 @@ public class NtRpgPlugin {
 		double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
 
 		Sponge.getRegistry().registerModule(ISkill.class, IoC.get().build(SkillService.class));
+		Sponge.getServiceManager().provide(PlaceholderService.class).ifPresent(a -> {
+
+			a.loadAll(IoC.get().build(Placeholders.class), this)
+					.stream()
+						.map(builder -> builder.author("NeumimTo").plugin(this).version("0.0.1-Test"))
+						.forEach(builder -> {
+							try {
+								builder.buildAndRegister();
+							} catch (Exception e) {
+								error("Could not register placeholder ", e);
+							}
+						});
+		});
 		info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
 	}
 

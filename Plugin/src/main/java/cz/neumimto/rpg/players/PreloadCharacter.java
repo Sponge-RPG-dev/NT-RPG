@@ -49,7 +49,13 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatType;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by NeumimTo on 23.7.2015.
@@ -603,6 +609,11 @@ public class PreloadCharacter implements IActiveCharacter {
 	@Override
 	public boolean hasSkillTreeSpecialization(SkillTreeSpecialization specialization) {
 		return false;
+	}
+
+	@Override
+	public Set<SkillTreeSpecialization> getSkillTreeSpecialization() {
+		return Collections.emptySet();
 	}
 
 	@Override

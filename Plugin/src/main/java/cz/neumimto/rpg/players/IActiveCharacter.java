@@ -240,6 +240,8 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	boolean hasSkillTreeSpecialization(SkillTreeSpecialization specialization);
 
+	Set<SkillTreeSpecialization> getSkillTreeSpecialization();
+
 	Set<EquipedSlot> getSlotsCannotBeEquiped();
 
     double getExperienceBonusFor(String name, EntityType type);
