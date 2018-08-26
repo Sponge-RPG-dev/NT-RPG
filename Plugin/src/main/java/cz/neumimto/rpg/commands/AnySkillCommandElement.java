@@ -12,6 +12,7 @@ import org.spongepowered.api.text.serializer.TextSerializers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Nullable;
 
@@ -27,11 +28,11 @@ public class AnySkillCommandElement extends CommandElement {
     @Override
     protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
         String skilllc = args.next().toLowerCase();
-        ISkill skill = NtRpgPlugin.GlobalScope.skillService.getSkillByLocalizedName(skilllc);
-        if (skill == null) {
+        Optional<ISkill> skill = NtRpgPlugin.GlobalScope.skillService.getById(skilllc);
+        if (!skill.isPresent()) {
             throw args.createError(TextSerializers.FORMATTING_CODE.deserialize("&CUnknown skill &C\"" + skilllc + "\""));
         }
-        return skill;
+        return skill.get();
     }
 
     @Override

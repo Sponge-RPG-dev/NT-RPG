@@ -18,6 +18,9 @@
 
 package cz.neumimto.rpg.skills;
 
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
+
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
@@ -50,9 +53,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.Log.warn;
 
 /**
  * Created by NeumimTo on 1.1.2015.
@@ -251,12 +251,18 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 		}
 		extraCatalog.init();
 		skills.put(extraCatalog.getId().toLowerCase(), extraCatalog);
+		skillByNames.put(extraCatalog.getName(), extraCatalog);
 		skillByNames.put(extraCatalog.getLocalizableName().toPlain(), extraCatalog);
 	}
 
 	@Override
 	public Optional<ISkill> getById(String id) {
-		return Optional.ofNullable(skills.get(id.toLowerCase()));
+		id = id.toLowerCase();
+		ISkill skill = skills.get(id);
+		if (skill == null) {
+			skill = getSkillByLocalizedName(id);
+		}
+		return Optional.ofNullable(skill);
 	}
 
 	@Override

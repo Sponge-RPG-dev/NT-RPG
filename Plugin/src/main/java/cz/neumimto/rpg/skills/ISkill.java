@@ -40,7 +40,11 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by NeumimTo on 1.1.2015.
@@ -231,7 +235,7 @@ public interface ISkill extends IEffectSourceProvider, CatalogType {
 
 
 		lore.add(Text.EMPTY);
-		lore.add(Text.builder(Localizations.SKILL_LEVEL + " " + currentLevel + " (" + totalLevel + ") ").build());
+		lore.add(Localizations.SKILL_LEVEL.toText(Arg.arg("level", currentLevel).with("total", totalLevel)));
 
 		if (getLore() != null) {
 			lore.addAll(getLore());

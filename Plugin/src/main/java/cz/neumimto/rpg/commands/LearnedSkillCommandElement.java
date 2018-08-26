@@ -13,9 +13,11 @@ import org.spongepowered.api.command.args.CommandElement;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by NeumimTo on 16.11.2017.
@@ -29,13 +31,13 @@ public class LearnedSkillCommandElement extends CommandElement {
     @Override
     protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
         String skilllc = args.next().toLowerCase();
-        ISkill skill = NtRpgPlugin.GlobalScope.skillService.getSkillByLocalizedName(skilllc);
-        if (skill == null) {
+        Optional<ISkill> skill = NtRpgPlugin.GlobalScope.skillService.getById(skilllc);
+        if (!skill.isPresent()) {
             throw args.createError(Localizations.UNKNOWN_SKILL.toText(Arg.arg("skill", skilllc)));
         }
         IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) source);
-        if (!character.hasSkill(skill.getId())) {
-            throw args.createError(Localizations.CHARACTER_DOES_NOT_HAVE_SKILL.toText(Arg.arg("skill", skill.getName())));
+        if (!character.hasSkill(skill.get().getId())) {
+            throw args.createError(Localizations.CHARACTER_DOES_NOT_HAVE_SKILL.toText(Arg.arg("skill", skill.get().getName())));
         }
         return skill;
     }

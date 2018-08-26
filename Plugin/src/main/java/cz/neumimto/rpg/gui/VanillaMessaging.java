@@ -708,11 +708,11 @@ public class VanillaMessaging implements IPlayerMessage {
 	@Override
 	public void sendCannotUseItemNotification(IActiveCharacter character, ItemStack is, CannotUseItemReason reason) {
 		if (reason == CannotUseItemReason.CONFIG) {
-			character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Text.of(TextColors.RED, Localizations.CANNOT_USE_ITEM_CONFIGURATION_REASON));
+			character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Text.of(TextColors.RED, Localizations.CANNOT_USE_ITEM_CONFIGURATION_REASON.toText()));
 		} else if (reason == CannotUseItemReason.LEVEL) {
-			character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Text.of(TextColors.RED, Localizations.CANNOT_USE_ITEM_LEVEL_REASON));
+			character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Text.of(TextColors.RED, Localizations.CANNOT_USE_ITEM_LEVEL_REASON.toText()));
 		} else if (reason == CannotUseItemReason.LORE) {
-			character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Text.of(TextColors.RED, Localizations.CANNOT_USE_ITEM_LORE_REASON));
+			character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Text.of(TextColors.RED, Localizations.CANNOT_USE_ITEM_LORE_REASON.toText()));
 		}
 	}
 

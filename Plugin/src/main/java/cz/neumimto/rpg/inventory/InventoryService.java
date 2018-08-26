@@ -158,7 +158,7 @@ public class InventoryService {
 
 	@Reload(on = ReloadService.PLUGIN_CONFIG)
 	public void init() {
-		NORMAL_RARITY = Text.of(Localizations.NORMAL_RARITY);
+		NORMAL_RARITY = Localizations.NORMAL_RARITY.toText();
 		loadItemGroups();
 		String s = PluginConfig.EQUIPED_SLOT_RESOLVE_SRATEGY;
 		Optional<PlayerInvHandler> type = Sponge.getRegistry().getType(PlayerInvHandler.class, s);
