@@ -96,7 +96,7 @@ public class InfoCommand extends CommandBase {
 			if (o.isPresent()) {
 				Player player = o.get();
 				if (player != commandSource && !player.hasPermission("list.character.others")) {
-					player.sendMessage(Text.of(Localizations.NO_PERMISSIONS));
+					player.sendMessage(Localizations.NO_PERMISSIONS.toText());
 					return CommandResult.empty();
 				}
 				printPlayerInfo(commandSource, args, player);
@@ -161,7 +161,7 @@ public class InfoCommand extends CommandBase {
 			if (!character.isStub()) {
 				Gui.sendStatus(character);
 			} else {
-				player.sendMessage(Text.of(Localizations.CHARACTER_IS_REQUIRED));
+				player.sendMessage(Localizations.CHARACTER_IS_REQUIRED.toText());
 
 			}
 		} else if (args[0].equalsIgnoreCase("skilltree")) {

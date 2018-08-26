@@ -1,5 +1,8 @@
 package cz.neumimto.rpg.gui;
 
+import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Block;
+import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Item;
+
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
@@ -15,7 +18,11 @@ import cz.neumimto.rpg.listeners.SkillTreeInventoryListener;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.NDamageType;
+import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillPathData;
+import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.block.BlockTypes;
@@ -38,10 +45,11 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import java.util.*;
-
-import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Block;
-import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Item;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ja on 29.12.2016.
@@ -119,7 +127,7 @@ public class GuiHelper {
 	private static ItemStack createPropertyCommand(PlayerGroup group) {
 		ItemStack i = itemStack(ItemTypes.BOOK);
 		i.offer(NKeys.MENU_INVENTORY, true);
-		i.offer(Keys.DISPLAY_NAME, Text.of(Localizations.ATTRIBUTES, TextColors.DARK_RED));
+		i.offer(Keys.DISPLAY_NAME, Localizations.ATTRIBUTES.toText());
 		String cc = IoC.get().build(InfoCommand.class).getAliases().iterator().next();
 		i.offer(new InventoryCommandItemMenuData(cc + " properties-initial " + group.getName()));
 		return i;
@@ -128,7 +136,7 @@ public class GuiHelper {
 	public static ItemStack createAttributesCommand(PlayerGroup group) {
 		ItemStack i = itemStack(ItemTypes.BOOK);
 		i.offer(NKeys.MENU_INVENTORY, true);
-		i.offer(Keys.DISPLAY_NAME, Text.of(Localizations.ATTRIBUTES, TextColors.DARK_RED));
+		i.offer(Keys.DISPLAY_NAME, Localizations.ATTRIBUTES.toText());
 		String cc = IoC.get().build(InfoCommand.class).getAliases().iterator().next();
 		i.offer(new InventoryCommandItemMenuData(cc + " attributes-initial " + group.getName()));
 		return i;
@@ -147,8 +155,8 @@ public class GuiHelper {
 	public static ItemStack createArmorCommand(PlayerGroup group) {
 		ItemStack i = itemStack(ItemTypes.DIAMOND_CHESTPLATE);
 		i.offer(NKeys.MENU_INVENTORY, true);
-		i.offer(Keys.DISPLAY_NAME, Text.of(Localizations.ARMOR, TextColors.DARK_RED));
-		i.offer(Keys.ITEM_LORE, Collections.singletonList(Text.of(Localizations.ARMOR_MENU_HELP, TextColors.GRAY)));
+		i.offer(Keys.DISPLAY_NAME, Localizations.ARMOR.toText());
+		i.offer(Keys.ITEM_LORE, Collections.singletonList(Localizations.ARMOR_MENU_HELP.toText()));
 		i.offer(new InventoryCommandItemMenuData("armor " + group.getName()));
 		return i;
 	}
@@ -156,8 +164,8 @@ public class GuiHelper {
 	public static ItemStack createWeaponCommand(PlayerGroup group) {
 		ItemStack i = itemStack(ItemTypes.DIAMOND_SWORD);
 		i.offer(NKeys.MENU_INVENTORY, true);
-		i.offer(Keys.DISPLAY_NAME, Text.of(Localizations.WEAPONS, TextColors.DARK_RED));
-		i.offer(Keys.ITEM_LORE, Collections.singletonList(Text.of(Localizations.WEAPONS_MENU_HELP, TextColors.GRAY)));
+		i.offer(Keys.DISPLAY_NAME, Localizations.WEAPONS.toText());
+		i.offer(Keys.ITEM_LORE, Collections.singletonList(Localizations.WEAPONS_MENU_HELP.toText()));
 		i.offer(new InventoryCommandItemMenuData("weapons " + group.getName()));
 		return i;
 	}
@@ -206,7 +214,7 @@ public class GuiHelper {
 		if (g.getType() == EffectSourceType.RACE) {
 			l = "race ";
 		}
-		of.offer(Keys.DISPLAY_NAME, Text.of(Localizations.BACK, TextColors.WHITE));
+		of.offer(Keys.DISPLAY_NAME, Localizations.BACK.toText());
 		of.offer(new InventoryCommandItemMenuData(l + g.getName()));
 		return of;
 	}
@@ -263,7 +271,7 @@ public class GuiHelper {
 
 	public static ItemStack createSkillTreeConfirmButtom() {
 		ItemStack itemStack = itemStack(ItemTypes.KNOWLEDGE_BOOK);
-		itemStack.offer(Keys.DISPLAY_NAME, Text.of(Localizations.CONFIRM_SKILL_SELECTION_BUTTON));
+		itemStack.offer(Keys.DISPLAY_NAME, Localizations.CONFIRM_SKILL_SELECTION_BUTTON.toText());
 		itemStack.offer(new SkillTreeInventoryViewControllsData(SkillTreeControllsButton.CONFIRM));
 		return itemStack;
 	}

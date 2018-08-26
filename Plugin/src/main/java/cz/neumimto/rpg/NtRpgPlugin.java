@@ -1174,7 +1174,7 @@ public class NtRpgPlugin {
 						Player player = (Player) src;
 						IActiveCharacter current = GlobalScope.characterService.getCharacter(player);
 						if (current != null && current.getName().equalsIgnoreCase(s)) {
-							player.sendMessage(Text.of(Localizations.ALREADY_CUURENT_CHARACTER));
+							player.sendMessage(Localizations.ALREADY_CUURENT_CHARACTER.toText());
 							return;
 						}
 						asyncExecutor.execute(() -> {
@@ -1194,7 +1194,7 @@ public class NtRpgPlugin {
 								}
 							}
 							if (!b)
-								player.sendMessage(Text.of(Localizations.NON_EXISTING_CHARACTER));
+								player.sendMessage(Localizations.NON_EXISTING_CHARACTER.toText());
 						});
 					});
 					return CommandResult.success();
