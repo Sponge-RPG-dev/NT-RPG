@@ -204,7 +204,7 @@ public class ResourceLoader {
 					info("ClassLoader for "
 							+ Console.GREEN_BOLD  + classLoader +
 							Console.RESET +" loaded class " +
-							Console.GREEN + clazz.getSimpleName(), PluginConfig
+							Console.GREEN + clazz.getSimpleName() + Console.RESET, PluginConfig
 							.DEBUG);
 					loadClass(clazz, classLoader);
 				} else {
