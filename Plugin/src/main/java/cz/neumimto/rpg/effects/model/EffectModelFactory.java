@@ -68,6 +68,9 @@ public class EffectModelFactory {
                 c.setAccessible(true);
                 break;
             }
+            if (constructor.getParameterCount() == 2) {
+                return Void.class;
+            }
         }
         if (c == null) {
             throw new RuntimeException("No valid constructor for " + effect.getSimpleName());

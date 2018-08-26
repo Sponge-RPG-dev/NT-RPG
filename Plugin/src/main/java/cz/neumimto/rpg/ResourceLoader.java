@@ -169,7 +169,10 @@ public class ResourceLoader {
 			URLClassLoader classLoader = classLoaderMap.get(f.getName());
 			if (classLoader == null) {
 				try {
-					classLoader = new ResourceClassLoader(file.getName().trim(), new URL[]{f.toURI().toURL()}, PluginCore.getClassLoader());
+
+					classLoader = new ResourceClassLoader(f.toPath().getFileName().toString().trim(),
+							new URL[]{f.toURI().toURL()},
+							PluginCore.getClassLoader());
 					classLoaderMap.put(f.getName(), classLoader);
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
@@ -198,7 +201,11 @@ public class ResourceLoader {
 				if (!main) {
 					ClassLoader classLoader = classLoaderMap.get(f.getName());
 					clazz = classLoader.loadClass(className);
-					info(classLoader + " loaded class " + clazz.getSimpleName());
+					info("ClassLoader for "
+							+ Console.GREEN_BOLD  + classLoader +
+							Console.RESET +" loaded class " +
+							Console.GREEN + clazz.getSimpleName(), PluginConfig
+							.DEBUG);
 					loadClass(clazz, classLoader);
 				} else {
 					clazz = Class.forName(className);
