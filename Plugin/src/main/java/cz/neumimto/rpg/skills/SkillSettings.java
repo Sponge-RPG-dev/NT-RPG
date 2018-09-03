@@ -18,12 +18,17 @@
 
 package cz.neumimto.rpg.skills;
 
+import static cz.neumimto.rpg.Log.error;
+
+import cz.neumimto.rpg.scripting.JsBinding;
+
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by NeumimTo on 14.2.2015.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class SkillSettings {
 	public static final String bonus = "_levelbonus";
 	private Map<String, Float> skillSettings = new HashMap<>();
@@ -76,7 +81,12 @@ public class SkillSettings {
 	}
 
 	public float getNodeValue(String s) {
-		return skillSettings.get(s.toLowerCase());
+		Float aFloat = skillSettings.get(s.toLowerCase());
+		if (aFloat == null) {
+			error("Missing skill node " + s);
+			return 0;
+		}
+		return aFloat;
 	}
 
 	public float getLevelNodeValue(ISkillNode n, int level) {

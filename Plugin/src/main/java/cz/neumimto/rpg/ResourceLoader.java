@@ -53,7 +53,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -220,12 +219,6 @@ public class ResourceLoader {
 	}
 
 	public Object loadClass(Class<?> clazz, ClassLoader classLoader) throws IllegalAccessException, CannotCompileException, InstantiationException {
-		if (clazz.isInterface())
-			return null;
-		if (Modifier.isAbstract(clazz.getModifiers())) {
-			return null;
-		}
-
 		info(" - Checking if theres something to load in a class " + clazz.getName(), PluginConfig.DEBUG);
 		//Properties
 		Object container = null;

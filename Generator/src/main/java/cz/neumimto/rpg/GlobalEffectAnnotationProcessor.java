@@ -299,7 +299,4 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
         return Collections.singleton("cz.neumimto.rpg.effects.Generate");
     }
 
-    private static class Model {
-
-    }
 }

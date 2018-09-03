@@ -48,6 +48,7 @@ public class Init {
         skillService.load();
         propertyService.init();
         jsLoader.initEngine();
+
         groupService.registerPlaceholders();
         rwService.load();
         groupDao.loadGuilds();

@@ -18,8 +18,8 @@
 
 package cz.neumimto.rpg.scripting;
 
+import static cz.neumimto.rpg.Log.error;
 import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.Log.warn;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
@@ -29,9 +29,13 @@ import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.PluginConfig;
+import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.skills.configs.SkillsDefinition;
 import cz.neumimto.rpg.skills.pipeline.SkillComponent;
 import cz.neumimto.rpg.utils.FileUtils;
 import jdk.internal.dynalink.beans.StaticClass;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
+import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.event.Event;
@@ -43,8 +47,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.*;
-import java.util.*;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import javax.script.Bindings;
@@ -76,6 +91,9 @@ public class JSLoader {
 	@Inject
 	private NtRpgPlugin ntRpgPlugin;
 
+	@Inject
+	private SkillService skillService;
+
 	private static Object listener;
 
 	private Map<Class<?>, JsBinding.Type> dataToBind = new HashMap<>();
@@ -91,15 +109,10 @@ public class JSLoader {
 				reloadAttributes();
 				generateListener();
 				info("JS resources loaded.");
-			} else {
-				warn("Could not load nashorn. Library not found on a classpath.");
-				warn(" - For SpongeVanilla create a symlink or place nashorn.jar into the sponge/config/nt-core folder");
-				warn(" - For SpongeForge create a symlink or place nashorn.jar into the sponge/mods folder");
+				return;
 			}
 		} catch (Exception e) {
-			warn("Could not load nashorn. Library not found on a classpath.");
-			warn(" - For SpongeVanilla create a symlink or place nashorn.jar into the sponge/config/nt-core folder");
-			warn(" - For SpongeForge create a symlink or place nashorn.jar into the sponge/mods folder");
+			error("Could not load script engine", e);
 		}
 	}
 
@@ -200,6 +213,33 @@ public class JSLoader {
 			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
+		}
+		File file = new File(NtRpgPlugin.workingDir, "Skills-Definition.conf");
+		if (!file.exists()) {
+			Asset asset = Sponge.getAssetManager().getAsset(ntRpgPlugin, "Skills-Definitions.conf").get();
+			try {
+				asset.copyToFile(file.toPath());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		info("Loading skills from file " + file.getName());
+		try {
+            URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{}, this.getClass().getClassLoader()) {
+                @Override
+                public String toString() {
+                    return "Internal - " + System.currentTimeMillis();
+                }
+            };
+			ObjectMapper<SkillsDefinition> mapper = ObjectMapper.forClass(SkillsDefinition.class);
+			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(file.toPath()).build();
+			SkillsDefinition definition = mapper.bind(new SkillsDefinition()).populate(hcl.load());
+			definition.getSkills().stream()
+					.map(a -> skillService.skillDefinitionToSkill(a, urlClassLoader))
+					.forEach(a -> skillService.registerAdditionalCatalog(a));
+		} catch (Exception e) {
+			throw new RuntimeException("Could not load file " + file, e);
 		}
 	}
 

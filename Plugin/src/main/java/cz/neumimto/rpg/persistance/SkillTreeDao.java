@@ -37,16 +37,14 @@ import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.SkillSettings;
-import cz.neumimto.rpg.skills.StartingPoint;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoader;
+import cz.neumimto.rpg.skills.parents.StartingPoint;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
-import cz.neumimto.rpg.utils.CatalogId;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Sponge;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -55,7 +53,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * Created by NeumimTo on 24.7.2015.
@@ -165,18 +162,6 @@ public class SkillTreeDao {
 
                 } catch (ConfigException.Missing ignored) {}
             }
-        }
-    }
-
-    private void injectCatalogId(ISkill skill, String name) {
-        Optional<Field> first = Stream.of(skill.getClass().getFields()).filter(field -> field.isAnnotationPresent(CatalogId.class))
-                .findFirst();
-        Field field = first.get();
-        field.setAccessible(true);
-        try {
-            field.set(skill, name);
-        } catch (IllegalAccessException ignored) {
-            //wonthappen
         }
     }
 

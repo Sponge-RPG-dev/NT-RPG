@@ -14,8 +14,8 @@ import cz.neumimto.rpg.skills.NDamageType;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.parents.Targetted;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.Targetted;
 import org.spongepowered.api.entity.living.Living;
 
 

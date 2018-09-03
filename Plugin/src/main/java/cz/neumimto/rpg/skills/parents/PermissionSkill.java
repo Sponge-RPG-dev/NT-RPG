@@ -14,9 +14,10 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package cz.neumimto.rpg.skills;
+package cz.neumimto.rpg.skills.parents;
 
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.skills.SkillResult;
 
 public class PermissionSkill extends AbstractSkill {
 

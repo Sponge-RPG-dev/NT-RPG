@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.skills;
+package cz.neumimto.rpg.skills.parents;
 
 import com.typesafe.config.Config;
 import cz.neumimto.core.localization.Arg;
@@ -9,6 +9,9 @@ import cz.neumimto.rpg.gui.GuiHelper;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.utils.Utils;
@@ -24,7 +27,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
 
-public class PropertySkill extends AbstractSkill{
+public class PropertySkill extends AbstractSkill {
 
     private PropertyService propertyService;
 

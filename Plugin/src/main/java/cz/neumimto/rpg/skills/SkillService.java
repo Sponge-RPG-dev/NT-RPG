@@ -18,12 +18,14 @@
 
 package cz.neumimto.rpg.skills;
 
+import static cz.neumimto.rpg.Log.error;
 import static cz.neumimto.rpg.Log.info;
 import static cz.neumimto.rpg.Log.warn;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
+import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.events.skills.SkillPostUsageEvent;
 import cz.neumimto.rpg.events.skills.SkillPrepareEvent;
@@ -36,7 +38,15 @@ import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.reloading.Reload;
 import cz.neumimto.rpg.reloading.ReloadService;
 import cz.neumimto.rpg.scripting.JSLoader;
+import cz.neumimto.rpg.skills.configs.ScriptSkillModel;
+import cz.neumimto.rpg.skills.parents.ActiveScriptSkill;
+import cz.neumimto.rpg.skills.parents.ScriptSkill;
+import cz.neumimto.rpg.skills.parents.TargettedScriptSkill;
 import cz.neumimto.rpg.skills.tree.SkillTree;
+import cz.neumimto.rpg.utils.CatalogId;
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.description.annotation.AnnotationDescription;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.manipulator.mutable.entity.HealthData;
@@ -48,11 +58,13 @@ import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 /**
  * Created by NeumimTo on 1.1.2015.
@@ -272,5 +284,58 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 
 	public ISkill getSkillByLocalizedName(String name) {
 		return skillByNames.get(name);
+	}
+
+	public ISkill skillDefinitionToSkill(ScriptSkillModel scriptSkillModel, ClassLoader classLoader) {
+		String parent = scriptSkillModel.getParent();
+		if (parent == null) {
+			warn("Could not load skill " + scriptSkillModel.getId() + " missing parent node");
+			return null;
+		}
+
+        Class type = null;
+		switch (parent.toLowerCase()) {
+			case "targetted":
+				type = TargettedScriptSkill.class;
+				break;
+			case "active":
+				type = ActiveScriptSkill.class;
+				break;
+			default:
+				warn("Could not load skill " + scriptSkillModel.getId() + " unknown parent " + scriptSkillModel.getParent());
+				return null;
+		}
+
+		Class sk = new ByteBuddy()
+				.subclass(type)
+				.name("cz.neumimto.skills.scripts."+ scriptSkillModel.getName().toPlain())
+				.annotateType(AnnotationDescription.Builder.ofType(ResourceLoader.Skill.class)
+						.define("value", scriptSkillModel.getId())
+						.build())
+				.make()
+				.load(classLoader)
+				.getLoaded();
+		try {
+			ScriptSkill s = (ScriptSkill) sk.newInstance();
+			injectCatalogId((ISkill) s, scriptSkillModel.getId());
+			s.setModel(scriptSkillModel);
+			s.initScript();
+			return (ISkill) s;
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public void injectCatalogId(ISkill skill, String name) {
+		Optional<Field> first = Stream.of(FieldUtils.getAllFields(skill.getClass())).filter(field -> field.isAnnotationPresent(CatalogId.class))
+				.findFirst();
+		Field field = first.get();
+		field.setAccessible(true);
+		try {
+			field.set(skill, name);
+		} catch (IllegalAccessException e) {
+			error("Could not inject CatalogId to the skill", e);
+		}
 	}
 }

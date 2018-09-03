@@ -14,10 +14,14 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package cz.neumimto.rpg.skills;
+package cz.neumimto.rpg.skills.parents;
 
 import cz.neumimto.rpg.events.skills.SkillFindTargetEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.ITargetted;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.tree.SkillType;
 import cz.neumimto.rpg.skills.utils.SkillModifier;
 import cz.neumimto.rpg.utils.Utils;

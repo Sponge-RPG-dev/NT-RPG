@@ -103,7 +103,6 @@ import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.AttributeRegistry;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.scripting.JSLoader;
-import cz.neumimto.rpg.skills.ActiveSkill;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.ISkillType;
@@ -114,6 +113,7 @@ import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.SkillTypeRegistry;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoader;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoaders;
+import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
 import cz.neumimto.rpg.utils.FileUtils;
 import cz.neumimto.rpg.utils.Placeholders;
@@ -875,6 +875,27 @@ public class NtRpgPlugin {
 							q = a[i];
 							if (q.equalsIgnoreCase("skills") || q.equalsIgnoreCase("s")) {
 								jsLoader.reloadSkills();
+								CharacterService build = IoC.get().build(CharacterService.class);
+								SkillService skillService = IoC.get().build(SkillService.class);
+								build.getCharacters()
+										.stream()
+										.forEach(qw -> {
+											Map<String, ExtendedSkillInfo> skills = qw.getSkills();
+											for (Map.Entry<String, ExtendedSkillInfo> entry : skills.entrySet()) {
+												if (entry.getValue() == ExtendedSkillInfo.Empty) {
+													continue;
+												}
+												ExtendedSkillInfo value = entry.getValue();
+												Optional<ISkill> byId = skillService.getById(value.getSkill().getId());
+												if (!byId.isPresent()) {
+													throw new RuntimeException("Unabled to reload the skill " + value.getSkill().getId() + ". "
+															+ "Restart the server");
+												}
+                                                ISkill skill = byId.get();
+                                                value.setSkill(skill);
+												value.getSkillData().setSkill(skill);
+											}
+										});
 							}
 							if (q.equalsIgnoreCase("attributes") || q.equalsIgnoreCase("a")) {
 								jsLoader.reloadAttributes();

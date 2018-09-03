@@ -16,9 +16,13 @@
  *     
  */
 
-package cz.neumimto.rpg.skills;
+package cz.neumimto.rpg.skills.parents;
 
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.ISkillType;
+import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillSettings;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.text.Text;
 

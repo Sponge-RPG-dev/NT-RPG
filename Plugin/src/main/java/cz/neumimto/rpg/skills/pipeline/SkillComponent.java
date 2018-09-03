@@ -17,7 +17,7 @@ public @interface SkillComponent {
 
     String usage();
 
-    public @interface Param {
+    @interface Param {
         String value();
     }
 }

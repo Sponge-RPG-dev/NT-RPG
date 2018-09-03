@@ -8,22 +8,6 @@ var File = Java.type("java.io.File");
 var TimeUnit = Java.type("java.util.concurrent.TimeUnit");
 var Runnable = Java.type("java.lang.Runnable");
 var Consumer = Java.type("java.util.function.Consumer");
-/*plugin */
-/*TODO bind from plugin */
-var SkillSettings = Java.type("cz.neumimto.rpg.skills.SkillSettings");
-var SkillNodes = Java.type("cz.neumimto.rpg.skills.SkillNodes");
-var ActiveSkill = Java.type("cz.neumimto.rpg.skills.ActiveSkill");
-var SkillResult = Java.type("cz.neumimto.rpg.skills.SkillResult");
-var AbstractSkill = Java.type("cz.neumimto.rpg.skills.AbstractSkill");
-var PassiveSkill = Java.type("cz.neumimto.rpg.skills.PassiveSkill");
-var GlobalEffect = Java.type("cz.neumimto.rpg.effects.IGlobalEffect");
-var EffectBase = Java.type("cz.neumimto.rpg.effects.EffectBase");
-var PluginConfig = Java.type("cz.neumimto.rpg.configuration.PluginConfig");
-var Effect = Java.type("cz.neumimto.rpg.effects.EffectBase");
-var SpeedBoost = Java.type("cz.neumimto.rpg.effects.common.positive.SpeedBoost");
-var DefaultProperties = Java.type("cz.neumimto.rpg.players.properties.DefaultProperties");
-var JSLoader = Java.type("cz.neumimto.rpg.scripting.JSLoader");
-var CharacterAttribute = Java.type("cz.neumimto.rpg.players.properties.attributes.CharacterAttribute");
 /* sponge */
 var Texts = Java.type("org.spongepowered.api.text.Text");
 var Keys = Java.type("org.spongepowered.api.data.key.Keys");

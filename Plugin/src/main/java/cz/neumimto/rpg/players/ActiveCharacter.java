@@ -39,7 +39,7 @@ import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.ItemAccessSkill;
 import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.StartingPoint;
+import cz.neumimto.rpg.skills.parents.StartingPoint;
 import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.type.HandType;

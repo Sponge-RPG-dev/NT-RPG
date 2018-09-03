@@ -1,10 +1,10 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ActiveSkill;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.utils.SkillModifier;
 import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.parents.ActiveSkill;
+import cz.neumimto.rpg.skills.utils.SkillModifier;
 
 /**
  * Created by NeumimTo on 2.8.2017.

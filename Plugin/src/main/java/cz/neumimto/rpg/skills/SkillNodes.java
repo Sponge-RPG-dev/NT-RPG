@@ -1,10 +1,12 @@
 package cz.neumimto.rpg.skills;
 
+import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.utils.SkillModifierProcessor;
 
 /**
  * Created by ja on 22.10.2016.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public enum SkillNodes implements ISkillNode {
 
 	DAMAGE("damage", SkillModifierProcessor.F_STACK),

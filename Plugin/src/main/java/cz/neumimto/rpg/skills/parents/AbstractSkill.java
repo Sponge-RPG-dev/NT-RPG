@@ -16,15 +16,23 @@
  *     
  */
 
-package cz.neumimto.rpg.skills;
+package cz.neumimto.rpg.skills.parents;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.localization.Arg;
+import cz.neumimto.rpg.Console;
+import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.scripting.JsBinding;
+import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.ISkillType;
+import cz.neumimto.rpg.skills.SkillItemIcon;
+import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.utils.CatalogId;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
@@ -39,6 +47,7 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 12.3.2015.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public abstract class AbstractSkill implements ISkill {
 
 	@Inject
@@ -228,5 +237,11 @@ public abstract class AbstractSkill implements ISkill {
 	public void setIcon(ItemType icon) {
 		this.itemType = icon;
 		this.icon = new SkillItemIcon(this);
+	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+		Log.info(Console.PURPLE + "Destroying " + getId() + " classloader: " + getClass().getClassLoader().toString(), DebugLevel.DEVELOP);
 	}
 }

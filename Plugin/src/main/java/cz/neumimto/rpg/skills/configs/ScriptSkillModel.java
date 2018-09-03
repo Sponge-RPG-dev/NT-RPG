@@ -31,7 +31,7 @@ public class ScriptSkillModel {
     private List<Text> lore;
 
     @Setting("Description")
-    private Text description;
+    private List<Text> description;
 
     @Setting("Settings")
     private Map<String, Float> settings;
@@ -41,9 +41,6 @@ public class ScriptSkillModel {
 
     @Setting("Script")
     private String script;
-
-    @Setting("Script")
-    private SkillBehaviorType skillBehaviorType;
 
     public String getId() {
         return id;
@@ -93,11 +90,11 @@ public class ScriptSkillModel {
         this.lore = lore;
     }
 
-    public Text getDescription() {
+    public List<Text> getDescription() {
         return description;
     }
 
-    public void setDescription(Text description) {
+    public void setDescription(List<Text> description) {
         this.description = description;
     }
 
@@ -123,13 +120,5 @@ public class ScriptSkillModel {
 
     public void setScript(String script) {
         this.script = script;
-    }
-
-    public SkillBehaviorType getSkillBehaviorType() {
-        return skillBehaviorType;
-    }
-
-    public void setSkillBehaviorType(SkillBehaviorType skillBehaviorType) {
-        this.skillBehaviorType = skillBehaviorType;
     }
 }

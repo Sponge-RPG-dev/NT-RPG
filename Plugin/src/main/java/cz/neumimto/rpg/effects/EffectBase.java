@@ -20,6 +20,7 @@ package cz.neumimto.rpg.effects;
 
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.utils.UUIDs;
 import org.spongepowered.api.effect.potion.PotionEffect;
 
@@ -30,6 +31,7 @@ import java.util.UUID;
 /**
  * Created by NeumimTo.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class EffectBase<Value> implements IEffect<Value> {
 	protected Set<EffectType> effectTypes = new HashSet<>();
 	private boolean stackable = false;

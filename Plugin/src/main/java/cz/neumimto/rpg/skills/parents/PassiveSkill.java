@@ -16,16 +16,20 @@
  *     
  */
 
-package cz.neumimto.rpg.skills;
+package cz.neumimto.rpg.skills.parents;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.scripting.JsBinding;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.SkillResult;
 
 /**
  * Created by NeumimTo on 6.8.2015.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public abstract class PassiveSkill extends AbstractSkill {
 
 	@Inject
