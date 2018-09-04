@@ -9,39 +9,40 @@ import java.util.Set;
  * Created by ja on 6.10.2017.
  */
 public class ItemGroup {
-    private Set<RPGItemType> itemTypes = new HashSet<>();
-    private int damageMultPropertyId;
-    private String groupName;
-    private ItemGroup directParent;
-    private Map<String, ItemGroup> allParents = new HashMap<>();
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
+	private Set<RPGItemType> itemTypes = new HashSet<>();
+	private int damageMultPropertyId;
+	private String groupName;
+	private ItemGroup directParent;
+	private Map<String, ItemGroup> allParents = new HashMap<>();
 
-    public String getGroupName() {
-        return groupName;
-    }
+	public String getGroupName() {
+		return groupName;
+	}
 
-    public Set<RPGItemType> getItemTypes() {
-        return itemTypes;
-    }
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
 
-    public void setItemTypes(Set<RPGItemType> itemTypes) {
-        this.itemTypes = itemTypes;
-    }
+	public Set<RPGItemType> getItemTypes() {
+		return itemTypes;
+	}
 
-    public int getDamageMultPropertyId() {
-        return damageMultPropertyId;
-    }
+	public void setItemTypes(Set<RPGItemType> itemTypes) {
+		this.itemTypes = itemTypes;
+	}
 
-    public void setDamageMultPropertyId(int damageMultPropertyId) {
-        this.damageMultPropertyId = damageMultPropertyId;
-    }
+	public int getDamageMultPropertyId() {
+		return damageMultPropertyId;
+	}
 
-    public boolean isRoot() {
-        return directParent == null;
-    }
+	public void setDamageMultPropertyId(int damageMultPropertyId) {
+		this.damageMultPropertyId = damageMultPropertyId;
+	}
+
+	public boolean isRoot() {
+		return directParent == null;
+	}
 
 
 }

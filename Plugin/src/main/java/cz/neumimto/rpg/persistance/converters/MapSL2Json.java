@@ -4,9 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import javax.persistence.AttributeConverter;
 import java.lang.reflect.Type;
 import java.util.Map;
+
+import javax.persistence.AttributeConverter;
 
 /**
  * Created by NeumimTo on 8.10.2016.
@@ -29,7 +30,8 @@ public class MapSL2Json implements AttributeConverter<Object, String> {
 
 	@Override
 	public Object convertToEntityAttribute(String s) {
-		Type slmap = new TypeToken<Map<String, Long>>() { }.getType();
+		Type slmap = new TypeToken<Map<String, Long>>() {
+		}.getType();
 		return gson.fromJson(s, slmap);
 	}
 }

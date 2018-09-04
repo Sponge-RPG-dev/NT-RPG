@@ -33,50 +33,23 @@ import java.util.function.Consumer;
 @Singleton
 public class RestService {
 
-	@Inject
-	private CharacterService characterService;
-
-	@Inject
-	private SkillService service;
-
-	@Inject
-	private SkillService skillService;
-
-	@Inject
-	private GroupService groupService;
-
-	private Thread t;
-
+	private static final int TOKEN_LIFETIME = 7200000;
+	private static String index;
+	private static Map<String, String> cachedTrees = new HashMap<>();
+	final private Map<String, Token> tokens = new ConcurrentHashMap<>();
 	@Inject
 	NtRpgPlugin plugin;
-
-	private static String index;
-
 	String charset = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ!@#$";
-
 	SecureRandom random = new SecureRandom();
-
-	final private Map<String, Token> tokens = new ConcurrentHashMap<>();
-
-	public void getSkeleton(String player, Consumer<String> consumer) {
-		Sponge.getScheduler().createTaskBuilder().execute(() -> {
-			Optional<Player> player1 = Sponge.getGame().getServer().getPlayer(player);
-			if (player1.isPresent()) {
-				UUID uniqueId = player1.get().getUniqueId();
-				IActiveCharacter character = characterService.getCharacter(uniqueId);
-				ExtendedNClass primaryClass = character.getPrimaryClass();
-				ConfigClass configClass = primaryClass.getConfigClass();
-				SkillTree skillTree = configClass.getSkillTree();
-				String nodes = toJson(skillTree);
-				Sponge.getScheduler().createTaskBuilder().async().execute(() -> consumer.accept(nodes)).submit(plugin);
-			}
-		}).submit(plugin);
-	}
-
-	public String toJson(Map<String, ExtendedSkillInfo> skills) {
-		return gson.toJson(skills);
-	}
-
+	@Inject
+	private CharacterService characterService;
+	@Inject
+	private SkillService service;
+	@Inject
+	private SkillService skillService;
+	@Inject
+	private GroupService groupService;
+	private Thread t;
 	private Gson gson = new GsonBuilder().registerTypeAdapter(SkillTree.class, new TypeAdapter<SkillTree>() {
 		@Override
 		public void write(JsonWriter jsonWriter, SkillTree skillTree) throws IOException {
@@ -133,19 +106,6 @@ public class RestService {
 			throw new UnsupportedOperationException();
 		}
 	}).create();
-
-	private static Map<String, String> cachedTrees = new HashMap<>();
-
-	public String toJson(SkillTree skillTree) {
-		String s = cachedTrees.get(skillTree.getId());
-		if (s == null) {
-			s = gson.toJson(skillTree);
-			cachedTrees.put(skillTree.getId(), s);
-		}
-		return s;
-
-	}
-
 	Runnable r = () -> {
 		//todo config
 		Spark.port(WebserverConfig.WEBSERVER_PORT);
@@ -256,6 +216,35 @@ public class RestService {
 
 	};
 
+	public void getSkeleton(String player, Consumer<String> consumer) {
+		Sponge.getScheduler().createTaskBuilder().execute(() -> {
+			Optional<Player> player1 = Sponge.getGame().getServer().getPlayer(player);
+			if (player1.isPresent()) {
+				UUID uniqueId = player1.get().getUniqueId();
+				IActiveCharacter character = characterService.getCharacter(uniqueId);
+				ExtendedNClass primaryClass = character.getPrimaryClass();
+				ConfigClass configClass = primaryClass.getConfigClass();
+				SkillTree skillTree = configClass.getSkillTree();
+				String nodes = toJson(skillTree);
+				Sponge.getScheduler().createTaskBuilder().async().execute(() -> consumer.accept(nodes)).submit(plugin);
+			}
+		}).submit(plugin);
+	}
+
+	public String toJson(Map<String, ExtendedSkillInfo> skills) {
+		return gson.toJson(skills);
+	}
+
+	public String toJson(SkillTree skillTree) {
+		String s = cachedTrees.get(skillTree.getId());
+		if (s == null) {
+			s = gson.toJson(skillTree);
+			cachedTrees.put(skillTree.getId(), s);
+		}
+		return s;
+
+	}
+
 	private void getCharacterData(String player, Consumer<CharacterData> data) {
 		Sponge.getGame().getScheduler().createTaskBuilder().execute(() -> {
 			Optional<Player> p = Sponge.getGame().getServer().getPlayer(player);
@@ -278,7 +267,6 @@ public class RestService {
 		}).submit(plugin);
 	}
 
-
 	public String getToken() {
 		StringBuilder token = new StringBuilder(8);
 		for (int i = 0; i < 8; i++) {
@@ -286,8 +274,6 @@ public class RestService {
 		}
 		return token.toString();
 	}
-
-	private static final int TOKEN_LIFETIME = 7200000;
 
 	private void cleanupTokenCache() {
 		Iterator<Map.Entry<String, Token>> iterator = tokens.entrySet().iterator();

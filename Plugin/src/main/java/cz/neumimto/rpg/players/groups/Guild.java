@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,15 +13,20 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.players.groups;
 
 import cz.neumimto.rpg.players.CharacterBase;
 
-import javax.persistence.*;
 import java.util.List;
+
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  * Created by NeumimTo on 27.12.2014.
@@ -32,6 +37,7 @@ import java.util.List;
 //TODO put guilds in a second level cache; configure ehcache in nt core
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)*/
 public class Guild {
+
 	public static Guild Default = new Guild();
 
 	static {

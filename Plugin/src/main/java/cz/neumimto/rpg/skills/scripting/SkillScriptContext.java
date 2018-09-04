@@ -8,20 +8,20 @@ import cz.neumimto.rpg.skills.ISkill;
  */
 public class SkillScriptContext {
 
-    private final ISkill skill;
-    private final ExtendedSkillInfo skillInfo;
+	private final ISkill skill;
+	private final ExtendedSkillInfo skillInfo;
 
-    public SkillScriptContext(ISkill skill, ExtendedSkillInfo skillInfo) {
-        this.skill = skill;
-        this.skillInfo = skillInfo;
-    }
+	public SkillScriptContext(ISkill skill, ExtendedSkillInfo skillInfo) {
+		this.skill = skill;
+		this.skillInfo = skillInfo;
+	}
 
-    public ISkill getSkill() {
-        return skill;
-    }
+	public ISkill getSkill() {
+		return skill;
+	}
 
-    public ExtendedSkillInfo getSkillInfo() {
-        return skillInfo;
-    }
+	public ExtendedSkillInfo getSkillInfo() {
+		return skillInfo;
+	}
 
 }

@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.skills.parents;
@@ -55,21 +55,17 @@ public abstract class AbstractSkill implements ISkill {
 
 	@Inject
 	protected CharacterService characterService;
-
-	@CatalogId
-	private String catalogId;
-
 	protected Text name;
 	protected List<Text> description;
 	protected SkillSettings settings = new SkillSettings();
 	protected SkillItemIcon icon;
 	protected String url;
-
+	protected ItemType itemType;
+	@CatalogId
+	private String catalogId;
 	private Set<ISkillType> skillTypes = new HashSet<>();
 	private List<Text> lore;
 	private DamageType damagetype;
-
-	protected ItemType itemType;
 
 	public AbstractSkill() {
 		ResourceLoader.Skill sk = this.getClass().getAnnotation(ResourceLoader.Skill.class);
@@ -79,15 +75,9 @@ public abstract class AbstractSkill implements ISkill {
 	}
 
 
-
 	@Override
 	public String getName() {
 		return name.toPlain();
-	}
-
-	@Override
-	public void setLocalizableName(Text name) {
-		this.name = name;
 	}
 
 	@Override
@@ -95,6 +85,10 @@ public abstract class AbstractSkill implements ISkill {
 		return name;
 	}
 
+	@Override
+	public void setLocalizableName(Text name) {
+		this.name = name;
+	}
 
 	@Override
 	public void skillLearn(IActiveCharacter IActiveCharacter) {
@@ -109,9 +103,9 @@ public abstract class AbstractSkill implements ISkill {
 	public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
 		if (PluginConfig.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE) {
 			Text t = Localizations.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE.toText(
-				Arg.arg("player", IActiveCharacter.getName())
-					.with("skill", getName())
-					.with("level", level));
+					Arg.arg("player", IActiveCharacter.getName())
+							.with("skill", getName())
+							.with("level", level));
 			game.getServer().getOnlinePlayers().forEach(p -> p.sendMessage(t));
 		}
 	}
@@ -120,7 +114,7 @@ public abstract class AbstractSkill implements ISkill {
 	public void skillRefund(IActiveCharacter IActiveCharacter) {
 		if (PluginConfig.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE) {
 			Text t = Localizations.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE.toText(
-				Arg.arg("%player%", IActiveCharacter.getName()).with("skill", getName()));
+					Arg.arg("%player%", IActiveCharacter.getName()).with("skill", getName()));
 			game.getServer().getOnlinePlayers().forEach(p -> p.sendMessage(t));
 		}
 	}
@@ -173,6 +167,12 @@ public abstract class AbstractSkill implements ISkill {
 	@Override
 	public SkillItemIcon getIcon() {
 		return icon;
+	}
+
+	@Override
+	public void setIcon(ItemType icon) {
+		this.itemType = icon;
+		this.icon = new SkillItemIcon(this);
 	}
 
 	@Override
@@ -231,12 +231,6 @@ public abstract class AbstractSkill implements ISkill {
 	@Override
 	public ItemType getItemType() {
 		return itemType;
-	}
-
-	@Override
-	public void setIcon(ItemType icon) {
-		this.itemType = icon;
-		this.icon = new SkillItemIcon(this);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.players;
@@ -24,6 +24,7 @@ import java.util.Vector;
  * Created by NeumimTo on 10.2.2015.
  */
 public interface INPlayer {
+
 	Vector<CharacterBase> getCharacterList();
 
 	IActiveCharacter getActiveActiveCharacter();

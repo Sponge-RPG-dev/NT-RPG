@@ -14,15 +14,15 @@ import java.lang.reflect.Type;
  */
 public class EquipedSlotDeserializer implements JsonDeserializer<EquipedSlot> {
 
-    @Override
-    public EquipedSlot deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        JsonObject object = json.getAsJsonObject();
-        String className = object.get("className").getAsString();
-        int slotId = object.get("slotIndex").getAsInt();
-        try {
-            return new EquipedSlot(className, slotId);
-        } catch (ClassNotFoundException e) {
-            return null;
-        }
-    }
+	@Override
+	public EquipedSlot deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+		JsonObject object = json.getAsJsonObject();
+		String className = object.get("className").getAsString();
+		int slotId = object.get("slotIndex").getAsInt();
+		try {
+			return new EquipedSlot(className, slotId);
+		} catch (ClassNotFoundException e) {
+			return null;
+		}
+	}
 }

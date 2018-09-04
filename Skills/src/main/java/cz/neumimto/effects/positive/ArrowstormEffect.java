@@ -5,7 +5,11 @@ import static com.flowpowered.math.TrigMath.sin;
 
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.Generate;
+import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.scripting.JsBinding;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
@@ -68,12 +72,12 @@ public class ArrowstormEffect extends EffectBase implements IEffectContainer {
 	}
 
 	@Override
-	public void removeStack(IEffect iEffect) {
+	public void setStackedValue(Object o) {
 
 	}
 
 	@Override
-	public void setStackedValue(Object o) {
+	public void removeStack(IEffect iEffect) {
 
 	}
 }

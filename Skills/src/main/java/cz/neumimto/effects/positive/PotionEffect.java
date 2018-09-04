@@ -12,6 +12,7 @@ import cz.neumimto.rpg.scripting.JsBinding;
  */
 @JsBinding(JsBinding.Type.CLASS)
 public class PotionEffect extends EffectBase<PotionEffectModel> {
+
 	public static final String name = "Potion";
 
 	public PotionEffect(IEffectConsumer consumer, long duration, PotionEffectModel model) {

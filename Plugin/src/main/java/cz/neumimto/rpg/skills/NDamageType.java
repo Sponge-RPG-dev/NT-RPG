@@ -20,6 +20,7 @@ import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
 public class NDamageType {
+
 	public static final DamageType MEELE_CRITICAL = new DamageType() {
 		@Override
 		public String getId() {

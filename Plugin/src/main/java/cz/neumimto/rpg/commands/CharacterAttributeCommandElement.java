@@ -11,31 +11,33 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.args.CommandElement;
 import org.spongepowered.api.text.Text;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by NeumimTo on 16.11.2017.
  */
 public class CharacterAttributeCommandElement extends CommandElement {
-    public CharacterAttributeCommandElement(Text attribute) {
-        super(attribute);
-    }
 
-    @Nullable
-    @Override
-    protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
-        String next = args.next();
-        ICharacterAttribute attribute = NtRpgPlugin.GlobalScope.propertyService.getAttribute(next);
-        if (attribute == null) {
-            throw args.createError(Localizations.UNKNOWN_ATTRIBUTE.toText(Arg.arg("attribute", next)));
-        }
-        return attribute;
-    }
+	public CharacterAttributeCommandElement(Text attribute) {
+		super(attribute);
+	}
 
-    @Override
-    public List<String> complete(CommandSource src, CommandArgs args, CommandContext context) {
-        return new ArrayList<>(NtRpgPlugin.GlobalScope.propertyService.getAttributes().keySet());
-    }
+	@Nullable
+	@Override
+	protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
+		String next = args.next();
+		ICharacterAttribute attribute = NtRpgPlugin.GlobalScope.propertyService.getAttribute(next);
+		if (attribute == null) {
+			throw args.createError(Localizations.UNKNOWN_ATTRIBUTE.toText(Arg.arg("attribute", next)));
+		}
+		return attribute;
+	}
+
+	@Override
+	public List<String> complete(CommandSource src, CommandArgs args, CommandContext context) {
+		return new ArrayList<>(NtRpgPlugin.GlobalScope.propertyService.getAttributes().keySet());
+	}
 }

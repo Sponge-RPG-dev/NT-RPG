@@ -57,12 +57,12 @@ public class BrainSap extends Targetted {
 		return SkillResult.OK;
 	}
 
-    @Listener(order = Order.LAST)
+	@Listener(order = Order.LAST)
 	@IsCancelled(Tristate.TRUE)
-    public void onDamage(SkillDamageEventLate event) {
-        if (event.getSkill() != null && event.getSkill().getClass() == this.getClass()) {
-            IEntity caster = event.getCaster();
-            entityService.healEntity(caster, (float) event.getDamage(), this);
-        }
-    }
+	public void onDamage(SkillDamageEventLate event) {
+		if (event.getSkill() != null && event.getSkill().getClass() == this.getClass()) {
+			IEntity caster = event.getCaster();
+			entityService.healEntity(caster, (float) event.getDamage(), this);
+		}
+	}
 }

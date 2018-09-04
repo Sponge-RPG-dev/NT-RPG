@@ -8,7 +8,7 @@ import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.scripting.JsBinding;
 
 @JsBinding(JsBinding.Type.CLASS)
-@Generate(id = "name",description = "An effect which gives +x bonus points to all skills")
+@Generate(id = "name", description = "An effect which gives +x bonus points to all skills")
 public class AllSkillsBonus extends EffectBase<Integer> {
 
 	public static final String name = "All skills";

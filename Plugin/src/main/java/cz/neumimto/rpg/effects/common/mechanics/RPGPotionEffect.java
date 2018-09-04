@@ -10,8 +10,8 @@ import org.spongepowered.api.effect.potion.PotionEffect;
 public abstract class RPGPotionEffect extends EffectBase {
 
 	public RPGPotionEffect(String name, IEffectConsumer iEffectConsumer,
-						   long duration,
-						   PotionEffect.Builder pe) {
+			long duration,
+			PotionEffect.Builder pe) {
 		super(name, iEffectConsumer);
 		pe.duration((int) (20 * duration / 1000));
 		getPotions().add(pe.build());

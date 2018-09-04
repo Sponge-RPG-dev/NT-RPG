@@ -21,91 +21,91 @@ import java.util.Optional;
 public class ItemLevelData extends AbstractIntData<ItemLevelData, ItemLevelData.Immutable> {
 
 
-    public ItemLevelData(int value) {
-        super(value, NKeys.ITEM_LEVEL);
-    }
+	public ItemLevelData(int value) {
+		super(value, NKeys.ITEM_LEVEL);
+	}
 
-    @Override
-    protected Value<Integer> getValueGetter() {
-        return Sponge.getRegistry().getValueFactory()
-                .createValue(NKeys.ITEM_LEVEL, this.getValue());
-    }
+	@Override
+	protected Value<Integer> getValueGetter() {
+		return Sponge.getRegistry().getValueFactory()
+				.createValue(NKeys.ITEM_LEVEL, this.getValue());
+	}
 
 
-    @Override
-    public Optional<ItemLevelData> fill(DataHolder dataHolder, MergeFunction overlap) {
-        Optional<ItemLevelData> a = dataHolder.get(ItemLevelData.class);
-        if (a.isPresent()) {
-            ItemLevelData otherData = a.get();
-            ItemLevelData finalData = overlap.merge(this, otherData);
-            setValue(finalData.getValue());
-        }
-        return Optional.of(this);
-    }
+	@Override
+	public Optional<ItemLevelData> fill(DataHolder dataHolder, MergeFunction overlap) {
+		Optional<ItemLevelData> a = dataHolder.get(ItemLevelData.class);
+		if (a.isPresent()) {
+			ItemLevelData otherData = a.get();
+			ItemLevelData finalData = overlap.merge(this, otherData);
+			setValue(finalData.getValue());
+		}
+		return Optional.of(this);
+	}
 
-    @Override
-    public Optional<ItemLevelData> from(DataContainer container) {
-        if (!container.contains(NKeys.ITEM_LEVEL)) {
-            return Optional.empty();
-        }
+	@Override
+	public Optional<ItemLevelData> from(DataContainer container) {
+		if (!container.contains(NKeys.ITEM_LEVEL)) {
+			return Optional.empty();
+		}
 
-        setValue((Integer) container.get(NKeys.ITEM_LEVEL.getQuery()).get());
-        return Optional.of(this);
-    }
+		setValue((Integer) container.get(NKeys.ITEM_LEVEL.getQuery()).get());
+		return Optional.of(this);
+	}
 
-    @Override
-    public ItemLevelData copy() {
-        return new ItemLevelData(getValue());
-    }
+	@Override
+	public ItemLevelData copy() {
+		return new ItemLevelData(getValue());
+	}
 
-    @Override
-    public Immutable asImmutable() {
-        return new Immutable(getValue());
-    }
+	@Override
+	public Immutable asImmutable() {
+		return new Immutable(getValue());
+	}
 
-    @Override
-    public int getContentVersion() {
-        return 1;
-    }
+	@Override
+	public int getContentVersion() {
+		return 1;
+	}
 
-    public class Immutable extends AbstractImmutableIntData<Immutable, ItemLevelData> {
+	public static class Builder implements DataManipulatorBuilder<ItemLevelData, Immutable> {
 
-        public Immutable(int value) {
-            super(Immutable.class, value, NKeys.ITEM_LEVEL, ItemLevelData.class, 0, Integer.MAX_VALUE, 0);
-        }
+		public static final int CONTENT_VERSION = 1;
 
-        public Immutable() {
-            this(0);
-        }
-    }
+		public Builder() {
+			super();
+		}
 
-    public static class Builder implements DataManipulatorBuilder<ItemLevelData, Immutable> {
+		@Override
+		public ItemLevelData create() {
+			return new ItemLevelData(0);
+		}
 
-        public static final int CONTENT_VERSION = 1;
+		@Override
+		public Optional<ItemLevelData> createFrom(DataHolder dataHolder) {
+			return create().fill(dataHolder);
+		}
 
-        public Builder() {
-            super();
-        }
+		@Override
+		@SuppressWarnings("unchecked")
+		public Optional<ItemLevelData> build(DataView container) throws InvalidDataException {
+			if (container.contains(NKeys.ITEM_RARITY)) {
+				return Optional.of(
+						new ItemLevelData((Integer) container.get(NKeys.ITEM_LEVEL.getQuery()).orElse(new Pair<>(0D, 0D)))
+				);
+			}
+			return Optional.empty();
+		}
+	}
 
-        @Override
-        public ItemLevelData create() {
-            return new ItemLevelData(0);
-        }
+	public class Immutable extends AbstractImmutableIntData<Immutable, ItemLevelData> {
 
-        @Override
-        public Optional<ItemLevelData> createFrom(DataHolder dataHolder) {
-            return create().fill(dataHolder);
-        }
+		public Immutable(int value) {
+			super(Immutable.class, value, NKeys.ITEM_LEVEL, ItemLevelData.class, 0, Integer.MAX_VALUE, 0);
+		}
 
-        @Override
-        @SuppressWarnings("unchecked")
-        public Optional<ItemLevelData> build(DataView container) throws InvalidDataException {
-            if (container.contains(NKeys.ITEM_RARITY)) {
-                return Optional.of(
-                        new ItemLevelData((Integer) container.get(NKeys.ITEM_LEVEL.getQuery()).orElse(new Pair<>(0D, 0D)))
-                );
-            }
-            return Optional.empty();
-        }
-    }
+		public Immutable() {
+			this(0);
+		}
+	}
 }

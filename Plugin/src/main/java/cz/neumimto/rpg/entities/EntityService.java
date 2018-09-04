@@ -144,8 +144,9 @@ public class EntityService {
 		}
 		event = new SkillHealEvent(entity, healedamount, skill);
 		Sponge.getGame().getEventManager().post(event);
-		if (event.isCancelled() || event.getAmount() <= 0)
+		if (event.isCancelled() || event.getAmount() <= 0) {
 			return 0;
+		}
 		return setEntityHealth(event.getEntity(), event.getAmount());
 	}
 

@@ -6,6 +6,7 @@ import cz.neumimto.rpg.effects.common.stacking.UnstackableEffectData;
  * Created by NeumimTo on 6.7.2017.
  */
 public class CriticalEffectModel implements UnstackableEffectData<CriticalEffectModel> {
+
 	public int chance;
 	public float mult;
 

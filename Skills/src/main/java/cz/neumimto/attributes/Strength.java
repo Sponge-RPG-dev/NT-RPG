@@ -10,6 +10,7 @@ import org.spongepowered.api.item.ItemTypes;
  */
 @ResourceLoader.Attribute
 public class Strength extends CharacterAttribute {
+
 	public Strength() {
 		//setName(SkillLocalization.STR);
 		//setDescription(SkillLocalization.STR_DESC);

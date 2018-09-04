@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.players.groups;
@@ -27,6 +27,7 @@ import java.util.Set;
  * Created by NeumimTo on 14.2.2015.
  */
 public class RecipeGroup {
+
 	private String name;
 	private Set<ItemStack> set = new HashSet<>();
 

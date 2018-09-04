@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.damage;
@@ -43,7 +43,14 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.OptionalDouble;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.function.BiFunction;
 
 /**
@@ -54,25 +61,30 @@ public class DamageService {
 
 	@Inject
 	public EntityService entityService;
-
+	public BiFunction<Double, Double, Double> DamageArmorReductionFactor = (damage, armor) -> armor / (armor + 10 * damage);
 	@Inject
 	private CharacterService characterService;
-
 	@Inject
 	private GroupService groupService;
-
 	@Inject
 	private InventoryService inventoryService;
-
 	@Inject
 	private ItemService itemService;
-
-
-	public BiFunction<Double, Double, Double> DamageArmorReductionFactor = (damage, armor) -> armor / (armor + 10 * damage);
+	private Map<Double, TextColor> doubleColorMap = new TreeMap<>();
+	private TextColor[] colorScale = new TextColor[]{
+			TextColors.WHITE,
+			TextColors.YELLOW,
+			TextColors.GOLD,
+			TextColors.RED,
+			TextColors.DARK_RED,
+			TextColors.DARK_PURPLE,
+			TextColors.GRAY
+	};
 
 	public double getCharacterItemDamage(IActiveCharacter character, RPGItemType type) {
-		if (character.isStub() || type == null)
+		if (character.isStub() || type == null) {
 			return 1;
+		}
 		double base = character.getBaseWeaponDamage(type);
 
 		for (Integer i : type.getWeaponClass().getProperties()) {
@@ -90,9 +102,12 @@ public class DamageService {
 	}
 
 	public double getCharacterProjectileDamage(IActiveCharacter character, EntityType type) {
-		if (character.isStub() || type == null)
+		if (character.isStub() || type == null) {
 			return 1;
-		double base = character.getBaseProjectileDamage(type) + characterService.getCharacterProperty(character, DefaultProperties.projectile_damage_bonus);
+		}
+		double base =
+				character.getBaseProjectileDamage(type) + characterService.getCharacterProperty(character, DefaultProperties
+						.projectile_damage_bonus);
 		if (type == EntityTypes.SPECTRAL_ARROW || type == EntityTypes.TIPPED_ARROW) {
 			base *= characterService.getCharacterProperty(character, DefaultProperties.arrow_damage_mult);
 		} else {
@@ -127,44 +142,42 @@ public class DamageService {
 	}
 
 	public double getEntityResistance(IEntity entity, DamageType source) {
-		if (source == DamageTypes.ATTACK)
+		if (source == DamageTypes.ATTACK) {
 			return entityService.getEntityProperty(entity, DefaultProperties.physical_damage_protection_mult);
-		if (source == DamageTypes.FIRE)
+		}
+		if (source == DamageTypes.FIRE) {
 			return entityService.getEntityProperty(entity, DefaultProperties.fire_damage_protection_mult);
-		if (source == DamageTypes.MAGIC)
+		}
+		if (source == DamageTypes.MAGIC) {
 			return entityService.getEntityProperty(entity, DefaultProperties.magic_damage_protection_mult);
-		if (source == NDamageType.LIGHTNING)
+		}
+		if (source == NDamageType.LIGHTNING) {
 			return entityService.getEntityProperty(entity, DefaultProperties.lightning_damage_protection_mult);
-		if (source == NDamageType.ICE)
+		}
+		if (source == NDamageType.ICE) {
 			return entityService.getEntityProperty(entity, DefaultProperties.ice_damage_protection_mult);
+		}
 		return 1;
 	}
 
 	public double getEntityBonusDamage(IEntity entity, DamageType source) {
-		if (source == DamageTypes.ATTACK)
+		if (source == DamageTypes.ATTACK) {
 			return entityService.getEntityProperty(entity, DefaultProperties.physical_damage_bonus_mult);
-		if (source == DamageTypes.FIRE)
+		}
+		if (source == DamageTypes.FIRE) {
 			return entityService.getEntityProperty(entity, DefaultProperties.fire_damage_bonus_mult);
-		if (source == DamageTypes.MAGIC)
+		}
+		if (source == DamageTypes.MAGIC) {
 			return entityService.getEntityProperty(entity, DefaultProperties.magic_damage_bonus_mult);
-		if (source == NDamageType.LIGHTNING)
+		}
+		if (source == NDamageType.LIGHTNING) {
 			return entityService.getEntityProperty(entity, DefaultProperties.lightning_damage_bonus_mult);
-		if (source == NDamageType.ICE)
+		}
+		if (source == NDamageType.ICE) {
 			return entityService.getEntityProperty(entity, DefaultProperties.ice_damage_bonus_mult);
+		}
 		return 0;
 	}
-
-
-	private Map<Double, TextColor> doubleColorMap = new TreeMap<>();
-	private TextColor[] colorScale = new TextColor[]{
-			TextColors.WHITE,
-			TextColors.YELLOW,
-			TextColors.GOLD,
-			TextColors.RED,
-			TextColors.DARK_RED,
-			TextColors.DARK_PURPLE,
-			TextColors.GRAY
-	};
 
 	public void createDamageToColorMapping() {
 		Collection<ConfigClass> classes = groupService.getClasses();
@@ -198,7 +211,7 @@ public class DamageService {
 		if (size >= colorScale.length) {
 			int l = list.size() / colorScale.length;
 			int w = 0;
-			for (List<Double> partition : Lists.partition(new ArrayList<>(list), l +1)) {
+			for (List<Double> partition : Lists.partition(new ArrayList<>(list), l + 1)) {
 				OptionalDouble max = partition.stream().mapToDouble(d -> d).max();
 				doubleColorMap.put(max.getAsDouble(), colorScale[w]);
 				w++;

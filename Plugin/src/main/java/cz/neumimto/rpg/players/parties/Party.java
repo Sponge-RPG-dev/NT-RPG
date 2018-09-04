@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.players.parties;
@@ -33,6 +33,7 @@ import java.util.UUID;
  * Created by NeumimTo on 10.8.2015.
  */
 public class Party {
+
 	private Set<IActiveCharacter> players = new HashSet<>();
 	private IActiveCharacter leader;
 	private Set<UUID> invites = new HashSet<>();
@@ -96,8 +97,12 @@ public class Party {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
 		Party party = (Party) o;
 

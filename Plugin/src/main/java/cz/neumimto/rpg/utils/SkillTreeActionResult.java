@@ -25,7 +25,7 @@ public enum SkillTreeActionResult {
 	INSUFFICIENT_LEVEL_GAP(Localizations.INSUFFICIENT_LEVEL_GAP),
 	NO_ACCESS_TO_SKILL(Localizations.NO_ACCESS_TO_SKILL);
 
-    public LocalizableParametrizedText message;
+	public LocalizableParametrizedText message;
 
 	SkillTreeActionResult(LocalizableParametrizedText a) {
 
@@ -33,6 +33,7 @@ public enum SkillTreeActionResult {
 	}
 
 	public static class Data {
+
 		private final Map<String, Object> variables;
 
 		public Data(Map<String, Object> variables) {

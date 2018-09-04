@@ -12,113 +12,113 @@ import java.util.Map;
 @ConfigSerializable
 public class ScriptSkillModel {
 
-    @Setting("Id")
-    private String id;
+	@Setting("Id")
+	private String id;
 
-    @Setting("Name")
-    private Text name;
+	@Setting("Name")
+	private Text name;
 
-    @Setting("Parent")
-    private String parent;
+	@Setting("Parent")
+	private String parent;
 
-    @Setting("Skill-Types")
-    private List<SkillType> skillTypes;
+	@Setting("Skill-Types")
+	private List<SkillType> skillTypes;
 
-    @Setting("Damage-Type")
-    private DamageType damageType;
+	@Setting("Damage-Type")
+	private DamageType damageType;
 
-    @Setting("Lore")
-    private List<Text> lore;
+	@Setting("Lore")
+	private List<Text> lore;
 
-    @Setting("Description")
-    private List<Text> description;
+	@Setting("Description")
+	private List<Text> description;
 
-    @Setting("Settings")
-    private Map<String, Float> settings;
+	@Setting("Settings")
+	private Map<String, Float> settings;
 
-    @Setting("Loader")
-    private String loader;
+	@Setting("Loader")
+	private String loader;
 
-    @Setting("Script")
-    private String script;
+	@Setting("Script")
+	private String script;
 
-    public String getId() {
-        return id;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public Text getName() {
-        return name;
-    }
+	public Text getName() {
+		return name;
+	}
 
-    public void setName(Text name) {
-        this.name = name;
-    }
+	public void setName(Text name) {
+		this.name = name;
+	}
 
-    public String getParent() {
-        return parent;
-    }
+	public String getParent() {
+		return parent;
+	}
 
-    public void setParent(String parent) {
-        this.parent = parent;
-    }
+	public void setParent(String parent) {
+		this.parent = parent;
+	}
 
-    public List<SkillType> getSkillTypes() {
-        return skillTypes;
-    }
+	public List<SkillType> getSkillTypes() {
+		return skillTypes;
+	}
 
-    public void setSkillTypes(List<SkillType> skillTypes) {
-        this.skillTypes = skillTypes;
-    }
+	public void setSkillTypes(List<SkillType> skillTypes) {
+		this.skillTypes = skillTypes;
+	}
 
-    public DamageType getDamageType() {
-        return damageType;
-    }
+	public DamageType getDamageType() {
+		return damageType;
+	}
 
-    public void setDamageType(DamageType damageType) {
-        this.damageType = damageType;
-    }
+	public void setDamageType(DamageType damageType) {
+		this.damageType = damageType;
+	}
 
-    public List<Text> getLore() {
-        return lore;
-    }
+	public List<Text> getLore() {
+		return lore;
+	}
 
-    public void setLore(List<Text> lore) {
-        this.lore = lore;
-    }
+	public void setLore(List<Text> lore) {
+		this.lore = lore;
+	}
 
-    public List<Text> getDescription() {
-        return description;
-    }
+	public List<Text> getDescription() {
+		return description;
+	}
 
-    public void setDescription(List<Text> description) {
-        this.description = description;
-    }
+	public void setDescription(List<Text> description) {
+		this.description = description;
+	}
 
-    public Map<String, Float> getSettings() {
-        return settings;
-    }
+	public Map<String, Float> getSettings() {
+		return settings;
+	}
 
-    public void setSettings(Map<String, Float> settings) {
-        this.settings = settings;
-    }
+	public void setSettings(Map<String, Float> settings) {
+		this.settings = settings;
+	}
 
-    public String getLoader() {
-        return loader;
-    }
+	public String getLoader() {
+		return loader;
+	}
 
-    public void setLoader(String loader) {
-        this.loader = loader;
-    }
+	public void setLoader(String loader) {
+		this.loader = loader;
+	}
 
-    public String getScript() {
-        return script;
-    }
+	public String getScript() {
+		return script;
+	}
 
-    public void setScript(String script) {
-        this.script = script;
-    }
+	public void setScript(String script) {
+		this.script = script;
+	}
 }

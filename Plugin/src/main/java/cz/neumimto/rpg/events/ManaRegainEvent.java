@@ -9,6 +9,7 @@ import cz.neumimto.rpg.scripting.JsBinding;
  */
 @JsBinding(JsBinding.Type.CLASS)
 public class ManaRegainEvent extends CancellableEvent {
+
 	private IActiveCharacter character;
 	private double newVal;
 	private double amount;

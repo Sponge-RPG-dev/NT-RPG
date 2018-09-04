@@ -47,7 +47,7 @@ public class Astronomy extends ActiveSkill {
 			character.getEntity().getInventory().offer(is);
 			return SkillResult.OK;
 		}
-		character1.sendMessage(ChatTypes.ACTION_BAR,SkillLocalization.ASTRONOMY_CANNOT_SEE_THE_SKY);
+		character1.sendMessage(ChatTypes.ACTION_BAR, SkillLocalization.ASTRONOMY_CANNOT_SEE_THE_SKY);
 		return SkillResult.CANCELLED;
 	}
 }

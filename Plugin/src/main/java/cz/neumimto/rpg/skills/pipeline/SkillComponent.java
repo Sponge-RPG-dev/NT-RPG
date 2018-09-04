@@ -11,13 +11,15 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface SkillComponent {
-    String value();
 
-    Param[] params();
+	String value();
 
-    String usage();
+	Param[] params();
 
-    @interface Param {
-        String value();
-    }
+	String usage();
+
+	@interface Param {
+
+		String value();
+	}
 }

@@ -39,11 +39,11 @@ public class PandemicEffect extends EffectBase {
 		}
 	}
 
-	public void setDamageSource(SkillDamageSource damageSource) {
-		this.damageSource = damageSource;
-	}
-
 	public SkillDamageSource getDamageSource() {
 		return damageSource;
+	}
+
+	public void setDamageSource(SkillDamageSource damageSource) {
+		this.damageSource = damageSource;
 	}
 }

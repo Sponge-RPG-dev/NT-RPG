@@ -19,123 +19,121 @@ import java.util.function.BiFunction;
 
 public class CharacterAttributeSkill extends AbstractSkill {
 
-    public CharacterAttributeSkill() {
-        super();
-    }
+	public CharacterAttributeSkill() {
+		super();
+	}
 
-    @Override
-    public SkillResult onPreUse(IActiveCharacter character) {
-        return SkillResult.CANCELLED;
-    }
+	@Override
+	public SkillResult onPreUse(IActiveCharacter character) {
+		return SkillResult.CANCELLED;
+	}
 
-    @Override
-    public void onCharacterInit(IActiveCharacter c, int level) {
-        super.onCharacterInit(c, level);
-        assignAll(c, 1, (integer, integer2) -> integer <= integer2);
-    }
+	@Override
+	public void onCharacterInit(IActiveCharacter c, int level) {
+		super.onCharacterInit(c, level);
+		assignAll(c, 1, (integer, integer2) -> integer <= integer2);
+	}
 
-    private void assignAll(IActiveCharacter c, int i, BiFunction<Integer, Integer, Boolean> fc) {
-        ExtendedSkillInfo skill = c.getSkill(getId());
-        int totalLevel = skill.getTotalLevel();
-        CharacterAttributeSkillData skillData = (CharacterAttributeSkillData) skill.getSkillData();
-        for (Wrapper wrapper : skillData.wrappers) {
-            if (fc.apply(wrapper.level, totalLevel)) {
-                NtRpgPlugin.GlobalScope.characterService.addTemporalAttribute(c, wrapper.getCharacterAttribute(), i * wrapper.value);
-            }
-        }
-    }
+	private void assignAll(IActiveCharacter c, int i, BiFunction<Integer, Integer, Boolean> fc) {
+		ExtendedSkillInfo skill = c.getSkill(getId());
+		int totalLevel = skill.getTotalLevel();
+		CharacterAttributeSkillData skillData = (CharacterAttributeSkillData) skill.getSkillData();
+		for (Wrapper wrapper : skillData.wrappers) {
+			if (fc.apply(wrapper.level, totalLevel)) {
+				NtRpgPlugin.GlobalScope.characterService.addTemporalAttribute(c, wrapper.getCharacterAttribute(), i * wrapper.value);
+			}
+		}
+	}
 
-    @Override
-    public void skillLearn(IActiveCharacter c) {
-        super.skillLearn(c);
-        assignAll(c, 1, (integer, integer2) -> integer <= integer2);
-    }
+	@Override
+	public void skillLearn(IActiveCharacter c) {
+		super.skillLearn(c);
+		assignAll(c, 1, (integer, integer2) -> integer <= integer2);
+	}
 
-    @Override
-    public void skillUpgrade(IActiveCharacter c, int level) {
-        super.skillUpgrade(c, level);
-        assignAll(c, 1, Objects::equals);
-    }
+	@Override
+	public void skillUpgrade(IActiveCharacter c, int level) {
+		super.skillUpgrade(c, level);
+		assignAll(c, 1, Objects::equals);
+	}
 
-    @Override
-    public void skillRefund(IActiveCharacter IActiveCharacter) {
-        super.skillRefund(IActiveCharacter);
-        assignAll(IActiveCharacter, -1, (integer, integer2) -> integer <= integer2);
-    }
-
-
-    @Override
-    public CharacterAttributeSkillData constructSkillData() {
-        return new CharacterAttributeSkillData(getName());
-    }
-
-    @Override
-    public <T extends SkillData> void loadSkillData(T skillData, SkillTree context, SkillLoadingErrors errors, Config c) {
-        CharacterAttributeSkillData data = (CharacterAttributeSkillData) skillData;
-        try {
-            List<? extends Config> attributes = c.getConfigList("attributes");
-            for (Config subc : attributes) {
-                String attribute = subc.getString("attribute");
-                int level = subc.getInt("skill-level");
-                int val = subc.getInt("attribute-value");
-                Wrapper wrapper = new Wrapper(NtRpgPlugin.GlobalScope.propertyService.getAttribute(attribute), level, val);
-                if (wrapper.characterAttribute == null) {
-                    errors.log("Unknown attribute %s in %s", attribute, context.getId());
-                } else {
-                    data.wrappers.add(wrapper);
-                }
-            }
-        } catch (ConfigException ex) {
-
-        }
-    }
+	@Override
+	public void skillRefund(IActiveCharacter IActiveCharacter) {
+		super.skillRefund(IActiveCharacter);
+		assignAll(IActiveCharacter, -1, (integer, integer2) -> integer <= integer2);
+	}
 
 
+	@Override
+	public CharacterAttributeSkillData constructSkillData() {
+		return new CharacterAttributeSkillData(getName());
+	}
+
+	@Override
+	public <T extends SkillData> void loadSkillData(T skillData, SkillTree context, SkillLoadingErrors errors, Config c) {
+		CharacterAttributeSkillData data = (CharacterAttributeSkillData) skillData;
+		try {
+			List<? extends Config> attributes = c.getConfigList("attributes");
+			for (Config subc : attributes) {
+				String attribute = subc.getString("attribute");
+				int level = subc.getInt("skill-level");
+				int val = subc.getInt("attribute-value");
+				Wrapper wrapper = new Wrapper(NtRpgPlugin.GlobalScope.propertyService.getAttribute(attribute), level, val);
+				if (wrapper.characterAttribute == null) {
+					errors.log("Unknown attribute %s in %s", attribute, context.getId());
+				} else {
+					data.wrappers.add(wrapper);
+				}
+			}
+		} catch (ConfigException ex) {
+
+		}
+	}
 
 
-    public class CharacterAttributeSkillData extends SkillData {
+	public class CharacterAttributeSkillData extends SkillData {
 
-        Set<Wrapper> wrappers = new HashSet<>();
+		Set<Wrapper> wrappers = new HashSet<>();
 
-        public CharacterAttributeSkillData(String skill) {
-            super(skill);
-        }
-    }
+		public CharacterAttributeSkillData(String skill) {
+			super(skill);
+		}
+	}
 
-    public class Wrapper  {
+	public class Wrapper {
 
-        private ICharacterAttribute characterAttribute;
-        private int level;
-        private int value;
+		private ICharacterAttribute characterAttribute;
+		private int level;
+		private int value;
 
-        public Wrapper(ICharacterAttribute characterAttribute, int level, int value) {
-            this.characterAttribute = characterAttribute;
-            this.level = level;
-            this.value = value;
-        }
+		public Wrapper(ICharacterAttribute characterAttribute, int level, int value) {
+			this.characterAttribute = characterAttribute;
+			this.level = level;
+			this.value = value;
+		}
 
-        public ICharacterAttribute getCharacterAttribute() {
-            return characterAttribute;
-        }
+		public ICharacterAttribute getCharacterAttribute() {
+			return characterAttribute;
+		}
 
-        public void setCharacterAttribute(ICharacterAttribute characterAttribute) {
-            this.characterAttribute = characterAttribute;
-        }
+		public void setCharacterAttribute(ICharacterAttribute characterAttribute) {
+			this.characterAttribute = characterAttribute;
+		}
 
-        public int getLevel() {
-            return level;
-        }
+		public int getLevel() {
+			return level;
+		}
 
-        public void setLevel(int level) {
-            this.level = level;
-        }
+		public void setLevel(int level) {
+			this.level = level;
+		}
 
-        public int getValue() {
-            return value;
-        }
+		public int getValue() {
+			return value;
+		}
 
-        public void setValue(int value) {
-            this.value = value;
-        }
-    }
+		public void setValue(int value) {
+			this.value = value;
+		}
+	}
 }

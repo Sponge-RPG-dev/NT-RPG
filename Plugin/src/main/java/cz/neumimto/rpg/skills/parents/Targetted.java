@@ -41,10 +41,10 @@ public abstract class Targetted extends ActiveSkill implements ITargetted {
 		int range = (int) info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.RANGE, info.getTotalLevel());
 		Living l = getTargettedEntity(character, range);
 		if (l == null) {
-		 	if (getDamageType() == null && !getSkillTypes().contains(SkillType.CANNOT_BE_SELF_CASTED)) {
+			if (getDamageType() == null && !getSkillTypes().contains(SkillType.CANNOT_BE_SELF_CASTED)) {
 				l = character.getEntity();
 			} else {
-		 		return SkillResult.NO_TARGET;
+				return SkillResult.NO_TARGET;
 			}
 		}
 		if (getDamageType() != null && !Utils.canDamage(character, l)) {

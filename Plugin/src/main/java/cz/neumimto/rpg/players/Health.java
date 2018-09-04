@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.players;
@@ -26,6 +26,7 @@ import org.spongepowered.api.data.key.Keys;
  * Created by NeumimTo on 30.12.2014.
  */
 public class Health implements IReservable {
+
 	private final IActiveCharacter activeCharacter;
 
 	public Health(IActiveCharacter activeCharacter) {

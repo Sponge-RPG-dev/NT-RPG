@@ -10,22 +10,22 @@ import java.util.Optional;
 
 public class ExperienceSourceRegistry implements AdditionalCatalogRegistryModule<ExperienceSource> {
 
-    @RegisterCatalog(ExperienceSource.class)
-    private final Map<String, ExperienceSource> sources = Maps.newHashMap();
+	@RegisterCatalog(ExperienceSource.class)
+	private final Map<String, ExperienceSource> sources = Maps.newHashMap();
 
-    @Override
-    public void registerAdditionalCatalog(ExperienceSource extraCatalog) {
-        sources.put(extraCatalog.getId().toLowerCase(), extraCatalog);
-    }
+	@Override
+	public void registerAdditionalCatalog(ExperienceSource extraCatalog) {
+		sources.put(extraCatalog.getId().toLowerCase(), extraCatalog);
+	}
 
-    @Override
-    public Optional<ExperienceSource> getById(String id) {
-        return Optional.of(sources.get(id.toLowerCase()));
-    }
+	@Override
+	public Optional<ExperienceSource> getById(String id) {
+		return Optional.of(sources.get(id.toLowerCase()));
+	}
 
-    @Override
-    public Collection<ExperienceSource> getAll() {
-        return sources.values();
-    }
+	@Override
+	public Collection<ExperienceSource> getAll() {
+		return sources.values();
+	}
 }
 

@@ -21,28 +21,28 @@ import javax.annotation.Nullable;
  */
 public class AnySkillCommandElement extends CommandElement {
 
-    public AnySkillCommandElement(@Nullable Text key) {
-        super(key);
-    }
+	public AnySkillCommandElement(@Nullable Text key) {
+		super(key);
+	}
 
-    @Override
-    protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
-        String skilllc = args.next().toLowerCase();
-        Optional<ISkill> skill = NtRpgPlugin.GlobalScope.skillService.getById(skilllc);
-        if (!skill.isPresent()) {
-            throw args.createError(TextSerializers.FORMATTING_CODE.deserialize("&CUnknown skill &C\"" + skilllc + "\""));
-        }
-        return skill.get();
-    }
+	@Override
+	protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
+		String skilllc = args.next().toLowerCase();
+		Optional<ISkill> skill = NtRpgPlugin.GlobalScope.skillService.getById(skilllc);
+		if (!skill.isPresent()) {
+			throw args.createError(TextSerializers.FORMATTING_CODE.deserialize("&CUnknown skill &C\"" + skilllc + "\""));
+		}
+		return skill.get();
+	}
 
-    @Override
-    public List<String> complete(CommandSource src, CommandArgs args, CommandContext context) {
-        return new ArrayList<>(NtRpgPlugin.GlobalScope.skillService.getSkills().keySet());
-    }
+	@Override
+	public List<String> complete(CommandSource src, CommandArgs args, CommandContext context) {
+		return new ArrayList<>(NtRpgPlugin.GlobalScope.skillService.getSkills().keySet());
+	}
 
-    @Override
-    public Text getUsage(CommandSource src) {
-        return Text.of("<skill_name>");
-    }
+	@Override
+	public Text getUsage(CommandSource src) {
+		return Text.of("<skill_name>");
+	}
 
 }

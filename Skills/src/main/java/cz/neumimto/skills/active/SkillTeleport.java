@@ -33,7 +33,7 @@ public class SkillTeleport extends ActiveSkill {
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.RANGE, 20, 20);
 		super.settings = settings;
-		
+
 		addSkillType(SkillType.TELEPORT);
 		setIcon(ItemTypes.END_PORTAL_FRAME);
 	}
@@ -43,7 +43,8 @@ public class SkillTeleport extends ActiveSkill {
 		Player player = character.getPlayer();
 		double doubleNodeValue = getDoubleNodeValue(extendedSkillInfo, SkillNodes.RANGE);
 
-		Optional<BlockRayHit<World>> optHit = BlockRay.from(player).distanceLimit(doubleNodeValue).stopFilter(Utils.SKILL_TARGET_BLOCK_FILTER).build().end();
+		Optional<BlockRayHit<World>> optHit =
+				BlockRay.from(player).distanceLimit(doubleNodeValue).stopFilter(Utils.SKILL_TARGET_BLOCK_FILTER).build().end();
 		if (optHit.isPresent()) {
 			Vector3d lookPos = optHit.get().getBlockPosition().toDouble();
 			Location<World> worldLocation = new Location<>(player.getWorld(), lookPos);

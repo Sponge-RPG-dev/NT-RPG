@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,14 +13,18 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.effects.common.mechanics;
 
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.PluginConfig;
-import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.effects.CoreEffectTypes;
+import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.EffectStatusType;
+import cz.neumimto.rpg.effects.Generate;
+import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.events.character.ManaRegainEvent;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -29,7 +33,7 @@ import cz.neumimto.rpg.players.properties.DefaultProperties;
 /**
  * Created by NeumimTo on 9.8.2015.
  */
-@Generate(id = "name",description = "A component which enables mana regeneration")
+@Generate(id = "name", description = "A component which enables mana regeneration")
 public class ManaRegeneration extends EffectBase {
 
 	public static final String name = "DefaultManaRegen";
@@ -61,8 +65,9 @@ public class ManaRegeneration extends EffectBase {
 	public void onTick() {
 		double current = character.getMana().getValue();
 		double max = character.getMana().getMaxValue();
-		if (current >= max)
+		if (current >= max) {
 			return;
+		}
 		double regen = character.getMana().getRegen()
 				+ getGlobalScope().characterService.getCharacterProperty(character, DefaultProperties.mana_regen_mult)
 				* character.getLevel();

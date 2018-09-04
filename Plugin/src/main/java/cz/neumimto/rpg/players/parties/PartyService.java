@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.players.parties;
@@ -65,14 +65,16 @@ public class PartyService {
 		party.getInvites().add(tcharacter.getPlayer().getUniqueId());
 		PartyInviteEvent event = new PartyInviteEvent(party, tcharacter);
 		game.getEventManager().post(event);
-		if (event.isCancelled())
+		if (event.isCancelled()) {
 			return;
+		}
 		event.getCharacter().setPendingPartyInvite(event.getParty());
 	}
 
 	public void addToParty(Party party, IActiveCharacter character) {
-		if (character.isStub())
+		if (character.isStub()) {
 			return;
+		}
 		if (character.hasParty()) {
 			Gui.sendMessage(character, Localizations.ALREADY_IN_PARTY, Arg.EMPTY);
 			return;
@@ -80,8 +82,9 @@ public class PartyService {
 		Player player = character.getPlayer();
 		party.getInvites().remove(player.getUniqueId());
 		PartyJoinEvent event = new PartyJoinEvent(character, party);
-		if (event.isCancelled())
+		if (event.isCancelled()) {
 			return;
+		}
 		Text msg = Localizations.PARTY_MSG_ON_PLAYER_JOIN.toText(Arg.arg("player", player.getName()));
 		player.sendMessage(Localizations.PLAYER_MSG_ON_JOIN_PARTY.toText());
 		party.sendPartyMessage(msg);

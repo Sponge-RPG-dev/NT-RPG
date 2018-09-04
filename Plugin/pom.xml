@@ -84,7 +84,7 @@
             <artifactId>luckperms-api</artifactId>
             <version>4.2</version>
             <scope>provided</scope>
-         </dependency>
+        </dependency>
         <dependency>
             <groupId>cz.neumimto.rpg</groupId>
             <artifactId>Generator</artifactId>

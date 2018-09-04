@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.persistance;
@@ -71,12 +71,13 @@ public class PlayerDao extends GenericDao<CharacterBase> {
 		List r = session.createCriteria(CharacterBase.class)
 				.add(Restrictions.eq("uuid", uuid.toString()))
 				.addOrder(Order.desc("updated"))
-				.add(Restrictions.ne("markedForRemoval",true))
+				.add(Restrictions.ne("markedForRemoval", true))
 				.list();
 		session.close();
 
-		if (r.size() == 0)
+		if (r.size() == 0) {
 			return null;
+		}
 		return (CharacterBase) r.get(0);
 	}
 
@@ -88,8 +89,9 @@ public class PlayerDao extends GenericDao<CharacterBase> {
 		query.setParameter("name", name);
 		List<CharacterBase> list = query.list();
 		s.close();
-		if (list.size() == 0)
+		if (list.size() == 0) {
 			return null;
+		}
 		return list.get(0);
 	}
 
@@ -127,7 +129,7 @@ public class PlayerDao extends GenericDao<CharacterBase> {
 
 	public void createAndUpdate(CharacterBase base) {
 		Session session = factory.openSession();
-		Transaction tx  = session.beginTransaction();
+		Transaction tx = session.beginTransaction();
 		session.saveOrUpdate(base);
 		session.flush();
 		tx.commit();

@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg;
@@ -178,17 +178,13 @@ public class NtRpgPlugin {
 	public static File pluginjar;
 	public static GlobalScope GlobalScope;
 	public static SpongeExecutorService asyncExecutor;
-
+	@Inject
+	public Logger logger;
+	@Inject
+	PluginContainer plugin;
 	@Inject
 	@ConfigDir(sharedRoot = false)
 	private Path config;
-
-	@Inject
-	public Logger logger;
-
-	@Inject
-	PluginContainer plugin;
-
 
 	@Listener
 	public void preinit(GamePreInitializationEvent e) {
@@ -341,13 +337,13 @@ public class NtRpgPlugin {
 				.builder(new ItemSubtypeData.Builder())
 				.buildAndRegister(plugin);
 
-        DataRegistration.<SkillBindData, SkillBindData.Immutable>builder()
-                .manipulatorId("skill_bind")
-                .dataName("SkillBind")
-                .dataClass(SkillBindData.class)
-                .immutableClass(SkillBindData.Immutable.class)
-                .builder(new SkillBindData.Builder())
-                .buildAndRegister(plugin);
+		DataRegistration.<SkillBindData, SkillBindData.Immutable>builder()
+				.manipulatorId("skill_bind")
+				.dataName("SkillBind")
+				.dataClass(SkillBindData.class)
+				.immutableClass(SkillBindData.Immutable.class)
+				.builder(new SkillBindData.Builder())
+				.buildAndRegister(plugin);
 
 		Sponge.getRegistry().registerModule(SocketType.class, new SocketTypeRegistry());
 		Sponge.getRegistry().registerModule(ICharacterAttribute.class, new AttributeRegistry());
@@ -459,7 +455,8 @@ public class NtRpgPlugin {
 		registerCommands();
 		IoC.get().build(PropertyService.class).loadMaximalServerPropertyValues();
 		IoC.get().build(LocalizationService.class).registerClass(Localizations.class);
-		IoC.get().build(LocalizationService.class).loadResourceBundle("assets.nt-rpg.localizations.localization", Locale.forLanguageTag(PluginConfig.LOCALE));
+		IoC.get().build(LocalizationService.class)
+				.loadResourceBundle("assets.nt-rpg.localizations.localization", Locale.forLanguageTag(PluginConfig.LOCALE));
 		IoC.get().build(Init.class).it();
 		IoC.get().build(LocalizationService.class).registerClass(Localizations.class);
 		ResourceBundle bundle = ResourceBundle.getBundle("assets.nt-rpg.localizations.localization", Locale.forLanguageTag(PluginConfig.LOCALE));
@@ -471,14 +468,14 @@ public class NtRpgPlugin {
 
 			a.loadAll(IoC.get().build(Placeholders.class), this)
 					.stream()
-						.map(builder -> builder.author("NeumimTo").plugin(this).version("0.0.1-Test"))
-						.forEach(builder -> {
-							try {
-								builder.buildAndRegister();
-							} catch (Exception e) {
-								error("Could not register placeholder ", e);
-							}
-						});
+					.map(builder -> builder.author("NeumimTo").plugin(this).version("0.0.1-Test"))
+					.forEach(builder -> {
+						try {
+							builder.buildAndRegister();
+						} catch (Exception e) {
+							error("Could not register placeholder ", e);
+						}
+					});
 		});
 		info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
 	}
@@ -488,7 +485,6 @@ public class NtRpgPlugin {
 		registerCharacterCommands();
 		registerSkillCommands();
 	}
-
 
 
 	public void registerAdminCommands() {
@@ -510,8 +506,9 @@ public class NtRpgPlugin {
 					SkillSettings defaultSkillSettings = skill.getSettings();
 					Player player = (Player) src;
 					IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
-					if (character.isStub())
+					if (character.isStub()) {
 						throw new RuntimeException("Character is required even for an admin.");
+					}
 
 					int level = 1;
 					Optional<Integer> optional = args.getOne("level");
@@ -709,7 +706,7 @@ public class NtRpgPlugin {
 								.FORMATTING_CODE
 								.deserialize(CommandLocalization.COMMAND_ADMIN_RARITY))
 				.arguments(
-						GenericArguments.text(Text.of("meta"), TextSerializers.FORMATTING_CODE,true)
+						GenericArguments.text(Text.of("meta"), TextSerializers.FORMATTING_CODE, true)
 				)
 				.executor((src, args) -> {
 					Text meta1 = args.<Text>getOne("meta").get();
@@ -849,7 +846,6 @@ public class NtRpgPlugin {
 				.build();
 
 
-
 		// ===========================================================
 		// ==================          ROOT         ==================
 		// ===========================================================
@@ -891,8 +887,8 @@ public class NtRpgPlugin {
 													throw new RuntimeException("Unabled to reload the skill " + value.getSkill().getId() + ". "
 															+ "Restart the server");
 												}
-                                                ISkill skill = byId.get();
-                                                value.setSkill(skill);
+												ISkill skill = byId.get();
+												value.setSkill(skill);
 												value.getSkillData().setSkill(skill);
 											}
 										});
@@ -929,7 +925,7 @@ public class NtRpgPlugin {
 				.executor((src, args) -> {
 					Player player = args.<Player>getOne("player").get();
 					String data = args.<String>getOne("data").get();
-					Long k  = args.<Long>getOne("duration").get();
+					Long k = args.<Long>getOne("duration").get();
 					IGlobalEffect effect1 = args.<IGlobalEffect>getOne("data").get();
 					IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
 					EffectParams params = gson.fromJson(data, EffectParams.class);
@@ -939,16 +935,13 @@ public class NtRpgPlugin {
 				.build();
 
 
-
-
-
 		CommandSpec adminRoot = CommandSpec
 				.builder()
 				.description(TextSerializers
 						.FORMATTING_CODE
 						.deserialize(CommandLocalization.COMMAND_ADMIN_DESC))
 				.permission("ntrpg.admin")
-				.child(executeSkill,"skill", "s")
+				.child(executeSkill, "skill", "s")
 				.child(enchant, "enchant", "e")
 				.child(socket, "socket", "sk")
 				.child(rune, "rune", "r")
@@ -957,14 +950,13 @@ public class NtRpgPlugin {
 				.child(effect, "effect", "ef")
 				.child(reload, "reload")
 				.child(rarity, "rarity", "rrty")
-				.child(meta, "itemmeta", "imeta","imt")
-				.child(rst, "grouprequirements","gr")
+				.child(meta, "itemmeta", "imeta", "imt")
+				.child(rst, "grouprequirements", "gr")
 				.child(mt, "itemType", "it", "type")
 				.build();
 
 		Sponge.getCommandManager().register(this, adminRoot, "nadmin", "na");
 	}
-
 
 
 	public void registerCharacterCommands() {
@@ -1049,7 +1041,7 @@ public class NtRpgPlugin {
 						return CommandResult.empty();
 					}
 
-					if (!src.hasPermission("ntrpg.groups."+configClass.getName().toLowerCase())) {
+					if (!src.hasPermission("ntrpg.groups." + configClass.getName().toLowerCase())) {
 						src.sendMessage(Localizations.NO_PERMISSIONS.toText());
 						return CommandResult.empty();
 					}
@@ -1102,7 +1094,7 @@ public class NtRpgPlugin {
 								(character.getRace() != Race.Default && PluginConfig.PLAYER_CAN_CHANGE_RACE)) {
 							if (PluginConfig.PLAYER_CAN_CHANGE_RACE) {
 								GlobalScope.characterService.updatePlayerGroups(character, null, 0, r, null);
-								return ;
+								return;
 							}
 							src.sendMessage(Localizations.PLAYER_CANT_CHANGE_RACE.toText());
 						}
@@ -1122,11 +1114,12 @@ public class NtRpgPlugin {
 				.arguments(new UnlearnedSkillCommandElement(TextHelper.parse("skill")))
 				.permission("ntrpg.player.skills")
 				.executor((src, args) -> {
-					args.<ISkill>getOne(Text.of("skill")).ifPresent( iSkill -> {
+					args.<ISkill>getOne(Text.of("skill")).ifPresent(iSkill -> {
 						Player player = (Player) src;
 						IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
 						Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data
-								= GlobalScope.characterService.characterLearnskill(character, iSkill, character.getPrimaryClass().getConfigClass().getSkillTree());
+								= GlobalScope.characterService
+								.characterLearnskill(character, iSkill, character.getPrimaryClass().getConfigClass().getSkillTree());
 						player.sendMessage(data.value.bind(data.key.message));
 					});
 					return CommandResult.empty();
@@ -1203,7 +1196,8 @@ public class NtRpgPlugin {
 							boolean b = false;
 							for (CharacterBase playersCharacter : playersCharacters) {
 								if (playersCharacter.getName().equalsIgnoreCase(s)) {
-									ActiveCharacter character = GlobalScope.characterService.buildActiveCharacterAsynchronously(player, playersCharacter);
+									ActiveCharacter character =
+											GlobalScope.characterService.buildActiveCharacterAsynchronously(player, playersCharacter);
 									Sponge.getScheduler().createTaskBuilder().name("SetCharacterCallback" + player.getUniqueId())
 											.execute(() -> GlobalScope.characterService.setActiveCharacter(player.getUniqueId(), character))
 											.submit(NtRpgPlugin.this);
@@ -1214,8 +1208,9 @@ public class NtRpgPlugin {
 									break;
 								}
 							}
-							if (!b)
+							if (!b) {
 								player.sendMessage(Localizations.NON_EXISTING_CHARACTER.toText());
+							}
 						});
 					});
 					return CommandResult.success();
@@ -1236,7 +1231,7 @@ public class NtRpgPlugin {
 						.deserialize(CommandLocalization.COMMAND_CHOOSE_DESC))
 				.child(createCharacter, "create", "c")
 				.child(cset, "set", "s")
-				.child(cskill, "skill", "s","sk")
+				.child(cskill, "skill", "s", "sk")
 				.child(cattribute, "attribute", "attr", "a")
 				.child(cswitch, "switch")
 				.child(cslist, "list")
@@ -1265,7 +1260,7 @@ public class NtRpgPlugin {
 							case ON_COOLDOWN:
 								break;
 							case NO_MANA:
-								Gui.sendMessage(character, Localizations.NO_MANA, Arg.EMPTY );
+								Gui.sendMessage(character, Localizations.NO_MANA, Arg.EMPTY);
 								break;
 							case NO_HP:
 								Gui.sendMessage(character, Localizations.NO_HP, Arg.EMPTY);
@@ -1371,7 +1366,6 @@ public class NtRpgPlugin {
 				.build();
 
 
-
 		CommandSpec accept = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE
 						.deserialize(CommandLocalization.COMMAND_BIND_DESC))
@@ -1461,7 +1455,6 @@ public class NtRpgPlugin {
 		Sponge.getCommandManager().register(this, racegui, "race");
 
 
-
 		CommandSpec weapon = CommandSpec.builder()
 				.arguments(new AnyPlayerGroupCommandElement(Text.of("class_or_race")))
 				.executor((src, args) -> {
@@ -1490,11 +1483,10 @@ public class NtRpgPlugin {
 		Sponge.getCommandManager().register(this, armor, "armor");
 
 
-
 		CommandSpec runes = CommandSpec.builder()
 				.permission("ntrpg.runes.list")
 				.executor((src, args) -> {
-					Gui.sendListOfRunes(GlobalScope.characterService.getCharacter((Player)src));
+					Gui.sendListOfRunes(GlobalScope.characterService.getCharacter((Player) src));
 					return CommandResult.success();
 				})
 				.build();
@@ -1514,21 +1506,21 @@ public class NtRpgPlugin {
 						new LearnedSkillCommandElement(TextHelper.parse("skill"))
 				)
 				.executor((src, args) -> {
-                    Optional<ISkill> skill = args.getOne("skill");
-                    if (skill.isPresent()) {
-                        ISkill iSkill = skill.get();
-                        if (!(iSkill instanceof ActiveSkill)) {
+					Optional<ISkill> skill = args.getOne("skill");
+					if (skill.isPresent()) {
+						ISkill iSkill = skill.get();
+						if (!(iSkill instanceof ActiveSkill)) {
 
-                            return CommandResult.empty();
-                        }
-                        Player pl = (Player) src;
-                        IActiveCharacter character = GlobalScope.characterService.getCharacter(pl);
-                        if (character.isStub()) {
-                            return CommandResult.empty();
-                        }
-                        ItemStack is = NtRpgPlugin.GlobalScope.inventorySerivce.createSkillbind(iSkill);
-                        pl.getInventory().query(Hotbar.class).offer(is);
-                    }
+							return CommandResult.empty();
+						}
+						Player pl = (Player) src;
+						IActiveCharacter character = GlobalScope.characterService.getCharacter(pl);
+						if (character.isStub()) {
+							return CommandResult.empty();
+						}
+						ItemStack is = NtRpgPlugin.GlobalScope.inventorySerivce.createSkillbind(iSkill);
+						pl.getInventory().query(Hotbar.class).offer(is);
+					}
 
 					return CommandResult.success();
 				})

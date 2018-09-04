@@ -57,6 +57,11 @@ public class SkillDamageSourceBuilder extends AbstractDamageSourceBuilder<SkillD
 		return this;
 	}
 
+	public SkillDamageSourceBuilder setCaster(IEntity caster) {
+		this.caster = caster;
+		return this;
+	}
+
 	@Override
 	public SkillDamageSource build() throws IllegalStateException {
 		return new SkillDamageSource(this);
@@ -68,11 +73,6 @@ public class SkillDamageSourceBuilder extends AbstractDamageSourceBuilder<SkillD
 
 	public SkillDamageSourceBuilder setTarget(IEntity target) {
 		this.target = target;
-		return this;
-	}
-
-	public SkillDamageSourceBuilder setCaster(IEntity caster) {
-		this.caster = caster;
 		return this;
 	}
 

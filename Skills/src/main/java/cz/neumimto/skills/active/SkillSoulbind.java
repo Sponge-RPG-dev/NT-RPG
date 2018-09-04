@@ -51,7 +51,8 @@ public class SkillSoulbind extends ActiveSkill {
 			IActiveCharacter character = characterService.getCharacter(targettedEntity.getUniqueId());
 			if (iActiveCharacter.getParty().getPlayers().contains(character)) {
 				SoulBindEffect effect = new SoulBindEffect(iActiveCharacter, character);
-				effect.setDuration((long) extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.DURATION, extendedSkillInfo.getTotalLevel()));
+				effect.setDuration((long) extendedSkillInfo.getSkillData().getSkillSettings()
+						.getLevelNodeValue(SkillNodes.DURATION, extendedSkillInfo.getTotalLevel()));
 				effectService.addEffect(effect, iActiveCharacter, this);
 				effectService.addEffect(effect, character, this);
 			}
@@ -68,8 +69,9 @@ public class SkillSoulbind extends ActiveSkill {
 			UUID id = event.getTargetEntity().getUniqueId();
 			IActiveCharacter character = characterService.getCharacter(id);
 			IEffectContainer container = character.getEffect(name);
-			if (container == null)
+			if (container == null) {
 				return;
+			}
 			if (!event.getCause().first(SoulBindEffect.class).isPresent()) {
 				event.setBaseDamage(event.getBaseDamage() * .5);
 				SoulBindEffect effect = (SoulBindEffect) container;

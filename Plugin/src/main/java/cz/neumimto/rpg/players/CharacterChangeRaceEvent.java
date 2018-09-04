@@ -9,6 +9,7 @@ import cz.neumimto.rpg.scripting.JsBinding;
  */
 @JsBinding(JsBinding.Type.CLASS)
 public class CharacterChangeRaceEvent extends CharacterChangeGroupEvent {
+
 	public CharacterChangeRaceEvent(IActiveCharacter character, Race next, Race old) {
 		super(next, character, old);
 	}

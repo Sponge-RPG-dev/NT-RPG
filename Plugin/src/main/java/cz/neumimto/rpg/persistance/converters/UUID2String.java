@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,14 +13,15 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.persistance.converters;
 
+import java.util.UUID;
+
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
-import java.util.UUID;
 
 /**
  * Created by NeumimTo on 25.7.2015.
@@ -28,6 +29,7 @@ import java.util.UUID;
 /* Some databases tends to save uuid as binary data */
 @Converter
 public class UUID2String implements AttributeConverter<UUID, String> {
+
 	@Override
 	public String convertToDatabaseColumn(UUID uuid) {
 		return uuid.toString();

@@ -18,12 +18,18 @@ import java.util.Map;
  */
 public class CustomItem implements IEffectSourceProvider {
 
-	private int slot;
-	private int level;
+	private final IEffectSource effectSource;
 	protected Map<IGlobalEffect, EffectParams> effects = new HashMap<>();
 	protected ItemStackSnapshot itemStack;
-	private final IEffectSource effectSource;
+	private int slot;
+	private int level;
 	private RPGItemType rpgItemType;
+
+	public CustomItem(ItemStack itemStack, IEffectSource effectSource, RPGItemType rpgItemType) {
+		this.itemStack = itemStack.createSnapshot();
+		this.effectSource = effectSource;
+		this.rpgItemType = rpgItemType;
+	}
 
 	public int getSlot() {
 		return slot;
@@ -33,23 +39,16 @@ public class CustomItem implements IEffectSourceProvider {
 		this.slot = slot;
 	}
 
-	public CustomItem(ItemStack itemStack, IEffectSource effectSource, RPGItemType rpgItemType) {
-		this.itemStack = itemStack.createSnapshot();
-		this.effectSource = effectSource;
-		this.rpgItemType = rpgItemType;
-	}
-
 	public int getLevel() {
 		return level;
 	}
 
-	public Map<IGlobalEffect, EffectParams> getEffects() {
-		return effects;
-	}
-
-
 	public void setLevel(int level) {
 		this.level = level;
+	}
+
+	public Map<IGlobalEffect, EffectParams> getEffects() {
+		return effects;
 	}
 
 	public void setEffects(Map<IGlobalEffect, EffectParams> effects) {

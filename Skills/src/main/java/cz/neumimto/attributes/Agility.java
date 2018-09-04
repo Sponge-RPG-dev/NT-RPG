@@ -7,6 +7,7 @@ import org.spongepowered.api.item.ItemTypes;
  * Created by ja on 10.6.2017.
  */
 public class Agility extends CharacterAttribute {
+
 	public Agility() {
 		//setName(SkillLocalization.AGI);
 		//setDescription(SkillLocalization.AGI_DESC);

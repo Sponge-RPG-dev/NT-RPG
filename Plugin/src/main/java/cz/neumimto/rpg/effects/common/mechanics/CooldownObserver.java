@@ -19,7 +19,7 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 26.4.17.
  */
-@Generate(id = "name",description = "A component which will be displaying cooldowns in the action bar")
+@Generate(id = "name", description = "A component which will be displaying cooldowns in the action bar")
 public class CooldownObserver extends EffectBase implements IEffectContainer {
 
 	public static final String name = "CooldownObserver";

@@ -105,6 +105,7 @@ public class InventoryCommandItemMenuData extends AbstractSingleData<String, Inv
 
 	public static class InventoryCommandItemMenuDataBuilder extends AbstractDataBuilder<InventoryCommandItemMenuData>
 			implements DataManipulatorBuilder<InventoryCommandItemMenuData, Immutable> {
+
 		public InventoryCommandItemMenuDataBuilder() {
 			super(InventoryCommandItemMenuData.class, 1);
 		}

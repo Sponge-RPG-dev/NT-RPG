@@ -5,10 +5,10 @@ import java.util.Map;
 
 public class EffectParams extends HashMap<String, String> {
 
-    public EffectParams() {
-    }
+	public EffectParams() {
+	}
 
-    public EffectParams(Map<? extends String, ? extends String> m) {
-        super(m);
-    }
+	public EffectParams(Map<? extends String, ? extends String> m) {
+		super(m);
+	}
 }

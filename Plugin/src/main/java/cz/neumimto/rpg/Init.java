@@ -22,44 +22,43 @@ import cz.neumimto.rpg.utils.PseudoRandomDistribution;
 @Singleton
 public class Init {
 
-    @Inject PropertyService propertyService;
-    @Inject JSLoader jsLoader;
-    @Inject InventoryService inventoryService;
-    @Inject VanillaMessaging vanillaMessaging;
-    @Inject SkillService skillService;
-    @Inject EffectService effectService;
-    @Inject ParticleDecorator particleDecorator;
-    @Inject ExperienceService experienceService;
-    @Inject CustomItemFactory customItemFactory;
-    @Inject GroupService groupService;
-    @Inject GroupDao groupDao;
-    @Inject RWService rwService;
+	@Inject PropertyService propertyService;
+	@Inject JSLoader jsLoader;
+	@Inject InventoryService inventoryService;
+	@Inject VanillaMessaging vanillaMessaging;
+	@Inject SkillService skillService;
+	@Inject EffectService effectService;
+	@Inject ParticleDecorator particleDecorator;
+	@Inject ExperienceService experienceService;
+	@Inject CustomItemFactory customItemFactory;
+	@Inject GroupService groupService;
+	@Inject GroupDao groupDao;
+	@Inject RWService rwService;
 
-    public void it() {
-        int a = 0;
-        PseudoRandomDistribution p = new PseudoRandomDistribution();
-        PseudoRandomDistribution.C = new double[101];
-        for (double i = 0.01; i <= 1; i += 0.01) {
-            PseudoRandomDistribution.C[a] = p.c(i);
-            a++;
-        }
-        experienceService.load();
-        inventoryService.init();
-        skillService.load();
-        propertyService.init();
-        jsLoader.initEngine();
+	public void it() {
+		int a = 0;
+		PseudoRandomDistribution p = new PseudoRandomDistribution();
+		PseudoRandomDistribution.C = new double[101];
+		for (double i = 0.01; i <= 1; i += 0.01) {
+			PseudoRandomDistribution.C[a] = p.c(i);
+			a++;
+		}
+		experienceService.load();
+		inventoryService.init();
+		skillService.load();
+		propertyService.init();
+		jsLoader.initEngine();
 
-        groupService.registerPlaceholders();
-        rwService.load();
-        groupDao.loadGuilds();
-        groupDao.loadRaces();
-        groupDao.loadNClasses();
+		groupService.registerPlaceholders();
+		rwService.load();
+		groupDao.loadGuilds();
+		groupDao.loadRaces();
+		groupDao.loadNClasses();
 
 
-
-        customItemFactory.initBuilder();
-        vanillaMessaging.load();
-        effectService.load();
-        particleDecorator.initModels();
-    }
+		customItemFactory.initBuilder();
+		vanillaMessaging.load();
+		effectService.load();
+		particleDecorator.initModels();
+	}
 }

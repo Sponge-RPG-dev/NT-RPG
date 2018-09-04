@@ -9,16 +9,16 @@ import java.util.Map;
  */
 public class TestModelMapper extends EffectModelMapper {
 
-    public TestModelMapper(Class<?> t) {
-        super(t);
-    }
+	public TestModelMapper(Class<?> t) {
+		super(t);
+	}
 
-    public Object parse(Map<String, String> data) {
-        TestModel model = new TestModel();
-        //model.q = (String) typeMapperMap.get(String.class).apply(data.get("q"));
-        model.l = (int) getCache().get(int.class).apply(data.get("l"));
-        model.v = (Double) typeMapperMap.get(Double.class).apply(data.get("v"));
-        return model;
-    }
+	public Object parse(Map<String, String> data) {
+		TestModel model = new TestModel();
+		//model.q = (String) typeMapperMap.get(String.class).apply(data.get("q"));
+		model.l = (int) getCache().get(int.class).apply(data.get("l"));
+		model.v = (Double) typeMapperMap.get(Double.class).apply(data.get("v"));
+		return model;
+	}
 
 }

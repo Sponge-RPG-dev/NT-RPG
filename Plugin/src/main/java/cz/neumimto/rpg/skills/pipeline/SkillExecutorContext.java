@@ -7,34 +7,34 @@ import java.util.Map;
 
 public class SkillExecutorContext {
 
-    private ISkill skill;
-    private ExtendedSkillInfo skillInfo;
-    private Map<String, Object> params;
-    private Map<String, Object> cache;
+	private ISkill skill;
+	private ExtendedSkillInfo skillInfo;
+	private Map<String, Object> params;
+	private Map<String, Object> cache;
 
-    public SkillExecutorContext(ISkill skill, ExtendedSkillInfo skillInfo, Map<String, Object> params) {
-        this.skill = skill;
-        this.skillInfo = skillInfo;
-        this.params = params;
-    }
+	public SkillExecutorContext(ISkill skill, ExtendedSkillInfo skillInfo, Map<String, Object> params) {
+		this.skill = skill;
+		this.skillInfo = skillInfo;
+		this.params = params;
+	}
 
-    public ISkill getSkill() {
-        return skill;
-    }
+	public ISkill getSkill() {
+		return skill;
+	}
 
-    public ExtendedSkillInfo getSkillInfo() {
-        return skillInfo;
-    }
+	public ExtendedSkillInfo getSkillInfo() {
+		return skillInfo;
+	}
 
-    public Map<String, Object> getParams() {
-        return params;
-    }
+	public Map<String, Object> getParams() {
+		return params;
+	}
 
-    public Map<String, Object> getCache() {
-        return cache;
-    }
+	public Map<String, Object> getCache() {
+		return cache;
+	}
 
-    public void setCache(Map<String, Object> cache) {
-        this.cache = cache;
-    }
+	public void setCache(Map<String, Object> cache) {
+		this.cache = cache;
+	}
 }

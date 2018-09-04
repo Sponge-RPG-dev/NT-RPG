@@ -28,19 +28,20 @@ import java.util.stream.Stream;
  */
 @cz.neumimto.core.ioc.Singleton
 public class ClassGenerator implements Opcodes {
+
 	protected static Map<Class<?>, String[]> signaturedictionary = new HashMap<>();
 
 	static {
-		signaturedictionary.put(int.class,      new String[]{"java/lang/Integer","intValue", "I"});
-		signaturedictionary.put(Integer.class,  new String[]{"java/lang/Integer","intValue", "I"});
-		signaturedictionary.put(double.class,   new String[]{"java/lang/Double","doubleValue", "D"});
-		signaturedictionary.put(Double.class,   new String[]{"java/lang/Double","doubleValue", "D"});
-		signaturedictionary.put(Float.class,    new String[]{"java/lang/Float","floatValue", "F"});
-		signaturedictionary.put(float.class,    new String[]{"java/lang/Float","floatValue", "F"});
-		signaturedictionary.put(Long.class,     new String[]{"java/lang/Long","longValue", "J"});
-		signaturedictionary.put(long.class,     new String[]{"java/lang/Long","longValue", "J"});
+		signaturedictionary.put(int.class, new String[]{"java/lang/Integer", "intValue", "I"});
+		signaturedictionary.put(Integer.class, new String[]{"java/lang/Integer", "intValue", "I"});
+		signaturedictionary.put(double.class, new String[]{"java/lang/Double", "doubleValue", "D"});
+		signaturedictionary.put(Double.class, new String[]{"java/lang/Double", "doubleValue", "D"});
+		signaturedictionary.put(Float.class, new String[]{"java/lang/Float", "floatValue", "F"});
+		signaturedictionary.put(float.class, new String[]{"java/lang/Float", "floatValue", "F"});
+		signaturedictionary.put(Long.class, new String[]{"java/lang/Long", "longValue", "J"});
+		signaturedictionary.put(long.class, new String[]{"java/lang/Long", "longValue", "J"});
 
-		signaturedictionary.put(String.class,   new String[]{"java/lang/String","toString", "Ljava/lang/String;"});
+		signaturedictionary.put(String.class, new String[]{"java/lang/String", "toString", "Ljava/lang/String;"});
 	}
 
 	private String packagee = "cz/neumimto/rpg/asm/";
@@ -55,10 +56,10 @@ public class ClassGenerator implements Opcodes {
 	public Object generateDynamicListener(Map<StaticClass, Set<Consumer<? extends Event>>> map) {
 		Object o = null;
 		try {
-		    String name = "DynamicListener"+System.currentTimeMillis();
+			String name = "DynamicListener" + System.currentTimeMillis();
 			byte[] b = generateDynamicListenerbc(map, name);
-			o = loadClass("cz.neumimto.rpg.listeners."+name, b, this.getClass().getClassLoader());
-			Class<?> listener = Class.forName("cz.neumimto.rpg.listeners."+name);
+			o = loadClass("cz.neumimto.rpg.listeners." + name, b, this.getClass().getClassLoader());
+			Class<?> listener = Class.forName("cz.neumimto.rpg.listeners." + name);
 			o = listener.newInstance();
 			for (Field field : listener.getDeclaredFields()) {
 				if (Set.class.isAssignableFrom(field.getType())) {
@@ -69,7 +70,7 @@ public class ClassGenerator implements Opcodes {
 					map.entrySet().stream()
 							.filter(m -> m.getKey().getRepresentedClass() == event)
 							.forEach(a -> {
-									s.addAll(a.getValue());
+								s.addAll(a.getValue());
 							});
 				}
 			}
@@ -121,19 +122,23 @@ public class ClassGenerator implements Opcodes {
 		FieldVisitor fv;
 		MethodVisitor mv;
 		AnnotationVisitor av0;
-		cw.visit(52, ACC_PUBLIC + ACC_SUPER, "cz/neumimto/rpg/listeners/"+name, null, "java/lang/Object", null);
+		cw.visit(52, ACC_PUBLIC + ACC_SUPER, "cz/neumimto/rpg/listeners/" + name, null, "java/lang/Object", null);
 
-		cw.visitSource(name+".java", null);
+		cw.visitSource(name + ".java", null);
 
 		{
 			av0 = cw.visitAnnotation("Lcz/neumimto/rpg/ResourceLoader$ListenerClass;", true);
 			av0.visitEnd();
 		}
-		cw.visitInnerClass("cz/neumimto/ResourceLoader$ListenerClass", "cz/neumimto/rpg/ResourceLoader", "ListenerClass", ACC_PUBLIC + ACC_STATIC + ACC_ANNOTATION + ACC_ABSTRACT + ACC_INTERFACE);
+		cw.visitInnerClass("cz/neumimto/ResourceLoader$ListenerClass", "cz/neumimto/rpg/ResourceLoader", "ListenerClass",
+				ACC_PUBLIC + ACC_STATIC + ACC_ANNOTATION + ACC_ABSTRACT + ACC_INTERFACE);
 
 		for (StaticClass e : set.keySet()) {
-			String name2 = e.getRepresentedClass().getSimpleName().substring(0, 1).toLowerCase() + e.getRepresentedClass().getSimpleName().substring(1) + "s";
-			fv = cw.visitField(ACC_PUBLIC, name2, "Ljava/util/Set;", "Ljava/util/Set<Ljava/util/function/Consumer<L" + toPath(e.getRepresentedClass()) + ";>;>;", null);
+			String name2 =
+					e.getRepresentedClass().getSimpleName().substring(0, 1).toLowerCase() + e.getRepresentedClass().getSimpleName().substring(1)
+							+ "s";
+			fv = cw.visitField(ACC_PUBLIC, name2, "Ljava/util/Set;",
+					"Ljava/util/Set<Ljava/util/function/Consumer<L" + toPath(e.getRepresentedClass()) + ";>;>;", null);
 			fv.visitEnd();
 		}
 		int i = 19;
@@ -156,12 +161,12 @@ public class ClassGenerator implements Opcodes {
 				mv.visitInsn(DUP);
 				mv.visitMethodInsn(INVOKESPECIAL, "java/util/HashSet", "<init>", "()V", false);
 				String namee = e.getSimpleName().substring(0, 1).toLowerCase() + e.getSimpleName().substring(1) + "s";
-				mv.visitFieldInsn(PUTFIELD, "cz/neumimto/rpg/listeners/"+name+"", namee, "Ljava/util/Set;");
+				mv.visitFieldInsn(PUTFIELD, "cz/neumimto/rpg/listeners/" + name + "", namee, "Ljava/util/Set;");
 			}
 			mv.visitInsn(RETURN);
 			Label l3 = new Label();
 			mv.visitLabel(l3);
-			mv.visitLocalVariable("this", "Lcz/neumimto/rpg/listeners/"+name+";", null, l0, l3, 0);
+			mv.visitLocalVariable("this", "Lcz/neumimto/rpg/listeners/" + name + ";", null, l0, l3, 0);
 			mv.visitMaxs(3, 1);
 			mv.visitEnd();
 		}
@@ -181,7 +186,7 @@ public class ClassGenerator implements Opcodes {
 					i += 3;
 					mv.visitLineNumber(i, l0);
 					mv.visitVarInsn(ALOAD, 0);
-					mv.visitFieldInsn(GETFIELD, "cz/neumimto/rpg/listeners/"+name+"", name1, "Ljava/util/Set;");
+					mv.visitFieldInsn(GETFIELD, "cz/neumimto/rpg/listeners/" + name + "", name1, "Ljava/util/Set;");
 					mv.visitMethodInsn(INVOKEINTERFACE, "java/util/Set", "iterator", "()Ljava/util/Iterator;", true);
 					mv.visitVarInsn(ASTORE, 2);
 					Label l1 = new Label();
@@ -215,7 +220,7 @@ public class ClassGenerator implements Opcodes {
 					Label l5 = new Label();
 					mv.visitLabel(l5);
 					mv.visitLocalVariable("it", "Ljava/util/function/Consumer;", "Ljava/util/function/Consumer<L" + toPath(e) + ";>;", l3, l4, 3);
-					mv.visitLocalVariable("this", "Lcz/neumimto/rpg/listeners/"+name+";", null, l0, l5, 0);
+					mv.visitLocalVariable("this", "Lcz/neumimto/rpg/listeners/" + name + ";", null, l0, l5, 0);
 					mv.visitLocalVariable("event", "L" + toPath(e) + ";", null, l0, l5, 1);
 					mv.visitMaxs(2, 4);
 					mv.visitEnd();

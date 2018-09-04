@@ -52,8 +52,9 @@ public class EntityLifecycleListener {
 
 	@Listener
 	public void onPlayerJoin(ClientConnectionEvent.Auth event) {
-		if (event.isCancelled())
+		if (event.isCancelled()) {
 			return;
+		}
 		UUID id = event.getProfile().getUniqueId();
 		characterService.loadPlayerData(id, event.getProfile().getName().get());
 	}
@@ -96,8 +97,9 @@ public class EntityLifecycleListener {
 		Entity targetEntity = event.getTargetEntity();
 		if (targetEntity.getType() == EntityTypes.PLAYER) {
 			IActiveCharacter character = characterService.getCharacter(targetEntity.getUniqueId());
-			if (character.isStub())
+			if (character.isStub()) {
 				return;
+			}
 			effectService.removeAllEffects(character);
 		} else {
 			if (!event.getTargetEntity().get(Keys.HEALTH).isPresent()) {

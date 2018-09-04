@@ -9,11 +9,11 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface JsBinding {
 
-    Type value();
+	Type value();
 
-    enum Type {
-        CLASS,
-        OBJECT,
-        CONTAINER
-    }
+	enum Type {
+		CLASS,
+		OBJECT,
+		CONTAINER
+	}
 }

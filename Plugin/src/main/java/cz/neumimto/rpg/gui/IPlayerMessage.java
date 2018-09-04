@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.gui;
@@ -40,6 +40,7 @@ import java.util.List;
  * Created by NeumimTo on 6.8.2015.
  */
 public interface IPlayerMessage {
+
 	boolean isClientSideGui();
 
 	void sendMessage(IActiveCharacter player, LocalizableParametrizedText message, Arg arg);
@@ -107,5 +108,5 @@ public interface IPlayerMessage {
 
 	void displayInitialProperties(PlayerGroup byName, Player player);
 
-    void sendCannotUseItemInOffHandNotification(ItemStack futureOffHand, IActiveCharacter character, CannotUseItemReason reason);
+	void sendCannotUseItemInOffHandNotification(ItemStack futureOffHand, IActiveCharacter character, CannotUseItemReason reason);
 }

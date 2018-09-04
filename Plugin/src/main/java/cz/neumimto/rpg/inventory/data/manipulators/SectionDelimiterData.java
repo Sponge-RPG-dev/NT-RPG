@@ -23,136 +23,138 @@ import java.util.Optional;
  */
 public class SectionDelimiterData extends AbstractSingleData<LoreSectionDelimiter, SectionDelimiterData, SectionDelimiterData.Immutable> {
 
-    public SectionDelimiterData(Text firstPart, Text secondPart) {
-        this(new LoreSectionDelimiter(firstPart,secondPart));
-    }
+	public SectionDelimiterData(Text firstPart, Text secondPart) {
+		this(new LoreSectionDelimiter(firstPart, secondPart));
+	}
 
 
-    public SectionDelimiterData() {
-        this(LoreSectionDelimiter.defaultFirstPart, LoreSectionDelimiter.defaultSecondPart);
-    }
+	public SectionDelimiterData() {
+		this(LoreSectionDelimiter.defaultFirstPart, LoreSectionDelimiter.defaultSecondPart);
+	}
 
-    public SectionDelimiterData(LoreSectionDelimiter durability) {
-        super(durability, NKeys.ITEM_SECTION_DELIMITER);
-    }
+	public SectionDelimiterData(LoreSectionDelimiter durability) {
+		super(durability, NKeys.ITEM_SECTION_DELIMITER);
+	}
 
-    @Override
-    public Optional<SectionDelimiterData> fill(DataHolder dataHolder, MergeFunction overlap) {
-        Optional<SectionDelimiterData> a = dataHolder.get(SectionDelimiterData.class);
-        if (a.isPresent()) {
-            SectionDelimiterData otherData = a.get();
-            SectionDelimiterData finalData = overlap.merge(this, otherData);
-            this.setValue(finalData.getValue());
-        }
-        return Optional.of(this);
-    }
+	@Override
+	public Optional<SectionDelimiterData> fill(DataHolder dataHolder, MergeFunction overlap) {
+		Optional<SectionDelimiterData> a = dataHolder.get(SectionDelimiterData.class);
+		if (a.isPresent()) {
+			SectionDelimiterData otherData = a.get();
+			SectionDelimiterData finalData = overlap.merge(this, otherData);
+			this.setValue(finalData.getValue());
+		}
+		return Optional.of(this);
+	}
 
-    @Override
-    public Optional<SectionDelimiterData> from(DataContainer container) {
-        if (!container.contains(NKeys.ITEM_SECTION_DELIMITER)) {
-            return Optional.empty();
-        }
+	@Override
+	public Optional<SectionDelimiterData> from(DataContainer container) {
+		if (!container.contains(NKeys.ITEM_SECTION_DELIMITER)) {
+			return Optional.empty();
+		}
 
-        setValue((LoreSectionDelimiter) container.get(NKeys.ITEM_SECTION_DELIMITER.getQuery()).get());
-        return Optional.of(this);
-    }
+		setValue((LoreSectionDelimiter) container.get(NKeys.ITEM_SECTION_DELIMITER.getQuery()).get());
+		return Optional.of(this);
+	}
 
-    @Override
-    public SectionDelimiterData copy() {
-        return new SectionDelimiterData(getValue());
-    }
+	@Override
+	public SectionDelimiterData copy() {
+		return new SectionDelimiterData(getValue());
+	}
 
-    @Override
-    protected Value<LoreSectionDelimiter> getValueGetter() {
-        return Sponge.getRegistry().getValueFactory().createValue(NKeys.ITEM_SECTION_DELIMITER, getValue());
-    }
+	@Override
+	protected Value<LoreSectionDelimiter> getValueGetter() {
+		return Sponge.getRegistry().getValueFactory().createValue(NKeys.ITEM_SECTION_DELIMITER, getValue());
+	}
 
-    @Override
-    public SectionDelimiterData.Immutable asImmutable() {
-        return new SectionDelimiterData.Immutable(getValue());
-    }
+	@Override
+	public SectionDelimiterData.Immutable asImmutable() {
+		return new SectionDelimiterData.Immutable(getValue());
+	}
 
-    @Override
-    public int getContentVersion() {
-        return SectionDelimiterData.Builder.CONTENT_VERSION;
-    }
+	@Override
+	public int getContentVersion() {
+		return SectionDelimiterData.Builder.CONTENT_VERSION;
+	}
 
-    @Override
-    public DataContainer toContainer() {
-        DataContainer dataContainer = super.toContainer();
-        dataContainer.set(NKeys.ITEM_SECTION_DELIMITER, getValue());
-        return dataContainer;
-    }
+	@Override
+	public DataContainer toContainer() {
+		DataContainer dataContainer = super.toContainer();
+		dataContainer.set(NKeys.ITEM_SECTION_DELIMITER, getValue());
+		return dataContainer;
+	}
 
-    public class Immutable extends AbstractImmutableSingleData<LoreSectionDelimiter, Immutable, SectionDelimiterData> {
+	public static class Builder extends AbstractDataBuilder<SectionDelimiterData> implements DataManipulatorBuilder<SectionDelimiterData,
+			Immutable> {
 
-        public Immutable(LoreSectionDelimiter durability) {
-            super(durability, NKeys.ITEM_SECTION_DELIMITER);
-        }
+		public static final int CONTENT_VERSION = 1;
 
+		public Builder() {
+			super(SectionDelimiterData.class, CONTENT_VERSION);
+		}
 
-        public Immutable() {
-            this(new LoreSectionDelimiter(LoreSectionDelimiter.defaultFirstPart,LoreSectionDelimiter.defaultSecondPart));
-        }
+		@Override
+		public SectionDelimiterData create() {
+			return new SectionDelimiterData();
+		}
 
-        @Override
-        public int getContentVersion() {
-            return SectionDelimiterData.Builder.CONTENT_VERSION;
-        }
+		@Override
+		public Optional<SectionDelimiterData> createFrom(DataHolder dataHolder) {
+			return create().fill(dataHolder);
+		}
 
-        @Override
-        public DataContainer toContainer() {
-            DataContainer dataContainer = super.toContainer();
-            dataContainer.set(NKeys.ITEM_SECTION_DELIMITER, getValue());
-            return dataContainer;
-        }
+		@Override
+		@SuppressWarnings("unchecked")
+		protected Optional<SectionDelimiterData> buildContent(DataView container) throws InvalidDataException {
+			if (container.contains(NKeys.ITEM_SECTION_DELIMITER)) {
 
-        @Override
-        protected ImmutableValue<?> getValueGetter() {
-            return Sponge.getRegistry().getValueFactory().createValue(NKeys.ITEM_SECTION_DELIMITER, getValue()).asImmutable();
-        }
-
-        @Override
-        public SectionDelimiterData asMutable() {
-            return new SectionDelimiterData(getValue());
-        }
-    }
-
-    public static class Builder extends AbstractDataBuilder<SectionDelimiterData> implements DataManipulatorBuilder<SectionDelimiterData, Immutable> {
-        public static final int CONTENT_VERSION = 1;
-
-        public Builder() {
-            super(SectionDelimiterData.class, CONTENT_VERSION);
-        }
-
-        @Override
-        public SectionDelimiterData create() {
-            return new SectionDelimiterData();
-        }
-
-        @Override
-        public Optional<SectionDelimiterData> createFrom(DataHolder dataHolder) {
-            return create().fill(dataHolder);
-        }
-
-        @Override
-        @SuppressWarnings("unchecked")
-        protected Optional<SectionDelimiterData> buildContent(DataView container) throws InvalidDataException {
-            if (container.contains(NKeys.ITEM_SECTION_DELIMITER)) {
-
-                SectionDelimiterData data = new SectionDelimiterData();
-                LoreSectionDelimiter t = (LoreSectionDelimiter) container.get(NKeys.ITEM_SECTION_DELIMITER.getQuery()).get();
-                data.setValue(t);
-                container.getSerializable(NKeys.ITEM_SECTION_DELIMITER.getQuery(), SectionDelimiterData.class)
-                        .ifPresent(a -> {
-                            data.set(NKeys.ITEM_SECTION_DELIMITER, a.getValue());
-                        });
+				SectionDelimiterData data = new SectionDelimiterData();
+				LoreSectionDelimiter t = (LoreSectionDelimiter) container.get(NKeys.ITEM_SECTION_DELIMITER.getQuery()).get();
+				data.setValue(t);
+				container.getSerializable(NKeys.ITEM_SECTION_DELIMITER.getQuery(), SectionDelimiterData.class)
+						.ifPresent(a -> {
+							data.set(NKeys.ITEM_SECTION_DELIMITER, a.getValue());
+						});
 
 
-                return Optional.of(data);
-            }
-            return Optional.empty();
-        }
-    }
+				return Optional.of(data);
+			}
+			return Optional.empty();
+		}
+	}
+
+	public class Immutable extends AbstractImmutableSingleData<LoreSectionDelimiter, Immutable, SectionDelimiterData> {
+
+		public Immutable(LoreSectionDelimiter durability) {
+			super(durability, NKeys.ITEM_SECTION_DELIMITER);
+		}
+
+
+		public Immutable() {
+			this(new LoreSectionDelimiter(LoreSectionDelimiter.defaultFirstPart, LoreSectionDelimiter.defaultSecondPart));
+		}
+
+		@Override
+		public int getContentVersion() {
+			return SectionDelimiterData.Builder.CONTENT_VERSION;
+		}
+
+		@Override
+		public DataContainer toContainer() {
+			DataContainer dataContainer = super.toContainer();
+			dataContainer.set(NKeys.ITEM_SECTION_DELIMITER, getValue());
+			return dataContainer;
+		}
+
+		@Override
+		protected ImmutableValue<?> getValueGetter() {
+			return Sponge.getRegistry().getValueFactory().createValue(NKeys.ITEM_SECTION_DELIMITER, getValue()).asImmutable();
+		}
+
+		@Override
+		public SectionDelimiterData asMutable() {
+			return new SectionDelimiterData(getValue());
+		}
+	}
 
 }

@@ -17,21 +17,22 @@ import javax.annotation.Nullable;
  * Created by NeumimTo on 16.11.2017.
  */
 public class UnlearnedSkillCommandElement extends CommandElement {
-    public UnlearnedSkillCommandElement(Text skill) {
-        super(skill);
-    }
 
-    @Nullable
-    @Override
-    protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
-        String next = args.next();
-        return NtRpgPlugin.GlobalScope.skillService.getSkillByLocalizedName(next);
-    }
+	public UnlearnedSkillCommandElement(Text skill) {
+		super(skill);
+	}
 
-    @Override
-    public List<String> complete(CommandSource src, CommandArgs args, CommandContext context) {
-        return Collections.emptyList();
-    }
+	@Nullable
+	@Override
+	protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
+		String next = args.next();
+		return NtRpgPlugin.GlobalScope.skillService.getSkillByLocalizedName(next);
+	}
+
+	@Override
+	public List<String> complete(CommandSource src, CommandArgs args, CommandContext context) {
+		return Collections.emptyList();
+	}
 
 
 }

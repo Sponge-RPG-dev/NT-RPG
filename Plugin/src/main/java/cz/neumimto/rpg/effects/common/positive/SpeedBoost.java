@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.effects.common.positive;
@@ -47,7 +47,8 @@ import org.spongepowered.api.world.World;
  * here only if someone would like to keep direct field reference to the global effect object.
  * Global Effects may be given to player via command or as an item enchantement
  * <p>
- * The class, which inherits from IEffect(or its implementations such as effect base) must contain a constructor - IEffectConsumer, long duration, int level.
+ * The class, which inherits from IEffect(or its implementations such as effect base) must contain a constructor - IEffectConsumer, long duration,
+ * int level.
  * <p>
  * Global effects can work as item enchantments, and be accessible from commands
  */

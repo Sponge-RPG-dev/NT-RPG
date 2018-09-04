@@ -18,59 +18,61 @@ import java.util.HashMap;
 @Singleton
 public class CustomItemFactory {
 
-    private static CustomItemBuilder builder;
+	private static CustomItemBuilder builder;
 
-    private static InventoryService inventoryService;
+	private static InventoryService inventoryService;
 
-    private static ItemService itemService;
+	private static ItemService itemService;
 
-    public void initBuilder() {
-        builder = new CustomItemBuilder();
-        inventoryService = NtRpgPlugin.GlobalScope.inventorySerivce;
-        itemService = NtRpgPlugin.GlobalScope.itemService;
-        //I should create InjectStatic/Inject lazy some day.
-    }
+	public static CustomItem createCustomItem(ItemStack is, Slot value) {
+		Inventory slot = value.transform();
+		SlotIndex index = slot.getInventoryProperty(SlotIndex.class).get();
+		return builder.create(is, slot.parent(), index.getValue());
+	}
 
+	public static CustomItem createCustomItemForHandSlot(ItemStack is, HandType type) {
+		return builder.createForHandSlot(is, type);
+	}
 
-    public static class CustomItemBuilder {
+	public void initBuilder() {
+		builder = new CustomItemBuilder();
+		inventoryService = NtRpgPlugin.GlobalScope.inventorySerivce;
+		itemService = NtRpgPlugin.GlobalScope.itemService;
+		//I should create InjectStatic/Inject lazy some day.
+	}
 
-        public CustomItem create(ItemStack itemStack, Inventory parent, Integer value) {
+	public static class CustomItemBuilder {
 
-            CustomItem customItem = new CustomItem(itemStack, inventoryService.getEffectSourceBySlotId(parent.getClass(), value), itemService.getFromItemStack(itemStack));
-            if (itemStack.getType() == ItemTypes.NONE) {
-                customItem.setEffects(new HashMap<>());
-                customItem.setLevel(0);
-            } else {
-                customItem.setEffects(inventoryService.getItemEffects(itemStack));
-                customItem.setLevel(inventoryService.getItemLevel(itemStack));
-            }
-            return customItem;
-        }
+		public CustomItem create(ItemStack itemStack, Inventory parent, Integer value) {
 
-        public CustomItem createForHandSlot(ItemStack itemStack, HandType handType) {
+			CustomItem customItem = new CustomItem(itemStack, inventoryService.getEffectSourceBySlotId(parent.getClass(), value),
+					itemService.getFromItemStack(itemStack));
+			if (itemStack.getType() == ItemTypes.NONE) {
+				customItem.setEffects(new HashMap<>());
+				customItem.setLevel(0);
+			} else {
+				customItem.setEffects(inventoryService.getItemEffects(itemStack));
+				customItem.setLevel(inventoryService.getItemLevel(itemStack));
+			}
+			return customItem;
+		}
 
-            CustomItem customItem = new CustomItem(itemStack, handType == HandTypes.OFF_HAND ? SlotEffectSource.OFF_HAND : SlotEffectSource.MAIN_HAND, itemService.getFromItemStack(itemStack));
-            if (itemStack.getType() == ItemTypes.NONE) {
-                customItem.setEffects(new HashMap<>());
-                customItem.setLevel(0);
-            } else {
-                customItem.setEffects(inventoryService.getItemEffects(itemStack));
-                customItem.setLevel(inventoryService.getItemLevel(itemStack));
-            }
-            return customItem;
-        }
+		public CustomItem createForHandSlot(ItemStack itemStack, HandType handType) {
 
-    }
+			CustomItem customItem = new CustomItem(itemStack, handType == HandTypes.OFF_HAND ? SlotEffectSource.OFF_HAND : SlotEffectSource
+					.MAIN_HAND,
+					itemService.getFromItemStack(itemStack));
+			if (itemStack.getType() == ItemTypes.NONE) {
+				customItem.setEffects(new HashMap<>());
+				customItem.setLevel(0);
+			} else {
+				customItem.setEffects(inventoryService.getItemEffects(itemStack));
+				customItem.setLevel(inventoryService.getItemLevel(itemStack));
+			}
+			return customItem;
+		}
 
-    public static CustomItem createCustomItem(ItemStack is, Slot value) {
-        Inventory slot = value.transform();
-        SlotIndex index = slot.getInventoryProperty(SlotIndex.class).get();
-        return builder.create(is, slot.parent(), index.getValue());
-    }
-
-    public static CustomItem createCustomItemForHandSlot(ItemStack is, HandType type) {
-        return builder.createForHandSlot(is, type);
-    }
+	}
 
 
 }

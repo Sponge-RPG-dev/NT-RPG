@@ -86,8 +86,9 @@ public class ManaBarNotifier extends EffectBase<Object> implements IEffectContai
 
 	@Override
 	public void setDuration(long l) {
-		if (l >= 0)
+		if (l >= 0) {
 			throw new IllegalArgumentException();
+		}
 		super.setDuration(l);
 	}
 
@@ -102,13 +103,13 @@ public class ManaBarNotifier extends EffectBase<Object> implements IEffectContai
 	}
 
 	@Override
-	public ManaBarNotifier constructEffectContainer() {
-		return this;
+	public void setStackedValue(Object o) {
+
 	}
 
 	@Override
-	public void setStackedValue(Object o) {
-
+	public ManaBarNotifier constructEffectContainer() {
+		return this;
 	}
 
 	@Override

@@ -1,5 +1,9 @@
 package cz.neumimto.rpg;
 
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.CharacterBase;
@@ -12,7 +16,6 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.EventManager;
 
-import javax.persistence.EntityManager;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
@@ -20,7 +23,7 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.UUID;
 
-import static org.mockito.Mockito.*;
+import javax.persistence.EntityManager;
 
 /**
  * Created by fs on 7.10.15.

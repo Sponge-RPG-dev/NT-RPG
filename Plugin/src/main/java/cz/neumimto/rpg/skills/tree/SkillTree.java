@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.skills.tree;
@@ -28,6 +28,7 @@ import java.util.Map;
  * Created by NeumimTo on 14.2.2015.
  */
 public class SkillTree {
+
 	public static SkillTree Default = new SkillTree() {{
 		setId("None");
 		setDescription("No skill tree");
@@ -36,7 +37,7 @@ public class SkillTree {
 	private Map<String, SkillData> skills = new HashMap<>();
 	private String description;
 	private short[][] skillTreeMap;
-	private Pair<Integer, Integer> center = new Pair<>(0,0);
+	private Pair<Integer, Integer> center = new Pair<>(0, 0);
 
 	public Map<String, SkillData> getSkills() {
 		return skills;
@@ -67,12 +68,12 @@ public class SkillTree {
 		return null;
 	}
 
-	public void setSkillTreeMap(short[][] skillTreeMap) {
-		this.skillTreeMap = skillTreeMap;
-	}
-
 	public short[][] getSkillTreeMap() {
 		return skillTreeMap;
+	}
+
+	public void setSkillTreeMap(short[][] skillTreeMap) {
+		this.skillTreeMap = skillTreeMap;
 	}
 
 	public Pair<Integer, Integer> getCenter() {

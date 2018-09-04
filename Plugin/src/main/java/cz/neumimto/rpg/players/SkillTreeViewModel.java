@@ -12,69 +12,69 @@ import org.spongepowered.api.text.Text;
  */
 public class SkillTreeViewModel {
 
-    private InteractiveMode interactiveMode;
-    private Pair<Integer, Integer> location;
-    private boolean current = true;
-    private SkillTree skillTree;
-    
-    public SkillTreeViewModel() {
-        interactiveMode = InteractiveMode.DETAILED;
-        location = new Pair<>(0,0);
-    }
+	private InteractiveMode interactiveMode;
+	private Pair<Integer, Integer> location;
+	private boolean current = true;
+	private SkillTree skillTree;
 
-    public SkillTree getSkillTree() {
-        return skillTree;
-    }
+	public SkillTreeViewModel() {
+		interactiveMode = InteractiveMode.DETAILED;
+		location = new Pair<>(0, 0);
+	}
 
-    public void setSkillTree(SkillTree skillTree) {
-        this.skillTree = skillTree;
-    }
+	public SkillTree getSkillTree() {
+		return skillTree;
+	}
 
-    public InteractiveMode getInteractiveMode() {
-        return interactiveMode;
-    }
+	public void setSkillTree(SkillTree skillTree) {
+		this.skillTree = skillTree;
+	}
 
-    public void setInteractiveMode(InteractiveMode interactiveMode) {
-        this.interactiveMode = interactiveMode;
-    }
+	public InteractiveMode getInteractiveMode() {
+		return interactiveMode;
+	}
 
-    public Pair<Integer, Integer> getLocation() {
-        return location;
-    }
+	public void setInteractiveMode(InteractiveMode interactiveMode) {
+		this.interactiveMode = interactiveMode;
+	}
 
-    public void setLocation(Pair<Integer, Integer> location) {
-        this.location = location;
-    }
+	public Pair<Integer, Integer> getLocation() {
+		return location;
+	}
 
-    public boolean isCurrent() {
-        return current;
-    }
+	public void setLocation(Pair<Integer, Integer> location) {
+		this.location = location;
+	}
 
-    public void setCurrent(boolean current) {
-        this.current = current;
-    }
+	public boolean isCurrent() {
+		return current;
+	}
 
-    public enum InteractiveMode {
-        DETAILED(Localizations.INTERACTIVE_SKILLTREE_MOD_DETAILS.toText(), ItemTypes.BOOK),
-        FAST(Localizations.INTERACTIVE_SKILLTREE_MOD_FAST.toText(), ItemTypes.GOLD_NUGGET);
-        private Text transltion;
-        private ItemType type;
+	public void setCurrent(boolean current) {
+		this.current = current;
+	}
 
-        InteractiveMode(Text interactiveSkilltreeModFast, ItemType type) {
-            this.transltion = interactiveSkilltreeModFast;
-            this.type = type;
-        }
+	public enum InteractiveMode {
+		DETAILED(Localizations.INTERACTIVE_SKILLTREE_MOD_DETAILS.toText(), ItemTypes.BOOK),
+		FAST(Localizations.INTERACTIVE_SKILLTREE_MOD_FAST.toText(), ItemTypes.GOLD_NUGGET);
+		private Text transltion;
+		private ItemType type;
 
-        public Text getTransltion() {
-            return transltion;
-        }
+		InteractiveMode(Text interactiveSkilltreeModFast, ItemType type) {
+			this.transltion = interactiveSkilltreeModFast;
+			this.type = type;
+		}
 
-        public InteractiveMode opposite() {
-            return this == DETAILED ? FAST : DETAILED;
-        }
+		public Text getTransltion() {
+			return transltion;
+		}
 
-        public ItemType getItemType() {
-            return type;
-        }
-    }
+		public InteractiveMode opposite() {
+			return this == DETAILED ? FAST : DETAILED;
+		}
+
+		public ItemType getItemType() {
+			return type;
+		}
+	}
 }

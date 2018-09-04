@@ -9,6 +9,7 @@ import cz.neumimto.rpg.scripting.JsBinding;
 @JsBinding(JsBinding.Type.CLASS)
 @Generate(id = "name", description = "Heals the target after each kill")
 public class LifeAfterKillEffect extends EffectBase<Float> {
+
 	public static final String name = "Life after each kill";
 
 	public LifeAfterKillEffect(IEffectConsumer character, long duration, float healedAmount) {

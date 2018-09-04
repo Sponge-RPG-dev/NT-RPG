@@ -45,7 +45,7 @@ public class Bandage extends Targetted {
 		if (iEntity.isFriendlyTo(source)) {
 			float floatNodeValue = getFloatNodeValue(info, SkillNodes.HEALED_AMOUNT);
 			entityService.healEntity(iEntity, floatNodeValue, this);
-			Decorator.healEffect(iEntity.getEntity().getLocation().add(0,1,0));
+			Decorator.healEffect(iEntity.getEntity().getLocation().add(0, 1, 0));
 			if (iEntity.hasEffect(Bleeding.name)) {
 				effectService.removeEffectContainer(iEntity.getEffect(Bleeding.name), iEntity);
 			}

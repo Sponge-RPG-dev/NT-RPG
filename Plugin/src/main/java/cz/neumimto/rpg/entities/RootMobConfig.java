@@ -12,22 +12,22 @@ import java.util.Map;
 @ConfigSerializable
 public class RootMobConfig {
 
-    @Setting(value="dimensions", comment="Dimensions")
-    private Map<String, MobsConfig> dimmensions;
+	@Setting(value = "dimensions", comment = "Dimensions")
+	private Map<String, MobsConfig> dimmensions;
 
-    public RootMobConfig() {
-        dimmensions = new HashMap<>();
-    }
+	public RootMobConfig() {
+		dimmensions = new HashMap<>();
+	}
 
-    public Map<String, MobsConfig> getDimmensions() {
-        return dimmensions;
-    }
+	public Map<String, MobsConfig> getDimmensions() {
+		return dimmensions;
+	}
 
-    public MobsConfig getDimmension(String worldName) {
-        return dimmensions.get(worldName);
-    }
+	public void setDimmensions(Map<String, MobsConfig> dimmensions) {
+		this.dimmensions = dimmensions;
+	}
 
-    public void setDimmensions(Map<String, MobsConfig> dimmensions) {
-        this.dimmensions = dimmensions;
-    }
+	public MobsConfig getDimmension(String worldName) {
+		return dimmensions.get(worldName);
+	}
 }

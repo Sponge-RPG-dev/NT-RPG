@@ -13,23 +13,23 @@ import java.util.Optional;
  */
 public class SkillTypeRegistry implements AdditionalCatalogRegistryModule<ISkillType> {
 
-    @RegisterCatalog(ISkillType.class)
-    private final Map<String, ISkillType> types = Maps.newHashMap();
+	@RegisterCatalog(ISkillType.class)
+	private final Map<String, ISkillType> types = Maps.newHashMap();
 
 
-    @Override
-    public void registerAdditionalCatalog(ISkillType extraCatalog) {
-        types.put(extraCatalog.getId(), extraCatalog);
-    }
+	@Override
+	public void registerAdditionalCatalog(ISkillType extraCatalog) {
+		types.put(extraCatalog.getId(), extraCatalog);
+	}
 
-    @Override
-    public Optional<ISkillType> getById(String id) {
-        return Optional.ofNullable(types.get(id.toLowerCase()));
-    }
+	@Override
+	public Optional<ISkillType> getById(String id) {
+		return Optional.ofNullable(types.get(id.toLowerCase()));
+	}
 
 
-    @Override
-    public Collection<ISkillType> getAll() {
-        return types.values();
-    }
+	@Override
+	public Collection<ISkillType> getAll() {
+		return types.values();
+	}
 }

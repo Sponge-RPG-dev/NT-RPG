@@ -12,41 +12,41 @@ import javax.script.ScriptException;
 
 public interface ScriptSkill<T> {
 
-    default void initScript() {
-        ScriptSkillModel model = getModel();
-        String s = bindScriptToTemplate(model);
-        try {
-            JSLoader.getEngine().eval(s);
-            T t = (T) JSLoader.getEngine().eval(model.getId().replaceAll(":","")+"_executor");
-            setExecutor(t);
-        } catch (ScriptException e) {
-            e.printStackTrace();
-        }
-    }
+	default void initScript() {
+		ScriptSkillModel model = getModel();
+		String s = bindScriptToTemplate(model);
+		try {
+			JSLoader.getEngine().eval(s);
+			T t = (T) JSLoader.getEngine().eval(model.getId().replaceAll(":", "") + "_executor");
+			setExecutor(t);
+		} catch (ScriptException e) {
+			e.printStackTrace();
+		}
+	}
 
-    void setModel(ScriptSkillModel model);
+	void setExecutor(T ses);
 
-    void setExecutor(T ses);
+	ScriptSkillModel getModel();
 
-    ScriptSkillModel getModel();
+	void setModel(ScriptSkillModel model);
 
-    default String bindScriptToTemplate(ScriptSkillModel model) {
-        Asset asset = Sponge.getAssetManager().getAsset(NtRpgPlugin.GlobalScope.plugin, getTemplateName()).get();
-        try {
-            String s = asset.readString();
-            s = s.replaceAll("\\{\\{skill\\.id}}", model.getId().replaceAll(":",""));
-            s = s.replaceAll("\\{\\{userScript}}", model.getScript());
-            s = fill(s);
-            return s;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
+	default String bindScriptToTemplate(ScriptSkillModel model) {
+		Asset asset = Sponge.getAssetManager().getAsset(NtRpgPlugin.GlobalScope.plugin, getTemplateName()).get();
+		try {
+			String s = asset.readString();
+			s = s.replaceAll("\\{\\{skill\\.id}}", model.getId().replaceAll(":", ""));
+			s = s.replaceAll("\\{\\{userScript}}", model.getScript());
+			s = fill(s);
+			return s;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
 
-    String getTemplateName();
+	String getTemplateName();
 
-    default String fill(String asset) {
-        return asset;
-    }
+	default String fill(String asset) {
+		return asset;
+	}
 }

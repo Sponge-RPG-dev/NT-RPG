@@ -59,7 +59,8 @@ public class DebugListener {
 	}
 
 	@Listener(order = Order.LAST)
-	public void debugi(DamageEntityEvent event, @First(typeFilter = IndirectEntityDamageSource.class) IndirectEntityDamageSource entityDamageSource) {
+	public void debugi(DamageEntityEvent event, @First(typeFilter = IndirectEntityDamageSource.class) IndirectEntityDamageSource
+			entityDamageSource) {
 		Entity targetEntity = event.getTargetEntity();
 
 		Entity source = entityDamageSource.getIndirectSource();

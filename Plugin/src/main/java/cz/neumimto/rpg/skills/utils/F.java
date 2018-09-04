@@ -5,11 +5,13 @@ package cz.neumimto.rpg.skills.utils;
  */
 public interface F {
 
-    interface QuadConsumer<T,U,V,W> {
-        void accept(T t, U u, V v, W w);
-    }
+	interface QuadConsumer<T, U, V, W> {
 
-    interface TriFunction<T,U,V,R> {
-        R apply(T t, U u, V v);
-    }
+		void accept(T t, U u, V v, W w);
+	}
+
+	interface TriFunction<T, U, V, R> {
+
+		R apply(T t, U u, V v);
+	}
 }

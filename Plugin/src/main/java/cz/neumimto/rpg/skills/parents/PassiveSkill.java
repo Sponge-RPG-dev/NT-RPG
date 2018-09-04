@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.skills.parents;
@@ -44,7 +44,7 @@ public abstract class PassiveSkill extends AbstractSkill {
 		this.relevantEffectName = name;
 	}
 
-    @Override
+	@Override
 	public SkillResult onPreUse(IActiveCharacter character) {
 		character.sendMessage(Localizations.CANT_USE_PASSIVE_SKILL);
 		return SkillResult.FAIL;

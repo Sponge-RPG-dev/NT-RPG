@@ -35,7 +35,8 @@ public class SkillJump extends ActiveSkill {
 	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier skillModifier) {
 		Vector3d rotation = character.getEntity().getRotation();
 		Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();
-		Vector3d mul = new Vector3d(0, 1, 0).mul(info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.VELOCITY, info.getTotalLevel()));
+		Vector3d mul = new Vector3d(0, 1, 0).mul(info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.VELOCITY, info.getTotalLevel
+				()));
 		direction = mul.add(direction.getX(), 0, direction.getZ());
 		character.getEntity().offer(Keys.VELOCITY, direction);
 		return SkillResult.OK;

@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.players.groups;
@@ -30,13 +30,21 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.format.TextColor;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by NeumimTo on 27.12.2014.
  */
 public class PlayerGroup implements IEffectSourceProvider {
+
 	private final String name;
+	protected cz.neumimto.rpg.effects.IEffectSource playerGroupType;
 	private Map<Integer, Float> propBonus = new HashMap<>();
 	private ItemStack info;
 	private boolean showsInMenu = true;
@@ -50,7 +58,6 @@ public class PlayerGroup implements IEffectSourceProvider {
 	private Map<ICharacterAttribute, Integer> startingAttributes = new HashMap<>();
 	private Map<IGlobalEffect, EffectParams> effects = new HashMap<>();
 	private TextColor preferedColor;
-	protected cz.neumimto.rpg.effects.IEffectSource playerGroupType;
 	private Map<EntityType, Double> projectileDamage = new HashMap<>();
 	private List<String> exitCommands;
 	private List<String> enterCommands;
@@ -182,20 +189,20 @@ public class PlayerGroup implements IEffectSourceProvider {
 		return projectileDamage;
 	}
 
-	public void setExitCommands(List<String> exitCommands) {
-		this.exitCommands = exitCommands;
-	}
-
 	public List<String> getExitCommands() {
 		return exitCommands;
 	}
 
-	public void setEnterCommands(List<String> enterCommands) {
-		this.enterCommands = enterCommands;
+	public void setExitCommands(List<String> exitCommands) {
+		this.exitCommands = exitCommands;
 	}
 
 	public List<String> getEnterCommands() {
 		return enterCommands;
+	}
+
+	public void setEnterCommands(List<String> enterCommands) {
+		this.enterCommands = enterCommands;
 	}
 
 	public TextColor getPreferedColor() {

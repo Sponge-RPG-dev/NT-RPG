@@ -47,7 +47,7 @@ public class GroupHeal extends ActiveSkill {
 			}
 		} else {
 			entityService.healEntity(character, amnt, this);
-			Decorator.healEffect(character.getEntity().getLocation().add(0,1,0));
+			Decorator.healEffect(character.getEntity().getLocation().add(0, 1, 0));
 		}
 
 		return SkillResult.OK;

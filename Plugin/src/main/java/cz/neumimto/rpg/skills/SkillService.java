@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.skills;
@@ -72,31 +72,23 @@ import java.util.stream.Stream;
 @Singleton
 public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 
+	private static int id = 0;
 	@Inject
 	private SkillTreeDao skillTreeDao;
-
 	@Inject
 	private GroupService groupService;
-
 	@Inject
 	private JSLoader jsLoader;
-
 	@Inject
 	private Game game;
-
 	@Inject
 	private CharacterService characterService;
-
 	private Map<String, ISkill> skills = new HashMap<>();
-
 	private Map<String, SkillTree> skillTrees = new ConcurrentHashMap<>();
-
 	private Map<Character, SkillTreeInterfaceModel> guiModelByCharacter = new HashMap<>();
-
 	private Map<Short, SkillTreeInterfaceModel> guiModelById = new HashMap<>();
-
-	private static int id = 0;
 	private Map<String, ISkill> skillByNames = new HashMap<>();
+
 	public void load() {
 		initGuis();
 		skillTrees.putAll(skillTreeDao.getAll());
@@ -111,7 +103,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 
 			short k = (short) (Short.MAX_VALUE - i);
 			SkillTreeInterfaceModel model = new SkillTreeInterfaceModel(Integer.parseInt(split[3]),
-					Sponge.getRegistry().getType(ItemType.class,split[1]).orElse(ItemTypes.STICK),
+					Sponge.getRegistry().getType(ItemType.class, split[1]).orElse(ItemTypes.STICK),
 					split[2], k);
 
 			guiModelById.put(k, model);
@@ -137,11 +129,13 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 	}
 
 	public SkillResult executeSkill(IActiveCharacter character, ExtendedSkillInfo esi) {
-		if (esi == null)
+		if (esi == null) {
 			return SkillResult.FAIL;
+		}
 		int level = esi.getTotalLevel();
-		if (level < 0)
+		if (level < 0) {
 			return SkillResult.NEGATIVE_SKILL_LEVEL;
+		}
 		level += characterService.getCharacterProperty(character, DefaultProperties.all_skills_bonus);
 		Long aLong = character.getCooldowns().get(esi.getSkill().getName());
 		long servertime = System.currentTimeMillis();
@@ -155,17 +149,18 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 		float requiredHp = skillSettings.getLevelNodeValue(SkillNodes.HPCOST, level);
 		SkillPrepareEvent event = new SkillPrepareEvent(character, requiredHp, requiredMana);
 		game.getEventManager().post(event);
-		if (event.isCancelled())
+		if (event.isCancelled()) {
 			return SkillResult.FAIL;
+		}
 		double hpcost = event.getRequiredHp() * characterService.getCharacterProperty(character, DefaultProperties.health_cost_reduce);
 		double manacost = event.getRequiredMana() * characterService.getCharacterProperty(character, DefaultProperties.mana_cost_reduce);
 		//todo float staminacost =
 		if (character.getHealth().getValue() > hpcost) {
 			if (character.getMana().getValue() >= manacost) {
 				SkillResult result = esi.getSkill().onPreUse(character);
-				if (result != SkillResult.OK)
+				if (result != SkillResult.OK) {
 					return result;
-				else {
+				} else {
 					float newCd = skillSettings.getLevelNodeValue(SkillNodes.COOLDOWN, level);
 					SkillPostUsageEvent eventt = new SkillPostUsageEvent(character, hpcost, manacost, newCd);
 					game.getEventManager().post(eventt);
@@ -208,7 +203,6 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 	}
 
 
-
 	public void reloadSkillTrees() {
 		try {
 			info("Currently its possible to reload ascii maps or add new skill trees");
@@ -226,7 +220,8 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 			}
 
 			/* todo thats gonna be quite tricky,
-			   todo  it should be easiest to lock (maybe even joining) specific commands,  save all current data, reset player objects, and recreate ActiveCharacters
+			   todo  it should be easiest to lock (maybe even joining) specific commands,  save all current data, reset player objects, and recreate
+			    ActiveCharacters
 			for (IActiveCharacter character : characterService.getCharacters()) {
 				Set<ExtendedNClass> classes = character.getClasses();
 				for (ExtendedNClass aClass : classes) {
@@ -293,7 +288,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 			return null;
 		}
 
-        Class type = null;
+		Class type = null;
 		switch (parent.toLowerCase()) {
 			case "targetted":
 				type = TargettedScriptSkill.class;
@@ -308,7 +303,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 
 		Class sk = new ByteBuddy()
 				.subclass(type)
-				.name("cz.neumimto.skills.scripts."+ scriptSkillModel.getName().toPlain())
+				.name("cz.neumimto.skills.scripts." + scriptSkillModel.getName().toPlain())
 				.annotateType(AnnotationDescription.Builder.ofType(ResourceLoader.Skill.class)
 						.define("value", scriptSkillModel.getId())
 						.build())

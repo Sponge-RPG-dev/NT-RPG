@@ -31,132 +31,134 @@ import java.util.Optional;
 
 public class SkillTreeSpecialization extends PassiveSkill {
 
-    public SkillTreeSpecialization() {
-        super();
-        SkillSettings settings = new SkillSettings();
-        addSkillType(SkillType.PATH);
-        setIcon(ItemTypes.BOOK);
-        super.setSettings(settings);
-    }
+	public SkillTreeSpecialization() {
+		super();
+		SkillSettings settings = new SkillSettings();
+		addSkillType(SkillType.PATH);
+		setIcon(ItemTypes.BOOK);
+		super.setSettings(settings);
+	}
 
-    @Override
-    public SkillResult onPreUse(IActiveCharacter character) {
-        return SkillResult.CANCELLED;
-    }
+	@Override
+	public SkillResult onPreUse(IActiveCharacter character) {
+		return SkillResult.CANCELLED;
+	}
 
-    @Override
-    public void skillLearn(IActiveCharacter IActiveCharacter) {
-        if (PluginConfig.PLAYER_CHOOSED_SKILLTREE_SPECIALIZATIon_GLOBAL_MESSAGE) {
-            Text t = Localizations.PLAYER_CHOOSED_SKILLTREE_PATH_GLOBAL_MESSAGE_CONTENT.toText(
-                    Arg.arg("player", IActiveCharacter.getPlayer().getName())
-                            .with("character", IActiveCharacter.getName())
-                            .with("path", getName()));
-            game.getServer().getOnlinePlayers().forEach(p -> p.sendMessage(t));
-        }
-        onCharacterInit(IActiveCharacter, 1);
-    }
+	@Override
+	public void skillLearn(IActiveCharacter IActiveCharacter) {
+		if (PluginConfig.PLAYER_CHOOSED_SKILLTREE_SPECIALIZATIon_GLOBAL_MESSAGE) {
+			Text t = Localizations.PLAYER_CHOOSED_SKILLTREE_PATH_GLOBAL_MESSAGE_CONTENT.toText(
+					Arg.arg("player", IActiveCharacter.getPlayer().getName())
+							.with("character", IActiveCharacter.getName())
+							.with("path", getName()));
+			game.getServer().getOnlinePlayers().forEach(p -> p.sendMessage(t));
+		}
+		onCharacterInit(IActiveCharacter, 1);
+	}
 
-    @Override
-    public void applyEffect(ExtendedSkillInfo info, IActiveCharacter character) {
+	@Override
+	public void applyEffect(ExtendedSkillInfo info, IActiveCharacter character) {
 
-    }
+	}
 
-    @Override
-    public void onCharacterInit(IActiveCharacter c, int level) {
-        super.onCharacterInit(c, level);
-        ExtendedSkillInfo skillInfo = c.getSkillInfo(this);
-        SkillData skillData = skillInfo.getSkillData();
-        SkillPathData pdata = (SkillPathData) skillData;
+	@Override
+	public void onCharacterInit(IActiveCharacter c, int level) {
+		super.onCharacterInit(c, level);
+		ExtendedSkillInfo skillInfo = c.getSkillInfo(this);
+		SkillData skillData = skillInfo.getSkillData();
+		SkillPathData pdata = (SkillPathData) skillData;
 
-        if (pdata.getEnterCommands() != null) {
-            Map<String, String> args = new HashMap<>();
-            Player pl = c.getPlayer();
-            args.put("player", pl.getName());
-            args.put("uuid", pl.getUniqueId().toString());
-            Utils.executeCommandBatch(args, pdata.getEnterCommands());
-        }
+		if (pdata.getEnterCommands() != null) {
+			Map<String, String> args = new HashMap<>();
+			Player pl = c.getPlayer();
+			args.put("player", pl.getName());
+			args.put("uuid", pl.getUniqueId().toString());
+			Utils.executeCommandBatch(args, pdata.getEnterCommands());
+		}
 
-        for (Map.Entry<String, Integer> entry : pdata.getSkillBonus().entrySet()) {
-            ExtendedSkillInfo skill = c.getSkill(entry.getKey());
-            skill.setBonusLevel(skill.getBonusLevel() + entry.getValue());
-        }
+		for (Map.Entry<String, Integer> entry : pdata.getSkillBonus().entrySet()) {
+			ExtendedSkillInfo skill = c.getSkill(entry.getKey());
+			skill.setBonusLevel(skill.getBonusLevel() + entry.getValue());
+		}
 
-    }
+	}
 
-    @Override
-    public void skillRefund(IActiveCharacter c) {
-        ExtendedSkillInfo skillInfo = c.getSkillInfo(this);
-        SkillData skillData = skillInfo.getSkillData();
-        SkillPathData pdata = (SkillPathData) skillData;
+	@Override
+	public void skillRefund(IActiveCharacter c) {
+		ExtendedSkillInfo skillInfo = c.getSkillInfo(this);
+		SkillData skillData = skillInfo.getSkillData();
+		SkillPathData pdata = (SkillPathData) skillData;
 
-        if (pdata.getEnterCommands() != null) {
-            Map<String, String> args = new HashMap<>();
-            Player player = c.getPlayer();
-            args.put("player", player.getName());
-            args.put("uuid", player.getUniqueId().toString());
-            Utils.executeCommandBatch(args, pdata.getExitCommands());
-        }
-    }
+		if (pdata.getEnterCommands() != null) {
+			Map<String, String> args = new HashMap<>();
+			Player player = c.getPlayer();
+			args.put("player", player.getName());
+			args.put("uuid", player.getUniqueId().toString());
+			Utils.executeCommandBatch(args, pdata.getExitCommands());
+		}
+	}
 
 
-    @Override
-    public SkillPathData constructSkillData() {
-        return new SkillPathData(getId());
-    }
+	@Override
+	public SkillPathData constructSkillData() {
+		return new SkillPathData(getId());
+	}
 
-    @Override
-    public <T extends SkillData> void loadSkillData(T skillData, SkillTree skillTree, SkillLoadingErrors logger, Config c) {
-        SkillPathData pdata = (SkillPathData) skillData;
-        try {
-            List<String> ec = c.getStringList("EnterCommands");
-            pdata.getEnterCommands().addAll(ec);
-        } catch (ConfigException e) {
+	@Override
+	public <T extends SkillData> void loadSkillData(T skillData, SkillTree skillTree, SkillLoadingErrors logger, Config c) {
+		SkillPathData pdata = (SkillPathData) skillData;
+		try {
+			List<String> ec = c.getStringList("EnterCommands");
+			pdata.getEnterCommands().addAll(ec);
+		} catch (ConfigException e) {
 
-        }
-        try {
-            List<String> ec = c.getStringList("ExitCommands");
-            pdata.getExitCommands().addAll(ec);
-        } catch (ConfigException e) {
+		}
+		try {
+			List<String> ec = c.getStringList("ExitCommands");
+			pdata.getExitCommands().addAll(ec);
+		} catch (ConfigException e) {
 
-        }
+		}
 
-        try {
-            int tier = c.getInt("Tier");
-            pdata.setTier(tier);
-        } catch (ConfigException e) {
-            logger.log("Found SkillPath in the tree \"" + skillTree.getId() + "\" but no tier defined, setting to 0");
-        }
+		try {
+			int tier = c.getInt("Tier");
+			pdata.setTier(tier);
+		} catch (ConfigException e) {
+			logger.log("Found SkillPath in the tree \"" + skillTree.getId() + "\" but no tier defined, setting to 0");
+		}
 
-        try {
-            pdata.setSkillPointsRequired(c.getInt("SkillPointsRequired"));
-        } catch (ConfigException e) {
-            logger.log("Found SkillPath in the tree \"" + skillTree.getId() + "\" but no permissions defined, setting to 1");
-            pdata.setSkillPointsRequired(1);
-        }
-        pdata.setMaxSkillLevel(1);
-        try {
-            List<? extends Config> skillBonus = c.getConfigList("SkillBonus");
-            for (Config s : skillBonus) {
-                try {
-                    String skill = s.getString("Skill");
-                    int levels = s.getInt("Levels");
-                    pdata.addSkillBonus(skill, levels);
-                } catch (ConfigException e) {
-                    logger.log("Found SkillPath.SkillBonus in the tree \"" + skillTree.getId() + "\" missing \"skill\" or \"level\" configuration node");
-                }
+		try {
+			pdata.setSkillPointsRequired(c.getInt("SkillPointsRequired"));
+		} catch (ConfigException e) {
+			logger.log("Found SkillPath in the tree \"" + skillTree.getId() + "\" but no permissions defined, setting to 1");
+			pdata.setSkillPointsRequired(1);
+		}
+		pdata.setMaxSkillLevel(1);
+		try {
+			List<? extends Config> skillBonus = c.getConfigList("SkillBonus");
+			for (Config s : skillBonus) {
+				try {
+					String skill = s.getString("Skill");
+					int levels = s.getInt("Levels");
+					pdata.addSkillBonus(skill, levels);
+				} catch (ConfigException e) {
+					logger.log(
+							"Found SkillPath.SkillBonus in the tree \"" + skillTree.getId() + "\" missing \"skill\" or \"level\" configuration "
+									+ "node");
+				}
 
-            }
-        } catch (ConfigException e) {
-        }
-        try {
-            String a = c.getString("ItemIcon");
-            Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, a);
-            type.ifPresent(this::setIcon);
-        } catch (ConfigException e) {
+			}
+		} catch (ConfigException e) {
+		}
+		try {
+			String a = c.getString("ItemIcon");
+			Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, a);
+			type.ifPresent(this::setIcon);
+		} catch (ConfigException e) {
 
-        }
+		}
 
-        pdata.setCombination(null);
-        pdata.setMaxSkillLevel(1);
-    }
+		pdata.setCombination(null);
+		pdata.setMaxSkillLevel(1);
+	}
 }

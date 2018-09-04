@@ -5,14 +5,15 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Generate {
-    String id();
 
-    boolean inject() default false;
+	String id();
 
-    @Retention(RetentionPolicy.RUNTIME)
-    @interface Constructor {
+	boolean inject() default false;
 
-    }
+	String description();
 
-    String description();
+	@Retention(RetentionPolicy.RUNTIME)
+	@interface Constructor {
+
+	}
 }

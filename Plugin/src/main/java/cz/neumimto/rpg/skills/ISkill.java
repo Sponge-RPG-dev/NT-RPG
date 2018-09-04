@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.skills;
@@ -58,9 +58,9 @@ public interface ISkill extends IEffectSourceProvider, CatalogType {
 
 	String getId();
 
-	void setLocalizableName(Text name);
-
 	Text getLocalizableName();
+
+	void setLocalizableName(Text name);
 
 	void init();
 
@@ -88,15 +88,17 @@ public interface ISkill extends IEffectSourceProvider, CatalogType {
 
 	List<Text> getLore();
 
+	void setLore(List<Text> lore);
+
 	boolean showsToPlayers();
 
 	SkillItemIcon getIcon();
 
+	void setIcon(ItemType icon);
+
 	String getIconURL();
 
 	void setIconURL(String url);
-
-	void setLore(List<Text> lore);
 
 	DamageType getDamageType();
 
@@ -139,15 +141,15 @@ public interface ISkill extends IEffectSourceProvider, CatalogType {
 		return EffectSourceType.SKILL;
 	}
 
-    default <T extends SkillData> T constructSkillData() {
-    	return (T) new SkillData(getName());
+	default <T extends SkillData> T constructSkillData() {
+		return (T) new SkillData(getName());
 	}
 
 	default <T extends SkillData> void loadSkillData(T skillData, SkillTree context, SkillLoadingErrors errors, Config c) {
 
 	}
 
-    default List<ItemStack> configurationToItemStacks(SkillData skillData) {
+	default List<ItemStack> configurationToItemStacks(SkillData skillData) {
 		List<ItemStack> a = new ArrayList<>();
 		if (skillData.getSkillSettings() != null) {
 			Map<String, Float> nodes = skillData.getSkillSettings().getNodes();
@@ -164,16 +166,16 @@ public interface ISkill extends IEffectSourceProvider, CatalogType {
 									.style(TextStyles.BOLD)
 									.color(TextColors.GOLD)
 									.append(Text.builder(": " + init)
-									.color(TextColors.GREEN).style(TextStyles.BOLD)
-									.build())
-								.build()
-									,
+											.color(TextColors.GREEN).style(TextStyles.BOLD)
+											.build())
+									.build()
+							,
 							Text.builder().append(Localizations.SKILL_VALUE_PER_LEVEL.toText())
 									.style(TextStyles.BOLD).color(TextColors.GOLD)
 									.append(Text.builder(": " + lbonus)
-									.color(TextColors.GREEN).style(TextStyles.BOLD)
-									.build())
-								.build()
+											.color(TextColors.GREEN).style(TextStyles.BOLD)
+											.build())
+									.build()
 					));
 					a.add(of);
 				}
@@ -245,9 +247,9 @@ public interface ISkill extends IEffectSourceProvider, CatalogType {
 		}
 
 		is.offer(Keys.ITEM_LORE, lore);
-		is.offer(Keys.DISPLAY_NAME, Text.builder(getName()).color(character.hasSkill(this.getName()) ? TextColors.GREEN : TextColors.GRAY).style(TextStyles.BOLD).build());
+		is.offer(Keys.DISPLAY_NAME,
+				Text.builder(getName()).color(character.hasSkill(this.getName()) ? TextColors.GREEN : TextColors.GRAY).style(TextStyles.BOLD)
+						.build());
 		return is;
 	}
-
-	void setIcon(ItemType icon);
 }

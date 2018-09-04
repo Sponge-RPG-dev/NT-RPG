@@ -9,6 +9,7 @@ import cz.neumimto.rpg.scripting.JsBinding;
  */
 @JsBinding(JsBinding.Type.CLASS)
 public class CharacterChangeGroupEvent extends CharacterEvent {
+
 	private final PlayerGroup _new;
 	private final PlayerGroup old;
 

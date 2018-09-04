@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.players;
@@ -243,15 +243,14 @@ public class PreloadCharacter implements IActiveCharacter {
 
 	}
 
+	@Override
+	public IReservable getHealth() {
+		return health;
+	}
 
 	@Override
 	public void setHealth(IReservable health) {
 
-	}
-
-	@Override
-	public IReservable getHealth() {
-		return health;
 	}
 
 	@Override
@@ -271,7 +270,8 @@ public class PreloadCharacter implements IActiveCharacter {
 			if (player.isPresent()) {
 				this.player = player.get();
 			} else {
-				throw new PlayerNotInGameException(String.format("Player object with uuid=%s has not been constructed yet. Calling PreloadCharacter.getCharacter in a wrong state"), this);
+				throw new PlayerNotInGameException(String.format(
+						"Player object with uuid=%s has not been constructed yet. Calling PreloadCharacter.getCharacter in a wrong state"), this);
 			}
 		}
 		return this.player;

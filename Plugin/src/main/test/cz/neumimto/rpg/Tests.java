@@ -4,18 +4,11 @@ package cz.neumimto.rpg;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.effects.IGlobalEffect;
-import cz.neumimto.rpg.effects.TestEffectFloat;
-import cz.neumimto.rpg.effects.TestEffectModel;
-import cz.neumimto.rpg.effects.TestEffectStr;
-import cz.neumimto.rpg.effects.TestEffectVoid0;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroupPermission;
 import cz.neumimto.rpg.players.groups.Race;
-import javassist.CannotCompileException;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.junit.Assert;
 import org.junit.Test;
@@ -31,7 +24,6 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import javax.script.ScriptEngine;

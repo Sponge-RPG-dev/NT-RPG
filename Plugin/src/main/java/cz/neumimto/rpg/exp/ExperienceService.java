@@ -59,10 +59,12 @@ public class ExperienceService {
 	}
 
 	public ExperienceSource getExperienceSourceByBlockType(BlockType type) {
-		if (minerals.containsKey(type))
+		if (minerals.containsKey(type)) {
 			return ExperienceSources.MINING;
-		if (woodenBlocks.containsKey(type))
+		}
+		if (woodenBlocks.containsKey(type)) {
 			return ExperienceSources.LOGGING;
+		}
 		return null;
 	}
 }

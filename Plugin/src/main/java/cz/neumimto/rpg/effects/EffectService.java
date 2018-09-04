@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.effects;
@@ -39,7 +39,13 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -161,7 +167,7 @@ public class EffectService {
 			asset = Sponge.getAssetManager().getAsset(plugin, "templates/SE.md").get();
 			String a = asset.readString();
 			Files.write(file1.toPath(), a.replaceAll("\\{\\{effects}}", finalString)
-										  .replaceAll("\\{\\{skills}}", skills).getBytes(), StandardOpenOption.APPEND);
+					.replaceAll("\\{\\{skills}}", skills).getBytes(), StandardOpenOption.APPEND);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -236,7 +242,8 @@ public class EffectService {
 			if (consumer1 instanceof ActiveCharacter) {
 				ActiveCharacter chara = (ActiveCharacter) consumer1;
 				chara.getPlayer().sendMessage(Text.of("Adding effect: " + iEffect.getName() +
-						" container: "  + (eff == null ? "null" : eff.getEffects().size()) + " provider: " + effectSourceProvider.getType().getClass().getSimpleName() ));
+						" container: " + (eff == null ? "null" : eff.getEffects().size()) + " provider: " + effectSourceProvider.getType().getClass()
+						.getSimpleName()));
 			}
 		}
 		if (eff == null) {
@@ -267,14 +274,14 @@ public class EffectService {
 	 */
 	public void removeEffect(IEffect iEffect, IEffectConsumer consumer) {
 		IEffectContainer effect = consumer.getEffect(iEffect.getName());
-        if (PluginConfig.DEBUG.isDevelop()) {
-            IEffectConsumer consumer1 = iEffect.getConsumer();
-            if (consumer1 instanceof ActiveCharacter) {
-                ActiveCharacter chara = (ActiveCharacter) consumer1;
-                chara.getPlayer().sendMessage(Text.of("Adding effect: " + iEffect.getName() +
-                        " container: "  + (effect == null ? "null" : effect.getEffects().size())));
-            }
-        }
+		if (PluginConfig.DEBUG.isDevelop()) {
+			IEffectConsumer consumer1 = iEffect.getConsumer();
+			if (consumer1 instanceof ActiveCharacter) {
+				ActiveCharacter chara = (ActiveCharacter) consumer1;
+				chara.getPlayer().sendMessage(Text.of("Adding effect: " + iEffect.getName() +
+						" container: " + (effect == null ? "null" : effect.getEffects().size())));
+			}
+		}
 		if (effect != null) {
 			removeEffectContainer(effect, iEffect, consumer);
 			stopEffect(iEffect);
@@ -286,19 +293,22 @@ public class EffectService {
 	}
 
 	protected void removeEffectContainer(IEffectContainer container, IEffect iEffect, IEffectConsumer consumer) {
-		if (container == null)
+		if (container == null) {
 			return;
+		}
 		if (iEffect == container) {
 			if (!iEffect.getConsumer().isDetached()) {
 				iEffect.onRemove();
 			}
-			if (!consumer.isDetached())
+			if (!consumer.isDetached()) {
 				consumer.removeEffect(iEffect);
+			}
 		} else if (container.getEffects().contains(iEffect)) {
 			container.removeStack(iEffect);
 			if (container.getEffects().isEmpty()) {
-				if (!consumer.isDetached())
+				if (!consumer.isDetached()) {
 					consumer.removeEffect(container);
+				}
 			}
 		} else {
 
@@ -343,7 +353,7 @@ public class EffectService {
 	 */
 	public void removeGlobalEffect(String name) {
 		name = name.toLowerCase();
-        globalEffects.remove(name);
+		globalEffects.remove(name);
 	}
 
 	/**
@@ -367,7 +377,8 @@ public class EffectService {
 	 * @param consumer
 	 * @param value
 	 */
-	public void applyGlobalEffectAsEnchantment(IGlobalEffect effect, IEffectConsumer consumer, Map<String, String> value, IEffectSourceProvider effectSourceType) {
+	public void applyGlobalEffectAsEnchantment(IGlobalEffect effect, IEffectConsumer consumer, Map<String, String> value,
+			IEffectSourceProvider effectSourceType) {
 		IEffect construct = effect.construct(consumer, unlimited_duration, value);
 		addEffect(construct, consumer, effectSourceType);
 	}
@@ -378,14 +389,16 @@ public class EffectService {
 	 * @param map
 	 * @param consumer
 	 */
-	public void applyGlobalEffectsAsEnchantments(Map<IGlobalEffect, EffectParams> map, IEffectConsumer consumer, IEffectSourceProvider effectSourceType) {
+	public void applyGlobalEffectsAsEnchantments(Map<IGlobalEffect, EffectParams> map, IEffectConsumer consumer,
+			IEffectSourceProvider effectSourceType) {
 		map.forEach((e, l) ->
 				applyGlobalEffectAsEnchantment(e, consumer, l, effectSourceType)
 		);
 	}
 
 
-	public void removeGlobalEffectsAsEnchantments(Collection<IGlobalEffect> itemEffects, IActiveCharacter character, IEffectSourceProvider effectSourceProvider) {
+	public void removeGlobalEffectsAsEnchantments(Collection<IGlobalEffect> itemEffects, IActiveCharacter character,
+			IEffectSourceProvider effectSourceProvider) {
 		if (PluginConfig.DEBUG.isDevelop()) {
 			character.sendMessage(Text.of(itemEffects.size() + " added echn. effects to remove queue."));
 		}

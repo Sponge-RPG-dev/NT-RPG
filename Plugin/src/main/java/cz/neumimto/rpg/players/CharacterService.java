@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 package cz.neumimto.rpg.players;
 
@@ -143,7 +143,8 @@ public class CharacterService {
 			info("Loading player - " + id);
 			long k = System.currentTimeMillis();
 			List<CharacterBase> playerCharacters = playerDao.getPlayersCharacters(id);
-			info("Finished loading of player " + id + ", loaded " + playerCharacters.size() + " characters   [" + (System.currentTimeMillis() - k) + "]ms");
+			info("Finished loading of player " + id + ", loaded " + playerCharacters.size() + " characters   [" + (System.currentTimeMillis() - k)
+					+ "]ms");
 			if (playerCharacters.isEmpty() && PluginConfig.CREATE_FIRST_CHAR_AFTER_LOGIN) {
 				CharacterBase characterBase = createCharacterBase(playerName, id);
 				createAndUpdate(characterBase);
@@ -379,7 +380,6 @@ public class CharacterService {
 		applyGroupEffects(character, character.getRace());
 
 
-
 		inventoryService.initializeCharacterInventory(character);
 		damageService.recalculateCharacterWeaponDamage(character);
 
@@ -410,8 +410,9 @@ public class CharacterService {
 	 * @param guild
 	 */
 	public void updatePlayerGroups(IActiveCharacter character, ConfigClass configClass, int slot, Race race, Guild guild) {
-		if (character.isStub())
+		if (character.isStub()) {
 			return;
+		}
 		info("Initializing character " + character.getCharacterBase().getId());
 		boolean k = false;
 		Player player = character.getPlayer();
@@ -431,8 +432,9 @@ public class CharacterService {
 					return;
 				}
 
-				if (character.getNClass(slot) != null && character.getNClass(slot).getExitCommands() != null)
+				if (character.getNClass(slot) != null && character.getNClass(slot).getExitCommands() != null) {
 					Utils.executeCommandBatch(args, character.getNClass(slot).getExitCommands());
+				}
 
 
 				removeGroupEffects(character, character.getNClass(slot));
@@ -440,9 +442,10 @@ public class CharacterService {
 				applyGroupEffects(character, configClass);
 
 				args.put("class", character.getRace().getName());
-				if (character.getNClass(slot) != null && character.getNClass(slot).getEnterCommands() != null)
+				if (character.getNClass(slot) != null && character.getNClass(slot).getEnterCommands() != null) {
 					Utils.executeCommandBatch(args, character.getNClass(slot).getEnterCommands());
-				player.sendMessage(Localizations.PLAYER_CHOOSED_CLASS.toText(Arg.arg("class",configClass.getName())));
+				}
+				player.sendMessage(Localizations.PLAYER_CHOOSED_CLASS.toText(Arg.arg("class", configClass.getName())));
 			}
 		}
 
@@ -460,8 +463,9 @@ public class CharacterService {
 					player.sendMessage(Localizations.ALREADY_HAS_THIS_RACE.toText(Arg.arg("race", race.getName())));
 					return;
 				}
-				if (character.getRace().getExitCommands() != null)
+				if (character.getRace().getExitCommands() != null) {
 					Utils.executeCommandBatch(args, character.getRace().getExitCommands());
+				}
 
 				removeGroupEffects(character, character.getRace());
 				character.setRace(race);
@@ -469,8 +473,9 @@ public class CharacterService {
 
 
 				args.put("race", character.getRace().getName());
-				if (character.getRace().getExitCommands() != null)
+				if (character.getRace().getExitCommands() != null) {
 					Utils.executeCommandBatch(args, character.getRace().getEnterCommands());
+				}
 				player.sendMessage(Localizations.PLAYER_CHOOSED_RACE.toText(Arg.arg("race", race.getName())));
 			}
 		}
@@ -488,12 +493,16 @@ public class CharacterService {
 	}
 
 	public void removeGroupEffects(IActiveCharacter character, PlayerGroup p) {
-		if (p == null) return;
+		if (p == null) {
+			return;
+		}
 		effectService.removeGlobalEffectsAsEnchantments(p.getEffects().keySet(), character, p);
 	}
 
 	public void applyGroupEffects(IActiveCharacter character, PlayerGroup p) {
-		if (p == null) return;
+		if (p == null) {
+			return;
+		}
 		effectService.applyGlobalEffectsAsEnchantments(p.getEffects(), character, p);
 	}
 
@@ -516,7 +525,8 @@ public class CharacterService {
 	 * @param character
 	 */
 	public void updateMaxHealth(IActiveCharacter character) {
-		float max_health = getCharacterProperty(character, DefaultProperties.max_health) - getCharacterProperty(character, DefaultProperties.reserved_health);
+		float max_health =
+				getCharacterProperty(character, DefaultProperties.max_health) - getCharacterProperty(character, DefaultProperties.reserved_health);
 		float actreserved = getCharacterProperty(character, DefaultProperties.reserved_health);
 		float reserved = getCharacterProperty(character, DefaultProperties.reserved_health_multiplier);
 		float maxval = max_health - (actreserved * reserved);
@@ -538,8 +548,9 @@ public class CharacterService {
 
 	protected IActiveCharacter deleteCharacterReferences(IActiveCharacter character) {
 		effectService.removeAllEffects(character);
-		if (character.hasParty())
+		if (character.hasParty()) {
 			character.getParty().removePlayer(character);
+		}
 		character.setParty(null);
 		return character;
 	}
@@ -806,7 +817,8 @@ public class CharacterService {
 	 * @param character
 	 * @param skill
 	 */
-	public Pair<SkillTreeActionResult, SkillTreeActionResult.Data> characterLearnskill(IActiveCharacter character, ISkill skill, SkillTree skillTree) {
+	public Pair<SkillTreeActionResult, SkillTreeActionResult.Data> characterLearnskill(IActiveCharacter character, ISkill skill,
+			SkillTree skillTree) {
 		Pair<SkillTreeActionResult, SkillTreeActionResult.Data> p = new Pair<>();
 
 		ExtendedNClass nClass = null;
@@ -908,7 +920,6 @@ public class CharacterService {
 		}
 
 
-
 		clazz.setSkillPoints(avalaibleSkillpoints - 1);
 		clazz.setUsedSkillPoints(avalaibleSkillpoints + 1);
 
@@ -951,14 +962,16 @@ public class CharacterService {
 	 */
 	public int refundSkill(IActiveCharacter character, ISkill skill, ConfigClass configClass) {
 		ExtendedSkillInfo skillInfo = character.getSkillInfo(skill);
-		if (skillInfo == null)
+		if (skillInfo == null) {
 			return 1;
+		}
 		SkillTree skillTree = configClass.getSkillTree();
 		SkillData info = skillTree.getSkills().get(skill.getId());
 		for (SkillData info1 : info.getDepending()) {
 			ExtendedSkillInfo e = character.getSkill(info1.getSkill().getId());
-			if (e != null)
+			if (e != null) {
 				return 2;
+			}
 		}
 		CancellableEvent event = new SkillRefundEvent(character, skill);
 		game.getEventManager().post(event);
@@ -1029,8 +1042,9 @@ public class CharacterService {
 	public void updateWalkSpeed(IEffectConsumer entity) {
 		double speed = entityService.getEntityProperty(entity, DefaultProperties.walk_speed);
 		entity.getEntity().offer(Keys.WALKING_SPEED, speed);
-		if (PluginConfig.DEBUG.isBalance())
+		if (PluginConfig.DEBUG.isBalance()) {
 			info(entity + " setting walk speed to " + speed);
+		}
 	}
 
 	/**
@@ -1055,8 +1069,9 @@ public class CharacterService {
 			ConfigClass configClass = aClass.getConfigClass();
 			if (configClass.hasExperienceSource(source)) {
 				int maxlevel = configClass.getLevels().length - 1;
-				if (aClass.getLevel() > maxlevel)
+				if (aClass.getLevel() > maxlevel) {
 					continue;
+				}
 				addExperiences(character, exp, aClass, false);
 			}
 		}
@@ -1076,8 +1091,9 @@ public class CharacterService {
 		double total = aClass.getExperiences();
 		double lvlexp = aClass.getExperiencesFromLevel();
 		double[] levels = aClass.getConfigClass().getLevels();
-		if (levels == null)
+		if (levels == null) {
 			return;
+		}
 		double levellimit = levels[level];
 
 		double newcurrentexp = lvlexp + exp;
@@ -1086,7 +1102,9 @@ public class CharacterService {
 			level++;
 			if (!onlyinit) {
 				Gui.showLevelChange(character, aClass, level);
-				CharacterGainedLevelEvent event = new CharacterGainedLevelEvent(character, aClass, level, aClass.getConfigClass().getSkillpointsperlevel(), aClass.getConfigClass().getAttributepointsperlevel());
+				CharacterGainedLevelEvent event =
+						new CharacterGainedLevelEvent(character, aClass, level, aClass.getConfigClass().getSkillpointsperlevel(),
+								aClass.getConfigClass().getAttributepointsperlevel());
 				event.getaClass().setLevel(event.getLevel());
 				game.getEventManager().post(event);
 				characterAddPoints(character, aClass.getConfigClass(), event.getSkillpointsPerLevel(), event.getAttributepointsPerLevel());
@@ -1162,7 +1180,8 @@ public class CharacterService {
 	}
 
 	/**
-	 * sponge is creating new player object each time a player is (re)spawned @link https://github.com/SpongePowered/SpongeCommon/commit/384180f372fa233bcfc110a7385f43df2a85ef76
+	 * sponge is creating new player object each time a player is (re)spawned @link https://github
+	 * .com/SpongePowered/SpongeCommon/commit/384180f372fa233bcfc110a7385f43df2a85ef76
 	 * character object is heavy, lets do not recreate its instance just reasign player and effects
 	 */
 	public void respawnCharacter(IActiveCharacter character, Player pl) {
@@ -1208,8 +1227,9 @@ public class CharacterService {
 	 */
 	public boolean processUserAction(IActiveCharacter character, UserActionType userActionType) {
 		IEffectContainer effect = character.getEffect(ClickComboActionEvent.name);
-		if (effect == null)
+		if (effect == null) {
 			return false;
+		}
 		ClickComboActionEvent e = (ClickComboActionEvent) effect;
 		if (userActionType == UserActionType.L && e.hasStarted()) {
 			e.processLMB();

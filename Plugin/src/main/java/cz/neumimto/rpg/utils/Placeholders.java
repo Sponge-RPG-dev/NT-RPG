@@ -18,58 +18,58 @@ import java.util.Set;
  */
 public class Placeholders {
 
-    @Inject
-    CharacterService characterService;
+	@Inject
+	CharacterService characterService;
 
-    @Placeholder(id = "race")
-    public Text getRace(@Source Player src) {
-        Race race = characterService.getCharacter(src).getRace();
-        return Text.of(race.getPreferedColor(), race.getName());
-    }
+	@Placeholder(id = "race")
+	public Text getRace(@Source Player src) {
+		Race race = characterService.getCharacter(src).getRace();
+		return Text.of(race.getPreferedColor(), race.getName());
+	}
 
-    @Placeholder(id = "class")
-    public Text getClass(@Source Player src) {
-        ExtendedNClass primaryClass = characterService.getCharacter(src).getPrimaryClass();
-        return Text.of(primaryClass.getConfigClass().getPreferedColor(), primaryClass.getConfigClass().getName());
-    }
+	@Placeholder(id = "class")
+	public Text getClass(@Source Player src) {
+		ExtendedNClass primaryClass = characterService.getCharacter(src).getPrimaryClass();
+		return Text.of(primaryClass.getConfigClass().getPreferedColor(), primaryClass.getConfigClass().getName());
+	}
 
-    @Placeholder(id = "char_name")
-    public Text getCharName(@Source Player src) {
-        IActiveCharacter character = characterService.getCharacter(src);
-        return Text.of(character.getName());
-    }
+	@Placeholder(id = "char_name")
+	public Text getCharName(@Source Player src) {
+		IActiveCharacter character = characterService.getCharacter(src);
+		return Text.of(character.getName());
+	}
 
-    @Placeholder(id = "primary_class_or_spec")
-    public Text getClassOrSpec(@Source Player src) {
-        IActiveCharacter character = characterService.getCharacter(src);
-        ExtendedNClass primaryClass = character.getPrimaryClass();
-        Set<SkillTreeSpecialization> skillTreeSpecialization = character.getSkillTreeSpecialization();
-        //todo
-        return Text.of(primaryClass.getConfigClass().getPreferedColor(), primaryClass.getConfigClass().getName());
-    }
+	@Placeholder(id = "primary_class_or_spec")
+	public Text getClassOrSpec(@Source Player src) {
+		IActiveCharacter character = characterService.getCharacter(src);
+		ExtendedNClass primaryClass = character.getPrimaryClass();
+		Set<SkillTreeSpecialization> skillTreeSpecialization = character.getSkillTreeSpecialization();
+		//todo
+		return Text.of(primaryClass.getConfigClass().getPreferedColor(), primaryClass.getConfigClass().getName());
+	}
 
-    @Placeholder(id = "primary_class_level")
-    public Integer getPrimaryClassLevel(@Source Player src) {
-        IActiveCharacter character = characterService.getCharacter(src);
-        return character.getLevel();
-    }
+	@Placeholder(id = "primary_class_level")
+	public Integer getPrimaryClassLevel(@Source Player src) {
+		IActiveCharacter character = characterService.getCharacter(src);
+		return character.getLevel();
+	}
 
-    @Placeholder(id = "mana")
-    public Double getMana(@Source Player src) {
-        IActiveCharacter character = characterService.getCharacter(src);
-        return character.getMana().getValue();
-    }
+	@Placeholder(id = "mana")
+	public Double getMana(@Source Player src) {
+		IActiveCharacter character = characterService.getCharacter(src);
+		return character.getMana().getValue();
+	}
 
-    @Placeholder(id = "max_mana")
-    public Double getMaxMana(@Source Player src) {
-        IActiveCharacter character = characterService.getCharacter(src);
-        return character.getMana().getMaxValue();
-    }
+	@Placeholder(id = "max_mana")
+	public Double getMaxMana(@Source Player src) {
+		IActiveCharacter character = characterService.getCharacter(src);
+		return character.getMana().getMaxValue();
+	}
 
-    @Placeholder(id = "max_hp")
-    public Double getMaxHealth(@Source Player src) {
-        IActiveCharacter character = characterService.getCharacter(src);
-        return character.getHealth().getMaxValue();
-    }
+	@Placeholder(id = "max_hp")
+	public Double getMaxHealth(@Source Player src) {
+		IActiveCharacter character = characterService.getCharacter(src);
+		return character.getHealth().getMaxValue();
+	}
 
 }

@@ -11,8 +11,9 @@ import org.spongepowered.api.world.World;
  * Created by NeumimTo on 1.8.2017.
  */
 public class CommandblockSkillExecutor extends PreloadCharacter {
-	private CommandBlock c;
+
 	private static IReservable INFINITY_POOL = new InfinityPool();
+	private CommandBlock c;
 
 	private CommandblockSkillExecutor(CommandBlock cb) {
 		super(null);

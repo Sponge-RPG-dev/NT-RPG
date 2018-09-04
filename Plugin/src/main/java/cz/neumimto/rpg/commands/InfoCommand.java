@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.commands;
@@ -181,7 +181,7 @@ public class InfoCommand extends CommandBase {
 			for (SkillTreeViewModel treeViewModel : character.getSkillTreeViewLocation().values()) {
 				treeViewModel.setCurrent(false);
 			}
-			if (character.getSkillTreeViewLocation().get(skillTree.getId()) == null){
+			if (character.getSkillTreeViewLocation().get(skillTree.getId()) == null) {
 				SkillTreeViewModel skillTreeViewModel = new SkillTreeViewModel();
 				character.getSkillTreeViewLocation().put(skillTree.getId(), skillTreeViewModel);
 				skillTreeViewModel.setSkillTree(skillTree);

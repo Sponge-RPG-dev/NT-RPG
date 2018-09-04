@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.utils;
@@ -68,7 +68,20 @@ public class Utils {
 
 	public static String LineSeparator = System.getProperty("line.separator");
 	public static String Tab = "\t";
+	public static Set<BlockType> transparentBlocks = new HashSet<>();
+	public static Predicate<BlockRayHit<World>> SKILL_TARGET_BLOCK_FILTER =
+			(Predicate<BlockRayHit<World>>)
+					a -> !isTransparent(a.getExtent()
+							.getBlockType(a.getBlockX(), a.getBlockY(), a.getBlockZ()));
+	public static Pattern REGEXP_NUMBER = Pattern.compile("[-+]?\\d+([\\.,]\\d+)?");
+	public static Pattern REGEXP_CLASS_MEMBER = Pattern.compile("^[a-z_]\\w*$");
 	private static GlobalScope globalScope = NtRpgPlugin.GlobalScope;
+
+	static {
+		transparentBlocks.addAll(Arrays.asList(BlockTypes.AIR,
+				BlockTypes.GRASS, BlockTypes.TALLGRASS, BlockTypes.GRASS, BlockTypes.BED,
+				BlockTypes.WHEAT, BlockTypes.FLOWER_POT, BlockTypes.FIRE, BlockTypes.WATER, BlockTypes.LAVA, BlockTypes.FLOWING_WATER));
+	}
 
 	public static void applyOnNearbyPartyMembers(IActiveCharacter character, int distance, Consumer<IActiveCharacter> c) {
 		double k = Math.pow(distance, 2);
@@ -129,8 +142,9 @@ public class Utils {
 			for (int chZ = 0 - chunkRadius; chZ <= chunkRadius; chZ++) {
 				Location chunkLoc = new Location(l.getExtent(), l.getBlockX() + (chX * 16), l.getBlockY(), l.getBlockZ() + (chZ * 16));
 				for (Entity e : chunkLoc.getExtent().getEntities()) {
-					if (e.getLocation().getPosition().distanceSquared(l.getPosition()) <= pow)
+					if (e.getLocation().getPosition().distanceSquared(l.getPosition()) <= pow) {
 						set.add(e);
+					}
 				}
 			}
 		}
@@ -144,20 +158,18 @@ public class Utils {
 			for (int chZ = 0 - chunkRadius; chZ <= chunkRadius; chZ++) {
 				Location chunkLoc = new Location(l.getExtent(), l.getBlockX() + (chX * 16), l.getBlockY(), l.getBlockZ() + (chZ * 16));
 				for (Entity e : chunkLoc.getExtent().getEntities()) {
-					if (e.getLocation().getPosition().distance(l.getPosition()) <= radius)
+					if (e.getLocation().getPosition().distance(l.getPosition()) <= radius) {
 						set.add(e);
+					}
 				}
 			}
 		}
 		return set;
 	}
 
-
 	public static Optional<Entity> spawnProjectile(IEntity caster, EntityType type) {
 		return Optional.empty(); //todo
 	}
-
-	public static Set<BlockType> transparentBlocks = new HashSet<>();
 
 	public static boolean isTransparent(BlockType e) {
 		return transparentBlocks.contains(e);
@@ -171,7 +183,8 @@ public class Utils {
 		Vector3d vec3d = player.getProperty(EyeLocationProperty.class).get().getValue();
 		Optional<EntityUniverse.EntityHit> e = player
 				.getWorld()
-				.getIntersectingEntities(vec3d, dir, range, entityHit -> entityHit.getEntity() != character.getEntity() && isLivingEntity(entityHit.getEntity()))
+				.getIntersectingEntities(vec3d, dir, range,
+						entityHit -> entityHit.getEntity() != character.getEntity() && isLivingEntity(entityHit.getEntity()))
 				.stream().reduce((a, b) -> a.getDistance() < b.getDistance() ? a : b);
 
 		if (e.isPresent()) {
@@ -193,12 +206,6 @@ public class Utils {
 		}
 		return null;
 	}
-
-
-	public static Predicate<BlockRayHit<World>> SKILL_TARGET_BLOCK_FILTER =
-			(Predicate<BlockRayHit<World>>)
-					a -> !isTransparent(a.getExtent()
-							.getBlockType(a.getBlockX(), a.getBlockY(), a.getBlockZ()));
 
 	public static void hideProjectile(Projectile projectile) {
 		projectile.offer(Keys.INVISIBLE, true);
@@ -223,7 +230,6 @@ public class Utils {
 	public static <T> Predicate<T> not(Predicate<T> t) {
 		return t.negate();
 	}
-
 
 	//todo
 	public static boolean canDamage(IActiveCharacter character, Living l) {
@@ -256,8 +262,9 @@ public class Utils {
 	}
 
 	public static boolean isLivingEntity(Entity entity) {
-		if (entity.isRemoved())
+		if (entity.isRemoved()) {
 			return false;
+		}
 		Optional<Double> aDouble = entity.get(Keys.HEALTH);
 		if (aDouble.isPresent()) {
 			return aDouble.get() > 0;
@@ -276,11 +283,8 @@ public class Utils {
 	}
 
 	public static String capitalizeFirst(String str) {
-		return (Character.toUpperCase(str.charAt(0)) + str.substring(1)).replaceAll("_"," ");
+		return (Character.toUpperCase(str.charAt(0)) + str.substring(1)).replaceAll("_", " ");
 	}
-
-	public static Pattern REGEXP_NUMBER = Pattern.compile("[-+]?\\d+([\\.,]\\d+)?");
-	public static Pattern REGEXP_CLASS_MEMBER = Pattern.compile("^[a-z_]\\w*$");
 
 	public static String extractNumber(String string) {
 		Matcher matcher = REGEXP_NUMBER.matcher(string);
@@ -299,15 +303,15 @@ public class Utils {
 	}
 
 	public static String configNodeToReadableString(String t) {
-		String a =  t.replaceAll("_"," ");
+		String a = t.replaceAll("_", " ");
 		a = a.substring(0, 1).toUpperCase() + a.substring(1);
 		return a;
 	}
 
-	public static void executeCommandBatch(Map<String,String> variables, List<String> commandTemplates) {
+	public static void executeCommandBatch(Map<String, String> variables, List<String> commandTemplates) {
 		for (String commandTemplate : commandTemplates) {
 			for (Map.Entry<String, String> entry : variables.entrySet()) {
-				commandTemplate = commandTemplate.replaceAll("\\{\\{"+entry.getKey()+"}}",entry.getValue());
+				commandTemplate = commandTemplate.replaceAll("\\{\\{" + entry.getKey() + "}}", entry.getValue());
 			}
 			try {
 				info(Console.GREEN_BOLD + " Running Command (as a console): " + Console.YELLOW + commandTemplate);
@@ -316,11 +320,5 @@ public class Utils {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	static {
-		transparentBlocks.addAll(Arrays.asList(BlockTypes.AIR,
-				BlockTypes.GRASS, BlockTypes.TALLGRASS, BlockTypes.GRASS, BlockTypes.BED,
-				BlockTypes.WHEAT, BlockTypes.FLOWER_POT, BlockTypes.FIRE, BlockTypes.WATER, BlockTypes.LAVA, BlockTypes.FLOWING_WATER));
 	}
 }

@@ -8,6 +8,7 @@ import org.spongepowered.api.event.cause.Cause;
  * Created by NeumimTo on 24.6.2017.
  */
 public class CharacterInitializedEvent implements Event {
+
 	private final IActiveCharacter character;
 
 	public CharacterInitializedEvent(IActiveCharacter character) {

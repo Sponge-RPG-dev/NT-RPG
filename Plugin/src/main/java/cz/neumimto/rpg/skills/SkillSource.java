@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.skills;
@@ -24,6 +24,7 @@ import cz.neumimto.rpg.players.IReservable;
  * Created by NeumimTo on 1.1.2015.
  */
 public interface SkillSource {
+
 	public IReservable getMana();
 
 	public void setMana(IReservable mana);

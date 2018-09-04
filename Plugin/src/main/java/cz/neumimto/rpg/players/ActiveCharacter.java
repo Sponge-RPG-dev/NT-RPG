@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.players;
@@ -440,24 +440,24 @@ public class ActiveCharacter implements IActiveCharacter {
 	@Override
 	public double getBaseProjectileDamage(EntityType id) {
 		Double d = getProjectileDamages().get(id);
-		if (d == null)
+		if (d == null) {
 			return 0;
+		}
 		return d;
 	}
 
 	public IActiveCharacter updateItemRestrictions() {
 		allowedWeapons.clear();
-        allowedOffHandWeapons.clear();
+		allowedOffHandWeapons.clear();
 		Map<ItemType, Set<ConfigRPGItemType>> weapons = getRace().getWeapons();
 		allowedWeapons.putAll(weapons.entrySet().stream()
 				.collect(Collectors.toMap(Map.Entry::getKey, e -> RPGItemWrapper.createFromSet(e.getValue()))));
 
-        for (Set<ConfigRPGItemType> configRPGItemTypes : getRace().getOffHandWeapons().values()) {
-            for (ConfigRPGItemType configRPGItemType : configRPGItemTypes) {
-                allowedOffHandWeapons.add(configRPGItemType.getRpgItemType());
-            }
-        }
-
+		for (Set<ConfigRPGItemType> configRPGItemTypes : getRace().getOffHandWeapons().values()) {
+			for (ConfigRPGItemType configRPGItemType : configRPGItemTypes) {
+				allowedOffHandWeapons.add(configRPGItemType.getRpgItemType());
+			}
+		}
 
 
 		//mergeWeapons(getGuild());
@@ -466,7 +466,7 @@ public class ActiveCharacter implements IActiveCharacter {
 		for (ExtendedSkillInfo extendedSkillInfo : getSkills().values()) {
 			if (extendedSkillInfo.getSkill().getType() == EffectSourceType.ITEM_ACCESS_SKILL) {
 				ItemAccessSkill.ItemAccessSkillData skillData = (ItemAccessSkill.ItemAccessSkillData) extendedSkillInfo.getSkillData();
-				Map<Integer, Map<ItemType,Set<ConfigRPGItemType>>> items = skillData.getItems();
+				Map<Integer, Map<ItemType, Set<ConfigRPGItemType>>> items = skillData.getItems();
 				for (Map.Entry<Integer, Map<ItemType, Set<ConfigRPGItemType>>> ent : items.entrySet()) {
 					if (ent.getKey() <= getLevel()) {
 						mergeWeapons(ent.getValue());
@@ -483,9 +483,9 @@ public class ActiveCharacter implements IActiveCharacter {
 		//allowedArmorIds.addAll(getGuild().getAllowedArmor());
 
 		allowedArmorIds.addAll(getPrimaryClass().getConfigClass().getAllowedArmor());
-		
+
 		getProjectileDamages().clear();
-		
+
 		getProjectileDamages().putAll(getRace().getProjectileDamage());
 
 		for (ExtendedNClass extendedNClass : getClasses()) {
@@ -502,7 +502,7 @@ public class ActiveCharacter implements IActiveCharacter {
 				}
 			}
 		}
-		
+
 		return this;
 	}
 
@@ -589,12 +589,12 @@ public class ActiveCharacter implements IActiveCharacter {
 		return Collections.unmodifiableMap(skills); //lets use wrapper class instaed of guava's immutable
 	}
 
-    @Override
-    public void sendMessage(LocalizableParametrizedText message) {
-        sendMessage(message, Arg.EMPTY);
-    }
+	@Override
+	public void sendMessage(LocalizableParametrizedText message) {
+		sendMessage(message, Arg.EMPTY);
+	}
 
-    @Override
+	@Override
 	public void addSkill(String id, ExtendedSkillInfo info) {
 		skills.put(id, info);
 	}
@@ -633,8 +633,9 @@ public class ActiveCharacter implements IActiveCharacter {
 	@Override
 	public ConfigClass getNClass(int index) {
 		for (ExtendedNClass aClass : classes) {
-			if (aClass.getSlot() == index)
+			if (aClass.getSlot() == index) {
 				return aClass.getConfigClass();
+			}
 		}
 		return null;
 	}
@@ -760,7 +761,9 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	@Override
 	public boolean isFriendlyTo(IActiveCharacter character) {
-		if (character == this) return true;
+		if (character == this) {
+			return true;
+		}
 		return getParty().getPlayers().contains(character);
 	}
 
@@ -786,8 +789,9 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	@Override
 	public void removeSkillTreeSpecialization(SkillTreeSpecialization specialization) {
-		if (hasSkillTreeSpecialization(specialization))
+		if (hasSkillTreeSpecialization(specialization)) {
 			specs.remove(specialization);
+		}
 	}
 
 	@Override
@@ -848,8 +852,12 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 		ActiveCharacter that = (ActiveCharacter) o;
 		return that.getCharacterBase().getId().equals(this.getCharacterBase().getId());
 	}

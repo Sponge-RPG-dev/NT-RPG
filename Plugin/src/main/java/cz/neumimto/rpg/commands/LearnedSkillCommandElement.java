@@ -24,33 +24,33 @@ import javax.annotation.Nullable;
  */
 public class LearnedSkillCommandElement extends CommandElement {
 
-    public LearnedSkillCommandElement(@Nullable Text key) {
-        super(key);
-    }
+	public LearnedSkillCommandElement(@Nullable Text key) {
+		super(key);
+	}
 
-    @Override
-    protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
-        String skilllc = args.next().toLowerCase();
-        Optional<ISkill> skill = NtRpgPlugin.GlobalScope.skillService.getById(skilllc);
-        if (!skill.isPresent()) {
-            throw args.createError(Localizations.UNKNOWN_SKILL.toText(Arg.arg("skill", skilllc)));
-        }
-        IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) source);
-        if (!character.hasSkill(skill.get().getId())) {
-            throw args.createError(Localizations.CHARACTER_DOES_NOT_HAVE_SKILL.toText(Arg.arg("skill", skill.get().getName())));
-        }
-        return skill;
-    }
+	@Override
+	protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
+		String skilllc = args.next().toLowerCase();
+		Optional<ISkill> skill = NtRpgPlugin.GlobalScope.skillService.getById(skilllc);
+		if (!skill.isPresent()) {
+			throw args.createError(Localizations.UNKNOWN_SKILL.toText(Arg.arg("skill", skilllc)));
+		}
+		IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) source);
+		if (!character.hasSkill(skill.get().getId())) {
+			throw args.createError(Localizations.CHARACTER_DOES_NOT_HAVE_SKILL.toText(Arg.arg("skill", skill.get().getName())));
+		}
+		return skill;
+	}
 
-    @Override
-    public List<String> complete(CommandSource src, CommandArgs args, CommandContext context) {
-        IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src);
-        return new ArrayList<>(character.getSkills().keySet());
-    }
+	@Override
+	public List<String> complete(CommandSource src, CommandArgs args, CommandContext context) {
+		IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src);
+		return new ArrayList<>(character.getSkills().keySet());
+	}
 
-    @Override
-    public Text getUsage(CommandSource src) {
-        return Text.of("<skill_name>");
-    }
+	@Override
+	public Text getUsage(CommandSource src) {
+		return Text.of("<skill_name>");
+	}
 
 }

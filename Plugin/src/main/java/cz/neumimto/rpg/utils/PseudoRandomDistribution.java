@@ -8,6 +8,7 @@ import static java.lang.Math.min;
  * Created by NeumimTo on 14.03.2016.
  */
 public class PseudoRandomDistribution {
+
 	public static double[] C = null;
 
 	private int pmt = 0;
@@ -31,8 +32,9 @@ public class PseudoRandomDistribution {
 		while (true) {
 			m = (u + l) / 2;
 			p1 = p(m);
-			if (abs(p1 - p2) <= 0)
+			if (abs(p1 - p2) <= 0) {
 				break;
+			}
 			if (p1 > percentage) {
 				u = m;
 			} else {

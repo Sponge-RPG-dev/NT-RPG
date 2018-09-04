@@ -10,6 +10,7 @@ import cz.neumimto.rpg.skills.utils.SkillModifier;
  * Created by NeumimTo on 5.8.2017.
  */
 public class Meteor extends ActiveSkill {
+
 	@Override
 	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
 		return null;

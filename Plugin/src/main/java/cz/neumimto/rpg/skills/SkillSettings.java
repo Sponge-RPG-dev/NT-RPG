@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.skills;
@@ -30,6 +30,7 @@ import java.util.Map;
  */
 @JsBinding(JsBinding.Type.CLASS)
 public class SkillSettings {
+
 	public static final String bonus = "_levelbonus";
 	private Map<String, Float> skillSettings = new HashMap<>();
 	private Map<String, String> objMap = new HashMap<>();
@@ -49,8 +50,9 @@ public class SkillSettings {
 
 	public Map.Entry<String, Float> getFloatNodeEntry(String entry) {
 		for (Map.Entry<String, Float> stringFloatEntry : skillSettings.entrySet()) {
-			if (stringFloatEntry.getKey().equalsIgnoreCase(entry))
+			if (stringFloatEntry.getKey().equalsIgnoreCase(entry)) {
 				return stringFloatEntry;
+			}
 		}
 		return null;
 	}

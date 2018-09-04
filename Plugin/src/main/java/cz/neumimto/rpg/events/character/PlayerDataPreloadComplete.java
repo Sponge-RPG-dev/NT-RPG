@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.events.character;
@@ -33,6 +33,7 @@ import java.util.UUID;
  */
 @JsBinding(JsBinding.Type.CLASS)
 public class PlayerDataPreloadComplete extends CancellableEvent {
+
 	private UUID player;
 	private List<CharacterBase> characterBases;
 

@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.players.properties;
@@ -169,8 +169,9 @@ public class PropertyService {
 
 
 	public void setupDefaultProperties(IActiveCharacter character) {
-		if (character.isStub())
+		if (character.isStub()) {
 			return;
+		}
 		float[] arr = character.getCharacterProperties();
 		Map<Integer, Float> defaults = getDefaults();
 		for (int i = 0; i < arr.length; i++) {
@@ -206,15 +207,15 @@ public class PropertyService {
 
 	public float getDefault(Integer key) {
 		Float f = defaults.get(key);
-		if (f == null)
+		if (f == null) {
 			return 0;
+		}
 		return f;
 	}
 
 	public float getMaxPropertyValue(int index) {
 		return maxValues[index];
 	}
-
 
 
 }

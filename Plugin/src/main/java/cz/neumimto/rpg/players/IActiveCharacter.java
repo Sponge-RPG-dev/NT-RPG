@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.players;
@@ -244,7 +244,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	Set<EquipedSlot> getSlotsCannotBeEquiped();
 
-    double getExperienceBonusFor(String name, EntityType type);
+	double getExperienceBonusFor(String name, EntityType type);
 
 	default void sendMessage(Text t) {
 		getPlayer().sendMessage(t);

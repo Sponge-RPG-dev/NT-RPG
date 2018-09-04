@@ -17,29 +17,29 @@ import cz.neumimto.rpg.skills.utils.SkillModifier;
 @ResourceLoader.Skill("ntrpg:manashield")
 public class ManaShield extends ActiveSkill {
 
-    @Inject
-    private EffectService effectService;
+	@Inject
+	private EffectService effectService;
 
-    public void init() {
-        super.init();
-        setDamageType(null);
-        SkillSettings skillSettings = new SkillSettings();
-        skillSettings.addNode("reduction", 10f, 11f);
-        skillSettings.addNode("reduction-manacost", 20f, -1f);
-        skillSettings.addNode(SkillNodes.DURATION, 30000, 500);
-        settings = skillSettings;
-        addSkillType(SkillType.UTILITY);
-        addSkillType(SkillType.PROTECTION);
-    }
+	public void init() {
+		super.init();
+		setDamageType(null);
+		SkillSettings skillSettings = new SkillSettings();
+		skillSettings.addNode("reduction", 10f, 11f);
+		skillSettings.addNode("reduction-manacost", 20f, -1f);
+		skillSettings.addNode(SkillNodes.DURATION, 30000, 500);
+		settings = skillSettings;
+		addSkillType(SkillType.UTILITY);
+		addSkillType(SkillType.PROTECTION);
+	}
 
-    @Override
-    public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
-        ManaShieldEffectModel manaShieldEffectModel = new ManaShieldEffectModel();
-        manaShieldEffectModel.duration = getLongNodeValue(info, SkillNodes.DURATION);
-        manaShieldEffectModel.reduction = getDoubleNodeValue(info, "reduction");
-        manaShieldEffectModel.reductionCost = getDoubleNodeValue(info, "reduction-manacost");
-        ManaShieldEffect effect = new ManaShieldEffect(character, manaShieldEffectModel);
-        effectService.addEffect(effect, character, this);
-        return SkillResult.OK;
-    }
+	@Override
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
+		ManaShieldEffectModel manaShieldEffectModel = new ManaShieldEffectModel();
+		manaShieldEffectModel.duration = getLongNodeValue(info, SkillNodes.DURATION);
+		manaShieldEffectModel.reduction = getDoubleNodeValue(info, "reduction");
+		manaShieldEffectModel.reductionCost = getDoubleNodeValue(info, "reduction-manacost");
+		ManaShieldEffect effect = new ManaShieldEffect(character, manaShieldEffectModel);
+		effectService.addEffect(effect, character, this);
+		return SkillResult.OK;
+	}
 }

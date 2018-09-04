@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.listeners;
@@ -70,7 +70,8 @@ public class RpgListener {
 			if (!event.getCharacterBases().isEmpty()) {
 				if (PluginConfig.PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR || event.getCharacterBases().size() == 1) {
 					NtRpgPlugin.asyncExecutor.execute(() -> {
-						final IActiveCharacter character = characterService.buildActiveCharacterAsynchronously(player, event.getCharacterBases().get(0));
+						final IActiveCharacter character =
+								characterService.buildActiveCharacterAsynchronously(player, event.getCharacterBases().get(0));
 						Sponge.getScheduler().createTaskBuilder().execute(() -> {
 							characterService.setActiveCharacter(event.getPlayer(), character);
 						}).submit(plugin);

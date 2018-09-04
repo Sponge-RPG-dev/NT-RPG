@@ -6,6 +6,7 @@ import org.spongepowered.api.item.ItemType;
  * Created by NeumimTo on 5.10.17.
  */
 public class RPGItemType {
+
 	private final ItemType itemType;
 	private final String displayName;
 	private final WeaponClass weaponClass;

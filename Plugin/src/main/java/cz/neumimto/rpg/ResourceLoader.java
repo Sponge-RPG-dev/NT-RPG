@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg;
@@ -151,8 +151,9 @@ public class ResourceLoader {
 	}
 
 	public void loadJarFile(File f, boolean main) {
-		if (f == null)
+		if (f == null) {
 			return;
+		}
 		JarFile file = null;
 		try {
 			file = new JarFile(f);
@@ -183,16 +184,18 @@ public class ResourceLoader {
 			if (next.isDirectory() || !next.getName().endsWith(".class")) {
 				continue;
 			}
-			if (main && !next.getName().startsWith("cz/neumimto"))
+			if (main && !next.getName().startsWith("cz/neumimto")) {
 				continue;
+			}
 			//todo place this into each modules
 			if (next.getName().startsWith("org")
 					|| next.getName().startsWith("spark")
 					|| next.getName().startsWith("javax")) {
 				continue;
 			}
-			if (next.getName().lastIndexOf(INNERCLASS_SEPARATOR) > 1)
+			if (next.getName().lastIndexOf(INNERCLASS_SEPARATOR) > 1) {
 				continue;
+			}
 			String className = next.getName().substring(0, next.getName().length() - 6);
 			className = className.replace('/', '.');
 			Class<?> clazz = null;
@@ -201,8 +204,8 @@ public class ResourceLoader {
 					ClassLoader classLoader = classLoaderMap.get(f.getName());
 					clazz = classLoader.loadClass(className);
 					info("ClassLoader for "
-							+ Console.GREEN_BOLD  + classLoader +
-							Console.RESET +" loaded class " +
+							+ Console.GREEN_BOLD + classLoader +
+							Console.RESET + " loaded class " +
 							Console.GREEN + clazz.getSimpleName() + Console.RESET, PluginConfig
 							.DEBUG);
 					loadClass(clazz, classLoader);
@@ -241,9 +244,9 @@ public class ResourceLoader {
 			ISkill skill = (ISkill) container;
 			Skill sk = clazz.getAnnotation(Skill.class);
 			if (sk.dynamicLocalizationNodes()) {
-				skill.setLocalizableName(localizationService.getText(sk.value()+".name"));
-				skill.setDescription(localizationService.getTextList(sk.value()+".description"));
-				skill.setLore(localizationService.getTextList(sk.value()+".lore"));
+				skill.setLocalizableName(localizationService.getText(sk.value() + ".name"));
+				skill.setDescription(localizationService.getTextList(sk.value() + ".description"));
+				skill.setLore(localizationService.getTextList(sk.value() + ".lore"));
 			}
 			if (skill.getLocalizableName() == null) {
 				String name = skill.getClass().getSimpleName();
@@ -290,20 +293,25 @@ public class ResourceLoader {
 
 	@Retention(RetentionPolicy.RUNTIME)
 	public @interface ListenerClass {
+
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
 	public @interface Skill {
+
 		String value();
+
 		boolean dynamicLocalizationNodes() default true;
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
 	public @interface Command {
+
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
 	public @interface Attribute {
+
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)

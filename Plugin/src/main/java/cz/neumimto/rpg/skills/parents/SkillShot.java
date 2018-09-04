@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.skills.parents;
@@ -52,7 +52,8 @@ public abstract class SkillShot extends ActiveSkill {
 		return SkillResult.CANCELLED;
 	}
 
-	protected abstract ProjectileProperties getProjectileProperties(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier, Projectile projectile);
+	protected abstract ProjectileProperties getProjectileProperties(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier,
+			Projectile projectile);
 
 	protected abstract Class<Projectile> getProjectile(IActiveCharacter character, ExtendedSkillInfo info);
 

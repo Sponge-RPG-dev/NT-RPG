@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.utils;
@@ -28,6 +28,7 @@ import java.util.function.Function;
  * Created by NeumimTo on 17.7.2015.
  */
 public class SASTask<T, U> {
+
 	Function<T, U> function;
 	Consumer<U> consumer;
 

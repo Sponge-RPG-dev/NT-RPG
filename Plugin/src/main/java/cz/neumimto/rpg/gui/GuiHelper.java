@@ -56,9 +56,8 @@ import java.util.Map;
  */
 public class GuiHelper {
 
-	private static NtRpgPlugin plugin;
-
 	public static Map<DamageType, CatalogTypeItemStackBuilder> damageTypeToItemStack = new HashMap<>();
+	private static NtRpgPlugin plugin;
 
 	static {
 		plugin = IoC.get().build(NtRpgPlugin.class);
@@ -94,8 +93,9 @@ public class GuiHelper {
 	}
 
 	public static ItemStack damageTypeToItemStack(DamageType type) {
-		if (type == null)
+		if (type == null) {
 			return itemStack(ItemTypes.STONE);
+		}
 		CatalogTypeItemStackBuilder a = damageTypeToItemStack.get(type);
 		ItemStack is = null;
 		if (a == null) {
@@ -116,7 +116,7 @@ public class GuiHelper {
 				.build(plugin);
 
 
-		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(2,2))).offer(createWeaponCommand(group));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(2, 2))).offer(createWeaponCommand(group));
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(3, 2))).offer(createArmorCommand(group));
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(2, 3))).offer(createAttributesCommand(group));
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(3, 3))).offer(createPropertyCommand(group));
@@ -229,8 +229,10 @@ public class GuiHelper {
 				.of(InventoryArchetypes.DOUBLE_CHEST)
 				.property(InventoryTitle.of(Localizations.SKILLTREE.toText()))
 				.property(AcceptsItems.of(Collections.EMPTY_LIST))
-				.listener(ClickInventoryEvent.Primary.class, event -> new SkillTreeInventoryListener().onOptionSelect(event, (Player) event.getCause().root()))
-				.listener(ClickInventoryEvent.Secondary.class, event -> new SkillTreeInventoryListener().onOptionSelect(event, (Player) event.getCause().root()))
+				.listener(ClickInventoryEvent.Primary.class,
+						event -> new SkillTreeInventoryListener().onOptionSelect(event, (Player) event.getCause().root()))
+				.listener(ClickInventoryEvent.Secondary.class,
+						event -> new SkillTreeInventoryListener().onOptionSelect(event, (Player) event.getCause().root()))
 				.build(plugin);
 
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 0))).offer(unclickableInterface());
@@ -239,7 +241,6 @@ public class GuiHelper {
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 3))).offer(unclickableInterface());
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 4))).offer(unclickableInterface());
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 5))).offer(unclickableInterface());
-
 
 
 		SkillTreeViewModel model = character.getSkillTreeViewLocation().get(skillTree.getId());
@@ -254,6 +255,7 @@ public class GuiHelper {
 
 		return i;
 	}
+
 	public static ItemStack createControlls(SkillTreeControllsButton button) {
 		ItemStack itemStack = VanillaMessaging.controlls.get(button).toItemStack();
 		itemStack.offer(new SkillTreeInventoryViewControllsData(button));
@@ -279,10 +281,10 @@ public class GuiHelper {
 	public static Inventory createSkillDetailInventoryView(IActiveCharacter character, String skillTree, SkillData skillData) {
 		Inventory build = Inventory.builder()
 				.of(InventoryArchetypes.DOUBLE_CHEST)
-			 	.build(plugin);
+				.build(plugin);
 
 		ItemStack back = back("skilltree", Localizations.SKILLTREE.toText());
-		build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0,0))).offer(back);
+		build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back);
 
 		if (skillData instanceof SkillPathData) {
 			SkillPathData data = (SkillPathData) skillData;
@@ -290,7 +292,7 @@ public class GuiHelper {
 			ItemStack of = itemStack(ItemTypes.PAPER);
 			of.offer(Keys.DISPLAY_NAME, Text.of("Tier " + data.getTier()));
 			of.offer(new MenuInventoryData(true));
-			build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(1,0))).offer(of);
+			build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(1, 0))).offer(of);
 
 			SkillService skillService = IoC.get().build(SkillService.class);
 
@@ -301,10 +303,10 @@ public class GuiHelper {
 				if (skill != null) {
 					ItemStack itemStack = skillToItemStack(character, character.getSkill(skill.getId()).getSkillData());
 					itemStack.offer(Keys.DISPLAY_NAME, Text
-							.builder(String.format("%+d",entry.getValue()) + " | " + entry.getKey())
+							.builder(String.format("%+d", entry.getValue()) + " | " + entry.getKey())
 							.color(entry.getValue() < 0 ? TextColors.RED : TextColors.DARK_GREEN)
 							.build());
-					build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(j,i))).offer(itemStack);
+					build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(j, i))).offer(itemStack);
 					if (j > 8) {
 						j = 0;
 						i++;
@@ -325,7 +327,7 @@ public class GuiHelper {
 
 			for (m = 0; m < 8; m++) {
 				for (n = 3; n < 5; n++) {
-					if (i > itemStacks.size() -1) {
+					if (i > itemStacks.size() - 1) {
 						return build;
 					}
 					build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(m, n))).offer(itemStacks.get(i));

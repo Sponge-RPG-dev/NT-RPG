@@ -10,23 +10,23 @@ import java.util.Optional;
 
 public class SkillConfigLoaderRegistry implements AdditionalCatalogRegistryModule<SkillConfigLoader> {
 
-    @RegisterCatalog(SkillConfigLoader.class)
-    private final Map<String, SkillConfigLoader> types = Maps.newHashMap();
+	@RegisterCatalog(SkillConfigLoader.class)
+	private final Map<String, SkillConfigLoader> types = Maps.newHashMap();
 
 
-    @Override
-    public void registerAdditionalCatalog(SkillConfigLoader extraCatalog) {
-        types.put(extraCatalog.getId(), extraCatalog);
-    }
+	@Override
+	public void registerAdditionalCatalog(SkillConfigLoader extraCatalog) {
+		types.put(extraCatalog.getId(), extraCatalog);
+	}
 
-    @Override
-    public Optional<SkillConfigLoader> getById(String id) {
-        return Optional.ofNullable(types.get(id.toLowerCase()));
-    }
+	@Override
+	public Optional<SkillConfigLoader> getById(String id) {
+		return Optional.ofNullable(types.get(id.toLowerCase()));
+	}
 
 
-    @Override
-    public Collection<SkillConfigLoader> getAll() {
-        return types.values();
-    }
+	@Override
+	public Collection<SkillConfigLoader> getAll() {
+		return types.values();
+	}
 }

@@ -15,33 +15,33 @@ import java.util.List;
  */
 public class TargettedScriptSkill extends Targetted implements ITargettedScriptSkill {
 
-    private TargettedScriptExecutorSkill executor;
+	private TargettedScriptExecutorSkill executor;
 
-    private ScriptSkillModel model;
+	private ScriptSkillModel model;
 
-    public void setModel(ScriptSkillModel model) {
-        this.model = model;
-        setLore(model.getLore());
-        setDamageType(model.getDamageType());
-        setDescription(model.getDescription());
-        setLocalizableName(model.getName());
-        List<SkillType> skillTypes = model.getSkillTypes();
-        skillTypes.forEach(super::addSkillType);
-    }
+	@Override
+	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info) {
+		return null;
+	}
 
-    @Override
-    public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info) {
-        return null;
-    }
+	public void setExecutor(TargettedScriptExecutorSkill ses) {
+		this.executor = ses;
+	}
 
-    public void setExecutor(TargettedScriptExecutorSkill ses) {
-        this.executor = ses;
-    }
+	@Override
+	public ScriptSkillModel getModel() {
+		return model;
+	}
 
-    @Override
-    public ScriptSkillModel getModel() {
-        return model;
-    }
+	public void setModel(ScriptSkillModel model) {
+		this.model = model;
+		setLore(model.getLore());
+		setDamageType(model.getDamageType());
+		setDescription(model.getDescription());
+		setLocalizableName(model.getName());
+		List<SkillType> skillTypes = model.getSkillTypes();
+		skillTypes.forEach(super::addSkillType);
+	}
 
 
 }

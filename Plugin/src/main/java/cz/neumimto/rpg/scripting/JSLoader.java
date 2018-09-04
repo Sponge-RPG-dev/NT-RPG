@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.scripting;
@@ -28,6 +28,7 @@ import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.configs.SkillsDefinition;
@@ -78,25 +79,22 @@ public class JSLoader {
 	private static ScriptEngine engine;
 
 	private static Path scripts_root = Paths.get(NtRpgPlugin.workingDir + "/scripts");
-
+	private static Object listener;
 	@Inject
 	private IoC ioc;
-
 	@Inject
 	private ClassGenerator classGenerator;
-
 	@Inject
 	private ResourceLoader resourceLoader;
-
 	@Inject
 	private NtRpgPlugin ntRpgPlugin;
-
 	@Inject
 	private SkillService skillService;
-
-	private static Object listener;
-
 	private Map<Class<?>, JsBinding.Type> dataToBind = new HashMap<>();
+
+	public static ScriptEngine getEngine() {
+		return engine;
+	}
 
 	public void initEngine() {
 		try {
@@ -116,9 +114,11 @@ public class JSLoader {
 		}
 	}
 
-	public void loadNashorn() throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+	public void loadNashorn()
+			throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
 		Object fct = Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory").newInstance();
-		engine = (ScriptEngine) fct.getClass().getMethod("getScriptEngine", String[].class, ClassLoader.class).invoke(fct, PluginConfig.JJS_ARGS.split(" "), Thread.currentThread().getContextClassLoader());
+		engine = (ScriptEngine) fct.getClass().getMethod("getScriptEngine", String[].class, ClassLoader.class)
+				.invoke(fct, PluginConfig.JJS_ARGS.split(" "), Thread.currentThread().getContextClassLoader());
 	}
 
 	private void setup() {
@@ -203,8 +203,6 @@ public class JSLoader {
 		Sponge.getGame().getEventManager().registerListeners(ioc.build(NtRpgPlugin.class), listener);
 	}
 
-
-
 	public void reloadSkills() {
 		Invocable invocable = (Invocable) engine;
 		try {
@@ -226,12 +224,18 @@ public class JSLoader {
 
 		info("Loading skills from file " + file.getName());
 		try {
-            URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{}, this.getClass().getClassLoader()) {
-                @Override
-                public String toString() {
-                    return "Internal - " + System.currentTimeMillis();
-                }
-            };
+			URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{}, this.getClass().getClassLoader()) {
+				@Override
+				public String toString() {
+					return "Internal - " + System.currentTimeMillis();
+				}
+
+				@Override
+				protected void finalize() throws Throwable {
+					super.finalize();
+					info("Removing URLClassloader " + toString(), DebugLevel.DEVELOP);
+				}
+			};
 			ObjectMapper<SkillsDefinition> mapper = ObjectMapper.forClass(SkillsDefinition.class);
 			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(file.toPath()).build();
 			SkillsDefinition definition = mapper.bind(new SkillsDefinition()).populate(hcl.load());
@@ -276,6 +280,10 @@ public class JSLoader {
 		}
 	}
 
+	public Map<Class<?>, JsBinding.Type> getDataToBind() {
+		return dataToBind;
+	}
+
 	public static class BindingsHelper {
 
 		private ScriptEngine scriptEngine;
@@ -295,14 +303,6 @@ public class JSLoader {
 		public Bindings getGlobalScopeKeys() {
 			return (Bindings) scriptEngine.getBindings(ScriptContext.GLOBAL_SCOPE).entrySet();
 		}
-	}
-
-	public Map<Class<?>, JsBinding.Type> getDataToBind() {
-		return dataToBind;
-	}
-
-	public static ScriptEngine getEngine() {
-		return engine;
 	}
 
 

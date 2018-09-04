@@ -13,14 +13,13 @@ public class SkillModifier {
 
 	private Map<SkillModifierType, SkillModifierData> map = new EnumMap<>(SkillModifierType.class);
 
-	public SkillModifierData getValueOf(SkillModifierType t) {
-		throw new NotImplementedException();
-	}
-
-
 	public static SkillModifier fromCommandArgs(String[] args) {
 		SkillModifier mod = new SkillModifier();
 		//todo
 		return null;
+	}
+
+	public SkillModifierData getValueOf(SkillModifierType t) {
+		throw new NotImplementedException();
 	}
 }

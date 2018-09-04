@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.persistance;
@@ -31,7 +31,6 @@ import com.typesafe.config.ConfigValue;
 import com.typesafe.config.ConfigValueType;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.EffectService;
@@ -289,10 +288,10 @@ public class GroupDao {
 		try {
 			List<String> allowedOffHandWeapons = c.getStringList("AllowedOffHandWeapons");
 			for (String allowedWeapon : allowedOffHandWeapons) {
-                ConfigRPGItemType configRPGItemType = weaponFromCSVString(allowedWeapon, group);
-                if (configRPGItemType != null) {
-                    group.addOffHandWeapon(configRPGItemType);
-                }
+				ConfigRPGItemType configRPGItemType = weaponFromCSVString(allowedWeapon, group);
+				if (configRPGItemType != null) {
+					group.addOffHandWeapon(configRPGItemType);
+				}
 			}
 		} catch (ConfigException e) {
 			warn(" - Missing configuration \"AllowedOffHandWeapons\", skipping");
@@ -301,10 +300,10 @@ public class GroupDao {
 		try {
 			List<String> allowedWeapons = c.getStringList("AllowedWeapons");
 			for (String allowedWeapon : allowedWeapons) {
-                ConfigRPGItemType configRPGItemType = weaponFromCSVString(allowedWeapon, group);
-                if (configRPGItemType != null) {
-                    group.addWeapon(configRPGItemType);
-                }
+				ConfigRPGItemType configRPGItemType = weaponFromCSVString(allowedWeapon, group);
+				if (configRPGItemType != null) {
+					group.addWeapon(configRPGItemType);
+				}
 			}
 		} catch (ConfigException e) {
 			warn(" - Missing configuration \"AllowedWeapons\", skipping");
@@ -321,7 +320,9 @@ public class GroupDao {
 					Optional<EntityType> type = game.getRegistry().getType(EntityType.class, m.getKey());
 					if (type.isPresent()) {
 						group.getProjectileDamage().put(type.get(), Double.parseDouble(m.getValue().render()));
-					} else warn("Defined invalid projectile type  " + m.getKey() + " in " + group.getName());
+					} else {
+						warn("Defined invalid projectile type  " + m.getKey() + " in " + group.getName());
+					}
 				}
 			}
 		} catch (ConfigException e) {
@@ -410,29 +411,30 @@ public class GroupDao {
 
 			Config effects = c.getConfig("Effects");
 			for (Map.Entry<String, ConfigValue> entry : effects.root().entrySet()) {
-					String effectName = entry.getKey();
-					ConfigValueType type = entry.getValue().valueType();
-					EffectParams value = new EffectParams();
-					IGlobalEffect globalEffect = effectService.getGlobalEffect(effectName);
-					if (globalEffect == null) {
-						warn(globalEffect + " not found");
-						continue;
-					}
-					switch (type) {
-						case NULL:
-							break;
-						case STRING:
-							value.put(effectName, entry.getValue().render());
-							break;
-						case OBJECT:
-							ConfigObject object = (ConfigObject) entry.getValue();
-							Map<String, Object> unwrapped1 = object.unwrapped();
-							for (Map.Entry<String, Object> stringObjectEntry : unwrapped1.entrySet()) {
-								value.put(stringObjectEntry.getKey(), stringObjectEntry.getValue() != null ? stringObjectEntry.getValue().toString() : null);
-							}
+				String effectName = entry.getKey();
+				ConfigValueType type = entry.getValue().valueType();
+				EffectParams value = new EffectParams();
+				IGlobalEffect globalEffect = effectService.getGlobalEffect(effectName);
+				if (globalEffect == null) {
+					warn(globalEffect + " not found");
+					continue;
+				}
+				switch (type) {
+					case NULL:
+						break;
+					case STRING:
+						value.put(effectName, entry.getValue().render());
+						break;
+					case OBJECT:
+						ConfigObject object = (ConfigObject) entry.getValue();
+						Map<String, Object> unwrapped1 = object.unwrapped();
+						for (Map.Entry<String, Object> stringObjectEntry : unwrapped1.entrySet()) {
+							value.put(stringObjectEntry.getKey(),
+									stringObjectEntry.getValue() != null ? stringObjectEntry.getValue().toString() : null);
+						}
 
-					}
-					group.getEffects().put(globalEffect, value);
+				}
+				group.getEffects().put(globalEffect, value);
 			}
 		} catch (ConfigException e) {
 			warn(" - Missing configuration \"Effects\", skipping");

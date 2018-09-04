@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg;
@@ -45,10 +45,9 @@ import java.util.Set;
 public class GroupService {
 
 	@Inject
-	private GroupDao groupDao;
-
-	@Inject
 	DamageService damageService;
+	@Inject
+	private GroupDao groupDao;
 
 	public GroupService() {
 
@@ -150,10 +149,12 @@ public class GroupService {
 	}
 
 	public PlayerGroup getByName(String arg) {
-		if (existsClass(arg))
+		if (existsClass(arg)) {
 			return getNClass(arg);
-		if (existsRace(arg))
+		}
+		if (existsRace(arg)) {
 			return getRace(arg);
+		}
 		return null;
 	}
 

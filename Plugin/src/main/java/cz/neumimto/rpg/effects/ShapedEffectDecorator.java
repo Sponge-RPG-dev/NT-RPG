@@ -7,9 +7,9 @@ import com.flowpowered.math.vector.Vector3d;
  */
 public abstract class ShapedEffectDecorator<Value> extends EffectBase<Value> {
 
+	int iter = 0;
 	private int printerCount;
 	private int q = 0;
-	int iter = 0;
 
 	public ShapedEffectDecorator(String name, IEffectConsumer consumers) {
 		super(name, consumers);
@@ -33,8 +33,9 @@ public abstract class ShapedEffectDecorator<Value> extends EffectBase<Value> {
 
 
 	public int getIndex(int i) {
-		if (i < 0)
+		if (i < 0) {
 			return 0;
+		}
 		if (i > getVertices().length - 1) {
 			while (i > getVertices().length - 1) {
 				i -= getVertices().length - 1;

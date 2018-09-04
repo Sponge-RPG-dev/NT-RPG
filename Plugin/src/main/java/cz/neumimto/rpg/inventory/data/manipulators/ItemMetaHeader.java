@@ -22,124 +22,125 @@ import java.util.Optional;
  */
 public class ItemMetaHeader extends AbstractSingleData<Text, ItemMetaHeader, ItemMetaHeader.Immutable> {
 
-    public ItemMetaHeader() {
-        this(Text.EMPTY);
-    }
+	public ItemMetaHeader() {
+		this(Text.EMPTY);
+	}
 
-    public ItemMetaHeader(Text rarity) {
-        super(rarity, NKeys.ITEM_META_HEADER);
-        registerGettersAndSetters();
-    }
+	public ItemMetaHeader(Text rarity) {
+		super(rarity, NKeys.ITEM_META_HEADER);
+		registerGettersAndSetters();
+	}
 
-    @Override
-    public Optional<ItemMetaHeader> fill(DataHolder dataHolder, MergeFunction overlap) {
-        Optional<ItemMetaHeader> a = dataHolder.get(ItemMetaHeader.class);
-        if (a.isPresent()) {
-            ItemMetaHeader otherData = a.get();
-            ItemMetaHeader finalData = overlap.merge(this, otherData);
-            setValue(finalData.getValue());
-        }
-        return Optional.of(this);
-    }
-
-
-    @Override
-    public Optional<ItemMetaHeader> from(DataContainer container) {
-        return from((DataView) container);
-    }
-
-    public Optional<ItemMetaHeader> from(DataView view) {
-        if (view.contains(NKeys.ITEM_META_HEADER.getQuery())) {
-            setValue((Text) view.get(NKeys.ITEM_META_HEADER.getQuery()).get());
-            return Optional.of(this);
-        } else {
-            return Optional.empty();
-        }
-    }
-
-    @Override
-    public ItemMetaHeader copy() {
-        return new ItemMetaHeader(getValue());
-    }
-
-    @Override
-    protected Value<Text> getValueGetter() {
-        return Sponge.getRegistry().getValueFactory().createValue(NKeys.ITEM_META_HEADER, getValue());
-    }
-
-    @Override
-    public ItemMetaHeader.Immutable asImmutable() {
-        return new ItemMetaHeader.Immutable(getValue());
-    }
-
-    @Override
-    public int getContentVersion() {
-        return ItemMetaHeader.Builder.CONTENT_VERSION;
-    }
-
-    @Override
-    public DataContainer toContainer() {
-        DataContainer dataContainer = super.toContainer();
-        dataContainer.set(NKeys.ITEM_META_HEADER, getValue());
-        return dataContainer;
-    }
-
-    public class Immutable extends AbstractImmutableSingleData<Text, Immutable, ItemMetaHeader> {
+	@Override
+	public Optional<ItemMetaHeader> fill(DataHolder dataHolder, MergeFunction overlap) {
+		Optional<ItemMetaHeader> a = dataHolder.get(ItemMetaHeader.class);
+		if (a.isPresent()) {
+			ItemMetaHeader otherData = a.get();
+			ItemMetaHeader finalData = overlap.merge(this, otherData);
+			setValue(finalData.getValue());
+		}
+		return Optional.of(this);
+	}
 
 
-        public Immutable(Text rarity) {
-            super(rarity, NKeys.ITEM_META_HEADER);
-            registerGetters();
-        }
+	@Override
+	public Optional<ItemMetaHeader> from(DataContainer container) {
+		return from((DataView) container);
+	}
 
-        public Immutable() {
-            this(Text.EMPTY);
-        }
+	public Optional<ItemMetaHeader> from(DataView view) {
+		if (view.contains(NKeys.ITEM_META_HEADER.getQuery())) {
+			setValue((Text) view.get(NKeys.ITEM_META_HEADER.getQuery()).get());
+			return Optional.of(this);
+		} else {
+			return Optional.empty();
+		}
+	}
 
-        @Override
-        public int getContentVersion() {
-            return ItemMetaHeader.Builder.CONTENT_VERSION;
-        }
+	@Override
+	public ItemMetaHeader copy() {
+		return new ItemMetaHeader(getValue());
+	}
 
-        @Override
-        public DataContainer toContainer() {
-            DataContainer dataContainer = super.toContainer();
-            dataContainer.set(NKeys.ITEM_META_HEADER, getValue());
-            return dataContainer;
-        }
+	@Override
+	protected Value<Text> getValueGetter() {
+		return Sponge.getRegistry().getValueFactory().createValue(NKeys.ITEM_META_HEADER, getValue());
+	}
 
-        @Override
-        protected ImmutableValue<Text> getValueGetter() {
-            return Sponge.getRegistry().getValueFactory().createValue(NKeys.ITEM_META_HEADER, getValue()).asImmutable();
-        }
+	@Override
+	public ItemMetaHeader.Immutable asImmutable() {
+		return new ItemMetaHeader.Immutable(getValue());
+	}
 
-        @Override
-        public ItemMetaHeader asMutable() {
-            return new ItemMetaHeader(getValue());
-        }
-    }
+	@Override
+	public int getContentVersion() {
+		return ItemMetaHeader.Builder.CONTENT_VERSION;
+	}
 
-    public static class Builder extends AbstractDataBuilder<ItemMetaHeader> implements DataManipulatorBuilder<ItemMetaHeader, Immutable> {
-        public static final int CONTENT_VERSION = 1;
+	@Override
+	public DataContainer toContainer() {
+		DataContainer dataContainer = super.toContainer();
+		dataContainer.set(NKeys.ITEM_META_HEADER, getValue());
+		return dataContainer;
+	}
 
-        public Builder() {
-            super(ItemMetaHeader.class, CONTENT_VERSION);
-        }
+	public static class Builder extends AbstractDataBuilder<ItemMetaHeader> implements DataManipulatorBuilder<ItemMetaHeader, Immutable> {
 
-        @Override
-        public ItemMetaHeader create() {
-            return new ItemMetaHeader();
-        }
+		public static final int CONTENT_VERSION = 1;
 
-        @Override
-        public Optional<ItemMetaHeader> createFrom(DataHolder dataHolder) {
-            return create().fill(dataHolder);
-        }
+		public Builder() {
+			super(ItemMetaHeader.class, CONTENT_VERSION);
+		}
 
-        @Override
-        protected Optional<ItemMetaHeader> buildContent(DataView container) throws InvalidDataException {
-            return create().from(container);
-        }
-    }
+		@Override
+		public ItemMetaHeader create() {
+			return new ItemMetaHeader();
+		}
+
+		@Override
+		public Optional<ItemMetaHeader> createFrom(DataHolder dataHolder) {
+			return create().fill(dataHolder);
+		}
+
+		@Override
+		protected Optional<ItemMetaHeader> buildContent(DataView container) throws InvalidDataException {
+			return create().from(container);
+		}
+	}
+
+	public class Immutable extends AbstractImmutableSingleData<Text, Immutable, ItemMetaHeader> {
+
+
+		public Immutable(Text rarity) {
+			super(rarity, NKeys.ITEM_META_HEADER);
+			registerGetters();
+		}
+
+		public Immutable() {
+			this(Text.EMPTY);
+		}
+
+		@Override
+		public int getContentVersion() {
+			return ItemMetaHeader.Builder.CONTENT_VERSION;
+		}
+
+		@Override
+		public DataContainer toContainer() {
+			DataContainer dataContainer = super.toContainer();
+			dataContainer.set(NKeys.ITEM_META_HEADER, getValue());
+			return dataContainer;
+		}
+
+		@Override
+		protected ImmutableValue<Text> getValueGetter() {
+			return Sponge.getRegistry().getValueFactory().createValue(NKeys.ITEM_META_HEADER, getValue()).asImmutable();
+		}
+
+		@Override
+		public ItemMetaHeader asMutable() {
+			return new ItemMetaHeader(getValue());
+		}
+	}
 
 }

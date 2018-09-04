@@ -21,7 +21,7 @@ import org.spongepowered.api.world.extent.Extent;
 public class StunEffect extends ShapedEffectDecorator<Location<World>> {
 
 	public static final String name = "Stun";
-	private static final Vector3d vec3d = new Vector3d(0,2,0);
+	private static final Vector3d vec3d = new Vector3d(0, 2, 0);
 	private static final long tickRate = 50L;
 
 	private static ParticleEffect particleEffect = ParticleEffect.builder()

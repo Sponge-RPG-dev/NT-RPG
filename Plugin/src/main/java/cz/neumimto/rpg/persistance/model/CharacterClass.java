@@ -2,7 +2,13 @@ package cz.neumimto.rpg.persistance.model;
 
 import cz.neumimto.rpg.players.CharacterBase;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  * Created by ja on 8.10.2016.
@@ -10,22 +16,17 @@ import javax.persistence.*;
 @Entity(name = "rpg_character_class")
 public class CharacterClass {
 
+	@Column(name = "skillpoints")
+	protected int skillPoints;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long classId;
-
 	@ManyToOne
 	@JoinColumn(name = "characterId")
 	private CharacterBase characterBase;
-
 	@Column(name = "experiences")
 	private Double experiences;
-
 	private String name;
-
-	@Column(name = "skillpoints")
-	protected int skillPoints;
-
 	@Column(name = "used_skil_points")
 	private int usedSkillPoints;
 
@@ -79,8 +80,12 @@ public class CharacterClass {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
 		CharacterClass that = (CharacterClass) o;
 

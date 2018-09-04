@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.configuration;
@@ -51,7 +51,8 @@ public class PluginConfig {
 	@Comment(content = {"Ingame debug output. NONE - recommended level for your production server;" +
 			" BALANCE - useful while you are balancing stuff it prints out incoming and outgoing damage, or you are setting up inventories," +
 			" DEVELOP - very detailed logging, useful only for developers " +
-			"!!!If you encounter any exceptions during server startup you will be asked to provide logs. For the developers are useful only logs created with DEBUG mode set to DEVELOP !!!"})
+			"!!!If you encounter any exceptions during server startup you will be asked to provide logs. For the developers are useful only logs "
+			+ "created with DEBUG mode set to DEVELOP !!!"})
 	public static DebugLevel DEBUG = DebugLevel.BALANCE;
 
 	@ConfigValue
@@ -124,9 +125,10 @@ public class PluginConfig {
 
 
 	@ConfigValue
-	@Comment(content = {"If a player chooses a race and a class, where both those groups define damage value for one specific weapon, or projectile" +
-			" this option specifies how the weapon damage will be calculated."+
-			"1 = sum"+
+	@Comment(content = {"If a player chooses a race and a class, where both those groups define damage value for one specific weapon, or "
+			+ "projectile" +
+			" this option specifies how the weapon damage will be calculated." +
+			"1 = sum" +
 			"2 = take highest value"})
 	public static int WEAPON_MERGE_STRATEGY = 2;
 
@@ -143,13 +145,13 @@ public class PluginConfig {
 	public static boolean SHIFT_CANCELS_COMBO = false;
 
 	@ConfigValue
-	@Comment(content = {"Recognizes pressing Q key (/throwing an item out of inventory) as the click combo option 'Q'"+
-			 " This action has priority over throwing item out of the inventory. Click combo may not start whit this action"})
+	@Comment(content = {"Recognizes pressing Q key (/throwing an item out of inventory) as the click combo option 'Q'" +
+			" This action has priority over throwing item out of the inventory. Click combo may not start whit this action"})
 	public static boolean ENABLED_Q;
 
 	@ConfigValue
-	@Comment(content = {"Recognizes pressing E key (/opening player inventory) as the click combo option 'E'"+
-			 " This action has priority over opening players' inventory. Click combo may not start whit this action"})
+	@Comment(content = {"Recognizes pressing E key (/opening player inventory) as the click combo option 'E'" +
+			" This action has priority over opening players' inventory. Click combo may not start whit this action"})
 	public static boolean ENABLED_E;
 
 	@ConfigValue
@@ -222,12 +224,16 @@ public class PluginConfig {
 	*/
 
 	@ConfigValue
-	@Comment(content = "Plugins attempt to create a list of items present on the server, which might fall into categories of weapons/armors/shields. The final list might, or might not be complete.")
+	@Comment(
+			content = "Plugins attempt to create a list of items present on the server, which might fall into categories of weapons/armors/shields. "
+					+ "The final list might, or might not be complete.")
 	public static boolean AUTODISCOVER_ITEMS = true;
 
 
 	@ConfigValue
-	@Comment(content = "If set to true plugin will generate first character right after log-in, for a players which do not have one yet. The new character has same name as the player. New players wont have to run command /char c playername<")
+	@Comment(
+			content = "If set to true plugin will generate first character right after log-in, for a players which do not have one yet. The new "
+					+ "character has same name as the player. New players wont have to run command /char c playername<")
 	public static boolean CREATE_FIRST_CHAR_AFTER_LOGIN = true;
 
 	@ConfigValue

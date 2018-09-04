@@ -20,7 +20,6 @@ public class CommandHP extends CommandBase {
 	private CharacterService characterService;
 
 
-
 	public CommandHP() {
 		addAlias("hp");
 	}

@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.configuration;
@@ -27,7 +27,7 @@ import cz.neumimto.configuration.ConfigurationContainer;
 @ConfigurationContainer(path = "{WorkingDir}", filename = "CommandLocalization.conf")
 public class CommandLocalization {
 
-    @ConfigValue
+	@ConfigValue
 	public static String COMMAND_ADMIN_ENCHANT = "&2Enchants held item with custom enchantment";
 	@ConfigValue
 	public static String COMMAND_ADMIN_DESC = "&2Access to administration commands";
@@ -48,10 +48,10 @@ public class CommandLocalization {
 	public static String COMMAND_ADMIN_RUNEWORD = "&2Tries to insert runeword into held item";
 
 	@ConfigValue
-	public static String COMMAND_ADMIN_EXP_ADD  = "&2Adds experience to specific player and class";
+	public static String COMMAND_ADMIN_EXP_ADD = "&2Adds experience to specific player and class";
 
 	@ConfigValue
-	public static String COMMAND_ADMIN_RELOAD  = "&2Reloads specific resource";
+	public static String COMMAND_ADMIN_RELOAD = "&2Reloads specific resource";
 
 	@ConfigValue
 	public static String COMMAND_BIND_DESC = "&2Binds skill to an item";
@@ -63,7 +63,8 @@ public class CommandLocalization {
 	public static String COMMAND_HP_DESC = "&2Health";
 
 	@ConfigValue
-	public static String COMMAND_SKILL_REFUND = "Refund a skill, refunding gives back skillpoints. Depending on server's settings class specialization may not be refunded";
+	public static String COMMAND_SKILL_REFUND =
+			"Refund a skill, refunding gives back skillpoints. Depending on server's settings class specialization may not be refunded";
 
 	@ConfigValue
 	public static String COMMAND_SKILL_UPGRADE = "Level up a skill";

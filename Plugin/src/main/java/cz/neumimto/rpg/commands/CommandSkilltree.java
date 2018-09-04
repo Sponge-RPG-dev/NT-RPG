@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.commands;
@@ -38,6 +38,7 @@ import org.spongepowered.api.entity.living.player.Player;
  */
 @ResourceLoader.Command
 public class CommandSkilltree extends CommandBase {
+
 	@Inject
 	private GroupService groupService;
 
@@ -51,14 +52,14 @@ public class CommandSkilltree extends CommandBase {
 
 	@Override
 	public CommandResult process(CommandSource commandSource, String s) {
-		Player p =(Player) commandSource;
+		Player p = (Player) commandSource;
 		IActiveCharacter character = characterService.getCharacter(p);
 		if (character.isStub()) {
 			p.sendMessage(Localizations.CHARACTER_IS_REQUIRED.toText());
 			return CommandResult.empty();
 		}
 		ConfigClass configClass;
-		if ("".equals(s.trim()) ) {
+		if ("".equals(s.trim())) {
 			configClass = character.getPrimaryClass().getConfigClass();
 		} else {
 			configClass = groupService.getNClass(s);
@@ -71,7 +72,7 @@ public class CommandSkilltree extends CommandBase {
 		for (SkillTreeViewModel treeViewModel : character.getSkillTreeViewLocation().values()) {
 			treeViewModel.setCurrent(false);
 		}
-		if (character.getSkillTreeViewLocation().get(skillTree.getId()) == null){
+		if (character.getSkillTreeViewLocation().get(skillTree.getId()) == null) {
 			SkillTreeViewModel skillTreeViewModel = new SkillTreeViewModel();
 			character.getSkillTreeViewLocation().put(skillTree.getId(), skillTreeViewModel);
 			skillTreeViewModel.setSkillTree(skillTree);

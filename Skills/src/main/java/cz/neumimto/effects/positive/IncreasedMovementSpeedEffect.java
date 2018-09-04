@@ -37,8 +37,9 @@ public class IncreasedMovementSpeedEffect extends EffectBase<Float> {
 
 	@Override
 	public void setValue(Float o) {
-		if (getValue() != null)
+		if (getValue() != null) {
 			throw new IllegalStateException("Operation permited");
+		}
 		super.setValue(o);
 	}
 }

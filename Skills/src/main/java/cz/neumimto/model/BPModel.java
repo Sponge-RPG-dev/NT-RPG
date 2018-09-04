@@ -14,8 +14,9 @@ public class BPModel implements UnstackableEffectData<BPModel> {
 
 	@Override
 	public int compareTo(BPModel o) {
-		if (o == null)
+		if (o == null) {
 			return -1;
+		}
 
 		return (int) ((int) (o.period + o.damage + o.radius) - (period + damage + radius));
 	}

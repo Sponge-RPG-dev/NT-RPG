@@ -12,10 +12,10 @@ import cz.neumimto.rpg.scripting.JsBinding;
 @JsBinding(JsBinding.Type.CLASS)
 public class ConductivityEffect extends SingleResistanceValueEffect {
 
-    public static final String name = "Conductivity";
+	public static final String name = "Conductivity";
 
-    public ConductivityEffect(IEffectConsumer consumer, long duration, @Inject Float value) {
-       	super(name, consumer, DefaultProperties.lightning_damage_protection_mult, value);
-        setDuration(duration);
-    }
+	public ConductivityEffect(IEffectConsumer consumer, long duration, @Inject Float value) {
+		super(name, consumer, DefaultProperties.lightning_damage_protection_mult, value);
+		setDuration(duration);
+	}
 }

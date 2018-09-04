@@ -12,94 +12,95 @@ import java.util.Map;
 public abstract class SingleValueModelMapper extends EffectModelMapper {
 
 
-    public SingleValueModelMapper(Class<?> type) {
-        super(type);
-    }
+	public SingleValueModelMapper(Class<?> type) {
+		super(type);
+	}
 
-    @Override
-    public Object parse(Map<String, String> map) {
-        if (map == null)
-            return null;
-        if (map.size() != 1)
-            throw new RuntimeException("SingleValueModelMapper but map.size <> 1" + new Gson().toJson(map));
-        return parseStr(map.values().stream().findFirst().get());
-    }
+	@Override
+	public Object parse(Map<String, String> map) {
+		if (map == null) {
+			return null;
+		}
+		if (map.size() != 1) {
+			throw new RuntimeException("SingleValueModelMapper but map.size <> 1" + new Gson().toJson(map));
+		}
+		return parseStr(map.values().stream().findFirst().get());
+	}
 
-    public abstract Object parseStr(String s);
-
-
-
-    public static class Int extends SingleValueModelMapper {
-
-        public Int(Class<?> type) {
-            super(type);
-        }
+	public abstract Object parseStr(String s);
 
 
-        @Override
-        public Object parseStr(String s) {
-            return Integer.parseInt(Utils.extractNumber(s));
-        }
-    }
+	public static class Int extends SingleValueModelMapper {
 
-    public static class Double extends SingleValueModelMapper {
-
-        public Double(Class<?> type) {
-            super(type);
-        }
-
-        @Override
-        public Object parseStr(String s) {
-            return java.lang.Double.parseDouble(Utils.extractNumber(s));
-        }
-    }
-
-    public static class Float extends SingleValueModelMapper {
-
-        public Float(Class<?> type) {
-            super(type);
-        }
-
-        @Override
-        public Object parseStr(String s) {
-            return java.lang.Float.parseFloat(Utils.extractNumber(s));
-        }
-    }
-
-    public static class Long extends SingleValueModelMapper {
-
-        public Long(Class<?> type) {
-            super(type);
-        }
-
-        @Override
-        public Object parseStr(String s) {
-            return java.lang.Float.parseFloat(Utils.extractNumber(s));
-        }
-    }
-
-    public static class Str extends SingleValueModelMapper {
-
-        public Str(Class<?> type) {
-            super(type);
-        }
-
-        @Override
-        public Object parseStr(String s) {
-            return s;
-        }
-    }
+		public Int(Class<?> type) {
+			super(type);
+		}
 
 
-    public static class Void extends EffectModelMapper {
+		@Override
+		public Object parseStr(String s) {
+			return Integer.parseInt(Utils.extractNumber(s));
+		}
+	}
 
-        public Void() {
-            super(Void.class);
-        }
+	public static class Double extends SingleValueModelMapper {
 
-        @Override
-        public Object parse(Map<String, String> map) {
-            return null;
-        }
-    }
+		public Double(Class<?> type) {
+			super(type);
+		}
+
+		@Override
+		public Object parseStr(String s) {
+			return java.lang.Double.parseDouble(Utils.extractNumber(s));
+		}
+	}
+
+	public static class Float extends SingleValueModelMapper {
+
+		public Float(Class<?> type) {
+			super(type);
+		}
+
+		@Override
+		public Object parseStr(String s) {
+			return java.lang.Float.parseFloat(Utils.extractNumber(s));
+		}
+	}
+
+	public static class Long extends SingleValueModelMapper {
+
+		public Long(Class<?> type) {
+			super(type);
+		}
+
+		@Override
+		public Object parseStr(String s) {
+			return java.lang.Float.parseFloat(Utils.extractNumber(s));
+		}
+	}
+
+	public static class Str extends SingleValueModelMapper {
+
+		public Str(Class<?> type) {
+			super(type);
+		}
+
+		@Override
+		public Object parseStr(String s) {
+			return s;
+		}
+	}
+
+
+	public static class Void extends EffectModelMapper {
+
+		public Void() {
+			super(Void.class);
+		}
+
+		@Override
+		public Object parse(Map<String, String> map) {
+			return null;
+		}
+	}
 }

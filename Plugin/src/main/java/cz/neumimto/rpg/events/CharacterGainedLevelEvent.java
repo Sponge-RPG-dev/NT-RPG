@@ -9,12 +9,14 @@ import cz.neumimto.rpg.scripting.JsBinding;
  */
 @JsBinding(JsBinding.Type.CLASS)
 public class CharacterGainedLevelEvent extends CharacterEvent {
+
 	private final ExtendedNClass aClass;
 	private final int level;
 	private int skillpointsPerLevel;
 	private int attributepointsPerLevel;
 
-	public CharacterGainedLevelEvent(IActiveCharacter character, ExtendedNClass aClass, int level, int skillpointsPerLevel, int attributepointsPerLevel) {
+	public CharacterGainedLevelEvent(IActiveCharacter character, ExtendedNClass aClass, int level, int skillpointsPerLevel,
+			int attributepointsPerLevel) {
 		super(character);
 		this.aClass = aClass;
 		this.level = level;
