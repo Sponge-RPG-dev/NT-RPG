@@ -3,6 +3,7 @@ package cz.neumimto.rpg.persistance.model;
 import cz.neumimto.rpg.players.CharacterBase;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,6 +19,7 @@ public class BaseCharacterAttribute {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "attribute_id")
 	private Long id;
 
 	@ManyToOne(cascade = CascadeType.ALL)

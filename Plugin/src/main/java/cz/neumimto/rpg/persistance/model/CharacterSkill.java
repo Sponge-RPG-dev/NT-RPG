@@ -23,16 +23,16 @@ public class CharacterSkill {
 	private Long skillId;
 
 	@ManyToOne
-	@JoinColumn(name = "characterId")
+	@JoinColumn(name = "character_id")
 	private CharacterBase characterBase;
 
 	private int level;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "classId", nullable = true)
+	@JoinColumn(name = "class_id", nullable = true)
 	private CharacterClass fromClass;
 
-	@Column(name = "catalogId")
+	@Column(name = "catalog_id")
 	private String catalogId;
 
 	public Long getId() {
