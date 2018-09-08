@@ -30,6 +30,7 @@ import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizationService;
 import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.core.migrations.DbMigrationService;
 import cz.neumimto.rpg.commands.AnyPlayerGroupCommandElement;
 import cz.neumimto.rpg.commands.AnySkillCommandElement;
 import cz.neumimto.rpg.commands.CharacterAttributeCommandElement;
@@ -122,6 +123,7 @@ import me.rojo8399.placeholderapi.PlaceholderService;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
@@ -131,6 +133,7 @@ import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.game.GameRegistryEvent;
 import org.spongepowered.api.event.game.state.GamePostInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
@@ -180,11 +183,15 @@ public class NtRpgPlugin {
 	public static SpongeExecutorService asyncExecutor;
 	@Inject
 	public Logger logger;
+
 	@Inject
 	PluginContainer plugin;
+
 	@Inject
 	@ConfigDir(sharedRoot = false)
 	private Path config;
+
+
 
 	@Listener
 	public void preinit(GamePreInitializationEvent e) {
@@ -408,6 +415,16 @@ public class NtRpgPlugin {
 		event.register(ExperienceSources.MINING);
 		event.register(ExperienceSources.LOGGING);
 		event.register(ExperienceSources.QUESTING);
+	}
+
+	@Listener(order = Order.LAST)
+	public void onPreIniti(GamePreInitializationEvent event) {
+		DbMigrationService dms = IoC.get().build(DbMigrationService.class);
+		String s = "nt-rpg";
+		dms.requestMigration(s);
+		Optional<Asset> sql = Sponge.getAssetManager().getAsset(this, "sql");
+		dms.se
+		dms.scopeFinished(s);
 	}
 
 	@Listener
