@@ -1,5 +1,5 @@
 --@author:NeumimTo
---@date:04.09.2018
+--@date:04.09.2018 01:00
 --@note:Initial setup
 --@id:init-db
 CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_CLASSID START WITH 1 BELONGS_TO_TABLE;
