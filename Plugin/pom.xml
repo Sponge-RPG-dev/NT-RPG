@@ -51,8 +51,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.NeumimTo</groupId>
+            <groupId>cz.neumimto</groupId>
             <artifactId>NTCore</artifactId>
+            <version>1.13-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.github.NeumimTo</groupId>

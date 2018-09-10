@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.inject.Inject;
 import cz.neumimto.configuration.ConfigMapper;
+import cz.neumimto.core.FindDbSchemaMigrationsEvent;
 import cz.neumimto.core.FindPersistenceContextEvent;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.localization.Arg;
@@ -152,17 +153,11 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -172,7 +167,8 @@ import javax.annotation.Resource;
  * Created by NeumimTo on 29.4.2015.
  */
 @Plugin(id = "nt-rpg", version = cz.neumimto.rpg.Version.VERSION, name = "NT-Rpg", dependencies = {
-		@Dependency(id = "nt-core", version = "1.13", optional = false)
+		@Dependency(id = "nt-core", version = "1.13", optional = false),
+		@Dependency(id = "placeholderapi", optional = true)
 })
 @Resource
 public class NtRpgPlugin {
@@ -181,6 +177,7 @@ public class NtRpgPlugin {
 	public static File pluginjar;
 	public static GlobalScope GlobalScope;
 	public static SpongeExecutorService asyncExecutor;
+
 	@Inject
 	public Logger logger;
 
@@ -417,14 +414,19 @@ public class NtRpgPlugin {
 		event.register(ExperienceSources.QUESTING);
 	}
 
-	@Listener(order = Order.LAST)
-	public void onPreIniti(GamePreInitializationEvent event) {
+	@Listener
+	public void onFindDbSchemaMigrationsEvent(FindDbSchemaMigrationsEvent event) throws IOException {
 		DbMigrationService dms = IoC.get().build(DbMigrationService.class);
 		String s = "nt-rpg";
-		dms.requestMigration(s);
-		Optional<Asset> sql = Sponge.getAssetManager().getAsset(this, "sql");
-		dms.se
-		dms.scopeFinished(s);
+		List<String> migrations = Arrays.asList(
+				"sql/%s/040918-init-db.sql"
+		);
+
+		for (String migration : migrations) {
+			migration = migration.replaceAll("%s", dms.getDatabaseProductName().toLowerCase());
+			Optional<Asset> sql = Sponge.getAssetManager().getAsset(this, migration);
+			dms.addMigration(sql.get().readString(Charset.forName("UTF-8")));
+		}
 	}
 
 	@Listener

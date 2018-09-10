@@ -47,7 +47,7 @@ public class SkillConfigLoader implements CatalogType {
 		Object o = null;
 		try {
 			o = rl.loadClass(value, getClass().getClassLoader());
-		} catch (IllegalAccessException | CannotCompileException | InstantiationException e) {
+		} catch (IllegalAccessException | InstantiationException e) {
 			e.printStackTrace();
 		}
 		return (ISkill) o;
