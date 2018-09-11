@@ -23,7 +23,7 @@ public class BaseCharacterAttribute {
 	private Long id;
 
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "characterId", nullable = false)
+	@JoinColumn(name = "character_id", nullable = false)
 	private CharacterBase characterBase;
 
 	private String name;

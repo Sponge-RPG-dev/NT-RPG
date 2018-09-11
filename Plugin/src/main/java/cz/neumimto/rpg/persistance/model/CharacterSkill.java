@@ -20,6 +20,7 @@ public class CharacterSkill {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "skill_id")
 	private Long skillId;
 
 	@ManyToOne

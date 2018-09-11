@@ -22,6 +22,7 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import java.util.Date;
 
 /**
  * Created by NeumimTo on 24.7.2015.
@@ -30,33 +31,34 @@ import javax.persistence.PreUpdate;
 public abstract class TimestampEntity {
 
 	@Column(name = "updated")
-	public Long updated;
+	public Date updated;
+
 	@Column(name = "created")
-	private Long created;
+	private Date created;
 
 	@PrePersist
 	public void onCreate() {
-		updated = created = System.currentTimeMillis();
+		updated = created = new Date();
 	}
 
 	@PreUpdate
 	public void onUpdate() {
-		updated = System.currentTimeMillis();
+		updated = new Date();
 	}
 
-	public Long getUpdated() {
+	public Date getUpdated() {
 		return updated;
 	}
 
-	public void setUpdated(Long updated) {
+	public void setUpdated(Date updated) {
 		this.updated = updated;
 	}
 
-	public Long getCreated() {
+	public Date getCreated() {
 		return created;
 	}
 
-	public void setCreated(Long created) {
+	public void setCreated(Date created) {
 		this.created = created;
 	}
 }

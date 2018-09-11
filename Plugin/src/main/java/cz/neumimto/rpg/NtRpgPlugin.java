@@ -417,7 +417,6 @@ public class NtRpgPlugin {
 	@Listener
 	public void onFindDbSchemaMigrationsEvent(FindDbSchemaMigrationsEvent event) throws IOException {
 		DbMigrationService dms = IoC.get().build(DbMigrationService.class);
-		String s = "nt-rpg";
 		List<String> migrations = Arrays.asList(
 				"sql/%s/040918-init-db.sql"
 		);

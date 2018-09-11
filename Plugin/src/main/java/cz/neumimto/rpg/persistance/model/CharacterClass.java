@@ -20,9 +20,10 @@ public class CharacterClass {
 	protected int skillPoints;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "class_id")
 	private Long classId;
 	@ManyToOne
-	@JoinColumn(name = "characterId")
+	@JoinColumn(name = "character_id")
 	private CharacterBase characterBase;
 	@Column(name = "experiences")
 	private Double experiences;

@@ -69,14 +69,14 @@ CREATE INDEX idx_rpg_character_base_uuid ON rpg_character_base USING btree (uuid
 
 ALTER TABLE rpg_character_class
     ADD CONSTRAINT fk_cbase_rpg_character_base_character_id
-    FOREIGN KEY (characterid) REFERENCES rpg_character_base(character_id);
+    FOREIGN KEY (character_id) REFERENCES rpg_character_base(character_id);
 
 
 ALTER TABLE rpg_character_skill
-    ADD CONSTRAINT fk_cskill_rpg_character_base_character_id FOREIGN KEY (characterid) REFERENCES rpg_character_base(character_id);
+    ADD CONSTRAINT fk_cskill_rpg_character_base_character_id FOREIGN KEY (character_id) REFERENCES rpg_character_base(character_id);
 
 ALTER TABLE rpg_character_skill
-    ADD CONSTRAINT fk_cskill_rpg_character_class_classid FOREIGN KEY (classid) REFERENCES rpg_character_class(classid);
+    ADD CONSTRAINT fk_cskill_rpg_character_class_class_id FOREIGN KEY (class_id) REFERENCES rpg_character_class(class_id);
 
 ALTER TABLE rpg_character_attribute
-    ADD CONSTRAINT fk_catt_rpg_character_base_character_id FOREIGN KEY (characterid) REFERENCES rpg_character_base(character_id);
+    ADD CONSTRAINT fk_catt_rpg_character_base_character_id FOREIGN KEY (character_id) REFERENCES rpg_character_base(character_id);

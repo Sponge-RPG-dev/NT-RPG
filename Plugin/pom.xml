@@ -54,6 +54,7 @@
             <groupId>cz.neumimto</groupId>
             <artifactId>NTCore</artifactId>
             <version>1.13-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.NeumimTo</groupId>
