@@ -51,9 +51,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>cz.neumimto</groupId>
+            <groupId>com.github.NeumimTo</groupId>
             <artifactId>NTCore</artifactId>
-            <version>1.13-SNAPSHOT</version>
+            <version>localizations-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

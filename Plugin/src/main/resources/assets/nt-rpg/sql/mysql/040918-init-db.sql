@@ -8,7 +8,7 @@ CREATE TABLE `rpg_character_attribute` (
   `name` varchar(255) DEFAULT NULL,
   `character_id` bigint NOT NULL,
   PRIMARY KEY (`attribute_id`),
-  KEY `fk_rpg_character_attribute_charid` (`character_id`)
+  KEY `fk_rpg_character_attribute_char_id` (`character_id`)
 );
 
 CREATE TABLE `rpg_character_base` (
