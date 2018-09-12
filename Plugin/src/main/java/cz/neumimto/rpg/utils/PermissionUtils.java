@@ -13,13 +13,23 @@ import java.util.UUID;
 
 public class PermissionUtils {
 
+	private static boolean luckPermsInstalled;
+
+	static {
+		try {
+			Class.forName("me.lucko.luckperms.api.LuckPermsApi");
+			luckPermsInstalled = true;
+		} catch (ClassNotFoundException e) {
+			luckPermsInstalled = false;
+		}
+	}
+
 	public static int getMaximalCharacterLimit(UUID player) {
-		Optional<ProviderRegistration<LuckPermsApi>> provider = Sponge.getServiceManager().getRegistration(LuckPermsApi.class);
-		if (!provider.isPresent()) {
+		if (!luckPermsInstalled) {
 			return PluginConfig.PLAYER_MAX_CHARS;
 		}
-
-		LuckPermsApi api = provider.get().getProvider();
+		ProviderRegistration<LuckPermsApi> provider = Sponge.getServiceManager().getRegistration(LuckPermsApi.class).get();
+		LuckPermsApi api = provider.getProvider();
 		User user = api.getUser(player);
 		SortedSet<? extends Node> permissions = user.getPermissions();
 		for (Node permission : permissions) {
