@@ -14,6 +14,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.Targetted;
 import cz.neumimto.rpg.skills.tree.SkillType;
+import cz.neumimto.rpg.skills.utils.SkillModifier;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.item.ItemTypes;
 
@@ -40,7 +41,7 @@ public class Bandage extends Targetted {
 	}
 
 	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info) {
+	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillModifier modifier) {
 		IEntity iEntity = entityService.get(target);
 		if (iEntity.isFriendlyTo(source)) {
 			float floatNodeValue = getFloatNodeValue(info, SkillNodes.HEALED_AMOUNT);

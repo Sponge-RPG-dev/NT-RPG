@@ -13,6 +13,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.Targetted;
 import cz.neumimto.rpg.skills.tree.SkillType;
+import cz.neumimto.rpg.skills.utils.SkillModifier;
 import org.spongepowered.api.entity.living.Living;
 
 /**
@@ -36,7 +37,7 @@ public class SkillLightning extends Targetted {
 	}
 
 	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info) {
+	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillModifier modifier) {
 		float damage = settings.getLevelNodeValue(SkillNodes.DAMAGE, info.getTotalLevel());
 		SkillDamageSourceBuilder build = new SkillDamageSourceBuilder();
 		build.fromSkill(this);

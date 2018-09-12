@@ -21,6 +21,7 @@ import org.spongepowered.api.world.Location;
 import java.util.Collection;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 @JsBinding(JsBinding.Type.CONTAINER)
 public class SkillActions {
@@ -127,9 +128,18 @@ public class SkillActions {
 					@SkillComponent.Param("context - skill context"),
 			}
 	)
-	public static TriConsumer<IEntity, Float, SkillScriptContext> HEAL = (iEntity, aFloat, context) -> {
+	public static TriConsumer<IEntity, Float, SkillScriptContext> HEAL = (iEntity, aFloat, context) ->
 		NtRpgPlugin.GlobalScope.entityService.healEntity(iEntity, aFloat, context.getSkill());
-	};
 
+
+	@SkillComponent(
+			value = "Returns entity location",
+			usage = "get_location(player_or_entity)",
+			params = {
+					@SkillComponent.Param("entity - An entitz"),
+					@SkillComponent.Param("@return - location object"),
+			}
+	)
+	public static Function<IEntity, Location> GET_LOCATION = iEntity -> iEntity.getEntity().getLocation();
 
 }

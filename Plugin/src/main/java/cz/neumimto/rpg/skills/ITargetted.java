@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.skills;
 
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.skills.utils.SkillModifier;
 import org.spongepowered.api.entity.living.Living;
 
 /**
@@ -26,5 +27,5 @@ import org.spongepowered.api.entity.living.Living;
  */
 public interface ITargetted {
 
-	SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info);
+	SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillModifier modifier);
 }
