@@ -84,11 +84,12 @@
             </dependency>
 
             <dependency>
-                <groupId>com.github.NeumimTo</groupId>
-                <artifactId>NTCore</artifactId>
-                <version>2499eca894</version>
+                <groupId>com.github.Sponge-RPG-dev</groupId>
+                <artifactId>NT-Rpg</artifactId>
+                <version>localizations-SNAPSHOT</version>
                 <scope>provided</scope>
             </dependency>
+
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>

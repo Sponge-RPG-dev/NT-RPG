@@ -38,8 +38,10 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.NeumimTo</groupId>
+            <groupId>com.github.Sponge-RPG-dev</groupId>
             <artifactId>NTCore</artifactId>
+            <version>localizations-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>cz.neumimto.rpg</groupId>
