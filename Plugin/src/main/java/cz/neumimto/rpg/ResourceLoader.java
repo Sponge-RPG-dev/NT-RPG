@@ -272,7 +272,7 @@ public class ResourceLoader {
 		if (clazz.isAnnotationPresent(ResourceBundles.class)) {
 			ResourceBundles annotation = clazz.getAnnotation(ResourceBundles.class);
 			for (ResourceBundle resourceBundle : annotation.value()) {
-				localizationService.loadResourceBundle(resourceBundle.value(), Locale.forLanguageTag(PluginConfig.LOCALE));
+				localizationService.loadResourceBundle(resourceBundle.value(), Locale.forLanguageTag(PluginConfig.LOCALE), clazz.getClassLoader());
 			}
 		}
 		if (IGlobalEffect.class.isAssignableFrom(clazz)) {

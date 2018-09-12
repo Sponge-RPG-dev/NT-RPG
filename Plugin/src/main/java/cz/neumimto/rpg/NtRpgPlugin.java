@@ -116,6 +116,7 @@ import cz.neumimto.rpg.skills.SkillTypeRegistry;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoader;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoaders;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
+import cz.neumimto.rpg.skills.parents.ScriptSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
 import cz.neumimto.rpg.utils.FileUtils;
 import cz.neumimto.rpg.utils.Placeholders;
@@ -473,7 +474,7 @@ public class NtRpgPlugin {
 		IoC.get().build(PropertyService.class).loadMaximalServerPropertyValues();
 		IoC.get().build(LocalizationService.class).registerClass(Localizations.class);
 		IoC.get().build(LocalizationService.class)
-				.loadResourceBundle("assets.nt-rpg.localizations.localization", Locale.forLanguageTag(PluginConfig.LOCALE));
+				.loadResourceBundle("assets.nt-rpg.localizations.localization", Locale.forLanguageTag(PluginConfig.LOCALE), null);
 		IoC.get().build(Init.class).it();
 
 		double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
@@ -538,7 +539,13 @@ public class NtRpgPlugin {
 						level = optional.get();
 					}
 					if (skill instanceof ActiveSkill) {
+
+						if (skill instanceof ScriptSkill) {
+
+
+						}
 						Long l = System.nanoTime();
+
 						ExtendedSkillInfo extendedSkillInfo = new ExtendedSkillInfo();
 						extendedSkillInfo.setLevel(level);
 						SkillData skillData = new SkillData(skill.getId());
