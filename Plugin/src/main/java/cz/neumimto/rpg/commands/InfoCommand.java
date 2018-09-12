@@ -23,7 +23,6 @@ import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.CommandLocalization;
-import cz.neumimto.rpg.configuration.CommandPermissions;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.runewords.RWService;
@@ -74,10 +73,10 @@ public class InfoCommand extends CommandBase {
 
 	public InfoCommand() {
 		setHelp(CommandLocalization.PLAYERINFO_HELP);
-		setPermission(CommandPermissions.COMMANDINFO_PERMS);
+		setPermission("*");
 		setDescription(CommandLocalization.PLAYERINFO_DESC);
 		setUsage(CommandLocalization.PLAYERINFO_USAGE);
-		addAlias(CommandPermissions.COMMANDINFO_ALIAS);
+		addAlias("show");
 	}
 
 	@Override

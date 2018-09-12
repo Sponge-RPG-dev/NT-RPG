@@ -31,7 +31,6 @@ import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.commands.InfoCommand;
-import cz.neumimto.rpg.configuration.CommandPermissions;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
@@ -510,7 +509,7 @@ public class VanillaMessaging implements IPlayerMessage {
 		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
 		String cmd = infoCommand.getAliases().get(0);
 		if (linkToRWList) {
-			if (character.getPlayer().hasPermission(CommandPermissions.SHOW_RUNEWORD_LIST)) {
+			if (character.getPlayer().hasPermission("ntrpg.runewords.list")) {
 				i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back("runes", Localizations.RUNE_LIST.toText()));
 			}
 		}
@@ -557,7 +556,7 @@ public class VanillaMessaging implements IPlayerMessage {
 			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(q + 2, 2))).offer(commands.get(q));
 		}
 
-		if (character.getPlayer().hasPermission(CommandPermissions.SWOW_RUNEWORD_COMBINATION)) {
+		if (character.getPlayer().hasPermission("ntrpg.runewords.combination.list")) {
 			int x = 1;
 			int y = 4;
 			if (rw.getRunes().size() <= 7) {
