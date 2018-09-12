@@ -33,7 +33,6 @@ import cz.neumimto.core.localization.LocalizationService;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.core.migrations.DbMigrationService;
 import cz.neumimto.rpg.commands.AnyPlayerGroupCommandElement;
-import cz.neumimto.rpg.commands.AnySkillCommandElement;
 import cz.neumimto.rpg.commands.CharacterAttributeCommandElement;
 import cz.neumimto.rpg.commands.GlobalEffectCommandElement;
 import cz.neumimto.rpg.commands.LearnedSkillCommandElement;
@@ -519,7 +518,7 @@ public class NtRpgPlugin {
 						.FORMATTING_CODE
 						.deserialize(CommandLocalization.COMMAND_ADMIN_EXEC_SKILL_DESC))
 				.arguments(
-						new AnySkillCommandElement(TextHelper.parse("skill")),
+						GenericArguments.catalogedElement(Text.of("skill"), ISkill.class),
 						GenericArguments.flags().valueFlag(GenericArguments
 								.integer(TextHelper.parse("level")), "l")
 								.buildWith(GenericArguments.none())

@@ -32,6 +32,7 @@ import cz.neumimto.rpg.events.skills.SkillPostUsageEvent;
 import cz.neumimto.rpg.events.skills.SkillPrepareEvent;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.SkillTreeInterfaceModel;
+import cz.neumimto.rpg.inventory.sockets.SocketType;
 import cz.neumimto.rpg.persistance.SkillTreeDao;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -54,6 +55,7 @@ import org.spongepowered.api.data.manipulator.mutable.entity.HealthData;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.registry.AdditionalCatalogRegistryModule;
+import org.spongepowered.api.registry.util.RegisterCatalog;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.text.format.TextColors;
@@ -74,20 +76,31 @@ import java.util.stream.Stream;
 public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 
 	private static int id = 0;
+
 	@Inject
 	private SkillTreeDao skillTreeDao;
+
 	@Inject
 	private GroupService groupService;
+
 	@Inject
 	private JSLoader jsLoader;
+
 	@Inject
 	private Game game;
+
 	@Inject
 	private CharacterService characterService;
+
+	@RegisterCatalog(ISkill.class)
 	private Map<String, ISkill> skills = new HashMap<>();
+
 	private Map<String, SkillTree> skillTrees = new ConcurrentHashMap<>();
+
 	private Map<Character, SkillTreeInterfaceModel> guiModelByCharacter = new HashMap<>();
+
 	private Map<Short, SkillTreeInterfaceModel> guiModelById = new HashMap<>();
+
 	private Map<String, ISkill> skillByNames = new HashMap<>();
 
 	public void load() {
@@ -313,6 +326,12 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 				.getLoaded();
 		try {
 			ScriptSkill s = (ScriptSkill) sk.newInstance();
+			SkillSettings settings = new SkillSettings();
+			Map<String, Float> settings2 = scriptSkillModel.getSettings();
+			for (Map.Entry<String, Float> w : settings2.entrySet()) {
+				settings.addNode(w.getKey(), w.getValue());
+			}
+			((ISkill)s).setSettings(settings);
 			injectCatalogId((ISkill) s, scriptSkillModel.getId());
 			s.setModel(scriptSkillModel);
 			IoC.get().get(sk, s);
