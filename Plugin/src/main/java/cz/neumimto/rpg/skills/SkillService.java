@@ -326,6 +326,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 				.getLoaded();
 		try {
 			ScriptSkill s = (ScriptSkill) sk.newInstance();
+
 			SkillSettings settings = new SkillSettings();
 			Map<String, Float> settings2 = scriptSkillModel.getSettings();
 			for (Map.Entry<String, Float> w : settings2.entrySet()) {
@@ -336,6 +337,12 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 			s.setModel(scriptSkillModel);
 			IoC.get().get(sk, s);
 			s.initScript();
+			if (PluginConfig.DEBUG.isDevelop()) {
+				info("-------- Created skill from skill def.");
+				info("+ ClassName " + s.getClass().getName());
+				info("+ ClassLoader " + s.getClass().getClassLoader());
+				info("+ Script:\n " + s.bindScriptToTemplate(scriptSkillModel));
+			}
 			return (ISkill) s;
 		} catch (InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();
