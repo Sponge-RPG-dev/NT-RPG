@@ -475,8 +475,6 @@ public class NtRpgPlugin {
 		IoC.get().build(LocalizationService.class)
 				.loadResourceBundle("assets.nt-rpg.localizations.localization", Locale.forLanguageTag(PluginConfig.LOCALE));
 		IoC.get().build(Init.class).it();
-		IoC.get().build(LocalizationService.class).registerClass(Localizations.class);
-		ResourceBundle bundle = ResourceBundle.getBundle("assets.nt-rpg.localizations.localization", Locale.forLanguageTag(PluginConfig.LOCALE));
 
 		double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
 
