@@ -223,8 +223,6 @@ public class ResourceLoader {
 
 	public Object loadClass(Class<?> clazz, ClassLoader classLoader) throws IllegalAccessException, InstantiationException {
 		info(" - Checking if theres something to load in a class " + clazz.getName(), PluginConfig.DEBUG);
-		if (clazz.isInterface())
-			return null;
 		//Properties
 		Object container = null;
 		if (clazz.isAnnotationPresent(Singleton.class)) {

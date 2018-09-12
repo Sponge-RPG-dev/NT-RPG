@@ -23,6 +23,7 @@ import static cz.neumimto.rpg.Log.info;
 import static cz.neumimto.rpg.Log.warn;
 
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.ResourceLoader;
@@ -314,6 +315,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 			ScriptSkill s = (ScriptSkill) sk.newInstance();
 			injectCatalogId((ISkill) s, scriptSkillModel.getId());
 			s.setModel(scriptSkillModel);
+			IoC.get().get(sk, s);
 			s.initScript();
 			return (ISkill) s;
 		} catch (InstantiationException | IllegalAccessException e) {

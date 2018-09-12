@@ -134,7 +134,6 @@ import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.game.GameRegistryEvent;
 import org.spongepowered.api.event.game.state.GamePostInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
@@ -482,19 +481,26 @@ public class NtRpgPlugin {
 		double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
 
 		Sponge.getRegistry().registerModule(ISkill.class, IoC.get().build(SkillService.class));
-		Sponge.getServiceManager().provide(PlaceholderService.class).ifPresent(a -> {
 
-			a.loadAll(IoC.get().build(Placeholders.class), this)
-					.stream()
-					.map(builder -> builder.author("NeumimTo").plugin(this).version("0.0.1-Test"))
-					.forEach(builder -> {
-						try {
-							builder.buildAndRegister();
-						} catch (Exception e) {
-							error("Could not register placeholder ", e);
-						}
-					});
-		});
+		try {
+			Class.forName("me.rojo8399.placeholderapi.PlaceholderService");
+			Sponge.getServiceManager().provide(PlaceholderService.class).ifPresent(a -> {
+
+				a.loadAll(IoC.get().build(Placeholders.class), this)
+						.stream()
+						.map(builder -> builder.author("NeumimTo").plugin(this).version("0.0.1-Test"))
+						.forEach(builder -> {
+							try {
+								builder.buildAndRegister();
+							} catch (Exception e) {
+								error("Could not register placeholder ", e);
+							}
+						});
+			});
+			info("Placeholders Enabled");
+		} catch (ClassNotFoundException e) {
+			info("Placeholders Disabled");
+		}
 		info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
 	}
 
