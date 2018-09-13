@@ -33,6 +33,7 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.configs.SkillsDefinition;
 import cz.neumimto.rpg.skills.pipeline.SkillComponent;
+import cz.neumimto.rpg.skills.utils.F;
 import cz.neumimto.rpg.utils.FileUtils;
 import jdk.internal.dynalink.beans.StaticClass;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
@@ -55,13 +56,10 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import javax.script.Bindings;
 import javax.script.Invocable;
@@ -149,8 +147,17 @@ public class JSLoader {
 					}
 					continue;
 				}
-				Object o = objectTypeEntry.getValue() == JsBinding.Type.CLASS ? objectTypeEntry.getKey() : objectTypeEntry.getKey().newInstance();
-				bindings.put(objectTypeEntry.getKey().getSimpleName(), o);
+				if (objectTypeEntry.getValue() == JsBinding.Type.CLASS) {
+					bindings.put(objectTypeEntry.getKey().getSimpleName(), objectTypeEntry.getKey());
+				}
+				if (objectTypeEntry.getValue() == JsBinding.Type.OBJECT) {
+					if (objectTypeEntry.getKey().isAnnotationPresent(SkillComponent.class)) {
+						skillComponents.add(objectTypeEntry.getKey().getAnnotation(SkillComponent.class));
+						bindings.put(objectTypeEntry.getKey().getSimpleName().toLowerCase(), objectTypeEntry.getKey().newInstance());
+					} else {
+						bindings.put(objectTypeEntry.getKey().getSimpleName(), objectTypeEntry.getKey().newInstance());
+					}
+				}
 			}
 			dumpDocumentedFunctions(skillComponents);
 			bindings.put("Folder", scripts_root.toString());

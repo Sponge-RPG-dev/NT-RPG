@@ -36,12 +36,12 @@ public class SkillActions {
 					@SkillComponent.Param("context - skill context"),
 			}
 	)
-	public static QuadConsumer<IEntity, IEntity, Double, SkillScriptContext> DAMAGE = (caster, target, damage, context) -> {
+	public static QuadConsumer<IEntity, IEntity, Number, SkillScriptContext> DAMAGE = (caster, target, damage, context) -> {
 		if (Utils.canDamage(caster, target.getEntity())) {
 			SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
 			builder.fromSkill(context.getSkill());
 			builder.setCaster(caster);
-			target.getEntity().damage(damage, builder.build());
+			target.getEntity().damage(damage.doubleValue(), builder.build());
 		}
 	};
 
@@ -93,9 +93,9 @@ public class SkillActions {
 					@SkillComponent.Param("radius - An integer"),
 			}
 	)
-	public static TriConsumer<Location, Integer, String> BROADCAST_NEARBY = (location, integer, string) -> {
+	public static TriConsumer<Location, Number, String> BROADCAST_NEARBY = (location, integer, string) -> {
 		Text text = TextHelper.parse(string);
-		double pow = Math.pow(integer, 2);
+		double pow = Math.pow(integer.intValue(), 2);
 
 		Collection<Player> onlinePlayers = Sponge.getServer().getOnlinePlayers();
 		for (Player onlinePlayer : onlinePlayers) {
@@ -128,8 +128,8 @@ public class SkillActions {
 					@SkillComponent.Param("context - skill context"),
 			}
 	)
-	public static TriConsumer<IEntity, Float, SkillScriptContext> HEAL = (iEntity, aFloat, context) ->
-		NtRpgPlugin.GlobalScope.entityService.healEntity(iEntity, aFloat, context.getSkill());
+	public static TriConsumer<IEntity, Number, SkillScriptContext> HEAL = (iEntity, aNumber, context) ->
+		NtRpgPlugin.GlobalScope.entityService.healEntity(iEntity, aNumber.floatValue(), context.getSkill());
 
 
 	@SkillComponent(

@@ -44,6 +44,7 @@ import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.skills.pipeline.SkillComponent;
 import javassist.CannotCompileException;
 import org.apache.commons.io.FileUtils;
 import org.spongepowered.api.Game;
@@ -279,11 +280,10 @@ public class ResourceLoader {
 			container = newInstance(IGlobalEffect.class, clazz);
 			effectService.registerGlobalEffect((IGlobalEffect) container);
 		}
-		if (clazz.isAssignableFrom(ModelMapper.class)) {
+		if (clazz.isAnnotationPresent(ModelMapper.class)) {
 			EffectModelMapper o = (EffectModelMapper) clazz.newInstance();
 			EffectModelFactory.typeMappers.put(o.getType(), o);
 		}
-
 		return container;
 	}
 
