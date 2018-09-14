@@ -6,8 +6,10 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.pipeline.SkillComponent;
+import cz.neumimto.rpg.skills.utils.F;
 import cz.neumimto.rpg.skills.utils.F.QuadConsumer;
 import cz.neumimto.rpg.utils.TriConsumer;
 import cz.neumimto.rpg.utils.Utils;
@@ -34,15 +36,14 @@ public class SkillActions {
 					@SkillComponent.Param("target - Entity to be damaged"),
 					@SkillComponent.Param("damage - damage value"),
 					@SkillComponent.Param("context - skill context"),
+					@SkillComponent.Param("@returns - true if the damage was dealt"),
 			}
 	)
-	public static QuadConsumer<IEntity, IEntity, Number, SkillScriptContext> DAMAGE = (caster, target, damage, context) -> {
-		if (Utils.canDamage(caster, target.getEntity())) {
+	public static F.QuadFunction<IEntity, IEntity, Number, SkillScriptContext, Boolean> DAMAGE = (caster, target, damage, context) -> {
 			SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
 			builder.fromSkill(context.getSkill());
 			builder.setCaster(caster);
-			target.getEntity().damage(damage.doubleValue(), builder.build());
-		}
+			return target.getEntity().damage(damage.doubleValue(), builder.build());
 	};
 
 	@SkillComponent(

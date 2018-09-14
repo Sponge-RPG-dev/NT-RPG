@@ -104,14 +104,7 @@ import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.AttributeRegistry;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.scripting.JSLoader;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.ISkillType;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.skills.SkillSettings;
-import cz.neumimto.rpg.skills.SkillTypeRegistry;
+import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoader;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoaders;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
@@ -134,6 +127,7 @@ import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.game.GameRegistryEvent;
 import org.spongepowered.api.event.game.state.GamePostInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
@@ -411,6 +405,14 @@ public class NtRpgPlugin {
 		event.register(ExperienceSources.MINING);
 		event.register(ExperienceSources.LOGGING);
 		event.register(ExperienceSources.QUESTING);
+	}
+
+	@Listener
+	public void postInit7(GameRegistryEvent.Register<DamageType> event) {
+		event.register(NDamageType.DAMAGE_CHECK);
+		event.register(NDamageType.ICE);
+		event.register(NDamageType.LIGHTNING);
+		event.register(NDamageType.MEELE_CRITICAL);
 	}
 
 	@Listener
