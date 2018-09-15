@@ -170,11 +170,13 @@ public class CharacterService {
 		characterBase.setName(name);
 		characterBase.setRace(Race.Default.getName());
 		characterBase.setPrimaryClass(ConfigClass.Default.getName());
+
 		CharacterClass characterClass = new CharacterClass();
 		characterClass.setName(ConfigClass.Default.getName());
 		characterClass.setExperiences(0D);
 		characterClass.setCharacterBase(characterBase);
 		characterBase.setAttributePoints(PluginConfig.ATTRIBUTEPOINTS_ON_START);
+
 		characterBase.getCharacterClasses().add(characterClass);
 		characterBase.setUuid(uuid);
 		characterBase.setAttributePoints(PluginConfig.ATTRIBUTEPOINTS_ON_START);

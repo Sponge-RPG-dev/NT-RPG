@@ -130,7 +130,7 @@ public class PlayerDao extends GenericDao<CharacterBase> {
 	public void createAndUpdate(CharacterBase base) {
 		Session session = factory.openSession();
 		Transaction tx = session.beginTransaction();
-		session.saveOrUpdate(base);
+		session.save(base);
 		session.flush();
 		tx.commit();
 		session.close();
