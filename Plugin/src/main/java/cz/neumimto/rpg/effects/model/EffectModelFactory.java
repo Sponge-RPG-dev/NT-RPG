@@ -69,6 +69,7 @@ public class EffectModelFactory {
 				c.setAccessible(true);
 				break;
 			}
+			//todo use annotation
 			if (constructor.getParameterCount() == 2) {
 				return Void.class;
 			}
