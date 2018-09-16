@@ -7,8 +7,8 @@ version = ''
 archivesBaseName = 'NT-RPG-Skills'
 
 dependencies {
-    compileOnly 'org.spongepowered:spongeapi:7.1.0-20180110.070302-4'
-    compileOnly 'com.github.Sponge-RPG-dev:NTCore:localizations-SNAPSHOT'
+    implementation 'org.spongepowered:spongeapi:' + project.spongeApiVersion
+    implementation 'com.github.Sponge-RPG-dev:NTCore:' + project.NTCoreVersion
     annotationProcessor project(':Generator')
-    compileOnly project(':Plugin')
+    implementation project(':Plugin')
 }
