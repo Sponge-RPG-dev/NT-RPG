@@ -1,5 +1,8 @@
 rootProject.name = 'NtRpgParent'
 
-include 'Generator'
-include 'Plugin'
-include 'Skills'
+include ':Generator'
+include ':NT-RPG'
+include ':NT-RPG-Skills'
+
+project(':NT-RPG').projectDir = file('Plugin')
+project(':NT-RPG-Skills').projectDir = file('Skills')

@@ -4,11 +4,10 @@ plugins {
 
 group = 'cz.neumimto.rpg'
 version = ''
-archivesBaseName = 'NT-RPG-Skills'
 
 dependencies {
     implementation 'org.spongepowered:spongeapi:' + project.spongeApiVersion
     implementation 'com.github.Sponge-RPG-dev:NTCore:' + project.NTCoreVersion
     annotationProcessor project(':Generator')
-    implementation project(':Plugin')
+    implementation project(':NT-RPG')
 }
