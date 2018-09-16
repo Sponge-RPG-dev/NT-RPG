@@ -22,4 +22,12 @@ dependencies {
     testCompile 'junit:junit:4.8.2'
     testCompile 'org.powermock:powermock-module-junit4:1.4.9'
     testCompile 'org.powermock:powermock-api-mockito:1.4.9'
+
+    jar {
+        manifest {
+            attributes(
+                    'Build-Timestamp': new Date()
+            )
+        }
+    }
 }
