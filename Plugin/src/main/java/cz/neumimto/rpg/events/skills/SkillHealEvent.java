@@ -19,7 +19,7 @@
 package cz.neumimto.rpg.events.skills;
 
 import cz.neumimto.rpg.IEntity;
-import cz.neumimto.rpg.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.IRpgElement;
 import cz.neumimto.rpg.events.CancellableEvent;
 import cz.neumimto.rpg.scripting.JsBinding;
 
@@ -31,9 +31,9 @@ public class SkillHealEvent extends CancellableEvent {
 
 	private IEntity character;
 	private double amount;
-	private IEffectSourceProvider skill;
+	private IRpgElement skill;
 
-	public SkillHealEvent(IEntity character, double amount, IEffectSourceProvider skill) {
+	public SkillHealEvent(IEntity character, double amount, IRpgElement skill) {
 		this.character = character;
 		this.amount = amount;
 		this.skill = skill;
@@ -55,11 +55,11 @@ public class SkillHealEvent extends CancellableEvent {
 		this.amount = amount;
 	}
 
-	public IEffectSourceProvider getSkill() {
+	public IRpgElement getSkill() {
 		return skill;
 	}
 
-	public void setSkill(IEffectSourceProvider skill) {
+	public void setSkill(IRpgElement skill) {
 		this.skill = skill;
 	}
 }

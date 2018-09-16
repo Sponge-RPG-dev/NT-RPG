@@ -5,13 +5,13 @@ import static cz.neumimto.rpg.Log.warn;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.IEntity;
+import cz.neumimto.rpg.IRpgElement;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.events.skills.SkillHealEvent;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.properties.PropertyService;
-import cz.neumimto.rpg.skills.ISkill;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
@@ -134,7 +134,7 @@ public class EntityService {
 	 * @param healedamount
 	 * @return healed hp
 	 */
-	public double healEntity(IEntity entity, float healedamount, ISkill skill) {
+	public double healEntity(IEntity entity, float healedamount, IRpgElement element) {
 		if (entity.getHealth().getValue() == entity.getHealth().getMaxValue()) {
 			return 0;
 		}
@@ -142,7 +142,7 @@ public class EntityService {
 		if (entity.getHealth().getValue() + healedamount > entity.getHealth().getMaxValue()) {
 			healedamount = (float) ((entity.getHealth().getValue() + healedamount) - entity.getHealth().getMaxValue());
 		}
-		event = new SkillHealEvent(entity, healedamount, skill);
+		event = new SkillHealEvent(entity, healedamount, element);
 		Sponge.getGame().getEventManager().post(event);
 		if (event.isCancelled() || event.getAmount() <= 0) {
 			return 0;
