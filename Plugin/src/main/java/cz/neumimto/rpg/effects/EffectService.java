@@ -159,7 +159,6 @@ public class EffectService {
 				StringBuilder buffer = new StringBuilder();
 				for (Map.Entry<String, Float> stringFloatEntry : defaultSkillSettings.getNodes().entrySet()) {
 					buffer.append("   * " + stringFloatEntry.getKey() + "\n\n");
-					buffer.append("   * " + stringFloatEntry.getKey() + "_levelbonus\n\n");
 				}
 				s = s.replaceAll("\\{\\{skill\\.parameters}}", buffer.toString());
 				skills += s;
