@@ -1,0 +1,3 @@
+group = 'cz.neumimto.rpg'
+version = '1.0-SNAPSHOT'
+archivesBaseName = 'Generator'

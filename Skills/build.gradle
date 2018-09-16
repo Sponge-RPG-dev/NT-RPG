@@ -1,0 +1,14 @@
+plugins {
+    id 'org.spongepowered.plugin' version '0.8.1'
+}
+
+group = 'cz.neumimto.rpg'
+version = ''
+archivesBaseName = 'NT-RPG-Skills'
+
+dependencies {
+    compileOnly 'org.spongepowered:spongeapi:7.1.0-20180110.070302-4'
+    compileOnly 'com.github.Sponge-RPG-dev:NTCore:localizations-SNAPSHOT'
+    annotationProcessor project(':Generator')
+    compileOnly project(':Plugin')
+}
