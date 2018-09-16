@@ -9,14 +9,15 @@ archivesBaseName = 'NT-RPG'
 
 dependencies {
     compileOnly('org.spongepowered:spongevanilla:1.12.2-7.1.0-BETA-11') {
+        exclude(module: 'spongeapi')
         exclude(module: 'launchwrapper')
         exclude(module: 'terminalconsoleappender')
     }
-    compileOnly 'org.spongepowered:spongeapi:7.1.0-20180110.070302-4'
+    implementation 'org.spongepowered:spongeapi:7.1.0-20180110.070302-4'
 
-    compileOnly 'com.github.Sponge-RPG-dev:NTCore:localizations-SNAPSHOT'
-    compileOnly 'me.lucko.luckperms:luckperms-api:4.2'
-    compileOnly 'com.github.rojo8399:PlaceholderAPI:4.5.1'
+    implementation 'com.github.Sponge-RPG-dev:NTCore:localizations-SNAPSHOT'
+    implementation 'me.lucko.luckperms:luckperms-api:4.2'
+    implementation 'com.github.rojo8399:PlaceholderAPI:4.5.1'
     annotationProcessor project(':Generator')
 
     testCompile 'junit:junit:4.8.2'
