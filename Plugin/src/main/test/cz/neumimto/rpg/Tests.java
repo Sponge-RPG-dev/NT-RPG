@@ -11,9 +11,12 @@ import cz.neumimto.rpg.players.groups.PlayerGroupPermission;
 import cz.neumimto.rpg.players.groups.Race;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 
@@ -32,6 +35,13 @@ import javax.script.ScriptException;
 @RunWith(PowerMockRunner.class)
 public class Tests {
 
+	private static Logger logger;
+
+	@BeforeClass
+	public static void setupLogger() {
+		logger = LoggerFactory.getLogger(Tests.class);
+		Log.logger = logger;
+	}
 
 	@Test
 	public void testDynamicListener() throws Exception {
@@ -45,7 +55,7 @@ public class Tests {
 			DamageEntityEvent mock = mock(DamageEntityEvent.class);
 			o.getClass().getMethod("onDamageEntityEvent", DamageEntityEvent.class).invoke(o, mock);
 			MoveEntityEvent mock2 = mock(MoveEntityEvent.class);
-			o.getClass().getMethod("onDisplaceEntityEvent", MoveEntityEvent.class).invoke(o, mock2);
+			o.getClass().getMethod("onMoveEntityEvent", MoveEntityEvent.class).invoke(o, mock2);
 		} catch (ScriptException | IOException e) {
 			e.printStackTrace();
 		}
