@@ -1,6 +1,7 @@
 package cz.neumimto.rpg;
 
-import javax.inject.Inject;
+
+import com.google.inject.Inject;
 
 /**
  * Created by NeumimTo on 16.9.2018.
