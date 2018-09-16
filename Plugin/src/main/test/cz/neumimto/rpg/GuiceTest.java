@@ -16,7 +16,9 @@ public class GuiceTest {
 		A instance = injector.getInstance(A.class);
 		//is it com.sun.Proxy?
 		System.out.println(instance.getClass().getCanonicalName());
-		System.out.println(instance.b == injector.getInstance(B.class));
+		A instance1 = injector.getInstance(A.class);
+		assert instance.b == instance1.b;
+
 	}
 
 }
