@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'cz.neumimto.rpg'
-version = '1.0.12'
+version = '1.0.12-SNAPSHOT'
 
 dependencies {
     compileOnly('org.spongepowered:spongevanilla:1.12.2-7.1.0-BETA-11') {

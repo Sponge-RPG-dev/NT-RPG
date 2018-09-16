@@ -254,6 +254,10 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
 	@Listener(order = Order.LAST)
 	public void onInventoryClose(InteractInventoryEvent.Close event, @Root Player player) {
 		IActiveCharacter character = characterService().getCharacter(player);
+		if (character == null) {
+			//called after player dc
+			return;
+		}
 		if (!character.isStub() && saveQuery.contains(character.getCharacterBase().getUuid())) {
 			updateSlotEquipOrder(character.getCharacterBase());
 		}
