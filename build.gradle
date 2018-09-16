@@ -1,0 +1,17 @@
+subprojects {
+    apply plugin: 'java-library'
+
+    sourceCompatibility = targetCompatibility = 1.8
+    compileJava.options.encoding = compileTestJava.options.encoding = 'UTF-8'
+
+    repositories {
+        mavenCentral()
+        maven {
+            name = 'sponge'
+            url = 'http://repo.spongepowered.org/maven'
+        }
+        maven {
+            url 'https://jitpack.io'
+        }
+    }
+}

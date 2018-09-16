@@ -14,6 +14,7 @@ function registerEventListener(eventclass, consumer) {
     }
     cls.add(consumer);
 }
+
 var DamageEvent = Java.type("org.spongepowered.api.event.entity.DamageEntityEvent");
 var DisplaceEntityEvent = Java.type("org.spongepowered.api.event.entity.MoveEntityEvent");
 
@@ -21,11 +22,11 @@ var RaceChangedEvent = Java.type("cz.neumimto.rpg.players.CharacterChangeRaceEve
 var TimeUnit = Java.type("java.util.concurrent.TimeUnit");
 
 registerEventListener(RaceChangedEvent, new (Java.extend(Consumer, {
-    accept: function(event) {
-         var character = event.getActiveCharacter();
-         Sponge.getScheduler().createTaskBuilder(1, TimeUnit.MILLISECONDS).execute()
+    accept: function (event) {
+        var character = event.getActiveCharacter();
+        Sponge.getScheduler().createTaskBuilder(1, TimeUnit.MILLISECONDS).execute()
     }
-})))
+})));
 
 registerEventListener(DamageEvent, new (Java.extend(Consumer, {
     accept: function (event) {
@@ -42,6 +43,7 @@ registerEventListener(DisplaceEntityEvent, new (Java.extend(Consumer, {
         print(event + "- test event 1");
     }
 })));
+
 function getMap() {
     return events;
 }

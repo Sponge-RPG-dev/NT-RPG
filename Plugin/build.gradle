@@ -1,0 +1,32 @@
+plugins {
+    id 'org.spongepowered.plugin' version '0.8.1'
+}
+
+group = 'cz.neumimto.rpg'
+version = '1.0.12'
+
+dependencies {
+    compileOnly('org.spongepowered:spongevanilla:1.12.2-7.1.0-BETA-11') {
+        exclude(module: 'spongeapi')
+        exclude(module: 'launchwrapper')
+        exclude(module: 'terminalconsoleappender')
+    }
+    implementation 'org.spongepowered:spongeapi:' + project.spongeApiVersion
+
+    implementation 'com.github.Sponge-RPG-dev:NTCore:' + project.NTCoreVersion
+    implementation 'me.lucko.luckperms:luckperms-api:4.2'
+    implementation 'com.github.rojo8399:PlaceholderAPI:4.5.1'
+    annotationProcessor project(':Generator')
+
+    testCompile 'junit:junit:4.8.2'
+    testCompile 'org.powermock:powermock-module-junit4:1.4.9'
+    testCompile 'org.powermock:powermock-api-mockito:1.4.9'
+
+    jar {
+        manifest {
+            attributes(
+                    'Build-Timestamp': new Date()
+            )
+        }
+    }
+}
