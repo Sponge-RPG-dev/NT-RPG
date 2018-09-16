@@ -6,20 +6,12 @@ import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroupPermission;
 import cz.neumimto.rpg.players.groups.Race;
-import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.spongepowered.api.event.entity.DamageEntityEvent;
-import org.spongepowered.api.event.entity.MoveEntityEvent;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptException;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,7 +22,7 @@ import static org.mockito.Mockito.when;
 public class Tests {
 
 
-    @Test
+    /*@Test
     public void testDynamicListener() throws Exception {
         Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
         ScriptEngine engine = new NashornScriptEngineFactory().getScriptEngine();
@@ -46,7 +38,7 @@ public class Tests {
         } catch (ScriptException | IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     @Test
     public void testPermissionsManagement() {
