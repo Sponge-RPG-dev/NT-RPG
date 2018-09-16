@@ -52,12 +52,12 @@ public class SkillDamageSourceBuilder extends AbstractDamageSourceBuilder<SkillD
 		return caster;
 	}
 
-	public SkillDamageSourceBuilder setCaster(IActiveCharacter caster) {
+	public SkillDamageSourceBuilder setCaster(IEntity caster) {
 		this.caster = caster;
 		return this;
 	}
 
-	public SkillDamageSourceBuilder setCaster(IEntity caster) {
+	public SkillDamageSourceBuilder setCaster(IActiveCharacter caster) {
 		this.caster = caster;
 		return this;
 	}

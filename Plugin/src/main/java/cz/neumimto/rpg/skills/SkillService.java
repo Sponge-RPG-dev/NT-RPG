@@ -32,7 +32,6 @@ import cz.neumimto.rpg.events.skills.SkillPostUsageEvent;
 import cz.neumimto.rpg.events.skills.SkillPrepareEvent;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.SkillTreeInterfaceModel;
-import cz.neumimto.rpg.inventory.sockets.SocketType;
 import cz.neumimto.rpg.persistance.SkillTreeDao;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -332,7 +331,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 			for (Map.Entry<String, Float> w : settings2.entrySet()) {
 				settings.addNode(w.getKey(), w.getValue());
 			}
-			((ISkill)s).setSettings(settings);
+			((ISkill) s).setSettings(settings);
 			injectCatalogId((ISkill) s, scriptSkillModel.getId());
 			s.setModel(scriptSkillModel);
 			IoC.get().get(sk, s);

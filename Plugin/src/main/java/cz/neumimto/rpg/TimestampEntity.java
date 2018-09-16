@@ -18,11 +18,12 @@
 
 package cz.neumimto.rpg;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-import java.util.Date;
 
 /**
  * Created by NeumimTo on 24.7.2015.

@@ -6,13 +6,10 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.pipeline.SkillComponent;
 import cz.neumimto.rpg.skills.utils.F;
-import cz.neumimto.rpg.skills.utils.F.QuadConsumer;
 import cz.neumimto.rpg.utils.TriConsumer;
-import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
@@ -40,10 +37,10 @@ public class SkillActions {
 			}
 	)
 	public static F.QuadFunction<IEntity, IEntity, Number, SkillScriptContext, Boolean> DAMAGE = (caster, target, damage, context) -> {
-			SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
-			builder.fromSkill(context.getSkill());
-			builder.setCaster(caster);
-			return target.getEntity().damage(damage.doubleValue(), builder.build());
+		SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
+		builder.fromSkill(context.getSkill());
+		builder.setCaster(caster);
+		return target.getEntity().damage(damage.doubleValue(), builder.build());
 	};
 
 	@SkillComponent(
@@ -130,7 +127,7 @@ public class SkillActions {
 			}
 	)
 	public static TriConsumer<IEntity, Number, SkillScriptContext> HEAL = (iEntity, aNumber, context) ->
-		NtRpgPlugin.GlobalScope.entityService.healEntity(iEntity, aNumber.floatValue(), context.getSkill());
+			NtRpgPlugin.GlobalScope.entityService.healEntity(iEntity, aNumber.floatValue(), context.getSkill());
 
 
 	@SkillComponent(

@@ -1257,13 +1257,13 @@ public class CharacterService {
 	public int markCharacterForRemoval(UUID player, String charName) {
 		return playerDao.markCharacterForRemoval(player, charName);
 	}
-	
+
 	public void gainMana(IActiveCharacter entity, float manaToAdd, IRpgElement source) {
 		if (entity.getMana().getValue() == entity.getMana().getMaxValue()) {
 			return;
 		}
 		ManaRegainEvent event = null;
-		
+
 		if (entity.getMana().getValue() + manaToAdd > entity.getMana().getMaxValue()) {
 			manaToAdd = (float) ((entity.getMana().getValue() + manaToAdd) - entity.getMana().getMaxValue());
 		}

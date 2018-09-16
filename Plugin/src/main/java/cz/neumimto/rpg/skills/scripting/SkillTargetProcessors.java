@@ -6,7 +6,6 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.pipeline.SkillComponent;
-import cz.neumimto.rpg.utils.TriConsumer;
 import cz.neumimto.rpg.utils.Utils;
 import org.apache.commons.lang3.NotImplementedException;
 import org.spongepowered.api.data.key.Keys;
@@ -20,7 +19,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
 
 @JsBinding(JsBinding.Type.CONTAINER)
 public class SkillTargetProcessors {

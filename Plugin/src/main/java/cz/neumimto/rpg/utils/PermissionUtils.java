@@ -7,7 +7,6 @@ import me.lucko.luckperms.api.User;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.service.ProviderRegistration;
 
-import java.util.Optional;
 import java.util.SortedSet;
 import java.util.UUID;
 
