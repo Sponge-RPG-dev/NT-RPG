@@ -20,6 +20,7 @@ package cz.neumimto.rpg.skills;
 
 import com.typesafe.config.Config;
 import cz.neumimto.core.localization.Arg;
+import cz.neumimto.rpg.IRpgElement;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
@@ -52,9 +53,7 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 1.1.2015.
  */
-public interface ISkill extends IEffectSourceProvider, CatalogType {
-
-	String getName();
+public interface ISkill extends IEffectSourceProvider, CatalogType, IRpgElement {
 
 	String getId();
 

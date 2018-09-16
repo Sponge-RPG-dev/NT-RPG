@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.effects;
 
 import cz.neumimto.rpg.GlobalScope;
+import cz.neumimto.rpg.IRpgElement;
 import cz.neumimto.rpg.NtRpgPlugin;
 import org.spongepowered.api.effect.potion.PotionEffect;
 
@@ -28,13 +29,11 @@ import java.util.UUID;
 /**
  * Created by NeumimTo on 17.1.2015.
  */
-public interface IEffect<K> {
+public interface IEffect<K> extends IRpgElement {
 
 	static GlobalScope getGlobalScope() {
 		return NtRpgPlugin.GlobalScope;
 	}
-
-	String getName();
 
 	void onApply();
 

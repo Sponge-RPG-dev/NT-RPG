@@ -24,6 +24,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.GroupService;
+import cz.neumimto.rpg.IRpgElement;
 import cz.neumimto.rpg.MissingConfigurationException;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.Pair;
@@ -44,6 +45,7 @@ import cz.neumimto.rpg.events.CharacterChangeGroupEvent;
 import cz.neumimto.rpg.events.CharacterEvent;
 import cz.neumimto.rpg.events.CharacterGainedLevelEvent;
 import cz.neumimto.rpg.events.CharacterInitializedEvent;
+import cz.neumimto.rpg.events.ManaRegainEvent;
 import cz.neumimto.rpg.events.character.CharacterWeaponUpdateEvent;
 import cz.neumimto.rpg.events.character.EventCharacterArmorPostUpdate;
 import cz.neumimto.rpg.events.character.PlayerDataPreloadComplete;
@@ -1255,5 +1257,23 @@ public class CharacterService {
 	public int markCharacterForRemoval(UUID player, String charName) {
 		return playerDao.markCharacterForRemoval(player, charName);
 	}
+	
+	public void gainMana(IActiveCharacter entity, float manaToAdd, IRpgElement source) {
+		if (entity.getMana().getValue() == entity.getMana().getMaxValue()) {
+			return;
+		}
+		ManaRegainEvent event = null;
+		
+		if (entity.getMana().getValue() + manaToAdd > entity.getMana().getMaxValue()) {
+			manaToAdd = (float) ((entity.getMana().getValue() + manaToAdd) - entity.getMana().getMaxValue());
+		}
+		event = new ManaRegainEvent(entity, manaToAdd, source);
+		Sponge.getGame().getEventManager().post(event);
+		if (event.isCancelled() || event.getAmount() <= 0) {
+			return;
+		}
+		entity.getMana().setValue(event.getNewVal());
+	}
+
 }
 
