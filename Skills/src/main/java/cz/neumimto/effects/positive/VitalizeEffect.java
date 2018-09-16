@@ -40,7 +40,7 @@ public class VitalizeEffect extends EffectBase<VitalizeEffectModel> {
 		if (character != null) {
 			IReservable mana = character.getMana();
 			if (mana instanceof Mana) {
-				mana.
+				NtRpgPlugin.GlobalScope.characterService.gainMana(character, getValue().manaPerTick, this);
 			}
 		}
 	}
