@@ -1,10 +1,12 @@
 package cz.neumimto.model;
 
 import cz.neumimto.rpg.effects.common.stacking.UnstackableEffectData;
+import cz.neumimto.rpg.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 5.7.2017.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class BPModel implements UnstackableEffectData<BPModel> {
 
 	public long period;

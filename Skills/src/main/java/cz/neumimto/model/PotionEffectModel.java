@@ -1,5 +1,6 @@
 package cz.neumimto.model;
 
+import cz.neumimto.rpg.scripting.JsBinding;
 import org.spongepowered.api.effect.potion.PotionEffectType;
 
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.Map;
 /**
  * Created by NeumimTo on 9.7.2017.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class PotionEffectModel {
 
 	public Map<PotionEffectType, Long> cooldowns;
