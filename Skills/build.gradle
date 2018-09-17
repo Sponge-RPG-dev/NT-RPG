@@ -7,6 +7,7 @@ version = '2.1.0'
 
 dependencies {
     compileOnly 'org.spongepowered:spongeapi:' + project.spongeApiVersion
+    implementation 'com.github.Sponge-RPG-dev:NTCore:' + project.NTCoreVersion
     annotationProcessor project(':Generator')
     implementation project(':NT-RPG')
 }
