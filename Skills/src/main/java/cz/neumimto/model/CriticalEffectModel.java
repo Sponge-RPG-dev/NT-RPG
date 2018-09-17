@@ -12,6 +12,10 @@ public class CriticalEffectModel implements UnstackableEffectData<CriticalEffect
 	public int chance;
 	public float mult;
 
+	public CriticalEffectModel() {
+
+	}
+
 	public CriticalEffectModel(int chance, float mult) {
 		this.chance = chance;
 		this.mult = mult;
