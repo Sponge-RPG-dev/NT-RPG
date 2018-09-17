@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.players.groups;
 
 import cz.neumimto.rpg.players.CharacterBase;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.List;
 
@@ -44,7 +45,8 @@ public class Guild {
 	}
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(generator = "native")
+	@GenericGenerator(name = "native", strategy = "native")
 	private Long guildId;
 
 	private String name;

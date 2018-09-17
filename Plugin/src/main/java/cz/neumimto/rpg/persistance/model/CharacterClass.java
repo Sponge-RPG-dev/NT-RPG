@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.persistance.model;
 
 import cz.neumimto.rpg.players.CharacterBase;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,20 +16,27 @@ import javax.persistence.ManyToOne;
 @Entity(name = "rpg_character_class")
 public class CharacterClass {
 
-	@Column(name = "skillpoints")
-	protected int skillPoints;
+
 	@Id
-	@GeneratedValue
+	@GeneratedValue(generator = "native")
+	@GenericGenerator(name = "native", strategy = "native")
 	@Column(name = "class_id")
 	private Long classId;
+
 	@ManyToOne
 	@JoinColumn(name = "character_id")
 	private CharacterBase characterBase;
+
 	@Column(name = "experiences")
 	private Double experiences;
+
 	private String name;
+
 	@Column(name = "used_skil_points")
 	private int usedSkillPoints;
+
+	@Column(name = "skillpoints")
+	protected int skillPoints;
 
 	public Long getId() {
 		return classId;

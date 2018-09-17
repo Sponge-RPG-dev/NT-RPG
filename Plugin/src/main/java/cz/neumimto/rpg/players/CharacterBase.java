@@ -28,6 +28,7 @@ import cz.neumimto.rpg.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.skills.ISkill;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -66,7 +67,8 @@ import javax.persistence.Transient;
 public class CharacterBase extends TimestampEntity {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(generator = "native")
+	@GenericGenerator(name = "native", strategy = "native")
 	@Column(name = "character_id")
 	private Long characterId;
 	//todo locking

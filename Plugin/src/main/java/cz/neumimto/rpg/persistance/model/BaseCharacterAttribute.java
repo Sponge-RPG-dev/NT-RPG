@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.persistance.model;
 
 import cz.neumimto.rpg.players.CharacterBase;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,7 +18,8 @@ import javax.persistence.ManyToOne;
 public class BaseCharacterAttribute {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(generator = "native")
+	@GenericGenerator(name = "native", strategy = "native")
 	@Column(name = "attribute_id")
 	private Long id;
 
