@@ -18,16 +18,14 @@
 
 package cz.neumimto.rpg.scripting;
 
+import static cz.neumimto.rpg.Log.*;
 import static cz.neumimto.rpg.Log.error;
 import static cz.neumimto.rpg.Log.info;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.ClassGenerator;
-import cz.neumimto.rpg.GlobalScope;
-import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.skills.SkillService;
@@ -55,12 +53,7 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 import javax.script.Bindings;
@@ -164,6 +157,14 @@ public class JSLoader {
 			dumpDocumentedFunctions(skillComponents);
 			bindings.put("Folder", scripts_root.toString());
 			bindings.put("GlobalScope", ioc.build(GlobalScope.class));
+			if (PluginConfig.DEBUG.isDevelop()) {
+				info("JSLOADER = Bindings");
+				Map<String, Object> sorted = new TreeMap<>(bindings);
+				for (Map.Entry<String, Object> e : sorted.entrySet()) {
+					info(e.getKey() + " -> " + e.getValue().toString());
+				}
+				info("===== Bindings END =====");
+			}
 			engine.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
 			engine.eval(rs);
 
