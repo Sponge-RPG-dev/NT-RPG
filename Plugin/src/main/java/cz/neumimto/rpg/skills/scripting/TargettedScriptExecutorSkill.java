@@ -13,5 +13,5 @@ import cz.neumimto.rpg.skills.utils.SkillModifier;
 @JsBinding(JsBinding.Type.CLASS)
 public interface TargettedScriptExecutorSkill {
 
-	SkillResult cast(IActiveCharacter character, IEntity target, SkillModifier modifier, SkillScriptContext context);
+	void cast(IActiveCharacter character, IEntity target, SkillModifier modifier, SkillScriptContext context);
 }

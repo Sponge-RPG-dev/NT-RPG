@@ -2,6 +2,7 @@ package cz.neumimto.rpg.skills.parents;
 
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.ISkillType;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.configs.ScriptSkillModel;
 import cz.neumimto.rpg.skills.scripting.ScriptExecutorSkill;
@@ -23,8 +24,8 @@ public class ActiveScriptSkill extends ActiveSkill implements ScriptSkill<Script
 	@Override
 	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
 		SkillScriptContext context = new SkillScriptContext(this, info);
-		SkillResult cast = executor.cast(character, info, modifier, context);
-		return cast;
+		executor.cast(character, info, modifier, context);
+		return context.getResult() == null ? SkillResult.OK : context.getResult();
 	}
 
 	@Override
@@ -43,7 +44,7 @@ public class ActiveScriptSkill extends ActiveSkill implements ScriptSkill<Script
 		setDamageType(model.getDamageType());
 		setDescription(model.getDescription());
 		setLocalizableName(model.getName());
-		List<SkillType> skillTypes = model.getSkillTypes();
+		List<ISkillType> skillTypes = model.getSkillTypes();
 		skillTypes.forEach(super::addSkillType);
 	}
 

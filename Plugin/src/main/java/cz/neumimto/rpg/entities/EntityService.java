@@ -49,9 +49,8 @@ public class EntityService {
 		}
 		IMob iEntity = entityHashMap.get(id.getUniqueId());
 		if (iEntity == null) {
-			iEntity = new NEntity();
+			iEntity = new NEntity((Living) id);
 			iEntity.setExperiences(-1);
-			iEntity.attach((Living) id);
 			entityHashMap.put(id.getUniqueId(), iEntity);
 			MobsConfig dimmension = dao.getCache().getDimmension(id.getLocation().getExtent().getName());
 			if (!PluginConfig.OVERRIDE_MOBS && dimmension != null) {

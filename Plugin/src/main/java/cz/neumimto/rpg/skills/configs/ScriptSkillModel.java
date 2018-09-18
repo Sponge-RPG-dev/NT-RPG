@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.skills.configs;
 
+import cz.neumimto.rpg.skills.ISkillType;
 import cz.neumimto.rpg.skills.tree.SkillType;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
@@ -22,7 +23,7 @@ public class ScriptSkillModel {
 	private String parent;
 
 	@Setting("Skill-Types")
-	private List<SkillType> skillTypes;
+	private List<ISkillType> skillTypes;
 
 	@Setting("Damage-Type")
 	private DamageType damageType;
@@ -66,11 +67,11 @@ public class ScriptSkillModel {
 		this.parent = parent;
 	}
 
-	public List<SkillType> getSkillTypes() {
+	public List<ISkillType> getSkillTypes() {
 		return skillTypes;
 	}
 
-	public void setSkillTypes(List<SkillType> skillTypes) {
+	public void setSkillTypes(List<ISkillType> skillTypes) {
 		this.skillTypes = skillTypes;
 	}
 
