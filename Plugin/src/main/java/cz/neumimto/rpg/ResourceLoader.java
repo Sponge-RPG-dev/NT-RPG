@@ -57,10 +57,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -123,6 +120,7 @@ public class ResourceLoader {
 	private LocalizationService localizationService;
 
 	private Map<String, URLClassLoader> classLoaderMap = new HashMap<>();
+
 	private URLClassLoader configClassLaoder;
 
 	public ResourceLoader() {
@@ -167,16 +165,24 @@ public class ResourceLoader {
 		if (!main) {
 			URLClassLoader classLoader = classLoaderMap.get(f.getName());
 			if (classLoader == null) {
-				try {
+				classLoader = (URLClassLoader) NtRpgPlugin.class.getClassLoader();
+				classLoaderMap.put(f.getName(), classLoader);
+				PluginCore.loadJarFile(f);
+			/*
+			Temp until i figure out nashorn
+			try {
 
-					classLoader = new ResourceClassLoader(f.toPath().getFileName().toString().trim(),
+				classLoader = = new ResourceClassLoader(f.toPath().getFileName().toString().trim(),
 							new URL[]{f.toURI().toURL()},
 							PluginCore.getClassLoader());
+
 					classLoaderMap.put(f.getName(), classLoader);
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}
+				*/
 			}
+
 		}
 		while (entries.hasMoreElements()) {
 			next = entries.nextElement();
@@ -287,6 +293,10 @@ public class ResourceLoader {
 
 	public URLClassLoader getConfigClassLaoder() {
 		return configClassLaoder;
+	}
+
+	public Map<String, URLClassLoader> getClassLoaderMap() {
+		return Collections.unmodifiableMap(classLoaderMap);
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)

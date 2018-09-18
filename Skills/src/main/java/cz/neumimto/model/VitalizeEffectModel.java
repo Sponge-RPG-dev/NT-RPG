@@ -13,4 +13,8 @@ public class VitalizeEffectModel {
 	public float manaPerTick;
 	public float healthPerTick;
 
+
+	public VitalizeEffectModel() {
+
+	}
 }

@@ -18,7 +18,6 @@
 
 package cz.neumimto.rpg.scripting;
 
-import static cz.neumimto.rpg.Log.*;
 import static cz.neumimto.rpg.Log.error;
 import static cz.neumimto.rpg.Log.info;
 
@@ -33,6 +32,7 @@ import cz.neumimto.rpg.skills.configs.SkillsDefinition;
 import cz.neumimto.rpg.skills.pipeline.SkillComponent;
 import cz.neumimto.rpg.utils.FileUtils;
 import jdk.internal.dynalink.beans.StaticClass;
+import net.bytebuddy.dynamic.loading.MultipleParentClassLoader;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import org.spongepowered.api.Sponge;
