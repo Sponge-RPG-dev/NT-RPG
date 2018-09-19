@@ -165,14 +165,13 @@ public class ResourceLoader {
 		if (!main) {
 			URLClassLoader classLoader = classLoaderMap.get(f.getName());
 			if (classLoader == null) {
-				classLoader = (URLClassLoader) NtRpgPlugin.class.getClassLoader();
+		/*		classLoader = (URLClassLoader) NtRpgPlugin.class.getClassLoader();
 				classLoaderMap.put(f.getName(), classLoader);
-				PluginCore.loadJarFile(f);
-			/*
-			Temp until i figure out nashorn
+				PluginCore.loadJarFile(f);*/
+
 			try {
 
-				classLoader = = new ResourceClassLoader(f.toPath().getFileName().toString().trim(),
+				classLoader = new ResourceClassLoader(f.toPath().getFileName().toString().trim(),
 							new URL[]{f.toURI().toURL()},
 							PluginCore.getClassLoader());
 
@@ -180,7 +179,7 @@ public class ResourceLoader {
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}
-				*/
+
 			}
 
 		}

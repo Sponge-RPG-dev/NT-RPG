@@ -110,8 +110,12 @@ public class JSLoader {
 	public void loadNashorn()
 			throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
 		Object fct = Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory").newInstance();
+		List<ClassLoader> list = new ArrayList<>();
+		list.add(this.getClass().getClassLoader());
+		list.addAll(resourceLoader.getClassLoaderMap().values());
+		MultipleParentClassLoader multipleParentClassLoader = new MultipleParentClassLoader(list);
 		engine = (ScriptEngine) fct.getClass().getMethod("getScriptEngine", String[].class, ClassLoader.class)
-				.invoke(fct, PluginConfig.JJS_ARGS.split(" "), Thread.currentThread().getContextClassLoader());
+				.invoke(fct, PluginConfig.JJS_ARGS.split(" "), multipleParentClassLoader);
 	}
 
 	private void setup() {
