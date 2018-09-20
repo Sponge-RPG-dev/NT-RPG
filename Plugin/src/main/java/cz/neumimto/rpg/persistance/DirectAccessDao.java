@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.persistance;
 
-import cz.neumimto.core.dao.genericDao.GenericDao;
+import cz.neumimto.core.dao.GenericDao;
 import cz.neumimto.core.ioc.Singleton;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
