@@ -172,7 +172,7 @@ import javax.annotation.Resource;
 /**
  * Created by NeumimTo on 29.4.2015.
  */
-@Plugin(id = "nt-rpg", version = "1.0.12-SNAPSHOT-2", name = "NT-Rpg", dependencies = {
+@Plugin(id = "nt-rpg", version = "1.0.12-SNAPSHOT-3", name = "NT-Rpg", dependencies = {
 		@Dependency(id = "nt-core", version = "1.13-SNAPSHOT-2", optional = false),
 		@Dependency(id = "placeholderapi", version = "4.5", optional = true)
 })
