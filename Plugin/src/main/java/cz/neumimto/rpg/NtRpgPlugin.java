@@ -18,7 +18,6 @@
 
 package cz.neumimto.rpg;
 
-import static cz.neumimto.rpg.Log.error;
 import static cz.neumimto.rpg.Log.info;
 
 import com.google.gson.Gson;
