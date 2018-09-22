@@ -1,9 +1,9 @@
 plugins {
-    id 'org.spongepowered.plugin' version '0.8.1'
+   // id 'org.spongepowered.plugin' version '0.8.1'
 }
 
 group = 'cz.neumimto.rpg'
-version = '1.0.12-SNAPSHOT'
+version = '1.0.12-SNAPSHOT-2'
 
 dependencies {
     implementation 'commons-io:commons-io:2.4'

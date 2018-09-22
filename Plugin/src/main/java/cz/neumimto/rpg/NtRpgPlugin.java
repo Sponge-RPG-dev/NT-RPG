@@ -121,7 +121,6 @@ import cz.neumimto.rpg.skills.tree.SkillType;
 import cz.neumimto.rpg.utils.FileUtils;
 import cz.neumimto.rpg.utils.Placeholders;
 import cz.neumimto.rpg.utils.SkillTreeActionResult;
-import me.rojo8399.placeholderapi.PlaceholderService;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
@@ -174,9 +173,9 @@ import javax.annotation.Resource;
 /**
  * Created by NeumimTo on 29.4.2015.
  */
-@Plugin(id = "nt-rpg", version = "1.0.12", name = "NT-Rpg", dependencies = {
-		@Dependency(id = "nt-core", version = "1.13"),
-		@Dependency(id = "placeholderapi", optional = true)
+@Plugin(id = "nt-rpg", version = "1.0.12-SNAPSHOT-2", name = "NT-Rpg", dependencies = {
+		@Dependency(id = "nt-core", version = "1.13-SNAPSHOT-2", optional = false),
+		@Dependency(id = "placeholderapi", version = "4.5", optional = true)
 })
 @Resource
 public class NtRpgPlugin {
@@ -481,7 +480,7 @@ public class NtRpgPlugin {
 		rl.loadJarFile(pluginjar, true);
 		GlobalScope = ioc.build(GlobalScope.class);
 		rl.loadExternalJars();
-		ioc.postProcess();
+
 		if (PluginConfig.DEBUG.isBalance()) {
 			Sponge.getEventManager().registerListeners(this, ioc.build(DebugListener.class));
 		}
@@ -492,29 +491,21 @@ public class NtRpgPlugin {
 				.loadResourceBundle("assets.nt-rpg.localizations.localization", Locale.forLanguageTag(PluginConfig.LOCALE), null);
 		IoC.get().build(Init.class).it();
 
-		double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
+
 
 		Sponge.getRegistry().registerModule(ISkill.class, IoC.get().build(SkillService.class));
 
 		try {
 			Class.forName("me.rojo8399.placeholderapi.PlaceholderService");
-			Sponge.getServiceManager().provide(PlaceholderService.class).ifPresent(a -> {
-
-				a.loadAll(IoC.get().build(Placeholders.class), this)
-						.stream()
-						.map(builder -> builder.author("NeumimTo").plugin(this).version("0.0.1-Test"))
-						.forEach(builder -> {
-							try {
-								builder.buildAndRegister();
-							} catch (Exception e) {
-								error("Could not register placeholder ", e);
-							}
-						});
-			});
+			Placeholders build = IoC.get().build(Placeholders.class);
+			build.init();
 			info("Placeholders Enabled");
 		} catch (ClassNotFoundException e) {
 			info("Placeholders Disabled");
 		}
+
+		ioc.postProcess();
+		double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
 		info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
 	}
 

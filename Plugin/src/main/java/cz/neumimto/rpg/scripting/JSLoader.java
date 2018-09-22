@@ -147,7 +147,8 @@ public class JSLoader {
 					continue;
 				}
 				if (objectTypeEntry.getValue() == JsBinding.Type.CLASS) {
-					bindings.put(objectTypeEntry.getKey().getSimpleName(), objectTypeEntry.getKey());
+					//bindings.put(objectTypeEntry.getKey().getSimpleName(), objectTypeEntry.getKey());
+					continue;
 				}
 				if (objectTypeEntry.getValue() == JsBinding.Type.OBJECT) {
 					if (objectTypeEntry.getKey().isAnnotationPresent(SkillComponent.class)) {
@@ -167,9 +168,18 @@ public class JSLoader {
 				for (Map.Entry<String, Object> e : sorted.entrySet()) {
 					info(e.getKey() + " -> " + e.getValue().toString());
 				}
-				info("===== Bindings END =====");
 			}
 			engine.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
+			//im not sure why this is needed yet, todo remove this
+			for (Map.Entry<Class<?>, JsBinding.Type> e : dataToBind.entrySet()) {
+				if (e.getValue() == JsBinding.Type.CLASS) {
+					if (PluginConfig.DEBUG.isDevelop()) {
+						info("var " + e.getKey().getSimpleName() + " = Java.type(\"" + e.getKey().getCanonicalName() + "\");");
+					}
+					engine.eval("var " + e.getKey().getSimpleName() + " = Java.type(\"" + e.getKey().getCanonicalName() + "\");");
+				}
+			}
+			info("===== Bindings END =====");
 			engine.eval(rs);
 
 		} catch (Exception e) {
