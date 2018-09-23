@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.skills.utils;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -20,6 +20,6 @@ public class SkillModifier {
 	}
 
 	public SkillModifierData getValueOf(SkillModifierType t) {
-		throw new NotImplementedException();
+		throw new NotImplementedException("Not yet implemented");
 	}
 }

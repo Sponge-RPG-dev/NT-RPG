@@ -1,8 +1,10 @@
 package cz.neumimto.rpg.persistance;
 
+import cz.neumimto.core.PersistentContext;
 import cz.neumimto.core.dao.GenericDao;
 import cz.neumimto.core.ioc.Singleton;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
@@ -17,8 +19,11 @@ import java.util.Map;
 public class DirectAccessDao extends GenericDao {
 
 
+	@PersistentContext("nt-rpg")
+	private SessionFactory sessionFactory;
+	
 	public <T> T findUnique(Class<T> t, String query, Map<String, Object> param) {
-		Session session = factory.openSession();
+		Session session = getFactory().openSession();
 		Query q = session.createQuery(query);
 		for (Map.Entry<String, Object> stringObjectEntry : param.entrySet()) {
 			q.setParameter(stringObjectEntry.getKey(), stringObjectEntry.getValue());
@@ -29,7 +34,7 @@ public class DirectAccessDao extends GenericDao {
 	}
 
 	public <T> List<T> findList(Class<T> t, String query, Map<String, Object> param) {
-		Session session = factory.openSession();
+		Session session = getFactory().openSession();
 		Query q = session.createQuery(query);
 		for (Map.Entry<String, Object> stringObjectEntry : param.entrySet()) {
 			q.setParameter(stringObjectEntry.getKey(), stringObjectEntry.getValue());
@@ -40,7 +45,7 @@ public class DirectAccessDao extends GenericDao {
 	}
 
 	public void update(String hql, Map<String, Object> param) {
-		Session session = factory.openSession();
+		Session session = getFactory().openSession();
 		Query query = session.createQuery(hql);
 		Transaction transaction = session.beginTransaction();
 		try {
@@ -53,5 +58,10 @@ public class DirectAccessDao extends GenericDao {
 			transaction.rollback();
 
 		}
+	}
+
+	@Override
+	public SessionFactory getFactory() {
+		return this.sessionFactory;
 	}
 }
