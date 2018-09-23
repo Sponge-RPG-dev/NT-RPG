@@ -113,6 +113,7 @@ import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.SkillTypeRegistry;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoader;
+import cz.neumimto.rpg.skills.configs.SkillConfigLoaderRegistry;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoaders;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.parents.ScriptSkill;
@@ -361,6 +362,7 @@ public class NtRpgPlugin {
 		Sponge.getRegistry().registerModule(ItemSubtype.class, new ItemSubtypeRegistry());
 		Sponge.getRegistry().registerModule(ISkillType.class, new SkillTypeRegistry());
 		Sponge.getRegistry().registerModule(ExperienceSource.class, new ExperienceSourceRegistry());
+		Sponge.getRegistry().registerModule(SkillConfigLoader.class, new SkillConfigLoaderRegistry());
 	}
 
 	@Listener

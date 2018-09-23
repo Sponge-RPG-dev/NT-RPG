@@ -18,7 +18,6 @@ import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 
@@ -38,7 +37,6 @@ public class ItemAccessSkill extends AbstractSkill {
 
 	public ItemAccessSkill() {
 		super();
-		setIcon(ItemTypes.REDSTONE);
 	}
 
 	@Override

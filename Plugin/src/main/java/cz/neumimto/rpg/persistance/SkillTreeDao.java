@@ -63,7 +63,6 @@ public class SkillTreeDao {
 	@Inject
 	SkillService skillService;
 
-
 	public Map<String, SkillTree> getAll() {
 		Path dir = ResourceLoader.skilltreeDir.toPath();
 		Map<String, SkillTree> map = new HashMap<>();
@@ -149,19 +148,19 @@ public class SkillTreeDao {
 			Config c = co.toConfig();
 			String id = c.getString("SkillId");
 			Optional<ISkill> byId = skillService.getById(id);
-			if (byId.isPresent()) {
+			if (!byId.isPresent()) {
 
 
 				try {
 					String type = c.getString("Type");
-					String sid = c.getString("Id");
 					SkillConfigLoader type1 = Sponge.getRegistry().getType(SkillConfigLoader.class, type)
 							.orElseThrow(() -> new IllegalArgumentException("Unknown skill type " + type + " in a skiltree " + skillTree.getId()));
 
-					type1.build(sid);
+					type1.build(id);
 
 				} catch (ConfigException.Missing ignored) {
 				}
+			} else {
 			}
 		}
 	}
