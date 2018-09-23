@@ -23,7 +23,9 @@ import static cz.neumimto.rpg.Log.info;
 
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.configuration.ConfigurationContainer;
+import cz.neumimto.core.PersistentContext;
 import cz.neumimto.core.PluginCore;
+import cz.neumimto.core.Repository;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
@@ -52,12 +54,17 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -229,6 +236,9 @@ public class ResourceLoader {
 		info(" - Checking if theres something to load in a class " + clazz.getName(), PluginConfig.DEBUG);
 		//Properties
 		Object container = null;
+		if (clazz.isInterface() && clazz.getAnnotations().length == 0) {
+			return null;
+		}
 		if (clazz.isAnnotationPresent(Singleton.class)) {
 			ioc.build(clazz);
 		}
@@ -286,6 +296,15 @@ public class ResourceLoader {
 		if (clazz.isAnnotationPresent(ModelMapper.class)) {
 			EffectModelMapper o = (EffectModelMapper) clazz.newInstance();
 			EffectModelFactory.typeMappers.put(o.getType(), o);
+		}
+		if (clazz.isAnnotationPresent(Repository.class)) {
+			container = ioc.build(clazz);
+			for (Field field : container.getClass().getFields()) {
+				field.setAccessible(true);
+				if (field.isAnnotationPresent(PersistentContext.class)) {
+					field.set(container, PluginCore.Instance.getSessionFactoryByName(field.getAnnotation(PersistentContext.class).value()));
+				}
+			}
 		}
 		return container;
 	}

@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.persistance;
 
 import cz.neumimto.core.PersistentContext;
+import cz.neumimto.core.Repository;
 import cz.neumimto.core.dao.GenericDao;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.players.CharacterBase;
@@ -37,6 +38,7 @@ import java.util.UUID;
  */
 //todo catch exceptions and rollback transactions
 @Singleton
+@Repository
 public class PlayerDao extends GenericDao<CharacterBase> {
 
 	@PersistentContext("nt-rpg")

@@ -373,10 +373,12 @@ public class NtRpgPlugin {
 
 	@Listener
 	public void registerEntities(FindPersistenceContextEvent event) {
-		event.getClasses().add(CharacterBase.class);
-		event.getClasses().add(BaseCharacterAttribute.class);
-		event.getClasses().add(CharacterSkill.class);
-		event.getClasses().add(CharacterClass.class);
+		if (event.validForContext("nt-rpg")) {
+			event.getClasses().add(CharacterBase.class);
+			event.getClasses().add(BaseCharacterAttribute.class);
+			event.getClasses().add(CharacterSkill.class);
+			event.getClasses().add(CharacterClass.class);
+		}
 	}
 
 	@Listener
@@ -429,15 +431,17 @@ public class NtRpgPlugin {
 
 	@Listener
 	public void onFindDbSchemaMigrationsEvent(FindDbSchemaMigrationsEvent event) throws IOException {
-		DbMigrationService dms = IoC.get().build(DbMigrationService.class);
-		List<String> migrations = Arrays.asList(
-				"sql/%s/040918-init-db.sql"
-		);
+		if (event.validForContext("nt-rpg")) {
+			DbMigrationService dms = IoC.get().build(DbMigrationService.class);
+			List<String> migrations = Arrays.asList(
+					"sql/%s/040918-init-db.sql"
+			);
 
-		for (String migration : migrations) {
-			migration = migration.replaceAll("%s", dms.getDatabaseProductName().toLowerCase());
-			Optional<Asset> sql = Sponge.getAssetManager().getAsset(this, migration);
-			dms.addMigration(sql.get().readString(Charset.forName("UTF-8")));
+			for (String migration : migrations) {
+				migration = migration.replaceAll("%s", dms.getDatabaseProductName().toLowerCase());
+				Optional<Asset> sql = Sponge.getAssetManager().getAsset(this, migration);
+				dms.addMigration(sql.get().readString(Charset.forName("UTF-8")));
+			}
 		}
 	}
 

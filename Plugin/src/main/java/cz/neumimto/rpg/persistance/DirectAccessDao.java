@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.persistance;
 
 import cz.neumimto.core.PersistentContext;
+import cz.neumimto.core.Repository;
 import cz.neumimto.core.dao.GenericDao;
 import cz.neumimto.core.ioc.Singleton;
 import org.hibernate.Session;
@@ -16,6 +17,7 @@ import java.util.Map;
  * Created by ja on 8.10.2016.
  */
 @Singleton
+@Repository
 public class DirectAccessDao extends GenericDao {
 
 
