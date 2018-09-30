@@ -205,11 +205,7 @@ public class Gui {
 	}
 
 	public static void resetCurrentClicks(ClickComboActionComponent clickComboActionComponent, boolean byShift) {
-		clickComboActionComponent.getConsumer().sendMessage(ChatTypes.ACTION_BAR,
-				Text.builder("<" + Localizations.CANCELLED + ">")
-						.color(TextColors.DARK_GRAY)
-						.style(TextStyles.ITALIC)
-						.build());
+		clickComboActionComponent.getConsumer().sendMessage(ChatTypes.ACTION_BAR, Localizations.CANCELLED.toText());
 
 	}
 
