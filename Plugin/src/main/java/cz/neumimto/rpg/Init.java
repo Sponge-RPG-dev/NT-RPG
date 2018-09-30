@@ -52,8 +52,9 @@ public class Init {
 		groupService.registerPlaceholders();
 		rwService.load();
 		groupDao.loadGuilds();
-		groupDao.loadRaces();
 		groupDao.loadNClasses();
+		groupDao.loadRaces();
+
 
 
 		customItemFactory.initBuilder();

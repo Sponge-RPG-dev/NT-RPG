@@ -29,11 +29,14 @@ public class ComboListener {
 
 	@Listener
 	@Include({
-			InteractBlockEvent.Secondary.class,
+			InteractBlockEvent.Secondary.OffHand.class,
 			InteractEntityEvent.Secondary.class,
-			InteractItemEvent.Secondary.class
+			InteractItemEvent.Secondary.class,
 	})
 	public void onRMBClick(InteractEvent e, @Root Player player) {
+		if (player.getOpenInventory().isPresent()) {
+			return;
+		}
 		IActiveCharacter character = characterService.getCharacter(player);
 		e.setCancelled(characterService.processUserAction(character, UserActionType.R));
 	}
@@ -45,12 +48,18 @@ public class ComboListener {
 			InteractItemEvent.Primary.class
 	})
 	public void onLMBClick(InteractEvent e, @Root Player player) {
+		if (player.getOpenInventory().isPresent()) {
+			return;
+		}
 		IActiveCharacter character = characterService.getCharacter(player);
 		e.setCancelled(characterService.processUserAction(character, UserActionType.L));
 	}
 
 	@Listener(order = Order.EARLY)
 	public void onQPress(DropItemEvent.Pre e, @Root Player player) {
+		if (player.getOpenInventory().isPresent()) {
+			return;
+		}
 		IActiveCharacter character = characterService.getCharacter(player);
 		e.setCancelled(characterService.processUserAction(character, UserActionType.Q));
 	}

@@ -35,7 +35,7 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
-import cz.neumimto.rpg.effects.common.def.ClickComboActionEvent;
+import cz.neumimto.rpg.effects.common.def.ClickComboActionComponent;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.events.CancellableEvent;
@@ -1230,11 +1230,11 @@ public class CharacterService {
 	 * @return true whenever root event should be cancelled
 	 */
 	public boolean processUserAction(IActiveCharacter character, UserActionType userActionType) {
-		IEffectContainer effect = character.getEffect(ClickComboActionEvent.name);
+		IEffectContainer effect = character.getEffect(ClickComboActionComponent.name);
 		if (effect == null) {
 			return false;
 		}
-		ClickComboActionEvent e = (ClickComboActionEvent) effect;
+		ClickComboActionComponent e = (ClickComboActionComponent) effect;
 		if (userActionType == UserActionType.L && e.hasStarted()) {
 			e.processLMB();
 			return false;

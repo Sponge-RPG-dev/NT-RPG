@@ -24,7 +24,7 @@ import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.effects.common.def.ClickComboActionEvent;
+import cz.neumimto.rpg.effects.common.def.ClickComboActionComponent;
 import cz.neumimto.rpg.inventory.CannotUseItemReason;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.players.CharacterBase;
@@ -34,11 +34,15 @@ import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.scripting.JsBinding;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.tree.SkillTree;
+import javafx.scene.text.TextBuilder;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.text.LiteralText;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
+import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
@@ -191,15 +195,17 @@ public class Gui {
 	}
 
 	public static void displayCurrentClicks(IActiveCharacter character, String combo) {
-		character.getPlayer().sendMessage(ChatTypes.ACTION_BAR,
-				Text.builder(combo.replaceAll(".", "$0, "))
-						.color(TextColors.GOLD)
-						.build());
+
+		String split = combo.replaceAll(".", "$0 ");
+		LiteralText build = Text.builder(split).color(TextColors.GREEN).style(TextStyles.UNDERLINE)
+				.append(Text.builder("_").color(TextColors.GRAY).build()).build();
+
+		character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, build);
 
 	}
 
-	public static void resetCurrentClicks(ClickComboActionEvent clickComboActionEvent, boolean byShift) {
-		clickComboActionEvent.getConsumer().sendMessage(ChatTypes.ACTION_BAR,
+	public static void resetCurrentClicks(ClickComboActionComponent clickComboActionComponent, boolean byShift) {
+		clickComboActionComponent.getConsumer().sendMessage(ChatTypes.ACTION_BAR,
 				Text.builder("<" + Localizations.CANCELLED + ">")
 						.color(TextColors.DARK_GRAY)
 						.style(TextStyles.ITALIC)
@@ -221,5 +227,9 @@ public class Gui {
 
 	public static void sendCannotUseItemInOffHandNotification(IActiveCharacter character, ItemStack futureOffHand, CannotUseItemReason reason) {
 		getMessageTypeOf(character).sendCannotUseItemInOffHandNotification(futureOffHand, character, reason);
+	}
+
+	public static void skillExecution(IActiveCharacter character, ExtendedSkillInfo skill) {
+		getMessageTypeOf(character).skillExecution(character, skill);
 	}
 }

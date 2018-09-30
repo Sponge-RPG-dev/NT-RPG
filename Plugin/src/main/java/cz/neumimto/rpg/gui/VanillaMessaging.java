@@ -66,6 +66,7 @@ import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.reloading.Reload;
 import cz.neumimto.rpg.reloading.ReloadService;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.tree.SkillTree;
@@ -95,6 +96,7 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
 
 import java.util.ArrayList;
@@ -822,5 +824,15 @@ public class VanillaMessaging implements IPlayerMessage {
 		} else if (reason == CannotUseItemReason.LORE) {
 			character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Localizations.CANNOT_USE_ITEM_LORE_REASON.toText());
 		}
+	}
+
+	@Override
+	public void skillExecution(IActiveCharacter character, ExtendedSkillInfo skill) {
+		character.sendMessage(ChatTypes.ACTION_BAR,
+				Text.builder(skill.getSkill().getName())
+						.style(TextStyles.BOLD)
+						.color(TextColors.GOLD)
+						.build()
+		);
 	}
 }

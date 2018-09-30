@@ -8,6 +8,7 @@ import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -17,7 +18,7 @@ import java.util.Set;
  * Created by NeumimTo on 28.8.2017.
  */
 @Generate(id = "name", description = "A component which enables click-combos")
-public class ClickComboActionEvent extends EffectBase implements IEffectContainer {
+public class ClickComboActionComponent extends EffectBase implements IEffectContainer {
 
 	public static final String name = "ClickCombos";
 
@@ -28,11 +29,11 @@ public class ClickComboActionEvent extends EffectBase implements IEffectContaine
 	private IActiveCharacter character;
 
 	@Generate.Constructor
-	public ClickComboActionEvent(IEffectConsumer t, long duration, Void literallyNothing) {
+	public ClickComboActionComponent(IEffectConsumer t, long duration, Void literallyNothing) {
 		this(t);
 	}
 
-	public ClickComboActionEvent(IEffectConsumer t) {
+	public ClickComboActionComponent(IEffectConsumer t) {
 		super(name, t);
 		character = (IActiveCharacter) t;
 		setPeriod(PluginConfig.CLICK_COMBO_MAX_INVERVAL_BETWEEN_ACTIONS);
@@ -72,10 +73,20 @@ public class ClickComboActionEvent extends EffectBase implements IEffectContaine
 	}
 
 	public void update() {
+		boolean exec = false;
 		if (combination != null) {
-			NtRpgPlugin.GlobalScope.skillService.invokeSkillByCombo(getCurrent(), character);
+			ExtendedSkillInfo skill = NtRpgPlugin.GlobalScope.skillService.invokeSkillByCombo(getCurrent(), character);
+			if (skill != null) {
+				skill.getSkill().getName();
+				Gui.skillExecution(character, skill);
+				combination = null;
+				exec = true;
+			}
 		}
-		k = System.currentTimeMillis();
+		k = System.currentTimeMillis() + 2000;
+		if (!exec) {
+			Gui.displayCurrentClicks(character, getCurrent());
+		}
 	}
 
 	public void cancel(boolean byShift) {
@@ -85,7 +96,7 @@ public class ClickComboActionEvent extends EffectBase implements IEffectContaine
 
 	@Override
 	public void onTick() {
-		if (getLastTickTime() + getPeriod() >= k) {
+		if (combination != null && getLastTickTime() + getPeriod() >= k) {
 			cancel(false);
 		}
 	}
@@ -107,7 +118,7 @@ public class ClickComboActionEvent extends EffectBase implements IEffectContaine
 
 
 	@Override
-	public Set<ClickComboActionEvent> getEffects() {
+	public Set<ClickComboActionComponent> getEffects() {
 		return new HashSet<>(Collections.singletonList(this));
 	}
 

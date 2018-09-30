@@ -34,6 +34,7 @@ import cz.neumimto.core.localization.ResourceBundle;
 import cz.neumimto.core.localization.ResourceBundles;
 import cz.neumimto.rpg.commands.CommandBase;
 import cz.neumimto.rpg.commands.CommandService;
+import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
@@ -299,11 +300,16 @@ public class ResourceLoader {
 		}
 		if (clazz.isAnnotationPresent(Repository.class)) {
 			container = ioc.build(clazz);
-			for (Field field : container.getClass().getFields()) {
+			boolean f = false;
+			for (Field field : container.getClass().getDeclaredFields()) {
 				field.setAccessible(true);
 				if (field.isAnnotationPresent(PersistentContext.class)) {
 					field.set(container, PluginCore.Instance.getSessionFactoryByName(field.getAnnotation(PersistentContext.class).value()));
+					f = true;
 				}
+			}
+			if (!f) {
+				Log.info("No SessionFactory injected for " + container.getClass().getCanonicalName());
 			}
 		}
 		return container;

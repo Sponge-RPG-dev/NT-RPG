@@ -199,20 +199,14 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 		return SkillResult.NO_HP;
 	}
 
-	public void invokeSkillByCombo(String combo, IActiveCharacter character) {
+	public ExtendedSkillInfo invokeSkillByCombo(String combo, IActiveCharacter character) {
 		for (ExtendedSkillInfo extendedSkillInfo : character.getSkills().values()) {
 			if (combo.equals(extendedSkillInfo.getSkillData().getCombination())) {
-				character.sendMessage(ChatTypes.ACTION_BAR,
-						Text.builder(extendedSkillInfo.getSkill().getName())
-								.style(TextStyles.BOLD)
-								.color(TextColors.GOLD)
-								.build()
-				);
 				executeSkill(character, extendedSkillInfo);
-				break;
+				return extendedSkillInfo;
 			}
 		}
-		Gui.displayCurrentClicks(character, combo);
+		return null;
 	}
 
 
