@@ -18,9 +18,6 @@ import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
 import org.spongepowered.api.event.item.inventory.InteractItemEvent;
 
 
-/**
- * Created by ja on 2.9.2017.
- */
 @ResourceLoader.ListenerClass
 public class ComboListener {
 
