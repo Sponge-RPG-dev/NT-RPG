@@ -1,9 +1,15 @@
 plugins {
    // id 'org.spongepowered.plugin' version '0.8.1'
+    id "net.kyori.blossom" version "1.1.0"
 }
 
 group = 'cz.neumimto.rpg'
-version = '1.0.12-SNAPSHOT-3'
+version = '1.0.12-SNAPSHOT-4'
+
+blossom {
+    String str = "src/main/java/cz/neumimto/rpg/NtRpgPlugin.java";
+    replaceToken '@VERSION@', getVersion().toString(), str
+}
 
 dependencies {
     implementation 'commons-io:commons-io:2.4'
