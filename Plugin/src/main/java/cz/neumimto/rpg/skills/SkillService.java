@@ -41,6 +41,7 @@ import cz.neumimto.rpg.reloading.ReloadService;
 import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.skills.configs.ScriptSkillModel;
 import cz.neumimto.rpg.skills.parents.ActiveScriptSkill;
+import cz.neumimto.rpg.skills.parents.PassiveScriptSkill;
 import cz.neumimto.rpg.skills.parents.ScriptSkill;
 import cz.neumimto.rpg.skills.parents.TargettedScriptSkill;
 import cz.neumimto.rpg.skills.tree.SkillTree;
@@ -55,10 +56,6 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.registry.AdditionalCatalogRegistryModule;
 import org.spongepowered.api.registry.util.RegisterCatalog;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.chat.ChatTypes;
-import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.format.TextStyles;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -302,6 +299,9 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 				break;
 			case "active":
 				type = ActiveScriptSkill.class;
+				break;
+			case "passive":
+				type = PassiveScriptSkill.class;
 				break;
 			default:
 				warn("Could not load skill " + scriptSkillModel.getId() + " unknown parent " + scriptSkillModel.getParent());
