@@ -178,14 +178,14 @@ public class SkillActions {
 			params = {}
 	)
 	public static Function<String, PotionEffect.Builder> POTION_EFFECT_BUILDER = s -> {
-		PotionEffectType type = Sponge.getRegistry().getType(PotionEffectType.class, s)
-				.orElseThrow(() -> {
-					info("Registered Potion Ids:");
-					for (PotionEffectType potionEffectType : Sponge.getRegistry().getAllOf(PotionEffectType.class)) {
-						info(" - " + potionEffectType.getId());
-					}
-					throw new RuntimeException("Unknown Potion Effect Id : " + s);
-				});
+		PotionEffectType type = Sponge.getRegistry().getType(PotionEffectType.class, s).orElseGet(null);
+		if (type == null) {
+			info("Registered Potion Ids:");
+			for (PotionEffectType potionEffectType : Sponge.getRegistry().getAllOf(PotionEffectType.class)) {
+				info(" - " + potionEffectType.getId());
+			}
+			throw new RuntimeException("Unknown Potion Effect Id : " + s);
+		};
 		return PotionEffect.builder().potionType(type);
 	};
 }
