@@ -35,8 +35,11 @@ import jdk.internal.dynalink.beans.StaticClass;
 import net.bytebuddy.dynamic.loading.MultipleParentClassLoader;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
+import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
+import org.spongepowered.api.effect.potion.PotionEffectType;
+import org.spongepowered.api.effect.potion.PotionEffectTypes;
 import org.spongepowered.api.event.Event;
 
 import java.io.File;
@@ -54,6 +57,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import javax.script.Bindings;
@@ -72,17 +76,24 @@ public class JSLoader {
 	private static ScriptEngine engine;
 
 	private static Path scripts_root = Paths.get(NtRpgPlugin.workingDir + "/scripts");
+
 	private static Object listener;
+
 	@Inject
 	private IoC ioc;
+
 	@Inject
 	private ClassGenerator classGenerator;
+
 	@Inject
 	private ResourceLoader resourceLoader;
+
 	@Inject
 	private NtRpgPlugin ntRpgPlugin;
+
 	@Inject
 	private SkillService skillService;
+
 	private Map<Class<?>, JsBinding.Type> dataToBind = new HashMap<>();
 
 	public static ScriptEngine getEngine() {
@@ -118,7 +129,7 @@ public class JSLoader {
 				.invoke(fct, PluginConfig.JJS_ARGS.split(" "), multipleParentClassLoader);
 	}
 
-	private void setup() {
+	private <T extends CatalogType> void setup() {
 		Path path = Paths.get(scripts_root + File.separator + "Main.js");
 		if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
 			try (InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("Main.js")) {
@@ -133,6 +144,7 @@ public class JSLoader {
 			Bindings bindings = new SimpleBindings();
 			bindings.put("IoC", ioc);
 			bindings.put("Bindings", new BindingsHelper(engine));
+			bindings.put("TimeUnit", TimeUnit.class);
 			for (Map.Entry<Class<?>, JsBinding.Type> objectTypeEntry : dataToBind.entrySet()) {
 				if (objectTypeEntry.getValue() == JsBinding.Type.CONTAINER) {
 					for (Field field : objectTypeEntry.getKey().getDeclaredFields()) {

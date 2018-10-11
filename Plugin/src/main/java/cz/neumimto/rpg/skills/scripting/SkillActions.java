@@ -2,6 +2,7 @@ package cz.neumimto.rpg.skills.scripting;
 
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.IEntity;
+import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.effects.IEffect;
@@ -10,7 +11,10 @@ import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.pipeline.SkillComponent;
 import cz.neumimto.rpg.skills.utils.F;
 import cz.neumimto.rpg.utils.TriConsumer;
+import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.effect.potion.PotionEffect;
+import org.spongepowered.api.effect.potion.PotionEffectType;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
@@ -18,9 +22,11 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 
 import java.util.Collection;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.function.*;
+
+import static cz.neumimto.rpg.Log.info;
 
 @JsBinding(JsBinding.Type.CONTAINER)
 public class SkillActions {
@@ -140,4 +146,46 @@ public class SkillActions {
 	)
 	public static Function<IEntity, Location> GET_LOCATION = iEntity -> iEntity.getEntity().getLocation();
 
+	@SkillComponent(
+			value = "Adds potion effect to the entity",
+			usage = "add_potion_effect(target, builder)",
+			params = {
+					@SkillComponent.Param("target - An entitz"),
+					@SkillComponent.Param("builder - potion effect builder"),
+			}
+	)
+	public static BiConsumer<IEffectConsumer, PotionEffect.Builder> ADD_POTION_EFFECT = (iEffectConsumer, builder) -> {
+		PotionEffect build = builder.build();
+		iEffectConsumer.addPotionEffect(build);
+	};
+
+	@SkillComponent(
+			value = "Converts a time to ingame interval represented in server ticks, conversion is not taking into account server lag",
+			usage = "to_server_ticks(100, timeunit)",
+			params = {
+					@SkillComponent.Param("number - time to be converted"),
+					@SkillComponent.Param("timeunit - an enum value of TimeUnit"),
+			}
+	)
+	public static BiFunction<Long, TimeUnit, Integer> TO_SERVER_TICKS = (o, o2) -> {
+		long convert = o2.convert(o, TimeUnit.SECONDS);
+		return (int) (convert / 3);
+	};
+
+	@SkillComponent(
+			value = "Returns an instance of PotionEffectBuilder",
+			usage = "var builder = potion_effect_builder(\"potioneffectid\")",
+			params = {}
+	)
+	public static Function<String, PotionEffect.Builder> POTION_EFFECT_BUILDER = s -> {
+		PotionEffectType type = Sponge.getRegistry().getType(PotionEffectType.class, s)
+				.orElseThrow(() -> {
+					info("Registered Potion Ids:");
+					for (PotionEffectType potionEffectType : Sponge.getRegistry().getAllOf(PotionEffectType.class)) {
+						info(" - " + potionEffectType.getId());
+					}
+					throw new RuntimeException("Unknown Potion Effect Id : " + s);
+				});
+		return PotionEffect.builder().potionType(type);
+	};
 }

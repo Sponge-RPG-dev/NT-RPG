@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.utils;
 
+import cz.neumimto.rpg.scripting.JsBinding;
+
 import static java.lang.Math.abs;
 import static java.lang.Math.ceil;
 import static java.lang.Math.min;
@@ -7,6 +9,7 @@ import static java.lang.Math.min;
 /**
  * Created by NeumimTo on 14.03.2016.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class PseudoRandomDistribution {
 
 	public static double[] C = null;
