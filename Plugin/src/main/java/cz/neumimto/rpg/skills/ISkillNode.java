@@ -18,15 +18,11 @@
 
 package cz.neumimto.rpg.skills;
 
-import cz.neumimto.rpg.skills.utils.SkillModifierProcessor;
 
 /**
  * Created by NeumimTo on 16.2.2015.
  */
 public interface ISkillNode {
 
-
-	public String value();
-
-	SkillModifierProcessor duplicityProcessor();
+	String value();
 }

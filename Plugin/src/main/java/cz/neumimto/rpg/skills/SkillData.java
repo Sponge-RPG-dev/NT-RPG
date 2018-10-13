@@ -18,7 +18,11 @@
 
 package cz.neumimto.rpg.skills;
 
+import cz.neumimto.rpg.skills.utils.SkillModifier;
+import org.spongepowered.api.item.inventory.ItemStack;
+
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -37,6 +41,8 @@ public class SkillData {
 	private Set<SkillData> hardDepends = new HashSet<>();
 	private Set<SkillData> conflicts = new HashSet<>();
 	private Set<SkillData> depending = new HashSet<>();
+	private Set<ItemStack> itemCost = new HashSet<>();
+	private Set<SkillModifier> insufficientCost = new HashSet<>();
 	private ISkill iskill;
 	private String combination = null;
 	private int relativeX;
@@ -155,5 +161,17 @@ public class SkillData {
 
 	public void setLevelGap(int levelGap) {
 		this.levelGap = levelGap;
+	}
+
+	public Set<ItemStack> getItemCost() {
+		return itemCost;
+	}
+
+	public Set<SkillModifier> getInsufficientCost() {
+		return insufficientCost;
+	}
+
+	public void setInsufficientCost(Set<SkillModifier> insufficientCost) {
+		this.insufficientCost = insufficientCost;
 	}
 }

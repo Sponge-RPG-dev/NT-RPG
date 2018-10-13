@@ -22,15 +22,13 @@ import static cz.neumimto.rpg.Log.error;
 import static cz.neumimto.rpg.Log.info;
 import static cz.neumimto.rpg.Log.warn;
 
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigException;
-import com.typesafe.config.ConfigFactory;
-import com.typesafe.config.ConfigObject;
-import com.typesafe.config.ConfigValue;
+import com.google.common.reflect.TypeToken;
+import com.typesafe.config.*;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.entities.RootMobConfig;
 import cz.neumimto.rpg.gui.SkillTreeInterfaceModel;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillData;
@@ -42,9 +40,20 @@ import cz.neumimto.rpg.skills.parents.StartingPoint;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.utils.Utils;
+import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.ConfigurationOptions;
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.gson.GsonConfigurationLoader;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
+import ninja.leaping.configurate.loader.ConfigurationLoader;
+import ninja.leaping.configurate.objectmapping.ObjectMapper;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.ItemStack;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -201,6 +210,22 @@ public class SkillTreeDao {
 			}
 
 			try {
+				List<? extends ConfigObject> list = c.getObjectList("ReagentCost");
+				for (ConfigObject configObject : list) {
+					try {
+						String render = configObject.render(ConfigRenderOptions.concise());
+						HoconConfigurationLoader build = HoconConfigurationLoader.builder().setSource(() -> new BufferedReader(new StringReader(render))).build();
+						ItemStack value = build.load().getValue(TypeToken.of(ItemStack.class));
+						info.getItemCost().add(value);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			try {
 				for (String conflicts : c.getStringList("Conflicts")) {
 					info.getConflicts().add(getSkillInfo(conflicts, skillTree));
 				}
@@ -277,7 +302,6 @@ public class SkillTreeDao {
 
 		}
 	}
-
 
 	private void addRequiredIfMissing(SkillSettings skillSettings) {
 		Map.Entry<String, Float> q = skillSettings.getFloatNodeEntry(SkillNodes.HPCOST.name());
