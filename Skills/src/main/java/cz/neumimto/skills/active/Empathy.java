@@ -40,8 +40,8 @@ public class Empathy extends Targetted {
 		Double max = entity.get(Keys.MAX_HEALTH).get();
 		Double a = entity.get(Keys.HEALTH).get();
 		a = max - a;
-		a *= getFloatNodeValue(info, SkillNodes.MULTIPLIER);
-		max = getDoubleNodeValue(info, "max-damage");
+		a *= getFloatNodeValue(info, SkillNodes.MULTIPLIER, modifier);
+		max = getDoubleNodeValue(info, "max-damage", modifier);
 		if (max > 0) {
 			a = a < max ? max : a;
 		}

@@ -53,7 +53,7 @@ public class BrainSap extends Targetted {
 		builder.setTarget(e);
 		builder.setCaster(iActiveCharacter);
 		SkillDamageSource s = builder.build();
-		float damage = getFloatNodeValue(info, SkillNodes.DAMAGE);
+		float damage = getFloatNodeValue(info, SkillNodes.DAMAGE, modifier);
 		e.getEntity().damage(damage, s);
 		return SkillResult.OK;
 	}

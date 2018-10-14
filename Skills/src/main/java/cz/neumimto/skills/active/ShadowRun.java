@@ -46,12 +46,12 @@ public class ShadowRun extends ActiveSkill {
 		World extent = location.getExtent();
 		Optional<GroundLuminanceProperty> property = location.add(0, -1, 0).getBlock().getProperty(GroundLuminanceProperty.class);
 		GroundLuminanceProperty groundLuminanceProperty = property.get();
-		double llevel = getDoubleNodeValue(info, "max-light-level");
+		double llevel = getDoubleNodeValue(info, "max-light-level", modifier);
 		if (groundLuminanceProperty.getValue() <= llevel) {
-			long duration = getLongNodeValue(info, SkillNodes.DURATION);
-			double damage = getDoubleNodeValue(info, SkillNodes.DAMAGE);
-			double attackmult = getDoubleNodeValue(info, SkillNodes.MULTIPLIER);
-			float walkspeed = getFloatNodeValue(info, "walk-speed");
+			long duration = getLongNodeValue(info, SkillNodes.DURATION, modifier);
+			double damage = getDoubleNodeValue(info, SkillNodes.DAMAGE, modifier);
+			double attackmult = getDoubleNodeValue(info, SkillNodes.MULTIPLIER, modifier);
+			float walkspeed = getFloatNodeValue(info, "walk-speed", modifier);
 			ShadowRunModel model = new ShadowRunModel();
 			model.duration = duration;
 			model.damage = damage;

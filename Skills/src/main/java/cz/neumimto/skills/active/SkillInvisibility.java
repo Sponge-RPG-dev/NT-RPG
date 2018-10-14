@@ -35,7 +35,7 @@ public class SkillInvisibility extends ActiveSkill {
 
 	@Override
 	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier skillModifier) {
-		long duration = (long) settings.getLevelNodeValue(SkillNodes.DURATION, info.getTotalLevel());
+		long duration = getLongNodeValue(info, SkillNodes.DURATION, skillModifier);
 		Invisibility invisibility = new Invisibility(character, duration);
 		effectService.addEffect(invisibility, character, this);
 		return SkillResult.OK;

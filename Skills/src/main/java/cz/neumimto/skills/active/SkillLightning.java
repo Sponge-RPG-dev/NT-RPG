@@ -38,7 +38,7 @@ public class SkillLightning extends Targetted {
 
 	@Override
 	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillModifier modifier) {
-		float damage = settings.getLevelNodeValue(SkillNodes.DAMAGE, info.getTotalLevel());
+		float damage = getFloatNodeValue(info, SkillNodes.DAMAGE, modifier);
 		SkillDamageSourceBuilder build = new SkillDamageSourceBuilder();
 		build.fromSkill(this);
 		build.setCaster(source);

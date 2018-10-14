@@ -77,7 +77,7 @@ public class GrapplingHook extends ActiveSkill {
 
 		Vector3d arrowVec = direction.normalize().mul(2);
 		sb.setVelocity(arrowVec);
-		double range = getDoubleNodeValue(info, SkillNodes.RANGE);
+		double range = getDoubleNodeValue(info, SkillNodes.RANGE, modifier);
 		//final double rangeSquared = Math.pow(range, 2);
 
 		world.spawnEntity(sb);

@@ -47,9 +47,9 @@ public class Wrestle extends ActiveSkill {
 
 	@Override
 	public SkillResult cast(IActiveCharacter source, ExtendedSkillInfo info, SkillModifier modifier) {
-		int intNodeValue = getIntNodeValue(info, SkillNodes.RADIUS);
-		float floatNodeValue = getFloatNodeValue(info, SkillNodes.DAMAGE);
-		long duration = getLongNodeValue(info, SkillNodes.DURATION);
+		int intNodeValue = getIntNodeValue(info, SkillNodes.RADIUS, modifier);
+		float floatNodeValue = getFloatNodeValue(info, SkillNodes.DAMAGE, modifier);
+		long duration = getLongNodeValue(info, SkillNodes.DURATION, modifier);
 		for (Entity entity : source.getPlayer().getNearbyEntities(intNodeValue)) {
 			if (Utils.isLivingEntity(entity)) {
 				Living l = (Living) entity;

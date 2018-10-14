@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.skills.mods;
 
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import org.spongepowered.api.CatalogType;
 
 import java.util.Arrays;
@@ -21,7 +21,7 @@ public abstract class SkillModifierProcessor implements CatalogType {
 		this.targetExcutions = new HashSet<>(Arrays.asList(targetExcutions));
 	}
 
-	public abstract void process(IActiveCharacter iActiveCharacter, SkillModifier parent ,SkillData skillData);
+	public abstract void process(IActiveCharacter iActiveCharacter, SkillModifier parent, ExtendedSkillInfo info);
 
 	public Set<ModifierTargetExcution> allowedTargets() {
 		return targetExcutions;

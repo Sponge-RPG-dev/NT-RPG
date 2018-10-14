@@ -43,10 +43,10 @@ public class Portal extends ActiveSkill {
 			effectService.removeEffect(PortalEffect.name, character, this);
 			return SkillResult.CANCELLED;
 		}
-		long duration = getLongNodeValue(info, SkillNodes.MANACOST);
-		double manaPerTick = getDoubleNodeValue(info, "manacost-per-tick");
-		double manaPerEntity = getDoubleNodeValue(info, "manacost-per-teleported-entity");
-		double chanceToFail = getDoubleNodeValue(info, "chance-to-fail");
+		long duration = getLongNodeValue(info, SkillNodes.MANACOST, modifier);
+		double manaPerTick = getDoubleNodeValue(info, "manacost-per-tick", modifier);
+		double manaPerEntity = getDoubleNodeValue(info, "manacost-per-teleported-entity", modifier);
+		double chanceToFail = getDoubleNodeValue(info, "chance-to-fail", modifier);
 		PortalEffect portalEffect = new PortalEffect(character, duration, null,
 				manaPerTick, manaPerEntity, 1750, chanceToFail, false);
 		effectService.addEffect(portalEffect, character, this);

@@ -34,9 +34,9 @@ public class BattleCharge extends ActiveSkill {
 
 	@Override
 	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
-		double distSq = Math.pow(getDoubleNodeValue(info, SkillNodes.RADIUS), 2);
-		long duration = getLongNodeValue(info, SkillNodes.DURATION);
-		float value = getFloatNodeValue(info, "speed-per-level");
+		double distSq = Math.pow(getDoubleNodeValue(info, SkillNodes.RADIUS, modifier), 2);
+		long duration = getLongNodeValue(info, SkillNodes.DURATION, modifier);
+		float value = getFloatNodeValue(info, "speed-per-level", modifier);
 		if (character.hasParty()) {
 			for (IActiveCharacter pmember : character.getParty().getPlayers()) {
 				if (pmember.getLocation().getPosition().distanceSquared(character.getLocation().getPosition()) <= distSq) {

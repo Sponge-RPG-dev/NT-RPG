@@ -42,8 +42,8 @@ public class Dementia extends Targetted {
 	@Override
 	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillModifier modifier) {
 		IEntity iEntity = entityService.get(target);
-		long duration = getLongNodeValue(info, SkillNodes.DURATION);
-		int skillLevel = getIntNodeValue(info, "skill-level");
+		long duration = getLongNodeValue(info, SkillNodes.DURATION, modifier);
+		int skillLevel = getIntNodeValue(info, "skill-level", modifier);
 		AllSkillsBonus bonus = new AllSkillsBonus(iEntity, duration, -1 * skillLevel);
 		effectService.addEffect(bonus, iEntity, this);
 		return null;

@@ -50,7 +50,7 @@ public class Harmtouch extends Targetted {
 		builder.setTarget(e);
 		builder.setCaster(source);
 		SkillDamageSource s = builder.build();
-		float damage = getFloatNodeValue(info, SkillNodes.DAMAGE);
+		float damage = getFloatNodeValue(info, SkillNodes.DAMAGE, modifier);
 		boolean damage1 = e.getEntity().damage(damage, s);
 		if (damage1) {
 			Vector3d r = source.getEntity().getRotation();

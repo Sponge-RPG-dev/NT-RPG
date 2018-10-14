@@ -40,8 +40,9 @@ public abstract class ActiveSkill extends AbstractSkill {
 			character.sendMessage(Localizations.PLAYER_IS_SILENCED);
 			return SkillResult.CASTER_SILENCED;
 		}
-		//todo
-		return cast(character, info, null);
+		SkillModifier skillModifier = new SkillModifier();
+
+		return cast(character, info, skillModifier);
 	}
 
 	public abstract SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier);

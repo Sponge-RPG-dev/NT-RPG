@@ -44,10 +44,10 @@ public class Arrowstorm extends ActiveSkill {
 
 	@Override
 	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
-		int min = getIntNodeValue(info, "min-arrows");
-		int max = getIntNodeValue(info, "max-arrows");
+		int min = getIntNodeValue(info, "min-arrows", modifier);
+		int max = getIntNodeValue(info, "max-arrows", modifier);
 		int arrows = ThreadLocalRandom.current().nextInt(max - min) + min;
-		min = getIntNodeValue(info, SkillNodes.PERIOD);
+		min = getIntNodeValue(info, SkillNodes.PERIOD, modifier);
 		min = min <= 0 ? 1 : min;
 		effectService.addEffect(new ArrowstormEffect(character, min, arrows), character, this);
 		return SkillResult.OK;

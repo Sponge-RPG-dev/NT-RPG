@@ -44,8 +44,8 @@ public class Stun extends Targetted {
 
 	@Override
 	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillModifier modifier) {
-		long duration = getLongNodeValue(info, SkillNodes.DURATION);
-		double damage = getDoubleNodeValue(info, SkillNodes.DAMAGE);
+		long duration = getLongNodeValue(info, SkillNodes.DURATION, modifier);
+		double damage = getDoubleNodeValue(info, SkillNodes.DAMAGE, modifier);
 		IEntity e = entityService.get(target);
 		StunEffect stunEffect = new StunEffect(e, duration);
 		effectService.addEffect(stunEffect, e, this);

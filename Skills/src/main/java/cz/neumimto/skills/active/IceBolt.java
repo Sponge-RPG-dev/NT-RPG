@@ -76,8 +76,8 @@ public class IceBolt extends ActiveSkill {
 		build.type(getDamageType());
 
 		projectileProperties.onHit((event, caster, target) -> {
-			long slowduration = getLongNodeValue(info, SkillNodes.DURATION);
-			int slowamplf = getIntNodeValue(info, SkillNodes.AMPLIFIER);
+			long slowduration = getLongNodeValue(info, SkillNodes.DURATION, skillModifier);
+			int slowamplf = getIntNodeValue(info, SkillNodes.AMPLIFIER, skillModifier);
 			target.getEntity().damage(projectileProperties.getDamage(), build.build());
 			effectService.addEffect(new SlowPotion(target, slowduration, slowamplf), target, this);
 		});

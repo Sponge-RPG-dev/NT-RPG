@@ -50,10 +50,10 @@ public class Pandemic extends ActiveSkill {
 
 	@Override
 	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
-		float damage = getFloatNodeValue(info, SkillNodes.DAMAGE);
-		int radius = getIntNodeValue(info, SkillNodes.RADIUS);
-		long period = getLongNodeValue(info, SkillNodes.PERIOD);
-		long duration = getLongNodeValue(info, SkillNodes.DURATION);
+		float damage = getFloatNodeValue(info, SkillNodes.DAMAGE, modifier);
+		int radius = getIntNodeValue(info, SkillNodes.RADIUS, modifier);
+		long period = getLongNodeValue(info, SkillNodes.PERIOD, modifier);
+		long duration = getLongNodeValue(info, SkillNodes.DURATION, modifier);
 		Set<Entity> nearbyEntities = Utils.getNearbyEntities(character.getLocation(), radius);
 		for (Entity entity : nearbyEntities) {
 			if (Utils.isLivingEntity(entity)) {

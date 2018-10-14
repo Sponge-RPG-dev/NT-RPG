@@ -44,7 +44,7 @@ public class Bandage extends Targetted {
 	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillModifier modifier) {
 		IEntity iEntity = entityService.get(target);
 		if (iEntity.isFriendlyTo(source)) {
-			float floatNodeValue = getFloatNodeValue(info, SkillNodes.HEALED_AMOUNT);
+			float floatNodeValue = getFloatNodeValue(info, SkillNodes.HEALED_AMOUNT, modifier);
 			entityService.healEntity(iEntity, floatNodeValue, this);
 			Decorator.healEffect(iEntity.getEntity().getLocation().add(0, 1, 0));
 			if (iEntity.hasEffect(Bleeding.name)) {

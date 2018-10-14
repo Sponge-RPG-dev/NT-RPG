@@ -35,9 +35,9 @@ public class ManaShield extends ActiveSkill {
 	@Override
 	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
 		ManaShieldEffectModel manaShieldEffectModel = new ManaShieldEffectModel();
-		manaShieldEffectModel.duration = getLongNodeValue(info, SkillNodes.DURATION);
-		manaShieldEffectModel.reduction = getDoubleNodeValue(info, "reduction");
-		manaShieldEffectModel.reductionCost = getDoubleNodeValue(info, "reduction-manacost");
+		manaShieldEffectModel.duration = getLongNodeValue(info, SkillNodes.DURATION, modifier);
+		manaShieldEffectModel.reduction = getDoubleNodeValue(info, "reduction", modifier);
+		manaShieldEffectModel.reductionCost = getDoubleNodeValue(info, "reduction-manacost", modifier);
 		ManaShieldEffect effect = new ManaShieldEffect(character, manaShieldEffectModel);
 		effectService.addEffect(effect, character, this);
 		return SkillResult.OK;

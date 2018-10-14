@@ -58,10 +58,10 @@ public class Despair extends ActiveSkill {
 
 	@Override
 	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
-		int k = getIntNodeValue(info, SkillNodes.RADIUS);
+		int k = getIntNodeValue(info, SkillNodes.RADIUS, modifier);
 		Set<Entity> nearbyEntities = Utils.getNearbyEntities(character.getEntity().getLocation(), k);
-		double damage = getDoubleNodeValue(info, SkillNodes.DAMAGE);
-		long duration = getLongNodeValue(info, SkillNodes.DURATION);
+		double damage = getDoubleNodeValue(info, SkillNodes.DAMAGE, modifier);
+		long duration = getLongNodeValue(info, SkillNodes.DURATION, modifier);
 
 		for (Entity nearbyEntity : nearbyEntities) {
 			if (Utils.isLivingEntity(nearbyEntity)) {
