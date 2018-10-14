@@ -18,11 +18,10 @@
 
 package cz.neumimto.rpg.skills;
 
-import cz.neumimto.rpg.skills.utils.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModifier;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**

@@ -8,7 +8,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.configs.ScriptSkillModel;
 import cz.neumimto.rpg.skills.scripting.SkillScriptContext;
 import cz.neumimto.rpg.skills.scripting.TargettedScriptExecutorSkill;
-import cz.neumimto.rpg.skills.utils.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModifier;
 import org.spongepowered.api.entity.living.Living;
 
 import java.util.List;

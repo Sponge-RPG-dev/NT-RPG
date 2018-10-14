@@ -24,7 +24,7 @@ import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.utils.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModifier;
 
 /**
  * Created by NeumimTo on 26.7.2015.

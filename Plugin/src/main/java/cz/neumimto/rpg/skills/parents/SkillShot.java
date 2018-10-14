@@ -24,7 +24,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ProjectileProperties;
 import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.utils.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModifier;
 import cz.neumimto.rpg.utils.TriConsumer;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.projectile.Projectile;

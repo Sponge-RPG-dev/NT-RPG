@@ -12,7 +12,7 @@ import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.Targetted;
-import cz.neumimto.rpg.skills.utils.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModifier;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.entity.living.Living;
 

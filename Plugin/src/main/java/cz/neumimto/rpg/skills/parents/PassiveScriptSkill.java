@@ -6,7 +6,7 @@ import cz.neumimto.rpg.skills.ISkillType;
 import cz.neumimto.rpg.skills.configs.ScriptSkillModel;
 import cz.neumimto.rpg.skills.scripting.PassiveScriptSkillHandler;
 import cz.neumimto.rpg.skills.scripting.SkillScriptContext;
-import cz.neumimto.rpg.skills.utils.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModifier;
 
 import java.util.List;
 

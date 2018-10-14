@@ -11,7 +11,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.utils.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModifier;
 
 /**
  * Created by NeumimTo on 23.12.2015.

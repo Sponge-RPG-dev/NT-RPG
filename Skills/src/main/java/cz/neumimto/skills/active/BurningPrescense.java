@@ -12,7 +12,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.utils.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModifier;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.item.ItemTypes;
 

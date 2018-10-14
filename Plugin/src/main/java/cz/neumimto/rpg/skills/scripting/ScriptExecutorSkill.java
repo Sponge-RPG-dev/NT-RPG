@@ -3,8 +3,7 @@ package cz.neumimto.rpg.skills.scripting;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.utils.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModifier;
 
 @FunctionalInterface
 @JsBinding(JsBinding.Type.CLASS)

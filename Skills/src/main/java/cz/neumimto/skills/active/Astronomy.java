@@ -9,7 +9,7 @@ import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.utils.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModifier;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
