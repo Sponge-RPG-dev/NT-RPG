@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.skills.mods;
 
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import com.typesafe.config.ConfigObject;
 import org.spongepowered.api.CatalogType;
 
 import java.util.Arrays;
@@ -11,21 +10,21 @@ import java.util.Set;
 /**
  * Created by ja on 22.10.2016.
  */
-public abstract class SkillModProcessor implements CatalogType {
+public abstract class SkillModProcessorFactory implements CatalogType {
 
 	private final String name;
 	private final Set<ModTargetExcution> targetExcutions;
 
-	public SkillModProcessor(String name, ModTargetExcution... targetExcutions) {
+	public SkillModProcessorFactory(String name, ModTargetExcution... targetExcutions) {
 		this.name = name.toLowerCase();
 		this.targetExcutions = new HashSet<>(Arrays.asList(targetExcutions));
 	}
 
-	public abstract void process(IActiveCharacter iActiveCharacter, SkillModList parent, ExtendedSkillInfo info);
-
 	public Set<ModTargetExcution> allowedTargets() {
 		return targetExcutions;
 	}
+
+	public abstract ImmutableSkillModProcessor parse(ConfigObject configObject);
 
 	@Override
 	public String getName() {

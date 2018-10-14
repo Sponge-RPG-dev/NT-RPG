@@ -109,8 +109,8 @@ public interface ISkill extends IEffectSourceProvider, CatalogType, IRpgElement 
 	}
 
 	default float getFloatNodeValue(ExtendedSkillInfo extendedSkillInfo, String node, SkillModList modifier) {
-
-		return extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node, extendedSkillInfo.getTotalLevel());
+		float v = resolveNodeMod(node, modifier);
+		return v + extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node, extendedSkillInfo.getTotalLevel());
 	}
 
 	default int getIntNodeValue(ExtendedSkillInfo extendedSkillInfo, ISkillNode node, SkillModList modifier) {
@@ -118,18 +118,30 @@ public interface ISkill extends IEffectSourceProvider, CatalogType, IRpgElement 
 	}
 
 	default int getIntNodeValue(ExtendedSkillInfo extendedSkillInfo, String node, SkillModList modifier) {
-
-		return (int) extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node, extendedSkillInfo.getTotalLevel());
+		int v = (int) resolveNodeMod(node, modifier);
+		return v + (int) extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node, extendedSkillInfo.getTotalLevel());
 	}
 
 	default long getLongNodeValue(ExtendedSkillInfo extendedSkillInfo, ISkillNode node, SkillModList modifier) {
+		return getLongNodeValue(extendedSkillInfo, node.value(), modifier);
+	}
 
-		return (long) extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node, extendedSkillInfo.getTotalLevel());
+	default long getLongNodeValue(ExtendedSkillInfo extendedSkillInfo, String node, SkillModList modifier) {
+		long v = (long) resolveNodeMod(node, modifier);
+		return v + (long) extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node, extendedSkillInfo.getTotalLevel());
 	}
 
 	default double getDoubleNodeValue(ExtendedSkillInfo extendedSkillInfo, String node, SkillModList modifier) {
+		float v = resolveNodeMod(node, modifier);
+		return v + extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node, extendedSkillInfo.getTotalLevel());
+	}
 
-		return extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node, extendedSkillInfo.getTotalLevel());
+	default float resolveNodeMod(String node, SkillModList mod) {
+		Float aFloat = mod.getSettings().getNodes().get(node);
+		if (aFloat == null) {
+			return 0;
+		}
+		return aFloat;
 	}
 
 	default double getDoubleNodeValue(ExtendedSkillInfo extendedSkillInfo, ISkillNode node, SkillModList modifier) {

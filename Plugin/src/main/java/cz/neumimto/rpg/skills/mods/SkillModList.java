@@ -1,5 +1,8 @@
 package cz.neumimto.rpg.skills.mods;
 
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillSettings;
+
 import java.util.EnumMap;
 
 /**
@@ -7,15 +10,35 @@ import java.util.EnumMap;
  */
 public class SkillModList {
 
-	private final EnumMap<ModTargetExcution, SkillModProcessor> cache = new EnumMap<>(ModTargetExcution.class);
+	private final EnumMap<ModTargetExcution, ImmutableSkillModProcessor> cache = new EnumMap<>(ModTargetExcution.class);
+
+	private final SkillSettings settings = new SkillSettings();
+
+	private SkillResult skipExecutionWithResult;
 
 	public SkillModList() {
 
 	}
 
-	public SkillModProcessor getProcessors(ModTargetExcution stage) {
+	public SkillResult getSkipExecutionWithResult() {
+		return skipExecutionWithResult;
+	}
+
+	public void setSkipExecutionWithResult(SkillResult skipExecutionWithResult) {
+		this.skipExecutionWithResult = skipExecutionWithResult;
+	}
+
+	public ImmutableSkillModProcessor getProcessors(ModTargetExcution stage) {
 		return cache.get(stage);
 	}
 
+	public void addProcessor(ImmutableSkillModProcessor processor) {
+		processor.merge(this);
+		cache.put(processor.getModTargetExecution(), processor);
+	}
+
+	public SkillSettings getSettings() {
+		return settings;
+	}
 
 }

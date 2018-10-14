@@ -22,6 +22,7 @@ import static cz.neumimto.rpg.Log.error;
 
 import cz.neumimto.rpg.scripting.JsBinding;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -100,6 +101,6 @@ public class SkillSettings {
 	}
 
 	public Map<String, Float> getNodes() {
-		return skillSettings;
+		return Collections.unmodifiableMap(skillSettings);
 	}
 }

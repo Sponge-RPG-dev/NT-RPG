@@ -10,22 +10,22 @@ import java.util.Optional;
 /**
  * Created by NeumimTo on 14.10.2018.
  */
-public class SkillModifierRegistry implements AdditionalCatalogRegistryModule<SkillModProcessor> {
+public class SkillModifierRegistry implements AdditionalCatalogRegistryModule<SkillModProcessorFactory> {
 
-	private Map<String, SkillModProcessor> cache = new HashMap<>();
+	private Map<String, SkillModProcessorFactory> cache = new HashMap<>();
 
 	@Override
-	public void registerAdditionalCatalog(SkillModProcessor extraCatalog) {
+	public void registerAdditionalCatalog(SkillModProcessorFactory extraCatalog) {
 		cache.put(extraCatalog.getId().toLowerCase(), extraCatalog);
 	}
 
 	@Override
-	public Optional<SkillModProcessor> getById(String id) {
+	public Optional<SkillModProcessorFactory> getById(String id) {
 		return Optional.ofNullable(cache.get(id.toLowerCase()));
 	}
 
 	@Override
-	public Collection<SkillModProcessor> getAll() {
+	public Collection<SkillModProcessorFactory> getAll() {
 		return cache.values();
 	}
 }
