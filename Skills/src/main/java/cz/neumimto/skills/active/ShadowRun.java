@@ -13,7 +13,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModList;
 import org.spongepowered.api.data.property.block.GroundLuminanceProperty;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -41,7 +41,7 @@ public class ShadowRun extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList modifier) {
 		Location<World> location = character.getPlayer().getLocation();
 		World extent = location.getExtent();
 		Optional<GroundLuminanceProperty> property = location.add(0, -1, 0).getBlock().getProperty(GroundLuminanceProperty.class);

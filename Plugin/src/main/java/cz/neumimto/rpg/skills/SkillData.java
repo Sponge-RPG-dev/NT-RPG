@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.skills;
 
-import cz.neumimto.rpg.skills.mods.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModList;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.HashSet;
@@ -41,7 +41,7 @@ public class SkillData {
 	private Set<SkillData> conflicts = new HashSet<>();
 	private Set<SkillData> depending = new HashSet<>();
 	private Set<ItemStack> itemCost = new HashSet<>();
-	private Set<SkillModifier> insufficientCost = new HashSet<>();
+	private Set<SkillModList> insufficientCost = new HashSet<>();
 	private ISkill iskill;
 	private String combination = null;
 	private int relativeX;
@@ -166,11 +166,11 @@ public class SkillData {
 		return itemCost;
 	}
 
-	public Set<SkillModifier> getInsufficientCost() {
+	public Set<SkillModList> getInsufficientCost() {
 		return insufficientCost;
 	}
 
-	public void setInsufficientCost(Set<SkillModifier> insufficientCost) {
+	public void setInsufficientCost(Set<SkillModList> insufficientCost) {
 		this.insufficientCost = insufficientCost;
 	}
 }

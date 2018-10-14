@@ -14,7 +14,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.Targetted;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModList;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
@@ -46,7 +46,7 @@ public class BrainSap extends Targetted {
 	}
 
 	@Override
-	public SkillResult castOn(Living targettedEntity, IActiveCharacter iActiveCharacter, ExtendedSkillInfo info, SkillModifier modifier) {
+	public SkillResult castOn(Living targettedEntity, IActiveCharacter iActiveCharacter, ExtendedSkillInfo info, SkillModList modifier) {
 		SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
 		builder.fromSkill(this);
 		IEntity e = entityService.get(targettedEntity);

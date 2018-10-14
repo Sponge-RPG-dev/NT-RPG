@@ -20,7 +20,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModList;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
@@ -56,7 +56,7 @@ public class IceBolt extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier skillModifier) {
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList skillModList) {
 		Player p = character.getPlayer();
 		World world = p.getWorld();
 		Entity optional = world.createEntity(EntityTypes.SNOWBALL, p.getLocation().getPosition()
@@ -76,8 +76,8 @@ public class IceBolt extends ActiveSkill {
 		build.type(getDamageType());
 
 		projectileProperties.onHit((event, caster, target) -> {
-			long slowduration = getLongNodeValue(info, SkillNodes.DURATION, skillModifier);
-			int slowamplf = getIntNodeValue(info, SkillNodes.AMPLIFIER, skillModifier);
+			long slowduration = getLongNodeValue(info, SkillNodes.DURATION, skillModList);
+			int slowamplf = getIntNodeValue(info, SkillNodes.AMPLIFIER, skillModList);
 			target.getEntity().damage(projectileProperties.getDamage(), build.build());
 			effectService.addEffect(new SlowPotion(target, slowduration, slowamplf), target, this);
 		});

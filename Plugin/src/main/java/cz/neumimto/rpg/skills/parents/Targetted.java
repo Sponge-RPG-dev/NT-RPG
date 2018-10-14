@@ -23,7 +23,7 @@ import cz.neumimto.rpg.skills.ITargetted;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModList;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.entity.living.Living;
 
@@ -37,7 +37,7 @@ public abstract class Targetted extends ActiveSkill implements ITargetted {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList modifier) {
 		int range = (int) info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.RANGE, info.getTotalLevel());
 		Living l = getTargettedEntity(character, range);
 		if (l == null) {

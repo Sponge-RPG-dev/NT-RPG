@@ -11,7 +11,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModList;
 
 /**
  * Created by NeumimTo on 23.12.2015.
@@ -34,8 +34,8 @@ public class SkillInvisibility extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier skillModifier) {
-		long duration = getLongNodeValue(info, SkillNodes.DURATION, skillModifier);
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList skillModList) {
+		long duration = getLongNodeValue(info, SkillNodes.DURATION, skillModList);
 		Invisibility invisibility = new Invisibility(character, duration);
 		effectService.addEffect(invisibility, character, this);
 		return SkillResult.OK;

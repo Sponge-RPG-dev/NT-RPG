@@ -24,7 +24,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ProjectileProperties;
 import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.mods.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModList;
 import cz.neumimto.rpg.utils.TriConsumer;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.projectile.Projectile;
@@ -42,7 +42,7 @@ public abstract class SkillShot extends ActiveSkill {
 
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList modifier) {
 		Optional<Projectile> projectile = character.getPlayer().launchProjectile(getProjectile(character, info));
 		if (projectile.isPresent()) {
 			ProjectileProperties projectileProperties = getProjectileProperties(character, info, modifier, projectile.get());
@@ -52,7 +52,7 @@ public abstract class SkillShot extends ActiveSkill {
 		return SkillResult.CANCELLED;
 	}
 
-	protected abstract ProjectileProperties getProjectileProperties(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier,
+	protected abstract ProjectileProperties getProjectileProperties(IActiveCharacter character, ExtendedSkillInfo info, SkillModList modifier,
 			Projectile projectile);
 
 	protected abstract Class<Projectile> getProjectile(IActiveCharacter character, ExtendedSkillInfo info);

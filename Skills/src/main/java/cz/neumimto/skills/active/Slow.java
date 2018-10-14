@@ -12,7 +12,7 @@ import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.Targetted;
-import cz.neumimto.rpg.skills.mods.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModList;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.entity.living.Living;
 
@@ -37,7 +37,7 @@ public class Slow extends Targetted {
 	}
 
 	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillModifier modifier) {
+	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillModList modifier) {
 		if (Utils.canDamage(source, target)) {
 			long duration = getLongNodeValue(info, SkillNodes.DURATION, modifier);
 			IEntity iEntity = entityService.get(target);

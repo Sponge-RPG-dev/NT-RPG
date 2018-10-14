@@ -17,7 +17,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModList;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleOptions;
@@ -57,7 +57,7 @@ public class Despair extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList modifier) {
 		int k = getIntNodeValue(info, SkillNodes.RADIUS, modifier);
 		Set<Entity> nearbyEntities = Utils.getNearbyEntities(character.getEntity().getLocation(), k);
 		double damage = getDoubleNodeValue(info, SkillNodes.DAMAGE, modifier);

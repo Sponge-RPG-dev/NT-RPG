@@ -11,7 +11,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModList;
 import org.spongepowered.api.item.ItemTypes;
 
 /**
@@ -35,7 +35,7 @@ public class SkillSpeed extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList modifier) {
 		long duration = getLongNodeValue(info, SkillNodes.DURATION, modifier);
 		float amount = getFloatNodeValue(info, SkillNodes.AMOUNT, modifier);
 		SpeedBoost sb = new SpeedBoost(character, duration, amount);

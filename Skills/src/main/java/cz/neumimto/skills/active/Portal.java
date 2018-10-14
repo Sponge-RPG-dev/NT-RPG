@@ -11,7 +11,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModList;
 
 /**
  * Created by NeumimTo on 22.7.2017.
@@ -38,7 +38,7 @@ public class Portal extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList modifier) {
 		if (character.hasEffect(PortalEffect.name)) {
 			effectService.removeEffect(PortalEffect.name, character, this);
 			return SkillResult.CANCELLED;

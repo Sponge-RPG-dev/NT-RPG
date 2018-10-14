@@ -24,7 +24,7 @@ import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModList;
 
 /**
  * Created by NeumimTo on 26.7.2015.
@@ -40,10 +40,10 @@ public abstract class ActiveSkill extends AbstractSkill {
 			character.sendMessage(Localizations.PLAYER_IS_SILENCED);
 			return SkillResult.CASTER_SILENCED;
 		}
-		SkillModifier skillModifier = new SkillModifier();
+		SkillModList skillModList = new SkillModList();
 
-		return cast(character, info, skillModifier);
+		return cast(character, info, skillModList);
 	}
 
-	public abstract SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier);
+	public abstract SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList modifier);
 }

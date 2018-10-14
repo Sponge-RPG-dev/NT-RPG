@@ -11,19 +11,19 @@ import java.util.Set;
 /**
  * Created by ja on 22.10.2016.
  */
-public abstract class SkillModifierProcessor implements CatalogType {
+public abstract class SkillModProcessor implements CatalogType {
 
 	private final String name;
-	private final Set<ModifierTargetExcution> targetExcutions;
+	private final Set<ModTargetExcution> targetExcutions;
 
-	public SkillModifierProcessor(String name, ModifierTargetExcution... targetExcutions) {
+	public SkillModProcessor(String name, ModTargetExcution... targetExcutions) {
 		this.name = name.toLowerCase();
 		this.targetExcutions = new HashSet<>(Arrays.asList(targetExcutions));
 	}
 
-	public abstract void process(IActiveCharacter iActiveCharacter, SkillModifier parent, ExtendedSkillInfo info);
+	public abstract void process(IActiveCharacter iActiveCharacter, SkillModList parent, ExtendedSkillInfo info);
 
-	public Set<ModifierTargetExcution> allowedTargets() {
+	public Set<ModTargetExcution> allowedTargets() {
 		return targetExcutions;
 	}
 

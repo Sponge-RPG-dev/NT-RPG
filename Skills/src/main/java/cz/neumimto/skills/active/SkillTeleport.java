@@ -9,7 +9,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModList;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -39,9 +39,9 @@ public class SkillTeleport extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo extendedSkillInfo, SkillModifier skillModifier) {
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo extendedSkillInfo, SkillModList skillModList) {
 		Player player = character.getPlayer();
-		double doubleNodeValue = getDoubleNodeValue(extendedSkillInfo, SkillNodes.RANGE, skillModifier);
+		double doubleNodeValue = getDoubleNodeValue(extendedSkillInfo, SkillNodes.RANGE, skillModList);
 
 		Optional<BlockRayHit<World>> optHit =
 				BlockRay.from(player).distanceLimit(doubleNodeValue).stopFilter(Utils.SKILL_TARGET_BLOCK_FILTER).build().end();

@@ -185,6 +185,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 							character.getMana().setValue(character.getMana().getValue() - event.getRequiredMana());
 							long cd = (long) newCd;
 							character.getCooldowns().put(esi.getSkill().getName(), cd + servertime);
+
 							Gui.displayMana(character);
 							return SkillResult.OK;
 						}

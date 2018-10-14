@@ -15,7 +15,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModList;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
@@ -44,7 +44,7 @@ public class SkillFireball extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier skillModifier) {
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList skillModList) {
 		Player p = character.getPlayer();
 		World world = p.getWorld();
 		Entity optional = world.createEntity(EntityTypes.SNOWBALL, p.getLocation().getPosition()
@@ -53,12 +53,12 @@ public class SkillFireball extends ActiveSkill {
 		Vector3d rotation = p.getRotation();
 		Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();
 		Snowball sb = (Snowball) optional;
-		sb.offer(Keys.VELOCITY, direction.mul(getFloatNodeValue(info, SkillNodes.VELOCITY, skillModifier)));
+		sb.offer(Keys.VELOCITY, direction.mul(getFloatNodeValue(info, SkillNodes.VELOCITY, skillModList)));
 		sb.setShooter(p);
 		world.spawnEntity(sb);
 		sb.offer(Keys.FIRE_TICKS, 999);
 		ProjectileProperties projectileProperties = new ProjectileProperties(sb, character);
-		projectileProperties.setDamage(getDoubleNodeValue(info, SkillNodes.DAMAGE, skillModifier));
+		projectileProperties.setDamage(getDoubleNodeValue(info, SkillNodes.DAMAGE, skillModList));
 		SkillDamageSourceBuilder build = new SkillDamageSourceBuilder();
 		build.fromSkill(this);
 		build.setCaster(character);

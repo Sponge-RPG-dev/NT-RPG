@@ -10,7 +10,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModifier;
+import cz.neumimto.rpg.skills.mods.SkillModList;
 import org.spongepowered.api.data.key.Keys;
 
 /**
@@ -32,7 +32,7 @@ public class SkillJump extends ActiveSkill {
 
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier skillModifier) {
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList skillModList) {
 		Vector3d rotation = character.getEntity().getRotation();
 		Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();
 		Vector3d mul = new Vector3d(0, 1, 0).mul(info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.VELOCITY, info.getTotalLevel
