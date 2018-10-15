@@ -16,7 +16,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.Targetted;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModList;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import org.spongepowered.api.entity.living.Living;
 
 
@@ -44,13 +44,13 @@ public class Multibolt extends Targetted {
 	}
 
 	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillModList modifier) {
-		float damage = getFloatNodeValue(info, SkillNodes.DAMAGE, modifier);
-		int timesToHit = getIntNodeValue(info, "times-hit", modifier);
+	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier) {
+		float damage = getFloatNodeValue(info, SkillNodes.DAMAGE);
+		int timesToHit = getIntNodeValue(info, "times-hit");
 		MultiboltModel model = new MultiboltModel(timesToHit, damage);
 		IEntity iEntity = entityService.get(target);
 		IEffect effect = new MultiboltEffect(iEntity, source, model);
 		effectService.addEffect(effect, iEntity, this);
-		return SkillResult.OK;
+		return modifier.next(source, info, SkillResult.OK);
 	}
 }

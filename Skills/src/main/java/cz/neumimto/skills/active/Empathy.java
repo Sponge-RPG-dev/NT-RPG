@@ -11,7 +11,7 @@ import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.Targetted;
-import cz.neumimto.rpg.skills.mods.SkillModList;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
@@ -35,13 +35,13 @@ public class Empathy extends Targetted {
 	}
 
 	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillModList modifier) {
+	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier) {
 		Player entity = source.getEntity();
 		Double max = entity.get(Keys.MAX_HEALTH).get();
 		Double a = entity.get(Keys.HEALTH).get();
 		a = max - a;
-		a *= getFloatNodeValue(info, SkillNodes.MULTIPLIER, modifier);
-		max = getDoubleNodeValue(info, "max-damage", modifier);
+		a *= getFloatNodeValue(info, SkillNodes.MULTIPLIER);
+		max = getDoubleNodeValue(info, "max-damage");
 		if (max > 0) {
 			a = a < max ? max : a;
 		}
@@ -50,6 +50,6 @@ public class Empathy extends Targetted {
 				.setTarget(entityService.get(target))
 				.setCaster(source).build();
 		target.damage(a, build);
-		return SkillResult.CANCELLED;
+		return modifier.next(source, info, SkillResult.OK);
 	}
 }

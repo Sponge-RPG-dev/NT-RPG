@@ -13,7 +13,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.Targetted;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModList;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.item.ItemTypes;
 
@@ -40,12 +40,12 @@ public class Dementia extends Targetted {
 	}
 
 	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillModList modifier) {
+	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier) {
 		IEntity iEntity = entityService.get(target);
-		long duration = getLongNodeValue(info, SkillNodes.DURATION, modifier);
-		int skillLevel = getIntNodeValue(info, "skill-level", modifier);
+		long duration = getLongNodeValue(info, SkillNodes.DURATION);
+		int skillLevel = getIntNodeValue(info, "skill-level");
 		AllSkillsBonus bonus = new AllSkillsBonus(iEntity, duration, -1 * skillLevel);
 		effectService.addEffect(bonus, iEntity, this);
-		return null;
+		return modifier.next(source, info, SkillResult.OK);
 	}
 }

@@ -12,7 +12,7 @@ import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.Targetted;
-import cz.neumimto.rpg.skills.mods.SkillModList;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.entity.living.Living;
 
@@ -22,31 +22,28 @@ import org.spongepowered.api.entity.living.Living;
 @ResourceLoader.Skill("ntrpg:slow")
 public class Slow extends Targetted {
 
-	@Inject
-	private EntityService entityService;
+    @Inject
+    private EntityService entityService;
 
-	@Inject
-	private EffectService effectService;
+    @Inject
+    private EffectService effectService;
 
-	public void init() {
-		super.init();
-		SkillSettings settings = new SkillSettings();
-		settings.addNode(SkillNodes.DURATION, 5000, 100);
-		settings.addNode(SkillNodes.AMPLIFIER, 1, 2);
-		setSettings(settings);
-	}
+    public void init() {
+        super.init();
+        SkillSettings settings = new SkillSettings();
+        settings.addNode(SkillNodes.DURATION, 5000, 100);
+        settings.addNode(SkillNodes.AMPLIFIER, 1, 2);
+        setSettings(settings);
+    }
 
-	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillModList modifier) {
-		if (Utils.canDamage(source, target)) {
-			long duration = getLongNodeValue(info, SkillNodes.DURATION, modifier);
-			IEntity iEntity = entityService.get(target);
-			int i = getIntNodeValue(info, SkillNodes.AMPLIFIER, modifier);
-			SlowPotion effect = new SlowPotion(iEntity, duration, i);
-			effectService.addEffect(effect, iEntity, this);
-			return SkillResult.OK;
-		} else {
-			return SkillResult.NO_TARGET;
-		}
-	}
+    @Override
+    public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier) {
+        long duration = getLongNodeValue(info, SkillNodes.DURATION);
+        IEntity iEntity = entityService.get(target);
+        int i = getIntNodeValue(info, SkillNodes.AMPLIFIER);
+        SlowPotion effect = new SlowPotion(iEntity, duration, i);
+        effectService.addEffect(effect, iEntity, this);
+        return modifier.next(source, info, SkillResult.OK);
+
+    }
 }

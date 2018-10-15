@@ -14,5 +14,5 @@ public abstract class ImmutableSkillModProcessor {
 		return modTargetExecution;
 	}
 
-	public abstract void merge(SkillModList skillModList);
+	public abstract void merge(SkillContext skillContext);
 }

@@ -15,7 +15,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModList;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
@@ -63,7 +63,7 @@ public class GrapplingHook extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList modifier) {
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
 		Player p = character.getPlayer();
 		World world = p.getWorld();
 		Entity optional = world.createEntity(EntityTypes.TIPPED_ARROW, p.getLocation().getPosition()
@@ -77,7 +77,7 @@ public class GrapplingHook extends ActiveSkill {
 
 		Vector3d arrowVec = direction.normalize().mul(2);
 		sb.setVelocity(arrowVec);
-		double range = getDoubleNodeValue(info, SkillNodes.RANGE, modifier);
+		double range = getDoubleNodeValue(info, SkillNodes.RANGE);
 		//final double rangeSquared = Math.pow(range, 2);
 
 		world.spawnEntity(sb);
@@ -123,7 +123,7 @@ public class GrapplingHook extends ActiveSkill {
 				.interval(50, TimeUnit.MILLISECONDS)
 				.submit(plugin);
 
-		return SkillResult.OK;
+		return modifier.next(character, info, SkillResult.OK);
 	}
 
 

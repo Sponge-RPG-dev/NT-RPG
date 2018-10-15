@@ -23,7 +23,7 @@ import cz.neumimto.rpg.skills.ITargetted;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModList;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.entity.living.Living;
 
@@ -37,23 +37,23 @@ public abstract class Targetted extends ActiveSkill implements ITargetted {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList modifier) {
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
 		int range = (int) info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.RANGE, info.getTotalLevel());
 		Living l = getTargettedEntity(character, range);
 		if (l == null) {
 			if (getDamageType() == null && !getSkillTypes().contains(SkillType.CANNOT_BE_SELF_CASTED)) {
 				l = character.getEntity();
 			} else {
-				return SkillResult.NO_TARGET;
+				return SkillResult.NO_TARGET; //dont chain
 			}
 		}
 		if (getDamageType() != null && !Utils.canDamage(character, l)) {
-			return SkillResult.CANCELLED;
+			return SkillResult.CANCELLED;//dont chain
 		}
 		SkillFindTargetEvent event = new SkillFindTargetEvent(character, l, this);
 		game.getEventManager().post(event);
 		if (event.isCancelled()) {
-			return SkillResult.CANCELLED;
+			return SkillResult.CANCELLED;//dont chain
 		}
 		return castOn(event.getTarget(), event.getCharacter(), info, modifier);
 	}

@@ -12,7 +12,7 @@ import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.Targetted;
-import cz.neumimto.rpg.skills.mods.SkillModList;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.item.ItemTypes;
 
@@ -37,12 +37,12 @@ public class Web extends Targetted {
 	}
 
 	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillModList modifier) {
-		long duration = getLongNodeValue(info, SkillNodes.DURATION, modifier);
+	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier) {
+		long duration = getLongNodeValue(info, SkillNodes.DURATION);
 		IEntity iEntity = entityService.get(target);
 		WebEffect eff = new WebEffect(iEntity, duration);
 		effectService.addEffect(eff, iEntity, this);
-		return null;
+		return modifier.next(source, info, SkillResult.OK);
 	}
 
 

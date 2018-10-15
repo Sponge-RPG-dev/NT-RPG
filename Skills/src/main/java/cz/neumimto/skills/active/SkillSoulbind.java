@@ -12,7 +12,7 @@ import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
-import cz.neumimto.rpg.skills.mods.SkillModList;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
@@ -44,7 +44,7 @@ public class SkillSoulbind extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter iActiveCharacter, ExtendedSkillInfo extendedSkillInfo, SkillModList skillModList) {
+	public SkillResult cast(IActiveCharacter iActiveCharacter, ExtendedSkillInfo extendedSkillInfo, SkillContext skillContext) {
 		float range = extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.RANGE, extendedSkillInfo.getTotalLevel());
 		Living targettedEntity = Utils.getTargettedEntity(iActiveCharacter, (int) range);
 		if (targettedEntity != null && targettedEntity == EntityTypes.PLAYER) {
@@ -57,7 +57,7 @@ public class SkillSoulbind extends ActiveSkill {
 				effectService.addEffect(effect, character, this);
 			}
 		}
-		return SkillResult.CANCELLED;
+		return skillContext.next(iActiveCharacter, extendedSkillInfo, SkillResult.OK);
 	}
 
 	@Listener(order = Order.LAST)

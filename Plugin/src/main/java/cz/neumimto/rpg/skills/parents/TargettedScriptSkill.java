@@ -8,7 +8,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.configs.ScriptSkillModel;
 import cz.neumimto.rpg.skills.scripting.SkillScriptContext;
 import cz.neumimto.rpg.skills.scripting.TargettedScriptExecutorSkill;
-import cz.neumimto.rpg.skills.mods.SkillModList;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import org.spongepowered.api.entity.living.Living;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public class TargettedScriptSkill extends Targetted implements ITargettedScriptS
 	private ScriptSkillModel model;
 
 	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillModList modifier) {
+	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier) {
 		SkillScriptContext context = new SkillScriptContext(this, info);
 		executor.cast(source, NtRpgPlugin.GlobalScope.entityService.get(target), modifier, context);
 		return context.getResult() == null ? SkillResult.OK : context.getResult();

@@ -9,7 +9,7 @@ import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModList;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -34,20 +34,20 @@ public class Astronomy extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList modifier) {
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
 		Player character1 = character.getEntity();
 
 		if (character1.getWorld().getWeather() == Weathers.CLEAR) {
 			Vector3d position = character1.getLocation().getPosition();
 			if (character1.getWorld().getHighestYAt(position.getFloorX(), position.getFloorZ()) > position.getFloorY()) {
 				character1.sendMessage(ChatTypes.ACTION_BAR, SkillLocalization.ASTRONOMY_CANNOT_SEE_THE_SKY);
-				return SkillResult.CANCELLED;
+				return modifier.next(character, info, SkillResult.CANCELLED);
 			}
 			ItemStack is = Utils.createTeleportationScroll(character.getLocation());
 			character.getEntity().getInventory().offer(is);
-			return SkillResult.OK;
+			return modifier.next(character, info, SkillResult.OK);
 		}
 		character1.sendMessage(ChatTypes.ACTION_BAR, SkillLocalization.ASTRONOMY_CANNOT_SEE_THE_SKY);
-		return SkillResult.CANCELLED;
+		return modifier.next(character, info, SkillResult.CANCELLED);
 	}
 }

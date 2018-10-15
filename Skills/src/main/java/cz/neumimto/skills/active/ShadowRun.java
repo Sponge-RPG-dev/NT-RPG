@@ -13,7 +13,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModList;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import org.spongepowered.api.data.property.block.GroundLuminanceProperty;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -41,17 +41,16 @@ public class ShadowRun extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList modifier) {
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
 		Location<World> location = character.getPlayer().getLocation();
-		World extent = location.getExtent();
 		Optional<GroundLuminanceProperty> property = location.add(0, -1, 0).getBlock().getProperty(GroundLuminanceProperty.class);
 		GroundLuminanceProperty groundLuminanceProperty = property.get();
-		double llevel = getDoubleNodeValue(info, "max-light-level", modifier);
+		double llevel = getDoubleNodeValue(info, "max-light-level");
 		if (groundLuminanceProperty.getValue() <= llevel) {
-			long duration = getLongNodeValue(info, SkillNodes.DURATION, modifier);
-			double damage = getDoubleNodeValue(info, SkillNodes.DAMAGE, modifier);
-			double attackmult = getDoubleNodeValue(info, SkillNodes.MULTIPLIER, modifier);
-			float walkspeed = getFloatNodeValue(info, "walk-speed", modifier);
+			long duration = getLongNodeValue(info, SkillNodes.DURATION);
+			double damage = getDoubleNodeValue(info, SkillNodes.DAMAGE);
+			double attackmult = getDoubleNodeValue(info, SkillNodes.MULTIPLIER);
+			float walkspeed = getFloatNodeValue(info, "walk-speed");
 			ShadowRunModel model = new ShadowRunModel();
 			model.duration = duration;
 			model.damage = damage;
@@ -60,6 +59,6 @@ public class ShadowRun extends ActiveSkill {
 			IEffect effect = new ShadowRunEffect(character, 0, model);
 			effectService.addEffect(effect, character, this);
 		}
-		return SkillResult.CANCELLED;
+		return modifier.next(character, info, SkillResult.OK);
 	}
 }

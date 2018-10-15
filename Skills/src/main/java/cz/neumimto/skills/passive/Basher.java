@@ -56,9 +56,9 @@ public class Basher extends PassiveSkill {
 	private BashModel getBashModel(ExtendedSkillInfo info, IActiveCharacter character) {
 		BashModel model = new BashModel();
 		model.chance = getIntNodeValue(info, SkillNodes.CHANCE);
-		model.cooldown = getLongNodeValue(info, SkillNodes.COOLDOWN, modifier);
+		model.cooldown = getLongNodeValue(info, SkillNodes.COOLDOWN);
 		model.damage = getIntNodeValue(info, SkillNodes.DAMAGE);
-		model.stunDuration = getLongNodeValue(info, SkillNodes.DURATION, modifier);
+		model.stunDuration = getLongNodeValue(info, SkillNodes.DURATION);
 		return model;
 	}
 }

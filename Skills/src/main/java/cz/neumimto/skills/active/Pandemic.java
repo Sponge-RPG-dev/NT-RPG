@@ -16,7 +16,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModList;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
@@ -49,11 +49,11 @@ public class Pandemic extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList modifier) {
-		float damage = getFloatNodeValue(info, SkillNodes.DAMAGE, modifier);
-		int radius = getIntNodeValue(info, SkillNodes.RADIUS, modifier);
-		long period = getLongNodeValue(info, SkillNodes.PERIOD, modifier);
-		long duration = getLongNodeValue(info, SkillNodes.DURATION, modifier);
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
+		float damage = getFloatNodeValue(info, SkillNodes.DAMAGE);
+		int radius = getIntNodeValue(info, SkillNodes.RADIUS);
+		long period = getLongNodeValue(info, SkillNodes.PERIOD);
+		long duration = getLongNodeValue(info, SkillNodes.DURATION);
 		Set<Entity> nearbyEntities = Utils.getNearbyEntities(character.getLocation(), radius);
 		for (Entity entity : nearbyEntities) {
 			if (Utils.isLivingEntity(entity)) {
@@ -70,6 +70,6 @@ public class Pandemic extends ActiveSkill {
 				}
 			}
 		}
-		return SkillResult.OK;
+		return modifier.next(character, info, SkillResult.OK);
 	}
 }

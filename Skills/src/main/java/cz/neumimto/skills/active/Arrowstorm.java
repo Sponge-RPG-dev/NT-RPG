@@ -11,7 +11,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModList;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.item.ItemTypes;
 
@@ -43,13 +43,13 @@ public class Arrowstorm extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList modifier) {
-		int min = getIntNodeValue(info, "min-arrows", modifier);
-		int max = getIntNodeValue(info, "max-arrows", modifier);
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
+		int min = getIntNodeValue(info, "min-arrows");
+		int max = getIntNodeValue(info, "max-arrows");
 		int arrows = ThreadLocalRandom.current().nextInt(max - min) + min;
-		min = getIntNodeValue(info, SkillNodes.PERIOD, modifier);
+		min = getIntNodeValue(info, SkillNodes.PERIOD);
 		min = min <= 0 ? 1 : min;
 		effectService.addEffect(new ArrowstormEffect(character, min, arrows), character, this);
-		return SkillResult.OK;
+		return modifier.next(character, info, SkillResult.OK);
 	}
 }

@@ -7,7 +7,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.configs.ScriptSkillModel;
 import cz.neumimto.rpg.skills.scripting.ScriptExecutorSkill;
 import cz.neumimto.rpg.skills.scripting.SkillScriptContext;
-import cz.neumimto.rpg.skills.mods.SkillModList;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 
 import java.util.List;
 
@@ -21,10 +21,11 @@ public class ActiveScriptSkill extends ActiveSkill implements ScriptSkill<Script
 	private ScriptSkillModel model;
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList modifier) {
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext chain) {
 		SkillScriptContext context = new SkillScriptContext(this, info);
-		executor.cast(character, info, modifier, context);
-		return context.getResult() == null ? SkillResult.OK : context.getResult();
+		executor.cast(character, info, chain, context);
+		SkillResult skillResult = context.getResult() == null ? SkillResult.OK : context.getResult();
+		return chain.next(character, info, skillResult);
 	}
 
 	@Override

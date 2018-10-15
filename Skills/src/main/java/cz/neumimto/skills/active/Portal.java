@@ -11,7 +11,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModList;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 
 /**
  * Created by NeumimTo on 22.7.2017.
@@ -38,19 +38,19 @@ public class Portal extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList modifier) {
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
 		if (character.hasEffect(PortalEffect.name)) {
 			effectService.removeEffect(PortalEffect.name, character, this);
-			return SkillResult.CANCELLED;
+			return modifier.next(character, info, SkillResult.CANCELLED);
 		}
-		long duration = getLongNodeValue(info, SkillNodes.MANACOST, modifier);
-		double manaPerTick = getDoubleNodeValue(info, "manacost-per-tick", modifier);
-		double manaPerEntity = getDoubleNodeValue(info, "manacost-per-teleported-entity", modifier);
-		double chanceToFail = getDoubleNodeValue(info, "chance-to-fail", modifier);
+		long duration = getLongNodeValue(info, SkillNodes.MANACOST);
+		double manaPerTick = getDoubleNodeValue(info, "manacost-per-tick");
+		double manaPerEntity = getDoubleNodeValue(info, "manacost-per-teleported-entity");
+		double chanceToFail = getDoubleNodeValue(info, "chance-to-fail");
 		PortalEffect portalEffect = new PortalEffect(character, duration, null,
 				manaPerTick, manaPerEntity, 1750, chanceToFail, false);
 		effectService.addEffect(portalEffect, character, this);
-		return SkillResult.OK;
+		return modifier.next(character, info, SkillResult.OK);
 	}
 
 

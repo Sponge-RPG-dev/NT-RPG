@@ -15,7 +15,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModList;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
@@ -44,7 +44,7 @@ public class SkillFireball extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList skillModList) {
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillContext) {
 		Player p = character.getPlayer();
 		World world = p.getWorld();
 		Entity optional = world.createEntity(EntityTypes.SNOWBALL, p.getLocation().getPosition()
@@ -53,12 +53,12 @@ public class SkillFireball extends ActiveSkill {
 		Vector3d rotation = p.getRotation();
 		Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();
 		Snowball sb = (Snowball) optional;
-		sb.offer(Keys.VELOCITY, direction.mul(getFloatNodeValue(info, SkillNodes.VELOCITY, skillModList)));
+		sb.offer(Keys.VELOCITY, direction.mul(getFloatNodeValue(info, SkillNodes.VELOCITY)));
 		sb.setShooter(p);
 		world.spawnEntity(sb);
 		sb.offer(Keys.FIRE_TICKS, 999);
 		ProjectileProperties projectileProperties = new ProjectileProperties(sb, character);
-		projectileProperties.setDamage(getDoubleNodeValue(info, SkillNodes.DAMAGE, skillModList));
+		projectileProperties.setDamage(getDoubleNodeValue(info, SkillNodes.DAMAGE));
 		SkillDamageSourceBuilder build = new SkillDamageSourceBuilder();
 		build.fromSkill(this);
 		build.setCaster(character);
@@ -66,6 +66,6 @@ public class SkillFireball extends ActiveSkill {
 		projectileProperties.onHit((event, caster, target) -> {
 			target.getEntity().damage(projectileProperties.getDamage(), build.build());
 		});
-		return SkillResult.OK;
+		return skillContext.next(character, info, SkillResult.OK);
 	}
 }

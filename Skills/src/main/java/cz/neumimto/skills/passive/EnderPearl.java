@@ -27,7 +27,7 @@ public class EnderPearl extends PassiveSkill {
 
 	@Override
 	public void applyEffect(ExtendedSkillInfo info, IActiveCharacter character) {
-		long cooldown = getLongNodeValue(info, SkillNodes.COOLDOWN, modifier);
+		long cooldown = getLongNodeValue(info, SkillNodes.COOLDOWN);
 		EnderPearlEffect effect = new EnderPearlEffect(character, -1L, cooldown);
 		effectService.addEffect(effect, character, this);
 	}
@@ -36,7 +36,7 @@ public class EnderPearl extends PassiveSkill {
 	public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
 		super.skillUpgrade(IActiveCharacter, level);
 		ExtendedSkillInfo skill = IActiveCharacter.getSkill(getId());
-		long cooldown = getLongNodeValue(skill, SkillNodes.COOLDOWN, modifier);
+		long cooldown = getLongNodeValue(skill, SkillNodes.COOLDOWN);
 		IEffectContainer<Long, EnderPearlEffect> container = IActiveCharacter.getEffect(EnderPearlEffect.name);
 		container.updateValue(cooldown, this);
 	}

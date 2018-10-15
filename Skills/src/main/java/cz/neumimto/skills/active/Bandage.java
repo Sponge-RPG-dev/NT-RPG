@@ -14,7 +14,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.Targetted;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModList;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.item.ItemTypes;
 
@@ -41,16 +41,16 @@ public class Bandage extends Targetted {
 	}
 
 	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillModList modifier) {
+	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier) {
 		IEntity iEntity = entityService.get(target);
 		if (iEntity.isFriendlyTo(source)) {
-			float floatNodeValue = getFloatNodeValue(info, SkillNodes.HEALED_AMOUNT, modifier);
+			float floatNodeValue = getFloatNodeValue(info, SkillNodes.HEALED_AMOUNT);
 			entityService.healEntity(iEntity, floatNodeValue, this);
 			Decorator.healEffect(iEntity.getEntity().getLocation().add(0, 1, 0));
 			if (iEntity.hasEffect(Bleeding.name)) {
 				effectService.removeEffectContainer(iEntity.getEffect(Bleeding.name), iEntity);
 			}
-			return SkillResult.OK;
+			return modifier.next(source, info, SkillResult.OK);
 		}
 		return SkillResult.CANCELLED;
 	}

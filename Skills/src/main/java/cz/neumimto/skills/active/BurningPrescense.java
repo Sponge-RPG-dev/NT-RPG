@@ -12,7 +12,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModList;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.item.ItemTypes;
 
@@ -41,23 +41,23 @@ public class BurningPrescense extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList modifier) {
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
 		if (character.hasEffect(BurningPrescenseEffect.name)) {
 			effectService.removeEffectContainer(character.getEffect(BurningPrescenseEffect.name), character);
 		} else {
-			BPModel model = getBPModel(info, character, modifier);
+			BPModel model = getBPModel(info);
 			model.duration = -1;
 			BurningPrescenseEffect eff = new BurningPrescenseEffect(character, -1, model);
 			effectService.addEffect(eff, character, this);
 		}
-		return SkillResult.OK;
+		return modifier.next(character, info, SkillResult.OK);
 	}
 
-	private BPModel getBPModel(ExtendedSkillInfo info, IActiveCharacter character, SkillModList modifier) {
+	private BPModel getBPModel(ExtendedSkillInfo info) {
 		BPModel model = new BPModel();
-		model.period = getIntNodeValue(info, SkillNodes.PERIOD, modifier);
-		model.radius = getLongNodeValue(info, SkillNodes.RADIUS, modifier);
-		model.damage = getIntNodeValue(info, SkillNodes.DAMAGE, modifier);
+		model.period = getIntNodeValue(info, SkillNodes.PERIOD);
+		model.radius = getLongNodeValue(info, SkillNodes.RADIUS);
+		model.damage = getIntNodeValue(info, SkillNodes.DAMAGE);
 		return model;
 	}
 }

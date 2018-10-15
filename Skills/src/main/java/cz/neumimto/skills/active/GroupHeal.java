@@ -11,7 +11,7 @@ import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModList;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import org.spongepowered.api.item.ItemTypes;
 
 /**
@@ -35,10 +35,10 @@ public class GroupHeal extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList modifier) {
-		float amnt = getFloatNodeValue(info, SkillNodes.HEALED_AMOUNT, modifier);
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
+		float amnt = getFloatNodeValue(info, SkillNodes.HEALED_AMOUNT);
 		if (character.hasParty()) {
-			double rad = Math.pow(getDoubleNodeValue(info, SkillNodes.RADIUS, modifier), 2);
+			double rad = Math.pow(getDoubleNodeValue(info, SkillNodes.RADIUS), 2);
 			for (IActiveCharacter a : character.getParty().getPlayers()) {
 				if (a.getLocation().getPosition().distanceSquared(character.getLocation().getPosition()) <= rad) {
 					entityService.healEntity(a, amnt, this);
@@ -50,6 +50,6 @@ public class GroupHeal extends ActiveSkill {
 			Decorator.healEffect(character.getEntity().getLocation().add(0, 1, 0));
 		}
 
-		return SkillResult.OK;
+		return modifier.next(character, info, SkillResult.OK);
 	}
 }

@@ -21,13 +21,13 @@ package cz.neumimto.rpg.skills.parents;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.mods.SkillModList;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 
 
 public class DelayedSkill extends ActiveSkill {
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList mod) {
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext mod) {
 		return null;
 	}
 

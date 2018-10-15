@@ -10,7 +10,7 @@ import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
-import cz.neumimto.rpg.skills.mods.SkillModList;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import org.spongepowered.api.item.ItemTypes;
 
 /**
@@ -33,10 +33,10 @@ public class BattleCharge extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList modifier) {
-		double distSq = Math.pow(getDoubleNodeValue(info, SkillNodes.RADIUS, modifier), 2);
-		long duration = getLongNodeValue(info, SkillNodes.DURATION, modifier);
-		float value = getFloatNodeValue(info, "speed-per-level", modifier);
+	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
+		double distSq = Math.pow(getDoubleNodeValue(info, SkillNodes.RADIUS), 2);
+		long duration = getLongNodeValue(info, SkillNodes.DURATION);
+		float value = getFloatNodeValue(info, "speed-per-level");
 		if (character.hasParty()) {
 			for (IActiveCharacter pmember : character.getParty().getPlayers()) {
 				if (pmember.getLocation().getPosition().distanceSquared(character.getLocation().getPosition()) <= distSq) {
@@ -48,6 +48,6 @@ public class BattleCharge extends ActiveSkill {
 			SpeedBoost sp = new SpeedBoost(character, duration, value);
 			effectService.addEffect(sp, character, this);
 		}
-		return SkillResult.OK;
+		return modifier.next(character, info, SkillResult.OK);
 	}
 }

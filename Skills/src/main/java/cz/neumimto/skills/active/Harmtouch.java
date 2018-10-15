@@ -14,7 +14,7 @@ import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.Targetted;
-import cz.neumimto.rpg.skills.mods.SkillModList;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleOptions;
 import org.spongepowered.api.entity.living.Living;
@@ -43,14 +43,14 @@ public class Harmtouch extends Targetted {
 	}
 
 	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillModList modifier) {
+	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier) {
 		SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
 		builder.fromSkill(this);
 		IEntity e = entityService.get(target);
 		builder.setTarget(e);
 		builder.setCaster(source);
 		SkillDamageSource s = builder.build();
-		float damage = getFloatNodeValue(info, SkillNodes.DAMAGE, modifier);
+		float damage = getFloatNodeValue(info, SkillNodes.DAMAGE);
 		boolean damage1 = e.getEntity().damage(damage, s);
 		if (damage1) {
 			Vector3d r = source.getEntity().getRotation();
@@ -71,6 +71,6 @@ public class Harmtouch extends Targetted {
 							.build(),
 					e.getEntity().getLocation().getPosition());
 		}
-		return SkillResult.OK;
+		return modifier.next(source, info, SkillResult.OK);
 	}
 }

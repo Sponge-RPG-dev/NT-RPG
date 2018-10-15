@@ -24,13 +24,13 @@ import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillModList;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 
 /**
  * Created by NeumimTo on 26.7.2015.
  */
 @JsBinding(JsBinding.Type.CLASS)
-public abstract class ActiveSkill extends AbstractSkill {
+public abstract class ActiveSkill extends AbstractSkill implements IActiveSkill {
 
 	@Override
 	public SkillResult onPreUse(IActiveCharacter character) {
@@ -40,10 +40,11 @@ public abstract class ActiveSkill extends AbstractSkill {
 			character.sendMessage(Localizations.PLAYER_IS_SILENCED);
 			return SkillResult.CASTER_SILENCED;
 		}
-		SkillModList skillModList = new SkillModList();
+		SkillContext skillContext = new SkillContext(this);
 
-		return cast(character, info, skillModList);
+		skillContext.sort();
+		return skillContext.next(character, info, null);
 	}
 
-	public abstract SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModList modifier);
+	public abstract SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier);
 }
