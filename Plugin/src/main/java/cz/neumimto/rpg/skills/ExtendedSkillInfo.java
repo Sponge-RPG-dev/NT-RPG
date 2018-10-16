@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.skills;
 
-import cz.neumimto.rpg.skills.mods.ImmutableSkillModProcessor;
+import cz.neumimto.rpg.skills.mods.ActiveSkillPreProcessorWrapper;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -34,7 +34,7 @@ public class ExtendedSkillInfo {
 	private ISkill skill;
 	private int level;
 	private SkillData skillData;
-	private Set<ImmutableSkillModProcessor> mods = new HashSet<>();
+	private Set<ActiveSkillPreProcessorWrapper> mods = new HashSet<>();
 	private int bonusLevel;
 
 	public ISkill getSkill() {
@@ -73,7 +73,7 @@ public class ExtendedSkillInfo {
 		return getBonusLevel() + getLevel();
 	}
 
-	public Set<ImmutableSkillModProcessor> getMods() {
+	public Set<ActiveSkillPreProcessorWrapper> getMods() {
 		return mods;
 	}
 }

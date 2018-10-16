@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.skills.mods;
 
-public enum ModTargetExcution {
+public enum PreProcessorTarget {
     EARLY,
     BEFORE,
     EXECUTION,

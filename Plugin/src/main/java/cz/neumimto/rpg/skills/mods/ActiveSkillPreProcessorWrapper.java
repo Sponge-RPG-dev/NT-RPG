@@ -4,15 +4,15 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.SkillResult;
 
-public abstract class ActiveSkillProcessorWrapper {
+public abstract class ActiveSkillPreProcessorWrapper {
 
-    private ModTargetExcution target;
+    private PreProcessorTarget target;
 
-    public ActiveSkillProcessorWrapper(ModTargetExcution target) {
+    public ActiveSkillPreProcessorWrapper(PreProcessorTarget target) {
         this.target = target;
     }
 
-    public ModTargetExcution getTarget() {
+    public PreProcessorTarget getTarget() {
         return target;
     }
 

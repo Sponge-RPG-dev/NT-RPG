@@ -14,12 +14,12 @@ import java.util.Comparator;
  */
 public class SkillContext {
 
-	private final ArrayList<ActiveSkillProcessorWrapper> wrappers = new ArrayList<>();
+	private final ArrayList<ActiveSkillPreProcessorWrapper> wrappers = new ArrayList<>();
 	private int cursor;
 
 	public SkillContext(ActiveSkill activeSkill) {
 		cursor = -1;
-		wrappers.add(new ActiveSkillProcessorWrapper(ModTargetExcution.EXECUTION) {
+		wrappers.add(new ActiveSkillPreProcessorWrapper(PreProcessorTarget.EXECUTION) {
 
 			@Override
 			public SkillResult doNext(IActiveCharacter character, ExtendedSkillInfo info, SkillResult skillResult) {
@@ -30,8 +30,8 @@ public class SkillContext {
 
 
 	public void sort() {
-		wrappers.sort(Comparator.comparing(ActiveSkillProcessorWrapper::getTarget));
-		wrappers.add(new ActiveSkillProcessorWrapper(ModTargetExcution.LATEST) {
+		wrappers.sort(Comparator.comparing(ActiveSkillPreProcessorWrapper::getTarget));
+		wrappers.add(new ActiveSkillPreProcessorWrapper(PreProcessorTarget.LATEST) {
 			@Override
 			public SkillResult doNext(IActiveCharacter character, ExtendedSkillInfo info, SkillResult skillResult) {
 				return skillResult;

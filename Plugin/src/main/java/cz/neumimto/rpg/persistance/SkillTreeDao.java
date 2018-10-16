@@ -28,7 +28,6 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.entities.RootMobConfig;
 import cz.neumimto.rpg.gui.SkillTreeInterfaceModel;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillData;
@@ -36,21 +35,14 @@ import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoader;
+import cz.neumimto.rpg.skills.mods.ActiveSkillPreProcessorWrapper;
+import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactory;
 import cz.neumimto.rpg.skills.parents.StartingPoint;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.utils.Utils;
-import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.ConfigurationOptions;
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
-import ninja.leaping.configurate.gson.GsonConfigurationLoader;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
-import ninja.leaping.configurate.loader.ConfigurationLoader;
-import ninja.leaping.configurate.objectmapping.ObjectMapper;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
-import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.io.*;
@@ -209,8 +201,11 @@ public class SkillTreeDao {
 				warn("Missing \"LevelGap\" node for a skill \"" + info.getSkillId() + "\", setting to 1");
 			}
 
+
+
 			try {
-				List<? extends ConfigObject> list = c.getObjectList("ReagentCost");
+				Config reagent = c.getConfig("Reagent");
+				List<? extends ConfigObject> list = reagent.getObjectList("Cost");
 				for (ConfigObject configObject : list) {
 					try {
 						String render = configObject.render(ConfigRenderOptions.concise());
@@ -221,9 +216,18 @@ public class SkillTreeDao {
 						e.printStackTrace();
 					}
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+                list = reagent.getObjectList("Insufficient");
+                for (ConfigObject configObject : list) {
+					Optional<SkillPreProcessorFactory> id = Sponge.getRegistry().getType(SkillPreProcessorFactory.class, configObject.get("Id").render());
+					if (id.isPresent()) {
+						SkillPreProcessorFactory skillPreProcessorFactory = id.get();
+						ActiveSkillPreProcessorWrapper parse = skillPreProcessorFactory.parse(configObject);
+						info.getInsufficientCostPreprocessors().add(parse);
+					}
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
 			try {
 				for (String conflicts : c.getStringList("Conflicts")) {

@@ -10,21 +10,21 @@ import java.util.Set;
 /**
  * Created by ja on 22.10.2016.
  */
-public abstract class SkillModProcessorFactory implements CatalogType {
+public abstract class SkillPreProcessorFactory implements CatalogType {
 
 	private final String name;
-	private final Set<ModTargetExcution> targetExcutions;
+	private final Set<PreProcessorTarget> targetExcutions;
 
-	public SkillModProcessorFactory(String name, ModTargetExcution... targetExcutions) {
+	public SkillPreProcessorFactory(String name, PreProcessorTarget... targetExcutions) {
 		this.name = name.toLowerCase();
 		this.targetExcutions = new HashSet<>(Arrays.asList(targetExcutions));
 	}
 
-	public Set<ModTargetExcution> allowedTargets() {
+	public Set<PreProcessorTarget> allowedTargets() {
 		return targetExcutions;
 	}
 
-	public abstract ImmutableSkillModProcessor parse(ConfigObject configObject);
+	public abstract ActiveSkillPreProcessorWrapper parse(ConfigObject configObject);
 
 	@Override
 	public String getName() {
