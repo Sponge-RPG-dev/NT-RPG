@@ -44,13 +44,13 @@ public class Multibolt extends Targetted {
 	}
 
 	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier) {
+	public void castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier) {
 		float damage = getFloatNodeValue(info, SkillNodes.DAMAGE);
 		int timesToHit = getIntNodeValue(info, "times-hit");
 		MultiboltModel model = new MultiboltModel(timesToHit, damage);
 		IEntity iEntity = entityService.get(target);
 		IEffect effect = new MultiboltEffect(iEntity, source, model);
 		effectService.addEffect(effect, iEntity, this);
-		return modifier.next(source, info, SkillResult.OK);
+		modifier.next(source, info, SkillResult.OK);
 	}
 }

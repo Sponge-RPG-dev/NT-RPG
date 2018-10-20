@@ -33,18 +33,17 @@ import cz.neumimto.rpg.skills.mods.SkillContext;
 public abstract class ActiveSkill extends AbstractSkill implements IActiveSkill {
 
 	@Override
-	public SkillResult onPreUse(IActiveCharacter character) {
+	public void onPreUse(IActiveCharacter character, SkillContext skillContext) {
 		ExtendedSkillInfo info = character.getSkillInfo(this);
 
 		if (character.isSilenced() && !getSkillTypes().contains(SkillType.CAN_CAST_WHILE_SILENCED)) {
 			character.sendMessage(Localizations.PLAYER_IS_SILENCED);
-			return SkillResult.CASTER_SILENCED;
+			skillContext.result(SkillResult.CASTER_SILENCED);
+			return;
 		}
-		SkillContext skillContext = new SkillContext(this);
 
-		skillContext.sort();
-		return skillContext.next(character, info, null);
+		skillContext.next(character, info, skillContext);
 	}
 
-	public abstract SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier);
+	public abstract void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier);
 }

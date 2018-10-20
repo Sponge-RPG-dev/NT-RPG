@@ -11,6 +11,7 @@ import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillPathData;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.PassiveSkill;
 import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.utils.Utils;
@@ -37,11 +38,6 @@ public class SkillTreeSpecialization extends PassiveSkill {
 		addSkillType(SkillType.PATH);
 		setIcon(ItemTypes.BOOK);
 		super.setSettings(settings);
-	}
-
-	@Override
-	public SkillResult onPreUse(IActiveCharacter character) {
-		return SkillResult.CANCELLED;
 	}
 
 	@Override

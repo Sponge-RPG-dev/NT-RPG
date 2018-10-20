@@ -38,10 +38,11 @@ public class Portal extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
 		if (character.hasEffect(PortalEffect.name)) {
 			effectService.removeEffect(PortalEffect.name, character, this);
-			return modifier.next(character, info, SkillResult.CANCELLED);
+			modifier.next(character, info, modifier.result(SkillResult.CANCELLED));
+			return;
 		}
 		long duration = getLongNodeValue(info, SkillNodes.MANACOST);
 		double manaPerTick = getDoubleNodeValue(info, "manacost-per-tick");
@@ -50,7 +51,7 @@ public class Portal extends ActiveSkill {
 		PortalEffect portalEffect = new PortalEffect(character, duration, null,
 				manaPerTick, manaPerEntity, 1750, chanceToFail, false);
 		effectService.addEffect(portalEffect, character, this);
-		return modifier.next(character, info, SkillResult.OK);
+		modifier.next(character, info, modifier.result(SkillResult.OK));
 	}
 
 

@@ -63,7 +63,7 @@ public class GrapplingHook extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
 		Player p = character.getPlayer();
 		World world = p.getWorld();
 		Entity optional = world.createEntity(EntityTypes.TIPPED_ARROW, p.getLocation().getPosition()
@@ -123,7 +123,7 @@ public class GrapplingHook extends ActiveSkill {
 				.interval(50, TimeUnit.MILLISECONDS)
 				.submit(plugin);
 
-		return modifier.next(character, info, SkillResult.OK);
+		modifier.next(character, info, SkillResult.OK);
 	}
 
 

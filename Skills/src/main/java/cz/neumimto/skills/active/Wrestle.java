@@ -46,7 +46,7 @@ public class Wrestle extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier) {
+	public void cast(IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier) {
 		int intNodeValue = getIntNodeValue(info, SkillNodes.RADIUS);
 		float floatNodeValue = getFloatNodeValue(info, SkillNodes.DAMAGE);
 		long duration = getLongNodeValue(info, SkillNodes.DURATION);
@@ -67,6 +67,6 @@ public class Wrestle extends ActiveSkill {
 				}
 			}
 		}
-		return modifier.next(source, info, SkillResult.OK);
+		modifier.next(source, info, modifier.result(SkillResult.OK));
 	}
 }

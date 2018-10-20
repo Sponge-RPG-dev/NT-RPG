@@ -12,6 +12,7 @@ import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.ItemService;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.AbstractSkill;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
@@ -40,8 +41,8 @@ public class ItemAccessSkill extends AbstractSkill {
 	}
 
 	@Override
-	public SkillResult onPreUse(IActiveCharacter character) {
-		return SkillResult.CANCELLED;
+	public void onPreUse(IActiveCharacter character, SkillContext skillContext) {
+		skillContext.result(SkillResult.CANCELLED);
 	}
 
 	@Override

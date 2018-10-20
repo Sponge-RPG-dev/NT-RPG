@@ -41,7 +41,7 @@ public class BurningPrescense extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
 		if (character.hasEffect(BurningPrescenseEffect.name)) {
 			effectService.removeEffectContainer(character.getEffect(BurningPrescenseEffect.name), character);
 		} else {
@@ -50,7 +50,8 @@ public class BurningPrescense extends ActiveSkill {
 			BurningPrescenseEffect eff = new BurningPrescenseEffect(character, -1, model);
 			effectService.addEffect(eff, character, this);
 		}
-		return modifier.next(character, info, SkillResult.OK);
+
+		modifier.next(character, info, modifier.result(SkillResult.OK));
 	}
 
 	private BPModel getBPModel(ExtendedSkillInfo info) {

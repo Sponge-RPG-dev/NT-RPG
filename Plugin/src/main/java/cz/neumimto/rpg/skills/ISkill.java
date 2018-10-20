@@ -74,7 +74,7 @@ public interface ISkill extends IEffectSourceProvider, CatalogType, IRpgElement 
 
 	void onCharacterInit(IActiveCharacter c, int level);
 
-	SkillResult onPreUse(IActiveCharacter character);
+	void onPreUse(IActiveCharacter character, SkillContext skillContext);
 
 	Set<ISkillType> getSkillTypes();
 

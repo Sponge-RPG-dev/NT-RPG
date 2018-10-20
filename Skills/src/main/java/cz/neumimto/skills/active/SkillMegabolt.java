@@ -38,7 +38,7 @@ public class SkillMegabolt extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter iActiveCharacter, ExtendedSkillInfo extendedSkillInfo, SkillContext skillContext) {
+	public void cast(IActiveCharacter iActiveCharacter, ExtendedSkillInfo extendedSkillInfo, SkillContext skillContext) {
 		int r = getIntNodeValue(extendedSkillInfo, SkillNodes.RADIUS);
 		Set<Entity> nearbyEntities = Utils.getNearbyEntities(iActiveCharacter.getPlayer().getLocation(), r);
 		float damage = getFloatNodeValue(extendedSkillInfo, SkillNodes.DAMAGE);
@@ -55,6 +55,6 @@ public class SkillMegabolt extends ActiveSkill {
 				}
 			}
 		}
-		return skillContext.next(iActiveCharacter, extendedSkillInfo, SkillResult.OK);
+		skillContext.next(iActiveCharacter, extendedSkillInfo, skillContext.result(SkillResult.OK));
 	}
 }

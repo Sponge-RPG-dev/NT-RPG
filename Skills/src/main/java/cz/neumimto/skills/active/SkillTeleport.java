@@ -39,7 +39,7 @@ public class SkillTeleport extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo extendedSkillInfo, SkillContext skillContext) {
+	public void cast(IActiveCharacter character, ExtendedSkillInfo extendedSkillInfo, SkillContext skillContext) {
 		Player player = character.getPlayer();
 		double doubleNodeValue = getDoubleNodeValue(extendedSkillInfo, SkillNodes.RANGE);
 
@@ -54,6 +54,6 @@ public class SkillTeleport extends ActiveSkill {
 				player.setLocation(safeLocation.get());
 			}
 		}
-		return skillContext.next(character, extendedSkillInfo, SkillResult.OK);
+		skillContext.next(character, extendedSkillInfo, skillContext.result(SkillResult.OK));
 	}
 }

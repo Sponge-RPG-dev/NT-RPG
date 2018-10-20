@@ -33,13 +33,13 @@ public class ManaShield extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
 		ManaShieldEffectModel manaShieldEffectModel = new ManaShieldEffectModel();
 		manaShieldEffectModel.duration = getLongNodeValue(info, SkillNodes.DURATION);
 		manaShieldEffectModel.reduction = getDoubleNodeValue(info, "reduction");
 		manaShieldEffectModel.reductionCost = getDoubleNodeValue(info, "reduction-manacost");
 		ManaShieldEffect effect = new ManaShieldEffect(character, manaShieldEffectModel);
 		effectService.addEffect(effect, character, this);
-		return SkillResult.OK;
-	}
+		modifier.next(character, info, SkillResult.OK);
+    }
 }

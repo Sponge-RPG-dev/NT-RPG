@@ -34,11 +34,11 @@ public class SkillInvisibility extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillContext) {
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillContext) {
 		long duration = getLongNodeValue(info, SkillNodes.DURATION);
 		Invisibility invisibility = new Invisibility(character, duration);
 		effectService.addEffect(invisibility, character, this);
-		return skillContext.next(character, info, SkillResult.OK);
+		skillContext.next(character, info, skillContext.result(SkillResult.OK));
 	}
 
 

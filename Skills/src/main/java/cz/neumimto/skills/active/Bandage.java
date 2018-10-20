@@ -41,7 +41,7 @@ public class Bandage extends Targetted {
 	}
 
 	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier) {
+	public void castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier) {
 		IEntity iEntity = entityService.get(target);
 		if (iEntity.isFriendlyTo(source)) {
 			float floatNodeValue = getFloatNodeValue(info, SkillNodes.HEALED_AMOUNT);
@@ -50,8 +50,9 @@ public class Bandage extends Targetted {
 			if (iEntity.hasEffect(Bleeding.name)) {
 				effectService.removeEffectContainer(iEntity.getEffect(Bleeding.name), iEntity);
 			}
-			return modifier.next(source, info, SkillResult.OK);
+			modifier.next(source, info, SkillResult.OK);
+			return;
 		}
-		return SkillResult.CANCELLED;
+		modifier.next(source, info, SkillResult.CANCELLED);
 	}
 }

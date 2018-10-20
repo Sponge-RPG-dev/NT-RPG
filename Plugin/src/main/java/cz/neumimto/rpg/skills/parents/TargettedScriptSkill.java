@@ -23,10 +23,10 @@ public class TargettedScriptSkill extends Targetted implements ITargettedScriptS
 	private ScriptSkillModel model;
 
 	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier) {
+	public void castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier) {
 		SkillScriptContext context = new SkillScriptContext(this, info);
 		executor.cast(source, NtRpgPlugin.GlobalScope.entityService.get(target), modifier, context);
-		return context.getResult() == null ? SkillResult.OK : context.getResult();
+		context.setResult(context.getResult() == null ? SkillResult.OK : context.getResult());
 	}
 
 	public void setExecutor(TargettedScriptExecutorSkill ses) {

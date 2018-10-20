@@ -56,7 +56,7 @@ public class IceBolt extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillContext) {
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillContext) {
 		Player p = character.getPlayer();
 		World world = p.getWorld();
 		Entity optional = world.createEntity(EntityTypes.SNOWBALL, p.getLocation().getPosition()
@@ -81,6 +81,6 @@ public class IceBolt extends ActiveSkill {
 			target.getEntity().damage(projectileProperties.getDamage(), build.build());
 			effectService.addEffect(new SlowPotion(target, slowduration, slowamplf), target, this);
 		});
-		return skillContext.next(character, info, SkillResult.OK);
+		skillContext.next(character, info, SkillResult.OK);
 	}
 }

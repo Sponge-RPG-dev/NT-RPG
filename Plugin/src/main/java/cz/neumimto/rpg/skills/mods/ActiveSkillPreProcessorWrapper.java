@@ -16,5 +16,5 @@ public abstract class ActiveSkillPreProcessorWrapper {
         return target;
     }
 
-    public abstract SkillResult doNext(IActiveCharacter character, ExtendedSkillInfo info, SkillResult skillResult);
+    public abstract void doNext(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillResult);
 }

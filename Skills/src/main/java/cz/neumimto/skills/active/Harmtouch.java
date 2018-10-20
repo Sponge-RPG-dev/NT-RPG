@@ -43,7 +43,7 @@ public class Harmtouch extends Targetted {
 	}
 
 	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier) {
+	public void castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier) {
 		SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
 		builder.fromSkill(this);
 		IEntity e = entityService.get(target);
@@ -71,6 +71,6 @@ public class Harmtouch extends Targetted {
 							.build(),
 					e.getEntity().getLocation().getPosition());
 		}
-		return modifier.next(source, info, SkillResult.OK);
+		modifier.next(source, info, SkillResult.OK);
 	}
 }

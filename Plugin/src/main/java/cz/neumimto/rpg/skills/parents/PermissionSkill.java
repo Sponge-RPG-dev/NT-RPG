@@ -18,12 +18,13 @@ package cz.neumimto.rpg.skills.parents;
 
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 
 public class PermissionSkill extends AbstractSkill {
 
 	@Override
-	public SkillResult onPreUse(IActiveCharacter character) {
-		return SkillResult.CANCELLED;
+	public void onPreUse(IActiveCharacter character, SkillContext skillContext) {
+		skillContext.result(SkillResult.CANCELLED);
 	}
 
 	@Override

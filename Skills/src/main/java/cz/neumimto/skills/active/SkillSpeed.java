@@ -35,11 +35,11 @@ public class SkillSpeed extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
 		long duration = getLongNodeValue(info, SkillNodes.DURATION);
 		float amount = getFloatNodeValue(info, SkillNodes.AMOUNT);
 		SpeedBoost sb = new SpeedBoost(character, duration, amount);
 		effectService.addEffect(sb, character, this);
-		return modifier.next(character, info, SkillResult.OK);
+		modifier.next(character, info, modifier.result(SkillResult.OK));
 	}
 }

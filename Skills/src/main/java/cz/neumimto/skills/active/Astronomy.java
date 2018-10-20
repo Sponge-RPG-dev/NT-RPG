@@ -34,20 +34,23 @@ public class Astronomy extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
 		Player character1 = character.getEntity();
 
 		if (character1.getWorld().getWeather() == Weathers.CLEAR) {
 			Vector3d position = character1.getLocation().getPosition();
 			if (character1.getWorld().getHighestYAt(position.getFloorX(), position.getFloorZ()) > position.getFloorY()) {
 				character1.sendMessage(ChatTypes.ACTION_BAR, SkillLocalization.ASTRONOMY_CANNOT_SEE_THE_SKY);
-				return modifier.next(character, info, SkillResult.CANCELLED);
+				modifier.next(character, info, modifier.result(SkillResult.CANCELLED));
+				return;
 			}
 			ItemStack is = Utils.createTeleportationScroll(character.getLocation());
 			character.getEntity().getInventory().offer(is);
-			return modifier.next(character, info, SkillResult.OK);
+			modifier.next(character, info, modifier.result(SkillResult.OK));
+			return;
 		}
 		character1.sendMessage(ChatTypes.ACTION_BAR, SkillLocalization.ASTRONOMY_CANNOT_SEE_THE_SKY);
-		return modifier.next(character, info, SkillResult.CANCELLED);
+		modifier.next(character, info, modifier.result(SkillResult.CANCELLED));
+		return;
 	}
 }

@@ -7,5 +7,5 @@ import cz.neumimto.rpg.skills.mods.SkillContext;
 
 public interface IActiveSkill {
 
-    SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier);
+    void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier);
 }

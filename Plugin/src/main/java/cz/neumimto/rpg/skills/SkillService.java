@@ -40,10 +40,8 @@ import cz.neumimto.rpg.reloading.Reload;
 import cz.neumimto.rpg.reloading.ReloadService;
 import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.skills.configs.ScriptSkillModel;
-import cz.neumimto.rpg.skills.parents.ActiveScriptSkill;
-import cz.neumimto.rpg.skills.parents.PassiveScriptSkill;
-import cz.neumimto.rpg.skills.parents.ScriptSkill;
-import cz.neumimto.rpg.skills.parents.TargettedScriptSkill;
+import cz.neumimto.rpg.skills.mods.SkillContext;
+import cz.neumimto.rpg.skills.parents.*;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.utils.CatalogId;
 import net.bytebuddy.ByteBuddy;
@@ -167,7 +165,14 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 		//todo float staminacost =
 		if (character.getHealth().getValue() > hpcost) {
 			if (character.getMana().getValue() >= manacost) {
-				SkillResult result = esi.getSkill().onPreUse(character);
+				SkillContext context = null;
+				if (esi.getSkill() instanceof IActiveSkill) {
+					context = new SkillContext((IActiveSkill) esi.getSkill());
+				} else {
+					context = new SkillContext();
+				}
+				esi.getSkill().onPreUse(character, context);
+				SkillResult result = context.getResult();
 				if (result != SkillResult.OK) {
 					return result;
 				} else {

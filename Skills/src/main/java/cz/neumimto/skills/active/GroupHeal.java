@@ -35,7 +35,7 @@ public class GroupHeal extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
 		float amnt = getFloatNodeValue(info, SkillNodes.HEALED_AMOUNT);
 		if (character.hasParty()) {
 			double rad = Math.pow(getDoubleNodeValue(info, SkillNodes.RADIUS), 2);
@@ -50,6 +50,6 @@ public class GroupHeal extends ActiveSkill {
 			Decorator.healEffect(character.getEntity().getLocation().add(0, 1, 0));
 		}
 
-		return modifier.next(character, info, SkillResult.OK);
+		modifier.next(character, info, SkillResult.OK);
 	}
 }

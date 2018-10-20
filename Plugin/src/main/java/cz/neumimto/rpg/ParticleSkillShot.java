@@ -12,7 +12,7 @@ import cz.neumimto.rpg.skills.mods.SkillContext;
 public class ParticleSkillShot extends ActiveSkill {
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
-		return null;
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillContext) {
+		skillContext.result(SkillResult.CANCELLED);
 	}
 }

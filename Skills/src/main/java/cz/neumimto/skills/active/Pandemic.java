@@ -49,7 +49,7 @@ public class Pandemic extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
 		float damage = getFloatNodeValue(info, SkillNodes.DAMAGE);
 		int radius = getIntNodeValue(info, SkillNodes.RADIUS);
 		long period = getLongNodeValue(info, SkillNodes.PERIOD);
@@ -70,6 +70,6 @@ public class Pandemic extends ActiveSkill {
 				}
 			}
 		}
-		return modifier.next(character, info, SkillResult.OK);
+		modifier.next(character, info, SkillResult.OK);
 	}
 }

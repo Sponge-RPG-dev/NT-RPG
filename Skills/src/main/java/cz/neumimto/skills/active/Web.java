@@ -37,12 +37,12 @@ public class Web extends Targetted {
 	}
 
 	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier) {
+	public void castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier) {
 		long duration = getLongNodeValue(info, SkillNodes.DURATION);
 		IEntity iEntity = entityService.get(target);
 		WebEffect eff = new WebEffect(iEntity, duration);
 		effectService.addEffect(eff, iEntity, this);
-		return modifier.next(source, info, SkillResult.OK);
+		modifier.next(source, info, modifier.result(SkillResult.OK));
 	}
 
 

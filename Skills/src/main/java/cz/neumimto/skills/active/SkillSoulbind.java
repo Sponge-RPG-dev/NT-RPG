@@ -44,7 +44,7 @@ public class SkillSoulbind extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter iActiveCharacter, ExtendedSkillInfo extendedSkillInfo, SkillContext skillContext) {
+	public void cast(IActiveCharacter iActiveCharacter, ExtendedSkillInfo extendedSkillInfo, SkillContext skillContext) {
 		float range = extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.RANGE, extendedSkillInfo.getTotalLevel());
 		Living targettedEntity = Utils.getTargettedEntity(iActiveCharacter, (int) range);
 		if (targettedEntity != null && targettedEntity == EntityTypes.PLAYER) {
@@ -57,7 +57,7 @@ public class SkillSoulbind extends ActiveSkill {
 				effectService.addEffect(effect, character, this);
 			}
 		}
-		return skillContext.next(iActiveCharacter, extendedSkillInfo, SkillResult.OK);
+		skillContext.next(iActiveCharacter, extendedSkillInfo, skillContext.result(SkillResult.OK));
 	}
 
 	@Listener(order = Order.LAST)

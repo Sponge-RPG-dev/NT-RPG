@@ -21,11 +21,11 @@ public class ActiveScriptSkill extends ActiveSkill implements ScriptSkill<Script
 	private ScriptSkillModel model;
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext chain) {
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext chain) {
 		SkillScriptContext context = new SkillScriptContext(this, info);
 		executor.cast(character, info, chain, context);
 		SkillResult skillResult = context.getResult() == null ? SkillResult.OK : context.getResult();
-		return chain.next(character, info, skillResult);
+		chain.next(character, info, chain.result(skillResult));
 	}
 
 	@Override

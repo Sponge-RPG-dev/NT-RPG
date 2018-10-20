@@ -8,8 +8,8 @@ public class SkillPreprocessors {
 
     public static ActiveSkillPreProcessorWrapper NOT_CASTABLE = new ActiveSkillPreProcessorWrapper(PreProcessorTarget.EARLY) {
         @Override
-        public SkillResult doNext(IActiveCharacter character, ExtendedSkillInfo info, SkillResult skillResult) {
-            return SkillResult.FAIL;
+        public void doNext(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillResult) {
+            skillResult.continueExecution(false).result(SkillResult.FAIL);
         }
     };
 

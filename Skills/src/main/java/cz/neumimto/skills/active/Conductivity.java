@@ -28,7 +28,7 @@ public class Conductivity extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
-		return null;
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
+
 	}
 }

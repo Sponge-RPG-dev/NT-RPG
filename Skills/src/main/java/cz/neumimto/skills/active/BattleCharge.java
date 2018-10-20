@@ -33,7 +33,7 @@ public class BattleCharge extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
 		double distSq = Math.pow(getDoubleNodeValue(info, SkillNodes.RADIUS), 2);
 		long duration = getLongNodeValue(info, SkillNodes.DURATION);
 		float value = getFloatNodeValue(info, "speed-per-level");
@@ -48,6 +48,6 @@ public class BattleCharge extends ActiveSkill {
 			SpeedBoost sp = new SpeedBoost(character, duration, value);
 			effectService.addEffect(sp, character, this);
 		}
-		return modifier.next(character, info, SkillResult.OK);
+		modifier.next(character, info, modifier.result(SkillResult.OK));
 	}
 }

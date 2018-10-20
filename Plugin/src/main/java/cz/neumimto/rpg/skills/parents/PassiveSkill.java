@@ -25,6 +25,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 
 /**
  * Created by NeumimTo on 6.8.2015.
@@ -45,9 +46,9 @@ public abstract class PassiveSkill extends AbstractSkill {
 	}
 
 	@Override
-	public SkillResult onPreUse(IActiveCharacter character) {
+	public void onPreUse(IActiveCharacter character, SkillContext skillContext) {
 		character.sendMessage(Localizations.CANT_USE_PASSIVE_SKILL);
-		return SkillResult.FAIL;
+		skillContext.result(SkillResult.CANCELLED);
 	}
 
 	private void update(IActiveCharacter IActiveCharacter) {

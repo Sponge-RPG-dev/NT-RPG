@@ -37,13 +37,13 @@ public class SkillLightning extends Targetted {
 	}
 
 	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier) {
+	public void castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier) {
 		float damage = getFloatNodeValue(info, SkillNodes.DAMAGE);
 		SkillDamageSourceBuilder build = new SkillDamageSourceBuilder();
 		build.fromSkill(this);
 		build.setCaster(source);
 		target.damage(damage, build.build());
 		Decorator.strikeLightning(target);
-		return modifier.next(source, info, SkillResult.OK);
+		modifier.next(source, info, modifier.result(SkillResult.OK));
 	}
 }

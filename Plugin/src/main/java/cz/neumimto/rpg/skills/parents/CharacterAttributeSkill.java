@@ -8,6 +8,7 @@ import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
 
@@ -24,8 +25,8 @@ public class CharacterAttributeSkill extends AbstractSkill {
 	}
 
 	@Override
-	public SkillResult onPreUse(IActiveCharacter character) {
-		return SkillResult.CANCELLED;
+	public void onPreUse(IActiveCharacter character, SkillContext skillContext) {
+		skillContext.result(SkillResult.CANCELLED);
 	}
 
 	@Override

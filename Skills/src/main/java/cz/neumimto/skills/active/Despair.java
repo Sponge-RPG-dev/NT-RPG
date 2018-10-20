@@ -57,7 +57,7 @@ public class Despair extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
 		int k = getIntNodeValue(info, SkillNodes.RADIUS);
 		Set<Entity> nearbyEntities = Utils.getNearbyEntities(character.getEntity().getLocation(), k);
 		double damage = getDoubleNodeValue(info, SkillNodes.DAMAGE);
@@ -93,6 +93,6 @@ public class Despair extends ActiveSkill {
 			character.getEntity().getLocation().getExtent().spawnParticles(build, location.getPosition().add(vec));
 		});
 
-		return modifier.next(character, info, SkillResult.OK);
+		modifier.next(character, info, SkillResult.OK);
 	}
 }

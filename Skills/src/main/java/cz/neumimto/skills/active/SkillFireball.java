@@ -44,7 +44,7 @@ public class SkillFireball extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillContext) {
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillContext) {
 		Player p = character.getPlayer();
 		World world = p.getWorld();
 		Entity optional = world.createEntity(EntityTypes.SNOWBALL, p.getLocation().getPosition()
@@ -66,6 +66,6 @@ public class SkillFireball extends ActiveSkill {
 		projectileProperties.onHit((event, caster, target) -> {
 			target.getEntity().damage(projectileProperties.getDamage(), build.build());
 		});
-		return skillContext.next(character, info, SkillResult.OK);
+		skillContext.next(character, info, skillContext.result(SkillResult.OK));
 	}
 }

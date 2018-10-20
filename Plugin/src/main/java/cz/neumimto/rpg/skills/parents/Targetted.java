@@ -37,25 +37,28 @@ public abstract class Targetted extends ActiveSkill implements ITargetted {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
 		int range = (int) info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.RANGE, info.getTotalLevel());
 		Living l = getTargettedEntity(character, range);
 		if (l == null) {
 			if (getDamageType() == null && !getSkillTypes().contains(SkillType.CANNOT_BE_SELF_CASTED)) {
 				l = character.getEntity();
 			} else {
-				return SkillResult.NO_TARGET; //dont chain
+				modifier.next(character, info, SkillResult.NO_TARGET); ;//dont chain
+				return;
 			}
 		}
 		if (getDamageType() != null && !Utils.canDamage(character, l)) {
-			return SkillResult.CANCELLED;//dont chain
+			modifier.next(character, info, SkillResult.CANCELLED); ;//dont chain
+			return;
 		}
 		SkillFindTargetEvent event = new SkillFindTargetEvent(character, l, this);
 		game.getEventManager().post(event);
 		if (event.isCancelled()) {
-			return SkillResult.CANCELLED;//dont chain
+			modifier.next(event.getCharacter(), info, SkillResult.CANCELLED); ;//dont chain
+			return;
 		}
-		return castOn(event.getTarget(), event.getCharacter(), info, modifier);
+		castOn(event.getTarget(), event.getCharacter(), info, modifier);
 	}
 
 
