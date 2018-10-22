@@ -1,14 +1,22 @@
 plugins {
-   // id 'org.spongepowered.plugin' version '0.8.1'
     id "net.kyori.blossom" version "1.1.0"
 }
 
 group = 'cz.neumimto.rpg'
 version = '1.0.12-SNAPSHOT-4'
 
+apply plugin: "net.minecraftforge.gradle.forge"
+apply plugin: "org.spongepowered.mctester"
+
 blossom {
     String str = "src/main/java/cz/neumimto/rpg/NtRpgPlugin.java";
     replaceToken '@VERSION@', getVersion().toString(), str
+}
+
+minecraft {
+    version = "1.12.2-14.23.4.2705"
+    runDir = "run"
+    mappings = "snapshot_20180808"
 }
 
 dependencies {
@@ -27,6 +35,10 @@ dependencies {
     testCompile 'junit:junit:4.8.2'
     testCompile 'org.powermock:powermock-module-junit4:1.4.9'
     testCompile 'org.powermock:powermock-api-mockito:1.4.9'
+    testCompile 'com.github.SpongePowered:McTester:0.9.0-SNAPSHOT'
+    testCompileClasspath 'me.lucko.luckperms:luckperms-api:4.2'
+    testCompileClasspath 'com.github.rojo8399:PlaceholderAPI:4.5.1'
+    testCompileClasspath 'com.github.Sponge-RPG-dev:NTCore:1.13-SNAPSHOT-6'
 
     jar {
         manifest {
