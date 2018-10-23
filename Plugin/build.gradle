@@ -41,7 +41,7 @@ dependencies {
     testCompile mcTesterDep
     testCompileClasspath 'me.lucko.luckperms:luckperms-api:4.2'
     testCompileClasspath 'com.github.rojo8399:PlaceholderAPI:4.5.1'
-    testCompileClasspath 'com.github.Sponge-RPG-dev:NTCore:1.13-SNAPSHOT-6'
+    //testCompileClasspath 'com.github.Sponge-RPG-dev:NTCore:1.13-SNAPSHOT-6'
 
     jar {
         manifest {
