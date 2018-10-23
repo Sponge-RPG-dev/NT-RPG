@@ -21,8 +21,8 @@ minecraft {
 
 dependencies {
     implementation 'commons-io:commons-io:2.4'
-    compileOnly('org.spongepowered:spongevanilla:1.12.2-7.1.0-BETA-11') {
-        exclude module: '*'
+    compileOnly ("org.spongepowered:spongecommon:7.1.0-SNAPSHOT:dev") {
+        exclude module: 'testplugins'
     }
     compileOnly 'org.spongepowered:spongeapi:' + project.spongeApiVersion
 
