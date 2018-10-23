@@ -21,8 +21,11 @@ minecraft {
 
 dependencies {
     implementation 'commons-io:commons-io:2.4'
-    compileOnly('org.spongepowered:spongevanilla:1.12.2-7.1.0-BETA-11') {
+    /*compileOnly('org.spongepowered:spongevanilla:1.12.2-7.1.0-BETA-11') {
         exclude module: '*'
+    }*/
+    compileOnly ("org.spongepowered:spongecommon:1.12.2-7.1.3-SNAPSHOT:dev") {
+        exclude module: 'testplugins'
     }
     compileOnly 'org.spongepowered:spongeapi:' + project.spongeApiVersion
 
@@ -35,7 +38,7 @@ dependencies {
     testCompile 'junit:junit:4.8.2'
     testCompile 'org.powermock:powermock-module-junit4:1.4.9'
     testCompile 'org.powermock:powermock-api-mockito:1.4.9'
-    testCompile 'com.github.SpongePowered:McTester:0.9.0-SNAPSHOT'
+    testCompile mcTesterDep
     testCompileClasspath 'me.lucko.luckperms:luckperms-api:4.2'
     testCompileClasspath 'com.github.rojo8399:PlaceholderAPI:4.5.1'
     testCompileClasspath 'com.github.Sponge-RPG-dev:NTCore:1.13-SNAPSHOT-6'
