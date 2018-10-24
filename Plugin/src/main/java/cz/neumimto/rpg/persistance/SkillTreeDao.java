@@ -226,7 +226,7 @@ public class SkillTreeDao {
 					}
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+
             }
 
 			try {
