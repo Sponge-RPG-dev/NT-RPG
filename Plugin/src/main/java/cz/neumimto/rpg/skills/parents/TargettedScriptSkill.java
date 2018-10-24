@@ -27,6 +27,7 @@ public class TargettedScriptSkill extends Targetted implements ITargettedScriptS
 		SkillScriptContext context = new SkillScriptContext(this, info);
 		executor.cast(source, NtRpgPlugin.GlobalScope.entityService.get(target), modifier, context);
 		context.setResult(context.getResult() == null ? SkillResult.OK : context.getResult());
+		modifier.next(source,info, context.getResult());
 	}
 
 	public void setExecutor(TargettedScriptExecutorSkill ses) {
