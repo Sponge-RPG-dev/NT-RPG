@@ -118,15 +118,13 @@ public class EntityLifecycleListener {
 				}
 			}
 
-
-			if (source != null) {
-
+			IActiveCharacter character = characterService.getCharacter(source.getUniqueId());
+			if (source != null && character != null) {
 				if (!Utils.isLivingEntity(source)) {
 					return;
 				}
 				double exp = entityService.getExperiences(targetEntity);
 
-				IActiveCharacter character = characterService.getCharacter(source.getUniqueId());
 				exp += character.getExperienceBonusFor(targetEntity.getLocation().getExtent().getName(), targetEntity.getType());
 				ExperienceSource experienceSource = targetEntity.getType() == EntityTypes.PLAYER ? ExperienceSources.PVP : ExperienceSources.PVE;
 				if (character != null) {
