@@ -41,7 +41,11 @@ import cz.neumimto.rpg.reloading.ReloadService;
 import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.skills.configs.ScriptSkillModel;
 import cz.neumimto.rpg.skills.mods.SkillContext;
-import cz.neumimto.rpg.skills.parents.*;
+import cz.neumimto.rpg.skills.mods.SkillExecutorCallback;
+import cz.neumimto.rpg.skills.parents.ActiveScriptSkill;
+import cz.neumimto.rpg.skills.parents.PassiveScriptSkill;
+import cz.neumimto.rpg.skills.parents.ScriptSkill;
+import cz.neumimto.rpg.skills.parents.TargettedScriptSkill;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.utils.CatalogId;
 import net.bytebuddy.ByteBuddy;
@@ -49,7 +53,7 @@ import net.bytebuddy.description.annotation.AnnotationDescription;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.data.manipulator.mutable.entity.HealthData;
+import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.registry.AdditionalCatalogRegistryModule;
@@ -129,27 +133,30 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 		return skillTrees;
 	}
 
-	public SkillResult executeSkill(IActiveCharacter character, ISkill skill) {
+	public void executeSkill(IActiveCharacter character, ISkill skill, SkillExecutorCallback callback) {
 		if (character.hasSkill(skill.getId())) {
-			return executeSkill(character, character.getSkillInfo(skill));
+			executeSkill(character, character.getSkillInfo(skill), callback);
 		}
-		return SkillResult.WRONG_DATA;
 	}
 
-	public SkillResult executeSkill(IActiveCharacter character, ExtendedSkillInfo esi) {
+	public void executeSkill(IActiveCharacter character, ExtendedSkillInfo esi, SkillExecutorCallback callback) {
 		if (esi == null) {
-			return SkillResult.FAIL;
+			callback.doNext(character, null, new SkillContext().result(SkillResult.WRONG_DATA));
+			return;
 		}
+		SkillContext context = esi.getSkill().createSkillExecutorContext();
 		int level = esi.getTotalLevel();
 		if (level < 0) {
-			return SkillResult.NEGATIVE_SKILL_LEVEL;
+			callback.doNext(character, esi, context.result(SkillResult.NEGATIVE_SKILL_LEVEL));
+			return;
 		}
 		level += characterService.getCharacterProperty(character, DefaultProperties.all_skills_bonus);
 		Long aLong = character.getCooldowns().get(esi.getSkill().getName());
 		long servertime = System.currentTimeMillis();
 		if (aLong != null && aLong > servertime) {
 			Gui.sendCooldownMessage(character, esi.getSkill().getName(), ((aLong - servertime) / 1000.0));
-			return SkillResult.ON_COOLDOWN;
+			callback.doNext(character, esi, context.result(SkillResult.ON_COOLDOWN));
+			return;
 		}
 		SkillData skillData = esi.getSkillData();
 		SkillSettings skillSettings = skillData.getSkillSettings();
@@ -158,23 +165,23 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 		SkillPrepareEvent event = new SkillPrepareEvent(character, requiredHp, requiredMana);
 		game.getEventManager().post(event);
 		if (event.isCancelled()) {
-			return SkillResult.FAIL;
+			callback.doNext(character, esi, context.result(SkillResult.FAIL));
+			return;
 		}
 		double hpcost = event.getRequiredHp() * characterService.getCharacterProperty(character, DefaultProperties.health_cost_reduce);
 		double manacost = event.getRequiredMana() * characterService.getCharacterProperty(character, DefaultProperties.mana_cost_reduce);
 		//todo float staminacost =
 		if (character.getHealth().getValue() > hpcost) {
 			if (character.getMana().getValue() >= manacost) {
-				SkillContext context = null;
-				if (esi.getSkill() instanceof IActiveSkill) {
-					context = new SkillContext((IActiveSkill) esi.getSkill());
-				} else {
-					context = new SkillContext();
-				}
+
+				//Skill execution start
 				esi.getSkill().onPreUse(character, context);
+				//skill execution end
+
 				SkillResult result = context.getResult();
 				if (result != SkillResult.OK) {
-					return result;
+					callback.doNext(character, esi, context.result(result));
+					return;
 				} else {
 					float newCd = skillSettings.getLevelNodeValue(SkillNodes.COOLDOWN, level);
 					SkillPostUsageEvent eventt = new SkillPostUsageEvent(character, hpcost, manacost, newCd);
@@ -182,8 +189,10 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 					if (!event.isCancelled()) {
 						double newval = character.getHealth().getValue() - eventt.getHpcost();
 						if (newval <= 0) {
-							//todo kill the player ?
-							HealthData healthData = character.getPlayer().getHealthData();
+							character.getPlayer().damage(Double.MAX_VALUE, DamageSource.builder()
+									.absolute()
+									.bypassesArmor()
+									.build());
 						} else {
 							character.getHealth().setValue(newval);
 							newCd = eventt.getCooldown() * characterService.getCharacterProperty(character, DefaultProperties.cooldown_reduce);
@@ -192,20 +201,23 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 							character.getCooldowns().put(esi.getSkill().getName(), cd + servertime);
 
 							Gui.displayMana(character);
-							return SkillResult.OK;
+							callback.doNext(character, esi, context.result(SkillResult.OK));
+							return;
 						}
 					}
 				}
 			}
-			return SkillResult.NO_MANA;
+			callback.doNext(character, esi, context.result(SkillResult.NO_MANA));
+			return;
 		}
-		return SkillResult.NO_HP;
+		callback.doNext(character, esi, context.result(SkillResult.NO_HP));
+		return;
 	}
 
 	public ExtendedSkillInfo invokeSkillByCombo(String combo, IActiveCharacter character) {
 		for (ExtendedSkillInfo extendedSkillInfo : character.getSkills().values()) {
 			if (combo.equals(extendedSkillInfo.getSkillData().getCombination())) {
-				executeSkill(character, extendedSkillInfo);
+				executeSkill(character, extendedSkillInfo, new SkillExecutorCallback());
 				return extendedSkillInfo;
 			}
 		}

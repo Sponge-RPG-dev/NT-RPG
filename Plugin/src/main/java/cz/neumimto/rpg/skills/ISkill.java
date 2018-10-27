@@ -256,4 +256,8 @@ public interface ISkill extends IEffectSourceProvider, CatalogType, IRpgElement 
 						.build());
 		return is;
 	}
+
+	default SkillContext createSkillExecutorContext() {
+		return new SkillContext();
+	}
 }

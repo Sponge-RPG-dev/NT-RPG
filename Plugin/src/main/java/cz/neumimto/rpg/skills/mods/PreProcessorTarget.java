@@ -6,5 +6,6 @@ public enum PreProcessorTarget {
     EXECUTION,
     AFTER,
     LATE,
-    LATEST
+    LATEST,
+    CALLBACK
 }

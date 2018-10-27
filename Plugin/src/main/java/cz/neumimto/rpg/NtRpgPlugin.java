@@ -108,13 +108,14 @@ import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.ISkillType;
 import cz.neumimto.rpg.skills.NDamageType;
 import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.SkillTypeRegistry;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoader;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoaderRegistry;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoaders;
+import cz.neumimto.rpg.skills.mods.SkillContext;
+import cz.neumimto.rpg.skills.mods.SkillExecutorCallback;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.parents.ScriptSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
@@ -1295,22 +1296,26 @@ public class NtRpgPlugin {
 						if (info == ExtendedSkillInfo.Empty || info == null) {
 							src.sendMessage(Localizations.CHARACTER_DOES_NOT_HAVE_SKILL.toText(Arg.arg("skill", iSkill.getName())));
 						}
-						SkillResult sk = GlobalScope.skillService.executeSkill(character, info);
-						switch (sk) {
-							case ON_COOLDOWN:
-								break;
-							case NO_MANA:
-								Gui.sendMessage(character, Localizations.NO_MANA, Arg.EMPTY);
-								break;
-							case NO_HP:
-								Gui.sendMessage(character, Localizations.NO_HP, Arg.EMPTY);
-								break;
-							case CASTER_SILENCED:
-								Gui.sendMessage(character, Localizations.PLAYER_IS_SILENCED, Arg.EMPTY);
-								break;
-							case NO_TARGET:
-								Gui.sendMessage(character, Localizations.NO_TARGET, Arg.EMPTY);
-						}
+						GlobalScope.skillService.executeSkill(character, info, new SkillExecutorCallback() {
+							@Override
+							public void doNext(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillResult) {
+								switch (skillResult.getResult()) {
+									case ON_COOLDOWN:
+										break;
+									case NO_MANA:
+										Gui.sendMessage(character, Localizations.NO_MANA, Arg.EMPTY);
+										break;
+									case NO_HP:
+										Gui.sendMessage(character, Localizations.NO_HP, Arg.EMPTY);
+										break;
+									case CASTER_SILENCED:
+										Gui.sendMessage(character, Localizations.PLAYER_IS_SILENCED, Arg.EMPTY);
+										break;
+									case NO_TARGET:
+										Gui.sendMessage(character, Localizations.NO_TARGET, Arg.EMPTY);
+								}
+							}
+						});
 					});
 					return CommandResult.success();
 				})

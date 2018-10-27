@@ -31,8 +31,8 @@ import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.skills.mods.SkillExecutorCallback;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
@@ -199,10 +199,8 @@ public class InventoryListener {
 				if (!byId.isPresent()) {
 					return;
 				}
-				SkillResult skillResult = skillService.executeSkill(character, byId.get());
-				if (skillResult == SkillResult.WRONG_DATA) {
-					player.setItemInHand(HandTypes.MAIN_HAND, null);
-				}
+				skillService.executeSkill(character, byId.get(), new SkillExecutorCallback());
+
 				event.setCancelled(true);
 			}
 		}
