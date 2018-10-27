@@ -3,8 +3,6 @@ package cz.neumimto.rpg.skills.mods;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.parents.AbstractSkill;
-import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.parents.IActiveSkill;
 
 import java.util.ArrayList;
@@ -16,13 +14,14 @@ import java.util.Comparator;
  */
 public class SkillContext {
 
-	private final ArrayList<ActiveSkillPreProcessorWrapper> wrappers = new ArrayList<>();
+	protected final ArrayList<ActiveSkillPreProcessorWrapper> wrappers = new ArrayList<>();
 	private int cursor;
 	private SkillResult result;
 	private boolean continueExecution;
 
 	public SkillContext(IActiveSkill activeSkill) {
 		cursor = -1;
+		continueExecution = true;
 		wrappers.add(new ActiveSkillPreProcessorWrapper(PreProcessorTarget.EXECUTION) {
 
 			@Override

@@ -118,33 +118,36 @@ public class EntityLifecycleListener {
 				}
 			}
 
-			IActiveCharacter character = characterService.getCharacter(source.getUniqueId());
-			if (source != null && character != null) {
-				if (!Utils.isLivingEntity(source)) {
-					return;
-				}
-				double exp = entityService.getExperiences(targetEntity);
 
-				exp += character.getExperienceBonusFor(targetEntity.getLocation().getExtent().getName(), targetEntity.getType());
-				ExperienceSource experienceSource = targetEntity.getType() == EntityTypes.PLAYER ? ExperienceSources.PVP : ExperienceSources.PVE;
+			if (source != null) {
+				IActiveCharacter character = characterService.getCharacter(source.getUniqueId());
 				if (character != null) {
-					if (character.hasParty()) {
-						exp *= PluginConfig.PARTY_EXPERIENCE_MULTIPLIER;
-						double dist = Math.pow(PluginConfig.PARTY_EXPERIENCE_SHARE_DISTANCE, 2);
-						Set<IActiveCharacter> set = new HashSet<>();
-						for (IActiveCharacter member : character.getParty().getPlayers()) {
-							Player player = member.getPlayer();
-							if (player.getLocation().getPosition()
-									.distanceSquared(character.getPlayer().getLocation().getPosition()) <= dist) {
-								set.add(member);
+					if (!Utils.isLivingEntity(source)) {
+						return;
+					}
+					double exp = entityService.getExperiences(targetEntity);
+
+					exp += character.getExperienceBonusFor(targetEntity.getLocation().getExtent().getName(), targetEntity.getType());
+					ExperienceSource experienceSource = targetEntity.getType() == EntityTypes.PLAYER ? ExperienceSources.PVP : ExperienceSources.PVE;
+					if (character != null) {
+						if (character.hasParty()) {
+							exp *= PluginConfig.PARTY_EXPERIENCE_MULTIPLIER;
+							double dist = Math.pow(PluginConfig.PARTY_EXPERIENCE_SHARE_DISTANCE, 2);
+							Set<IActiveCharacter> set = new HashSet<>();
+							for (IActiveCharacter member : character.getParty().getPlayers()) {
+								Player player = member.getPlayer();
+								if (player.getLocation().getPosition()
+										.distanceSquared(character.getPlayer().getLocation().getPosition()) <= dist) {
+									set.add(member);
+								}
 							}
+							exp /= set.size();
+							for (IActiveCharacter character1 : set) {
+								characterService.addExperiences(character1, exp, experienceSource);
+							}
+						} else {
+							characterService.addExperiences(character, exp, experienceSource);
 						}
-						exp /= set.size();
-						for (IActiveCharacter character1 : set) {
-							characterService.addExperiences(character1, exp, experienceSource);
-						}
-					} else {
-						characterService.addExperiences(character, exp, experienceSource);
 					}
 				}
 			}

@@ -565,9 +565,17 @@ public class NtRpgPlugin {
 						extendedSkillInfo.setSkillData(skillData);
 						extendedSkillInfo.setSkill(skill);
 						ActiveSkill askill = (ActiveSkill) skill;
-						askill.cast(character, extendedSkillInfo, null);
-						Long e = System.nanoTime();
-						character.getPlayer().sendMessage(Text.of("Exec Time: " + TimeUnit.MILLISECONDS.convert(e - l, TimeUnit.NANOSECONDS)));
+						SkillContext skillContext = new SkillContext(askill) {{
+							wrappers.add(new SkillExecutorCallback(){
+								@Override
+								public void doNext(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillResult) {
+									Long e = System.nanoTime();
+									character.getPlayer().sendMessage(Text.of("Exec Time: " + TimeUnit.MILLISECONDS.convert(e - l, TimeUnit.NANOSECONDS)));
+								}
+							});
+						}};
+						skillContext.sort();
+						askill.cast(character, extendedSkillInfo, skillContext);
 					}
 					return CommandResult.success();
 				})
