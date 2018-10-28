@@ -19,12 +19,10 @@
 package cz.neumimto.rpg.skills;
 
 import cz.neumimto.rpg.skills.mods.ActiveSkillPreProcessorWrapper;
-import cz.neumimto.rpg.skills.mods.SkillContext;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.text.Text;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -51,7 +49,7 @@ public class SkillData {
 	private int relativeY;
 	private int skillTreeId;
 	private int levelGap;
-
+	private Text skillName;
 
 	public SkillData(String skill) {
 		this.skill = skill;
@@ -173,4 +171,11 @@ public class SkillData {
 		return insufficientCostpreprocessors;
 	}
 
+	public Text getSkillName() {
+		return skillName;
+	}
+
+	public void setSkillName(Text skillName) {
+		this.skillName = skillName;
+	}
 }

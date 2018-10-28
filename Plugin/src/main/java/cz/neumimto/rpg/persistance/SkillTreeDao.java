@@ -26,6 +26,7 @@ import com.google.common.reflect.TypeToken;
 import com.typesafe.config.*;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.gui.SkillTreeInterfaceModel;
@@ -262,6 +263,14 @@ public class SkillTreeDao {
 			}
 
 			try {
+				info.setSkillName(TextHelper.parse(c.getString("Name")));
+				info(" - Alternate name defined for skill " + info.getSkill().getId() + " > " + info.getSkillName().toPlain());
+				skillService.registerSkillAlternateName(info.getSkillName().toPlain(), info.getSkill());
+			} catch (ConfigException missing) {
+				info.setSkillName(info.getSkill().getLocalizableName());
+			}
+
+			try {
 				Config settings = c.getConfig("SkillSettings");
 				SkillSettings skillSettings = new SkillSettings();
 				for (Map.Entry<String, ConfigValue> e : settings.entrySet()) {
@@ -301,7 +310,7 @@ public class SkillTreeDao {
 			}
 
 
-			skillTree.getSkills().put(info.getSkillId(), info);
+			skillTree.getSkills().put(info.getSkillId().toLowerCase(), info);
 
 
 		}
@@ -322,15 +331,16 @@ public class SkillTreeDao {
 		}
 	}
 
-	private SkillData getSkillInfo(String name, SkillTree tree) {
-		SkillData info = tree.getSkills().get(name);
+	private SkillData getSkillInfo(String id, SkillTree tree) {
+		final String lowercased = id.toLowerCase();
+		SkillData info = tree.getSkills().get(lowercased);
 		if (info == null) {
-			ISkill skill = skillService.getById(name)
-					.orElseThrow(() -> new IllegalStateException("Could not find a skill " + name + " referenced in the skilltree " + tree.getId()));
+			ISkill skill = skillService.getById(lowercased)
+					.orElseThrow(() -> new IllegalStateException("Could not find a skill " + lowercased + " referenced in the skilltree " + tree.getId()));
 
 			info = skill.constructSkillData();
 			info.setSkill(skill);
-			tree.getSkills().put(name, info);
+			tree.getSkills().put(lowercased, info);
 		}
 		return info;
 	}

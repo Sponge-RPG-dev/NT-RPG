@@ -736,7 +736,7 @@ public class VanillaMessaging implements IPlayerMessage {
 	@Override
 	public void displaySkillDetailsInventoryMenu(IActiveCharacter character, SkillTree tree, String command) {
 
-		Inventory skillDetailInventoryView = GuiHelper.createSkillDetailInventoryView(character, tree.getId(), tree.getSkills().get(command));
+		Inventory skillDetailInventoryView = GuiHelper.createSkillDetailInventoryView(character, tree, tree.getSkills().get(command));
 		character.getPlayer().openInventory(skillDetailInventoryView);
 	}
 
@@ -789,10 +789,10 @@ public class VanillaMessaging implements IPlayerMessage {
 									itemStack.offer(Keys.DISPLAY_NAME, Text.of("UNKNOWN SKILL ID: " + id));
 									itemStack.offer(new MenuInventoryData(true));
 								} else {
-									itemStack = GuiHelper.skillToItemStack(character, skillById);
+									itemStack = GuiHelper.skillToItemStack(character, skillById, skillTree);
 									itemStack.offer(new SkillTreeInventoryViewControllsData(SkillTreeControllsButton.NODE));
 									itemStack.offer(new MenuInventoryData(true));
-									itemStack.offer(new SkillTreeNode(skillById.getSkill().getName()));
+									itemStack.offer(new SkillTreeNode(skillById.getSkill().getId()));
 								}
 							}
 						}

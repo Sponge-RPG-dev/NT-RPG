@@ -129,7 +129,7 @@ public class EntityLifecycleListener {
 
 					exp += character.getExperienceBonusFor(targetEntity.getLocation().getExtent().getName(), targetEntity.getType());
 					ExperienceSource experienceSource = targetEntity.getType() == EntityTypes.PLAYER ? ExperienceSources.PVP : ExperienceSources.PVE;
-					if (character != null) {
+
 						if (character.hasParty()) {
 							exp *= PluginConfig.PARTY_EXPERIENCE_MULTIPLIER;
 							double dist = Math.pow(PluginConfig.PARTY_EXPERIENCE_SHARE_DISTANCE, 2);
@@ -148,7 +148,7 @@ public class EntityLifecycleListener {
 						} else {
 							characterService.addExperiences(character, exp, experienceSource);
 						}
-					}
+
 				}
 			}
 

@@ -81,7 +81,7 @@ public class SkillTreeInventoryListener {
 						String node = t.getOriginal().get(NKeys.SKILLTREE_NODE).get();
 						if (viewModel.getInteractiveMode() == SkillTreeViewModel.InteractiveMode.FAST) {
 
-							ISkill iSkill = skillService.getSkillByLocalizedName(node);
+							ISkill iSkill = skillService.getById(node).get();
 							SkillTree tree = character.getPrimaryClass().getConfigClass().getSkillTree();
 							if (character.getSkill(iSkill.getId()) == null) {
 								Pair<SkillTreeActionResult, SkillTreeActionResult.Data>
@@ -96,7 +96,7 @@ public class SkillTreeInventoryListener {
 									.execute(() -> Gui.moveSkillTreeMenu(character))
 									.submit(plugin);
 						} else {
-							SkillTree tree = character.getPrimaryClass().getConfigClass().getSkillTree();
+							SkillTree tree = viewModel.getSkillTree();
 							event.setCancelled(true);
 							Sponge.getScheduler().createTaskBuilder()
 									.execute(() -> Gui.displaySkillDetailsInventoryMenu(character, tree, node))

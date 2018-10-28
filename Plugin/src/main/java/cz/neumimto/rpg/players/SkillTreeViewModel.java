@@ -2,6 +2,7 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.configuration.Localizations;
+import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
@@ -16,6 +17,7 @@ public class SkillTreeViewModel {
 	private Pair<Integer, Integer> location;
 	private boolean current = true;
 	private SkillTree skillTree;
+	private ConfigClass viewedClass;
 
 	public SkillTreeViewModel() {
 		interactiveMode = InteractiveMode.DETAILED;
@@ -52,6 +54,14 @@ public class SkillTreeViewModel {
 
 	public void setCurrent(boolean current) {
 		this.current = current;
+	}
+
+	public void setViewedClass(ConfigClass viewedClass) {
+		this.viewedClass = viewedClass;
+	}
+
+	public ConfigClass getViewedClass() {
+		return viewedClass;
 	}
 
 	public enum InteractiveMode {

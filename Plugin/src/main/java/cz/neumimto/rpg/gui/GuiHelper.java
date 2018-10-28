@@ -219,8 +219,8 @@ public class GuiHelper {
 		return of;
 	}
 
-	public static ItemStack skillToItemStack(IActiveCharacter character, SkillData skillData) {
-		return skillData.getSkill().toItemStack(character, skillData);
+	public static ItemStack skillToItemStack(IActiveCharacter character, SkillData skillData, SkillTree skillTree) {
+		return skillData.getSkill().toItemStack(character, skillData, skillTree);
 	}
 
 
@@ -278,12 +278,12 @@ public class GuiHelper {
 		return itemStack;
 	}
 
-	public static Inventory createSkillDetailInventoryView(IActiveCharacter character, String skillTree, SkillData skillData) {
+	public static Inventory createSkillDetailInventoryView(IActiveCharacter character, SkillTree skillTree, SkillData skillData) {
 		Inventory build = Inventory.builder()
 				.of(InventoryArchetypes.DOUBLE_CHEST)
 				.build(plugin);
 
-		ItemStack back = back("skilltree", Localizations.SKILLTREE.toText());
+		ItemStack back = back("skilltree " + character.getLastTimeInvokedSkillTreeView().getViewedClass().getName(), Localizations.SKILLTREE.toText());
 		build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back);
 
 		if (skillData instanceof SkillPathData) {
@@ -301,7 +301,7 @@ public class GuiHelper {
 			for (Map.Entry<String, Integer> entry : data.getSkillBonus().entrySet()) {
 				ISkill skill = skillService.getById(entry.getKey()).orElse(null);
 				if (skill != null) {
-					ItemStack itemStack = skillToItemStack(character, character.getSkill(skill.getId()).getSkillData());
+					ItemStack itemStack = skillToItemStack(character, character.getSkill(skill.getId()).getSkillData(), skillTree);
 					itemStack.offer(Keys.DISPLAY_NAME, Text
 							.builder(String.format("%+d", entry.getValue()) + " | " + entry.getKey())
 							.color(entry.getValue() < 0 ? TextColors.RED : TextColors.DARK_GREEN)

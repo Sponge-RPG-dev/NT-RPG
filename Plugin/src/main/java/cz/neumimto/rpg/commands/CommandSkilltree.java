@@ -28,6 +28,7 @@ import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.ConfigClass;
+import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -44,6 +45,9 @@ public class CommandSkilltree extends CommandBase {
 
 	@Inject
 	private CharacterService characterService;
+
+	@Inject
+	private SkillService skillService;
 
 	public CommandSkilltree() {
 		addAlias("skilltree");
@@ -72,13 +76,15 @@ public class CommandSkilltree extends CommandBase {
 		for (SkillTreeViewModel treeViewModel : character.getSkillTreeViewLocation().values()) {
 			treeViewModel.setCurrent(false);
 		}
-		if (character.getSkillTreeViewLocation().get(skillTree.getId()) == null) {
-			SkillTreeViewModel skillTreeViewModel = new SkillTreeViewModel();
+		SkillTreeViewModel skillTreeViewModel = character.getSkillTreeViewLocation().get(skillTree.getId());
+		if (skillTreeViewModel == null) {
+			skillTreeViewModel = new SkillTreeViewModel();
 			character.getSkillTreeViewLocation().put(skillTree.getId(), skillTreeViewModel);
 			skillTreeViewModel.setSkillTree(skillTree);
 		} else {
-			character.getSkillTreeViewLocation().get(skillTree.getId()).setCurrent(true);
+			skillTreeViewModel.setCurrent(true);
 		}
+		skillTreeViewModel.setViewedClass(configClass);
 		Gui.openSkillTreeMenu(character);
 		return CommandResult.success();
 	}

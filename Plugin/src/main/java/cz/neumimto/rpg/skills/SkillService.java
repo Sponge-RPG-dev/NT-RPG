@@ -303,6 +303,14 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 		return skillByNames.get(name);
 	}
 
+	public void registerSkillAlternateName(String name, ISkill skill) {
+		if (skillByNames.containsKey(name)) {
+			throw new RuntimeException("Attempted to register altername name " + name + " for a skill " + skill.getId() + ". But the name is "
+					+ "already taken by the skill " + skillByNames.get(name).getId());
+		}
+		skillByNames.put(name, skill);
+	}
+
 	public ISkill skillDefinitionToSkill(ScriptSkillModel scriptSkillModel, ClassLoader classLoader) {
 		String parent = scriptSkillModel.getParent();
 		if (parent == null) {

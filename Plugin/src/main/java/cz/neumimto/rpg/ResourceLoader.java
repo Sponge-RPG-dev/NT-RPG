@@ -34,7 +34,6 @@ import cz.neumimto.core.localization.ResourceBundle;
 import cz.neumimto.core.localization.ResourceBundles;
 import cz.neumimto.rpg.commands.CommandBase;
 import cz.neumimto.rpg.commands.CommandService;
-import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
@@ -263,7 +262,7 @@ public class ResourceLoader {
 				skill.setDescription(localizationService.getTextList(sk.value() + ".description"));
 				skill.setLore(localizationService.getTextList(sk.value() + ".lore"));
 			}
-			if (skill.getLocalizableName() == null) {
+			if (skill.getLocalizableName().isEmpty()) {
 				String name = skill.getClass().getSimpleName();
 				name = name.startsWith("Skill") ? name.substring("Skill".length()) : name;
 				skill.setLocalizableName(Text.of(name));

@@ -42,6 +42,7 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
@@ -188,7 +189,7 @@ public interface ISkill extends IEffectSourceProvider, CatalogType, IRpgElement 
 		return a;
 	}
 
-	default ItemStack toItemStack(IActiveCharacter character, SkillData skillData) {
+	default ItemStack toItemStack(IActiveCharacter character, SkillData skillData, SkillTree skillTree) {
 		SkillItemIcon icon = getIcon();
 
 		ItemStack is = null;
@@ -251,9 +252,13 @@ public interface ISkill extends IEffectSourceProvider, CatalogType, IRpgElement 
 		}
 
 		is.offer(Keys.ITEM_LORE, lore);
+
+		Text skillName = skillTree.getSkills().get(getId()).getSkillName();
+
+		TextColor textColor = character.hasSkill(this.getName()) ? TextColors.GREEN : TextColors.GRAY;
+
 		is.offer(Keys.DISPLAY_NAME,
-				Text.builder(getName()).color(character.hasSkill(this.getName()) ? TextColors.GREEN : TextColors.GRAY).style(TextStyles.BOLD)
-						.build());
+				Text.builder(skillName.toPlain()).color(textColor).style(TextStyles.BOLD).build());
 		return is;
 	}
 
