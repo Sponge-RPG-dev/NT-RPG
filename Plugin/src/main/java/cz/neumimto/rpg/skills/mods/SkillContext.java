@@ -68,4 +68,8 @@ public class SkillContext {
 		this.continueExecution = continueExecution;
 		return this;
 	}
+
+	public void addExecutor(ActiveSkillPreProcessorWrapper proc) {
+		wrappers.add(proc);
+	}
 }

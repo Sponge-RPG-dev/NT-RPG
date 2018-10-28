@@ -175,6 +175,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 			if (character.getMana().getValue() >= manacost) {
 
 				//Skill execution start
+				context.addExecutor(callback);
 				esi.getSkill().onPreUse(character, context);
 				//skill execution end
 
