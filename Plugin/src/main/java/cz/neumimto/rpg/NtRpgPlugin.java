@@ -971,6 +971,8 @@ public class NtRpgPlugin {
 						}
 					} else if (a[0].equalsIgnoreCase("skilltree")) {
 						IoC.get().build(SkillService.class).reloadSkillTrees();
+					} else if (a[0].equalsIgnoreCase("settings")) {
+						reloadMainPluigonConfig();
 					} else {
 						src.sendMessage(TextHelper.parse("js[s/a/g] skilltree [r,a] icons"));
 						return CommandResult.empty();
