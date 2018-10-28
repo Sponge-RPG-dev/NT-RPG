@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.players;
 
-import cz.neumimto.rpg.configuration.PluginConfig;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.RPGItemType;
 
@@ -20,7 +20,7 @@ public class RPGItemWrapper {
 	}
 
 	public void addItem(ConfigRPGItemType type) {
-		switch (PluginConfig.WEAPON_MERGE_STRATEGY) {
+		switch (pluginConfig.WEAPON_MERGE_STRATEGY) {
 			case 2:
 				damage = Math.max(damage, type.getDamage());
 				items.add(type);
@@ -34,7 +34,7 @@ public class RPGItemWrapper {
 	public void removeItem(ConfigRPGItemType type) {
 		if (items.contains(type)) {
 			items.remove(type);
-			switch (PluginConfig.WEAPON_MERGE_STRATEGY) {
+			switch (pluginConfig.WEAPON_MERGE_STRATEGY) {
 				case 2:
 					damage = items.stream().mapToDouble(ConfigRPGItemType::getDamage)
 							.max().orElse(0D);

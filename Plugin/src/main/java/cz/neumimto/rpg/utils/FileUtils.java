@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.utils;
 
+import com.typesafe.config.ConfigRenderOptions;
 import cz.neumimto.rpg.NtRpgPlugin;
 import ninja.leaping.configurate.SimpleConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
@@ -90,7 +91,10 @@ public class FileUtils {
 				file.delete();
 			}
 			ObjectMapper.BoundInstance configMapper = ObjectMapper.forObject(data);
-			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(file.toPath()).build();
+			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder()
+					.setRenderOptions(ConfigRenderOptions.defaults().setComments(true))
+					.setPath(file.toPath())
+					.build();
 			SimpleConfigurationNode scn = SimpleConfigurationNode.root();
 			configMapper.serialize(scn);
 			hcl.save(scn);

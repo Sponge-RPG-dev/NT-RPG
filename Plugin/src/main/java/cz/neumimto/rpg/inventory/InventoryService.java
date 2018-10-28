@@ -34,7 +34,7 @@ import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.Localizations;
-import cz.neumimto.rpg.configuration.PluginConfig;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.EffectService;
@@ -160,7 +160,7 @@ public class InventoryService {
 	public void init() {
 		NORMAL_RARITY = Localizations.NORMAL_RARITY.toText();
 		loadItemGroups();
-		String s = PluginConfig.EQUIPED_SLOT_RESOLVE_SRATEGY;
+		String s = pluginConfig.EQUIPED_SLOT_RESOLVE_SRATEGY;
 		Optional<PlayerInvHandler> type = Sponge.getRegistry().getType(PlayerInvHandler.class, s);
 		if (type.isPresent()) {
 			playerInvHandler = type.get();
@@ -176,7 +176,7 @@ public class InventoryService {
 	@Listener
 	//Dump items once game started, so we can assume that registries wont change anymore
 	public void dumpItems(GameStartedServerEvent event) {
-		if (PluginConfig.AUTODISCOVER_ITEMS) {
+		if (pluginConfig.AUTODISCOVER_ITEMS) {
 			Collection<ItemType> allOf = Sponge.getRegistry().getAllOf(ItemType.class);
 			ItemDumpConfig itemDump = new ItemDumpConfig();
 

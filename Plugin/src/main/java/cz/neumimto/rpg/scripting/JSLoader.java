@@ -26,7 +26,7 @@ import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.configuration.DebugLevel;
-import cz.neumimto.rpg.configuration.PluginConfig;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.configs.SkillsDefinition;
 import cz.neumimto.rpg.skills.pipeline.SkillComponent;
@@ -38,8 +38,6 @@ import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
-import org.spongepowered.api.effect.potion.PotionEffectType;
-import org.spongepowered.api.effect.potion.PotionEffectTypes;
 import org.spongepowered.api.event.Event;
 
 import java.io.File;
@@ -126,7 +124,7 @@ public class JSLoader {
 		list.addAll(resourceLoader.getClassLoaderMap().values());
 		MultipleParentClassLoader multipleParentClassLoader = new MultipleParentClassLoader(list);
 		engine = (ScriptEngine) fct.getClass().getMethod("getScriptEngine", String[].class, ClassLoader.class)
-				.invoke(fct, PluginConfig.JJS_ARGS.split(" "), multipleParentClassLoader);
+				.invoke(fct, pluginConfig.JJS_ARGS.split(" "), multipleParentClassLoader);
 	}
 
 	private <T extends CatalogType> void setup() {
@@ -174,7 +172,7 @@ public class JSLoader {
 			dumpDocumentedFunctions(skillComponents);
 			bindings.put("Folder", scripts_root.toString());
 			bindings.put("GlobalScope", ioc.build(GlobalScope.class));
-			if (PluginConfig.DEBUG.isDevelop()) {
+			if (pluginConfig.DEBUG.isDevelop()) {
 				info("JSLOADER = Bindings");
 				Map<String, Object> sorted = new TreeMap<>(bindings);
 				for (Map.Entry<String, Object> e : sorted.entrySet()) {
@@ -185,7 +183,7 @@ public class JSLoader {
 			//im not sure why this is needed yet, todo remove this
 			for (Map.Entry<Class<?>, JsBinding.Type> e : dataToBind.entrySet()) {
 				if (e.getValue() == JsBinding.Type.CLASS) {
-					if (PluginConfig.DEBUG.isDevelop()) {
+					if (pluginConfig.DEBUG.isDevelop()) {
 						info("var " + e.getKey().getSimpleName() + " = Java.type(\"" + e.getKey().getCanonicalName() + "\");");
 					}
 					engine.eval("var " + e.getKey().getSimpleName() + " = Java.type(\"" + e.getKey().getCanonicalName() + "\");");

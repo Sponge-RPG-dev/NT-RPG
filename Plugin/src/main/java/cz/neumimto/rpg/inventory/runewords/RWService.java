@@ -8,7 +8,7 @@ import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.Pair;
-import cz.neumimto.rpg.configuration.PluginConfig;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
@@ -90,7 +90,7 @@ public class RWService {
 		for (RuneWordTemplate runeWord : allRws) {
 			registerRuneword(getRuneword(runeWord));
 		}
-		for (String s : PluginConfig.ALLOWED_RUNES_ITEMTYPES) {
+		for (String s : pluginConfig.ALLOWED_RUNES_ITEMTYPES) {
 			Optional<ItemType> type = Sponge.getGame().getRegistry().getType(ItemType.class, s);
 			type.ifPresent(itemType -> allowedRuneItemTypes.add(itemType));
 		}
@@ -280,7 +280,7 @@ public class RWService {
 
 	public ItemStack reBuildRuneword(ItemStack i, RuneWord rw) {
 		if (rw == null) {
-			if (PluginConfig.AUTOREMOVE_NONEXISTING_RUNEWORDS) {
+			if (pluginConfig.AUTOREMOVE_NONEXISTING_RUNEWORDS) {
 				i.offer(Keys.DISPLAY_NAME, Text.of(i.getType().getName()));
 				i.offer(Keys.ITEM_LORE, Collections.emptyList());
 			}

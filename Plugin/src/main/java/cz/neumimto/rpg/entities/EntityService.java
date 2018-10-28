@@ -6,7 +6,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.IRpgElement;
-import cz.neumimto.rpg.configuration.PluginConfig;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.events.skills.SkillHealEvent;
@@ -53,7 +53,7 @@ public class EntityService {
 			iEntity.setExperiences(-1);
 			entityHashMap.put(id.getUniqueId(), iEntity);
 			MobsConfig dimmension = dao.getCache().getDimmension(id.getLocation().getExtent().getName());
-			if (!PluginConfig.OVERRIDE_MOBS && dimmension != null) {
+			if (!pluginConfig.OVERRIDE_MOBS && dimmension != null) {
 				Double aDouble = dimmension.getHealth().get(id.getType());
 				if (aDouble == null) {
 					warn("No max health configured for " + id.getType().getId() + " in world " + id.getLocation().getExtent().getName());

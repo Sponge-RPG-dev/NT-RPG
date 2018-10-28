@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.players;
 
-import cz.neumimto.rpg.configuration.PluginConfig;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 import java.util.Vector;
 
@@ -29,7 +29,7 @@ import java.util.Vector;
 public class NPlayer implements INPlayer {
 
 
-	private final Vector<CharacterBase> characters = new Vector<>(PluginConfig.PLAYER_MAX_CHARS, 1);
+	private final Vector<CharacterBase> characters = new Vector<>(pluginConfig.PLAYER_MAX_CHARS, 1);
 	private IActiveCharacter activeIActiveCharacter;
 
 	public IActiveCharacter getActiveActiveCharacter() {

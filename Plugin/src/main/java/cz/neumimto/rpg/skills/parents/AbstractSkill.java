@@ -25,7 +25,7 @@ import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.Localizations;
-import cz.neumimto.rpg.configuration.PluginConfig;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
@@ -92,7 +92,7 @@ public abstract class AbstractSkill implements ISkill {
 
 	@Override
 	public void skillLearn(IActiveCharacter IActiveCharacter) {
-		if (PluginConfig.PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE) {
+		if (pluginConfig.PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE) {
 			Text t = Localizations.PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE
 					.toText(Arg.arg("player", IActiveCharacter.getName()).with("skill", getName()));
 			game.getServer().getOnlinePlayers().forEach(p -> p.sendMessage(t));
@@ -101,7 +101,7 @@ public abstract class AbstractSkill implements ISkill {
 
 	@Override
 	public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
-		if (PluginConfig.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE) {
+		if (pluginConfig.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE) {
 			Text t = Localizations.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE.toText(
 					Arg.arg("player", IActiveCharacter.getName())
 							.with("skill", getName())
@@ -112,7 +112,7 @@ public abstract class AbstractSkill implements ISkill {
 
 	@Override
 	public void skillRefund(IActiveCharacter IActiveCharacter) {
-		if (PluginConfig.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE) {
+		if (pluginConfig.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE) {
 			Text t = Localizations.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE.toText(
 					Arg.arg("%player%", IActiveCharacter.getName()).with("skill", getName()));
 			game.getServer().getOnlinePlayers().forEach(p -> p.sendMessage(t));
@@ -126,7 +126,7 @@ public abstract class AbstractSkill implements ISkill {
 
 	@Override
 	public void onCharacterInit(IActiveCharacter c, int level) {
-		if (PluginConfig.SKILLGAIN_MESSAGES_AFTER_LOGIN) {
+		if (pluginConfig.SKILLGAIN_MESSAGES_AFTER_LOGIN) {
 			c.sendMessage(Localizations.PLAYER_GAINED_SKILL, Arg.arg("skill", getName()));
 		}
 	}

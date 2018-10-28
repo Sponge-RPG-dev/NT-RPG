@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.gui;
 
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import static cz.neumimto.rpg.gui.GuiHelper.back;
 import static cz.neumimto.rpg.gui.GuiHelper.createPlayerGroupView;
 import static cz.neumimto.rpg.gui.GuiHelper.getItemLore;
@@ -32,7 +33,7 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.Localizations;
-import cz.neumimto.rpg.configuration.PluginConfig;
+
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.EffectSourceType;
@@ -140,7 +141,7 @@ public class VanillaMessaging implements IPlayerMessage {
 	@Reload(on = ReloadService.PLUGIN_CONFIG)
 	public void load() {
 		controlls = new HashMap<>();
-		for (String a : PluginConfig.SKILLTREE_BUTTON_CONTROLLS) {
+		for (String a : pluginConfig.SKILLTREE_BUTTON_CONTROLLS) {
 			String[] split = a.split(",");
 
 			SkillTreeControllsButton key = SkillTreeControllsButton.valueOf(split[0].toUpperCase());
@@ -469,7 +470,7 @@ public class VanillaMessaging implements IPlayerMessage {
 	@Override
 	public void sendRaceInfo(IActiveCharacter target, Race race) {
 		Inventory i = createPlayerGroupView(race);
-		if ((target.getRace() == null || target.getRace() == Race.Default) || PluginConfig.PLAYER_CAN_CHANGE_RACE) {
+		if ((target.getRace() == null || target.getRace() == Race.Default) || pluginConfig.PLAYER_CAN_CHANGE_RACE) {
 			ItemStack of = GuiHelper.itemStack(ItemTypes.DIAMOND);
 			of.offer(new InventoryCommandItemMenuData("character set race " + race.getName()));
 			of.offer(Keys.DISPLAY_NAME, Localizations.CONFIRM.toText());

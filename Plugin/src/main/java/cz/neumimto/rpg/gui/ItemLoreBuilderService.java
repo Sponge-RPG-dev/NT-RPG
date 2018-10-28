@@ -6,7 +6,7 @@ import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.Localizations;
-import cz.neumimto.rpg.configuration.PluginConfig;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.inventory.ItemLoreSections;
 import cz.neumimto.rpg.inventory.LoreSectionDelimiter;
@@ -69,11 +69,11 @@ public class ItemLoreBuilderService {
 
 	@Reload(on = ReloadService.PLUGIN_CONFIG)
 	public void setupColor() {
-		effectName = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_NAME_COLOR).get();
-		doubleColon = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_COLON_COLOR).get();
-		value = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_VALUE_COLOR).get();
-		effectSettings = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_EFFECT_SECTION_COLOR).get();
-		groupMinLevelColor = Sponge.getRegistry().getType(TextColor.class, PluginConfig.ITEM_LORE_GROUP_MIN_LEVEL_COLOR).get();
+		effectName = Sponge.getRegistry().getType(TextColor.class, pluginConfig.ITEM_LORE_EFFECT_NAME_COLOR).get();
+		doubleColon = Sponge.getRegistry().getType(TextColor.class, pluginConfig.ITEM_LORE_EFFECT_COLON_COLOR).get();
+		value = Sponge.getRegistry().getType(TextColor.class, pluginConfig.ITEM_LORE_EFFECT_VALUE_COLOR).get();
+		effectSettings = Sponge.getRegistry().getType(TextColor.class, pluginConfig.ITEM_LORE_EFFECT_SECTION_COLOR).get();
+		groupMinLevelColor = Sponge.getRegistry().getType(TextColor.class, pluginConfig.ITEM_LORE_GROUP_MIN_LEVEL_COLOR).get();
 
 
 		effectSection = Localizations.ITEM_EFFECTS_SECTION.toText();
@@ -85,9 +85,9 @@ public class ItemLoreBuilderService {
 		requirements = Localizations.ITEM_REQUIREMENTS_SECTION.toText();
 		metaType = Localizations.ITEM_META_TYPE_NAME.toText();
 
-		loreOrder = PluginConfig.ITEM_LORE_ORDER.stream().map(ItemLoreSections::valueOf).collect(Collectors.toList());
+		loreOrder = pluginConfig.ITEM_LORE_ORDER.stream().map(ItemLoreSections::valueOf).collect(Collectors.toList());
 
-		for (String s : PluginConfig.ITEM_RARITY) {
+		for (String s : pluginConfig.ITEM_RARITY) {
 			String[] split = s.split(",");
 			Integer i = Integer.parseInt(split[0]);
 			Text t = TextHelper.parse(split[1]);

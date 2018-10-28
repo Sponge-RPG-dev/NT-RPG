@@ -34,7 +34,7 @@ import cz.neumimto.core.localization.ResourceBundle;
 import cz.neumimto.core.localization.ResourceBundles;
 import cz.neumimto.rpg.commands.CommandBase;
 import cz.neumimto.rpg.commands.CommandService;
-import cz.neumimto.rpg.configuration.PluginConfig;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
@@ -217,7 +217,7 @@ public class ResourceLoader {
 					info("ClassLoader for "
 							+ Console.GREEN_BOLD + classLoader +
 							Console.RESET + " loaded class " +
-							Console.GREEN + clazz.getSimpleName() + Console.RESET, PluginConfig
+							Console.GREEN + clazz.getSimpleName() + Console.RESET, pluginConfig
 							.DEBUG);
 					loadClass(clazz, classLoader);
 				} else {
@@ -233,7 +233,7 @@ public class ResourceLoader {
 	}
 
 	public Object loadClass(Class<?> clazz, ClassLoader classLoader) throws IllegalAccessException, InstantiationException {
-		info(" - Checking if theres something to load in a class " + clazz.getName(), PluginConfig.DEBUG);
+		info(" - Checking if theres something to load in a class " + clazz.getName(), pluginConfig.DEBUG);
 		//Properties
 		Object container = null;
 		if (clazz.isInterface() && clazz.getAnnotations().length == 0) {
@@ -243,18 +243,18 @@ public class ResourceLoader {
 			ioc.build(clazz);
 		}
 		if (clazz.isAnnotationPresent(ListenerClass.class)) {
-			info("Registering listener" + clazz.getName(), PluginConfig.DEBUG);
+			info("Registering listener" + clazz.getName(), pluginConfig.DEBUG);
 			container = ioc.build(clazz);
 			ioc.build(Game.class).getEventManager().registerListeners(ioc.build(NtRpgPlugin.class), container);
 		}
 		if (clazz.isAnnotationPresent(Command.class)) {
 			container = ioc.build(clazz);
-			info("registering command class" + clazz.getName(), PluginConfig.DEBUG);
+			info("registering command class" + clazz.getName(), pluginConfig.DEBUG);
 			commandService.registerCommand((CommandBase) container);
 		}
 		if (clazz.isAnnotationPresent(Skill.class)) {
 			container = ioc.build(clazz);
-			info("registering skill " + clazz.getName(), PluginConfig.DEBUG);
+			info("registering skill " + clazz.getName(), pluginConfig.DEBUG);
 			ISkill skill = (ISkill) container;
 			Skill sk = clazz.getAnnotation(Skill.class);
 			if (sk.dynamicLocalizationNodes()) {
@@ -271,10 +271,10 @@ public class ResourceLoader {
 		}
 		if (clazz.isAnnotationPresent(ConfigurationContainer.class)) {
 			configMapper.loadClass(clazz);
-			info("Found configuration container class " + clazz.getName(), PluginConfig.DEBUG);
+			info("Found configuration container class " + clazz.getName(), pluginConfig.DEBUG);
 		}
 		if (clazz.isAnnotationPresent(PropertyContainer.class)) {
-			info("Found Property container class" + clazz.getName(), PluginConfig.DEBUG);
+			info("Found Property container class" + clazz.getName(), pluginConfig.DEBUG);
 			propertyService.process(clazz);
 		}
 		if (clazz.isAnnotationPresent(Attribute.class)) {
@@ -286,7 +286,7 @@ public class ResourceLoader {
 		if (clazz.isAnnotationPresent(ResourceBundles.class)) {
 			ResourceBundles annotation = clazz.getAnnotation(ResourceBundles.class);
 			for (ResourceBundle resourceBundle : annotation.value()) {
-				localizationService.loadResourceBundle(resourceBundle.value(), Locale.forLanguageTag(PluginConfig.LOCALE), clazz.getClassLoader());
+				localizationService.loadResourceBundle(resourceBundle.value(), Locale.forLanguageTag(pluginConfig.LOCALE), clazz.getClassLoader());
 			}
 		}
 		if (IGlobalEffect.class.isAssignableFrom(clazz)) {

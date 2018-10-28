@@ -22,7 +22,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.configuration.PluginConfig;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -236,7 +236,7 @@ public class EffectService {
 	@SuppressWarnings("unchecked")
 	public void addEffect(IEffect iEffect, IEffectConsumer consumer, IEffectSourceProvider effectSourceProvider) {
 		IEffectContainer eff = consumer.getEffect(iEffect.getName());
-		if (PluginConfig.DEBUG.isDevelop()) {
+		if (pluginConfig.DEBUG.isDevelop()) {
 			IEffectConsumer consumer1 = iEffect.getConsumer();
 			if (consumer1 instanceof ActiveCharacter) {
 				ActiveCharacter chara = (ActiveCharacter) consumer1;
@@ -273,7 +273,7 @@ public class EffectService {
 	 */
 	public void removeEffect(IEffect iEffect, IEffectConsumer consumer) {
 		IEffectContainer effect = consumer.getEffect(iEffect.getName());
-		if (PluginConfig.DEBUG.isDevelop()) {
+		if (pluginConfig.DEBUG.isDevelop()) {
 			IEffectConsumer consumer1 = iEffect.getConsumer();
 			if (consumer1 instanceof ActiveCharacter) {
 				ActiveCharacter chara = (ActiveCharacter) consumer1;
@@ -398,7 +398,7 @@ public class EffectService {
 
 	public void removeGlobalEffectsAsEnchantments(Collection<IGlobalEffect> itemEffects, IActiveCharacter character,
 			IEffectSourceProvider effectSourceProvider) {
-		if (PluginConfig.DEBUG.isDevelop()) {
+		if (pluginConfig.DEBUG.isDevelop()) {
 			character.sendMessage(Text.of(itemEffects.size() + " added echn. effects to remove queue."));
 		}
 		itemEffects.forEach((e) -> {

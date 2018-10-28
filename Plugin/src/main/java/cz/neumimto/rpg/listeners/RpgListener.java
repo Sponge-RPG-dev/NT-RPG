@@ -22,7 +22,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.configuration.PluginConfig;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.events.CharacterChangeGroupEvent;
 import cz.neumimto.rpg.events.PlayerGuiModInitEvent;
 import cz.neumimto.rpg.events.character.PlayerDataPreloadComplete;
@@ -68,7 +68,7 @@ public class RpgListener {
 		if (retardedOptional.isPresent()) {
 			Player player = retardedOptional.get();
 			if (!event.getCharacterBases().isEmpty()) {
-				if (PluginConfig.PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR || event.getCharacterBases().size() == 1) {
+				if (pluginConfig.PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR || event.getCharacterBases().size() == 1) {
 					NtRpgPlugin.asyncExecutor.execute(() -> {
 						final IActiveCharacter character =
 								characterService.buildActiveCharacterAsynchronously(player, event.getCharacterBases().get(0));
@@ -92,8 +92,8 @@ public class RpgListener {
 
 	@Listener(order = Order.EARLY)
 	public void onPartyJoin(PartyJoinEvent event) {
-		if (PluginConfig.MAX_PARTY_SIZE > -1) {
-			if (event.getParty().getPlayers().size() > PluginConfig.MAX_PARTY_SIZE) {
+		if (pluginConfig.MAX_PARTY_SIZE > -1) {
+			if (event.getParty().getPlayers().size() > pluginConfig.MAX_PARTY_SIZE) {
 				event.setCancelled(true);
 			}
 		}

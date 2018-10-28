@@ -1,10 +1,11 @@
 package cz.neumimto.rpg.commands;
 
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localizations;
-import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Race;
@@ -48,7 +49,7 @@ public class PlayerClassCommandElement extends CommandElement {
 		}
 		IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) source);
 
-		if (validate && PluginConfig.VALIDATE_RACE_DURING_CLASS_SELECTION) {
+		if (validate && pluginConfig.VALIDATE_RACE_DURING_CLASS_SELECTION) {
 			Race race = character.getRace();
 			if (race == Race.Default) {
 				throw args.createError(Localizations.RACE_NOT_SELECTED.toText());
@@ -67,7 +68,7 @@ public class PlayerClassCommandElement extends CommandElement {
 
 	@Override
 	public List<String> complete(CommandSource src, CommandArgs args, CommandContext context) {
-		if (PluginConfig.VALIDATE_RACE_DURING_CLASS_SELECTION) {
+		if (pluginConfig.VALIDATE_RACE_DURING_CLASS_SELECTION) {
 			IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src);
 			Race race = character.getRace();
 			if (race == Race.Default) {

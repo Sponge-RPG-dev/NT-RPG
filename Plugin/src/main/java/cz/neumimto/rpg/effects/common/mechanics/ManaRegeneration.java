@@ -19,7 +19,7 @@
 package cz.neumimto.rpg.effects.common.mechanics;
 
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.configuration.PluginConfig;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.effects.CoreEffectTypes;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.EffectStatusType;
@@ -44,7 +44,7 @@ public class ManaRegeneration extends EffectBase {
 	public ManaRegeneration(IEffectConsumer character, long duration, Void value) {
 		super(name, character);
 		this.character = (IActiveCharacter) character;
-		setPeriod(PluginConfig.MANA_REGENERATION_RATE);
+		setPeriod(pluginConfig.MANA_REGENERATION_RATE);
 		setApplyMessage(apply);
 		setExpireMessage(remove);
 		setDuration(-1);

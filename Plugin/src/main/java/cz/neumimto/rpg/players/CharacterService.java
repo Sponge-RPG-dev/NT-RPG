@@ -19,6 +19,7 @@ package cz.neumimto.rpg.players;
 
 import static cz.neumimto.rpg.Log.error;
 import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
@@ -29,7 +30,6 @@ import cz.neumimto.rpg.MissingConfigurationException;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.configuration.Localizations;
-import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectConsumer;
@@ -147,7 +147,7 @@ public class CharacterService {
 			List<CharacterBase> playerCharacters = playerDao.getPlayersCharacters(id);
 			info("Finished loading of player " + id + ", loaded " + playerCharacters.size() + " characters   [" + (System.currentTimeMillis() - k)
 					+ "]ms");
-			if (playerCharacters.isEmpty() && PluginConfig.CREATE_FIRST_CHAR_AFTER_LOGIN) {
+			if (playerCharacters.isEmpty() && pluginConfig.CREATE_FIRST_CHAR_AFTER_LOGIN) {
 				CharacterBase characterBase = createCharacterBase(playerName, id);
 				createAndUpdate(characterBase);
 				playerCharacters = Collections.singletonList(characterBase);
@@ -177,11 +177,11 @@ public class CharacterService {
 		characterClass.setName(ConfigClass.Default.getName());
 		characterClass.setExperiences(0D);
 		characterClass.setCharacterBase(characterBase);
-		characterBase.setAttributePoints(PluginConfig.ATTRIBUTEPOINTS_ON_START);
+		characterBase.setAttributePoints(pluginConfig.ATTRIBUTEPOINTS_ON_START);
 
 		characterBase.getCharacterClasses().add(characterClass);
 		characterBase.setUuid(uuid);
-		characterBase.setAttributePoints(PluginConfig.ATTRIBUTEPOINTS_ON_START);
+		characterBase.setAttributePoints(pluginConfig.ATTRIBUTEPOINTS_ON_START);
 		return characterBase;
 	}
 
@@ -982,7 +982,7 @@ public class CharacterService {
 		if (event.isCancelled()) {
 			return 3;
 		}
-		if (skill instanceof SkillTreeSpecialization && PluginConfig.PATH_NODES_SEALED) {
+		if (skill instanceof SkillTreeSpecialization && pluginConfig.PATH_NODES_SEALED) {
 			return 4;
 		}
 		int level = skillInfo.getLevel();
@@ -1046,7 +1046,7 @@ public class CharacterService {
 	public void updateWalkSpeed(IEffectConsumer entity) {
 		double speed = entityService.getEntityProperty(entity, DefaultProperties.walk_speed);
 		entity.getEntity().offer(Keys.WALKING_SPEED, speed);
-		if (PluginConfig.DEBUG.isBalance()) {
+		if (pluginConfig.DEBUG.isBalance()) {
 			info(entity + " setting walk speed to " + speed);
 		}
 	}
@@ -1202,9 +1202,9 @@ public class CharacterService {
 		addDefaultEffects(character);
 
 		inventoryService.initializeCharacterInventory(character);
-		updateAll(character).run();
 		Sponge.getScheduler().createTaskBuilder().execute(() -> {
-			Double d = character.getEntity().get(Keys.MAX_HEALTH).get();
+			updateAll(character).run();
+			Double d = character.getHealth().getMaxValue();
 			character.getEntity().offer(Keys.HEALTH, d);
 		}).delay(1, TimeUnit.MILLISECONDS).submit(plugin);
 	}
@@ -1243,11 +1243,11 @@ public class CharacterService {
 			e.processRMB();
 			return false;
 		}
-		if (userActionType == UserActionType.Q && PluginConfig.ENABLED_Q && e.hasStarted()) {
+		if (userActionType == UserActionType.Q && pluginConfig.ENABLED_Q && e.hasStarted()) {
 			e.processQ();
 			return true;
 		}
-		if (userActionType == UserActionType.E && PluginConfig.ENABLED_E && e.hasStarted()) {
+		if (userActionType == UserActionType.E && pluginConfig.ENABLED_E && e.hasStarted()) {
 			e.processE();
 			return true;
 		}

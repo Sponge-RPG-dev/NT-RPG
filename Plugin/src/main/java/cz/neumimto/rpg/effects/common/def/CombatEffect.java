@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.effects.common.def;
 
-import cz.neumimto.rpg.configuration.PluginConfig;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.effects.CoreEffectTypes;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -22,7 +22,7 @@ public class CombatEffect extends EffectBase {
 		super(name, consumer);
 		this.character = consumer;
 		opponent = new WeakReference<IActiveCharacter>(null);
-		initiation = System.currentTimeMillis() - PluginConfig.COMBAT_TIME;
+		initiation = System.currentTimeMillis() - pluginConfig.COMBAT_TIME;
 		effectTypes.add(CoreEffectTypes.COMBAT_TIMER);
 	}
 
@@ -35,7 +35,7 @@ public class CombatEffect extends EffectBase {
 	}
 
 	public void setOpponent(IActiveCharacter character) {
-		initiation = System.currentTimeMillis() + PluginConfig.COMBAT_TIME;
+		initiation = System.currentTimeMillis() + pluginConfig.COMBAT_TIME;
 		opponent = new WeakReference<>(character);
 	}
 }

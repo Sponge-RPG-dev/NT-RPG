@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.effects.common.def;
 
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.configuration.PluginConfig;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
@@ -36,7 +36,7 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 	public ClickComboActionComponent(IEffectConsumer t) {
 		super(name, t);
 		character = (IActiveCharacter) t;
-		setPeriod(PluginConfig.CLICK_COMBO_MAX_INVERVAL_BETWEEN_ACTIONS);
+		setPeriod(pluginConfig.CLICK_COMBO_MAX_INVERVAL_BETWEEN_ACTIONS);
 		setDuration(-1L);
 	}
 
@@ -54,7 +54,7 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 	}
 
 	public void processShift() {
-		if (PluginConfig.SHIFT_CANCELS_COMBO) {
+		if (pluginConfig.SHIFT_CANCELS_COMBO) {
 			cancel(true);
 		} else {
 			combination.append('S');
@@ -77,13 +77,12 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 		if (combination != null) {
 			ExtendedSkillInfo skill = NtRpgPlugin.GlobalScope.skillService.invokeSkillByCombo(getCurrent(), character);
 			if (skill != null) {
-				skill.getSkill().getName();
 				Gui.skillExecution(character, skill);
 				combination = null;
 				exec = true;
 			}
 		}
-		k = System.currentTimeMillis() + 2000;
+		k = System.currentTimeMillis() + 2000L;
 		if (!exec) {
 			Gui.displayCurrentClicks(character, getCurrent());
 		}
@@ -115,7 +114,6 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 	public IEffectContainer constructEffectContainer() {
 		return this;
 	}
-
 
 	@Override
 	public Set<ClickComboActionComponent> getEffects() {

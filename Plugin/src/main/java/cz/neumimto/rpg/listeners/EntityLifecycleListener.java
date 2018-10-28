@@ -4,7 +4,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.configuration.PluginConfig;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.entities.EntityService;
@@ -84,7 +84,7 @@ public class EntityLifecycleListener {
 
 	@Listener
 	public void onUserBan(BanUserEvent event) {
-		if (PluginConfig.REMOVE_PLAYERDATA_AFTER_PERMABAN) {
+		if (pluginConfig.REMOVE_PLAYERDATA_AFTER_PERMABAN) {
 			if (!event.getBan().getExpirationDate().isPresent()) {
 				characterService.removePlayerData(event.getTargetUser().getUniqueId());
 			}
@@ -131,8 +131,8 @@ public class EntityLifecycleListener {
 					ExperienceSource experienceSource = targetEntity.getType() == EntityTypes.PLAYER ? ExperienceSources.PVP : ExperienceSources.PVE;
 
 						if (character.hasParty()) {
-							exp *= PluginConfig.PARTY_EXPERIENCE_MULTIPLIER;
-							double dist = Math.pow(PluginConfig.PARTY_EXPERIENCE_SHARE_DISTANCE, 2);
+							exp *= pluginConfig.PARTY_EXPERIENCE_MULTIPLIER;
+							double dist = Math.pow(pluginConfig.PARTY_EXPERIENCE_SHARE_DISTANCE, 2);
 							Set<IActiveCharacter> set = new HashSet<>();
 							for (IActiveCharacter member : character.getParty().getPlayers()) {
 								Player player = member.getPlayer();

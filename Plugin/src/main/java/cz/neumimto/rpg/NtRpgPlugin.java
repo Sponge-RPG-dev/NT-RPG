@@ -122,6 +122,9 @@ import cz.neumimto.rpg.skills.tree.SkillType;
 import cz.neumimto.rpg.utils.FileUtils;
 import cz.neumimto.rpg.utils.Placeholders;
 import cz.neumimto.rpg.utils.SkillTreeActionResult;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
+import ninja.leaping.configurate.objectmapping.ObjectMapper;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
@@ -185,6 +188,7 @@ public class NtRpgPlugin {
 	public static File pluginjar;
 	public static GlobalScope GlobalScope;
 	public static SpongeExecutorService asyncExecutor;
+	public static PluginConfig pluginConfig;
 
 	@Inject
 	public Logger logger;
@@ -452,6 +456,7 @@ public class NtRpgPlugin {
 	public void onPluginLoad(GamePostInitializationEvent event) {
 		long start = System.nanoTime();
 		Log.logger = logger;
+		reloadMainPluigonConfig();
 		IoC ioc = IoC.get();
 		asyncExecutor = Sponge.getGame().getScheduler().createAsyncExecutor(NtRpgPlugin.this);
 
@@ -487,14 +492,14 @@ public class NtRpgPlugin {
 		GlobalScope = ioc.build(GlobalScope.class);
 		rl.loadExternalJars();
 
-		if (PluginConfig.DEBUG.isBalance()) {
+		if (pluginConfig.DEBUG.isBalance()) {
 			Sponge.getEventManager().registerListeners(this, ioc.build(DebugListener.class));
 		}
 		registerCommands();
 		IoC.get().build(PropertyService.class).loadMaximalServerPropertyValues();
 		IoC.get().build(LocalizationService.class).registerClass(Localizations.class);
 		IoC.get().build(LocalizationService.class)
-				.loadResourceBundle("assets.nt-rpg.localizations.localization", Locale.forLanguageTag(PluginConfig.LOCALE), null);
+				.loadResourceBundle("assets.nt-rpg.localizations.localization", Locale.forLanguageTag(pluginConfig.LOCALE), null);
 		IoC.get().build(Init.class).it();
 
 
@@ -513,6 +518,20 @@ public class NtRpgPlugin {
 		ioc.postProcess();
 		double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
 		info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
+	}
+
+	private void reloadMainPluigonConfig() {
+		File settings = Paths.get(config.toFile().toPath().toString(), "Settings.conf").toFile();
+		if (!settings.exists()) {
+			FileUtils.generateConfigFile(new PluginConfig(), settings);
+		}
+		try {
+			ObjectMapper<PluginConfig> mapper = ObjectMapper.forClass(PluginConfig.class);
+			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(settings.toPath()).build();
+			pluginConfig = mapper.bind(new PluginConfig()).populate(hcl.load());
+		} catch (ObjectMappingException | IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void registerCommands() {
@@ -718,7 +737,7 @@ public class NtRpgPlugin {
 				.executor((src, args) -> {
 					Integer integer = args.<Integer>getOne("level").get();
 					Set<Integer> i = new HashSet<>();
-					for (String s : PluginConfig.ITEM_RARITY) {
+					for (String s : pluginConfig.ITEM_RARITY) {
 						i.add(Integer.parseInt(s.split(",")[0]));
 					}
 					if (!i.contains(integer)) {
@@ -907,7 +926,7 @@ public class NtRpgPlugin {
 				.executor((src, args) -> {
 					String[] a = args.<String>getOne("args").get().split(" ");
 					if (a[0].equalsIgnoreCase("js")) {
-						if (!(PluginConfig.DEBUG.isBalance())) {
+						if (!(pluginConfig.DEBUG.isBalance())) {
 							src.sendMessage(TextHelper.parse("Reloading is allowed only in debug mode"));
 							return CommandResult.success();
 						}
@@ -1039,10 +1058,10 @@ public class NtRpgPlugin {
 							characterClass.setName(ConfigClass.Default.getName());
 							characterClass.setExperiences(0D);
 							characterClass.setCharacterBase(characterBase);
-							characterBase.setAttributePoints(PluginConfig.ATTRIBUTEPOINTS_ON_START);
+							characterBase.setAttributePoints(pluginConfig.ATTRIBUTEPOINTS_ON_START);
 							characterBase.getCharacterClasses().add(characterClass);
 							characterBase.setUuid(player.getUniqueId());
-							characterBase.setAttributePoints(PluginConfig.ATTRIBUTEPOINTS_ON_START);
+							characterBase.setAttributePoints(pluginConfig.ATTRIBUTEPOINTS_ON_START);
 							characterService.createAndUpdate(characterBase);
 							src.sendMessage(TextHelper.parse(CommandLocalization.CHARACTER_CREATED.replaceAll("%1", characterBase.getName())));
 							Gui.sendListOfCharacters(characterService.getCharacter(player.getUniqueId()), characterBase);
@@ -1140,8 +1159,8 @@ public class NtRpgPlugin {
 						}
 
 						if (character.getRace() == Race.Default ||
-								(character.getRace() != Race.Default && PluginConfig.PLAYER_CAN_CHANGE_RACE)) {
-							if (PluginConfig.PLAYER_CAN_CHANGE_RACE) {
+								(character.getRace() != Race.Default && pluginConfig.PLAYER_CAN_CHANGE_RACE)) {
+							if (pluginConfig.PLAYER_CAN_CHANGE_RACE) {
 								GlobalScope.characterService.updatePlayerGroups(character, null, 0, r, null);
 								return;
 							}

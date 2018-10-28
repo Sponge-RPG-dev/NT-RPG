@@ -18,13 +18,14 @@
 
 package cz.neumimto.rpg.listeners;
 
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+
 import com.flowpowered.math.vector.Vector3i;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.NEventContextKeys;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.damage.ISkillDamageSource;
 import cz.neumimto.rpg.effects.EffectService;
@@ -145,7 +146,7 @@ public class BasicListener {
 
 		if (entity.getType() == IEntityType.CHARACTER) {
 			IActiveCharacter target = characterService.getCharacter(event.getTargetEntity().getUniqueId());
-			if (target.isStub() && !PluginConfig.ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS) {
+			if (target.isStub() && !pluginConfig.ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS) {
 				event.setCancelled(true);
 				return;
 			}
@@ -256,7 +257,7 @@ public class BasicListener {
 					event.setBaseDamage(e.getDamage());
 				}
 			} else {
-				if (!PluginConfig.OVERRIDE_MOBS) {
+				if (!pluginConfig.OVERRIDE_MOBS) {
 					newdamage = entityService.getMobDamage(source);
 				}
 				newdamage *= damageService.getEntityBonusDamage(entity, entityDamageSource.getType());
@@ -306,7 +307,7 @@ public class BasicListener {
 			IActiveCharacter c = (IActiveCharacter) shooter;
 			projectileDamage = damageService.getCharacterProjectileDamage(c, projectile.getType());
 		} else if (shooter.getType() == IEntityType.MOB) {
-			if (!PluginConfig.OVERRIDE_MOBS) {
+			if (!pluginConfig.OVERRIDE_MOBS) {
 				projectileDamage = entityService.getMobDamage(shooter.getEntity());
 			}
 		}

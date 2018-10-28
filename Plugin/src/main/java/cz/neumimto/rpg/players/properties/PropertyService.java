@@ -22,7 +22,7 @@ import static cz.neumimto.rpg.Log.info;
 
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.configuration.PluginConfig;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.utils.Utils;
@@ -71,7 +71,7 @@ public class PropertyService {
 	private float[] maxValues;
 
 	public void registerProperty(String name, int id) {
-		info("Found property " + name + "; assigned id: " + id, PluginConfig.DEBUG);
+		info("Found property " + name + "; assigned id: " + id, pluginConfig.DEBUG);
 		idMap.put(name, id);
 		nameMap.put(id, name);
 	}
@@ -112,7 +112,7 @@ public class PropertyService {
 		Path path = Paths.get(NtRpgPlugin.workingDir + File.separator + "properties_dump.info");
 		StringBuilder s = new StringBuilder();
 		List<String> l = new ArrayList<>(idMap.keySet());
-		info(" - found " + l.size() + " Properties", PluginConfig.DEBUG);
+		info(" - found " + l.size() + " Properties", pluginConfig.DEBUG);
 		l.sort(Collator.getInstance());
 		for (String s1 : l) {
 			s.append(s1).append(Utils.LineSeparator);

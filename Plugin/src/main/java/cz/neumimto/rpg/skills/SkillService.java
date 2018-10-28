@@ -27,7 +27,7 @@ import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.configuration.PluginConfig;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.events.skills.SkillPostUsageEvent;
 import cz.neumimto.rpg.events.skills.SkillPrepareEvent;
 import cz.neumimto.rpg.gui.Gui;
@@ -110,7 +110,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 	public void initGuis() {
 		int i = 0;
 
-		for (String str : PluginConfig.SKILLTREE_RELATIONS) {
+		for (String str : pluginConfig.SKILLTREE_RELATIONS) {
 			String[] split = str.split(",");
 
 			short k = (short) (Short.MAX_VALUE - i);
@@ -357,7 +357,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 			s.setModel(scriptSkillModel);
 			IoC.get().get(sk, s);
 			s.initScript();
-			if (PluginConfig.DEBUG.isDevelop()) {
+			if (pluginConfig.DEBUG.isDevelop()) {
 				info("-------- Created skill from skill def.");
 				info("+ ClassName " + s.getClass().getName());
 				info("+ ClassLoader " + s.getClass().getClassLoader());

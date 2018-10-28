@@ -18,9 +18,10 @@
 
 package cz.neumimto.rpg.players;
 
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
-import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
@@ -102,7 +103,7 @@ public class PreloadCharacter implements IActiveCharacter {
 
 	@Override
 	public boolean isInvulnerable() {
-		return PluginConfig.ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS;
+		return pluginConfig.ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS;
 	}
 
 	@Override

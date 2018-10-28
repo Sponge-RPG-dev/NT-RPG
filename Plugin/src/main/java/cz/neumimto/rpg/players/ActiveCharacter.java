@@ -18,9 +18,10 @@
 
 package cz.neumimto.rpg.players;
 
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
-import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
@@ -358,7 +359,7 @@ public class ActiveCharacter implements IActiveCharacter {
 			primary.setExperiences(0D);
 			primary.setLevel(0);
 			if (slot == 0) {
-				cc.setSkillPoints(PluginConfig.SKILLPOINTS_ON_START);
+				cc.setSkillPoints(pluginConfig.SKILLPOINTS_ON_START);
 			}
 			cc.setExperiences(0D);
 		} else {
@@ -495,9 +496,9 @@ public class ActiveCharacter implements IActiveCharacter {
 				Double aDouble = getProjectileDamages().get(entityType.getKey());
 				if (aDouble == null) {
 					getProjectileDamages().put(entityType.getKey(), entityType.getValue());
-				} else if (PluginConfig.WEAPON_MERGE_STRATEGY == 1) {
+				} else if (pluginConfig.WEAPON_MERGE_STRATEGY == 1) {
 					getProjectileDamages().put(entityType.getKey(), aDouble + entityType.getValue());
-				} else if (PluginConfig.WEAPON_MERGE_STRATEGY == 2) {
+				} else if (pluginConfig.WEAPON_MERGE_STRATEGY == 2) {
 					getProjectileDamages().put(entityType.getKey(), Math.max(aDouble, entityType.getValue()));
 				}
 			}
