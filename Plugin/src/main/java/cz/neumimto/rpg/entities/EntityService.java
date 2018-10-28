@@ -1,12 +1,12 @@
 package cz.neumimto.rpg.entities;
 
 import static cz.neumimto.rpg.Log.warn;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.IRpgElement;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.events.skills.SkillHealEvent;
@@ -173,5 +173,9 @@ public class EntityService {
 	 */
 	public void setEntityToFullHealth(IEntity entityToFullHealth) {
 		entityToFullHealth.getHealth().setValue(entityToFullHealth.getHealth().getMaxValue());
+	}
+
+	public void reloadMobConfiguration() {
+		dao.load(null);
 	}
 }

@@ -48,6 +48,7 @@ import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
+import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
@@ -973,6 +974,8 @@ public class NtRpgPlugin {
 						IoC.get().build(SkillService.class).reloadSkillTrees();
 					} else if (a[0].equalsIgnoreCase("settings")) {
 						reloadMainPluigonConfig();
+					} else if (a[0].equalsIgnoreCase("mobs")) {
+						IoC.get().build(EntityService.class).reloadMobConfiguration();
 					} else {
 						src.sendMessage(TextHelper.parse("js[s/a/g] skilltree [r,a] icons"));
 						return CommandResult.empty();
