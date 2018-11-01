@@ -34,6 +34,6 @@ dependencies {
                     'Build-Timestamp': new Date()
             )
         }
-        exclude 'mcmod.info'
+        //exclude 'mcmod.info'
     }
 }
