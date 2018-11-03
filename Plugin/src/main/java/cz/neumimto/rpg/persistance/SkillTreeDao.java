@@ -27,6 +27,7 @@ import com.typesafe.config.*;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.gui.SkillTreeInterfaceModel;
@@ -55,6 +56,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by NeumimTo on 24.7.2015.
@@ -219,11 +221,14 @@ public class SkillTreeDao {
 				}
                 list = reagent.getObjectList("Insufficient");
                 for (ConfigObject configObject : list) {
-					Optional<SkillPreProcessorFactory> id = Sponge.getRegistry().getType(SkillPreProcessorFactory.class, configObject.get("Id").render());
+					Optional<SkillPreProcessorFactory> id = Sponge.getRegistry().getType(SkillPreProcessorFactory.class, configObject.get("Id").unwrapped().toString());
 					if (id.isPresent()) {
 						SkillPreProcessorFactory skillPreProcessorFactory = id.get();
 						ActiveSkillPreProcessorWrapper parse = skillPreProcessorFactory.parse(configObject);
 						info.getInsufficientCostPreprocessors().add(parse);
+					} else {
+						warn("- Unknown processor type " + configObject.get("Id").render() + ", use one of: " + Sponge.getRegistry().getAllOf(SkillPreProcessorFactory.class)
+								.stream().map(SkillPreProcessorFactory::getId).collect(Collectors.joining(", ")));
 					}
                 }
             } catch (Exception e) {

@@ -3,6 +3,7 @@ package cz.neumimto.rpg.skills.mods;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillSettings;
 
 public class SkillPreprocessors {
 

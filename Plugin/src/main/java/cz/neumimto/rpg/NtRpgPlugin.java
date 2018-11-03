@@ -115,8 +115,7 @@ import cz.neumimto.rpg.skills.SkillTypeRegistry;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoader;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoaderRegistry;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoaders;
-import cz.neumimto.rpg.skills.mods.SkillContext;
-import cz.neumimto.rpg.skills.mods.SkillExecutorCallback;
+import cz.neumimto.rpg.skills.mods.*;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.parents.ScriptSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
@@ -369,6 +368,7 @@ public class NtRpgPlugin {
 		Sponge.getRegistry().registerModule(ISkillType.class, new SkillTypeRegistry());
 		Sponge.getRegistry().registerModule(ExperienceSource.class, new ExperienceSourceRegistry());
 		Sponge.getRegistry().registerModule(SkillConfigLoader.class, new SkillConfigLoaderRegistry());
+		Sponge.getRegistry().registerModule(SkillPreProcessorFactory.class, new SkillPreProcessorFactoryRegistry());
 	}
 
 	@Listener
@@ -435,6 +435,12 @@ public class NtRpgPlugin {
 		event.register(NDamageType.ICE);
 		event.register(NDamageType.LIGHTNING);
 		event.register(NDamageType.MEELE_CRITICAL);
+	}
+
+	@Listener
+	public void postInit8(GameRegistryEvent.Register<SkillPreProcessorFactory> event) {
+		event.register(SkillPreprocessorFactories.UNCASTABLE);
+		event.register(SkillPreprocessorFactories.ADJUSTED_SKILL_SETTINGS);
 	}
 
 	@Listener
