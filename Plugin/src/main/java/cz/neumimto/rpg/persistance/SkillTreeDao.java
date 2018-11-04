@@ -220,6 +220,8 @@ public class SkillTreeDao {
 						SkillItemCost q = new SkillItemCost();
 						q.setAmount(Integer.parseInt(configObject.get("Amount").unwrapped().toString()));
 						String type = configObject.get("Item-Type").unwrapped().toString();
+						boolean consume = Boolean.valueOf(configObject.get("Consume").unwrapped().toString());
+						q.setConsumeItems(consume);
 						Optional<ItemType> type1 = Sponge.getRegistry().getType(ItemType.class, type);
 						if (type1.isPresent()) {
 							q.setItemType(type1.get());

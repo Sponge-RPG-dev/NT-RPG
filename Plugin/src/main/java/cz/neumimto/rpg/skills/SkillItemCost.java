@@ -10,6 +10,7 @@ public class SkillItemCost {
     private ItemType itemType;
     private Integer modelId;
     private Integer amount;
+    private boolean consumeItems;
 
     public SkillItemCost() {
     }
@@ -37,5 +38,13 @@ public class SkillItemCost {
 
     public void setAmount(Integer amount) {
         this.amount = amount;
+    }
+
+    public void setConsumeItems(boolean consumeItems) {
+        this.consumeItems = consumeItems;
+    }
+
+    public boolean isConsumeItems() {
+        return consumeItems;
     }
 }
