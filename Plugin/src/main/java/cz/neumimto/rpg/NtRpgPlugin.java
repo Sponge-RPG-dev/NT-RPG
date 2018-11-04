@@ -115,9 +115,12 @@ import cz.neumimto.rpg.skills.SkillTypeRegistry;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoader;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoaderRegistry;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoaders;
-import cz.neumimto.rpg.skills.mods.*;
+import cz.neumimto.rpg.skills.mods.SkillContext;
+import cz.neumimto.rpg.skills.mods.SkillExecutorCallback;
+import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactory;
+import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactoryRegistry;
+import cz.neumimto.rpg.skills.mods.SkillPreprocessorFactories;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
-import cz.neumimto.rpg.skills.parents.ScriptSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
 import cz.neumimto.rpg.utils.FileUtils;
 import cz.neumimto.rpg.utils.Placeholders;
@@ -577,11 +580,6 @@ public class NtRpgPlugin {
 						level = optional.get();
 					}
 					if (skill instanceof ActiveSkill) {
-
-						if (skill instanceof ScriptSkill) {
-
-
-						}
 						Long l = System.nanoTime();
 
 						ExtendedSkillInfo extendedSkillInfo = new ExtendedSkillInfo();

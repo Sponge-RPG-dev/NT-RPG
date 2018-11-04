@@ -18,8 +18,6 @@
 
 package cz.neumimto.rpg.skills;
 
-import cz.neumimto.rpg.skills.mods.ActiveSkillPreProcessorWrapper;
-import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 
 import java.util.HashSet;
@@ -41,8 +39,6 @@ public class SkillData {
 	private Set<SkillData> hardDepends = new HashSet<>();
 	private Set<SkillData> conflicts = new HashSet<>();
 	private Set<SkillData> depending = new HashSet<>();
-	private Set<ItemStack> itemCost = new HashSet<>();
-	private Set<ActiveSkillPreProcessorWrapper> insufficientCostpreprocessors = new HashSet<>();
 	private ISkill iskill;
 	private String combination = null;
 	private int relativeX;
@@ -50,6 +46,7 @@ public class SkillData {
 	private int skillTreeId;
 	private int levelGap;
 	private Text skillName;
+	private SkillCost invokeCost;
 
 	public SkillData(String skill) {
 		this.skill = skill;
@@ -163,19 +160,19 @@ public class SkillData {
 		this.levelGap = levelGap;
 	}
 
-	public Set<ItemStack> getItemCost() {
-		return itemCost;
-	}
-
-	public Set<ActiveSkillPreProcessorWrapper> getInsufficientCostPreprocessors() {
-		return insufficientCostpreprocessors;
-	}
-
 	public Text getSkillName() {
 		return skillName;
 	}
 
 	public void setSkillName(Text skillName) {
 		this.skillName = skillName;
+	}
+
+	public SkillCost getInvokeCost() {
+		return invokeCost;
+	}
+
+	public void setInvokeCost(SkillCost invokeCost) {
+		this.invokeCost = invokeCost;
 	}
 }
