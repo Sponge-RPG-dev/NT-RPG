@@ -44,7 +44,7 @@ public class SkillItemCost {
         this.consumeItems = consumeItems;
     }
 
-    public boolean isConsumeItems() {
+    public boolean consumeItems() {
         return consumeItems;
     }
 }

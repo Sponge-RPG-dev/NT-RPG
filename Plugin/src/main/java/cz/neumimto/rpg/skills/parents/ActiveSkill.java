@@ -65,7 +65,7 @@ public abstract class ActiveSkill extends AbstractSkill implements IActiveSkill 
 		SkillCost invokeCost = skillInfo.getSkillData().getInvokeCost();
 		Player player = character.getPlayer();
 		Inventory query = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
-		Map<Inventory, Integer> itemsToTake = new HashMap<>();
+		Map<Inventory, Result> itemsToTake = new HashMap<>();
 		int c = 0;
 		outer:
 		for (SkillItemCost skillItemCost : invokeCost.getItemCost()) {
@@ -80,10 +80,10 @@ public abstract class ActiveSkill extends AbstractSkill implements IActiveSkill 
 						requiredAmount -= itemStack.getQuantity();
 						if (requiredAmount > 0) {
 							int b = i - requiredAmount;
-							itemsToTake.put(inventory, b);
+							itemsToTake.put(inventory, new Result(b, skillItemCost.consumeItems()));
 							i = requiredAmount;
 						} else {
-							itemsToTake.put(inventory, requiredAmount);
+							itemsToTake.put(inventory, new Result(requiredAmount,skillItemCost.consumeItems()));
 							break outer;
 						}
 					}
@@ -91,10 +91,13 @@ public abstract class ActiveSkill extends AbstractSkill implements IActiveSkill 
 			}
 		}
 		if (c == invokeCost.getItemCost().size()) {
-			for (Map.Entry<Inventory, Integer> e : itemsToTake.entrySet()) {
-				Integer amount = e.getValue();
-				Inventory slot = e.getKey();
-				slot.peek().get().setQuantity(amount);
+			for (Map.Entry<Inventory, Result> e : itemsToTake.entrySet()) {
+				Result result = e.getValue();
+				if (result.consume) {
+					int amount = result.amount;
+					Inventory slot = e.getKey();
+					slot.peek().get().setQuantity(amount);
+				}
 			}
 		} else {
 			return invokeCost.getInsufficientProcessors();
@@ -107,5 +110,16 @@ public abstract class ActiveSkill extends AbstractSkill implements IActiveSkill 
 
 	public SkillContext createSkillExecutorContext() {
 		return new SkillContext(this);
+	}
+
+
+	private static class Result {
+		public int amount;
+		public boolean consume;
+
+		private Result(int amount, boolean consume) {
+			this.amount = amount;
+			this.consume = consume;
+		}
 	}
 }
