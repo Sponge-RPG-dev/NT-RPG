@@ -210,7 +210,7 @@ public class SkillTreeDao {
 
 
 			try {
-				Config reagent = c.getConfig("Invoke-Cost");
+				Config reagent = c.getConfig("InvokeCost");
 				SkillCost itemCost = new SkillCost();
 				info.setInvokeCost(itemCost);
 				List<? extends ConfigObject> list = reagent.getObjectList("Items");
@@ -219,7 +219,7 @@ public class SkillTreeDao {
 					try {
 						SkillItemCost q = new SkillItemCost();
 						q.setAmount(Integer.parseInt(configObject.get("Amount").unwrapped().toString()));
-						String type = configObject.get("Item-Type").unwrapped().toString();
+						String type = configObject.get("ItemType").unwrapped().toString();
 						boolean consume = Boolean.valueOf(configObject.get("Consume").unwrapped().toString());
 						q.setConsumeItems(consume);
 						Optional<ItemType> type1 = Sponge.getRegistry().getType(ItemType.class, type);
