@@ -9,6 +9,7 @@ import cz.neumimto.rpg.skills.parents.IActiveSkill;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Set;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -79,6 +80,10 @@ public class SkillContext {
 
 	public void addExecutor(ActiveSkillPreProcessorWrapper proc) {
 		wrappers.add(proc);
+	}
+
+	public void addExecutor(Set<ActiveSkillPreProcessorWrapper> set) {
+		wrappers.addAll(set);
 	}
 
 	public Map<String, Float> getSkillNodes() {

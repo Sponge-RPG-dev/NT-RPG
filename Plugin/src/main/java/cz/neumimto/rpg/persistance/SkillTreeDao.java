@@ -22,17 +22,21 @@ import static cz.neumimto.rpg.Log.error;
 import static cz.neumimto.rpg.Log.info;
 import static cz.neumimto.rpg.Log.warn;
 
-import com.google.common.reflect.TypeToken;
-import com.typesafe.config.*;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigException;
+import com.typesafe.config.ConfigFactory;
+import com.typesafe.config.ConfigObject;
+import com.typesafe.config.ConfigValue;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.TextHelper;
-import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.gui.SkillTreeInterfaceModel;
 import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.SkillCost;
 import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillItemCost;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.SkillSettings;
@@ -43,11 +47,10 @@ import cz.neumimto.rpg.skills.parents.StartingPoint;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.utils.Utils;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.ItemType;
 
-import java.io.*;
+import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -207,14 +210,25 @@ public class SkillTreeDao {
 
 
 			try {
-				Config reagent = c.getConfig("Reagent");
-				List<? extends ConfigObject> list = reagent.getObjectList("Cost");
+				Config reagent = c.getConfig("InvokeCost");
+				SkillCost itemCost = new SkillCost();
+				info.setInvokeCost(itemCost);
+				List<? extends ConfigObject> list = reagent.getObjectList("Items");
+
 				for (ConfigObject configObject : list) {
 					try {
-						String render = configObject.render(ConfigRenderOptions.concise());
-						HoconConfigurationLoader build = HoconConfigurationLoader.builder().setSource(() -> new BufferedReader(new StringReader(render))).build();
-						ItemStack value = build.load().getValue(TypeToken.of(ItemStack.class));
-						info.getItemCost().add(value);
+						SkillItemCost q = new SkillItemCost();
+						q.setAmount(Integer.parseInt(configObject.get("Amount").unwrapped().toString()));
+						String type = configObject.get("ItemType").unwrapped().toString();
+						boolean consume = Boolean.valueOf(configObject.get("Consume").unwrapped().toString());
+						q.setConsumeItems(consume);
+						Optional<ItemType> type1 = Sponge.getRegistry().getType(ItemType.class, type);
+						if (type1.isPresent()) {
+							q.setItemType(type1.get());
+							itemCost.getItemCost().add(q);
+						} else {
+							warn(" - Unknown ItemType " + type + " Defined in Invoke-Cost section for a skill " + info.getSkillId());
+						}
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -225,7 +239,7 @@ public class SkillTreeDao {
 					if (id.isPresent()) {
 						SkillPreProcessorFactory skillPreProcessorFactory = id.get();
 						ActiveSkillPreProcessorWrapper parse = skillPreProcessorFactory.parse(configObject);
-						info.getInsufficientCostPreprocessors().add(parse);
+						itemCost.getInsufficientProcessors().add(parse);
 					} else {
 						warn("- Unknown processor type " + configObject.get("Id").render() + ", use one of: " + Sponge.getRegistry().getAllOf(SkillPreProcessorFactory.class)
 								.stream().map(SkillPreProcessorFactory::getId).collect(Collectors.joining(", ")));
