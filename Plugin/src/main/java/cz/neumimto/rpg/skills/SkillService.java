@@ -144,7 +144,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 			callback.doNext(character, null, new SkillContext().result(SkillResult.WRONG_DATA));
 			return;
 		}
-		SkillContext context = esi.getSkill().createSkillExecutorContext();
+		SkillContext context = esi.getSkill().createSkillExecutorContext(esi);
 		int level = esi.getTotalLevel();
 		if (level < 0) {
 			callback.doNext(character, esi, context.result(SkillResult.NEGATIVE_SKILL_LEVEL));

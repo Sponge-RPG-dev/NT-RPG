@@ -48,7 +48,7 @@ public abstract class ActiveSkill extends AbstractSkill implements IActiveSkill 
 	public abstract void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier);
 
 
-	public SkillContext createSkillExecutorContext() {
-		return new SkillContext(this);
+	public SkillContext createSkillExecutorContext(ExtendedSkillInfo esi) {
+		return new SkillContext(this, esi);
 	}
 }

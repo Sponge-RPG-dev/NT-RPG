@@ -591,7 +591,7 @@ public class NtRpgPlugin {
 						extendedSkillInfo.setSkillData(skillData);
 						extendedSkillInfo.setSkill(skill);
 						ActiveSkill askill = (ActiveSkill) skill;
-						SkillContext skillContext = new SkillContext(askill) {{
+						SkillContext skillContext = new SkillContext(extendedSkillInfo) {{
 							wrappers.add(new SkillExecutorCallback(){
 								@Override
 								public void doNext(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillResult) {

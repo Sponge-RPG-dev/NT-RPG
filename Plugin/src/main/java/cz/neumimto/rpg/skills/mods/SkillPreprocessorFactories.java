@@ -1,16 +1,11 @@
 package cz.neumimto.rpg.skills.mods;
 
 import com.typesafe.config.ConfigObject;
-import cz.neumimto.rpg.effects.model.mappers.SingleValueModelMapper;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.SkillSettings;
-import cz.neumimto.rpg.utils.TriConsumer;
 
 import javax.script.ScriptException;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public class SkillPreprocessorFactories {
     public static final SkillPreProcessorFactory UNCASTABLE = new SkillPreProcessorFactory("uncastable", PreProcessorTarget.EARLY) {
@@ -29,14 +24,14 @@ public class SkillPreprocessorFactories {
 
             return new ActiveSkillPreProcessorWrapper(PreProcessorTarget.BEFORE) {
                 @Override
-                public void doNext(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillResult) {
+                public void doNext(IActiveCharacter character, ExtendedSkillInfo info, SkillContext context) {
                     try {
-                        Number eval = (Number) JSLoader.getEngine().eval(value.replaceAll(expr, String.valueOf(info.getSkillData().getSkillSettings().getNodeValue(key))));
-                        info.getSkillData().getSkillSettings().getNodes().put(key, eval.floatValue());
+                        Number eval = (Number) JSLoader.getEngine().eval(value.replaceAll(expr, String.valueOf(context.getSkillNodes().get(key))));
+                        context.overrideNode(key, eval.floatValue());
                     } catch (ScriptException e) {
                         e.printStackTrace();
                     }
-                    skillResult.next(character, info, skillResult);
+                    context.next(character, info, context);
                 }
             };
         }

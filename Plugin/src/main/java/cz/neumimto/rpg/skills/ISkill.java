@@ -262,7 +262,7 @@ public interface ISkill extends IEffectSourceProvider, CatalogType, IRpgElement 
 		return is;
 	}
 
-	default SkillContext createSkillExecutorContext() {
+	default SkillContext createSkillExecutorContext(ExtendedSkillInfo esi) {
 		return new SkillContext();
 	}
 }
