@@ -49,8 +49,9 @@ public class Critical extends PassiveSkill {
 	}
 
 	private CriticalEffectModel getModel(ExtendedSkillInfo info) {
-		int chance = getIntNodeValue(info, SkillNodes.CHANCE);
-		float mult = getFloatNodeValue(info, SkillNodes.MULTIPLIER);
+		int totalLevel = info.getTotalLevel();
+		int chance = (int) info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.CHANCE, totalLevel);
+		float mult = info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.MULTIPLIER, totalLevel);
 		return new CriticalEffectModel(chance, mult);
 	}
 }

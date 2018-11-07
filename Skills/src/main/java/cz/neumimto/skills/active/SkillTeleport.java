@@ -41,7 +41,7 @@ public class SkillTeleport extends ActiveSkill {
 	@Override
 	public void cast(IActiveCharacter character, ExtendedSkillInfo extendedSkillInfo, SkillContext skillContext) {
 		Player player = character.getPlayer();
-		double doubleNodeValue = getDoubleNodeValue(extendedSkillInfo, SkillNodes.RANGE);
+		double doubleNodeValue = skillContext.getDoubleNodeValue(SkillNodes.RANGE);
 
 		Optional<BlockRayHit<World>> optHit =
 				BlockRay.from(player).distanceLimit(doubleNodeValue).stopFilter(Utils.SKILL_TARGET_BLOCK_FILTER).build().end();

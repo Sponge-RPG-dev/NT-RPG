@@ -63,7 +63,7 @@ public class GrapplingHook extends ActiveSkill {
 	}
 
 	@Override
-	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillContext) {
 		Player p = character.getPlayer();
 		World world = p.getWorld();
 		Entity optional = world.createEntity(EntityTypes.TIPPED_ARROW, p.getLocation().getPosition()
@@ -77,7 +77,7 @@ public class GrapplingHook extends ActiveSkill {
 
 		Vector3d arrowVec = direction.normalize().mul(2);
 		sb.setVelocity(arrowVec);
-		double range = getDoubleNodeValue(info, SkillNodes.RANGE);
+		double range = skillContext.getDoubleNodeValue(SkillNodes.RANGE);
 		//final double rangeSquared = Math.pow(range, 2);
 
 		world.spawnEntity(sb);
@@ -123,7 +123,7 @@ public class GrapplingHook extends ActiveSkill {
 				.interval(50, TimeUnit.MILLISECONDS)
 				.submit(plugin);
 
-		modifier.next(character, info, SkillResult.OK);
+		skillContext.next(character, info, SkillResult.OK);
 	}
 
 

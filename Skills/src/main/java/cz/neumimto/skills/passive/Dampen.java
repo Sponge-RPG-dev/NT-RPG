@@ -7,6 +7,7 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.PassiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
@@ -30,7 +31,8 @@ public class Dampen extends PassiveSkill {
 
 	@Override
 	public void applyEffect(ExtendedSkillInfo info, IActiveCharacter character) {
-		double val = getDoubleNodeValue(info, "min-mana");
+		int totalLevel = info.getTotalLevel();
+		double val = info.getSkillData().getSkillSettings().getLevelNodeValue("min-mana", totalLevel);
 		DampenEffect eff = new DampenEffect(character, -1, val);
 		effectService.addEffect(eff, character, this);
 	}
@@ -38,8 +40,9 @@ public class Dampen extends PassiveSkill {
 	@Override
 	public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
 		super.skillUpgrade(IActiveCharacter, level);
-
-		double val = getDoubleNodeValue(IActiveCharacter.getSkill(getId()), "min-mana");
+		ExtendedSkillInfo info = IActiveCharacter.getSkill(getId());
+		int totalLevel = info.getTotalLevel();
+		double val = info.getSkillData().getSkillSettings().getLevelNodeValue("min-mana", totalLevel);
 		IEffectContainer<Double, DampenEffect> effect = IActiveCharacter.getEffect(DampenEffect.name);
 		effect.updateValue(val, this);
 	}

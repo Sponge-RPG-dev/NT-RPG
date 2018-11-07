@@ -41,16 +41,16 @@ public class ShadowRun extends ActiveSkill {
 	}
 
 	@Override
-	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillContext) {
 		Location<World> location = character.getPlayer().getLocation();
 		Optional<GroundLuminanceProperty> property = location.add(0, -1, 0).getBlock().getProperty(GroundLuminanceProperty.class);
 		GroundLuminanceProperty groundLuminanceProperty = property.get();
-		double llevel = getDoubleNodeValue(info, "max-light-level");
+		double llevel = skillContext.getDoubleNodeValue("max-light-level");
 		if (groundLuminanceProperty.getValue() <= llevel) {
-			long duration = getLongNodeValue(info, SkillNodes.DURATION);
-			double damage = getDoubleNodeValue(info, SkillNodes.DAMAGE);
-			double attackmult = getDoubleNodeValue(info, SkillNodes.MULTIPLIER);
-			float walkspeed = getFloatNodeValue(info, "walk-speed");
+			long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
+			double damage = skillContext.getDoubleNodeValue(SkillNodes.DAMAGE);
+			double attackmult = skillContext.getDoubleNodeValue(SkillNodes.MULTIPLIER);
+			float walkspeed = skillContext.getFloatNodeValue("walk-speed");
 			ShadowRunModel model = new ShadowRunModel();
 			model.duration = duration;
 			model.damage = damage;
@@ -59,6 +59,6 @@ public class ShadowRun extends ActiveSkill {
 			IEffect effect = new ShadowRunEffect(character, 0, model);
 			effectService.addEffect(effect, character, this);
 		}
-		modifier.next(character, info, modifier.result(SkillResult.OK));
+		skillContext.next(character, info, skillContext.result(SkillResult.OK));
 	}
 }

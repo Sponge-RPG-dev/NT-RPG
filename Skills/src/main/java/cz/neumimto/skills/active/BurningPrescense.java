@@ -41,24 +41,24 @@ public class BurningPrescense extends ActiveSkill {
 	}
 
 	@Override
-	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillContext) {
 		if (character.hasEffect(BurningPrescenseEffect.name)) {
 			effectService.removeEffectContainer(character.getEffect(BurningPrescenseEffect.name), character);
 		} else {
-			BPModel model = getBPModel(info);
+			BPModel model = getBPModel(skillContext);
 			model.duration = -1;
 			BurningPrescenseEffect eff = new BurningPrescenseEffect(character, -1, model);
 			effectService.addEffect(eff, character, this);
 		}
 
-		modifier.next(character, info, modifier.result(SkillResult.OK));
+		skillContext.next(character, info, skillContext.result(SkillResult.OK));
 	}
 
-	private BPModel getBPModel(ExtendedSkillInfo info) {
+	private BPModel getBPModel(SkillContext skillContext) {
 		BPModel model = new BPModel();
-		model.period = getIntNodeValue(info, SkillNodes.PERIOD);
-		model.radius = getLongNodeValue(info, SkillNodes.RADIUS);
-		model.damage = getIntNodeValue(info, SkillNodes.DAMAGE);
+		model.period = skillContext.getIntNodeValue(SkillNodes.PERIOD);
+		model.radius = skillContext.getLongNodeValue(SkillNodes.RADIUS);
+		model.damage = skillContext.getIntNodeValue(SkillNodes.DAMAGE);
 		return model;
 	}
 }

@@ -43,14 +43,14 @@ public class Harmtouch extends Targetted {
 	}
 
 	@Override
-	public void castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier) {
+	public void castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext skillContext) {
 		SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
 		builder.fromSkill(this);
 		IEntity e = entityService.get(target);
 		builder.setTarget(e);
 		builder.setCaster(source);
 		SkillDamageSource s = builder.build();
-		float damage = getFloatNodeValue(info, SkillNodes.DAMAGE);
+		float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
 		boolean damage1 = e.getEntity().damage(damage, s);
 		if (damage1) {
 			Vector3d r = source.getEntity().getRotation();
@@ -71,6 +71,6 @@ public class Harmtouch extends Targetted {
 							.build(),
 					e.getEntity().getLocation().getPosition());
 		}
-		modifier.next(source, info, SkillResult.OK);
+		skillContext.next(source, info, SkillResult.OK);
 	}
 }

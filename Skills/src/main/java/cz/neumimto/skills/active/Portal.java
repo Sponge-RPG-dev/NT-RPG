@@ -38,20 +38,20 @@ public class Portal extends ActiveSkill {
 	}
 
 	@Override
-	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillContext) {
 		if (character.hasEffect(PortalEffect.name)) {
 			effectService.removeEffect(PortalEffect.name, character, this);
-			modifier.next(character, info, modifier.result(SkillResult.CANCELLED));
+			skillContext.next(character, info, skillContext.result(SkillResult.CANCELLED));
 			return;
 		}
-		long duration = getLongNodeValue(info, SkillNodes.MANACOST);
-		double manaPerTick = getDoubleNodeValue(info, "manacost-per-tick");
-		double manaPerEntity = getDoubleNodeValue(info, "manacost-per-teleported-entity");
-		double chanceToFail = getDoubleNodeValue(info, "chance-to-fail");
+		long duration = skillContext.getLongNodeValue(SkillNodes.MANACOST);
+		double manaPerTick = skillContext.getDoubleNodeValue("manacost-per-tick");
+		double manaPerEntity = skillContext.getDoubleNodeValue("manacost-per-teleported-entity");
+		double chanceToFail = skillContext.getDoubleNodeValue("chance-to-fail");
 		PortalEffect portalEffect = new PortalEffect(character, duration, null,
 				manaPerTick, manaPerEntity, 1750, chanceToFail, false);
 		effectService.addEffect(portalEffect, character, this);
-		modifier.next(character, info, modifier.result(SkillResult.OK));
+		skillContext.next(character, info, skillContext.result(SkillResult.OK));
 	}
 
 

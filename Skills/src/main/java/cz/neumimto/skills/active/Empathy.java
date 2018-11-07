@@ -35,13 +35,13 @@ public class Empathy extends Targetted {
 	}
 
 	@Override
-	public void castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier) {
+	public void castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext skillContext) {
 		Player entity = source.getEntity();
 		Double max = entity.get(Keys.MAX_HEALTH).get();
 		Double a = entity.get(Keys.HEALTH).get();
 		a = max - a;
-		a *= getFloatNodeValue(info, SkillNodes.MULTIPLIER);
-		max = getDoubleNodeValue(info, "max-damage");
+		a *= skillContext.getFloatNodeValue(SkillNodes.MULTIPLIER);
+		max = skillContext.getDoubleNodeValue("max-damage");
 		if (max > 0) {
 			a = a < max ? max : a;
 		}
@@ -50,6 +50,6 @@ public class Empathy extends Targetted {
 				.setTarget(entityService.get(target))
 				.setCaster(source).build();
 		target.damage(a, build);
-		modifier.next(source, info, SkillResult.OK);
+		skillContext.next(source, info, SkillResult.OK);
 	}
 }

@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.skills.mods;
 
-import com.google.common.collect.Maps;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.ISkillNode;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.IActiveSkill;
@@ -12,6 +12,8 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.HashMap;
 import java.util.Map;
+
+import static cz.neumimto.rpg.Log.error;
 
 
 /**
@@ -96,5 +98,50 @@ public class SkillContext {
 			skillNodes = new HashMap<>(skillNodes);
 		}
 		skillNodes.put(key, value);
+	}
+
+    private float getLevelNodeValue(String s, int level) {
+        return getNodeValue(s) + level * getNodeValue(s + SkillSettings.bonus);
+    }
+
+    private float getNodeValue(String node) {
+        Float aFloat = skillNodes.get(node.toLowerCase());
+        if (aFloat == null) {
+            error("Missing skill node " + node);
+            return 0;
+        }
+        return aFloat;
+    }
+
+	public float getFloatNodeValue(ISkillNode node) {
+		return getFloatNodeValue(node.value());
+	}
+
+	public float getFloatNodeValue(String node) {
+		return getLevelNodeValue(node, esi.getTotalLevel());
+	}
+
+	public int getIntNodeValue(ISkillNode node) {
+		return getIntNodeValue(node.value());
+	}
+
+	public int getIntNodeValue(String node) {
+		return (int) getLevelNodeValue(node, esi.getTotalLevel());
+	}
+
+	public long getLongNodeValue(ISkillNode node) {
+		return getLongNodeValue(node.value());
+	}
+
+	public long getLongNodeValue(String node) {
+		return (long) getLevelNodeValue(node, esi.getTotalLevel());
+	}
+
+	public double getDoubleNodeValue(String node) {
+		return getLevelNodeValue(node, esi.getTotalLevel());
+	}
+
+	public double getDoubleNodeValue(ISkillNode node) {
+		return getDoubleNodeValue(node.value());
 	}
 }

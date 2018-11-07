@@ -65,19 +65,19 @@ public class IceBolt extends ActiveSkill {
 		Vector3d rotation = p.getRotation();
 		Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();
 		Snowball sb = (Snowball) optional;
-		sb.offer(Keys.VELOCITY, direction.mul(settings.getLevelNodeValue(SkillNodes.VELOCITY, info.getTotalLevel())));
+		sb.offer(Keys.VELOCITY, direction.mul(skillContext.getFloatNodeValue(SkillNodes.VELOCITY)));
 		sb.setShooter(p);
 		world.spawnEntity(sb);
 		ProjectileProperties projectileProperties = new ProjectileProperties(sb, character);
-		projectileProperties.setDamage(settings.getLevelNodeValue(SkillNodes.DAMAGE, info.getTotalLevel()));
+		projectileProperties.setDamage(skillContext.getDoubleNodeValue(SkillNodes.DAMAGE));
 		SkillDamageSourceBuilder build = new SkillDamageSourceBuilder();
 		build.fromSkill(this);
 		build.setCaster(character);
 		build.type(getDamageType());
 
 		projectileProperties.onHit((event, caster, target) -> {
-			long slowduration = getLongNodeValue(info, SkillNodes.DURATION);
-			int slowamplf = getIntNodeValue(info, SkillNodes.AMPLIFIER);
+			long slowduration = skillContext.getLongNodeValue(SkillNodes.DURATION);
+			int slowamplf = skillContext.getIntNodeValue(SkillNodes.AMPLIFIER);
 			target.getEntity().damage(projectileProperties.getDamage(), build.build());
 			effectService.addEffect(new SlowPotion(target, slowduration, slowamplf), target, this);
 		});

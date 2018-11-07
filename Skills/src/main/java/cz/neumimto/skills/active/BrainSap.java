@@ -46,16 +46,16 @@ public class BrainSap extends Targetted {
 	}
 
 	@Override
-	public void castOn(Living targettedEntity, IActiveCharacter iActiveCharacter, ExtendedSkillInfo info, SkillContext modifier) {
+	public void castOn(Living targettedEntity, IActiveCharacter iActiveCharacter, ExtendedSkillInfo info, SkillContext skillContext) {
 		SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
 		builder.fromSkill(this);
 		IEntity e = entityService.get(targettedEntity);
 		builder.setTarget(e);
 		builder.setCaster(iActiveCharacter);
 		SkillDamageSource s = builder.build();
-		float damage = getFloatNodeValue(info, SkillNodes.DAMAGE);
+		float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
 		e.getEntity().damage(damage, s);
-		modifier.next(iActiveCharacter, info, SkillResult.OK);
+		skillContext.next(iActiveCharacter, info, SkillResult.OK);
 	}
 
 	@Listener(order = Order.LAST)

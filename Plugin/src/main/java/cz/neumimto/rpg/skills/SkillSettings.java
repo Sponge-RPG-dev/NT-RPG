@@ -92,14 +92,18 @@ public class SkillSettings {
 		return aFloat;
 	}
 
+	//Use skillContext.getLevelNode
+    @Deprecated
 	public float getLevelNodeValue(ISkillNode n, int level) {
 		return getLevelNodeValue(n.toString(), level);
 	}
 
+    @Deprecated
 	public float getLevelNodeValue(String s, int level) {
 		return getNodeValue(s) + level * getNodeValue(s + bonus);
 	}
 
+    @Deprecated
 	public Map<String, Float> getNodes() {
 		return Collections.unmodifiableMap(skillSettings);
 	}

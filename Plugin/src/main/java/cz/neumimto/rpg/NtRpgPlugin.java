@@ -121,6 +121,7 @@ import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactory;
 import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactoryRegistry;
 import cz.neumimto.rpg.skills.mods.SkillPreprocessorFactories;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
+import cz.neumimto.rpg.skills.parents.IActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
 import cz.neumimto.rpg.utils.FileUtils;
 import cz.neumimto.rpg.utils.Placeholders;
@@ -589,7 +590,7 @@ public class NtRpgPlugin {
 						extendedSkillInfo.setSkillData(skillData);
 						extendedSkillInfo.setSkill(skill);
 						ActiveSkill askill = (ActiveSkill) skill;
-						SkillContext skillContext = new SkillContext(extendedSkillInfo) {{
+						SkillContext skillContext = new SkillContext((IActiveSkill) skill, extendedSkillInfo) {{
 							wrappers.add(new SkillExecutorCallback(){
 								@Override
 								public void doNext(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillResult) {
