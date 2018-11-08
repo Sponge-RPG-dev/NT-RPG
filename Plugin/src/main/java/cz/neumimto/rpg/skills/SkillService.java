@@ -158,6 +158,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 			callback.doNext(character, esi, context.result(SkillResult.ON_COOLDOWN));
 			return;
 		}
+		//
 		SkillData skillData = esi.getSkillData();
 		SkillSettings skillSettings = skillData.getSkillSettings();
 		float requiredMana = skillSettings.getLevelNodeValue(SkillNodes.MANACOST, level);
@@ -170,6 +171,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 		}
 		double hpcost = event.getRequiredHp() * characterService.getCharacterProperty(character, DefaultProperties.health_cost_reduce);
 		double manacost = event.getRequiredMana() * characterService.getCharacterProperty(character, DefaultProperties.mana_cost_reduce);
+		//
 		//todo float staminacost =
 		if (character.getHealth().getValue() > hpcost) {
 			if (character.getMana().getValue() >= manacost) {
@@ -179,6 +181,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 				esi.getSkill().onPreUse(character, context);
 				//skill execution end
 
+				//
 				SkillResult result = context.getResult();
 				if (result != SkillResult.OK) {
 					callback.doNext(character, esi, context.result(result));
@@ -207,6 +210,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 						}
 					}
 				}
+				//
 			}
 			callback.doNext(character, esi, context.result(SkillResult.NO_MANA));
 			return;
