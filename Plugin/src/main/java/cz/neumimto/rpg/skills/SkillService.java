@@ -40,8 +40,10 @@ import cz.neumimto.rpg.reloading.Reload;
 import cz.neumimto.rpg.reloading.ReloadService;
 import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.skills.configs.ScriptSkillModel;
+import cz.neumimto.rpg.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.mods.SkillExecutorCallback;
+import cz.neumimto.rpg.skills.mods.SkillPreprocessors;
 import cz.neumimto.rpg.skills.parents.ActiveScriptSkill;
 import cz.neumimto.rpg.skills.parents.PassiveScriptSkill;
 import cz.neumimto.rpg.skills.parents.ScriptSkill;
@@ -150,7 +152,6 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 			callback.doNext(character, esi, context.result(SkillResult.NEGATIVE_SKILL_LEVEL));
 			return;
 		}
-		level += characterService.getCharacterProperty(character, DefaultProperties.all_skills_bonus);
 		Long aLong = character.getCooldowns().get(esi.getSkill().getName());
 		long servertime = System.currentTimeMillis();
 		if (aLong != null && aLong > servertime) {
@@ -158,65 +159,13 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 			callback.doNext(character, esi, context.result(SkillResult.ON_COOLDOWN));
 			return;
 		}
-		//
-		SkillData skillData = esi.getSkillData();
-		SkillSettings skillSettings = skillData.getSkillSettings();
-		float requiredMana = skillSettings.getLevelNodeValue(SkillNodes.MANACOST, level);
-		float requiredHp = skillSettings.getLevelNodeValue(SkillNodes.HPCOST, level);
-		SkillPrepareEvent event = new SkillPrepareEvent(character, requiredHp, requiredMana);
-		game.getEventManager().post(event);
-		if (event.isCancelled()) {
-			callback.doNext(character, esi, context.result(SkillResult.FAIL));
-			return;
-		}
-		double hpcost = event.getRequiredHp() * characterService.getCharacterProperty(character, DefaultProperties.health_cost_reduce);
-		double manacost = event.getRequiredMana() * characterService.getCharacterProperty(character, DefaultProperties.mana_cost_reduce);
-		//
-		//todo float staminacost =
-		if (character.getHealth().getValue() > hpcost) {
-			if (character.getMana().getValue() >= manacost) {
 
-				//Skill execution start
-				context.addExecutor(callback);
-				esi.getSkill().onPreUse(character, context);
-				//skill execution end
-
-				//
-				SkillResult result = context.getResult();
-				if (result != SkillResult.OK) {
-					callback.doNext(character, esi, context.result(result));
-					return;
-				} else {
-					float newCd = skillSettings.getLevelNodeValue(SkillNodes.COOLDOWN, level);
-					SkillPostUsageEvent eventt = new SkillPostUsageEvent(character, hpcost, manacost, newCd);
-					game.getEventManager().post(eventt);
-					if (!event.isCancelled()) {
-						double newval = character.getHealth().getValue() - eventt.getHpcost();
-						if (newval <= 0) {
-							character.getPlayer().damage(Double.MAX_VALUE, DamageSource.builder()
-									.absolute()
-									.bypassesArmor()
-									.build());
-						} else {
-							character.getHealth().setValue(newval);
-							newCd = eventt.getCooldown() * characterService.getCharacterProperty(character, DefaultProperties.cooldown_reduce);
-							character.getMana().setValue(character.getMana().getValue() - event.getRequiredMana());
-							long cd = (long) newCd;
-							character.getCooldowns().put(esi.getSkill().getName(), cd + servertime);
-
-							Gui.displayMana(character);
-							callback.doNext(character, esi, context.result(SkillResult.OK));
-							return;
-						}
-					}
-				}
-				//
-			}
-			callback.doNext(character, esi, context.result(SkillResult.NO_MANA));
-			return;
-		}
-		callback.doNext(character, esi, context.result(SkillResult.NO_HP));
-		return;
+		context.addExecutor(SkillPreprocessors.SKILL_COST);
+		context.addExecutor(SkillPreprocessors.RESOLVE_SKILLRESULT);
+		context.addExecutor(callback);
+		//skill execution start
+		esi.getSkill().onPreUse(character, context);
+		//skill execution sto
 	}
 
 	public ExtendedSkillInfo invokeSkillByCombo(String combo, IActiveCharacter character) {

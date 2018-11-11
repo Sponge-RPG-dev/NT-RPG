@@ -28,6 +28,10 @@ public class SkillContext {
 	private boolean continueExecution;
 	private boolean copy;
 	private Map<String, Float> skillNodes;
+	protected double staminacost;
+	protected double manacost;
+	protected double hpcost;
+
 	public SkillContext(IActiveSkill activeSkill, ExtendedSkillInfo esi) {
 		this.esi = esi;
 		cursor = -1;
@@ -143,5 +147,11 @@ public class SkillContext {
 
 	public double getDoubleNodeValue(ISkillNode node) {
 		return getDoubleNodeValue(node.value());
+	}
+
+	protected void setSkillCost(double hpcost, double manacost, double staminacost) {
+		this.hpcost = hpcost;
+		this.manacost = manacost;
+		this.staminacost = staminacost;
 	}
 }
