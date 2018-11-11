@@ -41,7 +41,6 @@ public class SkillPreprocessors {
             //todo float staminacost =
             if (character.getHealth().getValue() > hpcost) {
                 if (character.getMana().getValue() >= manacost) {
-                    skillResult.setSkillCost(hpcost, manacost, 0D);
                     skillResult.next(character, info, skillResult);     
                     return;
                 }
