@@ -17,7 +17,7 @@ public class SkillPreprocessors {
     public static ActiveSkillPreProcessorWrapper NOT_CASTABLE = new ActiveSkillPreProcessorWrapper(PreProcessorTarget.EARLY) {
         @Override
         public void doNext(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillResult) {
-            skillResult.continueExecution(false).result(SkillResult.FAIL);
+            skillResult.endWith(character, info, skillResult.result(SkillResult.FAIL));
         }
     };
 
