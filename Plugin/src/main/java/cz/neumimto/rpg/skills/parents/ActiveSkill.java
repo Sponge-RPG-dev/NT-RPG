@@ -63,6 +63,9 @@ public abstract class ActiveSkill extends AbstractSkill implements IActiveSkill 
 
 	protected Set<ActiveSkillPreProcessorWrapper> processItemCost(IActiveCharacter character, ExtendedSkillInfo skillInfo) {
 		SkillCost invokeCost = skillInfo.getSkillData().getInvokeCost();
+		if (invokeCost == null) {
+			return Collections.emptySet();
+		}
 		Player player = character.getPlayer();
 		Inventory query = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
 		Map<Inventory, Result> itemsToTake = new HashMap<>();

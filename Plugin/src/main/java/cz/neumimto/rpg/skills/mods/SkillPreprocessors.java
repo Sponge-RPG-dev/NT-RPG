@@ -71,7 +71,7 @@ public class SkillPreprocessors {
                                 character.getCooldowns().put(info.getSkill().getName(), cd + System.currentTimeMillis());
 
                                 Gui.displayMana(character);
-                                skillResult.next(character, info, skillResult.result(result));
+                                //skillResult.next(character, info, skillResult.result(result));
                                 return;
                             }
                         }
@@ -79,13 +79,13 @@ public class SkillPreprocessors {
 
                     return;
                 }
-                skillResult.continueExecution(false);
-                skillResult.next(character, info, skillResult.result(SkillResult.NO_MANA));
-                return;
+       //        skillResult.continueExecution(false);
+       //        skillResult.next(character, info, skillResult.result(SkillResult.NO_MANA));
+       //        return;
             }
-            skillResult.continueExecution(false);
-            skillResult.next(character, info, skillResult.result(SkillResult.NO_HP));
-            return;
+        //    skillResult.continueExecution(false);
+        //    skillResult.next(character, info, skillResult.result(SkillResult.NO_HP));
+        //    return;
         }
     };
 
