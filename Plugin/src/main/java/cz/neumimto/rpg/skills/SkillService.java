@@ -161,7 +161,6 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 		}
 
 		context.addExecutor(SkillPreprocessors.SKILL_COST);
-		context.addExecutor(SkillPreprocessors.RESOLVE_SKILLRESULT);
 		context.addExecutor(callback);
 		//skill execution start
 		esi.getSkill().onPreUse(character, context);

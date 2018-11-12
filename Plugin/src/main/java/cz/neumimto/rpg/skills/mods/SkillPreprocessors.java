@@ -41,7 +41,42 @@ public class SkillPreprocessors {
             //todo float staminacost =
             if (character.getHealth().getValue() > hpcost) {
                 if (character.getMana().getValue() >= manacost) {
-                    skillResult.next(character, info, skillResult);     
+                    //execute skill start
+                    skillResult.next(character, info, skillResult);
+                    //execute skill end
+
+                    SkillResult result = skillResult.getResult();
+                    if (result != SkillResult.OK) {
+                        skillResult.next(character, info, skillResult.result(result));
+                        return;
+                    } else {
+                        float newCd = skillResult.getLongNodeValue(SkillNodes.COOLDOWN);
+                        SkillPostUsageEvent eventt = new SkillPostUsageEvent(character,
+                                skillResult.getFloatNodeValue(SkillNodes.HPCOST),
+                                skillResult.getFloatNodeValue(SkillNodes.MANACOST),
+                                newCd);
+                        Sponge.getGame().getEventManager().post(eventt);
+                        if (!eventt.isCancelled()) {
+                            double newval = character.getHealth().getValue() - eventt.getHpcost();
+                            if (newval <= 0) {
+                                character.getPlayer().damage(Double.MAX_VALUE, DamageSource.builder()
+                                        .absolute()
+                                        .bypassesArmor()
+                                        .build());
+                            } else {
+                                character.getHealth().setValue(newval);
+                                newCd = eventt.getCooldown() * NtRpgPlugin.GlobalScope.characterService.getCharacterProperty(character, DefaultProperties.cooldown_reduce);
+                                character.getMana().setValue(character.getMana().getValue() - eventt.getManacost());
+                                long cd = (long) newCd;
+                                character.getCooldowns().put(info.getSkill().getName(), cd + System.currentTimeMillis());
+
+                                Gui.displayMana(character);
+                                skillResult.next(character, info, skillResult.result(result));
+                                return;
+                            }
+                        }
+                    }
+
                     return;
                 }
                 skillResult.continueExecution(false);
@@ -53,43 +88,6 @@ public class SkillPreprocessors {
             return;
         }
     };
-    
-    public static ActiveSkillPreProcessorWrapper RESOLVE_SKILLRESULT = new ActiveSkillPreProcessorWrapper(PreProcessorTarget.LATEST) {
-        @Override
-        public void doNext(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillResult) {
-            SkillResult result = skillResult.getResult();
-            if (result != SkillResult.OK) {
-                skillResult.next(character, info, skillResult.result(result));
-                return;
-            } else {
-                float newCd = skillResult.getLongNodeValue(SkillNodes.COOLDOWN);
-                SkillPostUsageEvent eventt = new SkillPostUsageEvent(character,
-                        skillResult.getFloatNodeValue(SkillNodes.HPCOST),
-                        skillResult.getFloatNodeValue(SkillNodes.MANACOST),
-                        newCd);
-                Sponge.getGame().getEventManager().post(eventt);
-                if (!eventt.isCancelled()) {
-                    double newval = character.getHealth().getValue() - eventt.getHpcost();
-                    if (newval <= 0) {
-                        character.getPlayer().damage(Double.MAX_VALUE, DamageSource.builder()
-                                .absolute()
-                                .bypassesArmor()
-                                .build());
-                    } else {
-                        character.getHealth().setValue(newval);
-                        newCd = eventt.getCooldown() * NtRpgPlugin.GlobalScope.characterService.getCharacterProperty(character, DefaultProperties.cooldown_reduce);
-                        character.getMana().setValue(character.getMana().getValue() - eventt.getManacost());
-                        long cd = (long) newCd;
-                        character.getCooldowns().put(info.getSkill().getName(), cd + System.currentTimeMillis());
 
-                        Gui.displayMana(character);
-                        skillResult.next(character, info, skillResult.result(result));
-                        return;
-                    }
-                }
-            }
-        }
-    };
-    
 
 }
