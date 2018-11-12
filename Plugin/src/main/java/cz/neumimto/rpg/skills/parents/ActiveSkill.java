@@ -80,13 +80,12 @@ public abstract class ActiveSkill extends AbstractSkill implements IActiveSkill 
 				if (peek.isPresent()) {
 					ItemStack itemStack = peek.get();
 					if (itemStack.getType() == itemType) {
-						requiredAmount -= itemStack.getQuantity();
-						if (requiredAmount > 0) {
-							int b = i - requiredAmount;
-							itemsToTake.put(inventory, new Result(b, skillItemCost.consumeItems()));
-							i = requiredAmount;
+						if (itemStack.getQuantity() - requiredAmount < 0) {
+							itemsToTake.put(inventory, new Result(itemStack.getQuantity(), skillItemCost.consumeItems()));
+							requiredAmount-=itemStack.getQuantity();
 						} else {
-							itemsToTake.put(inventory, new Result(requiredAmount,skillItemCost.consumeItems()));
+							itemsToTake.put(inventory, new Result(requiredAmount, skillItemCost.consumeItems()));
+							c++;
 							break outer;
 						}
 					}
@@ -97,9 +96,8 @@ public abstract class ActiveSkill extends AbstractSkill implements IActiveSkill 
 			for (Map.Entry<Inventory, Result> e : itemsToTake.entrySet()) {
 				Result result = e.getValue();
 				if (result.consume) {
-					int amount = result.amount;
 					Inventory slot = e.getKey();
-					slot.peek().get().setQuantity(amount);
+                    slot.poll(result.amount);
 				}
 			}
 		} else {
