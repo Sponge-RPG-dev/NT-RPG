@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.commands;
@@ -42,7 +42,8 @@ public class CommandService {
 		} catch (NoSuchMethodError e) {
 			try {
 				Object o = Sponge.class.getDeclaredMethod("getCommandDispatcher").invoke(null);
-				o.getClass().getDeclaredMethod("register", Object.class, CommandCallable.class, List.class).invoke(o, plugin, commandCallable, commandCallable.getAliases());
+				o.getClass().getDeclaredMethod("register", Object.class, CommandCallable.class, List.class)
+						.invoke(o, plugin, commandCallable, commandCallable.getAliases());
 			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e1) {
 				e1.printStackTrace();
 			}

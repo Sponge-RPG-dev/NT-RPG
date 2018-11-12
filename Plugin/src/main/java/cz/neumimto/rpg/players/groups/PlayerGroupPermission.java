@@ -7,6 +7,7 @@ import java.util.Set;
  * Created by ja on 22.7.2017.
  */
 public class PlayerGroupPermission implements Comparable<PlayerGroupPermission> {
+
 	private int level;
 	private Set<String> permissions;
 

@@ -10,6 +10,7 @@ import org.spongepowered.api.event.cause.entity.damage.DamageType;
  */
 @JsBinding(JsBinding.Type.CLASS)
 public class SkillDamageEventLate extends CancellableEvent {
+
 	IEntity caster;
 	IEntity target;
 	ISkill skill;

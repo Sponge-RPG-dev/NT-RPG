@@ -10,10 +10,10 @@ import org.spongepowered.api.entity.projectile.Projectile;
 @JsBinding(JsBinding.Type.CLASS)
 public class ProjectileHitEvent extends CancellableEvent {
 
+	private final Projectile projectile;
 	private IEntity shooter;
 	private IEntity target;
 	private double projectileDamage;
-	private final Projectile projectile;
 
 	public ProjectileHitEvent(IEntity shooter, IEntity target, double projectileDamage, Projectile projectile) {
 

@@ -12,6 +12,7 @@ public abstract class CatalogTypeItemStackBuilder {
 	public abstract ItemStack toItemStack();
 
 	public static class Block extends CatalogTypeItemStackBuilder {
+
 		private BlockType blockType;
 
 		public static CatalogTypeItemStackBuilder of(BlockType type) {
@@ -22,11 +23,12 @@ public abstract class CatalogTypeItemStackBuilder {
 
 		@Override
 		public ItemStack toItemStack() {
-			return ItemStack.of(blockType.getItem().get(),1);
+			return ItemStack.of(blockType.getItem().get(), 1);
 		}
 	}
 
 	public static class Item extends CatalogTypeItemStackBuilder {
+
 		private ItemType itemType;
 
 		public static CatalogTypeItemStackBuilder of(ItemType type) {
@@ -37,7 +39,7 @@ public abstract class CatalogTypeItemStackBuilder {
 
 		@Override
 		public ItemStack toItemStack() {
-			return ItemStack.of(itemType,1);
+			return ItemStack.of(itemType, 1);
 		}
 	}
 

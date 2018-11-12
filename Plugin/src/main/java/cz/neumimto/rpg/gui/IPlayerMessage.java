@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,11 +13,13 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.gui;
 
+import cz.neumimto.core.localization.Arg;
+import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.inventory.CannotUseItemReason;
@@ -28,7 +30,8 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
-import cz.neumimto.rpg.skills.SkillTree;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.tree.SkillTree;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
 
@@ -38,9 +41,10 @@ import java.util.List;
  * Created by NeumimTo on 6.8.2015.
  */
 public interface IPlayerMessage {
+
 	boolean isClientSideGui();
 
-	void sendMessage(IActiveCharacter player, String message);
+	void sendMessage(IActiveCharacter player, LocalizableParametrizedText message, Arg arg);
 
 	void sendCooldownMessage(IActiveCharacter player, String message, double cooldown);
 
@@ -105,5 +109,7 @@ public interface IPlayerMessage {
 
 	void displayInitialProperties(PlayerGroup byName, Player player);
 
-    void sendCannotUseItemInOffHandNotification(ItemStack futureOffHand, IActiveCharacter character, CannotUseItemReason reason);
+	void sendCannotUseItemInOffHandNotification(ItemStack futureOffHand, IActiveCharacter character, CannotUseItemReason reason);
+
+    void skillExecution(IActiveCharacter character, ExtendedSkillInfo skill);
 }

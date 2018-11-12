@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,20 +13,24 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg;
 
+import static cz.neumimto.rpg.Log.info;
+
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.persistance.GroupDao;
 import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.groups.*;
-import org.slf4j.Logger;
+import cz.neumimto.rpg.players.groups.ConfigClass;
+import cz.neumimto.rpg.players.groups.Guild;
+import cz.neumimto.rpg.players.groups.PlayerGroup;
+import cz.neumimto.rpg.players.groups.PlayerGroupPermission;
+import cz.neumimto.rpg.players.groups.Race;
 import org.spongepowered.api.service.permission.SubjectData;
 import org.spongepowered.api.util.Tristate;
 
@@ -41,13 +45,9 @@ import java.util.Set;
 public class GroupService {
 
 	@Inject
-	private GroupDao groupDao;
-
-	@Inject
-	Logger logger;
-
-	@Inject
 	DamageService damageService;
+	@Inject
+	private GroupDao groupDao;
 
 	public GroupService() {
 
@@ -97,7 +97,6 @@ public class GroupService {
 		return groupDao.getGuilds().values();
 	}
 
-	@PostProcess(priority = 401)
 	public void registerPlaceholders() {
 
 		registerClass(ConfigClass.Default);
@@ -150,17 +149,19 @@ public class GroupService {
 	}
 
 	public PlayerGroup getByName(String arg) {
-		if (existsClass(arg))
+		if (existsClass(arg)) {
 			return getNClass(arg);
-		if (existsRace(arg))
+		}
+		if (existsRace(arg)) {
 			return getRace(arg);
+		}
 		return null;
 	}
 
 	public void setDefaultClass(ConfigClass configClass) {
 		ConfigClass.Default = configClass;
 		ExtendedNClass.Default.setConfigClass(configClass);
-		logger.info("Default class set to \"" + configClass.getName() + "\"");
+		info("Default class set to \"" + configClass.getName() + "\"");
 	}
 
 	public Set<String> getPermissionsToRemove(IActiveCharacter character, PlayerGroup toBeReplaced) {

@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,12 +13,14 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.effects;
 
 import com.flowpowered.math.vector.Vector3d;
+import cz.neumimto.core.localization.Arg;
+import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.entities.PropertyContainer;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.PotionEffectData;
@@ -125,9 +127,11 @@ public interface IEffectConsumer<T extends Living> extends PropertyContainer {
 		}
 	}
 
-	void sendMessage(String message);
+	void sendMessage(LocalizableParametrizedText message, Arg arg);
 
 	void sendMessage(ChatType chatType, Text message);
+
+	void sendMessage(Text t);
 
 	boolean isDetached();
 

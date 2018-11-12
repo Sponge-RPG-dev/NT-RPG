@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,22 +13,23 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.commands;
 
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.TextHelper;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.ConfigClass;
-import cz.neumimto.rpg.skills.SkillTree;
+import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.skills.tree.SkillTree;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
@@ -38,11 +39,15 @@ import org.spongepowered.api.entity.living.player.Player;
  */
 @ResourceLoader.Command
 public class CommandSkilltree extends CommandBase {
+
 	@Inject
 	private GroupService groupService;
 
 	@Inject
 	private CharacterService characterService;
+
+	@Inject
+	private SkillService skillService;
 
 	public CommandSkilltree() {
 		addAlias("skilltree");
@@ -51,33 +56,35 @@ public class CommandSkilltree extends CommandBase {
 
 	@Override
 	public CommandResult process(CommandSource commandSource, String s) {
-		Player p =(Player) commandSource;
+		Player p = (Player) commandSource;
 		IActiveCharacter character = characterService.getCharacter(p);
 		if (character.isStub()) {
-			p.sendMessage(TextHelper.parse(Localization.CHARACTER_IS_REQUIRED));
+			p.sendMessage(Localizations.CHARACTER_IS_REQUIRED.toText());
 			return CommandResult.empty();
 		}
 		ConfigClass configClass;
-		if ("".equals(s.trim()) ) {
+		if ("".equals(s.trim())) {
 			configClass = character.getPrimaryClass().getConfigClass();
 		} else {
 			configClass = groupService.getNClass(s);
 		}
 		if (configClass == null || configClass == ConfigClass.Default) {
-			Gui.sendMessage(character, Localization.NON_EXISTING_GROUP);
+			Gui.sendMessage(character, Localizations.NON_EXISTING_GROUP, Arg.EMPTY);
 			return CommandResult.builder().build();
 		}
 		SkillTree skillTree = configClass.getSkillTree();
 		for (SkillTreeViewModel treeViewModel : character.getSkillTreeViewLocation().values()) {
 			treeViewModel.setCurrent(false);
 		}
-		if (character.getSkillTreeViewLocation().get(skillTree.getId()) == null){
-			SkillTreeViewModel skillTreeViewModel = new SkillTreeViewModel();
+		SkillTreeViewModel skillTreeViewModel = character.getSkillTreeViewLocation().get(skillTree.getId());
+		if (skillTreeViewModel == null) {
+			skillTreeViewModel = new SkillTreeViewModel();
 			character.getSkillTreeViewLocation().put(skillTree.getId(), skillTreeViewModel);
 			skillTreeViewModel.setSkillTree(skillTree);
 		} else {
-			character.getSkillTreeViewLocation().get(skillTree.getId()).setCurrent(true);
+			skillTreeViewModel.setCurrent(true);
 		}
+		skillTreeViewModel.setViewedClass(configClass);
 		Gui.openSkillTreeMenu(character);
 		return CommandResult.success();
 	}

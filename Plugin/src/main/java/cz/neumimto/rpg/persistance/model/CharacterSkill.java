@@ -1,8 +1,16 @@
 package cz.neumimto.rpg.persistance.model;
 
 import cz.neumimto.rpg.players.CharacterBase;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  * Created by ja on 8.10.2016.
@@ -11,20 +19,23 @@ import javax.persistence.*;
 public class CharacterSkill {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(generator = "native")
+	@GenericGenerator(name = "native", strategy = "native")
+	@Column(name = "skill_id")
 	private Long skillId;
 
 	@ManyToOne
-	@JoinColumn(name = "characterId")
+	@JoinColumn(name = "character_id")
 	private CharacterBase characterBase;
-
-	private String name;
 
 	private int level;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "classId", nullable = true)
+	@JoinColumn(name = "class_id", nullable = true)
 	private CharacterClass fromClass;
+
+	@Column(name = "catalog_id")
+	private String catalogId;
 
 	public Long getId() {
 		return skillId;
@@ -40,14 +51,6 @@ public class CharacterSkill {
 
 	public void setCharacterBase(CharacterBase characterBase) {
 		this.characterBase = characterBase;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public int getLevel() {
@@ -66,4 +69,11 @@ public class CharacterSkill {
 		this.fromClass = fromClass;
 	}
 
+	public String getCatalogId() {
+		return catalogId;
+	}
+
+	public void setCatalogId(String catalogId) {
+		this.catalogId = catalogId;
+	}
 }

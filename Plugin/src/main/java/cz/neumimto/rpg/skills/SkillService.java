@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,20 +13,21 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.skills;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import static cz.neumimto.rpg.Log.error;
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
+
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.PostProcess;
+import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.Console;
 import cz.neumimto.rpg.GroupService;
-import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.configuration.PluginConfig;
+import cz.neumimto.rpg.ResourceLoader;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.events.skills.SkillPostUsageEvent;
 import cz.neumimto.rpg.events.skills.SkillPrepareEvent;
 import cz.neumimto.rpg.gui.Gui;
@@ -38,37 +39,43 @@ import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.reloading.Reload;
 import cz.neumimto.rpg.reloading.ReloadService;
 import cz.neumimto.rpg.scripting.JSLoader;
+import cz.neumimto.rpg.skills.configs.ScriptSkillModel;
+import cz.neumimto.rpg.skills.mods.ActiveSkillPreProcessorWrapper;
+import cz.neumimto.rpg.skills.mods.SkillContext;
+import cz.neumimto.rpg.skills.mods.SkillExecutorCallback;
+import cz.neumimto.rpg.skills.mods.SkillPreprocessors;
+import cz.neumimto.rpg.skills.parents.ActiveScriptSkill;
+import cz.neumimto.rpg.skills.parents.PassiveScriptSkill;
+import cz.neumimto.rpg.skills.parents.ScriptSkill;
+import cz.neumimto.rpg.skills.parents.TargettedScriptSkill;
+import cz.neumimto.rpg.skills.tree.SkillTree;
+import cz.neumimto.rpg.utils.CatalogId;
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.description.annotation.AnnotationDescription;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.data.manipulator.mutable.entity.HealthData;
+import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.chat.ChatTypes;
-import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.format.TextStyles;
+import org.spongepowered.api.registry.AdditionalCatalogRegistryModule;
+import org.spongepowered.api.registry.util.RegisterCatalog;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 /**
  * Created by NeumimTo on 1.1.2015.
  */
 @Singleton
-public class SkillService {
+public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 
-	private Logger logger = Logger.getLogger("SkillService");
+	private static int id = 0;
 
 	@Inject
 	private SkillTreeDao skillTreeDao;
@@ -85,7 +92,8 @@ public class SkillService {
 	@Inject
 	private CharacterService characterService;
 
-	private Map<String, ISkill> skills = new ConcurrentHashMap<>();
+	@RegisterCatalog(ISkill.class)
+	private Map<String, ISkill> skills = new HashMap<>();
 
 	private Map<String, SkillTree> skillTrees = new ConcurrentHashMap<>();
 
@@ -93,28 +101,23 @@ public class SkillService {
 
 	private Map<Short, SkillTreeInterfaceModel> guiModelById = new HashMap<>();
 
-	private static int id = 0;
+	private Map<String, ISkill> skillByNames = new HashMap<>();
 
-	@PostProcess(priority = 300)
 	public void load() {
 		initGuis();
 		skillTrees.putAll(skillTreeDao.getAll());
-		createSkillsDefaults();
-		reloadIcons();
 	}
-
-
 
 	@Reload(on = ReloadService.PLUGIN_CONFIG)
 	public void initGuis() {
 		int i = 0;
 
-		for (String str : PluginConfig.SKILLTREE_RELATIONS) {
+		for (String str : pluginConfig.SKILLTREE_RELATIONS) {
 			String[] split = str.split(",");
 
 			short k = (short) (Short.MAX_VALUE - i);
 			SkillTreeInterfaceModel model = new SkillTreeInterfaceModel(Integer.parseInt(split[3]),
-					Sponge.getRegistry().getType(ItemType.class,split[1]).orElse(ItemTypes.STICK),
+					Sponge.getRegistry().getType(ItemType.class, split[1]).orElse(ItemTypes.STICK),
 					split[2], k);
 
 			guiModelById.put(k, model);
@@ -124,167 +127,76 @@ public class SkillService {
 
 	}
 
-
-	public void addSkill(ISkill ISkill) {
-		if (ISkill.getName() == null) {
-			String simpleName = ISkill.getClass().getSimpleName();
-			if (simpleName.startsWith("Skill")) {
-				simpleName = simpleName.substring(5, simpleName.length());
-			}
-			ISkill.setName(simpleName);
-		}
-		if (!PluginConfig.DEBUG.isBalance()) {
-			if (skills.containsKey(ISkill.getName().toLowerCase()))
-				throw new RuntimeException("Skill " + ISkill.getName() + " already exists");
-		}
-		ISkill.setId(id);
-		id++;
-		ISkill.init();
-		skills.put(ISkill.getName().toLowerCase().replaceAll(" ", "_"), ISkill);
-	}
-
-
-	public ISkill getSkill(String name) {
-		return skills.get(name.toLowerCase().replaceAll(" ", "_"));
-	}
-
 	public Map<String, ISkill> getSkills() {
 		return skills;
 	}
-
 
 	public Map<String, SkillTree> getSkillTrees() {
 		return skillTrees;
 	}
 
-	public SkillResult executeSkill(IActiveCharacter character, ISkill skill) {
-		if (character.hasSkill(skill.getName())) {
-			return executeSkill(character, character.getSkillInfo(skill));
+	public void executeSkill(IActiveCharacter character, ISkill skill, SkillExecutorCallback callback) {
+		if (character.hasSkill(skill.getId())) {
+			executeSkill(character, character.getSkillInfo(skill), callback);
 		}
-		return SkillResult.WRONG_DATA;
 	}
 
-	public SkillResult executeSkill(IActiveCharacter character, ExtendedSkillInfo esi) {
-		if (esi == null)
-			return SkillResult.FAIL;
+	public void executeSkill(IActiveCharacter character, ExtendedSkillInfo esi, SkillExecutorCallback callback) {
+		if (esi == null) {
+			callback.doNext(character, null, new SkillContext().result(SkillResult.WRONG_DATA));
+			return;
+		}
+		SkillContext context = esi.getSkill().createSkillExecutorContext(esi);
 		int level = esi.getTotalLevel();
-		if (level < 0)
-			return SkillResult.NEGATIVE_SKILL_LEVEL;
-		level += characterService.getCharacterProperty(character, DefaultProperties.all_skills_bonus);
+		if (level < 0) {
+			callback.doNext(character, esi, context.result(SkillResult.NEGATIVE_SKILL_LEVEL));
+			return;
+		}
 		Long aLong = character.getCooldowns().get(esi.getSkill().getName());
 		long servertime = System.currentTimeMillis();
 		if (aLong != null && aLong > servertime) {
 			Gui.sendCooldownMessage(character, esi.getSkill().getName(), ((aLong - servertime) / 1000.0));
-			return SkillResult.ON_COOLDOWN;
+			callback.doNext(character, esi, context.result(SkillResult.ON_COOLDOWN));
+			return;
 		}
-		SkillData skillData = esi.getSkillData();
-		SkillSettings skillSettings = skillData.getSkillSettings();
-		float requiredMana = skillSettings.getLevelNodeValue(SkillNodes.MANACOST, level);
-		float requiredHp = skillSettings.getLevelNodeValue(SkillNodes.HPCOST, level);
-		SkillPrepareEvent event = new SkillPrepareEvent(character, requiredHp, requiredMana);
-		game.getEventManager().post(event);
-		if (event.isCancelled())
-			return SkillResult.FAIL;
-		double hpcost = event.getRequiredHp() * characterService.getCharacterProperty(character, DefaultProperties.health_cost_reduce);
-		double manacost = event.getRequiredMana() * characterService.getCharacterProperty(character, DefaultProperties.mana_cost_reduce);
-		//todo float staminacost =
-		if (character.getHealth().getValue() > hpcost) {
-			if (character.getMana().getValue() >= manacost) {
-				SkillResult result = esi.getSkill().onPreUse(character);
-				if (result != SkillResult.OK)
-					return result;
-				else {
-					float newCd = skillSettings.getLevelNodeValue(SkillNodes.COOLDOWN, level);
-					SkillPostUsageEvent eventt = new SkillPostUsageEvent(character, hpcost, manacost, newCd);
-					game.getEventManager().post(eventt);
-					if (!event.isCancelled()) {
-						double newval = character.getHealth().getValue() - eventt.getHpcost();
-						if (newval <= 0) {
-							//todo kill the player ?
-							HealthData healthData = character.getPlayer().getHealthData();
-						} else {
-							character.getHealth().setValue(newval);
-							newCd = eventt.getCooldown() * characterService.getCharacterProperty(character, DefaultProperties.cooldown_reduce);
-							character.getMana().setValue(character.getMana().getValue() - event.getRequiredMana());
-							long cd = (long) newCd;
-							character.getCooldowns().put(esi.getSkill().getName(), cd + servertime);
-							Gui.displayMana(character);
-							return SkillResult.OK;
-						}
-					}
-				}
-			}
-			return SkillResult.NO_MANA;
-		}
-		return SkillResult.NO_HP;
+
+		context.addExecutor(SkillPreprocessors.SKILL_COST);
+		context.addExecutor(callback);
+		//skill execution start
+		esi.getSkill().onPreUse(character, context);
+		//skill execution sto
 	}
 
-	public void createSkillsDefaults() {
-		Path path = Paths.get(NtRpgPlugin.workingDir + "/skills-nodelist.conf");
-		try {
-			if (Files.exists(path)) {
-				Files.delete(path);
-			}
-			Files.createFile(path);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		Gson gson = new GsonBuilder()
-				.setPrettyPrinting()
-				.create();
-		Map<String, SkillSettings> result = new HashMap<>();
-
-		
-
-		try (PrintWriter writer = new PrintWriter(path.toFile())) {
-			skills.values()
-					.stream()
-					.filter(entry -> entry.getName() != null)
-					.forEach(entry -> result.put(entry.getName(), entry.getDefaultSkillSettings()));
-			String s = gson.toJson(result);
-			writer.print(s);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	}
-
-	public void invokeSkillByCombo(String combo, IActiveCharacter character) {
+	public ExtendedSkillInfo invokeSkillByCombo(String combo, IActiveCharacter character) {
 		for (ExtendedSkillInfo extendedSkillInfo : character.getSkills().values()) {
 			if (combo.equals(extendedSkillInfo.getSkillData().getCombination())) {
-				character.sendMessage(ChatTypes.ACTION_BAR,
-						Text.builder(extendedSkillInfo.getSkill().getName())
-								.style(TextStyles.BOLD)
-								.color(TextColors.GOLD)
-								.build()
-				);
-				executeSkill(character, extendedSkillInfo);
-				break;
+				executeSkill(character, extendedSkillInfo, new SkillExecutorCallback());
+				return extendedSkillInfo;
 			}
 		}
-		Gui.displayCurrentClicks(character, combo);
+		return null;
 	}
-
 
 
 	public void reloadSkillTrees() {
 		try {
-			logger.info("Currently its possible to reload ascii maps or add new skill trees");
+			info("Currently its possible to reload ascii maps or add new skill trees");
 			Map<String, SkillTree> all = skillTreeDao.getAll();
 			for (Map.Entry<String, SkillTree> s : all.entrySet()) {
 				SkillTree skillTree = skillTrees.get(s.getKey());
 				if (skillTree == null) {
 					skillTrees.put(s.getValue().getId(), s.getValue());
-					logger.info("Found new Skilltree " + s.getValue().getId());
+					info("Found new Skilltree " + s.getValue().getId());
 				} else {
 					skillTree.setSkillTreeMap(s.getValue().getSkillTreeMap());
 					skillTree.setCenter(s.getValue().getCenter());
-					logger.info("Refreshed skilltree view for " + s.getValue().getId());
+					info("Refreshed skilltree view for " + s.getValue().getId());
 				}
 			}
 
 			/* todo thats gonna be quite tricky,
-			   todo  it should be easiest to lock (maybe even joining) specific commands,  save all current data, reset player objects, and recreate ActiveCharacters
+			   todo  it should be easiest to lock (maybe even joining) specific commands,  save all current data, reset player objects, and recreate
+			    ActiveCharacters
 			for (IActiveCharacter character : characterService.getCharacters()) {
 				Set<ExtendedNClass> classes = character.getClasses();
 				for (ExtendedNClass aClass : classes) {
@@ -300,7 +212,7 @@ public class SkillService {
 			}
 			*/
 		} catch (Exception e) {
-			logger.warning("Failed to reload skilltrees: " + e.getMessage());
+			warn("Failed to reload skilltrees: " + e.getMessage());
 		}
 	}
 
@@ -312,41 +224,113 @@ public class SkillService {
 		return guiModelById.get(k);
 	}
 
-	public void reloadIcons() {
-		Properties properties = new Properties();
-		File f = new File(NtRpgPlugin.workingDir, "Icons.properties");
-		if (!f.exists()) {
-			try {
-				f.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+	@Override
+	public void registerAdditionalCatalog(ISkill extraCatalog) {
+		if (extraCatalog.getId() == null) {
+			warn("Cannot register skill " + extraCatalog.getName() + ", " + extraCatalog.getClass().getSimpleName() + " getId() returned"
+					+ " null");
+			return;
 		}
-		try (FileInputStream stream = new FileInputStream(f)) {
-			properties.load(stream);
-			for (Map.Entry<Object, Object> l : properties.entrySet()) {
-				String skillname = (String) l.getKey();
-				String value = (String) l.getValue();
-				String[] split = value.split(";");
-				ISkill skill = getSkill(skillname);
-				SkillItemIcon icon = skill.getIcon();
-				if (icon == null) {
-					icon = new SkillItemIcon(skill);
-				}
-				Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, split[0]);
-				if (!type.isPresent()) {
-					logger.warning("Item Type defined in Icons.properties " + split[0] + " is unknown");
-				} else {
-					icon.itemType = type.get();
-					if (split.length == 1) {
-						logger.info("Missing item damage argument in Icons.properties " + Console.RED + split[0] +  Console.RESET + " skillName=itemType;itemDamage");
-					} else {
-						icon.damage = Integer.parseInt(split[1]);
-					}
-				}
+		extraCatalog.init();
+		skills.put(extraCatalog.getId().toLowerCase(), extraCatalog);
+		skillByNames.put(extraCatalog.getName(), extraCatalog);
+		skillByNames.put(extraCatalog.getLocalizableName().toPlain(), extraCatalog);
+	}
+
+	@Override
+	public Optional<ISkill> getById(String id) {
+		id = id.toLowerCase();
+		ISkill skill = skills.get(id);
+		if (skill == null) {
+			skill = getSkillByLocalizedName(id);
+		}
+		return Optional.ofNullable(skill);
+	}
+
+	@Override
+	public Collection<ISkill> getAll() {
+		return skills.values();
+	}
+
+	public ISkill getSkillByLocalizedName(String name) {
+		return skillByNames.get(name);
+	}
+
+	public void registerSkillAlternateName(String name, ISkill skill) {
+		if (skillByNames.containsKey(name)) {
+			throw new RuntimeException("Attempted to register altername name " + name + " for a skill " + skill.getId() + ". But the name is "
+					+ "already taken by the skill " + skillByNames.get(name).getId());
+		}
+		skillByNames.put(name, skill);
+	}
+
+	public ISkill skillDefinitionToSkill(ScriptSkillModel scriptSkillModel, ClassLoader classLoader) {
+		String parent = scriptSkillModel.getParent();
+		if (parent == null) {
+			warn("Could not load skill " + scriptSkillModel.getId() + " missing parent node");
+			return null;
+		}
+
+		Class type = null;
+		switch (parent.toLowerCase()) {
+			case "targetted":
+				type = TargettedScriptSkill.class;
+				break;
+			case "active":
+				type = ActiveScriptSkill.class;
+				break;
+			case "passive":
+				type = PassiveScriptSkill.class;
+				break;
+			default:
+				warn("Could not load skill " + scriptSkillModel.getId() + " unknown parent " + scriptSkillModel.getParent());
+				return null;
+		}
+
+		Class sk = new ByteBuddy()
+				.subclass(type)
+				.name("cz.neumimto.skills.scripts." + scriptSkillModel.getName().toPlain())
+				.annotateType(AnnotationDescription.Builder.ofType(ResourceLoader.Skill.class)
+						.define("value", scriptSkillModel.getId())
+						.build())
+				.make()
+				.load(classLoader)
+				.getLoaded();
+		try {
+			ScriptSkill s = (ScriptSkill) sk.newInstance();
+
+			SkillSettings settings = new SkillSettings();
+			Map<String, Float> settings2 = scriptSkillModel.getSettings();
+			for (Map.Entry<String, Float> w : settings2.entrySet()) {
+				settings.addNode(w.getKey(), w.getValue());
 			}
-		} catch (IOException e) {
+			((ISkill) s).setSettings(settings);
+			injectCatalogId((ISkill) s, scriptSkillModel.getId());
+			s.setModel(scriptSkillModel);
+			IoC.get().get(sk, s);
+			s.initScript();
+			if (pluginConfig.DEBUG.isDevelop()) {
+				info("-------- Created skill from skill def.");
+				info("+ ClassName " + s.getClass().getName());
+				info("+ ClassLoader " + s.getClass().getClassLoader());
+				info("+ Script:\n " + s.bindScriptToTemplate(scriptSkillModel));
+			}
+			return (ISkill) s;
+		} catch (InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public void injectCatalogId(ISkill skill, String name) {
+		Optional<Field> first = Stream.of(FieldUtils.getAllFields(skill.getClass())).filter(field -> field.isAnnotationPresent(CatalogId.class))
+				.findFirst();
+		Field field = first.get();
+		field.setAccessible(true);
+		try {
+			field.set(skill, name);
+		} catch (IllegalAccessException e) {
+			error("Could not inject CatalogId to the skill", e);
 		}
 	}
 }

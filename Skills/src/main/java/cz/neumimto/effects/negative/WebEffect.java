@@ -4,6 +4,7 @@ import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.scripting.JsBinding;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.world.Location;
@@ -12,6 +13,7 @@ import org.spongepowered.api.world.World;
 /**
  * Created by NeumimTo on 20.8.2017.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class WebEffect extends EffectBase<Long> {
 
 	public static String name = "Web";

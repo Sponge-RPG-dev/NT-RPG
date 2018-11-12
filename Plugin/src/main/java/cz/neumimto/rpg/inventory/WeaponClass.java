@@ -8,66 +8,67 @@ import java.util.Set;
  */
 public class WeaponClass {
 
-    public static final WeaponClass ARMOR = new WeaponClass("Armor");
+	public static final WeaponClass ARMOR = new WeaponClass("Armor");
 
-    public static final WeaponClass SHIELD = new WeaponClass("Shield");
+	public static final WeaponClass SHIELD = new WeaponClass("Shield");
 
-    static {
-        SHIELD.parent = ARMOR;
-    }
-    private final String name;
+	static {
+		SHIELD.parent = ARMOR;
+	}
 
-    private Set<WeaponClass> subClass = new HashSet<>();
+	private final String name;
 
-    private Set<RPGItemType> items = new HashSet<>();
-        
-    private WeaponClass parent;
-    
-    private Set<Integer> properties = new HashSet<>();
-    
-    private Set<Integer> propertiesMults = new HashSet<>();
-    
-    public WeaponClass(String name) {
-        this.name = name;
-    }
+	private Set<WeaponClass> subClass = new HashSet<>();
 
-    public Set<WeaponClass> getSubClass() {
-        return subClass;
-    }
+	private Set<RPGItemType> items = new HashSet<>();
 
-    public void setSubClass(Set<WeaponClass> subClass) {
-        this.subClass = subClass;
-    }
+	private WeaponClass parent;
 
-    public Set<RPGItemType> getItems() {
-        return items;
-    }
+	private Set<Integer> properties = new HashSet<>();
 
-    public void setItems(Set<RPGItemType> items) {
-        this.items = items;
-    }
+	private Set<Integer> propertiesMults = new HashSet<>();
 
-    public Set<Integer> getProperties() {
-        return properties;
-    }
+	public WeaponClass(String name) {
+		this.name = name;
+	}
 
-    public void setProperties(Set<Integer> properties) {
-        this.properties = properties;
-    }
+	public Set<WeaponClass> getSubClass() {
+		return subClass;
+	}
 
-    public void setParent(WeaponClass parent) {
-        this.parent = parent;
-    }
+	public void setSubClass(Set<WeaponClass> subClass) {
+		this.subClass = subClass;
+	}
 
-    public WeaponClass getParent() {
-        return parent;
-    }
+	public Set<RPGItemType> getItems() {
+		return items;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setItems(Set<RPGItemType> items) {
+		this.items = items;
+	}
 
-    public Set<Integer> getPropertiesMults() {
-        return propertiesMults;
-    }
+	public Set<Integer> getProperties() {
+		return properties;
+	}
+
+	public void setProperties(Set<Integer> properties) {
+		this.properties = properties;
+	}
+
+	public WeaponClass getParent() {
+		return parent;
+	}
+
+	public void setParent(WeaponClass parent) {
+		this.parent = parent;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public Set<Integer> getPropertiesMults() {
+		return propertiesMults;
+	}
 }

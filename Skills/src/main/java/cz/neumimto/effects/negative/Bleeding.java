@@ -4,6 +4,7 @@ import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
@@ -16,15 +17,10 @@ import org.spongepowered.api.world.World;
 /**
  * Created by NeumimTo on 5.8.2017.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class Bleeding extends EffectBase<Double> {
 
 	public static final String name = "Bleeding";
-
-	private IActiveCharacter caster;
-
-	private SkillDamageSource source;
-	private double damage;
-
 	private static ParticleEffect particleEffect = ParticleEffect.builder()
 			.quantity(3)
 			.type(ParticleTypes.BREAK_BLOCK)
@@ -33,6 +29,9 @@ public class Bleeding extends EffectBase<Double> {
 							.blockType(BlockTypes.REDSTONE_BLOCK)
 							.build())
 			.build();
+	private IActiveCharacter caster;
+	private SkillDamageSource source;
+	private double damage;
 
 	public Bleeding(IEffectConsumer consumer, IActiveCharacter caster, SkillDamageSource source, double damage, long period, long duration) {
 		super(name, consumer);

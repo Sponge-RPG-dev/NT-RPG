@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.commands;
@@ -22,10 +22,8 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.TextHelper;
 import cz.neumimto.rpg.configuration.CommandLocalization;
-import cz.neumimto.rpg.configuration.CommandPermissions;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
@@ -36,8 +34,7 @@ import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.skills.SkillTree;
-import org.slf4j.Logger;
+import cz.neumimto.rpg.skills.tree.SkillTree;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -55,8 +52,6 @@ import java.util.Optional;
 @ResourceLoader.Command
 public class InfoCommand extends CommandBase {
 
-	@Inject
-	private Logger logger;
 
 	@Inject
 	Game game;
@@ -78,10 +73,10 @@ public class InfoCommand extends CommandBase {
 
 	public InfoCommand() {
 		setHelp(CommandLocalization.PLAYERINFO_HELP);
-		setPermission(CommandPermissions.COMMANDINFO_PERMS);
+		setPermission("*");
 		setDescription(CommandLocalization.PLAYERINFO_DESC);
 		setUsage(CommandLocalization.PLAYERINFO_USAGE);
-		addAlias(CommandPermissions.COMMANDINFO_ALIAS);
+		addAlias("show");
 	}
 
 	@Override
@@ -100,13 +95,13 @@ public class InfoCommand extends CommandBase {
 			if (o.isPresent()) {
 				Player player = o.get();
 				if (player != commandSource && !player.hasPermission("list.character.others")) {
-					player.sendMessage(Text.of(Localization.NO_PERMISSIONS));
+					player.sendMessage(Localizations.NO_PERMISSIONS.toText());
 					return CommandResult.empty();
 				}
 				printPlayerInfo(commandSource, args, player);
 				return CommandResult.success();
 			} else {
-				commandSource.sendMessage(TextHelper.parse(Localization.PLAYER_IS_OFFLINE_MSG));
+				commandSource.sendMessage(Localizations.PLAYER_IS_OFFLINE_MSG.toText());
 			}
 		} else if (args[0].equalsIgnoreCase("character")) {
 			if (!(commandSource instanceof Player)) {
@@ -165,7 +160,7 @@ public class InfoCommand extends CommandBase {
 			if (!character.isStub()) {
 				Gui.sendStatus(character);
 			} else {
-				player.sendMessage(Text.of(Localization.CHARACTER_IS_REQUIRED));
+				player.sendMessage(Localizations.CHARACTER_IS_REQUIRED.toText());
 
 			}
 		} else if (args[0].equalsIgnoreCase("skilltree")) {
@@ -185,7 +180,7 @@ public class InfoCommand extends CommandBase {
 			for (SkillTreeViewModel treeViewModel : character.getSkillTreeViewLocation().values()) {
 				treeViewModel.setCurrent(false);
 			}
-			if (character.getSkillTreeViewLocation().get(skillTree.getId()) == null){
+			if (character.getSkillTreeViewLocation().get(skillTree.getId()) == null) {
 				SkillTreeViewModel skillTreeViewModel = new SkillTreeViewModel();
 				character.getSkillTreeViewLocation().put(skillTree.getId(), skillTreeViewModel);
 				skillTreeViewModel.setSkillTree(skillTree);

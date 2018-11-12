@@ -5,8 +5,8 @@ import cz.neumimto.rpg.inventory.sockets.SocketTypes;
 
 public class Gem extends ItemUpgrade {
 
-    @Override
-    public SocketType getSocketType() {
-        return SocketTypes.GEM;
-    }
+	@Override
+	public SocketType getSocketType() {
+		return SocketTypes.GEM;
+	}
 }

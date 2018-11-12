@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,10 +13,12 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg;
+
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -30,33 +32,34 @@ import javax.persistence.PreUpdate;
 public abstract class TimestampEntity {
 
 	@Column(name = "updated")
-	public Long updated;
+	public Date updated;
+
 	@Column(name = "created")
-	private Long created;
+	private Date created;
 
 	@PrePersist
 	public void onCreate() {
-		updated = created = System.currentTimeMillis();
+		updated = created = new Date();
 	}
 
 	@PreUpdate
 	public void onUpdate() {
-		updated = System.currentTimeMillis();
+		updated = new Date();
 	}
 
-	public Long getUpdated() {
+	public Date getUpdated() {
 		return updated;
 	}
 
-	public void setUpdated(Long updated) {
+	public void setUpdated(Date updated) {
 		this.updated = updated;
 	}
 
-	public Long getCreated() {
+	public Date getCreated() {
 		return created;
 	}
 
-	public void setCreated(Long created) {
+	public void setCreated(Date created) {
 		this.created = created;
 	}
 }

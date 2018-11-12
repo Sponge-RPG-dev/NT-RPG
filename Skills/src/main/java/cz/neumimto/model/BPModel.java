@@ -1,10 +1,12 @@
 package cz.neumimto.model;
 
 import cz.neumimto.rpg.effects.common.stacking.UnstackableEffectData;
+import cz.neumimto.rpg.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 5.7.2017.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class BPModel implements UnstackableEffectData<BPModel> {
 
 	public long period;
@@ -14,8 +16,9 @@ public class BPModel implements UnstackableEffectData<BPModel> {
 
 	@Override
 	public int compareTo(BPModel o) {
-		if (o == null)
+		if (o == null) {
 			return -1;
+		}
 
 		return (int) ((int) (o.period + o.damage + o.radius) - (period + damage + radius));
 	}

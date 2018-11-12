@@ -2,7 +2,6 @@ package cz.neumimto.skills.active;
 
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.ResourceLoader;
@@ -10,7 +9,12 @@ import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.parents.Targetted;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleOptions;
 import org.spongepowered.api.entity.living.Living;
@@ -23,15 +27,14 @@ import org.spongepowered.api.world.World;
 /**
  * Created by NeumimTo on 20.8.2017.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:harmtouch")
 public class Harmtouch extends Targetted {
 
 	@Inject
 	private EntityService entityService;
 
-	public Harmtouch() {
-		setName(SkillLocalization.SKILL_HARMTOUCH_NAME);
-		setDescription(SkillLocalization.SKILL_HARMTOUCH_DESC);
+	public void init() {
+		super.init();
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DAMAGE, 5000, 100);
 		setSettings(settings);
@@ -40,14 +43,14 @@ public class Harmtouch extends Targetted {
 	}
 
 	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info) {
+	public void castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext skillContext) {
 		SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
 		builder.fromSkill(this);
 		IEntity e = entityService.get(target);
 		builder.setTarget(e);
 		builder.setCaster(source);
 		SkillDamageSource s = builder.build();
-		float damage = getFloatNodeValue(info, SkillNodes.DAMAGE);
+		float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
 		boolean damage1 = e.getEntity().damage(damage, s);
 		if (damage1) {
 			Vector3d r = source.getEntity().getRotation();
@@ -68,6 +71,6 @@ public class Harmtouch extends Targetted {
 							.build(),
 					e.getEntity().getLocation().getPosition());
 		}
-		return SkillResult.OK;
+		skillContext.next(source, info, SkillResult.OK);
 	}
 }

@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.commands;
@@ -30,11 +30,12 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import javax.annotation.Nullable;
 
 
 public abstract class CommandBase implements CommandCallable, IEffectSourceProvider {
@@ -82,8 +83,9 @@ public abstract class CommandBase implements CommandCallable, IEffectSourceProvi
 
 	@Override
 	public boolean testPermission(CommandSource commandSource) {
-		if (permission.equalsIgnoreCase("*"))
+		if (permission.equalsIgnoreCase("*")) {
 			return true;
+		}
 		return commandSource.hasPermission(permission);
 	}
 

@@ -1,11 +1,12 @@
 package cz.neumimto.effects.negative;
 
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.CommonEffectTypes;
+import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.ShapedEffectDecorator;
 import cz.neumimto.rpg.gui.ParticleDecorator;
+import cz.neumimto.rpg.scripting.JsBinding;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.world.Location;
@@ -15,21 +16,18 @@ import org.spongepowered.api.world.extent.Extent;
 /**
  * Created by NeumimTo on 5.6.17.
  */
-@ClassGenerator.Generate(id = "name")
+@JsBinding(JsBinding.Type.CLASS)
+@Generate(id = "name", description = "Stuns the target, Stunned entities may not move, nor use skills")
 public class StunEffect extends ShapedEffectDecorator<Location<World>> {
 
 	public static final String name = "Stun";
-	private static final Vector3d vec3d = new Vector3d(0,2,0);
+	private static final Vector3d vec3d = new Vector3d(0, 2, 0);
 	private static final long tickRate = 50L;
 
 	private static ParticleEffect particleEffect = ParticleEffect.builder()
 			.quantity(8)
 			.type(ParticleTypes.CRITICAL_HIT)
 			.build();
-
-	public StunEffect(IEffectConsumer consumer, long duration, Void value) {
-		this(consumer, duration);
-	}
 
 	public StunEffect(IEffectConsumer consumer, long duration) {
 		super(name, consumer);

@@ -13,6 +13,7 @@ import java.util.Map;
  */
 @JsBinding(JsBinding.Type.CLASS)
 public class CharacterWeaponUpdateEvent extends CancellableEvent {
+
 	private final IActiveCharacter character;
 	private final Map<ItemType, RPGItemWrapper> allowedArmor;
 

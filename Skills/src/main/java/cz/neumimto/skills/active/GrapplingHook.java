@@ -1,13 +1,21 @@
 package cz.neumimto.skills.active;
 
+import static com.flowpowered.math.TrigMath.cos;
+import static com.flowpowered.math.TrigMath.sin;
+
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.parents.ActiveSkill;
+import cz.neumimto.rpg.skills.tree.SkillType;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
@@ -26,13 +34,10 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-import static com.flowpowered.math.TrigMath.cos;
-import static com.flowpowered.math.TrigMath.sin;
-
 /**
  * Created by NeumimTo on 5.8.2017.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:grapplinghook")
 public class GrapplingHook extends ActiveSkill {
 
 	public static Map<UUID, Long> cache = new LinkedHashMap<UUID, Long>() {
@@ -45,9 +50,8 @@ public class GrapplingHook extends ActiveSkill {
 	@Inject
 	private NtRpgPlugin plugin;
 
-	public GrapplingHook() {
-		setName(SkillLocalization.GRAPPLING_HOOK_NAME);
-		setDescription(SkillLocalization.GRAPPLING_HOOK_DESC);
+	public void init() {
+		super.init();
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.RANGE, 100, 10);
 		setSettings(settings);
@@ -59,10 +63,11 @@ public class GrapplingHook extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillContext) {
 		Player p = character.getPlayer();
 		World world = p.getWorld();
-		Entity optional = world.createEntity(EntityTypes.TIPPED_ARROW, p.getLocation().getPosition().add(cos((p.getRotation().getX() - 90) % 360) * 0.2, 1.8, sin((p.getRotation().getX() - 90) % 360) * 0.2));
+		Entity optional = world.createEntity(EntityTypes.TIPPED_ARROW, p.getLocation().getPosition()
+				.add(cos((p.getRotation().getX() - 90) % 360) * 0.2, 1.8, sin((p.getRotation().getX() - 90) % 360) * 0.2));
 
 		Vector3d rotation = p.getRotation();
 		Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();
@@ -72,7 +77,7 @@ public class GrapplingHook extends ActiveSkill {
 
 		Vector3d arrowVec = direction.normalize().mul(2);
 		sb.setVelocity(arrowVec);
-		double range = getDoubleNodeValue(info, SkillNodes.RANGE);
+		double range = skillContext.getDoubleNodeValue(SkillNodes.RANGE);
 		//final double rangeSquared = Math.pow(range, 2);
 
 		world.spawnEntity(sb);
@@ -118,7 +123,7 @@ public class GrapplingHook extends ActiveSkill {
 				.interval(50, TimeUnit.MILLISECONDS)
 				.submit(plugin);
 
-		return SkillResult.OK;
+		skillContext.next(character, info, SkillResult.OK);
 	}
 
 

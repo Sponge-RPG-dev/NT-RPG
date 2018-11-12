@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,13 +13,18 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.utils;
 
+import com.typesafe.config.ConfigRenderOptions;
 import cz.neumimto.rpg.NtRpgPlugin;
+import ninja.leaping.configurate.SimpleConfigurationNode;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
+import ninja.leaping.configurate.objectmapping.ObjectMapper;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.URL;
@@ -59,24 +64,44 @@ public class FileUtils {
 
 
 	public static void createFileIfNotExists(Path path) {
-		if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS))
+		if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
 			try {
 				Files.createFile(path);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}
 	}
 
 	public static Path createDirectoryIfNotExists(Path path) {
-		if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS))
+		if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
 			try {
 				Files.createDirectory(path);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}
 		return path;
 	}
 
+
+	public static void generateConfigFile(Object data, File file) {
+		try {
+			if (file.exists()) {
+				file.delete();
+			}
+			ObjectMapper.BoundInstance configMapper = ObjectMapper.forObject(data);
+			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder()
+					.setRenderOptions(ConfigRenderOptions.defaults().setComments(true))
+					.setPath(file.toPath())
+					.build();
+			SimpleConfigurationNode scn = SimpleConfigurationNode.root();
+			configMapper.serialize(scn);
+			hcl.save(scn);
+		} catch (Exception e) {
+			throw new RuntimeException("Could not create file " + file, e);
+		}
+	}
 }
 
 

@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.events;
@@ -43,10 +43,10 @@ public class CancellableEvent extends AbstractEvent implements Cancellable {
 		cancelled = b;
 	}
 
-    @Override
-    public Cause getCause() {
-        return cause == null ? Cause.of(EventContext.empty(), NtRpgPlugin.GlobalScope.plugin) : cause;
-    }
+	@Override
+	public Cause getCause() {
+		return cause == null ? Cause.of(EventContext.empty(), NtRpgPlugin.GlobalScope.plugin) : cause;
+	}
 
 	public void setCause(Cause cause) {
 		this.cause = cause;

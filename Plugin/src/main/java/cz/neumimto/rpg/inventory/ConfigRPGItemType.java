@@ -5,7 +5,7 @@ import cz.neumimto.rpg.effects.IEffectSourceProvider;
 /**
  * Created by fs on 5.10.17.
  */
-public final class ConfigRPGItemType implements Comparable<ConfigRPGItemType>{
+public final class ConfigRPGItemType implements Comparable<ConfigRPGItemType> {
 
 	public final double damage;
 	public final IEffectSourceProvider fromParent;

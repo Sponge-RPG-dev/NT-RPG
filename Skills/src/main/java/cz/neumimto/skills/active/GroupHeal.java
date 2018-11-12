@@ -1,26 +1,30 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.Decorator;
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.parents.ActiveSkill;
+import cz.neumimto.rpg.skills.tree.SkillType;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import org.spongepowered.api.item.ItemTypes;
 
 /**
  * Created by NeumimTo on 6.8.2017.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:groupheal")
 public class GroupHeal extends ActiveSkill {
 
 	@Inject
 	private EntityService entityService;
 
-	public GroupHeal() {
-		setName(SkillLocalization.SKILL_GROUPHEAL_NAME);
-		setDescription(SkillLocalization.SKILL_GROUPHEAL_DESC);
+	public void init() {
+		super.init();
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.RADIUS, 10, 10);
 		settings.addNode(SkillNodes.HEALED_AMOUNT, 10, 10);
@@ -31,10 +35,10 @@ public class GroupHeal extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
-		float amnt = getFloatNodeValue(info, SkillNodes.HEALED_AMOUNT);
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillContext) {
+		float amnt = skillContext.getFloatNodeValue(SkillNodes.HEALED_AMOUNT);
 		if (character.hasParty()) {
-			double rad = Math.pow(getDoubleNodeValue(info, SkillNodes.RADIUS), 2);
+			double rad = Math.pow(skillContext.getDoubleNodeValue(SkillNodes.RADIUS), 2);
 			for (IActiveCharacter a : character.getParty().getPlayers()) {
 				if (a.getLocation().getPosition().distanceSquared(character.getLocation().getPosition()) <= rad) {
 					entityService.healEntity(a, amnt, this);
@@ -43,9 +47,9 @@ public class GroupHeal extends ActiveSkill {
 			}
 		} else {
 			entityService.healEntity(character, amnt, this);
-			Decorator.healEffect(character.getEntity().getLocation().add(0,1,0));
+			Decorator.healEffect(character.getEntity().getLocation().add(0, 1, 0));
 		}
 
-		return SkillResult.OK;
+		skillContext.next(character, info, SkillResult.OK);
 	}
 }

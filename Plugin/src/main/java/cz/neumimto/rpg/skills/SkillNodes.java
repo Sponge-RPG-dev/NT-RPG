@@ -1,43 +1,38 @@
 package cz.neumimto.rpg.skills;
 
+import cz.neumimto.rpg.scripting.JsBinding;
+
 /**
  * Created by ja on 22.10.2016.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public enum SkillNodes implements ISkillNode {
 
-	DAMAGE("damage", SkillModifierProcessor.F_STACK),
-	RADIUS("radius", SkillModifierProcessor.D_STACK),
-	MANACOST("manacost", SkillModifierProcessor.F_STACK),
-	COOLDOWN("cooldown", SkillModifierProcessor.L_STACK),
-	VELOCITY("velocity", SkillModifierProcessor.D_STACK),
-	HPCOST("hpcost", SkillModifierProcessor.D_STACK),
-	PROJECTILE_TYPE("projectile-type", null),
-	RANGE("range", SkillModifierProcessor.D_STACK),
-	DURATION("duration", SkillModifierProcessor.L_STACK),
-	AMOUNT("amount", SkillModifierProcessor.D_STACK),
-	PERIOD("period", SkillModifierProcessor.L_STACK),
-	CHANCE("chance", SkillModifierProcessor.D_STACK),
-	MULTIPLIER("multiplier", SkillModifierProcessor.F_MAX),
-	HEALED_AMOUNT("healed_amount", SkillModifierProcessor.F_STACK),
-	AMPLIFIER("amplifier", SkillModifierProcessor.F_STACK);
-
+	DAMAGE("damage"),
+	RADIUS("radius"),
+	MANACOST("manacost"),
+	COOLDOWN("cooldown"),
+	VELOCITY("velocity"),
+	HPCOST("hpcost"),
+	PROJECTILE_TYPE("projectile-type"),
+	RANGE("range"),
+	DURATION("duration"),
+	AMOUNT("amount"),
+	PERIOD("period"),
+	CHANCE("chance"),
+	MULTIPLIER("multiplier"),
+	HEALED_AMOUNT("healed_amount"),
+	AMPLIFIER("amplifier");
 
 	private final String str;
-	private final SkillModifierProcessor processor;
 
-	SkillNodes(String str, SkillModifierProcessor processor) {
+	SkillNodes(String str) {
 		this.str = str;
-		this.processor = processor;
 	}
 
 	@Override
 	public String value() {
 		return str;
-	}
-
-	@Override
-	public SkillModifierProcessor duplicityProcessor() {
-		return processor;
 	}
 
 

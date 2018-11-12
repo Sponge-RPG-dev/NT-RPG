@@ -4,6 +4,7 @@ package cz.neumimto.rpg.utils.model;
  * Created by ja on 8.10.2016.
  */
 public class CharacterListModel {
+
 	private String characterName;
 	private String primaryClassName;
 	private Double primaryClassExp;

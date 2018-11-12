@@ -7,6 +7,7 @@ import cz.neumimto.rpg.scripting.JsBinding;
  */
 @JsBinding(JsBinding.Type.CLASS)
 public class CharacterAttributeChange extends CharacterEvent {
+
 	private final int attributechange;
 
 	public CharacterAttributeChange(cz.neumimto.rpg.players.IActiveCharacter character, int attributechange) {

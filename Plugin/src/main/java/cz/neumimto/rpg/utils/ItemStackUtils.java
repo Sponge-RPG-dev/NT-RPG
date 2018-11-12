@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.utils;
@@ -63,8 +63,6 @@ import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.configuration.Localization;
-import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.inventory.items.ItemMetaTypes;
@@ -77,13 +75,9 @@ import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
@@ -148,23 +142,6 @@ public class ItemStackUtils {
 		return boots.contains(type);
 	}
 
-	public static boolean isItemSkillBind(ItemStack is) {
-		if (is.getType() != InventoryService.ITEM_SKILL_BIND) {
-			return false;
-		}
-		Optional<List<Text>> texts = is.get(Keys.ITEM_LORE);
-		if (texts.isPresent()) {
-			List<Text> a = texts.get();
-			if (a.size() > 1) {
-				Text text = a.get(0);
-				if (text.toPlain().equalsIgnoreCase(Localization.SKILLBIND)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
 	public static boolean isConsumable(ItemType type) {
 		return consumables.contains(type);
 	}
@@ -201,18 +178,6 @@ public class ItemStackUtils {
 		item.offer(Keys.PICKUP_DELAY, 50);
 		p.getLocation().getExtent().spawnEntity(item);
 
-	}
-
-	static {
-		any_armor.addAll(helmet);
-		any_armor.addAll(chestplates);
-		any_armor.addAll(leggings);
-		any_armor.addAll(boots);
-	}
-
-
-	public static Text stringToItemTooltip(String string) {
-		return Text.of(TextColors.GOLD, TextStyles.ITALIC, string);
 	}
 
 }

@@ -1,16 +1,17 @@
 package cz.neumimto.rpg.entities;
 
+import static cz.neumimto.rpg.Log.warn;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.IEntity;
-import cz.neumimto.rpg.configuration.PluginConfig;
+import cz.neumimto.rpg.IRpgElement;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.events.skills.SkillHealEvent;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.properties.PropertyService;
-import cz.neumimto.rpg.skills.ISkill;
-import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
@@ -27,8 +28,6 @@ import java.util.UUID;
 @Singleton
 public class EntityService {
 
-	@Inject
-	private Logger logger;
 
 	private HashMap<UUID, IMob> entityHashMap = new HashMap<>();
 
@@ -50,15 +49,14 @@ public class EntityService {
 		}
 		IMob iEntity = entityHashMap.get(id.getUniqueId());
 		if (iEntity == null) {
-			iEntity = new NEntity();
+			iEntity = new NEntity((Living) id);
 			iEntity.setExperiences(-1);
-			iEntity.attach((Living) id);
 			entityHashMap.put(id.getUniqueId(), iEntity);
 			MobsConfig dimmension = dao.getCache().getDimmension(id.getLocation().getExtent().getName());
-			if (!PluginConfig.OVERRIDE_MOBS && dimmension != null) {
+			if (!pluginConfig.OVERRIDE_MOBS && dimmension != null) {
 				Double aDouble = dimmension.getHealth().get(id.getType());
 				if (aDouble == null) {
-					logger.warn("No max health configured for " + id.getType().getId() + " in world " + id.getLocation().getExtent().getName());
+					warn("No max health configured for " + id.getType().getId() + " in world " + id.getLocation().getExtent().getName());
 				} else {
 					id.offer(Keys.MAX_HEALTH, aDouble);
 					id.offer(Keys.HEALTH, aDouble);
@@ -91,7 +89,7 @@ public class EntityService {
 		if (dimmension != null) {
 			Double aDouble = dimmension.getDamage().get(type.getType());
 			if (aDouble == null) {
-				logger.warn("No max experience drop configured for " + type.getType().getId()
+				warn("No max experience drop configured for " + type.getType().getId()
 						+ " in world " + type.getLocation().getExtent().getName());
 				aDouble = 0D;
 			}
@@ -105,7 +103,7 @@ public class EntityService {
 		if (dimmension != null) {
 			Double aDouble = dimmension.getExperiences().get(type.getType());
 			if (aDouble == null) {
-				logger.warn("No max experience drop configured for " + type.getType().getId()
+				warn("No max experience drop configured for " + type.getType().getId()
 						+ " in world " + type.getLocation().getExtent().getName());
 				aDouble = 0D;
 			}
@@ -135,7 +133,7 @@ public class EntityService {
 	 * @param healedamount
 	 * @return healed hp
 	 */
-	public double healEntity(IEntity entity, float healedamount, ISkill skill) {
+	public double healEntity(IEntity entity, float healedamount, IRpgElement element) {
 		if (entity.getHealth().getValue() == entity.getHealth().getMaxValue()) {
 			return 0;
 		}
@@ -143,10 +141,11 @@ public class EntityService {
 		if (entity.getHealth().getValue() + healedamount > entity.getHealth().getMaxValue()) {
 			healedamount = (float) ((entity.getHealth().getValue() + healedamount) - entity.getHealth().getMaxValue());
 		}
-		event = new SkillHealEvent(entity, healedamount, skill);
+		event = new SkillHealEvent(entity, healedamount, element);
 		Sponge.getGame().getEventManager().post(event);
-		if (event.isCancelled() || event.getAmount() <= 0)
+		if (event.isCancelled() || event.getAmount() <= 0) {
 			return 0;
+		}
 		return setEntityHealth(event.getEntity(), event.getAmount());
 	}
 
@@ -174,5 +173,9 @@ public class EntityService {
 	 */
 	public void setEntityToFullHealth(IEntity entityToFullHealth) {
 		entityToFullHealth.getHealth().setValue(entityToFullHealth.getHealth().getMaxValue());
+	}
+
+	public void reloadMobConfiguration() {
+		dao.load(null);
 	}
 }

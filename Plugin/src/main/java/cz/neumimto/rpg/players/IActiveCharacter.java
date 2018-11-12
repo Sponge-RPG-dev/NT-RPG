@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,11 +13,12 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.players;
 
+import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.inventory.RPGItemType;
@@ -31,12 +32,13 @@ import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.SkillTreeSpecialization;
+import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
 import org.spongepowered.api.data.type.HandType;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.text.Text;
 
 import java.util.List;
 import java.util.Map;
@@ -209,8 +211,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 	@Override
 	Player getEntity();
 
-	@Override
-	void sendMessage(String message);
+	void sendMessage(LocalizableParametrizedText message);
 
 	float[] getCharacterLevelProperties();
 
@@ -239,6 +240,13 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	boolean hasSkillTreeSpecialization(SkillTreeSpecialization specialization);
 
+	Set<SkillTreeSpecialization> getSkillTreeSpecialization();
+
 	Set<EquipedSlot> getSlotsCannotBeEquiped();
 
+	double getExperienceBonusFor(String name, EntityType type);
+
+	default void sendMessage(Text t) {
+		getPlayer().sendMessage(t);
+	}
 }

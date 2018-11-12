@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,15 +13,15 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.effects.common.positive;
 
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.ClassGenerator;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.ParticleDecorator;
@@ -29,6 +29,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
+import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -46,11 +47,12 @@ import org.spongepowered.api.world.World;
  * here only if someone would like to keep direct field reference to the global effect object.
  * Global Effects may be given to player via command or as an item enchantement
  * <p>
- * The class, which inherits from IEffect(or its implementations such as effect base) must contain a constructor - IEffectConsumer, long duration, int level.
+ * The class, which inherits from IEffect(or its implementations such as effect base) must contain a constructor - IEffectConsumer, long duration,
+ * int level.
  * <p>
  * Global effects can work as item enchantments, and be accessible from commands
  */
-@ClassGenerator.Generate(id = "name", inject = true)
+@Generate(id = "name", inject = true, description = "An effect which increases target walk speed")
 public class SpeedBoost extends EffectBase {
 
 	public static final String name = "Speed";
@@ -91,7 +93,7 @@ public class SpeedBoost extends EffectBase {
 			location.getExtent().spawnParticles(build, location.getPosition().add(vector3d));
 		}
 
-		getConsumer().sendMessage(Localization.SPEED_BOOST_APPLY);
+		getConsumer().sendMessage(ChatTypes.CHAT, Localizations.SPEED_BOOST_APPLY.toText());
 
 	}
 
@@ -101,7 +103,7 @@ public class SpeedBoost extends EffectBase {
 		getConsumer().setProperty(DefaultProperties.walk_speed,
 				getGlobalScope().characterService.getCharacterProperty(getConsumer(), DefaultProperties.walk_speed) - speedbonus);
 		getGlobalScope().characterService.updateWalkSpeed(getConsumer());
-		getConsumer().sendMessage(Localization.SPEED_BOOST_EXPIRE);
+		getConsumer().sendMessage(ChatTypes.CHAT, Localizations.SPEED_BOOST_EXPIRE.toText());
 	}
 
 	@Override

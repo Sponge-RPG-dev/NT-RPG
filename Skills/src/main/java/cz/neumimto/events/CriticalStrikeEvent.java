@@ -9,6 +9,7 @@ import cz.neumimto.rpg.scripting.JsBinding;
  */
 @JsBinding(JsBinding.Type.CLASS)
 public class CriticalStrikeEvent extends CancellableEvent {
+
 	private final IEntity source;
 	private final IEntity target;
 	private final double damage;

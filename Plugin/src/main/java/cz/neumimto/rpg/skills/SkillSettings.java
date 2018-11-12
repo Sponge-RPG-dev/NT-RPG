@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,18 +13,25 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.skills;
 
+import static cz.neumimto.rpg.Log.error;
+
+import cz.neumimto.rpg.scripting.JsBinding;
+
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by NeumimTo on 14.2.2015.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class SkillSettings {
+
 	public static final String bonus = "_levelbonus";
 	private Map<String, Float> skillSettings = new HashMap<>();
 	private Map<String, String> objMap = new HashMap<>();
@@ -44,8 +51,9 @@ public class SkillSettings {
 
 	public Map.Entry<String, Float> getFloatNodeEntry(String entry) {
 		for (Map.Entry<String, Float> stringFloatEntry : skillSettings.entrySet()) {
-			if (stringFloatEntry.getKey().equalsIgnoreCase(entry))
+			if (stringFloatEntry.getKey().equalsIgnoreCase(entry)) {
 				return stringFloatEntry;
+			}
 		}
 		return null;
 	}
@@ -76,18 +84,27 @@ public class SkillSettings {
 	}
 
 	public float getNodeValue(String s) {
-		return skillSettings.get(s.toLowerCase());
+		Float aFloat = skillSettings.get(s.toLowerCase());
+		if (aFloat == null) {
+			error("Missing skill node " + s);
+			return 0;
+		}
+		return aFloat;
 	}
 
+	//Use skillContext.getLevelNode
+    @Deprecated
 	public float getLevelNodeValue(ISkillNode n, int level) {
 		return getLevelNodeValue(n.toString(), level);
 	}
 
+    @Deprecated
 	public float getLevelNodeValue(String s, int level) {
 		return getNodeValue(s) + level * getNodeValue(s + bonus);
 	}
 
+    @Deprecated
 	public Map<String, Float> getNodes() {
-		return skillSettings;
+		return Collections.unmodifiableMap(skillSettings);
 	}
 }

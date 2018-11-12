@@ -1,6 +1,5 @@
 package cz.neumimto.skills.passive;
 
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.CriticalEffect;
 import cz.neumimto.model.CriticalEffectModel;
@@ -8,12 +7,17 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.NDamageType;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.parents.PassiveSkill;
+import cz.neumimto.rpg.skills.tree.SkillType;
 
 /**
  * Created by ja on 6.7.2017.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:critical")
 public class Critical extends PassiveSkill {
 
 	@Inject
@@ -21,9 +25,6 @@ public class Critical extends PassiveSkill {
 
 	public Critical() {
 		super(CriticalEffect.name);
-		setName("Critical");
-		setLore(SkillLocalization.SKILL_CRITICAL_LORE);
-		setDescription(SkillLocalization.SKILL_CRITICAL_DESC);
 		SkillSettings skillSettings = new SkillSettings();
 		skillSettings.addNode(SkillNodes.CHANCE, 10, 20);
 		skillSettings.addNode(SkillNodes.MULTIPLIER, 10, 20);
@@ -41,15 +42,16 @@ public class Critical extends PassiveSkill {
 
 	@Override
 	public void skillUpgrade(IActiveCharacter character, int level) {
-		ExtendedSkillInfo info = character.getSkill(getName());
+		ExtendedSkillInfo info = character.getSkill(getId());
 		IEffectContainer<CriticalEffectModel, CriticalEffect> effect = character.getEffect(CriticalEffect.name);
 		effect.updateValue(getModel(info), this);
 		effect.updateStackedValue();
 	}
 
 	private CriticalEffectModel getModel(ExtendedSkillInfo info) {
-		int chance = getIntNodeValue(info, SkillNodes.CHANCE);
-		float mult = getFloatNodeValue(info, SkillNodes.MULTIPLIER);
+		int totalLevel = info.getTotalLevel();
+		int chance = (int) info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.CHANCE, totalLevel);
+		float mult = info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.MULTIPLIER, totalLevel);
 		return new CriticalEffectModel(chance, mult);
 	}
 }

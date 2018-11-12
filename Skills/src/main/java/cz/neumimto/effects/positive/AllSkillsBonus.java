@@ -1,13 +1,14 @@
 package cz.neumimto.effects.positive;
 
-import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.common.stacking.IntegerEffectStackingStrategy;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
-import cz.neumimto.rpg.utils.Utils;
+import cz.neumimto.rpg.scripting.JsBinding;
 
-@ClassGenerator.Generate(id = "name")
+@JsBinding(JsBinding.Type.CLASS)
+@Generate(id = "name", description = "An effect which gives +x bonus points to all skills")
 public class AllSkillsBonus extends EffectBase<Integer> {
 
 	public static final String name = "All skills";

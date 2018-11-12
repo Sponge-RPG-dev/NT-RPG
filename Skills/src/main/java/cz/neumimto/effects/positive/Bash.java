@@ -2,16 +2,18 @@ package cz.neumimto.effects.positive;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.model.BashModel;
-import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.EffectContainer;
+import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 4.7.2017.
  */
-@ClassGenerator.Generate(id = "name")
+@JsBinding(JsBinding.Type.CLASS)
+@Generate(id = "name", description = "An effect, which gives the target % chance to apply stun while attacking to entity")
 public class Bash extends EffectBase<BashModel> {
 
 	public static final String name = "Bash";

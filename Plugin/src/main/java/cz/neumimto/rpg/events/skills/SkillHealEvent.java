@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,13 +13,13 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.events.skills;
 
 import cz.neumimto.rpg.IEntity;
-import cz.neumimto.rpg.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.IRpgElement;
 import cz.neumimto.rpg.events.CancellableEvent;
 import cz.neumimto.rpg.scripting.JsBinding;
 
@@ -28,11 +28,12 @@ import cz.neumimto.rpg.scripting.JsBinding;
  */
 @JsBinding(JsBinding.Type.CLASS)
 public class SkillHealEvent extends CancellableEvent {
+
 	private IEntity character;
 	private double amount;
-	private IEffectSourceProvider skill;
+	private IRpgElement skill;
 
-	public SkillHealEvent(IEntity character, double amount, IEffectSourceProvider skill) {
+	public SkillHealEvent(IEntity character, double amount, IRpgElement skill) {
 		this.character = character;
 		this.amount = amount;
 		this.skill = skill;
@@ -54,11 +55,11 @@ public class SkillHealEvent extends CancellableEvent {
 		this.amount = amount;
 	}
 
-	public IEffectSourceProvider getSkill() {
+	public IRpgElement getSkill() {
 		return skill;
 	}
 
-	public void setSkill(IEffectSourceProvider skill) {
+	public void setSkill(IRpgElement skill) {
 		this.skill = skill;
 	}
 }

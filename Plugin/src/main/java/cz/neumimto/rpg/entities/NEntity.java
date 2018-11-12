@@ -1,14 +1,20 @@
 package cz.neumimto.rpg.entities;
 
+import cz.neumimto.core.localization.Arg;
+import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.parties.Party;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Creature;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatType;
+import org.spongepowered.api.world.World;
+import org.spongepowered.api.world.extent.Extent;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -19,19 +25,19 @@ import java.util.UUID;
 /**
  * Created by NeumimTo on 19.12.2015.
  */
+//todo use mixins
 public class NEntity implements IMob {
 
 	private double experiences;
-	private WeakReference<Living> entity;
+//	private WeakReference<Living> entity;
 	private Map<String, IEffectContainer> effectSet = new HashMap<>();
 	private Map<Integer, Float> properties = new HashMap<>();
 	private EntityHealth entityHealth;
+	private UUID uuid;
+	private UUID extent;
 
-	protected NEntity(Creature l) {
+	protected NEntity(Living l) {
 		attach(l);
-	}
-
-	NEntity() {
 	}
 
 	@Override
@@ -47,12 +53,12 @@ public class NEntity implements IMob {
 	@Override
 
 	public double getHp() {
-		return entity.get().get(Keys.HEALTH).get();
+		return getEntity().get(Keys.HEALTH).get();
 	}
 
 	@Override
 	public void setHp(double d) {
-		entity.get().offer(Keys.HEALTH, d);
+		getEntity().offer(Keys.HEALTH, d);
 	}
 
 	@Override
@@ -84,25 +90,31 @@ public class NEntity implements IMob {
 
 	@Override
 	public void attach(Living creature) {
-		this.entity = new WeakReference<>(creature);
+		//this.entity = new WeakReference<>(creature);
+		this.uuid = creature.getUniqueId();
+		this.extent = creature.getWorld().getUniqueId();
 		this.entityHealth = new EntityHealth(this);
 	}
 
 	@Override
 	public void detach() {
 		entityHealth = null;
-		this.entity = null;
+		this.uuid = null;
+		this.extent = null;
+		//this.entity = null;
 	}
 
 
 	@Override
 	public Living getEntity() {
-		return entity.get();
+		World world = Sponge.getServer().getWorld(extent).get();
+		Entity entity = world.getEntity(uuid).get();
+		return (Living) entity;
 	}
 
 	@Override
 	public boolean isDetached() {
-		return entity == null || entity.get() == null;
+		return uuid == null || getEntity() == null;
 	}
 
 	@Override
@@ -111,12 +123,17 @@ public class NEntity implements IMob {
 	}
 
 	@Override
-	public void sendMessage(String message) {
+	public void sendMessage(LocalizableParametrizedText message, Arg arg) {
 
 	}
 
 	@Override
 	public void sendMessage(ChatType chatType, Text message) {
+
+	}
+
+	@Override
+	public void sendMessage(Text t) {
 
 	}
 

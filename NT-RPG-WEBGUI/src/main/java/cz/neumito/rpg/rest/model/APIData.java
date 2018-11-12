@@ -5,6 +5,7 @@ import java.util.Map;
 
 
 public class APIData {
+
 	private Map<String, Integer> allocatedSkillpoints = new HashMap<>();
 
 	public Map<String, Integer> getAllocatedSkillpoints() {

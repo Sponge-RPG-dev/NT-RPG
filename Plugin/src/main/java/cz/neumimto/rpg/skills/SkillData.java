@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,10 +13,12 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.skills;
+
+import org.spongepowered.api.text.Text;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,6 +27,7 @@ import java.util.Set;
  * Created by NeumimTo on 14.2.2015.
  */
 public class SkillData {
+
 	public static SkillData EMPTY = new SkillData("Empty") {{
 		setSkillSettings(new SkillSettings());
 	}};
@@ -42,7 +45,8 @@ public class SkillData {
 	private int relativeY;
 	private int skillTreeId;
 	private int levelGap;
-
+	private Text skillName;
+	private SkillCost invokeCost;
 
 	public SkillData(String skill) {
 		this.skill = skill;
@@ -56,7 +60,7 @@ public class SkillData {
 		this.iskill = skill;
 	}
 
-	public String getSkillName() {
+	public String getSkillId() {
 		return skill;
 	}
 
@@ -140,19 +144,35 @@ public class SkillData {
 		this.relativeY = relativeY;
 	}
 
-	public void setSkillTreeId(int skillTreeId) {
-		this.skillTreeId = skillTreeId;
-	}
-
 	public int getSkillTreeId() {
 		return skillTreeId;
 	}
 
-    public void setLevelGap(int levelGap) {
-        this.levelGap = levelGap;
-    }
+	public void setSkillTreeId(int skillTreeId) {
+		this.skillTreeId = skillTreeId;
+	}
 
-    public int getLevelGap() {
-        return levelGap;
-    }
+	public int getLevelGap() {
+		return levelGap;
+	}
+
+	public void setLevelGap(int levelGap) {
+		this.levelGap = levelGap;
+	}
+
+	public Text getSkillName() {
+		return skillName;
+	}
+
+	public void setSkillName(Text skillName) {
+		this.skillName = skillName;
+	}
+
+	public SkillCost getInvokeCost() {
+		return invokeCost;
+	}
+
+	public void setInvokeCost(SkillCost invokeCost) {
+		this.invokeCost = invokeCost;
+	}
 }

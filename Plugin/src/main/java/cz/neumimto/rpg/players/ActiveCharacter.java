@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,13 +13,15 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.players;
 
-import cz.neumimto.rpg.TextHelper;
-import cz.neumimto.rpg.configuration.PluginConfig;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+
+import cz.neumimto.core.localization.Arg;
+import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
@@ -34,7 +36,12 @@ import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.PropertyService;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.ItemAccessSkill;
+import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.parents.StartingPoint;
+import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.type.HandType;
 import org.spongepowered.api.data.type.HandTypes;
@@ -46,7 +53,14 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatType;
 
 import java.lang.ref.WeakReference;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -345,7 +359,7 @@ public class ActiveCharacter implements IActiveCharacter {
 			primary.setExperiences(0D);
 			primary.setLevel(0);
 			if (slot == 0) {
-				cc.setSkillPoints(PluginConfig.SKILLPOINTS_ON_START);
+				cc.setSkillPoints(pluginConfig.SKILLPOINTS_ON_START);
 			}
 			cc.setExperiences(0D);
 		} else {
@@ -427,24 +441,24 @@ public class ActiveCharacter implements IActiveCharacter {
 	@Override
 	public double getBaseProjectileDamage(EntityType id) {
 		Double d = getProjectileDamages().get(id);
-		if (d == null)
+		if (d == null) {
 			return 0;
+		}
 		return d;
 	}
 
 	public IActiveCharacter updateItemRestrictions() {
 		allowedWeapons.clear();
-        allowedOffHandWeapons.clear();
+		allowedOffHandWeapons.clear();
 		Map<ItemType, Set<ConfigRPGItemType>> weapons = getRace().getWeapons();
 		allowedWeapons.putAll(weapons.entrySet().stream()
 				.collect(Collectors.toMap(Map.Entry::getKey, e -> RPGItemWrapper.createFromSet(e.getValue()))));
 
-        for (Set<ConfigRPGItemType> configRPGItemTypes : getRace().getOffHandWeapons().values()) {
-            for (ConfigRPGItemType configRPGItemType : configRPGItemTypes) {
-                allowedOffHandWeapons.add(configRPGItemType.getRpgItemType());
-            }
-        }
-
+		for (Set<ConfigRPGItemType> configRPGItemTypes : getRace().getOffHandWeapons().values()) {
+			for (ConfigRPGItemType configRPGItemType : configRPGItemTypes) {
+				allowedOffHandWeapons.add(configRPGItemType.getRpgItemType());
+			}
+		}
 
 
 		//mergeWeapons(getGuild());
@@ -453,7 +467,7 @@ public class ActiveCharacter implements IActiveCharacter {
 		for (ExtendedSkillInfo extendedSkillInfo : getSkills().values()) {
 			if (extendedSkillInfo.getSkill().getType() == EffectSourceType.ITEM_ACCESS_SKILL) {
 				ItemAccessSkill.ItemAccessSkillData skillData = (ItemAccessSkill.ItemAccessSkillData) extendedSkillInfo.getSkillData();
-				Map<Integer, Map<ItemType,Set<ConfigRPGItemType>>> items = skillData.getItems();
+				Map<Integer, Map<ItemType, Set<ConfigRPGItemType>>> items = skillData.getItems();
 				for (Map.Entry<Integer, Map<ItemType, Set<ConfigRPGItemType>>> ent : items.entrySet()) {
 					if (ent.getKey() <= getLevel()) {
 						mergeWeapons(ent.getValue());
@@ -470,9 +484,9 @@ public class ActiveCharacter implements IActiveCharacter {
 		//allowedArmorIds.addAll(getGuild().getAllowedArmor());
 
 		allowedArmorIds.addAll(getPrimaryClass().getConfigClass().getAllowedArmor());
-		
+
 		getProjectileDamages().clear();
-		
+
 		getProjectileDamages().putAll(getRace().getProjectileDamage());
 
 		for (ExtendedNClass extendedNClass : getClasses()) {
@@ -482,14 +496,14 @@ public class ActiveCharacter implements IActiveCharacter {
 				Double aDouble = getProjectileDamages().get(entityType.getKey());
 				if (aDouble == null) {
 					getProjectileDamages().put(entityType.getKey(), entityType.getValue());
-				} else if (PluginConfig.WEAPON_MERGE_STRATEGY == 1) {
+				} else if (pluginConfig.WEAPON_MERGE_STRATEGY == 1) {
 					getProjectileDamages().put(entityType.getKey(), aDouble + entityType.getValue());
-				} else if (PluginConfig.WEAPON_MERGE_STRATEGY == 2) {
+				} else if (pluginConfig.WEAPON_MERGE_STRATEGY == 2) {
 					getProjectileDamages().put(entityType.getKey(), Math.max(aDouble, entityType.getValue()));
 				}
 			}
 		}
-		
+
 		return this;
 	}
 
@@ -562,8 +576,8 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public void sendMessage(String message) {
-		getPlayer().sendMessage(TextHelper.parse(message));
+	public void sendMessage(LocalizableParametrizedText message, Arg arg) {
+		getPlayer().sendMessage(message.toText(arg));
 	}
 
 	@Override
@@ -577,13 +591,18 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public void addSkill(String name, ExtendedSkillInfo info) {
-		skills.put(name.toLowerCase(), info);
+	public void sendMessage(LocalizableParametrizedText message) {
+		sendMessage(message, Arg.EMPTY);
 	}
 
 	@Override
-	public ExtendedSkillInfo getSkill(String skillName) {
-		return skills.get(skillName.toLowerCase());
+	public void addSkill(String id, ExtendedSkillInfo info) {
+		skills.put(id, info);
+	}
+
+	@Override
+	public ExtendedSkillInfo getSkill(String id) {
+		return skills.get(id);
 	}
 
 	@Override
@@ -594,7 +613,7 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	@Override
 	public ExtendedSkillInfo getSkillInfo(ISkill skill) {
-		return skills.get(skill.getName().toLowerCase());
+		return skills.get(skill.getId());
 	}
 
 	@Override
@@ -615,8 +634,9 @@ public class ActiveCharacter implements IActiveCharacter {
 	@Override
 	public ConfigClass getNClass(int index) {
 		for (ExtendedNClass aClass : classes) {
-			if (aClass.getSlot() == index)
+			if (aClass.getSlot() == index) {
 				return aClass.getConfigClass();
+			}
 		}
 		return null;
 	}
@@ -742,13 +762,10 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	@Override
 	public boolean isFriendlyTo(IActiveCharacter character) {
-		if (character == this) return true;
-		for (IActiveCharacter iActiveCharacter : getParty().getPlayers()) {
-			if (iActiveCharacter == character) {
-				return true;
-			}
+		if (character == this) {
+			return true;
 		}
-		return false;
+		return getParty().getPlayers().contains(character);
 	}
 
 	@Override
@@ -773,13 +790,19 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	@Override
 	public void removeSkillTreeSpecialization(SkillTreeSpecialization specialization) {
-		if (hasSkillTreeSpecialization(specialization))
+		if (hasSkillTreeSpecialization(specialization)) {
 			specs.remove(specialization);
+		}
 	}
 
 	@Override
 	public boolean hasSkillTreeSpecialization(SkillTreeSpecialization specialization) {
 		return specs.contains(specialization);
+	}
+
+	@Override
+	public Set<SkillTreeSpecialization> getSkillTreeSpecialization() {
+		return Collections.unmodifiableSet(specs);
 	}
 
 	@Override
@@ -819,9 +842,23 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
+	public double getExperienceBonusFor(String name, EntityType type) {
+		double exp = 0;
+		exp += getRace().getExperiencesBonus(name, type);
+		for (ExtendedNClass extendedNClass : getClasses()) {
+			exp += extendedNClass.getConfigClass().getExperiencesBonus(name, type);
+		}
+		return exp;
+	}
+
+	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 		ActiveCharacter that = (ActiveCharacter) o;
 		return that.getCharacterBase().getId().equals(this.getCharacterBase().getId());
 	}

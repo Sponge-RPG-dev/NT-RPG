@@ -23,6 +23,7 @@ import org.spongepowered.api.entity.living.Living;
 
 @JsBinding(JsBinding.Type.CLASS)
 public class SkillFindTargetEvent extends CancellableEvent {
+
 	private IActiveCharacter character;
 	private Living target;
 	private ISkill skill;

@@ -4,7 +4,6 @@ package cz.neumimto.rpg.commands;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.CommandLocalization;
-import cz.neumimto.rpg.configuration.CommandPermissions;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.command.CommandException;
@@ -23,8 +22,8 @@ public class CommandSetHealthScale extends CommandBase {
 
 	public CommandSetHealthScale() {
 		addAlias("healthscale");
-		addAlias(CommandPermissions.COMMAND_SET_HEALTHSCALE);
-		setUsage(CommandLocalization.COMMAND_SET_HEALTHSCALE_USAGE);
+		addAlias("hs");
+		setUsage("/healthscale [integer]");
 		setDescription(CommandLocalization.COMMAND_SET_HEALTHSCALE_DESCRIPTION);
 	}
 

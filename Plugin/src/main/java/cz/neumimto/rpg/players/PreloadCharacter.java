@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,12 +13,15 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.players;
 
-import cz.neumimto.rpg.configuration.PluginConfig;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+
+import cz.neumimto.core.localization.Arg;
+import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
@@ -34,7 +37,7 @@ import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.SkillTreeSpecialization;
+import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.type.HandType;
 import org.spongepowered.api.effect.potion.PotionEffect;
@@ -47,7 +50,13 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatType;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by NeumimTo on 23.7.2015.
@@ -94,7 +103,7 @@ public class PreloadCharacter implements IActiveCharacter {
 
 	@Override
 	public boolean isInvulnerable() {
-		return PluginConfig.ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS;
+		return pluginConfig.ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS;
 	}
 
 	@Override
@@ -235,15 +244,14 @@ public class PreloadCharacter implements IActiveCharacter {
 
 	}
 
+	@Override
+	public IReservable getHealth() {
+		return health;
+	}
 
 	@Override
 	public void setHealth(IReservable health) {
 
-	}
-
-	@Override
-	public IReservable getHealth() {
-		return health;
 	}
 
 	@Override
@@ -263,7 +271,8 @@ public class PreloadCharacter implements IActiveCharacter {
 			if (player.isPresent()) {
 				this.player = player.get();
 			} else {
-				throw new PlayerNotInGameException(String.format("Player object with uuid=%s has not been constructed yet. Calling PreloadCharacter.getCharacter in a wrong state"), this);
+				throw new PlayerNotInGameException(String.format(
+						"Player object with uuid=%s has not been constructed yet. Calling PreloadCharacter.getCharacter in a wrong state"), this);
 			}
 		}
 		return this.player;
@@ -436,8 +445,8 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public void sendMessage(String message) {
-
+	public void sendMessage(LocalizableParametrizedText message, Arg arg) {
+		getPlayer().sendMessage(message.toText(arg));
 	}
 
 	@Override
@@ -536,6 +545,11 @@ public class PreloadCharacter implements IActiveCharacter {
 		return getPlayer();
 	}
 
+	@Override
+	public void sendMessage(LocalizableParametrizedText message) {
+		getPlayer().sendMessage(message.toText());
+	}
+
 
 	@Override
 	public MessageType getPreferedMessageType() {
@@ -584,6 +598,11 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
+	public double getExperienceBonusFor(String name, EntityType type) {
+		return 0;
+	}
+
+	@Override
 	public void removeSkillTreeSpecialization(SkillTreeSpecialization specialization) {
 
 	}
@@ -591,6 +610,11 @@ public class PreloadCharacter implements IActiveCharacter {
 	@Override
 	public boolean hasSkillTreeSpecialization(SkillTreeSpecialization specialization) {
 		return false;
+	}
+
+	@Override
+	public Set<SkillTreeSpecialization> getSkillTreeSpecialization() {
+		return Collections.emptySet();
 	}
 
 	@Override

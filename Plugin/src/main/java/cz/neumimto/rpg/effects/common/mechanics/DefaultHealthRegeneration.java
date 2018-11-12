@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.effects.common.mechanics;
 
-import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
 
@@ -12,12 +12,12 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 27.4.17.
  */
-@ClassGenerator.Generate(id = "name")
+@Generate(id = "name", description = "A component which enables default health regeneration")
 public class DefaultHealthRegeneration extends EffectBase implements IEffectContainer {
 
 	public static final String name = "DefaultHealthRegen";
 
-	public DefaultHealthRegeneration(IEffectConsumer character, long duration, String value) {
+	public DefaultHealthRegeneration(IEffectConsumer character, long duration, Void value) {
 		super(name, character);
 	}
 

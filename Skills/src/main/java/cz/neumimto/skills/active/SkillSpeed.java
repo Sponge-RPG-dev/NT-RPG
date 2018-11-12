@@ -1,27 +1,31 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.common.positive.SpeedBoost;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.parents.ActiveSkill;
+import cz.neumimto.rpg.skills.tree.SkillType;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import org.spongepowered.api.item.ItemTypes;
 
 /**
  * Created by NeumimTo on 23.12.2015.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:speed")
 public class SkillSpeed extends ActiveSkill {
 
 	@Inject
 	private EffectService effectService;
 
-	public SkillSpeed() {
-		setName("Speed");
+	public void init() {
+		super.init();
 		setDamageType(null);
-		setDescription(SkillLocalization.SKILL_SPEED_DESC);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DURATION, 1000, 1500);
 		settings.addNode(SkillNodes.AMOUNT, 0.1f, 0.05f);
@@ -31,11 +35,11 @@ public class SkillSpeed extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier skillModifier) {
-		long duration = getLongNodeValue(info, SkillNodes.DURATION);
-		float amount = getFloatNodeValue(info, SkillNodes.AMOUNT);
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillContext) {
+		long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
+		float amount = skillContext.getFloatNodeValue(SkillNodes.AMOUNT);
 		SpeedBoost sb = new SpeedBoost(character, duration, amount);
 		effectService.addEffect(sb, character, this);
-		return SkillResult.OK;
+		skillContext.next(character, info, skillContext.result(SkillResult.OK));
 	}
 }

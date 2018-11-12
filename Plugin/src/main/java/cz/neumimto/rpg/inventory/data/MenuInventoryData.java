@@ -15,6 +15,7 @@ import org.spongepowered.api.data.value.mutable.Value;
 import java.util.Optional;
 
 public class MenuInventoryData extends AbstractBooleanData<MenuInventoryData, MenuInventoryData.Immutable> {
+
 	public MenuInventoryData(Boolean b) {
 		super(b, NKeys.MENU_INVENTORY, true);
 	}
@@ -72,6 +73,7 @@ public class MenuInventoryData extends AbstractBooleanData<MenuInventoryData, Me
 	}
 
 	public static class Immutable extends AbstractImmutableBooleanData<Immutable, MenuInventoryData> {
+
 		public Immutable(Boolean b) {
 			super(b, NKeys.MENU_INVENTORY, true);
 		}
@@ -88,6 +90,7 @@ public class MenuInventoryData extends AbstractBooleanData<MenuInventoryData, Me
 	}
 
 	public static class Builder extends AbstractDataBuilder<MenuInventoryData> implements DataManipulatorBuilder<MenuInventoryData, Immutable> {
+
 		public Builder() {
 			super(MenuInventoryData.class, 1);
 		}

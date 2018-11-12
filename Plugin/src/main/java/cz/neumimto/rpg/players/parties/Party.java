@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,13 +13,12 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.players.parties;
 
-import cz.neumimto.rpg.TextHelper;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.scoreboard.Team;
 import org.spongepowered.api.text.Text;
@@ -34,6 +33,7 @@ import java.util.UUID;
  * Created by NeumimTo on 10.8.2015.
  */
 public class Party {
+
 	private Set<IActiveCharacter> players = new HashSet<>();
 	private IActiveCharacter leader;
 	private Set<UUID> invites = new HashSet<>();
@@ -97,8 +97,12 @@ public class Party {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
 		Party party = (Party) o;
 
@@ -107,10 +111,9 @@ public class Party {
 	}
 
 	public void sendPartyMessage(Text t) {
-		Text text = Text.builder().append(TextHelper.parse(Localization.PARTY_CHAT_PREFIX)).append(t).build();
-
+		Text text = Text.builder().append(Localizations.PARTY_CHAT_PREFIX.toText()).append(t).build();
 		for (IActiveCharacter player : players) {
-			player.getPlayer().sendMessage(t);
+			player.getPlayer().sendMessage(text);
 		}
 	}
 

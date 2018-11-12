@@ -20,6 +20,7 @@ import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
 public class NDamageType {
+
 	public static final DamageType MEELE_CRITICAL = new DamageType() {
 		@Override
 		public String getId() {
@@ -41,6 +42,11 @@ public class NDamageType {
 		public String getName() {
 			return "lightning";
 		}
+
+		@Override
+		public String toString() {
+			return "Lightning";
+		}
 	};
 	public static DamageType ICE = new DamageType() {
 		@Override
@@ -52,6 +58,11 @@ public class NDamageType {
 		public String getName() {
 			return "ice";
 		}
+
+		@Override
+		public String toString() {
+			return "Ice";
+		}
 	};
 	public static DamageType DAMAGE_CHECK = new DamageType() {
 		@Override
@@ -62,6 +73,11 @@ public class NDamageType {
 		@Override
 		public String getName() {
 			return "damagecheck";
+		}
+
+		@Override
+		public String toString() {
+			return "DAMAGE_CHECK";
 		}
 	};
 	public static DamageType PHYSICAL = DamageTypes.ATTACK;

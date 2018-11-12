@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,14 +13,15 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.effects.common.positive;
 
-import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.EffectStatusType;
+import cz.neumimto.rpg.effects.Generate;
+import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.common.mechanics.ManaRegeneration;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.Health;
@@ -30,7 +31,7 @@ import cz.neumimto.rpg.players.Mana;
 /**
  * Created by ja on 4.9.2015.
  */
-@ClassGenerator.Generate(id = "name")
+@Generate(id = "name", description = "An effect which will redirect all skill's mana consumption to the health pool")
 public class BloodMagicEffect extends EffectBase {
 
 	public static String name = "BloodMagic";
@@ -38,9 +39,9 @@ public class BloodMagicEffect extends EffectBase {
 	private static String expire = "You have lost " + name;
 	private IActiveCharacter consumer;
 
-	public BloodMagicEffect(IActiveCharacter consumer, long duration, String value) {
+	public BloodMagicEffect(IEffectConsumer consumer, long duration) {
 		super(name, consumer);
-		this.consumer = consumer;
+		this.consumer = (IActiveCharacter) consumer;
 		setDuration(duration);
 		setApplyMessage(apply);
 		setExpireMessage(expire);

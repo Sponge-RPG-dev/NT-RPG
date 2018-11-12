@@ -3,7 +3,6 @@ package cz.neumimto.rpg.gui;
 import com.flowpowered.math.TrigMath;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.VectorUtils;
@@ -26,7 +25,10 @@ import java.util.function.Consumer;
 @Singleton
 public class ParticleDecorator implements IActionDecorator {
 
-    @Inject
+	public static Vector3d[] smallCircle;
+	public static Vector3d[] tinyCircle;
+	public static Vector3d[][] smallCylinder;
+	@Inject
 	private NtRpgPlugin plugin;
 
 	@Override
@@ -74,11 +76,10 @@ public class ParticleDecorator implements IActionDecorator {
 
 	}
 
-
 	@Override
 	public void spiral(double radius, double points, double fullrot,
-					   double rotation,
-					   Consumer<Vector3d> cb) {
+			double rotation,
+			Consumer<Vector3d> cb) {
 		double a = radius / points;
 		double s = fullrot / points;
 		double arad = s * TrigMath.TWO_PI;
@@ -91,7 +92,6 @@ public class ParticleDecorator implements IActionDecorator {
 			cb.accept(new Vector3d(x, 0, y));
 		}
 	}
-
 
 	public void draw(Location world, Vector3d[] vector3ds, ParticleEffect effect) {
 		for (Vector3d vector3d : vector3ds) {
@@ -116,12 +116,6 @@ public class ParticleDecorator implements IActionDecorator {
 		}
 	}
 
-	public static Vector3d[] smallCircle;
-	public static Vector3d[] tinyCircle;
-
-	public static Vector3d[][] smallCylinder;
-
-	@PostProcess
 	public void initModels() {
 		smallCircle = new Vector3d[15];
 		fillCircle(smallCircle, 1.3);

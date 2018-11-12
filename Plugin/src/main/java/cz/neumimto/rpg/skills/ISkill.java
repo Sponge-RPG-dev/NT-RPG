@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,40 +13,55 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.skills;
 
 import com.typesafe.config.Config;
-import cz.neumimto.rpg.TextHelper;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.core.localization.Arg;
+import cz.neumimto.rpg.IRpgElement;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.gui.GuiHelper;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.skills.mods.SkillContext;
+import cz.neumimto.rpg.skills.parents.ActiveSkill;
+import cz.neumimto.rpg.skills.parents.PassiveSkill;
+import cz.neumimto.rpg.skills.parents.Targetted;
+import cz.neumimto.rpg.skills.tree.SkillTree;
+import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.utils.Utils;
+import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by NeumimTo on 1.1.2015.
  */
-public interface ISkill extends IEffectSourceProvider {
+public interface ISkill extends IEffectSourceProvider, CatalogType, IRpgElement {
 
-	String getName();
+	String getId();
 
-	void setName(String name);
+	Text getLocalizableName();
+
+	void setLocalizableName(Text name);
 
 	void init();
 
@@ -60,7 +75,7 @@ public interface ISkill extends IEffectSourceProvider {
 
 	void onCharacterInit(IActiveCharacter c, int level);
 
-	SkillResult onPreUse(IActiveCharacter character);
+	void onPreUse(IActiveCharacter character, SkillContext skillContext);
 
 	Set<ISkillType> getSkillTypes();
 
@@ -68,15 +83,19 @@ public interface ISkill extends IEffectSourceProvider {
 
 	void setSettings(SkillSettings settings);
 
-	String getDescription();
+	List<Text> getDescription();
 
-	void setDescription(String description);
+	void setDescription(List<Text> description);
 
-	String getLore();
+	List<Text> getLore();
+
+	void setLore(List<Text> lore);
 
 	boolean showsToPlayers();
 
 	SkillItemIcon getIcon();
+
+	void setIcon(ItemType icon);
 
 	String getIconURL();
 
@@ -85,34 +104,6 @@ public interface ISkill extends IEffectSourceProvider {
 	DamageType getDamageType();
 
 	void setDamageType(DamageType type);
-
-	default float getFloatNodeValue(ExtendedSkillInfo extendedSkillInfo, ISkillNode node) {
-		return getFloatNodeValue(extendedSkillInfo, node.value());
-	}
-
-	default float getFloatNodeValue(ExtendedSkillInfo extendedSkillInfo, String node) {
-		return extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node, extendedSkillInfo.getTotalLevel());
-	}
-
-	default int getIntNodeValue(ExtendedSkillInfo extendedSkillInfo, ISkillNode node) {
-		return getIntNodeValue(extendedSkillInfo, node.value());
-	}
-
-	default int getIntNodeValue(ExtendedSkillInfo extendedSkillInfo, String node) {
-		return (int) extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node, extendedSkillInfo.getTotalLevel());
-	}
-
-	default long getLongNodeValue(ExtendedSkillInfo extendedSkillInfo, ISkillNode node) {
-		return (long) extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node, extendedSkillInfo.getTotalLevel());
-	}
-
-	default double getDoubleNodeValue(ExtendedSkillInfo extendedSkillInfo, String node) {
-		return extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node, extendedSkillInfo.getTotalLevel());
-	}
-
-	default double getDoubleNodeValue(ExtendedSkillInfo extendedSkillInfo, ISkillNode node) {
-		return getDoubleNodeValue(extendedSkillInfo, node.value());
-	}
 
 	default ItemType getItemType() {
 		return ItemTypes.STONE;
@@ -123,19 +114,15 @@ public interface ISkill extends IEffectSourceProvider {
 		return EffectSourceType.SKILL;
 	}
 
-	int getId();
-
-	void setId(int runtimeId);
-
-    default <T extends SkillData> T constructSkillData() {
-    	return (T) new SkillData(getName());
+	default <T extends SkillData> T constructSkillData() {
+		return (T) new SkillData(getName());
 	}
 
 	default <T extends SkillData> void loadSkillData(T skillData, SkillTree context, SkillLoadingErrors errors, Config c) {
 
 	}
 
-    default List<ItemStack> configurationToItemStacks(SkillData skillData) {
+	default List<ItemStack> configurationToItemStacks(SkillData skillData) {
 		List<ItemStack> a = new ArrayList<>();
 		if (skillData.getSkillSettings() != null) {
 			Map<String, Float> nodes = skillData.getSkillSettings().getNodes();
@@ -148,20 +135,20 @@ public interface ISkill extends IEffectSourceProvider {
 					of.offer(Keys.DISPLAY_NAME, Text.builder(s1).build());
 					of.offer(new MenuInventoryData(true));
 					of.offer(Keys.ITEM_LORE, Arrays.asList(
-							Text.builder(Localization.SKILL_VALUE_STARTS_AT)
+							Text.builder().append(Localizations.SKILL_VALUE_STARTS_AT.toText())
 									.style(TextStyles.BOLD)
 									.color(TextColors.GOLD)
 									.append(Text.builder(": " + init)
-									.color(TextColors.GREEN).style(TextStyles.BOLD)
-									.build())
-								.build()
-									,
-							Text.builder(Localization.SKILL_VALUE_PER_LEVEL)
+											.color(TextColors.GREEN).style(TextStyles.BOLD)
+											.build())
+									.build()
+							,
+							Text.builder().append(Localizations.SKILL_VALUE_PER_LEVEL.toText())
 									.style(TextStyles.BOLD).color(TextColors.GOLD)
 									.append(Text.builder(": " + lbonus)
-									.color(TextColors.GREEN).style(TextStyles.BOLD)
-									.build())
-								.build()
+											.color(TextColors.GREEN).style(TextStyles.BOLD)
+											.build())
+									.build()
 					));
 					a.add(of);
 				}
@@ -170,7 +157,7 @@ public interface ISkill extends IEffectSourceProvider {
 		return a;
 	}
 
-	default ItemStack toItemStack(IActiveCharacter character, SkillData skillData) {
+	default ItemStack toItemStack(IActiveCharacter character, SkillData skillData, SkillTree skillTree) {
 		SkillItemIcon icon = getIcon();
 
 		ItemStack is = null;
@@ -183,17 +170,17 @@ public interface ISkill extends IEffectSourceProvider {
 
 		List<Text> lore = new ArrayList<>();
 
-		String desc = getDescription();
-		String skillTargetType = null;
+		List<Text> desc = getDescription();
+		Text skillTargetType = null;
 		if (this instanceof ActiveSkill) {
-			skillTargetType = Localization.SKILL_TYPE_ACTIVE;
+			skillTargetType = Localizations.SKILL_TYPE_ACTIVE.toText();
 		} else if (this instanceof PassiveSkill) {
-			skillTargetType = Localization.SKILL_TYPE_PASSIVE;
+			skillTargetType = Localizations.SKILL_TYPE_PASSIVE.toText();
 		} else if (this instanceof Targetted) {
-			skillTargetType = Localization.SKILL_TYPE_TARGETTED;
+			skillTargetType = Localizations.SKILL_TYPE_TARGETTED.toText();
 		}
 		if (desc != null) {
-			lore.addAll(TextHelper.splitStringByDelimiter(desc));
+			lore.addAll(desc);
 		}
 		if (skillTargetType != null) {
 			lore.add(Text.of(skillTargetType, TextColors.DARK_PURPLE, TextStyles.ITALIC));
@@ -202,7 +189,7 @@ public interface ISkill extends IEffectSourceProvider {
 
 		int minPlayerLevel = skillData.getMinPlayerLevel();
 		int maxSkillLevel = skillData.getMaxSkillLevel();
-		ExtendedSkillInfo ei = character.getSkill(getName());
+		ExtendedSkillInfo ei = character.getSkill(getId());
 		int currentLevel = 0;
 		int totalLevel = 0;
 		if (ei != null) {
@@ -210,35 +197,40 @@ public interface ISkill extends IEffectSourceProvider {
 			totalLevel = ei.getTotalLevel();
 		}
 
-		String s = Localization.MIN_PLAYER_LEVEL;
+		Text s = Localizations.MIN_PLAYER_LEVEL.toText();
 		if (minPlayerLevel > 0) {
-			lore.add(Text.builder(s).color(TextColors.YELLOW)
+			lore.add(Text.builder().append(s).color(TextColors.YELLOW)
 					.append(Text.builder(" " + minPlayerLevel)
 							.color(character.getLevel() < minPlayerLevel ? TextColors.RED : TextColors.GREEN)
 							.build())
 					.build());
 		}
 
-		s = Localization.MAX_SKILL_LEVEL + " " + maxSkillLevel;
-		lore.add(Text.builder(s)
+		s = Localizations.MAX_SKILL_LEVEL.toText(Arg.arg("level", maxSkillLevel));
+		lore.add(Text.builder().append(s)
 				.color(TextColors.YELLOW)
 				.build());
 
 
 		lore.add(Text.EMPTY);
-		lore.add(Text.builder(Localization.SKILL_LEVEL + " " + currentLevel + " (" + totalLevel + ") ").build());
+		lore.add(Localizations.SKILL_LEVEL.toText(Arg.arg("level", currentLevel).with("total", totalLevel)));
 
 		if (getLore() != null) {
-			String[] split = getLore().split(":n");
-			for (String ss : split) {
-				lore.add(Text.builder(ss).style(TextStyles.ITALIC).color(TextColors.GOLD).build());
-			}
+			lore.addAll(getLore());
 		}
 
 		is.offer(Keys.ITEM_LORE, lore);
-		is.offer(Keys.DISPLAY_NAME, Text.builder(getName()).color(character.hasSkill(this.getName()) ? TextColors.GREEN : TextColors.GRAY).style(TextStyles.BOLD).build());
+
+		Text skillName = skillTree.getSkills().get(getId()).getSkillName();
+
+		TextColor textColor = character.hasSkill(this.getName()) ? TextColors.GREEN : TextColors.GRAY;
+
+		is.offer(Keys.DISPLAY_NAME,
+				Text.builder(skillName.toPlain()).color(textColor).style(TextStyles.BOLD).build());
 		return is;
 	}
 
-	void setIcon(ItemType icon);
+	default SkillContext createSkillExecutorContext(ExtendedSkillInfo esi) {
+		return new SkillContext();
+	}
 }

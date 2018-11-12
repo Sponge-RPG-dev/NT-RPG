@@ -1,5 +1,8 @@
 package cz.neumimto.rpg.rest;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.google.gson.Gson;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
@@ -11,9 +14,6 @@ import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 
 public class TestGson {

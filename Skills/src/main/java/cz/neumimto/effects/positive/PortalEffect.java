@@ -3,14 +3,15 @@ package cz.neumimto.effects.positive;
 import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
 import cz.neumimto.Decorator;
+import cz.neumimto.SkillLocalization;
 import cz.neumimto.Utils;
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.VectorUtils;
+import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.ShapedEffectDecorator;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.utils.XORShiftRnd;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
@@ -34,12 +35,28 @@ import java.util.Set;
 /**
  * Created by ja on 1.8.2017.
  */
-@ClassGenerator.Generate(id = "name")
+@JsBinding(JsBinding.Type.CLASS)
+@Generate(id = "name", description = "Creates a portal. The portal has to be targetted via teleportation scroll")
 public class PortalEffect extends ShapedEffectDecorator {
 
 	public static final String name = "Portal";
-
-
+	private static ParticleEffect uninicialized = ParticleEffect.builder()
+			.type(ParticleTypes.ENCHANTING_GLYPHS)
+			.quantity(3)
+			.build();
+	private static ParticleEffect inLava = ParticleEffect.builder()
+			.type(ParticleTypes.DRIP_WATER)
+			.quantity(3)
+			.build();
+	private static ParticleEffect inWater = ParticleEffect.builder()
+			.type(ParticleTypes.DRIP_LAVA)
+			.quantity(6)
+			.build();
+	private static ParticleEffect initialized = ParticleEffect.builder()
+			.type(ParticleTypes.REDSTONE_DUST)
+			.option(ParticleOptions.COLOR, Color.YELLOW)
+			.quantity(5)
+			.build();
 	private Location<World> targetLocation;
 	private Location<World> castLocation;
 	private double manaPerLookup;
@@ -50,30 +67,9 @@ public class PortalEffect extends ShapedEffectDecorator {
 	private boolean safe;
 	private IActiveCharacter character;
 	private Vector3d[] vertices;
-
-	private static ParticleEffect uninicialized = ParticleEffect.builder()
-			.type(ParticleTypes.ENCHANTING_GLYPHS)
-			.quantity(3)
-			.build();
-
-	private static ParticleEffect inLava = ParticleEffect.builder()
-			.type(ParticleTypes.DRIP_WATER)
-			.quantity(3)
-			.build();
-
-	private static ParticleEffect inWater = ParticleEffect.builder()
-			.type(ParticleTypes.DRIP_LAVA)
-			.quantity(6)
-			.build();
-
-	private static ParticleEffect initialized = ParticleEffect.builder()
-			.type(ParticleTypes.REDSTONE_DUST)
-			.option(ParticleOptions.COLOR, Color.YELLOW)
-			.quantity(5)
-			.build();
 	private PortalState portalState;
 
-	@Inject
+	@Generate.Constructor
 	public PortalEffect(IEffectConsumer consumer, long duration, String location) {
 		this(consumer, duration, Utils.locationFromString(location));
 	}
@@ -83,8 +79,8 @@ public class PortalEffect extends ShapedEffectDecorator {
 	}
 
 	public PortalEffect(IEffectConsumer consumer, long duration, Location<World> targetLocation,
-						double manaPerLookup, double manaPerEntity, long entityLookupInterval,
-						double chanceToFail, boolean safe) {
+			double manaPerLookup, double manaPerEntity, long entityLookupInterval,
+			double chanceToFail, boolean safe) {
 		super(name, consumer);
 		this.castLocation = consumer.getLocation().add(0, 1, 0);
 		this.targetLocation = targetLocation;
@@ -120,7 +116,7 @@ public class PortalEffect extends ShapedEffectDecorator {
 							candidate.setLocation(processChanceToFail(safeLocation.get()));
 							drainMana(manaPerEntity);
 						} else {
-							getConsumer().sendMessage("Teleport location obstructed");
+							getConsumer().sendMessage(SkillLocalization.TELEPORT_LOCATION_OBSTRUCTED);
 							setDuration(0);
 						}
 					}
@@ -238,34 +234,6 @@ public class PortalEffect extends ShapedEffectDecorator {
 		portalState = PortalState.getByBlock(block);
 	}
 
-	public enum PortalState {
-		WATER(inWater),
-		LAVA(inLava),
-		UNINITIALIZED(uninicialized),
-		INITIALIZED(initialized);
-
-		private final ParticleEffect particleEffect;
-
-		PortalState(ParticleEffect effect) {
-			this.particleEffect = effect;
-		}
-
-		public ParticleEffect getParticleEffect() {
-			return particleEffect;
-		}
-
-		static PortalState getByBlock(BlockState state) {
-			BlockType type = state.getType();
-			if (type == BlockTypes.LAVA || type == BlockTypes.FLOWING_LAVA) {
-				return LAVA;
-			}
-			if (type == BlockTypes.WATER || type == BlockTypes.FLOWING_WATER) {
-				return WATER;
-			}
-			return INITIALIZED;
-		}
-	}
-
 	private Location<World> processChanceToFail(Location<World> desiredLocation) {
 		XORShiftRnd rnd = new XORShiftRnd();
 		if (rnd.nextDouble(100) < chanceToFail) {
@@ -282,5 +250,33 @@ public class PortalEffect extends ShapedEffectDecorator {
 			}
 		}
 		return desiredLocation;
+	}
+
+	public enum PortalState {
+		WATER(inWater),
+		LAVA(inLava),
+		UNINITIALIZED(uninicialized),
+		INITIALIZED(initialized);
+
+		private final ParticleEffect particleEffect;
+
+		PortalState(ParticleEffect effect) {
+			this.particleEffect = effect;
+		}
+
+		static PortalState getByBlock(BlockState state) {
+			BlockType type = state.getType();
+			if (type == BlockTypes.LAVA || type == BlockTypes.FLOWING_LAVA) {
+				return LAVA;
+			}
+			if (type == BlockTypes.WATER || type == BlockTypes.FLOWING_WATER) {
+				return WATER;
+			}
+			return INITIALIZED;
+		}
+
+		public ParticleEffect getParticleEffect() {
+			return particleEffect;
+		}
 	}
 }

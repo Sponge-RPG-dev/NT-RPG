@@ -39,10 +39,12 @@ public class Token {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null)
+		if (obj == null) {
 			return false;
-		if (obj.getClass() != Token.class)
+		}
+		if (obj.getClass() != Token.class) {
 			return false;
+		}
 		return ((Token) obj).token.equals(this.token);
 	}
 }

@@ -10,6 +10,7 @@ import cz.neumimto.rpg.scripting.JsBinding;
  */
 @JsBinding(JsBinding.Type.CLASS)
 public class ManaDrainEvent extends CancellableEvent {
+
 	private final IEntity source;
 	private final IActiveCharacter target;
 	private double amountDrained;

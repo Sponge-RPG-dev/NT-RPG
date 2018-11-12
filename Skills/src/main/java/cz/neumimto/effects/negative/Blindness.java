@@ -1,10 +1,11 @@
 package cz.neumimto.effects.negative;
 
-import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.scripting.JsBinding;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectTypes;
 
@@ -15,7 +16,8 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 9.7.2017.
  */
-@ClassGenerator.Generate(id = "name")
+@JsBinding(JsBinding.Type.CLASS)
+@Generate(id = "name", description = "Applies potion effect blindness to the target")
 public class Blindness extends EffectBase<Long> implements IEffectContainer<Long, Blindness> {
 
 	public static final String name = "Blindness";

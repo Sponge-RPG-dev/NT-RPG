@@ -10,8 +10,9 @@ public class XORShiftRnd {
 	}
 
 	public XORShiftRnd(long seed) {
-		if (seed == 0)
+		if (seed == 0) {
 			throw new RuntimeException("The Seed of xor shift rnd can't be 0");
+		}
 		this.l = seed;
 	}
 

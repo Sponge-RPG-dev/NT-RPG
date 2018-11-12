@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,21 +13,28 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.inventory;
+
+import static cz.neumimto.rpg.Log.error;
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import com.typesafe.config.ConfigFactory;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
-import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.*;
-import cz.neumimto.rpg.configuration.Localization;
-import cz.neumimto.rpg.configuration.PluginConfig;
+import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.Console;
+import cz.neumimto.rpg.GroupService;
+import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.configuration.Localizations;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.EffectService;
@@ -36,7 +43,14 @@ import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.ItemLoreBuilderService;
 import cz.neumimto.rpg.inventory.data.NKeys;
-import cz.neumimto.rpg.inventory.data.manipulators.*;
+import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaHeader;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaTypeData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemRarityData;
+import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemGroupRequirementsData;
+import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemRequirementsData;
+import cz.neumimto.rpg.inventory.data.manipulators.SkillBindData;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtypes;
@@ -58,7 +72,6 @@ import cz.neumimto.rpg.utils.ItemStackUtils;
 import ninja.leaping.configurate.SimpleConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
-import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
@@ -80,7 +93,16 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -90,9 +112,6 @@ import java.util.stream.Collectors;
 @Singleton
 @ResourceLoader.ListenerClass
 public class InventoryService {
-
-    @Inject
-	private Logger logger;
 
 	public static ItemType ITEM_SKILL_BIND = ItemTypes.BLAZE_POWDER;
 
@@ -138,18 +157,17 @@ public class InventoryService {
 	private Map<Class<?>, ManagedInventory> managedInventories = new HashMap<>();
 
 	@Reload(on = ReloadService.PLUGIN_CONFIG)
-	@PostProcess(priority = 100)
 	public void init() {
-		NORMAL_RARITY = Text.of(Localization.NORMAL_RARITY);
+		NORMAL_RARITY = Localizations.NORMAL_RARITY.toText();
 		loadItemGroups();
-		String s = PluginConfig.EQUIPED_SLOT_RESOLVE_SRATEGY;
+		String s = pluginConfig.EQUIPED_SLOT_RESOLVE_SRATEGY;
 		Optional<PlayerInvHandler> type = Sponge.getRegistry().getType(PlayerInvHandler.class, s);
 		if (type.isPresent()) {
 			playerInvHandler = type.get();
 		} else {
-			logger.warn("Unknown EQUIPED_SLOT_RESOLVE_SRATEGY, value should be one of " +
+			warn("Unknown EQUIPED_SLOT_RESOLVE_SRATEGY, value should be one of " +
 					Sponge.getRegistry().getAllOf(PlayerInvHandler.class).stream
-					().map(PlayerInvHandler::getId).collect(Collectors.joining(", ")));
+							().map(PlayerInvHandler::getId).collect(Collectors.joining(", ")));
 			playerInvHandler = IoC.get().build(DefaultPlayerInvHandler.class);
 		}
 		playerInvHandler.initHandler();
@@ -158,7 +176,7 @@ public class InventoryService {
 	@Listener
 	//Dump items once game started, so we can assume that registries wont change anymore
 	public void dumpItems(GameStartedServerEvent event) {
-		if (PluginConfig.AUTODISCOVER_ITEMS) {
+		if (pluginConfig.AUTODISCOVER_ITEMS) {
 			Collection<ItemType> allOf = Sponge.getRegistry().getAllOf(ItemType.class);
 			ItemDumpConfig itemDump = new ItemDumpConfig();
 
@@ -180,8 +198,9 @@ public class InventoryService {
 			try {
 				ObjectMapper.BoundInstance configMapper = ObjectMapper.forObject(itemDump);
 				File properties = new File(NtRpgPlugin.workingDir, "itemDump.conf");
-				if (properties.exists())
+				if (properties.exists()) {
 					properties.delete();
+				}
 				HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(properties.toPath()).build();
 				SimpleConfigurationNode scn = SimpleConfigurationNode.root();
 				configMapper.serialize(scn);
@@ -195,7 +214,7 @@ public class InventoryService {
 	}
 
 	private void loadItemGroups() {
-		Path path = Paths.get(NtRpgPlugin.workingDir+"/ItemGroups.conf");
+		Path path = Paths.get(NtRpgPlugin.workingDir + "/ItemGroups.conf");
 		File f = path.toFile();
 		if (!f.exists()) {
 			Optional<Asset> asset = Sponge.getAssetManager().getAsset(plugin, "ItemGroups.conf");
@@ -231,9 +250,9 @@ public class InventoryService {
 				if (type.isPresent()) {
 					itemService.registerItemArmorType(type.get());
 				} else {
-					logger.warn(Console.RED + "Could not find item type " + Console.YELLOW + armor + Console.RED + ".");
-					logger.warn(Console.RED + " - Is the mod loaded and is the name correct?");
-					logger.warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN+ "\"modid:my_item\"");
+					warn(Console.RED + "Could not find item type " + Console.YELLOW + armor + Console.RED + ".");
+					warn(Console.RED + " - Is the mod loaded and is the name correct?");
+					warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN + "\"modid:my_item\"");
 				}
 			}
 			for (String shield : c.getStringList("Shields")) {
@@ -241,9 +260,9 @@ public class InventoryService {
 				if (type.isPresent()) {
 					itemService.registerShieldType(type.get());
 				} else {
-					logger.warn(Console.RED + "Could not find item type " + Console.YELLOW + shield + Console.RED + ".");
-					logger.warn(Console.RED + " - Is the mod loaded and is the name correct?");
-					logger.warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN+ "\"modid:my_item\"");
+					warn(Console.RED + "Could not find item type " + Console.YELLOW + shield + Console.RED + ".");
+					warn(Console.RED + " - Is the mod loaded and is the name correct?");
+					warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN + "\"modid:my_item\"");
 				}
 			}
 		} catch (ConfigException e) {
@@ -257,23 +276,24 @@ public class InventoryService {
 			try {
 				weaponClass = itemGroup.getString("WeaponClass");
 			} catch (ConfigException e) {
-				logger.error("Could not read \"WeaponClass\" node, skipping. This is a critical miss configuration, some items will not be recognized as weapons");
+				error("Could not read \"WeaponClass\" node, skipping. This is a critical miss configuration, some items will not be recognized "
+						+ "as weapons");
 				continue;
 			}
-			logger.info(" - Loading weaponClass" + weaponClass);
+			info(" - Loading weaponClass" + weaponClass);
 			WeaponClass weapons = new WeaponClass(weaponClass);
 			weapons.setParent(parent);
 
 			try {
-				logger.info("  - Reading \"Items\" config section" + weaponClass);
+				info("  - Reading \"Items\" config section" + weaponClass);
 				List<String> items = itemGroup.getStringList("Items");
 				for (String item : items) {
 					String[] split = item.split(";");
 					Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, split[0]);
 					if (!type.isPresent()) {
-						logger.warn(Console.RED + "Could not find item type " + Console.YELLOW + split[0] + Console.RED + " defined in ItemGroups.conf.");
-						logger.warn(Console.RED + " - Is the mod loaded and is the name correct?");
-						logger.warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN+ "\"modid:my_item\"");
+						warn(Console.RED + "Could not find item type " + Console.YELLOW + split[0] + Console.RED + " defined in ItemGroups.conf.");
+						warn(Console.RED + " - Is the mod loaded and is the name correct?");
+						warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN + "\"modid:my_item\"");
 					} else {
 						ItemType itemType = type.get();
 						String name = null;
@@ -287,7 +307,8 @@ public class InventoryService {
 				try {
 					loadItemGroups(itemGroup.getConfigList("Items"), weapons);
 				} catch (ConfigException ee) {
-					logger.error("Could not read nested configuration for weapon class " + weaponClass + "This is a critical miss configuration, some items will not be recognized as weapons");
+					warn("Could not read nested configuration for weapon class " + weaponClass + "This is a critical miss configuration, some items "
+							+ "will not be recognized as weapons");
 				}
 			}
 
@@ -297,7 +318,7 @@ public class InventoryService {
 					itemService.registerProperty(weapons, property.toLowerCase());
 				}
 			} catch (ConfigException e) {
-				logger.error("Properties configuration section not found, skipping", e);
+				warn("Properties configuration section not found, skipping");
 			}
 		}
 	}
@@ -318,7 +339,7 @@ public class InventoryService {
 					Optional<ItemSubtype> type = Sponge.getRegistry().getType(ItemSubtype.class, split[1]);
 					if (!type.isPresent()) {
 						type = Optional.of(ItemSubtypes.ANY);
-						logger.error("Could not find subtype " + split[1]);
+						error("Could not find subtype " + split[1]);
 					}
 					SlotEffectSource slotEffectSource = new SlotEffectSource(Integer.parseInt(split[0]), type.get());
 					slotEffectSourceHashMap.put(slotEffectSource.getSlotId(), slotEffectSource);
@@ -326,7 +347,9 @@ public class InventoryService {
 			}
 			managedInventories.put(managedInventory.getType(), managedInventory);
 		} catch (ClassNotFoundException e) {
-			logger.error(Console.RED + "Could not find inventory type " + Console.GREEN + aClass + Console.RED + " defined in ItemGroups.conf. Is the mod loaded? Is the class name correct? If you are unsure restart plugin with debug mode ON and interact with desired inventory");
+			error(Console.RED + "Could not find inventory type " + Console.GREEN + aClass + Console.RED
+					+ " defined in ItemGroups.conf. Is the mod loaded? Is the class name correct? If you are unsure restart plugin with debug mode "
+					+ "ON and interact with desired inventory");
 		}
 	}
 
@@ -336,8 +359,9 @@ public class InventoryService {
 			for (RPGItemType rpgItemType : itemGroup.getItemTypes()) {
 				if (rpgItemType.getItemType().equals(itemType.getItemType())) {
 					if (rpgItemType.getDisplayName() == null && itemType.getDisplayName() == null
-							&& rpgItemType.getItemType().equals(itemType.getItemType()))
+							&& rpgItemType.getItemType().equals(itemType.getItemType())) {
 						return itemGroup;
+					}
 					if (rpgItemType.getDisplayName() != null &&
 							rpgItemType.getDisplayName().equalsIgnoreCase(itemType.getDisplayName()) &&
 							rpgItemType.getItemType().equals(itemType.getItemType())
@@ -351,8 +375,9 @@ public class InventoryService {
 	}
 
 	public void initializeCharacterInventory(IActiveCharacter character) {
-		if (character.isStub())
+		if (character.isStub()) {
 			return;
+		}
 		playerInvHandler.initializeCharacterInventory(character);
 	}
 
@@ -377,8 +402,9 @@ public class InventoryService {
 	}
 
 	public CannotUseItemReason canWear(ItemStack itemStack, IActiveCharacter character, RPGItemType type) {
-		if (itemStack == null )
+		if (itemStack == null) {
 			return CannotUseItemReason.OK;
+		}
 		if (type == null) {
 			return CannotUseItemReason.OK; //ItemStack was not recognized as a managed item type. Player may use it
 		}
@@ -390,20 +416,22 @@ public class InventoryService {
 
 
 	public CannotUseItemReason canUse(ItemStack itemStack, IActiveCharacter character, RPGItemType type, HandType h) {
-		if (itemStack == null)
+		if (itemStack == null) {
 			return CannotUseItemReason.OK;
+		}
 		if (type == null) {
 			return CannotUseItemReason.OK; //ItemStack was not recognized as a managed item type. Player may use it
 		}
 		if (!character.canUse(type, h)) {
 			return CannotUseItemReason.CONFIG;
 		}
-		return checkRestrictions(character,itemStack);
+		return checkRestrictions(character, itemStack);
 	}
 
 	private CannotUseItemReason checkGroupRequirements(IActiveCharacter character, Map<String, Integer> a) {
-		if (a.isEmpty())
+		if (a.isEmpty()) {
 			return CannotUseItemReason.OK;
+		}
 		int k = 0;
 		Iterator<Map.Entry<String, Integer>> it = a.entrySet().iterator();
 		while (it.hasNext()) {
@@ -435,15 +463,18 @@ public class InventoryService {
 	}
 
 	private CannotUseItemReason checkAttributeRequirements(IActiveCharacter character, Map<String, Integer> a) {
-		if (a.isEmpty())
+		if (a.isEmpty()) {
 			return CannotUseItemReason.OK;
+		}
 		for (Map.Entry<String, Integer> q : a.entrySet()) {
 			ICharacterAttribute attribute = propertyService.getAttribute(q.getKey());
-			if (attribute == null)
+			if (attribute == null) {
 				continue;
+			}
 			Integer attributeValue = character.getAttributeValue(attribute);
-			if (attributeValue == null || attributeValue < q.getValue())
+			if (attributeValue == null || attributeValue < q.getValue()) {
 				return CannotUseItemReason.ATTRIBUTE;
+			}
 
 		}
 		return CannotUseItemReason.OK;
@@ -483,8 +514,9 @@ public class InventoryService {
 
 	public void processHotbarItemDispense(Player player) {
 		IActiveCharacter character = characterService.getCharacter(player);
-		if (character.isStub())
+		if (character.isStub()) {
 			return;
+		}
 		playerInvHandler.processHotbarItemDispense(character);
 	}
 
@@ -591,8 +623,9 @@ public class InventoryService {
 
 	public IEffectSource getEffectSourceBySlotId(Class<?> type, Integer value) {
 		ManagedInventory managedInventory = managedInventories.get(type);
-		if (managedInventory == null)
+		if (managedInventory == null) {
 			return null;
+		}
 		return managedInventory.getSlotEffectSourceHashMap().get(value);
 	}
 
@@ -601,8 +634,9 @@ public class InventoryService {
 		Class type = transform.parent().getClass();
 		SlotIndex index = slot.getInventoryProperty(SlotIndex.class).get();
 		ManagedInventory managedInventory = managedInventories.get(type);
-		if (managedInventory == null)
+		if (managedInventory == null) {
 			return null;
+		}
 		return managedInventory.getSlotEffectSourceHashMap().get(index.getValue());
 	}
 
@@ -619,16 +653,17 @@ public class InventoryService {
 	 */
 	public boolean processHotbarSwapHand(Player player, ItemStack futureMainHand, ItemStack futureOffHand) {
 		IActiveCharacter character = characterService.getCharacter(player);
-		if (character.isStub())
+		if (character.isStub()) {
 			return true;
+		}
 		return playerInvHandler.processHotbarSwapHand(character, futureMainHand, futureOffHand);
 	}
 
 	public ItemStack createSkillbind(ISkill iSkill) {
 		ItemStack itemStack = ItemStack.of(ItemTypes.PUMPKIN_SEEDS, 1);
-		SkillBindData orCreate = itemStack.getOrCreate(SkillBindData.class).orElse(new SkillBindData(iSkill.getName()));
-		orCreate.set(NKeys.SKILLBIND, iSkill.getName());
-		itemStack.offer(Keys.DISPLAY_NAME, Text.of(iSkill.getName()));
+		SkillBindData orCreate = itemStack.getOrCreate(SkillBindData.class).orElse(new SkillBindData(iSkill.getId()));
+		orCreate.set(NKeys.SKILLBIND, iSkill.getId());
+		itemStack.offer(Keys.DISPLAY_NAME, Text.of(iSkill.getLocalizableName()));
 		itemStack.offer(orCreate);
 		return itemStack;
 	}

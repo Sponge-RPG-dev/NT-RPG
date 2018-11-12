@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.effects.common.def;
 
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.CoreEffectTypes;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectContainer;
@@ -16,7 +16,12 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Created by NeumimTo on 25.6.2016.
@@ -36,7 +41,8 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 
 	public void notifyExpChange(IActiveCharacter character, String clazz, double exps) {
 		final String classname = clazz.toLowerCase();
-		Optional<ExtendedNClass> first = character.getClasses().stream().filter(a -> a.getConfigClass().getName().equalsIgnoreCase(classname)).findFirst();
+		Optional<ExtendedNClass> first =
+				character.getClasses().stream().filter(a -> a.getConfigClass().getName().equalsIgnoreCase(classname)).findFirst();
 		if (first.isPresent()) {
 			ServerBossBar serverBossBar = bossBarMap.get(classname);
 			if (serverBossBar == null) {
@@ -61,21 +67,22 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 
 			serverBossBar.setName(
 					Text.builder(Utils.capitalizeFirst(classname)).color(extendedNClass.getConfigClass().getPreferedColor())
-							.append(Text.builder(" " + Localization.LEVEL+": ").color(TextColors.DARK_GRAY).build())
+							.append(Text.builder(" ").append(Localizations.LEVEL.toText()).append(Text.of(": ")).color(TextColors.DARK_GRAY)
+					.build())
 							.append(Text.builder(String.valueOf(extendedNClass.getLevel())).color(TextColors.GOLD).build())
-							.append(Text.builder(" +"+df.format(expCurrentSession)).color(TextColors.GREEN).build())
+							.append(Text.builder(" +" + df.format(expCurrentSession)).color(TextColors.GREEN).build())
 							.append(Text.builder(" " + df.format(extendedNClass.getExperiencesFromLevel())
 									+ " / "
 									+ extendedNClass.getConfigClass().getLevels()[extendedNClass.getLevel()])
-										.color(TextColors.DARK_GRAY)
-										.style(TextStyles.ITALIC)
+									.color(TextColors.DARK_GRAY)
+									.style(TextStyles.ITALIC)
 									.build())
 							.build());
 
 
-
-
-			serverBossBar.setPercent((float) Utils.getPercentage(extendedNClass.getExperiencesFromLevel(), extendedNClass.getConfigClass().getLevels()[extendedNClass.getLevel()]) / 100);
+			serverBossBar.setPercent((float) Utils
+					.getPercentage(extendedNClass.getExperiencesFromLevel(), extendedNClass.getConfigClass().getLevels()[extendedNClass.getLevel()])
+					/ 100);
 			serverBossBar.setVisible(true);
 			setLastTickTime(System.currentTimeMillis());
 		}
@@ -95,15 +102,16 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 	public void onRemove() {
 		for (ServerBossBar bossBar : bossBarMap.values()) {
 
-			bossBar.removePlayer(((IActiveCharacter)getConsumer()).getPlayer());
+			bossBar.removePlayer(((IActiveCharacter) getConsumer()).getPlayer());
 
 		}
 	}
 
 	@Override
 	public void setDuration(long l) {
-		if (l >= 0)
+		if (l >= 0) {
 			throw new IllegalArgumentException();
+		}
 		super.setDuration(l);
 	}
 
@@ -118,13 +126,13 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 	}
 
 	@Override
-	public BossBarExpNotifier constructEffectContainer() {
-		return this;
+	public void setStackedValue(Object o) {
+
 	}
 
 	@Override
-	public void setStackedValue(Object o) {
-
+	public BossBarExpNotifier constructEffectContainer() {
+		return this;
 	}
 
 	@Override

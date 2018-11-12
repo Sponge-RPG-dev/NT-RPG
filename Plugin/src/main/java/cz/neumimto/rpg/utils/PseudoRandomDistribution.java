@@ -1,21 +1,18 @@
 package cz.neumimto.rpg.utils;
 
-import static java.lang.Math.*;
+import cz.neumimto.rpg.scripting.JsBinding;
+
+import static java.lang.Math.abs;
+import static java.lang.Math.ceil;
+import static java.lang.Math.min;
 
 /**
  * Created by NeumimTo on 14.03.2016.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class PseudoRandomDistribution {
-	public static double[] C = null;
 
-	static {
-		int a = 0;
-		PseudoRandomDistribution p = new PseudoRandomDistribution();
-		for (double i = 0.01; i <= 1; i += 0.01) {
-			C[a] = p.c(i);
-			a++;
-		}
-	}
+	public static double[] C = null;
 
 	private int pmt = 0;
 
@@ -38,8 +35,9 @@ public class PseudoRandomDistribution {
 		while (true) {
 			m = (u + l) / 2;
 			p1 = p(m);
-			if (abs(p1 - p2) <= 0)
+			if (abs(p1 - p2) <= 0) {
 				break;
+			}
 			if (p1 > percentage) {
 				u = m;
 			} else {

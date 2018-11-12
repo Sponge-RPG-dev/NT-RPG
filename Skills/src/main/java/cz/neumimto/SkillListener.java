@@ -6,12 +6,25 @@ import cz.neumimto.effects.EnderPearlEffect;
 import cz.neumimto.effects.ManaDrainEffect;
 import cz.neumimto.effects.ResoluteTechniqueEffect;
 import cz.neumimto.effects.negative.StunEffect;
-import cz.neumimto.effects.positive.*;
+import cz.neumimto.effects.positive.AlchemyEffect;
+import cz.neumimto.effects.positive.Bash;
+import cz.neumimto.effects.positive.CriticalEffect;
+import cz.neumimto.effects.positive.DamageToMana;
+import cz.neumimto.effects.positive.DampenEffect;
+import cz.neumimto.effects.positive.DodgeEffect;
+import cz.neumimto.effects.positive.LifeAfterKillEffect;
+import cz.neumimto.effects.positive.ManaShieldEffect;
+import cz.neumimto.effects.positive.PotionEffect;
+import cz.neumimto.effects.positive.ShadowRunEffect;
 import cz.neumimto.events.CriticalStrikeEvent;
 import cz.neumimto.events.DamageDodgedEvent;
 import cz.neumimto.events.ManaDrainEvent;
 import cz.neumimto.events.StunApplyEvent;
-import cz.neumimto.model.*;
+import cz.neumimto.model.BashModel;
+import cz.neumimto.model.CriticalEffectModel;
+import cz.neumimto.model.ManaShieldEffectModel;
+import cz.neumimto.model.PotionEffectModel;
+import cz.neumimto.model.ShadowRunModel;
 import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
@@ -219,7 +232,8 @@ public class SkillListener {
 			IEffectContainer<CriticalEffectModel, CriticalEffect> effect = event.getSource().getEffect(CriticalEffect.name);
 			CriticalEffectModel stackedValue = effect.getStackedValue();
 			if (stackedValue.chance <= random.nextInt(100)) {
-				CriticalStrikeEvent criticalStrikeEvent = new CriticalStrikeEvent(event.getSource(), event.getTarget(), stackedValue.mult * event.getDamage());
+				CriticalStrikeEvent criticalStrikeEvent =
+						new CriticalStrikeEvent(event.getSource(), event.getTarget(), stackedValue.mult * event.getDamage());
 				if (!game.getEventManager().post(criticalStrikeEvent)) {
 					event.setDamage(event.getDamage() + criticalStrikeEvent.getDamage());
 				}
@@ -308,7 +322,7 @@ public class SkillListener {
 
 	@Listener(order = Order.LATE)
 	public void onItemConsumerFinish(UseItemStackEvent.Finish event,
-									 @Root(typeFilter = Player.class) Player player) {
+			@Root(typeFilter = Player.class) Player player) {
 		ItemStackSnapshot itemStack = event.getItemStackInUse();
 		if (itemStack.getType() == ItemTypes.POTION
 				|| itemStack.getType() == ItemTypes.SPLASH_POTION

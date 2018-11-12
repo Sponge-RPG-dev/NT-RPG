@@ -8,70 +8,71 @@ import org.spongepowered.api.item.inventory.property.SlotIndex;
  * Created by NeumimTo on 20.5.2018.
  */
 public final class EquipedSlot {
-    private final String className;
-    private final transient Class<?> runtimeInventoryClass;
-    private final int slotIndex;
 
-    public EquipedSlot(String className, int slotIndex) throws ClassNotFoundException {
-        this.slotIndex = slotIndex;
-        this.className = className;
-        runtimeInventoryClass = Class.forName(className);
-    }
+	private final String className;
+	private final transient Class<?> runtimeInventoryClass;
+	private final int slotIndex;
 
-    public EquipedSlot(String className, int slotIndex, Class<?> class_) {
-        this.slotIndex = slotIndex;
-        this.className = className;
-        this.runtimeInventoryClass = class_;
-    }
+	public EquipedSlot(String className, int slotIndex) throws ClassNotFoundException {
+		this.slotIndex = slotIndex;
+		this.className = className;
+		runtimeInventoryClass = Class.forName(className);
+	}
 
-    public String getClassName() {
-        return className;
-    }
+	public EquipedSlot(String className, int slotIndex, Class<?> class_) {
+		this.slotIndex = slotIndex;
+		this.className = className;
+		this.runtimeInventoryClass = class_;
+	}
 
-    @SuppressWarnings("unchecked")
-    public Class<? extends Inventory> getRuntimeInventoryClass() {
-        return (Class<? extends Inventory>) runtimeInventoryClass;
-    }
+	public static EquipedSlot from(Slot slot) {
+		Slot transform = slot.transform();
+		Class<? extends Inventory> aClass = transform.parent().getClass();
+		SlotIndex slotIndex = transform.getInventoryProperty(SlotIndex.class).get();
+		return new EquipedSlot(
+				aClass.getName(),
+				slotIndex.getValue(),
+				aClass
+		);
+	}
 
-    public int getSlotIndex() {
-        return slotIndex;
-    }
+	public String getClassName() {
+		return className;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+	@SuppressWarnings("unchecked")
+	public Class<? extends Inventory> getRuntimeInventoryClass() {
+		return (Class<? extends Inventory>) runtimeInventoryClass;
+	}
 
-        EquipedSlot that = (EquipedSlot) o;
+	public int getSlotIndex() {
+		return slotIndex;
+	}
 
-        if (slotIndex != that.slotIndex) {
-            return false;
-        }
-        if (!className.equals(that.className)) {
-            return false;
-        }
-        return runtimeInventoryClass != null ? runtimeInventoryClass.equals(that.runtimeInventoryClass) : that.runtimeInventoryClass == null;
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-    @Override
-    public int hashCode() {
-        int result = className.hashCode();
-        result = 71 * result + slotIndex;
-        return result;
-    }
+		EquipedSlot that = (EquipedSlot) o;
 
-    public static EquipedSlot from(Slot slot) {
-        Slot transform = slot.transform();
-        Class<? extends Inventory> aClass = transform.parent().getClass();
-        SlotIndex slotIndex = transform.getInventoryProperty(SlotIndex.class).get();
-        return new EquipedSlot(
-                aClass.getName(),
-                slotIndex.getValue(),
-                aClass
-        );
-    }
+		if (slotIndex != that.slotIndex) {
+			return false;
+		}
+		if (!className.equals(that.className)) {
+			return false;
+		}
+		return runtimeInventoryClass != null ? runtimeInventoryClass.equals(that.runtimeInventoryClass) : that.runtimeInventoryClass == null;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = className.hashCode();
+		result = 71 * result + slotIndex;
+		return result;
+	}
 }

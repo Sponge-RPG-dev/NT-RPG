@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,16 +13,18 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.gui;
 
 import cz.neumimto.core.ioc.IoC;
-import cz.neumimto.rpg.configuration.Localization;
+import cz.neumimto.core.localization.Arg;
+import cz.neumimto.core.localization.LocalizableParametrizedText;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.effects.common.def.ClickComboActionEvent;
+import cz.neumimto.rpg.effects.common.def.ClickComboActionComponent;
 import cz.neumimto.rpg.inventory.CannotUseItemReason;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.players.CharacterBase;
@@ -32,9 +34,11 @@ import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.scripting.JsBinding;
-import cz.neumimto.rpg.skills.SkillTree;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.tree.SkillTree;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.text.LiteralText;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.text.format.TextColors;
@@ -57,21 +61,23 @@ public class Gui {
 	}
 
 	public static IPlayerMessage getMessageTypeOf(IActiveCharacter player) {
-		if (player == null || player.isUsingGuiMod())
+		if (player == null || player.isUsingGuiMod()) {
 			return mod;
+		}
 		return vanilla;
 	}
 
 	public static IPlayerMessage getMessageTypeOf(Player player) {
-		if (mod == null)
+		if (mod == null) {
 			return vanilla;
+		}
    /*     if (isUsingClientSideGui(player))
 			return mod;*/
 		return vanilla;
 	}
 
-	public static void sendMessage(IActiveCharacter player, String message) {
-		getMessageTypeOf(player).sendMessage(player, message);
+	public static void sendMessage(IActiveCharacter player, LocalizableParametrizedText message, Arg arg) {
+		getMessageTypeOf(player).sendMessage(player, message, arg);
 	}
 
 	public static void sendCooldownMessage(IActiveCharacter player, String skillname, double cooldown) {
@@ -187,19 +193,17 @@ public class Gui {
 	}
 
 	public static void displayCurrentClicks(IActiveCharacter character, String combo) {
-		character.getPlayer().sendMessage(ChatTypes.ACTION_BAR,
-				Text.builder(combo.replaceAll(".", "$0, "))
-						.color(TextColors.GOLD)
-						.build());
+
+		String split = combo.replaceAll(".", "$0 ");
+		LiteralText build = Text.builder(split).color(TextColors.GREEN).style(TextStyles.UNDERLINE)
+				.append(Text.builder("_").color(TextColors.GRAY).build()).build();
+
+		character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, build);
 
 	}
 
-	public static void resetCurrentClicks(ClickComboActionEvent clickComboActionEvent, boolean byShift) {
-		clickComboActionEvent.getConsumer().sendMessage(ChatTypes.ACTION_BAR,
-					Text.builder("<"+ Localization.CANCELLED+">")
-							.color(TextColors.DARK_GRAY)
-							.style(TextStyles.ITALIC)
-							.build());
+	public static void resetCurrentClicks(ClickComboActionComponent clickComboActionComponent, boolean byShift) {
+		clickComboActionComponent.getConsumer().sendMessage(ChatTypes.ACTION_BAR, Localizations.CANCELLED.toText());
 
 	}
 
@@ -217,5 +221,9 @@ public class Gui {
 
 	public static void sendCannotUseItemInOffHandNotification(IActiveCharacter character, ItemStack futureOffHand, CannotUseItemReason reason) {
 		getMessageTypeOf(character).sendCannotUseItemInOffHandNotification(futureOffHand, character, reason);
+	}
+
+	public static void skillExecution(IActiveCharacter character, ExtendedSkillInfo skill) {
+		getMessageTypeOf(character).skillExecution(character, skill);
 	}
 }

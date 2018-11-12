@@ -13,42 +13,42 @@ import java.util.Map;
 @ConfigSerializable
 public class MobsConfig {
 
-    @Setting(value="damage", comment="Entity Damage")
-    private Map<EntityType, Double> damage;
+	@Setting(value = "damage", comment = "Entity Damage")
+	private Map<EntityType, Double> damage;
 
-    @Setting(value="experiences", comment="Entity experience gain")
-    private Map<EntityType, Double> experiences;
+	@Setting(value = "experiences", comment = "Entity experience gain")
+	private Map<EntityType, Double> experiences;
 
-    @Setting(value="health", comment="Entity Maximum health")
-    private Map<EntityType, Double> health;
+	@Setting(value = "health", comment = "Entity Maximum health")
+	private Map<EntityType, Double> health;
 
-    public MobsConfig() {
-        this.damage = new HashMap<>();
-        this.experiences = new HashMap<>();
-        this.health = new HashMap<>();
-    }
+	public MobsConfig() {
+		this.damage = new HashMap<>();
+		this.experiences = new HashMap<>();
+		this.health = new HashMap<>();
+	}
 
-    public Map<EntityType, Double> getDamage() {
-        return damage;
-    }
+	public Map<EntityType, Double> getDamage() {
+		return damage;
+	}
 
-    public void setDamage(Map<EntityType, Double> damage) {
-        this.damage = damage;
-    }
+	public void setDamage(Map<EntityType, Double> damage) {
+		this.damage = damage;
+	}
 
-    public Map<EntityType, Double> getExperiences() {
-        return experiences;
-    }
+	public Map<EntityType, Double> getExperiences() {
+		return experiences;
+	}
 
-    public void setExperiences(Map<EntityType, Double> experiences) {
-        this.experiences = experiences;
-    }
+	public void setExperiences(Map<EntityType, Double> experiences) {
+		this.experiences = experiences;
+	}
 
-    public Map<EntityType, Double> getHealth() {
-        return health;
-    }
+	public Map<EntityType, Double> getHealth() {
+		return health;
+	}
 
-    public void setHealth(Map<EntityType, Double> health) {
-        this.health = health;
-    }
+	public void setHealth(Map<EntityType, Double> health) {
+		this.health = health;
+	}
 }

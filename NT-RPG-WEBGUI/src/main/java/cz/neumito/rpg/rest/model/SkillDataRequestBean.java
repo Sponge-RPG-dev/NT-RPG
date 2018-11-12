@@ -4,6 +4,7 @@ package cz.neumito.rpg.rest.model;
  * Created by Nt on 8.5.2016.
  */
 public class SkillDataRequestBean {
+
 	private String classname;
 	private String tree;
 	private String skill;

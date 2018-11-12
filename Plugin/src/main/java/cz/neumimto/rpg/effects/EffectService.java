@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,22 +13,39 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.effects;
 
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.PostProcess;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.configuration.PluginConfig;
+import cz.neumimto.rpg.ResourceLoader;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.SkillSettings;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.asset.Asset;
+import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.text.Text;
 
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -36,6 +53,7 @@ import java.util.function.Consumer;
  * Created by NeumimTo on 17.1.2015.
  */
 @Singleton
+@ResourceLoader.ListenerClass
 public class EffectService {
 
 	public static final long TICK_PERIOD = 5L;
@@ -73,15 +91,94 @@ public class EffectService {
 		}
 	}
 
+	public void load() {
+		File file1 = new File(NtRpgPlugin.workingDir, "SkillsAndEffects.md");
+		if (file1.exists()) {
+			file1.delete();
+		}
 
-	@PostProcess(priority = 1000)
-	public void run() {
+		try {
+			String finalString = "";
+			file1.createNewFile();
+			Asset asset = Sponge.getAssetManager().getAsset(plugin, "templates/Effect.md").get();
+			for (Map.Entry<String, IGlobalEffect> effect : globalEffects.entrySet()) {
+				String s = asset.readString();
+				Class aClass = effect.getValue().asEffectClass();
+				if (aClass != null && aClass.isAnnotationPresent(Generate.class)) {
+					Generate meta = (Generate) aClass.getAnnotation(Generate.class);
+					String description = meta.description();
+					String name = effect.getKey();
+
+					Class<?> modelType = EffectModelFactory.getModelType(aClass);
+
+					s = s.replaceAll("\\{\\{effect\\.name}}", name);
+					s = s.replaceAll("\\{\\{effect\\.description}}", description);
+
+					if (EffectModelFactory.typeMappers.containsKey(modelType)) {
+						s = s.replaceAll("\\{\\{effect\\.parameter}}", modelType.getSimpleName());
+						s = s.replaceAll("\\{\\{effect\\.parameters}}", "");
+					} else {
+						Field[] fields = modelType.getFields();
+						s = s.replaceAll("\\{\\{effect\\.parameter}}", "");
+						StringBuilder buffer = new StringBuilder();
+						for (Field field : fields) {
+							String fname = field.getName();
+							String type = field.getType().getSimpleName();
+							buffer.append("   * " + fname + " - " + type + "\n\n");
+						}
+						s = s.replaceAll("\\{\\{effect\\.parameters}}", buffer.toString());
+					}
+					finalString += s;
+				}
+			}
+
+			asset = Sponge.getAssetManager().getAsset(plugin, "templates/Skill.md").get();
+			String skills = "";
+			for (ISkill iSkill : NtRpgPlugin.GlobalScope.skillService.getAll()) {
+				String s = asset.readString();
+
+				DamageType damageType = iSkill.getDamageType();
+
+				s = s.replaceAll("\\{\\{skill\\.damageType}}", damageType == null ? "Deals no damage" : damageType.getName());
+
+				List<Text> description = iSkill.getDescription();
+				String desc = "";
+				for (Text text : description) {
+					desc += text.toPlain();
+				}
+				s = s.replaceAll("\\{\\{skill\\.description}}", desc);
+
+				String id = iSkill.getId();
+				s = s.replaceAll("\\{\\{skill\\.id}}", id);
+
+
+				s = s.replaceAll("\\{\\{skill\\.name}}", iSkill.getName());
+
+				SkillSettings defaultSkillSettings = iSkill.getDefaultSkillSettings();
+
+				StringBuilder buffer = new StringBuilder();
+				for (Map.Entry<String, Float> stringFloatEntry : defaultSkillSettings.getNodes().entrySet()) {
+					buffer.append("   * " + stringFloatEntry.getKey() + "\n\n");
+				}
+				s = s.replaceAll("\\{\\{skill\\.parameters}}", buffer.toString());
+				skills += s;
+			}
+			asset = Sponge.getAssetManager().getAsset(plugin, "templates/SE.md").get();
+			String a = asset.readString();
+			Files.write(file1.toPath(), a.replaceAll("\\{\\{effects}}", finalString)
+					.replaceAll("\\{\\{skills}}", skills).getBytes(), StandardOpenOption.APPEND);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+
 		game.getScheduler().createTaskBuilder().name("EffectTask")
 				.delay(5L, TimeUnit.MILLISECONDS)
 				.interval(TICK_PERIOD, TimeUnit.MILLISECONDS)
 				.execute(this::schedule)
 				.submit(plugin);
 	}
+
 
 	public void schedule() {
 		for (IEffect pendingRemoval : pendingRemovals) {
@@ -139,12 +236,13 @@ public class EffectService {
 	@SuppressWarnings("unchecked")
 	public void addEffect(IEffect iEffect, IEffectConsumer consumer, IEffectSourceProvider effectSourceProvider) {
 		IEffectContainer eff = consumer.getEffect(iEffect.getName());
-		if (PluginConfig.DEBUG.isDevelop()) {
+		if (pluginConfig.DEBUG.isDevelop()) {
 			IEffectConsumer consumer1 = iEffect.getConsumer();
 			if (consumer1 instanceof ActiveCharacter) {
 				ActiveCharacter chara = (ActiveCharacter) consumer1;
 				chara.getPlayer().sendMessage(Text.of("Adding effect: " + iEffect.getName() +
-						" container: "  + (eff == null ? "null" : eff.getEffects().size()) + " provider: " + effectSourceProvider.getType().getClass().getSimpleName() ));
+						" container: " + (eff == null ? "null" : eff.getEffects().size()) + " provider: " + effectSourceProvider.getType().getClass()
+						.getSimpleName()));
 			}
 		}
 		if (eff == null) {
@@ -175,14 +273,14 @@ public class EffectService {
 	 */
 	public void removeEffect(IEffect iEffect, IEffectConsumer consumer) {
 		IEffectContainer effect = consumer.getEffect(iEffect.getName());
-        if (PluginConfig.DEBUG.isDevelop()) {
-            IEffectConsumer consumer1 = iEffect.getConsumer();
-            if (consumer1 instanceof ActiveCharacter) {
-                ActiveCharacter chara = (ActiveCharacter) consumer1;
-                chara.getPlayer().sendMessage(Text.of("Adding effect: " + iEffect.getName() +
-                        " container: "  + (effect == null ? "null" : effect.getEffects().size())));
-            }
-        }
+		if (pluginConfig.DEBUG.isDevelop()) {
+			IEffectConsumer consumer1 = iEffect.getConsumer();
+			if (consumer1 instanceof ActiveCharacter) {
+				ActiveCharacter chara = (ActiveCharacter) consumer1;
+				chara.getPlayer().sendMessage(Text.of("Adding effect: " + iEffect.getName() +
+						" container: " + (effect == null ? "null" : effect.getEffects().size())));
+			}
+		}
 		if (effect != null) {
 			removeEffectContainer(effect, iEffect, consumer);
 			stopEffect(iEffect);
@@ -194,19 +292,22 @@ public class EffectService {
 	}
 
 	protected void removeEffectContainer(IEffectContainer container, IEffect iEffect, IEffectConsumer consumer) {
-		if (container == null)
+		if (container == null) {
 			return;
+		}
 		if (iEffect == container) {
 			if (!iEffect.getConsumer().isDetached()) {
 				iEffect.onRemove();
 			}
-			if (!consumer.isDetached())
+			if (!consumer.isDetached()) {
 				consumer.removeEffect(iEffect);
+			}
 		} else if (container.getEffects().contains(iEffect)) {
 			container.removeStack(iEffect);
 			if (container.getEffects().isEmpty()) {
-				if (!consumer.isDetached())
+				if (!consumer.isDetached()) {
 					consumer.removeEffect(container);
+				}
 			}
 		} else {
 
@@ -251,7 +352,7 @@ public class EffectService {
 	 */
 	public void removeGlobalEffect(String name) {
 		name = name.toLowerCase();
-        globalEffects.remove(name);
+		globalEffects.remove(name);
 	}
 
 	/**
@@ -275,7 +376,8 @@ public class EffectService {
 	 * @param consumer
 	 * @param value
 	 */
-	public void applyGlobalEffectAsEnchantment(IGlobalEffect effect, IEffectConsumer consumer, Map<String, String> value, IEffectSourceProvider effectSourceType) {
+	public void applyGlobalEffectAsEnchantment(IGlobalEffect effect, IEffectConsumer consumer, Map<String, String> value,
+			IEffectSourceProvider effectSourceType) {
 		IEffect construct = effect.construct(consumer, unlimited_duration, value);
 		addEffect(construct, consumer, effectSourceType);
 	}
@@ -286,16 +388,18 @@ public class EffectService {
 	 * @param map
 	 * @param consumer
 	 */
-	public void applyGlobalEffectsAsEnchantments(Map<IGlobalEffect, EffectParams> map, IEffectConsumer consumer, IEffectSourceProvider effectSourceType) {
+	public void applyGlobalEffectsAsEnchantments(Map<IGlobalEffect, EffectParams> map, IEffectConsumer consumer,
+			IEffectSourceProvider effectSourceType) {
 		map.forEach((e, l) ->
 				applyGlobalEffectAsEnchantment(e, consumer, l, effectSourceType)
 		);
 	}
 
 
-	public void removeGlobalEffectsAsEnchantments(Collection<IGlobalEffect> itemEffects, IActiveCharacter character, IEffectSourceProvider effectSourceProvider) {
-		if (PluginConfig.DEBUG.isDevelop()) {
-			character.sendMessage(itemEffects.size() + " added echn. effects to remove queue.");
+	public void removeGlobalEffectsAsEnchantments(Collection<IGlobalEffect> itemEffects, IActiveCharacter character,
+			IEffectSourceProvider effectSourceProvider) {
+		if (pluginConfig.DEBUG.isDevelop()) {
+			character.sendMessage(Text.of(itemEffects.size() + " added echn. effects to remove queue."));
 		}
 		itemEffects.forEach((e) -> {
 			removeEffect(e.getName(), character, effectSourceProvider);

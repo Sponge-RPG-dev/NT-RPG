@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,21 +13,20 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.players.properties;
 
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.PostProcess;
+import static cz.neumimto.rpg.Log.info;
+
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.configuration.PluginConfig;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.utils.Utils;
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,7 +38,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.text.Collator;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.function.Supplier;
 
 /**
@@ -57,9 +62,6 @@ public class PropertyService {
 		return t;
 	};
 
-	@Inject
-	private Logger logger;
-
 	private Map<String, Integer> idMap = new HashMap<>();
 	private Map<Integer, String> nameMap = new HashMap<>();
 
@@ -69,8 +71,7 @@ public class PropertyService {
 	private float[] maxValues;
 
 	public void registerProperty(String name, int id) {
-		if (PluginConfig.DEBUG.isDevelop())
-			logger.info("Found property " + name + "; assigned id: " + id);
+		info("Found property " + name + "; assigned id: " + id, pluginConfig.DEBUG);
 		idMap.put(name, id);
 		nameMap.put(id, name);
 	}
@@ -107,13 +108,11 @@ public class PropertyService {
 		return attributes;
 	}
 
-	@PostProcess(priority = 2000)
-	public void dump() {
+	public void init() {
 		Path path = Paths.get(NtRpgPlugin.workingDir + File.separator + "properties_dump.info");
 		StringBuilder s = new StringBuilder();
 		List<String> l = new ArrayList<>(idMap.keySet());
-		if (PluginConfig.DEBUG.isDevelop())
-			logger.info(" - found " + l.size() + " Properties");
+		info(" - found " + l.size() + " Properties", pluginConfig.DEBUG);
 		l.sort(Collator.getInstance());
 		for (String s1 : l) {
 			s.append(s1).append(Utils.LineSeparator);
@@ -170,8 +169,9 @@ public class PropertyService {
 
 
 	public void setupDefaultProperties(IActiveCharacter character) {
-		if (character.isStub())
+		if (character.isStub()) {
 			return;
+		}
 		float[] arr = character.getCharacterProperties();
 		Map<Integer, Float> defaults = getDefaults();
 		for (int i = 0; i < arr.length; i++) {
@@ -207,15 +207,15 @@ public class PropertyService {
 
 	public float getDefault(Integer key) {
 		Float f = defaults.get(key);
-		if (f == null)
+		if (f == null) {
 			return 0;
+		}
 		return f;
 	}
 
 	public float getMaxPropertyValue(int index) {
 		return maxValues[index];
 	}
-
 
 
 }

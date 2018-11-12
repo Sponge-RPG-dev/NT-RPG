@@ -11,6 +11,7 @@ import cz.neumimto.rpg.scripting.JsBinding;
  */
 @JsBinding(JsBinding.Type.CLASS)
 public class DamageDodgedEvent extends CancellableEvent {
+
 	private final IEntity source;
 	private final IEntity target;
 	private final IEffectContainer<Float, DodgeEffect> effect;

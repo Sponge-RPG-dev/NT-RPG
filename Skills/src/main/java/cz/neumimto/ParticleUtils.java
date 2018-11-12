@@ -18,6 +18,10 @@ public class ParticleUtils {
 
 	private static Game game;
 
+	static {
+		registry = Sponge.getGame().getRegistry();
+		game = Sponge.getGame();
+	}
 
 	public static void drawCircle(Location<World> center, double radius, ParticleType type) {
 		drawCircle(center.getExtent(), center.getX(), center.getY(), center.getZ(), radius,
@@ -38,10 +42,5 @@ public class ParticleUtils {
 
 	private static void drawParticle(World w, int z, int blockY, int k, ParticleEffect effect) {
 		w.spawnParticles(effect, new Vector3d(k, blockY, z));
-	}
-
-	static {
-		registry = Sponge.getGame().getRegistry();
-		game = Sponge.getGame();
 	}
 }

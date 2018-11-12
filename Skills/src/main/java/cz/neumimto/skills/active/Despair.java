@@ -11,15 +11,21 @@ import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.parents.ActiveSkill;
+import cz.neumimto.rpg.skills.tree.SkillType;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.utils.Utils;
-import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleOptions;
 import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.util.Color;
 
 import java.util.Set;
@@ -27,7 +33,7 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 15.7.2017.
  */
-@ResourceLoader.Skill
+@ResourceLoader.Skill("ntrpg:despair")
 public class Despair extends ActiveSkill {
 
 	@Inject
@@ -36,8 +42,8 @@ public class Despair extends ActiveSkill {
 	@Inject
 	private EffectService effectService;
 
-	public Despair() {
-		setName("Despair");
+	public void init() {
+		super.init();
 		setDamageType(DamageTypes.MAGIC);
 		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DURATION, 1000L, 500);
@@ -47,15 +53,15 @@ public class Despair extends ActiveSkill {
 		addSkillType(SkillType.AOE);
 		addSkillType(SkillType.ESCAPE);
 		addSkillType(SkillType.STEALTH);
-		setIcon(BlockTypes.END_PORTAL.getItem().get());
+		setIcon(ItemTypes.COAL.getType());
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
-		int k = getIntNodeValue(info, SkillNodes.RADIUS);
+	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillContext) {
+		int k = skillContext.getIntNodeValue(SkillNodes.RADIUS);
 		Set<Entity> nearbyEntities = Utils.getNearbyEntities(character.getEntity().getLocation(), k);
-		double damage = getDoubleNodeValue(info, SkillNodes.DAMAGE);
-		long duration = getLongNodeValue(info, SkillNodes.DURATION);
+		double damage = skillContext.getDoubleNodeValue(SkillNodes.DAMAGE);
+		long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
 
 		for (Entity nearbyEntity : nearbyEntities) {
 			if (Utils.isLivingEntity(nearbyEntity)) {
@@ -87,6 +93,6 @@ public class Despair extends ActiveSkill {
 			character.getEntity().getLocation().getExtent().spawnParticles(build, location.getPosition().add(vec));
 		});
 
-		return SkillResult.OK;
+		skillContext.next(character, info, SkillResult.OK);
 	}
 }

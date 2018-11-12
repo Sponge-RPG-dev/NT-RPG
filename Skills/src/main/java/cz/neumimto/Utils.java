@@ -26,8 +26,7 @@ public class Utils {
 
 	public static ItemStack createTeleportationScroll(Location<World> location) {
 		ItemStack of = ItemStack.of(ItemTypes.PAPER, 1);
-		of.offer(Keys.DISPLAY_NAME, Text.builder(SkillLocalization.TELEPORTATION_SCROLL)
-				.color(teleportationScrollColor).build());
+		of.offer(Keys.DISPLAY_NAME, SkillLocalization.TELEPORTATION_SCROLL);
 		List<Text> lore = new ArrayList<>();
 		String name = location.getExtent().getName();
 		lore.add(Text.builder(name).color(TextColors.DARK_GRAY).style(TextStyles.BOLD).build());
@@ -52,7 +51,7 @@ public class Utils {
 				return null;
 			}
 
-			if (!text1.toPlain().equalsIgnoreCase(SkillLocalization.TELEPORTATION_SCROLL)) {
+			if (!text1.equals(SkillLocalization.TELEPORTATION_SCROLL)) {
 				return null;
 			}
 

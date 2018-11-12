@@ -16,25 +16,26 @@ import javax.persistence.Converter;
  */
 @Converter(autoApply = true)
 public class EquipedSlot2Json implements AttributeConverter<List, String> {
-        
-    private static Gson gson;
 
-    static {
-        gson = new GsonBuilder().registerTypeAdapter(EquipedSlot.class, new EquipedSlotDeserializer()).create();
-    }
+	private static Gson gson;
 
-    @Override
-    public String convertToDatabaseColumn(List vector2is) {
-        return gson.toJson(vector2is);
-    }
+	static {
+		gson = new GsonBuilder().registerTypeAdapter(EquipedSlot.class, new EquipedSlotDeserializer()).create();
+	}
 
-    @Override
-    public List<EquipedSlot> convertToEntityAttribute(String s) {
-        if (s == null) {
-            return new ArrayList<>();
-        }
-        return gson.fromJson(s, new TypeToken<List<EquipedSlot>>(){}.getType());
-    }
+	@Override
+	public String convertToDatabaseColumn(List vector2is) {
+		return gson.toJson(vector2is);
+	}
+
+	@Override
+	public List<EquipedSlot> convertToEntityAttribute(String s) {
+		if (s == null) {
+			return new ArrayList<>();
+		}
+		return gson.fromJson(s, new TypeToken<List<EquipedSlot>>() {
+		}.getType());
+	}
 
 
 }

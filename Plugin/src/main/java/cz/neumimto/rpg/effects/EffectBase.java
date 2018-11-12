@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,13 +13,14 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.effects;
 
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.utils.UUIDs;
 import org.spongepowered.api.effect.potion.PotionEffect;
 
@@ -30,8 +31,11 @@ import java.util.UUID;
 /**
  * Created by NeumimTo.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class EffectBase<Value> implements IEffect<Value> {
+
 	protected Set<EffectType> effectTypes = new HashSet<>();
+	protected long tickCount;
 	private boolean stackable = false;
 	private String name;
 	private int level;
@@ -41,7 +45,6 @@ public class EffectBase<Value> implements IEffect<Value> {
 	private long period = -1;
 	private long lastTickTime;
 	private long expireTime;
-	protected long tickCount;
 	private long timeCreated;
 	private String applyMessage;
 	private String expireMessage;
@@ -118,14 +121,16 @@ public class EffectBase<Value> implements IEffect<Value> {
 	}
 
 	public void setConsumer(IEffectConsumer consumer) {
-		if (consumer != null)
+		if (consumer != null) {
 			this.consumer = consumer;
+		}
 	}
 
 	@Override
 	public Set<PotionEffect> getPotions() {
-		if (potions == null)
+		if (potions == null) {
 			potions = new HashSet<>();
+		}
 		return potions;
 	}
 
@@ -217,6 +222,10 @@ public class EffectBase<Value> implements IEffect<Value> {
 		return effectTypes;
 	}
 
+	public void setEffectTypes(Set<EffectType> effectTypes) {
+		this.effectTypes = effectTypes;
+	}
+
 	@Override
 	public IEffectSourceProvider getEffectSourceProvider() {
 		return effectSourceProvider;
@@ -229,9 +238,15 @@ public class EffectBase<Value> implements IEffect<Value> {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null) return false;
-		if (!(o instanceof EffectBase)) return false;
+		if (this == o) {
+			return true;
+		}
+		if (o == null) {
+			return false;
+		}
+		if (!(o instanceof EffectBase)) {
+			return false;
+		}
 
 		EffectBase that = (EffectBase) o;
 		return uuid != null ? uuid.equals(that.uuid) : that.uuid == null;
@@ -242,18 +257,14 @@ public class EffectBase<Value> implements IEffect<Value> {
 		return uuid.hashCode();
 	}
 
-	public void setEffectTypes(Set<EffectType> effectTypes) {
-		this.effectTypes = effectTypes;
+	@Override
+	public Value getValue() {
+		return value;
 	}
 
 	@Override
 	public void setValue(Value o) {
 		this.value = o;
-	}
-
-	@Override
-	public Value getValue() {
-		return value;
 	}
 
 	@Override
@@ -277,8 +288,9 @@ public class EffectBase<Value> implements IEffect<Value> {
 	}
 
 	protected void addEffectType(EffectType e) {
-		if (effectTypes == null)
+		if (effectTypes == null) {
 			effectTypes = new HashSet<>();
+		}
 		effectTypes.add(e);
 	}
 

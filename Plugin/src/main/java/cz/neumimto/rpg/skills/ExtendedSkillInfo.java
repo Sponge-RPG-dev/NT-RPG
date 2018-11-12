@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,22 +13,28 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg.skills;
+
+import cz.neumimto.rpg.skills.mods.ActiveSkillPreProcessorWrapper;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by NeumimTo on 26.7.2015.
  */
 public class ExtendedSkillInfo {
+
 	public static ExtendedSkillInfo Empty = new ExtendedSkillInfo() {{
 		setSkillData(SkillData.EMPTY);
 	}};
 	private ISkill skill;
 	private int level;
 	private SkillData skillData;
-
+	private Set<ActiveSkillPreProcessorWrapper> mods = new HashSet<>();
 	private int bonusLevel;
 
 	public ISkill getSkill() {
@@ -65,5 +71,9 @@ public class ExtendedSkillInfo {
 
 	public int getTotalLevel() {
 		return getBonusLevel() + getLevel();
+	}
+
+	public Set<ActiveSkillPreProcessorWrapper> getMods() {
+		return mods;
 	}
 }

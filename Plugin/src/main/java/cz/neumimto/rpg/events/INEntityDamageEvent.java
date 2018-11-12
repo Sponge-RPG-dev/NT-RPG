@@ -7,6 +7,7 @@ import org.spongepowered.api.event.cause.entity.damage.DamageType;
  * Created by NeumimTo on 8.7.2017.
  */
 public class INEntityDamageEvent extends CancellableEvent {
+
 	private IEntity source;
 	private IEntity target;
 	private double damage;
