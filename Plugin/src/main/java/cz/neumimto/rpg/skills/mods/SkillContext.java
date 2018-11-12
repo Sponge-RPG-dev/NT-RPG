@@ -58,6 +58,10 @@ public class SkillContext {
 		}
 	}
 
+	public void endWith(IActiveCharacter consumer, ExtendedSkillInfo info, SkillContext context) {
+		wrappers.get(wrappers.size()-1).doNext(consumer, info, context);
+	}
+
 	public void next(IActiveCharacter consumer, ExtendedSkillInfo info, SkillResult skillResult) {
 		next(consumer, info, result(skillResult));
 	}

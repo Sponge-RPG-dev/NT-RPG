@@ -2,6 +2,7 @@ package cz.neumimto.rpg.entities;
 
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.utils.FileUtils;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
@@ -22,6 +23,7 @@ import java.util.List;
  * Created by NeumimTo on 20.12.2015.
  */
 @Singleton
+@ResourceLoader.ListenerClass
 public class MobSettingsDao {
 
 	private RootMobConfig cache;

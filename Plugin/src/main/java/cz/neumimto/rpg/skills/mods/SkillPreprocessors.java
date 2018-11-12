@@ -47,7 +47,7 @@ public class SkillPreprocessors {
 
                     SkillResult result = skillResult.getResult();
                     if (result != SkillResult.OK) {
-                        skillResult.next(character, info, skillResult.result(result));
+                        skillResult.endWith(character, info, skillResult.result(result));
                         return;
                     } else {
                         float newCd = skillResult.getLongNodeValue(SkillNodes.COOLDOWN);
@@ -79,13 +79,11 @@ public class SkillPreprocessors {
 
                     return;
                 }
-       //        skillResult.continueExecution(false);
-       //        skillResult.next(character, info, skillResult.result(SkillResult.NO_MANA));
-       //        return;
+               skillResult.endWith(character, info, skillResult.result(SkillResult.NO_MANA));
+               return;
             }
-        //    skillResult.continueExecution(false);
-        //    skillResult.next(character, info, skillResult.result(SkillResult.NO_HP));
-        //    return;
+            skillResult.endWith(character, info, skillResult.result(SkillResult.NO_HP));
+            return;
         }
     };
 
