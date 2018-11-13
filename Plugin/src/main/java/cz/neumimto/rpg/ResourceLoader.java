@@ -235,6 +235,9 @@ public class ResourceLoader {
 	public Object loadClass(Class<?> clazz, ClassLoader classLoader) throws IllegalAccessException, InstantiationException {
 		info(" - Checking if theres something to load in a class " + clazz.getName(), pluginConfig.DEBUG);
 		//Properties
+		if (clazz == IGlobalEffect.class) {
+			return null;
+		}
 		Object container = null;
 		if (clazz.isInterface() && clazz.getAnnotations().length == 0) {
 			return null;
