@@ -90,6 +90,7 @@ public class FileUtils {
 			if (file.exists()) {
 				file.delete();
 			}
+			file.createNewFile();
 			ObjectMapper.BoundInstance configMapper = ObjectMapper.forObject(data);
 			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder()
 					.setRenderOptions(ConfigRenderOptions.defaults().setComments(true))

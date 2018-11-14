@@ -151,8 +151,6 @@ public class InventoryService {
 
 	private PlayerInvHandler playerInvHandler;
 
-	private Set<String> reservedItemNames = new HashSet<>();
-
 	private Map<String, ItemGroup> itemGroups = new HashMap<>();
 	private Map<Class<?>, ManagedInventory> managedInventories = new HashMap<>();
 
@@ -230,8 +228,6 @@ public class InventoryService {
 
 		try {
 			Config c = ConfigFactory.parseFile(path.toFile());
-			reservedItemNames.addAll(c.getStringList("ReservedItemNames"));
-
 			List<String> itemMetaSubtypes = c.getStringList("ItemMetaSubtypes");
 
 			//will break in api 8
@@ -551,14 +547,6 @@ public class InventoryService {
 			}
 		}
 		return map;
-	}
-
-	public void addReservedItemname(String k) {
-		reservedItemNames.add(k.toLowerCase());
-	}
-
-	public Set<String> getReservedItemNames() {
-		return reservedItemNames;
 	}
 
 	public int getItemLevel(ItemStack itemStack) {

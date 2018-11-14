@@ -532,13 +532,13 @@ public class NtRpgPlugin {
 	}
 
 	private void reloadMainPluigonConfig() {
-		File settings = Paths.get(config.toFile().toPath().toString(), "Settings.conf").toFile();
-		if (!settings.exists()) {
-			FileUtils.generateConfigFile(new PluginConfig(), settings);
+		File properties = new File(NtRpgPlugin.workingDir, "Settings.conf");
+		if (!properties.exists()) {
+			FileUtils.generateConfigFile(new PluginConfig(), properties);
 		}
 		try {
 			ObjectMapper<PluginConfig> mapper = ObjectMapper.forClass(PluginConfig.class);
-			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(settings.toPath()).build();
+			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(properties.toPath()).build();
 			pluginConfig = mapper.bind(new PluginConfig()).populate(hcl.load());
 		} catch (ObjectMappingException | IOException e) {
 			e.printStackTrace();
