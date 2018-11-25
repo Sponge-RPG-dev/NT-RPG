@@ -18,9 +18,8 @@
 
 package cz.neumimto.rpg.utils;
 
-import com.typesafe.config.ConfigRenderOptions;
 import cz.neumimto.rpg.NtRpgPlugin;
-import ninja.leaping.configurate.SimpleConfigurationNode;
+import ninja.leaping.configurate.commented.SimpleCommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
 
@@ -93,11 +92,11 @@ public class FileUtils {
 			file.createNewFile();
 			ObjectMapper.BoundInstance configMapper = ObjectMapper.forObject(data);
 			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder()
-					.setRenderOptions(ConfigRenderOptions.defaults().setComments(true))
 					.setPath(file.toPath())
 					.build();
-			SimpleConfigurationNode scn = SimpleConfigurationNode.root();
+			SimpleCommentedConfigurationNode scn = SimpleCommentedConfigurationNode.root();
 			configMapper.serialize(scn);
+
 			hcl.save(scn);
 		} catch (Exception e) {
 			throw new RuntimeException("Could not create file " + file, e);
