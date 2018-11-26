@@ -458,7 +458,15 @@ public class NtRpgPlugin {
 			for (String migration : migrations) {
 				migration = migration.replaceAll("%s", dms.getDatabaseProductName().toLowerCase());
 				Optional<Asset> sql = Sponge.getAssetManager().getAsset(this, migration);
-				dms.addMigration(sql.get().readString(Charset.forName("UTF-8")));
+				if (sql.isPresent()) {
+					dms.addMigration(sql.get().readString(Charset.forName("UTF-8")));
+				} else {
+					Log.warn("You are using a database which is not officialy supported, nor tested. " +
+							"While the plugin will most likely keep working all DDL changes have to be done manually, If you want to have a simpler life  please consider switching to either mysql or postgres. " +
+							"Or in the best case submit a pr containing Database schema migrations.");
+					break;
+				}
+
 			}
 		}
 	}
