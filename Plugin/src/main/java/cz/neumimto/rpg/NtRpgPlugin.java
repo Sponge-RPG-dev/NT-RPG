@@ -466,7 +466,6 @@ public class NtRpgPlugin {
 							"Or in the best case submit a pr containing Database schema migrations.");
 					break;
 				}
-
 			}
 		}
 	}
