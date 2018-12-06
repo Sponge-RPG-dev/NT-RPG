@@ -121,7 +121,7 @@ import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.parents.IActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
 import cz.neumimto.rpg.utils.FileUtils;
-import cz.neumimto.rpg.utils.Placeholders;
+import cz.neumimto.rpg.bridges.Placeholders;
 import cz.neumimto.rpg.utils.SkillTreeActionResult;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;

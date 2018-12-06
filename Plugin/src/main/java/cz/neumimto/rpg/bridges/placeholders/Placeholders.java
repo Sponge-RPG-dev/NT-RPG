@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.utils;
+package cz.neumimto.rpg.bridges.placeholders;
 
 import static cz.neumimto.rpg.Log.error;
 

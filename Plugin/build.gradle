@@ -19,6 +19,8 @@ dependencies {
     compileOnly 'org.spongepowered:spongeapi:' + project.spongeApiVersion
 
     implementation 'com.github.Sponge-RPG-dev:NTCore:' + project.NTCoreVersion
+    
+    compileOnly 'com.github.OnapleRPG:Itemizer:8277fafd0a'
     compileOnly 'me.lucko.luckperms:luckperms-api:4.2'
     compileOnly 'com.github.rojo8399:PlaceholderAPI:4.5.1'
     annotationProcessor project(':Generator')
@@ -27,7 +29,8 @@ dependencies {
     testCompile 'junit:junit:4.8.2'
     testCompile 'org.powermock:powermock-module-junit4:1.4.9'
     testCompile 'org.powermock:powermock-api-mockito:1.4.9'
-
+    
+    
     jar {
         manifest {
             attributes(
