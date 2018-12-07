@@ -1,29 +1,31 @@
 package cz.neumimto.rpg.inventory.data.manipulators;
 
+import cz.neumimto.rpg.bridges.itemizer.ItemizerBean;
+import cz.neumimto.rpg.effects.EffectDataBean;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.DataManipulatorBuilder;
+import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableListData;
 import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableMappedData;
+import org.spongepowered.api.data.manipulator.mutable.common.AbstractListData;
 import org.spongepowered.api.data.manipulator.mutable.common.AbstractMappedData;
 import org.spongepowered.api.data.merge.MergeFunction;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 12.1.2018.
  * /nadmin enchant add bash {"damage":"10","chance":"1%"}
  */
-public class EffectsData extends AbstractMappedData<String, EffectParams, EffectsData, EffectsData.Immutable> {
+@ItemizerBean(keyId = "effects")
+public class EffectsData extends AbstractListData<EffectDataBean, EffectsData, EffectsData.Immutable> {
 
-	public EffectsData(Map<String, EffectParams> value) {
+	public EffectsData(List<EffectDataBean> value) {
 		super(value, NKeys.ITEM_EFFECTS);
 	}
 
@@ -45,10 +47,9 @@ public class EffectsData extends AbstractMappedData<String, EffectParams, Effect
 
 	public Optional<EffectsData> from(DataView view) {
 		if (view.contains(NKeys.ITEM_EFFECTS.getQuery())) {
-			Map<String, Map> stringMapMap = (Map<String, Map>) view.getMap(NKeys.ITEM_EFFECTS.getQuery()).get();
+			List<EffectDataBean> list = (List<EffectDataBean>) view.getList(NKeys.ITEM_EFFECTS.getQuery()).get();
 			Map<String, EffectParams> paramsMap = new HashMap<>();
-			stringMapMap.entrySet().stream().forEach(w -> paramsMap.put(w.getKey(), new EffectParams(w.getValue())));
-			setValue(paramsMap);
+			setValue(list);
 			return Optional.of(this);
 		} else {
 			return Optional.empty();
@@ -76,41 +77,10 @@ public class EffectsData extends AbstractMappedData<String, EffectParams, Effect
 				.set(NKeys.ITEM_EFFECTS.getQuery(), getValue());
 	}
 
-	@Override
-	public Optional<EffectParams> get(String key) {
-		return Optional.of(getValue().get(key));
-	}
-
-	@Override
-	public Set<String> getMapKeys() {
-		return getValue().keySet();
-	}
-
-	@Override
-	public EffectsData put(String key, EffectParams value) {
-		getValue().put(key, value);
-		return this;
-	}
-
-	@Override
-	public EffectsData putAll(Map<? extends String, ? extends EffectParams> map) {
-		getValue().putAll(map);
-		return this;
-	}
-
-	@Override
-	public EffectsData remove(String key) {
-		if (getValue().containsKey(key)) {
-			getValue().remove(key);
-		}
-		return this;
-	}
+	public static class Immutable extends AbstractImmutableListData<EffectDataBean, Immutable, EffectsData> {
 
 
-	public static class Immutable extends AbstractImmutableMappedData<String, EffectParams, Immutable, EffectsData> {
-
-
-		public Immutable(Map<String, EffectParams> value) {
+		public Immutable(List<EffectDataBean> value) {
 			super(value, NKeys.ITEM_EFFECTS);
 		}
 
@@ -121,7 +91,7 @@ public class EffectsData extends AbstractMappedData<String, EffectParams, Effect
 
 		@Override
 		public int getContentVersion() {
-			return 1;
+			return 2;
 		}
 
 		@Override
@@ -138,7 +108,7 @@ public class EffectsData extends AbstractMappedData<String, EffectParams, Effect
 
 		@Override
 		public EffectsData create() {
-			return new EffectsData(new HashMap<>());
+			return new EffectsData(new ArrayList<>());
 		}
 
 		@Override

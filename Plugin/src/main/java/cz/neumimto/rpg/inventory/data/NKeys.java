@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.inventory.data;
 
 import com.google.common.reflect.TypeToken;
+import cz.neumimto.rpg.effects.EffectDataBean;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.gui.SkillTreeControllsButton;
 import cz.neumimto.rpg.inventory.ItemDamage;
@@ -28,7 +29,7 @@ public class NKeys {
 	public static Key<MapValue<String, Integer>> ITEM_ATTRIBUTE_REQUIREMENTS = null;
 	public static Key<MapValue<String, Integer>> ITEM_ATTRIBUTE_BONUS = null;
 	public static Key<MapValue<String, Float>> ITEM_PROPERTY_BONUS = null;
-	public static Key<MapValue<String, EffectParams>> ITEM_EFFECTS = null;
+	public static Key<ListValue<EffectDataBean>> ITEM_EFFECTS = null;
 
 	public static Key<ListValue<SocketType>> ITEM_SOCKET_CONTAINER = null;
 	public static Key<ListValue<Text>> ITEM_SOCKET_CONTAINER_CONTENT = null;
@@ -145,7 +146,7 @@ public class NKeys {
 				.build();
 
 		ITEM_EFFECTS = Key.builder()
-				.type(new TypeToken<MapValue<String, EffectParams>>() {
+				.type(new TypeToken<ListValue<EffectDataBean>>() {
 				})
 				.id("nt-rpg:item_effects")
 				.name("Item Effects")
