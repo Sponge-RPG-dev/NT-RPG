@@ -62,6 +62,7 @@ import com.flowpowered.math.TrigMath;
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.GlobalScope;
+import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
@@ -181,6 +182,7 @@ public class ItemStackUtils {
 
 	public static double readGenericDamageNbt(DataContainer dataContainer) {
 		Optional<Map<?,?>> datamap = (Optional<Map<?, ?>>) dataContainer.getMap(DataQuery.of("UnsafeData"));
+		Log.error("ItemStackUtils.readGenericDamageNbt not yet implemented");
 		return 0;
 	}
 
