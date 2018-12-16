@@ -67,6 +67,8 @@ import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.inventory.items.ItemMetaTypes;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.DataContainer;
+import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.item.EnchantmentData;
 import org.spongepowered.api.entity.Entity;
@@ -76,10 +78,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 
@@ -178,6 +177,11 @@ public class ItemStackUtils {
 		item.offer(Keys.PICKUP_DELAY, 50);
 		p.getLocation().getExtent().spawnEntity(item);
 
+	}
+
+	public static double readGenericDamageNbt(DataContainer dataContainer) {
+		Optional<Map<?,?>> datamap = (Optional<Map<?, ?>>) dataContainer.getMap(DataQuery.of("UnsafeData"));
+		return 0;
 	}
 
 }

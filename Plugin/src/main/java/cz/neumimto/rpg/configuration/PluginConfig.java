@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.configuration;
 
+import cz.neumimto.rpg.damage.ItemDamageProcessor;
 import cz.neumimto.rpg.inventory.ItemLoreSections;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
@@ -227,4 +228,9 @@ public class PluginConfig {
 
 	@Setting
 	public String LOCALE = "en";
+
+	@Setting(comment = "A damage preprocessor which handles how is weapon damage calculated. Vanilla mc allows you to modify item damage by modifying generic.value nbt." +
+			" CD = (Class Damage, calculated depending on WEAPON_MERGE_STRATEGY config node)" +
+			"Possible Values: OVERRIDE = item nbt overrides CD; IGNORE = item nbt value will be ignored; SUM = nbt + CD; MAX = choses highest value either CD or nbt")
+	public ItemDamageProcessor ITEM_DAMAGE_PROCESSOR = ItemDamageProcessor.IGNORE;
 }

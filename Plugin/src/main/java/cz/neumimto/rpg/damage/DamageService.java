@@ -23,6 +23,8 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.IEntity;
+import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.InventoryService;
@@ -40,6 +42,7 @@ import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 
@@ -81,24 +84,12 @@ public class DamageService {
 			TextColors.GRAY
 	};
 
-	public double getCharacterItemDamage(IActiveCharacter character, RPGItemType type) {
+	public double getCharacterItemDamage(IActiveCharacter character, RPGItemType type, ItemStackSnapshot itemStack) {
 		if (character.isStub() || type == null) {
 			return 1;
 		}
-		double base = character.getBaseWeaponDamage(type);
-
-		for (Integer i : type.getWeaponClass().getProperties()) {
-			base += characterService.getCharacterProperty(character, i);
-		}
-
-		if (!type.getWeaponClass().getPropertiesMults().isEmpty()) {
-			double totalMult = 0;
-			for (Integer integer : type.getWeaponClass().getPropertiesMults()) {
-				totalMult += characterService.getCharacterProperty(character, integer);
-			}
-			base *= totalMult;
-		}
-		return base;
+		ItemDamageProcessor idm = NtRpgPlugin.pluginConfig.ITEM_DAMAGE_PROCESSOR;
+		return idm.process(character, type, itemStack);
 	}
 
 	public double getCharacterProjectileDamage(IActiveCharacter character, EntityType type) {
@@ -131,12 +122,12 @@ public class DamageService {
 		if (mainHand == null) {
 			character.setWeaponDamage(0);
 		} else {
-			recalculateCharacterWeaponDamage(character, mainHand.getRpgItemType());
+			recalculateCharacterWeaponDamage(character, mainHand.getRpgItemType(), mainHand.getItemStack());
 		}
 	}
 
-	public void recalculateCharacterWeaponDamage(IActiveCharacter character, RPGItemType type) {
-		double damage = getCharacterItemDamage(character, type);
+	public void recalculateCharacterWeaponDamage(IActiveCharacter character, RPGItemType type, ItemStackSnapshot itemStack) {
+		double damage = getCharacterItemDamage(character, type, itemStack);
 		// damage += character.getMainHand().getDamage() + character.getOffHand().getDamage();
 		character.setWeaponDamage(damage);
 	}
