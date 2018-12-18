@@ -1,11 +1,18 @@
 package cz.neumimto.rpg.effects;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class EffectDataBean {
     private String effect;
-    private Map<String, EffectParams> params = new HashMap<>();
+    private EffectParams params = new EffectParams();
+
+    public EffectDataBean(String effect, EffectParams params) {
+        this.effect = effect;
+        this.params = params;
+    }
+
+    public EffectDataBean() {
+    }
 
     public String getEffect() {
         return effect;
@@ -15,11 +22,11 @@ public class EffectDataBean {
         this.effect = effect;
     }
 
-    public Map<String, EffectParams> getParams() {
+    public EffectParams getParams() {
         return params;
     }
 
-    public void setParams(Map<String, EffectParams> params) {
+    public void setParams(EffectParams params) {
         this.params = params;
     }
 }

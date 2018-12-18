@@ -36,10 +36,7 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.Localizations;
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
-import cz.neumimto.rpg.effects.EffectParams;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.IEffectSource;
-import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.ItemLoreBuilderService;
 import cz.neumimto.rpg.inventory.data.NKeys;
@@ -78,6 +75,7 @@ import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandType;
+import org.spongepowered.api.data.value.mutable.ListValue;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
@@ -531,7 +529,7 @@ public class InventoryService {
 
 
 	public Map<IGlobalEffect, EffectParams> getItemEffects(ItemStack is) {
-		Optional<Map<String, EffectParams>> q = is.get(NKeys.ITEM_EFFECTS);
+		Optional<List<EffectDataBean>> q = is.get(NKeys.ITEM_EFFECTS);
 		if (q.isPresent()) {
 			return getItemEffects(q.get());
 		}
@@ -549,6 +547,17 @@ public class InventoryService {
 		return map;
 	}
 
+	private Map<IGlobalEffect, EffectParams> getItemEffects(List<EffectDataBean> params) {
+		Map<IGlobalEffect, EffectParams> map = new HashMap<>();
+
+		for (EffectDataBean param : params) {
+			IGlobalEffect globalEffect = effectService.getGlobalEffect(param.getEffect());
+			map.put(globalEffect, param.getParams());
+		}
+
+		return map;
+	}
+
 	public int getItemLevel(ItemStack itemStack) {
 		Optional<Integer> integer = itemStack.get(NKeys.ITEM_LEVEL);
 		return integer.orElse(0);
@@ -556,10 +565,10 @@ public class InventoryService {
 
 	public ItemStack addEffectsToItemStack(ItemStack is, String effectName, EffectParams effectParams) {
 		EffectsData effectsData = is.getOrCreate(EffectsData.class).get();
-		Optional<Map<String, EffectParams>> q = effectsData.get(NKeys.ITEM_EFFECTS);
-		Map<String, EffectParams> w = q.orElse(new HashMap<>());
-		w.put(effectName, effectParams);
-		effectsData.set(NKeys.ITEM_EFFECTS, w);
+		Optional<List<EffectDataBean>> q = effectsData.get(NKeys.ITEM_EFFECTS);
+		List<EffectDataBean> effectDataBeans = q.orElse(new ArrayList<>());
+		effectDataBeans.add(new EffectDataBean(effectName, effectParams));
+		effectsData.set(NKeys.ITEM_EFFECTS, effectDataBeans);
 		is.offer(effectsData);
 		return is;
 	}

@@ -418,7 +418,7 @@ public class VanillaMessaging implements IPlayerMessage {
 				rows.get(1).add(type);
 			} else if (ItemStackUtils.isLeggings(type.getItemType())) {
 				rows.get(2).add(type);
-			} else if (ItemStackUtils.isBoots(type.getItemType())) {
+			} else if (ItemStackUtils. isBoots(type.getItemType())) {
 				rows.get(3).add(type);
 			} else {
 				rows.get(4).add(type);

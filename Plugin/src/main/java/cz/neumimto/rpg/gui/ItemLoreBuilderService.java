@@ -7,6 +7,8 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.Localizations;
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+
+import cz.neumimto.rpg.effects.EffectDataBean;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.inventory.ItemLoreSections;
 import cz.neumimto.rpg.inventory.LoreSectionDelimiter;
@@ -272,27 +274,8 @@ public class ItemLoreBuilderService {
 			});
 		}
 
-		public void itemEffectsToTextList(Map<String, EffectParams> a) {
-			for (Map.Entry<String, EffectParams> entry : a.entrySet()) {
-				if (entry.getValue() == null) {
-					t.add(Text.builder(entry.getKey()).color(effectName).append(Text.NEW_LINE).build());
-				} else if (entry.getValue().size() == 1
-						&& entry.getKey()
-						.equalsIgnoreCase(entry.getValue().entrySet().stream().findFirst().get().getKey())) {
-					t.add(Text.builder(entry.getKey()).color(effectName)
-							.append(Text.builder(": ").color(doubleColon).build())
-							.append(Text.builder(entry.getValue().get(entry.getKey())).color(value).build())
-							.build());
-				} else {
-					t.add(Text.builder(entry.getKey()).color(effectName).build());
-					for (Map.Entry<String, String> q : entry.getValue().entrySet()) {
-						t.add(Text.builder("  - " + q.getKey()).color(effectSettings)
-								.append(Text.builder(": ").color(doubleColon).build())
-								.append(Text.builder(q.getValue()).color(value).build())
-								.build());
-					}
-				}
-			}
+		public void itemEffectsToTextList(List<EffectDataBean> a) {
+			//todo
 		}
 
 
