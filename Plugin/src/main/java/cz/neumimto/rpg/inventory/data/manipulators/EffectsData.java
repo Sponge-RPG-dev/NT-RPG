@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.inventory.data.manipulators;
 
-import cz.neumimto.rpg.bridges.itemizer.ItemizerBean;
+import cz.neumimto.rpg.bridges.itemizer.ItemizerFactoryMethod;
 import cz.neumimto.rpg.effects.EffectDataBean;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.inventory.data.NKeys;
@@ -9,9 +9,7 @@ import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.DataManipulatorBuilder;
 import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableListData;
-import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableMappedData;
 import org.spongepowered.api.data.manipulator.mutable.common.AbstractListData;
-import org.spongepowered.api.data.manipulator.mutable.common.AbstractMappedData;
 import org.spongepowered.api.data.merge.MergeFunction;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.api.data.persistence.InvalidDataException;
@@ -22,9 +20,10 @@ import java.util.*;
  * Created by NeumimTo on 12.1.2018.
  * /nadmin enchant add bash {"damage":"10","chance":"1%"}
  */
-@ItemizerBean(keyId = "effects")
+
 public class EffectsData extends AbstractListData<EffectDataBean, EffectsData, EffectsData.Immutable> {
 
+	@ItemizerFactoryMethod(keyId = "effects", keyStaticPath = "cz.neumimto.rpg.inventory.data.NKeys.ITEM_EFFECTS")
 	public EffectsData(List<EffectDataBean> value) {
 		super(value, NKeys.ITEM_EFFECTS);
 	}

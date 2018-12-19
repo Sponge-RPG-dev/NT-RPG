@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.bridges.itemizer;
 
+import com.google.common.reflect.TypeToken;
 import com.onaple.itemizer.data.beans.IItemBeanConfiguration;
 import com.onaple.itemizer.events.ItemizerPreLoadEvent;
 import com.onaple.itemizer.service.IItemBeanFactory;
@@ -19,6 +20,7 @@ public class Itemizer {
         Optional<IItemService> provide = Sponge.getServiceManager().provide(IItemService.class);
         IItemService iItemService = provide.get();
         iItemService.addThirdpartyConfig(new EffectBeanFactory());
+
     }
 
 }

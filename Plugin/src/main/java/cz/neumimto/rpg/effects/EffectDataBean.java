@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.effects;
 
-import java.util.Map;
-
 public class EffectDataBean {
     private String effect;
     private EffectParams params = new EffectParams();
