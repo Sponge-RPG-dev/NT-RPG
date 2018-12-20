@@ -31,6 +31,12 @@ public class ItemizerAnnotationProcessor extends AbstractProcessor {
 
                     "" +
                     "\n\npublic class %KeyId%BeanFactory implements IItemBeanFactory {\n" +
+                    "\n" +
+                    "static {\n" +
+                    "\n" +
+                    "\ncz.neumimto.rpg.bridges.itemizer.Itemizer.itemBeanFactories.add(%KeyId%BeanFactory.class);" +
+                    "\n}" +
+                    "\n" +
                     "    @Override\n" +
                     "    public String getKeyId() {\n" +
                     "        return \"%KeyId%\";\n" +
@@ -134,14 +140,14 @@ public class ItemizerAnnotationProcessor extends AbstractProcessor {
                     for (Map.Entry<String, String> a : mappings.entrySet()) {
                         file = file.replaceAll(a.getKey(), a.getValue());
                     }
-
+                    PackageElement pkg = processingEnv.getElementUtils().getPackageOf(element);
                     JavaFileObject javaFileObject = null;
 
                     try {
-                        javaFileObject = filerUtils.createSourceFile(mappings.get("%KeyId%")+"BeanFactory");
+                        javaFileObject = filerUtils.createSourceFile(mappings.get("%KeyId%")+"BeanFactory", pkg);
                         try (BufferedWriter writer = new BufferedWriter(javaFileObject.openWriter())) {
                             if (elementUtils.getPackageOf(element).getQualifiedName().length() > 0) {
-                                writer.write("package cz.neumimto.rpg.bridges.itemizer;");
+                                writer.write("package "+pkg+";");
                                 writer.newLine();
                             }
                             writer.write(file);
