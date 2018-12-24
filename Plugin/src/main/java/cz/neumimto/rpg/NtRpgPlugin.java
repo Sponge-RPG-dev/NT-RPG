@@ -95,7 +95,6 @@ import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
-import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.AttributeRegistry;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.scripting.JSLoader;
@@ -474,7 +473,6 @@ public class NtRpgPlugin {
 			Sponge.getEventManager().registerListeners(this, ioc.build(DebugListener.class));
 		}
 		registerCommands();
-		IoC.get().build(PropertyService.class).loadMaximalServerPropertyValues();
 		IoC.get().build(LocalizationService.class).registerClass(Localizations.class);
 		IoC.get().build(LocalizationService.class)
 				.loadResourceBundle("assets.nt-rpg.localizations.localization", Locale.forLanguageTag(pluginConfig.LOCALE), null);

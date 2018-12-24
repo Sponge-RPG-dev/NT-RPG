@@ -47,6 +47,7 @@ public class Init {
 		inventoryService.init();
 		skillService.load();
 		propertyService.init();
+		propertyService.loadMaximalServerPropertyValues();
 		jsLoader.initEngine();
 
 		groupService.registerPlaceholders();
