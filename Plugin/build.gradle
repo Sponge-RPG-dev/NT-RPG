@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'cz.neumimto.rpg'
-version = '1.0.12-RC-5'
+version = '1.0.12-RC-6'
 
 blossom {
     String str = "src/main/java/cz/neumimto/rpg/NtRpgPlugin.java";

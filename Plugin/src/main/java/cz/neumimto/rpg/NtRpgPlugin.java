@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.inject.Inject;
 import cz.neumimto.configuration.ConfigMapper;
+import cz.neumimto.core.PluginCore;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizationService;
@@ -82,7 +83,9 @@ import cz.neumimto.rpg.inventory.sockets.SocketType;
 import cz.neumimto.rpg.inventory.sockets.SocketTypeRegistry;
 import cz.neumimto.rpg.inventory.sockets.SocketTypes;
 import cz.neumimto.rpg.listeners.DebugListener;
+import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
+import cz.neumimto.rpg.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.CharacterService;
@@ -198,6 +201,10 @@ public class NtRpgPlugin {
 
 	@Listener
 	public void preinit(GamePreInitializationEvent e) {
+		PluginCore.MANAGED_JPA_TYPES.add(CharacterBase.class);
+		PluginCore.MANAGED_JPA_TYPES.add(BaseCharacterAttribute.class);
+		PluginCore.MANAGED_JPA_TYPES.add(CharacterSkill.class);
+		PluginCore.MANAGED_JPA_TYPES.add(CharacterClass.class);
 		Sponge.getEventManager().registerListeners(this, new PersistenceHandler());
 		new NKeys();
 		DataRegistration.<InventoryCommandItemMenuData, InventoryCommandItemMenuData.Immutable>builder()
