@@ -1,7 +1,8 @@
 package cz.neumimto.rpg.effects.common.def;
 
-import cz.neumimto.rpg.NtRpgPlugin;
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
@@ -82,7 +83,9 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 				exec = true;
 			}
 		}
-		k = System.currentTimeMillis() + 2000L;
+		if (k <= + System.currentTimeMillis() + 2000L) {
+			k = System.currentTimeMillis() + 2000L;
+		}
 		if (!exec) {
 			Gui.displayCurrentClicks(character, getCurrent());
 		}
@@ -95,7 +98,7 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 
 	@Override
 	public void onTick() {
-		if (combination != null && getLastTickTime() + getPeriod() >= k) {
+		if (getLastTickTime() + getPeriod() >= k) {
 			cancel(false);
 		}
 	}
