@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.inventory.data.manipulators;
 
-import cz.neumimto.rpg.bridges.itemizer.ItemizerFactoryMethod;
 import cz.neumimto.rpg.effects.EffectDataBean;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.inventory.data.NKeys;
@@ -23,7 +22,6 @@ import java.util.*;
 
 public class EffectsData extends AbstractListData<EffectDataBean, EffectsData, EffectsData.Immutable> {
 
-	@ItemizerFactoryMethod(keyId = "effects", keyStaticPath = "cz.neumimto.rpg.inventory.data.NKeys.ITEM_EFFECTS")
 	public EffectsData(List<EffectDataBean> value) {
 		super(value, NKeys.ITEM_EFFECTS);
 	}

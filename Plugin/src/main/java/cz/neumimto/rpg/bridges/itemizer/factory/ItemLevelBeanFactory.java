@@ -1,7 +1,9 @@
-package cz.neumimto.rpg.bridges.itemizer;
+package cz.neumimto.rpg.bridges.itemizer.factory;
 
 import com.onaple.itemizer.data.beans.IItemBeanConfiguration;
 import com.onaple.itemizer.service.IItemBeanFactory;
+import cz.neumimto.rpg.inventory.data.NKeys;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.manipulator.DataManipulator;
@@ -9,32 +11,24 @@ import org.spongepowered.api.data.manipulator.DataManipulator;
 /**
  * Created by NeumimTo on 25.12.2018.
  */
+public class ItemLevelBeanFactory implements IItemBeanFactory {
 
-public class headerBeanFactory implements IItemBeanFactory {
-
-    static {
-
-
-        cz.neumimto.rpg.bridges.itemizer.Itemizer.itemBeanFactories.add(headerBeanFactory.class);
-    }
     @Override
     public String getKeyId() {
-        return "header";
+        return "ItemLevel";
     }
 
     @Override
-    public IItemBeanConfiguration build(final ConfigurationNode node) {
+    public IItemBeanConfiguration build(ConfigurationNode node) {
         return new IItemBeanConfiguration() {
             @Override
             public Key getKey() {
-                return cz.neumimto.rpg.inventory.data.NKeys.ITEM_META_HEADER;
+                return NKeys.ITEM_LEVEL;
             }
 
             @Override
             public DataManipulator<?, ?> constructDataManipulator() {
-                org.spongepowered.api.text.Text o = cz.neumimto.core.localization.TextHelper.parse(node.getString());
-
-                return new cz.neumimto.rpg.inventory.data.manipulators.ItemMetaHeader(o);
+                return new ItemLevelData(node.getInt());
             }
         };
     }
