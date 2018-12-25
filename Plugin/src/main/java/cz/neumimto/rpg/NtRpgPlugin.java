@@ -29,6 +29,7 @@ import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizationService;
 import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.bridges.itemizer.Itemizer;
 import cz.neumimto.rpg.bridges.placeholders.Placeholders;
 import cz.neumimto.rpg.commands.AnyPlayerGroupCommandElement;
 import cz.neumimto.rpg.commands.CharacterAttributeCommandElement;
@@ -207,7 +208,8 @@ public class NtRpgPlugin {
 		PluginCore.MANAGED_JPA_TYPES.add(CharacterClass.class);
 		Sponge.getEventManager().registerListeners(this, new PersistenceHandler());
 		new NKeys();
-		DataRegistration.<InventoryCommandItemMenuData, InventoryCommandItemMenuData.Immutable>builder()
+        Sponge.getPluginManager().getPlugin("itemizer").ifPresent(a-> Itemizer.initItemizerIntegration());
+        DataRegistration.<InventoryCommandItemMenuData, InventoryCommandItemMenuData.Immutable>builder()
 				.manipulatorId("custom_inventory_command")
 				.dataName("Custom Inventory Command")
 				.dataClass(InventoryCommandItemMenuData.class)
