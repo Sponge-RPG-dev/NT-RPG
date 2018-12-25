@@ -1,15 +1,31 @@
 package cz.neumimto.rpg;
 
-import javax.annotation.processing.*;
-import javax.lang.model.SourceVersion;
-import javax.lang.model.element.*;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Elements;
-import javax.tools.JavaFileObject;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Filer;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.PackageElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.util.Elements;
+import javax.tools.JavaFileObject;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes({"cz.neumimto.rpg.bridges.itemizer.ItemizerFactoryMethod"})
@@ -66,6 +82,7 @@ public class ItemizerAnnotationProcessor extends AbstractProcessor {
                 "} catch (ObjectMappingException e) {\n" +
                 "        throw new RuntimeException(e);\n" +
                 "    }";
+        private String text = "org.spongepowered.api.text.Text o = cz.neumimto.core.localization.TextHelper.parse(node.getString());";
         private String set = "java.util.Set<%model%> o = new java.util.HashSet(node.getList(TypeToken.of(%model%.class)));";
 
 
@@ -126,6 +143,8 @@ public class ItemizerAnnotationProcessor extends AbstractProcessor {
 
                             } else if (s1.equalsIgnoreCase(Map.class.getCanonicalName())) {
 
+                            } else if (s1.equalsIgnoreCase("org.spongepowered.api.text.Text")) {
+                                mappings.put("%mappingFunc%", text);
                             }
                         } else {
 

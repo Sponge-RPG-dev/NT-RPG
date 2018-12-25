@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.inventory.data.manipulators;
 
+import cz.neumimto.rpg.bridges.itemizer.ItemizerFactoryMethod;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
@@ -26,6 +27,7 @@ public class ItemMetaHeader extends AbstractSingleData<Text, ItemMetaHeader, Ite
 		this(Text.EMPTY);
 	}
 
+	@ItemizerFactoryMethod(keyId = "header", keyStaticPath = "cz.neumimto.rpg.inventory.data.NKeys.ITEM_META_HEADER")
 	public ItemMetaHeader(Text rarity) {
 		super(rarity, NKeys.ITEM_META_HEADER);
 		registerGettersAndSetters();

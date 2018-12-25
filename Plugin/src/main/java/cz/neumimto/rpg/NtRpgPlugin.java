@@ -29,7 +29,6 @@ import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizationService;
 import cz.neumimto.core.localization.TextHelper;
-import cz.neumimto.core.migrations.DbMigrationService;
 import cz.neumimto.rpg.bridges.placeholders.Placeholders;
 import cz.neumimto.rpg.commands.AnyPlayerGroupCommandElement;
 import cz.neumimto.rpg.commands.CharacterAttributeCommandElement;

@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.inventory.data.manipulators;
 
 import cz.neumimto.rpg.Pair;
+import cz.neumimto.rpg.bridges.itemizer.ItemizerFactoryMethod;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
@@ -20,7 +21,7 @@ import java.util.Optional;
  */
 public class ItemLevelData extends AbstractIntData<ItemLevelData, ItemLevelData.Immutable> {
 
-
+	@ItemizerFactoryMethod(keyId = "itemlevel", keyStaticPath = "cz.neumimto.rpg.inventory.data.NKeys.ITEM_LEVEL")
 	public ItemLevelData(int value) {
 		super(value, NKeys.ITEM_LEVEL);
 	}
