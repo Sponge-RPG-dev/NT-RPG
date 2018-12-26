@@ -1,8 +1,16 @@
 package cz.neumimto.rpg.effects;
 
+import ninja.leaping.configurate.objectmapping.Setting;
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+
+@ConfigSerializable
 public class EffectDataBean {
+
+    @Setting
     private String effect;
-    private EffectParams params = new EffectParams();
+
+    @Setting
+    private EffectParams params;
 
     public EffectDataBean(String effect, EffectParams params) {
         this.effect = effect;
@@ -10,6 +18,7 @@ public class EffectDataBean {
     }
 
     public EffectDataBean() {
+        params = new EffectParams();
     }
 
     public String getEffect() {

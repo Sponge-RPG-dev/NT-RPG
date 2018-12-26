@@ -178,7 +178,8 @@ import javax.annotation.Resource;
  */
 @Plugin(id = "nt-rpg", version = "@VERSION@", name = "NT-Rpg", dependencies = {
 		@Dependency(id = "nt-core", version = "1.13-SNAPSHOT-6"),
-		@Dependency(id = "placeholderapi", version = "4.5", optional = true)
+		@Dependency(id = "placeholderapi", version = "4.5", optional = true),
+		@Dependency(id = "itemizer", version = "1", optional = true)
 })
 @Resource
 public class NtRpgPlugin {
