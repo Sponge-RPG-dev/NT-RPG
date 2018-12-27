@@ -7,6 +7,8 @@ import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
 import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.commented.SimpleCommentedConfigurationNode;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.manipulator.DataManipulator;
 
@@ -42,16 +44,31 @@ public class EffectBeanFactory implements IItemBeanFactory {
             LinkedHashMap params = (LinkedHashMap) m.get("params");
             data.add(new EffectDataBean(effectName, new EffectParams(params)));
         }
-        return new IItemBeanConfiguration() {
-            @Override
-            public Key getKey() {
-                return NKeys.ITEM_EFFECTS;
-            }
+        return new EffectItemBeanConfiguration(data);
+    }
 
-            @Override
-            public DataManipulator<?, ?> constructDataManipulator() {
-                return new EffectsData(data);
-            }
-        };
+    private static class EffectItemBeanConfiguration implements IItemBeanConfiguration {
+
+        private List<EffectDataBean> data;
+
+        public EffectItemBeanConfiguration(List<EffectDataBean> data) {
+            this.data = data;
+        }
+
+        @Override
+        public Key getKey() {
+            return NKeys.ITEM_EFFECTS;
+        }
+
+        @Override
+        public DataManipulator<?, ?> constructDataManipulator() {
+            return new EffectsData(data);
+        }
+
+        public CommentedConfigurationNode toNode() {
+            SimpleCommentedConfigurationNode root = SimpleCommentedConfigurationNode.root();
+            root.setValue(data);
+            return root;
+        }
     }
 }
