@@ -18,11 +18,12 @@
 
 package cz.neumimto.rpg.effects;
 
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -46,6 +47,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -71,6 +73,10 @@ public class EffectService {
 	private Set<IEffect> pendingRemovals = new HashSet<>();
 	private Map<String, IGlobalEffect> globalEffects = new HashMap<>();
 
+	private UUID timings;
+	private long timingsStart;
+	private long timingsTicks;
+	private static final long timingsTicksMax = 100;
 	/**
 	 * calls effect.onApply and registers if effect requires
 	 *
@@ -181,6 +187,9 @@ public class EffectService {
 
 
 	public void schedule() {
+		if (timings != null) {
+			timingsTicks++;
+		}
 		for (IEffect pendingRemoval : pendingRemovals) {
 			removeEffectContainer(pendingRemoval.getEffectContainer(), pendingRemoval, pendingRemoval.getConsumer());
 			effectSet.remove(pendingRemoval);
@@ -207,6 +216,9 @@ public class EffectService {
 
 		effectSet.addAll(pendingAdditions);
 		pendingAdditions.clear();
+		if (timings != null) {
+
+		}
 	}
 
 	/**
