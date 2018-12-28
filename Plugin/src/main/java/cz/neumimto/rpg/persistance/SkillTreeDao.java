@@ -157,16 +157,27 @@ public class SkillTreeDao {
 			Optional<ISkill> byId = skillService.getById(id);
 			if (!byId.isPresent()) {
 
-
+				ISkill skill = null;
 				try {
 					String type = c.getString("Type");
 					SkillConfigLoader type1 = Sponge.getRegistry().getType(SkillConfigLoader.class, type)
 							.orElseThrow(() -> new IllegalArgumentException("Unknown skill type " + type + " in a skiltree " + skillTree.getId()));
 
-					type1.build(id);
+					skill = type1.build(id);
 
 				} catch (ConfigException.Missing ignored) {
 				}
+
+				try {
+					List<String> description = c.getStringList("Description");
+					skill.setDescription(description.stream().map(TextHelper::parse).collect(Collectors.toList()));
+				} catch (ConfigException.Missing ignored) {}
+
+				try {
+					List<String> lore = c.getStringList("Lore");
+					skill.setDescription(lore.stream().map(TextHelper::parse).collect(Collectors.toList()));
+				} catch (ConfigException.Missing ignored) {}
+
 			} else {
 			}
 		}
@@ -208,7 +219,6 @@ public class SkillTreeDao {
 			}
 
 
-
 			try {
 				Config reagent = c.getConfig("InvokeCost");
 				SkillCost itemCost = new SkillCost();
@@ -233,21 +243,23 @@ public class SkillTreeDao {
 						e.printStackTrace();
 					}
 				}
-                list = reagent.getObjectList("Insufficient");
-                for (ConfigObject configObject : list) {
-					Optional<SkillPreProcessorFactory> id = Sponge.getRegistry().getType(SkillPreProcessorFactory.class, configObject.get("Id").unwrapped().toString());
+				list = reagent.getObjectList("Insufficient");
+				for (ConfigObject configObject : list) {
+					Optional<SkillPreProcessorFactory> id =
+							Sponge.getRegistry().getType(SkillPreProcessorFactory.class, configObject.get("Id").unwrapped().toString());
 					if (id.isPresent()) {
 						SkillPreProcessorFactory skillPreProcessorFactory = id.get();
 						ActiveSkillPreProcessorWrapper parse = skillPreProcessorFactory.parse(configObject);
 						itemCost.getInsufficientProcessors().add(parse);
 					} else {
-						warn("- Unknown processor type " + configObject.get("Id").render() + ", use one of: " + Sponge.getRegistry().getAllOf(SkillPreProcessorFactory.class)
+						warn("- Unknown processor type " + configObject.get("Id").render() + ", use one of: " + Sponge.getRegistry()
+								.getAllOf(SkillPreProcessorFactory.class)
 								.stream().map(SkillPreProcessorFactory::getId).collect(Collectors.joining(", ")));
 					}
-                }
-            } catch (Exception e) {
+				}
+			} catch (Exception e) {
 
-            }
+			}
 
 			try {
 				for (String conflicts : c.getStringList("Conflicts")) {
@@ -355,7 +367,9 @@ public class SkillTreeDao {
 		SkillData info = tree.getSkills().get(lowercased);
 		if (info == null) {
 			ISkill skill = skillService.getById(lowercased)
-					.orElseThrow(() -> new IllegalStateException("Could not find a skill " + lowercased + " referenced in the skilltree " + tree.getId()));
+					.orElseThrow(
+							() -> new IllegalStateException("Could not find a skill " + lowercased + " referenced in the skilltree " + tree.getId
+									()));
 
 			info = skill.constructSkillData();
 			info.setSkill(skill);
