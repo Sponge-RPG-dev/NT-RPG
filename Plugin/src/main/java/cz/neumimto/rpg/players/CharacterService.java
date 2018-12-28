@@ -750,7 +750,7 @@ public class CharacterService {
 		}
 
 		if (cc.getSkillPoints() < 1) {
-			return Localizations.NO_SKILLPOINTS.toText(arg("skill", skill.getLocalizableName()));
+			return Localizations.NO_SKILLPOINTS.toText(arg("skill", skill.getName()));
 		}
 		ExtendedSkillInfo extendedSkillInfo = character.getSkillInfo(skill);
 
@@ -774,7 +774,7 @@ public class CharacterService {
 
 		if (extendedSkillInfo.getLevel() * extendedSkillInfo.getSkillData().getLevelGap() > character.getLevel()) {
 			Map<String, Object> map = new HashMap<>();
-			map.put("skill", skill.getLocalizableName());
+			map.put("skill", skill.getName());
 			map.put("level", extendedSkillInfo.getLevel() * extendedSkillInfo.getSkillData().getLevelGap());
 			return Localizations.INSUFFICIENT_LEVEL_GAP.toText(arg(map));
 		}
@@ -821,11 +821,11 @@ public class CharacterService {
 		//todo fetch from db
 		avalaibleSkillpoints = clazz.getSkillPoints();
 		if (avalaibleSkillpoints < 1) {
-			return Localizations.NO_SKILLPOINTS.toText(arg("skill", skill.getLocalizableName()));
+			return Localizations.NO_SKILLPOINTS.toText(arg("skill", skill.getName()));
 		}
 		SkillData info = skillTree.getSkillById(skill.getId());
 		if (info == null) {
-			return Localizations.SKILL_NOT_IN_A_TREE.toText(arg("skill", skill.getLocalizableName()));
+			return Localizations.SKILL_NOT_IN_A_TREE.toText(arg("skill", skill.getName()));
 		}
 		if (character.getLevel() < info.getMinPlayerLevel()) {
 			Map<String, Object> map = new HashMap<>();
@@ -866,7 +866,7 @@ public class CharacterService {
 		}
 
 		if (character.hasSkill(skill.getId())) {
-			return Localizations.SKILL_ALREADY_LEARNED.toText(arg("skill", skill.getLocalizableName()));
+			return Localizations.SKILL_ALREADY_LEARNED.toText(arg("skill", skill.getName()));
 		}
 		SkillLearnEvent event = new SkillLearnEvent(character, skill);
 		game.getEventManager().post(event);
@@ -879,7 +879,7 @@ public class CharacterService {
 		ExtendedSkillInfo einfo = new ExtendedSkillInfo();
 		einfo.setLevel(1);
 		einfo.setSkill(skill);
-		einfo.setSkillData(skillTree.getSkills().get(skill.getId()));
+		einfo.setSkillData(skillTree.getSkills().get(skill.getId().toLowerCase()));
 		character.addSkill(skill.getId(), einfo);
 
 		CharacterSkill skill1 = new CharacterSkill();
@@ -891,7 +891,7 @@ public class CharacterService {
 
 		putInSaveQueue(character.getCharacterBase());
 		skill.skillLearn(character);
-		return Localizations.SKILL_LEARNED.toText(arg("skill", skill.getLocalizableName()));
+		return Localizations.SKILL_LEARNED.toText(arg("skill", skill.getName()));
 	}
 
 	/**
