@@ -27,6 +27,8 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 
 	private long k = 0;
 
+	private boolean notifyIfCancelled;
+
 	private IActiveCharacter character;
 
 	@Generate.Constructor
@@ -74,6 +76,7 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 	}
 
 	public void update() {
+		notifyIfCancelled = true;
 		boolean exec = false;
 		if (combination != null) {
 			ExtendedSkillInfo skill = NtRpgPlugin.GlobalScope.skillService.invokeSkillByCombo(getCurrent(), character);
@@ -93,7 +96,10 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 
 	public void cancel(boolean byShift) {
 		combination = null;
-		Gui.resetCurrentClicks(this, byShift);
+		if (notifyIfCancelled) {
+			Gui.resetCurrentClicks(this, byShift);
+		}
+		notifyIfCancelled = false;
 	}
 
 	@Override
