@@ -281,7 +281,7 @@ public class GuiHelper {
 	public static Inventory createSkillDetailInventoryView(IActiveCharacter character, SkillTree skillTree, SkillData skillData) {
 		Inventory build = Inventory.builder()
 				.of(InventoryArchetypes.DOUBLE_CHEST)
-				.property(InventoryTitle.of(skillData.getSkill().getLocalizableName().toBuilder().color(TextColors.GREEN).style(TextStyles.BOLD)
+				.property(InventoryTitle.of(skillData.getSkill().getLocalizableName().toBuilder().color(TextColors.DARK_GREEN).style(TextStyles.BOLD)
 						.build()))
 				.build(plugin);
 
