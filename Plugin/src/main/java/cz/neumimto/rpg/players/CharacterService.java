@@ -851,7 +851,7 @@ public class CharacterService {
 			p.value = new SkillTreeActionResult.Data(map);
 			return p;
 		}
-		SkillData info = skillTree.getSkills().get(skill.getId());
+		SkillData info = skillTree.getSkillById(skill.getId());
 		if (info == null) {
 			p.key = SkillTreeActionResult.SKILL_IS_NOT_IN_A_TREE;
 			Map<String, Object> map = new HashMap<>();
