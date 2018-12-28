@@ -122,7 +122,6 @@ import cz.neumimto.rpg.skills.parents.IActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
 import cz.neumimto.rpg.utils.FileUtils;
 import cz.neumimto.rpg.utils.Placeholders;
-import cz.neumimto.rpg.utils.SkillTreeActionResult;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -1167,10 +1166,9 @@ public class NtRpgPlugin {
 					args.<ISkill>getOne(Text.of("skill")).ifPresent(iSkill -> {
 						Player player = (Player) src;
 						IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
-						Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data
-								= GlobalScope.characterService
+						Text data= GlobalScope.characterService
 								.characterLearnskill(character, iSkill, character.getPrimaryClass().getConfigClass().getSkillTree());
-						player.sendMessage(data.value.bind(data.key.message));
+						player.sendMessage(data);
 					});
 					return CommandResult.empty();
 				})
@@ -1185,8 +1183,8 @@ public class NtRpgPlugin {
 					args.<ISkill>getOne("skill").ifPresent(iSkill -> {
 						Player player = (Player) src;
 						IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
-						Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data = GlobalScope.characterService.upgradeSkill(character, iSkill);
-						player.sendMessage(data.value.bind(data.key.message));
+						Text data = GlobalScope.characterService.upgradeSkill(character, iSkill);
+						player.sendMessage(data);
 					});
 					return CommandResult.success();
 				})

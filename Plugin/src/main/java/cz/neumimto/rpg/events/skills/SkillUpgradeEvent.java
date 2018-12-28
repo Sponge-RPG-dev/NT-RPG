@@ -22,6 +22,7 @@ import cz.neumimto.rpg.events.CancellableEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.ISkill;
+import org.spongepowered.api.text.Text;
 
 /**
  * Created by NeumimTo on 26.7.2015.
@@ -32,6 +33,7 @@ public class SkillUpgradeEvent extends CancellableEvent {
 	IActiveCharacter character;
 	ISkill skill;
 	int level;
+	private Text message;
 
 	public SkillUpgradeEvent(IActiveCharacter character, ISkill skill, int level) {
 		this.character = character;
@@ -61,5 +63,13 @@ public class SkillUpgradeEvent extends CancellableEvent {
 
 	public void setLevel(int level) {
 		this.level = level;
+	}
+
+	public Text getMessage() {
+		return message == null ? Text.EMPTY : message;
+	}
+
+	public void setMessage(Text message) {
+		this.message = message;
 	}
 }

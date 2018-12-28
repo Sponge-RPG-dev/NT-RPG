@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.listeners;
 
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.SkillTreeControllsButton;
 import cz.neumimto.rpg.inventory.data.NKeys;
@@ -11,11 +10,11 @@ import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.tree.SkillTree;
-import cz.neumimto.rpg.utils.SkillTreeActionResult;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
+import org.spongepowered.api.text.Text;
 
 import java.util.Iterator;
 
@@ -84,12 +83,11 @@ public class SkillTreeInventoryListener {
 							ISkill iSkill = skillService.getById(node).get();
 							SkillTree tree = character.getPrimaryClass().getConfigClass().getSkillTree();
 							if (character.getSkill(iSkill.getId()) == null) {
-								Pair<SkillTreeActionResult, SkillTreeActionResult.Data>
-										data = characterService.characterLearnskill(character, iSkill, tree);
-								player.sendMessage(data.value.bind(data.key.message));
+								Text data = characterService.characterLearnskill(character, iSkill, tree);
+								player.sendMessage(data);
 							} else {
-								Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data = characterService.upgradeSkill(character, iSkill);
-								player.sendMessage(data.value.bind(data.key.message));
+								Text data = characterService.upgradeSkill(character, iSkill);
+								player.sendMessage(data);
 							}
 							//redraw
 							Sponge.getScheduler().createTaskBuilder()
