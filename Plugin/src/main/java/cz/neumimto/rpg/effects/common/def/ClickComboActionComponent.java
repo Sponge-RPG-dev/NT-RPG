@@ -96,15 +96,13 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 
 	public void cancel(boolean byShift) {
 		combination = null;
-		if (notifyIfCancelled) {
-			Gui.resetCurrentClicks(this, byShift);
-		}
+		Gui.resetCurrentClicks(this, byShift);
 		notifyIfCancelled = false;
 	}
 
 	@Override
 	public void onTick() {
-		if (getLastTickTime() + getPeriod() >= k) {
+		if (notifyIfCancelled && getLastTickTime() + getPeriod() >= k) {
 			cancel(false);
 		}
 	}
