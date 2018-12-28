@@ -156,7 +156,7 @@ public class GroupDao {
 				try {
 					List<String> experienceSources = c.getStringList("ExperienceSources");
 					HashSet<ExperienceSource> objects = new HashSet<>();
-					experienceSources.forEach(a -> objects.add(Sponge.getRegistry().getType(ExperienceSource.class, a).orElseGet(() -> {
+					experienceSources.forEach(a -> objects.add(Sponge.getRegistry().getType(ExperienceSource.class, a.toLowerCase()).orElseGet(() -> {
 						info(" - Unknown experience source " + a);
 						return null;
 					})));
