@@ -20,6 +20,7 @@ package cz.neumimto.rpg;
 
 import static cz.neumimto.rpg.Log.error;
 import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.configuration.ConfigurationContainer;
@@ -34,7 +35,6 @@ import cz.neumimto.core.localization.ResourceBundle;
 import cz.neumimto.core.localization.ResourceBundles;
 import cz.neumimto.rpg.commands.CommandBase;
 import cz.neumimto.rpg.commands.CommandService;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
@@ -261,9 +261,11 @@ public class ResourceLoader {
 			ISkill skill = (ISkill) container;
 			Skill sk = clazz.getAnnotation(Skill.class);
 			if (sk.dynamicLocalizationNodes()) {
-				skill.setLocalizableName(localizationService.getText(sk.value() + ".name"));
-				skill.setDescription(localizationService.getTextList(sk.value() + ".description"));
-				skill.setLore(localizationService.getTextList(sk.value() + ".lore"));
+				String[] split = sk.value().split(":");
+				String key = split[0] + ".skills." + split[1];
+				skill.setLocalizableName(localizationService.getText(key + ".name"));
+				skill.setDescription(localizationService.getTextList(key + ".desc"));
+				skill.setLore(localizationService.getTextList(key + ".lore"));
 			}
 			if (skill.getLocalizableName().isEmpty()) {
 				String name = skill.getClass().getSimpleName();
