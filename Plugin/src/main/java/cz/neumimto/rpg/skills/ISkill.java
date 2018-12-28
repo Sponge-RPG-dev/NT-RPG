@@ -221,7 +221,7 @@ public interface ISkill extends IEffectSourceProvider, CatalogType, IRpgElement 
 
 		is.offer(Keys.ITEM_LORE, lore);
 
-		Text skillName = skillTree.getSkills().get(getId()).getSkillName();
+		Text skillName = skillTree.getSkills().get(getId().toLowerCase()).getSkillName();
 
 		TextColor textColor = character.hasSkill(this.getName()) ? TextColors.GREEN : TextColors.GRAY;
 
