@@ -630,7 +630,7 @@ public class CharacterService {
 
 		Map<String, Integer> skills = new HashMap<>();
 		Set<CharacterSkill> characterSkills = characterBase.getCharacterSkills();
-		characterSkills.forEach(characterSkill -> skills.put(characterSkill.getCatalogId(), characterSkill.getLevel()));
+		characterSkills.forEach(characterSkill -> skills.put(characterSkill.getCatalogId().toLowerCase(), characterSkill.getLevel()));
 		Map<String, Long> cooldowns = characterBase.getCharacterCooldowns();
 
 		long l = System.currentTimeMillis();
@@ -743,7 +743,7 @@ public class CharacterService {
 
 		for (ExtendedNClass aClass : classes) {
 			Map<String, SkillData> skills = aClass.getConfigClass().getSkillTree().getSkills();
-			if (skills.containsKey(skill.getId().toLowerCase())) {
+			if (skills.containsKey(skill.getId())) {
 				cc = character.getCharacterBase().getCharacterClass(aClass.getConfigClass());
 				break;
 			}
@@ -879,7 +879,7 @@ public class CharacterService {
 		ExtendedSkillInfo einfo = new ExtendedSkillInfo();
 		einfo.setLevel(1);
 		einfo.setSkill(skill);
-		einfo.setSkillData(skillTree.getSkills().get(skill.getId().toLowerCase()));
+		einfo.setSkillData(skillTree.getSkills().get(skill.getId()));
 		character.addSkill(skill.getId(), einfo);
 
 		CharacterSkill skill1 = new CharacterSkill();

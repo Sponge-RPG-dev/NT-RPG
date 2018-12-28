@@ -163,7 +163,7 @@ public class SkillTreeDao {
 					SkillConfigLoader type1 = Sponge.getRegistry().getType(SkillConfigLoader.class, type)
 							.orElseThrow(() -> new IllegalArgumentException("Unknown skill type " + type + " in a skiltree " + skillTree.getId()));
 
-					skill = type1.build(id);
+					skill = type1.build(id.toLowerCase());
 
 				} catch (ConfigException.Missing ignored) {
 				}

@@ -597,12 +597,12 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	@Override
 	public void addSkill(String id, ExtendedSkillInfo info) {
-		skills.put(id.toLowerCase(), info);
+		skills.put(id, info);
 	}
 
 	@Override
 	public ExtendedSkillInfo getSkill(String id) {
-		return skills.get(id.toLowerCase());
+		return skills.get(id);
 	}
 
 	@Override

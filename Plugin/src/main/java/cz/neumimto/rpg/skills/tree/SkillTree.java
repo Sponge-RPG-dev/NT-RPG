@@ -74,7 +74,7 @@ public class SkillTree {
 	}
 
 	public SkillData getSkillById(String id) {
-		return skills.get(id.toLowerCase());
+		return skills.get(id);
 	}
 
 	public short[][] getSkillTreeMap() {
