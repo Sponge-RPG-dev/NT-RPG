@@ -743,7 +743,7 @@ public class CharacterService {
 
 		for (ExtendedNClass aClass : classes) {
 			Map<String, SkillData> skills = aClass.getConfigClass().getSkillTree().getSkills();
-			if (skills.containsKey(skill.getId())) {
+			if (skills.containsKey(skill.getId().toLowerCase())) {
 				cc = character.getCharacterBase().getCharacterClass(aClass.getConfigClass());
 				break;
 			}
