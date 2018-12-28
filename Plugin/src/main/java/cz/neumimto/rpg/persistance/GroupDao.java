@@ -68,6 +68,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by NeumimTo on 10.7.2015.
@@ -157,7 +158,11 @@ public class GroupDao {
 					List<String> experienceSources = c.getStringList("ExperienceSources");
 					HashSet<ExperienceSource> objects = new HashSet<>();
 					experienceSources.forEach(a -> objects.add(Sponge.getRegistry().getType(ExperienceSource.class, a.toLowerCase()).orElseGet(() -> {
-						info(" - Unknown experience source " + a);
+						info(" - Unknown experience source " + a + ". Should be one of [" +
+								Sponge.getRegistry().getAllOf(ExperienceSource.class)
+										.stream()
+										.map(ExperienceSource::getId)
+										.collect(Collectors.joining(", ")) + "]");
 						return null;
 					})));
 					configClass.setExperienceSources(objects);
