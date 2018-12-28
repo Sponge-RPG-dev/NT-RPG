@@ -52,7 +52,7 @@ public class RPGItemWrapper {
 				if (item.getRpgItemType().getDisplayName() == null && from.getDisplayName() == null) {
 					return true;
 				}
-				if (item.getRpgItemType().getDisplayName().equalsIgnoreCase(from.getDisplayName())) {
+				if (from.getDisplayName() != null && from.getDisplayName().equals(item.getRpgItemType().getDisplayName())) {
 					return true;
 				}
 			}
