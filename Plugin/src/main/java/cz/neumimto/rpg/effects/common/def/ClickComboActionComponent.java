@@ -31,6 +31,12 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 
 	private IActiveCharacter character;
 
+	private long lastTimeUsed;
+
+	private byte length;
+
+	private static long MIN_DELAY = 125L;
+
 	@Generate.Constructor
 	public ClickComboActionComponent(IEffectConsumer t, long duration, Void literallyNothing) {
 		this(t);
@@ -47,31 +53,51 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 		if (!hasStarted()) {
 			combination = new StringBuilder();
 		}
+		if (lastTimeUsed > System.currentTimeMillis()) {
+			return;
+		}
 		combination.append('R');
+		length++;
 		update();
 	}
 
 	public void processLMB() {
+		if (lastTimeUsed > System.currentTimeMillis() || length >= pluginConfig.MAX_CLICK_COMBO_LENGTH) {
+			return;
+		}
 		combination.append('L');
+		length++;
 		update();
 	}
 
 	public void processShift() {
-		if (pluginConfig.SHIFT_CANCELS_COMBO) {
+		if (pluginConfig.SHIFT_CANCELS_COMBO || length < pluginConfig.MAX_CLICK_COMBO_LENGTH) {
 			cancel(true);
 		} else {
+			if (lastTimeUsed > System.currentTimeMillis()) {
+				return;
+			}
 			combination.append('S');
+			length++;
 		}
 		update();
 	}
 
 	public void processQ() {
+		if (lastTimeUsed > System.currentTimeMillis() || length < pluginConfig.MAX_CLICK_COMBO_LENGTH) {
+			return;
+		}
 		combination.append('Q');
+		length++;
 		update();
 	}
 
 	public void processE() {
+		if (lastTimeUsed > System.currentTimeMillis() || length < pluginConfig.MAX_CLICK_COMBO_LENGTH) {
+			return;
+		}
 		combination.append('E');
+		length++;
 		update();
 	}
 
@@ -86,8 +112,10 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 				exec = true;
 			}
 		}
-		if (k <= + System.currentTimeMillis() + 2000L) {
-			k = System.currentTimeMillis() + 2000L;
+		long delta = System.currentTimeMillis();
+		lastTimeUsed = delta + MIN_DELAY;
+		if (k <= + delta + 2000L) {
+			k = delta + 2000L;
 		}
 		if (!exec) {
 			Gui.displayCurrentClicks(character, getCurrent());
@@ -95,6 +123,7 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 	}
 
 	public void cancel(boolean byShift) {
+		length = 0;
 		combination = null;
 		Gui.resetCurrentClicks(this, byShift);
 		notifyIfCancelled = false;

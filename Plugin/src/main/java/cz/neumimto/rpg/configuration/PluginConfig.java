@@ -227,4 +227,7 @@ public class PluginConfig {
 
 	@Setting
 	public String LOCALE = "en";
+
+	@Setting
+	public byte MAX_CLICK_COMBO_LENGTH = new Byte("6");
 }
