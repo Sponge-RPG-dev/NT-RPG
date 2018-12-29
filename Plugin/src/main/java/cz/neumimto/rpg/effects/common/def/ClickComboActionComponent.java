@@ -53,7 +53,7 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 		if (!hasStarted()) {
 			combination = new StringBuilder();
 		}
-		if (lastTimeUsed > System.currentTimeMillis()) {
+		if (lastTimeUsed > System.currentTimeMillis() || length >= pluginConfig.MAX_CLICK_COMBO_LENGTH) {
 			return;
 		}
 		combination.append('R');
@@ -71,10 +71,10 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 	}
 
 	public void processShift() {
-		if (pluginConfig.SHIFT_CANCELS_COMBO || length < pluginConfig.MAX_CLICK_COMBO_LENGTH) {
+		if (pluginConfig.SHIFT_CANCELS_COMBO) {
 			cancel(true);
 		} else {
-			if (lastTimeUsed > System.currentTimeMillis()) {
+			if (lastTimeUsed > System.currentTimeMillis() || length >= pluginConfig.MAX_CLICK_COMBO_LENGTH) {
 				return;
 			}
 			combination.append('S');
@@ -84,7 +84,7 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 	}
 
 	public void processQ() {
-		if (lastTimeUsed > System.currentTimeMillis() || length < pluginConfig.MAX_CLICK_COMBO_LENGTH) {
+		if (lastTimeUsed > System.currentTimeMillis() || length >= pluginConfig.MAX_CLICK_COMBO_LENGTH) {
 			return;
 		}
 		combination.append('Q');
@@ -93,7 +93,7 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 	}
 
 	public void processE() {
-		if (lastTimeUsed > System.currentTimeMillis() || length < pluginConfig.MAX_CLICK_COMBO_LENGTH) {
+		if (lastTimeUsed > System.currentTimeMillis() || length >= pluginConfig.MAX_CLICK_COMBO_LENGTH) {
 			return;
 		}
 		combination.append('E');
