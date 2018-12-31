@@ -2,6 +2,7 @@ package cz.neumimto;
 
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.core.localization.Arg;
 import cz.neumimto.effects.EnderPearlEffect;
 import cz.neumimto.effects.ManaDrainEffect;
 import cz.neumimto.effects.ResoluteTechniqueEffect;
@@ -29,6 +30,7 @@ import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.effects.common.positive.Invisibility;
 import cz.neumimto.rpg.entities.EntityService;
@@ -299,15 +301,20 @@ public class SkillListener {
 						ListValue<org.spongepowered.api.effect.potion.PotionEffect> effects = o.effects();
 						if (effects.size() >= 1) {
 							org.spongepowered.api.effect.potion.PotionEffect potionEffect = effects.get(0);
-							PotionEffect effect = (PotionEffect) character.getEffect(PotionEffect.name);
-							PotionEffectModel value = effect.getValue();
-							if (value.cooldowns.get(potionEffect.getType()) == null) {
+							IEffectContainer<PotionEffectModel, PotionEffect> effect = character.getEffect(PotionEffect.name);
+							PotionEffectModel value = effect.getStackedValue();
+							Long aLong = value.cooldowns.get(potionEffect.getType());
+							if (aLong == null) {
+							//	player.sendMessage(SkillLocalization.CANNOT_DRIK_POTION_TYPE.toText(Arg.arg("potion", potionEffect.getType().getName())));
 								event.setCancelled(true);
 								return;
 							}
+							long l = System.currentTimeMillis();
 							Long next = value.nextUseTime.get(potionEffect.getType());
-							if (next > System.currentTimeMillis()) {
+							if (next != null && next < l) {
+						//		player.sendMessage(SkillLocalization.CANNOT_DRIK_POTION_TYPE_COOLDOWN.toText(Arg.arg("potion", potionEffect.getType().getName())));
 								event.setCancelled(true);
+								return;
 							}
 						}
 					}
@@ -321,20 +328,20 @@ public class SkillListener {
 
 	@Listener(order = Order.LATE)
 	public void onItemConsumerFinish(UseItemStackEvent.Finish event,
-			@Root(typeFilter = Player.class) Player player) {
+									 @Root(typeFilter = Player.class) Player player) {
 		ItemStackSnapshot itemStack = event.getItemStackInUse();
 		if (itemStack.getType() == ItemTypes.POTION
 				|| itemStack.getType() == ItemTypes.SPLASH_POTION
 				|| itemStack.getType() == ItemTypes.LINGERING_POTION) {
 			IActiveCharacter character = characterService.getCharacter(player);
 			if (character.hasEffect(PotionEffect.name)) {
-				PotionEffect effect = (PotionEffect) character.getEffect(PotionEffect.name);
-				PotionEffectModel value = effect.getValue();
 				Optional<PotionEffectData> potionEffectData = itemStack.createStack().get(PotionEffectData.class);
 				if (potionEffectData.isPresent()) {
 					PotionEffectData o = potionEffectData.get();
 					ListValue<org.spongepowered.api.effect.potion.PotionEffect> effects = o.effects();
-					if (effects.size() > 1) {
+					if (effects.size() > 0) {
+						IEffectContainer effect = character.getEffect(PotionEffect.name);
+						PotionEffectModel value = (PotionEffectModel) effect.getStackedValue();
 						value.nextUseTime.put(effects.get(0).getType(), value.cooldowns.get(effects.get(0).getType()) + System.currentTimeMillis());
 					}
 				}

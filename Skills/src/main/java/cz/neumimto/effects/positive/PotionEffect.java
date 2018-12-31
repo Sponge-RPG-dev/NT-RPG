@@ -7,6 +7,10 @@ import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.scripting.JsBinding;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by NeumimTo on 9.7.2017.
  */
@@ -21,7 +25,6 @@ public class PotionEffect extends EffectBase<PotionEffectModel> {
 		setValue(model);
 		setStackable(true, null);
 	}
-
 
 	@Override
 	public IEffectContainer<PotionEffectModel, PotionEffect> constructEffectContainer() {
