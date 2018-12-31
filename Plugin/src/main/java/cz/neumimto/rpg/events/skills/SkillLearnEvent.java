@@ -22,6 +22,7 @@ import cz.neumimto.rpg.events.CancellableEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.ISkill;
+import org.spongepowered.api.text.Text;
 
 /**
  * Created by NeumimTo on 26.7.2015.
@@ -31,6 +32,7 @@ public class SkillLearnEvent extends CancellableEvent {
 
 	IActiveCharacter character;
 	ISkill skill;
+	private Text message;
 
 	public SkillLearnEvent(IActiveCharacter character, ISkill skill) {
 		this.character = character;
@@ -43,5 +45,13 @@ public class SkillLearnEvent extends CancellableEvent {
 
 	public ISkill getSkill() {
 		return skill;
+	}
+
+	public Text getMessage() {
+		return message == null ? Text.EMPTY : message;
+	}
+
+	public void setMessage(Text message) {
+		this.message = message;
 	}
 }

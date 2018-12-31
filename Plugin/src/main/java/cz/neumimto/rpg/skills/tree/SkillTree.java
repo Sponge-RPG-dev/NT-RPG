@@ -73,6 +73,10 @@ public class SkillTree {
 		return null;
 	}
 
+	public SkillData getSkillById(String id) {
+		return skills.get(id);
+	}
+
 	public short[][] getSkillTreeMap() {
 		return skillTreeMap;
 	}

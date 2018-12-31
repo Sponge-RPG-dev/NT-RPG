@@ -21,26 +21,22 @@ package cz.neumimto.rpg.skills;
 import static cz.neumimto.rpg.Log.error;
 import static cz.neumimto.rpg.Log.info;
 import static cz.neumimto.rpg.Log.warn;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.ResourceLoader;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-import cz.neumimto.rpg.events.skills.SkillPostUsageEvent;
-import cz.neumimto.rpg.events.skills.SkillPrepareEvent;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.SkillTreeInterfaceModel;
 import cz.neumimto.rpg.persistance.SkillTreeDao;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.reloading.Reload;
 import cz.neumimto.rpg.reloading.ReloadService;
 import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.skills.configs.ScriptSkillModel;
-import cz.neumimto.rpg.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.mods.SkillExecutorCallback;
 import cz.neumimto.rpg.skills.mods.SkillPreprocessors;
@@ -55,7 +51,6 @@ import net.bytebuddy.description.annotation.AnnotationDescription;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.registry.AdditionalCatalogRegistryModule;
@@ -232,6 +227,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 			return;
 		}
 		extraCatalog.init();
+
 		skills.put(extraCatalog.getId().toLowerCase(), extraCatalog);
 		skillByNames.put(extraCatalog.getName(), extraCatalog);
 		skillByNames.put(extraCatalog.getLocalizableName().toPlain(), extraCatalog);
@@ -239,7 +235,6 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 
 	@Override
 	public Optional<ISkill> getById(String id) {
-		id = id.toLowerCase();
 		ISkill skill = skills.get(id);
 		if (skill == null) {
 			skill = getSkillByLocalizedName(id);

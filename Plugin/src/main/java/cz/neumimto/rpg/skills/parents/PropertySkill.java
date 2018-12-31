@@ -3,6 +3,7 @@ package cz.neumimto.rpg.skills.parents;
 import com.typesafe.config.Config;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.Console;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.gui.GuiHelper;
@@ -97,7 +98,7 @@ public class PropertySkill extends AbstractSkill {
 				Wrapper wrapper = new Wrapper(name, idByName, level, value);
 				data.properties.add(wrapper);
 			} catch (NullPointerException e) {
-				errors.log("Unknown property name %s in %s", name, context.getId());
+				errors.log(Console.RED + "Unknown property name %s in %s" + Console.RESET, name, context.getId());
 			}
 
 		}

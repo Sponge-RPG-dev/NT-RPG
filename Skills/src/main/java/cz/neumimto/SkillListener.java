@@ -126,7 +126,6 @@ public class SkillListener {
 			IEffectContainer container = character.getEffect(DamageToMana.name);
 			if (container != null) {
 				double percentage = (double) container.getStackedValue();
-
 			}
 		}
 	}

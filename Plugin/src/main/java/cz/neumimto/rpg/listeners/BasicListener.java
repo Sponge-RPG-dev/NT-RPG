@@ -302,7 +302,7 @@ public class BasicListener {
 			return;
 		}
 
-		double projectileDamage = 0;
+		double projectileDamage = event.getOriginalDamage();
 		if (shooter.getType() == IEntityType.CHARACTER) {
 			IActiveCharacter c = (IActiveCharacter) shooter;
 			projectileDamage = damageService.getCharacterProjectileDamage(c, projectile.getType());

@@ -18,6 +18,8 @@
 
 package cz.neumimto.rpg.skills.parents;
 
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.Console;
@@ -25,7 +27,6 @@ import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.Localizations;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
@@ -70,7 +71,7 @@ public abstract class AbstractSkill implements ISkill {
 	public AbstractSkill() {
 		ResourceLoader.Skill sk = this.getClass().getAnnotation(ResourceLoader.Skill.class);
 		if (sk != null) {
-			catalogId = sk.value();
+			catalogId = sk.value().toLowerCase();
 		}
 	}
 

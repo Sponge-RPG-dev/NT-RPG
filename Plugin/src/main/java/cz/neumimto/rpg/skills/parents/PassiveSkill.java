@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.skills.parents;
 
 import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -52,6 +53,7 @@ public abstract class PassiveSkill extends AbstractSkill {
 	}
 
 	private void update(IActiveCharacter IActiveCharacter) {
+		NtRpgPlugin.GlobalScope.inventorySerivce.initializeCharacterInventory(IActiveCharacter);
 		ExtendedSkillInfo skill = IActiveCharacter.getSkill(getId());
 		applyEffect(skill, IActiveCharacter);
 	}

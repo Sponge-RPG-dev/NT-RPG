@@ -24,13 +24,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.inject.Inject;
 import cz.neumimto.configuration.ConfigMapper;
-import cz.neumimto.core.FindDbSchemaMigrationsEvent;
-import cz.neumimto.core.FindPersistenceContextEvent;
+import cz.neumimto.core.PluginCore;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizationService;
 import cz.neumimto.core.localization.TextHelper;
-import cz.neumimto.core.migrations.DbMigrationService;
 import cz.neumimto.rpg.commands.AnyPlayerGroupCommandElement;
 import cz.neumimto.rpg.commands.CharacterAttributeCommandElement;
 import cz.neumimto.rpg.commands.GlobalEffectCommandElement;
@@ -100,7 +98,6 @@ import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
-import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.AttributeRegistry;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.scripting.JSLoader;
@@ -125,14 +122,12 @@ import cz.neumimto.rpg.skills.parents.IActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
 import cz.neumimto.rpg.utils.FileUtils;
 import cz.neumimto.rpg.utils.Placeholders;
-import cz.neumimto.rpg.utils.SkillTreeActionResult;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
@@ -161,11 +156,9 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -207,6 +200,11 @@ public class NtRpgPlugin {
 
 	@Listener
 	public void preinit(GamePreInitializationEvent e) {
+		PluginCore.MANAGED_JPA_TYPES.add(CharacterBase.class);
+		PluginCore.MANAGED_JPA_TYPES.add(BaseCharacterAttribute.class);
+		PluginCore.MANAGED_JPA_TYPES.add(CharacterSkill.class);
+		PluginCore.MANAGED_JPA_TYPES.add(CharacterClass.class);
+		Sponge.getEventManager().registerListeners(this, new PersistenceHandler());
 		new NKeys();
 		DataRegistration.<InventoryCommandItemMenuData, InventoryCommandItemMenuData.Immutable>builder()
 				.manipulatorId("custom_inventory_command")
@@ -384,16 +382,6 @@ public class NtRpgPlugin {
 	}
 
 	@Listener
-	public void registerEntities(FindPersistenceContextEvent event) {
-		if (event.validForContext("nt-rpg")) {
-			event.getClasses().add(CharacterBase.class);
-			event.getClasses().add(BaseCharacterAttribute.class);
-			event.getClasses().add(CharacterSkill.class);
-			event.getClasses().add(CharacterClass.class);
-		}
-	}
-
-	@Listener
 	public void postInit1(GameRegistryEvent.Register<PlayerInvHandler> event) {
 		event.register(new DefaultPlayerInvHandler());
 	}
@@ -448,32 +436,16 @@ public class NtRpgPlugin {
 	}
 
 	@Listener
-	public void onFindDbSchemaMigrationsEvent(FindDbSchemaMigrationsEvent event) throws IOException {
-		if (event.validForContext("nt-rpg")) {
-			DbMigrationService dms = IoC.get().build(DbMigrationService.class);
-			List<String> migrations = Arrays.asList(
-					"sql/%s/040918-init-db.sql"
-			);
-
-			for (String migration : migrations) {
-				migration = migration.replaceAll("%s", dms.getDatabaseProductName().toLowerCase());
-				Optional<Asset> sql = Sponge.getAssetManager().getAsset(this, migration);
-				if (sql.isPresent()) {
-					dms.addMigration(sql.get().readString(Charset.forName("UTF-8")));
-				} else {
-					logger.error("You are using a database which is not officialy supported, nor tested. " +
-							"While the plugin will most likely keep working all DDL changes have to be done manually, If you want to have a simpler life  please consider switching to either mysql or postgres. " +
-							"Or in the best case submit a pr containing Database schema migrations.");
-					break;
-				}
-			}
-		}
-	}
-
-	@Listener
 	public void onPluginLoad(GamePostInitializationEvent event) {
 		long start = System.nanoTime();
 		Log.logger = logger;
+		try {
+			workingDir = config.toString();
+			URL url = FileUtils.getPluginUrl();
+			pluginjar = new File(url.toURI());
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 		reloadMainPluigonConfig();
 		IoC ioc = IoC.get();
 		asyncExecutor = Sponge.getGame().getScheduler().createAsyncExecutor(NtRpgPlugin.this);
@@ -488,13 +460,6 @@ public class NtRpgPlugin {
 		}
 		ioc.registerDependency(this);
 		ioc.registerInterfaceImplementation(CauseStackManager.class, Sponge.getCauseStackManager());
-		try {
-			workingDir = config.toString();
-			URL url = FileUtils.getPluginUrl();
-			pluginjar = new File(url.toURI());
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
 
 		Path path = Paths.get(workingDir);
 		ConfigMapper.init("NtRpg", path);
@@ -514,7 +479,6 @@ public class NtRpgPlugin {
 			Sponge.getEventManager().registerListeners(this, ioc.build(DebugListener.class));
 		}
 		registerCommands();
-		IoC.get().build(PropertyService.class).loadMaximalServerPropertyValues();
 		IoC.get().build(LocalizationService.class).registerClass(Localizations.class);
 		IoC.get().build(LocalizationService.class)
 				.loadResourceBundle("assets.nt-rpg.localizations.localization", Locale.forLanguageTag(pluginConfig.LOCALE), null);
@@ -1202,10 +1166,9 @@ public class NtRpgPlugin {
 					args.<ISkill>getOne(Text.of("skill")).ifPresent(iSkill -> {
 						Player player = (Player) src;
 						IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
-						Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data
-								= GlobalScope.characterService
+						Text data= GlobalScope.characterService
 								.characterLearnskill(character, iSkill, character.getPrimaryClass().getConfigClass().getSkillTree());
-						player.sendMessage(data.value.bind(data.key.message));
+						player.sendMessage(data);
 					});
 					return CommandResult.empty();
 				})
@@ -1220,8 +1183,8 @@ public class NtRpgPlugin {
 					args.<ISkill>getOne("skill").ifPresent(iSkill -> {
 						Player player = (Player) src;
 						IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
-						Pair<SkillTreeActionResult, SkillTreeActionResult.Data> data = GlobalScope.characterService.upgradeSkill(character, iSkill);
-						player.sendMessage(data.value.bind(data.key.message));
+						Text data = GlobalScope.characterService.upgradeSkill(character, iSkill);
+						player.sendMessage(data);
 					});
 					return CommandResult.success();
 				})

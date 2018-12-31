@@ -304,7 +304,7 @@ public class VanillaMessaging implements IPlayerMessage {
 			Map<String, Object> map = new HashMap<>();
 			map.put("id", player.getPlayer().getUniqueId());
 			List<CharacterListModel> list = build.findList(CharacterListModel.class, query, map);
-			List<Text> content = new ArrayList<Text>();
+			List<Text> content = new ArrayList<>();
 			builder.linesPerPage(10);
 			builder.padding(Text.builder("=").color(TextColors.DARK_GRAY).build());
 			GroupService s = IoC.get().build(GroupService.class);
@@ -737,7 +737,7 @@ public class VanillaMessaging implements IPlayerMessage {
 	@Override
 	public void displaySkillDetailsInventoryMenu(IActiveCharacter character, SkillTree tree, String command) {
 
-		Inventory skillDetailInventoryView = GuiHelper.createSkillDetailInventoryView(character, tree, tree.getSkills().get(command));
+		Inventory skillDetailInventoryView = GuiHelper.createSkillDetailInventoryView(character, tree, tree.getSkillById(command));
 		character.getPlayer().openInventory(skillDetailInventoryView);
 	}
 

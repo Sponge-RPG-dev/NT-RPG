@@ -1,7 +1,8 @@
 package cz.neumimto.rpg.effects.common.def;
 
-import cz.neumimto.rpg.NtRpgPlugin;
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
@@ -26,7 +27,15 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 
 	private long k = 0;
 
+	private boolean notifyIfCancelled;
+
 	private IActiveCharacter character;
+
+	private long lastTimeUsed;
+
+	private byte length;
+
+	private static long MIN_DELAY = 125L;
 
 	@Generate.Constructor
 	public ClickComboActionComponent(IEffectConsumer t, long duration, Void literallyNothing) {
@@ -44,12 +53,20 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 		if (!hasStarted()) {
 			combination = new StringBuilder();
 		}
+		if (lastTimeUsed > System.currentTimeMillis() || length >= pluginConfig.MAX_CLICK_COMBO_LENGTH) {
+			return;
+		}
 		combination.append('R');
+		length++;
 		update();
 	}
 
 	public void processLMB() {
+		if (lastTimeUsed > System.currentTimeMillis() || length >= pluginConfig.MAX_CLICK_COMBO_LENGTH) {
+			return;
+		}
 		combination.append('L');
+		length++;
 		update();
 	}
 
@@ -57,22 +74,35 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 		if (pluginConfig.SHIFT_CANCELS_COMBO) {
 			cancel(true);
 		} else {
+			if (lastTimeUsed > System.currentTimeMillis() || length >= pluginConfig.MAX_CLICK_COMBO_LENGTH) {
+				return;
+			}
 			combination.append('S');
+			length++;
 		}
 		update();
 	}
 
 	public void processQ() {
+		if (lastTimeUsed > System.currentTimeMillis() || length >= pluginConfig.MAX_CLICK_COMBO_LENGTH) {
+			return;
+		}
 		combination.append('Q');
+		length++;
 		update();
 	}
 
 	public void processE() {
+		if (lastTimeUsed > System.currentTimeMillis() || length >= pluginConfig.MAX_CLICK_COMBO_LENGTH) {
+			return;
+		}
 		combination.append('E');
+		length++;
 		update();
 	}
 
 	public void update() {
+		notifyIfCancelled = true;
 		boolean exec = false;
 		if (combination != null) {
 			ExtendedSkillInfo skill = NtRpgPlugin.GlobalScope.skillService.invokeSkillByCombo(getCurrent(), character);
@@ -82,20 +112,26 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 				exec = true;
 			}
 		}
-		k = System.currentTimeMillis() + 2000L;
+		long delta = System.currentTimeMillis();
+		lastTimeUsed = delta + MIN_DELAY;
+		if (k <= + delta + 2000L) {
+			k = delta + 2000L;
+		}
 		if (!exec) {
 			Gui.displayCurrentClicks(character, getCurrent());
 		}
 	}
 
 	public void cancel(boolean byShift) {
+		length = 0;
 		combination = null;
 		Gui.resetCurrentClicks(this, byShift);
+		notifyIfCancelled = false;
 	}
 
 	@Override
 	public void onTick() {
-		if (combination != null && getLastTickTime() + getPeriod() >= k) {
+		if (notifyIfCancelled && getLastTickTime() + getPeriod() >= k) {
 			cancel(false);
 		}
 	}
