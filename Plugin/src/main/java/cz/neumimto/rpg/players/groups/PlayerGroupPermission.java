@@ -1,14 +1,21 @@
 package cz.neumimto.rpg.players.groups;
 
+import ninja.leaping.configurate.objectmapping.Setting;
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Created by ja on 22.7.2017.
  */
+@ConfigSerializable
 public class PlayerGroupPermission implements Comparable<PlayerGroupPermission> {
 
+	@Setting("Level")
 	private int level;
+
+	@Setting("Permissions")
 	private Set<String> permissions;
 
 	public int getLevel() {
