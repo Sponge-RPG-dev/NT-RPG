@@ -22,7 +22,6 @@ import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.skills.ISkill;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -33,7 +32,7 @@ public class Race extends PlayerGroup {
 
 	public static Race Default = new Race("RNone");
 	private List<ISkill> skills = new ArrayList<>();
-	private Set<ConfigClass> allowedClasses = new HashSet<>();
+
 
 	public Race(String name) {
 		super(name);

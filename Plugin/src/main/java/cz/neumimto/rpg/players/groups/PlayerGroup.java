@@ -18,17 +18,26 @@
 
 package cz.neumimto.rpg.players.groups;
 
+import cz.neumimto.rpg.configuration.adapters.AllowedArmorListAdapter;
+import cz.neumimto.rpg.configuration.adapters.PropertyMapAdapter;
+import cz.neumimto.rpg.configuration.adapters.WeaponsAdapter;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.RPGItemType;
+import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
+import cz.neumimto.rpg.skills.tree.SkillTree;
+import ninja.leaping.configurate.objectmapping.Adapter;
+import ninja.leaping.configurate.objectmapping.Setting;
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.format.TextColor;
+import org.spongepowered.api.util.Color;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,28 +50,78 @@ import java.util.TreeSet;
 /**
  * Created by NeumimTo on 27.12.2014.
  */
+@ConfigSerializable
 public class PlayerGroup implements IEffectSourceProvider {
 
+	@Setting("Name")
 	private final String name;
-	protected cz.neumimto.rpg.effects.IEffectSource playerGroupType;
-	private Map<Integer, Float> propBonus = new HashMap<>();
-	private ItemStack info;
-	private boolean showsInMenu = true;
-	private Set<ItemType> canCraft = new HashSet<>();
-	private Set<RPGItemType> allowedArmor = new HashSet<>();
-	private HashMap<ItemType, Set<ConfigRPGItemType>> weapons = new HashMap<>();
-	private Set<PlayerGroupPermission> permissions = new TreeSet<>();
-	private Map<Integer, Float> propLevelBonus = new HashMap<>();
-	private ItemType itemType;
+
+	@Setting("Description")
 	private String description;
-	private Map<ICharacterAttribute, Integer> startingAttributes = new HashMap<>();
-	private Map<IGlobalEffect, EffectParams> effects = new HashMap<>();
+
+	@Setting("PreferredTextColor")
 	private TextColor preferedColor;
-	private Map<EntityType, Double> projectileDamage = new HashMap<>();
+
+	@Setting("ItemInfo")
+	private ItemStack info;
+
+	@Setting("ItemType")
+	private ItemType itemType;
+
+	@Setting("Visible")
+	private boolean showsInMenu = true;
+
+	@Setting("ClassType")
+	protected IEffectSource playerGroupType;
+
+	@Setting("Properties")
+	@Adapter(PropertyMapAdapter.class)
+	private Map<Integer, Float> propBonus = new HashMap<>();
+
+	@Setting
+	@Adapter(AllowedArmorListAdapter.class)
+	private Set<RPGItemType> allowedArmor = new HashSet<>();
+
+	@Setting("Permissions")
+	private TreeSet<PlayerGroupPermission> permissions = new TreeSet<>();
+
+	@Setting("Properties")
+	@Adapter(PropertyMapAdapter.class)
+	private Map<Integer, Float> propLevelBonus = new HashMap<>();
+
+	@Setting("ExitCommands")
 	private List<String> exitCommands;
+
+	@Setting("EnterCommands")
 	private List<String> enterCommands;
+
+	@Setting("ProjectileDamage")
+	private Map<EntityType, Double> projectileDamage = new HashMap<>();
+
+	@Setting("Weapons")
+	@Adapter(WeaponsAdapter.class)
+	private HashMap<ItemType, Set<ConfigRPGItemType>> weapons = new HashMap<>();
+
+	private Map<ICharacterAttribute, Integer> startingAttributes = new HashMap<>();
+
+	private Map<IGlobalEffect, EffectParams> effects = new HashMap<>();
+
+
 	private HashMap<ItemType, Set<ConfigRPGItemType>> offHandWeapons = new HashMap<>();
 	private Map<String, Map<EntityType, Double>> experiences = new HashMap<>();
+
+	@Setting("SkillTreeId")
+	@Adapter(SkillTreeIdAdapter.class)
+	private SkillTree skillTree;
+
+	private int skillpointsperlevel, attributepointsperlevel;
+	private double[] levels;
+	private double totalExp;
+	private Set<ExperienceSource> experienceSourceSet = new HashSet<>();
+	private boolean defaultClass;
+	private Color chatColor;
+
+	private Set<ConfigClass> allowedClasses = new HashSet<>();
 
 	public PlayerGroup(String name) {
 		this.name = name;
@@ -138,7 +197,7 @@ public class PlayerGroup implements IEffectSourceProvider {
 	}
 
 	public void setPermissions(Set<PlayerGroupPermission> permissions) {
-		this.permissions = permissions;
+		this.permissions = new TreeSet<>(permissions);
 	}
 
 	public Map<Integer, Float> getPropLevelBonus() {
@@ -167,10 +226,6 @@ public class PlayerGroup implements IEffectSourceProvider {
 
 	public void setStartingAttributes(Map<ICharacterAttribute, Integer> startingAttributes) {
 		this.startingAttributes = startingAttributes;
-	}
-
-	public Set<ItemType> getCanCraft() {
-		return canCraft;
 	}
 
 	public IEffectSource getType() {
