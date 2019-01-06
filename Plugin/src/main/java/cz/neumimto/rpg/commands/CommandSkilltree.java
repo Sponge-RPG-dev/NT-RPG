@@ -66,7 +66,7 @@ public class CommandSkilltree extends CommandBase {
 		if ("".equals(s.trim())) {
 			configClass = character.getPrimaryClass().getConfigClass();
 		} else {
-			configClass = groupService.getNClass(s);
+			configClass = groupService.getClassDefinitionByName(s);
 		}
 		if (configClass == null || configClass == ConfigClass.Default) {
 			Gui.sendMessage(character, Localizations.NON_EXISTING_GROUP, Arg.EMPTY);

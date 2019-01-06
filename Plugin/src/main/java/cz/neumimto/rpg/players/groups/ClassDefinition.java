@@ -236,7 +236,7 @@ public class ClassDefinition /* implements IEffectSourceProvider */ {
 		this.startingAttributes = startingAttributes;
 	}
 
-	public String getType() {
+	public String getClassType() {
 		return type;
 	}
 

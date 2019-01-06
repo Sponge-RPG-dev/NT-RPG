@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.commands;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
@@ -23,6 +21,8 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+
 /**
  * Created by NeumimTo on 5.11.2017.
  */
@@ -43,7 +43,7 @@ public class PlayerClassCommandElement extends CommandElement {
 	@Override
 	protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
 		String clazz = args.next();
-		ConfigClass configClass = NtRpgPlugin.GlobalScope.groupService.getNClass(clazz);
+		ConfigClass configClass = NtRpgPlugin.GlobalScope.groupService.getClassDefinitionByName(clazz);
 		if (configClass == null) {
 			throw args.createError(Localizations.UNKNOWN_CLASS.toText(Arg.arg("class", clazz)));
 		}

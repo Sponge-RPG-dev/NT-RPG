@@ -211,7 +211,7 @@ public class GuiHelper {
 	public static ItemStack back(ClassDefinition g) {
 		ItemStack of = itemStack(ItemTypes.PAPER);
 		String l = "class ";
-		if (g.getType() == EffectSourceType.RACE) {
+		if (g.getClassType() == EffectSourceType.RACE) {
 			l = "race ";
 		}
 		of.offer(Keys.DISPLAY_NAME, Localizations.BACK.toText());

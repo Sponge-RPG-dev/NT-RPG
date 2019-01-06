@@ -27,7 +27,7 @@ public class AnyPlayerGroupCommandElement extends CommandElement {
 	@Override
 	protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
 		String k = args.next();
-		return NtRpgPlugin.GlobalScope.groupService.getAll().stream()
+		return NtRpgPlugin.GlobalScope.groupService.getClassDefinitions().stream()
 				.filter(a -> source.hasPermission("ntrpg.groups." + a.getName().toLowerCase()))
 				.filter(a -> a.getName().equalsIgnoreCase(k))
 				.collect(Collectors.toList());
@@ -35,7 +35,7 @@ public class AnyPlayerGroupCommandElement extends CommandElement {
 
 	@Override
 	public List<String> complete(CommandSource src, CommandArgs args, CommandContext context) {
-		return NtRpgPlugin.GlobalScope.groupService.getAll().stream()
+		return NtRpgPlugin.GlobalScope.groupService.getClassDefinitions().stream()
 				.map(ClassDefinition::getName)
 				.filter(a -> src.hasPermission("ntrpg.groups." + a.toLowerCase()))
 				.collect(Collectors.toList());
