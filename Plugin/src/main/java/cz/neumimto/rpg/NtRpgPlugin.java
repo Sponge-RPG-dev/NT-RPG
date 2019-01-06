@@ -1108,46 +1108,9 @@ public class NtRpgPlugin {
 				})
 				.build();
 
-		CommandSpec setrace = CommandSpec.builder()
-				.description(TextSerializers.FORMATTING_CODE
-						.deserialize(CommandLocalization.COMMAND_CHOOSE_DESC))
-				.arguments(new RaceCommandElement(TextHelper.parse("race")))
-				.permission("ntrpg.player.set.race")
-				.executor((src, args) -> {
-					Player pl = (Player) src;
-					IActiveCharacter character = GlobalScope.characterService.getCharacter(pl);
-					if (character.isStub()) {
-						pl.sendMessage(Localizations.CHARACTER_IS_REQUIRED.toText());
-						return CommandResult.empty();
-					}
-
-					args.<Race>getOne(TextHelper.parse("race")).ifPresent(r -> {
-						if (r == Race.Default) {
-							src.sendMessage(Localizations.NON_EXISTING_GROUP.toText());
-							return;
-						}
-
-						if (!src.hasPermission("ntrpg.groups." + r.getName().toLowerCase())) {
-							src.sendMessage(Localizations.NO_PERMISSIONS.toText());
-							return;
-						}
-
-						if (character.getRace() == Race.Default ||
-								(character.getRace() != Race.Default && pluginConfig.PLAYER_CAN_CHANGE_RACE)) {
-							if (pluginConfig.PLAYER_CAN_CHANGE_RACE) {
-								GlobalScope.characterService.updatePlayerGroups(character, null, 0, r, null);
-								return;
-							}
-							src.sendMessage(Localizations.PLAYER_CANT_CHANGE_RACE.toText());
-						}
-					});
-					return CommandResult.empty();
-				})
-				.build();
 
 		CommandSpec cset = CommandSpec.builder()
 				.child(setclass, "class", "c")
-				.child(setrace, "race", "r")
 				.build();
 
 		CommandSpec learn = CommandSpec.builder()
