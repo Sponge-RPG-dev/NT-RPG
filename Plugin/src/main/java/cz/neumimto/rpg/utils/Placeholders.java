@@ -1,12 +1,10 @@
 package cz.neumimto.rpg.utils;
 
-import static cz.neumimto.rpg.Log.error;
-
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
 import me.rojo8399.placeholderapi.Placeholder;
@@ -17,6 +15,8 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
 import java.util.Set;
+
+import static cz.neumimto.rpg.Log.error;
 
 /**
  * Created by NeumimTo on 25.8.2018.
@@ -49,8 +49,8 @@ public class Placeholders {
 
 	@Placeholder(id = "class")
 	public Text getClass(@Source Player src) {
-		ExtendedNClass primaryClass = characterService.getCharacter(src).getPrimaryClass();
-		return Text.of(primaryClass.getConfigClass().getPreferedColor(), primaryClass.getConfigClass().getName());
+		PlayerClassData primaryClass = characterService.getCharacter(src).getPrimaryClass();
+		return Text.of(primaryClass.getClassDefinition().getPreferedColor(), primaryClass.getClassDefinition().getName());
 	}
 
 	@Placeholder(id = "char_name")
@@ -62,10 +62,10 @@ public class Placeholders {
 	@Placeholder(id = "primary_class_or_spec")
 	public Text getClassOrSpec(@Source Player src) {
 		IActiveCharacter character = characterService.getCharacter(src);
-		ExtendedNClass primaryClass = character.getPrimaryClass();
+		PlayerClassData primaryClass = character.getPrimaryClass();
 		Set<SkillTreeSpecialization> skillTreeSpecialization = character.getSkillTreeSpecialization();
 		//todo
-		return Text.of(primaryClass.getConfigClass().getPreferedColor(), primaryClass.getConfigClass().getName());
+		return Text.of(primaryClass.getClassDefinition().getPreferedColor(), primaryClass.getClassDefinition().getName());
 	}
 
 	@Placeholder(id = "primary_class_level")

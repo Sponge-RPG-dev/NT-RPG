@@ -18,63 +18,56 @@
 
 package cz.neumimto.rpg.players;
 
-import cz.neumimto.rpg.players.groups.ConfigClass;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
 
 /**
  * Created by NeumimTo on 28.7.2015.
  */
-public class ExtendedNClass {
+public class PlayerClassData {
 
-	public static ExtendedNClass Default;
+	public static PlayerClassData Default;
 
 	static {
-		Default = new ExtendedNClass(null) {
+		Default = new PlayerClassData(null) {
 			@Override
 			public boolean takesExp() {
 				return false;
 			}
 		};
-		Default.setConfigClass(ConfigClass.Default);
+		Default.setClassDefinition(ConfigClass.Default);
 		Default.setPrimary(true);
 	}
 
-	private ConfigClass configClass;
-	private double experiencesFromLevel;
-	private int slot;
-	private int level;
 	private ActiveCharacter activeCharacter;
+	private ClassDefinition classDefinition;
 
-	public ExtendedNClass(ActiveCharacter activeCharacter) {
+	private double experiencesFromLevel;
+	private int level;
+
+
+	public PlayerClassData(ActiveCharacter activeCharacter) {
 		this.activeCharacter = activeCharacter;
 	}
 
 
 	public boolean takesExp() {
-		return getExperiences() <= configClass.getTotalExp();
+		return getExperiences() <= classDefinition.getTotalExp();
 	}
 
-	public ConfigClass getConfigClass() {
-		return configClass;
+	public ClassDefinition getClassDefinition() {
+		return classDefinition;
 	}
 
-	public void setConfigClass(ConfigClass configClass) {
-		this.configClass = configClass;
+	public void setClassDefinition(ClassDefinition classDefinition) {
+		this.classDefinition = classDefinition;
 	}
 
 	public double getExperiences() {
-		return activeCharacter.getCharacterBase().getCharacterClass(getConfigClass()).getExperiences();
+		return activeCharacter.getCharacterBase().getCharacterClass(getClassDefinition()).getExperiences();
 	}
 
 	public void setExperiences(double experiences) {
-		activeCharacter.getCharacterBase().getCharacterClass(getConfigClass()).setExperiences(experiences);
-	}
-
-	public boolean isPrimary() {
-		return slot == 1;
-	}
-
-	public void setPrimary(boolean isPrimary) {
-		this.slot = 1;
+		activeCharacter.getCharacterBase().getCharacterClass(getClassDefinition()).setExperiences(experiences);
 	}
 
 	public int getLevel() {
@@ -91,13 +84,5 @@ public class ExtendedNClass {
 
 	public void setExperiencesFromLevel(double experiencesFromLevel) {
 		this.experiencesFromLevel = experiencesFromLevel;
-	}
-
-	public int getSlot() {
-		return slot;
-	}
-
-	public void setSlot(int slot) {
-		this.slot = slot;
 	}
 }

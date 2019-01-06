@@ -24,8 +24,6 @@ import cz.neumimto.rpg.configuration.adapters.PropertyMapAdapter;
 import cz.neumimto.rpg.configuration.adapters.SkillTreeLookupAdapter;
 import cz.neumimto.rpg.configuration.adapters.WeaponsAdapter;
 import cz.neumimto.rpg.effects.EffectParams;
-import cz.neumimto.rpg.effects.IEffectSource;
-import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.RPGItemType;
@@ -53,10 +51,7 @@ import java.util.TreeSet;
  * Created by NeumimTo on 27.12.2014.
  */
 @ConfigSerializable
-public class PlayerGroup implements IEffectSourceProvider {
-
-	@Setting("Id")
-	private String id;
+public class ClassDefinition /* implements IEffectSourceProvider */ {
 
 	@Setting("Name")
 	private String name;
@@ -77,7 +72,7 @@ public class PlayerGroup implements IEffectSourceProvider {
 	private boolean showsInMenu = true;
 
 	@Setting("ClassType")
-	protected IEffectSource playerGroupType;
+	protected ClassDefinitionType type;
 
 	@Setting("Properties")
 	@Adapter(PropertyMapAdapter.class)
@@ -111,8 +106,8 @@ public class PlayerGroup implements IEffectSourceProvider {
 
 	private Map<IGlobalEffect, EffectParams> effects = new HashMap<>();
 
-
 	private HashMap<ItemType, Set<ConfigRPGItemType>> offHandWeapons = new HashMap<>();
+
 	private Map<String, Map<EntityType, Double>> experiences = new HashMap<>();
 
 	@Setting("SkillTreeId")
@@ -139,7 +134,7 @@ public class PlayerGroup implements IEffectSourceProvider {
 	@Setting("RequiredClasses")
 	@Adapter(ClassConfigAdapter.class)
 	*/
-	private Set<PlayerGroup> allowedClasses = new HashSet<>();
+	private Set<ClassDefinition> allowedClasses = new HashSet<>();
 
 	public String getName() {
 		return name;
@@ -239,8 +234,8 @@ public class PlayerGroup implements IEffectSourceProvider {
 		this.startingAttributes = startingAttributes;
 	}
 
-	public IEffectSource getType() {
-		return playerGroupType;
+	public ClassDefinitionType getType() {
+		return type;
 	}
 
 	public Map<IGlobalEffect, EffectParams> getEffects() {
@@ -300,7 +295,7 @@ public class PlayerGroup implements IEffectSourceProvider {
 	public String toString() {
 		return "PlayerGroup{" +
 				"name='" + name + '\'' +
-				", playerGroupType=" + playerGroupType +
+				", getClasses=" + type +
 				'}';
 	}
 }

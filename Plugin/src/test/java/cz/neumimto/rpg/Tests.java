@@ -1,11 +1,8 @@
 package cz.neumimto.rpg;
 
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import cz.neumimto.rpg.players.ActiveCharacter;
-import cz.neumimto.rpg.players.ExtendedNClass;
+import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroupPermission;
 import cz.neumimto.rpg.players.groups.Race;
@@ -29,6 +26,9 @@ import java.util.Set;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
 public class Tests {
@@ -77,7 +77,7 @@ public class Tests {
 		}});
 		when(character.getRace()).thenReturn(race);
 
-		ExtendedNClass nClass = new ExtendedNClass(character);
+		PlayerClassData nClass = new PlayerClassData(character);
 
 		ConfigClass c = new ConfigClass("b");
 
@@ -94,7 +94,7 @@ public class Tests {
 			}
 		});
 
-		nClass.setConfigClass(c);
+		nClass.setClassDefinition(c);
 
 		when(character.getPrimaryClass()).thenReturn(nClass);
 		when(character.getClasses()).thenReturn(new HashSet<>(Arrays.asList(nClass)));
@@ -106,7 +106,7 @@ public class Tests {
 			}});
 		}});
 
-		Set<String> permissionsToRemove = groupService.getPermissionsToRemove(character, nClass.getConfigClass());
+		Set<String> permissionsToRemove = groupService.getPermissionsToRemove(character, nClass.getClassDefinition());
 		Assert.assertFalse(permissionsToRemove.contains("common2"));
 		Assert.assertFalse(permissionsToRemove.contains("common1"));
 		Assert.assertTrue(permissionsToRemove.contains("class1"));

@@ -25,10 +25,10 @@ import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.inventory.CannotUseItemReason;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.PlayerClassData;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.groups.ConfigClass;
-import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.tree.SkillTree;
@@ -59,7 +59,7 @@ public interface IPlayerMessage {
 
 	void showExpChange(IActiveCharacter character, String classname, double expchange);
 
-	void showLevelChange(IActiveCharacter character, ExtendedNClass clazz, int level);
+	void showLevelChange(IActiveCharacter character, PlayerClassData clazz, int level);
 
 	void sendStatus(IActiveCharacter character);
 
@@ -77,13 +77,13 @@ public interface IPlayerMessage {
 
 	void sendRaceInfo(IActiveCharacter target, Race race);
 
-	void displayGroupArmor(PlayerGroup g, Player target);
+	void displayGroupArmor(ClassDefinition g, Player target);
 
-	void displayGroupWeapon(PlayerGroup g, Player target);
+	void displayGroupWeapon(ClassDefinition g, Player target);
 
 	void sendClassInfo(IActiveCharacter target, ConfigClass configClass);
 
-	void displayAttributes(Player target, PlayerGroup group);
+	void displayAttributes(Player target, ClassDefinition group);
 
 	void displayRuneword(IActiveCharacter character, RuneWord rw, boolean linkToRWList);
 
@@ -107,7 +107,7 @@ public interface IPlayerMessage {
 
 	void displaySkillDetailsInventoryMenu(IActiveCharacter character, SkillTree tree, String command);
 
-	void displayInitialProperties(PlayerGroup byName, Player player);
+	void displayInitialProperties(ClassDefinition byName, Player player);
 
 	void sendCannotUseItemInOffHandNotification(ItemStack futureOffHand, IActiveCharacter character, CannotUseItemReason reason);
 

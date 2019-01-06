@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.effects;
 
 import cz.neumimto.rpg.commands.CommandBase;
-import cz.neumimto.rpg.players.groups.PlayerGroup;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.skills.ISkill;
 
 import java.util.ArrayList;
@@ -18,8 +18,8 @@ public class EffectSourceFactory {
 		return new EffectValue<>(iSkill, set);
 	}
 
-	public static <T> EffectValue<T> createEffectSource(PlayerGroup playerGroup, T t) {
-		return new EffectValue<>(playerGroup, t);
+	public static <T> EffectValue<T> createEffectSource(ClassDefinition classDefinition, T t) {
+		return new EffectValue<>(classDefinition, t);
 	}
 
 	public static <T> EffectValue<List<T>> createEffectSource(CommandBase commandBase, T t) {

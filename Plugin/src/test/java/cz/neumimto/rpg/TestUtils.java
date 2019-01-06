@@ -1,14 +1,10 @@
 package cz.neumimto.rpg;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
@@ -24,6 +20,10 @@ import java.util.Date;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
+
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by fs on 7.10.15.
@@ -92,8 +92,8 @@ public class TestUtils {
 		when(character.getPlayer()).thenReturn(player);
 		CharacterBase characterBase = buildCharacterBase(uuid);
 		when(character.getCharacterBase()).thenReturn(characterBase);
-		ExtendedNClass k = new ExtendedNClass(character);
-		k.setConfigClass(new ConfigClass("test"));
+		PlayerClassData k = new PlayerClassData(character);
+		k.setClassDefinition(new ConfigClass("test"));
 		when(character.getPrimaryClass()).thenReturn(k);
 		return character;
 	}

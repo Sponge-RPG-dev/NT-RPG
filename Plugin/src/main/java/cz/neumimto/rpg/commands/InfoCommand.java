@@ -31,8 +31,8 @@ import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.groups.ConfigClass;
-import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import org.spongepowered.api.Game;
@@ -143,13 +143,13 @@ public class InfoCommand extends CommandBase {
 				}
 			}
 		} else if (args[0].equalsIgnoreCase("attributes-initial")) {
-			PlayerGroup byName = groupService.getByName(args[1]);
+			ClassDefinition byName = groupService.getByName(args[1]);
 			if (byName == null) {
 				return CommandResult.empty();
 			}
 			Gui.displayInitialAttributes(byName, (Player) commandSource);
 		} else if (args[0].equalsIgnoreCase("properties-initial")) {
-			PlayerGroup byName = groupService.getByName(args[1]);
+			ClassDefinition byName = groupService.getByName(args[1]);
 			if (byName == null) {
 				return CommandResult.empty();
 			}

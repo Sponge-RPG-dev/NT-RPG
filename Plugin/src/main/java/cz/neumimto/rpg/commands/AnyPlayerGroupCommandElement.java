@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.commands;
 
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.players.groups.PlayerGroup;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.ArgumentParseException;
 import org.spongepowered.api.command.args.CommandArgs;
@@ -36,7 +36,7 @@ public class AnyPlayerGroupCommandElement extends CommandElement {
 	@Override
 	public List<String> complete(CommandSource src, CommandArgs args, CommandContext context) {
 		return NtRpgPlugin.GlobalScope.groupService.getAll().stream()
-				.map(PlayerGroup::getName)
+				.map(ClassDefinition::getName)
 				.filter(a -> src.hasPermission("ntrpg.groups." + a.toLowerCase()))
 				.collect(Collectors.toList());
 	}

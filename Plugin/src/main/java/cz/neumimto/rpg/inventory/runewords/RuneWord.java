@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.inventory.runewords;
 
 import cz.neumimto.rpg.effects.IGlobalEffect;
-import cz.neumimto.rpg.players.groups.PlayerGroup;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
 import org.spongepowered.api.item.ItemType;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class RuneWord {
 	private String name;
 	private List<ItemUpgrade> runes = new ArrayList<>();
 	private int minLevel;
-	private Set<PlayerGroup> allowedGroups = new HashSet<>();
+	private Set<ClassDefinition> allowedGroups = new HashSet<>();
 
 	private Map<IGlobalEffect, String> effects = new HashMap<>();
 	private Set<ItemType> allowedItems = new HashSet<>();
@@ -50,11 +50,11 @@ public class RuneWord {
 		this.minLevel = minLevel;
 	}
 
-	public Set<PlayerGroup> getAllowedGroups() {
+	public Set<ClassDefinition> getAllowedGroups() {
 		return allowedGroups;
 	}
 
-	public void setAllowedGroups(Set<PlayerGroup> allowedGroups) {
+	public void setAllowedGroups(Set<ClassDefinition> allowedGroups) {
 		this.allowedGroups = allowedGroups;
 	}
 
