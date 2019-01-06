@@ -25,18 +25,15 @@ import cz.neumimto.rpg.persistance.GroupDao;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.players.groups.ConfigClass;
-import cz.neumimto.rpg.players.groups.Guild;
 import cz.neumimto.rpg.players.groups.PlayerGroupPermission;
-import cz.neumimto.rpg.players.groups.Race;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.service.permission.SubjectData;
 import org.spongepowered.api.util.Tristate;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
-
-import static cz.neumimto.rpg.Log.info;
 
 /**
  * Created by NeumimTo on 28.12.2014.
@@ -44,124 +41,43 @@ import static cz.neumimto.rpg.Log.info;
 @Singleton
 public class GroupService {
 
+	private static final String CLASS_ACCESS_PERM = "ntrpg.class.";
+
 	@Inject
-	DamageService damageService;
+	private DamageService damageService;
+
 	@Inject
 	private GroupDao groupDao;
 
-	public GroupService() {
 
-	}
 
-	public Guild getGuild(String name) {
-		name = name.toLowerCase();
-		if (!groupDao.getGuilds().containsKey(name)) {
-			return Guild.Default;
-		}
-		return groupDao.getGuilds().get(name.toLowerCase());
-	}
-
-	public void registerGuild(Guild g) {
-		groupDao.getGuilds().put(g.getName().toLowerCase(), g);
-	}
-
-	public Race getRace(String name) {
-		name = name.toLowerCase();
-		if (!groupDao.getRaces().containsKey(name)) {
-			return Race.Default;
-		}
-		return groupDao.getRaces().get(name.toLowerCase());
-	}
-
-	public void registerRace(Race g) {
-		groupDao.getRaces().put(g.getName().toLowerCase(), g);
-	}
-
-	public ConfigClass getNClass(String name) {
-		name = name.toLowerCase();
-		if (!groupDao.getClasses().containsKey(name)) {
-			return ConfigClass.Default;
-		}
+	public ClassDefinition getClassDefinitionByName(String name) {
 		return groupDao.getClasses().get(name.toLowerCase());
 	}
 
-	public void registerClass(ConfigClass g) {
-		groupDao.getClasses().put(g.getName().toLowerCase(), g);
-	}
-
-	public Collection<Race> getRaces() {
-		return groupDao.getRaces().values();
-	}
-
-	public Collection<Guild> getGuilds() {
-		return groupDao.getGuilds().values();
-	}
-
 	public void registerPlaceholders() {
-
-		registerClass(ConfigClass.Default);
-		registerRace(Race.Default);
-
-		for (ConfigClass configClass : getClasses()) {
-			if (configClass.isDefaultClass()) {
-				setDefaultClass(configClass);
-				break;
-			}
-		}
-
 		damageService.createDamageToColorMapping();
-	}
-
-	public boolean existsGuild(String s) {
-		return groupDao.getGuilds().containsKey(s.toLowerCase());
 	}
 
 	public boolean existsClass(String s) {
 		return groupDao.getClasses().containsKey(s.toLowerCase());
 	}
 
-	public boolean existsRace(String s) {
-		return groupDao.getRaces().containsKey(s.toLowerCase());
-	}
-
-	public Set<ClassDefinition> getAll() {
-		Set<ClassDefinition> set = new HashSet<>();
-		set.addAll(getRaces());
-		set.addAll(getClasses());
-		return set;
-
-	}
-
-	public Collection<ConfigClass> getClasses() {
+	public Collection<ClassDefinition> getClassDefinitions() {
 		return groupDao.getClasses().values();
 	}
 
-	public int getLevel(ConfigClass configClass, double experiendec) {
-		double l = 0;
-		int k = 1;
-		for (double v : configClass.getLevels()) {
-			if (l < experiendec) {
-				return k;
+	public Set<ClassDefinition> filterByPlayerAndType(Player player, String type) {
+		Set<ClassDefinition> defs = new HashSet<>();
+		for (Map.Entry<String, ClassDefinition> entry : groupDao.getClasses().entrySet()) {
+			ClassDefinition value = entry.getValue();
+			if (value.getClassType().equalsIgnoreCase(type)) {
+				if (player.hasPermission(CLASS_ACCESS_PERM + value.getName().toLowerCase())) {
+					defs.add(value);
+				}
 			}
-			k += v;
 		}
-		return k;
-	}
-
-	public ClassDefinition getByName(String arg) {
-		if (existsClass(arg)) {
-			return getNClass(arg);
-		}
-		if (existsRace(arg)) {
-			return getRace(arg);
-		}
-		return null;
-	}
-
-	public void setDefaultClass(ConfigClass configClass) {
-		ConfigClass.Default = configClass;
-		PlayerClassData.Default.setClassDefinition(configClass);
-		info("Default class set to \"" + configClass.getName() + "\"");
+		return defs;
 	}
 
 	public Set<String> getPermissionsToRemove(IActiveCharacter character, ClassDefinition toBeReplaced) {
@@ -169,26 +85,8 @@ public class GroupService {
 
 		Set<String> toBeRemoved = new HashSet<>();
 
-		if (character.getRace() != toBeReplaced) {
-			for (PlayerGroupPermission playerGroupPermission : character.getRace().getPermissions()) {
-				if (playerGroupPermission.getLevel() <= character.getLevel()) {
-					intersection.addAll(playerGroupPermission.getPermissions());
-				} else {
-
-					break;
-				}
-			}
-		} else {
-			for (PlayerGroupPermission pgp : character.getRace().getPermissions()) {
-				if (pgp.getLevel() <= character.getLevel()) {
-					toBeRemoved.addAll(pgp.getPermissions());
-				}
-			}
-		}
-
-
-		for (PlayerClassData nClass : character.getClasses()) {
-			ConfigClass configClass = nClass.getClassDefinition();
+		for (PlayerClassData nClass : character.getClasses().values()) {
+			ClassDefinition configClass = nClass.getClassDefinition();
 			if (configClass == toBeReplaced) {
 				for (PlayerGroupPermission pgp : configClass.getPermissions()) {
 					if (pgp.getLevel() <= character.getLevel()) {

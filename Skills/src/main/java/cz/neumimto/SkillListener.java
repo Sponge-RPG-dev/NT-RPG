@@ -2,7 +2,6 @@ package cz.neumimto;
 
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.localization.Arg;
 import cz.neumimto.effects.EnderPearlEffect;
 import cz.neumimto.effects.ManaDrainEffect;
 import cz.neumimto.effects.ResoluteTechniqueEffect;
@@ -30,7 +29,6 @@ import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.effects.common.positive.Invisibility;
 import cz.neumimto.rpg.entities.EntityService;
@@ -305,14 +303,14 @@ public class SkillListener {
 							PotionEffectModel value = effect.getStackedValue();
 							Long aLong = value.cooldowns.get(potionEffect.getType());
 							if (aLong == null) {
-							//	player.sendMessage(SkillLocalization.CANNOT_DRIK_POTION_TYPE.toText(Arg.arg("potion", potionEffect.getType().getName())));
+							//	player.sendMessage(SkillLocalization.CANNOT_DRIK_POTION_TYPE.toText(Arg.arg("potion", potionEffect.getClassType().getName())));
 								event.setCancelled(true);
 								return;
 							}
 							long l = System.currentTimeMillis();
 							Long next = value.nextUseTime.get(potionEffect.getType());
 							if (next != null && next < l) {
-						//		player.sendMessage(SkillLocalization.CANNOT_DRIK_POTION_TYPE_COOLDOWN.toText(Arg.arg("potion", potionEffect.getType().getName())));
+						//		player.sendMessage(SkillLocalization.CANNOT_DRIK_POTION_TYPE_COOLDOWN.toText(Arg.arg("potion", potionEffect.getClassType().getName())));
 								event.setCancelled(true);
 								return;
 							}

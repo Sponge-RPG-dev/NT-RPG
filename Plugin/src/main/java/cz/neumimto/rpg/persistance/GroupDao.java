@@ -43,7 +43,7 @@ public class GroupDao {
 
     private Map<String, ClassDefinition> classes = new HashMap<>();
 
-    public void loadRaces() {
+    public void loadClassDefinitions() {
         Path path = ResourceLoader.raceDir.toPath();
         try (Stream<Path> s = Files.walk(path, 50, FileVisitOption.FOLLOW_LINKS)) {
             final ObjectMapper<ClassDefinition> mapper = ObjectMapper.forClass(ClassDefinition.class);
@@ -65,5 +65,9 @@ public class GroupDao {
         info("Loaded " + classes.size() + " Classes");
         //todo initialize class dependencies
 
+    }
+
+    public Map<String, ClassDefinition> getClasses() {
+        return classes;
     }
 }

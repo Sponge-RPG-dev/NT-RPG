@@ -54,7 +54,7 @@ public class Init {
 		rwService.load();
 		groupDao.loadGuilds();
 		groupDao.loadNClasses();
-		groupDao.loadRaces();
+		groupDao.loadClassDefinitions();
 
 
 

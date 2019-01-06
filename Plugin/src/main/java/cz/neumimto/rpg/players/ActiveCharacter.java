@@ -675,7 +675,7 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	@Override
 	public boolean hasClass(ClassDefinition configClass) {
-		ClassDefinitionType type = configClass.getType();
+		ClassDefinitionType type = configClass.getClassType();
 		return getClassByType(type) != null;
 	}
 

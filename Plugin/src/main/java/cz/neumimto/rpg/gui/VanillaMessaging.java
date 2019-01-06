@@ -323,7 +323,7 @@ public class VanillaMessaging implements IPlayerMessage {
 							.append(Text.builder("] - ").color(TextColors.DARK_GRAY).build());
 				}
 				b.append(Text.builder(a.getCharacterName()).color(TextColors.GRAY).append(Text.of(" ")).build());
-				ConfigClass cc = s.getNClass(a.getPrimaryClassName());
+				ConfigClass cc = s.getClassDefinitionByName(a.getPrimaryClassName());
 				int level = 0;
 				int m = 0;
 				if (cc != ConfigClass.Default) {
@@ -396,7 +396,7 @@ public class VanillaMessaging implements IPlayerMessage {
 		s.offer(Keys.DISPLAY_NAME, Text.of(p.getName(), TextColors.DARK_PURPLE));
 		s.offer(Keys.ITEM_LORE, getItemLore(p.getDescription()));
 		String l = "race ";
-		if (p.getType() == EffectSourceType.CLASS) {
+		if (p.getClassType() == EffectSourceType.CLASS) {
 			l = "class ";
 		}
 		s.offer(new InventoryCommandItemMenuData(l + p.getName()));
@@ -651,10 +651,10 @@ public class VanillaMessaging implements IPlayerMessage {
 	}
 
 	private TextColor hasGroup(IActiveCharacter character, ClassDefinition classDefinition) {
-		if (classDefinition.getType() == EffectSourceType.RACE) {
+		if (classDefinition.getClassType() == EffectSourceType.RACE) {
 			return character.getRace() == classDefinition ? TextColors.GREEN : TextColors.RED;
 		}
-		if (classDefinition.getType() == EffectSourceType.CLASS) {
+		if (classDefinition.getClassType() == EffectSourceType.CLASS) {
 			return character.hasClass(classDefinition) ? TextColors.GREEN : TextColors.RED;
 		}
 		return null;

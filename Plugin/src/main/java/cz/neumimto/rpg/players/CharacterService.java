@@ -667,7 +667,7 @@ public class CharacterService {
 		ActiveCharacter activeCharacter = new ActiveCharacter(player, characterBase);
 		activeCharacter.setRace(groupService.getRace(characterBase.getRace()));
 
-		activeCharacter.setPrimaryClass(groupService.getNClass(characterBase.getPrimaryClass()));
+		activeCharacter.setPrimaryClass(groupService.getClassDefinitionByName(characterBase.getPrimaryClass()));
 		groupService.addAllPermissions(activeCharacter, activeCharacter.getRace());
 		groupService.addAllPermissions(activeCharacter, activeCharacter.getPrimaryClass().getClassDefinition());
 		String s = activeCharacter.getPrimaryClass().getClassDefinition().getName();
