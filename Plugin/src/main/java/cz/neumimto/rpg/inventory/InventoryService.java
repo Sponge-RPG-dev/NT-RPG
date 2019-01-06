@@ -18,10 +18,6 @@
 
 package cz.neumimto.rpg.inventory;
 
-import static cz.neumimto.rpg.Log.error;
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.Log.warn;
-
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import com.typesafe.config.ConfigFactory;
@@ -34,7 +30,6 @@ import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.Localizations;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.EffectService;
@@ -58,9 +53,9 @@ import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.slotparsers.DefaultPlayerInvHandler;
 import cz.neumimto.rpg.inventory.slotparsers.PlayerInvHandler;
 import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.groups.PlayerGroup;
+import cz.neumimto.rpg.players.PlayerClassData;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
@@ -97,14 +92,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static cz.neumimto.rpg.Log.error;
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 22.7.2015.
@@ -441,9 +439,9 @@ public class InventoryService {
 					return CannotUseItemReason.LEVEL;
 				}
 			} else {
-				for (ExtendedNClass extendedNClass : character.getClasses()) {
-					if (extendedNClass.getConfigClass().getName().equalsIgnoreCase(next.getKey())) {
-						if (next.getValue() != null && character.getLevel() < extendedNClass.getLevel()) {
+				for (PlayerClassData playerClassData : character.getClasses()) {
+					if (playerClassData.getClassDefinition().getName().equalsIgnoreCase(next.getKey())) {
+						if (next.getValue() != null && character.getLevel() < playerClassData.getLevel()) {
 							return CannotUseItemReason.LEVEL;
 						}
 						k++;
@@ -593,7 +591,7 @@ public class InventoryService {
 		itemStack.offer(data);
 	}
 
-	public void addGroupRestriction(ItemStack itemStack, PlayerGroup clazz, int level) {
+	public void addGroupRestriction(ItemStack itemStack, ClassDefinition clazz, int level) {
 		Optional<MinimalItemGroupRequirementsData> orCreate = itemStack.getOrCreate(MinimalItemGroupRequirementsData.class);
 		MinimalItemGroupRequirementsData data = orCreate.get();
 		Map<String, Integer> map = data.get(NKeys.ITEM_PLAYER_ALLOWED_GROUPS).orElse(new HashMap<>());

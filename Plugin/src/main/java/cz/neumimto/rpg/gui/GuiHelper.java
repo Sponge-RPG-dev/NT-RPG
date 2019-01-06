@@ -1,8 +1,5 @@
 package cz.neumimto.rpg.gui;
 
-import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Block;
-import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Item;
-
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
@@ -17,7 +14,7 @@ import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
 import cz.neumimto.rpg.listeners.SkillTreeInventoryListener;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
-import cz.neumimto.rpg.players.groups.PlayerGroup;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.NDamageType;
 import cz.neumimto.rpg.skills.SkillData;
@@ -50,6 +47,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Block;
+import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Item;
 
 /**
  * Created by ja on 29.12.2016.
@@ -108,7 +108,7 @@ public class GuiHelper {
 		return is;
 	}
 
-	public static Inventory createPlayerGroupView(PlayerGroup group) {
+	public static Inventory createPlayerGroupView(ClassDefinition group) {
 		Inventory.Builder builder = Inventory
 				.builder();
 		Inventory i = builder.of(InventoryArchetypes.DOUBLE_CHEST)
@@ -124,7 +124,7 @@ public class GuiHelper {
 		return i;
 	}
 
-	private static ItemStack createPropertyCommand(PlayerGroup group) {
+	private static ItemStack createPropertyCommand(ClassDefinition group) {
 		ItemStack i = itemStack(ItemTypes.BOOK);
 		i.offer(NKeys.MENU_INVENTORY, true);
 		i.offer(Keys.DISPLAY_NAME, Localizations.ATTRIBUTES.toText());
@@ -133,7 +133,7 @@ public class GuiHelper {
 		return i;
 	}
 
-	public static ItemStack createAttributesCommand(PlayerGroup group) {
+	public static ItemStack createAttributesCommand(ClassDefinition group) {
 		ItemStack i = itemStack(ItemTypes.BOOK);
 		i.offer(NKeys.MENU_INVENTORY, true);
 		i.offer(Keys.DISPLAY_NAME, Localizations.ATTRIBUTES.toText());
@@ -152,7 +152,7 @@ public class GuiHelper {
 		return i;
 	}
 
-	public static ItemStack createArmorCommand(PlayerGroup group) {
+	public static ItemStack createArmorCommand(ClassDefinition group) {
 		ItemStack i = itemStack(ItemTypes.DIAMOND_CHESTPLATE);
 		i.offer(NKeys.MENU_INVENTORY, true);
 		i.offer(Keys.DISPLAY_NAME, Localizations.ARMOR.toText());
@@ -161,7 +161,7 @@ public class GuiHelper {
 		return i;
 	}
 
-	public static ItemStack createWeaponCommand(PlayerGroup group) {
+	public static ItemStack createWeaponCommand(ClassDefinition group) {
 		ItemStack i = itemStack(ItemTypes.DIAMOND_SWORD);
 		i.offer(NKeys.MENU_INVENTORY, true);
 		i.offer(Keys.DISPLAY_NAME, Localizations.WEAPONS.toText());
@@ -208,7 +208,7 @@ public class GuiHelper {
 		return of;
 	}
 
-	public static ItemStack back(PlayerGroup g) {
+	public static ItemStack back(ClassDefinition g) {
 		ItemStack of = itemStack(ItemTypes.PAPER);
 		String l = "class ";
 		if (g.getType() == EffectSourceType.RACE) {

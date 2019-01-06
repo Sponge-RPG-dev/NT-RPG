@@ -24,10 +24,8 @@ import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
-import cz.neumimto.rpg.players.groups.ConfigClass;
-import cz.neumimto.rpg.players.groups.Guild;
-import cz.neumimto.rpg.players.groups.PlayerGroup;
-import cz.neumimto.rpg.players.groups.Race;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.players.groups.ClassDefinitionType;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
@@ -48,6 +46,12 @@ import java.util.Set;
  * Created by NeumimTo on 23.7.2015.
  */
 public interface IActiveCharacter extends IEntity<Player> {
+
+	Map<ClassDefinitionType, PlayerClassData> getClasses();
+
+	default PlayerClassData getClassByType(ClassDefinitionType type) {
+		return getClasses().get(type);
+	}
 
 	Party getParty();
 
@@ -101,10 +105,6 @@ public interface IActiveCharacter extends IEntity<Player> {
 		return getAttributeValue(attribute.getId());
 	}
 
-	ExtendedNClass getPrimaryClass();
-
-	void setPrimaryClass(ConfigClass clazz);
-
 	Map<String, Long> getCooldowns();
 
 	boolean hasCooldown(String thing);
@@ -119,21 +119,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	Map<EntityType, Double> getProjectileDamages();
 
-	Set<ExtendedNClass> getClasses();
-
-	ConfigClass getNClass(int index);
-
-	Race getRace();
-
-	void setRace(Race race);
-
-	Guild getGuild();
-
-	void setGuild(Guild guild);
-
 	CharacterBase getCharacterBase();
-
-	void setClass(ConfigClass nclass, int slot);
 
 	double getBaseProjectileDamage(EntityType id);
 
@@ -223,12 +209,11 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setPreferedMessageType(MessageType type);
 
-	boolean hasClass(PlayerGroup configClass);
+	boolean hasClass(ClassDefinition configClass);
 
 	List<Integer> getSlotsToReinitialize();
 
 	void setSlotsToReinitialize(List<Integer> slotsToReinitialize);
-
 
 	Map<String, SkillTreeViewModel> getSkillTreeViewLocation();
 

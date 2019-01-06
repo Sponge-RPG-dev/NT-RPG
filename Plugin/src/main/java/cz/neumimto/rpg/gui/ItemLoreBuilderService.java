@@ -6,7 +6,6 @@ import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.Localizations;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.inventory.ItemLoreSections;
 import cz.neumimto.rpg.inventory.LoreSectionDelimiter;
@@ -14,7 +13,7 @@ import cz.neumimto.rpg.inventory.data.DataConstants;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemSocketsData;
 import cz.neumimto.rpg.inventory.sockets.SocketType;
-import cz.neumimto.rpg.players.groups.PlayerGroup;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.reloading.Reload;
 import cz.neumimto.rpg.reloading.ReloadService;
@@ -33,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 20.1.2018.
@@ -224,7 +225,7 @@ public class ItemLoreBuilderService {
 			for (Map.Entry<String, Integer> stringIntegerEntry : r.entrySet()) {
 				Integer value = stringIntegerEntry.getValue();
 				String group = stringIntegerEntry.getKey();
-				PlayerGroup byName = NtRpgPlugin.GlobalScope.groupService.getByName(group);
+				ClassDefinition byName = NtRpgPlugin.GlobalScope.groupService.getByName(group);
 				if (byName != null) {
 					if (value > 0) {
 						t.add(

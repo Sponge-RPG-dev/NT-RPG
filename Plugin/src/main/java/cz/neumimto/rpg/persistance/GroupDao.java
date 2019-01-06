@@ -18,57 +18,22 @@
 
 package cz.neumimto.rpg.persistance;
 
-import static cz.neumimto.rpg.Log.error;
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.Log.warn;
-
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigBeanFactory;
-import com.typesafe.config.ConfigException;
-import com.typesafe.config.ConfigFactory;
-import com.typesafe.config.ConfigObject;
-import com.typesafe.config.ConfigValue;
-import com.typesafe.config.ConfigValueType;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.effects.EffectParams;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.IGlobalEffect;
-import cz.neumimto.rpg.inventory.ConfigRPGItemType;
-import cz.neumimto.rpg.inventory.ItemService;
-import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.players.ExperienceSource;
-import cz.neumimto.rpg.players.groups.ConfigClass;
-import cz.neumimto.rpg.players.groups.Guild;
-import cz.neumimto.rpg.players.groups.PlayerGroup;
-import cz.neumimto.rpg.players.groups.PlayerGroupPermission;
-import cz.neumimto.rpg.players.groups.Race;
-import cz.neumimto.rpg.players.properties.PropertyService;
-import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
-import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.skills.tree.SkillTree;
-import org.spongepowered.api.Game;
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.entity.EntityType;
-import org.spongepowered.api.entity.EntityTypes;
-import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.text.format.TextColor;
-import org.spongepowered.api.text.format.TextColors;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
+import ninja.leaping.configurate.objectmapping.ObjectMapper;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static cz.neumimto.rpg.Log.info;
 
 /**
  * Created by NeumimTo on 10.7.2015.
@@ -76,440 +41,29 @@ import java.util.stream.Collectors;
 @Singleton
 public class GroupDao {
 
-	@Inject
-	PropertyService propertyService;
+    private Map<String, ClassDefinition> classes = new HashMap<>();
 
-	@Inject
-	EffectService effectService;
+    public void loadRaces() {
+        Path path = ResourceLoader.raceDir.toPath();
+        try (Stream<Path> s = Files.walk(path, 50, FileVisitOption.FOLLOW_LINKS)) {
+            final ObjectMapper<ClassDefinition> mapper = ObjectMapper.forClass(ClassDefinition.class);
+            s.peek(a-> info("Loading class file file: " + a.getFileName().toString()))
+                .forEach(a -> {
+                        HoconConfigurationLoader hcl = HoconConfigurationLoader.builder()
+                                .setPath(a).build();
+                        try {
+                            ClassDefinition classDefinition = mapper.bind(new ClassDefinition()).populate(hcl.load());
+                            classes.put(classDefinition.getName(), classDefinition);
+                        } catch (ObjectMappingException | IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+            );
+        } catch (IOException | ObjectMappingException e) {
+            e.printStackTrace();
+        }
+        info("Loaded " + classes.size() + " Classes");
+        //todo initialize class dependencies
 
-	@Inject
-	Game game;
-
-	@Inject
-	SkillService skillService;
-
-	@Inject
-	ItemService itemService;
-
-	private Map<String, Race> races = new HashMap<>();
-	private Map<String, ConfigClass> classes = new HashMap<>();
-	private Map<String, Guild> guilds = new HashMap<>();
-
-	public Map<String, Race> getRaces() {
-		return races;
-	}
-
-	public Map<String, ConfigClass> getClasses() {
-		return classes;
-	}
-
-	public Map<String, Guild> getGuilds() {
-		return guilds;
-	}
-
-	public void loadGuilds() {
-		Path path = ResourceLoader.guildsDir.toPath();
-		try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, "*.conf")) {
-			stream.forEach(p -> {
-				Config c = ConfigFactory.parseFile(p.toFile());
-				//     Guild guild = new Guild(c.getString("Name"));
-				//     loadPlayerGroup(c, guild);
-				//     getGuilds().put(guild.getName().toLowerCase(), guild);
-			});
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void loadNClasses() {
-		Path path = ResourceLoader.classDir.toPath();
-		try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, "*.conf")) {
-			stream.forEach(p -> {
-				Config c = ConfigFactory.parseFile(p.toFile());
-				ConfigClass configClass = new ConfigClass(c.getString("Name"));
-				loadPlayerGroup(c, configClass);
-				long k = classes.values().stream().filter(ConfigClass::isDefaultClass).count();
-				try {
-					boolean aDefault = c.getBoolean("Default");
-					if (aDefault) {
-						if (k == 0) {
-							configClass.setDefaultClass(aDefault);
-						} else {
-							warn("One default class already loaded, class \"" + configClass.getName() + "\" will be ignored");
-						}
-					}
-				} catch (ConfigException e) {
-
-				}
-
-				try {
-					SkillTree skillTree = skillService.getSkillTrees().get(c.getString("SkillTree"));
-					if (skillTree == null) {
-						warn(" - Unknown \"SkillTree\", setting to default value");
-						skillTree = SkillTree.Default;
-					}
-					configClass.setSkillTree(skillTree);
-				} catch (ConfigException e) {
-					configClass.setSkillTree(SkillTree.Default);
-					warn(" - Missing configuration \"SkillTree\", setting to default value");
-				}
-
-				try {
-					List<String> experienceSources = c.getStringList("ExperienceSources");
-					HashSet<ExperienceSource> objects = new HashSet<>();
-					experienceSources.forEach(a -> objects.add(Sponge.getRegistry().getType(ExperienceSource.class, a.toLowerCase()).orElseGet(() -> {
-						info(" - Unknown experience source " + a + ". Should be one of [" +
-								Sponge.getRegistry().getAllOf(ExperienceSource.class)
-										.stream()
-										.map(ExperienceSource::getId)
-										.collect(Collectors.joining(", ")) + "]");
-						return null;
-					})));
-					configClass.setExperienceSources(objects);
-				} catch (ConfigException e) {
-					warn(" - Missing configuration \"ExperienceSources\", skipping");
-				}
-
-				try {
-					configClass.setSkillpointsperlevel(c.getInt("SkillPointsPerLevel"));
-				} catch (ConfigException e) {
-					warn(" - Missing configuration \"SkillPointsPerLevel\", skipping");
-				}
-
-				try {
-					configClass.setAttributepointsperlevel(c.getInt("AttributePointsPerLevel"));
-				} catch (ConfigException e) {
-					warn(" - Missing configuration \"AttributePointsPerLevel\", skipping");
-				}
-
-				try {
-					int maxLevel = c.getInt("MaxLevel");
-					double first = c.getDouble("ExpFirstLevel");
-					double last = c.getDouble("ExpLastLevel");
-					initLevelCurve(configClass, maxLevel, first, last);
-				} catch (ConfigException e) {
-					error(" - Missing one of configuration nodes \"MaxLevel\", \"ExpFirstLevel\", \"ExpLastLevel\"");
-					initLevelCurve(configClass, 2, 1, 2); //just some not null values which might cause npes later
-				}
-
-				getClasses().put(configClass.getName().toLowerCase(), configClass);
-			});
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void loadRaces() {
-		Path path = ResourceLoader.raceDir.toPath();
-		try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, "*.conf")) {
-			stream.forEach(p -> {
-				info("Loading file: " + p.getFileName().toString());
-				Config c = ConfigFactory.parseFile(p.toFile());
-				Race race = new Race(c.getString("Name"));
-				loadPlayerGroup(c, race);
-				Set<ConfigClass> set = new HashSet<>();
-				for (String a : c.getStringList("AllowedClasses")) {
-					ConfigClass configClass = getClasses().get(a.toLowerCase());
-					if (configClass == null) {
-						configClass = ConfigClass.Default;
-					}
-					set.add(configClass);
-				}
-				race.setAllowedClasses(set);
-				getRaces().put(race.getName().toLowerCase(), race);
-			});
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-
-	private void loadPlayerGroup(Config c, PlayerGroup group) {
-		try {
-			group.setShowsInMenu(c.getBoolean("Wildcard"));
-		} catch (ConfigException e) {
-			group.setShowsInMenu(true);
-			warn(" - Missing configuration \"Wildcard\", setting to true");
-		}
-
-		int id = 0;
-		float bonus;
-		Config prop;
-		Set<Map.Entry<String, ConfigValue>> set;
-		try {
-			prop = c.getConfig("BonusProperties");
-			set = prop.entrySet();
-
-			for (Map.Entry<String, ConfigValue> m : set) {
-				try {
-					id = propertyService.getIdByName(m.getKey());
-					bonus = Float.parseFloat(m.getValue().render());
-					group.getPropBonus().put(id, bonus);
-				} catch (NullPointerException e) {
-					error("Unknown property name \"" + m.getKey() + "\", check out your file properties_dump.info");
-				}
-			}
-		} catch (ConfigException e) {
-			warn(" - Missing configuration \"BonusProperties\", skipping");
-		}
-
-		try {
-			Config propl = c.getConfig("BonusPropertiesPerLevel");
-			Set<Map.Entry<String, ConfigValue>> setl = propl.entrySet();
-			for (Map.Entry<String, ConfigValue> m : setl) {
-				try {
-					id = propertyService.getIdByName(m.getKey());
-					bonus = Float.parseFloat(m.getValue().render());
-					group.getPropLevelBonus().put(id, bonus);
-				} catch (NullPointerException e) {
-					error("Unknown property name \"" + m.getKey() + "\", check out your file properties_dump.info");
-				}
-			}
-		} catch (ConfigException e) {
-			warn(" - Missing configuration \"BonusPropertiesPerLevel\", skipping");
-
-		}
-
-		try {
-			List<String> list = c.getStringList("AllowedArmor");
-			list.stream().forEach(a -> {
-				String[] k = a.split(";");
-				Optional<ItemType> type = game.getRegistry().getType(ItemType.class, k[0]);
-				if (type.isPresent()) {
-					RPGItemType rpgitemType = itemService.getArmorByItemType(type.get());
-					if (rpgitemType == null) {
-						warn("Unknown Armor type " + k[0] + " Check your ItemGroups.conf");
-					} else {
-						group.getAllowedArmor().add(rpgitemType);
-					}
-				} else {
-					warn("Defined invalid itemtype  " + a + " in " + group.getName());
-				}
-			});
-		} catch (ConfigException e) {
-			warn(" - Missing configuration \"AllowedArmor\", skipping");
-		}
-
-		try {
-			List<String> allowedOffHandWeapons = c.getStringList("AllowedOffHandWeapons");
-			for (String allowedWeapon : allowedOffHandWeapons) {
-				ConfigRPGItemType configRPGItemType = weaponFromCSVString(allowedWeapon, group);
-				if (configRPGItemType != null) {
-					group.addOffHandWeapon(configRPGItemType);
-				}
-			}
-		} catch (ConfigException e) {
-			warn(" - Missing configuration \"AllowedOffHandWeapons\", skipping");
-		}
-
-		try {
-			List<String> allowedWeapons = c.getStringList("AllowedWeapons");
-			for (String allowedWeapon : allowedWeapons) {
-				ConfigRPGItemType configRPGItemType = weaponFromCSVString(allowedWeapon, group);
-				if (configRPGItemType != null) {
-					group.addWeapon(configRPGItemType);
-				}
-			}
-		} catch (ConfigException e) {
-			warn(" - Missing configuration \"AllowedWeapons\", skipping");
-		}
-
-		try {
-			prop = c.getConfig("ProjectileDamage");
-			set = prop.entrySet();
-			for (Map.Entry<String, ConfigValue> m : set) {
-				if (m.getKey().equalsIgnoreCase("arrow") || m.getKey().equalsIgnoreCase("minecraft:arrow")) {
-					group.getProjectileDamage().put(EntityTypes.SPECTRAL_ARROW, Double.parseDouble(m.getValue().render()));
-					group.getProjectileDamage().put(EntityTypes.TIPPED_ARROW, Double.parseDouble(m.getValue().render()));
-				} else {
-					Optional<EntityType> type = game.getRegistry().getType(EntityType.class, m.getKey());
-					if (type.isPresent()) {
-						group.getProjectileDamage().put(type.get(), Double.parseDouble(m.getValue().render()));
-					} else {
-						warn("Defined invalid projectile type  " + m.getKey() + " in " + group.getName());
-					}
-				}
-			}
-		} catch (ConfigException e) {
-
-		}
-
-		try {
-			prop = c.getConfig("Attributes");
-			set = prop.entrySet();
-			for (Map.Entry<String, ConfigValue> entry : set) {
-				String attribute = entry.getKey();
-				int i = Integer.parseInt(entry.getValue().render());
-				ICharacterAttribute attribute1 = propertyService.getAttribute(attribute);
-				group.getStartingAttributes().put(attribute1, i);
-			}
-		} catch (ConfigException e) {
-			warn(" - Missing configuration \"Attributes\", skipping");
-		}
-
-		try {
-			Optional<ItemType> menuIcon = game.getRegistry().getType(ItemType.class, c.getString("MenuIcon"));
-			if (menuIcon.isPresent()) {
-				group.setItemType(menuIcon.get());
-			} else {
-				warn(" - Unknown item type in \"MenuIcon\", setting STONE as default");
-				group.setItemType(ItemTypes.STONE);
-			}
-		} catch (ConfigException e) {
-			warn(" - Missing configuration \"MenuIcon\", setting STONE as default");
-			group.setItemType(ItemTypes.STONE);
-		}
-
-		try {
-			group.setDescription(c.getString("Description"));
-		} catch (ConfigException e) {
-			group.setDescription("");
-			warn(" - Missing configuration \"Description\", setting an empty string as default");
-
-		}
-
-		try {
-			String color = c.getString("Color");
-			Optional<TextColor> type = Sponge.getRegistry().getType(TextColor.class, color);
-			if (type.isPresent()) {
-				group.setPreferedColor(type.get());
-			} else {
-				group.setPreferedColor(TextColors.WHITE);
-			}
-		} catch (ConfigException e) {
-			group.setPreferedColor(TextColors.WHITE);
-		}
-
-		try {
-			Config commands = c.getConfig("Commands");
-			try {
-				List<String> enter = commands.getStringList("Enter");
-				group.setEnterCommands(enter);
-			} catch (ConfigException e) {
-				group.setEnterCommands(new ArrayList<>());
-				warn(" - Missing configuration \"Commands.enter\", skipping");
-			}
-
-			try {
-				List<String> exit = commands.getStringList("Exit");
-				group.setExitCommands(exit);
-			} catch (ConfigException e) {
-				group.setExitCommands(new ArrayList<>());
-				warn(" - Missing configuration \"Commands.exit\", skipping");
-			}
-		} catch (ConfigException e) {
-			warn(" - Missing configuration \"Commands\", skipping");
-		}
-
-		try {
-			List<? extends Config> permissions = c.getConfigList("Permissions");
-			for (Config permission : permissions) {
-				group.getPermissions().add(ConfigBeanFactory.create(permission, PlayerGroupPermission.class));
-			}
-		} catch (ConfigException e) {
-			group.setPermissions(new HashSet<>());
-			warn(" - Missing configuration \"Permissions\", skipping");
-		}
-
-		try {
-
-
-			Config effects = c.getConfig("Effects");
-			for (Map.Entry<String, ConfigValue> entry : effects.root().entrySet()) {
-				String effectName = entry.getKey();
-				ConfigValueType type = entry.getValue().valueType();
-				EffectParams value = new EffectParams();
-				IGlobalEffect globalEffect = effectService.getGlobalEffect(effectName);
-				if (globalEffect == null) {
-					warn(globalEffect + " not found");
-					continue;
-				}
-				switch (type) {
-					case NULL:
-						break;
-					case STRING:
-						value.put(effectName, entry.getValue().render());
-						break;
-					case OBJECT:
-						ConfigObject object = (ConfigObject) entry.getValue();
-						Map<String, Object> unwrapped1 = object.unwrapped();
-						for (Map.Entry<String, Object> stringObjectEntry : unwrapped1.entrySet()) {
-							value.put(stringObjectEntry.getKey(),
-									stringObjectEntry.getValue() != null ? stringObjectEntry.getValue().toString() : null);
-						}
-
-				}
-				group.getEffects().put(globalEffect, value);
-			}
-		} catch (ConfigException e) {
-			warn(" - Missing configuration \"Effects\", skipping");
-
-		}
-
-		try {
-			Map<String, Map<EntityType, Double>> map = new HashMap<>();
-			Config experience = c.getObject("Experiences").toConfig();
-			for (Map.Entry<String, ConfigValue> entry : experience.root().entrySet()) {
-				String dimmension = entry.getKey();
-				map.putIfAbsent(dimmension, new HashMap<>());
-				ConfigObject value = (ConfigObject) entry.getValue();
-				for (Map.Entry<String, ConfigValue> a : value.entrySet()) {
-					String entityId = a.getKey();
-					Optional<EntityType> type = Sponge.getRegistry().getType(EntityType.class, entityId);
-					if (type.isPresent()) {
-						Double aDouble = Double.parseDouble(a.getValue().render());
-						EntityType entityType = type.get();
-						map.get(dimmension).put(entityType, aDouble);
-					} else {
-						error(" - Unknown entity type " + entityId);
-					}
-				}
-			}
-			group.setExperiences(map);
-		} catch (Exception e) {
-			info(" - Could not read Experiences node section, skipping");
-		}
-
-	}
-
-	private ConfigRPGItemType weaponFromCSVString(String allowedWeapon, PlayerGroup playerGroup) {
-		String[] split = allowedWeapon.split(";");
-		String s = split[0];
-		double damage = 0;
-		String itemName = null;
-
-		ItemType type = game.getRegistry().getType(ItemType.class, s).orElse(null);
-		if (type == null) {
-			error(" - Unknown item type " + s);
-		} else {
-			String s1 = split[1];
-			damage = Double.parseDouble(s1);
-			if (split.length == 3) {
-				itemName = split[2];
-			}
-			RPGItemType rpgitemType = itemService.getByItemTypeAndName(type, itemName);
-			if (rpgitemType == null) {
-				error(" - Defined weapon " + s + " but its configuration in ItemGroups.conf is missing!");
-				return null;
-			}
-			return new ConfigRPGItemType(rpgitemType, playerGroup, damage);
-		}
-		return null;
-	}
-
-
-	public void initLevelCurve(ConfigClass configClass, int maxlevel, double expFirstLevel, double expForLastLevel) {
-		double factora = Math.log(expForLastLevel / expFirstLevel) / (maxlevel - 1);
-		double factorb = expFirstLevel / (Math.exp(factora) - 1.0);
-		double[] levels = new double[maxlevel];
-		double k = 0;
-		for (int i = 1; i <= maxlevel; i++) {
-			double oldxp = Math.round(factorb * Math.exp(factora * (i - 1)));
-			double newxp = Math.round(factorb * Math.exp(factora * i));
-			levels[i - 1] = newxp - oldxp;
-			k += levels[i - 1];
-		}
-		configClass.setLevels(levels);
-		configClass.setTotalExp(k);
-	}
+    }
 }

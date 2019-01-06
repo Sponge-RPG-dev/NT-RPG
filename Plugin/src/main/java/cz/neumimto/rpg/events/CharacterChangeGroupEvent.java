@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.events;
 
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.groups.PlayerGroup;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.scripting.JsBinding;
 
 /**
@@ -10,20 +10,20 @@ import cz.neumimto.rpg.scripting.JsBinding;
 @JsBinding(JsBinding.Type.CLASS)
 public class CharacterChangeGroupEvent extends CharacterEvent {
 
-	private final PlayerGroup _new;
-	private final PlayerGroup old;
+	private final ClassDefinition _new;
+	private final ClassDefinition old;
 
-	public CharacterChangeGroupEvent(PlayerGroup playerGroup, IActiveCharacter character, PlayerGroup old) {
+	public CharacterChangeGroupEvent(ClassDefinition classDefinition, IActiveCharacter character, ClassDefinition old) {
 		super(character);
-		this._new = playerGroup;
+		this._new = classDefinition;
 		this.old = old;
 	}
 
-	public PlayerGroup getNew() {
+	public ClassDefinition getNew() {
 		return _new;
 	}
 
-	public PlayerGroup getOld() {
+	public ClassDefinition getOld() {
 		return old;
 	}
 }

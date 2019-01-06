@@ -18,11 +18,6 @@
 
 package cz.neumimto.rpg.skills;
 
-import static cz.neumimto.rpg.Log.error;
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.Log.warn;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
@@ -63,6 +58,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
+
+import static cz.neumimto.rpg.Log.error;
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 1.1.2015.
@@ -195,14 +195,14 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 			for (IActiveCharacter character : characterService.getCharacters()) {
 				Set<ExtendedNClass> classes = character.getClasses();
 				for (ExtendedNClass aClass : classes) {
-					SkillTree skillTree = aClass.getConfigClass().getSkillTree();
+					SkillTree skillTree = aClass.getClassDefinition().getSkillTree();
 					if (skillTree == null) continue; //should not happen anyway
 					String id = skillTree.getId();
 					SkillTree skillTree1 = skillTrees.get(id);
 					if (skillTree1 == null) continue;
-					aClass.getConfigClass().setSkillTree(skillTree1);
+					aClass.getClassDefinition().setSkillTree(skillTree1);
 
-					aClass.getConfigClass().
+					aClass.getClassDefinition().
 				}
 			}
 			*/

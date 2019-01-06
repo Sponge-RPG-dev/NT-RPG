@@ -18,17 +18,15 @@
 
 package cz.neumimto.rpg;
 
-import static cz.neumimto.rpg.Log.info;
-
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.persistance.GroupDao;
-import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.PlayerClassData;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
-import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.PlayerGroupPermission;
 import cz.neumimto.rpg.players.groups.Race;
 import org.spongepowered.api.service.permission.SubjectData;
@@ -37,6 +35,8 @@ import org.spongepowered.api.util.Tristate;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import static cz.neumimto.rpg.Log.info;
 
 /**
  * Created by NeumimTo on 28.12.2014.
@@ -124,8 +124,8 @@ public class GroupService {
 		return groupDao.getRaces().containsKey(s.toLowerCase());
 	}
 
-	public Set<PlayerGroup> getAll() {
-		Set<PlayerGroup> set = new HashSet<>();
+	public Set<ClassDefinition> getAll() {
+		Set<ClassDefinition> set = new HashSet<>();
 		set.addAll(getRaces());
 		set.addAll(getClasses());
 		return set;
@@ -148,7 +148,7 @@ public class GroupService {
 		return k;
 	}
 
-	public PlayerGroup getByName(String arg) {
+	public ClassDefinition getByName(String arg) {
 		if (existsClass(arg)) {
 			return getNClass(arg);
 		}
@@ -160,11 +160,11 @@ public class GroupService {
 
 	public void setDefaultClass(ConfigClass configClass) {
 		ConfigClass.Default = configClass;
-		ExtendedNClass.Default.setConfigClass(configClass);
+		PlayerClassData.Default.setClassDefinition(configClass);
 		info("Default class set to \"" + configClass.getName() + "\"");
 	}
 
-	public Set<String> getPermissionsToRemove(IActiveCharacter character, PlayerGroup toBeReplaced) {
+	public Set<String> getPermissionsToRemove(IActiveCharacter character, ClassDefinition toBeReplaced) {
 		Set<String> intersection = new HashSet<>();
 
 		Set<String> toBeRemoved = new HashSet<>();
@@ -187,8 +187,8 @@ public class GroupService {
 		}
 
 
-		for (ExtendedNClass nClass : character.getClasses()) {
-			ConfigClass configClass = nClass.getConfigClass();
+		for (PlayerClassData nClass : character.getClasses()) {
+			ConfigClass configClass = nClass.getClassDefinition();
 			if (configClass == toBeReplaced) {
 				for (PlayerGroupPermission pgp : configClass.getPermissions()) {
 					if (pgp.getLevel() <= character.getLevel()) {
@@ -226,16 +226,16 @@ public class GroupService {
 		}
 	}
 
-	public void addAllPermissions(IActiveCharacter character, PlayerGroup playerGroup) {
-		for (PlayerGroupPermission playerGroupPermission : playerGroup.getPermissions()) {
+	public void addAllPermissions(IActiveCharacter character, ClassDefinition classDefinition) {
+		for (PlayerGroupPermission playerGroupPermission : classDefinition.getPermissions()) {
 			if (playerGroupPermission.getLevel() <= character.getLevel()) {
 				addPermissions(character, playerGroupPermission.getPermissions());
 			}
 		}
 	}
 
-	public void addPermissions(IActiveCharacter character, PlayerGroup playerGroup) {
-		for (PlayerGroupPermission playerGroupPermission : playerGroup.getPermissions()) {
+	public void addPermissions(IActiveCharacter character, ClassDefinition classDefinition) {
+		for (PlayerGroupPermission playerGroupPermission : classDefinition.getPermissions()) {
 			if (playerGroupPermission.getLevel() == character.getLevel()) {
 				addPermissions(character, playerGroupPermission.getPermissions());
 			}

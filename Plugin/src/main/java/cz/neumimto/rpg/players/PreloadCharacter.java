@@ -18,8 +18,6 @@
 
 package cz.neumimto.rpg.players;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.effects.EffectContainer;
@@ -28,10 +26,8 @@ import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
-import cz.neumimto.rpg.players.groups.ConfigClass;
-import cz.neumimto.rpg.players.groups.Guild;
-import cz.neumimto.rpg.players.groups.PlayerGroup;
-import cz.neumimto.rpg.players.groups.Race;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.players.groups.ClassDefinitionType;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
@@ -57,6 +53,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 23.7.2015.
@@ -304,16 +302,6 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public ExtendedNClass getPrimaryClass() {
-		return ExtendedNClass.Default;
-	}
-
-	@Override
-	public void setPrimaryClass(ConfigClass clazz) {
-
-	}
-
-	@Override
 	public Map<String, Long> getCooldowns() {
 		return Collections.emptyMap();
 	}
@@ -345,36 +333,6 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Set<ExtendedNClass> getClasses() {
-		return Collections.emptySet();
-	}
-
-	@Override
-	public ConfigClass getNClass(int index) {
-		return ConfigClass.Default;
-	}
-
-	@Override
-	public Race getRace() {
-		return Race.Default;
-	}
-
-	@Override
-	public void setRace(Race race) {
-
-	}
-
-	@Override
-	public Guild getGuild() {
-		return null;
-	}
-
-	@Override
-	public void setGuild(Guild guild) {
-
-	}
-
-	@Override
 	public IActiveCharacter updateItemRestrictions() {
 		return this;
 	}
@@ -382,11 +340,6 @@ public class PreloadCharacter implements IActiveCharacter {
 	@Override
 	public CharacterBase getCharacterBase() {
 		return new CharacterBase();
-	}
-
-	@Override
-	public void setClass(ConfigClass nclass, int slot) {
-
 	}
 
 	@Override
@@ -506,6 +459,11 @@ public class PreloadCharacter implements IActiveCharacter {
 
 
 	@Override
+	public Map<ClassDefinitionType, PlayerClassData> getClasses() {
+		return Collections.EMPTY_MAP;
+	}
+
+	@Override
 	public Party getParty() {
 		return new Party(this);
 	}
@@ -562,7 +520,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public boolean hasClass(PlayerGroup configClass) {
+	public boolean hasClass(ClassDefinition configClass) {
 		return false;
 	}
 

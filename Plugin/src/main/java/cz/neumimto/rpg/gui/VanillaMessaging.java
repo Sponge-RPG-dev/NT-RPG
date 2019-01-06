@@ -18,11 +18,6 @@
 
 package cz.neumimto.rpg.gui;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-import static cz.neumimto.rpg.gui.GuiHelper.back;
-import static cz.neumimto.rpg.gui.GuiHelper.createPlayerGroupView;
-import static cz.neumimto.rpg.gui.GuiHelper.getItemLore;
-
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
@@ -33,7 +28,6 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.Localizations;
-
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.EffectSourceType;
@@ -58,11 +52,11 @@ import cz.neumimto.rpg.persistance.DirectAccessDao;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.groups.ConfigClass;
-import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.reloading.Reload;
@@ -109,6 +103,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.gui.GuiHelper.back;
+import static cz.neumimto.rpg.gui.GuiHelper.createPlayerGroupView;
+import static cz.neumimto.rpg.gui.GuiHelper.getItemLore;
 
 /**
  * Created by NeumimTo on 6.8.2015.
@@ -200,7 +199,7 @@ public class VanillaMessaging implements IPlayerMessage {
 					.append(Text.builder("SELECT").color(TextColors.GREEN).build())
 					.append(Text.builder("] - ").color(TextColors.DARK_GRAY).build());
 			b.append(Text.of(name));
-			if (character.getPrimaryClass() != ExtendedNClass.Default) {
+			if (character.getPrimaryClass() != PlayerClassData.Default) {
 				b.append(Text.builder(" ").build()).append(Text.of(level));
 			}
 			if (character.getRace() != Race.Default) {
@@ -239,9 +238,9 @@ public class VanillaMessaging implements IPlayerMessage {
 	}
 
 	@Override
-	public void showLevelChange(IActiveCharacter character, ExtendedNClass clazz, int level) {
+	public void showLevelChange(IActiveCharacter character, PlayerClassData clazz, int level) {
 		Player player = character.getPlayer();
-		player.sendMessage(Text.of("Level up: " + clazz.getConfigClass().getName() + " - " + level));
+		player.sendMessage(Text.of("Level up: " + clazz.getClassDefinition().getName() + " - " + level));
 	}
 
 	@Override
@@ -373,13 +372,13 @@ public class VanillaMessaging implements IPlayerMessage {
 		displayCommonMenu(character, groupService.getRaces(), Race.Default, Localizations.RACES_MENU_TEXT.toText());
 	}
 
-	private void displayCommonMenu(IActiveCharacter character, Collection<? extends PlayerGroup> g, PlayerGroup default_, Text invHeader) {
+	private void displayCommonMenu(IActiveCharacter character, Collection<? extends ClassDefinition> g, ClassDefinition default_, Text invHeader) {
 		Inventory i = Inventory.builder()
 				.of(InventoryArchetypes.DOUBLE_CHEST)
 				.property(InventoryTitle.of(invHeader))
 				.build(plugin);
 		Player player = character.getPlayer();
-		for (PlayerGroup cc : g) {
+		for (ClassDefinition cc : g) {
 			if (cc == default_) {
 				continue;
 			}
@@ -391,7 +390,7 @@ public class VanillaMessaging implements IPlayerMessage {
 		player.openInventory(i);
 	}
 
-	private ItemStack createItemRepresentingGroup(PlayerGroup p) {
+	private ItemStack createItemRepresentingGroup(ClassDefinition p) {
 		ItemStack s = GuiHelper.itemStack(p.getItemType());
 		s.offer(new MenuInventoryData(true));
 		s.offer(Keys.DISPLAY_NAME, Text.of(p.getName(), TextColors.DARK_PURPLE));
@@ -405,7 +404,7 @@ public class VanillaMessaging implements IPlayerMessage {
 	}
 
 	@Override
-	public void displayGroupArmor(PlayerGroup g, Player target) {
+	public void displayGroupArmor(ClassDefinition g, Player target) {
 		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
 		List<List<RPGItemType>> rows = new ArrayList<>(5);
 		for (int ki = 0; ki <= 5; ki++) {
@@ -447,7 +446,7 @@ public class VanillaMessaging implements IPlayerMessage {
 	}
 
 	@Override
-	public void displayGroupWeapon(PlayerGroup g, Player target) {
+	public void displayGroupWeapon(ClassDefinition g, Player target) {
 		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
 
 
@@ -486,7 +485,7 @@ public class VanillaMessaging implements IPlayerMessage {
 	}
 
 	@Override
-	public void displayAttributes(Player player, PlayerGroup group) {
+	public void displayAttributes(Player player, ClassDefinition group) {
 		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back(group));
 
@@ -620,15 +619,15 @@ public class VanillaMessaging implements IPlayerMessage {
 
 	}
 
-	private Inventory displayGroupRequirements(IActiveCharacter character, RuneWord rw, Set<PlayerGroup> groups) {
+	private Inventory displayGroupRequirements(IActiveCharacter character, RuneWord rw, Set<ClassDefinition> groups) {
 		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
 		String cmd = infoCommand.getAliases().get(0);
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0)))
 				.offer(back("runeword " + rw.getName(), Localizations.RUNEWORD_DETAILS_MENU.toText()));
 
 		List<ItemStack> list = new ArrayList<>();
-		for (PlayerGroup playerGroup : groups) {
-			list.add(runewordRequirementsToItemStack(character, playerGroup));
+		for (ClassDefinition classDefinition : groups) {
+			list.add(runewordRequirementsToItemStack(character, classDefinition));
 		}
 		int x = 1;
 		int y = 2;
@@ -644,19 +643,19 @@ public class VanillaMessaging implements IPlayerMessage {
 		return i;
 	}
 
-	private ItemStack runewordRequirementsToItemStack(IActiveCharacter character, PlayerGroup playerGroup) {
-		ItemStack is = createItemRepresentingGroup(playerGroup);
-		TextColor color = hasGroup(character, playerGroup);
-		is.offer(Keys.DISPLAY_NAME, Text.of(color, playerGroup.getName()));
+	private ItemStack runewordRequirementsToItemStack(IActiveCharacter character, ClassDefinition classDefinition) {
+		ItemStack is = createItemRepresentingGroup(classDefinition);
+		TextColor color = hasGroup(character, classDefinition);
+		is.offer(Keys.DISPLAY_NAME, Text.of(color, classDefinition.getName()));
 		return is;
 	}
 
-	private TextColor hasGroup(IActiveCharacter character, PlayerGroup playerGroup) {
-		if (playerGroup.getType() == EffectSourceType.RACE) {
-			return character.getRace() == playerGroup ? TextColors.GREEN : TextColors.RED;
+	private TextColor hasGroup(IActiveCharacter character, ClassDefinition classDefinition) {
+		if (classDefinition.getType() == EffectSourceType.RACE) {
+			return character.getRace() == classDefinition ? TextColors.GREEN : TextColors.RED;
 		}
-		if (playerGroup.getType() == EffectSourceType.CLASS) {
-			return character.hasClass(playerGroup) ? TextColors.GREEN : TextColors.RED;
+		if (classDefinition.getType() == EffectSourceType.CLASS) {
+			return character.hasClass(classDefinition) ? TextColors.GREEN : TextColors.RED;
 		}
 		return null;
 	}
@@ -742,7 +741,7 @@ public class VanillaMessaging implements IPlayerMessage {
 	}
 
 	@Override
-	public void displayInitialProperties(PlayerGroup g, Player p) {
+	public void displayInitialProperties(ClassDefinition g, Player p) {
 		ItemStack back = GuiHelper.back(g);
 
 	}

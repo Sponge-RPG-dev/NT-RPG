@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.events;
 
-import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.scripting.JsBinding;
 
 /**
@@ -10,12 +10,12 @@ import cz.neumimto.rpg.scripting.JsBinding;
 @JsBinding(JsBinding.Type.CLASS)
 public class CharacterGainedLevelEvent extends CharacterEvent {
 
-	private final ExtendedNClass aClass;
+	private final PlayerClassData aClass;
 	private final int level;
 	private int skillpointsPerLevel;
 	private int attributepointsPerLevel;
 
-	public CharacterGainedLevelEvent(IActiveCharacter character, ExtendedNClass aClass, int level, int skillpointsPerLevel,
+	public CharacterGainedLevelEvent(IActiveCharacter character, PlayerClassData aClass, int level, int skillpointsPerLevel,
 			int attributepointsPerLevel) {
 		super(character);
 		this.aClass = aClass;
@@ -24,7 +24,7 @@ public class CharacterGainedLevelEvent extends CharacterEvent {
 		this.attributepointsPerLevel = attributepointsPerLevel;
 	}
 
-	public ExtendedNClass getaClass() {
+	public PlayerClassData getaClass() {
 		return aClass;
 	}
 

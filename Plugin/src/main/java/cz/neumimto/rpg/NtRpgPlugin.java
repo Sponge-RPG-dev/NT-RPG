@@ -18,8 +18,6 @@
 
 package cz.neumimto.rpg;
 
-import static cz.neumimto.rpg.Log.info;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.inject.Inject;
@@ -92,10 +90,10 @@ import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.ExperienceSourceRegistry;
 import cz.neumimto.rpg.players.ExperienceSources;
-import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.PlayerClassData;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.groups.ConfigClass;
-import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.attributes.AttributeRegistry;
@@ -170,6 +168,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
+
+import static cz.neumimto.rpg.Log.info;
 
 /**
  * Created by NeumimTo on 29.4.2015.
@@ -822,7 +822,7 @@ public class NtRpgPlugin {
 						return CommandResult.empty();
 					}
 					ItemStack itemStack = itemInHand.get();
-					PlayerGroup group = args.<PlayerGroup>getOne("group").get();
+					ClassDefinition group = args.<ClassDefinition>getOne("group").get();
 					Integer integer = args.<Integer>getOne("level").orElse(0);
 
 					GlobalScope.inventorySerivce.addGroupRestriction(itemStack, group, integer);
@@ -875,10 +875,10 @@ public class NtRpgPlugin {
 					Player player = args.<Player>getOne("player").get();
 					String data = args.<String>getOne("data").get();
 					IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
-					Set<ExtendedNClass> classes = character.getClasses();
+					Set<PlayerClassData> classes = character.getClasses();
 					String[] a = data.split(" ");
-					for (ExtendedNClass aClass : classes) {
-						if (aClass.getConfigClass().getName().equalsIgnoreCase(a[0])) {
+					for (PlayerClassData aClass : classes) {
+						if (aClass.getClassDefinition().getName().equalsIgnoreCase(a[0])) {
 							NtRpgPlugin.GlobalScope.characterService.addExperiences(character, Double.valueOf(a[1]), aClass, false);
 						}
 					}
@@ -1109,7 +1109,7 @@ public class NtRpgPlugin {
 						player.sendMessage(Localizations.CHARACTER_IS_REQUIRED.toText());
 						return CommandResult.empty();
 					}
-					character.getClasses().remove(ExtendedNClass.Default);
+					character.getClasses().remove(PlayerClassData.Default);
 					GlobalScope.characterService.updatePlayerGroups(character, configClass, i, null, null);
 					return CommandResult.success();
 				})
@@ -1510,7 +1510,7 @@ public class NtRpgPlugin {
 		CommandSpec weapon = CommandSpec.builder()
 				.arguments(new AnyPlayerGroupCommandElement(Text.of("class_or_race")))
 				.executor((src, args) -> {
-					args.<PlayerGroup>getOne(Text.of("class_or_race"))
+					args.<ClassDefinition>getOne(Text.of("class_or_race"))
 							.ifPresent(playerGroup -> {
 								Player player = (Player) src;
 								Gui.displayGroupWeapon(playerGroup, player);
@@ -1524,7 +1524,7 @@ public class NtRpgPlugin {
 				.arguments(new AnyPlayerGroupCommandElement(Text.of("class_or_race")))
 				.executor((src, args) -> {
 
-					args.<PlayerGroup>getOne(Text.of("class_or_race"))
+					args.<ClassDefinition>getOne(Text.of("class_or_race"))
 							.ifPresent(playerGroup -> {
 								Player player = (Player) src;
 								Gui.displayGroupArmor(playerGroup, player);

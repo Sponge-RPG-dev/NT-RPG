@@ -18,8 +18,6 @@
 
 package cz.neumimto.rpg.players;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.effects.EffectSourceType;
@@ -30,10 +28,9 @@ import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.players.groups.ClassDefinitionType;
 import cz.neumimto.rpg.players.groups.ConfigClass;
-import cz.neumimto.rpg.players.groups.Guild;
-import cz.neumimto.rpg.players.groups.PlayerGroup;
-import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
@@ -63,6 +60,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -72,6 +71,8 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	private transient UUID pl;
 	private CharacterBase base;
+
+	private Map<ClassDefinitionType, PlayerClassData> classes = new HashMap<>();
 
 	private transient float[] characterProperties;
 	private transient float[] characterPropertiesLevel;
@@ -83,16 +84,10 @@ public class ActiveCharacter implements IActiveCharacter {
 	private IReservable mana = new Mana(this);
 	private IReservable health = new Health(this);
 
-	private Race race = Race.Default;
-	private Guild guild;
-
 	private transient Party party;
 
 	private transient Map<String, IEffectContainer<Object, IEffect<Object>>> effects = new HashMap<>();
 	private Map<String, ExtendedSkillInfo> skills = new HashMap<>();
-	private transient Set<ExtendedNClass> classes = new HashSet<>();
-
-	private transient ExtendedNClass primary;
 
 	private transient Click click = new Click();
 	private transient Set<RPGItemType> allowedArmorIds = new HashSet<>();
@@ -123,11 +118,7 @@ public class ActiveCharacter implements IActiveCharacter {
 		characterProperties = new float[PropertyService.LAST_ID];
 		characterPropertiesLevel = new float[PropertyService.LAST_ID];
 		equipedArmor = new HashMap<>();
-		ExtendedNClass cl = new ExtendedNClass(this);
-		cl.setPrimary(true);
-		cl.setConfigClass(ConfigClass.Default);
 		this.base = base;
-		classes.add(cl);
 		slotsToReinitialize = new ArrayList<>();
 		skillTreeViewLocation = new HashMap<>();
 		denySlotInteractionArr = new HashSet<>();
@@ -274,9 +265,9 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	@Override
 	public void addExperiences(double exp, ExperienceSource source) {
-		for (ExtendedNClass nClass : classes) {
-			if (nClass.getConfigClass().hasExperienceSource(source)) {
-				CharacterClass c = getCharacterBase().getCharacterClass(nClass.getConfigClass());
+		for (PlayerClassData nClass : classes.values()) {
+			if (nClass.getClassDefinition().hasExperienceSource(source)) {
+				CharacterClass c = getCharacterBase().getCharacterClass(nClass.getClassDefinition());
 				Double nClass1 = c.getExperiences() == null ? 0 : c.getExperiences();
 				if (nClass1 == null) {
 					c.setExperiences(exp);
@@ -322,28 +313,18 @@ public class ActiveCharacter implements IActiveCharacter {
 		return base.getAttributes().get(name) + getTransientAttributes().get(name);
 	}
 
-	@Override
-	public ExtendedNClass getPrimaryClass() {
-		return primary;
-	}
-
-	@Override
-	public void setPrimaryClass(ConfigClass clazz) {
-		setClass(clazz, 0);
-	}
-
 	public void setClass(ConfigClass nclass, int slot) {
 		if (primary != null) {
-			//      fixPropertyValues(getPrimaryClass().getConfigClass().getPropBonus(), -1);
-			//      fixPropertyLevelValues(getPrimaryClass().getConfigClass().getPropLevelBonus(), -1);
+			//      fixPropertyValues(getPrimaryClass().getClassDefinition().getPropBonus(), -1);
+			//      fixPropertyLevelValues(getPrimaryClass().getClassDefinition().getPropLevelBonus(), -1);
 			skills.clear();
 		}
 
 		//classes.clear();
 
 		if (slot == 0) {
-			primary = new ExtendedNClass(this);
-			primary.setConfigClass(nclass);
+			primary = new PlayerClassData(this);
+			primary.setClassDefinition(nclass);
 			primary.setPrimary(true);
 			classes.add(primary);
 		}
@@ -368,7 +349,7 @@ public class ActiveCharacter implements IActiveCharacter {
 		}
 		base.setPrimaryClass(nclass.getName());
 		//   fixPropertyValues(nclass.getPropBonus(), 1);
-		//  fixPropertyLevelValues(getPrimaryClass().getConfigClass().getPropLevelBonus(), 1);
+		//  fixPropertyLevelValues(getPrimaryClass().getClassDefinition().getPropLevelBonus(), 1);
 		SkillData skillData = nclass.getSkillTree().getSkills().get(StartingPoint.name);
 		if (skillData != null) {
 			ExtendedSkillInfo info = new ExtendedSkillInfo();
@@ -389,7 +370,7 @@ public class ActiveCharacter implements IActiveCharacter {
 		return getCharacterBase().getCharacterCooldowns().containsKey(thing);
 	}
 
-	private void mergeWeapons(PlayerGroup g) {
+	private void mergeWeapons(ClassDefinition g) {
 		mergeWeapons(g.getWeapons());
 		for (Map.Entry<EntityType, Double> e : g.getProjectileDamage().entrySet()) {
 			if (getBaseProjectileDamage(e.getKey()) < e.getValue()) {
@@ -462,7 +443,7 @@ public class ActiveCharacter implements IActiveCharacter {
 
 
 		//mergeWeapons(getGuild());
-		mergeWeapons(getPrimaryClass().getConfigClass());
+		mergeWeapons(getPrimaryClass().getClassDefinition());
 		//could be problematic, but its not called too often
 		for (ExtendedSkillInfo extendedSkillInfo : getSkills().values()) {
 			if (extendedSkillInfo.getSkill().getType() == EffectSourceType.ITEM_ACCESS_SKILL) {
@@ -483,14 +464,14 @@ public class ActiveCharacter implements IActiveCharacter {
 
 		//allowedArmorIds.addAll(getGuild().getAllowedArmor());
 
-		allowedArmorIds.addAll(getPrimaryClass().getConfigClass().getAllowedArmor());
+		allowedArmorIds.addAll(getPrimaryClass().getClassDefinition().getAllowedArmor());
 
 		getProjectileDamages().clear();
 
 		getProjectileDamages().putAll(getRace().getProjectileDamage());
 
-		for (ExtendedNClass extendedNClass : getClasses()) {
-			ConfigClass configClass = extendedNClass.getConfigClass();
+		for (PlayerClassData playerClassData : getClasses()) {
+			ConfigClass configClass = playerClassData.getClassDefinition();
 			Map<EntityType, Double> projectileDamage = configClass.getProjectileDamage();
 			for (Map.Entry<EntityType, Double> entityType : projectileDamage.entrySet()) {
 				Double aDouble = getProjectileDamages().get(entityType.getKey());
@@ -536,38 +517,6 @@ public class ActiveCharacter implements IActiveCharacter {
 	@Override
 	public Map<EntityType, Double> getProjectileDamages() {
 		return projectileDamage;
-	}
-
-	@Override
-	public Set<ExtendedNClass> getClasses() {
-		return classes;
-	}
-
-	@Override
-	public Race getRace() {
-		return race;
-	}
-
-	@Override
-	public void setRace(Race race) {
-		this.race = race;
-		getCharacterBase().setRace(race.getName());
-	}
-
-	@Override
-	public Guild getGuild() {
-		return guild;
-	}
-
-	@Override
-	public void setGuild(Guild guild) {
-		if (this.guild != Guild.Default) {
-			//     fixPropertyValues(this.guild.getPropBonus(), -1);
-			//       removePermissions(guild.getPermissions());
-		}
-		this.guild = guild;
-		//  fixPropertyValues(guild.getPropBonus(), 1);
-		//   addPermissions(guild.getPermissions());*/
 	}
 
 	@Override
@@ -629,16 +578,6 @@ public class ActiveCharacter implements IActiveCharacter {
 	@Override
 	public int getLevel() {
 		return getPrimaryClass().getLevel();
-	}
-
-	@Override
-	public ConfigClass getNClass(int index) {
-		for (ExtendedNClass aClass : classes) {
-			if (aClass.getSlot() == index) {
-				return aClass.getConfigClass();
-			}
-		}
-		return null;
 	}
 
 	@Override
@@ -735,13 +674,9 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public boolean hasClass(PlayerGroup configClass) {
-		for (ExtendedNClass aClass : classes) {
-			if (aClass.getConfigClass() == configClass) {
-				return true;
-			}
-		}
-		return false;
+	public boolean hasClass(ClassDefinition configClass) {
+		ClassDefinitionType type = configClass.getType();
+		return getClassByType(type) != null;
 	}
 
 	@Override
@@ -844,9 +779,8 @@ public class ActiveCharacter implements IActiveCharacter {
 	@Override
 	public double getExperienceBonusFor(String name, EntityType type) {
 		double exp = 0;
-		exp += getRace().getExperiencesBonus(name, type);
-		for (ExtendedNClass extendedNClass : getClasses()) {
-			exp += extendedNClass.getConfigClass().getExperiencesBonus(name, type);
+		for (PlayerClassData playerClassData : getClasses().values()) {
+			exp += playerClassData.getClassDefinition().getExperiencesBonus(name, type);
 		}
 		return exp;
 	}

@@ -28,10 +28,10 @@ import cz.neumimto.rpg.effects.common.def.ClickComboActionComponent;
 import cz.neumimto.rpg.inventory.CannotUseItemReason;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.ExtendedNClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.PlayerClassData;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.groups.ConfigClass;
-import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
@@ -108,7 +108,7 @@ public class Gui {
 		getMessageTypeOf(character).showExpChange(character, classname, expchange);
 	}
 
-	public static void showLevelChange(IActiveCharacter character, ExtendedNClass aClass, int level) {
+	public static void showLevelChange(IActiveCharacter character, PlayerClassData aClass, int level) {
 		getMessageTypeOf(character).showLevelChange(character, aClass, level);
 	}
 
@@ -144,15 +144,15 @@ public class Gui {
 		getMessageTypeOf(target).sendListOfRaces(target);
 	}
 
-	public static void displayGroupArmor(PlayerGroup g, Player target) {
+	public static void displayGroupArmor(ClassDefinition g, Player target) {
 		getMessageTypeOf(target).displayGroupArmor(g, target);
 	}
 
-	public static void displayGroupWeapon(PlayerGroup g, Player target) {
+	public static void displayGroupWeapon(ClassDefinition g, Player target) {
 		getMessageTypeOf(target).displayGroupWeapon(g, target);
 	}
 
-	public static void displayInitialAttributes(PlayerGroup g, Player target) {
+	public static void displayInitialAttributes(ClassDefinition g, Player target) {
 		getMessageTypeOf(target).displayAttributes(target, g);
 	}
 
@@ -215,7 +215,7 @@ public class Gui {
 		getMessageTypeOf(character).displaySkillDetailsInventoryMenu(character, tree, command);
 	}
 
-	public static void displayInitialProperties(PlayerGroup byName, Player commandSource) {
+	public static void displayInitialProperties(ClassDefinition byName, Player commandSource) {
 		getMessageTypeOf(commandSource).displayInitialProperties(byName, commandSource);
 	}
 

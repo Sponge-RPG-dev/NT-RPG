@@ -17,11 +17,6 @@
  */
 package cz.neumimto.rpg.players;
 
-import static cz.neumimto.core.localization.Arg.arg;
-import static cz.neumimto.rpg.Log.error;
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
@@ -60,9 +55,9 @@ import cz.neumimto.rpg.persistance.PlayerDao;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.Guild;
-import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
@@ -95,6 +90,11 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static cz.neumimto.core.localization.Arg.arg;
+import static cz.neumimto.rpg.Log.error;
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -376,8 +376,8 @@ public class CharacterService {
 			}
 		}
 
-		for (ExtendedNClass nClass : character.getClasses()) {
-			applyGroupEffects(character, nClass.getConfigClass());
+		for (PlayerClassData nClass : character.getClasses()) {
+			applyGroupEffects(character, nClass.getClassDefinition());
 		}
 		applyGroupEffects(character, character.getRace());
 
@@ -494,14 +494,14 @@ public class CharacterService {
 
 	}
 
-	public void removeGroupEffects(IActiveCharacter character, PlayerGroup p) {
+	public void removeGroupEffects(IActiveCharacter character, ClassDefinition p) {
 		if (p == null) {
 			return;
 		}
 		effectService.removeGlobalEffectsAsEnchantments(p.getEffects().keySet(), character, p);
 	}
 
-	public void applyGroupEffects(IActiveCharacter character, PlayerGroup p) {
+	public void applyGroupEffects(IActiveCharacter character, ClassDefinition p) {
 		if (p == null) {
 			return;
 		}
@@ -669,8 +669,8 @@ public class CharacterService {
 
 		activeCharacter.setPrimaryClass(groupService.getNClass(characterBase.getPrimaryClass()));
 		groupService.addAllPermissions(activeCharacter, activeCharacter.getRace());
-		groupService.addAllPermissions(activeCharacter, activeCharacter.getPrimaryClass().getConfigClass());
-		String s = activeCharacter.getPrimaryClass().getConfigClass().getName();
+		groupService.addAllPermissions(activeCharacter, activeCharacter.getPrimaryClass().getClassDefinition());
+		String s = activeCharacter.getPrimaryClass().getClassDefinition().getName();
 		Optional<CharacterClass> first = characterBase.getCharacterClasses()
 				.stream()
 				.filter(a -> s.equalsIgnoreCase(a.getName()))
@@ -739,12 +739,12 @@ public class CharacterService {
 	 */
 	public Text upgradeSkill(IActiveCharacter character, ISkill skill) {
 		CharacterClass cc = null;
-		Set<ExtendedNClass> classes = character.getClasses();
+		Set<PlayerClassData> classes = character.getClasses();
 
-		for (ExtendedNClass aClass : classes) {
-			Map<String, SkillData> skills = aClass.getConfigClass().getSkillTree().getSkills();
+		for (PlayerClassData aClass : classes) {
+			Map<String, SkillData> skills = aClass.getClassDefinition().getSkillTree().getSkills();
 			if (skills.containsKey(skill.getId())) {
-				cc = character.getCharacterBase().getCharacterClass(aClass.getConfigClass());
+				cc = character.getCharacterBase().getCharacterClass(aClass.getClassDefinition());
 				break;
 			}
 		}
@@ -802,10 +802,10 @@ public class CharacterService {
 	 * @param skill
 	 */
 	public Text characterLearnskill(IActiveCharacter character, ISkill skill, SkillTree skillTree) {
-		ExtendedNClass nClass = null;
-		for (ExtendedNClass extendedNClass : character.getClasses()) {
-			if (extendedNClass.getConfigClass().getSkillTree() == skillTree) {
-				nClass = extendedNClass;
+		PlayerClassData nClass = null;
+		for (PlayerClassData playerClassData : character.getClasses()) {
+			if (playerClassData.getClassDefinition().getSkillTree() == skillTree) {
+				nClass = playerClassData;
 				break;
 			}
 		}
@@ -814,9 +814,9 @@ public class CharacterService {
 			return Localizations.NO_ACCESS_TO_SKILL.toText();
 		}
 		int avalaibleSkillpoints = 0;
-		CharacterClass clazz = character.getCharacterBase().getCharacterClass(nClass.getConfigClass());
+		CharacterClass clazz = character.getCharacterBase().getCharacterClass(nClass.getClassDefinition());
 		if (clazz == null) {
-			throw new MissingConfigurationException("Class=" + nClass.getConfigClass().getName() + ". Renamed?");
+			throw new MissingConfigurationException("Class=" + nClass.getClassDefinition().getName() + ". Renamed?");
 		}
 		//todo fetch from db
 		avalaibleSkillpoints = clazz.getSkillPoints();
@@ -1008,9 +1008,9 @@ public class CharacterService {
 	}
 
 	public void addExperiences(IActiveCharacter character, double exp, ExperienceSource source) {
-		Set<ExtendedNClass> classes = character.getClasses();
-		for (ExtendedNClass aClass : classes) {
-			ConfigClass configClass = aClass.getConfigClass();
+		Set<PlayerClassData> classes = character.getClasses();
+		for (PlayerClassData aClass : classes) {
+			ConfigClass configClass = aClass.getClassDefinition();
 			if (configClass.hasExperienceSource(source)) {
 				int maxlevel = configClass.getLevels().length - 1;
 				if (aClass.getLevel() > maxlevel) {
@@ -1022,7 +1022,7 @@ public class CharacterService {
 	}
 
 
-	public void addExperiences(IActiveCharacter character, double exp, ExtendedNClass aClass, boolean onlyinit) {
+	public void addExperiences(IActiveCharacter character, double exp, PlayerClassData aClass, boolean onlyinit) {
 		if (!aClass.takesExp() && !onlyinit) {
 			return;
 		}
@@ -1034,7 +1034,7 @@ public class CharacterService {
 		}
 		double total = aClass.getExperiences();
 		double lvlexp = aClass.getExperiencesFromLevel();
-		double[] levels = aClass.getConfigClass().getLevels();
+		double[] levels = aClass.getClassDefinition().getLevels();
 		if (levels == null) {
 			return;
 		}
@@ -1047,11 +1047,11 @@ public class CharacterService {
 			if (!onlyinit) {
 				Gui.showLevelChange(character, aClass, level);
 				CharacterGainedLevelEvent event =
-						new CharacterGainedLevelEvent(character, aClass, level, aClass.getConfigClass().getSkillpointsperlevel(),
-								aClass.getConfigClass().getAttributepointsperlevel());
+						new CharacterGainedLevelEvent(character, aClass, level, aClass.getClassDefinition().getSkillpointsperlevel(),
+								aClass.getClassDefinition().getAttributepointsperlevel());
 				event.getaClass().setLevel(event.getLevel());
 				game.getEventManager().post(event);
-				characterAddPoints(character, aClass.getConfigClass(), event.getSkillpointsPerLevel(), event.getAttributepointsPerLevel());
+				characterAddPoints(character, aClass.getClassDefinition(), event.getSkillpointsPerLevel(), event.getAttributepointsPerLevel());
 				inventoryService.initializeCharacterInventory(character);
 			}
 			groupService.addPermissions(character, character.getRace());
@@ -1071,7 +1071,7 @@ public class CharacterService {
 		if (!onlyinit) {
 			aClass.setExperiences(k);
 			aClass.setExperiencesFromLevel(newcurrentexp);
-			Gui.showExpChange(character, aClass.getConfigClass().getName(), exp);
+			Gui.showExpChange(character, aClass.getClassDefinition().getName(), exp);
 		} else {
 			aClass.setExperiencesFromLevel(newcurrentexp);
 		}
@@ -1131,8 +1131,8 @@ public class CharacterService {
 	public void respawnCharacter(IActiveCharacter character, Player pl) {
 		effectService.removeAllEffects(character);
 
-		for (ExtendedNClass nClass : character.getClasses()) {
-			applyGroupEffects(character, nClass.getConfigClass());
+		for (PlayerClassData nClass : character.getClasses()) {
+			applyGroupEffects(character, nClass.getClassDefinition());
 		}
 
 		applyGroupEffects(character, character.getRace());
