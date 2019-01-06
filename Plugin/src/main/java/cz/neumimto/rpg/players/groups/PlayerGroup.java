@@ -19,7 +19,9 @@
 package cz.neumimto.rpg.players.groups;
 
 import cz.neumimto.rpg.configuration.adapters.AllowedArmorListAdapter;
+import cz.neumimto.rpg.configuration.adapters.ClassLevelingDefinitionAdapter;
 import cz.neumimto.rpg.configuration.adapters.PropertyMapAdapter;
+import cz.neumimto.rpg.configuration.adapters.SkillTreeLookupAdapter;
 import cz.neumimto.rpg.configuration.adapters.WeaponsAdapter;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IEffectSource;
@@ -28,6 +30,7 @@ import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.players.ExperienceSource;
+import cz.neumimto.rpg.players.leveling.ClassLevelingDefinition;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import ninja.leaping.configurate.objectmapping.Adapter;
@@ -37,7 +40,6 @@ import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.format.TextColor;
-import org.spongepowered.api.util.Color;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -53,8 +55,11 @@ import java.util.TreeSet;
 @ConfigSerializable
 public class PlayerGroup implements IEffectSourceProvider {
 
+	@Setting("Id")
+	private String id;
+
 	@Setting("Name")
-	private final String name;
+	private String name;
 
 	@Setting("Description")
 	private String description;
@@ -111,24 +116,30 @@ public class PlayerGroup implements IEffectSourceProvider {
 	private Map<String, Map<EntityType, Double>> experiences = new HashMap<>();
 
 	@Setting("SkillTreeId")
-	@Adapter(SkillTreeIdAdapter.class)
+	@Adapter(SkillTreeLookupAdapter.class)
 	private SkillTree skillTree;
 
-	private int skillpointsperlevel, attributepointsperlevel;
-	private double[] levels;
-	private double totalExp;
+	@Setting("SkillPointsPerLevel")
+	private int skillpointsperlevel;
+
+	@Setting("AttributePointsPerLevel")
+	private int attributepointsperlevel;
+
+	@Setting("Leveling")
+	@Adapter(ClassLevelingDefinitionAdapter.class)
+	private ClassLevelingDefinition levels;
+
+	@Setting("ExperienceSources")
 	private Set<ExperienceSource> experienceSourceSet = new HashSet<>();
+
+	@Setting("Default")
 	private boolean defaultClass;
-	private Color chatColor;
 
-	private Set<ConfigClass> allowedClasses = new HashSet<>();
-
-	public PlayerGroup(String name) {
-		this.name = name;
-		if (name.toLowerCase().equalsIgnoreCase("none")) {
-			setShowsInMenu(false);
-		}
-	}
+	/*
+	@Setting("RequiredClasses")
+	@Adapter(ClassConfigAdapter.class)
+	*/
+	private Set<PlayerGroup> allowedClasses = new HashSet<>();
 
 	public String getName() {
 		return name;
