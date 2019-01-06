@@ -26,7 +26,7 @@ import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
-import cz.neumimto.rpg.players.groups.ConfigClass;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.skills.ISkill;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -91,9 +91,6 @@ public class CharacterBase extends TimestampEntity {
 
 	@Column(name = "can_reset_skills")
 	private Boolean canResetskills;
-
-	@Column(name = "primary_class")
-	private String primaryClass;
 
 	@Column(name = "guild_id")
 	private Long guildid;
@@ -171,14 +168,6 @@ public class CharacterBase extends TimestampEntity {
 		this.info = info;
 	}
 
-	public String getRace() {
-		return race;
-	}
-
-	public void setRace(String race) {
-		this.race = race;
-	}
-
 	public Long getGuildid() {
 		return guildid;
 	}
@@ -219,14 +208,6 @@ public class CharacterBase extends TimestampEntity {
 		this.canResetskills = canResetskills;
 	}
 
-	public String getPrimaryClass() {
-		return primaryClass;
-	}
-
-	public void setPrimaryClass(String primaryClass) {
-		this.primaryClass = primaryClass;
-	}
-
 	public Date getLastReset() {
 		return lastReset;
 	}
@@ -234,7 +215,6 @@ public class CharacterBase extends TimestampEntity {
 	public void setLastReset(Date lastReset) {
 		this.lastReset = lastReset;
 	}
-
 
 	public long getVersion() {
 		return version;
@@ -319,7 +299,7 @@ public class CharacterBase extends TimestampEntity {
 		}
 	}
 
-	public CharacterClass getCharacterClass(ConfigClass configClass) {
+	public CharacterClass getCharacterClass(ClassDefinition configClass) {
 		for (CharacterClass characterClass : characterClasses) {
 			if (configClass.getName().equalsIgnoreCase(characterClass.getName())) {
 				return characterClass;
