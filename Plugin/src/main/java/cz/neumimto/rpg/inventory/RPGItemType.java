@@ -8,7 +8,9 @@ import org.spongepowered.api.item.ItemType;
 public class RPGItemType {
 
 	private final ItemType itemType;
+
 	private final String displayName;
+
 	private final WeaponClass weaponClass;
 
 	public RPGItemType(ItemType itemType, String itemName, WeaponClass weaponClass) {

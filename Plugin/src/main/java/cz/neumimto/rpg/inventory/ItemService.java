@@ -12,6 +12,7 @@ import org.spongepowered.api.text.Text;
 
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -74,6 +75,17 @@ public class ItemService {
 		RPGItemType type = new RPGItemType(itemType, itemName, weaponClass);
 		weaponClass.getItems().add(type);
 		rpgItemTypes.add(type);
+	}
+
+	public Set<WeaponClass> getItemTypes() {
+		Set<WeaponClass> classes = new HashSet<>();
+		for (Set<RPGItemType> rpgItemTypes : itemTypes.values()) {
+			for (RPGItemType rpgItemType : rpgItemTypes) {
+				WeaponClass weaponClass = rpgItemType.getWeaponClass();
+				classes.add(weaponClass);
+			}
+		}
+		return classes;
 	}
 
 	public void registerProperty(WeaponClass weaponClass, String property) {
