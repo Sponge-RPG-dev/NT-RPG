@@ -230,4 +230,14 @@ public class PluginConfig {
 
 	@Setting
 	public byte MAX_CLICK_COMBO_LENGTH = new Byte("6");
+
+	@Setting(comment = "Class types")
+	public List<String> CLASS_TYPES = new ArrayList<String>() {{
+		add("Race");
+		add("Primary Class");
+		add("Secondary Class");
+	}};
+
+	@Setting(comment = "If set to true player has to choose classes in an order as they are defined in the section \"CLASS_TYPES\"")
+	public boolean RESPECT_CLASS_SELECTION_ORDER = true;
 }
