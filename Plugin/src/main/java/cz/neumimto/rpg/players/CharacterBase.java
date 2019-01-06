@@ -92,9 +92,6 @@ public class CharacterBase extends TimestampEntity {
 	@Column(name = "can_reset_skills")
 	private Boolean canResetskills;
 
-	@Column(name = "race")
-	private String race;
-
 	@Column(name = "primary_class")
 	private String primaryClass;
 
