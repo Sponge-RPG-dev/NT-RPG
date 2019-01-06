@@ -20,6 +20,7 @@ package cz.neumimto.rpg.players.groups;
 
 import cz.neumimto.rpg.configuration.adapters.AllowedArmorListAdapter;
 import cz.neumimto.rpg.configuration.adapters.ClassLevelingDefinitionAdapter;
+import cz.neumimto.rpg.configuration.adapters.ClassTypeAdapter;
 import cz.neumimto.rpg.configuration.adapters.PropertyMapAdapter;
 import cz.neumimto.rpg.configuration.adapters.SkillTreeLookupAdapter;
 import cz.neumimto.rpg.configuration.adapters.WeaponsAdapter;
@@ -72,7 +73,8 @@ public class ClassDefinition /* implements IEffectSourceProvider */ {
 	private boolean showsInMenu = true;
 
 	@Setting("ClassType")
-	protected ClassDefinitionType type;
+	@Adapter(ClassTypeAdapter.class)
+	protected String type;
 
 	@Setting("Properties")
 	@Adapter(PropertyMapAdapter.class)
@@ -234,7 +236,7 @@ public class ClassDefinition /* implements IEffectSourceProvider */ {
 		this.startingAttributes = startingAttributes;
 	}
 
-	public ClassDefinitionType getType() {
+	public String getType() {
 		return type;
 	}
 
