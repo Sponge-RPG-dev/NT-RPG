@@ -1030,18 +1030,13 @@ public class NtRpgPlugin {
 							src.sendMessage(Localizations.CHARACTER_EXISTS.toText());
 						} else if (i == 0) {
 							CharacterBase characterBase = new CharacterBase();
-							characterBase.setName(a);
-							characterBase.setRace(Race.Default.getName());
-							characterBase.setPrimaryClass(ConfigClass.Default.getName());
-							CharacterClass characterClass = new CharacterClass();
-							characterClass.setName(ConfigClass.Default.getName());
-							characterClass.setExperiences(0D);
-							characterClass.setCharacterBase(characterBase);
-							characterBase.setAttributePoints(pluginConfig.ATTRIBUTEPOINTS_ON_START);
-							characterBase.getCharacterClasses().add(characterClass);
 							characterBase.setUuid(player.getUniqueId());
+							characterBase.setName(a);
 							characterBase.setAttributePoints(pluginConfig.ATTRIBUTEPOINTS_ON_START);
+							characterBase.setAttributePoints(pluginConfig.ATTRIBUTEPOINTS_ON_START);
+
 							characterService.createAndUpdate(characterBase);
+
 							src.sendMessage(TextHelper.parse(CommandLocalization.CHARACTER_CREATED.replaceAll("%1", characterBase.getName())));
 							Gui.sendListOfCharacters(characterService.getCharacter(player.getUniqueId()), characterBase);
 						}
