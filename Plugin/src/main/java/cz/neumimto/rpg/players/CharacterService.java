@@ -999,10 +999,11 @@ public class CharacterService {
 	}
 
 	public void addExperiences(IActiveCharacter character, double exp, ExperienceSource source) {
-		Set<PlayerClassData> classes = character.getClasses();
-		for (PlayerClassData aClass : classes) {
-			ConfigClass configClass = aClass.getClassDefinition();
-			if (configClass.hasExperienceSource(source)) {
+		Map<String, PlayerClassData> classes = character.getClasses();
+		for (Map.Entry<String, PlayerClassData> entry : classes.entrySet()) {
+			PlayerClassData value = entry.getValue();
+			ClassDefinition classDefinition = value.getClassDefinition();
+			if (classDefinition.hasExperienceSource(source)) {
 				int maxlevel = configClass.getLevels().length - 1;
 				if (aClass.getLevel() > maxlevel) {
 					continue;
@@ -1010,6 +1011,7 @@ public class CharacterService {
 				addExperiences(character, exp, aClass, false);
 			}
 		}
+
 	}
 
 
@@ -1122,12 +1124,9 @@ public class CharacterService {
 	public void respawnCharacter(IActiveCharacter character, Player pl) {
 		effectService.removeAllEffects(character);
 
-		for (PlayerClassData nClass : character.getClasses()) {
+		for (PlayerClassData nClass : character.getClasses().values()) {
 			applyGroupEffects(character, nClass.getClassDefinition());
 		}
-
-		applyGroupEffects(character, character.getRace());
-
 
 		character.getMana().setValue(0);
 		addDefaultEffects(character);
