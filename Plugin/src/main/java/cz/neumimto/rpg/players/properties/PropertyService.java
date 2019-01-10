@@ -188,7 +188,7 @@ public class PropertyService {
 		}
 	}
 
-	public void process(Class<?> container) {
+	public void processContainer(Class<?> container) {
 		int value;
 		for (Field f : container.getDeclaredFields()) {
 			if (f.isAnnotationPresent(Property.class)) {

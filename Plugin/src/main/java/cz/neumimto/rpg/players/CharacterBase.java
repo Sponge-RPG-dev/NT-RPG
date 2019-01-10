@@ -301,7 +301,7 @@ public class CharacterBase extends TimestampEntity {
 
 	public CharacterClass getCharacterClass(ClassDefinition configClass) {
 		for (CharacterClass characterClass : characterClasses) {
-			if (configClass.getName().equalsIgnoreCase(characterClass.getName())) {
+			if (configClass.getName().e(characterClass.getName())) {
 				return characterClass;
 			}
 		}

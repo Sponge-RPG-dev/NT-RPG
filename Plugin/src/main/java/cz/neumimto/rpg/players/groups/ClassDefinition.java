@@ -300,4 +300,8 @@ public class ClassDefinition /* implements IEffectSourceProvider */ {
 				", getClasses=" + type +
 				'}';
 	}
+
+	public boolean hasExperienceSource(ExperienceSource source) {
+		return experienceSourceSet.contains(source);
+	}
 }

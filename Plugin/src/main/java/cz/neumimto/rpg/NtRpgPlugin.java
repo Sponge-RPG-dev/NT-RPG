@@ -1198,25 +1198,15 @@ public class NtRpgPlugin {
 				.arguments(new PlayerClassCommandElement(TextHelper.parse("class")))
 				.permission("ntrpg.player.set.class")
 				.executor((src, args) -> {
-					ConfigClass configClass = args.<ConfigClass>getOne("class").get();
-					if (configClass == ConfigClass.Default) {
-						src.sendMessage(Localizations.NON_EXISTING_GROUP.toText());
-						return CommandResult.empty();
-					}
+					ClassDefinition configClass = args.<ClassDefinition>getOne("class").get();
 
-					if (!src.hasPermission("ntrpg.groups." + configClass.getName().toLowerCase())) {
+					if (!src.hasPermission("ntrpg.class." + configClass.getName().toLowerCase())) {
 						src.sendMessage(Localizations.NO_PERMISSIONS.toText());
 						return CommandResult.empty();
 					}
-					int i = 0;
-					/*
-					if (args.length == 3) {
-						i = Integer.parseInt(args[2]) - 1;
+					if (!(src instanceof Player)) {
+						throw new IllegalStateException("Cannot be run as a console");
 					}
-					if (i < 0) {
-						i = 0;
-					}
-					*/
 					Player player = (Player) src;
 					IActiveCharacter character = GlobalScope.characterService.getCharacter(player.getUniqueId());
 					if (character.isStub()) {
@@ -1224,7 +1214,7 @@ public class NtRpgPlugin {
 						return CommandResult.empty();
 					}
 					character.getClasses().remove(PlayerClassData.Default);
-					GlobalScope.characterService.updatePlayerGroups(character, configClass, i, null, null);
+					GlobalScope.characterService.addNewClass(character, configClass);
 					return CommandResult.success();
 				})
 				.build();

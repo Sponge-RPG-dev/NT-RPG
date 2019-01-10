@@ -86,7 +86,7 @@ public class TestUtils {
 	public static ActiveCharacter buildActiveCharacter(UUID uuid) {
 		IoC ioC = setupIocEnviromentTest();
 		PropertyService p = ioC.build(PropertyService.class);
-		p.process(DefaultProperties.class);
+		p.processContainer(DefaultProperties.class);
 		ActiveCharacter character = mock(ActiveCharacter.class);
 		Player player = buildPlayerImpl(uuid);
 		when(character.getPlayer()).thenReturn(player);

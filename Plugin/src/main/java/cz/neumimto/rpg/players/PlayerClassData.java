@@ -25,28 +25,15 @@ import cz.neumimto.rpg.players.groups.ClassDefinition;
  */
 public class PlayerClassData {
 
-	public static PlayerClassData Default;
-
-	static {
-		Default = new PlayerClassData(null) {
-			@Override
-			public boolean takesExp() {
-				return false;
-			}
-		};
-		Default.setClassDefinition(ConfigClass.Default);
-		Default.setPrimary(true);
-	}
-
-	private ActiveCharacter activeCharacter;
+	private IActiveCharacter activeCharacter;
 	private ClassDefinition classDefinition;
 
 	private double experiencesFromLevel;
 	private int level;
 
-
-	public PlayerClassData(ActiveCharacter activeCharacter) {
+	public PlayerClassData(IActiveCharacter activeCharacter, ClassDefinition classDefinition) {
 		this.activeCharacter = activeCharacter;
+		this.classDefinition = classDefinition;
 	}
 
 
