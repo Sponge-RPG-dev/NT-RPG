@@ -70,7 +70,9 @@ public class DamageService {
 	private InventoryService inventoryService;
 	@Inject
 	private ItemService itemService;
+
 	private Map<Double, TextColor> doubleColorMap = new TreeMap<>();
+
 	private TextColor[] colorScale = new TextColor[]{
 			TextColors.WHITE,
 			TextColors.YELLOW,
@@ -92,7 +94,7 @@ public class DamageService {
 		}
 
 		if (!type.getWeaponClass().getPropertiesMults().isEmpty()) {
-			double totalMult = 0;
+			double totalMult = 1;
 			for (Integer integer : type.getWeaponClass().getPropertiesMults()) {
 				totalMult += characterService.getCharacterProperty(character, integer);
 			}
