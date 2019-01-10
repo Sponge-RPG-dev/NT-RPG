@@ -82,6 +82,10 @@ public class PropertyService {
 		return idMap.get(name);
 	}
 
+	public boolean exists(String property) {
+		return idMap.containsKey(property);
+	}
+
 	public String getNameById(Integer id) {
 		return nameMap.get(id);
 	}
