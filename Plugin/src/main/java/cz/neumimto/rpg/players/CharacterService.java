@@ -605,7 +605,7 @@ public class CharacterService {
 				val = defaults.get(i);
 			}
 			arr[i] = val;
-			val = 0;
+			val = 1;
 			if (character.getPrimaryClass().getConfigClass().getPropLevelBonus().containsKey(i)) {
 				val += character.getPrimaryClass().getConfigClass().getPropLevelBonus().get(i);
 			}
