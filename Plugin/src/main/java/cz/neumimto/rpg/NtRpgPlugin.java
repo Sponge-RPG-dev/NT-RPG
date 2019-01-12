@@ -98,6 +98,7 @@ import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
+import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.AttributeRegistry;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.scripting.JSLoader;
@@ -159,6 +160,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -983,6 +986,46 @@ public class NtRpgPlugin {
 				})
 				.build();
 
+		CommandSpec inspectProperty = CommandSpec.builder()
+				.arguments(
+						GenericArguments.onlyOne(GenericArguments.player(TextHelper.parse("player"))),
+						GenericArguments.remainingJoinedStrings(TextHelper.parse("data"))
+				)
+				.executor((src, args) -> {
+					Player player = args.<Player>getOne("player").get();
+					String data = args.<String>getOne("data").get();
+					PropertyService ps = IoC.get().build(PropertyService.class);
+					CharacterService cs = IoC.get().build(CharacterService.class);
+					try {
+						int idByName = ps.getIdByName(data);
+						IActiveCharacter character = cs.getCharacter(player);
+						src.sendMessage(Text.of(TextColors.GOLD, "=================="));
+						src.sendMessage(Text.of(TextColors.GREEN, data));
+
+						src.sendMessage(Text.of(TextColors.GOLD, "Value", TextColors.WHITE,"/",
+												TextColors.AQUA, "Effective Value",TextColors.WHITE,"/",
+												TextColors.GRAY, "Cap",
+												TextColors.DARK_GRAY, " .##"));
+
+						NumberFormat formatter = new DecimalFormat("#0.00");
+						src.sendMessage(Text.of(TextColors.GOLD, formatter.format(character.getProperty(idByName)), TextColors.WHITE,"/",
+												TextColors.AQUA, formatter.format(cs.getCharacterProperty(character, idByName)),TextColors.WHITE,"/",
+												TextColors.GRAY, formatter.format(ps.getMaxPropertyValue(idByName))));
+
+						src.sendMessage(Text.of(TextColors.GOLD, "=================="));
+						src.sendMessage(Text.of(TextColors.GRAY, "Memory/1 player: " + (character.getCharacterProperties().length*2*4)/1024.0+"kb"));
+
+					} catch (Throwable t) {
+						src.sendMessage(Text.of("No such property"));
+					}
+					return CommandResult.success();
+				})
+				.build();
+
+
+		CommandSpec inspect = CommandSpec.builder()
+				.child(inspectProperty, "property", "p")
+				.build();
 
 		CommandSpec adminRoot = CommandSpec
 				.builder()
@@ -1002,6 +1045,7 @@ public class NtRpgPlugin {
 				.child(meta, "itemmeta", "imeta", "imt")
 				.child(rst, "grouprequirements", "gr")
 				.child(mt, "itemType", "it", "type")
+				.child(inspect, "i", "inspect")
 				.build();
 
 		Sponge.getCommandManager().register(this, adminRoot, "nadmin", "na");
