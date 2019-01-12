@@ -1,15 +1,30 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.rpg.configuration.DebugLevel;
+import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.WeaponClass;
 import cz.neumimto.rpg.players.properties.PropertyService;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.slf4j.LoggerFactory;
+import org.spongepowered.api.Game;
 import org.spongepowered.api.item.ItemType;
 
 public class TestPropertyValueResolving {
+
+    @BeforeClass
+    public static void initLogger() {
+        Log.logger = LoggerFactory.getLogger(NtRpgPlugin.class);
+        NtRpgPlugin.pluginConfig = Mockito.mock(PluginConfig.class);
+        NtRpgPlugin.pluginConfig.DEBUG = DebugLevel.NONE;
+        Game mock = Mockito.mock(Game.class);
+        IoC.get().registerInterfaceImplementation(Game.class, mock);
+        IoC.get().registerInterfaceImplementation(ResourceLoader.class, Mockito.mock(ResourceLoader.class));
+    }
 
     @Test
     public void test0() {
