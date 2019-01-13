@@ -42,12 +42,17 @@ import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.configuration.Settings;
+import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.inventory.ConfigRPGItemType;
+import cz.neumimto.rpg.inventory.ItemService;
+import cz.neumimto.rpg.inventory.RPGItemType;
+import cz.neumimto.rpg.inventory.WeaponClass;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
@@ -98,6 +103,7 @@ import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.groups.PlayerGroup;
 import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
+import cz.neumimto.rpg.players.properties.Property;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.AttributeRegistry;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
@@ -123,6 +129,7 @@ import cz.neumimto.rpg.skills.parents.IActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
 import cz.neumimto.rpg.utils.FileUtils;
 import cz.neumimto.rpg.utils.Placeholders;
+import cz.neumimto.rpg.utils.TriConsumer;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -130,10 +137,12 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.data.DataRegistration;
+import org.spongepowered.api.data.type.HandType;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.CauseStackManager;
@@ -162,15 +171,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import javax.annotation.Resource;
 
@@ -986,6 +992,33 @@ public class NtRpgPlugin {
 				})
 				.build();
 
+		final TriConsumer<CommandSource, String, Player> PROPERTY_DETAIL = (src, data, player) -> {
+			PropertyService ps = IoC.get().build(PropertyService.class);
+			CharacterService cs = IoC.get().build(CharacterService.class);
+			try {
+				int idByName = ps.getIdByName(data);
+				IActiveCharacter character = cs.getCharacter(player);
+				src.sendMessage(Text.of(TextColors.GOLD, "=================="));
+				src.sendMessage(Text.of(TextColors.GREEN, data));
+
+				src.sendMessage(Text.of(TextColors.GOLD, "Value", TextColors.WHITE,"/",
+						TextColors.AQUA, "Effective Value",TextColors.WHITE,"/",
+						TextColors.GRAY, "Cap",
+						TextColors.DARK_GRAY, " .##"));
+
+				NumberFormat formatter = new DecimalFormat("#0.00");
+				src.sendMessage(Text.of(TextColors.GOLD, formatter.format(character.getProperty(idByName)), TextColors.WHITE,"/",
+						TextColors.AQUA, formatter.format(cs.getCharacterProperty(character, idByName)),TextColors.WHITE,"/",
+						TextColors.GRAY, formatter.format(ps.getMaxPropertyValue(idByName))));
+
+				src.sendMessage(Text.of(TextColors.GOLD, "=================="));
+				src.sendMessage(Text.of(TextColors.GRAY, "Memory/1 player: " + (character.getCharacterProperties().length*2*4)/1024.0+"kb"));
+
+			} catch (Throwable t) {
+				src.sendMessage(Text.of("No such property"));
+			}
+		};
+
 		CommandSpec inspectProperty = CommandSpec.builder()
 				.arguments(
 						GenericArguments.onlyOne(GenericArguments.player(TextHelper.parse("player"))),
@@ -994,37 +1027,114 @@ public class NtRpgPlugin {
 				.executor((src, args) -> {
 					Player player = args.<Player>getOne("player").get();
 					String data = args.<String>getOne("data").get();
-					PropertyService ps = IoC.get().build(PropertyService.class);
-					CharacterService cs = IoC.get().build(CharacterService.class);
-					try {
-						int idByName = ps.getIdByName(data);
-						IActiveCharacter character = cs.getCharacter(player);
-						src.sendMessage(Text.of(TextColors.GOLD, "=================="));
-						src.sendMessage(Text.of(TextColors.GREEN, data));
-
-						src.sendMessage(Text.of(TextColors.GOLD, "Value", TextColors.WHITE,"/",
-												TextColors.AQUA, "Effective Value",TextColors.WHITE,"/",
-												TextColors.GRAY, "Cap",
-												TextColors.DARK_GRAY, " .##"));
-
-						NumberFormat formatter = new DecimalFormat("#0.00");
-						src.sendMessage(Text.of(TextColors.GOLD, formatter.format(character.getProperty(idByName)), TextColors.WHITE,"/",
-												TextColors.AQUA, formatter.format(cs.getCharacterProperty(character, idByName)),TextColors.WHITE,"/",
-												TextColors.GRAY, formatter.format(ps.getMaxPropertyValue(idByName))));
-
-						src.sendMessage(Text.of(TextColors.GOLD, "=================="));
-						src.sendMessage(Text.of(TextColors.GRAY, "Memory/1 player: " + (character.getCharacterProperties().length*2*4)/1024.0+"kb"));
-
-					} catch (Throwable t) {
-						src.sendMessage(Text.of("No such property"));
-					}
+					PROPERTY_DETAIL.accept(src, data, player);
 					return CommandResult.success();
 				})
 				.build();
 
+		Function<WeaponClass, List<Text>> TO_TEXT = weaponClass -> {
+			List<Text> list = new ArrayList<>();
+			PropertyService ps = IoC.get().build(PropertyService.class);
+			list.add(Text.of(TextColors.GOLD, weaponClass.getName()));
+			for (Integer property : weaponClass.getProperties()) {
+				list.add(Text.of(TextColors.GRAY, " -> ", ps.getNameById(property)));
+			}
+			for (Integer property : weaponClass.getPropertiesMults()) {
+				list.add(Text.of(TextColors.GRAY, " -> ", ps.getNameById(property)));
+			}
+			return list;
+		};
+
+		CommandSpec inspectItemDamage = CommandSpec.builder()
+				.arguments(
+						GenericArguments.onlyOne(GenericArguments.player(TextHelper.parse("player")))
+				)
+				.executor((src, args) -> {
+					Player player = args.<Player>getOne("player").get();
+					ItemService is = IoC.get().build(ItemService.class);
+					Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
+					if (!itemInHand.isPresent()) {
+						src.sendMessage(Text.of(player.getName()+ " has no item in main hand"));
+						return CommandResult.empty();
+					}
+					ItemStack itemStack = itemInHand.get();
+					RPGItemType fromItemStack = is.getFromItemStack(itemStack);
+					WeaponClass weaponClass = fromItemStack.getWeaponClass();
+					List<WeaponClass> parents = new LinkedList<>();
+					WeaponClass parent = weaponClass.getParent();
+					List<Integer> o = new ArrayList<>();
+					o.addAll(weaponClass.getProperties());
+					o.addAll(weaponClass.getPropertiesMults());
+					while (parent != null) {
+						parents.add(parent);
+						o.addAll(parent.getPropertiesMults());
+						o.addAll(parent.getProperties());
+						parent = parent.getParent();
+					}
+					parents.add(weaponClass);
+					Collections.reverse(parents);
+
+					List<Text> a = new ArrayList<>();
+					for (WeaponClass wc : parents) {
+						a.addAll(TO_TEXT.apply(wc));
+					}
+					for (Text text : a) {
+						src.sendMessage(text);
+					}
+					src.sendMessage(Text.of(TextColors.GOLD, "=================="));
+					DamageService ds = IoC.get().build(DamageService.class);
+					CharacterService cs = IoC.get().build(CharacterService.class);
+					PropertyService ps = IoC.get().build(PropertyService.class);
+					IActiveCharacter character = cs.getCharacter(player);
+					src.sendMessage(Text.of(TextColors.RED, "Damage: ", ds.getCharacterItemDamage(character, fromItemStack)));
+					src.sendMessage(Text.of(TextColors.RED, "Details: "));
+					src.sendMessage(Text.of(TextColors.GRAY, " - From Item: ", character.getBaseWeaponDamage(fromItemStack)));
+					Set<ConfigRPGItemType> configRPGItemTypes = character.getRace().getWeapons().get(itemInHand.get());
+					if (configRPGItemTypes != null) {
+						for (ConfigRPGItemType w : configRPGItemTypes) {
+							if (w.rpgItemType.equals(fromItemStack)) {
+								src.sendMessage(Text.of(TextColors.GRAY, "  - From Race: " + w.damage));
+							}
+						}
+					}
+
+					configRPGItemTypes = character.getPrimaryClass().getConfigClass().getWeapons().get(itemInHand.get());
+					if (configRPGItemTypes != null) {
+						for (ConfigRPGItemType w : configRPGItemTypes) {
+							if (w.rpgItemType.equals(fromItemStack)) {
+								src.sendMessage(Text.of(TextColors.GRAY, "  - From Class: " + w.damage));
+							}
+						}
+					}
+
+					src.sendMessage(Text.of(TextColors.GRAY, " - From WeaponClass: "));
+					Iterator<Integer> iterator = o.iterator();
+					while (iterator.hasNext()) {
+						int integer = iterator.next();
+						String nameById = ps.getNameById(integer);
+						if (!nameById.endsWith("_mult")) {
+							iterator.remove();
+						} else continue;
+						src.sendMessage(Text.of(TextColors.GRAY, "   - ", nameById, ":", cs.getCharacterProperty(character, integer)));
+					}
+					src.sendMessage(Text.of(TextColors.GRAY, "   - Mult: "));
+					iterator = o.iterator();
+					while (iterator.hasNext()) {
+						int integer = iterator.next();
+						String nameById = ps.getNameById(integer);
+						src.sendMessage(Text.of(TextColors.GRAY, "   - ", nameById, ":", cs.getCharacterProperty(character, integer)));
+					}
+
+
+
+
+					return CommandResult.success();
+				})
+				.build();
 
 		CommandSpec inspect = CommandSpec.builder()
 				.child(inspectProperty, "property", "p")
+				.child(inspectItemDamage, "itemDamage", "idmg")
 				.build();
 
 		CommandSpec adminRoot = CommandSpec

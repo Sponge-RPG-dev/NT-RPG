@@ -94,7 +94,7 @@ public class DamageService {
 		}
 
 		if (!type.getWeaponClass().getPropertiesMults().isEmpty()) {
-			double totalMult = 1;
+			double totalMult = 0;
 			for (Integer integer : type.getWeaponClass().getPropertiesMults()) {
 				totalMult += characterService.getCharacterProperty(character, integer);
 			}

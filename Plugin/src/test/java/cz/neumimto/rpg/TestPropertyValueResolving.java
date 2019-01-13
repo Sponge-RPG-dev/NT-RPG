@@ -36,7 +36,7 @@ public class TestPropertyValueResolving {
         IoC.get().registerInterfaceImplementation(ResourceLoader.class, Mockito.mock(ResourceLoader.class));
     }
 
-    @Test
+    //@Test
     public void test0() {
         PropertyService propertyService = IoC.get().build(PropertyService.class);
         DamageService ds = IoC.get().build(DamageService.class);
