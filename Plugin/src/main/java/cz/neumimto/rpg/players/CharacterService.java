@@ -83,15 +83,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -136,6 +128,7 @@ public class CharacterService {
 
 	@Inject
 	private EffectService effectService;
+
 
 	public void loadPlayerData(UUID id, String playerName) {
 		characters.put(id, buildDummyChar(id));
@@ -1215,6 +1208,5 @@ public class CharacterService {
 		}
 		entity.getMana().setValue(event.getNewVal());
 	}
-
 }
 

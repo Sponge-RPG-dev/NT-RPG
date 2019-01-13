@@ -64,6 +64,8 @@ public class PropertyService {
 	private Map<Integer, Float> defaults = new HashMap<>();
 	private Map<String, ICharacterAttribute> attributes = new HashMap<>();
 
+	private Set<Integer> damageRecalc = new HashSet<>();
+
 	private float[] maxValues;
 
 	public void registerProperty(String name, int id) {
@@ -232,5 +234,13 @@ public class PropertyService {
 		}
 		defaults.put(getIdByName(s), aFloat);
 		Log.info(" Property \"" + s + "\" default value is now " + aFloat + ". This change wont affect already joined players!");
+	}
+
+	public boolean updatingRequiresDamageRecalc(int propertyId) {
+		return damageRecalc.contains(propertyId);
+	}
+
+	public void addPropertyToRequiresDamageRecalc(int i) {
+		damageRecalc.add(i);
 	}
 }

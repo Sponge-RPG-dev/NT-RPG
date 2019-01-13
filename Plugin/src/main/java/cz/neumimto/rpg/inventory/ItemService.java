@@ -81,6 +81,7 @@ public class ItemService {
 
 		if (!propertyService.exists(property)) {
 			propertyService.registerProperty(property, val);
+			propertyService.addPropertyToRequiresDamageRecalc(propertyService.getIdByName(property));
 		}
 		if (property.endsWith("_mult")) {
 			propertyService.registerDefaultValue(val, 1.0f);
