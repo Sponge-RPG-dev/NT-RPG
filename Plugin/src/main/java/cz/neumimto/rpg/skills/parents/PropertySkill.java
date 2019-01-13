@@ -76,7 +76,7 @@ public class PropertySkill extends AbstractSkill {
 		PropertySkillData skillData = (PropertySkillData) skill.getSkillData();
 		for (Wrapper property : skillData.properties) {
 			if (fc.apply(property.level, skill.getTotalLevel())) {
-				character.addProperty(property.level, property.value * i);
+				character.addProperty(property.propertyId, property.value * i);
 				if (property.propertyId == DefaultProperties.max_health) {
 					characterService.updateMaxHealth(character);
 				} else if (property.propertyId == DefaultProperties.walk_speed) {
