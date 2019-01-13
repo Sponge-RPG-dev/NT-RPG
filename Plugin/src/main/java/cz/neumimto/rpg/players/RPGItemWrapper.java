@@ -11,8 +11,6 @@ public class RPGItemWrapper {
 
 	private Set<ConfigRPGItemType> items = new HashSet<>();
 
-	private double damage;
-
 	public static RPGItemWrapper createFromSet(Set<ConfigRPGItemType> types) {
 		RPGItemWrapper wrapper = new RPGItemWrapper();
 		wrapper.addItems(types);
@@ -20,29 +18,12 @@ public class RPGItemWrapper {
 	}
 
 	public void addItem(ConfigRPGItemType type) {
-		switch (pluginConfig.WEAPON_MERGE_STRATEGY) {
-			case 2:
-				damage = Math.max(damage, type.getDamage());
-				items.add(type);
-				break;
-			case 1:
-				items.add(type);
-				damage = items.stream().mapToDouble(ConfigRPGItemType::getDamage).sum();
-		}
+		items.add(type);
 	}
 
 	public void removeItem(ConfigRPGItemType type) {
 		if (items.contains(type)) {
 			items.remove(type);
-			switch (pluginConfig.WEAPON_MERGE_STRATEGY) {
-				case 2:
-					damage = items.stream().mapToDouble(ConfigRPGItemType::getDamage)
-							.max().orElse(0D);
-					break;
-				case 1:
-					damage = items.stream().mapToDouble(ConfigRPGItemType::getDamage).sum();
-					break;
-			}
 		}
 	}
 
@@ -64,7 +45,24 @@ public class RPGItemWrapper {
 		return items;
 	}
 
-	public double getDamage() {
+	public double getDamage(RPGItemType rpgItemType) {
+		double damage = 0;
+		switch (pluginConfig.WEAPON_MERGE_STRATEGY) {
+			case 2:
+
+				for (ConfigRPGItemType item : items) {
+					if (item.rpgItemType.equals(rpgItemType)) {
+						damage = Math.max(damage, item.damage);
+					}
+				}
+				break;
+			case 1:
+				for (ConfigRPGItemType item : items) {
+					if (item.rpgItemType.equals(rpgItemType)) {
+						damage += item.damage;
+					}
+				}
+		}
 		return damage;
 	}
 

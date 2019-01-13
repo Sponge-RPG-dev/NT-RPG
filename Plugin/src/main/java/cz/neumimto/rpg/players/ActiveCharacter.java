@@ -427,11 +427,11 @@ public class ActiveCharacter implements IActiveCharacter {
 			if (weaponItemType.getDisplayName() == null) {
 				if (configRPGItemType.getRpgItemType().getDisplayName() == null) {
 					//todo check if the displayname is reserved
-					return wrapper.getDamage(); //null is first, if both null => can use unnamed item
+					return wrapper.getDamage(weaponItemType); //null is first, if both null => can use unnamed item
 				}
 			} else {
 				if (weaponItemType.getDisplayName().equalsIgnoreCase(configRPGItemType.getRpgItemType().getDisplayName())) {
-					return wrapper.getDamage();
+					return wrapper.getDamage(weaponItemType);
 				}
 			}
 		}
