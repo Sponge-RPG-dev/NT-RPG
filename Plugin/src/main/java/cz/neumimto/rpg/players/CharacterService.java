@@ -191,6 +191,7 @@ public class CharacterService {
 		if (pl == null) {
 			return false;
 		}
+		info("Assigning player to character " + pl.getName());
 		if (!characters.containsKey(pl.getUniqueId())) {
 			error("Could not find any character for player " + pl.getName() + " Auth event not fired?");
 			return false;
@@ -238,7 +239,7 @@ public class CharacterService {
 
 	public void putInSaveQueue(CharacterBase base) {
 		NtRpgPlugin.asyncExecutor.execute(() -> {
-			Long k = System.currentTimeMillis();
+			long k = System.currentTimeMillis();
 			info("Saving player " + base.getUuid() + " character " + base.getName());
 			save(base);
 			info("Saved player " + base.getUuid() + " character " + base.getName() + "[" + (System.currentTimeMillis() - k) + "]ms ");
