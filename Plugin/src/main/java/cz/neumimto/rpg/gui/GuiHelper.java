@@ -5,7 +5,6 @@ import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.Localizations;
-import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
@@ -15,11 +14,7 @@ import cz.neumimto.rpg.listeners.SkillTreeInventoryListener;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.NDamageType;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillPathData;
-import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.block.BlockTypes;
@@ -42,11 +37,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Block;
 import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Item;
@@ -120,7 +111,7 @@ public class GuiHelper {
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(3, 2))).offer(createArmorCommand(group));
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(2, 3))).offer(createAttributesCommand(group));
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(3, 3))).offer(createPropertyCommand(group));
-		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(createDescriptionItem(group.getDescription()));
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 3))).offer(toItemStack(group));
 		return i;
 	}
 
@@ -210,12 +201,8 @@ public class GuiHelper {
 
 	public static ItemStack back(ClassDefinition g) {
 		ItemStack of = itemStack(ItemTypes.PAPER);
-		String l = "class ";
-		if (g.getClassType() == EffectSourceType.RACE) {
-			l = "race ";
-		}
 		of.offer(Keys.DISPLAY_NAME, Localizations.BACK.toText());
-		of.offer(new InventoryCommandItemMenuData(l + g.getName()));
+		of.offer(new InventoryCommandItemMenuData(g.getClassType() + " " + g.getName()));
 		return of;
 	}
 
@@ -353,7 +340,7 @@ public class GuiHelper {
 				.append(Text.builder(String.valueOf(character.getLevel())).style(TextStyles.BOLD).build())
 				.build());
 
-		int sp = character.getCharacterBase().getCharacterClass(character.getPrimaryClass().getConfigClass()).getSkillPoints();
+		int sp = character.getCharacterBase().getCharacterClass(character.getPrimaryClass().getClassDefinition()).getSkillPoints();
 
 		lore.add(Text.builder("SP: ").color(TextColors.GREEN)
 				.append(Text.builder(String.valueOf(sp)).style(TextStyles.BOLD).build())
@@ -376,5 +363,23 @@ public class GuiHelper {
 			q.offer(Keys.DISPLAY_NAME, Text.of(configRPGItemType.getRpgItemType().getDisplayName()));
 		}
 		return q;
+	}
+
+	public static ItemStack toItemStack(ClassDefinition a) {
+		ItemStack itemStack = itemStack(a.getItemType());
+		itemStack.offer(Keys.DISPLAY_NAME, Text.of(a.getName(), a.getPreferedColor()));
+
+		if (a.getCustomLore().isEmpty()) {
+			itemStack.offer(Keys.ITEM_LORE, a.getCustomLore());
+		} else {
+			List<Text> lore = new ArrayList<>();
+			String description = a.getDescription();
+			lore.add(Text.of(a.getClassType(), TextStyles.BOLD, TextColors.GRAY));
+			lore.add(Text.EMPTY);
+			lore.add(Text.of(description, TextStyles.ITALIC, TextColors.GOLD));
+			itemStack.offer(Keys.ITEM_LORE, lore);
+		}
+
+		return itemStack;
 	}
 }

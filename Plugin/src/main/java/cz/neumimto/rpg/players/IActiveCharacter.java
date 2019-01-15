@@ -116,6 +116,8 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	CharacterBase getCharacterBase();
 
+	PlayerClassData getPrimaryClass();
+
 	double getBaseProjectileDamage(EntityType id);
 
 	IActiveCharacter updateItemRestrictions();
@@ -233,4 +235,6 @@ public interface IActiveCharacter extends IEntity<Player> {
 	default void updatePropertyArrays() {
 
 	}
+
+	void addClass(PlayerClassData playerClassData);
 }

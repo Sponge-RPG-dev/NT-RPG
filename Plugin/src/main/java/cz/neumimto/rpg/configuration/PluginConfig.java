@@ -152,10 +152,6 @@ public class PluginConfig {
 	public long CLICK_COMBO_MAX_INVERVAL_BETWEEN_ACTIONS = 1250;
 
 	@Setting
-	(comment = "If true then class is validated against character's race.allowedClasses parameter ")
-	public boolean VALIDATE_RACE_DURING_CLASS_SELECTION = true;
-
-	@Setting
 	public String ITEM_LORE_EFFECT_NAME_COLOR = TextColors.BLUE.getName();
 
 	@Setting
@@ -216,7 +212,7 @@ public class PluginConfig {
 
 	*/
 
-	@Setting(comment = "Plugins attempt to create a list of items present on the server, which might fall into categories of weapons/armors/shields. "
+	@Setting(comment = "The plugin attempts to create a list of items present on the server, which might fall into categories of weapons/armors/shields. "
 					+ "The final list might, or might not be complete.")
 	public boolean AUTODISCOVER_ITEMS = true;
 
@@ -234,9 +230,12 @@ public class PluginConfig {
 	@Setting(comment = "Class types")
 	public List<String> CLASS_TYPES = new ArrayList<String>() {{
 		add("Race");
-		add("Primary Class");
-		add("Secondary Class");
+		add("Primary");
+		add("Profession");
 	}};
+
+	@Setting(comment = "Primary class. Level of primary class determines character level.")
+	public String PRIMARY_CLASS_TYPE = "Primary";
 
 	@Setting(comment = "If set to true player has to choose classes in an order as they are defined in the section \"CLASS_TYPES\"")
 	public boolean RESPECT_CLASS_SELECTION_ORDER = true;

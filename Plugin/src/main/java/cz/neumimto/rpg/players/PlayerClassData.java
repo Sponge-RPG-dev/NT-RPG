@@ -30,10 +30,16 @@ public class PlayerClassData {
 
 	private double experiencesFromLevel;
 	private int level;
+	private double expTotal;
 
 	public PlayerClassData(IActiveCharacter activeCharacter, ClassDefinition classDefinition) {
 		this.activeCharacter = activeCharacter;
 		this.classDefinition = classDefinition;
+	}
+
+	public PlayerClassData(ActiveCharacter activeCharacter, ClassDefinition characterClass, Double experiences) {
+		this(activeCharacter, characterClass);
+		expTotal = experiences;
 	}
 
 

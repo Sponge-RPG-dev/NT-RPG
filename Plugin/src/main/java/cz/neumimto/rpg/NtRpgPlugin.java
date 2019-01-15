@@ -66,14 +66,7 @@ import cz.neumimto.rpg.listeners.DebugListener;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.players.ActiveCharacter;
-import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.ExperienceSource;
-import cz.neumimto.rpg.players.ExperienceSourceRegistry;
-import cz.neumimto.rpg.players.ExperienceSources;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.PlayerClassData;
+import cz.neumimto.rpg.players.*;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.PropertyService;
@@ -136,8 +129,6 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-
-import static cz.neumimto.rpg.Log.info;
 
 import static cz.neumimto.rpg.Log.info;
 
@@ -1054,23 +1045,19 @@ public class NtRpgPlugin {
 					src.sendMessage(Text.of(TextColors.RED, "Damage: ", ds.getCharacterItemDamage(character, fromItemStack)));
 					src.sendMessage(Text.of(TextColors.RED, "Details: "));
 					src.sendMessage(Text.of(TextColors.GRAY, " - From Item: ", character.getBaseWeaponDamage(fromItemStack)));
-					Set<ConfigRPGItemType> configRPGItemTypes = character.getRace().getWeapons().get(itemInHand.get());
-					if (configRPGItemTypes != null) {
-						for (ConfigRPGItemType w : configRPGItemTypes) {
-							if (w.rpgItemType.equals(fromItemStack)) {
-								src.sendMessage(Text.of(TextColors.GRAY, "  - From Race: " + w.damage));
+
+					Collection<PlayerClassData> values = character.getClasses().values();
+					for (PlayerClassData value : values) {
+						Set<ConfigRPGItemType> configRPGItemTypes = value.getClassDefinition().getWeapons().get(itemInHand.get());
+						if (configRPGItemTypes != null) {
+							for (ConfigRPGItemType w : configRPGItemTypes) {
+								if (w.rpgItemType.equals(fromItemStack)) {
+									src.sendMessage(Text.of(TextColors.GRAY, "  - From Class: " + w.damage));
+								}
 							}
 						}
 					}
 
-					configRPGItemTypes = character.getPrimaryClass().getConfigClass().getWeapons().get(itemInHand.get());
-					if (configRPGItemTypes != null) {
-						for (ConfigRPGItemType w : configRPGItemTypes) {
-							if (w.rpgItemType.equals(fromItemStack)) {
-								src.sendMessage(Text.of(TextColors.GRAY, "  - From Class: " + w.damage));
-							}
-						}
-					}
 
 					src.sendMessage(Text.of(TextColors.GRAY, " - From WeaponClass: "));
 					Iterator<Integer> iterator = o.iterator();
@@ -1518,36 +1505,25 @@ public class NtRpgPlugin {
 		CommandSpec classes = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE
 						.deserialize(CommandLocalization.COMMAND_CLASSES_DESC))
+				.arguments(new PlayerClassTypeCommandElement(Text.of("type")))
 				.permission("ntrpg.groups.list.classes")
 				.executor((src, args) -> {
-					IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
-					Gui.showAvalaibleClasses(character);
+					args.<ClassDefinition>getOne(Text.of("type")).ifPresent(o -> {
+						IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
+						Gui.filterClassesByType(character, o);
+					});
 					return CommandResult.success();
 				})
 				.build();
 
 		Sponge.getCommandManager().register(this, classes, "classes");
 
-		CommandSpec races = CommandSpec.builder()
-				.description(TextSerializers.FORMATTING_CODE
-						.deserialize(CommandLocalization.COMMAND_CLASSES_RACE))
-				.permission("ntrpg.groups.list.races")
-				.executor((src, args) -> {
-					IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
-					Gui.sendRaceList(character);
-					return CommandResult.success();
-				})
-				.build();
-
-		Sponge.getCommandManager().register(this, races, "races");
-
-
 		CommandSpec classgui = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE
 						.deserialize(CommandLocalization.COMMAND_RACE_DESC))
 				.arguments(new PlayerClassCommandElement(Text.of("class"), false))
 				.executor((src, args) -> {
-					args.<ConfigClass>getOne(Text.of("class")).ifPresent(o -> {
+					args.<ClassDefinition>getOne(Text.of("class")).ifPresent(o -> {
 						IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
 						Gui.showClassInfo(character, o);
 					});
@@ -1557,21 +1533,6 @@ public class NtRpgPlugin {
 
 		Sponge.getCommandManager().register(this, classgui, "class");
 
-
-		CommandSpec racegui = CommandSpec.builder()
-				.description(TextSerializers.FORMATTING_CODE
-						.deserialize(CommandLocalization.COMMAND_RACE_DESC))
-				.arguments(new RaceCommandElement(Text.of("race")))
-				.executor((src, args) -> {
-					args.<Race>getOne(Text.of("race")).ifPresent(o -> {
-						IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
-						Gui.sendRaceInfo(character, o);
-					});
-					return CommandResult.success();
-				})
-				.build();
-
-		Sponge.getCommandManager().register(this, racegui, "race");
 
 
 		CommandSpec weapon = CommandSpec.builder()

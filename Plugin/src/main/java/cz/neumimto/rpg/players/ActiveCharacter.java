@@ -20,6 +20,7 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
@@ -29,15 +30,11 @@ import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.players.groups.String;
-import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.ItemAccessSkill;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.parents.StartingPoint;
 import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
 import org.jline.utils.Log;
 import org.spongepowered.api.Sponge;
@@ -52,7 +49,6 @@ import org.spongepowered.api.text.chat.ChatType;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
@@ -106,6 +102,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	private CustomItem offHand;
 	private int mainHandSlotId;
 	private CustomItem mainHand;
+	private PlayerClassData primaryClass;
 
 	public ActiveCharacter(Player pl, CharacterBase base) {
 		this.pl = pl.getUniqueId();
@@ -241,9 +238,8 @@ public class ActiveCharacter implements IActiveCharacter {
 		return equipedArmor;
 	}
 
-
 	@Override
-	public Map<java.lang.String, IEffectContainer<Object, IEffect<Object>>> getEffectMap() {
+	public Map<String, IEffectContainer<Object, IEffect<Object>>> getEffectMap() {
 		return effects;
 	}
 
@@ -515,7 +511,23 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
+	public PlayerClassData getPrimaryClass() {
+		return primaryClass;
+	}
+
+	@Override
+	public void addClass(PlayerClassData playerClassData) {
+		if (playerClassData.getClassDefinition().getClassType().equalsIgnoreCase(NtRpgPlugin.pluginConfig.PRIMARY_CLASS_TYPE)) {
+			primaryClass = playerClassData;
+		}
+		classes.put(playerClassData.getClassDefinition().getName(), playerClassData);
+	}
+
+	@Override
 	public int getLevel() {
+		if (primaryClass == null) {
+			return 1;
+		}
 		return getPrimaryClass().getLevel();
 	}
 

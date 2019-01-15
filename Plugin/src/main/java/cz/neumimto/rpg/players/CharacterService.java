@@ -32,14 +32,7 @@ import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.common.def.ClickComboActionComponent;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.events.CancellableEvent;
-import cz.neumimto.rpg.events.CharacterAttributeChange;
-import cz.neumimto.rpg.events.CharacterChangeClassEvent;
-import cz.neumimto.rpg.events.CharacterChangeGroupEvent;
-import cz.neumimto.rpg.events.CharacterEvent;
-import cz.neumimto.rpg.events.CharacterGainedLevelEvent;
-import cz.neumimto.rpg.events.CharacterInitializedEvent;
-import cz.neumimto.rpg.events.ManaRegainEvent;
+import cz.neumimto.rpg.events.*;
 import cz.neumimto.rpg.events.character.CharacterWeaponUpdateEvent;
 import cz.neumimto.rpg.events.character.EventCharacterArmorPostUpdate;
 import cz.neumimto.rpg.events.character.PlayerDataPreloadComplete;
@@ -56,10 +49,6 @@ import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.players.groups.String;
-import cz.neumimto.rpg.players.groups.ConfigClass;
-import cz.neumimto.rpg.players.groups.Guild;
-import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
@@ -68,7 +57,6 @@ import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.skills.parents.StartingPoint;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.utils.PermissionUtils;
@@ -86,8 +74,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static cz.neumimto.core.localization.Arg.arg;
-import static cz.neumimto.rpg.Log.error;
-import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.*;
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
@@ -160,19 +147,9 @@ public class CharacterService {
 	 * @param name
 	 * @return Initialized CharacterBase in the default state, The entity is not persisted yet
 	 */
-	public CharacterBase createCharacterBase(java.lang.String name, UUID uuid) {
+	public CharacterBase createCharacterBase(String name, UUID uuid) {
 		CharacterBase characterBase = new CharacterBase();
 		characterBase.setName(name);
-		characterBase.setRace(Race.Default.getName());
-		characterBase.setPrimaryClass(ConfigClass.Default.getName());
-
-		CharacterClass characterClass = new CharacterClass();
-		characterClass.setName(ConfigClass.Default.getName());
-		characterClass.setExperiences(0D);
-		characterClass.setCharacterBase(characterBase);
-		characterBase.setAttributePoints(pluginConfig.ATTRIBUTEPOINTS_ON_START);
-
-		characterBase.getCharacterClasses().add(characterClass);
 		characterBase.setUuid(uuid);
 		characterBase.setAttributePoints(pluginConfig.ATTRIBUTEPOINTS_ON_START);
 		return characterBase;
@@ -372,11 +349,9 @@ public class CharacterService {
 			}
 		}
 
-		for (PlayerClassData nClass : character.getClasses()) {
+		for (PlayerClassData nClass : character.getClasses().values()) {
 			applyGroupEffects(character, nClass.getClassDefinition());
 		}
-		applyGroupEffects(character, character.getRace());
-
 
 		inventoryService.initializeCharacterInventory(character);
 		damageService.recalculateCharacterWeaponDamage(character);
@@ -403,11 +378,8 @@ public class CharacterService {
 	 *
 	 * @param character
 	 * @param configClass
-	 * @param slot        defines primary/Secondary/... class
-	 * @param race
-	 * @param guild
 	 */
-	public void updatePlayerGroups(IActiveCharacter character, ConfigClass configClass, int slot, Race race, Guild guild) {
+	public void addPlayerGroup(IActiveCharacter character, ClassDefinition configClass) {
 		if (character.isStub()) {
 			return;
 		}
@@ -415,66 +387,36 @@ public class CharacterService {
 		boolean k = false;
 		Player player = character.getPlayer();
 		if (configClass != null) {
-			CharacterChangeGroupEvent e = new CharacterChangeClassEvent(character, configClass, slot, character.getNClass(slot));
+			PlayerClassData classByType = character.getClassByType(configClass.getClassType());
+			ClassDefinition originClass = classByType == null ? null : classByType.getClassDefinition();
+			CharacterChangeGroupEvent e = new CharacterChangeGroupEvent(character, configClass, originClass);
 
 			game.getEventManager().post(e);
 			if (!e.isCancelled()) {
 				k = true;
 				info("Processing class change - " + e);
-				Map<java.lang.String, java.lang.String> args = new HashMap<>();
+				Map<String, String> args = new HashMap<>();
 				args.put("player", player.getName());
 				args.put("uuid", player.getUniqueId().toString());
-				args.put("class", character.getRace().getName());
+				args.put("class", configClass.getName());
 				if (character.hasClass(configClass)) {
 					player.sendMessage(Localizations.ALREADY_HAS_THIS_CLASS.toText());
 					return;
 				}
 
-				if (character.getNClass(slot) != null && character.getNClass(slot).getExitCommands() != null) {
-					Utils.executeCommandBatch(args, character.getNClass(slot).getExitCommands());
+				if (originClass != null && originClass.getExitCommands() != null) {
+					Utils.executeCommandBatch(args, originClass.getExitCommands());
 				}
+				removeGroupEffects(character, originClass);
 
-
-				removeGroupEffects(character, character.getNClass(slot));
-				character.setClass(configClass, slot);
+				character.addClass(new PlayerClassData(character, configClass));
 				applyGroupEffects(character, configClass);
 
-				args.put("class", character.getRace().getName());
-				if (character.getNClass(slot) != null && character.getNClass(slot).getEnterCommands() != null) {
-					Utils.executeCommandBatch(args, character.getNClass(slot).getEnterCommands());
+				args.put("class", configClass.getName());
+				if (configClass.getEnterCommands() != null) {
+					Utils.executeCommandBatch(args, configClass.getEnterCommands());
 				}
 				player.sendMessage(Localizations.PLAYER_CHOOSED_CLASS.toText(arg("class", configClass.getName())));
-			}
-		}
-
-		if (race != null) {
-			CharacterChangeGroupEvent ev = new CharacterChangeRaceEvent(character, race, character.getRace());
-			game.getEventManager().post(ev);
-			if (!ev.isCancelled()) {
-				k = true;
-				info("Processing race change - " + ev);
-				Map<java.lang.String, java.lang.String> args = new HashMap<>();
-				args.put("player", player.getName());
-				args.put("uuid", player.getUniqueId().toString());
-				args.put("race", character.getRace().getName());
-				if (character.getRace() == race) {
-					player.sendMessage(Localizations.ALREADY_HAS_THIS_RACE.toText(arg("race", race.getName())));
-					return;
-				}
-				if (character.getRace().getExitCommands() != null) {
-					Utils.executeCommandBatch(args, character.getRace().getExitCommands());
-				}
-
-				removeGroupEffects(character, character.getRace());
-				character.setRace(race);
-				applyGroupEffects(character, race);
-
-
-				args.put("race", character.getRace().getName());
-				if (character.getRace().getExitCommands() != null) {
-					Utils.executeCommandBatch(args, character.getRace().getEnterCommands());
-				}
-				player.sendMessage(Localizations.PLAYER_CHOOSED_RACE.toText(arg("race", race.getName())));
 			}
 		}
 
@@ -656,30 +598,24 @@ public class CharacterService {
 	public ActiveCharacter buildActiveCharacterAsynchronously(Player player, CharacterBase characterBase) {
 		characterBase = playerDao.fetchCharacterBase(characterBase);
 		ActiveCharacter activeCharacter = new ActiveCharacter(player, characterBase);
-		activeCharacter.setRace(groupService.getRace(characterBase.getRace()));
 
-		activeCharacter.setPrimaryClass(groupService.getClassDefinitionByName(characterBase.getPrimaryClass()));
-		groupService.addAllPermissions(activeCharacter, activeCharacter.getRace());
-		groupService.addAllPermissions(activeCharacter, activeCharacter.getPrimaryClass().getClassDefinition());
-		java.lang.String s = activeCharacter.getPrimaryClass().getClassDefinition().getName();
-		Optional<CharacterClass> first = characterBase.getCharacterClasses()
-				.stream()
-				.filter(a -> s.equalsIgnoreCase(a.getName()))
-				.findFirst();
-		if (first.isPresent()) {
-			CharacterClass cc = first.get();
-			Double d = cc.getExperiences();
-			if (d != null) {
-				activeCharacter.getPrimaryClass().setExperiences(d);
+		Set<CharacterClass> characterClasses = characterBase.getCharacterClasses();
+
+		for (CharacterClass characterClass : characterClasses) {
+			ClassDefinition classDef = groupService.getClassDefinitionByName(characterClass.getName());
+			if (classDef == null) {
+				warn(" Character " + characterBase.getUuid() + " had persisted class " + characterClass.getName() + " but the class is missing class definition configuration");
+				continue;
 			}
+
+			groupService.addAllPermissions(activeCharacter, classDef);
+			activeCharacter.addClass(new PlayerClassData(activeCharacter, classDef, characterClass.getExperiences()));
+
 			recalculateProperties(activeCharacter);
 			resolveSkillsCds(characterBase, activeCharacter);
 			initSkills(activeCharacter);
-			Double exp = d;
-			if (exp != null) {
-				addExperiences(activeCharacter, exp, activeCharacter.getPrimaryClass(), true);
-			}
 		}
+
 		game.getScheduler().createTaskBuilder().name("FetchCharBaseDataCallback-" + player.getUniqueId())
 				.execute(updateAll(activeCharacter)
 				).submit(plugin);
@@ -728,17 +664,20 @@ public class CharacterService {
 	 * 5 - if event is cancelled
 	 * 0 - ok
 	 */
-	public Text upgradeSkill(IActiveCharacter character, ISkill skill) {
+	public Text upgradeSkill(IActiveCharacter character, ClassDefinition classDef, ISkill skill) {
 		CharacterClass cc = null;
-		Set<PlayerClassData> classes = character.getClasses();
+		Collection<PlayerClassData> classes = character.getClasses().values();
 
-		for (PlayerClassData aClass : classes) {
-			Map<java.lang.String, SkillData> skills = aClass.getClassDefinition().getSkillTree().getSkills();
-			if (skills.containsKey(skill.getId())) {
-				cc = character.getCharacterBase().getCharacterClass(aClass.getClassDefinition());
-				break;
-			}
+		if (!character.hasClass(classDef)) {
+
 		}
+
+		Map<String, SkillData> skills = classDef.getSkillTree().getSkills();
+		if (skills.containsKey(skill.getId())) {
+			cc = character.getCharacterBase().getCharacterClass(aClass.getClassDefinition());
+			break;
+		}
+
 
 		if (cc.getSkillPoints() < 1) {
 			return Localizations.NO_SKILLPOINTS.toText(arg("skill", skill.getName()));
@@ -792,7 +731,7 @@ public class CharacterService {
 	 * @param character
 	 * @param skill
 	 */
-	public Text characterLearnskill(IActiveCharacter character, ISkill skill, SkillTree skillTree) {
+	public Text characterLearnskill(IActiveCharacter character, ClassDefinition classDef, ISkill skill) {
 		PlayerClassData nClass = null;
 		for (PlayerClassData playerClassData : character.getClasses()) {
 			if (playerClassData.getClassDefinition().getSkillTree() == skillTree) {
@@ -895,7 +834,7 @@ public class CharacterService {
 	 * 4 - Cant refund skill-tree path
 	 * 0 - ok
 	 */
-	public int refundSkill(IActiveCharacter character, ISkill skill, ConfigClass configClass) {
+	public int refundSkill(IActiveCharacter character, ClassDefinition classDefinition, ISkill skill) {
 		ExtendedSkillInfo skillInfo = character.getSkillInfo(skill);
 		if (skillInfo == null) {
 			return 1;
@@ -1004,7 +943,7 @@ public class CharacterService {
 			PlayerClassData value = entry.getValue();
 			ClassDefinition classDefinition = value.getClassDefinition();
 			if (classDefinition.hasExperienceSource(source)) {
-				int maxlevel = configClass.getLevels().length - 1;
+				int maxlevel = classDefinition.getLevels().length - 1;
 				if (aClass.getLevel() > maxlevel) {
 					continue;
 				}
@@ -1232,7 +1171,7 @@ public class CharacterService {
 			//   fixPropertyValues(nclass.getPropBonus(), 1);
 			//  fixPropertyLevelValues(getPrimaryClass().getClassDefinition().getPropLevelBonus(), 1);
 
-		character.getClasses().put(klass.getClassType(), new PlayerClassData(character, klass));
+		character.addClass(new PlayerClassData(character, klass));
 		character.updatePropertyArrays();
 		character.updateItemRestrictions();
 

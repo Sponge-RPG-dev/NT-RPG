@@ -18,12 +18,7 @@
 
 package cz.neumimto.rpg.players.groups;
 
-import cz.neumimto.rpg.configuration.adapters.AllowedArmorListAdapter;
-import cz.neumimto.rpg.configuration.adapters.ClassLevelingDefinitionAdapter;
-import cz.neumimto.rpg.configuration.adapters.ClassTypeAdapter;
-import cz.neumimto.rpg.configuration.adapters.PropertyMapAdapter;
-import cz.neumimto.rpg.configuration.adapters.SkillTreeLookupAdapter;
-import cz.neumimto.rpg.configuration.adapters.WeaponsAdapter;
+import cz.neumimto.rpg.configuration.adapters.*;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
@@ -38,15 +33,10 @@ import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 27.12.2014.
@@ -132,11 +122,10 @@ public class ClassDefinition /* implements IEffectSourceProvider */ {
 	@Setting("Default")
 	private boolean defaultClass;
 
-	/*
-	@Setting("RequiredClasses")
-	@Adapter(ClassConfigAdapter.class)
-	*/
-	private Set<ClassDefinition> allowedClasses = new HashSet<>();
+	private ClassDependencyGraph classDependencyGraph = new ClassDependencyGraph();
+
+	@Setting("CustomLore")
+	private List<Text> customLore;
 
 	public String getName() {
 		return name;
@@ -293,6 +282,10 @@ public class ClassDefinition /* implements IEffectSourceProvider */ {
 		this.experiences = experiences;
 	}
 
+	public ClassDependencyGraph getClassDependencyGraph() {
+		return classDependencyGraph;
+	}
+
 	@Override
 	public String toString() {
 		return "PlayerGroup{" +
@@ -303,5 +296,9 @@ public class ClassDefinition /* implements IEffectSourceProvider */ {
 
 	public boolean hasExperienceSource(ExperienceSource source) {
 		return experienceSourceSet.contains(source);
+	}
+
+	public List<Text> getCustomLore() {
+		return customLore;
 	}
 }
