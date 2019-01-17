@@ -18,15 +18,11 @@
 
 package cz.neumimto.rpg.skills;
 
-import static cz.neumimto.rpg.Log.error;
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.Log.warn;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
+import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.SkillTreeInterfaceModel;
@@ -63,6 +59,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
+
+import static cz.neumimto.rpg.Log.*;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 1.1.2015.
@@ -253,8 +252,12 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 
 	public void registerSkillAlternateName(String name, ISkill skill) {
 		if (skillByNames.containsKey(name)) {
-			throw new RuntimeException("Attempted to register altername name " + name + " for a skill " + skill.getId() + ". But the name is "
-					+ "already taken by the skill " + skillByNames.get(name).getId());
+			ISkill iSkill = skillByNames.get(name);
+			if (iSkill != skill) {
+				throw new RuntimeException("Attempted to register alternate name " + name + " for a skill " + skill.getId() + ". But the name is "
+						+ "already taken by the skill " + iSkill.getId());
+			}
+			Log.warn("Attempted to register alternate name for a skill " + skill.getId() + ". Skill is already registered under the same name - " + name);
 		}
 		skillByNames.put(name, skill);
 	}
