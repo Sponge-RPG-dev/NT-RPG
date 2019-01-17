@@ -23,6 +23,13 @@ import java.util.Optional;
  */
 public class PersistenceHandler {
 
+    private NtRpgPlugin ntRpgPlugin;
+
+    public PersistenceHandler(NtRpgPlugin ntRpgPlugin) {
+
+        this.ntRpgPlugin = ntRpgPlugin;
+    }
+
     @Listener
     public void onFindDbSchemaMigrationsEvent(FindDbSchemaMigrationsEvent event) throws IOException {
         if (event.validForContext("nt-rpg")) {
@@ -33,11 +40,11 @@ public class PersistenceHandler {
 
             for (String migration : migrations) {
                 migration = migration.replaceAll("%s", dms.getDatabaseProductName().toLowerCase());
-                Optional<Asset> sql = Sponge.getAssetManager().getAsset(this, migration);
+                Optional<Asset> sql = Sponge.getAssetManager().getAsset(ntRpgPlugin, migration);
                 if (sql.isPresent()) {
                     dms.addMigration(sql.get().readString(Charset.forName("UTF-8")));
                 } else {
-                    System.err.println("You are using a database which is not officialy supported, nor tested. " +
+                    System.out.println("You are using a database which is not officialy supported, nor tested. " +
                             "While the plugin will most likely keep working all DDL changes have to be done manually, If you want to have a simpler life  please consider switching to either mysql or postgres. " +
                             "Or in the best case submit a pr containing Database schema migrations.");
                     break;
