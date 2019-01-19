@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.players.leveling;
 
-import java.math.BigDecimal;
-
 /**
  * Created by NeumimTo on 6.1.2019.
  */
@@ -11,7 +9,7 @@ public class ClassLevelingDefinition {
 
 	private double[] levelMargins;
 
-	private BigDecimal totalExp;
+	private long totalExp;
 
 
 
@@ -31,11 +29,11 @@ public class ClassLevelingDefinition {
 		this.levelMargins = levelMargins;
 	}
 
-	public BigDecimal getTotalExp() {
+	public long getTotalExp() {
 		return totalExp;
 	}
 
-	public void setTotalExp(BigDecimal totalExp) {
+	public void setTotalExp(long totalExp) {
 		this.totalExp = totalExp;
 	}
 }

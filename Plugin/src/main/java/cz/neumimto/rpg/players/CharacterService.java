@@ -733,7 +733,8 @@ public class CharacterService {
 	 */
 	public Text characterLearnskill(IActiveCharacter character, ClassDefinition classDef, ISkill skill) {
 		PlayerClassData nClass = null;
-		for (PlayerClassData playerClassData : character.getClasses()) {
+		SkillTree skillTree = classDef.getSkillTree();
+		for (PlayerClassData playerClassData : character.getClasses().values()) {
 			if (playerClassData.getClassDefinition().getSkillTree() == skillTree) {
 				nClass = playerClassData;
 				break;
@@ -827,7 +828,7 @@ public class CharacterService {
 	/**
 	 * @param character
 	 * @param skill
-	 * @param configClass
+	 * @param classDefinition
 	 * @return 1 - if character has not a single skillpoint in the skill
 	 * 2 - if one or more skills are on a path in a skilltree after the skill.
 	 * 3 - SkillRefundEvent was cancelled
