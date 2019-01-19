@@ -24,6 +24,5 @@ package cz.neumimto.rpg.configuration;
 public class Settings {
 
 	public static boolean ENABLED_GUI = false;
-	public static short CHARACTER_PROPERTIES;
 
 }

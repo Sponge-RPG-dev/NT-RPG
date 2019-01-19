@@ -25,7 +25,6 @@ import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.players.groups.ClassDefinitionType;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
@@ -47,9 +46,9 @@ import java.util.Set;
  */
 public interface IActiveCharacter extends IEntity<Player> {
 
-	Map<ClassDefinitionType, PlayerClassData> getClasses();
+	Map<String, PlayerClassData> getClasses();
 
-	default PlayerClassData getClassByType(ClassDefinitionType type) {
+	default PlayerClassData getClassByType(String type) {
 		return getClasses().get(type);
 	}
 
@@ -57,13 +56,11 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setParty(Party party);
 
-	String getName();
+	java.lang.String getName();
 
 	boolean isStub();
 
 	float[] getCharacterProperties();
-
-	void setProperties(float[] arr);
 
 	void setCharacterLevelProperty(int index, float value);
 
@@ -85,8 +82,6 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	Map<EquipedSlot, CustomItem> getEquipedInventorySlots();
 
-	double getExperiencs();
-
 	void addExperiences(double exp, ExperienceSource source);
 
 	Player getPlayer();
@@ -99,15 +94,15 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setAttributePoints(int attributePoints);
 
-	Integer getAttributeValue(String name);
+	Integer getAttributeValue(java.lang.String name);
 
 	default Integer getAttributeValue(ICharacterAttribute attribute) {
 		return getAttributeValue(attribute.getId());
 	}
 
-	Map<String, Long> getCooldowns();
+	Map<java.lang.String, Long> getCooldowns();
 
-	boolean hasCooldown(String thing);
+	boolean hasCooldown(java.lang.String thing);
 
 	double getBaseWeaponDamage(RPGItemType type);
 
@@ -121,25 +116,27 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	CharacterBase getCharacterBase();
 
+	PlayerClassData getPrimaryClass();
+
 	double getBaseProjectileDamage(EntityType id);
 
 	IActiveCharacter updateItemRestrictions();
 
-	Map<String, ExtendedSkillInfo> getSkills();
+	Map<java.lang.String, ExtendedSkillInfo> getSkills();
 
 	ExtendedSkillInfo getSkillInfo(ISkill skill);
 
-	boolean hasSkill(String name);
+	boolean hasSkill(java.lang.String name);
 
 	int getLevel();
 
-	ExtendedSkillInfo getSkillInfo(String s);
+	ExtendedSkillInfo getSkillInfo(java.lang.String s);
 
 	boolean isSilenced();
 
-	void addSkill(String name, ExtendedSkillInfo info);
+	void addSkill(java.lang.String name, ExtendedSkillInfo info);
 
-	ExtendedSkillInfo getSkill(String skillName);
+	ExtendedSkillInfo getSkill(java.lang.String skillName);
 
 	void getRemoveAllSkills();
 
@@ -173,7 +170,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setDamageType(DamageType damageType);
 
-	void updateLastKnownLocation(int x, int y, int z, String name);
+	void updateLastKnownLocation(int x, int y, int z, java.lang.String name);
 
 	boolean isInvulnerable();
 
@@ -203,7 +200,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setCharacterLevelProperties(float[] arr);
 
-	Map<String, Integer> getTransientAttributes();
+	Map<java.lang.String, Integer> getTransientAttributes();
 
 	MessageType getPreferedMessageType();
 
@@ -215,7 +212,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setSlotsToReinitialize(List<Integer> slotsToReinitialize);
 
-	Map<String, SkillTreeViewModel> getSkillTreeViewLocation();
+	Map<java.lang.String, SkillTreeViewModel> getSkillTreeViewLocation();
 
 	SkillTreeViewModel getLastTimeInvokedSkillTreeView();
 
@@ -229,9 +226,15 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	Set<EquipedSlot> getSlotsCannotBeEquiped();
 
-	double getExperienceBonusFor(String name, EntityType type);
+	double getExperienceBonusFor(java.lang.String name, EntityType type);
 
 	default void sendMessage(Text t) {
 		getPlayer().sendMessage(t);
 	}
+
+	default void updatePropertyArrays() {
+
+	}
+
+	void addClass(PlayerClassData playerClassData);
 }

@@ -280,7 +280,7 @@ public class ResourceLoader {
 		}
 		if (clazz.isAnnotationPresent(PropertyContainer.class)) {
 			info("Found Property container class" + clazz.getName(), pluginConfig.DEBUG);
-			propertyService.process(clazz);
+			propertyService.processContainer(clazz);
 		}
 		if (clazz.isAnnotationPresent(Attribute.class)) {
 			propertyService.registerAttribute((ICharacterAttribute) clazz.newInstance());

@@ -13,9 +13,9 @@ public class CharacterChangeGroupEvent extends CharacterEvent {
 	private final ClassDefinition _new;
 	private final ClassDefinition old;
 
-	public CharacterChangeGroupEvent(ClassDefinition classDefinition, IActiveCharacter character, ClassDefinition old) {
+	public CharacterChangeGroupEvent(IActiveCharacter character, ClassDefinition _new, ClassDefinition old) {
 		super(character);
-		this._new = classDefinition;
+		this._new = _new;
 		this.old = old;
 	}
 

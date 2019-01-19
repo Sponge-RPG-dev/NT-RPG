@@ -6,6 +6,7 @@ import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.Console;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localizations;
+import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.gui.GuiHelper;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
@@ -33,9 +34,12 @@ public class PropertySkill extends AbstractSkill {
 
 	private PropertyService propertyService;
 
+	private DamageService damageService;
+
 	public PropertySkill() {
 		super();
 		propertyService = NtRpgPlugin.GlobalScope.propertyService;
+		damageService = NtRpgPlugin.GlobalScope.damageService;
 	}
 
 	@Override
@@ -72,13 +76,15 @@ public class PropertySkill extends AbstractSkill {
 		PropertySkillData skillData = (PropertySkillData) skill.getSkillData();
 		for (Wrapper property : skillData.properties) {
 			if (fc.apply(property.level, skill.getTotalLevel())) {
-				character.addProperty(property.level, property.value * i);
+				character.addProperty(property.propertyId, property.value * i);
 				if (property.propertyId == DefaultProperties.max_health) {
 					characterService.updateMaxHealth(character);
 				} else if (property.propertyId == DefaultProperties.walk_speed) {
 					characterService.updateWalkSpeed(character);
 				} else if (property.propertyId == DefaultProperties.max_mana) {
 					characterService.updateMaxMana(character);
+				} else if (propertyService.updatingRequiresDamageRecalc(property.propertyId)) {
+					damageService.recalculateCharacterWeaponDamage(character);
 				}
 			}
 		}

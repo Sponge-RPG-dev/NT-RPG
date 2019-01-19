@@ -233,8 +233,6 @@ public class Localizations {
 
 	public static LocalizableParametrizedText RACE_CANNOT_BECOME_CLASS;
 
-	public static LocalizableParametrizedText RACE_NOT_SELECTED;
-
 	public static LocalizableParametrizedText ITEM_EFFECTS_SECTION;
 
 	public static LocalizableParametrizedText ITEM_RARITY_SECTION;
@@ -259,8 +257,6 @@ public class Localizations {
 
 	public static LocalizableParametrizedText RACES_MENU_TEXT;
 
-	public static LocalizableParametrizedText CLASSES_MENU_TEXT;
-
 	public static LocalizableParametrizedText LEVEL;
 
 	public static LocalizableParametrizedText CHAR_DELETED_FEEDBACK;
@@ -276,4 +272,8 @@ public class Localizations {
 	public static LocalizableParametrizedText INSUFFICIENT_LEVEL_GAP;
 
 	public static LocalizableParametrizedText CANNOT_USE_ITEM_CONFIGURATION_REASON_OFFHAND;
+
+	public static LocalizableParametrizedText CLASS_TYPE_NOT_SELECTED;
+	public static LocalizableParametrizedText MISSING_CLASS_DEPENDENCIES;
+	public static LocalizableParametrizedText NO_SUCH_CLASSTYPE;
 }

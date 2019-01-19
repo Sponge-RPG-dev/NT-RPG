@@ -27,7 +27,7 @@ import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.players.groups.ClassDefinitionType;
+import cz.neumimto.rpg.players.groups.String;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
@@ -95,7 +95,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Map<String, Integer> getTransientAttributes() {
+	public Map<java.lang.String, Integer> getTransientAttributes() {
 		return null;
 	}
 
@@ -125,7 +125,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public String getName() {
+	public java.lang.String getName() {
 		return "None";
 	}
 
@@ -190,12 +190,12 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public void updateLastKnownLocation(int x, int y, int z, String name) {
+	public void updateLastKnownLocation(int x, int y, int z, java.lang.String name) {
 
 	}
 
 	@Override
-	public Map<String, IEffectContainer<Object, IEffect<Object>>> getEffectMap() {
+	public Map<java.lang.String, IEffectContainer<Object, IEffect<Object>>> getEffectMap() {
 		return Collections.emptyMap();
 	}
 
@@ -269,7 +269,7 @@ public class PreloadCharacter implements IActiveCharacter {
 			if (player.isPresent()) {
 				this.player = player.get();
 			} else {
-				throw new PlayerNotInGameException(String.format(
+				throw new PlayerNotInGameException(java.lang.String.format(
 						"Player object with uuid=%s has not been constructed yet. Calling PreloadCharacter.getCharacter in a wrong state"), this);
 			}
 		}
@@ -297,17 +297,17 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Integer getAttributeValue(String name) {
+	public Integer getAttributeValue(java.lang.String name) {
 		return 0;
 	}
 
 	@Override
-	public Map<String, Long> getCooldowns() {
+	public Map<java.lang.String, Long> getCooldowns() {
 		return Collections.emptyMap();
 	}
 
 	@Override
-	public boolean hasCooldown(String thing) {
+	public boolean hasCooldown(java.lang.String thing) {
 		return true;
 	}
 
@@ -353,12 +353,12 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public EffectContainer getEffect(String cl) {
+	public EffectContainer getEffect(java.lang.String cl) {
 		return null;
 	}
 
 	@Override
-	public boolean hasEffect(String cl) {
+	public boolean hasEffect(java.lang.String cl) {
 		return false;
 	}
 
@@ -368,7 +368,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public void removeEffect(String cl) {
+	public void removeEffect(java.lang.String cl) {
 
 	}
 
@@ -408,7 +408,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Map<String, ExtendedSkillInfo> getSkills() {
+	public Map<java.lang.String, ExtendedSkillInfo> getSkills() {
 		return Collections.emptyMap();
 	}
 
@@ -418,12 +418,12 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public boolean hasSkill(String name) {
+	public boolean hasSkill(java.lang.String name) {
 		return false;
 	}
 
 	@Override
-	public ExtendedSkillInfo getSkillInfo(String s) {
+	public ExtendedSkillInfo getSkillInfo(java.lang.String s) {
 		return ExtendedSkillInfo.Empty;
 	}
 
@@ -433,12 +433,12 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public void addSkill(String name, ExtendedSkillInfo info) {
+	public void addSkill(java.lang.String name, ExtendedSkillInfo info) {
 
 	}
 
 	@Override
-	public ExtendedSkillInfo getSkill(String skillName) {
+	public ExtendedSkillInfo getSkill(java.lang.String skillName) {
 		return ExtendedSkillInfo.Empty;
 	}
 
@@ -459,7 +459,7 @@ public class PreloadCharacter implements IActiveCharacter {
 
 
 	@Override
-	public Map<ClassDefinitionType, PlayerClassData> getClasses() {
+	public Map<String, PlayerClassData> getClasses() {
 		return Collections.EMPTY_MAP;
 	}
 
@@ -541,7 +541,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Map<String, SkillTreeViewModel> getSkillTreeViewLocation() {
+	public Map<java.lang.String, SkillTreeViewModel> getSkillTreeViewLocation() {
 		return Collections.emptyMap();
 	}
 
@@ -556,7 +556,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public double getExperienceBonusFor(String name, EntityType type) {
+	public double getExperienceBonusFor(java.lang.String name, EntityType type) {
 		return 0;
 	}
 

@@ -5,8 +5,8 @@ import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.groups.ConfigClass;
-import cz.neumimto.rpg.players.groups.Race;
+import cz.neumimto.rpg.players.PlayerClassData;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.ArgumentParseException;
 import org.spongepowered.api.command.args.CommandArgs;
@@ -15,11 +15,10 @@ import org.spongepowered.api.command.args.CommandElement;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import javax.annotation.Nullable;
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
@@ -43,20 +42,29 @@ public class PlayerClassCommandElement extends CommandElement {
 	@Override
 	protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
 		String clazz = args.next();
-		ConfigClass configClass = NtRpgPlugin.GlobalScope.groupService.getClassDefinitionByName(clazz);
+		ClassDefinition configClass = NtRpgPlugin.GlobalScope.groupService.getClassDefinitionByName(clazz);
 		if (configClass == null) {
 			throw args.createError(Localizations.UNKNOWN_CLASS.toText(Arg.arg("class", clazz)));
 		}
 		IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) source);
 
-		if (validate && pluginConfig.VALIDATE_RACE_DURING_CLASS_SELECTION) {
-			Race race = character.getRace();
-			if (race == Race.Default) {
-				throw args.createError(Localizations.RACE_NOT_SELECTED.toText());
-			}
-			if (!race.getAllowedClasses().contains(configClass)) {
-				throw args.createError(Localizations.RACE_CANNOT_BECOME_CLASS.toText(
-						Arg.arg("race", race.getName()).with("class", configClass.getName())));
+		if (validate && pluginConfig.RESPECT_CLASS_SELECTION_ORDER) {
+			List<String> classTypes = pluginConfig.CLASS_TYPES;
+
+
+			boolean depOk = false;
+			for (String classType : classTypes) {
+				PlayerClassData classByType = character.getClassByType(classType);
+				if (classByType == null) {
+				 	throw args.createError(Localizations.CLASS_TYPE_NOT_SELECTED.toText());
+				}
+				if (!depOk) {
+					ClassDefinition classDefinition = classByType.getClassDefinition();
+					if (!classDefinition.getClassDependencyGraph().isValidFor(character.getClasses()
+							.values().stream().map(PlayerClassData::getClassDefinition).collect(Collectors.toSet()))) {
+						throw args.createError(Localizations.MISSING_CLASS_DEPENDENCIES.toText());
+					}
+				}
 			}
 		}
 		if (!source.hasPermission("ntrpg.groups." + configClass.getName().toLowerCase())) {
@@ -68,21 +76,14 @@ public class PlayerClassCommandElement extends CommandElement {
 
 	@Override
 	public List<String> complete(CommandSource src, CommandArgs args, CommandContext context) {
-		if (pluginConfig.VALIDATE_RACE_DURING_CLASS_SELECTION) {
-			IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src);
-			Race race = character.getRace();
-			if (race == Race.Default) {
-				return Collections.emptyList();
-			}
-			return race.getAllowedClasses().stream()
-					.map(ConfigClass::getName)
+		if (validate) {
+			//todo
+			return NtRpgPlugin.GlobalScope.groupService.getClassDefinitions().stream()
+					.map(ClassDefinition::getName)
 					.filter(a -> src.hasPermission("ntrpg.groups." + a.toLowerCase()))
 					.collect(Collectors.toList());
 		}
-		return NtRpgPlugin.GlobalScope.groupService.getClasses().stream()
-				.map(ConfigClass::getName)
-				.filter(a -> src.hasPermission("ntrpg.groups." + a.toLowerCase()))
-				.collect(Collectors.toList());
+		return Collections.EMPTY_LIST;
 	}
 
 	@Override

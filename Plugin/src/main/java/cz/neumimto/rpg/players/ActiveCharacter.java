@@ -20,6 +20,7 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
@@ -29,16 +30,13 @@ import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.players.groups.ClassDefinitionType;
-import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.ItemAccessSkill;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.parents.StartingPoint;
 import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
+import org.jline.utils.Log;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.type.HandType;
 import org.spongepowered.api.data.type.HandTypes;
@@ -50,15 +48,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatType;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.*;
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
@@ -72,7 +62,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	private transient UUID pl;
 	private CharacterBase base;
 
-	private Map<ClassDefinitionType, PlayerClassData> classes = new HashMap<>();
+	private Map<String, PlayerClassData> classes = new HashMap<>();
 
 	private transient float[] characterProperties;
 	private transient float[] characterPropertiesLevel;
@@ -112,6 +102,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	private CustomItem offHand;
 	private int mainHandSlotId;
 	private CustomItem mainHand;
+	private PlayerClassData primaryClass;
 
 	public ActiveCharacter(Player pl, CharacterBase base) {
 		this.pl = pl.getUniqueId();
@@ -145,11 +136,6 @@ public class ActiveCharacter implements IActiveCharacter {
 	@Override
 	public float[] getCharacterProperties() {
 		return characterProperties;
-	}
-
-	@Override
-	public void setProperties(float[] arr) {
-		characterProperties = arr;
 	}
 
 	@Override
@@ -252,15 +238,9 @@ public class ActiveCharacter implements IActiveCharacter {
 		return equipedArmor;
 	}
 
-
 	@Override
 	public Map<String, IEffectContainer<Object, IEffect<Object>>> getEffectMap() {
 		return effects;
-	}
-
-	@Override
-	public double getExperiencs() {
-		return getPrimaryClass().getExperiences();
 	}
 
 	@Override
@@ -304,84 +284,32 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Map<String, Integer> getTransientAttributes() {
+	public Map<java.lang.String, Integer> getTransientAttributes() {
 		return transientAttributes;
 	}
 
 	@Override
-	public Integer getAttributeValue(String name) {
+	public Integer getAttributeValue(java.lang.String name) {
 		return base.getAttributes().get(name) + getTransientAttributes().get(name);
 	}
 
-	public void setClass(ConfigClass nclass, int slot) {
-		if (primary != null) {
-			//      fixPropertyValues(getPrimaryClass().getClassDefinition().getPropBonus(), -1);
-			//      fixPropertyLevelValues(getPrimaryClass().getClassDefinition().getPropLevelBonus(), -1);
-			skills.clear();
-		}
-
-		//classes.clear();
-
-		if (slot == 0) {
-			primary = new PlayerClassData(this);
-			primary.setClassDefinition(nclass);
-			primary.setPrimary(true);
-			classes.add(primary);
-		}
-		CharacterClass cc = getCharacterBase().getCharacterClass(nclass);
-		if (cc == null) {
-			cc = new CharacterClass();
-			cc.setCharacterBase(getCharacterBase());
-			cc.setName(nclass.getName());
-			getCharacterBase().getCharacterClasses().add(cc);
-		}
-		Double aDouble = cc.getExperiences();
-		if (aDouble == null) {
-			primary.setExperiences(0D);
-			primary.setLevel(0);
-			if (slot == 0) {
-				cc.setSkillPoints(pluginConfig.SKILLPOINTS_ON_START);
-			}
-			cc.setExperiences(0D);
-		} else {
-			//  primary.setStacks(getCharacterBase().getStacks());
-			primary.setExperiences(aDouble);
-		}
-		base.setPrimaryClass(nclass.getName());
-		//   fixPropertyValues(nclass.getPropBonus(), 1);
-		//  fixPropertyLevelValues(getPrimaryClass().getClassDefinition().getPropLevelBonus(), 1);
-		SkillData skillData = nclass.getSkillTree().getSkills().get(StartingPoint.name);
-		if (skillData != null) {
-			ExtendedSkillInfo info = new ExtendedSkillInfo();
-			info.setLevel(0);
-			info.setSkill(null);
-			info.setSkillData(skillData);
-		}
-		updateItemRestrictions();
-	}
-
 	@Override
-	public Map<String, Long> getCooldowns() {
+	public Map<java.lang.String, Long> getCooldowns() {
 		return getCharacterBase().getCharacterCooldowns();
 	}
 
 	@Override
-	public boolean hasCooldown(String thing) {
+	public boolean hasCooldown(java.lang.String thing) {
 		return getCharacterBase().getCharacterCooldowns().containsKey(thing);
 	}
 
 	private void mergeWeapons(ClassDefinition g) {
 		mergeWeapons(g.getWeapons());
-		for (Map.Entry<EntityType, Double> e : g.getProjectileDamage().entrySet()) {
-			if (getBaseProjectileDamage(e.getKey()) < e.getValue()) {
-				projectileDamage.put(e.getKey(), e.getValue());
-			}
-		}
 		HashMap<ItemType, Set<ConfigRPGItemType>> offHandWeapons = g.getOffHandWeapons();
 		for (Map.Entry<ItemType, Set<ConfigRPGItemType>> e : offHandWeapons.entrySet()) {
 			Set<ConfigRPGItemType> value = e.getValue();
 			for (ConfigRPGItemType configRPGItemType : value) {
-				this.allowedOffHandWeapons.add(configRPGItemType.getRpgItemType());
+				allowedOffHandWeapons.add(configRPGItemType.getRpgItemType());
 			}
 		}
 	}
@@ -408,11 +336,11 @@ public class ActiveCharacter implements IActiveCharacter {
 			if (weaponItemType.getDisplayName() == null) {
 				if (configRPGItemType.getRpgItemType().getDisplayName() == null) {
 					//todo check if the displayname is reserved
-					return wrapper.getDamage(); //null is first, if both null => can use unnamed item
+					return wrapper.getDamage(weaponItemType); //null is first, if both null => can use unnamed item
 				}
 			} else {
 				if (weaponItemType.getDisplayName().equalsIgnoreCase(configRPGItemType.getRpgItemType().getDisplayName())) {
-					return wrapper.getDamage();
+					return wrapper.getDamage(weaponItemType);
 				}
 			}
 		}
@@ -428,50 +356,58 @@ public class ActiveCharacter implements IActiveCharacter {
 		return d;
 	}
 
-	public IActiveCharacter updateItemRestrictions() {
+    @Override
+    public IActiveCharacter updateItemRestrictions() {
+        Log.debug("Updating item restrictions " + getName());
+
 		allowedWeapons.clear();
 		allowedOffHandWeapons.clear();
-		Map<ItemType, Set<ConfigRPGItemType>> weapons = getRace().getWeapons();
-		allowedWeapons.putAll(weapons.entrySet().stream()
-				.collect(Collectors.toMap(Map.Entry::getKey, e -> RPGItemWrapper.createFromSet(e.getValue()))));
+        allowedArmorIds.clear();
+        getProjectileDamages().clear();
 
-		for (Set<ConfigRPGItemType> configRPGItemTypes : getRace().getOffHandWeapons().values()) {
-			for (ConfigRPGItemType configRPGItemType : configRPGItemTypes) {
-				allowedOffHandWeapons.add(configRPGItemType.getRpgItemType());
-			}
-		}
+        Iterator<PlayerClassData> iterator = classes.values().iterator();
+        //put in first
+        if (iterator.hasNext()) {
+            PlayerClassData next = iterator.next();
+            Map<ItemType, Set<ConfigRPGItemType>> weapons = next.getClassDefinition().getWeapons();
+            for (Map.Entry<ItemType, Set<ConfigRPGItemType>> entry : weapons.entrySet()) {
+                allowedWeapons.put(entry.getKey(), RPGItemWrapper.createFromSet(entry.getValue()));
+            }
 
+            HashMap<ItemType, Set<ConfigRPGItemType>> offHandWeapons = next.getClassDefinition().getOffHandWeapons();
+            for (Set<ConfigRPGItemType> configRPGItemTypes : offHandWeapons.values()) {
+                for (ConfigRPGItemType configRPGItemType : configRPGItemTypes) {
+                    allowedOffHandWeapons.add(configRPGItemType.getRpgItemType());
+                }
+            }
+            allowedArmorIds.addAll(next.getClassDefinition().getAllowedArmor());
+            getProjectileDamages().putAll(next.getClassDefinition().getProjectileDamage());
+        }
 
-		//mergeWeapons(getGuild());
-		mergeWeapons(getPrimaryClass().getClassDefinition());
-		//could be problematic, but its not called too often
-		for (ExtendedSkillInfo extendedSkillInfo : getSkills().values()) {
-			if (extendedSkillInfo.getSkill().getType() == EffectSourceType.ITEM_ACCESS_SKILL) {
-				ItemAccessSkill.ItemAccessSkillData skillData = (ItemAccessSkill.ItemAccessSkillData) extendedSkillInfo.getSkillData();
-				Map<Integer, Map<ItemType, Set<ConfigRPGItemType>>> items = skillData.getItems();
-				for (Map.Entry<Integer, Map<ItemType, Set<ConfigRPGItemType>>> ent : items.entrySet()) {
-					if (ent.getKey() <= getLevel()) {
-						mergeWeapons(ent.getValue());
-					}
-				}
+        //calculate rest
+        while (iterator.hasNext()) {
+            PlayerClassData next = iterator.next();
 
-			}
-		}
-		//mergeWeapons(getRace());
-		allowedArmorIds.clear();
+            //merge weapon sets
+            mergeWeapons(next.getClassDefinition());
 
-		allowedArmorIds.addAll(getRace().getAllowedArmor());
+            //might be expensive on massive skilltrees, eventually i could cache these types of skill in an extra collection
+            for (ExtendedSkillInfo extendedSkillInfo : getSkills().values()) {
+                if (extendedSkillInfo.getSkill().getType() == EffectSourceType.ITEM_ACCESS_SKILL) {
+                    ItemAccessSkill.ItemAccessSkillData skillData = (ItemAccessSkill.ItemAccessSkillData) extendedSkillInfo.getSkillData();
+                    Map<Integer, Map<ItemType, Set<ConfigRPGItemType>>> items = skillData.getItems();
+                    for (Map.Entry<Integer, Map<ItemType, Set<ConfigRPGItemType>>> ent : items.entrySet()) {
+                        if (ent.getKey() <= getLevel()) {
+                            mergeWeapons(ent.getValue());
+                        }
+                    }
+                }
+            }
+            allowedArmorIds.addAll(next.getClassDefinition().getAllowedArmor());
+        }
 
-		//allowedArmorIds.addAll(getGuild().getAllowedArmor());
-
-		allowedArmorIds.addAll(getPrimaryClass().getClassDefinition().getAllowedArmor());
-
-		getProjectileDamages().clear();
-
-		getProjectileDamages().putAll(getRace().getProjectileDamage());
-
-		for (PlayerClassData playerClassData : getClasses()) {
-			ConfigClass configClass = playerClassData.getClassDefinition();
+		for (PlayerClassData playerClassData : getClasses().values()) {
+			ClassDefinition configClass = playerClassData.getClassDefinition();
 			Map<EntityType, Double> projectileDamage = configClass.getProjectileDamage();
 			for (Map.Entry<EntityType, Double> entityType : projectileDamage.entrySet()) {
 				Double aDouble = getProjectileDamages().get(entityType.getKey());
@@ -484,7 +420,6 @@ public class ActiveCharacter implements IActiveCharacter {
 				}
 			}
 		}
-
 		return this;
 	}
 
@@ -535,7 +470,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Map<String, ExtendedSkillInfo> getSkills() {
+	public Map<java.lang.String, ExtendedSkillInfo> getSkills() {
 		return Collections.unmodifiableMap(skills); //lets use wrapper class instaed of guava's immutable
 	}
 
@@ -545,12 +480,12 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public void addSkill(String id, ExtendedSkillInfo info) {
+	public void addSkill(java.lang.String id, ExtendedSkillInfo info) {
 		skills.put(id, info);
 	}
 
 	@Override
-	public ExtendedSkillInfo getSkill(String id) {
+	public ExtendedSkillInfo getSkill(java.lang.String id) {
 		return skills.get(id);
 	}
 
@@ -566,21 +501,42 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public ExtendedSkillInfo getSkillInfo(String s) {
+	public ExtendedSkillInfo getSkillInfo(java.lang.String s) {
 		return skills.get(s.toLowerCase());
 	}
 
 	@Override
-	public boolean hasSkill(String name) {
+	public boolean hasSkill(java.lang.String name) {
 		return skills.containsKey(name.toLowerCase());
 	}
 
 	@Override
-	public int getLevel() {
-		return getPrimaryClass().getLevel();
+	public PlayerClassData getPrimaryClass() {
+		return primaryClass;
 	}
 
 	@Override
+	public void addClass(PlayerClassData playerClassData) {
+		if (playerClassData.getClassDefinition().getClassType().equalsIgnoreCase(NtRpgPlugin.pluginConfig.PRIMARY_CLASS_TYPE)) {
+			primaryClass = playerClassData;
+		}
+		classes.put(playerClassData.getClassDefinition().getName(), playerClassData);
+	}
+
+	@Override
+	public int getLevel() {
+		if (primaryClass == null) {
+			return 1;
+		}
+		return getPrimaryClass().getLevel();
+	}
+
+    @Override
+    public Map<String, PlayerClassData> getClasses() {
+        return classes;
+    }
+
+    @Override
 	public Party getParty() {
 		return party;
 	}
@@ -675,7 +631,7 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	@Override
 	public boolean hasClass(ClassDefinition configClass) {
-		ClassDefinitionType type = configClass.getClassType();
+		String type = configClass.getClassType();
 		return getClassByType(type) != null;
 	}
 
@@ -704,7 +660,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Map<String, SkillTreeViewModel> getSkillTreeViewLocation() {
+	public Map<java.lang.String, SkillTreeViewModel> getSkillTreeViewLocation() {
 		return skillTreeViewLocation;
 	}
 
@@ -777,7 +733,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public double getExperienceBonusFor(String name, EntityType type) {
+	public double getExperienceBonusFor(java.lang.String name, EntityType type) {
 		double exp = 0;
 		for (PlayerClassData playerClassData : getClasses().values()) {
 			exp += playerClassData.getClassDefinition().getExperiencesBonus(name, type);
@@ -798,7 +754,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public String toString() {
+	public java.lang.String toString() {
 		return "ActiveCharacter{" +
 				"uuid=" + pl +
 				" name=" + getName() +

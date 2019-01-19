@@ -18,12 +18,8 @@
 
 package cz.neumimto.rpg.players.groups;
 
-import cz.neumimto.rpg.configuration.adapters.AllowedArmorListAdapter;
-import cz.neumimto.rpg.configuration.adapters.ClassLevelingDefinitionAdapter;
-import cz.neumimto.rpg.configuration.adapters.ClassTypeAdapter;
-import cz.neumimto.rpg.configuration.adapters.PropertyMapAdapter;
-import cz.neumimto.rpg.configuration.adapters.SkillTreeLookupAdapter;
-import cz.neumimto.rpg.configuration.adapters.WeaponsAdapter;
+import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
+import cz.neumimto.rpg.configuration.adapters.*;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
@@ -32,21 +28,15 @@ import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.leveling.ClassLevelingDefinition;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.tree.SkillTree;
-import ninja.leaping.configurate.objectmapping.Adapter;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 27.12.2014.
@@ -73,22 +63,22 @@ public class ClassDefinition /* implements IEffectSourceProvider */ {
 	private boolean showsInMenu = true;
 
 	@Setting("ClassType")
-	@Adapter(ClassTypeAdapter.class)
+	@CustomAdapter(ClassTypeAdapter.class)
 	protected String type;
 
 	@Setting("Properties")
-	@Adapter(PropertyMapAdapter.class)
+	@CustomAdapter(PropertyMapAdapter.class)
 	private Map<Integer, Float> propBonus = new HashMap<>();
 
 	@Setting
-	@Adapter(AllowedArmorListAdapter.class)
+	@CustomAdapter(AllowedArmorListAdapter.class)
 	private Set<RPGItemType> allowedArmor = new HashSet<>();
 
 	@Setting("Permissions")
 	private TreeSet<PlayerGroupPermission> permissions = new TreeSet<>();
 
 	@Setting("Properties")
-	@Adapter(PropertyMapAdapter.class)
+	@CustomAdapter(PropertyMapAdapter.class)
 	private Map<Integer, Float> propLevelBonus = new HashMap<>();
 
 	@Setting("ExitCommands")
@@ -101,7 +91,7 @@ public class ClassDefinition /* implements IEffectSourceProvider */ {
 	private Map<EntityType, Double> projectileDamage = new HashMap<>();
 
 	@Setting("Weapons")
-	@Adapter(WeaponsAdapter.class)
+	@CustomAdapter(WeaponsAdapter.class)
 	private HashMap<ItemType, Set<ConfigRPGItemType>> weapons = new HashMap<>();
 
 	private Map<ICharacterAttribute, Integer> startingAttributes = new HashMap<>();
@@ -113,7 +103,7 @@ public class ClassDefinition /* implements IEffectSourceProvider */ {
 	private Map<String, Map<EntityType, Double>> experiences = new HashMap<>();
 
 	@Setting("SkillTreeId")
-	@Adapter(SkillTreeLookupAdapter.class)
+	@CustomAdapter(SkillTreeLookupAdapter.class)
 	private SkillTree skillTree;
 
 	@Setting("SkillPointsPerLevel")
@@ -123,7 +113,7 @@ public class ClassDefinition /* implements IEffectSourceProvider */ {
 	private int attributepointsperlevel;
 
 	@Setting("Leveling")
-	@Adapter(ClassLevelingDefinitionAdapter.class)
+	@CustomAdapter(ClassLevelingDefinitionAdapter.class)
 	private ClassLevelingDefinition levels;
 
 	@Setting("ExperienceSources")
@@ -132,11 +122,10 @@ public class ClassDefinition /* implements IEffectSourceProvider */ {
 	@Setting("Default")
 	private boolean defaultClass;
 
-	/*
-	@Setting("RequiredClasses")
-	@Adapter(ClassConfigAdapter.class)
-	*/
-	private Set<ClassDefinition> allowedClasses = new HashSet<>();
+	private ClassDependencyGraph classDependencyGraph = new ClassDependencyGraph();
+
+	@Setting("CustomLore")
+	private List<Text> customLore;
 
 	public String getName() {
 		return name;
@@ -293,11 +282,31 @@ public class ClassDefinition /* implements IEffectSourceProvider */ {
 		this.experiences = experiences;
 	}
 
+	public ClassDependencyGraph getClassDependencyGraph() {
+		return classDependencyGraph;
+	}
+
 	@Override
 	public String toString() {
 		return "PlayerGroup{" +
 				"name='" + name + '\'' +
 				", getClasses=" + type +
 				'}';
+	}
+
+	public boolean hasExperienceSource(ExperienceSource source) {
+		return experienceSourceSet.contains(source);
+	}
+
+	public List<Text> getCustomLore() {
+		return customLore;
+	}
+
+	public SkillTree getSkillTree() {
+		return skillTree;
+	}
+
+	public void setSkillTree(SkillTree skillTree) {
+		this.skillTree = skillTree;
 	}
 }

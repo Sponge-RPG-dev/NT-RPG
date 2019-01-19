@@ -31,8 +31,6 @@ import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.players.groups.ConfigClass;
-import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.tree.SkillTree;
@@ -116,10 +114,6 @@ public class Gui {
 		getMessageTypeOf(character).sendStatus(character);
 	}
 
-	public static void showAvalaibleClasses(IActiveCharacter character) {
-		getMessageTypeOf(character).showAvalaibleClasses(character);
-	}
-
 	public static void invokeDefaultMenu(IActiveCharacter character) {
 		getMessageTypeOf(character).invokerDefaultMenu(character);
 	}
@@ -128,20 +122,12 @@ public class Gui {
 		getMessageTypeOf(player).sendListOfCharacters(player, currentlyCreated);
 	}
 
-	public static void showClassInfo(IActiveCharacter character, ConfigClass cc) {
+	public static void showClassInfo(IActiveCharacter character, ClassDefinition cc) {
 		getMessageTypeOf(character).showClassInfo(character, cc);
 	}
 
 	public static void sendListOfRunes(IActiveCharacter character) {
 		getMessageTypeOf(character).sendListOfRunes(character);
-	}
-
-	public static void sendRaceInfo(IActiveCharacter target, Race race) {
-		getMessageTypeOf(target).sendRaceInfo(target, race);
-	}
-
-	public static void sendRaceList(IActiveCharacter target) {
-		getMessageTypeOf(target).sendListOfRaces(target);
 	}
 
 	public static void displayGroupArmor(ClassDefinition g, Player target) {
@@ -225,5 +211,9 @@ public class Gui {
 
 	public static void skillExecution(IActiveCharacter character, ExtendedSkillInfo skill) {
 		getMessageTypeOf(character).skillExecution(character, skill);
+	}
+
+	public static void filterClassesByType(IActiveCharacter character, String o) {
+		getMessageTypeOf(character).filterClassesByType(character, o);
 	}
 }

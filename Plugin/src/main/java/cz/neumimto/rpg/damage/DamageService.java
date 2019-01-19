@@ -70,7 +70,9 @@ public class DamageService {
 	private InventoryService inventoryService;
 	@Inject
 	private ItemService itemService;
+
 	private Map<Double, TextColor> doubleColorMap = new TreeMap<>();
+
 	private TextColor[] colorScale = new TextColor[]{
 			TextColors.WHITE,
 			TextColors.YELLOW,

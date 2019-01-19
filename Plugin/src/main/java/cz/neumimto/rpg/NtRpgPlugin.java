@@ -27,45 +27,27 @@ import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizationService;
 import cz.neumimto.core.localization.TextHelper;
-import cz.neumimto.rpg.commands.AnyPlayerGroupCommandElement;
-import cz.neumimto.rpg.commands.CharacterAttributeCommandElement;
-import cz.neumimto.rpg.commands.GlobalEffectCommandElement;
-import cz.neumimto.rpg.commands.LearnedSkillCommandElement;
-import cz.neumimto.rpg.commands.PartyMemberCommandElement;
-import cz.neumimto.rpg.commands.PlayerClassCommandElement;
-import cz.neumimto.rpg.commands.RaceCommandElement;
-import cz.neumimto.rpg.commands.RuneCommandElement;
-import cz.neumimto.rpg.commands.UnlearnedSkillCommandElement;
+import cz.neumimto.rpg.commands.*;
 import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.configuration.Settings;
+import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.inventory.ConfigRPGItemType;
+import cz.neumimto.rpg.inventory.ItemService;
+import cz.neumimto.rpg.inventory.RPGItemType;
+import cz.neumimto.rpg.inventory.WeaponClass;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
-import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemAttributesData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaHeader;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaTypeData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemRarityData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemSocketsData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemStackUpgradeData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemSubtypeData;
-import cz.neumimto.rpg.inventory.data.manipulators.LoreDamageData;
-import cz.neumimto.rpg.inventory.data.manipulators.LoreDurabilityData;
-import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemGroupRequirementsData;
-import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemRequirementsData;
-import cz.neumimto.rpg.inventory.data.manipulators.SectionDelimiterData;
-import cz.neumimto.rpg.inventory.data.manipulators.SkillBindData;
-import cz.neumimto.rpg.inventory.data.manipulators.SkillTreeNode;
+import cz.neumimto.rpg.inventory.data.manipulators.*;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.inventory.items.ItemMetaTypeRegistry;
 import cz.neumimto.rpg.inventory.items.ItemMetaTypes;
@@ -84,40 +66,24 @@ import cz.neumimto.rpg.listeners.DebugListener;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.players.ActiveCharacter;
-import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.ExperienceSource;
-import cz.neumimto.rpg.players.ExperienceSourceRegistry;
-import cz.neumimto.rpg.players.ExperienceSources;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.PlayerClassData;
+import cz.neumimto.rpg.players.*;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
+import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.AttributeRegistry;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.scripting.JSLoader;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.ISkillType;
-import cz.neumimto.rpg.skills.NDamageType;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.skills.SkillSettings;
-import cz.neumimto.rpg.skills.SkillTypeRegistry;
+import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoader;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoaderRegistry;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoaders;
-import cz.neumimto.rpg.skills.mods.SkillContext;
-import cz.neumimto.rpg.skills.mods.SkillExecutorCallback;
-import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactory;
-import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactoryRegistry;
-import cz.neumimto.rpg.skills.mods.SkillPreprocessorFactories;
+import cz.neumimto.rpg.skills.mods.*;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.parents.IActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
 import cz.neumimto.rpg.utils.FileUtils;
 import cz.neumimto.rpg.utils.Placeholders;
+import cz.neumimto.rpg.utils.TriConsumer;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -125,6 +91,7 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.ConfigDir;
@@ -147,6 +114,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -155,17 +123,12 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
-
-import javax.annotation.Resource;
+import java.util.function.Function;
 
 import static cz.neumimto.rpg.Log.info;
 
@@ -202,7 +165,7 @@ public class NtRpgPlugin {
 		PluginCore.MANAGED_JPA_TYPES.add(BaseCharacterAttribute.class);
 		PluginCore.MANAGED_JPA_TYPES.add(CharacterSkill.class);
 		PluginCore.MANAGED_JPA_TYPES.add(CharacterClass.class);
-		Sponge.getEventManager().registerListeners(this, new PersistenceHandler());
+		Sponge.getEventManager().registerListeners(this, new PersistenceHandler(this));
 		new NKeys();
 		DataRegistration.<InventoryCommandItemMenuData, InventoryCommandItemMenuData.Immutable>builder()
 				.manipulatorId("custom_inventory_command")
@@ -501,6 +464,10 @@ public class NtRpgPlugin {
 	}
 
 	private void reloadMainPluigonConfig() {
+		File file = new File(NtRpgPlugin.workingDir);
+		if (!file.exists()) {
+			file.mkdir();
+		}
 		File properties = new File(NtRpgPlugin.workingDir, "Settings.conf");
 		if (!properties.exists()) {
 			FileUtils.generateConfigFile(new PluginConfig(), properties);
@@ -981,6 +948,146 @@ public class NtRpgPlugin {
 				})
 				.build();
 
+		final TriConsumer<CommandSource, String, Player> PROPERTY_DETAIL = (src, data, player) -> {
+			PropertyService ps = IoC.get().build(PropertyService.class);
+			CharacterService cs = IoC.get().build(CharacterService.class);
+			try {
+				int idByName = ps.getIdByName(data);
+				IActiveCharacter character = cs.getCharacter(player);
+				src.sendMessage(Text.of(TextColors.GOLD, "=================="));
+				src.sendMessage(Text.of(TextColors.GREEN, data));
+
+				src.sendMessage(Text.of(TextColors.GOLD, "Value", TextColors.WHITE,"/",
+						TextColors.AQUA, "Effective Value",TextColors.WHITE,"/",
+						TextColors.GRAY, "Cap",
+						TextColors.DARK_GRAY, " .##"));
+
+				NumberFormat formatter = new DecimalFormat("#0.00");
+				src.sendMessage(Text.of(TextColors.GOLD, formatter.format(character.getProperty(idByName)), TextColors.WHITE,"/",
+						TextColors.AQUA, formatter.format(cs.getCharacterProperty(character, idByName)),TextColors.WHITE,"/",
+						TextColors.GRAY, formatter.format(ps.getMaxPropertyValue(idByName))));
+
+				src.sendMessage(Text.of(TextColors.GOLD, "=================="));
+				src.sendMessage(Text.of(TextColors.GRAY, "Memory/1 player: " + (character.getCharacterProperties().length*2*4)/1024.0+"kb"));
+
+			} catch (Throwable t) {
+				src.sendMessage(Text.of("No such property"));
+			}
+		};
+
+		CommandSpec inspectProperty = CommandSpec.builder()
+				.arguments(
+						GenericArguments.onlyOne(GenericArguments.player(TextHelper.parse("player"))),
+						GenericArguments.remainingJoinedStrings(TextHelper.parse("data"))
+				)
+				.executor((src, args) -> {
+					Player player = args.<Player>getOne("player").get();
+					String data = args.<String>getOne("data").get();
+					PROPERTY_DETAIL.accept(src, data, player);
+					return CommandResult.success();
+				})
+				.build();
+
+		Function<WeaponClass, List<Text>> TO_TEXT = weaponClass -> {
+			List<Text> list = new ArrayList<>();
+			PropertyService ps = IoC.get().build(PropertyService.class);
+			list.add(Text.of(TextColors.GOLD, weaponClass.getName()));
+			for (Integer property : weaponClass.getProperties()) {
+				list.add(Text.of(TextColors.GRAY, " -> ", ps.getNameById(property)));
+			}
+			for (Integer property : weaponClass.getPropertiesMults()) {
+				list.add(Text.of(TextColors.GRAY, " -> ", ps.getNameById(property)));
+			}
+			return list;
+		};
+
+		CommandSpec inspectItemDamage = CommandSpec.builder()
+				.arguments(
+						GenericArguments.onlyOne(GenericArguments.player(TextHelper.parse("player")))
+				)
+				.executor((src, args) -> {
+					Player player = args.<Player>getOne("player").get();
+					ItemService is = IoC.get().build(ItemService.class);
+					Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
+					if (!itemInHand.isPresent()) {
+						src.sendMessage(Text.of(player.getName()+ " has no item in main hand"));
+						return CommandResult.empty();
+					}
+					ItemStack itemStack = itemInHand.get();
+					RPGItemType fromItemStack = is.getFromItemStack(itemStack);
+					WeaponClass weaponClass = fromItemStack.getWeaponClass();
+					List<WeaponClass> parents = new LinkedList<>();
+					WeaponClass parent = weaponClass.getParent();
+					List<Integer> o = new ArrayList<>();
+					o.addAll(weaponClass.getProperties());
+					o.addAll(weaponClass.getPropertiesMults());
+					while (parent != null) {
+						parents.add(parent);
+						o.addAll(parent.getPropertiesMults());
+						o.addAll(parent.getProperties());
+						parent = parent.getParent();
+					}
+					parents.add(weaponClass);
+					Collections.reverse(parents);
+
+					List<Text> a = new ArrayList<>();
+					for (WeaponClass wc : parents) {
+						a.addAll(TO_TEXT.apply(wc));
+					}
+					for (Text text : a) {
+						src.sendMessage(text);
+					}
+					src.sendMessage(Text.of(TextColors.GOLD, "=================="));
+					DamageService ds = IoC.get().build(DamageService.class);
+					CharacterService cs = IoC.get().build(CharacterService.class);
+					PropertyService ps = IoC.get().build(PropertyService.class);
+					IActiveCharacter character = cs.getCharacter(player);
+					src.sendMessage(Text.of(TextColors.RED, "Damage: ", ds.getCharacterItemDamage(character, fromItemStack)));
+					src.sendMessage(Text.of(TextColors.RED, "Details: "));
+					src.sendMessage(Text.of(TextColors.GRAY, " - From Item: ", character.getBaseWeaponDamage(fromItemStack)));
+
+					Collection<PlayerClassData> values = character.getClasses().values();
+					for (PlayerClassData value : values) {
+						Set<ConfigRPGItemType> configRPGItemTypes = value.getClassDefinition().getWeapons().get(itemInHand.get());
+						if (configRPGItemTypes != null) {
+							for (ConfigRPGItemType w : configRPGItemTypes) {
+								if (w.rpgItemType.equals(fromItemStack)) {
+									src.sendMessage(Text.of(TextColors.GRAY, "  - From Class: " + w.damage));
+								}
+							}
+						}
+					}
+
+
+					src.sendMessage(Text.of(TextColors.GRAY, " - From WeaponClass: "));
+					Iterator<Integer> iterator = o.iterator();
+					while (iterator.hasNext()) {
+						int integer = iterator.next();
+						String nameById = ps.getNameById(integer);
+						if (!nameById.endsWith("_mult")) {
+							iterator.remove();
+						} else continue;
+						src.sendMessage(Text.of(TextColors.GRAY, "   - ", nameById, ":", cs.getCharacterProperty(character, integer)));
+					}
+					src.sendMessage(Text.of(TextColors.GRAY, "   - Mult: "));
+					iterator = o.iterator();
+					while (iterator.hasNext()) {
+						int integer = iterator.next();
+						String nameById = ps.getNameById(integer);
+						src.sendMessage(Text.of(TextColors.GRAY, "   - ", nameById, ":", cs.getCharacterProperty(character, integer)));
+					}
+
+
+
+
+					return CommandResult.success();
+				})
+				.build();
+
+		CommandSpec inspect = CommandSpec.builder()
+				.child(inspectProperty, "property", "p")
+				.child(inspectItemDamage, "itemDamage", "idmg")
+				.build();
 
 		CommandSpec adminRoot = CommandSpec
 				.builder()
@@ -1000,6 +1107,7 @@ public class NtRpgPlugin {
 				.child(meta, "itemmeta", "imeta", "imt")
 				.child(rst, "grouprequirements", "gr")
 				.child(mt, "itemType", "it", "type")
+				.child(inspect, "i", "inspect")
 				.build();
 
 		Sponge.getCommandManager().register(this, adminRoot, "nadmin", "na");
@@ -1077,25 +1185,15 @@ public class NtRpgPlugin {
 				.arguments(new PlayerClassCommandElement(TextHelper.parse("class")))
 				.permission("ntrpg.player.set.class")
 				.executor((src, args) -> {
-					ConfigClass configClass = args.<ConfigClass>getOne("class").get();
-					if (configClass == ConfigClass.Default) {
-						src.sendMessage(Localizations.NON_EXISTING_GROUP.toText());
-						return CommandResult.empty();
-					}
+					ClassDefinition configClass = args.<ClassDefinition>getOne("class").get();
 
-					if (!src.hasPermission("ntrpg.groups." + configClass.getName().toLowerCase())) {
+					if (!src.hasPermission("ntrpg.class." + configClass.getName().toLowerCase())) {
 						src.sendMessage(Localizations.NO_PERMISSIONS.toText());
 						return CommandResult.empty();
 					}
-					int i = 0;
-					/*
-					if (args.length == 3) {
-						i = Integer.parseInt(args[2]) - 1;
+					if (!(src instanceof Player)) {
+						throw new IllegalStateException("Cannot be run as a console");
 					}
-					if (i < 0) {
-						i = 0;
-					}
-					*/
 					Player player = (Player) src;
 					IActiveCharacter character = GlobalScope.characterService.getCharacter(player.getUniqueId());
 					if (character.isStub()) {
@@ -1103,7 +1201,7 @@ public class NtRpgPlugin {
 						return CommandResult.empty();
 					}
 					character.getClasses().remove(PlayerClassData.Default);
-					GlobalScope.characterService.updatePlayerGroups(character, configClass, i, null, null);
+					GlobalScope.characterService.addNewClass(character, configClass);
 					return CommandResult.success();
 				})
 				.build();
@@ -1407,36 +1505,25 @@ public class NtRpgPlugin {
 		CommandSpec classes = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE
 						.deserialize(CommandLocalization.COMMAND_CLASSES_DESC))
+				.arguments(new PlayerClassTypeCommandElement(Text.of("type")))
 				.permission("ntrpg.groups.list.classes")
 				.executor((src, args) -> {
-					IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
-					Gui.showAvalaibleClasses(character);
+					args.<ClassDefinition>getOne(Text.of("type")).ifPresent(o -> {
+						IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
+						Gui.filterClassesByType(character, o);
+					});
 					return CommandResult.success();
 				})
 				.build();
 
 		Sponge.getCommandManager().register(this, classes, "classes");
 
-		CommandSpec races = CommandSpec.builder()
-				.description(TextSerializers.FORMATTING_CODE
-						.deserialize(CommandLocalization.COMMAND_CLASSES_RACE))
-				.permission("ntrpg.groups.list.races")
-				.executor((src, args) -> {
-					IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
-					Gui.sendRaceList(character);
-					return CommandResult.success();
-				})
-				.build();
-
-		Sponge.getCommandManager().register(this, races, "races");
-
-
 		CommandSpec classgui = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE
 						.deserialize(CommandLocalization.COMMAND_RACE_DESC))
 				.arguments(new PlayerClassCommandElement(Text.of("class"), false))
 				.executor((src, args) -> {
-					args.<ConfigClass>getOne(Text.of("class")).ifPresent(o -> {
+					args.<ClassDefinition>getOne(Text.of("class")).ifPresent(o -> {
 						IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
 						Gui.showClassInfo(character, o);
 					});
@@ -1446,21 +1533,6 @@ public class NtRpgPlugin {
 
 		Sponge.getCommandManager().register(this, classgui, "class");
 
-
-		CommandSpec racegui = CommandSpec.builder()
-				.description(TextSerializers.FORMATTING_CODE
-						.deserialize(CommandLocalization.COMMAND_RACE_DESC))
-				.arguments(new RaceCommandElement(Text.of("race")))
-				.executor((src, args) -> {
-					args.<Race>getOne(Text.of("race")).ifPresent(o -> {
-						IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
-						Gui.sendRaceInfo(character, o);
-					});
-					return CommandResult.success();
-				})
-				.build();
-
-		Sponge.getCommandManager().register(this, racegui, "race");
 
 
 		CommandSpec weapon = CommandSpec.builder()

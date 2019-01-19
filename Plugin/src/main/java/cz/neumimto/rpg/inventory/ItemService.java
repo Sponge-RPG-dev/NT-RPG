@@ -91,7 +91,10 @@ public class ItemService {
 	public void registerProperty(WeaponClass weaponClass, String property) {
 		int val = PropertyService.getAndIncrement.get();
 
-		propertyService.registerProperty(property, val);
+		if (!propertyService.exists(property)) {
+			propertyService.registerProperty(property, val);
+			propertyService.addPropertyToRequiresDamageRecalc(propertyService.getIdByName(property));
+		}
 		if (property.endsWith("_mult")) {
 			propertyService.registerDefaultValue(val, 1.0f);
 			weaponClass.getPropertiesMults().add(val);

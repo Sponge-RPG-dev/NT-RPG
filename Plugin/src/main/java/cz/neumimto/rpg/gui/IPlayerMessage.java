@@ -28,8 +28,6 @@ import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.players.groups.ConfigClass;
-import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import org.spongepowered.api.entity.living.player.Player;
@@ -63,25 +61,19 @@ public interface IPlayerMessage {
 
 	void sendStatus(IActiveCharacter character);
 
-	void showAvalaibleClasses(IActiveCharacter character);
-
 	void invokerDefaultMenu(IActiveCharacter character);
 
 	void sendListOfCharacters(IActiveCharacter player, CharacterBase currentlyCreated);
 
-	void showClassInfo(IActiveCharacter character, ConfigClass cc);
+	void showClassInfo(IActiveCharacter character, ClassDefinition cc);
 
 	void sendListOfRunes(IActiveCharacter character);
-
-	void sendListOfRaces(IActiveCharacter target);
-
-	void sendRaceInfo(IActiveCharacter target, Race race);
 
 	void displayGroupArmor(ClassDefinition g, Player target);
 
 	void displayGroupWeapon(ClassDefinition g, Player target);
 
-	void sendClassInfo(IActiveCharacter target, ConfigClass configClass);
+	void sendClassInfo(IActiveCharacter target, ClassDefinition configClass);
 
 	void displayAttributes(Player target, ClassDefinition group);
 
@@ -112,4 +104,6 @@ public interface IPlayerMessage {
 	void sendCannotUseItemInOffHandNotification(ItemStack futureOffHand, IActiveCharacter character, CannotUseItemReason reason);
 
     void skillExecution(IActiveCharacter character, ExtendedSkillInfo skill);
+
+	void filterClassesByType(IActiveCharacter character, String def);
 }

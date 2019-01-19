@@ -40,13 +40,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.text.Collator;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -70,16 +64,22 @@ public class PropertyService {
 	private Map<Integer, Float> defaults = new HashMap<>();
 	private Map<String, ICharacterAttribute> attributes = new HashMap<>();
 
+	private Set<Integer> damageRecalc = new HashSet<>();
+
 	private float[] maxValues;
 
 	public void registerProperty(String name, int id) {
-		info("Found property " + name + "; assigned id: " + id, pluginConfig.DEBUG);
+		info("A new property " + name + "; assigned id: " + id, pluginConfig.DEBUG);
 		idMap.put(name, id);
 		nameMap.put(id, name);
 	}
 
 	public int getIdByName(String name) {
 		return idMap.get(name);
+	}
+
+	public boolean exists(String property) {
+		return idMap.containsKey(property);
 	}
 
 	public String getNameById(Integer id) {
@@ -188,7 +188,7 @@ public class PropertyService {
 		}
 	}
 
-	public void process(Class<?> container) {
+	public void processContainer(Class<?> container) {
 		int value;
 		for (Field f : container.getDeclaredFields()) {
 			if (f.isAnnotationPresent(Property.class)) {
@@ -222,5 +222,25 @@ public class PropertyService {
 		return maxValues[index];
 	}
 
+	public Collection<String> getAllProperties() {
+		return nameMap.values();
+	}
 
+
+	public void overrideMaxPropertyValue(String s, Float aFloat) {
+		if (!nameMap.containsValue(s)) {
+			Log.info("Attempt to override default value for a property \""+s+"\". But such property does not exists yet. THe property will be created");
+			registerProperty(s, getAndIncrement.get());
+		}
+		defaults.put(getIdByName(s), aFloat);
+		Log.info(" Property \"" + s + "\" default value is now " + aFloat + ". This change wont affect already joined players!");
+	}
+
+	public boolean updatingRequiresDamageRecalc(int propertyId) {
+		return damageRecalc.contains(propertyId);
+	}
+
+	public void addPropertyToRequiresDamageRecalc(int i) {
+		damageRecalc.add(i);
+	}
 }
