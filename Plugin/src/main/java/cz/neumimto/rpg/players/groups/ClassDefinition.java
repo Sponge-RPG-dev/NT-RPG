@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.players.groups;
 
+import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
 import cz.neumimto.rpg.configuration.adapters.*;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IGlobalEffect;
@@ -27,7 +28,6 @@ import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.leveling.ClassLevelingDefinition;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.tree.SkillTree;
-import ninja.leaping.configurate.objectmapping.Adapter;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.entity.EntityType;
@@ -63,22 +63,22 @@ public class ClassDefinition /* implements IEffectSourceProvider */ {
 	private boolean showsInMenu = true;
 
 	@Setting("ClassType")
-	@Adapter(ClassTypeAdapter.class)
+	@CustomAdapter(ClassTypeAdapter.class)
 	protected String type;
 
 	@Setting("Properties")
-	@Adapter(PropertyMapAdapter.class)
+	@CustomAdapter(PropertyMapAdapter.class)
 	private Map<Integer, Float> propBonus = new HashMap<>();
 
 	@Setting
-	@Adapter(AllowedArmorListAdapter.class)
+	@CustomAdapter(AllowedArmorListAdapter.class)
 	private Set<RPGItemType> allowedArmor = new HashSet<>();
 
 	@Setting("Permissions")
 	private TreeSet<PlayerGroupPermission> permissions = new TreeSet<>();
 
 	@Setting("Properties")
-	@Adapter(PropertyMapAdapter.class)
+	@CustomAdapter(PropertyMapAdapter.class)
 	private Map<Integer, Float> propLevelBonus = new HashMap<>();
 
 	@Setting("ExitCommands")
@@ -91,7 +91,7 @@ public class ClassDefinition /* implements IEffectSourceProvider */ {
 	private Map<EntityType, Double> projectileDamage = new HashMap<>();
 
 	@Setting("Weapons")
-	@Adapter(WeaponsAdapter.class)
+	@CustomAdapter(WeaponsAdapter.class)
 	private HashMap<ItemType, Set<ConfigRPGItemType>> weapons = new HashMap<>();
 
 	private Map<ICharacterAttribute, Integer> startingAttributes = new HashMap<>();
@@ -103,7 +103,7 @@ public class ClassDefinition /* implements IEffectSourceProvider */ {
 	private Map<String, Map<EntityType, Double>> experiences = new HashMap<>();
 
 	@Setting("SkillTreeId")
-	@Adapter(SkillTreeLookupAdapter.class)
+	@CustomAdapter(SkillTreeLookupAdapter.class)
 	private SkillTree skillTree;
 
 	@Setting("SkillPointsPerLevel")
@@ -113,7 +113,7 @@ public class ClassDefinition /* implements IEffectSourceProvider */ {
 	private int attributepointsperlevel;
 
 	@Setting("Leveling")
-	@Adapter(ClassLevelingDefinitionAdapter.class)
+	@CustomAdapter(ClassLevelingDefinitionAdapter.class)
 	private ClassLevelingDefinition levels;
 
 	@Setting("ExperienceSources")
@@ -300,5 +300,13 @@ public class ClassDefinition /* implements IEffectSourceProvider */ {
 
 	public List<Text> getCustomLore() {
 		return customLore;
+	}
+
+	public SkillTree getSkillTree() {
+		return skillTree;
+	}
+
+	public void setSkillTree(SkillTree skillTree) {
+		this.skillTree = skillTree;
 	}
 }

@@ -839,7 +839,7 @@ public class CharacterService {
 		if (skillInfo == null) {
 			return 1;
 		}
-		SkillTree skillTree = configClass.getSkillTree();
+		SkillTree skillTree = classDefinition.getSkillTree();
 		SkillData info = skillTree.getSkills().get(skill.getId());
 		for (SkillData info1 : info.getDepending()) {
 			ExtendedSkillInfo e = character.getSkill(info1.getSkill().getId());
@@ -857,7 +857,7 @@ public class CharacterService {
 		}
 		int level = skillInfo.getLevel();
 		skill.skillRefund(character);
-		CharacterClass cc = character.getCharacterBase().getCharacterClass(configClass);
+		CharacterClass cc = character.getCharacterBase().getCharacterClass(classDefinition);
 		int skillPoints = cc.getSkillPoints();
 		cc.setSkillPoints(skillPoints + level);
 		cc.setUsedSkillPoints(skillPoints - level);
@@ -943,7 +943,7 @@ public class CharacterService {
 			PlayerClassData value = entry.getValue();
 			ClassDefinition classDefinition = value.getClassDefinition();
 			if (classDefinition.hasExperienceSource(source)) {
-				int maxlevel = classDefinition.getLevels().length - 1;
+				int maxlevel = classDefinition.getLevel().length - 1;
 				if (aClass.getLevel() > maxlevel) {
 					continue;
 				}
