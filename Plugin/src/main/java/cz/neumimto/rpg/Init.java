@@ -52,9 +52,7 @@ public class Init {
 
 		groupService.registerPlaceholders();
 		rwService.load();
-		groupDao.loadGuilds();
-		groupDao.loadNClasses();
-		groupDao.loadClassDefinitions();
+		groupDao.loadClassDefs();
 
 
 

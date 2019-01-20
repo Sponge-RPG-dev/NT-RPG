@@ -13,17 +13,17 @@ import java.util.List;
 public class EffectSourceFactory {
 
 	public static <T> EffectValue<List<T>> createEffectSource(ISkill iSkill, T t) {
-		List<T> set = new ArrayList<T>();
+		List<T> set = new ArrayList<>();
 		set.add(t);
 		return new EffectValue<>(iSkill, set);
 	}
 
 	public static <T> EffectValue<T> createEffectSource(ClassDefinition classDefinition, T t) {
-		return new EffectValue<>(classDefinition, t);
+		return new EffectValue<T>(classDefinition, t);
 	}
 
 	public static <T> EffectValue<List<T>> createEffectSource(CommandBase commandBase, T t) {
-		List<T> set = new ArrayList<T>();
+		List<T> set = new ArrayList<>();
 		set.add(t);
 		return new EffectValue<>(commandBase, set);
 	}

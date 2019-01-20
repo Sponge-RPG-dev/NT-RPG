@@ -15,7 +15,8 @@ public class PropertyMapAdapter implements AbstractSerializer<Map<Integer, Float
 	@Override
 	public Map<Integer, Float> deserialize(TypeToken<?> typeToken, ConfigurationNode configurationNode) throws ObjectMappingException {
 		Map<Integer, Float> map = new HashMap<>();
-		//todo
+		Map<Object, ? extends ConfigurationNode> childrenMap = configurationNode.getChildrenMap();
+
 		return map;
 	}
 

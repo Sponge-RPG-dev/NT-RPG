@@ -1,11 +1,12 @@
 package cz.neumimto.rpg.utils;
 
+import static cz.neumimto.rpg.Log.error;
+
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
-import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
 import me.rojo8399.placeholderapi.Placeholder;
 import me.rojo8399.placeholderapi.PlaceholderService;
@@ -15,8 +16,6 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
 import java.util.Set;
-
-import static cz.neumimto.rpg.Log.error;
 
 /**
  * Created by NeumimTo on 25.8.2018.
@@ -41,11 +40,6 @@ public class Placeholders {
 		});
 	}
 
-	@Placeholder(id = "race")
-	public Text getRace(@Source Player src) {
-		Race race = characterService.getCharacter(src).getRace();
-		return Text.of(race.getPreferedColor(), race.getName());
-	}
 
 	@Placeholder(id = "class")
 	public Text getClass(@Source Player src) {

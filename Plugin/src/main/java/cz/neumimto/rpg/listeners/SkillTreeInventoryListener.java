@@ -7,6 +7,7 @@ import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.tree.SkillTree;
@@ -81,12 +82,14 @@ public class SkillTreeInventoryListener {
 						if (viewModel.getInteractiveMode() == SkillTreeViewModel.InteractiveMode.FAST) {
 
 							ISkill iSkill = skillService.getById(node).get();
-							SkillTree tree = character.getPrimaryClass().getConfigClass().getSkillTree();
+							//todo
+							ClassDefinition classDefinition = character.getPrimaryClass().getClassDefinition();
+							SkillTree tree = classDefinition.getSkillTree();
 							if (character.getSkill(iSkill.getId()) == null) {
-								Text data = characterService.characterLearnskill(character, iSkill, tree);
+								Text data = characterService.characterLearnskill(character, classDefinition, iSkill);
 								player.sendMessage(data);
 							} else {
-								Text data = characterService.upgradeSkill(character, iSkill);
+								Text data = characterService.upgradeSkill(character, classDefinition, iSkill);
 								player.sendMessage(data);
 							}
 							//redraw

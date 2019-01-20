@@ -27,12 +27,12 @@ import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
+import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.players.groups.ConfigClass;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import org.spongepowered.api.Game;
@@ -45,6 +45,7 @@ import org.spongepowered.api.text.format.TextColors;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by NeumimTo on 23.7.2015.
@@ -143,13 +144,13 @@ public class InfoCommand extends CommandBase {
 				}
 			}
 		} else if (args[0].equalsIgnoreCase("attributes-initial")) {
-			ClassDefinition byName = groupService.getByName(args[1]);
+			ClassDefinition byName = groupService.getClassDefinitionByName(args[1]);
 			if (byName == null) {
 				return CommandResult.empty();
 			}
 			Gui.displayInitialAttributes(byName, (Player) commandSource);
 		} else if (args[0].equalsIgnoreCase("properties-initial")) {
-			ClassDefinition byName = groupService.getByName(args[1]);
+			ClassDefinition byName = groupService.getClassDefinitionByName(args[1]);
 			if (byName == null) {
 				return CommandResult.empty();
 			}
@@ -165,9 +166,9 @@ public class InfoCommand extends CommandBase {
 			}
 		} else if (args[0].equalsIgnoreCase("skilltree")) {
 			IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
-			SkillTree skillTree = character.getPrimaryClass().getConfigClass().getSkillTree();
+			SkillTree skillTree = character.getPrimaryClass().getClassDefinition().getSkillTree();
 			if (args.length == 2) {
-				for (ConfigClass configClass : groupService.getClasses()) {
+				for (ClassDefinition configClass : groupService.getClassDefinitions()) {
 					if (configClass.getName().equalsIgnoreCase(args[1])) {
 						skillTree = configClass.getSkillTree();
 					}
@@ -213,7 +214,7 @@ public class InfoCommand extends CommandBase {
 	}
 
 	private String getSmallInfo(CharacterBase character) {
-		return TextColors.GOLD + ", C:" + character.getPrimaryClass() + ", R: " + character.getRace() + ", G: " + character.getGuildid();
+		return TextColors.GOLD + ", C:" + character.getCharacterClasses().stream().map(CharacterClass::getName).collect(Collectors.joining(", "));
 	}
 
 

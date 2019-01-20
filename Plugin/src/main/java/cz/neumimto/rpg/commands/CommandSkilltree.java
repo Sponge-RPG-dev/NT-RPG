@@ -27,7 +27,7 @@ import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
-import cz.neumimto.rpg.players.groups.ConfigClass;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import org.spongepowered.api.command.CommandResult;
@@ -62,13 +62,13 @@ public class CommandSkilltree extends CommandBase {
 			p.sendMessage(Localizations.CHARACTER_IS_REQUIRED.toText());
 			return CommandResult.empty();
 		}
-		ConfigClass configClass;
+		ClassDefinition configClass;
 		if ("".equals(s.trim())) {
-			configClass = character.getPrimaryClass().getConfigClass();
+			configClass = character.getPrimaryClass().getClassDefinition();
 		} else {
 			configClass = groupService.getClassDefinitionByName(s);
 		}
-		if (configClass == null || configClass == ConfigClass.Default) {
+		if (configClass == null) {
 			Gui.sendMessage(character, Localizations.NON_EXISTING_GROUP, Arg.EMPTY);
 			return CommandResult.builder().build();
 		}

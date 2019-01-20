@@ -31,8 +31,7 @@ import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.groups.ConfigClass;
-import cz.neumimto.rpg.players.groups.Race;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.skills.NDamageType;
 import org.spongepowered.api.entity.EntityType;
@@ -182,23 +181,10 @@ public class DamageService {
 	}
 
 	public void createDamageToColorMapping() {
-		Collection<ConfigClass> classes = groupService.getClasses();
+		Collection<ClassDefinition> classes = groupService.getClassDefinitions();
 		Set<Double> list = new TreeSet<>();
 
-		for (ConfigClass aClass : classes) {
-			Map<ItemType, Set<ConfigRPGItemType>> weapons = aClass.getWeapons();
-			for (Set<ConfigRPGItemType> configRPGItemTypes : weapons.values()) {
-				configRPGItemTypes
-						.stream()
-						.map(ConfigRPGItemType::getDamage)
-						.forEach(list::add);
-			}
-		}
-
-		Collection<Race> races = groupService.getRaces();
-
-
-		for (Race aClass : races) {
+		for (ClassDefinition aClass : classes) {
 			Map<ItemType, Set<ConfigRPGItemType>> weapons = aClass.getWeapons();
 			for (Set<ConfigRPGItemType> configRPGItemTypes : weapons.values()) {
 				configRPGItemTypes

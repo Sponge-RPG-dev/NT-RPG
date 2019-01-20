@@ -18,6 +18,11 @@
 
 package cz.neumimto.rpg.inventory;
 
+import static cz.neumimto.rpg.Log.error;
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import com.typesafe.config.ConfigFactory;
@@ -56,7 +61,6 @@ import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.players.groups.Race;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.reloading.Reload;
@@ -98,11 +102,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import static cz.neumimto.rpg.Log.error;
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.Log.warn;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 22.7.2015.
@@ -430,16 +429,8 @@ public class InventoryService {
 		Iterator<Map.Entry<String, Integer>> it = a.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry<String, Integer> next = it.next();
-			Race race = groupService.getRace(next.getKey());
-			if (race != null) {
-				if (character.getRace() != race) {
-					return CannotUseItemReason.LORE;
-				}
-				if (next.getValue() != null && character.getLevel() < next.getValue()) {
-					return CannotUseItemReason.LEVEL;
-				}
-			} else {
-				for (PlayerClassData playerClassData : character.getClasses()) {
+
+				for (PlayerClassData playerClassData : character.getClasses().values()) {
 					if (playerClassData.getClassDefinition().getName().equalsIgnoreCase(next.getKey())) {
 						if (next.getValue() != null && character.getLevel() < playerClassData.getLevel()) {
 							return CannotUseItemReason.LEVEL;
@@ -447,7 +438,7 @@ public class InventoryService {
 						k++;
 					}
 				}
-			}
+
 		}
 		if (a.size() == k) {
 			return CannotUseItemReason.OK;

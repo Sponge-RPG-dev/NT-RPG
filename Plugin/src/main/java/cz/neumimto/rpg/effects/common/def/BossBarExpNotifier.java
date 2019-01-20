@@ -1,19 +1,15 @@
 package cz.neumimto.rpg.effects.common.def;
 
-import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.CoreEffectTypes;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
-import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.boss.BossBarColors;
 import org.spongepowered.api.boss.BossBarOverlays;
 import org.spongepowered.api.boss.ServerBossBar;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.format.TextStyles;
 
 import java.text.DecimalFormat;
 import java.util.Collections;
@@ -42,7 +38,7 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 	public void notifyExpChange(IActiveCharacter character, String clazz, double exps) {
 		final String classname = clazz.toLowerCase();
 		Optional<PlayerClassData> first =
-				character.getClasses().stream().filter(a -> a.getClassDefinition().getName().equalsIgnoreCase(classname)).findFirst();
+				character.getClasses().values().stream().filter(a -> a.getClassDefinition().getName().equalsIgnoreCase(classname)).findFirst();
 		if (first.isPresent()) {
 			ServerBossBar serverBossBar = bossBarMap.get(classname);
 			if (serverBossBar == null) {
@@ -63,8 +59,8 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 
 			expCurrentSession += exps;
 			DecimalFormat df = new DecimalFormat("#.00");
-
-
+		//todo
+/*
 			serverBossBar.setName(
 					Text.builder(Utils.capitalizeFirst(classname)).color(playerClassData.getClassDefinition().getPreferedColor())
 							.append(Text.builder(" ").append(Localizations.LEVEL.toText()).append(Text.of(": ")).color(TextColors.DARK_GRAY)
@@ -85,6 +81,7 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 					/ 100);
 			serverBossBar.setVisible(true);
 			setLastTickTime(System.currentTimeMillis());
+			*/
 		}
 	}
 

@@ -18,6 +18,8 @@
 
 package cz.neumimto.rpg.players;
 
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.effects.EffectContainer;
@@ -27,7 +29,6 @@ import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.players.groups.String;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
@@ -53,8 +54,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 23.7.2015.
@@ -125,7 +124,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public java.lang.String getName() {
+	public String getName() {
 		return "None";
 	}
 
@@ -142,11 +141,6 @@ public class PreloadCharacter implements IActiveCharacter {
 	@Override
 	public float[] getCharacterProperties() {
 		return characterProperties;
-	}
-
-	@Override
-	public void setProperties(float[] arr) {
-
 	}
 
 	@Override
@@ -253,11 +247,6 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public double getExperiencs() {
-		return 0;
-	}
-
-	@Override
 	public void addExperiences(double exp, ExperienceSource source) {
 
 	}
@@ -340,6 +329,11 @@ public class PreloadCharacter implements IActiveCharacter {
 	@Override
 	public CharacterBase getCharacterBase() {
 		return new CharacterBase();
+	}
+
+	@Override
+	public PlayerClassData getPrimaryClass() {
+		return null;
 	}
 
 	@Override
@@ -558,6 +552,10 @@ public class PreloadCharacter implements IActiveCharacter {
 	@Override
 	public double getExperienceBonusFor(java.lang.String name, EntityType type) {
 		return 0;
+	}
+
+	@Override public void addClass(PlayerClassData playerClassData) {
+
 	}
 
 	@Override

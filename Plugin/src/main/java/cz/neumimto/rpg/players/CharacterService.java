@@ -17,6 +17,12 @@
  */
 package cz.neumimto.rpg.players;
 
+import static cz.neumimto.core.localization.Arg.arg;
+import static cz.neumimto.rpg.Log.error;
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
@@ -32,7 +38,13 @@ import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.common.def.ClickComboActionComponent;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.events.*;
+import cz.neumimto.rpg.events.CancellableEvent;
+import cz.neumimto.rpg.events.CharacterAttributeChange;
+import cz.neumimto.rpg.events.CharacterChangeGroupEvent;
+import cz.neumimto.rpg.events.CharacterEvent;
+import cz.neumimto.rpg.events.CharacterGainedLevelEvent;
+import cz.neumimto.rpg.events.CharacterInitializedEvent;
+import cz.neumimto.rpg.events.ManaRegainEvent;
 import cz.neumimto.rpg.events.character.CharacterWeaponUpdateEvent;
 import cz.neumimto.rpg.events.character.EventCharacterArmorPostUpdate;
 import cz.neumimto.rpg.events.character.PlayerDataPreloadComplete;
@@ -68,14 +80,18 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
-import static cz.neumimto.core.localization.Arg.arg;
-import static cz.neumimto.rpg.Log.*;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -579,7 +595,7 @@ public class CharacterService {
 				ISkill sk = skill.get();
 				info.setLevel(stringIntegerEntry.getValue());
 				info.setSkill(sk);
-				SkillData info1 = character.getPrimaryClass().getConfigClass().getSkillTree().getSkills().get(skill.get().getId());
+				SkillData info1 = character.getPrimaryClass().getClassDefinition().getSkillTree().getSkills().get(skill.get().getId());
 				if (info1 != null) {
 
 					info.setSkillData(info1);
