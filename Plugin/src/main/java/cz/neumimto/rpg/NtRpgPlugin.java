@@ -840,7 +840,7 @@ public class NtRpgPlugin {
 					Player player = args.<Player>getOne("player").get();
 					String data = args.<String>getOne("data").get();
 					IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
-					Set<PlayerClassData> classes = character.getClasses();
+					Collection<PlayerClassData> classes = character.getClasses().values();
 					String[] a = data.split(" ");
 					for (PlayerClassData aClass : classes) {
 						if (aClass.getClassDefinition().getName().equalsIgnoreCase(a[0])) {
@@ -1200,7 +1200,6 @@ public class NtRpgPlugin {
 						player.sendMessage(Localizations.CHARACTER_IS_REQUIRED.toText());
 						return CommandResult.empty();
 					}
-					character.getClasses().remove(PlayerClassData.Default);
 					GlobalScope.characterService.addNewClass(character, configClass);
 					return CommandResult.success();
 				})
@@ -1221,7 +1220,7 @@ public class NtRpgPlugin {
 						Player player = (Player) src;
 						IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
 						Text data= GlobalScope.characterService
-								.characterLearnskill(character, iSkill, character.getPrimaryClass().getConfigClass().getSkillTree());
+								.characterLearnskill(character, character.getPrimaryClass().getClassDefinition(), iSkill);
 						player.sendMessage(data);
 					});
 					return CommandResult.empty();
@@ -1237,7 +1236,7 @@ public class NtRpgPlugin {
 					args.<ISkill>getOne("skill").ifPresent(iSkill -> {
 						Player player = (Player) src;
 						IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
-						Text data = GlobalScope.characterService.upgradeSkill(character, iSkill);
+						Text data = GlobalScope.characterService.upgradeSkill(character, character.getPrimaryClass().getClassDefinition(), iSkill);
 						player.sendMessage(data);
 					});
 					return CommandResult.success();
@@ -1253,7 +1252,7 @@ public class NtRpgPlugin {
 					args.<ISkill>getOne("skill").ifPresent(iSkill -> {
 						Player player = (Player) src;
 						IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
-						int i = GlobalScope.characterService.refundSkill(character, iSkill, character.getPrimaryClass().getConfigClass());
+						int i = GlobalScope.characterService.refundSkill(character, character.getPrimaryClass().getClassDefinition(), iSkill);
 					});
 					return CommandResult.success();
 				})
@@ -1505,10 +1504,10 @@ public class NtRpgPlugin {
 		CommandSpec classes = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE
 						.deserialize(CommandLocalization.COMMAND_CLASSES_DESC))
-				.arguments(new PlayerClassTypeCommandElement(Text.of("type")))
+				.arguments(GenericArguments.remainingJoinedStrings(Text.of("type")))
 				.permission("ntrpg.groups.list.classes")
 				.executor((src, args) -> {
-					args.<ClassDefinition>getOne(Text.of("type")).ifPresent(o -> {
+					args.<String>getOne(Text.of("type")).ifPresent(o -> {
 						IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
 						Gui.filterClassesByType(character, o);
 					});

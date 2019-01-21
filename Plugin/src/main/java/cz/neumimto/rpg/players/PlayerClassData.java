@@ -44,7 +44,7 @@ public class PlayerClassData {
 
 
 	public boolean takesExp() {
-		return getExperiences() <= classDefinition.getTotalExp();
+		return getExperiences() <= /* classDefinition.getTotalExp() */ 0;
 	}
 
 	public ClassDefinition getClassDefinition() {

@@ -17,12 +17,6 @@
  */
 package cz.neumimto.rpg.players;
 
-import static cz.neumimto.core.localization.Arg.arg;
-import static cz.neumimto.rpg.Log.error;
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.Log.warn;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.GroupService;
@@ -38,13 +32,7 @@ import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.common.def.ClickComboActionComponent;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.events.CancellableEvent;
-import cz.neumimto.rpg.events.CharacterAttributeChange;
-import cz.neumimto.rpg.events.CharacterChangeGroupEvent;
-import cz.neumimto.rpg.events.CharacterEvent;
-import cz.neumimto.rpg.events.CharacterGainedLevelEvent;
-import cz.neumimto.rpg.events.CharacterInitializedEvent;
-import cz.neumimto.rpg.events.ManaRegainEvent;
+import cz.neumimto.rpg.events.*;
 import cz.neumimto.rpg.events.character.CharacterWeaponUpdateEvent;
 import cz.neumimto.rpg.events.character.EventCharacterArmorPostUpdate;
 import cz.neumimto.rpg.events.character.PlayerDataPreloadComplete;
@@ -52,7 +40,6 @@ import cz.neumimto.rpg.events.party.PartyInviteEvent;
 import cz.neumimto.rpg.events.skills.SkillLearnEvent;
 import cz.neumimto.rpg.events.skills.SkillRefundEvent;
 import cz.neumimto.rpg.events.skills.SkillUpgradeEvent;
-import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.UserActionType;
@@ -80,18 +67,14 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static cz.neumimto.core.localization.Arg.arg;
+import static cz.neumimto.rpg.Log.*;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -690,8 +673,7 @@ public class CharacterService {
 
 		Map<String, SkillData> skills = classDef.getSkillTree().getSkills();
 		if (skills.containsKey(skill.getId())) {
-			cc = character.getCharacterBase().getCharacterClass(aClass.getClassDefinition());
-			break;
+			cc = character.getCharacterBase().getCharacterClass(classDef);
 		}
 
 
@@ -960,11 +942,13 @@ public class CharacterService {
 			PlayerClassData value = entry.getValue();
 			ClassDefinition classDefinition = value.getClassDefinition();
 			if (classDefinition.hasExperienceSource(source)) {
-				int maxlevel = classDefinition.getLevel().length - 1;
+				//todo
+				/*int maxlevel = classDefinition.getLevel().length - 1;
 				if (aClass.getLevel() > maxlevel) {
 					continue;
 				}
 				addExperiences(character, exp, aClass, false);
+				*/
 			}
 		}
 
@@ -983,6 +967,7 @@ public class CharacterService {
 		}
 		double total = aClass.getExperiences();
 		double lvlexp = aClass.getExperiencesFromLevel();
+		/*
 		double[] levels = aClass.getClassDefinition().getLevels();
 		if (levels == null) {
 			return;
@@ -1025,6 +1010,7 @@ public class CharacterService {
 			aClass.setExperiencesFromLevel(newcurrentexp);
 		}
 		aClass.setLevel(level);
+		*/
 	}
 
 

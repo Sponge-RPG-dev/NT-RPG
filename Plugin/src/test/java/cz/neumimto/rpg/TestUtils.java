@@ -4,14 +4,11 @@ import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.PlayerClassData;
-import cz.neumimto.rpg.players.groups.ConfigClass;
-import cz.neumimto.rpg.players.properties.DefaultProperties;
-import cz.neumimto.rpg.players.properties.PropertyService;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.EventManager;
 
+import javax.persistence.EntityManager;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
@@ -19,11 +16,7 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.UUID;
 
-import javax.persistence.EntityManager;
-
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by fs on 7.10.15.
@@ -83,27 +76,12 @@ public class TestUtils {
 		return c;
 	}
 
-	public static ActiveCharacter buildActiveCharacter(UUID uuid) {
-		IoC ioC = setupIocEnviromentTest();
-		PropertyService p = ioC.build(PropertyService.class);
-		p.processContainer(DefaultProperties.class);
-		ActiveCharacter character = mock(ActiveCharacter.class);
-		Player player = buildPlayerImpl(uuid);
-		when(character.getPlayer()).thenReturn(player);
-		CharacterBase characterBase = buildCharacterBase(uuid);
-		when(character.getCharacterBase()).thenReturn(characterBase);
-		PlayerClassData k = new PlayerClassData(character);
-		k.setClassDefinition(new ConfigClass("test"));
-		when(character.getPrimaryClass()).thenReturn(k);
-		return character;
-	}
 
 	public static CharacterBase buildCharacterBase(UUID uuid) {
 		CharacterBase characterBase = new CharacterBase();
 		characterBase.setUuid(uuid);
 		characterBase.setAttributePoints(10);
 		characterBase.setCanResetskills(true);
-		characterBase.setRace("test");
 		//characterBase.setGuild("attributes");
 		characterBase.setLastReset(new Date(System.currentTimeMillis()));
 		characterBase.setName("testChar");

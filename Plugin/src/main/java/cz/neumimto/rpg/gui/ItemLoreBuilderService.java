@@ -26,11 +26,7 @@ import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
@@ -225,7 +221,7 @@ public class ItemLoreBuilderService {
 			for (Map.Entry<String, Integer> stringIntegerEntry : r.entrySet()) {
 				Integer value = stringIntegerEntry.getValue();
 				String group = stringIntegerEntry.getKey();
-				ClassDefinition byName = NtRpgPlugin.GlobalScope.groupService.getByName(group);
+				ClassDefinition byName = NtRpgPlugin.GlobalScope.groupService.getClassDefinitionByName(group);
 				if (byName != null) {
 					if (value > 0) {
 						t.add(
