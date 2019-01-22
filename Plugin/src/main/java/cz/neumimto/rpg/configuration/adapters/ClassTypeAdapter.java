@@ -22,6 +22,6 @@ public class ClassTypeAdapter implements AbstractSerializer<String> {
             }
         }
         String all = NtRpgPlugin.pluginConfig.CLASS_TYPES.stream().collect(Collectors.joining(", "));
-        throw new ObjectMappingException("Unknown class type \""+string+"\", should be one of " + all);
+        throw new ObjectMappingException("Unknown class type \""+string+"\", must be one of " + all);
     }
 }

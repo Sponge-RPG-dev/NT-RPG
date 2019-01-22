@@ -18,11 +18,10 @@
 
 package cz.neumimto.rpg.persistance;
 
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
 import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.inventory.ItemService;
@@ -35,7 +34,6 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.Game;
 
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -47,51 +45,54 @@ import java.util.Map;
 @Singleton
 public class GroupDao {
 
-	@Inject
-	PropertyService propertyService;
+    @Inject
+    PropertyService propertyService;
 
-	@Inject
-	EffectService effectService;
+    @Inject
+    EffectService effectService;
 
-	@Inject
-	Game game;
+    @Inject
+    Game game;
 
-	@Inject
-	SkillService skillService;
+    @Inject
+    SkillService skillService;
 
-	@Inject
-	ItemService itemService;
+    @Inject
+    ItemService itemService;
 
-	private Map<String, ClassDefinition> classes = new HashMap<>();
-
-
-	public Map<String, ClassDefinition> getClasses() {
-		return classes;
-	}
+    private Map<String, ClassDefinition> classes = new HashMap<>();
 
 
-	public void loadClassDefs() {
-		Path path = ResourceLoader.classDir.toPath();
+    public Map<String, ClassDefinition> getClasses() {
+        return classes;
+    }
 
-		try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, "*.conf")) {
-			ObjectMapper<ClassDefinition> mapper = NotSoStupidObjectMapper.forClass(ClassDefinition.class);
-			stream.forEach(p -> {
-				Config c = ConfigFactory.parseFile(p.toFile());
-				try {
-					HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(p).build();
-					ClassDefinition result = mapper.bind(new ClassDefinition()).populate(hcl.load());
-					classes.put(result.getName(), result);
-				} catch (ObjectMappingException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			});
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ObjectMappingException e) {
-			e.printStackTrace();
-		}
-	}
+
+    public void loadClassDefs() {
+        Path path = ResourceLoader.classDir.toPath();
+
+        try {
+            final ObjectMapper<ClassDefinition> mapper = NotSoStupidObjectMapper.forClass(ClassDefinition.class);
+            Files.walk(path)
+                    .filter(Files::isRegularFile)
+                    .forEach(p -> {
+                      //  Config c = ConfigFactory.parseFile(p.toFile());
+                        try {
+                            Log.info("Loading class definition file " + p.getFileName());
+                            HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(p).build();
+                            ClassDefinition result = mapper.bind(new ClassDefinition()).populate(hcl.load());
+                            classes.put(result.getName(), result);
+                        } catch (ObjectMappingException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ObjectMappingException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

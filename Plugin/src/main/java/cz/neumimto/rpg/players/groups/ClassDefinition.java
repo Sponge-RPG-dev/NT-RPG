@@ -19,17 +19,8 @@
 package cz.neumimto.rpg.players.groups;
 
 import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
-import cz.neumimto.rpg.configuration.adapters.AllowedArmorListAdapter;
-import cz.neumimto.rpg.configuration.adapters.ClassLevelingDefinitionAdapter;
-import cz.neumimto.rpg.configuration.adapters.ClassTypeAdapter;
-import cz.neumimto.rpg.configuration.adapters.PropertyMapAdapter;
-import cz.neumimto.rpg.configuration.adapters.SkillTreeLookupAdapter;
-import cz.neumimto.rpg.configuration.adapters.WeaponsAdapter;
-import cz.neumimto.rpg.effects.EffectParams;
-import cz.neumimto.rpg.effects.EffectSourceType;
-import cz.neumimto.rpg.effects.IEffectSource;
-import cz.neumimto.rpg.effects.IEffectSourceProvider;
-import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.configuration.adapters.*;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.players.ExperienceSource;
@@ -44,13 +35,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 27.12.2014.
@@ -84,14 +69,14 @@ public class ClassDefinition  implements IEffectSourceProvider {
 	@CustomAdapter(PropertyMapAdapter.class)
 	private Map<Integer, Float> propBonus = new HashMap<>();
 
-	@Setting
+	@Setting("AllowedArmor")
 	@CustomAdapter(AllowedArmorListAdapter.class)
 	private Set<RPGItemType> allowedArmor = new HashSet<>();
 
 	@Setting("Permissions")
 	private TreeSet<PlayerGroupPermission> permissions = new TreeSet<>();
 
-	@Setting("Properties")
+	@Setting("PropertiesLevelBonus")
 	@CustomAdapter(PropertyMapAdapter.class)
 	private Map<Integer, Float> propLevelBonus = new HashMap<>();
 

@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'cz.neumimto.rpg'
-version = '2.0.0.'
+version = '2.0.0.-SNAPSHOT'
 
 blossom {
     String str = "src/main/java/cz/neumimto/rpg/NtRpgPlugin.java";
@@ -17,7 +17,7 @@ dependencies {
         exclude module: '*'
     }
     compileOnly 'org.spongepowered:spongeapi:' + project.spongeApiVersion
-    implementation 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:5c06c6a126'
+    compile 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:5c06c6a126'
     implementation 'com.github.Sponge-RPG-dev:NTCore:' + project.NTCoreVersion
     compileOnly 'me.lucko.luckperms:luckperms-api:4.2'
     compileOnly 'com.github.rojo8399:PlaceholderAPI:4.5.1'
@@ -34,6 +34,9 @@ dependencies {
                     'Build-Timestamp': new Date()
             )
         }
-        //exclude 'mcmod.info'
+        from {
+            configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        }
     }
+
 }
