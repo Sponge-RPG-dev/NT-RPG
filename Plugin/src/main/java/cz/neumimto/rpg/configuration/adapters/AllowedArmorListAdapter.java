@@ -34,4 +34,9 @@ public class AllowedArmorListAdapter implements AbstractSerializer<Set<RPGItemTy
         }
         return res;
     }
+
+    @Override
+    public void serialize(TypeToken<?> typeToken, Set<RPGItemType> rpgItemTypes, ConfigurationNode configurationNode) {
+
+    }
 }

@@ -84,7 +84,7 @@ public class GroupDao {
                             classes.put(result.getName(), result);
                         } catch (ObjectMappingException e) {
                             e.printStackTrace();
-                        } catch (IOException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     });

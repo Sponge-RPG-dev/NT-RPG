@@ -23,5 +23,9 @@ public class WeaponsAdapter implements AbstractSerializer<Map<ItemType, Set<Conf
 		return map;
 	}
 
+	@Override
+	public void serialize(TypeToken<?> typeToken, Map<ItemType, Set<ConfigRPGItemType>> itemTypeSetMap, ConfigurationNode configurationNode) {
+
+	}
 }
 

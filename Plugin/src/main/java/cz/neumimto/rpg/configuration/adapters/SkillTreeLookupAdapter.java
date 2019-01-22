@@ -20,4 +20,9 @@ public class SkillTreeLookupAdapter implements AbstractSerializer<SkillTree> {
 		}
 		return skillTree;
 	}
+
+	@Override
+	public void serialize(TypeToken<?> typeToken, SkillTree skillTree, ConfigurationNode configurationNode) {
+
+	}
 }
