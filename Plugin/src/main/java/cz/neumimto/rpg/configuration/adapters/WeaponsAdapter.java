@@ -61,11 +61,15 @@ public class WeaponsAdapter implements AbstractSerializer<Map<ItemType, Set<Conf
 				try {
 					damage = Double.parseDouble(split[1]);
 				} catch (NumberFormatException e) {
-					e.printStackTrace();
+					displayName = split[1];
 				}
 			}
 			if (split.length > 2) {
-				displayName = split[2];
+				try {
+					damage = Double.parseDouble(split[2]);
+				} catch (NumberFormatException e) {
+					displayName = split[2];
+				}
 			}
 			RPGItemType byItemTypeAndName = NtRpgPlugin.GlobalScope.itemService.getByItemTypeAndName(type, displayName);
 			ConfigRPGItemType configRPGItemType = new ConfigRPGItemType(byItemTypeAndName, provider, damage);
