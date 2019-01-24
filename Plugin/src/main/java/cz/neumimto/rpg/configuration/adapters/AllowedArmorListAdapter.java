@@ -26,7 +26,7 @@ public class AllowedArmorListAdapter implements AbstractSerializer<Set<RPGItemTy
             String[] split = a.split(";");
             Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, split[0]);
             if (type.isPresent()) {
-                RPGItemType rpgItemType = new RPGItemType(type.get(), split.length == 2 ? split[1] : null, null);
+                RPGItemType rpgItemType = new RPGItemType(type.get(), split.length == 2 ? split[1] : null, null, defaultDamage);
                 res.add(rpgItemType);
             } else {
                 Log.warn(" - Unknown item \""+a+"\")");

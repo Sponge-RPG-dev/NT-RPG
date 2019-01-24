@@ -15,10 +15,25 @@ public class RPGItemType {
 
 	private final WeaponClass weaponClass;
 
-	public RPGItemType(ItemType itemType, String itemName, WeaponClass weaponClass) {
+	private final double defaultDamage;
+
+	private int hashCode = 0;
+
+	public RPGItemType(ItemType itemType, String itemName, WeaponClass weaponClass, double defaultDamage) {
 		this.itemType = itemType;
 		this.displayName = itemName;
 		this.weaponClass = weaponClass;
+		this.defaultDamage = defaultDamage;
+		hashCode = itemType.hashCode() * 77;
+		if (itemName != null) {
+			hashCode += itemName.hashCode();
+		}
+		hashCode += defaultDamage * 11;
+		hashCode += weaponClass.hashCode();
+	}
+
+	public double getDefaultDamage() {
+		return defaultDamage;
 	}
 
 	public String getDisplayName() {
@@ -33,6 +48,10 @@ public class RPGItemType {
 		return weaponClass;
 	}
 
+	public String toConfigString() {
+		return itemType.getId() + ";" + defaultDamage + ";" + getDisplayName();
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -45,6 +64,6 @@ public class RPGItemType {
 
 	@Override
 	public int hashCode() {
-		return itemType.hashCode() * 77 * 31;
+		return hashCode;
 	}
 }

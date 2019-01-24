@@ -13,12 +13,10 @@ import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import org.junit.BeforeClass;
-import org.junit.Test;
 import org.mockito.Mockito;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.text.Text;
 
@@ -63,7 +61,7 @@ public class TestPropertyValueResolving {
         weaponClass0.getProperties().add(propertyService.getIdByName(b2));
         weaponClass0.getPropertiesMults().add(propertyService.getIdByName(m2));
 
-        i.registerItemType(ItemTypes.DIAMOND_AXE, null, weaponClass0);
+        i.registerItemType(ItemTypes.DIAMOND_AXE, null, weaponClass0, damage);
 
         RPGItemType item = i.getByItemTypeAndName(ItemTypes.DIAMOND_AXE, (Text) null);
 

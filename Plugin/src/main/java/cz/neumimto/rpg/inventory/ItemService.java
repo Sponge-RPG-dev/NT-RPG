@@ -10,12 +10,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.text.Text;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 
 /**
@@ -70,9 +65,9 @@ public class ItemService {
 		return getByItemTypeAndName(itemStackSnapshot.getType(), itemStackSnapshot.get(Keys.DISPLAY_NAME).orElse(null));
 	}
 
-	public void registerItemType(ItemType itemType, String itemName, WeaponClass weaponClass) {
+	public void registerItemType(ItemType itemType, String itemName, WeaponClass weaponClass, double defaultDamage) {
 		Set<RPGItemType> rpgItemTypes = itemTypes.computeIfAbsent(itemType, k -> new TreeSet<>(new RPGItemTypeComparator()));
-		RPGItemType type = new RPGItemType(itemType, itemName, weaponClass);
+		RPGItemType type = new RPGItemType(itemType, itemName, weaponClass, defaultDamage);
 		weaponClass.getItems().add(type);
 		rpgItemTypes.add(type);
 	}
@@ -104,7 +99,7 @@ public class ItemService {
 	}
 
 	public void registerItemArmorType(ItemType type) {
-		RPGItemType rpgItemType = new RPGItemType(type, null, WeaponClass.ARMOR);
+		RPGItemType rpgItemType = new RPGItemType(type, null, WeaponClass.ARMOR, 0);
 		WeaponClass.ARMOR.getItems().add(rpgItemType);
 		Set<RPGItemType> rpgItemTypes = itemTypes.computeIfAbsent(type, k -> new TreeSet<>(new RPGItemTypeComparator()));
 		rpgItemTypes.add(rpgItemType);
@@ -124,7 +119,7 @@ public class ItemService {
 	}
 
 	public void registerShieldType(ItemType type) {
-		RPGItemType rpgItemType = new RPGItemType(type, null, WeaponClass.SHIELD);
+		RPGItemType rpgItemType = new RPGItemType(type, null, WeaponClass.SHIELD, 0);
 		WeaponClass.SHIELD.getItems().add(rpgItemType);
 		Set<RPGItemType> rpgItemTypes = itemTypes.computeIfAbsent(type, k -> new TreeSet<>(new RPGItemTypeComparator()));
 		rpgItemTypes.add(rpgItemType);
