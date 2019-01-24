@@ -1,6 +1,8 @@
 package cz.neumimto.rpg.configuration.adapters;
 
 import com.google.common.reflect.TypeToken;
+import cz.neumimto.config.blackjack.and.hookers.annotations.EnableSetterInjection;
+import cz.neumimto.config.blackjack.and.hookers.annotations.Setter;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
@@ -11,16 +13,21 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.item.ItemType;
 
-import javax.inject.Inject;
 import java.util.*;
 
 /**
  * Created by NeumimTo on 5.1.2019.
  */
+@EnableSetterInjection
 public class WeaponsAdapter implements AbstractSerializer<Map<ItemType, Set<ConfigRPGItemType>>> {
 
-	@Inject
+
 	private IEffectSourceProvider provider;
+
+	@Setter
+	public void setProvider(IEffectSourceProvider provider) {
+		this.provider = provider;
+	}
 
 	@Override
 	public Map<ItemType, Set<ConfigRPGItemType>> deserialize(TypeToken<?> typeToken, ConfigurationNode configurationNode)
@@ -81,7 +88,7 @@ public class WeaponsAdapter implements AbstractSerializer<Map<ItemType, Set<Conf
 
 	private boolean hasSameitemType(List<String> list, RPGItemType item) {
 		for (String s : list) {
-			if (s.startsWith(item.getItemType().getId()) && s.endsWith(item.getDisplayName())) {
+			if (s.startsWith(item.getItemType().getId()) && (s.contains(item.getDisplayName()))) {
 				return true;
 			}
 		}

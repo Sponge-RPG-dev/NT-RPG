@@ -61,7 +61,7 @@ public class TestPropertyValueResolving {
         weaponClass0.getProperties().add(propertyService.getIdByName(b2));
         weaponClass0.getPropertiesMults().add(propertyService.getIdByName(m2));
 
-        i.registerItemType(ItemTypes.DIAMOND_AXE, null, weaponClass0, damage);
+        i.registerItemType(ItemTypes.DIAMOND_AXE, null, weaponClass0, 0);
 
         RPGItemType item = i.getByItemTypeAndName(ItemTypes.DIAMOND_AXE, (Text) null);
 
