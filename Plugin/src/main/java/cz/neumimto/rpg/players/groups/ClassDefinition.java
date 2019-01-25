@@ -101,6 +101,8 @@ public class ClassDefinition  implements IEffectSourceProvider {
 
 	private HashMap<ItemType, Set<ConfigRPGItemType>> offHandWeapons = new HashMap<>();
 
+	@Setting("Experiences")
+	@CustomAdapter(ClassExpAdapter.class)
 	private Map<String, Map<EntityType, Double>> experiences = new HashMap<>();
 
 	@Setting("SkillTreeId")
