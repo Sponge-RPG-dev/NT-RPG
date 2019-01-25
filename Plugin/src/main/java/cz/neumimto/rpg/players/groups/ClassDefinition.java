@@ -95,6 +95,8 @@ public class ClassDefinition  implements IEffectSourceProvider {
 
 	private Map<ICharacterAttribute, Integer> startingAttributes = new HashMap<>();
 
+	@Setting("Effects")
+	@CustomAdapter(EffectsAdapter.class)
 	private Map<IGlobalEffect, EffectParams> effects = new HashMap<>();
 
 	private HashMap<ItemType, Set<ConfigRPGItemType>> offHandWeapons = new HashMap<>();
