@@ -46,6 +46,7 @@ public class WeaponsAdapter implements AbstractSerializer<Map<ItemType, Set<Conf
 				if (first.isPresent()) {
 						WeaponClass weaponClass = first.get();
 						weaponClasses.add(weaponClass);
+						iterator.remove();
 					}
 				}
 			}
@@ -88,8 +89,31 @@ public class WeaponsAdapter implements AbstractSerializer<Map<ItemType, Set<Conf
 
 	private boolean hasSameitemType(List<String> list, RPGItemType item) {
 		for (String s : list) {
-			if (s.startsWith(item.getItemType().getId()) && (s.contains(item.getDisplayName()))) {
-				return true;
+			if (s.startsWith(item.getItemType().getId())) {
+				String[] split = s.split(";");
+				String displayName = null;
+
+				try {
+					if (split.length > 1) {
+						Double.parseDouble(split[1]);
+					}
+				} catch (NumberFormatException e) {
+					displayName = split[1];
+				}
+				if (displayName == null && split.length > 2) {
+					try {
+						Double.parseDouble(split[2]);
+					} catch (NumberFormatException e) {
+						displayName = split[2];
+					}
+				}
+
+				if (item.getDisplayName() != null && s.contains(item.getDisplayName())) {
+					return true;
+				}
+				if (item.getDisplayName() == null && displayName == null) {
+					return true;
+				}
 			}
 		}
 		return false;

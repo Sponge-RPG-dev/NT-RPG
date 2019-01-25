@@ -29,7 +29,9 @@ public class RPGItemType {
 			hashCode += itemName.hashCode();
 		}
 		hashCode += defaultDamage * 11;
-		hashCode += weaponClass.hashCode();
+		if (weaponClass != null) {
+			hashCode += weaponClass.hashCode();
+		}
 	}
 
 	public double getDefaultDamage() {
@@ -49,7 +51,11 @@ public class RPGItemType {
 	}
 
 	public String toConfigString() {
-		return itemType.getId() + ";" + defaultDamage + ";" + getDisplayName();
+		String s = itemType.getId() + ";" + defaultDamage;
+		if (displayName != null) {
+			s += ";" + displayName;
+		}
+		return s;
 	}
 
 	@Override
