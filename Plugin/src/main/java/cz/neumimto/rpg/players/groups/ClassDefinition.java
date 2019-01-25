@@ -99,6 +99,8 @@ public class ClassDefinition  implements IEffectSourceProvider {
 	@CustomAdapter(EffectsAdapter.class)
 	private Map<IGlobalEffect, EffectParams> effects = new HashMap<>();
 
+	@Setting("Offhand")
+	@CustomAdapter(WeaponsAdapter.class)
 	private HashMap<ItemType, Set<ConfigRPGItemType>> offHandWeapons = new HashMap<>();
 
 	@Setting("Experiences")
@@ -125,6 +127,8 @@ public class ClassDefinition  implements IEffectSourceProvider {
 	@Setting("Default")
 	private boolean defaultClass;
 
+	@Setting("Dependencies")
+	@CustomAdapter(ClassDependencyGraphAdapter.class)
 	private ClassDependencyGraph classDependencyGraph = new ClassDependencyGraph();
 
 	@Setting("CustomLore")

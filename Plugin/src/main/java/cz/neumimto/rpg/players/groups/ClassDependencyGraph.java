@@ -12,6 +12,18 @@ public class ClassDependencyGraph {
 
     private Set<ClassDefinition> conflicts = new HashSet<>();
 
+    public Set<ClassDefinition> getSoftDepends() {
+        return softDepends;
+    }
+
+    public Set<ClassDefinition> getHardDepends() {
+        return hardDepends;
+    }
+
+    public Set<ClassDefinition> getConflicts() {
+        return conflicts;
+    }
+
     public boolean isValidFor(Collection<ClassDefinition> context) {
         boolean found = false;
         for (ClassDefinition softDepend : softDepends) {

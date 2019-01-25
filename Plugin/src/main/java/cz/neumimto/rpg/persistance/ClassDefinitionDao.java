@@ -21,13 +21,13 @@ package cz.neumimto.rpg.persistance;
 import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.inventory.ItemService;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.skills.SkillService;
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -39,11 +39,13 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
+import static cz.neumimto.rpg.Log.info;
+
 /**
  * Created by NeumimTo on 10.7.2015.
  */
 @Singleton
-public class GroupDao {
+public class ClassDefinitionDao {
 
     @Inject
     PropertyService propertyService;
@@ -72,22 +74,24 @@ public class GroupDao {
         Path path = ResourceLoader.classDir.toPath();
 
         try {
+            Map<String, Path> stringPathMap = preloadClassDefs(path);
             final ObjectMapper<ClassDefinition> mapper = NotSoStupidObjectMapper.forClass(ClassDefinition.class);
-            Files.walk(path)
-                    .filter(Files::isRegularFile)
-                    .forEach(p -> {
-                      //  Config c = ConfigFactory.parseFile(p.toFile());
-                        try {
-                            Log.info("Loading class definition file " + p.getFileName());
-                            HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(p).build();
-                            ClassDefinition result = mapper.bind(new ClassDefinition()).populate(hcl.load());
-                            classes.put(result.getName(), result);
-                        } catch (ObjectMappingException e) {
-                            e.printStackTrace();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    });
+            for (Map.Entry<String, Path> stringPathEntry : stringPathMap.entrySet()) {
+                String key = stringPathEntry.getKey();
+                Path p = stringPathEntry.getValue();
+
+                try {
+                    info("Loading class definition file " + p.getFileName());
+                    HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(p).build();
+                    ClassDefinition result = mapper.bind(classes.get(key)).populate(hcl.load());
+                    classes.put(key, result);
+                } catch (ObjectMappingException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ObjectMappingException e) {
@@ -95,4 +99,24 @@ public class GroupDao {
         }
     }
 
+    //because of dependency graph
+    public Map<String, Path> preloadClassDefs(Path path) throws IOException {
+        Map<String, Path> map = new HashMap<>();
+        Files.walk(path)
+                .filter(Files::isRegularFile)
+                .forEach(p -> {
+                    info("Preloading class definition file " + p.getFileName());
+                    HoconConfigurationLoader build = HoconConfigurationLoader.builder().setPath(p).build();
+                    try {
+                        CommentedConfigurationNode load = build.load();
+                        String name = (String) load.getNode("Name").getValue();
+                        ClassDefinition classDefinition = new ClassDefinition();
+                        map.put(name, p);
+                        classes.put(name, classDefinition);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+        return map;
+    }
 }

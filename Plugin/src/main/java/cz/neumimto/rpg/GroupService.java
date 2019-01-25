@@ -21,7 +21,7 @@ package cz.neumimto.rpg;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.damage.DamageService;
-import cz.neumimto.rpg.persistance.GroupDao;
+import cz.neumimto.rpg.persistance.ClassDefinitionDao;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
@@ -47,12 +47,12 @@ public class GroupService {
 	private DamageService damageService;
 
 	@Inject
-	private GroupDao groupDao;
+	private ClassDefinitionDao classDefinitionDao;
 
 
 
 	public ClassDefinition getClassDefinitionByName(String name) {
-		return groupDao.getClasses().get(name.toLowerCase());
+		return classDefinitionDao.getClasses().get(name.toLowerCase());
 	}
 
 	public void registerPlaceholders() {
@@ -60,16 +60,16 @@ public class GroupService {
 	}
 
 	public boolean existsClass(String s) {
-		return groupDao.getClasses().containsKey(s.toLowerCase());
+		return classDefinitionDao.getClasses().containsKey(s.toLowerCase());
 	}
 
 	public Collection<ClassDefinition> getClassDefinitions() {
-		return groupDao.getClasses().values();
+		return classDefinitionDao.getClasses().values();
 	}
 
 	public Set<ClassDefinition> filterByPlayerAndType(Player player, String type) {
 		Set<ClassDefinition> defs = new HashSet<>();
-		for (Map.Entry<String, ClassDefinition> entry : groupDao.getClasses().entrySet()) {
+		for (Map.Entry<String, ClassDefinition> entry : classDefinitionDao.getClasses().entrySet()) {
 			ClassDefinition value = entry.getValue();
 			if (value.getClassType().equalsIgnoreCase(type)) {
 				if (player.hasPermission(CLASS_ACCESS_PERM + value.getName().toLowerCase())) {
