@@ -1,8 +1,11 @@
 package cz.neumimto.rpg.players.leveling;
 
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+
 /**
  * Created by NeumimTo on 6.1.2019.
  */
+@ConfigSerializable
 public class ClassLevelingDefinition {
 
 	private LevelHandler handler;
@@ -10,8 +13,6 @@ public class ClassLevelingDefinition {
 	private double[] levelMargins;
 
 	private long totalExp;
-
-
 
 	public LevelHandler getHandler() {
 		return handler;

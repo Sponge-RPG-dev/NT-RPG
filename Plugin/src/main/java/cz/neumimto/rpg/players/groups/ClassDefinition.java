@@ -19,12 +19,22 @@
 package cz.neumimto.rpg.players.groups;
 
 import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
-import cz.neumimto.rpg.configuration.adapters.*;
-import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.configuration.adapters.AllowedArmorListAdapter;
+import cz.neumimto.rpg.configuration.adapters.ClassDependencyGraphAdapter;
+import cz.neumimto.rpg.configuration.adapters.ClassExpAdapter;
+import cz.neumimto.rpg.configuration.adapters.ClassTypeAdapter;
+import cz.neumimto.rpg.configuration.adapters.EffectsAdapter;
+import cz.neumimto.rpg.configuration.adapters.PropertyMapAdapter;
+import cz.neumimto.rpg.configuration.adapters.SkillTreeLookupAdapter;
+import cz.neumimto.rpg.configuration.adapters.WeaponsAdapter;
+import cz.neumimto.rpg.effects.EffectParams;
+import cz.neumimto.rpg.effects.EffectSourceType;
+import cz.neumimto.rpg.effects.IEffectSource;
+import cz.neumimto.rpg.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.players.ExperienceSource;
-import cz.neumimto.rpg.players.leveling.ClassLevelingDefinition;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import ninja.leaping.configurate.objectmapping.Setting;
@@ -35,7 +45,13 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by NeumimTo on 27.12.2014.
@@ -118,8 +134,7 @@ public class ClassDefinition  implements IEffectSourceProvider {
 	private int attributepointsperlevel;
 
 	@Setting("Leveling")
-	@CustomAdapter(ClassLevelingDefinitionAdapter.class)
-	private ClassLevelingDefinition levels;
+	private ILevelProgression levels;
 
 	@Setting("ExperienceSources")
 	private Set<ExperienceSource> experienceSourceSet = new HashSet<>();
@@ -295,9 +310,9 @@ public class ClassDefinition  implements IEffectSourceProvider {
 
 	@Override
 	public String toString() {
-		return "PlayerGroup{" +
+		return "ClassDefinition{" +
 				"name='" + name + '\'' +
-				", getClasses=" + type +
+				", type=" + type +
 				'}';
 	}
 
