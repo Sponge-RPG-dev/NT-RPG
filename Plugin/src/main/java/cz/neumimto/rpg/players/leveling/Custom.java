@@ -3,6 +3,8 @@ package cz.neumimto.rpg.players.leveling;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
+import java.util.List;
+
 /**
  * Created by NeumimTo on 26.1.2019.
  */
@@ -10,20 +12,13 @@ import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 public class Custom extends AbstractLevelprogression {
 
     @Setting("Levels")
-    private double[] lvlMgrs;
+    private List<Double> lvlMgrs;
 
     @Override
     public double[] initCurve() {
-        return lvlMgrs;
+        double[] doubles = lvlMgrs.stream().mapToDouble(Double::doubleValue).toArray();
+        lvlMgrs = null;
+        return doubles;
     }
 
-    @Override
-    public double[] getLevelMargins() {
-        return lvlMgrs;
-    }
-
-    @Override
-    public void setLevelMargins(double[] levelMargins) {
-        lvlMgrs = levelMargins;
-    }
 }
