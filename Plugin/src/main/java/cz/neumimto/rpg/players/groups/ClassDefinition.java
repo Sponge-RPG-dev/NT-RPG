@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.players.groups;
 
+import cz.neumimto.config.blackjack.and.hookers.annotations.AsCollectionImpl;
 import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
 import cz.neumimto.rpg.configuration.adapters.AllowedArmorListAdapter;
 import cz.neumimto.rpg.configuration.adapters.ClassDependencyGraphAdapter;
@@ -45,6 +46,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -90,16 +92,19 @@ public class ClassDefinition  implements IEffectSourceProvider {
 	private Set<RPGItemType> allowedArmor = new HashSet<>();
 
 	@Setting("Permissions")
-	private Set<PlayerGroupPermission> permissions = new HashSet<>();
+	@AsCollectionImpl(TreeSet.class)
+	private Set<PlayerGroupPermission> permissions;
 
 	@Setting("PropertiesLevelBonus")
 	@CustomAdapter(PropertyMapAdapter.class)
 	private Map<Integer, Float> propLevelBonus = new HashMap<>();
 
 	@Setting("ExitCommands")
+	@AsCollectionImpl(ArrayList.class)
 	private List<String> exitCommands;
 
 	@Setting("EnterCommands")
+	@AsCollectionImpl(ArrayList.class)
 	private List<String> enterCommands;
 
 	@Setting("ProjectileDamage")
@@ -137,7 +142,8 @@ public class ClassDefinition  implements IEffectSourceProvider {
 	private ILevelProgression levels;
 
 	@Setting("ExperienceSources")
-	private Set<ExperienceSource> experienceSourceSet = new HashSet<>();
+	@AsCollectionImpl(HashSet.class)
+	private Set<ExperienceSource> experienceSourceSet;
 
 	@Setting("Default")
 	private boolean defaultClass;
@@ -147,6 +153,7 @@ public class ClassDefinition  implements IEffectSourceProvider {
 	private ClassDependencyGraph classDependencyGraph = new ClassDependencyGraph();
 
 	@Setting("CustomLore")
+	@AsCollectionImpl(ArrayList.class)
 	private List<Text> customLore;
 
 	public String getName() {
@@ -308,14 +315,6 @@ public class ClassDefinition  implements IEffectSourceProvider {
 		return classDependencyGraph;
 	}
 
-	@Override
-	public String toString() {
-		return "ClassDefinition{" +
-				"name='" + name + '\'' +
-				", type=" + type +
-				'}';
-	}
-
 	public boolean hasExperienceSource(ExperienceSource source) {
 		return experienceSourceSet.contains(source);
 	}
@@ -339,5 +338,13 @@ public class ClassDefinition  implements IEffectSourceProvider {
 
 	public ILevelProgression getLevelProgression() {
 		return levels;
+	}
+
+	@Override
+	public String toString() {
+		return "ClassDefinition{" +
+				"name='" + name + '\'' +
+				", type=" + type +
+				'}';
 	}
 }

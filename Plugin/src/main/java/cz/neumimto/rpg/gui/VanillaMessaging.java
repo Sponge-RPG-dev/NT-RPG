@@ -803,8 +803,6 @@ public class VanillaMessaging implements IPlayerMessage {
 
     @Override
     public void filterClassesByType(IActiveCharacter character, String def) {
-
-
         Inventory.Builder builder = Inventory
                 .builder();
         Inventory i = builder.of(InventoryArchetypes.DOUBLE_CHEST)

@@ -130,11 +130,11 @@ public class Gui {
 		getMessageTypeOf(character).sendListOfRunes(character);
 	}
 
-	public static void displayGroupArmor(ClassDefinition g, Player target) {
+	public static void displayClassArmor(ClassDefinition g, Player target) {
 		getMessageTypeOf(target).displayGroupArmor(g, target);
 	}
 
-	public static void displayGroupWeapon(ClassDefinition g, Player target) {
+	public static void displayClassWeapons(ClassDefinition g, Player target) {
 		getMessageTypeOf(target).displayGroupWeapon(g, target);
 	}
 
