@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.players.leveling;
 
+import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
 /**
@@ -8,8 +9,21 @@ import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 @ConfigSerializable
 public class Custom extends AbstractLevelprogression {
 
+    @Setting("Levels")
+    private double[] lvlMgrs;
+
     @Override
     public double[] initCurve() {
-        return null;
+        return lvlMgrs;
+    }
+
+    @Override
+    public double[] getLevelMargins() {
+        return lvlMgrs;
+    }
+
+    @Override
+    public void setLevelMargins(double[] levelMargins) {
+        lvlMgrs = levelMargins;
     }
 }

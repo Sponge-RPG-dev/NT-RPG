@@ -3,6 +3,7 @@ package cz.neumimto.rpg.configuration.adapters;
 import com.google.common.reflect.TypeToken;
 import cz.neumimto.config.blackjack.and.hookers.annotations.EnableSetterInjection;
 import cz.neumimto.config.blackjack.and.hookers.annotations.Setter;
+import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
@@ -13,7 +14,14 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.item.ItemType;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by NeumimTo on 5.1.2019.
@@ -62,7 +70,12 @@ public class WeaponsAdapter implements AbstractSerializer<Map<ItemType, Set<Conf
 
 		for (String s : list) {
 			String[] split = s.split(";");
-			ItemType type = Sponge.getRegistry().getType(ItemType.class, split[0]).get();
+			Optional<ItemType> t = Sponge.getRegistry().getType(ItemType.class, split[0]);
+			if (!t.isPresent()) {
+				Log.warn("Unknown item type " + split[0]);
+				continue;
+			}
+			ItemType type = t.get();
 			double damage = 0;
 			String displayName = null;
 			if (split.length > 1) {
@@ -80,6 +93,10 @@ public class WeaponsAdapter implements AbstractSerializer<Map<ItemType, Set<Conf
 				}
 			}
 			RPGItemType byItemTypeAndName = NtRpgPlugin.GlobalScope.itemService.getByItemTypeAndName(type, displayName);
+			if (byItemTypeAndName == null) {
+				Log.warn("Unknown item defined - " + type + " " + displayName + ". Check your ItemGroups.conf");
+				continue;
+			}
 			ConfigRPGItemType configRPGItemType = new ConfigRPGItemType(byItemTypeAndName, provider, damage);
 			addToCache(map, configRPGItemType);
 		}

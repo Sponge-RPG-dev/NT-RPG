@@ -336,4 +336,8 @@ public class ClassDefinition  implements IEffectSourceProvider {
 	public IEffectSource getType() {
 		return EffectSourceType.CLASS;
 	}
+
+	public ILevelProgression getLevelProgression() {
+		return levels;
+	}
 }
