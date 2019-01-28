@@ -87,7 +87,6 @@ public class ClassDefinitionDao {
                     classes.put(key, result);
                     if (result.getLevelProgression() != null) {
                         result.getLevelProgression().setLevelMargins(result.getLevelProgression().initCurve());
-                        result.getLevelProgression().
                     }
                 } catch (ObjectMappingException e) {
                     e.printStackTrace();
