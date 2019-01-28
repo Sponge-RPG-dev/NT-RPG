@@ -18,8 +18,6 @@
 
 package cz.neumimto.rpg.persistance;
 
-import static cz.neumimto.rpg.Log.info;
-
 import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
@@ -40,6 +38,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+
+import static cz.neumimto.rpg.Log.info;
 
 /**
  * Created by NeumimTo on 10.7.2015.
@@ -86,7 +86,8 @@ public class ClassDefinitionDao {
                     ClassDefinition result = mapper.bind(classes.get(key)).populate(hcl.load());
                     classes.put(key, result);
                     if (result.getLevelProgression() != null) {
-                        result.getLevelProgression().initCurve();
+                        result.getLevelProgression().setLevelMargins(result.getLevelProgression().initCurve());
+                        result.getLevelProgression().
                     }
                 } catch (ObjectMappingException e) {
                     e.printStackTrace();

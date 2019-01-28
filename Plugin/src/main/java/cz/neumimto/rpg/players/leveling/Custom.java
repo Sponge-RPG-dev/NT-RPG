@@ -22,4 +22,8 @@ public class Custom extends AbstractLevelprogression {
         return doubles;
     }
 
+    @Override
+    public int getMaxLevel() {
+        return getLevelMargins().length;
+    }
 }
