@@ -84,7 +84,7 @@ public class ClassDefinitionDao {
                     info("Loading class definition file " + p.getFileName());
                     HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(p).build();
                     ClassDefinition result = mapper.bind(classes.get(key)).populate(hcl.load());
-                    classes.put(key, result);
+
                     if (result.getLevelProgression() != null) {
                         result.getLevelProgression().setLevelMargins(result.getLevelProgression().initCurve());
                     }

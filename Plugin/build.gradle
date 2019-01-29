@@ -17,7 +17,7 @@ dependencies {
         exclude module: '*'
     }
     compileOnly 'org.spongepowered:spongeapi:' + project.spongeApiVersion
-    compile 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:1852f93667'
+    compile 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:cb79453c0d'
     implementation 'com.github.Sponge-RPG-dev:NTCore:' + project.NTCoreVersion
     compileOnly 'me.lucko.luckperms:luckperms-api:4.2'
     compileOnly 'com.github.rojo8399:PlaceholderAPI:4.5.1'
