@@ -367,16 +367,16 @@ public class GuiHelper {
 
 	public static ItemStack toItemStack(ClassDefinition a) {
 		ItemStack itemStack = itemStack(a.getItemType());
-		itemStack.offer(Keys.DISPLAY_NAME, Text.of(a.getName(), a.getPreferedColor()));
+		itemStack.offer(Keys.DISPLAY_NAME, Text.builder(a.getName()).color(a.getPreferedColor()).build());
 
 		if (a.getCustomLore().isEmpty()) {
 			itemStack.offer(Keys.ITEM_LORE, a.getCustomLore());
 		} else {
 			List<Text> lore = new ArrayList<>();
 			String description = a.getDescription();
-			lore.add(Text.of(a.getClassType(), TextStyles.BOLD, TextColors.GRAY));
+			lore.add(Text.builder(a.getClassType()).style(TextStyles.BOLD).color(TextColors.GRAY).build());
 			lore.add(Text.EMPTY);
-			lore.add(Text.of(description, TextStyles.ITALIC, TextColors.GOLD));
+			lore.add(Text.builder(description).style(TextStyles.ITALIC).color(TextColors.GOLD).build());
 			itemStack.offer(Keys.ITEM_LORE, lore);
 		}
 

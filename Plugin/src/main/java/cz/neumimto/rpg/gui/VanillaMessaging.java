@@ -18,11 +18,6 @@
 
 package cz.neumimto.rpg.gui;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-import static cz.neumimto.rpg.gui.GuiHelper.back;
-import static cz.neumimto.rpg.gui.GuiHelper.createPlayerGroupView;
-import static cz.neumimto.rpg.gui.GuiHelper.getItemLore;
-
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
@@ -34,11 +29,7 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.damage.DamageService;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.EffectStatusType;
-import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.effects.common.def.ManaBarNotifier;
 import cz.neumimto.rpg.inventory.CannotUseItemReason;
@@ -54,11 +45,7 @@ import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.persistance.DirectAccessDao;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
-import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.PlayerClassData;
-import cz.neumimto.rpg.players.SkillTreeViewModel;
+import cz.neumimto.rpg.players.*;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.reloading.Reload;
@@ -73,6 +60,7 @@ import cz.neumimto.rpg.utils.model.CharacterListModel;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.type.DyeColor;
 import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
@@ -96,15 +84,10 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.gui.GuiHelper.*;
 
 /**
  * Created by NeumimTo on 6.8.2015.
@@ -808,10 +791,35 @@ public class VanillaMessaging implements IPlayerMessage {
         Inventory i = builder.of(InventoryArchetypes.DOUBLE_CHEST)
                 .property(InventoryTitle.of(Text.of(def, TextColors.DARK_RED, TextStyles.BOLD)))
                 .build(plugin);
+        makeBorder(i, DyeColors.YELLOW);
 
         groupService.getClassDefinitions()
                 .stream().filter(a -> a.getClassType().equalsIgnoreCase(def)).forEach(a ->
                     i.offer(GuiHelper.toItemStack(a))
         );
+
+        character.getPlayer().openInventory(i);
+    }
+
+    private void makeBorder(Inventory i, DyeColor dyeColor) {
+        for (int j = 0; j < 8; j++) {
+            ItemStack of = ItemStack.of(ItemTypes.STAINED_GLASS_PANE, 1);
+            of.offer(new MenuInventoryData(true));
+            of.offer(Keys.DYE_COLOR, dyeColor);
+            of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
+            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(j, 0))).offer(of);
+            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(j, 5))).offer(of.copy());
+        }
+
+        for (int j = 1; j < 4; j++) {
+            ItemStack of = ItemStack.of(ItemTypes.STAINED_GLASS_PANE, 1);
+            of.offer(new MenuInventoryData(true));
+            of.offer(Keys.DYE_COLOR, dyeColor);
+            of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
+
+            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, j))).offer(of);
+
+            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, j))).offer(of.copy());
+        }
     }
 }
