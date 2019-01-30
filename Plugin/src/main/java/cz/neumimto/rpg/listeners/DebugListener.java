@@ -32,6 +32,7 @@ import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.event.filter.type.Include;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
+import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.text.Text;
@@ -91,8 +92,9 @@ public class DebugListener {
 			if (!inventoryProperty.isPresent()) {
 				inventoryProperty = transaction.getSlot().getInventoryProperty(SlotIndex.class);
 			}
+			Class<? extends Inventory> aClass = transaction.getSlot().transform().parent().getClass();
 			inventoryProperty.ifPresent(slotIndex -> player.sendMessage(TextHelper.parse("[Debug] ID:" + slotIndex.getValue()
-					+ ", Container: " + transaction.getSlot().transform().parent().getClass().getName())));
+					+ ", Container: " + aClass.getName())));
 		}
 	}
 }

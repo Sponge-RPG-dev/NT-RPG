@@ -607,7 +607,7 @@ public class InventoryService {
 	public IEffectSource getEffectSourceBySlotId(Slot slot) {
 		Slot transform = slot.transform();
 		Class type = transform.parent().getClass();
-		SlotIndex index = slot.getInventoryProperty(SlotIndex.class).get();
+		SlotIndex index = transform.getInventoryProperty(SlotIndex.class).get();
 		ManagedInventory managedInventory = managedInventories.get(type);
 		if (managedInventory == null) {
 			return null;
