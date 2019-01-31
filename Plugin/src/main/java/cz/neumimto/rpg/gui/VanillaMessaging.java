@@ -802,16 +802,21 @@ public class VanillaMessaging implements IPlayerMessage {
     }
 
     private void makeBorder(Inventory i, DyeColor dyeColor) {
-        for (int j = 0; j < 8; j++) {
+        for (int j = 0; j < 9; j++) {
             ItemStack of = ItemStack.of(ItemTypes.STAINED_GLASS_PANE, 1);
             of.offer(new MenuInventoryData(true));
             of.offer(Keys.DYE_COLOR, dyeColor);
             of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
             i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(j, 0))).offer(of);
-            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(j, 5))).offer(of.copy());
+
+            of = ItemStack.of(ItemTypes.STAINED_GLASS_PANE, 1);
+            of.offer(new MenuInventoryData(true));
+            of.offer(Keys.DYE_COLOR, dyeColor);
+            of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
+            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(j, 5))).offer(of);
         }
 
-        for (int j = 1; j < 4; j++) {
+        for (int j = 1; j < 5; j++) {
             ItemStack of = ItemStack.of(ItemTypes.STAINED_GLASS_PANE, 1);
             of.offer(new MenuInventoryData(true));
             of.offer(Keys.DYE_COLOR, dyeColor);
@@ -819,7 +824,11 @@ public class VanillaMessaging implements IPlayerMessage {
 
             i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, j))).offer(of);
 
-            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, j))).offer(of.copy());
+            of = ItemStack.of(ItemTypes.STAINED_GLASS_PANE, 1);
+            of.offer(new MenuInventoryData(true));
+            of.offer(Keys.DYE_COLOR, dyeColor);
+            of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
+            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, j))).offer(of);
         }
     }
 }
