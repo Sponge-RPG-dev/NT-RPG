@@ -23,6 +23,7 @@ import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
+import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
@@ -789,7 +790,7 @@ public class VanillaMessaging implements IPlayerMessage {
         Inventory.Builder builder = Inventory
                 .builder();
         Inventory i = builder.of(InventoryArchetypes.DOUBLE_CHEST)
-                .property(InventoryTitle.of(Text.of(def, TextColors.DARK_RED, TextStyles.BOLD)))
+                .property(InventoryTitle.of(TextHelper.parse("&6[ &c&l" + def + " &r&6]")))
                 .build(plugin);
         makeBorder(i, DyeColors.YELLOW);
 

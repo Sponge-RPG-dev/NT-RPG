@@ -367,7 +367,7 @@ public class GuiHelper {
 
 	public static ItemStack toItemStack(ClassDefinition a) {
 		ItemStack itemStack = itemStack(a.getItemType());
-		itemStack.offer(Keys.DISPLAY_NAME, Text.builder(a.getName()).color(a.getPreferedColor()).build());
+		itemStack.offer(Keys.DISPLAY_NAME, Text.builder(a.getName()).color(a.getPreferedColor()).style(TextStyles.BOLD).build());
 
 		if (a.getCustomLore().isEmpty()) {
 			itemStack.offer(Keys.ITEM_LORE, a.getCustomLore());
@@ -379,7 +379,8 @@ public class GuiHelper {
 			lore.add(Text.builder(description).style(TextStyles.ITALIC).color(TextColors.GOLD).build());
 			itemStack.offer(Keys.ITEM_LORE, lore);
 		}
-
+		itemStack.offer(new InventoryCommandItemMenuData("/class " + a.getName()));
+		itemStack.offer(new MenuInventoryData(true));
 		return itemStack;
 	}
 }
