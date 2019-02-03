@@ -40,6 +40,7 @@ import cz.neumimto.rpg.events.party.PartyInviteEvent;
 import cz.neumimto.rpg.events.skills.SkillLearnEvent;
 import cz.neumimto.rpg.events.skills.SkillRefundEvent;
 import cz.neumimto.rpg.events.skills.SkillUpgradeEvent;
+import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.UserActionType;
@@ -528,26 +529,38 @@ public class CharacterService {
 
 	public void recalculateProperties(IActiveCharacter character) {
 		Map<Integer, Float> defaults = propertyService.getDefaults();
-		float[] arr = character.getCharacterProperties();
-		float[] lvl = character.getCharacterLevelProperties();
-		float val = 0;
-		float bval = 0;
-		for (int i = 0; i < arr.length; i++) {
-			for (PlayerClassData value : character.getClasses().values()) {
-				ClassDefinition classDefinition = value.getClassDefinition();
-				if (classDefinition.getPropBonus().containsKey(i)) {
-					val += classDefinition.getPropBonus().get(i);
-				}
-				if (classDefinition.getPropLevelBonus().containsKey(i)) {
-					bval += classDefinition.getPropBonus().get(i);
-				}
+		float[] primary = character.getPrimaryProperties();
+		float[] secondary = character.getSecondaryProperties();
+		float pval = 0;
+		float sval = 0;
+		for (int i = 0; i < primary.length; i++) {
+
+			for (PlayerClassData cdata : character.getClasses().values()) {
+				ClassDefinition classDefinition = cdata.getClassDefinition();
+				float[] propBonus = classDefinition.getPropBonus();
+				pval += propBonus[i];
+				float[] propLevelBonus = classDefinition.getPropLevelBonus();
+				sval += propLevelBonus[i] * cdata.getLevel();
 			}
 
-			if (val == 0 && defaults.containsKey(i)) {
-				val = defaults.get(i);
+			if (pval == 0 && defaults.containsKey(i)) {
+				pval = defaults.get(i);
 			}
-			arr[i] = val;
-			lvl[i] = bval;
+			primary[i] = pval;
+			secondary[i] = sval;
+		}
+	}
+
+	public void recalculateSecondaryPropertiesOnly(IActiveCharacter character) {
+		float[] secondary = character.getSecondaryProperties();
+		float sval = 0;
+		for (int i = 0; i < secondary.length; i++) {
+			for (PlayerClassData cdata : character.getClasses().values()) {
+				ClassDefinition classDefinition = cdata.getClassDefinition();
+				float[] propLevelBonus = classDefinition.getPropLevelBonus();
+				sval += propLevelBonus[i] * cdata.getLevel();
+			}
+			secondary[i] = sval;
 		}
 	}
 
@@ -606,9 +619,9 @@ public class CharacterService {
 				warn(" Character " + characterBase.getUuid() + " had persisted class " + characterClass.getName() + " but the class is missing class definition configuration");
 				continue;
 			}
-
-			groupService.addAllPermissions(activeCharacter, classDef);
-			activeCharacter.addClass(new PlayerClassData(activeCharacter, classDef, characterClass.getExperiences()));
+			PlayerClassData playerClassData = new PlayerClassData(classDef, characterClass);
+			activeCharacter.addClass(playerClassData);
+			groupService.addAllPermissions(activeCharacter, playerClassData);
 
 			recalculateProperties(activeCharacter);
 			resolveSkillsCds(characterBase, activeCharacter);
@@ -618,6 +631,7 @@ public class CharacterService {
 		game.getScheduler().createTaskBuilder().name("FetchCharBaseDataCallback-" + player.getUniqueId())
 				.execute(updateAll(activeCharacter)
 				).submit(plugin);
+
 		return activeCharacter;
 
 	}
@@ -965,11 +979,12 @@ public class CharacterService {
 		if (!onlyinit) {
 			exp = exp * getCharacterProperty(character, DefaultProperties.experiences_mult);
 		}
-		double total = aClass.getExperiences();
+		double total = aClass.getCla;
 		double lvlexp = aClass.getExperiencesFromLevel();
-		/*
-		double[] levels = aClass.getClassDefinition().getLevels();
+
+		double[] levels = aClass.getClassDefinition().getLevelProgression().getLevelMargins();
 		if (levels == null) {
+			//class can`t take exp
 			return;
 		}
 		double levellimit = levels[level];
@@ -981,15 +996,18 @@ public class CharacterService {
 			if (!onlyinit) {
 				Gui.showLevelChange(character, aClass, level);
 				CharacterGainedLevelEvent event =
-						new CharacterGainedLevelEvent(character, aClass, level, aClass.getClassDefinition().getSkillpointsperlevel(),
-								aClass.getClassDefinition().getAttributepointsperlevel());
+						new CharacterGainedLevelEvent(character, aClass, level,
+								aClass.getClassDefinition().getSkillpointsPerLevel(),
+								aClass.getClassDefinition().getAttributepointsPerLevel());
+
 				event.getaClass().setLevel(event.getLevel());
 				game.getEventManager().post(event);
 				characterAddPoints(character, aClass.getClassDefinition(), event.getSkillpointsPerLevel(), event.getAttributepointsPerLevel());
 				inventoryService.initializeCharacterInventory(character);
 			}
-			groupService.addPermissions(character, character.getRace());
-			groupService.addPermissions(character, character.getPrimaryClass().getConfigClass());
+
+
+			groupService.addPermissions(character, aClass);
 			aClass.setExperiencesFromLevel(0);
 			if (!aClass.takesExp()) {
 				break;
@@ -1010,15 +1028,15 @@ public class CharacterService {
 			aClass.setExperiencesFromLevel(newcurrentexp);
 		}
 		aClass.setLevel(level);
-		*/
+
 	}
 
 
 	public void assignAttribute(IActiveCharacter character, ICharacterAttribute attribute, int levels) {
 		Map<Integer, Float> integerFloatMap = attribute.affectsProperties();
 		for (Map.Entry<Integer, Float> entry : integerFloatMap.entrySet()) {
-			character.getCharacterProperties()[entry.getKey()] = character
-					.getCharacterProperties()[entry.getKey()] + entry.getValue() * levels;
+			character.getPrimaryProperties()[entry.getKey()] = character
+					.getPrimaryProperties()[entry.getKey()] + entry.getValue() * levels;
 		}
 	}
 

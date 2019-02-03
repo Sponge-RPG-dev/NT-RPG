@@ -64,8 +64,11 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	private Map<String, PlayerClassData> classes = new HashMap<>();
 
-	private transient float[] characterProperties;
-	private transient float[] characterPropertiesLevel;
+	/*barely ever changes*/
+	private transient float[] primaryProperties;
+
+	/*changes on multiple occasions*/
+	private transient float[] secondaryProperties;
 
 	private transient boolean invulnerable;
 	private transient boolean silenced = false;
@@ -106,13 +109,13 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	public ActiveCharacter(Player pl, CharacterBase base) {
 		this.pl = pl.getUniqueId();
-		characterProperties = new float[PropertyService.LAST_ID];
-		characterPropertiesLevel = new float[PropertyService.LAST_ID];
-		equipedArmor = new HashMap<>();
+		this.primaryProperties = new float[PropertyService.LAST_ID];
+		this.secondaryProperties = new float[PropertyService.LAST_ID];
+		this.equipedArmor = new HashMap<>();
 		this.base = base;
-		slotsToReinitialize = new ArrayList<>();
-		skillTreeViewLocation = new HashMap<>();
-		denySlotInteractionArr = new HashSet<>();
+		this.slotsToReinitialize = new ArrayList<>();
+		this.skillTreeViewLocation = new HashMap<>();
+		this.denySlotInteractionArr = new HashSet<>();
 	}
 
 	public boolean isSilenced() {
@@ -134,28 +137,28 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public float[] getCharacterProperties() {
-		return characterProperties;
+	public float[] getPrimaryProperties() {
+		return primaryProperties;
 	}
 
 	@Override
 	public float getProperty(int index) {
-		return characterProperties[index] + characterPropertiesLevel[index] * getPrimaryClass().getLevel();
+		return primaryProperties[index] + secondaryProperties[index];
 	}
 
 	@Override
 	public void setProperty(int index, float value) {
-		characterProperties[index] = value;
+		primaryProperties[index] = value;
 	}
 
 	@Override
-	public float[] getCharacterLevelProperties() {
-		return characterPropertiesLevel;
+	public float[] getSecondaryProperties() {
+		return secondaryProperties;
 	}
 
 	@Override
-	public void setCharacterLevelProperties(float[] arr) {
-		this.characterPropertiesLevel = arr;
+	public void setSecondaryProperties(float[] arr) {
+		this.secondaryProperties = arr;
 	}
 
 	@Override
@@ -179,12 +182,12 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	@Override
 	public void setCharacterLevelProperty(int index, float value) {
-		characterPropertiesLevel[index] = value;
+		secondaryProperties[index] = value;
 	}
 
 	@Override
 	public float getCharacterPropertyWithoutLevel(int index) {
-		return characterProperties[index];
+		return primaryProperties[index];
 	}
 
 	@Override

@@ -4,6 +4,8 @@ import cz.neumimto.rpg.players.groups.ILevelProgression;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
+import java.util.Arrays;
+
 /**
  * Created by NeumimTo on 26.1.2019.
  */
@@ -15,6 +17,8 @@ public abstract class AbstractLevelprogression implements ILevelProgression {
 
     protected double[] levelMargins;
 
+    protected double totalExpAmount;
+
     @Override
     public double[] getLevelMargins() {
         return levelMargins;
@@ -23,6 +27,9 @@ public abstract class AbstractLevelprogression implements ILevelProgression {
     @Override
     public void setLevelMargins(double[] levelMargins) {
         this.levelMargins = levelMargins;
+        if (levelMargins != null) {
+            totalExpAmount = Arrays.stream(levelMargins).sum();
+        }
     }
 
     @Override

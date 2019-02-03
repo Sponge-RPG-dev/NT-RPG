@@ -18,9 +18,6 @@
 
 package cz.neumimto.rpg.players.properties;
 
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.Console;
 import cz.neumimto.rpg.Log;
@@ -29,11 +26,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.utils.Utils;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -42,6 +35,9 @@ import java.nio.file.StandardOpenOption;
 import java.text.Collator;
 import java.util.*;
 import java.util.function.Supplier;
+
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 28.12.2014.
@@ -177,7 +173,7 @@ public class PropertyService {
 		if (character.isStub()) {
 			return;
 		}
-		float[] arr = character.getCharacterProperties();
+		float[] arr = character.getPrimaryProperties();
 		Map<Integer, Float> defaults = getDefaults();
 		for (int i = 0; i < arr.length; i++) {
 			if (defaults.containsKey(i)) {

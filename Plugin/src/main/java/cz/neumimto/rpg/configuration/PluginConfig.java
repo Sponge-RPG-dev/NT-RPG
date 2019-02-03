@@ -21,12 +21,10 @@ package cz.neumimto.rpg.configuration;
 import cz.neumimto.rpg.inventory.ItemLoreSections;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.text.format.TextColors;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -54,10 +52,7 @@ public class PluginConfig {
 
 	@Setting
 	public int SKILLPOINTS_ON_START = 1;
-
-	@Setting
-	public boolean PLAYER_CAN_CHANGE_RACE = true;
-
+	
 	@Setting
 	public boolean PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR = true;
 
@@ -228,10 +223,10 @@ public class PluginConfig {
 	public byte MAX_CLICK_COMBO_LENGTH = new Byte("6");
 
 	@Setting(comment = "Class types")
-	public List<String> CLASS_TYPES = new ArrayList<String>() {{
-		add("Race");
-		add("Primary");
-		add("Profession");
+	public Map<String, ClassTypeDefinition> CLASS_TYPES = new TreeMap<String, ClassTypeDefinition>() {{
+		put("Race", new ClassTypeDefinition(TextColors.GREEN, TextColors.DARK_GREEN, DyeColors.GREEN, false));
+		put("Primary", new ClassTypeDefinition(TextColors.YELLOW, TextColors.GOLD, DyeColors.YELLOW, true));
+		put("Profession", new ClassTypeDefinition(TextColors.GRAY, TextColors.BLACK, DyeColors.GRAY, true));
 	}};
 
 	@Setting(comment = "Primary class. Level of primary class determines character level.")

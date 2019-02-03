@@ -18,8 +18,6 @@
 
 package cz.neumimto.rpg.players;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.effects.EffectContainer;
@@ -47,13 +45,9 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatType;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 23.7.2015.
@@ -84,12 +78,12 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public float[] getCharacterLevelProperties() {
+	public float[] getSecondaryProperties() {
 		return characterProperties;
 	}
 
 	@Override
-	public void setCharacterLevelProperties(float[] arr) {
+	public void setSecondaryProperties(float[] arr) {
 
 	}
 
@@ -139,7 +133,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public float[] getCharacterProperties() {
+	public float[] getPrimaryProperties() {
 		return characterProperties;
 	}
 

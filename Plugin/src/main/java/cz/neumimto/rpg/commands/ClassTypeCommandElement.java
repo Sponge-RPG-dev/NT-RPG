@@ -12,7 +12,7 @@ public class ClassTypeCommandElement extends PatternMatchingCommandElement {
 
     @Override
     protected Iterable<String> getChoices(CommandSource source) {
-        return NtRpgPlugin.pluginConfig.CLASS_TYPES;
+        return NtRpgPlugin.pluginConfig.CLASS_TYPES.keySet();
     }
 
     @Override

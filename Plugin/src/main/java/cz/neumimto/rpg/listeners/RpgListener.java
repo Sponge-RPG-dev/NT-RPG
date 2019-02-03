@@ -22,7 +22,6 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.events.CharacterChangeGroupEvent;
 import cz.neumimto.rpg.events.PlayerGuiModInitEvent;
 import cz.neumimto.rpg.events.character.PlayerDataPreloadComplete;
@@ -42,6 +41,8 @@ import org.spongepowered.api.util.Tristate;
 
 import java.util.Optional;
 import java.util.UUID;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 
 /**
@@ -108,6 +109,6 @@ public class RpgListener {
 	@IsCancelled(Tristate.FALSE)
 	public void onChangeGroup(CharacterChangeGroupEvent event, @First(typeFilter = IActiveCharacter.class) IActiveCharacter character) {
 		groupService.removePermissions(character, groupService.getPermissionsToRemove(character, event.getOld()));
-		groupService.addAllPermissions(character, event.getNew());
+	//	groupService.addAllPermissions(character, event.getNew());
 	}
 }

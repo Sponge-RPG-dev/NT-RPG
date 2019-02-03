@@ -23,11 +23,11 @@ import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
-import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.commands.InfoCommand;
+import cz.neumimto.rpg.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.*;
@@ -61,7 +61,6 @@ import cz.neumimto.rpg.utils.model.CharacterListModel;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.type.DyeColor;
 import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
@@ -251,7 +250,7 @@ public class VanillaMessaging implements IPlayerMessage {
 
     @Override
     public void showClassInfo(IActiveCharacter character, ClassDefinition cc) {
-        Inventory i = createPlayerGroupView(cc);
+        Inventory i = createMenuInventoryClassDefView(cc);
 
         ItemStack of = GuiHelper.itemStack(ItemTypes.DIAMOND);
         of.offer(new InventoryCommandItemMenuData("character set class " + cc.getName()));
@@ -435,7 +434,7 @@ public class VanillaMessaging implements IPlayerMessage {
 
     @Override
     public void sendClassInfo(IActiveCharacter target, ClassDefinition configClass) {
-        Inventory i = createPlayerGroupView(configClass);
+        Inventory i = createMenuInventoryClassDefView(configClass);
         target.getPlayer().openInventory(i);
     }
 
@@ -789,10 +788,15 @@ public class VanillaMessaging implements IPlayerMessage {
     public void filterClassesByType(IActiveCharacter character, String def) {
         Inventory.Builder builder = Inventory
                 .builder();
+        ClassTypeDefinition classTypeDefinition = NtRpgPlugin.pluginConfig.CLASS_TYPES.get(def);
         Inventory i = builder.of(InventoryArchetypes.DOUBLE_CHEST)
-                .property(InventoryTitle.of(TextHelper.parse("&6[ &c&l" + def + " &r&6]")))
+                .property(InventoryTitle.of(
+                        Text.builder("[ ").color(classTypeDefinition.getSecondaryColor())
+                                .append(Text.builder(def).color(classTypeDefinition.getPrimaryColor()).style(TextStyles.BOLD).build())
+                                .append(Text.builder(" ]").color(classTypeDefinition.getSecondaryColor()).build())
+                                .build()))
                 .build(plugin);
-        makeBorder(i, DyeColors.YELLOW);
+        GuiHelper.makeBorder(i, classTypeDefinition.getDyeColor());
 
         groupService.getClassDefinitions()
                 .stream().filter(a -> a.getClassType().equalsIgnoreCase(def)).forEach(a ->
@@ -802,34 +806,5 @@ public class VanillaMessaging implements IPlayerMessage {
         character.getPlayer().openInventory(i);
     }
 
-    private void makeBorder(Inventory i, DyeColor dyeColor) {
-        for (int j = 0; j < 9; j++) {
-            ItemStack of = ItemStack.of(ItemTypes.STAINED_GLASS_PANE, 1);
-            of.offer(new MenuInventoryData(true));
-            of.offer(Keys.DYE_COLOR, dyeColor);
-            of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
-            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(j, 0))).offer(of);
 
-            of = ItemStack.of(ItemTypes.STAINED_GLASS_PANE, 1);
-            of.offer(new MenuInventoryData(true));
-            of.offer(Keys.DYE_COLOR, dyeColor);
-            of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
-            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(j, 5))).offer(of);
-        }
-
-        for (int j = 1; j < 5; j++) {
-            ItemStack of = ItemStack.of(ItemTypes.STAINED_GLASS_PANE, 1);
-            of.offer(new MenuInventoryData(true));
-            of.offer(Keys.DYE_COLOR, dyeColor);
-            of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
-
-            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, j))).offer(of);
-
-            of = ItemStack.of(ItemTypes.STAINED_GLASS_PANE, 1);
-            of.offer(new MenuInventoryData(true));
-            of.offer(Keys.DYE_COLOR, dyeColor);
-            of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
-            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, j))).offer(of);
-        }
-    }
 }

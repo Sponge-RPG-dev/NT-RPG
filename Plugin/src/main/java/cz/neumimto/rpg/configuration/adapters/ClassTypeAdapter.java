@@ -16,12 +16,12 @@ public class ClassTypeAdapter implements AbstractSerializer<String> {
     @Override
     public String deserialize(TypeToken<?> typeToken, ConfigurationNode configurationNode) throws ObjectMappingException{
         String string = configurationNode.getString();
-        for (String class_type : NtRpgPlugin.pluginConfig.CLASS_TYPES) {
+        for (String class_type : NtRpgPlugin.pluginConfig.CLASS_TYPES.keySet()) {
             if (string.equalsIgnoreCase(class_type)) {
                 return class_type;
             }
         }
-        String all = NtRpgPlugin.pluginConfig.CLASS_TYPES.stream().collect(Collectors.joining(", "));
+        String all = NtRpgPlugin.pluginConfig.CLASS_TYPES.keySet().stream().collect(Collectors.joining(", "));
         throw new ObjectMappingException("Unknown class type \""+string+"\", must be one of " + all);
     }
 

@@ -20,19 +20,8 @@ package cz.neumimto.rpg.players.groups;
 
 import cz.neumimto.config.blackjack.and.hookers.annotations.AsCollectionImpl;
 import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
-import cz.neumimto.rpg.configuration.adapters.AllowedArmorListAdapter;
-import cz.neumimto.rpg.configuration.adapters.ClassDependencyGraphAdapter;
-import cz.neumimto.rpg.configuration.adapters.ClassExpAdapter;
-import cz.neumimto.rpg.configuration.adapters.ClassTypeAdapter;
-import cz.neumimto.rpg.configuration.adapters.EffectsAdapter;
-import cz.neumimto.rpg.configuration.adapters.PropertyMapAdapter;
-import cz.neumimto.rpg.configuration.adapters.SkillTreeLookupAdapter;
-import cz.neumimto.rpg.configuration.adapters.WeaponsAdapter;
-import cz.neumimto.rpg.effects.EffectParams;
-import cz.neumimto.rpg.effects.EffectSourceType;
-import cz.neumimto.rpg.effects.IEffectSource;
-import cz.neumimto.rpg.effects.IEffectSourceProvider;
-import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.configuration.adapters.*;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.players.ExperienceSource;
@@ -46,14 +35,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 27.12.2014.
@@ -84,8 +66,8 @@ public class ClassDefinition  implements IEffectSourceProvider {
 	protected String type;
 
 	@Setting("Properties")
-	@CustomAdapter(PropertyMapAdapter.class)
-	private Map<Integer, Float> propBonus = new HashMap<>();
+	@CustomAdapter(PropertiesAdapter.class)
+	private float[] propBonus;
 
 	@Setting("AllowedArmor")
 	@CustomAdapter(AllowedArmorListAdapter.class)
@@ -96,8 +78,8 @@ public class ClassDefinition  implements IEffectSourceProvider {
 	private Set<PlayerGroupPermission> permissions;
 
 	@Setting("PropertiesLevelBonus")
-	@CustomAdapter(PropertyMapAdapter.class)
-	private Map<Integer, Float> propLevelBonus = new HashMap<>();
+	@CustomAdapter(PropertiesAdapter.class)
+	private float[] propLevelBonus;
 
 	@Setting("ExitCommands")
 	@AsCollectionImpl(ArrayList.class)
@@ -133,12 +115,13 @@ public class ClassDefinition  implements IEffectSourceProvider {
 	private SkillTree skillTree;
 
 	@Setting("SkillPointsPerLevel")
-	private int skillpointsperlevel;
+	private int skillpointsPerLevel;
 
 	@Setting("AttributePointsPerLevel")
-	private int attributepointsperlevel;
+	private int attributepointsPerLevel;
 
 	@Setting("Leveling")
+	@Default(ILevelProgression.EMPTY.class)
 	private ILevelProgression levels;
 
 	@Setting("ExperienceSources")
@@ -172,11 +155,11 @@ public class ClassDefinition  implements IEffectSourceProvider {
 		return showsInMenu;
 	}
 
-	public Map<Integer, Float> getPropBonus() {
+	public float[] getPropBonus() {
 		return propBonus;
 	}
 
-	public void setPropBonus(Map<Integer, Float> propBonus) {
+	public void setPropBonus(float[] propBonus) {
 		this.propBonus = propBonus;
 	}
 
@@ -196,26 +179,8 @@ public class ClassDefinition  implements IEffectSourceProvider {
 		return weapons;
 	}
 
-	public void addWeapon(ConfigRPGItemType item) {
-		Set<ConfigRPGItemType> configRPGItemTypes = weapons.get(item.getRpgItemType().getItemType());
-		if (configRPGItemTypes == null) {
-			configRPGItemTypes = new HashSet<>();
-			weapons.put(item.getRpgItemType().getItemType(), configRPGItemTypes);
-		}
-		configRPGItemTypes.add(item);
-	}
-
 	public HashMap<ItemType, Set<ConfigRPGItemType>> getOffHandWeapons() {
 		return offHandWeapons;
-	}
-
-	public void addOffHandWeapon(ConfigRPGItemType item) {
-		Set<ConfigRPGItemType> configRPGItemTypes = weapons.get(item.getRpgItemType().getItemType());
-		if (configRPGItemTypes == null) {
-			configRPGItemTypes = new HashSet<>();
-			weapons.put(item.getRpgItemType().getItemType(), configRPGItemTypes);
-		}
-		configRPGItemTypes.add(item);
 	}
 
 	public Set<PlayerGroupPermission> getPermissions() {
@@ -226,7 +191,7 @@ public class ClassDefinition  implements IEffectSourceProvider {
 		this.permissions = new TreeSet<>(permissions);
 	}
 
-	public Map<Integer, Float> getPropLevelBonus() {
+	public float[] getPropLevelBonus() {
 		return propLevelBonus;
 	}
 
@@ -329,6 +294,14 @@ public class ClassDefinition  implements IEffectSourceProvider {
 
 	public void setSkillTree(SkillTree skillTree) {
 		this.skillTree = skillTree;
+	}
+
+	public int getSkillpointsPerLevel() {
+		return skillpointsPerLevel;
+	}
+
+	public int getAttributepointsPerLevel() {
+		return attributepointsPerLevel;
 	}
 
 	@Override

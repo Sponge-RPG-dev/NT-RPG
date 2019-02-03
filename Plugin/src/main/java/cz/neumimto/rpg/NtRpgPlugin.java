@@ -106,6 +106,7 @@ import org.spongepowered.api.event.game.state.GamePostInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
@@ -135,7 +136,7 @@ import static cz.neumimto.rpg.Log.info;
 /**
  * Created by NeumimTo on 29.4.2015.
  */
-@Plugin(id = "nt-rpg", version = "@VERSION@", name = "NT-Rpg", dependencies = {
+@Plugin(id = "nt-rpg", version = "@VERSION@", name = "NT-Rpg", description = "RPG features for sponge", dependencies = {
 		@Dependency(id = "nt-core", version = "1.13-SNAPSHOT-6"),
 		@Dependency(id = "placeholderapi", version = "4.5", optional = true)
 })
@@ -968,7 +969,7 @@ public class NtRpgPlugin {
 						TextColors.GRAY, formatter.format(ps.getMaxPropertyValue(idByName))));
 
 				src.sendMessage(Text.of(TextColors.GOLD, "=================="));
-				src.sendMessage(Text.of(TextColors.GRAY, "Memory/1 player: " + (character.getCharacterProperties().length*2*4)/1024.0+"kb"));
+				src.sendMessage(Text.of(TextColors.GRAY, "Memory/1 player: " + (character.getPrimaryProperties().length*2*4)/1024.0+"kb"));
 
 			} catch (Throwable t) {
 				src.sendMessage(Text.of("No such property"));
@@ -1598,7 +1599,7 @@ public class NtRpgPlugin {
 							return CommandResult.empty();
 						}
 						ItemStack is = NtRpgPlugin.GlobalScope.inventorySerivce.createSkillbind(iSkill);
-						pl.getInventory().query(Hotbar.class).offer(is);
+						pl.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class)).offer(is);
 					}
 
 					return CommandResult.success();

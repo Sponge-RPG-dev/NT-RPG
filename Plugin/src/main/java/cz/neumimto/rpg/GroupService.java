@@ -124,17 +124,17 @@ public class GroupService {
 		}
 	}
 
-	public void addAllPermissions(IActiveCharacter character, ClassDefinition classDefinition) {
-		for (PlayerGroupPermission playerGroupPermission : classDefinition.getPermissions()) {
-			if (playerGroupPermission.getLevel() <= character.getLevel()) {
+	public void addAllPermissions(IActiveCharacter character, PlayerClassData classDefinition) {
+		for (PlayerGroupPermission playerGroupPermission : classDefinition.getClassDefinition().getPermissions()) {
+			if (playerGroupPermission.getLevel() <= classDefinition.getLevel()) {
 				addPermissions(character, playerGroupPermission.getPermissions());
 			}
 		}
 	}
 
-	public void addPermissions(IActiveCharacter character, ClassDefinition classDefinition) {
-		for (PlayerGroupPermission playerGroupPermission : classDefinition.getPermissions()) {
-			if (playerGroupPermission.getLevel() == character.getLevel()) {
+	public void addPermissions(IActiveCharacter character, PlayerClassData classDefinition) {
+		for (PlayerGroupPermission playerGroupPermission : classDefinition.getClassDefinition().getPermissions()) {
+			if (playerGroupPermission.getLevel() == classDefinition.getLevel()) {
 				addPermissions(character, playerGroupPermission.getPermissions());
 			}
 		}

@@ -18,33 +18,27 @@
 
 package cz.neumimto.rpg.players;
 
+import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.players.groups.ILevelProgression;
 
 /**
  * Created by NeumimTo on 28.7.2015.
  */
 public class PlayerClassData {
 
-	private IActiveCharacter activeCharacter;
 	private ClassDefinition classDefinition;
+	private CharacterClass characterClass;
 
-	private double experiencesFromLevel;
-	private int level;
-	private double expTotal;
-
-	public PlayerClassData(IActiveCharacter activeCharacter, ClassDefinition classDefinition) {
-		this.activeCharacter = activeCharacter;
+	public PlayerClassData(ClassDefinition classDefinition, CharacterClass characterClass) {
 		this.classDefinition = classDefinition;
+		this.characterClass = characterClass;
 	}
-
-	public PlayerClassData(ActiveCharacter activeCharacter, ClassDefinition characterClass, Double experiences) {
-		this(activeCharacter, characterClass);
-		expTotal = experiences;
-	}
-
 
 	public boolean takesExp() {
-		return getExperiences() <= /* classDefinition.getTotalExp() */ 0;
+		ILevelProgression levelProgression = classDefinition.getLevelProgression();
+		return characterClass.getLevel() < levelProgression.getMaxLevel()
+				|| characterClass.getExperiences() < levelProgression.getLevelMargins()[levelProgression.getMaxLevel() - 1];
 	}
 
 	public ClassDefinition getClassDefinition() {
@@ -55,20 +49,20 @@ public class PlayerClassData {
 		this.classDefinition = classDefinition;
 	}
 
-	public double getExperiences() {
-		return activeCharacter.getCharacterBase().getCharacterClass(getClassDefinition()).getExperiences();
+	public double getExperiencesFromLevel() {
+		return characterClass.getExperiences();
 	}
 
-	public void setExperiences(double experiences) {
-		activeCharacter.getCharacterBase().getCharacterClass(getClassDefinition()).setExperiences(experiences);
+	public void addExperiences(double experiences) {
+		characterClass.setExperiences(characterClass.getExperiences() += experiences);
 	}
 
 	public int getLevel() {
-		return level;
+		return characterClass.getLevel();
 	}
 
 	public void setLevel(int level) {
-		this.level = level;
+		this.characterClass.setLevel(level);
 	}
 
 	public double getExperiencesFromLevel() {

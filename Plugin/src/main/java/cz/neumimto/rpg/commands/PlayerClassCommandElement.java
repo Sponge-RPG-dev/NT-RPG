@@ -18,6 +18,7 @@ import org.spongepowered.api.text.Text;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
@@ -49,7 +50,7 @@ public class PlayerClassCommandElement extends CommandElement {
 		IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) source);
 
 		if (validate && pluginConfig.RESPECT_CLASS_SELECTION_ORDER) {
-			List<String> classTypes = pluginConfig.CLASS_TYPES;
+			Set<String> classTypes = pluginConfig.CLASS_TYPES.keySet();
 
 
 			boolean depOk = false;

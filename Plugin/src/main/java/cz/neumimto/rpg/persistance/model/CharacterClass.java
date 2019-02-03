@@ -3,19 +3,13 @@ package cz.neumimto.rpg.persistance.model;
 import cz.neumimto.rpg.players.CharacterBase;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * Created by ja on 8.10.2016.
  */
 @Entity(name = "rpg_character_class")
 public class CharacterClass {
-
 
 	@Id
 	@GeneratedValue(generator = "native")
@@ -28,8 +22,12 @@ public class CharacterClass {
 	private CharacterBase characterBase;
 
 	@Column(name = "experiences")
-	private Double experiences;
+	private double experiences;
 
+	@Column(name = "level", columnDefinition = "1")
+	private int level;
+
+	@Column(name = "name")
 	private String name;
 
 	@Column(name = "used_skil_points")
@@ -84,6 +82,15 @@ public class CharacterClass {
 
 	public void setUsedSkillPoints(int usedSkillPoints) {
 		this.usedSkillPoints = usedSkillPoints;
+	}
+
+
+	public Integer getLevel() {
+		return level;
+	}
+
+	public void setLevel(Integer level) {
+		this.level = level;
 	}
 
 	@Override

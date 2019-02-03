@@ -19,6 +19,7 @@ import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.type.DyeColor;
 import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
@@ -99,19 +100,28 @@ public class GuiHelper {
 		return is;
 	}
 
-	public static Inventory createPlayerGroupView(ClassDefinition group) {
+	public static Inventory createMenuInventoryClassDefView(ClassDefinition w) {
 		Inventory.Builder builder = Inventory
 				.builder();
 		Inventory i = builder.of(InventoryArchetypes.DOUBLE_CHEST)
-				.property(InventoryTitle.of(Text.of(group.getName(), group.getPreferedColor(), TextStyles.BOLD)))
+				.property(InventoryTitle.of(Text.of(w.getName(), w.getPreferedColor(), TextStyles.BOLD)))
 				.build(plugin);
 
+		makeBorder(i, NtRpgPlugin.pluginConfig.CLASS_TYPES.get(w.getClassType()).getDyeColor());
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(1, 4))).offer(toItemStack(w));
 
-		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(2, 2))).offer(createWeaponCommand(group));
-		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(3, 2))).offer(createArmorCommand(group));
-		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(2, 3))).offer(createAttributesCommand(group));
-		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(3, 3))).offer(createPropertyCommand(group));
-		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 3))).offer(toItemStack(group));
+		if (!w.getWeapons().isEmpty()) {
+			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(2, 2))).offer(createWeaponCommand(w));
+		}
+		if (!w.getAllowedArmor().isEmpty()) {
+			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(3, 2))).offer(createArmorCommand(w));
+		}
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(2, 3))).offer(createAttributesCommand(w));
+
+		if (!w.getPropBonus().isEmpty() || !w.getPropLevelBonus().isEmpty()){
+			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(3, 3))).offer(createPropertyCommand(w));
+		}
+
 		return i;
 	}
 
@@ -130,16 +140,6 @@ public class GuiHelper {
 		i.offer(Keys.DISPLAY_NAME, Localizations.ATTRIBUTES.toText());
 		String cc = IoC.get().build(InfoCommand.class).getAliases().iterator().next();
 		i.offer(new InventoryCommandItemMenuData(cc + " attributes-initial " + group.getName()));
-		return i;
-	}
-
-	public static ItemStack createDescriptionItem(String description) {
-		ItemStack i = itemStack(ItemTypes.PAPER);
-		i.offer(Keys.DISPLAY_NAME, Text.of(""));
-		i.offer(Keys.HIDE_MISCELLANEOUS, true);
-		i.offer(Keys.HIDE_ATTRIBUTES, true);
-		i.offer(new MenuInventoryData(true));
-		i.offer(Keys.ITEM_LORE, Collections.singletonList(Text.of(description, TextColors.GRAY)));
 		return i;
 	}
 
@@ -379,8 +379,39 @@ public class GuiHelper {
 			lore.add(Text.builder(description).style(TextStyles.ITALIC).color(TextColors.GOLD).build());
 			itemStack.offer(Keys.ITEM_LORE, lore);
 		}
-		itemStack.offer(new InventoryCommandItemMenuData("/class " + a.getName()));
+		itemStack.offer(new InventoryCommandItemMenuData("class " + a.getName()));
 		itemStack.offer(new MenuInventoryData(true));
 		return itemStack;
+	}
+
+	public static void makeBorder(Inventory i, DyeColor dyeColor) {
+		for (int j = 0; j < 9; j++) {
+			ItemStack of = ItemStack.of(ItemTypes.STAINED_GLASS_PANE, 1);
+			of.offer(new MenuInventoryData(true));
+			of.offer(Keys.DYE_COLOR, dyeColor);
+			of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
+			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(j, 0))).offer(of);
+
+			of = ItemStack.of(ItemTypes.STAINED_GLASS_PANE, 1);
+			of.offer(new MenuInventoryData(true));
+			of.offer(Keys.DYE_COLOR, dyeColor);
+			of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
+			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(j, 5))).offer(of);
+		}
+
+		for (int j = 1; j < 5; j++) {
+			ItemStack of = ItemStack.of(ItemTypes.STAINED_GLASS_PANE, 1);
+			of.offer(new MenuInventoryData(true));
+			of.offer(Keys.DYE_COLOR, dyeColor);
+			of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
+
+			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, j))).offer(of);
+
+			of = ItemStack.of(ItemTypes.STAINED_GLASS_PANE, 1);
+			of.offer(new MenuInventoryData(true));
+			of.offer(Keys.DYE_COLOR, dyeColor);
+			of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
+			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, j))).offer(of);
+		}
 	}
 }

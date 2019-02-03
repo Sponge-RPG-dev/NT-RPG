@@ -60,7 +60,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	boolean isStub();
 
-	float[] getCharacterProperties();
+	float[] getPrimaryProperties();
 
 	void setCharacterLevelProperty(int index, float value);
 
@@ -196,9 +196,9 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void sendMessage(LocalizableParametrizedText message);
 
-	float[] getCharacterLevelProperties();
+	float[] getSecondaryProperties();
 
-	void setCharacterLevelProperties(float[] arr);
+	void setSecondaryProperties(float[] arr);
 
 	Map<java.lang.String, Integer> getTransientAttributes();
 
