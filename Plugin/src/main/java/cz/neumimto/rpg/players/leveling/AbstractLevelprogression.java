@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.players.leveling;
 
-import cz.neumimto.rpg.players.groups.ILevelProgression;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 

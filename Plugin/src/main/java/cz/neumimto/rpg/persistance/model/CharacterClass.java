@@ -24,7 +24,7 @@ public class CharacterClass {
 	@Column(name = "experiences")
 	private double experiences;
 
-	@Column(name = "level", columnDefinition = "1")
+	@Column(name = "level")
 	private int level;
 
 	@Column(name = "name")
@@ -52,11 +52,11 @@ public class CharacterClass {
 		this.characterBase = characterBase;
 	}
 
-	public Double getExperiences() {
+	public double getExperiences() {
 		return experiences;
 	}
 
-	public void setExperiences(Double experiences) {
+	public void setExperiences(double experiences) {
 		this.experiences = experiences;
 	}
 
@@ -85,11 +85,11 @@ public class CharacterClass {
 	}
 
 
-	public Integer getLevel() {
+	public int getLevel() {
 		return level;
 	}
 
-	public void setLevel(Integer level) {
+	public void setLevel(int level) {
 		this.level = level;
 	}
 

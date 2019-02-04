@@ -82,8 +82,6 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	Map<EquipedSlot, CustomItem> getEquipedInventorySlots();
 
-	void addExperiences(double exp, ExperienceSource source);
-
 	Player getPlayer();
 
 	void setPlayer(Player pl);

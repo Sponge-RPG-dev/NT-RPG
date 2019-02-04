@@ -370,7 +370,7 @@ public class CharacterService {
 		effectService.addEffect(new CombatEffect(character), character, InternalEffectSourceProvider.INSTANCE);
 	}
 
-	/**
+	/*	/**
 	 * Does nothing if character is PreloadChar.
 	 * If group is null nothing is changed
 	 * character is saved
@@ -379,6 +379,7 @@ public class CharacterService {
 	 * @param character
 	 * @param configClass
 	 */
+	/*
 	public void addPlayerGroup(IActiveCharacter character, ClassDefinition configClass) {
 		if (character.isStub()) {
 			return;
@@ -409,7 +410,7 @@ public class CharacterService {
 				}
 				removeGroupEffects(character, originClass);
 
-				character.addClass(new PlayerClassData(character, configClass));
+				character.addClass(new PlayerClassData(configClass, ));
 				applyGroupEffects(character, configClass);
 
 				args.put("class", configClass.getName());
@@ -431,7 +432,7 @@ public class CharacterService {
 		}
 
 	}
-
+*/
 	public void removeGroupEffects(IActiveCharacter character, ClassDefinition p) {
 		if (p == null) {
 			return;
@@ -956,13 +957,9 @@ public class CharacterService {
 			PlayerClassData value = entry.getValue();
 			ClassDefinition classDefinition = value.getClassDefinition();
 			if (classDefinition.hasExperienceSource(source)) {
-				//todo
-				/*int maxlevel = classDefinition.getLevel().length - 1;
-				if (aClass.getLevel() > maxlevel) {
-					continue;
+				if (value.takesExp()) {
+					addExperiences(character, exp, entry.getValue(), false);
 				}
-				addExperiences(character, exp, aClass, false);
-				*/
 			}
 		}
 
@@ -979,7 +976,7 @@ public class CharacterService {
 		if (!onlyinit) {
 			exp = exp * getCharacterProperty(character, DefaultProperties.experiences_mult);
 		}
-		double total = aClass.getCla;
+		double total = aClass.getExperiencesFromLevel();
 		double lvlexp = aClass.getExperiencesFromLevel();
 
 		double[] levels = aClass.getClassDefinition().getLevelProgression().getLevelMargins();
@@ -987,7 +984,7 @@ public class CharacterService {
 			//class can`t take exp
 			return;
 		}
-		double levellimit = levels[level];
+		double levellimit = levels[level - 1];
 
 		double newcurrentexp = lvlexp + exp;
 		double k = total + exp;
@@ -1008,7 +1005,7 @@ public class CharacterService {
 
 
 			groupService.addPermissions(character, aClass);
-			aClass.setExperiencesFromLevel(0);
+			aClass.incrementLevel();
 			if (!aClass.takesExp()) {
 				break;
 			}
@@ -1021,14 +1018,8 @@ public class CharacterService {
 		}
 
 		if (!onlyinit) {
-			aClass.setExperiences(k);
-			aClass.setExperiencesFromLevel(newcurrentexp);
 			Gui.showExpChange(character, aClass.getClassDefinition().getName(), exp);
-		} else {
-			aClass.setExperiencesFromLevel(newcurrentexp);
 		}
-		aClass.setLevel(level);
-
 	}
 
 
@@ -1171,7 +1162,6 @@ public class CharacterService {
 		if (classes.containsKey(classType)) {
 			throw new IllegalStateException("Not possible to change " + klass.getClassType());
 		}
-		classes.put(klass.getClassType(), new PlayerClassData(character, klass));
 
 		CharacterBase characterBase = character.getCharacterBase();
 		Set<CharacterClass> characterClasses = characterBase.getCharacterClasses();
@@ -1192,7 +1182,7 @@ public class CharacterService {
 			//   fixPropertyValues(nclass.getPropBonus(), 1);
 			//  fixPropertyLevelValues(getPrimaryClass().getClassDefinition().getPropLevelBonus(), 1);
 
-		character.addClass(new PlayerClassData(character, klass));
+		character.addClass(new PlayerClassData(klass, cc));
 		character.updatePropertyArrays();
 		character.updateItemRestrictions();
 

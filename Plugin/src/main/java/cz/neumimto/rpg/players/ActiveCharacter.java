@@ -27,7 +27,6 @@ import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
-import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
@@ -245,20 +244,6 @@ public class ActiveCharacter implements IActiveCharacter {
 	public Map<String, IEffectContainer<Object, IEffect<Object>>> getEffectMap() {
 		return effects;
 	}
-
-	@Override
-	public void addExperiences(double exp, ExperienceSource source) {
-		for (PlayerClassData nClass : classes.values()) {
-			if (nClass.getClassDefinition().hasExperienceSource(source)) {
-				CharacterClass c = getCharacterBase().getCharacterClass(nClass.getClassDefinition());
-				Double nClass1 = c.getExperiences() == null ? 0 : c.getExperiences();
-				if (nClass1 == null) {
-					c.setExperiences(exp);
-				}
-			}
-		}
-	}
-
 
 	@Override
 	public Player getPlayer() {

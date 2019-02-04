@@ -241,18 +241,13 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public void addExperiences(double exp, ExperienceSource source) {
-
-	}
-
-	@Override
 	public Player getPlayer() {
 		if (this.player == null) {
 			Optional<Player> player = Sponge.getServer().getPlayer(uuid);
 			if (player.isPresent()) {
 				this.player = player.get();
 			} else {
-				throw new PlayerNotInGameException(java.lang.String.format(
+				throw new PlayerNotInGameException(String.format(
 						"Player object with uuid=%s has not been constructed yet. Calling PreloadCharacter.getCharacter in a wrong state"), this);
 			}
 		}

@@ -118,9 +118,8 @@ public class GuiHelper {
 		}
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(2, 3))).offer(createAttributesCommand(w));
 
-		if (!w.getPropBonus().isEmpty() || !w.getPropLevelBonus().isEmpty()){
-			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(3, 3))).offer(createPropertyCommand(w));
-		}
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(3, 3))).offer(createPropertyCommand(w));
+
 
 		return i;
 	}

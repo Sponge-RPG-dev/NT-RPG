@@ -20,11 +20,14 @@ package cz.neumimto.rpg.players.groups;
 
 import cz.neumimto.config.blackjack.and.hookers.annotations.AsCollectionImpl;
 import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
+import cz.neumimto.config.blackjack.and.hookers.annotations.Default;
 import cz.neumimto.rpg.configuration.adapters.*;
 import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.players.ExperienceSource;
+import cz.neumimto.rpg.players.leveling.EmptyLevlProgression;
+import cz.neumimto.rpg.players.leveling.ILevelProgression;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import ninja.leaping.configurate.objectmapping.Setting;
@@ -121,7 +124,7 @@ public class ClassDefinition  implements IEffectSourceProvider {
 	private int attributepointsPerLevel;
 
 	@Setting("Leveling")
-	@Default(ILevelProgression.EMPTY.class)
+	@Default(EmptyLevlProgression.class)
 	private ILevelProgression levels;
 
 	@Setting("ExperienceSources")

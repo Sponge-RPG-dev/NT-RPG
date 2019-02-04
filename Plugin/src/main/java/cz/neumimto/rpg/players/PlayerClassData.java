@@ -20,7 +20,7 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.players.groups.ILevelProgression;
+import cz.neumimto.rpg.players.leveling.ILevelProgression;
 
 /**
  * Created by NeumimTo on 28.7.2015.
@@ -49,12 +49,12 @@ public class PlayerClassData {
 		this.classDefinition = classDefinition;
 	}
 
-	public double getExperiencesFromLevel() {
-		return characterClass.getExperiences();
+	public void addExperiences(double experiences) {
+		characterClass.setExperiences(characterClass.getExperiences() + experiences);
 	}
 
-	public void addExperiences(double experiences) {
-		characterClass.setExperiences(characterClass.getExperiences() += experiences);
+	public double getExperiencesFromLevel() {
+		return characterClass.getExperiences();
 	}
 
 	public int getLevel() {
@@ -65,11 +65,8 @@ public class PlayerClassData {
 		this.characterClass.setLevel(level);
 	}
 
-	public double getExperiencesFromLevel() {
-		return experiencesFromLevel;
-	}
-
-	public void setExperiencesFromLevel(double experiencesFromLevel) {
-		this.experiencesFromLevel = experiencesFromLevel;
+	public void incrementLevel() {
+		setLevel(getLevel()+1);
+		characterClass.setExperiences(0);
 	}
 }
