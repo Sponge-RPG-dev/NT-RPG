@@ -30,8 +30,8 @@ import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.type.HandType;
@@ -391,13 +391,13 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Map<java.lang.String, ExtendedSkillInfo> getSkills() {
+	public Map<java.lang.String, PlayerSkillContext> getSkills() {
 		return Collections.emptyMap();
 	}
 
 	@Override
-	public ExtendedSkillInfo getSkillInfo(ISkill skill) {
-		return ExtendedSkillInfo.Empty;
+	public PlayerSkillContext getSkillInfo(ISkill skill) {
+		return PlayerSkillContext.Empty;
 	}
 
 	@Override
@@ -406,8 +406,8 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public ExtendedSkillInfo getSkillInfo(java.lang.String s) {
-		return ExtendedSkillInfo.Empty;
+	public PlayerSkillContext getSkillInfo(java.lang.String s) {
+		return PlayerSkillContext.Empty;
 	}
 
 	@Override
@@ -416,17 +416,17 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public void addSkill(java.lang.String name, ExtendedSkillInfo info) {
+	public void addSkill(java.lang.String name, PlayerSkillContext info) {
 
 	}
 
 	@Override
-	public ExtendedSkillInfo getSkill(java.lang.String skillName) {
-		return ExtendedSkillInfo.Empty;
+	public PlayerSkillContext getSkill(java.lang.String skillName) {
+		return PlayerSkillContext.Empty;
 	}
 
 	@Override
-	public void getRemoveAllSkills() {
+	public void removeAllSkills() {
 
 	}
 

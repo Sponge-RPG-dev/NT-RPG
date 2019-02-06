@@ -3,7 +3,7 @@ package cz.neumimto.rpg.skills.mods;
 import com.typesafe.config.ConfigObject;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JSLoader;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 
 import javax.script.ScriptException;
 
@@ -24,7 +24,7 @@ public class SkillPreprocessorFactories {
 
             return new ActiveSkillPreProcessorWrapper(PreProcessorTarget.BEFORE) {
                 @Override
-                public void doNext(IActiveCharacter character, ExtendedSkillInfo info, SkillContext context) {
+                public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext context) {
                     try {
                         Number eval = (Number) JSLoader.getEngine().eval(value.replaceAll(expr, String.valueOf(context.getSkillNodes().get(key))));
                         context.overrideNode(key, eval.floatValue());

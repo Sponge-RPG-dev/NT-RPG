@@ -4,9 +4,8 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.configuration.Localizations;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillPathData;
 import cz.neumimto.rpg.skills.SkillSettings;
@@ -23,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 16.8.17.
@@ -51,14 +52,14 @@ public class SkillTreeSpecialization extends PassiveSkill {
 	}
 
 	@Override
-	public void applyEffect(ExtendedSkillInfo info, IActiveCharacter character) {
+	public void applyEffect(PlayerSkillContext info, IActiveCharacter character) {
 
 	}
 
 	@Override
 	public void onCharacterInit(IActiveCharacter c, int level) {
 		super.onCharacterInit(c, level);
-		ExtendedSkillInfo skillInfo = c.getSkillInfo(this);
+		PlayerSkillContext skillInfo = c.getSkillInfo(this);
 		SkillData skillData = skillInfo.getSkillData();
 		SkillPathData pdata = (SkillPathData) skillData;
 
@@ -71,7 +72,7 @@ public class SkillTreeSpecialization extends PassiveSkill {
 		}
 
 		for (Map.Entry<String, Integer> entry : pdata.getSkillBonus().entrySet()) {
-			ExtendedSkillInfo skill = c.getSkill(entry.getKey());
+			PlayerSkillContext skill = c.getSkill(entry.getKey());
 			skill.setBonusLevel(skill.getBonusLevel() + entry.getValue());
 		}
 
@@ -79,7 +80,7 @@ public class SkillTreeSpecialization extends PassiveSkill {
 
 	@Override
 	public void skillRefund(IActiveCharacter c) {
-		ExtendedSkillInfo skillInfo = c.getSkillInfo(this);
+		PlayerSkillContext skillInfo = c.getSkillInfo(this);
 		SkillData skillData = skillInfo.getSkillData();
 		SkillPathData pdata = (SkillPathData) skillData;
 

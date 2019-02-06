@@ -51,7 +51,7 @@ import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.reloading.Reload;
 import cz.neumimto.rpg.reloading.ReloadService;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.tree.SkillTree;
@@ -775,7 +775,7 @@ public class VanillaMessaging implements IPlayerMessage {
     }
 
     @Override
-    public void skillExecution(IActiveCharacter character, ExtendedSkillInfo skill) {
+    public void skillExecution(IActiveCharacter character, PlayerSkillContext skill) {
         character.sendMessage(ChatTypes.ACTION_BAR,
                 Text.builder(skill.getSkill().getName())
                         .style(TextStyles.BOLD)

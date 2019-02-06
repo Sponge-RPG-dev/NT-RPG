@@ -3,13 +3,13 @@ package cz.neumimto.skills.active;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -39,7 +39,7 @@ public class SkillTeleport extends ActiveSkill {
 	}
 
 	@Override
-	public void cast(IActiveCharacter character, ExtendedSkillInfo extendedSkillInfo, SkillContext skillContext) {
+	public void cast(IActiveCharacter character, PlayerSkillContext playerSkillContext, SkillContext skillContext) {
 		Player player = character.getPlayer();
 		double doubleNodeValue = skillContext.getDoubleNodeValue(SkillNodes.RANGE);
 
@@ -54,6 +54,6 @@ public class SkillTeleport extends ActiveSkill {
 				player.setLocation(safeLocation.get());
 			}
 		}
-		skillContext.next(character, extendedSkillInfo, skillContext.result(SkillResult.OK));
+		skillContext.next(character, playerSkillContext, skillContext.result(SkillResult.OK));
 	}
 }

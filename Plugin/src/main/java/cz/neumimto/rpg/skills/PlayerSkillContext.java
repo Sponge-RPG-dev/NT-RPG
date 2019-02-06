@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.skills;
 
+import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.skills.mods.ActiveSkillPreProcessorWrapper;
 
 import java.util.HashSet;
@@ -26,23 +27,31 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 26.7.2015.
  */
-public class ExtendedSkillInfo {
+public class PlayerSkillContext {
 
-	public static ExtendedSkillInfo Empty = new ExtendedSkillInfo() {{
+	public static PlayerSkillContext Empty = new PlayerSkillContext(null, null) {{
 		setSkillData(SkillData.EMPTY);
 	}};
-	private ISkill skill;
+
 	private int level;
 	private SkillData skillData;
 	private Set<ActiveSkillPreProcessorWrapper> mods = new HashSet<>();
 	private int bonusLevel;
 
+	private final ClassDefinition classDefinition;
+	private ISkill skill;
+
+	public PlayerSkillContext(ClassDefinition classDefinition, ISkill skill) {
+		this.classDefinition = classDefinition;
+		this.skill = skill;
+	}
+
 	public ISkill getSkill() {
 		return skill;
 	}
 
-	public void setSkill(ISkill skill) {
-		this.skill = skill;
+	public ClassDefinition getClassDefinition() {
+		return classDefinition;
 	}
 
 	public int getLevel() {
@@ -75,5 +84,9 @@ public class ExtendedSkillInfo {
 
 	public Set<ActiveSkillPreProcessorWrapper> getMods() {
 		return mods;
+	}
+
+	public void setSkill(ISkill skill) {
+		this.skill = skill;
 	}
 }

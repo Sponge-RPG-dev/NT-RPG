@@ -24,7 +24,7 @@ import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 
@@ -54,7 +54,7 @@ public abstract class PassiveSkill extends AbstractSkill {
 
 	private void update(IActiveCharacter IActiveCharacter) {
 		NtRpgPlugin.GlobalScope.inventorySerivce.initializeCharacterInventory(IActiveCharacter);
-		ExtendedSkillInfo skill = IActiveCharacter.getSkill(getId());
+		PlayerSkillContext skill = IActiveCharacter.getSkill(getId());
 		applyEffect(skill, IActiveCharacter);
 	}
 
@@ -73,7 +73,7 @@ public abstract class PassiveSkill extends AbstractSkill {
 	@Override
 	public void skillRefund(IActiveCharacter IActiveCharacter) {
 		super.skillRefund(IActiveCharacter);
-		ExtendedSkillInfo skillInfo = IActiveCharacter.getSkillInfo(this);
+		PlayerSkillContext skillInfo = IActiveCharacter.getSkillInfo(this);
 		if (skillInfo.getLevel() <= 0) {
 			effectService.removeEffect(relevantEffectName, IActiveCharacter, this);
 		} else {
@@ -81,5 +81,5 @@ public abstract class PassiveSkill extends AbstractSkill {
 		}
 	}
 
-	public abstract void applyEffect(ExtendedSkillInfo info, IActiveCharacter character);
+	public abstract void applyEffect(PlayerSkillContext info, IActiveCharacter character);
 }

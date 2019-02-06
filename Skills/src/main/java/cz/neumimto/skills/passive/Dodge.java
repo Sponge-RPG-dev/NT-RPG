@@ -6,7 +6,7 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.PassiveSkill;
@@ -30,7 +30,7 @@ public class Dodge extends PassiveSkill {
 	}
 
 	@Override
-	public void applyEffect(ExtendedSkillInfo info, IActiveCharacter character) {
+	public void applyEffect(PlayerSkillContext info, IActiveCharacter character) {
 		int totalLevel = info.getTotalLevel();
 		float chance = info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.CHANCE, totalLevel);
 		DodgeEffect dodgeEffect = new DodgeEffect(character, -1, chance);
@@ -39,7 +39,7 @@ public class Dodge extends PassiveSkill {
 
 	@Override
 	public void skillUpgrade(IActiveCharacter character, int level) {
-		ExtendedSkillInfo info = character.getSkill(getId());
+		PlayerSkillContext info = character.getSkill(getId());
 		int totalLevel = info.getTotalLevel();
 		float chance = info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.CHANCE, totalLevel);
 		IEffectContainer<Float, DodgeEffect> effect = character.getEffect(DodgeEffect.name);

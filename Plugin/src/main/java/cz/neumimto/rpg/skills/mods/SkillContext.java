@@ -1,17 +1,13 @@
 package cz.neumimto.rpg.skills.mods;
 
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkillNode;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.IActiveSkill;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Set;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static cz.neumimto.rpg.Log.error;
 
@@ -22,14 +18,14 @@ import static cz.neumimto.rpg.Log.error;
 public class SkillContext {
 
 	protected final ArrayList<ActiveSkillPreProcessorWrapper> wrappers = new ArrayList<>();
-	private ExtendedSkillInfo esi;
+	private PlayerSkillContext esi;
 	private int cursor;
 	private SkillResult result;
 	private boolean continueExecution;
 	private boolean copy;
 	private Map<String, Float> skillNodes;
 
-	public SkillContext(IActiveSkill activeSkill, ExtendedSkillInfo esi) {
+	public SkillContext(IActiveSkill activeSkill, PlayerSkillContext esi) {
 		this.esi = esi;
 		cursor = -1;
 		continueExecution = true;
@@ -37,7 +33,7 @@ public class SkillContext {
 		wrappers.add(new ActiveSkillPreProcessorWrapper(PreProcessorTarget.EXECUTION) {
 
 			@Override
-			public void doNext(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillResult) {
+			public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
 				activeSkill.cast(character, info, SkillContext.this);
 			}
 		});
@@ -51,18 +47,18 @@ public class SkillContext {
 		wrappers.sort(Comparator.comparing(ActiveSkillPreProcessorWrapper::getTarget));
 	}
 
-	public void next(IActiveCharacter consumer, ExtendedSkillInfo info, SkillContext skillResult) {
+	public void next(IActiveCharacter consumer, PlayerSkillContext info, SkillContext skillResult) {
 		cursor++;
 		if (result == SkillResult.CANCELLED || skillResult.continueExecution) {
 			wrappers.get(cursor).doNext(consumer, info, skillResult);
 		}
 	}
 
-	public void endWith(IActiveCharacter consumer, ExtendedSkillInfo info, SkillContext context) {
+	public void endWith(IActiveCharacter consumer, PlayerSkillContext info, SkillContext context) {
 		wrappers.get(wrappers.size()-1).doNext(consumer, info, context);
 	}
 
-	public void next(IActiveCharacter consumer, ExtendedSkillInfo info, SkillResult skillResult) {
+	public void next(IActiveCharacter consumer, PlayerSkillContext info, SkillResult skillResult) {
 		next(consumer, info, result(skillResult));
 	}
 

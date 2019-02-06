@@ -5,13 +5,13 @@ import cz.neumimto.effects.positive.PortalEffect;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillContext;
 
 /**
  * Created by NeumimTo on 22.7.2017.
@@ -38,7 +38,7 @@ public class Portal extends ActiveSkill {
 	}
 
 	@Override
-	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillContext) {
+	public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
 		if (character.hasEffect(PortalEffect.name)) {
 			effectService.removeEffect(PortalEffect.name, character, this);
 			skillContext.next(character, info, skillContext.result(SkillResult.CANCELLED));

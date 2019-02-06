@@ -7,7 +7,7 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.PassiveSkill;
@@ -39,7 +39,7 @@ public class Basher extends PassiveSkill {
 	}
 
 	@Override
-	public void applyEffect(ExtendedSkillInfo info, IActiveCharacter character) {
+	public void applyEffect(PlayerSkillContext info, IActiveCharacter character) {
 		BashModel model = getBashModel(info, character);
 		effectService.addEffect(new Bash(character, -1, model), character, this);
 	}
@@ -47,13 +47,13 @@ public class Basher extends PassiveSkill {
 	@Override
 	public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
 		super.skillUpgrade(IActiveCharacter, level);
-		ExtendedSkillInfo info = IActiveCharacter.getSkills().get(getId());
+		PlayerSkillContext info = IActiveCharacter.getSkill(getId());
 		BashModel model = getBashModel(info, IActiveCharacter);
 		effectService.removeEffect(Bash.name, IActiveCharacter, this);
 		effectService.addEffect(new Bash(IActiveCharacter, -1, model), IActiveCharacter, this);
 	}
 
-	private BashModel getBashModel(ExtendedSkillInfo info, IActiveCharacter character) {
+	private BashModel getBashModel(PlayerSkillContext info, IActiveCharacter character) {
 		BashModel model = new BashModel();
 		int level = info.getTotalLevel();
 		model.chance = (int) info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.CHANCE, level);

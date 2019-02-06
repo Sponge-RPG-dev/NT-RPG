@@ -1,12 +1,11 @@
 package cz.neumimto.rpg.skills.parents;
 
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkillType;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.configs.ScriptSkillModel;
 import cz.neumimto.rpg.skills.scripting.PassiveScriptSkillHandler;
 import cz.neumimto.rpg.skills.scripting.SkillScriptContext;
-import cz.neumimto.rpg.skills.mods.SkillContext;
 
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class PassiveScriptSkill extends PassiveSkill implements IPassiveScriptSk
 	private ScriptSkillModel model;
 
 	@Override
-	public void applyEffect(ExtendedSkillInfo info, IActiveCharacter character) {
+	public void applyEffect(PlayerSkillContext info, IActiveCharacter character) {
 		handler.init(character, info, new SkillScriptContext(this, info));
 	}
 

@@ -5,7 +5,7 @@ import com.typesafe.config.ConfigException;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.mods.SkillContext;
@@ -36,7 +36,7 @@ public class CharacterAttributeSkill extends AbstractSkill {
 	}
 
 	private void assignAll(IActiveCharacter c, int i, BiFunction<Integer, Integer, Boolean> fc) {
-		ExtendedSkillInfo skill = c.getSkill(getId());
+		PlayerSkillContext skill = c.getSkill(getId());
 		int totalLevel = skill.getTotalLevel();
 		CharacterAttributeSkillData skillData = (CharacterAttributeSkillData) skill.getSkillData();
 		for (Wrapper wrapper : skillData.wrappers) {

@@ -6,13 +6,13 @@ import cz.neumimto.model.ManaShieldEffectModel;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillContext;
 
 @ResourceLoader.Skill("ntrpg:manashield")
 public class ManaShield extends ActiveSkill {
@@ -33,7 +33,7 @@ public class ManaShield extends ActiveSkill {
 	}
 
 	@Override
-	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillContext) {
+	public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
 		ManaShieldEffectModel manaShieldEffectModel = new ManaShieldEffectModel();
 		manaShieldEffectModel.duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
 		manaShieldEffectModel.reduction = skillContext.getDoubleNodeValue("reduction");

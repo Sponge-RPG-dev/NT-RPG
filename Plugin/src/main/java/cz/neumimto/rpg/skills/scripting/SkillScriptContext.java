@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.skills.scripting;
 
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillResult;
 
 /**
@@ -10,10 +10,10 @@ import cz.neumimto.rpg.skills.SkillResult;
 public class SkillScriptContext {
 
 	private final ISkill skill;
-	private final ExtendedSkillInfo skillInfo;
+	private final PlayerSkillContext skillInfo;
 	private SkillResult result;
 
-	public SkillScriptContext(ISkill skill, ExtendedSkillInfo skillInfo) {
+	public SkillScriptContext(ISkill skill, PlayerSkillContext skillInfo) {
 		this.skill = skill;
 		this.skillInfo = skillInfo;
 	}
@@ -22,7 +22,7 @@ public class SkillScriptContext {
 		return skill;
 	}
 
-	public ExtendedSkillInfo getSkillInfo() {
+	public PlayerSkillContext getSkillInfo() {
 		return skillInfo;
 	}
 

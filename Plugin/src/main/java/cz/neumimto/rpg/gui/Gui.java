@@ -32,7 +32,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.scripting.JsBinding;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -209,7 +209,7 @@ public class Gui {
 		getMessageTypeOf(character).sendCannotUseItemInOffHandNotification(futureOffHand, character, reason);
 	}
 
-	public static void skillExecution(IActiveCharacter character, ExtendedSkillInfo skill) {
+	public static void skillExecution(IActiveCharacter character, PlayerSkillContext skill) {
 		getMessageTypeOf(character).skillExecution(character, skill);
 	}
 

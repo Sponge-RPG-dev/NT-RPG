@@ -21,7 +21,7 @@ package cz.neumimto.rpg.skills.parents;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillCost;
 import cz.neumimto.rpg.skills.SkillItemCost;
 import cz.neumimto.rpg.skills.SkillResult;
@@ -35,11 +35,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 26.7.2015.
@@ -49,7 +45,7 @@ public abstract class ActiveSkill extends AbstractSkill implements IActiveSkill 
 
 	@Override
 	public void onPreUse(IActiveCharacter character, SkillContext skillContext) {
-		ExtendedSkillInfo info = character.getSkillInfo(this);
+		PlayerSkillContext info = character.getSkillInfo(this);
 
 		if (character.isSilenced() && !getSkillTypes().contains(SkillType.CAN_CAST_WHILE_SILENCED)) {
 			character.sendMessage(Localizations.PLAYER_IS_SILENCED);
@@ -61,7 +57,7 @@ public abstract class ActiveSkill extends AbstractSkill implements IActiveSkill 
 		skillContext.next(character, info, skillContext);
 	}
 
-	protected Set<ActiveSkillPreProcessorWrapper> processItemCost(IActiveCharacter character, ExtendedSkillInfo skillInfo) {
+	protected Set<ActiveSkillPreProcessorWrapper> processItemCost(IActiveCharacter character, PlayerSkillContext skillInfo) {
 		SkillCost invokeCost = skillInfo.getSkillData().getInvokeCost();
 		if (invokeCost == null) {
 			return Collections.emptySet();
@@ -106,10 +102,10 @@ public abstract class ActiveSkill extends AbstractSkill implements IActiveSkill 
 		return Collections.emptySet();
 	}
 
-	public abstract void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier);
+	public abstract void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext modifier);
 
 
-	public SkillContext createSkillExecutorContext(ExtendedSkillInfo esi) {
+	public SkillContext createSkillExecutorContext(PlayerSkillContext esi) {
 		return new SkillContext(this, esi);
 	}
 

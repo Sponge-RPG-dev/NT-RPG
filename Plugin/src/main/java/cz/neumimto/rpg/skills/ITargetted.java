@@ -27,5 +27,5 @@ import org.spongepowered.api.entity.living.Living;
  */
 public interface ITargetted {
 
-	void castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext modifier);
+	void castOn(Living target, IActiveCharacter source, PlayerSkillContext info, SkillContext modifier);
 }

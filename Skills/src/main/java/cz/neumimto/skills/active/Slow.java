@@ -7,13 +7,12 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.common.negative.SlowPotion;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
-import cz.neumimto.rpg.skills.parents.Targetted;
 import cz.neumimto.rpg.skills.mods.SkillContext;
-import cz.neumimto.rpg.utils.Utils;
+import cz.neumimto.rpg.skills.parents.Targetted;
 import org.spongepowered.api.entity.living.Living;
 
 /**
@@ -37,7 +36,7 @@ public class Slow extends Targetted {
     }
 
     @Override
-    public void castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext skillContext) {
+    public void castOn(Living target, IActiveCharacter source, PlayerSkillContext info, SkillContext skillContext) {
         long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
         IEntity iEntity = entityService.get(target);
         int i = skillContext.getIntNodeValue(SkillNodes.AMPLIFIER);

@@ -9,14 +9,10 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.NDamageType;
-import cz.neumimto.rpg.skills.SkillNodes;
-import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.Targetted;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillContext;
 import org.spongepowered.api.entity.living.Living;
 
 
@@ -44,7 +40,7 @@ public class Multibolt extends Targetted {
 	}
 
 	@Override
-	public void castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info, SkillContext skillContext) {
+	public void castOn(Living target, IActiveCharacter source, PlayerSkillContext info, SkillContext skillContext) {
 		float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
 		int timesToHit = skillContext.getIntNodeValue("times-hit");
 		MultiboltModel model = new MultiboltModel(timesToHit, damage);

@@ -5,14 +5,10 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.NDamageType;
-import cz.neumimto.rpg.skills.SkillNodes;
-import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
@@ -38,7 +34,7 @@ public class SkillMegabolt extends ActiveSkill {
 	}
 
 	@Override
-	public void cast(IActiveCharacter iActiveCharacter, ExtendedSkillInfo extendedSkillInfo, SkillContext skillContext) {
+	public void cast(IActiveCharacter iActiveCharacter, PlayerSkillContext playerSkillContext, SkillContext skillContext) {
 		int r = skillContext.getIntNodeValue(SkillNodes.RADIUS);
 		Set<Entity> nearbyEntities = Utils.getNearbyEntities(iActiveCharacter.getPlayer().getLocation(), r);
 		float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
@@ -55,6 +51,6 @@ public class SkillMegabolt extends ActiveSkill {
 				}
 			}
 		}
-		skillContext.next(iActiveCharacter, extendedSkillInfo, skillContext.result(SkillResult.OK));
+		skillContext.next(iActiveCharacter, playerSkillContext, skillContext.result(SkillResult.OK));
 	}
 }

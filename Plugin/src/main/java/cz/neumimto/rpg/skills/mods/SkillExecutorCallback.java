@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.skills.mods;
 
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 
 /**
  * Created by NeumimTo on 27.10.2018.
@@ -15,7 +15,7 @@ public class SkillExecutorCallback extends ActiveSkillPreProcessorWrapper {
     }
 
     @Override
-    public void doNext(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillResult) {
+    public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
 
     }
 }

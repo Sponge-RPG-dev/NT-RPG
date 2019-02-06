@@ -4,7 +4,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.SkillSettings;
@@ -48,7 +48,7 @@ public class DropTNT extends ActiveSkill {
     }
 
     @Override
-    public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillContext) {
+    public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
         Player player = character.getPlayer();
         Location<World> location = player.getLocation();
         World extent = location.getExtent();

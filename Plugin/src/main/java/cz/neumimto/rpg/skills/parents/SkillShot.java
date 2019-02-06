@@ -21,7 +21,7 @@ package cz.neumimto.rpg.skills.parents;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.ProjectileProperties;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.mods.SkillContext;
@@ -42,7 +42,7 @@ public abstract class SkillShot extends ActiveSkill {
 
 
 	@Override
-	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier) {
+	public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext modifier) {
 		Optional<Projectile> projectile = character.getPlayer().launchProjectile(getProjectile(character, info));
 		if (projectile.isPresent()) {
 			ProjectileProperties projectileProperties = getProjectileProperties(character, info, modifier, projectile.get());
@@ -53,10 +53,10 @@ public abstract class SkillShot extends ActiveSkill {
 		modifier.result(SkillResult.CANCELLED);
 	}
 
-	protected abstract ProjectileProperties getProjectileProperties(IActiveCharacter character, ExtendedSkillInfo info, SkillContext modifier,
-			Projectile projectile);
+	protected abstract ProjectileProperties getProjectileProperties(IActiveCharacter character, PlayerSkillContext info, SkillContext modifier,
+                                                                    Projectile projectile);
 
-	protected abstract Class<Projectile> getProjectile(IActiveCharacter character, ExtendedSkillInfo info);
+	protected abstract Class<Projectile> getProjectile(IActiveCharacter character, PlayerSkillContext info);
 
 	protected abstract TriConsumer<DamageEntityEvent, IEntity, IEntity> getHitConsumer();
 

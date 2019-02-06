@@ -27,8 +27,8 @@ import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
 import org.spongepowered.api.data.type.HandType;
 import org.spongepowered.api.entity.EntityType;
@@ -120,23 +120,23 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	IActiveCharacter updateItemRestrictions();
 
-	Map<java.lang.String, ExtendedSkillInfo> getSkills();
+	Map<java.lang.String, PlayerSkillContext> getSkills();
 
-	ExtendedSkillInfo getSkillInfo(ISkill skill);
+	PlayerSkillContext getSkillInfo(ISkill skill);
 
 	boolean hasSkill(java.lang.String name);
 
 	int getLevel();
 
-	ExtendedSkillInfo getSkillInfo(java.lang.String s);
+	PlayerSkillContext getSkillInfo(java.lang.String s);
 
 	boolean isSilenced();
 
-	void addSkill(java.lang.String name, ExtendedSkillInfo info);
+	void addSkill(java.lang.String name, PlayerSkillContext info);
 
-	ExtendedSkillInfo getSkill(java.lang.String skillName);
+	PlayerSkillContext getSkill(java.lang.String skillName);
 
-	void getRemoveAllSkills();
+	void removeAllSkills();
 
 	boolean hasParty();
 

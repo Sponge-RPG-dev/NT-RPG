@@ -31,9 +31,7 @@ import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.PropertyService;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.ItemAccessSkill;
+import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
 import org.jline.utils.Log;
 import org.spongepowered.api.Sponge;
@@ -79,7 +77,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	private transient Party party;
 
 	private transient Map<String, IEffectContainer<Object, IEffect<Object>>> effects = new HashMap<>();
-	private Map<String, ExtendedSkillInfo> skills = new HashMap<>();
+	private IPlayerSkillHandler skills;
 
 	private transient Click click = new Click();
 	private transient Set<RPGItemType> allowedArmorIds = new HashSet<>();
@@ -112,6 +110,7 @@ public class ActiveCharacter implements IActiveCharacter {
 		this.secondaryProperties = new float[PropertyService.LAST_ID];
 		this.equipedArmor = new HashMap<>();
 		this.base = base;
+		this.skills = new PlayerSkillHandlers.SHARED();
 		this.slotsToReinitialize = new ArrayList<>();
 		this.skillTreeViewLocation = new HashMap<>();
 		this.denySlotInteractionArr = new HashSet<>();
@@ -380,9 +379,9 @@ public class ActiveCharacter implements IActiveCharacter {
             mergeWeapons(next.getClassDefinition());
 
             //might be expensive on massive skilltrees, eventually i could cache these types of skill in an extra collection
-            for (ExtendedSkillInfo extendedSkillInfo : getSkills().values()) {
-                if (extendedSkillInfo.getSkill().getType() == EffectSourceType.ITEM_ACCESS_SKILL) {
-                    ItemAccessSkill.ItemAccessSkillData skillData = (ItemAccessSkill.ItemAccessSkillData) extendedSkillInfo.getSkillData();
+            for (PlayerSkillContext playerSkillContext : getSkills().values()) {
+                if (playerSkillContext.getSkill().getType() == EffectSourceType.ITEM_ACCESS_SKILL) {
+                    ItemAccessSkill.ItemAccessSkillData skillData = (ItemAccessSkill.ItemAccessSkillData) playerSkillContext.getSkillData();
                     Map<Integer, Map<ItemType, Set<ConfigRPGItemType>>> items = skillData.getItems();
                     for (Map.Entry<Integer, Map<ItemType, Set<ConfigRPGItemType>>> ent : items.entrySet()) {
                         if (ent.getKey() <= getLevel()) {
@@ -458,8 +457,8 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Map<java.lang.String, ExtendedSkillInfo> getSkills() {
-		return Collections.unmodifiableMap(skills); //lets use wrapper class instaed of guava's immutable
+	public Map<String, PlayerSkillContext> getSkills() {
+		return skills.getSkills();
 	}
 
 	@Override
@@ -468,34 +467,34 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public void addSkill(java.lang.String id, ExtendedSkillInfo info) {
-		skills.put(id, info);
+	public void addSkill(String id, PlayerSkillContext info) {
+		skills.add(id, info);
 	}
 
 	@Override
-	public ExtendedSkillInfo getSkill(java.lang.String id) {
+	public PlayerSkillContext getSkill(String id) {
 		return skills.get(id);
 	}
 
 	@Override
-	public void getRemoveAllSkills() {
+	public void removeAllSkills() {
 		getCharacterBase().getCharacterSkills().clear();
 		skills.clear();
 	}
 
 	@Override
-	public ExtendedSkillInfo getSkillInfo(ISkill skill) {
+	public PlayerSkillContext getSkillInfo(ISkill skill) {
 		return skills.get(skill.getId());
 	}
 
 	@Override
-	public ExtendedSkillInfo getSkillInfo(java.lang.String s) {
+	public PlayerSkillContext getSkillInfo(String s) {
 		return skills.get(s.toLowerCase());
 	}
 
 	@Override
-	public boolean hasSkill(java.lang.String name) {
-		return skills.containsKey(name.toLowerCase());
+	public boolean hasSkill(String name) {
+		return skills.contains(name);
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.effects.common.def;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.Generate;
@@ -9,11 +7,13 @@ import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 28.8.2017.
@@ -105,7 +105,7 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 		notifyIfCancelled = true;
 		boolean exec = false;
 		if (combination != null) {
-			ExtendedSkillInfo skill = NtRpgPlugin.GlobalScope.skillService.invokeSkillByCombo(getCurrent(), character);
+			PlayerSkillContext skill = NtRpgPlugin.GlobalScope.skillService.invokeSkillByCombo(getCurrent(), character);
 			if (skill != null) {
 				Gui.skillExecution(character, skill);
 				combination = null;

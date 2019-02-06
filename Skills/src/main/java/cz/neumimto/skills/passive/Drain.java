@@ -6,7 +6,7 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.PassiveSkill;
@@ -33,7 +33,7 @@ public class Drain extends PassiveSkill {
 	}
 
 	@Override
-	public void applyEffect(ExtendedSkillInfo info, IActiveCharacter character) {
+	public void applyEffect(PlayerSkillContext info, IActiveCharacter character) {
 		int totalLevel = info.getTotalLevel();
 		float floatNodeValue =  info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.AMOUNT, totalLevel);
 		ManaDrainEffect effect = new ManaDrainEffect(character, -1L, floatNodeValue);
@@ -43,7 +43,7 @@ public class Drain extends PassiveSkill {
 	@Override
 	public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
 		super.skillUpgrade(IActiveCharacter, level);
-		ExtendedSkillInfo info = IActiveCharacter.getSkill(getId());
+		PlayerSkillContext info = IActiveCharacter.getSkill(getId());
 		int totalLevel = info.getTotalLevel();
 		float floatNodeValue =  info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.AMOUNT, totalLevel);
 		IEffectContainer<Float, ManaDrainEffect> container = IActiveCharacter.getEffect(ManaDrainEffect.name);

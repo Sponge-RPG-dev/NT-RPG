@@ -60,9 +60,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
-import static cz.neumimto.rpg.Log.error;
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.Log.warn;
+import static cz.neumimto.rpg.Log.*;
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
@@ -137,7 +135,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 		}
 	}
 
-	public void executeSkill(IActiveCharacter character, ExtendedSkillInfo esi, SkillExecutorCallback callback) {
+	public void executeSkill(IActiveCharacter character, PlayerSkillContext esi, SkillExecutorCallback callback) {
 		if (esi == null) {
 			callback.doNext(character, null, new SkillContext().result(SkillResult.WRONG_DATA));
 			return;
@@ -163,11 +161,11 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 		//skill execution sto
 	}
 
-	public ExtendedSkillInfo invokeSkillByCombo(String combo, IActiveCharacter character) {
-		for (ExtendedSkillInfo extendedSkillInfo : character.getSkills().values()) {
-			if (combo.equals(extendedSkillInfo.getSkillData().getCombination())) {
-				executeSkill(character, extendedSkillInfo, new SkillExecutorCallback());
-				return extendedSkillInfo;
+	public PlayerSkillContext invokeSkillByCombo(String combo, IActiveCharacter character) {
+		for (PlayerSkillContext playerSkillContext : character.getSkills().values()) {
+			if (combo.equals(playerSkillContext.getSkillData().getCombination())) {
+				executeSkill(character, playerSkillContext, new SkillExecutorCallback());
+				return playerSkillContext;
 			}
 		}
 		return null;

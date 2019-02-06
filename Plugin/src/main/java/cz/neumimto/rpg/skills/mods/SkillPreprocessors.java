@@ -6,7 +6,7 @@ import cz.neumimto.rpg.events.skills.SkillPrepareEvent;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
 import org.spongepowered.api.Sponge;
@@ -16,7 +16,7 @@ public class SkillPreprocessors {
 
     public static ActiveSkillPreProcessorWrapper NOT_CASTABLE = new ActiveSkillPreProcessorWrapper(PreProcessorTarget.EARLY) {
         @Override
-        public void doNext(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillResult) {
+        public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
             skillResult.endWith(character, info, skillResult.result(SkillResult.FAIL));
         }
     };
@@ -24,7 +24,7 @@ public class SkillPreprocessors {
 
     public static ActiveSkillPreProcessorWrapper SKILL_COST = new ActiveSkillPreProcessorWrapper(PreProcessorTarget.BEFORE) {
         @Override
-        public void doNext(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillResult) {
+        public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
             float requiredMana = skillResult.getFloatNodeValue(SkillNodes.MANACOST);
             float requiredHp = skillResult.getFloatNodeValue(SkillNodes.HPCOST);
             

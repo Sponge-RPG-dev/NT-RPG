@@ -520,24 +520,24 @@ public class NtRpgPlugin {
 					if (skill instanceof ActiveSkill) {
 						Long l = System.nanoTime();
 
-						ExtendedSkillInfo extendedSkillInfo = new ExtendedSkillInfo();
-						extendedSkillInfo.setLevel(level);
+						PlayerSkillContext playerSkillContext = new PlayerSkillContext();
+						playerSkillContext.setLevel(level);
 						SkillData skillData = new SkillData(skill.getId());
 						skillData.setSkillSettings(defaultSkillSettings);
-						extendedSkillInfo.setSkillData(skillData);
-						extendedSkillInfo.setSkill(skill);
+						playerSkillContext.setSkillData(skillData);
+						playerSkillContext.setSkill(skill);
 						ActiveSkill askill = (ActiveSkill) skill;
-						SkillContext skillContext = new SkillContext((IActiveSkill) skill, extendedSkillInfo) {{
+						SkillContext skillContext = new SkillContext((IActiveSkill) skill, playerSkillContext) {{
 							wrappers.add(new SkillExecutorCallback(){
 								@Override
-								public void doNext(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillResult) {
+								public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
 									Long e = System.nanoTime();
 									character.getPlayer().sendMessage(Text.of("Exec Time: " + TimeUnit.MILLISECONDS.convert(e - l, TimeUnit.NANOSECONDS)));
 								}
 							});
 						}};
 						skillContext.sort();
-						askill.cast(character, extendedSkillInfo, skillContext);
+						askill.cast(character, playerSkillContext, skillContext);
 					}
 					return CommandResult.success();
 				})
@@ -887,12 +887,12 @@ public class NtRpgPlugin {
 								build.getCharacters()
 										.stream()
 										.forEach(qw -> {
-											Map<String, ExtendedSkillInfo> skills = qw.getSkills();
-											for (Map.Entry<String, ExtendedSkillInfo> entry : skills.entrySet()) {
-												if (entry.getValue() == ExtendedSkillInfo.Empty) {
+											Map<String, PlayerSkillContext> skills = qw.getSkills();
+											for (Map.Entry<String, PlayerSkillContext> entry : skills.entrySet()) {
+												if (entry.getValue() == PlayerSkillContext.Empty) {
 													continue;
 												}
-												ExtendedSkillInfo value = entry.getValue();
+												PlayerSkillContext value = entry.getValue();
 												Optional<ISkill> byId = skillService.getById(value.getSkill().getId());
 												if (!byId.isPresent()) {
 													throw new RuntimeException("Unabled to reload the skill " + value.getSkill().getId() + ". "
@@ -1353,13 +1353,13 @@ public class NtRpgPlugin {
 				.executor((src, args) -> {
 					IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);
 					args.<ISkill>getOne(Text.of("skill")).ifPresent(iSkill -> {
-						ExtendedSkillInfo info = character.getSkillInfo(iSkill.getId());
-						if (info == ExtendedSkillInfo.Empty || info == null) {
+						PlayerSkillContext info = character.getSkillInfo(iSkill.getId());
+						if (info == PlayerSkillContext.Empty || info == null) {
 							src.sendMessage(Localizations.CHARACTER_DOES_NOT_HAVE_SKILL.toText(Arg.arg("skill", iSkill.getName())));
 						}
 						GlobalScope.skillService.executeSkill(character, info, new SkillExecutorCallback() {
 							@Override
-							public void doNext(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillResult) {
+							public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
 								switch (skillResult.getResult()) {
 									case ON_COOLDOWN:
 										break;

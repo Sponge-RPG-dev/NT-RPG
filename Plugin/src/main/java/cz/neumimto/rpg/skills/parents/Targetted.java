@@ -18,12 +18,12 @@ package cz.neumimto.rpg.skills.parents;
 
 import cz.neumimto.rpg.events.skills.SkillFindTargetEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ITargetted;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.tree.SkillType;
 import cz.neumimto.rpg.skills.mods.SkillContext;
+import cz.neumimto.rpg.skills.tree.SkillType;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.entity.living.Living;
 
@@ -37,7 +37,7 @@ public abstract class Targetted extends ActiveSkill implements ITargetted {
 	}
 
 	@Override
-	public void cast(IActiveCharacter character, ExtendedSkillInfo info, SkillContext skillContext) {
+	public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
 		int range = skillContext.getIntNodeValue(SkillNodes.RANGE);
 		Living l = getTargettedEntity(character, range);
 		if (l == null) {

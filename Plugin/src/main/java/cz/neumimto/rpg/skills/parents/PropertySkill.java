@@ -11,7 +11,7 @@ import cz.neumimto.rpg.gui.GuiHelper;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.mods.SkillContext;
@@ -72,7 +72,7 @@ public class PropertySkill extends AbstractSkill {
 	}
 
 	private void add(IActiveCharacter character, int i, BiFunction<Integer, Integer, Boolean> fc) {
-		ExtendedSkillInfo skill = character.getSkill(getId());
+		PlayerSkillContext skill = character.getSkill(getId());
 		PropertySkillData skillData = (PropertySkillData) skill.getSkillData();
 		for (Wrapper property : skillData.properties) {
 			if (fc.apply(property.level, skill.getTotalLevel())) {

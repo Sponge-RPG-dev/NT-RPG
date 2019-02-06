@@ -8,14 +8,10 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.NDamageType;
-import cz.neumimto.rpg.skills.SkillNodes;
-import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
@@ -46,7 +42,7 @@ public class Wrestle extends ActiveSkill {
 	}
 
 	@Override
-	public void cast(IActiveCharacter source, ExtendedSkillInfo info, SkillContext skillContext) {
+	public void cast(IActiveCharacter source, PlayerSkillContext info, SkillContext skillContext) {
 		int intNodeValue = skillContext.getIntNodeValue(SkillNodes.RADIUS);
 		float floatNodeValue = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
 		long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);

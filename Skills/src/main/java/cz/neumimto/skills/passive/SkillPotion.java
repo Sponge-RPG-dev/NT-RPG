@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import cz.neumimto.effects.positive.PotionEffect;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.PassiveSkill;
 import org.spongepowered.api.Sponge;
@@ -47,7 +47,7 @@ public class SkillPotion extends PassiveSkill {
 
 
 	@Override
-	public void applyEffect(ExtendedSkillInfo info, IActiveCharacter character) {
+	public void applyEffect(PlayerSkillContext info, IActiveCharacter character) {
 		PotionEffect pe = (PotionEffect) character.getEffect(PotionEffect.name);
 		if (pe == null) {
 			String potions = info.getSkillData().getSkillSettings().getObjectNode("potions");

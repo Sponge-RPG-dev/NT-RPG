@@ -53,8 +53,8 @@ import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
 import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.tree.SkillTree;
@@ -566,8 +566,8 @@ public class CharacterService {
 	}
 
 	private void initSkills(ActiveCharacter activeCharacter) {
-		for (ExtendedSkillInfo extendedSkillInfo : activeCharacter.getSkills().values()) {
-			extendedSkillInfo.getSkill().onCharacterInit(activeCharacter, extendedSkillInfo.getLevel());
+		for (PlayerSkillContext playerSkillContext : activeCharacter.getSkills().values()) {
+			playerSkillContext.getSkill().onCharacterInit(activeCharacter, playerSkillContext.getLevel());
 		}
 	}
 
@@ -576,22 +576,22 @@ public class CharacterService {
 		character.getCooldowns();
 
 
-		Map<java.lang.String, Integer> skills = new HashMap<>();
+		Map<String, Integer> skills = new HashMap<>();
 		Set<CharacterSkill> characterSkills = characterBase.getCharacterSkills();
 		characterSkills.forEach(characterSkill -> skills.put(characterSkill.getCatalogId().toLowerCase(), characterSkill.getLevel()));
-		Map<java.lang.String, Long> cooldowns = characterBase.getCharacterCooldowns();
+		Map<String, Long> cooldowns = characterBase.getCharacterCooldowns();
 
 		long l = System.currentTimeMillis();
 		cooldowns.entrySet().removeIf(next -> next.getValue() <= l);
 
 		characterBase.getCharacterCooldowns().clear();
-		for (Map.Entry<java.lang.String, Integer> stringIntegerEntry : skills.entrySet()) {
-			ExtendedSkillInfo info = new ExtendedSkillInfo();
+		for (Map.Entry<String, Integer> stringIntegerEntry : skills.entrySet()) {
 			Optional<ISkill> skill = skillService.getById(stringIntegerEntry.getKey());
 			if (skill.isPresent()) {
 				ISkill sk = skill.get();
+				PlayerSkillContext info = new PlayerSkillContext(, sk);
 				info.setLevel(stringIntegerEntry.getValue());
-				info.setSkill(sk);
+
 				SkillData info1 = character.getPrimaryClass().getClassDefinition().getSkillTree().getSkills().get(skill.get().getId());
 				if (info1 != null) {
 
@@ -695,12 +695,12 @@ public class CharacterService {
 		if (cc.getSkillPoints() < 1) {
 			return Localizations.NO_SKILLPOINTS.toText(arg("skill", skill.getName()));
 		}
-		ExtendedSkillInfo extendedSkillInfo = character.getSkillInfo(skill);
+		PlayerSkillContext playerSkillContext = character.getSkillInfo(skill);
 
-		if (extendedSkillInfo == null) {
+		if (playerSkillContext == null) {
 			return Localizations.NOT_LEARNED_SKILL.toText(arg("skill", skill.getName()));
 		}
-		int minlevel = extendedSkillInfo.getLevel() + extendedSkillInfo.getSkillData().getMinPlayerLevel();
+		int minlevel = playerSkillContext.getLevel() + playerSkillContext.getSkillData().getMinPlayerLevel();
 
 		if (minlevel > character.getLevel()) {
 			Map<java.lang.String, Object> map = new HashMap<>();
@@ -708,30 +708,30 @@ public class CharacterService {
 			map.put("level", minlevel);
 			return Localizations.SKILL_REQUIRES_HIGHER_LEVEL.toText(arg(map));
 		}
-		if (extendedSkillInfo.getLevel() + 1 > extendedSkillInfo.getSkillData().getMaxSkillLevel()) {
+		if (playerSkillContext.getLevel() + 1 > playerSkillContext.getSkillData().getMaxSkillLevel()) {
 			Map<java.lang.String, Object> map = new HashMap<>();
 			map.put("skill", skill.getName());
-			map.put("level", extendedSkillInfo.getLevel());
+			map.put("level", playerSkillContext.getLevel());
 			return Localizations.SKILL_IS_ON_MAX_LEVEL.toText(arg(map));
 		}
 
-		if (extendedSkillInfo.getLevel() * extendedSkillInfo.getSkillData().getLevelGap() > character.getLevel()) {
+		if (playerSkillContext.getLevel() * playerSkillContext.getSkillData().getLevelGap() > character.getLevel()) {
 			Map<java.lang.String, Object> map = new HashMap<>();
 			map.put("skill", skill.getName());
-			map.put("level", extendedSkillInfo.getLevel() * extendedSkillInfo.getSkillData().getLevelGap());
+			map.put("level", playerSkillContext.getLevel() * playerSkillContext.getSkillData().getLevelGap());
 			return Localizations.INSUFFICIENT_LEVEL_GAP.toText(arg(map));
 		}
-		SkillUpgradeEvent event = new SkillUpgradeEvent(character, skill, extendedSkillInfo.getLevel() + 1);
+		SkillUpgradeEvent event = new SkillUpgradeEvent(character, skill, playerSkillContext.getLevel() + 1);
 		game.getEventManager().post(event);
 		if (event.isCancelled()) {
 			return event.getMessage();
 		}
-		extendedSkillInfo.setLevel(event.getLevel());
+		playerSkillContext.setLevel(event.getLevel());
 		int s = cc.getSkillPoints();
 		cc.setSkillPoints(s - 1);
 		cc.setUsedSkillPoints(s + 1);
 		CharacterSkill characterSkill = character.getCharacterBase().getCharacterSkill(skill);
-		characterSkill.setLevel(extendedSkillInfo.getLevel());
+		characterSkill.setLevel(playerSkillContext.getLevel());
 		skill.skillUpgrade(character, event.getLevel());
 
 		Map<java.lang.String, Object> map = new HashMap<>();
@@ -820,9 +820,9 @@ public class CharacterService {
 		clazz.setSkillPoints(avalaibleSkillpoints - 1);
 		clazz.setUsedSkillPoints(avalaibleSkillpoints + 1);
 
-		ExtendedSkillInfo einfo = new ExtendedSkillInfo();
+		PlayerSkillContext einfo = new PlayerSkillContext(classDef, skill);
 		einfo.setLevel(1);
-		einfo.setSkill(skill);
+
 		einfo.setSkillData(skillTree.getSkills().get(skill.getId()));
 		character.addSkill(skill.getId(), einfo);
 
@@ -849,14 +849,14 @@ public class CharacterService {
 	 * 0 - ok
 	 */
 	public int refundSkill(IActiveCharacter character, ClassDefinition classDefinition, ISkill skill) {
-		ExtendedSkillInfo skillInfo = character.getSkillInfo(skill);
+		PlayerSkillContext skillInfo = character.getSkillInfo(skill);
 		if (skillInfo == null) {
 			return 1;
 		}
 		SkillTree skillTree = classDefinition.getSkillTree();
 		SkillData info = skillTree.getSkills().get(skill.getId());
 		for (SkillData info1 : info.getDepending()) {
-			ExtendedSkillInfo e = character.getSkill(info1.getSkill().getId());
+			PlayerSkillContext e = character.getSkill(info1.getSkill().getId());
 			if (e != null) {
 				return 2;
 			}
@@ -893,7 +893,7 @@ public class CharacterService {
 			characterBase.setCanResetskills(false);
 			characterBase.setLastReset(new Date(System.currentTimeMillis()));
 			characterBase.getCharacterSkills().clear();
-			character.getRemoveAllSkills();
+			character.removeAllSkills();
 			characterBase.getCharacterCooldowns().clear();
 			Set<CharacterClass> characterClasses = character.getCharacterBase().getCharacterClasses();
 			character.getCharacterBase().getCharacterSkills().clear();
