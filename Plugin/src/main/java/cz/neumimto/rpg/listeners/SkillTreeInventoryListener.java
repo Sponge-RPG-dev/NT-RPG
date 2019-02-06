@@ -82,9 +82,8 @@ public class SkillTreeInventoryListener {
 						if (viewModel.getInteractiveMode() == SkillTreeViewModel.InteractiveMode.FAST) {
 
 							ISkill iSkill = skillService.getById(node).get();
-							//todo
-							ClassDefinition classDefinition = character.getPrimaryClass().getClassDefinition();
-							SkillTree tree = classDefinition.getSkillTree();
+
+							ClassDefinition classDefinition = viewModel.getViewedClass();
 							if (character.getSkill(iSkill.getId()) == null) {
 								Text data = characterService.characterLearnskill(character, classDefinition, iSkill);
 								player.sendMessage(data);

@@ -49,7 +49,12 @@ public interface IActiveCharacter extends IEntity<Player> {
 	Map<String, PlayerClassData> getClasses();
 
 	default PlayerClassData getClassByType(String type) {
-		return getClasses().get(type);
+		for (PlayerClassData value : getClasses().values()) {
+			if (value.getClassDefinition().getClassType().equals(type)) {
+				return value;
+			}
+		}
+		return null;
 	}
 
 	Party getParty();

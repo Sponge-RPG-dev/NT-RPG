@@ -339,7 +339,8 @@ public class GuiHelper {
 				.append(Text.builder(String.valueOf(character.getLevel())).style(TextStyles.BOLD).build())
 				.build());
 
-		int sp = character.getCharacterBase().getCharacterClass(character.getPrimaryClass().getClassDefinition()).getSkillPoints();
+		ClassDefinition viewedClass = character.getLastTimeInvokedSkillTreeView().getViewedClass();
+		int sp = character.getCharacterBase().getCharacterClass(viewedClass).getSkillPoints();
 
 		lore.add(Text.builder("SP: ").color(TextColors.GREEN)
 				.append(Text.builder(String.valueOf(sp)).style(TextStyles.BOLD).build())
