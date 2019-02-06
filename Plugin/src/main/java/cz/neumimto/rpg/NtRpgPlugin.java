@@ -520,7 +520,7 @@ public class NtRpgPlugin {
 					if (skill instanceof ActiveSkill) {
 						Long l = System.nanoTime();
 
-						PlayerSkillContext playerSkillContext = new PlayerSkillContext();
+						PlayerSkillContext playerSkillContext = new PlayerSkillContext(null,skill);
 						playerSkillContext.setLevel(level);
 						SkillData skillData = new SkillData(skill.getId());
 						skillData.setSkillSettings(defaultSkillSettings);
