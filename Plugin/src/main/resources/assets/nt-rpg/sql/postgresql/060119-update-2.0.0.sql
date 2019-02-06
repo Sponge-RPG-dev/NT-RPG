@@ -10,3 +10,10 @@ alter table rpg_character_class drop column race;
 --@note:Add Level Column
 --@id:add-level-column
 alter table rpg_character_class add column level INT;
+
+--@author:NeumimTo
+--@date:06.02.2019 23:00
+--@note:Move cooldowns column to rpg_character_skill
+--@id:move-cooldowns-column
+alter table rpg_character_base drop column cooldowns;
+alter table rpg_character_skill add column cooldowns BIGINT;

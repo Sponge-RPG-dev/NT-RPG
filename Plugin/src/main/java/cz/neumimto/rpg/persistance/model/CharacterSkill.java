@@ -3,14 +3,7 @@ package cz.neumimto.rpg.persistance.model;
 import cz.neumimto.rpg.players.CharacterBase;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * Created by ja on 8.10.2016.
@@ -36,6 +29,9 @@ public class CharacterSkill {
 
 	@Column(name = "catalog_id")
 	private String catalogId;
+
+	@Column(name = "cooldown")
+	private Long cooldown;
 
 	public Long getId() {
 		return skillId;
@@ -75,5 +71,13 @@ public class CharacterSkill {
 
 	public void setCatalogId(String catalogId) {
 		this.catalogId = catalogId;
+	}
+
+	public Long getCooldown() {
+		return cooldown;
+	}
+
+	public void setCooldown(Long cooldown) {
+		this.cooldown = cooldown;
 	}
 }

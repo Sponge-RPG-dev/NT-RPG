@@ -84,7 +84,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	private transient Map<ItemType, RPGItemWrapper> allowedWeapons = new HashMap<>();
 	private transient Map<EntityType, Double> projectileDamage = new HashMap<>();
 	private transient Set<RPGItemType> allowedOffHandWeapons = new HashSet<>();
-
+	private Map<String, Long> cooldowns = new HashMap<>();
 	private transient WeakReference<Party> pendingPartyInvite = new WeakReference<Party>(null);
 	private transient double weaponDamage;
 	private transient double armorvalue;
@@ -271,23 +271,23 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Map<java.lang.String, Integer> getTransientAttributes() {
+	public Map<String, Integer> getTransientAttributes() {
 		return transientAttributes;
 	}
 
 	@Override
-	public Integer getAttributeValue(java.lang.String name) {
+	public Integer getAttributeValue(String name) {
 		return base.getAttributes().get(name) + getTransientAttributes().get(name);
 	}
 
 	@Override
-	public Map<java.lang.String, Long> getCooldowns() {
-		return getCharacterBase().getCharacterCooldowns();
+	public Map<String, Long> getCooldowns() {
+		return cooldowns;
 	}
 
 	@Override
-	public boolean hasCooldown(java.lang.String thing) {
-		return getCharacterBase().getCharacterCooldowns().containsKey(thing);
+	public boolean hasCooldown(String thing) {
+		return cooldowns.containsKey(thing);
 	}
 
 	private void mergeWeapons(ClassDefinition g) {

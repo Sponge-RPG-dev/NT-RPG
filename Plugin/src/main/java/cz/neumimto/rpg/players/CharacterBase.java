@@ -20,7 +20,6 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.TimestampEntity;
 import cz.neumimto.rpg.persistance.converters.EquipedSlot2Json;
-import cz.neumimto.rpg.persistance.converters.MapSL2Json;
 import cz.neumimto.rpg.persistance.converters.UUID2String;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
@@ -80,10 +79,6 @@ public class CharacterBase extends TimestampEntity {
 	@Column(name = "last_reset_time")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastReset;
-
-	@Column(name = "character_cooldowns", columnDefinition = "TEXT")
-	@Convert(converter = MapSL2Json.class)
-	private Map<String, Long> characterCooldowns = new HashMap<>();
 
 	@OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "characterBase")
 	private Set<CharacterSkill> characterSkills = new HashSet<>();
@@ -238,14 +233,6 @@ public class CharacterBase extends TimestampEntity {
 
 	public void setAttributePoints(Integer attributePoints) {
 		this.attributePoints = attributePoints;
-	}
-
-	public Map<String, Long> getCharacterCooldowns() {
-		return characterCooldowns;
-	}
-
-	public void setCharacterCooldowns(Map<String, Long> characterCooldowns) {
-		this.characterCooldowns = characterCooldowns;
 	}
 
 	public Set<CharacterSkill> getCharacterSkills() {

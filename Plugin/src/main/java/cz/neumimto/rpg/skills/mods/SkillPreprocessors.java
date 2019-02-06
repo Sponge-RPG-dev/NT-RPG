@@ -68,8 +68,12 @@ public class SkillPreprocessors {
                                 newCd = eventt.getCooldown() * NtRpgPlugin.GlobalScope.characterService.getCharacterProperty(character, DefaultProperties.cooldown_reduce);
                                 character.getMana().setValue(character.getMana().getValue() - eventt.getManacost());
                                 long cd = (long) newCd;
-                                character.getCooldowns().put(info.getSkill().getName(), cd + System.currentTimeMillis());
+                                cd = cd + System.currentTimeMillis();
+                                if (newCd > 59999L) {
+                                    character.getCharacterBase().getCharacterSkill(info.getSkill()).setCooldown(cd);
+                                }
 
+                                character.getCooldowns().put(info.getSkill().getName(), cd);
                                 Gui.displayMana(character);
                                 //skillResult.next(character, info, skillResult.result(result));
                                 return;
