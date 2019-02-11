@@ -178,7 +178,11 @@ public class CharacterService {
             return;
         }
         if (dataPreparationStage.stage == DataPreparationStage.Stage.NO_ACTION) {
-
+            if (!dataPreparationStage.characters.isEmpty()) {
+                Gui.invokeCharacterMenu(targetEntity, dataPreparationStage.characters);
+            } else {
+                //todo message
+            }
         }
     }
 
