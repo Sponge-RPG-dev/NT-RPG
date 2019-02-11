@@ -151,12 +151,11 @@ public class CharacterService {
 
                     Optional<Player> popt = game.getServer().getPlayer(event.getPlayer());
                     if (popt.isPresent()) {
-                        if (!event.getCharacterBases().isEmpty()) {
-                            setActiveCharacter(event.getPlayer(), character);
-                            dataPreparationStageMap.remove(id);
-                        }
+                        setActiveCharacter(event.getPlayer(), character);
+                        assignPlayerToCharacter(popt.get());
+                        dataPreparationStageMap.remove(id);
                     } else {
-                        dataPreparationStageMap.put(id, new DataPreparationStage(DataPreparationStage.Stage.PLAYER_NOT_YET_READY));
+                        dataPreparationStageMap.put(id, new DataPreparationStage(DataPreparationStage.Stage.PLAYER_NOT_YET_READY, character));
                         Log.info("Data for Player " + event.getPlayer() + " prepared but player instance not ready yet, will attempt to initialize later");
                     }
                 }).submit(plugin);
@@ -164,6 +163,23 @@ public class CharacterService {
                 dataPreparationStageMap.put(id, new DataPreparationStage(DataPreparationStage.Stage.NO_ACTION, playerCharacters));
             }
         }, NtRpgPlugin.asyncExecutor);
+    }
+
+    public void checkPlayerDataStatus(Player targetEntity) {
+        UUID uniqueId = targetEntity.getUniqueId();
+        if (characters.containsKey(uniqueId)) {
+            return;
+        }
+        DataPreparationStage dataPreparationStage = dataPreparationStageMap.get(uniqueId);
+        if (dataPreparationStage.stage == DataPreparationStage.Stage.PLAYER_NOT_YET_READY) {
+            setActiveCharacter(uniqueId, dataPreparationStage.character);
+            assignPlayerToCharacter(targetEntity);
+            dataPreparationStageMap.remove(uniqueId);
+            return;
+        }
+        if (dataPreparationStage.stage == DataPreparationStage.Stage.NO_ACTION) {
+
+        }
     }
 
     /**
@@ -195,7 +211,6 @@ public class CharacterService {
         if (character.isStub()) {
             return false;
         }
-        character.setPlayer(pl);
         if (character.getCharacterBase().getHealthScale() != null) {
             pl.offer(Keys.HEALTH_SCALE, character.getCharacterBase().getHealthScale());
         }
@@ -384,7 +399,6 @@ public class CharacterService {
 
     }
 
-
     public void addDefaultEffects(IActiveCharacter character) {
         effectService.addEffect(new CombatEffect(character), character, InternalEffectSourceProvider.INSTANCE);
     }
@@ -397,6 +411,7 @@ public class CharacterService {
      * @param character
      * @param configClass
      */
+
 	/*
 	public void addPlayerGroup(IActiveCharacter character, ClassDefinition configClass) {
 		if (character.isStub()) {

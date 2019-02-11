@@ -63,7 +63,7 @@ public class EntityLifecycleListener {
 	@Listener
 	public void onPlayerLogin(ClientConnectionEvent.Join event) {
 		//  IActiveCharacter character = characterService.getCharacter(event.getTargetEntity().getUniqueId());
-		characterService.putPlayerToAssignQueue(event.getTargetEntity());
+		characterService.checkPlayerDataStatus(event.getTargetEntity());
 	}
 
 	@Listener
