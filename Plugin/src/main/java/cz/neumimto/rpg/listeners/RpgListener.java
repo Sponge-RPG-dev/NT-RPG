@@ -24,13 +24,10 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.events.CharacterChangeGroupEvent;
 import cz.neumimto.rpg.events.PlayerGuiModInitEvent;
-import cz.neumimto.rpg.events.character.PlayerDataPreloadComplete;
 import cz.neumimto.rpg.events.party.PartyJoinEvent;
-import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
@@ -39,7 +36,6 @@ import org.spongepowered.api.event.filter.IsCancelled;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.util.Tristate;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
@@ -62,27 +58,6 @@ public class RpgListener {
 
 	@Inject
 	private NtRpgPlugin plugin;
-
-	@Listener
-	public void onPlayerDataPreloadComplete(PlayerDataPreloadComplete event) {
-		Optional<Player> retardedOptional = game.getServer().getPlayer(event.getPlayer());
-		if (retardedOptional.isPresent()) {
-			Player player = retardedOptional.get();
-			if (!event.getCharacterBases().isEmpty()) {
-				if (pluginConfig.PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR || event.getCharacterBases().size() == 1) {
-					NtRpgPlugin.asyncExecutor.execute(() -> {
-						final IActiveCharacter character =
-								characterService.buildActiveCharacterAsynchronously(player, event.getCharacterBases().get(0));
-						Sponge.getScheduler().createTaskBuilder().execute(() -> {
-							characterService.setActiveCharacter(event.getPlayer(), character);
-						}).submit(plugin);
-					});
-				} else {
-					Gui.invokeCharacterMenu(player, event.getCharacterBases());
-				}
-			}
-		}
-	}
 
 	@Listener
 	public void onGuiInit(PlayerGuiModInitEvent event) {

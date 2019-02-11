@@ -4,7 +4,6 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.ResourceLoader;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.entities.EntityService;
@@ -31,6 +30,8 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 3.1.2016.
@@ -62,7 +63,7 @@ public class EntityLifecycleListener {
 	@Listener
 	public void onPlayerLogin(ClientConnectionEvent.Join event) {
 		//  IActiveCharacter character = characterService.getCharacter(event.getTargetEntity().getUniqueId());
-		characterService.assignPlayerToCharacter(event.getTargetEntity());
+		characterService.putPlayerToAssignQueue(event.getTargetEntity());
 	}
 
 	@Listener

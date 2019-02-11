@@ -136,7 +136,7 @@ public class ClassDefinition  implements IEffectSourceProvider {
 
 	@Setting("Dependencies")
 	@CustomAdapter(ClassDependencyGraphAdapter.class)
-	private ClassDependencyGraph classDependencyGraph = new ClassDependencyGraph();
+	private DependencyGraph classDefinitionDependencyGraph = new DependencyGraph();
 
 	@Setting("CustomLore")
 	@AsCollectionImpl(ArrayList.class)
@@ -279,8 +279,8 @@ public class ClassDefinition  implements IEffectSourceProvider {
 		this.experiences = experiences;
 	}
 
-	public ClassDependencyGraph getClassDependencyGraph() {
-		return classDependencyGraph;
+	public DependencyGraph getClassDependencyGraph() {
+		return classDefinitionDependencyGraph;
 	}
 
 	public boolean hasExperienceSource(ExperienceSource source) {

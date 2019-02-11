@@ -104,8 +104,8 @@ public class ActiveCharacter implements IActiveCharacter {
 	private CustomItem mainHand;
 	private PlayerClassData primaryClass;
 
-	public ActiveCharacter(Player pl, CharacterBase base) {
-		this.pl = pl.getUniqueId();
+	public ActiveCharacter(UUID uuid, CharacterBase base) {
+		this.pl = uuid;
 		this.primaryProperties = new float[PropertyService.LAST_ID];
 		this.secondaryProperties = new float[PropertyService.LAST_ID];
 		this.equipedArmor = new HashMap<>();

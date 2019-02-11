@@ -66,6 +66,7 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -107,36 +108,62 @@ public class CharacterService {
     @Inject
     private PropertyService propertyService;
 
-    private Map<UUID, NPlayer> playerWrappers = new ConcurrentHashMap<>();
-
     private Map<UUID, IActiveCharacter> characters = new HashMap<>();
 
+    private Map<UUID, DataPreparationStage> dataPreparationStageMap = new ConcurrentHashMap<>();
 
     @Inject
     private EffectService effectService;
 
 
-    public void loadPlayerData(UUID id, java.lang.String playerName) {
+    public void loadPlayerData(UUID id, String playerName) {
+        dataPreparationStageMap.put(id, new DataPreparationStage(DataPreparationStage.Stage.LOADING));
+
         characters.put(id, buildDummyChar(id));
-        game.getScheduler().createTaskBuilder().name("PlayerDataLoad-" + id).async().execute(() -> {
+        CompletableFuture.runAsync(() -> {
             info("Loading player - " + id);
             long k = System.currentTimeMillis();
             List<CharacterBase> playerCharacters = playerDao.getPlayersCharacters(id);
-            info("Finished loading of player " + id + ", loaded " + playerCharacters.size() + " characters   [" + (System.currentTimeMillis() - k)
-                    + "]ms");
+            k = System.currentTimeMillis() - k;
+            info("Finished loading of player data" + id + ", loaded " + playerCharacters.size() + " characters   [" + k + "]ms");
+
             if (playerCharacters.isEmpty() && pluginConfig.CREATE_FIRST_CHAR_AFTER_LOGIN) {
-                CharacterBase characterBase = createCharacterBase(playerName, id);
-                createAndUpdate(characterBase);
-                playerCharacters = Collections.singletonList(characterBase);
+                CharacterBase cb = createCharacterBase(playerName, id);
+                createAndUpdate(cb);
+
+                playerCharacters = Collections.singletonList(cb);
                 info("Automatically created character for a player " + id + ", " + playerName);
             }
-            final List<CharacterBase> playerChars = playerCharacters;
-            game.getScheduler().createTaskBuilder().name("Callback-PlayerDataLoad" + id).execute(() -> {
-                PlayerDataPreloadComplete event = new PlayerDataPreloadComplete(id, playerChars);
-                game.getEventManager().post(event);
+            IActiveCharacter icharacter = null;
+            if (pluginConfig.PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR || playerCharacters.size() == 1) {
+                icharacter = createActiveCharacter(id, playerCharacters.get(0));
+                dataPreparationStageMap.put(id, new DataPreparationStage(DataPreparationStage.Stage.TO_BE_ASSIGNED));
+            }
+            final IActiveCharacter character = icharacter;
 
-            }).submit(plugin);
-        }).submit(plugin);
+            if (character != null) {
+                info("Finished initializing of player character " + id + ", [" + (System.currentTimeMillis() - k) + "]ms");
+                final List<CharacterBase> playerChars = playerCharacters;
+
+                game.getScheduler().createTaskBuilder().name("Callback-PlayerDataLoad" + id).execute(() -> {
+                    PlayerDataPreloadComplete event = new PlayerDataPreloadComplete(id, playerChars);
+                    game.getEventManager().post(event);
+
+                    Optional<Player> popt = game.getServer().getPlayer(event.getPlayer());
+                    if (popt.isPresent()) {
+                        if (!event.getCharacterBases().isEmpty()) {
+                            setActiveCharacter(event.getPlayer(), character);
+                            dataPreparationStageMap.remove(id);
+                        }
+                    } else {
+                        dataPreparationStageMap.put(id, new DataPreparationStage(DataPreparationStage.Stage.PLAYER_NOT_YET_READY));
+                        Log.info("Data for Player " + event.getPlayer() + " prepared but player instance not ready yet, will attempt to initialize later");
+                    }
+                }).submit(plugin);
+            } else {
+                dataPreparationStageMap.put(id, new DataPreparationStage(DataPreparationStage.Stage.NO_ACTION, playerCharacters));
+            }
+        }, NtRpgPlugin.asyncExecutor);
     }
 
     /**
@@ -227,10 +254,6 @@ public class CharacterService {
     public void createAndUpdate(CharacterBase base) {
         base.onCreate();
         playerDao.createAndUpdate(base);
-    }
-
-    public NPlayer getPlayerWrapper(UUID uuid) {
-        return playerWrappers.get(uuid);
     }
 
     /**
@@ -365,7 +388,6 @@ public class CharacterService {
     public void addDefaultEffects(IActiveCharacter character) {
         effectService.addEffect(new CombatEffect(character), character, InternalEffectSourceProvider.INSTANCE);
     }
-
     /*	/**
      * Does nothing if character is PreloadChar.
      * If group is null nothing is changed
@@ -429,6 +451,7 @@ public class CharacterService {
 
 	}
 */
+
     public void removeGroupEffects(IActiveCharacter character, ClassDefinition p) {
         if (p == null) {
             return;
@@ -514,14 +537,12 @@ public class CharacterService {
         return new PreloadCharacter(uuid);
     }
 
-    private Runnable updateAll(final IActiveCharacter activeCharacter) {
-        return () -> {
-            updateArmorRestrictions(activeCharacter);
-            updateWeaponRestrictions(activeCharacter);
-            updateWalkSpeed(activeCharacter);
-            updateMaxHealth(activeCharacter);
-            updateMaxMana(activeCharacter);
-        };
+    private void updateAll(final IActiveCharacter activeCharacter) {
+        updateArmorRestrictions(activeCharacter);
+        updateWeaponRestrictions(activeCharacter);
+        updateWalkSpeed(activeCharacter);
+        updateMaxHealth(activeCharacter);
+        updateMaxMana(activeCharacter);
     }
 
     public void recalculateProperties(IActiveCharacter character) {
@@ -579,7 +600,7 @@ public class CharacterService {
                 String name = fromClass.getName();
                 ClassDefinition classDefinitionByName = groupService.getClassDefinitionByName(name);
                 if (classDefinitionByName == null) {
-                    Log.warn("Character Base [" + characterBase.getId() + "] CharacterSkill [" + characterSkill.getId() + "] CharacterClass [" + fromClass.getId() + "] Unknown class name ["+fromClass.getName()+"]");
+                    Log.warn("Character Base [" + characterBase.getId() + "] CharacterSkill [" + characterSkill.getId() + "] CharacterClass [" + fromClass.getId() + "] Unknown class name [" + fromClass.getName() + "]");
                     continue;
                 }
 
@@ -609,7 +630,7 @@ public class CharacterService {
      * @param characterBase
      * @return
      */
-    public ActiveCharacter buildActiveCharacterAsynchronously(Player player, CharacterBase characterBase) {
+    public ActiveCharacter createActiveCharacter(UUID player, CharacterBase characterBase) {
         characterBase = playerDao.fetchCharacterBase(characterBase);
         ActiveCharacter activeCharacter = new ActiveCharacter(player, characterBase);
 
@@ -629,13 +650,7 @@ public class CharacterService {
             resolveSkills(characterBase, activeCharacter);
             initSkills(activeCharacter);
         }
-
-        game.getScheduler().createTaskBuilder().name("FetchCharBaseDataCallback-" + player.getUniqueId())
-                .execute(updateAll(activeCharacter)
-                ).submit(plugin);
-
         return activeCharacter;
-
     }
 
     /**
@@ -1084,7 +1099,7 @@ public class CharacterService {
 
         inventoryService.initializeCharacterInventory(character);
         Sponge.getScheduler().createTaskBuilder().execute(() -> {
-            updateAll(character).run();
+            updateAll(character);
             Double d = character.getHealth().getMaxValue();
             character.getEntity().offer(Keys.HEALTH, d);
         }).delay(1, TimeUnit.MILLISECONDS).submit(plugin);
