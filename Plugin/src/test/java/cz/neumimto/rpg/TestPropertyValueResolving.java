@@ -16,7 +16,6 @@ import org.junit.BeforeClass;
 import org.mockito.Mockito;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.text.Text;
 
@@ -65,10 +64,8 @@ public class TestPropertyValueResolving {
 
         RPGItemType item = i.getByItemTypeAndName(ItemTypes.DIAMOND_AXE, (Text) null);
 
-        Player player = Mockito.mock(Player.class);
         UUID uuid = UUID.randomUUID();
-        Mockito.when(player.getUniqueId()).thenReturn(uuid);
-        IActiveCharacter character = new ActiveCharacter(player, new CharacterBase());
+        IActiveCharacter character = new ActiveCharacter(uuid, new CharacterBase());
 
         characterService.initActiveCharacter(character);
 

@@ -32,7 +32,7 @@ public class TestUtils {
 		game = buildGameImpl();
 	}
 
-	public static IActiveCharacter buildCharacter(Player player, CharacterBase characterBase) {
+	public static IActiveCharacter buildCharacter(UUID player, CharacterBase characterBase) {
 		ActiveCharacter character = new ActiveCharacter(player, characterBase);
 		return character;
 	}

@@ -175,9 +175,7 @@ public class CharacterService {
             setActiveCharacter(uniqueId, dataPreparationStage.character);
             assignPlayerToCharacter(targetEntity);
             dataPreparationStageMap.remove(uniqueId);
-            return;
-        }
-        if (dataPreparationStage.stage == DataPreparationStage.Stage.NO_ACTION) {
+        } else if (dataPreparationStage.stage == DataPreparationStage.Stage.NO_ACTION) {
             if (!dataPreparationStage.characters.isEmpty()) {
                 Gui.invokeCharacterMenu(targetEntity, dataPreparationStage.characters);
             } else {
