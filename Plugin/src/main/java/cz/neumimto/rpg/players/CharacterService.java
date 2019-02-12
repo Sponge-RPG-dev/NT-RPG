@@ -569,7 +569,8 @@ public class CharacterService {
         float pval = 0;
         float sval = 0;
         for (int i = 0; i < primary.length; i++) {
-
+            pval = 0;
+            sval = 0;
             for (PlayerClassData cdata : character.getClasses().values()) {
                 ClassDefinition classDefinition = cdata.getClassDefinition();
                 float[] propBonus = classDefinition.getPropBonus();
@@ -578,8 +579,8 @@ public class CharacterService {
                 sval += propLevelBonus[i] * cdata.getLevel();
             }
 
-            if (pval == 0 && defaults.containsKey(i)) {
-                pval = defaults.get(i);
+            if (defaults.containsKey(i)) {
+                pval += defaults.get(i);
             }
             primary[i] = pval;
             secondary[i] = sval;
@@ -662,11 +663,10 @@ public class CharacterService {
             PlayerClassData playerClassData = new PlayerClassData(classDef, characterClass);
             activeCharacter.addClass(playerClassData);
             groupService.addAllPermissions(activeCharacter, playerClassData);
-
-            recalculateProperties(activeCharacter);
-            resolveSkills(characterBase, activeCharacter);
-            initSkills(activeCharacter);
         }
+        resolveSkills(characterBase, activeCharacter);
+        recalculateProperties(activeCharacter);
+        initSkills(activeCharacter);
         return activeCharacter;
     }
 
