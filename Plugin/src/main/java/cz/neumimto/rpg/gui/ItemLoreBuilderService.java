@@ -221,7 +221,7 @@ public class ItemLoreBuilderService {
 			for (Map.Entry<String, Integer> stringIntegerEntry : r.entrySet()) {
 				Integer value = stringIntegerEntry.getValue();
 				String group = stringIntegerEntry.getKey();
-				ClassDefinition byName = NtRpgPlugin.GlobalScope.groupService.getClassDefinitionByName(group);
+				ClassDefinition byName = NtRpgPlugin.GlobalScope.classService.getClassDefinitionByName(group);
 				if (byName != null) {
 					if (value > 0) {
 						t.add(

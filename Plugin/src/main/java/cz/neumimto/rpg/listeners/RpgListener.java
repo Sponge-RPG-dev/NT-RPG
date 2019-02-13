@@ -19,7 +19,7 @@
 package cz.neumimto.rpg.listeners;
 
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.rpg.GroupService;
+import cz.neumimto.rpg.ClassService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.events.CharacterChangeGroupEvent;
@@ -54,7 +54,7 @@ public class RpgListener {
 	private Game game;
 
 	@Inject
-	private GroupService groupService;
+	private ClassService classService;
 
 	@Inject
 	private NtRpgPlugin plugin;
@@ -83,7 +83,7 @@ public class RpgListener {
 	@Listener
 	@IsCancelled(Tristate.FALSE)
 	public void onChangeGroup(CharacterChangeGroupEvent event, @First(typeFilter = IActiveCharacter.class) IActiveCharacter character) {
-		groupService.removePermissions(character, groupService.getPermissionsToRemove(character, event.getOld()));
-	//	groupService.addAllPermissions(character, event.getNew());
+		classService.removePermissions(character, classService.getPermissionsToRemove(character, event.getOld()));
+	//	classService.addAllPermissions(character, event.getNew());
 	}
 }

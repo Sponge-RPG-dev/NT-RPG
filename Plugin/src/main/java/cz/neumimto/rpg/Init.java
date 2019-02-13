@@ -31,7 +31,8 @@ public class Init {
 	@Inject ParticleDecorator particleDecorator;
 	@Inject ExperienceService experienceService;
 	@Inject CustomItemFactory customItemFactory;
-	@Inject GroupService groupService;
+	@Inject
+    ClassService classService;
 	@Inject
     ClassDefinitionDao classDefinitionDao;
 	@Inject RWService rwService;
@@ -51,7 +52,7 @@ public class Init {
 		propertyService.loadMaximalServerPropertyValues();
 		jsLoader.initEngine();
 
-		groupService.registerPlaceholders();
+		classService.registerPlaceholders();
 		rwService.load();
 		classDefinitionDao.loadClassDefs();
 

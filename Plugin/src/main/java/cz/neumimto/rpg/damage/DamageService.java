@@ -21,7 +21,7 @@ package cz.neumimto.rpg.damage;
 import com.google.common.collect.Lists;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.GroupService;
+import cz.neumimto.rpg.ClassService;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
@@ -42,14 +42,7 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.OptionalDouble;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.function.BiFunction;
 
 /**
@@ -64,7 +57,7 @@ public class DamageService {
 	@Inject
 	private CharacterService characterService;
 	@Inject
-	private GroupService groupService;
+	private ClassService classService;
 	@Inject
 	private InventoryService inventoryService;
 	@Inject
@@ -181,7 +174,7 @@ public class DamageService {
 	}
 
 	public void createDamageToColorMapping() {
-		Collection<ClassDefinition> classes = groupService.getClassDefinitions();
+		Collection<ClassDefinition> classes = classService.getClassDefinitions();
 		Set<Double> list = new TreeSet<>();
 
 		for (ClassDefinition aClass : classes) {

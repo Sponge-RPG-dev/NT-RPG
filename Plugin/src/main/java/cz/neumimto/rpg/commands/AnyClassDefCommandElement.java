@@ -43,7 +43,7 @@ public class AnyClassDefCommandElement extends CommandElement {
 	@Override
 	protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
 		String clazz = args.next();
-		ClassDefinition configClass = NtRpgPlugin.GlobalScope.groupService.getClassDefinitionByName(clazz);
+		ClassDefinition configClass = NtRpgPlugin.GlobalScope.classService.getClassDefinitionByName(clazz);
 		if (configClass == null) {
 			throw args.createError(Localizations.UNKNOWN_CLASS.toText(Arg.arg("class", clazz)));
 		}
@@ -79,7 +79,7 @@ public class AnyClassDefCommandElement extends CommandElement {
 	public List<String> complete(CommandSource src, CommandArgs args, CommandContext context) {
 		if (validate) {
 			//todo
-			return NtRpgPlugin.GlobalScope.groupService.getClassDefinitions().stream()
+			return NtRpgPlugin.GlobalScope.classService.getClassDefinitions().stream()
 					.map(ClassDefinition::getName)
 					.filter(a -> src.hasPermission("ntrpg.groups." + a.toLowerCase()))
 					.collect(Collectors.toList());

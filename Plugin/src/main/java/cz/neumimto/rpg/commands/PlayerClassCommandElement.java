@@ -24,6 +24,6 @@ public class PlayerClassCommandElement extends PatternMatchingCommandElement {
 
     @Override
     protected Object getValue(String choice) throws IllegalArgumentException {
-        return NtRpgPlugin.GlobalScope.groupService.getClassDefinitionByName(choice);
+        return NtRpgPlugin.GlobalScope.classService.getClassDefinitionByName(choice);
     }
 }

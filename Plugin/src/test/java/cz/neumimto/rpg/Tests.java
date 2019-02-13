@@ -34,7 +34,7 @@ public class Tests {
 
         @Test
         public void testPermissionsManagement() {
-            GroupService groupService = new GroupService();
+            ClassService classService = new ClassService();
             ActiveCharacter character = mock(ActiveCharacter.class);
             when(character.getLevel()).thenReturn(2);
             ClassDefinition race = new ClassDefinition("a");
@@ -80,7 +80,7 @@ public class Tests {
                 }});
             }});
 
-            Set<String> permissionsToRemove = groupService.getPermissionsToRemove(character, nClass.getClassDefinition());
+            Set<String> permissionsToRemove = classService.getPermissionsToRemove(character, nClass.getClassDefinition());
             Assert.assertFalse(permissionsToRemove.contains("common2"));
             Assert.assertFalse(permissionsToRemove.contains("common1"));
             Assert.assertTrue(permissionsToRemove.contains("class1"));

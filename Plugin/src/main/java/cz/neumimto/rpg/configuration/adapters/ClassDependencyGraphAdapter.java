@@ -26,7 +26,7 @@ public class ClassDependencyGraphAdapter implements TypeSerializer<DependencyGra
     }
 
     private Collection<? extends ClassDefinition> toClass(List<String> list) {
-        return list.stream().map(NtRpgPlugin.GlobalScope.groupService::getClassDefinitionByName).collect(Collectors.toSet());
+        return list.stream().map(NtRpgPlugin.GlobalScope.classService::getClassDefinitionByName).collect(Collectors.toSet());
     }
 
     @Override

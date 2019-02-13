@@ -21,7 +21,7 @@ package cz.neumimto.rpg.skills;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.GroupService;
+import cz.neumimto.rpg.ClassService;
 import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.gui.Gui;
@@ -75,7 +75,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 	private SkillTreeDao skillTreeDao;
 
 	@Inject
-	private GroupService groupService;
+	private ClassService classService;
 
 	@Inject
 	private JSLoader jsLoader;

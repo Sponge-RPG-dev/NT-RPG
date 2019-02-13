@@ -18,7 +18,7 @@ public class ClassDefCommandElement extends PatternMatchingCommandElement {
 
 	@Override
 	protected Iterable<String> getChoices(CommandSource source) {
-		return NtRpgPlugin.GlobalScope.groupService.getClassDefinitions().stream()
+		return NtRpgPlugin.GlobalScope.classService.getClassDefinitions().stream()
 				.filter(a -> source.hasPermission("ntrpg.groups." + a.getName().toLowerCase()))
 				.map(a -> a.getName())
 				.collect(Collectors.toList());
@@ -27,6 +27,6 @@ public class ClassDefCommandElement extends PatternMatchingCommandElement {
 
 	@Override
 	protected Object getValue(String choice) throws IllegalArgumentException {
-		return NtRpgPlugin.GlobalScope.groupService.getClassDefinitionByName(choice);
+		return NtRpgPlugin.GlobalScope.classService.getClassDefinitionByName(choice);
 	}
 }

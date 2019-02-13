@@ -20,7 +20,7 @@ package cz.neumimto.rpg.commands;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.localization.Arg;
-import cz.neumimto.rpg.GroupService;
+import cz.neumimto.rpg.ClassService;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.gui.Gui;
@@ -41,7 +41,7 @@ import org.spongepowered.api.entity.living.player.Player;
 public class CommandSkilltree extends CommandBase {
 
 	@Inject
-	private GroupService groupService;
+	private ClassService classService;
 
 	@Inject
 	private CharacterService characterService;
@@ -66,7 +66,7 @@ public class CommandSkilltree extends CommandBase {
 		if ("".equals(s.trim())) {
 			configClass = character.getPrimaryClass().getClassDefinition();
 		} else {
-			configClass = groupService.getClassDefinitionByName(s);
+			configClass = classService.getClassDefinitionByName(s);
 		}
 		if (configClass == null) {
 			Gui.sendMessage(character, Localizations.NON_EXISTING_GROUP, Arg.EMPTY);

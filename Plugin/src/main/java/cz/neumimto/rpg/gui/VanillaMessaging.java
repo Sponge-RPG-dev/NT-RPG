@@ -23,7 +23,7 @@ import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
-import cz.neumimto.rpg.GroupService;
+import cz.neumimto.rpg.ClassService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.commands.InfoCommand;
@@ -101,7 +101,7 @@ public class VanillaMessaging implements IPlayerMessage {
     @Inject
     private Game game;
     @Inject
-    private GroupService groupService;
+    private ClassService classService;
     @Inject
     private EffectService effectService;
     @Inject
@@ -282,7 +282,7 @@ public class VanillaMessaging implements IPlayerMessage {
             List<Text> content = new ArrayList<>();
             builder.linesPerPage(10);
             builder.padding(Text.builder("=").color(TextColors.DARK_GRAY).build());
-            GroupService s = IoC.get().build(GroupService.class);
+            ClassService s = IoC.get().build(ClassService.class);
             String current = player.getName();
 
             list.forEach(a -> {
@@ -798,7 +798,7 @@ public class VanillaMessaging implements IPlayerMessage {
                 .build(plugin);
         GuiHelper.makeBorder(i, classTypeDefinition.getDyeColor());
 
-        groupService.getClassDefinitions()
+        classService.getClassDefinitions()
                 .stream().filter(a -> a.getClassType().equalsIgnoreCase(def)).forEach(a ->
                     i.offer(GuiHelper.toItemStack(a))
         );

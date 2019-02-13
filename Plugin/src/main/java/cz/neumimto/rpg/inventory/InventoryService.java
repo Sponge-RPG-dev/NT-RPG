@@ -25,8 +25,8 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.ClassService;
 import cz.neumimto.rpg.Console;
-import cz.neumimto.rpg.GroupService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.Localizations;
@@ -122,7 +122,7 @@ public class InventoryService {
 	private PropertyService propertyService;
 
 	@Inject
-	private GroupService groupService;
+	private ClassService classService;
 
 	@Inject
 	private NtRpgPlugin plugin;

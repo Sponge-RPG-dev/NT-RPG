@@ -39,7 +39,7 @@ import java.util.Set;
  * Created by NeumimTo on 28.12.2014.
  */
 @Singleton
-public class GroupService {
+public class ClassService {
 
 	private static final String CLASS_ACCESS_PERM = "ntrpg.class.";
 
@@ -52,6 +52,9 @@ public class GroupService {
 
 
 	public ClassDefinition getClassDefinitionByName(String name) {
+		if (name == null) {
+			return null;
+		}
 		return classDefinitionDao.getClasses().get(name.toLowerCase());
 	}
 

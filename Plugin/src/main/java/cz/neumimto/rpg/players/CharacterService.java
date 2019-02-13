@@ -97,7 +97,7 @@ public class CharacterService {
     private InventoryService inventoryService;
 
     @Inject
-    private GroupService groupService;
+    private ClassService classService;
 
     @Inject
     private EntityService entityService;
@@ -616,7 +616,7 @@ public class CharacterService {
                 ISkill iSkill = byId.get();
                 CharacterClass fromClass = characterSkill.getFromClass();
                 String name = fromClass.getName();
-                ClassDefinition classDefinitionByName = groupService.getClassDefinitionByName(name);
+                ClassDefinition classDefinitionByName = classService.getClassDefinitionByName(name);
                 if (classDefinitionByName == null) {
                     Log.warn("Character Base [" + characterBase.getId() + "] CharacterSkill [" + characterSkill.getId() + "] CharacterClass [" + fromClass.getId() + "] Unknown class name [" + fromClass.getName() + "]");
                     continue;
@@ -655,14 +655,14 @@ public class CharacterService {
         Set<CharacterClass> characterClasses = characterBase.getCharacterClasses();
 
         for (CharacterClass characterClass : characterClasses) {
-            ClassDefinition classDef = groupService.getClassDefinitionByName(characterClass.getName());
+            ClassDefinition classDef = classService.getClassDefinitionByName(characterClass.getName());
             if (classDef == null) {
                 warn(" Character " + characterBase.getUuid() + " had persisted class " + characterClass.getName() + " but the class is missing class definition configuration");
                 continue;
             }
             PlayerClassData playerClassData = new PlayerClassData(classDef, characterClass);
             activeCharacter.addClass(playerClassData);
-            groupService.addAllPermissions(activeCharacter, playerClassData);
+            classService.addAllPermissions(activeCharacter, playerClassData);
         }
         resolveSkills(characterBase, activeCharacter);
         recalculateProperties(activeCharacter);
@@ -1036,7 +1036,7 @@ public class CharacterService {
             }
 
 
-            groupService.addPermissions(character, aClass);
+            classService.addPermissions(character, aClass);
             aClass.incrementLevel();
             if (!aClass.takesExp()) {
                 break;

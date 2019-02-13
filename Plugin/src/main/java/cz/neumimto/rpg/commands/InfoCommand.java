@@ -19,7 +19,7 @@
 package cz.neumimto.rpg.commands;
 
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.rpg.GroupService;
+import cz.neumimto.rpg.ClassService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.CommandLocalization;
@@ -67,7 +67,7 @@ public class InfoCommand extends CommandBase {
 	private NtRpgPlugin plugin;
 
 	@Inject
-	private GroupService groupService;
+	private ClassService classService;
 
 	@Inject
 	private RWService rwService;
@@ -144,13 +144,13 @@ public class InfoCommand extends CommandBase {
 				}
 			}
 		} else if (args[0].equalsIgnoreCase("attributes-initial")) {
-			ClassDefinition byName = groupService.getClassDefinitionByName(args[1]);
+			ClassDefinition byName = classService.getClassDefinitionByName(args[1]);
 			if (byName == null) {
 				return CommandResult.empty();
 			}
 			Gui.displayInitialAttributes(byName, (Player) commandSource);
 		} else if (args[0].equalsIgnoreCase("properties-initial")) {
-			ClassDefinition byName = groupService.getClassDefinitionByName(args[1]);
+			ClassDefinition byName = classService.getClassDefinitionByName(args[1]);
 			if (byName == null) {
 				return CommandResult.empty();
 			}
@@ -168,7 +168,7 @@ public class InfoCommand extends CommandBase {
 			IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
 			SkillTree skillTree = character.getPrimaryClass().getClassDefinition().getSkillTree();
 			if (args.length == 2) {
-				for (ClassDefinition configClass : groupService.getClassDefinitions()) {
+				for (ClassDefinition configClass : classService.getClassDefinitions()) {
 					if (configClass.getName().equalsIgnoreCase(args[1])) {
 						skillTree = configClass.getSkillTree();
 					}

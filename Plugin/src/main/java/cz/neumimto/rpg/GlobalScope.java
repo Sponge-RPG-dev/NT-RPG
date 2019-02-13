@@ -45,7 +45,7 @@ public class GlobalScope {
 	public EffectService effectService;
 
 	@Inject
-	public GroupService groupService;
+	public ClassService classService;
 
 	@Inject
 	public SkillService skillService;
