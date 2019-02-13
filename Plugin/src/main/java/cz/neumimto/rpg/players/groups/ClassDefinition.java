@@ -52,6 +52,9 @@ public class ClassDefinition  implements IEffectSourceProvider {
 	@Setting("Description")
 	private String description;
 
+	@Setting("WelcomeMessage")
+	private Text welcomeMessage;
+
 	@Setting("PreferredTextColor")
 	private TextColor preferedColor;
 
@@ -314,6 +317,10 @@ public class ClassDefinition  implements IEffectSourceProvider {
 
 	public ILevelProgression getLevelProgression() {
 		return levels;
+	}
+
+	public Text getWelcomeMessage() {
+		return welcomeMessage;
 	}
 
 	@Override

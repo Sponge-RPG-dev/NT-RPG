@@ -1524,7 +1524,7 @@ public class NtRpgPlugin {
 				.description(TextSerializers.FORMATTING_CODE
 						.deserialize(CommandLocalization.COMMAND_CLASSES_DESC))
 				.arguments(new ClassTypeCommandElement(Text.of("type")))
-				.permission("ntrpg.groups.list.classes")
+				.permission("ntrpg.classes.list")
 				.executor((src, args) -> {
 					args.<String>getOne(Text.of("type")).ifPresent(o -> {
 						IActiveCharacter character = GlobalScope.characterService.getCharacter((Player) src);

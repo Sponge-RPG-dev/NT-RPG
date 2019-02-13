@@ -255,7 +255,7 @@ public class VanillaMessaging implements IPlayerMessage {
         ItemStack of = GuiHelper.itemStack(ItemTypes.DIAMOND);
         of.offer(new InventoryCommandItemMenuData("character set class " + cc.getName()));
         of.offer(Keys.DISPLAY_NAME, Localizations.CONFIRM.toText());
-        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 0))).offer(of);
+        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 1))).offer(of);
 
         ItemStack tree = GuiHelper.itemStack(ItemTypes.SAPLING);
         tree.offer(Keys.DISPLAY_NAME, Localizations.SKILLTREE.toText());
@@ -305,7 +305,7 @@ public class VanillaMessaging implements IPlayerMessage {
 
                 if (cc != null) {
                     b.append(Text.builder(a.getPrimaryClassName()).color(TextColors.AQUA).append(Text.of(" ")).build());
-                    //todo
+
                    /* level = s.getLevel(cc, a.getPrimaryClassExp());
                     m = cc.getMaxLevel();
 */

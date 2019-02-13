@@ -16,9 +16,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
@@ -52,12 +50,19 @@ public class AnyClassDefCommandElement extends CommandElement {
 		if (validate && pluginConfig.RESPECT_CLASS_SELECTION_ORDER) {
 			Set<String> classTypes = pluginConfig.CLASS_TYPES.keySet();
 
+			Iterator<String> ctype = new LinkedList<>(classTypes).descendingIterator();
 
 			boolean depOk = false;
-			for (String classType : classTypes) {
+			int it = 0;
+			while (ctype.hasNext()) {
+				it++;
+				String classType = ctype.next();
 				PlayerClassData classByType = character.getClassByType(classType);
 				if (classByType == null) {
-				 	throw args.createError(Localizations.CLASS_TYPE_NOT_SELECTED.toText());
+					if (it != 1) {
+						throw args.createError(Text.of("Class type of " + classType + " not selected"));
+					}
+					depOk = true;
 				}
 				if (!depOk) {
 					ClassDefinition classDefinition = classByType.getClassDefinition();
@@ -68,8 +73,8 @@ public class AnyClassDefCommandElement extends CommandElement {
 				}
 			}
 		}
-		if (!source.hasPermission("ntrpg.groups." + configClass.getName().toLowerCase())) {
-			throw args.createError(TextHelper.parse("&CNo permission ntrpg.groups.%class%",
+		if (!source.hasPermission("ntrpg.class." + configClass.getName().toLowerCase())) {
+			throw args.createError(TextHelper.parse("&CNo permission ntrpg.class.%class%",
 					Arg.arg("class", configClass.getName().toLowerCase())));
 		}
 		return configClass;
@@ -81,7 +86,7 @@ public class AnyClassDefCommandElement extends CommandElement {
 			//todo
 			return NtRpgPlugin.GlobalScope.classService.getClassDefinitions().stream()
 					.map(ClassDefinition::getName)
-					.filter(a -> src.hasPermission("ntrpg.groups." + a.toLowerCase()))
+					.filter(a -> src.hasPermission("ntrpg.class." + a.toLowerCase()))
 					.collect(Collectors.toList());
 		}
 		return Collections.EMPTY_LIST;

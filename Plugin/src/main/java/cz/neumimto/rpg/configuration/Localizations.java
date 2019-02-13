@@ -83,10 +83,6 @@ public class Localizations {
 
 	public static LocalizableParametrizedText UNKNOWN_CLASS;
 
-	public static LocalizableParametrizedText PLAYER_CHOOSED_RACE;
-
-	public static LocalizableParametrizedText UNKNOWN_RACE;
-
 	public static LocalizableParametrizedText ALREADY_CUURENT_CHARACTER;
 
 	public static LocalizableParametrizedText NO_TARGET;

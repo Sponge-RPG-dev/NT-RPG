@@ -235,9 +235,5 @@ public interface IActiveCharacter extends IEntity<Player> {
 		getPlayer().sendMessage(t);
 	}
 
-	default void updatePropertyArrays() {
-
-	}
-
 	void addClass(PlayerClassData playerClassData);
 }

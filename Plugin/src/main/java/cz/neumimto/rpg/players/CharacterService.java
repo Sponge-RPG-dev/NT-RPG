@@ -404,70 +404,6 @@ public class CharacterService {
     public void addDefaultEffects(IActiveCharacter character) {
         effectService.addEffect(new CombatEffect(character), character, InternalEffectSourceProvider.INSTANCE);
     }
-    /*	/**
-     * Does nothing if character is PreloadChar.
-     * If group is null nothing is changed
-     * character is saved
-     * Updates item restriction
-     *
-     * @param character
-     * @param configClass
-     */
-
-	/*
-	public void addPlayerGroup(IActiveCharacter character, ClassDefinition configClass) {
-		if (character.isStub()) {
-			return;
-		}
-		info("Initializing character " + character.getCharacterBase().getId());
-		boolean k = false;
-		Player player = character.getPlayer();
-		if (configClass != null) {
-			PlayerClassData classByType = character.getClassByType(configClass.getClassType());
-			ClassDefinition originClass = classByType == null ? null : classByType.getClassDefinition();
-			CharacterChangeGroupEvent e = new CharacterChangeGroupEvent(character, configClass, originClass);
-
-			game.getEventManager().post(e);
-			if (!e.isCancelled()) {
-				k = true;
-				info("Processing class change - " + e);
-				Map<String, String> args = new HashMap<>();
-				args.put("player", player.getName());
-				args.put("uuid", player.getUniqueId().toString());
-				args.put("class", configClass.getName());
-				if (character.hasClass(configClass)) {
-					player.sendMessage(Localizations.ALREADY_HAS_THIS_CLASS.toText());
-					return;
-				}
-
-				if (originClass != null && originClass.getExitCommands() != null) {
-					Utils.executeCommandBatch(args, originClass.getExitCommands());
-				}
-				removeGroupEffects(character, originClass);
-
-				character.addClass(new PlayerClassData(configClass, ));
-				applyGroupEffects(character, configClass);
-
-				args.put("class", configClass.getName());
-				if (configClass.getEnterCommands() != null) {
-					Utils.executeCommandBatch(args, configClass.getEnterCommands());
-				}
-				player.sendMessage(Localizations.PLAYER_CHOOSED_CLASS.toText(arg("class", configClass.getName())));
-			}
-		}
-
-		if (k) {
-			putInSaveQueue(character.getCharacterBase());
-			recalculateProperties(character);
-			updateArmorRestrictions(character);
-			updateWeaponRestrictions(character);
-			updateWalkSpeed(character);
-			updateMaxHealth(character);
-			updateMaxMana(character);
-		}
-
-	}
-*/
 
     public void removeGroupEffects(IActiveCharacter character, ClassDefinition p) {
         if (p == null) {
@@ -1190,8 +1126,7 @@ public class CharacterService {
 
     public void addNewClass(IActiveCharacter character, ClassDefinition klass) {
         Map<String, PlayerClassData> classes = character.getClasses();
-        String classType = klass.getClassType();
-        if (classes.containsKey(classType)) {
+        if (classes.containsKey(klass.getName())) {
             throw new IllegalStateException("Not possible to change " + klass.getClassType());
         }
 
@@ -1200,7 +1135,7 @@ public class CharacterService {
 
         for (CharacterClass characterClass : characterClasses) {
             if (characterClass.getName().equalsIgnoreCase(klass.getName())) {
-                throw new IllegalStateException("Not possible to change " + klass.getClassType());
+                throw new IllegalStateException("Not possible to change " + klass.getClassType() + ". Already has class of same type");
             }
         }
 
@@ -1211,14 +1146,35 @@ public class CharacterService {
         cc.setSkillPoints(0);
         cc.setUsedSkillPoints(0);
 
-        //   fixPropertyValues(nclass.getPropBonus(), 1);
-        //  fixPropertyLevelValues(getPrimaryClass().getClassDefinition().getPropLevelBonus(), 1);
+        characterBase.getCharacterClasses().add(cc);
+        putInSaveQueue(characterBase);
 
-        character.addClass(new PlayerClassData(klass, cc));
-        character.updatePropertyArrays();
-        character.updateItemRestrictions();
+        PlayerClassData playerClassData = new PlayerClassData(klass, cc);
+        character.addClass(playerClassData);
 
 
+        scheduleNextTick(() -> {
+            recalculateProperties(character);
+            classService.addPermissions(character, playerClassData);
+            scheduleNextTick(() -> {
+                recalculateSecondaryPropertiesOnly(character);
+                applyGroupEffects(character, klass);
+                scheduleNextTick(() -> {
+                    updateAll(character);
+                    character.updateItemRestrictions();
+                    Text message = klass.getWelcomeMessage();
+                    if (message == null) {
+                        message = Localizations.PLAYER_CHOOSED_CLASS.toText();
+                    }
+                    character.sendMessage(message);
+                });
+            });
+        });
+    }
+
+    private void scheduleNextTick(Runnable r) {
+        Sponge.getScheduler().createTaskBuilder().delay(1, TimeUnit.MILLISECONDS)
+                .execute(r::run).submit(NtRpgPlugin.GlobalScope.plugin);
     }
 }
 
