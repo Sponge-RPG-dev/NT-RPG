@@ -69,4 +69,8 @@ public class PlayerClassData {
 		setLevel(getLevel()+1);
 		characterClass.setExperiences(0);
 	}
+
+	public CharacterClass getCharacterClass() {
+		return characterClass;
+	}
 }

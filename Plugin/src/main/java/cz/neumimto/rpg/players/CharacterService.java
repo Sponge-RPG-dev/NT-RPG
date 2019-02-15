@@ -46,6 +46,7 @@ import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.players.leveling.SkillTreeType;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
@@ -636,23 +637,12 @@ public class CharacterService {
         }).submit(plugin);
     }
 
-    /**
-     * @param character
-     * @param skill
-     * @return 1 if character has no skillpoints,
-     * 2 if character has not learned the skill yet
-     * 3 if skill requires higher level. The formula is MinPlayerLevel + skillLevel > characterlevel
-     * (this restricts abusing when player might rush certain skills in a skilltree and spending all skillpoints on a single skill).
-     * 4 if skill is on max level
-     * 5 - if event is cancelled
-     * 0 - ok
-     */
-    public Text upgradeSkill(IActiveCharacter character, ClassDefinition classDef, ISkill skill) {
+
+    public ActionResult canUpgradeSkill(IActiveCharacter character, ClassDefinition classDef, ISkill skill) {
         CharacterClass cc = null;
-        Collection<PlayerClassData> classes = character.getClasses().values();
 
         if (!character.hasClass(classDef)) {
-
+            return ActionResult.withErrorMessage(Localizations.NO_ACCESS_TO_SKILL.toText());
         }
 
         Map<String, SkillData> skills = classDef.getSkillTree().getSkills();
@@ -662,12 +652,12 @@ public class CharacterService {
 
 
         if (cc.getSkillPoints() < 1) {
-            return Localizations.NO_SKILLPOINTS.toText(arg("skill", skill.getName()));
+            return ActionResult.withErrorMessage(Localizations.NO_SKILLPOINTS.toText(arg("skill", skill.getName())));
         }
         PlayerSkillContext playerSkillContext = character.getSkillInfo(skill);
 
         if (playerSkillContext == null) {
-            return Localizations.NOT_LEARNED_SKILL.toText(arg("skill", skill.getName()));
+            return ActionResult.withErrorMessage(Localizations.NOT_LEARNED_SKILL.toText(arg("skill", skill.getName())));
         }
         int minlevel = playerSkillContext.getLevel() + playerSkillContext.getSkillData().getMinPlayerLevel();
 
@@ -675,45 +665,48 @@ public class CharacterService {
             Map<java.lang.String, Object> map = new HashMap<>();
             map.put("skill", skill.getName());
             map.put("level", minlevel);
-            return Localizations.SKILL_REQUIRES_HIGHER_LEVEL.toText(arg(map));
+            return ActionResult.withErrorMessage(Localizations.SKILL_REQUIRES_HIGHER_LEVEL.toText(arg(map)));
         }
         if (playerSkillContext.getLevel() + 1 > playerSkillContext.getSkillData().getMaxSkillLevel()) {
             Map<java.lang.String, Object> map = new HashMap<>();
             map.put("skill", skill.getName());
             map.put("level", playerSkillContext.getLevel());
-            return Localizations.SKILL_IS_ON_MAX_LEVEL.toText(arg(map));
+            return ActionResult.withErrorMessage(Localizations.SKILL_IS_ON_MAX_LEVEL.toText(arg(map)));
         }
 
         if (playerSkillContext.getLevel() * playerSkillContext.getSkillData().getLevelGap() > character.getLevel()) {
             Map<java.lang.String, Object> map = new HashMap<>();
             map.put("skill", skill.getName());
             map.put("level", playerSkillContext.getLevel() * playerSkillContext.getSkillData().getLevelGap());
-            return Localizations.INSUFFICIENT_LEVEL_GAP.toText(arg(map));
+            return ActionResult.withErrorMessage(Localizations.INSUFFICIENT_LEVEL_GAP.toText(arg(map)));
         }
         SkillUpgradeEvent event = new SkillUpgradeEvent(character, skill, playerSkillContext.getLevel() + 1);
         game.getEventManager().post(event);
         if (event.isCancelled()) {
-            return event.getMessage();
+            return ActionResult.withErrorMessage(event.getMessage());
         }
-        playerSkillContext.setLevel(event.getLevel());
+
+        return ActionResult.ok();
+    }
+
+    public void upgradeSkill(IActiveCharacter character, PlayerSkillContext playerSkillContext, ISkill skill) {
+        ClassDefinition classDefinition = playerSkillContext.getClassDefinition();
+        CharacterClass cc = character.getCharacterBase().getCharacterClass(classDefinition);
         int s = cc.getSkillPoints();
+        playerSkillContext.setLevel(playerSkillContext.getLevel() + 1);
         cc.setSkillPoints(s - 1);
         cc.setUsedSkillPoints(s + 1);
         CharacterSkill characterSkill = character.getCharacterBase().getCharacterSkill(skill);
         characterSkill.setLevel(playerSkillContext.getLevel());
-        skill.skillUpgrade(character, event.getLevel());
 
-        Map<java.lang.String, Object> map = new HashMap<>();
-        map.put("skill", event.getSkill().getName());
-        map.put("level", event.getLevel());
-        return Localizations.SKILL_UPGRADED.toText(arg(map));
+        skill.skillUpgrade(character, playerSkillContext.getLevel());
     }
 
     /**
      * @param character
      * @param skill
      */
-    public Text characterLearnskill(IActiveCharacter character, ClassDefinition classDef, ISkill skill) {
+    public ActionResult canLearnSkill(IActiveCharacter character, ClassDefinition classDef, ISkill skill) {
         PlayerClassData nClass = null;
         SkillTree skillTree = classDef.getSkillTree();
         for (PlayerClassData playerClassData : character.getClasses().values()) {
@@ -724,7 +717,7 @@ public class CharacterService {
         }
 
         if (nClass == null) {
-            return Localizations.NO_ACCESS_TO_SKILL.toText();
+            return ActionResult.withErrorMessage(Localizations.NO_ACCESS_TO_SKILL.toText());
         }
         int avalaibleSkillpoints = 0;
         CharacterClass clazz = character.getCharacterBase().getCharacterClass(nClass.getClassDefinition());
@@ -734,17 +727,17 @@ public class CharacterService {
         //todo fetch from db
         avalaibleSkillpoints = clazz.getSkillPoints();
         if (avalaibleSkillpoints < 1) {
-            return Localizations.NO_SKILLPOINTS.toText(arg("skill", skill.getName()));
+            return ActionResult.withErrorMessage(Localizations.NO_SKILLPOINTS.toText(arg("skill", skill.getName())));
         }
         SkillData info = skillTree.getSkillById(skill.getId());
         if (info == null) {
-            return Localizations.SKILL_NOT_IN_A_TREE.toText(arg("skill", skill.getName()));
+            return ActionResult.withErrorMessage(Localizations.SKILL_NOT_IN_A_TREE.toText(arg("skill", skill.getName())));
         }
         if (character.getLevel() < info.getMinPlayerLevel()) {
             Map<java.lang.String, Object> map = new HashMap<>();
             map.put("skill", skill.getName());
             map.put("level", info.getMinPlayerLevel());
-            return Localizations.SKILL_REQUIRES_HIGHER_LEVEL.toText(arg(map));
+            return ActionResult.withErrorMessage(Localizations.SKILL_REQUIRES_HIGHER_LEVEL.toText(arg(map)));
         }
         for (SkillData skillData : info.getHardDepends()) {
             if (!character.hasSkill(skillData.getSkillId())) {
@@ -752,7 +745,7 @@ public class CharacterService {
                 map.put("skill", skill.getName());
                 map.put("hard", info.getHardDepends().stream().map(SkillData::getSkillId).collect(Collectors.joining(", ")));
                 map.put("soft", info.getSoftDepends().stream().map(SkillData::getSkillId).collect(Collectors.joining(", ")));
-                return Localizations.MISSING_SKILL_DEPENDENCIES.toText(arg(map));
+                return ActionResult.withErrorMessage(Localizations.MISSING_SKILL_DEPENDENCIES.toText(arg(map)));
             }
         }
         boolean hasSkill = info.getSoftDepends().isEmpty();
@@ -767,44 +760,26 @@ public class CharacterService {
             map.put("skill", skill.getName());
             map.put("hard", info.getHardDepends().stream().map(SkillData::getSkillId).collect(Collectors.joining(", ")));
             map.put("soft", info.getSoftDepends().stream().map(SkillData::getSkillId).collect(Collectors.joining(", ")));
-            return Localizations.MISSING_SKILL_DEPENDENCIES.toText(arg(map));
+            return ActionResult.withErrorMessage(Localizations.MISSING_SKILL_DEPENDENCIES.toText(arg(map)));
         }
         for (SkillData skillData : info.getConflicts()) {
             if (character.hasSkill(skillData.getSkillId())) {
                 Map<java.lang.String, Object> map = new HashMap<>();
                 map.put("skill", skill.getName());
                 map.put("conflict", skillData.getSkillId());
-                return Localizations.SKILL_CONFLICTS.toText(arg(map));
+                return ActionResult.withErrorMessage(Localizations.SKILL_CONFLICTS.toText(arg(map)));
             }
         }
 
         if (character.hasSkill(skill.getId())) {
-            return Localizations.SKILL_ALREADY_LEARNED.toText(arg("skill", skill.getName()));
+            return ActionResult.withErrorMessage(Localizations.SKILL_ALREADY_LEARNED.toText(arg("skill", skill.getName())));
         }
         SkillLearnEvent event = new SkillLearnEvent(character, skill);
         game.getEventManager().post(event);
         if (event.isCancelled()) {
-            return event.getMessage();
+            return ActionResult.withErrorMessage(event.getMessage());
         }
-        clazz.setSkillPoints(avalaibleSkillpoints - 1);
-        clazz.setUsedSkillPoints(avalaibleSkillpoints + 1);
-
-        PlayerSkillContext einfo = new PlayerSkillContext(classDef, skill);
-        einfo.setLevel(1);
-
-        einfo.setSkillData(skillTree.getSkills().get(skill.getId()));
-        character.addSkill(skill.getId(), einfo);
-
-        CharacterSkill skill1 = new CharacterSkill();
-        skill1.setLevel(1);
-        skill1.setCharacterBase(character.getCharacterBase());
-        skill1.setFromClass(clazz);
-        skill1.setCatalogId(skill.getId());
-        character.getCharacterBase().getCharacterSkills().add(skill1);
-
-        putInSaveQueue(character.getCharacterBase());
-        skill.skillLearn(character);
-        return Localizations.SKILL_LEARNED.toText(arg("skill", skill.getName()));
+        return ActionResult.ok();
     }
 
     /**
@@ -956,19 +931,14 @@ public class CharacterService {
 
         double newcurrentexp = lvlexp + exp;
         double k = total + exp;
+        boolean gotLevel = false;
         while (newcurrentexp > levellimit) {
             level++;
             if (!onlyinit) {
                 Gui.showLevelChange(character, aClass, level);
-                CharacterGainedLevelEvent event =
-                        new CharacterGainedLevelEvent(character, aClass, level,
-                                aClass.getClassDefinition().getSkillpointsPerLevel(),
-                                aClass.getClassDefinition().getAttributepointsPerLevel());
-
-                event.getaClass().setLevel(event.getLevel());
-                game.getEventManager().post(event);
-                characterAddPoints(character, aClass.getClassDefinition(), event.getSkillpointsPerLevel(), event.getAttributepointsPerLevel());
-                inventoryService.initializeCharacterInventory(character);
+                SkillTreeType skillTreeType = aClass.getClassDefinition().getSkillTreeType();
+                skillTreeType.processClassLevelUp(character, aClass, level);
+                gotLevel = true;
             }
 
 
@@ -985,8 +955,14 @@ public class CharacterService {
 
         }
 
+        if (gotLevel) {
+            inventoryService.initializeCharacterInventory(character);
+        }
+
+
         if (!onlyinit) {
             Gui.showExpChange(character, aClass.getClassDefinition().getName(), exp);
+            putInSaveQueue(character.getCharacterBase());
         }
     }
 
@@ -1175,6 +1151,46 @@ public class CharacterService {
     private void scheduleNextTick(Runnable r) {
         Sponge.getScheduler().createTaskBuilder().delay(1, TimeUnit.MILLISECONDS)
                 .execute(r::run).submit(NtRpgPlugin.GlobalScope.plugin);
+    }
+
+    public void addSkillPoint(IActiveCharacter character, PlayerClassData playerClassData, int skillpointsPerLevel) {
+        CharacterClass characterClass = character.getCharacterBase().getCharacterClass(playerClassData.getClassDefinition());
+        characterClass.setSkillPoints(characterClass.getSkillPoints() + skillpointsPerLevel);
+    }
+
+    public void addSkill(IActiveCharacter character, PlayerClassData origin, CharacterSkill skill) {
+        character.getCharacterBase().getCharacterSkills().add(skill);
+    }
+
+    /**
+     * Takes away one skillpoint and adds skill to player
+     * Does not update the character state
+     * @param character
+     * @param origin
+     * @param skill
+     */
+    public void learnSkill(IActiveCharacter character, PlayerClassData origin, ISkill skill) {
+        CharacterClass clazz = origin.getCharacterClass();
+        clazz.setSkillPoints(clazz.getSkillPoints() - 1);
+        clazz.setUsedSkillPoints(clazz.getUsedSkillPoints() + 1);
+
+        ClassDefinition classDef = origin.getClassDefinition();
+        PlayerSkillContext einfo = new PlayerSkillContext(classDef, skill);
+        einfo.setLevel(1);
+
+        SkillTree skillTree = classDef.getSkillTree();
+        einfo.setSkillData(skillTree.getSkills().get(skill.getId()));
+        character.addSkill(skill.getId(), einfo);
+
+        CharacterSkill skill1 = new CharacterSkill();
+        skill1.setLevel(1);
+        skill1.setCharacterBase(character.getCharacterBase());
+        skill1.setFromClass(clazz);
+        skill1.setCatalogId(skill.getId());
+
+        addSkill(character, origin, skill1);
+
+        skill.skillLearn(character);
     }
 }
 

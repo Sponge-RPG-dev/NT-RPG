@@ -1224,9 +1224,14 @@ public class NtRpgPlugin {
 						args.<ISkill>getOne(Text.of("skill")).ifPresent(iSkill -> {
 							Player player = (Player) src;
 							IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
-							Text data= GlobalScope.characterService
-									.characterLearnskill(character, aClass, iSkill);
-							player.sendMessage(data);
+							ActionResult actionResult = GlobalScope.characterService.canLearnSkill(character, aClass, iSkill);
+							if (actionResult.isOk()) {
+								PlayerClassData playerClassData = character.getClasses().get(aClass.getName());
+								GlobalScope.characterService.learnSkill(character, playerClassData, iSkill);
+								GlobalScope.characterService.putInSaveQueue(character.getCharacterBase());
+							} else {
+								player.sendMessage(actionResult.getErrorMesage());
+							}
 						});
 					});
 					return CommandResult.empty();
@@ -1246,8 +1251,14 @@ public class NtRpgPlugin {
 						args.<ISkill>getOne("skill").ifPresent(iSkill -> {
 							Player player = (Player) src;
 							IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
-							Text data = GlobalScope.characterService.upgradeSkill(character, aClass, iSkill);
-							player.sendMessage(data);
+							ActionResult actionResult = GlobalScope.characterService.canUpgradeSkill(character, aClass, iSkill);
+							if (actionResult.isOk()) {
+								PlayerSkillContext skillInfo = character.getSkillInfo(iSkill);
+								GlobalScope.characterService.upgradeSkill(character, skillInfo, iSkill);
+								GlobalScope.characterService.putInSaveQueue(character.getCharacterBase());
+							} else {
+								player.sendMessage(actionResult.getErrorMesage());
+							}
 						});
 					});
 					return CommandResult.success();

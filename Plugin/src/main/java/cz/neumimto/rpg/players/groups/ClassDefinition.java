@@ -28,6 +28,7 @@ import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.leveling.EmptyLevlProgression;
 import cz.neumimto.rpg.players.leveling.ILevelProgression;
+import cz.neumimto.rpg.players.leveling.SkillTreeType;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import ninja.leaping.configurate.objectmapping.Setting;
@@ -129,6 +130,9 @@ public class ClassDefinition  implements IEffectSourceProvider {
 	@Setting("Leveling")
 	@Default(EmptyLevlProgression.class)
 	private ILevelProgression levels;
+
+	@Setting("SkillTreeType")
+	private SkillTreeType skillTreeType;
 
 	@Setting("ExperienceSources")
 	@AsCollectionImpl(HashSet.class)
@@ -321,6 +325,10 @@ public class ClassDefinition  implements IEffectSourceProvider {
 
 	public Text getWelcomeMessage() {
 		return welcomeMessage;
+	}
+
+	public SkillTreeType getSkillTreeType() {
+		return skillTreeType;
 	}
 
 	@Override

@@ -4,18 +4,16 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.SkillTreeControllsButton;
 import cz.neumimto.rpg.inventory.data.NKeys;
-import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.SkillTreeViewModel;
+import cz.neumimto.rpg.players.*;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
-import org.spongepowered.api.text.Text;
 
 import java.util.Iterator;
 
@@ -85,11 +83,25 @@ public class SkillTreeInventoryListener {
 
 							ClassDefinition classDefinition = viewModel.getViewedClass();
 							if (character.getSkill(iSkill.getId()) == null) {
-								Text data = characterService.characterLearnskill(character, classDefinition, iSkill);
-								player.sendMessage(data);
+
+								ActionResult actionResult = characterService.canLearnSkill(character, classDefinition, iSkill);
+								if (actionResult.isOk()) {
+									PlayerClassData playerClassData = character.getClasses().get(classDefinition.getName());
+									characterService.learnSkill(character, playerClassData, iSkill);
+									characterService.putInSaveQueue(character.getCharacterBase());
+								} else {
+									player.sendMessage(actionResult.getErrorMesage());
+								}
+
 							} else {
-								Text data = characterService.upgradeSkill(character, classDefinition, iSkill);
-								player.sendMessage(data);
+								ActionResult actionResult = characterService.canUpgradeSkill(character, classDefinition, iSkill);
+								if (actionResult.isOk()) {
+									PlayerSkillContext skillInfo = character.getSkillInfo(iSkill);
+									characterService.upgradeSkill(character, skillInfo, iSkill);
+									characterService.putInSaveQueue(character.getCharacterBase());
+								} else {
+									player.sendMessage(actionResult.getErrorMesage());
+								}
 							}
 							//redraw
 							Sponge.getScheduler().createTaskBuilder()

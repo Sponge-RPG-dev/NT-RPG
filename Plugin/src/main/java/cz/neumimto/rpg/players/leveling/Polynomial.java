@@ -20,7 +20,6 @@ public class Polynomial extends AbstractLevelprogression {
         double[] arr = new double[getMaxLevel()];
         for (int i = 1; i < getMaxLevel()+1; i++) {
             arr[i] = mult * Math.pow(i, factor);
-            System.out.println(arr[i]);
         }
         return arr;
     }
