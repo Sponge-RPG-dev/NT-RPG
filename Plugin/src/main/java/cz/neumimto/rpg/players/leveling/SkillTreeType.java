@@ -85,7 +85,7 @@ public enum SkillTreeType {
                     //language=HQL
                     Map<String, Object> params = new HashMap<>();
                     params.put("id", characterSkill);
-                    dad.update("delete from CharacterSkill where skill_id = :id", params);
+                    dad.update("delete from CharacterSkill where skillId = :id", params);
                 }, NtRpgPlugin.asyncExecutor);
             } else {
                 character.getPlayer().sendMessage(actionResult.getErrorMesage());
