@@ -845,7 +845,9 @@ public class NtRpgPlugin {
 					String[] a = data.split(" ");
 					for (PlayerClassData aClass : classes) {
 						if (aClass.getClassDefinition().getName().equalsIgnoreCase(a[0])) {
-							NtRpgPlugin.GlobalScope.characterService.addExperiences(character, Double.valueOf(a[1]), aClass, false);
+							if (aClass.takesExp()) {
+								NtRpgPlugin.GlobalScope.characterService.addExperiences(character, Double.valueOf(a[1]), aClass);
+							}
 						}
 					}
 					return CommandResult.success();

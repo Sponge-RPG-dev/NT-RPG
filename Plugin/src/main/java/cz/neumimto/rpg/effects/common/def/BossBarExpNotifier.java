@@ -1,23 +1,22 @@
 package cz.neumimto.rpg.effects.common.def;
 
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.CoreEffectTypes;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
+import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.boss.BossBarColors;
 import org.spongepowered.api.boss.BossBarOverlays;
 import org.spongepowered.api.boss.ServerBossBar;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 
 import java.text.DecimalFormat;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 25.6.2016.
@@ -59,8 +58,8 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 
 			expCurrentSession += exps;
 			DecimalFormat df = new DecimalFormat("#.00");
-		//todo
-/*
+
+
 			serverBossBar.setName(
 					Text.builder(Utils.capitalizeFirst(classname)).color(playerClassData.getClassDefinition().getPreferedColor())
 							.append(Text.builder(" ").append(Localizations.LEVEL.toText()).append(Text.of(": ")).color(TextColors.DARK_GRAY)
@@ -69,7 +68,7 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 							.append(Text.builder(" +" + df.format(expCurrentSession)).color(TextColors.GREEN).build())
 							.append(Text.builder(" " + df.format(playerClassData.getExperiencesFromLevel())
 									+ " / "
-									+ playerClassData.getClassDefinition().getLevels()[playerClassData.getLevel()])
+									+ playerClassData.getClassDefinition().getLevelProgression().getLevelMargins()[playerClassData.getLevel()])
 									.color(TextColors.DARK_GRAY)
 									.style(TextStyles.ITALIC)
 									.build())
@@ -77,11 +76,11 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 
 
 			serverBossBar.setPercent((float) Utils
-					.getPercentage(playerClassData.getExperiencesFromLevel(), playerClassData.getClassDefinition().getLevels()[playerClassData.getLevel()])
+					.getPercentage(playerClassData.getExperiencesFromLevel(), playerClassData.getClassDefinition().getLevelProgression().getLevelMargins()[playerClassData.getLevel()])
 					/ 100);
 			serverBossBar.setVisible(true);
 			setLastTickTime(System.currentTimeMillis());
-			*/
+
 		}
 	}
 

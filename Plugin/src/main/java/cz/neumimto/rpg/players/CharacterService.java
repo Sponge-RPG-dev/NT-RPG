@@ -537,16 +537,11 @@ public class CharacterService {
         }
     }
 
-    private void initSkills(ActiveCharacter activeCharacter) {
-        for (PlayerSkillContext playerSkillContext : activeCharacter.getSkills().values()) {
-            playerSkillContext.getSkill().onCharacterInit(activeCharacter, playerSkillContext.getLevel());
-        }
-    }
 
-
-    private void resolveSkills(CharacterBase characterBase, IActiveCharacter character) {
+    private Set<PlayerSkillContext> resolveSkills(CharacterBase characterBase, IActiveCharacter character) {
         Set<CharacterSkill> characterSkills1 = characterBase.getCharacterSkills();
         final long l = System.currentTimeMillis();
+        Set<PlayerSkillContext> toInit = new HashSet<>();
         for (CharacterSkill characterSkill : characterSkills1) {
             Optional<ISkill> byId = skillService.getById(characterSkill.getCatalogId());
             if (byId.isPresent()) {
@@ -561,10 +556,12 @@ public class CharacterService {
 
                 PlayerSkillContext info = new PlayerSkillContext(classDefinitionByName, iSkill);
                 info.setLevel(characterSkill.getLevel());
-                SkillData info1 = character.getClasses().get(name).getClassDefinition().getSkillTree().getSkills().get(iSkill.getId());
+                PlayerClassData playerClassData = character.getClasses().get(name);
+                SkillData info1 = playerClassData.getClassDefinition().getSkillTree().getSkills().get(iSkill.getId());
                 if (info1 != null) {
+                    toInit.add(info);
                     info.setSkillData(info1);
-                    character.addSkill(info.getSkill().getId(), info);
+                    addSkill(character, playerClassData, info);
                 }
 
                 if (characterSkill.getCooldown() == null) {
@@ -578,6 +575,7 @@ public class CharacterService {
                 Log.warn("Character Base [" + characterBase.getId() + "] CharacterSkill [" + characterSkill.getId() + "] Unknown Skill id [" + characterSkill.getCatalogId() + "]");
             }
         }
+        return toInit;
     }
 
     /**
@@ -601,9 +599,11 @@ public class CharacterService {
             activeCharacter.addClass(playerClassData);
             classService.addAllPermissions(activeCharacter, playerClassData);
         }
-        resolveSkills(characterBase, activeCharacter);
+        Set<PlayerSkillContext> skillData = resolveSkills(characterBase, activeCharacter);
         recalculateProperties(activeCharacter);
-        initSkills(activeCharacter);
+        for (PlayerSkillContext dt : skillData) {
+            dt.getSkill().onCharacterInit(activeCharacter, dt.getLevel());
+        }
         return activeCharacter;
     }
 
@@ -919,7 +919,7 @@ public class CharacterService {
             ClassDefinition classDefinition = value.getClassDefinition();
             if (classDefinition.hasExperienceSource(source)) {
                 if (value.takesExp()) {
-                    addExperiences(character, exp, entry.getValue(), false);
+                    addExperiences(character, exp, entry.getValue());
                 }
             }
         }
@@ -927,41 +927,34 @@ public class CharacterService {
     }
 
 
-    public void addExperiences(IActiveCharacter character, double exp, PlayerClassData aClass, boolean onlyinit) {
-        if (!aClass.takesExp() && !onlyinit) {
-            return;
-        }
-
-        int level = aClass.getLevel();
-
-        if (!onlyinit) {
-            exp = exp * getCharacterProperty(character, DefaultProperties.experiences_mult);
-        }
-        double total = aClass.getExperiencesFromLevel();
-        double lvlexp = aClass.getExperiencesFromLevel();
+    public void addExperiences(IActiveCharacter character, double exp, PlayerClassData aClass) {
 
         double[] levels = aClass.getClassDefinition().getLevelProgression().getLevelMargins();
         if (levels == null) {
             //class can`t take exp
             return;
         }
-        double levellimit = levels[level - 1];
+
+        int level = aClass.getLevel();
+        exp = exp * getCharacterProperty(character, DefaultProperties.experiences_mult);
+
+        double total = aClass.getExperiencesFromLevel();
+        double lvlexp = aClass.getExperiencesFromLevel();
+
+        double levellimit = levels[level];
 
         double newcurrentexp = lvlexp + exp;
-        double k = total + exp;
+
         boolean gotLevel = false;
         while (newcurrentexp > levellimit) {
             level++;
-            if (!onlyinit) {
-                Gui.showLevelChange(character, aClass, level);
-                SkillTreeType skillTreeType = aClass.getClassDefinition().getSkillTreeType();
-                skillTreeType.processClassLevelUp(character, aClass, level);
-                gotLevel = true;
-            }
-
+            aClass.setLevel(level);
+            Gui.showLevelChange(character, aClass, level);
+            SkillTreeType skillTreeType = aClass.getClassDefinition().getSkillTreeType();
+            skillTreeType.processClassLevelUp(character, aClass, level);
+            gotLevel = true;
 
             classService.addPermissions(character, aClass);
-            aClass.incrementLevel();
             if (!aClass.takesExp()) {
                 break;
             }
@@ -970,18 +963,16 @@ public class CharacterService {
             }
             newcurrentexp = newcurrentexp - levellimit;
             levellimit = levels[level];
-
         }
+        aClass.getCharacterClass().setExperiences(newcurrentexp);
 
         if (gotLevel) {
             inventoryService.initializeCharacterInventory(character);
         }
 
+        Gui.showExpChange(character, aClass.getClassDefinition().getName(), exp);
+        putInSaveQueue(character.getCharacterBase());
 
-        if (!onlyinit) {
-            Gui.showExpChange(character, aClass.getClassDefinition().getName(), exp);
-            putInSaveQueue(character.getCharacterBase());
-        }
     }
 
 
@@ -1181,6 +1172,7 @@ public class CharacterService {
     }
 
     public void addSkill(IActiveCharacter character, PlayerClassData origin, PlayerSkillContext skill) {
+        character.addSkill(skill.getSkill().getId(), skill);
         character.addSkill(skill.getSkill().getName(), skill);
     }
 
@@ -1212,6 +1204,7 @@ public class CharacterService {
         addPersistantSkill(character, origin, skill1);
         addSkill(character, origin, einfo);
         skill.skillLearn(character);
+        Log.info("Character " + character.getCharacterBase().getUuid() + " learned skill " + skill.getId());
     }
 }
 

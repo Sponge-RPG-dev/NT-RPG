@@ -37,8 +37,8 @@ public class PlayerClassData {
 
 	public boolean takesExp() {
 		ILevelProgression levelProgression = classDefinition.getLevelProgression();
-		return characterClass.getLevel() < levelProgression.getMaxLevel()
-				|| characterClass.getExperiences() < levelProgression.getLevelMargins()[levelProgression.getMaxLevel() - 1];
+		return levelProgression != null && (characterClass.getLevel() < levelProgression.getMaxLevel()
+				|| characterClass.getExperiences() < levelProgression.getLevelMargins()[levelProgression.getMaxLevel() - 1]);
 	}
 
 	public ClassDefinition getClassDefinition() {

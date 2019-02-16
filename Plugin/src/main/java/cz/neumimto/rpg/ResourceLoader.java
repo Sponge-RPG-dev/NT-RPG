@@ -229,7 +229,6 @@ public class ResourceLoader {
 	}
 
 	public Object loadClass(Class<?> clazz, ClassLoader classLoader) throws IllegalAccessException, InstantiationException {
-		info(" - Checking if theres something to load in a class " + clazz.getName(), pluginConfig.DEBUG);
 		//Properties
 		if (clazz == IGlobalEffect.class) {
 			return null;
@@ -242,7 +241,7 @@ public class ResourceLoader {
 			ioc.build(clazz);
 		}
 		if (clazz.isAnnotationPresent(ListenerClass.class)) {
-			info("Registering listener" + clazz.getName(), pluginConfig.DEBUG);
+			info("Registering listener class" + clazz.getName(), pluginConfig.DEBUG);
 			container = ioc.build(clazz);
 			ioc.build(Game.class).getEventManager().registerListeners(ioc.build(NtRpgPlugin.class), container);
 		}

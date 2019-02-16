@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public enum SkillTreeType {
-    TREE {
+    MANUAL {
         @Override
         public void processClassLevelUp(IActiveCharacter character, PlayerClassData playerClassData, int level) {
             CharacterGainedLevelEvent event =
@@ -80,7 +80,7 @@ public enum SkillTreeType {
                 CharacterSkill characterSkill = characterService.refundSkill(character, skillInfo, iSkill);
 
                 CompletableFuture.runAsync(() -> {
-                    characterService.putInSaveQueue(character.getCharacterBase());
+                    characterService.save(character.getCharacterBase());
                     DirectAccessDao dad = IoC.get().build(DirectAccessDao.class);
                     //language=HQL
                     Map<String, Object> params = new HashMap<>();
@@ -92,7 +92,7 @@ public enum SkillTreeType {
             }
         }
     },
-    FLAT {
+    AUTO {
         @Override
         public void processClassLevelUp(IActiveCharacter character, PlayerClassData playerClassData, int level) {
             ClassDefinition classDefinition = playerClassData.getClassDefinition();
