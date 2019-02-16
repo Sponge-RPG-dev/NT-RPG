@@ -87,7 +87,7 @@ public class SkillTreeDao {
 
 				try {
 					List<String> asciiMap = config.getStringList("AsciiMap");
-					java.util.Optional<String> max = asciiMap.stream().max(Comparator.comparingInt(String::length));
+					Optional<String> max = asciiMap.stream().max(Comparator.comparingInt(String::length));
 					if (max.isPresent()) {
 						int length = max.get().length();
 						int rows = asciiMap.size();
@@ -256,7 +256,7 @@ public class SkillTreeDao {
 			try {
 				Config softDepends = c.getConfig("SoftDepends");
 				for (Map.Entry<String, ConfigValue> entry : softDepends.entrySet()) {
-					String skillId = entry.getKey();
+					String skillId = entry.getKey().replaceAll("\"", "");
 					String render = entry.getValue().render();
 					int i = Integer.parseInt(render);
 					SkillData skill = getSkillInfo(skillId, skillTree);

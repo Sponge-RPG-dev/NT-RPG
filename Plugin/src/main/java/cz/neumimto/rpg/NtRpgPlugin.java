@@ -1323,7 +1323,7 @@ public class NtRpgPlugin {
 							player.sendMessage(Localizations.ALREADY_CUURENT_CHARACTER.toText());
 							return;
 						}
-						asyncExecutor.execute(() -> {
+						CompletableFuture.runAsync(() -> {
 							List<CharacterBase> playersCharacters = GlobalScope.characterService.getPlayersCharacters(player.getUniqueId());
 							boolean b = false;
 							for (CharacterBase playersCharacter : playersCharacters) {
@@ -1333,7 +1333,9 @@ public class NtRpgPlugin {
 									Sponge.getScheduler().createTaskBuilder().name("SetCharacterCallback" + player.getUniqueId())
 											.execute(() ->  {
 												GlobalScope.characterService.setActiveCharacter(player.getUniqueId(), character);
+												GlobalScope.characterService.invalidateCaches(character);
 												GlobalScope.characterService.assignPlayerToCharacter(player);
+
 											})
 											.submit(NtRpgPlugin.this);
 									b = true;
@@ -1346,7 +1348,7 @@ public class NtRpgPlugin {
 							if (!b) {
 								player.sendMessage(Localizations.NON_EXISTING_CHARACTER.toText());
 							}
-						});
+						}, asyncExecutor);
 					});
 					return CommandResult.success();
 				})

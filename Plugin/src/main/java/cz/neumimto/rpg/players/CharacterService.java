@@ -219,7 +219,7 @@ public class CharacterService {
     }
 
     public void updateWeaponRestrictions(IActiveCharacter character) {
-        Map<ItemType, RPGItemWrapper> weapons = character.updateItemRestrictions().getAllowedWeapons();
+        Map<ItemType, RPGItemWrapper> weapons = character.getAllowedWeapons();
 
 
         CharacterWeaponUpdateEvent event = new CharacterWeaponUpdateEvent(character, weapons);
@@ -228,7 +228,7 @@ public class CharacterService {
     }
 
     public void updateArmorRestrictions(IActiveCharacter character) {
-        Set<RPGItemType> allowedArmor = character.updateItemRestrictions().getAllowedArmor();
+        Set<RPGItemType> allowedArmor = character.getAllowedArmor();
 
         EventCharacterArmorPostUpdate event = new EventCharacterArmorPostUpdate(character, allowedArmor);
         game.getEventManager().post(event);
@@ -488,7 +488,8 @@ public class CharacterService {
         return new PreloadCharacter(uuid);
     }
 
-    private void updateAll(final IActiveCharacter activeCharacter) {
+    public void invalidateCaches(final IActiveCharacter activeCharacter) {
+        activeCharacter.updateItemRestrictions();
         updateArmorRestrictions(activeCharacter);
         updateWeaponRestrictions(activeCharacter);
         updateWalkSpeed(activeCharacter);
@@ -1037,7 +1038,7 @@ public class CharacterService {
 
         inventoryService.initializeCharacterInventory(character);
         Sponge.getScheduler().createTaskBuilder().execute(() -> {
-            updateAll(character);
+            invalidateCaches(character);
             Double d = character.getHealth().getMaxValue();
             character.getEntity().offer(Keys.HEALTH, d);
         }).delay(1, TimeUnit.MILLISECONDS).submit(plugin);
@@ -1145,7 +1146,7 @@ public class CharacterService {
                 recalculateSecondaryPropertiesOnly(character);
                 applyGroupEffects(character, klass);
                 scheduleNextTick(() -> {
-                    updateAll(character);
+                    invalidateCaches(character);
                     character.updateItemRestrictions();
                     Text message = klass.getWelcomeMessage();
                     if (message == null) {
