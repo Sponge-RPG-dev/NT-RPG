@@ -269,7 +269,15 @@ public class Localizations {
 
 	public static LocalizableParametrizedText CANNOT_USE_ITEM_CONFIGURATION_REASON_OFFHAND;
 
-	public static LocalizableParametrizedText CLASS_TYPE_NOT_SELECTED;
 	public static LocalizableParametrizedText MISSING_CLASS_DEPENDENCIES;
-	public static LocalizableParametrizedText NO_SUCH_CLASSTYPE;
+
+	public static LocalizableParametrizedText CLASS_HAS_NO_SKILLTREE;
+
+	public static LocalizableParametrizedText NOT_ALLOWED_MANUAL_SKILLTREE_MANAGEMENT;
+
+	public static LocalizableParametrizedText REFUND_SKILLS_DEPENDING;
+
+	public static LocalizableParametrizedText UNABLE_TO_REFUND_SKILL;
+
+	public static LocalizableParametrizedText  UNABLE_TO_REFUND_SKILL_SEALED;
 }

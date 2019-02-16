@@ -1223,14 +1223,12 @@ public class NtRpgPlugin {
 					args.<ClassDefinition>getOne(Text.of("class")).ifPresent(aClass -> {
 						args.<ISkill>getOne(Text.of("skill")).ifPresent(iSkill -> {
 							Player player = (Player) src;
-							IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
-							ActionResult actionResult = GlobalScope.characterService.canLearnSkill(character, aClass, iSkill);
-							if (actionResult.isOk()) {
+							if (aClass.getSkillTree() != null) {
+								IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
 								PlayerClassData playerClassData = character.getClasses().get(aClass.getName());
-								GlobalScope.characterService.learnSkill(character, playerClassData, iSkill);
-								GlobalScope.characterService.putInSaveQueue(character.getCharacterBase());
+								aClass.getSkillTreeType().processLearnSkill(character, playerClassData, iSkill);
 							} else {
-								player.sendMessage(actionResult.getErrorMesage());
+								player.sendMessage(Localizations.CLASS_HAS_NO_SKILLTREE.toText(Arg.arg("class",aClass.getName())));
 							}
 						});
 					});
@@ -1250,14 +1248,12 @@ public class NtRpgPlugin {
 					args.<ClassDefinition>getOne(Text.of("class")).ifPresent(aClass -> {
 						args.<ISkill>getOne("skill").ifPresent(iSkill -> {
 							Player player = (Player) src;
-							IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
-							ActionResult actionResult = GlobalScope.characterService.canUpgradeSkill(character, aClass, iSkill);
-							if (actionResult.isOk()) {
-								PlayerSkillContext skillInfo = character.getSkillInfo(iSkill);
-								GlobalScope.characterService.upgradeSkill(character, skillInfo, iSkill);
-								GlobalScope.characterService.putInSaveQueue(character.getCharacterBase());
+							if (aClass.getSkillTree() != null) {
+								IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
+								PlayerClassData playerClassData = character.getClasses().get(aClass.getName());
+								aClass.getSkillTreeType().processUpgradeSkill(character, playerClassData, iSkill);
 							} else {
-								player.sendMessage(actionResult.getErrorMesage());
+								player.sendMessage(Localizations.CLASS_HAS_NO_SKILLTREE.toText(Arg.arg("class",aClass.getName())));
 							}
 						});
 					});
@@ -1277,8 +1273,13 @@ public class NtRpgPlugin {
 					args.<ClassDefinition>getOne(Text.of("class")).ifPresent(aClass -> {
 						args.<ISkill>getOne("skill").ifPresent(iSkill -> {
 							Player player = (Player) src;
-							IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
-							int i = GlobalScope.characterService.refundSkill(character, aClass, iSkill);
+							if (aClass.getSkillTree() != null) {
+								IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
+								PlayerClassData playerClassData = character.getClasses().get(aClass.getName());
+								aClass.getSkillTreeType().processRefundSkill(character, playerClassData, iSkill);
+							} else {
+								player.sendMessage(Localizations.CLASS_HAS_NO_SKILLTREE.toText(Arg.arg("class",aClass.getName())));
+							}
 						});
 					});
 					return CommandResult.success();

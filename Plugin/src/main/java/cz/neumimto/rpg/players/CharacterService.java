@@ -251,12 +251,12 @@ public class CharacterService {
     }
 
     public void putInSaveQueue(CharacterBase base) {
-        NtRpgPlugin.asyncExecutor.execute(() -> {
+        CompletableFuture.runAsync(() -> {
             long k = System.currentTimeMillis();
             info("Saving player " + base.getUuid() + " character " + base.getName());
             save(base);
             info("Saved player " + base.getUuid() + " character " + base.getName() + "[" + (System.currentTimeMillis() - k) + "]ms ");
-        });
+        }, NtRpgPlugin.asyncExecutor);
     }
 
     /**
@@ -792,36 +792,54 @@ public class CharacterService {
      * 4 - Cant refund skill-tree path
      * 0 - ok
      */
-    public int refundSkill(IActiveCharacter character, ClassDefinition classDefinition, ISkill skill) {
+    public ActionResult canRefundSkill(IActiveCharacter character, ClassDefinition classDefinition, ISkill skill) {
         PlayerSkillContext skillInfo = character.getSkillInfo(skill);
         if (skillInfo == null) {
-            return 1;
+            return ActionResult.withErrorMessage(Localizations.NOT_LEARNED_SKILL.toText());
         }
         SkillTree skillTree = classDefinition.getSkillTree();
         SkillData info = skillTree.getSkills().get(skill.getId());
         for (SkillData info1 : info.getDepending()) {
             PlayerSkillContext e = character.getSkill(info1.getSkill().getId());
             if (e != null) {
-                return 2;
+                return ActionResult.withErrorMessage(Localizations.REFUND_SKILLS_DEPENDING.toText());
             }
         }
-        CancellableEvent event = new SkillRefundEvent(character, skill);
+        SkillRefundEvent event = new SkillRefundEvent(character, skill);
         game.getEventManager().post(event);
         if (event.isCancelled()) {
-            return 3;
+            return ActionResult.withErrorMessage(Localizations.UNABLE_TO_REFUND_SKILL.toText());
         }
         if (skill instanceof SkillTreeSpecialization && pluginConfig.PATH_NODES_SEALED) {
-            return 4;
+            return ActionResult.withErrorMessage(Localizations.UNABLE_TO_REFUND_SKILL_SEALED.toText());
         }
-        int level = skillInfo.getLevel();
+        return ActionResult.ok();
+    }
+
+    public CharacterSkill refundSkill(IActiveCharacter character, PlayerSkillContext playerSkillContext, ISkill skill) {
+        int level = playerSkillContext.getLevel();
         skill.skillRefund(character);
-        CharacterClass cc = character.getCharacterBase().getCharacterClass(classDefinition);
+        CharacterBase characterBase = character.getCharacterBase();
+
+        CharacterClass cc = characterBase.getCharacterClass(playerSkillContext.getClassDefinition());
+
         int skillPoints = cc.getSkillPoints();
         cc.setSkillPoints(skillPoints + level);
         cc.setUsedSkillPoints(skillPoints - level);
-        putInSaveQueue(character.getCharacterBase());
-        return 0;
+
+        Iterator<CharacterSkill> iterator = characterBase.getCharacterSkills().iterator();
+        while (iterator.hasNext()) {
+            CharacterSkill next = iterator.next();
+            if (next.getFromClass().getName().equalsIgnoreCase(playerSkillContext.getClassDefinition().getName())){
+                if (next.getCatalogId().equalsIgnoreCase(skill.getId())) {
+                    iterator.remove();
+                    return next;
+                }
+            }
+        }
+        return null;
     }
+
 
     /**
      * Resets character's skilltrees, and gives back all allocated skillpoints.
@@ -1158,8 +1176,12 @@ public class CharacterService {
         characterClass.setSkillPoints(characterClass.getSkillPoints() + skillpointsPerLevel);
     }
 
-    public void addSkill(IActiveCharacter character, PlayerClassData origin, CharacterSkill skill) {
+    public void addPersistantSkill(IActiveCharacter character, PlayerClassData origin, CharacterSkill skill) {
         character.getCharacterBase().getCharacterSkills().add(skill);
+    }
+
+    public void addSkill(IActiveCharacter character, PlayerClassData origin, PlayerSkillContext skill) {
+        character.addSkill(skill.getSkill().getName(), skill);
     }
 
     /**
@@ -1180,7 +1202,6 @@ public class CharacterService {
 
         SkillTree skillTree = classDef.getSkillTree();
         einfo.setSkillData(skillTree.getSkills().get(skill.getId()));
-        character.addSkill(skill.getId(), einfo);
 
         CharacterSkill skill1 = new CharacterSkill();
         skill1.setLevel(1);
@@ -1188,8 +1209,8 @@ public class CharacterService {
         skill1.setFromClass(clazz);
         skill1.setCatalogId(skill.getId());
 
-        addSkill(character, origin, skill1);
-
+        addPersistantSkill(character, origin, skill1);
+        addSkill(character, origin, einfo);
         skill.skillLearn(character);
     }
 }

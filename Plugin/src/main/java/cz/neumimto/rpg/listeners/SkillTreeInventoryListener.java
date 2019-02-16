@@ -4,10 +4,12 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.SkillTreeControllsButton;
 import cz.neumimto.rpg.inventory.data.NKeys;
-import cz.neumimto.rpg.players.*;
+import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.PlayerClassData;
+import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import org.spongepowered.api.Sponge;
@@ -82,26 +84,12 @@ public class SkillTreeInventoryListener {
 							ISkill iSkill = skillService.getById(node).get();
 
 							ClassDefinition classDefinition = viewModel.getViewedClass();
+							PlayerClassData playerClassData = character.getClasses().get(classDefinition.getName());
+
 							if (character.getSkill(iSkill.getId()) == null) {
-
-								ActionResult actionResult = characterService.canLearnSkill(character, classDefinition, iSkill);
-								if (actionResult.isOk()) {
-									PlayerClassData playerClassData = character.getClasses().get(classDefinition.getName());
-									characterService.learnSkill(character, playerClassData, iSkill);
-									characterService.putInSaveQueue(character.getCharacterBase());
-								} else {
-									player.sendMessage(actionResult.getErrorMesage());
-								}
-
+								classDefinition.getSkillTreeType().processLearnSkill(character, playerClassData, iSkill);
 							} else {
-								ActionResult actionResult = characterService.canUpgradeSkill(character, classDefinition, iSkill);
-								if (actionResult.isOk()) {
-									PlayerSkillContext skillInfo = character.getSkillInfo(iSkill);
-									characterService.upgradeSkill(character, skillInfo, iSkill);
-									characterService.putInSaveQueue(character.getCharacterBase());
-								} else {
-									player.sendMessage(actionResult.getErrorMesage());
-								}
+								classDefinition.getSkillTreeType().processUpgradeSkill(character, playerClassData, iSkill);
 							}
 							//redraw
 							Sponge.getScheduler().createTaskBuilder()
