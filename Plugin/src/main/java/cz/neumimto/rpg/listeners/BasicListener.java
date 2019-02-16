@@ -18,8 +18,6 @@
 
 package cz.neumimto.rpg.listeners;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-
 import com.flowpowered.math.vector.Vector3i;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.IEntity;
@@ -31,11 +29,7 @@ import cz.neumimto.rpg.damage.ISkillDamageSource;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.events.CharacterWeaponDamageEvent;
-import cz.neumimto.rpg.events.INEntityWeaponDamageEvent;
-import cz.neumimto.rpg.events.ProjectileHitEvent;
-import cz.neumimto.rpg.events.SkillDamageEvent;
-import cz.neumimto.rpg.events.SkillDamageEventLate;
+import cz.neumimto.rpg.events.*;
 import cz.neumimto.rpg.exp.ExperienceService;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.runewords.RWService;
@@ -59,10 +53,12 @@ import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.projectile.FishHook;
 import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
+import org.spongepowered.api.event.action.FishingEvent;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.cause.Cause;
@@ -85,6 +81,8 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import java.util.Optional;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 12.2.2015.
@@ -410,6 +408,16 @@ public class BasicListener {
 		}
 	}
 
+	@Listener
+	public void onFishCatch(FishingEvent event) {
+		FishHook fishHook = event.getFishHook();
+
+
+//		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+
+	//	characterService.addExperiences(character, 10, ExperienceSources.FISHING);
+
+	}
 
 	//TODO sponge bug as of 7.1-BETA-15
     /*

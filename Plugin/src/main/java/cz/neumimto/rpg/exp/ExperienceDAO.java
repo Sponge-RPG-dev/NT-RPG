@@ -26,6 +26,11 @@ public class ExperienceDAO {
 		return getStringDoubleMap(defaults);
 	}
 
+	public Map<String, Double> getExperiencesForFishing() {
+		File defaults = createDefaults("Fishing_experiences.properties");
+		return getStringDoubleMap(defaults);
+	}
+
 	private Map<String, Double> getStringDoubleMap(File defaults) {
 		Map<String, Double> map = new HashMap<>();
 		try (FileInputStream stream = new FileInputStream(defaults)) {

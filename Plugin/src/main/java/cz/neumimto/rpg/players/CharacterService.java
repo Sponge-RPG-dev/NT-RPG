@@ -51,10 +51,7 @@ import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
-import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.utils.PermissionUtils;
@@ -739,18 +736,21 @@ public class CharacterService {
             map.put("level", info.getMinPlayerLevel());
             return ActionResult.withErrorMessage(Localizations.SKILL_REQUIRES_HIGHER_LEVEL.toText(arg(map)));
         }
-        for (SkillData skillData : info.getHardDepends()) {
-            if (!character.hasSkill(skillData.getSkillId())) {
-                Map<java.lang.String, Object> map = new HashMap<>();
+        for (SkillDependency skillData : info.getHardDepends()) {
+            PlayerSkillContext skillInfo = character.getSkillInfo(skillData.skillData.getSkill());
+
+            if (skillInfo == null || skillInfo.getLevel() < skillData.minSkillLevel) {
+                Map<String, Object> map = new HashMap<>();
                 map.put("skill", skill.getName());
-                map.put("hard", info.getHardDepends().stream().map(SkillData::getSkillId).collect(Collectors.joining(", ")));
-                map.put("soft", info.getSoftDepends().stream().map(SkillData::getSkillId).collect(Collectors.joining(", ")));
+                map.put("hard", info.getHardDepends().stream().map(SkillDependency::toString).collect(Collectors.joining(", ")));
+                map.put("soft", info.getSoftDepends().stream().map(SkillDependency::toString).collect(Collectors.joining(", ")));
                 return ActionResult.withErrorMessage(Localizations.MISSING_SKILL_DEPENDENCIES.toText(arg(map)));
             }
         }
         boolean hasSkill = info.getSoftDepends().isEmpty();
-        for (SkillData skillData : info.getSoftDepends()) {
-            if (character.hasSkill(skillData.getSkillId())) {
+        for (SkillDependency dep : info.getSoftDepends()) {
+            PlayerSkillContext skillInfo = character.getSkillInfo(dep.skillData.getSkill());
+            if (skillInfo != null && skillInfo.getLevel() < dep.minSkillLevel) {
                 hasSkill = true;
                 break;
             }
@@ -758,8 +758,8 @@ public class CharacterService {
         if (!hasSkill) {
             Map<java.lang.String, Object> map = new HashMap<>();
             map.put("skill", skill.getName());
-            map.put("hard", info.getHardDepends().stream().map(SkillData::getSkillId).collect(Collectors.joining(", ")));
-            map.put("soft", info.getSoftDepends().stream().map(SkillData::getSkillId).collect(Collectors.joining(", ")));
+            map.put("hard", info.getHardDepends().stream().map(SkillDependency::toString).collect(Collectors.joining(", ")));
+            map.put("soft", info.getSoftDepends().stream().map(SkillDependency::toString).collect(Collectors.joining(", ")));
             return ActionResult.withErrorMessage(Localizations.MISSING_SKILL_DEPENDENCIES.toText(arg(map)));
         }
         for (SkillData skillData : info.getConflicts()) {

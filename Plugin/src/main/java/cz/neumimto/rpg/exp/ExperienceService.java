@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.exp;
 
-import static cz.neumimto.rpg.Log.warn;
-
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.players.ExperienceSource;
@@ -12,6 +10,8 @@ import org.spongepowered.api.block.BlockType;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import static cz.neumimto.rpg.Log.warn;
 
 /**
  * Created by NeumimTo on 8.4.2017.
@@ -67,4 +67,5 @@ public class ExperienceService {
 		}
 		return null;
 	}
+
 }

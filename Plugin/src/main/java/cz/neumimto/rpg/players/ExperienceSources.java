@@ -7,5 +7,5 @@ public class ExperienceSources {
 	public static ExperienceSource MINING = new ExperienceSource("mining");
 	public static ExperienceSource LOGGING = new ExperienceSource("logging");
 	public static ExperienceSource QUESTING = new ExperienceSource("questing");
-
+	public static ExperienceSource FISHING = new ExperienceSource("fishing");
 }

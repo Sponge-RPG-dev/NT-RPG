@@ -35,8 +35,8 @@ public class SkillData {
 	private SkillSettings skillSettings;
 	private int minPlayerLevel;
 	private int maxSkillLevel;
-	private Set<SkillData> softDepends = new HashSet<>();
-	private Set<SkillData> hardDepends = new HashSet<>();
+	private Set<SkillDependency> softDepends = new HashSet<>();
+	private Set<SkillDependency> hardDepends = new HashSet<>();
 	private Set<SkillData> conflicts = new HashSet<>();
 	private Set<SkillData> depending = new HashSet<>();
 	private ISkill iskill;
@@ -92,19 +92,19 @@ public class SkillData {
 		this.maxSkillLevel = maxSkillLevel;
 	}
 
-	public Set<SkillData> getSoftDepends() {
+	public Set<SkillDependency> getSoftDepends() {
 		return softDepends;
 	}
 
-	public void setSoftDepends(Set<SkillData> softDepends) {
+	public void setSoftDepends(Set<SkillDependency> softDepends) {
 		this.softDepends = softDepends;
 	}
 
-	public Set<SkillData> getHardDepends() {
+	public Set<SkillDependency> getHardDepends() {
 		return hardDepends;
 	}
 
-	public void setHardDepends(Set<SkillData> hardDepends) {
+	public void setHardDepends(Set<SkillDependency> hardDepends) {
 		this.hardDepends = hardDepends;
 	}
 

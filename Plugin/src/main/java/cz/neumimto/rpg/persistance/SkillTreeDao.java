@@ -18,28 +18,14 @@
 
 package cz.neumimto.rpg.persistance;
 
-import static cz.neumimto.rpg.Log.error;
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.Log.warn;
-
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigException;
-import com.typesafe.config.ConfigFactory;
-import com.typesafe.config.ConfigObject;
-import com.typesafe.config.ConfigValue;
+import com.typesafe.config.*;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.gui.SkillTreeInterfaceModel;
-import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.SkillCost;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillItemCost;
-import cz.neumimto.rpg.skills.SkillNodes;
-import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoader;
 import cz.neumimto.rpg.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactory;
@@ -54,12 +40,11 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static cz.neumimto.rpg.Log.*;
 
 /**
  * Created by NeumimTo on 24.7.2015.
@@ -269,20 +254,26 @@ public class SkillTreeDao {
 			}
 
 			try {
-				for (String conflicts : c.getStringList("SoftDepends")) {
-					SkillData i = getSkillInfo(conflicts, skillTree);
-					info.getSoftDepends().add(i);
-					i.getDepending().add(info);
+				Config softDepends = c.getConfig("SoftDepends");
+				for (Map.Entry<String, ConfigValue> entry : softDepends.entrySet()) {
+					String skillId = entry.getKey();
+					String render = entry.getValue().render();
+					int i = Integer.parseInt(render);
+					SkillData skill = getSkillInfo(skillId, skillTree);
+					info.getSoftDepends().add(new SkillDependency(skill, i));
+					skill.getDepending().add(info);
 				}
 			} catch (ConfigException ignored) {
 			}
-
-
 			try {
-				for (String conflicts : c.getStringList("HardDepends")) {
-					SkillData i = getSkillInfo(conflicts, skillTree);
-					info.getHardDepends().add(i);
-					i.getDepending().add(info);
+				Config softDepends = c.getConfig("HardDepends");
+				for (Map.Entry<String, ConfigValue> entry : softDepends.entrySet()) {
+					String skillId = entry.getKey();
+					String render = entry.getValue().render();
+					int i = Integer.parseInt(render);
+					SkillData skill = getSkillInfo(skillId, skillTree);
+					info.getHardDepends().add(new SkillDependency(skill, i));
+					skill.getDepending().add(info);
 				}
 			} catch (ConfigException ignored) {
 			}

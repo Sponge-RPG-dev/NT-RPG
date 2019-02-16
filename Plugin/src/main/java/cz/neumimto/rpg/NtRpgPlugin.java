@@ -381,6 +381,7 @@ public class NtRpgPlugin {
 		event.register(ExperienceSources.MINING);
 		event.register(ExperienceSources.LOGGING);
 		event.register(ExperienceSources.QUESTING);
+		event.register(ExperienceSources.FISHING);
 	}
 
 	@Listener
