@@ -8,6 +8,10 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.text.Text;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by NeumimTo on 22.10.2017.
  */
@@ -18,10 +22,13 @@ public class SkillTreeViewModel {
 	private boolean current = true;
 	private SkillTree skillTree;
 	private ClassDefinition viewedClass;
+	private Map<String, List<Text>> loreCache;
+
 
 	public SkillTreeViewModel() {
 		interactiveMode = InteractiveMode.DETAILED;
 		location = new Pair<>(0, 0);
+		loreCache = new HashMap<>();
 	}
 
 	public SkillTree getSkillTree() {
@@ -62,6 +69,10 @@ public class SkillTreeViewModel {
 
 	public ClassDefinition getViewedClass() {
 		return viewedClass;
+	}
+
+	public void clearCache() {
+		loreCache = new HashMap<>();
 	}
 
 	public enum InteractiveMode {

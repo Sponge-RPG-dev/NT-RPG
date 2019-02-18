@@ -49,6 +49,7 @@ import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.type.Fish;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
@@ -72,14 +73,17 @@ import org.spongepowered.api.event.entity.InteractEntityEvent;
 import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.cause.Root;
+import org.spongepowered.api.event.filter.type.Exclude;
 import org.spongepowered.api.event.world.chunk.UnloadChunkEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import java.util.List;
 import java.util.Optional;
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
@@ -409,8 +413,35 @@ public class BasicListener {
 	}
 
 	@Listener
-	public void onFishCatch(FishingEvent event) {
+	@Exclude({FishingEvent.Start.class, FishingEvent.HookEntity.class})
+	public void onFishCatch(FishingEvent.Stop event, @Root Player player) {
 		FishHook fishHook = event.getFishHook();
+		List<Transaction<ItemStackSnapshot>> transactions = event.getTransactions();
+		if (transactions.isEmpty()) {
+			return;
+		}
+		Transaction<ItemStackSnapshot> transaction = transactions.get(0);
+		ItemStackSnapshot aFinal = transaction.getFinal();
+		Optional<Fish> ofish = aFinal.get(Keys.FISH_TYPE);
+
+		if (ofish.isPresent()) {
+			Fish fish = ofish.get();
+			Double d = experienceService.getFishingExperience(fish);
+			if (d == null) {
+				return;
+			}
+			Location<World> location = fishHook.getLocation();
+			BlockType blockType = location.getBlockType();
+			if (blockType != BlockTypes.WATER) {
+				location = location.add(0, -1, 0);
+				blockType = location.getBlockType();
+				if (blockType != BlockTypes.WATER) {
+					return;
+				}
+			}
+			IActiveCharacter character = characterService.getCharacter(player);
+			characterService.addExperiences(character, d, ExperienceSources.FISHING);
+		}
 
 
 //		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
@@ -474,5 +505,7 @@ public class BasicListener {
 		}
 		return true;
 	}
+
+
 
 }
