@@ -22,11 +22,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.inventory.CannotUseItemReason;
-import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.inventory.ItemService;
-import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.WeaponClass;
+import cz.neumimto.rpg.inventory.*;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -34,10 +30,12 @@ import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.mods.SkillExecutorCallback;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
+import org.spongepowered.api.event.entity.ChangeEntityEquipmentEvent;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.filter.IsCancelled;
 import org.spongepowered.api.event.filter.cause.First;
@@ -46,9 +44,10 @@ import org.spongepowered.api.event.filter.type.Include;
 import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
-import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
 import org.spongepowered.api.event.item.inventory.InteractItemEvent;
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.util.Tristate;
@@ -80,11 +79,6 @@ public class InventoryListener {
 	private NtRpgPlugin plugin;
 
 	@Listener
-	public void onInventoryClose(InteractInventoryEvent.Close event, @First(typeFilter = {Player.class}) Player player) {
-		//todo
-	}
-
-	@Listener
 	@IsCancelled(Tristate.FALSE)
 	public void onItemDrop(DropItemEvent.Dispense event, @Root Player player) {
 		if (!player.getOpenInventory().isPresent()) {
@@ -93,6 +87,7 @@ public class InventoryListener {
 
 		inventoryService.processHotbarItemDispense(player);
 	}
+
 
 	@Listener
 	public void onHotbarInteract(InteractItemEvent event, @First(typeFilter = Player.class) Player player) {
@@ -206,4 +201,22 @@ public class InventoryListener {
 		}
 
 	}
+
+
+	@Listener
+	public void onItemDestruct(ChangeEntityEquipmentEvent.TargetPlayer event) {
+		Optional<Transaction<ItemStackSnapshot>> itemStack = event.getItemStack();
+		if (itemStack.isPresent()) {
+			Transaction<ItemStackSnapshot> transaction = itemStack.get();
+			ItemStackSnapshot aFinal = transaction.getFinal();
+			if (aFinal.getType() == ItemTypes.AIR) {
+				RPGItemType rpgItemType = itemService.getFromItemStack(transaction.getOriginal());
+				if (rpgItemType != null) {
+					inventoryService.processHotbarItemDispense(event.getTargetEntity());
+				}
+			}
+		}
+
+	}
+
 }

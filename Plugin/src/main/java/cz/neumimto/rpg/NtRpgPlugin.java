@@ -1335,7 +1335,6 @@ public class NtRpgPlugin {
 												GlobalScope.characterService.setActiveCharacter(player.getUniqueId(), character);
 												GlobalScope.characterService.invalidateCaches(character);
 												GlobalScope.characterService.assignPlayerToCharacter(player);
-
 											})
 											.submit(NtRpgPlugin.this);
 									b = true;
