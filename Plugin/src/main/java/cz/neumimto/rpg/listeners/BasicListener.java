@@ -403,11 +403,17 @@ public class BasicListener {
 			Double d = experienceService.getMinningExperiences(type);
 			if (d != null) {
 				characterService.addExperiences(character, d, ExperienceSources.MINING);
-			} else {
-				d = experienceService.getLoggingExperiences(type);
-				if (d != null) {
-					characterService.addExperiences(character, d, ExperienceSources.LOGGING);
-				}
+				return;
+			}
+			d = experienceService.getFarmingExperiences(type);
+			if (d != null) {
+				characterService.addExperiences(character, d, ExperienceSources.FARMING);
+				return;
+			}
+			d = experienceService.getLoggingExperiences(type);
+			if (d != null) {
+				characterService.addExperiences(character, d, ExperienceSources.LOGGING);
+				return;
 			}
 		}
 	}

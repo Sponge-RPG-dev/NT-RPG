@@ -8,4 +8,5 @@ public class ExperienceSources {
 	public static ExperienceSource LOGGING = new ExperienceSource("logging");
 	public static ExperienceSource QUESTING = new ExperienceSource("questing");
 	public static ExperienceSource FISHING = new ExperienceSource("fishing");
+	public static ExperienceSource FARMING = new ExperienceSource("harvesting");
 }
