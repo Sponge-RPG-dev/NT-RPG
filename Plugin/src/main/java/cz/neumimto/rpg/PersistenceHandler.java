@@ -35,7 +35,8 @@ public class PersistenceHandler {
         if (event.validForContext("nt-rpg")) {
             DbMigrationService dms = IoC.get().build(DbMigrationService.class);
             List<String> migrations = Arrays.asList(
-                    "sql/%s/040918-init-db.sql"
+                    "sql/%s/040918-init-db.sql",
+                    "sql/%s/060119-update-2.0.0.sql"
             );
 
             for (String migration : migrations) {

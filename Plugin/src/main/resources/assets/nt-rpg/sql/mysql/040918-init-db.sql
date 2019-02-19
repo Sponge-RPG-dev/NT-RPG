@@ -1,7 +1,7 @@
+--@id:init-db
 --@author:NeumimTo
 --@date:04.09.2018 01:00
 --@note:Initial setup
---@id:init-db
 CREATE TABLE rpg_character_attribute (
   attribute_id bigint NOT NULL AUTO_INCREMENT,
   level int NOT NULL,
