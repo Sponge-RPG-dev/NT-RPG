@@ -17,7 +17,7 @@ public class WeaponClassAdapter implements AbstractSerializer<WeaponClass> {
 	public WeaponClass deserialize(TypeToken<?> typeToken, ConfigurationNode configurationNode) throws ObjectMappingException {
 		String string = configurationNode.getString();
 		Optional<WeaponClass> first =
-				NtRpgPlugin.GlobalScope.itemService.getItemTypes().stream().filter(a -> a.getName().equalsIgnoreCase(string)).findFirst();
+				NtRpgPlugin.GlobalScope.itemService.getWeaponCLasses().stream().filter(a -> a.getName().equalsIgnoreCase(string)).findFirst();
 		if (!first.isPresent()) {
 			throw new ObjectMappingException("Unknown weapon class \""+string+" \"");
 		}

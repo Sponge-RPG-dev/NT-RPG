@@ -81,6 +81,7 @@ import cz.neumimto.rpg.skills.mods.*;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.parents.IActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
+import cz.neumimto.rpg.utils.EditorMappings;
 import cz.neumimto.rpg.utils.FileUtils;
 import cz.neumimto.rpg.utils.Placeholders;
 import cz.neumimto.rpg.utils.TriConsumer;
@@ -461,6 +462,8 @@ public class NtRpgPlugin {
         }
 
         ioc.postProcess();
+
+        EditorMappings.dump();
         double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
         info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
     }

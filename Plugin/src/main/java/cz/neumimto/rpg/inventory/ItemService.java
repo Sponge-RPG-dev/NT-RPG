@@ -72,7 +72,7 @@ public class ItemService {
 		rpgItemTypes.add(type);
 	}
 
-	public Set<WeaponClass> getItemTypes() {
+	public Set<WeaponClass> getWeaponCLasses() {
 		Set<WeaponClass> classes = new HashSet<>();
 		for (Set<RPGItemType> rpgItemTypes : itemTypes.values()) {
 			for (RPGItemType rpgItemType : rpgItemTypes) {
@@ -81,6 +81,16 @@ public class ItemService {
 			}
 		}
 		return classes;
+	}
+
+	public Set<String> getRegisteredWeapons() {
+		Set<String> items = new HashSet<>();
+		for (Set<RPGItemType> value : itemTypes.values()) {
+			for (RPGItemType type : value) {
+				items.add(type.getItemType().getId() + ";" + type.getDefaultDamage());
+			}
+		}
+		return items;
 	}
 
 	public void registerProperty(WeaponClass weaponClass, String property) {
@@ -108,6 +118,20 @@ public class ItemService {
 
 	public RPGItemType getArmorByItemType(ItemType type) {
 		return armor.get(type);
+	}
+
+	public Collection<RPGItemType> getArmorList() {
+		return armor.values();
+	}
+
+	public Set<WeaponClass> getWeaponClasses() {
+		Set<WeaponClass> weaponClasses = new HashSet<>();
+		for (Set<RPGItemType> value : itemTypes.values()) {
+			for (RPGItemType type : value) {
+				weaponClasses.add(type.getWeaponClass());
+			}
+		}
+		return weaponClasses;
 	}
 
 	public RPGItemType getArmorFromItemStack(ItemStack itemStack) {

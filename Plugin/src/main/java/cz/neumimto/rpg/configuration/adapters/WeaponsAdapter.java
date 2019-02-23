@@ -14,14 +14,7 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.item.ItemType;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 5.1.2019.
@@ -50,7 +43,7 @@ public class WeaponsAdapter implements AbstractSerializer<Map<ItemType, Set<Conf
 			String s = iterator.next();
 			if (s.toLowerCase().startsWith("weaponclass:")) {
 				String clazz = s.split(":")[1];
-				Optional<WeaponClass> first = NtRpgPlugin.GlobalScope.itemService.getItemTypes().stream().filter(a -> a.getName().equalsIgnoreCase(clazz)).findFirst();
+				Optional<WeaponClass> first = NtRpgPlugin.GlobalScope.itemService.getWeaponCLasses().stream().filter(a -> a.getName().equalsIgnoreCase(clazz)).findFirst();
 				if (first.isPresent()) {
 						WeaponClass weaponClass = first.get();
 						weaponClasses.add(weaponClass);
