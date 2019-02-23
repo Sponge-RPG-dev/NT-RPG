@@ -25,10 +25,11 @@ public class EffectsAdapter implements TypeSerializer<Map<IGlobalEffect, EffectP
         for (EffectConfigModel model : list) {
             if (model.type == null) {
                 Log.warn("Cannot read effects section - Missing node Id");
+                continue;
             }
-            IGlobalEffect globalEffect = NtRpgPlugin.GlobalScope.effectService.getGlobalEffect(model.type.toLowerCase());
+            IGlobalEffect globalEffect = NtRpgPlugin.GlobalScope.effectService.getGlobalEffect(model.type);
             if (globalEffect == null) {
-                Log.error("Unknown Effect " + model.type.toLowerCase());
+                Log.error("Unknown Effect " + model.type);
                 continue;
             }
             if (model.settings == null) {

@@ -455,7 +455,6 @@ public class EffectService {
 		effectSet.clear();
 		pendingAdditions.clear();
 		pendingRemovals.clear();
-		globalEffects.clear();
 	}
 }
 
