@@ -20,7 +20,7 @@ public class ExperienceSourceRegistry implements AdditionalCatalogRegistryModule
 
 	@Override
 	public Optional<ExperienceSource> getById(String id) {
-		return Optional.of(sources.get(id.toLowerCase()));
+		return Optional.ofNullable(sources.get(id.toLowerCase()));
 	}
 
 	@Override
