@@ -21,8 +21,19 @@ package cz.neumimto.rpg.players.groups;
 import cz.neumimto.config.blackjack.and.hookers.annotations.AsCollectionImpl;
 import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
 import cz.neumimto.config.blackjack.and.hookers.annotations.Default;
-import cz.neumimto.rpg.configuration.adapters.*;
-import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.configuration.adapters.AllowedArmorListAdapter;
+import cz.neumimto.rpg.configuration.adapters.ClassDependencyGraphAdapter;
+import cz.neumimto.rpg.configuration.adapters.ClassExpAdapter;
+import cz.neumimto.rpg.configuration.adapters.ClassTypeAdapter;
+import cz.neumimto.rpg.configuration.adapters.EffectsAdapter;
+import cz.neumimto.rpg.configuration.adapters.PropertiesAdapter;
+import cz.neumimto.rpg.configuration.adapters.SkillTreeLookupAdapter;
+import cz.neumimto.rpg.configuration.adapters.WeaponsAdapter;
+import cz.neumimto.rpg.effects.EffectParams;
+import cz.neumimto.rpg.effects.EffectSourceType;
+import cz.neumimto.rpg.effects.IEffectSource;
+import cz.neumimto.rpg.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.players.ExperienceSource;
@@ -39,13 +50,20 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by NeumimTo on 27.12.2014.
  */
 @ConfigSerializable
-public class ClassDefinition  implements IEffectSourceProvider {
+public class ClassDefinition implements IEffectSourceProvider {
 
 	@Setting("Name")
 	private String name;
@@ -148,6 +166,10 @@ public class ClassDefinition  implements IEffectSourceProvider {
 	@Setting("CustomLore")
 	@AsCollectionImpl(ArrayList.class)
 	private List<Text> customLore;
+
+	public ClassDefinition(String name) {
+		this.name = name;
+	}
 
 	public String getName() {
 		return name;

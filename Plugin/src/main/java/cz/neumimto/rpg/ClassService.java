@@ -26,11 +26,13 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.groups.PlayerGroupPermission;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.service.permission.SubjectData;
 import org.spongepowered.api.util.Tristate;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -49,13 +51,17 @@ public class ClassService {
 	@Inject
 	private ClassDefinitionDao classDefinitionDao;
 
+	private Map<String, ClassDefinition> classes = new HashMap<>();
 
+	public Map<String, ClassDefinition> getClasses() {
+		return classes;
+	}
 
 	public ClassDefinition getClassDefinitionByName(String name) {
 		if (name == null) {
 			return null;
 		}
-		return classDefinitionDao.getClasses().get(name.toLowerCase());
+		return getClasses().get(name.toLowerCase());
 	}
 
 	public void registerPlaceholders() {
@@ -63,16 +69,16 @@ public class ClassService {
 	}
 
 	public boolean existsClass(String s) {
-		return classDefinitionDao.getClasses().containsKey(s.toLowerCase());
+		return getClasses().containsKey(s.toLowerCase());
 	}
 
 	public Collection<ClassDefinition> getClassDefinitions() {
-		return classDefinitionDao.getClasses().values();
+		return getClasses().values();
 	}
 
 	public Set<ClassDefinition> filterByPlayerAndType(Player player, String type) {
 		Set<ClassDefinition> defs = new HashSet<>();
-		for (Map.Entry<String, ClassDefinition> entry : classDefinitionDao.getClasses().entrySet()) {
+		for (Map.Entry<String, ClassDefinition> entry : getClasses().entrySet()) {
 			ClassDefinition value = entry.getValue();
 			if (value.getClassType().equalsIgnoreCase(type)) {
 				if (player.hasPermission(CLASS_ACCESS_PERM + value.getName().toLowerCase())) {
@@ -140,6 +146,18 @@ public class ClassService {
 			if (playerGroupPermission.getLevel() == classDefinition.getLevel()) {
 				addPermissions(character, playerGroupPermission.getPermissions());
 			}
+		}
+	}
+
+	public void loadClasses() {
+		try {
+			Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles();
+			classes.clear();
+			classDefinitions.stream().forEach(a -> classes.put(a.getName().toLowerCase(), a));
+			Log.info("Successfully loaded " + classes.size() + " classes");
+
+		} catch (ObjectMappingException e) {
+			Log.error("Could not load classes, ", e);
 		}
 	}
 }

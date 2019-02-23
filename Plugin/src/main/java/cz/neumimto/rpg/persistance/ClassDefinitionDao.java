@@ -19,26 +19,23 @@
 package cz.neumimto.rpg.persistance;
 
 import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.inventory.ItemService;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.players.properties.PropertyService;
-import cz.neumimto.rpg.skills.SkillService;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
-import org.spongepowered.api.Game;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
+import static cz.neumimto.rpg.Log.error;
 import static cz.neumimto.rpg.Log.info;
 
 /**
@@ -47,34 +44,11 @@ import static cz.neumimto.rpg.Log.info;
 @Singleton
 public class ClassDefinitionDao {
 
-    @Inject
-    PropertyService propertyService;
-
-    @Inject
-    EffectService effectService;
-
-    @Inject
-    Game game;
-
-    @Inject
-    SkillService skillService;
-
-    @Inject
-    ItemService itemService;
-
-    private Map<String, ClassDefinition> classes = new HashMap<>();
-
-
-    public Map<String, ClassDefinition> getClasses() {
-        return classes;
-    }
-
-
-    public void loadClassDefs() {
+    public Set<ClassDefinition> parseClassFiles() throws ObjectMappingException {
         Path path = ResourceLoader.classDir.toPath();
-
+        Set<ClassDefinition> set = new HashSet<>();
         try {
-            Map<String, Path> stringPathMap = preloadClassDefs(path);
+            Map<String, Path> stringPathMap = preloadClassDefs(path, set);
             final ObjectMapper<ClassDefinition> mapper = NotSoStupidObjectMapper.forClass(ClassDefinition.class);
             for (Map.Entry<String, Path> stringPathEntry : stringPathMap.entrySet()) {
                 String key = stringPathEntry.getKey();
@@ -83,27 +57,35 @@ public class ClassDefinitionDao {
                 try {
                     info("Loading class definition file " + p.getFileName());
                     HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(p).build();
-                    ClassDefinition result = mapper.bind(classes.get(key)).populate(hcl.load());
+                    ClassDefinition definition = null;
+                    for (ClassDefinition classDefinition : set) {
+                        if (classDefinition.getName().equalsIgnoreCase(key)) {
+                            definition = classDefinition;
+                            break;
+                        }
+                    }
+
+                    ClassDefinition result = mapper.bind(definition).populate(hcl.load());
 
                     if (result.getLevelProgression() != null) {
                         result.getLevelProgression().setLevelMargins(result.getLevelProgression().initCurve());
                     }
-                } catch (ObjectMappingException e) {
-                    e.printStackTrace();
+                    set.add(result);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    error("Could not read class file: ", e);
+                    throw new ObjectMappingException(e);
                 }
 
             }
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ObjectMappingException e) {
-            e.printStackTrace();
+            error("Could not read class file: ", e);
+            throw new ObjectMappingException(e);
         }
+        return set;
     }
 
     //because of dependency graph
-    public Map<String, Path> preloadClassDefs(Path path) throws IOException {
+    private Map<String, Path> preloadClassDefs(Path path, Set<ClassDefinition> set) throws IOException {
         Map<String, Path> map = new HashMap<>();
         Files.walk(path)
                 .filter(Files::isRegularFile)
@@ -113,9 +95,9 @@ public class ClassDefinitionDao {
                     try {
                         CommentedConfigurationNode load = build.load();
                         String name = (String) load.getNode("Name").getValue();
-                        ClassDefinition classDefinition = new ClassDefinition();
+                        ClassDefinition classDefinition = new ClassDefinition(name);
                         map.put(name, p);
-                        classes.put(name, classDefinition);
+                        set.add(classDefinition);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

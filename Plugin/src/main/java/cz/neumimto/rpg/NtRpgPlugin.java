@@ -27,7 +27,16 @@ import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizationService;
 import cz.neumimto.core.localization.TextHelper;
-import cz.neumimto.rpg.commands.*;
+import cz.neumimto.rpg.commands.AnyClassDefCommandElement;
+import cz.neumimto.rpg.commands.CharacterAttributeCommandElement;
+import cz.neumimto.rpg.commands.ClassDefCommandElement;
+import cz.neumimto.rpg.commands.ClassTypeCommandElement;
+import cz.neumimto.rpg.commands.GlobalEffectCommandElement;
+import cz.neumimto.rpg.commands.LearnedSkillCommandElement;
+import cz.neumimto.rpg.commands.PartyMemberCommandElement;
+import cz.neumimto.rpg.commands.PlayerClassCommandElement;
+import cz.neumimto.rpg.commands.RuneCommandElement;
+import cz.neumimto.rpg.commands.UnlearnedSkillCommandElement;
 import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.configuration.PluginConfig;
@@ -47,7 +56,22 @@ import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
-import cz.neumimto.rpg.inventory.data.manipulators.*;
+import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemAttributesData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaHeader;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaTypeData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemRarityData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemSocketsData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemStackUpgradeData;
+import cz.neumimto.rpg.inventory.data.manipulators.ItemSubtypeData;
+import cz.neumimto.rpg.inventory.data.manipulators.LoreDamageData;
+import cz.neumimto.rpg.inventory.data.manipulators.LoreDurabilityData;
+import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemGroupRequirementsData;
+import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemRequirementsData;
+import cz.neumimto.rpg.inventory.data.manipulators.SectionDelimiterData;
+import cz.neumimto.rpg.inventory.data.manipulators.SkillBindData;
+import cz.neumimto.rpg.inventory.data.manipulators.SkillTreeNode;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.inventory.items.ItemMetaTypeRegistry;
 import cz.neumimto.rpg.inventory.items.ItemMetaTypes;
@@ -63,21 +87,41 @@ import cz.neumimto.rpg.inventory.sockets.SocketType;
 import cz.neumimto.rpg.inventory.sockets.SocketTypeRegistry;
 import cz.neumimto.rpg.inventory.sockets.SocketTypes;
 import cz.neumimto.rpg.listeners.DebugListener;
+import cz.neumimto.rpg.persistance.ClassDefinitionDao;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.players.*;
+import cz.neumimto.rpg.players.ActiveCharacter;
+import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.players.ExperienceSource;
+import cz.neumimto.rpg.players.ExperienceSourceRegistry;
+import cz.neumimto.rpg.players.ExperienceSources;
+import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.PlayerClassData;
+import cz.neumimto.rpg.players.PreloadCharacter;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.AttributeRegistry;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.scripting.JSLoader;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.ISkillType;
+import cz.neumimto.rpg.skills.NDamageType;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
+import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.SkillTypeRegistry;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoader;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoaderRegistry;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoaders;
-import cz.neumimto.rpg.skills.mods.*;
+import cz.neumimto.rpg.skills.mods.SkillContext;
+import cz.neumimto.rpg.skills.mods.SkillExecutorCallback;
+import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactory;
+import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactoryRegistry;
+import cz.neumimto.rpg.skills.mods.SkillPreprocessorFactories;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.parents.IActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
@@ -116,7 +160,6 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
-import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -127,12 +170,27 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
+import javax.annotation.Resource;
+
 import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
 
 /**
  * Created by NeumimTo on 29.4.2015.
@@ -924,8 +982,77 @@ public class NtRpgPlugin {
                         reloadMainPluigonConfig();
                     } else if (a[0].equalsIgnoreCase("mobs")) {
                         IoC.get().build(EntityService.class).reloadMobConfiguration();
+                    } else if (a[0].equalsIgnoreCase("classes")) {
+                        //Check if configs are ok
+                        warn("[RELOAD] Attempting to reload classes from config files...");
+                        info("[RELOAD] Checking class files: ");
+                        ClassDefinitionDao build = IoC.get().build(ClassDefinitionDao.class);
+                        try {
+                            build.parseClassFiles();
+                            info("[RELOAD] Class files ok");
+
+                            //Get all objects we need to save
+                            Set<CharacterBase> characterBases = new HashSet<>();
+                            for (Player player : Sponge.getServer().getOnlinePlayers()) {
+                                IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
+                                if (character.isStub()){
+                                    continue;
+                                }
+                                characterBases.add(character.getCharacterBase());
+                            }
+
+                            //Set Char stubs
+                            for (Player player : Sponge.getServer().getOnlinePlayers()) {
+                                IActiveCharacter character = GlobalScope.characterService.getCharacter(player);
+                                if (character.isStub()){
+                                    continue;
+                                }
+                                PreloadCharacter preloadCharacter = GlobalScope.characterService.buildDummyChar(player.getUniqueId());
+                                GlobalScope.characterService.registerDummyChar(preloadCharacter);
+                            }
+                            logger.info("[RELOAD] Purging effect caches");
+                            GlobalScope.effectService.purgeEffectCache();
+                            GlobalScope.effectService.stop();
+                            //todo purge all skills
+                            //todo purge all skilltrees
+
+                            for (CharacterBase characterBase : characterBases) {
+                                logger.info("[RELOAD] saving character " + characterBase.getLastKnownPlayerName());
+                                GlobalScope.characterService.save(characterBase);
+                            }
+
+
+                            //we should be ready to start loading stuff back
+                            Sponge.getScheduler().createTaskBuilder().execute(() -> {
+                                //System.gc(); - for reloading skills its required
+
+                                GlobalScope.effectService.start();
+                                //todo load skills
+                                //todo load skilltrees
+
+                                GlobalScope.classService.loadClasses();
+                                Comparator<CharacterBase> cmp = Comparator.comparing(CharacterBase::getUpdated);
+                                for (Player player : Sponge.getServer().getOnlinePlayers()) {
+                                    List<CharacterBase> playersCharacters =
+                                            GlobalScope.characterService.getPlayersCharacters(player.getUniqueId());
+                                    if (playersCharacters.isEmpty()) {
+                                        continue;
+                                    }
+                                    CharacterBase max = playersCharacters.stream().max(cmp).get();
+                                    ActiveCharacter activeCharacter = GlobalScope.characterService.createActiveCharacter(player.getUniqueId(), max);
+                                    GlobalScope.characterService.setActiveCharacter(player.getUniqueId(), activeCharacter);
+                                    GlobalScope.characterService.invalidateCaches(activeCharacter);
+                                    GlobalScope.characterService.assignPlayerToCharacter(player);
+                                }
+                            }).submit(this);
+
+
+
+                        } catch (ObjectMappingException e) {
+                            src.sendMessage(Text.of("Errors occured during class reload, check server console for more informations"));
+                        }
                     } else {
-                        src.sendMessage(TextHelper.parse("js[s/a/g] skilltree [r,a] icons"));
+                        src.sendMessage(TextHelper.parse("js[s/a/g] skilltree [r,a] classes"));
                         return CommandResult.empty();
                     }
                     return CommandResult.success();

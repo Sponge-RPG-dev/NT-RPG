@@ -9,7 +9,6 @@ import cz.neumimto.rpg.gui.VanillaMessaging;
 import cz.neumimto.rpg.inventory.CustomItemFactory;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.runewords.RWService;
-import cz.neumimto.rpg.persistance.ClassDefinitionDao;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.skills.SkillService;
@@ -31,10 +30,7 @@ public class Init {
 	@Inject ParticleDecorator particleDecorator;
 	@Inject ExperienceService experienceService;
 	@Inject CustomItemFactory customItemFactory;
-	@Inject
-    ClassService classService;
-	@Inject
-    ClassDefinitionDao classDefinitionDao;
+	@Inject ClassService classService;
 	@Inject RWService rwService;
 
 	public void it() {
@@ -54,7 +50,7 @@ public class Init {
 
 		classService.registerPlaceholders();
 		rwService.load();
-		classDefinitionDao.loadClassDefs();
+		classService.loadClasses();
 
 
 

@@ -18,8 +18,6 @@
 
 package cz.neumimto.rpg.effects;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
@@ -33,6 +31,7 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
+import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
 
 import java.io.File;
@@ -50,6 +49,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 17.1.2015.
@@ -77,6 +78,7 @@ public class EffectService {
 	private long timingsStart;
 	private long timingsTicks;
 	private static final long timingsTicksMax = 100;
+	private Task effectTask;
 	/**
 	 * calls effect.onApply and registers if effect requires
 	 *
@@ -178,7 +180,11 @@ public class EffectService {
 		}
 
 
-		game.getScheduler().createTaskBuilder().name("EffectTask")
+		start();
+	}
+
+	public void start() {
+		effectTask = game.getScheduler().createTaskBuilder().name("EffectTask")
 				.delay(5L, TimeUnit.MILLISECONDS)
 				.interval(TICK_PERIOD, TimeUnit.MILLISECONDS)
 				.execute(this::schedule)
@@ -439,6 +445,17 @@ public class EffectService {
 			}
 			iterator1.remove();
 		}
+	}
+
+	public void stop() {
+		effectTask.cancel();
+	}
+
+	public void purgeEffectCache() {
+		effectSet.clear();
+		pendingAdditions.clear();
+		pendingRemovals.clear();
+		globalEffects.clear();
 	}
 }
 
