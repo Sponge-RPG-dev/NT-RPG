@@ -55,6 +55,7 @@ import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.UserActionType;
+import cz.neumimto.rpg.persistance.CharacterClassDao;
 import cz.neumimto.rpg.persistance.PlayerDao;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
@@ -129,6 +130,10 @@ public class CharacterService {
 
     @Inject
     private PropertyService propertyService;
+
+    @Inject
+    private CharacterClassDao characterClassDao;
+
 
     private Map<UUID, IActiveCharacter> characters = new HashMap<>();
 
@@ -946,12 +951,13 @@ public class CharacterService {
 
     public void addExperiences(IActiveCharacter character, double exp, ExperienceSource source) {
         Map<String, PlayerClassData> classes = character.getClasses();
+        boolean save = false;
         for (Map.Entry<String, PlayerClassData> entry : classes.entrySet()) {
             PlayerClassData value = entry.getValue();
             ClassDefinition classDefinition = value.getClassDefinition();
             if (classDefinition.hasExperienceSource(source)) {
                 if (value.takesExp()) {
-                    addExperiences(character, exp, entry.getValue());
+                   addExperiences(character, exp, entry.getValue());
                 }
             }
         }
@@ -983,7 +989,9 @@ public class CharacterService {
             aClass.setLevel(level);
             Gui.showLevelChange(character, aClass, level);
             SkillTreeType skillTreeType = aClass.getClassDefinition().getSkillTreeType();
-            skillTreeType.processClassLevelUp(character, aClass, level);
+            if (skillTreeType != null) {
+                skillTreeType.processClassLevelUp(character, aClass, level);
+            }
             gotLevel = true;
 
             classService.addPermissions(character, aClass);
@@ -996,15 +1004,19 @@ public class CharacterService {
             newcurrentexp = newcurrentexp - levellimit;
             levellimit = levels[level];
         }
-        aClass.getCharacterClass().setExperiences(newcurrentexp);
+        CharacterClass characterClass = aClass.getCharacterClass();
+        characterClass.setExperiences(newcurrentexp);
 
         if (gotLevel) {
             inventoryService.initializeCharacterInventory(character);
         }
 
         Gui.showExpChange(character, aClass.getClassDefinition().getName(), exp);
-        putInSaveQueue(character.getCharacterBase());
 
+        CompletableFuture.runAsync(() -> {
+            info("Saving CharacterClass " + characterClass.getId());
+            characterClassDao.update(characterClass);
+        }, NtRpgPlugin.asyncExecutor);
     }
 
 

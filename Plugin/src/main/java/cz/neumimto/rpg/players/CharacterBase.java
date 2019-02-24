@@ -110,7 +110,7 @@ public class CharacterBase extends TimestampEntity {
 	@OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "characterBase")
 	private Set<CharacterClass> characterClasses = new HashSet<>();
 
-	@OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "characterBase")
+	@OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "characterBase")
 	@Access(AccessType.FIELD)
 	private Set<BaseCharacterAttribute> baseCharacterAttribute = new HashSet<>();
 
