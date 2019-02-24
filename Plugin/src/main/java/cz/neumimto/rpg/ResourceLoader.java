@@ -210,11 +210,6 @@ public class ResourceLoader {
 				if (!main) {
 					ClassLoader classLoader = classLoaderMap.get(f.getName());
 					clazz = classLoader.loadClass(className);
-					info("ClassLoader for "
-							+ Console.GREEN_BOLD + classLoader +
-							Console.RESET + " loaded class " +
-							Console.GREEN + clazz.getSimpleName() + Console.RESET, pluginConfig
-							.DEBUG);
 					loadClass(clazz, classLoader);
 				} else {
 					clazz = Class.forName(className);
