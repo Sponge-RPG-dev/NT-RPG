@@ -1490,13 +1490,17 @@ public class NtRpgPlugin {
                                 if (playersCharacter.getName().equalsIgnoreCase(s)) {
                                     ActiveCharacter character =
                                             GlobalScope.characterService.createActiveCharacter(player.getUniqueId(), playersCharacter);
-                                    Sponge.getScheduler().createTaskBuilder().name("SetCharacterCallback" + player.getUniqueId())
+
+                                    Sponge.getScheduler()
+                                            .createTaskBuilder()
+                                            .name("SetCharacterCallback" + player.getUniqueId())
                                             .execute(() -> {
                                                 GlobalScope.characterService.setActiveCharacter(player.getUniqueId(), character);
                                                 GlobalScope.characterService.invalidateCaches(character);
                                                 GlobalScope.characterService.assignPlayerToCharacter(player);
                                             })
-                                            .submit(NtRpgPlugin.this);
+                                            .submit(NtRpgPlugin.GlobalScope.plugin);
+
                                     b = true;
                                     //Update characterbase#updated, so next time plazer logs it it will autoselect this character,
                                     // even if it was never updated afterwards

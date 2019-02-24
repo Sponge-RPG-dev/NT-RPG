@@ -63,10 +63,10 @@ public class PlayerDao extends GenericDao<CharacterBase> {
 		Session session = getFactory().openSession();
 		CharacterBase cb = (CharacterBase) session.merge(base);
 		session.beginTransaction();
-		cb.getCharacterSkills();
-		cb.getCharacterClasses();
-		cb.getBaseCharacterAttribute();
-		cb.getCharacterSkills();
+		cb.getCharacterSkills().size();
+		cb.getCharacterClasses().size();
+		cb.getBaseCharacterAttribute().size();
+		cb.getCharacterSkills().size();
 		session.getTransaction().commit();
 		session.close();
 		return cb;

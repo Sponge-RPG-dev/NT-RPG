@@ -25,7 +25,7 @@ public class DependencyGraph {
     }
 
     public boolean isValidFor(Collection<ClassDefinition> context) {
-        boolean found = false;
+        boolean found = softDepends.isEmpty();
         for (ClassDefinition softDepend : softDepends) {
             if (context.contains(softDepend)) {
                 found = true;

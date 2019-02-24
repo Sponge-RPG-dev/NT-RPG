@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.commands;
 
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
@@ -15,11 +17,13 @@ import org.spongepowered.api.command.args.CommandElement;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
-import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import javax.annotation.Nullable;
 
 /**
  * Created by NeumimTo on 5.11.2017.
@@ -50,27 +54,25 @@ public class AnyClassDefCommandElement extends CommandElement {
 		if (validate && pluginConfig.RESPECT_CLASS_SELECTION_ORDER) {
 			Set<String> classTypes = pluginConfig.CLASS_TYPES.keySet();
 
-			Iterator<String> ctype = new LinkedList<>(classTypes).descendingIterator();
+			Iterator<String> ctype = classTypes.iterator();
+			String first = classTypes.iterator().next();
 
-			boolean depOk = false;
-			int it = 0;
 			while (ctype.hasNext()) {
-				it++;
 				String classType = ctype.next();
+				if (first.equalsIgnoreCase(classType) && first.equalsIgnoreCase(configClass.getClassType())) {
+					break;
+				}
 				PlayerClassData classByType = character.getClassByType(classType);
 				if (classByType == null) {
-					if (it != 1) {
-						throw args.createError(Text.of("Class type of " + classType + " not selected"));
-					}
-					depOk = true;
+					throw args.createError(Text.of("Class type of " + classType + " not selected."));
 				}
-				if (!depOk) {
-					ClassDefinition classDefinition = classByType.getClassDefinition();
-					if (!classDefinition.getClassDependencyGraph().isValidFor(character.getClasses()
-							.values().stream().map(PlayerClassData::getClassDefinition).collect(Collectors.toSet()))) {
-						throw args.createError(Localizations.MISSING_CLASS_DEPENDENCIES.toText());
-					}
+				ClassDefinition classDefinition = classByType.getClassDefinition();
+				if (!classDefinition.getClassDependencyGraph().isValidFor(character.getClasses()
+						.values().stream().map(PlayerClassData::getClassDefinition).collect(Collectors.toSet()))) {
+					throw args.createError(Localizations.MISSING_CLASS_DEPENDENCIES.toText());
 				}
+				break;
+
 			}
 		}
 		if (!source.hasPermission("ntrpg.class." + configClass.getName().toLowerCase())) {

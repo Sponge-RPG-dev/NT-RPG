@@ -3,7 +3,12 @@ package cz.neumimto.rpg.persistance.model;
 import cz.neumimto.rpg.players.CharacterBase;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  * Created by ja on 8.10.2016.
@@ -22,19 +27,19 @@ public class CharacterClass {
 	private CharacterBase characterBase;
 
 	@Column(name = "experiences")
-	private double experiences;
+	private Double experiences;
 
 	@Column(name = "level")
-	private int level;
+	private Integer level;
 
 	@Column(name = "name")
 	private String name;
 
 	@Column(name = "used_skil_points")
-	private int usedSkillPoints;
+	private Integer usedSkillPoints;
 
 	@Column(name = "skillpoints")
-	protected int skillPoints;
+	protected Integer skillPoints;
 
 	public Long getId() {
 		return classId;
