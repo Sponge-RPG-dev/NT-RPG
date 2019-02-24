@@ -11,6 +11,7 @@ import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
 import cz.neumimto.rpg.listeners.SkillTreeInventoryListener;
+import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
@@ -340,11 +341,16 @@ public class GuiHelper {
 				.build());
 
 		ClassDefinition viewedClass = character.getLastTimeInvokedSkillTreeView().getViewedClass();
-		int sp = character.getCharacterBase().getCharacterClass(viewedClass).getSkillPoints();
+		CharacterClass characterClass = character.getCharacterBase().getCharacterClass(viewedClass);
+		if (characterClass == null) {
+			lore.add(Localizations.CLASS_NOT_SELECTED.toText());
+		} else {
+			int sp = characterClass.getSkillPoints();
 
-		lore.add(Text.builder("SP: ").color(TextColors.GREEN)
+			lore.add(Text.builder("SP: ").color(TextColors.GREEN)
 				.append(Text.builder(String.valueOf(sp)).style(TextStyles.BOLD).build())
 				.build());
+		}
 		md.offer(Keys.ITEM_LORE, lore);
 		return md;
 	}

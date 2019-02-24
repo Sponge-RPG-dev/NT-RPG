@@ -279,5 +279,7 @@ public class Localizations {
 
 	public static LocalizableParametrizedText UNABLE_TO_REFUND_SKILL;
 
-	public static LocalizableParametrizedText  UNABLE_TO_REFUND_SKILL_SEALED;
+	public static LocalizableParametrizedText UNABLE_TO_REFUND_SKILL_SEALED;
+
+	public static LocalizableParametrizedText CLASS_NOT_SELECTED;
 }
