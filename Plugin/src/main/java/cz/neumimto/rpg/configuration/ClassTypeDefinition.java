@@ -6,7 +6,7 @@ import org.spongepowered.api.data.type.DyeColor;
 import org.spongepowered.api.text.format.TextColor;
 
 @ConfigSerializable
-public class ClassTypeDefinition {
+public class ClassTypeDefinition implements Comparable<ClassTypeDefinition> {
 
     @Setting("PrimaryColor")
     private TextColor primaryColor;
@@ -20,15 +20,15 @@ public class ClassTypeDefinition {
     @Setting("Changeable")
     private boolean changeable;
 
+    @Setting("Order")
+    private int order;
 
-    public ClassTypeDefinition(TextColor primaryColor, TextColor secondaryColor, DyeColor dyeColor, boolean changeable) {
+    public ClassTypeDefinition(TextColor primaryColor, TextColor secondaryColor, DyeColor dyeColor, boolean changeable, int order) {
         this.primaryColor = primaryColor;
         this.secondaryColor = secondaryColor;
         this.changeable = changeable;
         this.dyeColor = dyeColor;
-    }
-
-    public ClassTypeDefinition() {
+        this.order = order;
     }
 
     public TextColor getPrimaryColor() {
@@ -45,5 +45,14 @@ public class ClassTypeDefinition {
 
     public DyeColor getDyeColor() {
         return dyeColor;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    @Override
+    public int compareTo(ClassTypeDefinition o) {
+        return order - o.order;
     }
 }

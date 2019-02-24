@@ -18,6 +18,9 @@
 
 package cz.neumimto.rpg;
 
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.inject.Inject;
@@ -37,6 +40,7 @@ import cz.neumimto.rpg.commands.PartyMemberCommandElement;
 import cz.neumimto.rpg.commands.PlayerClassCommandElement;
 import cz.neumimto.rpg.commands.RuneCommandElement;
 import cz.neumimto.rpg.commands.UnlearnedSkillCommandElement;
+import cz.neumimto.rpg.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.configuration.PluginConfig;
@@ -177,6 +181,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -188,9 +193,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 import javax.annotation.Resource;
-
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.Log.warn;
 
 /**
  * Created by NeumimTo on 29.4.2015.
@@ -539,6 +541,15 @@ public class NtRpgPlugin {
             ObjectMapper<PluginConfig> mapper = ObjectMapper.forClass(PluginConfig.class);
             HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(properties.toPath()).build();
             pluginConfig = mapper.bind(new PluginConfig()).populate(hcl.load());
+
+            List<Map.Entry<String, ClassTypeDefinition>> list = new ArrayList<>(pluginConfig.CLASS_TYPES.entrySet());
+            list.sort(Map.Entry.comparingByValue());
+
+            Map<String, ClassTypeDefinition> result = new LinkedHashMap<>();
+            for (Map.Entry<String, ClassTypeDefinition> entry : list) {
+                result.put(entry.getKey(), entry.getValue());
+            }
+            pluginConfig.CLASS_TYPES = result;
         } catch (ObjectMappingException | IOException e) {
             e.printStackTrace();
         }
