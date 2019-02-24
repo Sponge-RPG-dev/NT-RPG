@@ -3,6 +3,7 @@ package cz.neumimto.rpg.configuration.adapters;
 import com.google.common.reflect.TypeToken;
 import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.inventory.RPGItemType;
+import cz.neumimto.rpg.inventory.WeaponClass;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.Sponge;
@@ -26,7 +27,7 @@ public class AllowedArmorListAdapter implements AbstractSerializer<Set<RPGItemTy
             String[] split = a.split(";");
             Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, split[0]);
             if (type.isPresent()) {
-                RPGItemType rpgItemType = new RPGItemType(type.get(), split.length == 2 ? split[1] : null, null, 0);
+                RPGItemType rpgItemType = new RPGItemType(type.get(), split.length == 2 ? split[1] : null, WeaponClass.ARMOR, 0);
                 res.add(rpgItemType);
             } else {
                 Log.warn(" - Unknown item \""+a+"\")");
