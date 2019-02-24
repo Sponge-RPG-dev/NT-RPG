@@ -30,6 +30,7 @@ import cz.neumimto.rpg.IRpgElement;
 import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.MissingConfigurationException;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectService;
@@ -1014,7 +1015,7 @@ public class CharacterService {
         Gui.showExpChange(character, aClass.getClassDefinition().getName(), exp);
 
         CompletableFuture.runAsync(() -> {
-            info("Saving CharacterClass " + characterClass.getId());
+            info("Saving CharacterClass " + characterClass.getId(), DebugLevel.DEVELOP);
             characterClassDao.update(characterClass);
         }, NtRpgPlugin.asyncExecutor);
     }
