@@ -6,36 +6,25 @@ package cz.neumimto.rpg.utils.model;
 public class CharacterListModel {
 
 	private String characterName;
-	private String primaryClassName;
-	private Double primaryClassExp;
+	private String concatClassNames;
+	private Integer primaryClassLevel;
 
-	public CharacterListModel(String characterName, String primaryClassName, Double primaryClassExp) {
+	public CharacterListModel(String characterName, String concatClassNames, Integer primaryClassLevel) {
 		this.characterName = characterName;
-		this.primaryClassName = primaryClassName;
-		this.primaryClassExp = primaryClassExp;
+		this.concatClassNames = concatClassNames;
+		this.primaryClassLevel = primaryClassLevel;
 	}
 
 	public String getCharacterName() {
 		return characterName;
 	}
 
-	public void setCharacterName(String characterName) {
-		this.characterName = characterName;
+	public String getConcatClassNames() {
+		return concatClassNames;
 	}
 
-	public String getPrimaryClassName() {
-		return primaryClassName;
+	public Integer getPrimaryClassLevel() {
+		return primaryClassLevel;
 	}
 
-	public void setPrimaryClassName(String primaryClassName) {
-		this.primaryClassName = primaryClassName;
-	}
-
-	public Double getPrimaryClassExp() {
-		return primaryClassExp;
-	}
-
-	public void setPrimaryClassExp(Double primaryClassExp) {
-		this.primaryClassExp = primaryClassExp;
-	}
 }

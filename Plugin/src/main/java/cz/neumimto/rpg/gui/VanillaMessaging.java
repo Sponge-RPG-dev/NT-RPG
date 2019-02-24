@@ -18,6 +18,11 @@
 
 package cz.neumimto.rpg.gui;
 
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.gui.GuiHelper.back;
+import static cz.neumimto.rpg.gui.GuiHelper.createMenuInventoryClassDefView;
+import static cz.neumimto.rpg.gui.GuiHelper.getItemLore;
+
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
@@ -30,7 +35,11 @@ import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.damage.DamageService;
-import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.effects.EffectStatusType;
+import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.effects.common.def.ManaBarNotifier;
 import cz.neumimto.rpg.inventory.CannotUseItemReason;
@@ -44,9 +53,13 @@ import cz.neumimto.rpg.inventory.runewords.ItemUpgrade;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
-import cz.neumimto.rpg.persistance.DirectAccessDao;
+import cz.neumimto.rpg.persistance.PlayerDao;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
-import cz.neumimto.rpg.players.*;
+import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.PlayerClassData;
+import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.reloading.Reload;
@@ -84,10 +97,16 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
 
-import java.util.*;
-
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-import static cz.neumimto.rpg.gui.GuiHelper.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 /**
  * Created by NeumimTo on 6.8.2015.
@@ -270,15 +289,34 @@ public class VanillaMessaging implements IPlayerMessage {
         PaginationService paginationService = Sponge.getServiceManager().provide(PaginationService.class).get();
         PaginationList.Builder builder = paginationService.builder();
         NtRpgPlugin.asyncExecutor.execute(() -> {
-            DirectAccessDao build = IoC.get().build(DirectAccessDao.class);
-            //language=HQL
-            String query = "select new cz.neumimto.rpg.utils.model.CharacterListModel(" +
-                    "c.name,d.name,d.experiences) " +
-                    "from CharacterBase c left join c.characterClasses d " +
-                    "where c.uuid = :id AND c.markedForRemoval = null order by c.updated desc";
-            Map<String, Object> map = new HashMap<>();
-            map.put("id", player.getPlayer().getUniqueId());
-            List<CharacterListModel> list = build.findList(CharacterListModel.class, query, map);
+
+            PlayerDao playerDao = IoC.get().build(PlayerDao.class);
+
+            List<CharacterBase> playersCharacters = characterService.getPlayersCharacters(player.getPlayer().getUniqueId());
+            List<CharacterListModel> list = new ArrayList<>();
+            for (CharacterBase playersCharacter : playersCharacters) {
+                playerDao.fetchCharacterBase(playersCharacter);
+                Set<CharacterClass> characterClasses = playersCharacter.getCharacterClasses();
+                Integer pcExp = 0;
+                for (CharacterClass characterClass : characterClasses) {
+                    ClassDefinition classDefinitionByName = classService.getClassDefinitionByName(characterClass.getName());
+                    if (classDefinitionByName == null) {
+                        continue;
+                    }
+                    if (classDefinitionByName.getClassType().equalsIgnoreCase(NtRpgPlugin.pluginConfig.PRIMARY_CLASS_TYPE)) {
+                        pcExp = characterClass.getLevel();
+                        break;
+                    }
+                }
+                String collect = playersCharacter.getCharacterClasses().stream().map(CharacterClass::getName).collect(Collectors.joining(", "));
+                list.add(new CharacterListModel(
+                        playersCharacter.getName(),
+                        collect,
+                        pcExp
+                ));
+            }
+
+
             List<Text> content = new ArrayList<>();
             builder.linesPerPage(10);
             builder.padding(Text.builder("=").color(TextColors.DARK_GRAY).build());
@@ -299,19 +337,15 @@ public class VanillaMessaging implements IPlayerMessage {
                             .append(Text.builder("] - ").color(TextColors.DARK_GRAY).build());
                 }
                 b.append(Text.builder(a.getCharacterName()).color(TextColors.GRAY).append(Text.of(" ")).build());
-                ClassDefinition cc = s.getClassDefinitionByName(a.getPrimaryClassName());
-                int level = 0;
+
+                int level = a.getPrimaryClassLevel();
                 int m = 0;
 
-                if (cc != null) {
-                    b.append(Text.builder(a.getPrimaryClassName()).color(TextColors.AQUA).append(Text.of(" ")).build());
+                b.append(Text.builder(a.getConcatClassNames()).color(TextColors.AQUA).append(Text.of(" ")).build());
 
-                   /* level = s.getLevel(cc, a.getPrimaryClassExp());
-                    m = cc.getMaxLevel();
-*/
-                    b.append(Text.builder("Level: ").color(TextColors.DARK_GRAY).append(
-                            Text.builder(level + "").color(level == m ? TextColors.RED : TextColors.DARK_PURPLE).build()).build());
-                }
+                b.append(Text.builder("Level: ").color(TextColors.DARK_GRAY).append(
+                         Text.builder(level + "").color(level == m ? TextColors.RED : TextColors.DARK_PURPLE).build()).build());
+
                 content.add(b.build());
             });
             builder.title(Text.of("Characters", TextColors.WHITE))
