@@ -180,6 +180,7 @@ public class CharacterService {
                     Optional<Player> popt = game.getServer().getPlayer(event.getPlayer());
                     if (popt.isPresent()) {
                         setActiveCharacter(event.getPlayer(), character);
+                        invalidateCaches(character);
                         assignPlayerToCharacter(popt.get());
                         dataPreparationStageMap.remove(id);
                     } else {
@@ -195,12 +196,13 @@ public class CharacterService {
 
     public void checkPlayerDataStatus(Player targetEntity) {
         UUID uniqueId = targetEntity.getUniqueId();
-        if (characters.containsKey(uniqueId)) {
+        if (!characters.containsKey(uniqueId)) {
             return;
         }
         DataPreparationStage dataPreparationStage = dataPreparationStageMap.get(uniqueId);
         if (dataPreparationStage.stage == DataPreparationStage.Stage.PLAYER_NOT_YET_READY) {
             setActiveCharacter(uniqueId, dataPreparationStage.character);
+            invalidateCaches(characters.get(targetEntity.getUniqueId()));
             assignPlayerToCharacter(targetEntity);
             dataPreparationStageMap.remove(uniqueId);
         } else if (dataPreparationStage.stage == DataPreparationStage.Stage.NO_ACTION) {
