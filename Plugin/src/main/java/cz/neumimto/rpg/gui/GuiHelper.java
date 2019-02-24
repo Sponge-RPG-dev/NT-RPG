@@ -202,7 +202,7 @@ public class GuiHelper {
 	public static ItemStack back(ClassDefinition g) {
 		ItemStack of = itemStack(ItemTypes.PAPER);
 		of.offer(Keys.DISPLAY_NAME, Localizations.BACK.toText());
-		of.offer(new InventoryCommandItemMenuData(g.getClassType() + " " + g.getName()));
+		of.offer(new InventoryCommandItemMenuData("class " + g.getName()));
 		return of;
 	}
 
