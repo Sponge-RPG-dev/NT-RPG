@@ -31,6 +31,9 @@ public class ClassTypeDefinition implements Comparable<ClassTypeDefinition> {
         this.order = order;
     }
 
+    public ClassTypeDefinition() {
+    }
+
     public TextColor getPrimaryColor() {
         return primaryColor;
     }
