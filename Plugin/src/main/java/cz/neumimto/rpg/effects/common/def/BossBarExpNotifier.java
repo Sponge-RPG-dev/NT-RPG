@@ -24,8 +24,7 @@ import java.util.*;
 public class BossBarExpNotifier extends EffectBase<Object> implements IEffectContainer<Object, BossBarExpNotifier> {
 
 	public static final String name = "BossBarExp";
-	private Map<String, ServerBossBar> bossBarMap = new HashMap<>();
-	private double expCurrentSession;
+	private Map<String, SessionWrapper> bossBarMap = new HashMap<>();
 
 	public BossBarExpNotifier(IActiveCharacter consumer) {
 		super(name, consumer);
@@ -39,7 +38,8 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 		Optional<PlayerClassData> first =
 				character.getClasses().values().stream().filter(a -> a.getClassDefinition().getName().equalsIgnoreCase(classname)).findFirst();
 		if (first.isPresent()) {
-			ServerBossBar serverBossBar = bossBarMap.get(classname);
+			SessionWrapper sessionWrapper = bossBarMap.computeIfAbsent(classname, s -> new SessionWrapper());
+			ServerBossBar serverBossBar = sessionWrapper.serverBossBar;
 			if (serverBossBar == null) {
 				serverBossBar = ServerBossBar.builder()
 						.visible(false)
@@ -52,11 +52,11 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 						.percent(0)
 						.build();
 				serverBossBar.addPlayer(character.getPlayer());
-				bossBarMap.put(classname, serverBossBar);
+				sessionWrapper.serverBossBar = serverBossBar;
 			}
 			PlayerClassData playerClassData = first.get();
 
-			expCurrentSession += exps;
+			sessionWrapper.currentSessionExp += exps;
 			DecimalFormat df = new DecimalFormat("#.00");
 
 
@@ -65,7 +65,7 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 							.append(Text.builder(" ").append(Localizations.LEVEL.toText()).append(Text.of(": ")).color(TextColors.DARK_GRAY)
 					.build())
 							.append(Text.builder(String.valueOf(playerClassData.getLevel())).color(TextColors.GOLD).build())
-							.append(Text.builder(" +" + df.format(expCurrentSession)).color(TextColors.GREEN).build())
+							.append(Text.builder(" +" + df.format(sessionWrapper.currentSessionExp)).color(TextColors.GREEN).build())
 							.append(Text.builder(" " + df.format(playerClassData.getExperiencesFromLevel())
 									+ " / "
 									+ playerClassData.getClassDefinition().getLevelProgression().getLevelMargins()[playerClassData.getLevel()])
@@ -86,20 +86,23 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 
 	@Override
 	public void onTick() {
-		for (ServerBossBar bossBar : bossBarMap.values()) {
-			if (bossBar.isVisible()) {
-				bossBar.setVisible(false);
-				expCurrentSession = 0;
+		for (SessionWrapper sessionWrapper : bossBarMap.values()) {
+			if (sessionWrapper.serverBossBar != null) {
+				ServerBossBar bossBar = sessionWrapper.serverBossBar;
+				if (bossBar.isVisible()) {
+					bossBar.setVisible(false);
+					sessionWrapper.currentSessionExp = 0;
+				}
 			}
 		}
 	}
 
 	@Override
 	public void onRemove() {
-		for (ServerBossBar bossBar : bossBarMap.values()) {
-
-			bossBar.removePlayer(((IActiveCharacter) getConsumer()).getPlayer());
-
+		for (SessionWrapper sessionWrapper : bossBarMap.values()) {
+			if (sessionWrapper.serverBossBar != null) {
+				sessionWrapper.serverBossBar.removePlayer(((IActiveCharacter) getConsumer()).getPlayer());
+			}
 		}
 	}
 
@@ -134,6 +137,11 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 	@Override
 	public void stackEffect(BossBarExpNotifier bossBarExpNotifier, IEffectSourceProvider effectSourceProvider) {
 
+	}
+
+	private static class SessionWrapper {
+		ServerBossBar serverBossBar;
+		double currentSessionExp;
 	}
 }
 
