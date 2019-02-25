@@ -319,7 +319,7 @@ public class SkillTreeDao {
 			} catch (ConfigException ignored) {
 				warn(" - missing SkillSettings section " + info.getSkillId());
 			}
-			info.setSkillSettings(new SkillSettings());
+			info.setSkillSettings(skillSettings);
 
 			SkillSettings defaultSkillSettings = info.getSkill().getDefaultSkillSettings();
 			if (defaultSkillSettings != null && defaultSkillSettings.getNodes() != null) {
