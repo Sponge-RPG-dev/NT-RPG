@@ -183,7 +183,7 @@ public class InventoryListener {
 	public void onScroll(ChangeInventoryEvent.Held event, @Root Player player) {
 		Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
 		if (itemInHand.isPresent()) {
-			if (player.getOpenInventory().isPresent()) {
+			if (!player.getOpenInventory().isPresent()) {
 				return;
 			}
 			ItemStack itemStack = itemInHand.get();

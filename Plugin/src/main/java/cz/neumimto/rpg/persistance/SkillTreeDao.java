@@ -292,9 +292,9 @@ public class SkillTreeDao {
 				info.setSkillName(info.getSkill().getLocalizableName());
 			}
 
+			SkillSettings skillSettings = new SkillSettings();
 			try {
 				Config settings = c.getConfig("SkillSettings");
-				SkillSettings skillSettings = new SkillSettings();
 				for (Map.Entry<String, ConfigValue> e : settings.entrySet()) {
 					if (e.getKey().endsWith(SkillSettings.bonus)) {
 						continue;
@@ -316,8 +316,27 @@ public class SkillTreeDao {
 					}
 				}
 				addRequiredIfMissing(skillSettings);
-				info.setSkillSettings(skillSettings);
 			} catch (ConfigException ignored) {
+				warn(" - missing SkillSettings section " + info.getSkillId());
+			}
+			info.setSkillSettings(new SkillSettings());
+
+			SkillSettings defaultSkillSettings = info.getSkill().getDefaultSkillSettings();
+			if (defaultSkillSettings != null && defaultSkillSettings.getNodes() != null) {
+				Iterator<Map.Entry<String, Float>> iterator = defaultSkillSettings.getNodes().entrySet().iterator();
+				while (iterator.hasNext()) {
+					Map.Entry<String, Float> next = iterator.next();
+					Float value = next.getValue();
+					String key = next.getKey();
+					if (key.endsWith(SkillSettings.bonus)) {
+						continue;
+					}
+					if (!skillSettings.getNodes().containsKey(key)) {
+						Float val2 = defaultSkillSettings.getNodes().get(key + SkillSettings.bonus);
+						skillSettings.addNode(key, value, val2);
+						warn(" - Missing settings node " + key + " for a skill " + info.getSkillId() + " - inherited from default: " + value + " / " + val2);
+					}
+				}
 			}
 
 

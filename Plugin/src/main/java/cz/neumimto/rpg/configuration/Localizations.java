@@ -282,4 +282,6 @@ public class Localizations {
 	public static LocalizableParametrizedText UNABLE_TO_REFUND_SKILL_SEALED;
 
 	public static LocalizableParametrizedText CLASS_NOT_SELECTED;
+
+	public static LocalizableParametrizedText CANNOT_BIN_NON_EXECUTABLE_SKILL;
 }

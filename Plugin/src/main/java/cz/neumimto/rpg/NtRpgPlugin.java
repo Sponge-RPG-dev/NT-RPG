@@ -18,9 +18,6 @@
 
 package cz.neumimto.rpg;
 
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.Log.warn;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.inject.Inject;
@@ -30,21 +27,8 @@ import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizationService;
 import cz.neumimto.core.localization.TextHelper;
-import cz.neumimto.rpg.commands.AnyClassDefCommandElement;
-import cz.neumimto.rpg.commands.CharacterAttributeCommandElement;
-import cz.neumimto.rpg.commands.ClassDefCommandElement;
-import cz.neumimto.rpg.commands.ClassTypeCommandElement;
-import cz.neumimto.rpg.commands.GlobalEffectCommandElement;
-import cz.neumimto.rpg.commands.LearnedSkillCommandElement;
-import cz.neumimto.rpg.commands.PartyMemberCommandElement;
-import cz.neumimto.rpg.commands.PlayerClassCommandElement;
-import cz.neumimto.rpg.commands.RuneCommandElement;
-import cz.neumimto.rpg.commands.UnlearnedSkillCommandElement;
-import cz.neumimto.rpg.configuration.ClassTypeDefinition;
-import cz.neumimto.rpg.configuration.CommandLocalization;
-import cz.neumimto.rpg.configuration.Localizations;
-import cz.neumimto.rpg.configuration.PluginConfig;
-import cz.neumimto.rpg.configuration.Settings;
+import cz.neumimto.rpg.commands.*;
+import cz.neumimto.rpg.configuration.*;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IGlobalEffect;
@@ -60,22 +44,7 @@ import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
-import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemAttributesData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaHeader;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaTypeData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemRarityData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemSocketsData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemStackUpgradeData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemSubtypeData;
-import cz.neumimto.rpg.inventory.data.manipulators.LoreDamageData;
-import cz.neumimto.rpg.inventory.data.manipulators.LoreDurabilityData;
-import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemGroupRequirementsData;
-import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemRequirementsData;
-import cz.neumimto.rpg.inventory.data.manipulators.SectionDelimiterData;
-import cz.neumimto.rpg.inventory.data.manipulators.SkillBindData;
-import cz.neumimto.rpg.inventory.data.manipulators.SkillTreeNode;
+import cz.neumimto.rpg.inventory.data.manipulators.*;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.inventory.items.ItemMetaTypeRegistry;
 import cz.neumimto.rpg.inventory.items.ItemMetaTypes;
@@ -95,37 +64,18 @@ import cz.neumimto.rpg.persistance.ClassDefinitionDao;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.players.ActiveCharacter;
-import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.ExperienceSource;
-import cz.neumimto.rpg.players.ExperienceSourceRegistry;
-import cz.neumimto.rpg.players.ExperienceSources;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.PlayerClassData;
-import cz.neumimto.rpg.players.PreloadCharacter;
+import cz.neumimto.rpg.players.*;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.AttributeRegistry;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.scripting.JSLoader;
-import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.ISkillType;
-import cz.neumimto.rpg.skills.NDamageType;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.skills.SkillSettings;
-import cz.neumimto.rpg.skills.SkillTypeRegistry;
+import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoader;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoaderRegistry;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoaders;
-import cz.neumimto.rpg.skills.mods.SkillContext;
-import cz.neumimto.rpg.skills.mods.SkillExecutorCallback;
-import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactory;
-import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactoryRegistry;
-import cz.neumimto.rpg.skills.mods.SkillPreprocessorFactories;
+import cz.neumimto.rpg.skills.mods.*;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.parents.IActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
@@ -164,6 +114,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -174,25 +125,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-import javax.annotation.Resource;
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
 
 /**
  * Created by NeumimTo on 29.4.2015.
@@ -1787,7 +1726,7 @@ public class NtRpgPlugin {
                     if (skill.isPresent()) {
                         ISkill iSkill = skill.get();
                         if (!(iSkill instanceof ActiveSkill)) {
-
+                            src.sendMessage(Localizations.CANNOT_BIN_NON_EXECUTABLE_SKILL.toText());
                             return CommandResult.empty();
                         }
                         Player pl = (Player) src;

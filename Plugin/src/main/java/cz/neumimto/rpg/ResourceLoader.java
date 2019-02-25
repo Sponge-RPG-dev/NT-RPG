@@ -285,6 +285,10 @@ public class ResourceLoader {
 		}
 		if (clazz.isAnnotationPresent(ResourceBundles.class)) {
 			ResourceBundles annotation = clazz.getAnnotation(ResourceBundles.class);
+			File localizations = new File(NtRpgPlugin.workingDir+"/localizations");
+			if (!localizations.exists()) {
+				localizations.mkdir();
+			}
 			for (ResourceBundle resourceBundle : annotation.value()) {
 				localizationService.loadResourceBundle(resourceBundle.value(), Locale.forLanguageTag(pluginConfig.LOCALE), clazz.getClassLoader());
 			}
