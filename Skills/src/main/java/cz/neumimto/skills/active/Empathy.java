@@ -27,7 +27,8 @@ public class Empathy extends Targetted {
 
 	public void init() {
 		super.init();
-		settings.addNode(SkillNodes.MULTIPLIER, 10, 10);
+		settings.addNode(SkillNodes.MULTIPLIER, 5, 10);
+		settings.addNode("max-damage", 100, 10);
 		setDamageType(DamageTypes.MAGIC);
 	}
 
