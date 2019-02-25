@@ -10,7 +10,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
@@ -31,13 +30,11 @@ public class ShadowRun extends ActiveSkill {
 		addSkillType(SkillType.STEALTH);
 		addSkillType(SkillType.MOVEMENT);
 		addSkillType(SkillType.ESCAPE);
-		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DURATION, 20000, 1750);
 		settings.addNode(SkillNodes.DAMAGE, 10, 5);
 		settings.addNode(SkillNodes.MULTIPLIER, 15, 8);
 		settings.addNode("max-light-level", 12, -2);
 		settings.addNode("walk-speed", 0.07f, 0.007f);
-		setSettings(settings);
 	}
 
 	@Override

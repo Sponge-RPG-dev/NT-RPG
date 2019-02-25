@@ -8,7 +8,10 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.NDamageType;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
@@ -32,11 +35,9 @@ public class Wrestle extends ActiveSkill {
 	public void init() {
 		super.init();
 		setDamageType(NDamageType.PHYSICAL);
-		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.RADIUS, 3, 0.5f);
 		settings.addNode(SkillNodes.DURATION, 1, 0.1f);
 		settings.addNode(SkillNodes.DAMAGE, 1, 0.5f);
-		super.settings = settings;
 		addSkillType(SkillType.PHYSICAL);
 		addSkillType(SkillType.AOE);
 	}

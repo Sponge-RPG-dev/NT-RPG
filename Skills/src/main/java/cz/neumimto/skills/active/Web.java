@@ -10,7 +10,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.Targetted;
 import org.spongepowered.api.entity.living.Living;
@@ -30,9 +29,7 @@ public class Web extends Targetted {
 
 	public void init() {
 		super.init();
-		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DURATION, 5000, 100);
-		setSettings(settings);
 		setIcon(ItemTypes.WEB);
 	}
 

@@ -7,7 +7,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
@@ -37,11 +36,9 @@ public class DropTNT extends ActiveSkill {
 
     public void init() {
         super.init();
-        SkillSettings settings = new SkillSettings();
         settings.addNode(SkillNodes.AMOUNT, 1f ,0f);
         settings.addNode(SkillNodes.DAMAGE, 100f ,10f);
         settings.addNode("explosion-radius", 3 ,0.1f);
-        setSettings(settings);
         addSkillType(SkillType.PHYSICAL);
         addSkillType(SkillType.SUMMON);
         setIcon(ItemTypes.TNT);

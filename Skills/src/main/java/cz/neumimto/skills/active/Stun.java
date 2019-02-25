@@ -12,7 +12,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.Targetted;
 import cz.neumimto.rpg.skills.tree.SkillType;
@@ -33,10 +32,8 @@ public class Stun extends Targetted {
 
 	public void init() {
 		super.init();
-		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DAMAGE, 10, 1);
 		settings.addNode(SkillNodes.DURATION, 4500, 100);
-		setSettings(settings);
 		addSkillType(SkillType.PHYSICAL);
 		addSkillType(SkillType.MOVEMENT);
 		setDamageType(DamageTypes.ATTACK);

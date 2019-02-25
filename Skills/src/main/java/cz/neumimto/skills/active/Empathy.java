@@ -9,7 +9,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.Targetted;
 import org.spongepowered.api.data.key.Keys;
@@ -28,9 +27,7 @@ public class Empathy extends Targetted {
 
 	public void init() {
 		super.init();
-		super.settings = new SkillSettings();
 		settings.addNode(SkillNodes.MULTIPLIER, 10, 10);
-		settings.addNode("max-damage", -1, 0);
 		setDamageType(DamageTypes.MAGIC);
 	}
 

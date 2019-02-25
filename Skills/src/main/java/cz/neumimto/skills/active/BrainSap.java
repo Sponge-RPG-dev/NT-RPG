@@ -11,7 +11,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.Targetted;
 import cz.neumimto.rpg.skills.tree.SkillType;
@@ -35,11 +34,9 @@ public class BrainSap extends Targetted {
 
 	public void init() {
 		super.init();
-		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.COOLDOWN, 1000f, 10f);
 		settings.addNode(SkillNodes.RANGE, 10f, 1f);
 		settings.addNode(SkillNodes.DAMAGE, 10f, 10f);
-		super.settings = settings;
 		setIcon(ItemTypes.ENDER_EYE);
 		setDamageType(DamageTypes.MAGIC);
 		addSkillType(SkillType.HEALTH_DRAIN);

@@ -21,10 +21,7 @@ package cz.neumimto.rpg.skills.parents;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
-import cz.neumimto.rpg.skills.SkillCost;
-import cz.neumimto.rpg.skills.SkillItemCost;
-import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.tree.SkillType;
@@ -42,6 +39,14 @@ import java.util.*;
  */
 @JsBinding(JsBinding.Type.CLASS)
 public abstract class ActiveSkill extends AbstractSkill implements IActiveSkill {
+
+	@Override
+	public void init() {
+		super.init();
+		settings.addNode(SkillNodes.COOLDOWN, 10000, 0);
+		settings.addNode(SkillNodes.HPCOST, 0, 0);
+		settings.addNode(SkillNodes.MANACOST, 0, 0);
+	}
 
 	@Override
 	public void onPreUse(IActiveCharacter character, SkillContext skillContext) {

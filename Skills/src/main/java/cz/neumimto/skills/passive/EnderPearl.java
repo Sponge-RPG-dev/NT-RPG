@@ -6,7 +6,6 @@ import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.PassiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
 
@@ -19,7 +18,6 @@ public class EnderPearl extends PassiveSkill {
 
 	public EnderPearl() {
 		super(EnderPearlEffect.name);
-		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.COOLDOWN, 7500, -150);
 		addSkillType(SkillType.TELEPORT);
 		addSkillType(SkillType.MOVEMENT);

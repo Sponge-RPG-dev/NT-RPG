@@ -7,7 +7,6 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.PassiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
 
@@ -22,9 +21,7 @@ public class Dampen extends PassiveSkill {
 
 	public Dampen() {
 		super(DampenEffect.name);
-		SkillSettings skillSettings = new SkillSettings();
-		skillSettings.addNode("min-mana", 310, -5);
-		super.settings = skillSettings;
+		settings.addNode("min-mana", 310, -5);
 		addSkillType(SkillType.UTILITY);
 	}
 

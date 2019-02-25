@@ -6,7 +6,10 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.NDamageType;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.Targetted;
 import cz.neumimto.rpg.skills.tree.SkillType;
@@ -24,10 +27,8 @@ public class SkillLightning extends Targetted {
 	public void init() {
 		super.init();
 		setDamageType(NDamageType.LIGHTNING);
-		SkillSettings skillSettings = new SkillSettings();
-		skillSettings.addNode(SkillNodes.DAMAGE, 10, 20);
-		skillSettings.addNode(SkillNodes.RANGE, 10, 10);
-		super.settings = skillSettings;
+		settings.addNode(SkillNodes.DAMAGE, 10, 20);
+		settings.addNode(SkillNodes.RANGE, 10, 10);
 		addSkillType(SkillType.ELEMENTAL);
 		addSkillType(SkillType.LIGHTNING);
 	}

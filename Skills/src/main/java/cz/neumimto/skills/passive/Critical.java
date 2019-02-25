@@ -10,7 +10,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.NDamageType;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.PassiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
 
@@ -25,10 +24,8 @@ public class Critical extends PassiveSkill {
 
 	public Critical() {
 		super(CriticalEffect.name);
-		SkillSettings skillSettings = new SkillSettings();
-		skillSettings.addNode(SkillNodes.CHANCE, 10, 20);
-		skillSettings.addNode(SkillNodes.MULTIPLIER, 10, 20);
-		super.settings = skillSettings;
+		settings.addNode(SkillNodes.CHANCE, 10, 20);
+		settings.addNode(SkillNodes.MULTIPLIER, 10, 20);
 		setDamageType(NDamageType.MEELE_CRITICAL);
 		addSkillType(SkillType.PHYSICAL);
 	}

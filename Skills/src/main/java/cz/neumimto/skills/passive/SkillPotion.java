@@ -6,7 +6,6 @@ import cz.neumimto.effects.positive.PotionEffect;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.PassiveSkill;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.potion.PotionEffectType;
@@ -23,14 +22,13 @@ public class SkillPotion extends PassiveSkill {
 
 	private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-	public SkillPotion() {
-		super(PotionEffect.name);
+	@Override
+	public void init() {
 		Map<PotionEffectType, Long> list = new HashMap<>();
 		Collection<PotionEffectType> allOf = Sponge.getRegistry().getAllOf(PotionEffectType.class);
 		for (PotionEffectType type : allOf) {
 			list.put(type, 19000L);
 		}
-		SkillSettings settings = new SkillSettings();
 		settings.addNode("cooldown-reduced", 0, -125);
 		settings.addObjectNode("potions", gson.toJson(list));
 	}

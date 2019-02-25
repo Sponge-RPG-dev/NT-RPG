@@ -9,7 +9,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
@@ -52,9 +51,7 @@ public class GrapplingHook extends ActiveSkill {
 
 	public void init() {
 		super.init();
-		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.RANGE, 100, 10);
-		setSettings(settings);
 		addSkillType(SkillType.PHYSICAL);
 		addSkillType(SkillType.PROJECTILE);
 		addSkillType(SkillType.SUMMON);

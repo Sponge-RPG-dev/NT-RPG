@@ -12,7 +12,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.Targetted;
 import org.spongepowered.api.effect.particle.ParticleEffect;
@@ -35,9 +34,7 @@ public class Harmtouch extends Targetted {
 
 	public void init() {
 		super.init();
-		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DAMAGE, 5000, 100);
-		setSettings(settings);
 		setDamageType(DamageTypes.MAGIC);
 		setIcon(ItemTypes.BLAZE_ROD);
 	}

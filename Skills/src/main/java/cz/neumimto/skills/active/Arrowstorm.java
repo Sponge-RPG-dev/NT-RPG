@@ -8,7 +8,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
@@ -30,12 +29,10 @@ public class Arrowstorm extends ActiveSkill {
 	public void init() {
 		super.init();
 		setDamageType(DamageTypes.PROJECTILE);
-		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DAMAGE, 10, 10);
 		settings.addNode("min-arrows", 35, 1);
 		settings.addNode("max-arrows", 45, 1);
 		settings.addNode(SkillNodes.PERIOD, 100, -10);
-		super.settings = settings;
 		addSkillType(SkillType.PHYSICAL);
 		addSkillType(SkillType.SUMMON);
 		addSkillType(SkillType.PROJECTILE);

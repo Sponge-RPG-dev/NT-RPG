@@ -7,7 +7,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
@@ -22,9 +21,7 @@ public class SkillJump extends ActiveSkill {
 	public void init() {
 		super.init();
 		setDamageType(null);
-		SkillSettings skillSettings = new SkillSettings();
-		skillSettings.addNode(SkillNodes.VELOCITY, 2, 2);
-		settings = skillSettings;
+		settings.addNode(SkillNodes.VELOCITY, 2, 2);
 		addSkillType(SkillType.STEALTH);
 		addSkillType(SkillType.MOVEMENT);
 		addSkillType(SkillType.PHYSICAL);

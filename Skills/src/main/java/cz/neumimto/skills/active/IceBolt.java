@@ -38,12 +38,10 @@ public class IceBolt extends ActiveSkill {
 	public void init() {
 		super.init();
 		setDamageType(NDamageType.ICE);
-		SkillSettings skillSettings = new SkillSettings();
-		skillSettings.addNode(SkillNodes.DAMAGE, 10, 10);
-		skillSettings.addNode(SkillNodes.VELOCITY, 0.5f, .5f);
-		skillSettings.addNode(SkillNodes.DURATION, 750, 15);
-		skillSettings.addNode(SkillNodes.AMPLIFIER, 1, 0f);
-		settings = skillSettings;
+		settings.addNode(SkillNodes.DAMAGE, 10, 10);
+		settings.addNode(SkillNodes.VELOCITY, 0.5f, .5f);
+		settings.addNode(SkillNodes.DURATION, 750, 15);
+		settings.addNode(SkillNodes.AMPLIFIER, 1, 0f);
 		addSkillType(SkillType.SUMMON);
 		addSkillType(SkillType.PROJECTILE);
 		addSkillType(SkillType.ELEMENTAL);

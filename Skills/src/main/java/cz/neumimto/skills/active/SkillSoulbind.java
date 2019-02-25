@@ -10,7 +10,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.utils.Utils;
@@ -36,11 +35,9 @@ public class SkillSoulbind extends ActiveSkill {
 
 	public void init() {
 		super.init();
-		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DURATION, 1000f, 10f);
 		settings.addNode(SkillNodes.COOLDOWN, 1000f, 10f);
 		settings.addNode(SkillNodes.RANGE, 10f, 1f);
-		super.settings = settings;
 	}
 
 	@Override

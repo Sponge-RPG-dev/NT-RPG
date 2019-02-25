@@ -6,7 +6,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
@@ -30,10 +29,7 @@ public class SkillTeleport extends ActiveSkill {
 
 	public void init() {
 		super.init();
-		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.RANGE, 20, 20);
-		super.settings = settings;
-
 		addSkillType(SkillType.TELEPORT);
 		setIcon(ItemTypes.END_PORTAL_FRAME);
 	}

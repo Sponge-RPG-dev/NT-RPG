@@ -9,7 +9,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
@@ -23,11 +22,9 @@ public class ManaShield extends ActiveSkill {
 	public void init() {
 		super.init();
 		setDamageType(null);
-		SkillSettings skillSettings = new SkillSettings();
-		skillSettings.addNode("reduction", 10f, 11f);
-		skillSettings.addNode("reduction-manacost", 20f, -1f);
-		skillSettings.addNode(SkillNodes.DURATION, 30000, 500);
-		settings = skillSettings;
+		settings.addNode("reduction", 10f, 11f);
+		settings.addNode("reduction-manacost", 20f, -1f);
+		settings.addNode(SkillNodes.DURATION, 30000, 500);
 		addSkillType(SkillType.UTILITY);
 		addSkillType(SkillType.PROTECTION);
 	}

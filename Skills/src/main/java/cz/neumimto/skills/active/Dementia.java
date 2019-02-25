@@ -10,7 +10,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.Targetted;
 import cz.neumimto.rpg.skills.tree.SkillType;
@@ -31,10 +30,8 @@ public class Dementia extends Targetted {
 
 	public void init() {
 		super.init();
-		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DURATION, 30000, 1500);
 		settings.addNode("skill-level", 1, 2);
-		setSettings(settings);
 		addSkillType(SkillType.DISEASE);
 		setIcon(ItemTypes.ROTTEN_FLESH);
 	}

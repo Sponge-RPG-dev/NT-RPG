@@ -8,7 +8,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
@@ -25,14 +24,11 @@ public class Portal extends ActiveSkill {
 
 	public void init() {
 		super.init();
-		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.COOLDOWN, 100000, -500);
-		settings.addNode(SkillNodes.MANACOST, 50, 15);
 		settings.addNode("chance-to-fail", 80, -50);
 		settings.addNode("manacost-per-tick", 20, 5);
 		settings.addNode("portal-duration", 20, 20);
 		settings.addNode("manacost-per-teleported-entity", 5, 7);
-		setSettings(settings);
 		addSkillType(SkillType.UTILITY);
 		addSkillType(SkillType.TELEPORT);
 	}

@@ -8,7 +8,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
@@ -26,10 +25,8 @@ public class SkillSpeed extends ActiveSkill {
 	public void init() {
 		super.init();
 		setDamageType(null);
-		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DURATION, 1000, 1500);
 		settings.addNode(SkillNodes.AMOUNT, 0.1f, 0.05f);
-		setSettings(settings);
 		addSkillType(SkillType.MOVEMENT);
 		setIcon(ItemTypes.LEATHER_BOOTS);
 	}

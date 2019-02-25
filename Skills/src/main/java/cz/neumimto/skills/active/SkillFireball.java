@@ -5,7 +5,10 @@ import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
+import cz.neumimto.rpg.skills.ProjectileProperties;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
@@ -29,10 +32,8 @@ public class SkillFireball extends ActiveSkill {
 	public void init() {
 		super.init();
 		setDamageType(DamageTypes.FIRE);
-		SkillSettings skillSettings = new SkillSettings();
-		skillSettings.addNode(SkillNodes.DAMAGE, 10, 10);
-		skillSettings.addNode(SkillNodes.VELOCITY, 1.5f, .5f);
-		settings = skillSettings;
+		settings.addNode(SkillNodes.DAMAGE, 10, 10);
+		settings.addNode(SkillNodes.VELOCITY, 1.5f, .5f);
 		addSkillType(SkillType.SUMMON);
 		addSkillType(SkillType.PROJECTILE);
 		addSkillType(SkillType.ELEMENTAL);

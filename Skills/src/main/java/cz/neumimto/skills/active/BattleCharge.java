@@ -8,7 +8,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import org.spongepowered.api.item.ItemTypes;
@@ -24,12 +23,10 @@ public class BattleCharge extends ActiveSkill {
 
 	public void init() {
 		super.init();
-		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DURATION, 7500, 100);
 		settings.addNode(SkillNodes.RADIUS, 7500, 100);
 		settings.addNode("speed-per-level", 0.9f, 0.01f);
 		setIcon(ItemTypes.BANNER);
-		setSettings(settings);
 	}
 
 	@Override

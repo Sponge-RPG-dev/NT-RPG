@@ -8,7 +8,6 @@ import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.PassiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
@@ -24,9 +23,7 @@ public class Drain extends PassiveSkill {
 
 	public Drain() {
 		super(ManaDrainEffect.name);
-		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.AMOUNT, 1, 1);
-		super.settings = settings;
 		setDamageType(DamageTypes.ATTACK);
 		addSkillType(SkillType.HEALTH_DRAIN);
 		addSkillType(SkillType.DRAIN);

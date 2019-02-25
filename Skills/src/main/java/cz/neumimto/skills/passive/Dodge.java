@@ -8,7 +8,6 @@ import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.PassiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
 
@@ -23,9 +22,7 @@ public class Dodge extends PassiveSkill {
 
 	public Dodge() {
 		super(DodgeEffect.name);
-		SkillSettings skillSettings = new SkillSettings();
-		skillSettings.addNode(SkillNodes.CHANCE, 10, 20);
-		super.settings = skillSettings;
+		settings.addNode(SkillNodes.CHANCE, 10, 20);
 		addSkillType(SkillType.PHYSICAL);
 	}
 

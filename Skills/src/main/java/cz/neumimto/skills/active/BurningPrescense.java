@@ -9,7 +9,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
@@ -27,11 +26,9 @@ public class BurningPrescense extends ActiveSkill {
 
 	public void init() {
 		super.init();
-		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.PERIOD, 1000, -10);
 		settings.addNode(SkillNodes.RADIUS, 3, 0);
 		settings.addNode(SkillNodes.DAMAGE, 5, 1);
-		super.settings = settings;
 		setDamageType(DamageTypes.FIRE);
 		addSkillType(SkillType.AURA);
 		addSkillType(SkillType.AOE);

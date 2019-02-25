@@ -9,7 +9,6 @@ import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
-import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.parents.PassiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
@@ -28,12 +27,10 @@ public class Basher extends PassiveSkill {
 
 	public Basher() {
 		super(Bash.name);
-		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DAMAGE, 10, 10);
 		settings.addNode(SkillNodes.CHANCE, 0.1f, 0.005f);
 		settings.addNode(SkillNodes.PERIOD, 2500, -100);
 		settings.addNode(SkillNodes.DURATION, 1000, 50f);
-		super.settings = settings;
 		setDamageType(DamageTypes.ATTACK);
 		addSkillType(SkillType.PHYSICAL);
 	}
