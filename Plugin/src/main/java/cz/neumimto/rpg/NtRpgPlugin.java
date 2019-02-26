@@ -549,7 +549,7 @@ public class NtRpgPlugin {
                             });
                         }};
                         skillContext.sort();
-                        askill.cast(character, playerSkillContext, skillContext);
+                        skillContext.next(character, playerSkillContext, skillContext);
                     }
                     return CommandResult.success();
                 })

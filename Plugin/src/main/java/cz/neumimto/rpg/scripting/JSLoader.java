@@ -18,15 +18,11 @@
 
 package cz.neumimto.rpg.scripting;
 
-import static cz.neumimto.rpg.Log.error;
-import static cz.neumimto.rpg.Log.info;
-
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.configuration.DebugLevel;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.configs.SkillsDefinition;
 import cz.neumimto.rpg.skills.pipeline.SkillComponent;
@@ -40,30 +36,20 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.event.Event;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import javax.script.*;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-import javax.script.Bindings;
-import javax.script.Invocable;
-import javax.script.ScriptContext;
-import javax.script.ScriptEngine;
-import javax.script.ScriptException;
-import javax.script.SimpleBindings;
+import static cz.neumimto.rpg.Log.error;
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 13.3.2015.
@@ -241,43 +227,45 @@ public class JSLoader {
 		Invocable invocable = (Invocable) engine;
 		try {
 			invocable.invokeFunction("registerSkills");
-		} catch (ScriptException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+		} catch (ScriptException | NoSuchMethodException e) {
+			Log.error("Could not invoker JS function registerSkills()", e);
 		}
-		File file = new File(NtRpgPlugin.workingDir, "Skills-Definition.conf");
+		File file = new File(ResourceLoader.addonDir, "Skills-Definition.conf");
 		if (!file.exists()) {
 			Asset asset = Sponge.getAssetManager().getAsset(ntRpgPlugin, "Skills-Definitions.conf").get();
 			try {
 				asset.copyToFile(file.toPath());
 			} catch (IOException e) {
-				e.printStackTrace();
+				Log.error("Could not copy file Skills-Definition.conf into the directory " + ResourceLoader.addonDir, e);
 			}
 		}
 
-		info("Loading skills from file " + file.getName());
-		try {
-			URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{}, this.getClass().getClassLoader()) {
-				@Override
-				public String toString() {
-					return "Internal - " + System.currentTimeMillis();
-				}
+		URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{}, this.getClass().getClassLoader()) {
+			@Override
+			public String toString() {
+				return "Internal - " + System.currentTimeMillis();
+			}
 
-				@Override
-				protected void finalize() throws Throwable {
-					super.finalize();
-					info("Removing URLClassloader " + toString(), DebugLevel.DEVELOP);
-				}
-			};
-			ObjectMapper<SkillsDefinition> mapper = ObjectMapper.forClass(SkillsDefinition.class);
-			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(file.toPath()).build();
-			SkillsDefinition definition = mapper.bind(new SkillsDefinition()).populate(hcl.load());
-			definition.getSkills().stream()
-					.map(a -> skillService.skillDefinitionToSkill(a, urlClassLoader))
-					.forEach(a -> skillService.registerAdditionalCatalog(a));
-		} catch (Exception e) {
-			throw new RuntimeException("Could not load file " + file, e);
+			@Override
+			protected void finalize() throws Throwable {
+				super.finalize();
+				info("Removing URLClassloader " + toString(), DebugLevel.DEVELOP);
+			}
+		};
+
+
+		for (File confFile : ResourceLoader.addonDir.listFiles(pathname -> pathname.isFile() && pathname.getName().endsWith(".conf"))) {
+			info("Loading skills from file " + confFile.getName());
+			try {
+				ObjectMapper<SkillsDefinition> mapper = ObjectMapper.forClass(SkillsDefinition.class);
+				HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(confFile.toPath()).build();
+				SkillsDefinition definition = mapper.bind(new SkillsDefinition()).populate(hcl.load());
+				definition.getSkills().stream()
+						.map(a -> skillService.skillDefinitionToSkill(a, urlClassLoader))
+						.forEach(a -> skillService.registerAdditionalCatalog(a));
+			} catch (Exception e) {
+				throw new RuntimeException("Could not load file " + confFile, e);
+			}
 		}
 	}
 

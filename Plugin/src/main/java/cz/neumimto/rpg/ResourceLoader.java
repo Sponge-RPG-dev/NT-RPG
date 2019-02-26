@@ -92,7 +92,7 @@ public class ResourceLoader {
 
 		try {
 			FileUtils.deleteDirectory(addonLoadDir);
-			FileUtils.copyDirectory(addonDir, addonLoadDir);
+			FileUtils.copyDirectory(addonDir, addonLoadDir, pathname -> pathname.isDirectory() || pathname.getName().endsWith(".jar"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -109,7 +109,6 @@ public class ResourceLoader {
 
 	@Inject
 	private PropertyService propertyService;
-
 
 	@Inject
 	private CommandService commandService;
@@ -130,7 +129,6 @@ public class ResourceLoader {
 		ConfigMapper.init("NtRPG", Paths.get(NtRpgPlugin.workingDir));
 		configMapper = ConfigMapper.get("NtRPG");
 		configClassLaoder = new URLClassLoader(new URL[]{}, this.getClass().getClassLoader());
-
 	}
 
 	private static <T> T newInstance(Class<T> excepted, Class<?> clazz) {
