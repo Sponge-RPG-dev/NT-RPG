@@ -25,7 +25,6 @@ import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.PluginCore;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.localization.Arg;
-import cz.neumimto.core.localization.LocalizationService;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.commands.*;
 import cz.neumimto.rpg.configuration.*;
@@ -443,9 +442,6 @@ public class NtRpgPlugin {
             Sponge.getEventManager().registerListeners(this, ioc.build(DebugListener.class));
         }
         registerCommands();
-        IoC.get().build(LocalizationService.class).registerClass(Localizations.class);
-        IoC.get().build(LocalizationService.class)
-                .loadResourceBundle("assets.nt-rpg.localizations.localization", Locale.forLanguageTag(pluginConfig.LOCALE), null);
         IoC.get().build(Init.class).it();
 
 

@@ -7,7 +7,7 @@ import cz.neumimto.core.localization.ResourceBundles;
  * Created by NeumimTo on 1.7.2018.
  */
 @ResourceBundles(
-		@ResourceBundle("localization")
+		@ResourceBundle("ntrpg_skills_localization")
 )
 public interface SkillPack {
 

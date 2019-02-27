@@ -228,7 +228,7 @@ public class JSLoader {
 		try {
 			invocable.invokeFunction("registerSkills");
 		} catch (ScriptException | NoSuchMethodException e) {
-			Log.error("Could not invoker JS function registerSkills()", e);
+			Log.error("Could not invoke JS function registerSkills()", e);
 		}
 		File file = new File(ResourceLoader.addonDir, "Skills-Definition.conf");
 		if (!file.exists()) {

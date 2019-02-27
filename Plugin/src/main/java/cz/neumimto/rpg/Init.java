@@ -2,6 +2,8 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.core.localization.ResourceBundle;
+import cz.neumimto.core.localization.ResourceBundles;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.exp.ExperienceService;
 import cz.neumimto.rpg.gui.ParticleDecorator;
@@ -14,11 +16,16 @@ import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.utils.PseudoRandomDistribution;
 
+import java.util.Locale;
+
 
 /**
  * Created by NeumimTo on 19.8.2018.
  */
 @Singleton
+@ResourceBundles(
+		@ResourceBundle("core_localization")
+)
 public class Init {
 
 	@Inject PropertyService propertyService;
@@ -32,6 +39,7 @@ public class Init {
 	@Inject CustomItemFactory customItemFactory;
 	@Inject ClassService classService;
 	@Inject RWService rwService;
+	@Inject ResourceLoader resourceLoader;
 
 	public void it() {
 		int a = 0;
@@ -41,6 +49,7 @@ public class Init {
 			PseudoRandomDistribution.C[a] = p.c(i);
 			a++;
 		}
+		resourceLoader.reloadLocalizations(Locale.forLanguageTag(NtRpgPlugin.pluginConfig.LOCALE));
 		experienceService.load();
 		inventoryService.init();
 		skillService.load();
