@@ -21,19 +21,8 @@ package cz.neumimto.rpg.players.groups;
 import cz.neumimto.config.blackjack.and.hookers.annotations.AsCollectionImpl;
 import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
 import cz.neumimto.config.blackjack.and.hookers.annotations.Default;
-import cz.neumimto.rpg.configuration.adapters.AllowedArmorListAdapter;
-import cz.neumimto.rpg.configuration.adapters.ClassDependencyGraphAdapter;
-import cz.neumimto.rpg.configuration.adapters.ClassExpAdapter;
-import cz.neumimto.rpg.configuration.adapters.ClassTypeAdapter;
-import cz.neumimto.rpg.configuration.adapters.EffectsAdapter;
-import cz.neumimto.rpg.configuration.adapters.PropertiesAdapter;
-import cz.neumimto.rpg.configuration.adapters.SkillTreeLookupAdapter;
-import cz.neumimto.rpg.configuration.adapters.WeaponsAdapter;
-import cz.neumimto.rpg.effects.EffectParams;
-import cz.neumimto.rpg.effects.EffectSourceType;
-import cz.neumimto.rpg.effects.IEffectSource;
-import cz.neumimto.rpg.effects.IEffectSourceProvider;
-import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.configuration.adapters.*;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.players.ExperienceSource;
@@ -50,14 +39,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 27.12.2014.
@@ -91,7 +73,7 @@ public class ClassDefinition implements IEffectSourceProvider {
 	protected String type;
 
 	@Setting("Properties")
-	@CustomAdapter(PropertiesAdapter.class)
+	@CustomAdapter(PropertiesArrayAdapter.class)
 	private float[] propBonus;
 
 	@Setting("AllowedArmor")
@@ -103,7 +85,7 @@ public class ClassDefinition implements IEffectSourceProvider {
 	private Set<PlayerGroupPermission> permissions;
 
 	@Setting("PropertiesLevelBonus")
-	@CustomAdapter(PropertiesAdapter.class)
+	@CustomAdapter(PropertiesArrayAdapter.class)
 	private float[] propLevelBonus;
 
 	@Setting("ExitCommands")

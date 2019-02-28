@@ -64,6 +64,7 @@ import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.players.*;
+import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.PropertyService;
@@ -396,6 +397,12 @@ public class NtRpgPlugin {
     public void postInit8(GameRegistryEvent.Register<SkillPreProcessorFactory> event) {
         event.register(SkillPreprocessorFactories.UNCASTABLE);
         event.register(SkillPreprocessorFactories.ADJUSTED_SKILL_SETTINGS);
+    }
+
+
+    @Listener
+    public void postInit9(GameRegistryEvent.Register<Attribute> event) {
+        //?
     }
 
     @Listener

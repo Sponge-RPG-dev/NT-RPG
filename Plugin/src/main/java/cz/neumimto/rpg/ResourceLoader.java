@@ -20,9 +20,7 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.configuration.ConfigurationContainer;
-import cz.neumimto.core.PersistentContext;
 import cz.neumimto.core.PluginCore;
-import cz.neumimto.core.Repository;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
@@ -50,7 +48,6 @@ import org.spongepowered.api.text.Text;
 import java.io.*;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -341,20 +338,6 @@ public class ResourceLoader {
         }
         if (clazz.isAnnotationPresent(Localization.class)) {
             localizationService.registerClass(clazz);
-        }
-        if (clazz.isAnnotationPresent(Repository.class)) {
-            container = ioc.build(clazz);
-            boolean f = false;
-            for (Field field : container.getClass().getDeclaredFields()) {
-                field.setAccessible(true);
-                if (field.isAnnotationPresent(PersistentContext.class)) {
-                    field.set(container, PluginCore.Instance.getSessionFactoryByName(field.getAnnotation(PersistentContext.class).value()));
-                    f = true;
-                }
-            }
-            if (!f) {
-                Log.info("No SessionFactory injected for " + container.getClass().getCanonicalName());
-            }
         }
         return container;
     }

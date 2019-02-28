@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Created by NeumimTo on 5.1.2019.
  */
-public class PropertiesAdapter implements AbstractSerializer<float[]> {
+public class PropertiesArrayAdapter implements AbstractSerializer<float[]> {
 
 	@Override
 	public float[] deserialize(TypeToken<?> typeToken, ConfigurationNode configurationNode) throws ObjectMappingException {
