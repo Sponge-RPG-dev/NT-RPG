@@ -18,7 +18,6 @@ function registerEventListener(eventclass, consumer) {
 var DamageEvent = Java.type("org.spongepowered.api.event.entity.DamageEntityEvent");
 var DisplaceEntityEvent = Java.type("org.spongepowered.api.event.entity.MoveEntityEvent");
 
-var RaceChangedEvent = Java.type("cz.neumimto.rpg.players.CharacterChangeRaceEvent");
 var TimeUnit = Java.type("java.util.concurrent.TimeUnit");
 
 registerEventListener(RaceChangedEvent, new (Java.extend(Consumer, {
