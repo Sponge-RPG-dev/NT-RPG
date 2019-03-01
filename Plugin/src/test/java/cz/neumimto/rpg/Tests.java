@@ -42,8 +42,9 @@ public class Tests {
             MoveEntityEvent moveEntityEvent = Mockito.mock(MoveEntityEvent.class);
             o.getClass().getMethod("onMoveEntityEvent", MoveEntityEvent.class).invoke(o, moveEntityEvent);
         } catch (ScriptException | IOException e) {
-            e.printStackTrace();
+            Assert.fail(e.getMessage());
         }
+        Assert.assertTrue(true);
     }
 
     @Test

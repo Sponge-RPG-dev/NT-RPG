@@ -20,13 +20,6 @@ var DisplaceEntityEvent = Java.type("org.spongepowered.api.event.entity.MoveEnti
 
 var TimeUnit = Java.type("java.util.concurrent.TimeUnit");
 
-registerEventListener(RaceChangedEvent, new (Java.extend(Consumer, {
-    accept: function (event) {
-        var character = event.getActiveCharacter();
-        Sponge.getScheduler().createTaskBuilder(1, TimeUnit.MILLISECONDS).execute()
-    }
-})));
-
 registerEventListener(DamageEvent, new (Java.extend(Consumer, {
     accept: function (event) {
         print(event + "- test event 1");
