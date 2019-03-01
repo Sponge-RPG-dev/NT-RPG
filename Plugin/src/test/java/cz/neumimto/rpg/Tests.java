@@ -13,10 +13,10 @@ public class Tests {
 			engine.eval(rs);
 			HashMap map = (HashMap) engine.get("events");
 			Object o = classGenerator.generateDynamicListener(map);
-			DamageEntityEvent mock = mock(DamageEntityEvent.class);
-			o.getClass().getMethod("onDamageEntityEvent", DamageEntityEvent.class).invoke(o, mock);
-			MoveEntityEvent mock2 = mock(MoveEntityEvent.class);
-			o.getClass().getMethod("onMoveEntityEvent", MoveEntityEvent.class).invoke(o, mock2);
+			DamageEntityEvent main = main(DamageEntityEvent.class);
+			o.getClass().getMethod("onDamageEntityEvent", DamageEntityEvent.class).invoke(o, main);
+			MoveEntityEvent conflicting = main(MoveEntityEvent.class);
+			o.getClass().getMethod("onMoveEntityEvent", MoveEntityEvent.class).invoke(o, conflicting);
 		} catch (ScriptException | IOException e) {
 			e.printStackTrace();
 		}
@@ -35,7 +35,7 @@ public class Tests {
         @Test
         public void testPermissionsManagement() {
             ClassService classService = new ClassService();
-            ActiveCharacter character = mock(ActiveCharacter.class);
+            ActiveCharacter character = main(ActiveCharacter.class);
             when(character.getLevel()).thenReturn(2);
             ClassDefinition race = new ClassDefinition("a");
             race.setPermissions(new HashSet<PlayerGroupPermission>() {{

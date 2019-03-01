@@ -24,12 +24,7 @@ import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.text.format.TextColors;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -152,23 +147,23 @@ public class PluginConfig {
 	public long CLICK_COMBO_MAX_INVERVAL_BETWEEN_ACTIONS = 1250;
 
 	@Setting
-	public String ITEM_LORE_EFFECT_NAME_COLOR = TextColors.BLUE.getName();
+	public String ITEM_LORE_EFFECT_NAME_COLOR = "BLUE";
 
 	@Setting
-	public String ITEM_LORE_EFFECT_COLON_COLOR = TextColors.DARK_GRAY.getName();
+	public String ITEM_LORE_EFFECT_COLON_COLOR = "DARK_GRAY";
 
 	@Setting
-	public String ITEM_LORE_EFFECT_VALUE_COLOR = TextColors.LIGHT_PURPLE.getName();
+	public String ITEM_LORE_EFFECT_VALUE_COLOR = "LIGHT_PURPLE";
 
 	@Setting
-	public String ITEM_LORE_EFFECT_SECTION_COLOR = TextColors.BLUE.getName();
+	public String ITEM_LORE_EFFECT_SECTION_COLOR = "BLUE";
 
 	@Setting
-	public String ITEM_LORE_RARITY_COLOR = TextColors.DARK_GRAY.getName();
+	public String ITEM_LORE_RARITY_COLOR = "DARK_GRAY";
 
 
 	@Setting
-	public String ITEM_LORE_GROUP_MIN_LEVEL_COLOR = TextColors.DARK_PURPLE.getName();
+	public String ITEM_LORE_GROUP_MIN_LEVEL_COLOR = "DARK_PURPLE";
 
 	@Setting
 	public List<String> ITEM_LORE_ORDER = Stream.of(ItemLoreSections.values()).map(ItemLoreSections::name).collect(Collectors.toList());

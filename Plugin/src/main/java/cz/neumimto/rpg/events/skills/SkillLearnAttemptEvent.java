@@ -28,13 +28,13 @@ import org.spongepowered.api.text.Text;
  * Created by NeumimTo on 26.7.2015.
  */
 @JsBinding(JsBinding.Type.CLASS)
-public class SkillLearnEvent extends CancellableEvent {
+public class SkillLearnAttemptEvent extends CancellableEvent {
 
 	IActiveCharacter character;
 	ISkill skill;
 	private Text message;
 
-	public SkillLearnEvent(IActiveCharacter character, ISkill skill) {
+	public SkillLearnAttemptEvent(IActiveCharacter character, ISkill skill) {
 		this.character = character;
 		this.skill = skill;
 	}

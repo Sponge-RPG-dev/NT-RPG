@@ -1,0 +1,59 @@
+package cz.neumimto.rpg;
+
+import cz.neumimto.core.localization.LocalizableParametrizedText;
+import cz.neumimto.rpg.configuration.Localizations;
+import cz.neumimto.rpg.persistance.model.CharacterClass;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.skills.ISkill;
+import org.mockito.Matchers;
+import org.mockito.Mockito;
+import org.spongepowered.api.text.Text;
+import sun.misc.Unsafe;
+
+import java.lang.reflect.Field;
+
+public class TestHelper {
+
+    public static Unsafe getUnsafe() throws Exception {
+        Field f =Unsafe.class.getDeclaredField("theUnsafe");
+        f.setAccessible(true);
+        return (Unsafe) f.get(null);
+    }
+
+    public static ClassDefinition createClassDefinition() throws Exception {
+        ClassDefinition classDefinition = new ClassDefinition("testclassdef");
+        setField(classDefinition,"type", "Primary");
+        return classDefinition;
+    }
+
+    public static ISkill createMockSkill(String skill) throws Exception {
+        ISkill mock = Mockito.mock(ISkill.class);
+        Mockito.when(mock.getId()).thenReturn(skill);
+        return mock;
+    }
+
+
+    public static CharacterClass createCharacterClass() throws Exception {
+        CharacterClass characterClass = new CharacterClass();
+        characterClass.setId(1L);
+        characterClass.setName("testClassDef");
+        return characterClass;
+    }
+
+    public static void setField(Object instance, String fieldName, Object value) throws Exception {
+        Field field = instance.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        field.set(instance, value);
+    }
+
+    public static void initLocalizations() throws Exception {
+        Field[] fields = Localizations.class.getFields();
+        Text text = Mockito.mock(Text.class);
+        LocalizableParametrizedText mock = Mockito.mock(LocalizableParametrizedText.class);
+        Mockito.when(mock.toText()).thenReturn(text);
+        Mockito.when(mock.toText(Matchers.any())).thenReturn(text);
+        for (Field field : fields) {
+            field.set(null, mock);
+        }
+    }
+}

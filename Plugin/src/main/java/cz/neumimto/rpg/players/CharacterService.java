@@ -17,19 +17,9 @@
  */
 package cz.neumimto.rpg.players;
 
-import static cz.neumimto.core.localization.Arg.arg;
-import static cz.neumimto.rpg.Log.error;
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.Log.warn;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.ClassService;
-import cz.neumimto.rpg.IRpgElement;
-import cz.neumimto.rpg.Log;
-import cz.neumimto.rpg.MissingConfigurationException;
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.damage.DamageService;
@@ -40,16 +30,12 @@ import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.common.def.ClickComboActionComponent;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.events.CancellableEvent;
-import cz.neumimto.rpg.events.CharacterAttributeChange;
-import cz.neumimto.rpg.events.CharacterEvent;
-import cz.neumimto.rpg.events.CharacterInitializedEvent;
-import cz.neumimto.rpg.events.ManaRegainEvent;
+import cz.neumimto.rpg.events.*;
 import cz.neumimto.rpg.events.character.CharacterWeaponUpdateEvent;
 import cz.neumimto.rpg.events.character.EventCharacterArmorPostUpdate;
 import cz.neumimto.rpg.events.character.PlayerDataPreloadComplete;
 import cz.neumimto.rpg.events.party.PartyInviteEvent;
-import cz.neumimto.rpg.events.skills.SkillLearnEvent;
+import cz.neumimto.rpg.events.skills.SkillLearnAttemptEvent;
 import cz.neumimto.rpg.events.skills.SkillRefundEvent;
 import cz.neumimto.rpg.events.skills.SkillUpgradeEvent;
 import cz.neumimto.rpg.gui.Gui;
@@ -67,11 +53,7 @@ import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
-import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillDependency;
-import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.utils.PermissionUtils;
@@ -83,21 +65,15 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static cz.neumimto.core.localization.Arg.arg;
+import static cz.neumimto.rpg.Log.*;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -753,73 +729,98 @@ public class CharacterService {
             }
         }
 
-        if (nClass == null) {
+        if (skillTree == null || nClass == null)  {
             return ActionResult.withErrorMessage(Localizations.NO_ACCESS_TO_SKILL.toText());
         }
+
         int avalaibleSkillpoints = 0;
         CharacterClass clazz = character.getCharacterBase().getCharacterClass(nClass.getClassDefinition());
         if (clazz == null) {
             throw new MissingConfigurationException("Class=" + nClass.getClassDefinition().getName() + ". Renamed?");
         }
+
         //todo fetch from db
         avalaibleSkillpoints = clazz.getSkillPoints();
         if (avalaibleSkillpoints < 1) {
             return ActionResult.withErrorMessage(Localizations.NO_SKILLPOINTS.toText(arg("skill", skill.getName())));
         }
+
+        if (character.hasSkill(skill.getId())) {
+            return ActionResult.withErrorMessage(Localizations.SKILL_ALREADY_LEARNED.toText(arg("skill", skill.getName())));
+        }
+
         SkillData info = skillTree.getSkillById(skill.getId());
         if (info == null) {
             return ActionResult.withErrorMessage(Localizations.SKILL_NOT_IN_A_TREE.toText(arg("skill", skill.getName())));
         }
+
         if (character.getLevel() < info.getMinPlayerLevel()) {
             Map<java.lang.String, Object> map = new HashMap<>();
             map.put("skill", skill.getName());
             map.put("level", info.getMinPlayerLevel());
             return ActionResult.withErrorMessage(Localizations.SKILL_REQUIRES_HIGHER_LEVEL.toText(arg(map)));
         }
-        for (SkillDependency skillData : info.getHardDepends()) {
-            PlayerSkillContext skillInfo = character.getSkillInfo(skillData.skillData.getSkill());
 
-            if (skillInfo == null || skillInfo.getLevel() < skillData.minSkillLevel) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("skill", skill.getName());
-                map.put("hard", info.getHardDepends().stream().map(SkillDependency::toString).collect(Collectors.joining(", ")));
-                map.put("soft", info.getSoftDepends().stream().map(SkillDependency::toString).collect(Collectors.joining(", ")));
-                return ActionResult.withErrorMessage(Localizations.MISSING_SKILL_DEPENDENCIES.toText(arg(map)));
-            }
+        if (!hasHardSkillDependencies(character, info)) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("skill", skill.getName());
+            map.put("hard", info.getHardDepends().stream().map(SkillDependency::toString).collect(Collectors.joining(", ")));
+            map.put("soft", info.getSoftDepends().stream().map(SkillDependency::toString).collect(Collectors.joining(", ")));
+            return ActionResult.withErrorMessage(Localizations.MISSING_SKILL_DEPENDENCIES.toText(arg(map)));
         }
-        boolean hasSkill = info.getSoftDepends().isEmpty();
-        for (SkillDependency dep : info.getSoftDepends()) {
-            PlayerSkillContext skillInfo = character.getSkillInfo(dep.skillData.getSkill());
-            if (skillInfo != null && skillInfo.getLevel() < dep.minSkillLevel) {
-                hasSkill = true;
-                break;
-            }
-        }
-        if (!hasSkill) {
+
+        if (!hasSoftSkillDependencies(character, info)) {
             Map<java.lang.String, Object> map = new HashMap<>();
             map.put("skill", skill.getName());
             map.put("hard", info.getHardDepends().stream().map(SkillDependency::toString).collect(Collectors.joining(", ")));
             map.put("soft", info.getSoftDepends().stream().map(SkillDependency::toString).collect(Collectors.joining(", ")));
             return ActionResult.withErrorMessage(Localizations.MISSING_SKILL_DEPENDENCIES.toText(arg(map)));
         }
-        for (SkillData skillData : info.getConflicts()) {
-            if (character.hasSkill(skillData.getSkillId())) {
-                Map<java.lang.String, Object> map = new HashMap<>();
-                map.put("skill", skill.getName());
-                map.put("conflict", skillData.getSkillId());
-                return ActionResult.withErrorMessage(Localizations.SKILL_CONFLICTS.toText(arg(map)));
-            }
+
+        if (hasConflictingSkillDepedencies(character, info)) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("skill", skill.getName());
+            map.put("conflict", skill.getId());
+            return ActionResult.withErrorMessage(Localizations.SKILL_CONFLICTS.toText(arg(map)));
         }
 
-        if (character.hasSkill(skill.getId())) {
-            return ActionResult.withErrorMessage(Localizations.SKILL_ALREADY_LEARNED.toText(arg("skill", skill.getName())));
-        }
-        SkillLearnEvent event = new SkillLearnEvent(character, skill);
+
+        SkillLearnAttemptEvent event = new SkillLearnAttemptEvent(character, skill);
         game.getEventManager().post(event);
         if (event.isCancelled()) {
             return ActionResult.withErrorMessage(event.getMessage());
         }
+
         return ActionResult.ok();
+    }
+
+    public boolean hasConflictingSkillDepedencies(IActiveCharacter character, SkillData info) {
+        for (SkillData skillData : info.getConflicts()) {
+            if (character.hasSkill(skillData.getSkillId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasSoftSkillDependencies(IActiveCharacter character, SkillData info) {
+        for (SkillDependency dep : info.getSoftDepends()) {
+            PlayerSkillContext skillInfo = character.getSkillInfo(dep.skillData.getSkill());
+            if (skillInfo != null && skillInfo.getLevel() <= dep.minSkillLevel) {
+                return true;
+            }
+        }
+        return info.getSoftDepends().isEmpty();
+    }
+
+    public boolean hasHardSkillDependencies(IActiveCharacter character, SkillData info) {
+        for (SkillDependency skillData : info.getHardDepends()) {
+            PlayerSkillContext skillInfo = character.getSkillInfo(skillData.skillData.getSkill());
+            if (skillInfo == null || skillInfo.getLevel() > skillData.minSkillLevel) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
