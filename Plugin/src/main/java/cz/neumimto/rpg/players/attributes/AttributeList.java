@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class AttributeList {
 
-    Map<Attribute, Integer> attributes = new HashMap<>();
+    private Map<Attribute, Integer> attributes = new HashMap<>();
 
     public Map<Attribute, Integer> getAttributes() {
         return attributes;

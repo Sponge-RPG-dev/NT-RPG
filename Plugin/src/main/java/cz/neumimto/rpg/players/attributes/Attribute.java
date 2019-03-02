@@ -17,9 +17,12 @@ public class Attribute implements CatalogType {
     @Setting("Name")
     private String name;
 
+    @Setting("MaxValue")
+    private String maxValue;
+
     @Setting("Properties")
     @CustomAdapter(PropertiesMapAdapter.class)
-    private Map<String, Float> propBonus;
+    private Map<Integer, Float> propBonus;
 
     public String getId() {
         return id;
@@ -29,7 +32,7 @@ public class Attribute implements CatalogType {
         return name;
     }
 
-    public Map<String, Float> getPropBonus() {
+    public Map<Integer, Float> getPropBonus() {
         return propBonus;
     }
 }
