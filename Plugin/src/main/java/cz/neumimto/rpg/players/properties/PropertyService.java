@@ -18,6 +18,10 @@
 
 package cz.neumimto.rpg.players.properties;
 
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+
+import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.Console;
 import cz.neumimto.rpg.Log;
@@ -25,19 +29,30 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.utils.Utils;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.asset.Asset;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.text.Collator;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.Set;
 import java.util.function.Supplier;
-
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 28.12.2014.
@@ -45,6 +60,9 @@ import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 @Singleton
 public class PropertyService {
+
+	@Inject
+	private NtRpgPlugin plugin;
 
 	public static final double WALKING_SPEED = 0.1d;
 	public static int LAST_ID = 0;
@@ -121,6 +139,19 @@ public class PropertyService {
 			e.printStackTrace();
 		}
 
+		path = Paths.get(NtRpgPlugin.workingDir + "/Attributes.conf");
+		File f = path.toFile();
+		if (!f.exists()) {
+			Optional<Asset> asset = Sponge.getAssetManager().getAsset(plugin, "Attributes.conf");
+			if (!asset.isPresent()) {
+				throw new IllegalStateException("Could not find an asset Attributes.conf");
+			}
+			try {
+				asset.get().copyToFile(f.toPath());
+			} catch (IOException e) {
+				throw new IllegalStateException("Could not create Attributes.conf file", e);
+			}
+		}
 	}
 
 	public void loadMaximalServerPropertyValues() {
