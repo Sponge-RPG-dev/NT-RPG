@@ -51,8 +51,6 @@ public class Localizations {
 
 	public static LocalizableParametrizedText CHARACTER_IS_REQUIRED;
 
-	public static LocalizableParametrizedText PLAYER_CANT_CHANGE_RACE;
-
 	public static LocalizableParametrizedText PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE;
 
 	public static LocalizableParametrizedText PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE;
@@ -223,11 +221,7 @@ public class Localizations {
 
 	public static LocalizableParametrizedText ALREADY_HAS_THIS_CLASS;
 
-	public static LocalizableParametrizedText ALREADY_HAS_THIS_RACE;
-
 	public static LocalizableParametrizedText UNKNOWN_SKILL;
-
-	public static LocalizableParametrizedText RACE_CANNOT_BECOME_CLASS;
 
 	public static LocalizableParametrizedText ITEM_EFFECTS_SECTION;
 
@@ -250,8 +244,6 @@ public class Localizations {
 	public static LocalizableParametrizedText ITEM_REQUIREMENTS_SECTION;
 
 	public static LocalizableParametrizedText CANNOT_USE_ITEM_GENERIC;
-
-	public static LocalizableParametrizedText RACES_MENU_TEXT;
 
 	public static LocalizableParametrizedText LEVEL;
 

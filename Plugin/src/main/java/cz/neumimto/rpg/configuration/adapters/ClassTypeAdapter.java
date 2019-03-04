@@ -5,8 +5,6 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
-import java.util.stream.Collectors;
-
 /**
  * Created by NeumimTo on 6.1.2019.
  */
@@ -21,12 +19,12 @@ public class ClassTypeAdapter implements AbstractSerializer<String> {
                 return class_type;
             }
         }
-        String all = NtRpgPlugin.pluginConfig.CLASS_TYPES.keySet().stream().collect(Collectors.joining(", "));
+        String all = String.join(", ", NtRpgPlugin.pluginConfig.CLASS_TYPES.keySet());
         throw new ObjectMappingException("Unknown class type \""+string+"\", must be one of " + all);
     }
 
     @Override
     public void serialize(TypeToken<?> typeToken, String s, ConfigurationNode configurationNode) {
-
+        configurationNode.setValue(s);
     }
 }

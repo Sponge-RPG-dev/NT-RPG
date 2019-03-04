@@ -21,8 +21,7 @@ public class TestHelper {
     }
 
     public static ClassDefinition createClassDefinition() throws Exception {
-        ClassDefinition classDefinition = new ClassDefinition("testclassdef");
-        setField(classDefinition,"type", "Primary");
+        ClassDefinition classDefinition = new ClassDefinition("testclassdef", "Primary");
         return classDefinition;
     }
 

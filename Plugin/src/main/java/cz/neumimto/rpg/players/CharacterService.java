@@ -48,6 +48,7 @@ import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.players.groups.DependencyGraph;
 import cz.neumimto.rpg.players.leveling.SkillTreeType;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
@@ -1157,21 +1158,27 @@ public class CharacterService {
         entity.getMana().setValue(event.getNewVal());
     }
 
-    public void addNewClass(IActiveCharacter character, ClassDefinition klass) {
+    public ActionResult canGainClass(IActiveCharacter character, ClassDefinition klass) {
         Map<String, PlayerClassData> classes = character.getClasses();
         if (classes.containsKey(klass.getName())) {
-            throw new IllegalStateException("Not possible to change " + klass.getClassType());
+            return ActionResult.withErrorMessage(Localizations.ALREADY_HAS_THIS_CLASS.toText(arg("class", klass.getName())));
         }
 
         CharacterBase characterBase = character.getCharacterBase();
-        Set<CharacterClass> characterClasses = characterBase.getCharacterClasses();
+        DependencyGraph classDependencyGraph = klass.getClassDependencyGraph();
 
-        for (CharacterClass characterClass : characterClasses) {
-            if (characterClass.getName().equalsIgnoreCase(klass.getName())) {
-                throw new IllegalStateException("Not possible to change " + klass.getClassType() + ". Already has class of same type");
-            }
+        Set<ClassDefinition> c = character.getClasses().values().stream().map(PlayerClassData::getClassDefinition).collect(Collectors.toSet());
+        boolean ok = classDependencyGraph.isValidFor(c);
+
+        if (!ok) {
+           ActionResult.withErrorMessage(Localizations.MISSING_CLASS_DEPENDENCIES.toText());
         }
 
+        return ActionResult.ok();
+    }
+
+    public ActionResult addNewClass(IActiveCharacter character, ClassDefinition klass) {
+        CharacterBase characterBase = character.getCharacterBase();
         CharacterClass cc = new CharacterClass();
         cc.setName(klass.getName());
         cc.setCharacterBase(characterBase);
@@ -1204,11 +1211,12 @@ public class CharacterService {
                 });
             });
         });
+        return ActionResult.ok();
     }
 
     private void scheduleNextTick(Runnable r) {
         Sponge.getScheduler().createTaskBuilder().delay(1, TimeUnit.MILLISECONDS)
-                .execute(r::run).submit(NtRpgPlugin.GlobalScope.plugin);
+                .execute(r).submit(NtRpgPlugin.GlobalScope.plugin);
     }
 
     public void addSkillPoint(IActiveCharacter character, PlayerClassData playerClassData, int skillpointsPerLevel) {

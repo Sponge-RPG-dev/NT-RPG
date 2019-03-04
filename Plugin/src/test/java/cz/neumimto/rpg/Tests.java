@@ -62,7 +62,7 @@ public class Tests {
         ActiveCharacter character = Mockito.mock(ActiveCharacter.class);
         when(character.getLevel()).thenReturn(2);
 
-        ClassDefinition race = new ClassDefinition("a");
+        ClassDefinition race = new ClassDefinition("a", "Primary");
         race.setPermissions(new HashSet<PlayerGroupPermission>() {{
             add(new PlayerGroupPermission() {{
                 setLevel(1);
@@ -79,7 +79,7 @@ public class Tests {
 
         PlayerClassData nClass = new PlayerClassData(race, characterClass);
 
-        ClassDefinition c = new ClassDefinition("b");
+        ClassDefinition c = new ClassDefinition("b", "Primary");
 
         c.setPermissions(new HashSet<PlayerGroupPermission>() {
             {
@@ -108,7 +108,7 @@ public class Tests {
 
         when(character.getClasses()).thenReturn(map);
 
-        ClassDefinition changeTo = new ClassDefinition("c");
+        ClassDefinition changeTo = new ClassDefinition("c", "Primary");
         changeTo.setPermissions(new HashSet<PlayerGroupPermission>() {{
             add(new PlayerGroupPermission() {{
                 setLevel(1);

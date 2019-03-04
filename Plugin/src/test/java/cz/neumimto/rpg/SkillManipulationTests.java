@@ -155,7 +155,7 @@ public class SkillManipulationTests {
 
     @Test
     public void mayLearnSkill_WrongClassSkillOrigin() throws Exception {
-        ActionResult actionResult = characterService.canLearnSkill(character, new ClassDefinition("test"), main);
+        ActionResult actionResult = characterService.canLearnSkill(character, new ClassDefinition("test", "Primary"), main);
 
         Assert.assertTrue(!actionResult.isOk());
     }
@@ -163,7 +163,7 @@ public class SkillManipulationTests {
     @Test
     public void mayLearnSkill_WrongClassSkillBothNull() throws Exception {
         classDefinition.setSkillTree(null);
-        ActionResult actionResult = characterService.canLearnSkill(character, new ClassDefinition("test"), main);
+        ActionResult actionResult = characterService.canLearnSkill(character, new ClassDefinition("test", "Primary"), main);
 
         Assert.assertTrue(!actionResult.isOk());
     }

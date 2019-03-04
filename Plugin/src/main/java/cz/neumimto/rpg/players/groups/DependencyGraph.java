@@ -6,6 +6,12 @@ import java.util.Set;
 
 public class DependencyGraph {
 
+    private ClassDefinition classDefinition;
+
+    public DependencyGraph(ClassDefinition classDefinition) {
+        this.classDefinition = classDefinition;
+    }
+
     private Set<ClassDefinition> softDepends = new HashSet<>();
 
     private Set<ClassDefinition> hardDepends = new HashSet<>();
@@ -47,5 +53,9 @@ public class DependencyGraph {
         }
 
         return true;
+    }
+
+    public ClassDefinition getOwner() {
+        return classDefinition;
     }
 }

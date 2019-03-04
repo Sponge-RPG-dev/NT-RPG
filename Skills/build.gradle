@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'cz.neumimto.rpg'
-version = '3.0.1'
+version = '3.0.2'
 
 dependencies {
     compileOnly 'org.spongepowered:spongeapi:' + project.spongeApiVersion

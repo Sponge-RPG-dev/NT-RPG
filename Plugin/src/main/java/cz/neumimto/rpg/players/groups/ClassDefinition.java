@@ -143,14 +143,16 @@ public class ClassDefinition implements IEffectSourceProvider {
 
 	@Setting("Dependencies")
 	@CustomAdapter(ClassDependencyGraphAdapter.class)
-	private DependencyGraph classDefinitionDependencyGraph = new DependencyGraph();
+	private DependencyGraph classDefinitionDependencyGraph;
 
 	@Setting("CustomLore")
 	@AsCollectionImpl(ArrayList.class)
 	private List<Text> customLore;
 
-	public ClassDefinition(String name) {
+	public ClassDefinition(String name, String classType) {
 		this.name = name;
+		this.type = classType;
+		classDefinitionDependencyGraph = new DependencyGraph(this);
 	}
 
 	public String getName() {

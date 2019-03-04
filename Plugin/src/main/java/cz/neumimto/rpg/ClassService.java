@@ -31,11 +31,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.service.permission.SubjectData;
 import org.spongepowered.api.util.Tristate;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 28.12.2014.
@@ -153,7 +149,7 @@ public class ClassService {
 		try {
 			Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles();
 			classes.clear();
-			classDefinitions.stream().forEach(a -> classes.put(a.getName().toLowerCase(), a));
+			classDefinitions.forEach(a -> classes.put(a.getName().toLowerCase(), a));
 			Log.info("Successfully loaded " + classes.size() + " classes");
 
 		} catch (ObjectMappingException e) {

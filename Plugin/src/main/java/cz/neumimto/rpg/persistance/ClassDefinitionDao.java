@@ -20,7 +20,9 @@ package cz.neumimto.rpg.persistance;
 
 import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
@@ -92,14 +94,39 @@ public class ClassDefinitionDao {
                 .forEach(p -> {
                     info("Preloading class definition file " + p.getFileName());
                     HoconConfigurationLoader build = HoconConfigurationLoader.builder().setPath(p).build();
+                    ClassDefinition classDefinition = null;
                     try {
                         CommentedConfigurationNode load = build.load();
-                        String name = (String) load.getNode("Name").getValue();
-                        ClassDefinition classDefinition = new ClassDefinition(name);
-                        map.put(name, p);
-                        set.add(classDefinition);
+                        if (!load.getChildrenMap().containsKey("Name") && !load.getChildrenMap().containsKey("ClassType")) {
+                            error(" - Nodes Name and ClassType are mandatory");
+                        } else {
+                            String name = (String) load.getNode("Name").getValue();
+                            String classType = (String) load.getNode("ClassType").getValue();
+                            Map<String, ClassTypeDefinition> types = NtRpgPlugin.pluginConfig.CLASS_TYPES;
+                            ClassTypeDefinition classTypeDefinition = null;
+
+                            for (Map.Entry<String, ClassTypeDefinition> e : types.entrySet()) {
+                                if (e.getKey().equalsIgnoreCase(classType)) {
+                                    classType = e.getKey();
+                                    classTypeDefinition = e.getValue();
+                                    break;
+                                }
+                            }
+
+                            if (classTypeDefinition == null) {
+                                error(" - Unknown ClassType; Allowed Class Types: " + String.join(", ", types.keySet()));
+                            } else {
+                                classDefinition = new ClassDefinition(name, classType);
+                                map.put(name, p);
+
+                                //todo this is wrong
+                                NtRpgPlugin.GlobalScope.classService.getClasses().put(classDefinition.getName().toLowerCase(), classDefinition);
+
+                                set.add(classDefinition);
+                            }
+                        }
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        error(" - File malformed", e);
                     }
                 });
         return map;
