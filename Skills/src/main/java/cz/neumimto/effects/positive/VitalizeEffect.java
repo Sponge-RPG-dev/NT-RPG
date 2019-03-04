@@ -5,6 +5,7 @@ import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.Generate;
+import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.IReservable;
@@ -34,8 +35,7 @@ public class VitalizeEffect extends EffectBase<VitalizeEffectModel> {
 	}
 
 	@Override
-	public void onTick() {
-		super.onTick();
+	public void onTick(IEffect self) {
 		NtRpgPlugin.GlobalScope.entityService.healEntity((IEntity) getConsumer(), getValue().healthPerTick, this);
 		if (character != null) {
 			IReservable mana = character.getMana();

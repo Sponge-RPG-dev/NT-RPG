@@ -6,6 +6,7 @@ import cz.neumimto.model.ManaShieldEffectModel;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.Generate;
+import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.gui.ParticleDecorator;
 import cz.neumimto.rpg.scripting.JsBinding;
@@ -44,14 +45,14 @@ public class ManaShieldEffect extends EffectBase<ManaShieldEffectModel> {
 	}
 
 	@Override
-	public void onApply() {
-		super.onApply();
+	public void onApply(IEffect self) {
+		super.onApply(self);
 		init(apply_effect, getConsumer().getEntity());
 	}
 
 	@Override
-	public void onRemove() {
-		super.onRemove();
+	public void onRemove(IEffect self) {
+		super.onRemove(self);
 		remove(remove_effect, getConsumer().getEntity());
 	}
 

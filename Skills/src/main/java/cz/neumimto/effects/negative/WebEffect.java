@@ -3,6 +3,7 @@ package cz.neumimto.effects.negative;
 import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
 import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.scripting.JsBinding;
 import org.spongepowered.api.block.BlockState;
@@ -26,8 +27,8 @@ public class WebEffect extends EffectBase<Long> {
 	}
 
 	@Override
-	public void onApply() {
-		super.onApply();
+	public void onApply(IEffect self) {
+		super.onApply(self);
 		Location<World> location = getConsumer().getEntity().getLocation();
 		Vector3d position = location.getPosition();
 		int floorY = position.getFloorY();
@@ -53,8 +54,8 @@ public class WebEffect extends EffectBase<Long> {
 	}
 
 	@Override
-	public void onRemove() {
-		super.onRemove();
+	public void onRemove(IEffect self) {
+		super.onRemove(self);
 		Location<World> location = getConsumer().getEntity().getLocation();
 		BlockState build = BlockState.builder().blockType(BlockTypes.AIR).build();
 

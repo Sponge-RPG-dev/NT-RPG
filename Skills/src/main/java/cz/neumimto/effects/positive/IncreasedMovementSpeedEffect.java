@@ -2,6 +2,7 @@ package cz.neumimto.effects.positive;
 
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.Generate;
+import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.common.stacking.FloatEffectStackingStrategy;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
@@ -24,13 +25,13 @@ public class IncreasedMovementSpeedEffect extends EffectBase<Float> {
 	}
 
 	@Override
-	public void onApply() {
+	public void onApply(IEffect self) {
 		getConsumer().setProperty(DefaultProperties.walk_speed, getConsumer().getProperty(DefaultProperties.walk_speed) + getValue());
 		getGlobalScope().characterService.updateWalkSpeed(getConsumer());
 	}
 
 	@Override
-	public void onRemove() {
+	public void onRemove(IEffect self) {
 		getConsumer().setProperty(DefaultProperties.walk_speed, getConsumer().getProperty(DefaultProperties.walk_speed) - getValue());
 		getGlobalScope().characterService.updateWalkSpeed(getConsumer());
 	}

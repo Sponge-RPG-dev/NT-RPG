@@ -46,7 +46,7 @@ public class BurningPrescenseEffect extends EffectBase<BPModel> {
     }
 
     @Override
-    public void onTick() {
+    public void onTick(IEffect self) {
         Living entity = getConsumer().getEntity();
         entity.getLocation().getExtent().spawnParticles(CASTER_EFFECT, entity.getLocation().getPosition());
         float radius = getValue().radius;

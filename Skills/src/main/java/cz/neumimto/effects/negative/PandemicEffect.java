@@ -4,6 +4,7 @@ import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.entity.living.Living;
@@ -30,7 +31,7 @@ public class PandemicEffect extends EffectBase {
 	}
 
 	@Override
-	public void onTick() {
+	public void onTick(IEffect self) {
 		Living entity = getConsumer().getEntity();
 		if (Utils.canDamage(caster, entity)) {
 			entity.damage(damage, damageSource);

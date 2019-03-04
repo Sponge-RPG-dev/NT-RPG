@@ -3,6 +3,7 @@ package cz.neumimto.effects.negative;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.Generate;
+import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.scripting.JsBinding;
 import org.spongepowered.api.event.cause.entity.damage.source.DamageSources;
@@ -23,7 +24,7 @@ public class DOTFireDamageEffect extends EffectBase {
 	}
 
 	@Override
-	public void onTick() {
+	public void onTick(IEffect self) {
 		getConsumer().getEntity().damage(damage, DamageSources.FIRE_TICK);
 	}
 }

@@ -4,6 +4,7 @@ import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.Generate;
+import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.scripting.JsBinding;
 import org.spongepowered.api.data.key.Keys;
@@ -55,9 +56,7 @@ public class FissureEffect extends EffectBase<Integer> {
     }
 
     @Override
-    public void onTick() {
-        super.onTick();
-
+    public void onTick(IEffect self) {
         if (iterator.hasNext()) {
             BlockRayHit<World> next = iterator.next();
             Location<World> location = next.getLocation();
@@ -71,7 +70,7 @@ public class FissureEffect extends EffectBase<Integer> {
     }
 
     @Override
-    public void onRemove() {
-        super.onRemove();
+    public void onRemove(IEffect self) {
+        super.onRemove(self);
     }
 }

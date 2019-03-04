@@ -1,10 +1,7 @@
 package cz.neumimto.effects.negative;
 
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.effects.CommonEffectTypes;
-import cz.neumimto.rpg.effects.Generate;
-import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.effects.ShapedEffectDecorator;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.gui.ParticleDecorator;
 import cz.neumimto.rpg.scripting.JsBinding;
 import org.spongepowered.api.effect.particle.ParticleEffect;
@@ -42,8 +39,7 @@ public class StunEffect extends ShapedEffectDecorator<Location<World>> {
 
 
 	@Override
-	public void onTick() {
-		super.onTick();
+	public void onTick(IEffect self) {
 		if (getLastTickTime() <= System.currentTimeMillis() - tickRate) {
 			getConsumer().getEntity().setLocation(getValue());
 		}

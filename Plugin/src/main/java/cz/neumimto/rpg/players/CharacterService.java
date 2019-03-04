@@ -816,7 +816,7 @@ public class CharacterService {
     public boolean hasHardSkillDependencies(IActiveCharacter character, SkillData info) {
         for (SkillDependency skillData : info.getHardDepends()) {
             PlayerSkillContext skillInfo = character.getSkillInfo(skillData.skillData.getSkill());
-            if (skillInfo == null || skillInfo.getLevel() > skillData.minSkillLevel) {
+            if (skillInfo == null || skillInfo.getLevel() < skillData.minSkillLevel) {
                 return false;
             }
         }

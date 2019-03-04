@@ -21,7 +21,7 @@ public interface IEffectContainer<K, T extends IEffect<K>> extends IEffectSource
 
 	default void stackEffect(T t, IEffectSourceProvider effectSourceProvider) {
 		getEffects().add(t);
-		t.onApply();
+		t.onApply(t);
 		updateStackedValue();
 
 	}
@@ -50,7 +50,7 @@ public interface IEffectContainer<K, T extends IEffect<K>> extends IEffectSource
 	default void removeStack(T iEffect) {
 		getEffects().remove(iEffect);
 		if (!iEffect.getConsumer().isDetached()) {
-			iEffect.onRemove();
+			iEffect.onRemove(iEffect);
 		}
 	}
 

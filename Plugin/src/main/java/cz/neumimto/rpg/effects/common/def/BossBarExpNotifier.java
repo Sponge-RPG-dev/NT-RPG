@@ -1,10 +1,7 @@
 package cz.neumimto.rpg.effects.common.def;
 
 import cz.neumimto.rpg.configuration.Localizations;
-import cz.neumimto.rpg.effects.CoreEffectTypes;
-import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.utils.Utils;
@@ -85,7 +82,7 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 	}
 
 	@Override
-	public void onTick() {
+	public void onTick(IEffect self) {
 		for (SessionWrapper sessionWrapper : bossBarMap.values()) {
 			if (sessionWrapper.serverBossBar != null) {
 				ServerBossBar bossBar = sessionWrapper.serverBossBar;
@@ -98,7 +95,7 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 	}
 
 	@Override
-	public void onRemove() {
+	public void onRemove(IEffect self) {
 		for (SessionWrapper sessionWrapper : bossBarMap.values()) {
 			if (sessionWrapper.serverBossBar != null) {
 				sessionWrapper.serverBossBar.removePlayer(((IActiveCharacter) getConsumer()).getPlayer());

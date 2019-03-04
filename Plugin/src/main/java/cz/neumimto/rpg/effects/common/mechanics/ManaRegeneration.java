@@ -19,16 +19,13 @@
 package cz.neumimto.rpg.effects.common.mechanics;
 
 import cz.neumimto.rpg.NtRpgPlugin;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-import cz.neumimto.rpg.effects.CoreEffectTypes;
-import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.EffectStatusType;
-import cz.neumimto.rpg.effects.Generate;
-import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.events.character.ManaRegainEvent;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 9.8.2015.
@@ -52,17 +49,17 @@ public class ManaRegeneration extends EffectBase {
 	}
 
 	@Override
-	public void onApply() {
+	public void onApply(IEffect self) {
 		Gui.sendEffectStatus(character, EffectStatusType.APPLIED, this);
 	}
 
 	@Override
-	public void onRemove() {
+	public void onRemove(IEffect self) {
 		Gui.sendEffectStatus(character, EffectStatusType.EXPIRED, this);
 	}
 
 	@Override
-	public void onTick() {
+	public void onTick(IEffect self) {
 		double current = character.getMana().getValue();
 		double max = character.getMana().getMaxValue();
 		if (current >= max) {
@@ -82,16 +79,6 @@ public class ManaRegeneration extends EffectBase {
 		NtRpgPlugin.GlobalScope.game.getEventManager().post(event);
 		event.getCharacter().getMana().setValue(event.getNewVal());
 		Gui.displayMana(character);
-	}
-
-	@Override
-	public int getStacks() {
-		return 1;
-	}
-
-	@Override
-	public void setStacks(int level) {
-
 	}
 
 	@Override

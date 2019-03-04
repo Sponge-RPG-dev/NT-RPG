@@ -2,6 +2,7 @@ package cz.neumimto.effects.positive;
 
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.Generate;
+import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.common.stacking.FloatEffectStackingStrategy;
 import cz.neumimto.rpg.entities.PropertyContainer;
@@ -25,8 +26,8 @@ public class ElementalResistanceEffect extends EffectBase<Float> {
 	}
 
 	@Override
-	public void onApply() {
-		super.onApply();
+	public void onApply(IEffect self) {
+		super.onApply(self);
 		apply(1, getConsumer());
 	}
 
@@ -42,8 +43,8 @@ public class ElementalResistanceEffect extends EffectBase<Float> {
 	}
 
 	@Override
-	public void onRemove() {
-		super.onRemove();
+	public void onRemove(IEffect self) {
+		super.onRemove(self);
 		apply(-1, getConsumer());
 	}
 }

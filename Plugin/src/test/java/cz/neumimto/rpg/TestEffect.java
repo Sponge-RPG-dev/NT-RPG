@@ -9,10 +9,9 @@ public class TestEffect extends EffectBase<TestModel> {
 
 	public static String name = "Test";
 
-	public TestEffect(IEffectConsumer character, long duration, float testModel) {
+	public TestEffect(IEffectConsumer character, long duration, float model) {
 		super(name, character);
 		setDuration(duration);
-		// setValue(testModel);
 	}
 
 }

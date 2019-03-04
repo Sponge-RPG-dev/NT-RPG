@@ -21,7 +21,6 @@ package cz.neumimto.rpg.effects;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.IRpgElement;
 import cz.neumimto.rpg.NtRpgPlugin;
-import org.spongepowered.api.effect.potion.PotionEffect;
 
 import java.util.Set;
 import java.util.UUID;
@@ -35,19 +34,20 @@ public interface IEffect<K> extends IRpgElement {
 		return NtRpgPlugin.GlobalScope;
 	}
 
-	void onApply();
+	/**
+	 * @param self The reference to the effect currently being processed. IE: self == this is always true. Useful mainly for JavaScript scripts
+	 */
+	default void onTick(IEffect self) {
 
-	default void reApplyPotions() {
-		for (PotionEffect e : getPotions()) {
-			getConsumer().addPotionEffect(e.getType(), e.getAmplifier(), e.getDuration());
-		}
 	}
 
-	void onRemove();
+	default void onApply(IEffect self) {
 
-	int getStacks();
+	}
 
-	void setStacks(int level);
+	default void onRemove(IEffect self) {
+
+	}
 
 	boolean isStackable();
 
@@ -63,19 +63,11 @@ public interface IEffect<K> extends IRpgElement {
 
 	void setLastTickTime(long currTime);
 
-	void onTick();
-
-	Set<PotionEffect> getPotions();
-
 	long getExpireTime();
-
-	long getTimeLeft(long currenttime);
 
 	long getDuration();
 
 	void setDuration(long l);
-
-	void tickCountIncrement();
 
 	UUID getUUID();
 

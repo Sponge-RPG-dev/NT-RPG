@@ -2,6 +2,7 @@ package cz.neumimto.effects.negative;
 
 import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
@@ -43,7 +44,7 @@ public class Bleeding extends EffectBase<Double> {
 	}
 
 	@Override
-	public void onTick() {
+	public void onTick(IEffect self) {
 		if (Utils.canDamage(caster, getConsumer().getEntity())) {
 			getConsumer().getEntity().damage(damage, source);
 			Location<World> location = getConsumer().getEntity().getLocation();

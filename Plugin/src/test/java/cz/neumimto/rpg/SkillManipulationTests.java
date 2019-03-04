@@ -23,7 +23,7 @@ import java.util.UUID;
 
 import static org.mockito.Matchers.any;
 
-public class SkillTests {
+public class SkillManipulationTests {
 
     private CharacterService characterService = new CharacterService();
 
@@ -59,7 +59,7 @@ public class SkillTests {
     public void before() throws Exception {
         Log.logger = LoggerFactory.getLogger(getClass());
 
-        //lets not invoker constructor
+        //lets not invoke constructor
         PluginConfig o = (PluginConfig) TestHelper.getUnsafe().allocateInstance(PluginConfig.class);
         o.PRIMARY_CLASS_TYPE = "Primary";
         NtRpgPlugin.pluginConfig = o;
@@ -141,6 +141,8 @@ public class SkillTests {
         Assert.assertEquals(2, characterClass.getUsedSkillPoints());
         Assert.assertTrue(character.hasSkill(main.getId()));
         Assert.assertSame(character.getPrimaryClass(), playerClassData);
+        Mockito.verify(main, Mockito.times(1)).skillLearn(Mockito.any());
+
     }
 
     @Test
@@ -244,7 +246,7 @@ public class SkillTests {
 
     @Test
     public void checkSkillConflictingDependencies_empty() throws Exception {
-        boolean result = characterService.hasConflictingSkillDepedencies(character, new SkillData(""));
+        boolean result = !characterService.hasConflictingSkillDepedencies(character, new SkillData(""));
         Assert.assertTrue(result);
     }
 
@@ -258,12 +260,12 @@ public class SkillTests {
     }
 
     @Test
-    public void mayLearkSkill_ok() {
+    public void mayLearnSkill_ok() {
         character.addSkill(shardDepending1.getSkillId(), new PlayerSkillContext(classDefinition, shardDepending1.getSkill()) {{
             setLevel(1);
         }});
         character.addSkill(shardDepending2.getSkillId(), new PlayerSkillContext(classDefinition, shardDepending2.getSkill()) {{
-            setLevel(1);
+            setLevel(2);
         }});
         character.addSkill(ssoftDepending1.getSkillId(), new PlayerSkillContext(classDefinition, ssoftDepending1.getSkill()) {{
             setLevel(2);
@@ -272,5 +274,6 @@ public class SkillTests {
 
         Assert.assertTrue(actionResult.isOk());
     }
+
 
 }

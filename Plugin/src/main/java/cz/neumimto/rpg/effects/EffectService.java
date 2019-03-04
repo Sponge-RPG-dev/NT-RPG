@@ -39,14 +39,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -238,8 +231,7 @@ public class EffectService {
 				removeEffect(effect.getName(), effect.getConsumer(), effect.getEffectSourceProvider());
 				return;
 			}
-			effect.onTick();
-			effect.tickCountIncrement();
+			effect.onTick(effect);
 		}
 		effect.setLastTickTime(time);
 	}
@@ -266,14 +258,14 @@ public class EffectService {
 		if (eff == null) {
 			eff = iEffect.constructEffectContainer();
 			consumer.addEffect(eff);
-			iEffect.onApply();
+			iEffect.onApply(iEffect);
 		} else if (eff.isStackable()) {
 			eff.stackEffect(iEffect, effectSourceProvider);
 		} else {
 			eff.forEach((Consumer<IEffect>) this::stopEffect); //there should be always only one
 			//on remove will be called one tick later.
 			eff.getEffects().add(iEffect);
-			iEffect.onApply();
+			iEffect.onApply(iEffect);
 		}
 
 		iEffect.setEffectContainer(eff);
@@ -315,7 +307,7 @@ public class EffectService {
 		}
 		if (iEffect == container) {
 			if (!iEffect.getConsumer().isDetached()) {
-				iEffect.onRemove();
+				iEffect.onRemove(iEffect);
 			}
 			if (!consumer.isDetached()) {
 				consumer.removeEffect(iEffect);

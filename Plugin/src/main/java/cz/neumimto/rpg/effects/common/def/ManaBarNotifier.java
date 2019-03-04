@@ -1,9 +1,6 @@
 package cz.neumimto.rpg.effects.common.def;
 
-import cz.neumimto.rpg.effects.CoreEffectTypes;
-import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.boss.BossBarColors;
@@ -71,7 +68,7 @@ public class ManaBarNotifier extends EffectBase<Object> implements IEffectContai
 	}
 
 	@Override
-	public void onTick() {
+	public void onTick(IEffect self) {
 		if (bossBar.isVisible()) {
 			bossBar.setVisible(false);
 		}
@@ -79,7 +76,7 @@ public class ManaBarNotifier extends EffectBase<Object> implements IEffectContai
 	}
 
 	@Override
-	public void onRemove() {
+	public void onRemove(IEffect self) {
 		bossBar.removePlayer(player);
 
 	}

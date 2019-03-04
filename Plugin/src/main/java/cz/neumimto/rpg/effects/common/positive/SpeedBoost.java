@@ -20,10 +20,7 @@ package cz.neumimto.rpg.effects.common.positive;
 
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.configuration.Localizations;
-import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.Generate;
-import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.gui.ParticleDecorator;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
@@ -76,8 +73,8 @@ public class SpeedBoost extends EffectBase {
 	}
 
 	@Override
-	public void onApply() {
-		super.onApply();
+	public void onApply(IEffect self) {
+		super.onApply(self);
 		getConsumer().setProperty(DefaultProperties.walk_speed,
 				getGlobalScope().characterService.getCharacterProperty(getConsumer(), DefaultProperties.walk_speed) + speedbonus);
 		getGlobalScope().characterService.updateWalkSpeed(getConsumer());
@@ -98,8 +95,8 @@ public class SpeedBoost extends EffectBase {
 	}
 
 	@Override
-	public void onRemove() {
-		super.onRemove();
+	public void onRemove(IEffect self) {
+		super.onRemove(self);
 		getConsumer().setProperty(DefaultProperties.walk_speed,
 				getGlobalScope().characterService.getCharacterProperty(getConsumer(), DefaultProperties.walk_speed) - speedbonus);
 		getGlobalScope().characterService.updateWalkSpeed(getConsumer());

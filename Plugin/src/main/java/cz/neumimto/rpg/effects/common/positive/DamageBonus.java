@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.effects.common.positive;
 
 import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
@@ -56,7 +57,7 @@ public class DamageBonus extends EffectBase {
 	}
 
 	@Override
-	public void onApply() {
+	public void onApply(IEffect self) {
 		getConsumer().setProperty(DefaultProperties.weapon_damage_bonus,
 				getConsumer().getProperty(DefaultProperties.weapon_damage_bonus) + bonusDamage);
 		if (getConsumer().getEntity().getType() == EntityTypes.PLAYER) {
@@ -65,7 +66,7 @@ public class DamageBonus extends EffectBase {
 	}
 
 	@Override
-	public void onRemove() {
+	public void onRemove(IEffect self) {
 		getConsumer().setProperty(DefaultProperties.weapon_damage_bonus,
 				getConsumer().getProperty(DefaultProperties.weapon_damage_bonus) - bonusDamage);
 		if (getConsumer().getEntity().getType() == EntityTypes.PLAYER) {

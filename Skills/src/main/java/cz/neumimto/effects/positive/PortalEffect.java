@@ -7,6 +7,7 @@ import cz.neumimto.SkillLocalization;
 import cz.neumimto.Utils;
 import cz.neumimto.rpg.VectorUtils;
 import cz.neumimto.rpg.effects.Generate;
+import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.ShapedEffectDecorator;
 import cz.neumimto.rpg.gui.Gui;
@@ -99,8 +100,8 @@ public class PortalEffect extends ShapedEffectDecorator {
 	}
 
 	@Override
-	public void onTick() {
-		super.onTick();
+	public void onTick(IEffect self) {
+		super.onTick(self);
 		if (lastTimeRun <= System.currentTimeMillis() - entityLookupInterval) {
 			if (!initialized()) {
 				Entity entity = getLocationImprint();

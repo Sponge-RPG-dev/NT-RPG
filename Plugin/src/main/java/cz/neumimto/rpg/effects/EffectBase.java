@@ -22,7 +22,6 @@ import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.utils.UUIDs;
-import org.spongepowered.api.effect.potion.PotionEffect;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -35,24 +34,28 @@ import java.util.UUID;
 public class EffectBase<Value> implements IEffect<Value> {
 
 	protected Set<EffectType> effectTypes = new HashSet<>();
-	protected long tickCount;
 	private boolean stackable = false;
+
 	private String name;
-	private int level;
-	private Set<PotionEffect> potions;
+
 	private IEffectConsumer consumer;
 	private long duration = -1;
 	private long period = -1;
 	private long lastTickTime;
-	private long expireTime;
+
 	private long timeCreated;
 	private String applyMessage;
 	private String expireMessage;
 	private UUID uuid;
+
 	private IEffectSourceProvider effectSourceProvider;
+
 	private Value value;
+
 	private EffectStackingStrategy<Value> effectStackingStrategy;
+
 	private IEffectContainer<Value, IEffect<Value>> container;
+
 	private boolean tickingDisabled = false;
 
 	public EffectBase(String name, IEffectConsumer consumer) {
@@ -81,20 +84,6 @@ public class EffectBase<Value> implements IEffect<Value> {
 	}
 
 	@Override
-	public void onApply() {
-		for (PotionEffect e : getPotions()) {
-			getConsumer().addPotionEffect(e);
-		}
-	}
-
-	@Override
-	public void onRemove() {
-		for (PotionEffect e : getPotions()) {
-			getConsumer().removePotionEffect(e.getType());
-		}
-	}
-
-	@Override
 	public boolean isStackable() {
 		return stackable;
 	}
@@ -103,17 +92,6 @@ public class EffectBase<Value> implements IEffect<Value> {
 	public void setStackable(boolean b, EffectStackingStrategy<Value> stackingStrategy) {
 		this.stackable = b;
 		setEffectStackingStrategy(stackingStrategy);
-	}
-
-	@Override
-	public int getStacks() {
-		return level;
-	}
-
-
-	@Override
-	public void setStacks(int level) {
-		this.level = level;
 	}
 
 	public IEffectConsumer getConsumer() {
@@ -127,25 +105,8 @@ public class EffectBase<Value> implements IEffect<Value> {
 	}
 
 	@Override
-	public Set<PotionEffect> getPotions() {
-		if (potions == null) {
-			potions = new HashSet<>();
-		}
-		return potions;
-	}
-
-	@Override
 	public long getExpireTime() {
 		return timeCreated + duration;
-	}
-
-	protected void setExpireTime(long expireTime) {
-		this.expireTime = expireTime;
-	}
-
-	@Override
-	public long getTimeLeft(long currenttime) {
-		return timeCreated + duration - currenttime;
 	}
 
 	@Override
@@ -156,15 +117,6 @@ public class EffectBase<Value> implements IEffect<Value> {
 	@Override
 	public void setDuration(long l) {
 		this.duration = l;
-	}
-
-	@Override
-	public void tickCountIncrement() {
-		tickCount++;
-	}
-
-	protected long getTickCount() {
-		return tickCount;
 	}
 
 	@Override
@@ -185,11 +137,6 @@ public class EffectBase<Value> implements IEffect<Value> {
 	@Override
 	public void setLastTickTime(long lastTickTime) {
 		this.lastTickTime = lastTickTime;
-	}
-
-	@Override
-	public void onTick() {
-
 	}
 
 	@Override

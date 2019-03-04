@@ -1,15 +1,8 @@
 package cz.neumimto.effects.positive;
 
-import static com.flowpowered.math.TrigMath.cos;
-import static com.flowpowered.math.TrigMath.sin;
-
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.Generate;
-import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.scripting.JsBinding;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
@@ -20,6 +13,9 @@ import org.spongepowered.api.world.World;
 
 import java.util.Collections;
 import java.util.Set;
+
+import static com.flowpowered.math.TrigMath.cos;
+import static com.flowpowered.math.TrigMath.sin;
 
 /**
  * Created by NeumimTo on 4.7.2017.
@@ -39,7 +35,7 @@ public class ArrowstormEffect extends EffectBase implements IEffectContainer {
 	}
 
 	@Override
-	public void onTick() {
+	public void onTick(IEffect self) {
 		if (arrows != 0) {
 			Living entity = getConsumer().getEntity();
 			World world = entity.getWorld();

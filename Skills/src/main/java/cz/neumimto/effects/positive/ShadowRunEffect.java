@@ -4,6 +4,7 @@ import cz.neumimto.model.ShadowRunModel;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.Generate;
+import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.scripting.JsBinding;
@@ -31,8 +32,8 @@ public class ShadowRunEffect extends EffectBase<ShadowRunModel> {
 	}
 
 	@Override
-	public void onApply() {
-		super.onApply();
+	public void onApply(IEffect self) {
+		super.onApply(self);
 		getConsumer().getEntity().offer(Keys.VANISH, true);
 		getConsumer().getEntity().offer(Keys.VANISH_PREVENTS_TARGETING, true);
 		getConsumer().addProperty(DefaultProperties.walk_speed, getValue().walkspeed);
@@ -40,7 +41,7 @@ public class ShadowRunEffect extends EffectBase<ShadowRunModel> {
 	}
 
 	@Override
-	public void onTick() {
+	public void onTick(IEffect self) {
 		int i = rnd.nextInt(5);
 		Location<World> location = getConsumer().getLocation();
 		World extent = location.getExtent();
@@ -53,8 +54,8 @@ public class ShadowRunEffect extends EffectBase<ShadowRunModel> {
 	}
 
 	@Override
-	public void onRemove() {
-		super.onRemove();
+	public void onRemove(IEffect self) {
+		super.onRemove(self);
 		getConsumer().getEntity().offer(Keys.VANISH, false);
 		getConsumer().getEntity().offer(Keys.VANISH_PREVENTS_TARGETING, false);
 		getConsumer().addProperty(DefaultProperties.walk_speed, -getValue().walkspeed);

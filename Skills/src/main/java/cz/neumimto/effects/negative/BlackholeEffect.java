@@ -2,6 +2,7 @@ package cz.neumimto.effects.negative;
 
 import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
+import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.ShapedEffectDecorator;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -46,8 +47,7 @@ public class BlackholeEffect extends ShapedEffectDecorator<Location<World>> {
 	}
 
 	@Override
-	public void onTick() {
-		super.onTick();
+	public void onTick(IEffect self) {
 		Vector3i chunkPosition = targetLocation.getChunkPosition();
 		Optional<Chunk> chunk = targetLocation.getExtent().getChunk(chunkPosition);
 		if (chunk.isPresent()) {

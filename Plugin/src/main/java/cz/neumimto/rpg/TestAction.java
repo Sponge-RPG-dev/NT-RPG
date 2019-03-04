@@ -5,13 +5,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
-import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.EffectSourceType;
-import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.effects.IEffectSource;
-import cz.neumimto.rpg.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.common.stacking.IntegerEffectStackingStrategy;
 import cz.neumimto.rpg.gui.ParticleDecorator;
 import cz.neumimto.rpg.inventory.InventoryService;
@@ -82,12 +76,12 @@ public class TestAction implements IEffectSourceProvider {
 		}
 
 		@Override
-		public void onApply() {
+		public void onApply(IEffect self) {
 			getConsumer().sendMessage(LocalizableParametrizedText.from("added"), Arg.EMPTY);
 		}
 
 		@Override
-		public void onRemove() {
+		public void onRemove(IEffect self) {
 			getConsumer().sendMessage(LocalizableParametrizedText.from("removed"), Arg.EMPTY);
 		}
 

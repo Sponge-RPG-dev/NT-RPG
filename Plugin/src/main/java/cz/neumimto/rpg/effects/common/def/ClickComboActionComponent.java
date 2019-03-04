@@ -1,10 +1,7 @@
 package cz.neumimto.rpg.effects.common.def;
 
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.Generate;
-import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
@@ -130,7 +127,7 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 	}
 
 	@Override
-	public void onTick() {
+	public void onTick(IEffect self) {
 		if (notifyIfCancelled && getLastTickTime() + getPeriod() >= k) {
 			cancel(false);
 		}

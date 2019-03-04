@@ -18,10 +18,7 @@
 
 package cz.neumimto.rpg.effects.common.positive;
 
-import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.EffectStatusType;
-import cz.neumimto.rpg.effects.Generate;
-import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.common.mechanics.ManaRegeneration;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.Health;
@@ -53,7 +50,7 @@ public class BloodMagicEffect extends EffectBase {
 	}
 
 	@Override
-	public void onApply() {
+	public void onApply(IEffect self) {
 		Gui.sendEffectStatus(consumer, EffectStatusType.APPLIED, this);
 		consumer.removeEffect(ManaRegeneration.name);
 		Health health = (Health) consumer.getHealth();
@@ -62,7 +59,7 @@ public class BloodMagicEffect extends EffectBase {
 
 
 	@Override
-	public void onRemove() {
+	public void onRemove(IEffect self) {
 		Gui.sendEffectStatus(consumer, EffectStatusType.EXPIRED, this);
 		consumer.setMana(new Mana(consumer));
 		//todo re-add mana regain event, or set period of mana regen to long.maxval; + listener

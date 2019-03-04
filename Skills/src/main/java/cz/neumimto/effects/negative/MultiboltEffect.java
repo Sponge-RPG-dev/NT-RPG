@@ -6,6 +6,7 @@ import cz.neumimto.model.MultiboltModel;
 import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.NDamageType;
@@ -29,14 +30,13 @@ public class MultiboltEffect extends EffectBase<MultiboltModel> {
 	}
 
 	@Override
-	public void onApply() {
-		super.onApply();
+	public void onApply(IEffect self) {
+		super.onApply(self);
 		damage();
 	}
 
 	@Override
-	public void onTick() {
-		super.onTick();
+	public void onTick(IEffect self) {
 		if (model.timesToHit <= 0) {
 			setDuration(0);
 		} else {

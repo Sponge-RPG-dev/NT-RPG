@@ -17,7 +17,7 @@ public abstract class ShapedEffectDecorator<Value> extends EffectBase<Value> {
 	}
 
 	@Override
-	public void onTick() {
+	public void onTick(IEffect self) {
 		int i = getVertices().length / printerCount;
 		for (int j = 0; j <= printerCount - 1; j++) {
 			int v = i * j + iter;
