@@ -143,7 +143,7 @@ public class JSLoader {
 					continue;
 				}
 				if (objectTypeEntry.getValue() == JsBinding.Type.CLASS) {
-					//bindings.put(objectTypeEntry.getKey().getSimpleName(), objectTypeEntry.getKey());
+					bindings.put(objectTypeEntry.getKey().getSimpleName(), objectTypeEntry.getKey());
 					continue;
 				}
 				if (objectTypeEntry.getValue() == JsBinding.Type.OBJECT) {
