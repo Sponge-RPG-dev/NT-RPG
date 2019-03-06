@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.effects.common.mechanics;
 
 import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.scripting.JsBinding;
 import org.spongepowered.api.effect.potion.PotionEffect;
 
 import java.util.Collections;
@@ -10,6 +11,7 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 12.8.2017.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public abstract class RPGPotionEffect extends EffectBase<Long> implements IEffectContainer<Long, RPGPotionEffect> {
 
 	private Set<PotionEffect> potions;
