@@ -2,7 +2,6 @@ package cz.neumimto.rpg.skills.scripting;
 
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.IEntity;
-import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.effects.IEffect;
@@ -11,7 +10,6 @@ import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.pipeline.SkillComponent;
 import cz.neumimto.rpg.skills.utils.F;
 import cz.neumimto.rpg.utils.TriConsumer;
-import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectType;
@@ -22,9 +20,11 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static cz.neumimto.rpg.Log.info;
 
@@ -188,4 +188,15 @@ public class SkillActions {
 		};
 		return PotionEffect.builder().potionType(type);
 	};
+
+	@SkillComponent(
+			value = "Puts a task into a scheduled execution",
+			params = {
+					@SkillComponent.Param("function - code to run later"),
+					@SkillComponent.Param("delay - time in milliseconds")
+			},
+			usage = "delay(function() { ... }, delay)"
+	)
+	public static BiConsumer<Runnable, Long> DELAY =  (r,l) -> Sponge.getScheduler().createTaskBuilder().execute(r).delay(l, TimeUnit.MILLISECONDS).submit(NtRpgPlugin.GlobalScope.plugin);
+
 }

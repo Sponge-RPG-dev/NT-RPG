@@ -1164,14 +1164,40 @@ public class CharacterService {
             return ActionResult.withErrorMessage(Localizations.ALREADY_HAS_THIS_CLASS.toText(arg("class", klass.getName())));
         }
 
-        CharacterBase characterBase = character.getCharacterBase();
         DependencyGraph classDependencyGraph = klass.getClassDependencyGraph();
 
         Set<ClassDefinition> c = character.getClasses().values().stream().map(PlayerClassData::getClassDefinition).collect(Collectors.toSet());
         boolean ok = classDependencyGraph.isValidFor(c);
 
         if (!ok) {
-           ActionResult.withErrorMessage(Localizations.MISSING_CLASS_DEPENDENCIES.toText());
+           return ActionResult.withErrorMessage(Localizations.MISSING_CLASS_DEPENDENCIES.toText());
+        }
+
+        if (NtRpgPlugin.pluginConfig.RESPECT_CLASS_SELECTION_ORDER) {
+            Set<String> classTypes = pluginConfig.CLASS_TYPES.keySet();
+            Iterator<String> ctype = classTypes.iterator();
+            String first = classTypes.iterator().next();
+
+            while (ctype.hasNext()) {
+                String classType = ctype.next();
+                if (first.equalsIgnoreCase(classType) && first.equalsIgnoreCase(klass.getClassType())) {
+                    break;
+                }
+                PlayerClassData classByType = character.getClassByType(classType);
+                if (classByType == null) {
+                    return ActionResult.withErrorMessage(Localizations.MISSING_CLASS_DEPENDENCIES.toText());
+                }
+                ClassDefinition classDefinition = classByType.getClassDefinition();
+                if (!classDefinition.getClassDependencyGraph().isValidFor(character.getClasses()
+                        .values().stream().map(PlayerClassData::getClassDefinition).collect(Collectors.toSet()))) {
+                    return ActionResult.withErrorMessage(Localizations.MISSING_CLASS_DEPENDENCIES.toText());
+                }
+                break;
+
+            }
+
+
+
         }
 
         return ActionResult.ok();

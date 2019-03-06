@@ -1,15 +1,18 @@
 package cz.neumimto.rpg;
 
 
+import cz.neumimto.rpg.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.configuration.PluginConfig;
-import cz.neumimto.rpg.players.ActiveCharacter;
-import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.persistance.model.CharacterClass;
+import cz.neumimto.rpg.players.*;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.UUID;
 
 public class ClassManipulationTests {
@@ -17,6 +20,11 @@ public class ClassManipulationTests {
     ClassDefinition pc1;
     ClassDefinition pc2;
     ClassDefinition pc3;
+
+
+    ClassDefinition ps1;
+    ClassDefinition ps2;
+    ClassDefinition ps3;
 
     CharacterService characterService = new CharacterService();
 
@@ -34,13 +42,26 @@ public class ClassManipulationTests {
         o.PRIMARY_CLASS_TYPE = "Primary";
         NtRpgPlugin.pluginConfig = o;
 
+        NtRpgPlugin.pluginConfig.CLASS_TYPES = new LinkedHashMap<String, ClassTypeDefinition>() {{
+            put("Primary", new ClassTypeDefinition(null, null, null, false, 1));
+            put("Secondary", new ClassTypeDefinition(null, null, null, false, 2));
+        }};
+
         pc1 = new ClassDefinition("class1", "Primary");
         pc2 = new ClassDefinition("class2", "Primary");
         pc3 = new ClassDefinition("class3", "Primary");
 
-        pc1 = new ClassDefinition("secondary1", "Secondary");
-        pc2 = new ClassDefinition("secondary2", "Secondary");
-        pc3 = new ClassDefinition("secondary3", "Secondary");
+        pc1.getClassDependencyGraph().getConflicts().addAll(Arrays.asList(pc2, pc3));
+        pc2.getClassDependencyGraph().getConflicts().addAll(Arrays.asList(pc1, pc3));
+        pc3.getClassDependencyGraph().getConflicts().addAll(Arrays.asList(pc1, pc2));
+
+        ps1 = new ClassDefinition("secondary1", "Secondary");
+        ps2 = new ClassDefinition("secondary2", "Secondary");
+        ps3 = new ClassDefinition("secondary3", "Secondary");
+
+        ps1.getClassDependencyGraph().getConflicts().addAll(Arrays.asList(ps2, ps3));
+        ps2.getClassDependencyGraph().getConflicts().addAll(Arrays.asList(ps1, ps3));
+        ps3.getClassDependencyGraph().getConflicts().addAll(Arrays.asList(ps1, ps2));
 
         CharacterBase base = new CharacterBase();
         character = new ActiveCharacter(UUID.randomUUID(), base);
@@ -49,6 +70,35 @@ public class ClassManipulationTests {
 
     @Test
     public void may_assign_primary_primary_as_first() {
-        characterService.canGainClass(character, pc1);
+        ActionResult result = characterService.canGainClass(character, pc1);
+        Assert.assertTrue(result.isOk());
     }
+
+    @Test
+    public void may_not_select_same_type() {
+        CharacterClass characterClass = new CharacterClass();
+        PlayerClassData playerClassData = new PlayerClassData(pc1, characterClass);
+        character.addClass(playerClassData);
+        ActionResult result = characterService.canGainClass(character, pc2);
+        Assert.assertTrue(!result.isOk());
+    }
+
+    @Test
+    public void respects_class_selection_order() {
+        NtRpgPlugin.pluginConfig.RESPECT_CLASS_SELECTION_ORDER = true;
+        ActionResult result = characterService.canGainClass(character, ps2);
+        Assert.assertTrue(!result.isOk());
+    }
+
+    @Test
+    public void select_secondary_class() {
+        NtRpgPlugin.pluginConfig.RESPECT_CLASS_SELECTION_ORDER = true;
+        CharacterClass characterClass = new CharacterClass();
+        PlayerClassData playerClassData = new PlayerClassData(pc1, characterClass);
+        character.addClass(playerClassData);
+
+        ActionResult result = characterService.canGainClass(character, ps1);
+        Assert.assertTrue(result.isOk());
+    }
+
 }
