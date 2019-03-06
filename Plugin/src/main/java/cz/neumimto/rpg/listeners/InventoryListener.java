@@ -162,7 +162,7 @@ public class InventoryListener {
 	public void onDimensionTravel(MoveEntityEvent.Teleport.Portal event, @Root Player player) {
 		IActiveCharacter character = characterService.getCharacter(player);
 		if (!character.isStub()) {
-			characterService.respawnCharacter(character, player);
+			characterService.respawnCharacter(character);
 		}
 	}
 

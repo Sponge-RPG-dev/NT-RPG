@@ -1074,7 +1074,7 @@ public class CharacterService {
      * .com/SpongePowered/SpongeCommon/commit/384180f372fa233bcfc110a7385f43df2a85ef76
      * character object is heavy, lets do not recreate its instance just reasign player and effects
      */
-    public void respawnCharacter(IActiveCharacter character, Player pl) {
+    public void respawnCharacter(IActiveCharacter character) {
         effectService.removeAllEffects(character);
 
         for (PlayerClassData nClass : character.getClasses().values()) {
