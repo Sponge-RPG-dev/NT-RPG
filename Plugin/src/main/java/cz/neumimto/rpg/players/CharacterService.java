@@ -956,7 +956,6 @@ public class CharacterService {
 
     public void addExperiences(IActiveCharacter character, double exp, ExperienceSource source) {
         Map<String, PlayerClassData> classes = character.getClasses();
-        boolean save = false;
         for (Map.Entry<String, PlayerClassData> entry : classes.entrySet()) {
             PlayerClassData value = entry.getValue();
             ClassDefinition classDefinition = value.getClassDefinition();
@@ -981,7 +980,6 @@ public class CharacterService {
         int level = aClass.getLevel();
         exp = exp * getCharacterProperty(character, DefaultProperties.experiences_mult);
 
-        double total = aClass.getExperiencesFromLevel();
         double lvlexp = aClass.getExperiencesFromLevel();
 
         double levellimit = levels[level];
@@ -1193,11 +1191,7 @@ public class CharacterService {
                     return ActionResult.withErrorMessage(Localizations.MISSING_CLASS_DEPENDENCIES.toText());
                 }
                 break;
-
             }
-
-
-
         }
 
         return ActionResult.ok();

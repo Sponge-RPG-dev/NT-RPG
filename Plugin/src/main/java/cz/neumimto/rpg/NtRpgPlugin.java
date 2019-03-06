@@ -1306,7 +1306,12 @@ public class NtRpgPlugin {
                         player.sendMessage(Localizations.CHARACTER_IS_REQUIRED.toText());
                         return CommandResult.empty();
                     }
-                    GlobalScope.characterService.addNewClass(character, configClass);
+                    ActionResult result = GlobalScope.characterService.canGainClass(character, configClass);
+                    if (result.isOk()) {
+                        GlobalScope.characterService.addNewClass(character, configClass);
+                    } else {
+                        src.sendMessage(result.getErrorMesage());
+                    }
                     return CommandResult.success();
                 })
                 .build();

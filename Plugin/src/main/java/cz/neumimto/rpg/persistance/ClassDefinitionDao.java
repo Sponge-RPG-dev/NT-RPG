@@ -118,10 +118,6 @@ public class ClassDefinitionDao {
                             } else {
                                 classDefinition = new ClassDefinition(name, classType);
                                 map.put(name, p);
-
-                                //todo this is wrong
-                                NtRpgPlugin.GlobalScope.classService.getClasses().put(classDefinition.getName().toLowerCase(), classDefinition);
-
                                 set.add(classDefinition);
                             }
                         }

@@ -18,8 +18,6 @@
 
 package cz.neumimto.rpg.listeners;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-
 import com.flowpowered.math.vector.Vector3i;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.IEntity;
@@ -31,11 +29,7 @@ import cz.neumimto.rpg.damage.ISkillDamageSource;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.events.CharacterWeaponDamageEvent;
-import cz.neumimto.rpg.events.INEntityWeaponDamageEvent;
-import cz.neumimto.rpg.events.ProjectileHitEvent;
-import cz.neumimto.rpg.events.SkillDamageEvent;
-import cz.neumimto.rpg.events.SkillDamageEventLate;
+import cz.neumimto.rpg.events.*;
 import cz.neumimto.rpg.exp.ExperienceService;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.runewords.RWService;
@@ -91,6 +85,8 @@ import org.spongepowered.api.world.World;
 
 import java.util.List;
 import java.util.Optional;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 12.2.2015.
@@ -390,7 +386,7 @@ public class BasicListener {
 			if (character.isStub()) {
 				return;
 			}
-			characterService.respawnCharacter(character, event.getTargetEntity());
+			characterService.respawnCharacter(character);
 
 		}
 	}

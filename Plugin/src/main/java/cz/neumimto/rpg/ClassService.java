@@ -149,7 +149,22 @@ public class ClassService {
 		try {
 			Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles();
 			classes.clear();
+
 			classDefinitions.forEach(a -> classes.put(a.getName().toLowerCase(), a));
+
+			for (ClassDefinition result : classDefinitions) {
+				Map<String, ClassDefinition> classes = NtRpgPlugin.GlobalScope.classService.getClasses();
+				for (ClassDefinition classDefinition : classes.values()) {
+					if (classDefinition.getName().equalsIgnoreCase(result.getName())) {
+						continue;
+					}
+					if (classDefinition.getClassType().equalsIgnoreCase(result.getClassType())) {
+						result.getClassDependencyGraph().getConflicts().add(classDefinition);
+					}
+				}
+
+			}
+
 			Log.info("Successfully loaded " + classes.size() + " classes");
 
 		} catch (ObjectMappingException e) {

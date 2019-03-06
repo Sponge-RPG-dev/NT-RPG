@@ -101,4 +101,11 @@ public class ClassManipulationTests {
         Assert.assertTrue(result.isOk());
     }
 
+    @Test
+    public void select_secondary_before_primary() {
+        NtRpgPlugin.pluginConfig.RESPECT_CLASS_SELECTION_ORDER = false;
+        ActionResult result = characterService.canGainClass(character, ps2);
+        Assert.assertTrue(result.isOk());
+    }
+
 }

@@ -12,7 +12,6 @@ import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @EnableSetterInjection
@@ -36,18 +35,6 @@ public class ClassDependencyGraphAdapter implements TypeSerializer<DependencyGra
         graph.getSoftDepends().addAll(toClass(soft.getList(TypeToken.of(String.class))));
         graph.getHardDepends().addAll(toClass(hard.getList(TypeToken.of(String.class))));
         graph.getConflicts().addAll(toClass(conflicts.getList(TypeToken.of(String.class))));
-
-        ClassDefinition owner = classDef;
-        Map<String, ClassDefinition> classes = NtRpgPlugin.GlobalScope.classService.getClasses();
-        for (ClassDefinition classDefinition : classes.values()) {
-            if (classDefinition.getName().equalsIgnoreCase(owner.getName())) {
-                continue;
-            }
-            if (classDefinition.getClassType().equalsIgnoreCase(owner.getClassType())) {
-                graph.getConflicts().add(classDefinition);
-            }
-        }
-
         return graph;
     }
 
