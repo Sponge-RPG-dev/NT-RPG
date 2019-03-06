@@ -250,4 +250,11 @@ public class EffectBase<Value> implements IEffect<Value> {
 	public void setTickingDisabled(boolean tickingDisabled) {
 		this.tickingDisabled = tickingDisabled;
 	}
+
+	public void init(IEffectConsumer consumer, String name, long duration, long period) {
+		this.consumer = consumer;
+		this.name = name;
+		this.period = period;
+		this.duration = duration;
+	}
 }
