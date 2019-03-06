@@ -189,14 +189,5 @@ public class SkillActions {
 		return PotionEffect.builder().potionType(type);
 	};
 
-	@SkillComponent(
-			value = "Puts a task into a scheduled execution",
-			params = {
-					@SkillComponent.Param("function - code to run later"),
-					@SkillComponent.Param("delay - time in milliseconds")
-			},
-			usage = "delay(function() { ... }, delay)"
-	)
-	public static BiConsumer<Runnable, Long> DELAY =  (r,l) -> Sponge.getScheduler().createTaskBuilder().execute(r).delay(l, TimeUnit.MILLISECONDS).submit(NtRpgPlugin.GlobalScope.plugin);
 
 }
