@@ -1,10 +1,7 @@
 package cz.neumimto.rpg.skills.mods;
 
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ISkillNode;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
-import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.skills.parents.IActiveSkill;
 
 import java.util.*;
@@ -41,6 +38,10 @@ public class SkillContext {
 
 	public SkillContext() {
 
+	}
+
+	public ISkill getSkill() {
+		return esi.getSkill();
 	}
 
 	public void sort() {
