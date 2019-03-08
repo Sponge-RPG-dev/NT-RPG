@@ -886,10 +886,6 @@ public class NtRpgPlugin {
                 .executor((src, args) -> {
                     String[] a = args.<String>getOne("args").get().split(" ");
                     if (a[0].equalsIgnoreCase("js")) {
-                        if (!(pluginConfig.DEBUG.isBalance())) {
-                            src.sendMessage(TextHelper.parse("Reloading is allowed only in debug mode"));
-                            return CommandResult.success();
-                        }
                         JSLoader jsLoader = IoC.get().build(JSLoader.class);
                         jsLoader.initEngine();
 
