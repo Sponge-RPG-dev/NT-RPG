@@ -66,10 +66,9 @@ public class SkillActions {
 
 	@SkillComponent(
 			value = "Applies an effect to a specifc entity, each effect has different constructor parameters",
-			usage = "apply_effect(effect, target, context)",
+			usage = "apply_effect(effect, context)",
 			params = {
 					@SkillComponent.Param("effect - The effect to be applied"),
-					@SkillComponent.Param("target - Entity to consume the effect"),
 					@SkillComponent.Param("context - skill context"),
 			}
 	)
