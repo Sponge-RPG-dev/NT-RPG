@@ -28,6 +28,6 @@ public class ResoluteTechnique extends PassiveSkill {
 	@Override
 	public void applyEffect(PlayerSkillContext info, IActiveCharacter character) {
 		ResoluteTechniqueEffect effect = new ResoluteTechniqueEffect(character, -1, null);
-		effectService.addEffect(effect, character, this);
+		effectService.addEffect(effect, this);
 	}
 }

@@ -71,7 +71,7 @@ public class Despair extends ActiveSkill {
 							.setCaster(character).build();
 					l.damage(damage, build);
 					Blindness blindness = new Blindness(iEntity, duration);
-					effectService.addEffect(blindness, character, this);
+					effectService.addEffect(blindness, this);
 				}
 			}
 		}

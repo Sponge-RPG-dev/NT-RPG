@@ -38,7 +38,7 @@ public class Web extends Targetted {
 		long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
 		IEntity iEntity = entityService.get(target);
 		WebEffect eff = new WebEffect(iEntity, duration);
-		effectService.addEffect(eff, iEntity, this);
+		effectService.addEffect(eff, this);
 		skillContext.next(source, info, skillContext.result(SkillResult.OK));
 	}
 

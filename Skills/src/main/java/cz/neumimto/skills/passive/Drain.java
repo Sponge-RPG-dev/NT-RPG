@@ -34,7 +34,7 @@ public class Drain extends PassiveSkill {
 		int totalLevel = info.getTotalLevel();
 		float floatNodeValue =  info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.AMOUNT, totalLevel);
 		ManaDrainEffect effect = new ManaDrainEffect(character, -1L, floatNodeValue);
-		effectService.addEffect(effect, character, this);
+		effectService.addEffect(effect, this);
 	}
 
 	@Override

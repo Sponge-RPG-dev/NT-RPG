@@ -409,7 +409,7 @@ public class CharacterService {
     }
 
     public void addDefaultEffects(IActiveCharacter character) {
-        effectService.addEffect(new CombatEffect(character), character, InternalEffectSourceProvider.INSTANCE);
+        effectService.addEffect(new CombatEffect(character), InternalEffectSourceProvider.INSTANCE);
     }
 
     public void removeGroupEffects(IActiveCharacter character, ClassDefinition p) {

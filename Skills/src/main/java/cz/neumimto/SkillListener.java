@@ -6,25 +6,12 @@ import cz.neumimto.effects.EnderPearlEffect;
 import cz.neumimto.effects.ManaDrainEffect;
 import cz.neumimto.effects.ResoluteTechniqueEffect;
 import cz.neumimto.effects.negative.StunEffect;
-import cz.neumimto.effects.positive.AlchemyEffect;
-import cz.neumimto.effects.positive.Bash;
-import cz.neumimto.effects.positive.CriticalEffect;
-import cz.neumimto.effects.positive.DamageToMana;
-import cz.neumimto.effects.positive.DampenEffect;
-import cz.neumimto.effects.positive.DodgeEffect;
-import cz.neumimto.effects.positive.LifeAfterKillEffect;
-import cz.neumimto.effects.positive.ManaShieldEffect;
-import cz.neumimto.effects.positive.PotionEffect;
-import cz.neumimto.effects.positive.ShadowRunEffect;
+import cz.neumimto.effects.positive.*;
 import cz.neumimto.events.CriticalStrikeEvent;
 import cz.neumimto.events.DamageDodgedEvent;
 import cz.neumimto.events.ManaDrainEvent;
 import cz.neumimto.events.StunApplyEvent;
-import cz.neumimto.model.BashModel;
-import cz.neumimto.model.CriticalEffectModel;
-import cz.neumimto.model.ManaShieldEffectModel;
-import cz.neumimto.model.PotionEffectModel;
-import cz.neumimto.model.ShadowRunModel;
+import cz.neumimto.model.*;
 import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
@@ -220,7 +207,7 @@ public class SkillListener {
 						event.setDamage(event.getDamage() + stackedValue.damage);
 					}
 					if (!game.getEventManager().post(new StunApplyEvent(event.getSource(), event.getTarget(), stunEffect))) {
-						effectService.addEffect(stunEffect, event.getTarget(), effect);
+						effectService.addEffect(stunEffect, effect);
 						stackedValue.lasttime = time;
 					}
 				}

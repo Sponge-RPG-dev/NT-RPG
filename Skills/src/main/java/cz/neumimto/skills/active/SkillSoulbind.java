@@ -49,8 +49,8 @@ public class SkillSoulbind extends ActiveSkill {
 			if (iActiveCharacter.getParty().getPlayers().contains(character)) {
 				SoulBindEffect effect = new SoulBindEffect(iActiveCharacter, character);
 				effect.setDuration(skillContext.getLongNodeValue(SkillNodes.DURATION));
-				effectService.addEffect(effect, iActiveCharacter, this);
-				effectService.addEffect(effect, character, this);
+				effectService.addEffect(effect, this);
+				effectService.addEffect(effect, this);
 			}
 		}
 		skillContext.next(iActiveCharacter, playerSkillContext, skillContext.result(SkillResult.OK));

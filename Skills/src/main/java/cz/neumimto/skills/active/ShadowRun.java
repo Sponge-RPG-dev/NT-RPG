@@ -54,7 +54,7 @@ public class ShadowRun extends ActiveSkill {
 			model.attackmult = attackmult;
 			model.walkspeed = walkspeed;
 			IEffect effect = new ShadowRunEffect(character, 0, model);
-			effectService.addEffect(effect, character, this);
+			effectService.addEffect(effect, this);
 		}
 		skillContext.next(character, info, skillContext.result(SkillResult.OK));
 	}

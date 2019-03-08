@@ -38,12 +38,12 @@ public class BattleCharge extends ActiveSkill {
 			for (IActiveCharacter pmember : character.getParty().getPlayers()) {
 				if (pmember.getLocation().getPosition().distanceSquared(character.getLocation().getPosition()) <= distSq) {
 					SpeedBoost sp = new SpeedBoost(pmember, duration, value);
-					effectService.addEffect(sp, pmember, this);
+					effectService.addEffect(sp, this);
 				}
 			}
 		} else {
 			SpeedBoost sp = new SpeedBoost(character, duration, value);
-			effectService.addEffect(sp, character, this);
+			effectService.addEffect(sp, this);
 		}
 		skillContext.next(character, info, skillContext.result(SkillResult.OK));
 	}

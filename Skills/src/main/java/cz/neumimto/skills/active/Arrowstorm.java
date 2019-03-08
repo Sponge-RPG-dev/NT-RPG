@@ -46,7 +46,7 @@ public class Arrowstorm extends ActiveSkill {
 		int arrows = ThreadLocalRandom.current().nextInt(max - min) + min;
 		min = skillContext.getIntNodeValue(SkillNodes.PERIOD);
 		min = min <= 0 ? 1 : min;
-		effectService.addEffect(new ArrowstormEffect(character, min, arrows), character, this);
+		effectService.addEffect(new ArrowstormEffect(character, min, arrows), this);
 		skillContext.next(character, info, skillContext.result(SkillResult.OK));
 	}
 }

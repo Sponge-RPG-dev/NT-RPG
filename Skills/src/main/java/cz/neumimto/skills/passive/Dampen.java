@@ -30,7 +30,7 @@ public class Dampen extends PassiveSkill {
 		int totalLevel = info.getTotalLevel();
 		double val = info.getSkillData().getSkillSettings().getLevelNodeValue("min-mana", totalLevel);
 		DampenEffect eff = new DampenEffect(character, -1, val);
-		effectService.addEffect(eff, character, this);
+		effectService.addEffect(eff, this);
 	}
 
 	@Override

@@ -46,7 +46,7 @@ public class Portal extends ActiveSkill {
 		double chanceToFail = skillContext.getDoubleNodeValue("chance-to-fail");
 		PortalEffect portalEffect = new PortalEffect(character, duration, null,
 				manaPerTick, manaPerEntity, 1750, chanceToFail, false);
-		effectService.addEffect(portalEffect, character, this);
+		effectService.addEffect(portalEffect, this);
 		skillContext.next(character, info, skillContext.result(SkillResult.OK));
 	}
 

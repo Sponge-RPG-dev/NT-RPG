@@ -36,7 +36,7 @@ public class SkillSpeed extends ActiveSkill {
 		long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
 		float amount = skillContext.getFloatNodeValue(SkillNodes.AMOUNT);
 		SpeedBoost sb = new SpeedBoost(character, duration, amount);
-		effectService.addEffect(sb, character, this);
+		effectService.addEffect(sb, this);
 		skillContext.next(character, info, skillContext.result(SkillResult.OK));
 	}
 }

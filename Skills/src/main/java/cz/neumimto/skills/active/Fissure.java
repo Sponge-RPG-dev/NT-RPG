@@ -30,7 +30,7 @@ public class Fissure extends ActiveSkill {
         long duration = context.getLongNodeValue(SkillNodes.DURATION);
         int range = context.getIntNodeValue(SkillNodes.RANGE);
         FissureEffect effect = new FissureEffect(character, duration, range);
-        effectService.addEffect(effect, character, this);
+        effectService.addEffect(effect, this);
         context.next(character, info, context);
     }
 }

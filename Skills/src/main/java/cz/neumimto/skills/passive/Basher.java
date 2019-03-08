@@ -38,7 +38,7 @@ public class Basher extends PassiveSkill {
 	@Override
 	public void applyEffect(PlayerSkillContext info, IActiveCharacter character) {
 		BashModel model = getBashModel(info, character);
-		effectService.addEffect(new Bash(character, -1, model), character, this);
+		effectService.addEffect(new Bash(character, -1, model), this);
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class Basher extends PassiveSkill {
 		PlayerSkillContext info = IActiveCharacter.getSkill(getId());
 		BashModel model = getBashModel(info, IActiveCharacter);
 		effectService.removeEffect(Bash.name, IActiveCharacter, this);
-		effectService.addEffect(new Bash(IActiveCharacter, -1, model), IActiveCharacter, this);
+		effectService.addEffect(new Bash(IActiveCharacter, -1, model), this);
 	}
 
 	private BashModel getBashModel(PlayerSkillContext info, IActiveCharacter character) {

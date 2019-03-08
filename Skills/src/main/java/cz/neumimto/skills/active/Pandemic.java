@@ -63,7 +63,7 @@ public class Pandemic extends ActiveSkill {
 							.setCaster(character)
 							.build();
 					effect.setDamageSource(build);
-					effectService.addEffect(effect, iEntity, this);
+					effectService.addEffect(effect, this);
 				}
 			}
 		}

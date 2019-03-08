@@ -1026,7 +1026,7 @@ public class NtRpgPlugin {
                     IGlobalEffect effect1 = args.<IGlobalEffect>getOne("data").get();
                     IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
                     EffectParams params = gson.fromJson(data, EffectParams.class);
-                    GlobalScope.effectService.addEffect(effect1.construct(character, k, params), character, InternalEffectSourceProvider.INSTANCE);
+                    GlobalScope.effectService.addEffect(effect1.construct(character, k, params), InternalEffectSourceProvider.INSTANCE);
                     return CommandResult.success();
                 })
                 .build();

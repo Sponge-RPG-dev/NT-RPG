@@ -34,7 +34,7 @@ public class Critical extends PassiveSkill {
 	public void applyEffect(PlayerSkillContext info, IActiveCharacter character) {
 		CriticalEffectModel model = getModel(info);
 		CriticalEffect dodgeEffect = new CriticalEffect(character, -1, model);
-		effectService.addEffect(dodgeEffect, character, this);
+		effectService.addEffect(dodgeEffect, this);
 	}
 
 	@Override

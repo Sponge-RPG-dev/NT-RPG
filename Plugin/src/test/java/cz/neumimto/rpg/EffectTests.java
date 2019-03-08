@@ -43,7 +43,7 @@ public class EffectTests {
         effect = (TickableEffect) Mockito.spy(effect);
         Mockito.doCallRealMethod().when(effect).constructEffectContainer();
 
-        effectService.addEffect(effect, character, InternalEffectSourceProvider.INSTANCE);
+        effectService.addEffect(effect, InternalEffectSourceProvider.INSTANCE);
         Assert.assertNotNull(character.getEffect(effect.getName()));
         Assert.assertNotSame(effect, character.getEffect(effect.getName()));
         Mockito.verify(effect, Mockito.times(1)).onApply(any());

@@ -45,7 +45,7 @@ public class BurningPrescense extends ActiveSkill {
 			BPModel model = getBPModel(skillContext);
 			model.duration = -1;
 			BurningPrescenseEffect eff = new BurningPrescenseEffect(character, -1, model);
-			effectService.addEffect(eff, character, this);
+			effectService.addEffect(eff, this);
 		}
 
 		skillContext.next(character, info, skillContext.result(SkillResult.OK));

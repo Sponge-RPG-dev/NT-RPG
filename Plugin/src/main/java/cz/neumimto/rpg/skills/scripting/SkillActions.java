@@ -73,8 +73,8 @@ public class SkillActions {
 					@SkillComponent.Param("context - skill context"),
 			}
 	)
-	public static TriConsumer<IEffect, IEffectConsumer, SkillScriptContext> APPLY_EFFECT = (iEffect1, iEffectConsumer, skillScriptContext) -> {
-		NtRpgPlugin.GlobalScope.effectService.addEffect(iEffect1, iEffectConsumer, skillScriptContext.getSkill());
+	public static BiConsumer<IEffect, SkillScriptContext> APPLY_EFFECT = (iEffect1, skillScriptContext) -> {
+		NtRpgPlugin.GlobalScope.effectService.addEffect(iEffect1, skillScriptContext.getSkill());
 	};
 
 	@SkillComponent(

@@ -239,13 +239,12 @@ public class EffectService {
 	/**
 	 * Adds effect to the consumer,
 	 * Effects requiring register are registered into the scheduler one tick later
+	 *  @param iEffect
 	 *
-	 * @param iEffect
-	 * @param consumer
 	 */
 	@SuppressWarnings("unchecked")
-	public void addEffect(IEffect iEffect, IEffectConsumer consumer, IEffectSourceProvider effectSourceProvider) {
-		IEffectContainer eff = consumer.getEffect(iEffect.getName());
+	public void addEffect(IEffect iEffect, IEffectSourceProvider effectSourceProvider) {
+		IEffectContainer eff = iEffect.getConsumer().getEffect(iEffect.getName());
 		if (pluginConfig.DEBUG.isDevelop()) {
 			IEffectConsumer consumer1 = iEffect.getConsumer();
 			if (consumer1 instanceof ActiveCharacter) {
@@ -257,7 +256,7 @@ public class EffectService {
 		}
 		if (eff == null) {
 			eff = iEffect.constructEffectContainer();
-			consumer.addEffect(eff);
+			iEffect.getConsumer().addEffect(eff);
 			iEffect.onApply(iEffect);
 		} else if (eff.isStackable()) {
 			eff.stackEffect(iEffect, effectSourceProvider);
@@ -389,7 +388,7 @@ public class EffectService {
 	public void applyGlobalEffectAsEnchantment(IGlobalEffect effect, IEffectConsumer consumer, Map<String, String> value,
 			IEffectSourceProvider effectSourceType) {
 		IEffect construct = effect.construct(consumer, unlimited_duration, value);
-		addEffect(construct, consumer, effectSourceType);
+		addEffect(construct, effectSourceType);
 	}
 
 	/**

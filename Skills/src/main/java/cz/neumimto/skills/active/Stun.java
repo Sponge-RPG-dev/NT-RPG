@@ -45,7 +45,7 @@ public class Stun extends Targetted {
 		double damage = skillContext.getDoubleNodeValue(SkillNodes.DAMAGE);
 		IEntity e = entityService.get(target);
 		StunEffect stunEffect = new StunEffect(e, duration);
-		effectService.addEffect(stunEffect, e, this);
+		effectService.addEffect(stunEffect, this);
 		if (damage > 0) {
 			SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
 			builder.fromSkill(this);

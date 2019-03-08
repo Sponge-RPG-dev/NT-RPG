@@ -28,7 +28,7 @@ public class EnderPearl extends PassiveSkill {
 		int totalLevel = info.getTotalLevel();
 		long cooldown = (long) info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.COOLDOWN, totalLevel);
 		EnderPearlEffect effect = new EnderPearlEffect(character, -1L, cooldown);
-		effectService.addEffect(effect, character, this);
+		effectService.addEffect(effect, this);
 	}
 
 	@Override
