@@ -39,7 +39,14 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -70,7 +77,9 @@ public class EffectService {
 	private UUID timings;
 	private long timingsStart;
 	private long timingsTicks;
+
 	private static final long timingsTicksMax = 100;
+
 	private Task effectTask;
 	/**
 	 * calls effect.onApply and registers if effect requires
@@ -196,11 +205,11 @@ public class EffectService {
 		pendingRemovals.clear();
 		long l = System.currentTimeMillis();
 		for (IEffect e : effectSet) {
-			if (e.getConsumer() == null || e.getConsumer().isDetached()) {
+			if (e.getConsumer() == null) {
 				pendingRemovals.add(e);
 				continue;
 			}
-			if (e.getPeriod() + e.getLastTickTime() <= l) {
+			if ((e.getPeriod() > 0 && !e.isTickingDisabled()) && e.getPeriod() + e.getLastTickTime() <= l) {
 				tickEffect(e, l);
 			}
 
@@ -227,10 +236,6 @@ public class EffectService {
 	 */
 	public void tickEffect(IEffect effect, long time) {
 		if (!effect.isTickingDisabled()) {
-			if (effect.getConsumer().isDetached()) {
-				removeEffect(effect.getName(), effect.getConsumer(), effect.getEffectSourceProvider());
-				return;
-			}
 			effect.onTick(effect);
 		}
 		effect.setLastTickTime(time);
@@ -314,7 +319,7 @@ public class EffectService {
 		} else if (container.getEffects().contains(iEffect)) {
 			container.removeStack(iEffect);
 			if (container.getEffects().isEmpty()) {
-				if (!consumer.isDetached()) {
+				if (consumer != null) {
 					consumer.removeEffect(container);
 				}
 			}
@@ -431,6 +436,7 @@ public class EffectService {
 			Iterator<IEffect<Object>> iterator2 = next.getEffects().iterator();
 			while (iterator2.hasNext()) {
 				IEffect<Object> next1 = iterator2.next();
+				next1.setConsumer(null);
 				pendingRemovals.add(next1);
 				iterator2.remove();
 			}

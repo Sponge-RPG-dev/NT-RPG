@@ -45,6 +45,13 @@ public class TestHelper {
         field.set(instance, value);
     }
 
+    public static Object getField(Object instance, String fieldName) throws Exception {
+        Field field = instance.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        return field.get(instance);
+    }
+
+
     public static void initLocalizations() throws Exception {
         Field[] fields = Localizations.class.getFields();
         Text text = Mockito.mock(Text.class);
