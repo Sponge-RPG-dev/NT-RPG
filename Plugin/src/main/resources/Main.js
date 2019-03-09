@@ -16,11 +16,30 @@ var Vector3d = Java.type("com.flowpowered.math.vector.Vector3d");
 var Optional = Java.type("com.google.common.base.Optional");
 /* https://wiki.openjdk.java.net/display/Nashorn/Nashorn+extensions */
 
+/* Also available:
+var IoC // cz.neumimto.core.ioc.IoC
+var Folder // java.nio.file.Path of scripts folder
+var GlobalScope // GlobalScope, containing characterService, effectService, entityService and others.
+See https://github.com/Sponge-RPG-dev/NT-RPG/blob/master/Plugin/src/main/java/cz/neumimto/rpg/GlobalScope.java
+ */
+
 var events = new HashMap();
 var skills = new ArrayList();
 var globalEffects = new ArrayList();
 var attributes = new ArrayList();
-//
+
+var folder = Folder;
+with (imports) {
+    Files.walkFileTree(folder, new (Java.extend(Java.type("java.nio.file.SimpleFileVisitor"), {
+        visitFile: function (file, attrs) {
+            if (file.toString().endsWith(".js") && !file.toString().endsWith("Main.js")) {
+                load(file.toString());
+            }
+            return FileVisitResult.CONTINUE;
+        }
+    })));
+}
+
 function log(obj) {
     console.println("[NTRPG-JS]" + obj);
 }
@@ -62,15 +81,6 @@ function registerEventListener(eventclass, consumer) {
     }
     cls.add(consumer);
 }
-with (imports) {
-    var stream = Files.newDirectoryStream(new File("./config/nt-rpg/scripts").toPath(), "*.js");
-    stream.forEach(function (p) {
-        var name = p.toFile().absolutePath;
-        if (!name.endsWith("Main.js")) {
-            load(name);
-        }
-    });
-}
 
 function registerAttributes() {
     log("registerAttributes, " + attributes.size())
@@ -107,7 +117,7 @@ function registerGlobalEffects() {
 function generateListener() {
     if (!events.isEmpty()) {
         log("generateListener")
-        IoC.build(JSLoader.class).generateDynamicListener(events);
+        IoC.build(Java.type("cz.neumimto.rpg.scripting.JSLoader").class).generateDynamicListener(events);
     }
     events.clear();
 }

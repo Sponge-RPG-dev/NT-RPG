@@ -18,6 +18,9 @@
 
 package cz.neumimto.rpg;
 
+import static cz.neumimto.rpg.Log.error;
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.configuration.ConfigurationContainer;
 import cz.neumimto.core.PluginCore;
@@ -45,7 +48,12 @@ import org.apache.commons.io.FileUtils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.text.Text;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.net.MalformedURLException;
@@ -53,13 +61,16 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
-import static cz.neumimto.rpg.Log.error;
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 27.12.2014.
@@ -68,319 +79,314 @@ import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 @Singleton
 public class ResourceLoader {
 
-    private final static String INNERCLASS_SEPARATOR = "$";
+	private final static String INNERCLASS_SEPARATOR = "$";
 
-    public static File classDir, raceDir, guildsDir, addonDir, skilltreeDir, addonLoadDir, localizations;
+	public static File classDir, addonDir, skilltreeDir, addonLoadDir, localizations;
 
-    private static IoC ioc;
+	private static IoC ioc;
 
-    private static URLClassLoader localizationsClassLoader;
+	private static URLClassLoader localizationsClassLoader;
 
-    static {
-        classDir = new File(NtRpgPlugin.workingDir + File.separator + "classes");
-        raceDir = new File(NtRpgPlugin.workingDir + File.separator + "races");
-        guildsDir = new File(NtRpgPlugin.workingDir + File.separator + "guilds");
-        addonDir = new File(NtRpgPlugin.workingDir + File.separator + "addons");
-        addonLoadDir = new File(NtRpgPlugin.workingDir + File.separator + ".deployed");
-        skilltreeDir = new File(NtRpgPlugin.workingDir + File.separator + "skilltrees");
-        localizations = new File(NtRpgPlugin.workingDir + File.separator + "localizations");
-        classDir.mkdirs();
-        raceDir.mkdirs();
-        guildsDir.mkdirs();
-        skilltreeDir.mkdirs();
-        addonDir.mkdirs();
-        localizations.mkdirs();
-        try {
-            localizationsClassLoader = new URLClassLoader(new URL[]{localizations.toURI().toURL()});
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        ioc = IoC.get();
+	static {
+		classDir = new File(NtRpgPlugin.workingDir + File.separator + "classes");
+		addonDir = new File(NtRpgPlugin.workingDir + File.separator + "addons");
+		addonLoadDir = new File(NtRpgPlugin.workingDir + File.separator + ".deployed");
+		skilltreeDir = new File(NtRpgPlugin.workingDir + File.separator + "skilltrees");
+		localizations = new File(NtRpgPlugin.workingDir + File.separator + "localizations");
+		classDir.mkdirs();
+		skilltreeDir.mkdirs();
+		addonDir.mkdirs();
+		localizations.mkdirs();
+		try {
+			localizationsClassLoader = new URLClassLoader(new URL[]{localizations.toURI().toURL()});
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		ioc = IoC.get();
 
-        try {
-            FileUtils.deleteDirectory(addonLoadDir);
-            FileUtils.copyDirectory(addonDir, addonLoadDir, pathname -> pathname.isDirectory() || pathname.getName().endsWith(".jar"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+		try {
+			FileUtils.deleteDirectory(addonLoadDir);
+			FileUtils.copyDirectory(addonDir, addonLoadDir, pathname -> pathname.isDirectory() || pathname.getName().endsWith(".jar"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-    @Inject
-    private SkillService skillService;
+	@Inject
+	private SkillService skillService;
 
-    @Inject
-    private ClassService classService;
+	@Inject
+	private ClassService classService;
 
-    @Inject
-    private EffectService effectService;
+	@Inject
+	private EffectService effectService;
 
-    @Inject
-    private PropertyService propertyService;
+	@Inject
+	private PropertyService propertyService;
 
-    @Inject
-    private CommandService commandService;
+	@Inject
+	private CommandService commandService;
 
-    private ConfigMapper configMapper;
+	private ConfigMapper configMapper;
 
-    @Inject
-    private ClassGenerator classGenerator;
+	@Inject
+	private ClassGenerator classGenerator;
 
-    @Inject
-    private LocalizationService localizationService;
+	@Inject
+	private LocalizationService localizationService;
 
-    private Map<String, URLClassLoader> classLoaderMap = new HashMap<>();
+	private Map<String, URLClassLoader> classLoaderMap = new HashMap<>();
 
-    private URLClassLoader configClassLaoder;
+	private URLClassLoader configClassLaoder;
 
-    private Set<String> resourceBundles = new HashSet<>();
+	private Set<String> resourceBundles = new HashSet<>();
 
-    public ResourceLoader() {
-        ConfigMapper.init("NtRPG", Paths.get(NtRpgPlugin.workingDir));
-        configMapper = ConfigMapper.get("NtRPG");
-        configClassLaoder = new URLClassLoader(new URL[]{}, this.getClass().getClassLoader());
-    }
+	public ResourceLoader() {
+		ConfigMapper.init("NtRPG", Paths.get(NtRpgPlugin.workingDir));
+		configMapper = ConfigMapper.get("NtRPG");
+		configClassLaoder = new URLClassLoader(new URL[]{}, this.getClass().getClassLoader());
+	}
 
-    private static <T> T newInstance(Class<T> excepted, Class<?> clazz) {
-        T t = null;
-        try {
-            t = (T) clazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return t;
-    }
+	private static <T> T newInstance(Class<T> excepted, Class<?> clazz) {
+		T t = null;
+		try {
+			t = (T) clazz.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return t;
+	}
 
-    public void loadExternalJars() {
-        Path dir = addonLoadDir.toPath();
-        for (File f : dir.toFile().listFiles()) {
-            loadJarFile(f, false);
-        }
-    }
+	public void loadExternalJars() {
+		Path dir = addonLoadDir.toPath();
+		for (File f : dir.toFile().listFiles()) {
+			loadJarFile(f, false);
+		}
+	}
 
-    public void loadJarFile(File f, boolean main) {
-        if (f == null) {
-            return;
-        }
-        JarFile file = null;
-        try {
-            file = new JarFile(f);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-        info("Loading jarfile " + file.getName());
-        Enumeration<JarEntry> entries = file.entries();
-        JarEntry next = null;
+	public void loadJarFile(File f, boolean main) {
+		if (f == null) {
+			return;
+		}
+		JarFile file = null;
+		try {
+			file = new JarFile(f);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
+		info("Loading jarfile " + file.getName());
+		Enumeration<JarEntry> entries = file.entries();
+		JarEntry next = null;
 
-        if (!main) {
-            URLClassLoader classLoader = classLoaderMap.get(f.getName());
-            if (classLoader == null) {
+		if (!main) {
+			URLClassLoader classLoader = classLoaderMap.get(f.getName());
+			if (classLoader == null) {
 
-                try {
-                    classLoader = new ResourceClassLoader(f.toPath().getFileName().toString().trim(),
-                            new URL[]{f.toURI().toURL()},
-                            PluginCore.getClassLoader());
+				try {
+					classLoader = new ResourceClassLoader(f.toPath().getFileName().toString().trim(),
+							new URL[]{f.toURI().toURL()},
+							PluginCore.getClassLoader());
 
-                    classLoaderMap.put(f.getName(), classLoader);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        ClassLoader classLoader = null;
-        if (main) {
-            classLoader = NtRpgPlugin.class.getClassLoader();
-        } else {
-            classLoader = classLoaderMap.get(f.getName());
-        }
-        while (entries.hasMoreElements()) {
-            next = entries.nextElement();
-            if (next.isDirectory() || !next.getName().endsWith(".class")) {
-                if (next.getName().contains("localizations") && next.getName().endsWith(".properties")) {
-                    String name = next.getName();
-                    int i = name.lastIndexOf("/");
-                    String substring = name.substring(i);
-                    File file1 = new File(localizations, substring);
+					classLoaderMap.put(f.getName(), classLoader);
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		ClassLoader classLoader = null;
+		if (main) {
+			classLoader = NtRpgPlugin.class.getClassLoader();
+		} else {
+			classLoader = classLoaderMap.get(f.getName());
+		}
+		while (entries.hasMoreElements()) {
+			next = entries.nextElement();
+			if (next.isDirectory() || !next.getName().endsWith(".class")) {
+				if (next.getName().contains("localizations") && next.getName().endsWith(".properties")) {
+					String name = next.getName();
+					int i = name.lastIndexOf("/");
+					String substring = name.substring(i);
+					File file1 = new File(localizations, substring);
 
-                    try (InputStream resourceAsStream = classLoader.getResourceAsStream(name)) {
-                        Properties properties = new Properties();
-                        properties.load(resourceAsStream);
+					try (InputStream resourceAsStream = classLoader.getResourceAsStream(name)) {
+						Properties properties = new Properties();
+						properties.load(resourceAsStream);
 
-                        if (!file1.exists()) {
-                            try (OutputStream outputStream = new FileOutputStream(file1)) {
-                                properties.store(outputStream, null);
-                            }
-                        } else {
-                            Properties local = new Properties();
-                            try (FileInputStream fileInputStream = new FileInputStream(file1)) {
-                                properties.load(fileInputStream);
-                            }
-                            properties.putAll(local);
-                            file1.delete();
-                            try (OutputStream outputStream = new FileOutputStream(file1)) {
-                                properties.store(outputStream, null);
-                            }
-                        }
+						if (!file1.exists()) {
+							try (OutputStream outputStream = new FileOutputStream(file1)) {
+								properties.store(outputStream, null);
+							}
+						} else {
+							Properties local = new Properties();
+							try (FileInputStream fileInputStream = new FileInputStream(file1)) {
+								properties.load(fileInputStream);
+							}
+							properties.putAll(local);
+							file1.delete();
+							try (OutputStream outputStream = new FileOutputStream(file1)) {
+								properties.store(outputStream, null);
+							}
+						}
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                continue;
-            }
-            if (main && !next.getName().startsWith("cz/neumimto")) {
-                continue;
-            }
-            //todo place this into each modules
-            if (next.getName().startsWith("org")
-                    || next.getName().startsWith("javax")) {
-                continue;
-            }
-            if (next.getName().lastIndexOf(INNERCLASS_SEPARATOR) > 1) {
-                continue;
-            }
-            String className = next.getName().substring(0, next.getName().length() - 6);
-            className = className.replace('/', '.');
-            Class<?> clazz = null;
-            try {
-                if (!main) {
-                    clazz = classLoader.loadClass(className);
-                    info("ClassLoader for "
-                            + Console.GREEN_BOLD + classLoader +
-                            Console.RESET + " loaded class " +
-                            Console.GREEN + clazz.getSimpleName() + Console.RESET, pluginConfig
-                            .DEBUG);
-                    loadClass(clazz, classLoader);
-                } else {
-                    clazz = Class.forName(className);
-                    loadClass(clazz, this.getClass().getClassLoader());
-                }
-            } catch (Exception e) {
-                error("Could not load the class [" + className + "]" + e.getMessage(), e);
-                continue;
-            }
-        }
-        info("Finished loading of jarfile " + file.getName());
-    }
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				continue;
+			}
+			if (main && !next.getName().startsWith("cz/neumimto")) {
+				continue;
+			}
+			//todo place this into each modules
+			if (next.getName().startsWith("org")
+					|| next.getName().startsWith("javax")) {
+				continue;
+			}
+			if (next.getName().lastIndexOf(INNERCLASS_SEPARATOR) > 1) {
+				continue;
+			}
+			String className = next.getName().substring(0, next.getName().length() - 6);
+			className = className.replace('/', '.');
+			Class<?> clazz = null;
+			try {
+				if (!main) {
+					clazz = classLoader.loadClass(className);
+					info("ClassLoader for "
+							+ Console.GREEN_BOLD + classLoader +
+							Console.RESET + " loaded class " +
+							Console.GREEN + clazz.getSimpleName() + Console.RESET, pluginConfig
+							.DEBUG);
+					loadClass(clazz, classLoader);
+				} else {
+					clazz = Class.forName(className);
+					loadClass(clazz, this.getClass().getClassLoader());
+				}
+			} catch (Exception e) {
+				error("Could not load the class [" + className + "]" + e.getMessage(), e);
+			}
+		}
+		info("Finished loading of jarfile " + file.getName());
+	}
 
-    public Object loadClass(Class<?> clazz, ClassLoader classLoader) throws IllegalAccessException, InstantiationException {
-        //Properties
-        if (clazz == IGlobalEffect.class) {
-            return null;
-        }
-        Object container = null;
-        if (clazz.isInterface() && clazz.getAnnotations().length == 0) {
-            return null;
-        }
-        if (clazz.isAnnotationPresent(Singleton.class)) {
-            ioc.build(clazz);
-        }
-        if (clazz.isAnnotationPresent(ListenerClass.class)) {
-            info("Registering listener class" + clazz.getName(), pluginConfig.DEBUG);
-            container = ioc.build(clazz);
-            ioc.build(Game.class).getEventManager().registerListeners(ioc.build(NtRpgPlugin.class), container);
-        }
-        if (clazz.isAnnotationPresent(Command.class)) {
-            container = ioc.build(clazz);
-            info("registering command class" + clazz.getName(), pluginConfig.DEBUG);
-            commandService.registerCommand((CommandBase) container);
-        }
-        if (clazz.isAnnotationPresent(Skill.class)) {
-            container = ioc.build(clazz);
-            info("registering skill " + clazz.getName(), pluginConfig.DEBUG);
-            ISkill skill = (ISkill) container;
-            Skill sk = clazz.getAnnotation(Skill.class);
-            if (sk.dynamicLocalizationNodes()) {
-                String[] split = sk.value().split(":");
-                String key = split[0] + ".skills." + split[1];
-                skill.setLocalizableName(localizationService.getText(key + ".name"));
-                skill.setDescription(localizationService.getTextList(key + ".desc"));
-                skill.setLore(localizationService.getTextList(key + ".lore"));
-            }
-            if (skill.getLocalizableName().isEmpty()) {
-                String name = skill.getClass().getSimpleName();
-                name = name.startsWith("Skill") ? name.substring("Skill".length()) : name;
-                skill.setLocalizableName(Text.of(name));
-            }
-            skillService.registerAdditionalCatalog(skill);
-        }
-        if (clazz.isAnnotationPresent(ConfigurationContainer.class)) {
-            configMapper.loadClass(clazz);
-            info("Found configuration container class " + clazz.getName(), pluginConfig.DEBUG);
-        }
-        if (clazz.isAnnotationPresent(PropertyContainer.class)) {
-            info("Found Property container class" + clazz.getName(), pluginConfig.DEBUG);
-            propertyService.processContainer(clazz);
-        }
-        if (clazz.isAnnotationPresent(Attribute.class)) {
-            propertyService.registerAttribute((ICharacterAttribute) clazz.newInstance());
-        }
-        if (clazz.isAnnotationPresent(JsBinding.class)) {
-            IoC.get().build(JSLoader.class).getDataToBind().put(clazz, clazz.getAnnotation(JsBinding.class).value());
-        }
-        if (clazz.isAnnotationPresent(ResourceBundles.class)) {
-            ResourceBundles annotation = clazz.getAnnotation(ResourceBundles.class);
-            File localizations = new File(NtRpgPlugin.workingDir + "/localizations");
-            if (!localizations.exists()) {
-                localizations.mkdir();
-            }
-            for (ResourceBundle resourceBundle : annotation.value()) {
-                resourceBundles.add(resourceBundle.value());
-            }
-        }
-        if (IGlobalEffect.class.isAssignableFrom(clazz)) {
-            container = newInstance(IGlobalEffect.class, clazz);
-            effectService.registerGlobalEffect((IGlobalEffect) container);
-        }
-        if (clazz.isAnnotationPresent(ModelMapper.class)) {
-            EffectModelMapper o = (EffectModelMapper) clazz.newInstance();
-            EffectModelFactory.typeMappers.put(o.getType(), o);
-        }
-        if (clazz.isAnnotationPresent(Localization.class)) {
-            localizationService.registerClass(clazz);
-        }
-        return container;
-    }
+	public Object loadClass(Class<?> clazz, ClassLoader classLoader) throws IllegalAccessException, InstantiationException {
+		//Properties
+		if (clazz == IGlobalEffect.class) {
+			return null;
+		}
+		Object container = null;
+		if (clazz.isInterface() && clazz.getAnnotations().length == 0) {
+			return null;
+		}
+		if (clazz.isAnnotationPresent(Singleton.class)) {
+			ioc.build(clazz);
+		}
+		if (clazz.isAnnotationPresent(ListenerClass.class)) {
+			info("Registering listener class" + clazz.getName(), pluginConfig.DEBUG);
+			container = ioc.build(clazz);
+			ioc.build(Game.class).getEventManager().registerListeners(ioc.build(NtRpgPlugin.class), container);
+		}
+		if (clazz.isAnnotationPresent(Command.class)) {
+			container = ioc.build(clazz);
+			info("registering command class" + clazz.getName(), pluginConfig.DEBUG);
+			commandService.registerCommand((CommandBase) container);
+		}
+		if (clazz.isAnnotationPresent(Skill.class)) {
+			container = ioc.build(clazz);
+			info("registering skill " + clazz.getName(), pluginConfig.DEBUG);
+			ISkill skill = (ISkill) container;
+			Skill sk = clazz.getAnnotation(Skill.class);
+			if (sk.dynamicLocalizationNodes()) {
+				String[] split = sk.value().split(":");
+				String key = split[0] + ".skills." + split[1];
+				skill.setLocalizableName(localizationService.getText(key + ".name"));
+				skill.setDescription(localizationService.getTextList(key + ".desc"));
+				skill.setLore(localizationService.getTextList(key + ".lore"));
+			}
+			if (skill.getLocalizableName().isEmpty()) {
+				String name = skill.getClass().getSimpleName();
+				name = name.startsWith("Skill") ? name.substring("Skill".length()) : name;
+				skill.setLocalizableName(Text.of(name));
+			}
+			skillService.registerAdditionalCatalog(skill);
+		}
+		if (clazz.isAnnotationPresent(ConfigurationContainer.class)) {
+			configMapper.loadClass(clazz);
+			info("Found configuration container class " + clazz.getName(), pluginConfig.DEBUG);
+		}
+		if (clazz.isAnnotationPresent(PropertyContainer.class)) {
+			info("Found Property container class" + clazz.getName(), pluginConfig.DEBUG);
+			propertyService.processContainer(clazz);
+		}
+		if (clazz.isAnnotationPresent(Attribute.class)) {
+			propertyService.registerAttribute((ICharacterAttribute) clazz.newInstance());
+		}
+		if (clazz.isAnnotationPresent(JsBinding.class)) {
+			IoC.get().build(JSLoader.class).getDataToBind().put(clazz, clazz.getAnnotation(JsBinding.class).value());
+		}
+		if (clazz.isAnnotationPresent(ResourceBundles.class)) {
+			ResourceBundles annotation = clazz.getAnnotation(ResourceBundles.class);
+			File localizations = new File(NtRpgPlugin.workingDir + "/localizations");
+			if (!localizations.exists()) {
+				localizations.mkdir();
+			}
+			for (ResourceBundle resourceBundle : annotation.value()) {
+				resourceBundles.add(resourceBundle.value());
+			}
+		}
+		if (IGlobalEffect.class.isAssignableFrom(clazz)) {
+			container = newInstance(IGlobalEffect.class, clazz);
+			effectService.registerGlobalEffect((IGlobalEffect) container);
+		}
+		if (clazz.isAnnotationPresent(ModelMapper.class)) {
+			EffectModelMapper o = (EffectModelMapper) clazz.newInstance();
+			EffectModelFactory.typeMappers.put(o.getType(), o);
+		}
+		if (clazz.isAnnotationPresent(Localization.class)) {
+			localizationService.registerClass(clazz);
+		}
+		return container;
+	}
 
-    public URLClassLoader getConfigClassLaoder() {
-        return configClassLaoder;
-    }
+	public URLClassLoader getConfigClassLoader() {
+		return configClassLaoder;
+	}
 
-    public Map<String, URLClassLoader> getClassLoaderMap() {
-        return Collections.unmodifiableMap(classLoaderMap);
-    }
+	public Map<String, URLClassLoader> getClassLoaderMap() {
+		return Collections.unmodifiableMap(classLoaderMap);
+	}
 
-    public void reloadLocalizations(Locale locale) {
-        for (String resourceBundle : resourceBundles) {
-            localizationService.loadResourceBundle(resourceBundle, locale, localizationsClassLoader);
-        }
-    }
+	public void reloadLocalizations(Locale locale) {
+		for (String resourceBundle : resourceBundles) {
+			localizationService.loadResourceBundle(resourceBundle, locale, localizationsClassLoader);
+		}
+	}
 
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface ListenerClass {
+	@Retention(RetentionPolicy.RUNTIME)
+	public @interface ListenerClass {
 
-    }
+	}
 
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface Skill {
+	@Retention(RetentionPolicy.RUNTIME)
+	public @interface Skill {
 
-        String value();
+		String value();
 
-        boolean dynamicLocalizationNodes() default true;
-    }
+		boolean dynamicLocalizationNodes() default true;
+	}
 
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface Command {
+	@Retention(RetentionPolicy.RUNTIME)
+	public @interface Command {
 
-    }
+	}
 
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface Attribute {
+	@Retention(RetentionPolicy.RUNTIME)
+	public @interface Attribute {
 
-    }
+	}
 
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface ModelMapper {
+	@Retention(RetentionPolicy.RUNTIME)
+	public @interface ModelMapper {
 
-    }
+	}
 }
