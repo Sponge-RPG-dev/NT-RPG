@@ -18,10 +18,17 @@
 
 package cz.neumimto.rpg.scripting;
 
+import static cz.neumimto.rpg.Log.error;
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.*;
+import cz.neumimto.rpg.ClassGenerator;
+import cz.neumimto.rpg.GlobalScope;
+import cz.neumimto.rpg.Log;
+import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.configs.SkillsDefinition;
@@ -36,20 +43,34 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.event.Event;
 
-import javax.script.*;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.*;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.function.Consumer;
-
-import static cz.neumimto.rpg.Log.error;
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import javax.script.Bindings;
+import javax.script.Invocable;
+import javax.script.ScriptContext;
+import javax.script.ScriptEngine;
+import javax.script.ScriptException;
+import javax.script.SimpleBindings;
 
 /**
  * Created by NeumimTo on 13.3.2015.
@@ -95,7 +116,6 @@ public class JSLoader {
 				reloadAttributes();
 				generateListener();
 				info("JS resources loaded.");
-				return;
 			}
 		} catch (Exception e) {
 			error("Could not load script engine", e);
@@ -128,7 +148,6 @@ public class JSLoader {
 			Bindings bindings = new SimpleBindings();
 			bindings.put("IoC", ioc);
 			bindings.put("Bindings", new BindingsHelper(engine));
-			bindings.put("TimeUnit", TimeUnit.class);
 			for (Map.Entry<Class<?>, JsBinding.Type> objectTypeEntry : dataToBind.entrySet()) {
 				if (objectTypeEntry.getValue() == JsBinding.Type.CONTAINER) {
 					for (Field field : objectTypeEntry.getKey().getDeclaredFields()) {
@@ -156,7 +175,7 @@ public class JSLoader {
 				}
 			}
 			dumpDocumentedFunctions(skillComponents);
-			bindings.put("Folder", scripts_root.toString());
+			bindings.put("Folder", scripts_root);
 			bindings.put("GlobalScope", ioc.build(GlobalScope.class));
 			if (pluginConfig.DEBUG.isDevelop()) {
 				info("JSLOADER = Bindings");
@@ -166,6 +185,7 @@ public class JSLoader {
 				}
 			}
 			engine.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
+
 			//im not sure why this is needed yet, todo remove this
 			for (Map.Entry<Class<?>, JsBinding.Type> e : dataToBind.entrySet()) {
 				if (e.getValue() == JsBinding.Type.CLASS) {
@@ -175,7 +195,9 @@ public class JSLoader {
 					engine.eval("var " + e.getKey().getSimpleName() + " = Java.type(\"" + e.getKey().getCanonicalName() + "\");");
 				}
 			}
-			info("===== Bindings END =====");
+			if (pluginConfig.DEBUG.isDevelop()) {
+				info("===== Bindings END =====");
+			}
 			engine.eval(rs);
 
 		} catch (Exception e) {
@@ -273,9 +295,7 @@ public class JSLoader {
 		Invocable invocable = (Invocable) engine;
 		try {
 			invocable.invokeFunction("registerGlobalEffects");
-		} catch (ScriptException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
+		} catch (ScriptException | NoSuchMethodException e) {
 			e.printStackTrace();
 		}
 	}
@@ -284,9 +304,7 @@ public class JSLoader {
 		Invocable invocable = (Invocable) engine;
 		try {
 			invocable.invokeFunction("registerAttributes");
-		} catch (ScriptException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
+		} catch (ScriptException | NoSuchMethodException e) {
 			e.printStackTrace();
 		}
 	}
@@ -295,9 +313,7 @@ public class JSLoader {
 		Invocable invocable = (Invocable) engine;
 		try {
 			invocable.invokeFunction("generateListener");
-		} catch (ScriptException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
+		} catch (ScriptException | NoSuchMethodException e) {
 			e.printStackTrace();
 		}
 	}
