@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.skills.configs;
 
 import static cz.neumimto.rpg.Log.info;
-
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.DebugLevel;
@@ -46,7 +45,7 @@ public class SkillConfigLoader implements CatalogType {
 						.define("value", id)
 						.build())
 				.make()
-				.load(rl.getConfigClassLaoder())
+				.load(rl.getConfigClassLoader())
 				.getLoaded();
 		Object o = null;
 		try {

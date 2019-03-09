@@ -2,7 +2,6 @@ package cz.neumimto.rpg;
 
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-
 import cz.neumimto.rpg.configuration.DebugLevel;
 import org.slf4j.Logger;
 
@@ -18,7 +17,7 @@ public class Log {
 	}
 
 	public static void info(String message, DebugLevel debugLevel) {
-		if (debugLevel.getLevel() >= pluginConfig.DEBUG.getLevel()) {
+		if (debugLevel.getLevel() <= pluginConfig.DEBUG.getLevel()) {
 			logger.info(message);
 		}
 	}
