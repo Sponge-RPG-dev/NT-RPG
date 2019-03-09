@@ -43,7 +43,9 @@ public class EffectTests {
         processedEffects = (Set<IEffect>) TestHelper.getField(effectService, "effectSet");
         characterBase = new CharacterBase();
         character = new ActiveCharacter(UUID.randomUUID(), characterBase);
+
         effect = Mockito.mock(TickableEffect.class);
+
         Mockito.when(effect.getConsumer()).thenReturn(character);
         Mockito.when(effect.getDuration()).thenReturn(Long.MAX_VALUE);
         Mockito.when(effect.getExpireTime()).thenReturn(Long.MAX_VALUE);
@@ -51,10 +53,10 @@ public class EffectTests {
         Mockito.when(effect.getName()).thenReturn("effect");
         Mockito.when(effect.getValue()).thenReturn(1000L);
         Mockito.when(effect.getEffectStackingStrategy()).thenReturn(MinLongStackingStrategy.INSTNCE);
-        EffectContainer container = new EffectContainer<>(effect);
-        Mockito.when(effect.constructEffectContainer()).thenReturn(container);
         Mockito.when(effect.requiresRegister()).thenCallRealMethod();
 
+        EffectContainer container = new EffectContainer<>(effect);
+        Mockito.when(effect.constructEffectContainer()).thenReturn(container);
 
     }
 
@@ -75,6 +77,44 @@ public class EffectTests {
         effectService.schedule();
         Mockito.verify(effect, Mockito.times(1)).onRemove(any());
         Assert.assertNull(character.getEffect(effect.getName()));
+        Assert.assertTrue(processedEffects.isEmpty());
+    }
+
+    @Test
+    public void testEffect_Add_And_Remove_tickable_unstackable() {
+        Mockito.when(effect.isTickingDisabled()).thenReturn(false);
+        Mockito.when(effect.getPeriod()).thenReturn(1L);
+
+        effectService.addEffect(effect, InternalEffectSourceProvider.INSTANCE);
+
+        effectService.schedule();
+        effectService.schedule();
+
+        Assert.assertNotNull(character.getEffect(effect.getName()));
+        Assert.assertNotSame(effect, character.getEffect(effect.getName()));
+        Mockito.verify(effect, Mockito.times(1)).onApply(any());
+        Mockito.verify(effect, Mockito.times(1)).onTick(any());
+        Mockito.verify(effect, Mockito.times(0)).onRemove(any());
+
+        Mockito.when(effect.getLastTickTime()).thenReturn(0L);
+
+        effectService.schedule();
+
+        Mockito.verify(effect, Mockito.times(2)).onTick(any());
+
+        effectService.schedule();
+        Mockito.verify(effect, Mockito.times(3)).onTick(any());
+
+        Mockito.when(effect.getExpireTime()).thenReturn(0L);
+
+        effectService.schedule();
+        Mockito.verify(effect, Mockito.times(4)).onTick(any());
+        Mockito.verify(effect, Mockito.times(1)).onRemove(any());
+
+        Mockito.verify(effect, Mockito.times(1)).onRemove(any());
+        Assert.assertNull(character.getEffect(effect.getName()));
+
+        effectService.schedule();
         Assert.assertTrue(processedEffects.isEmpty());
     }
 }

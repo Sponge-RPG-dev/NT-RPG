@@ -235,9 +235,7 @@ public class EffectService {
 	 * @param effect
 	 */
 	public void tickEffect(IEffect effect, long time) {
-		if (!effect.isTickingDisabled()) {
-			effect.onTick(effect);
-		}
+		effect.onTick(effect);
 		effect.setLastTickTime(time);
 	}
 
