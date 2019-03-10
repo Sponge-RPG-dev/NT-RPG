@@ -146,9 +146,7 @@ public class ReloadExecutor implements CommandExecutor {
 						NtRpgPlugin.GlobalScope.characterService.invalidateCaches(activeCharacter);
 						NtRpgPlugin.GlobalScope.characterService.assignPlayerToCharacter(player);
 					}
-				}).submit(this);
-
-
+				}).submit(NtRpgPlugin.GlobalScope.plugin);
 			} catch (ObjectMappingException e) {
 				src.sendMessage(Text.of("Errors occured during class reload, check server console for more informations"));
 			}
