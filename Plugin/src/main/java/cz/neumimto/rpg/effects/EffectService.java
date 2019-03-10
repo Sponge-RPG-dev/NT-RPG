@@ -334,6 +334,8 @@ public class EffectService {
 				if (consumer != null) {
 					consumer.removeEffect(container);
 				}
+			} else {
+				container.updateStackedValue();
 			}
 		} else {
 

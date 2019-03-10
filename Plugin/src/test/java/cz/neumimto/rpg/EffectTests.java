@@ -154,6 +154,7 @@ public class EffectTests {
         Assert.assertNotNull(character.getEffect(effect.getName()));
         Assert.assertNotSame(effect, character.getEffect(effect.getName()));
         Assert.assertTrue(character.getEffect("test").getStackedValue().equals(1L));
+        effectService.schedule();
 
         Mockito.verify(effect, Mockito.times(1)).onApply(any());
         Mockito.verify(effect, Mockito.times(0)).onTick(any());
@@ -165,8 +166,27 @@ public class EffectTests {
         effectService.addEffect(test, InternalEffectSourceProvider.INSTANCE);
         Mockito.verify(test, Mockito.times(1)).onApply(any());
         Mockito.verify(effect, Mockito.times(1)).onApply(any());
+        effectService.schedule();
 
         Assert.assertTrue(character.getEffect("test").getStackedValue().equals(2L));
+        Assert.assertEquals(processedEffects.size(), 2);
+        Assert.assertEquals(character.getEffectMap().size(), 1);
+        Assert.assertEquals(character.getEffect("test").getEffects().size(), 2);
+
+        //expire
+        Mockito.when(test.getExpireTime()).thenReturn(0L);
+        effectService.schedule();
+        effectService.schedule();
+        Assert.assertEquals(processedEffects.size(), 1);
+        Assert.assertEquals(character.getEffectMap().size(), 1);
+        Assert.assertTrue(character.getEffect("test").getStackedValue().equals(1L));
+
+        Mockito.when(effect.getExpireTime()).thenReturn(0L);
+        effectService.schedule();
+        effectService.schedule();
+        Assert.assertEquals(processedEffects.size(), 0);
+        Assert.assertEquals(character.getEffectMap().size(), 0);
+        Assert.assertNull(character.getEffect("test"));
     }
 
     private void makeEffectStackable(IEffect effect) {
@@ -174,10 +194,9 @@ public class EffectTests {
         Mockito.when(effect.getEffectStackingStrategy()).thenReturn(new EffectStackingStrategy<Long>() {
             @Override
             public Long mergeValues(Long current, Long toAdd) {
-                return current + toAdd;
+                return current == null ? 1 : toAdd + current;
             }
         });
-        effect.setValue(1L);
-        Mockito.when(effect.getValue()).thenCallRealMethod();
+        Mockito.when(effect.getValue()).thenReturn(1L);
     }
 }
