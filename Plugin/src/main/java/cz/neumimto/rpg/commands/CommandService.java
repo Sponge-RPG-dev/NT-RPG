@@ -34,6 +34,7 @@ import cz.neumimto.rpg.commands.character.CharacterChooseClassExecutor;
 import cz.neumimto.rpg.commands.character.CharacterCreateExecutor;
 import cz.neumimto.rpg.commands.character.CharacterDeleteExecutor;
 import cz.neumimto.rpg.commands.character.CharacterListExecutor;
+import cz.neumimto.rpg.commands.character.CharacterShowClassesExecutor;
 import cz.neumimto.rpg.commands.character.CharacterSkillBindExecutor;
 import cz.neumimto.rpg.commands.character.CharacterSkillExecuteExecutor;
 import cz.neumimto.rpg.commands.character.CharacterSkillLearnExecutor;
@@ -339,6 +340,7 @@ public class CommandService {
 		Sponge.getCommandManager().register(plugin, bind, "bind", "nb");
 
 		//==========PARTY==========
+
 		CommandSpec createparty = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_BIND_DESC))
 				.permission("ntrpg.player.party")
@@ -379,21 +381,15 @@ public class CommandService {
 
 		Sponge.getCommandManager().register(plugin, partyRoot, "party", "np", "nparty");
 
-		// ===========================================================
-		// =================          Groups         =================
-		// ===========================================================
+		//==========GROUPS==========
 
 		CommandSpec classes = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_CLASSES_DESC))
-				.arguments(new ClassTypeCommandElement(Text.of("type")))
+				.arguments(
+						GenericArguments.optional(new ClassTypeCommandElement(Text.of("type")))
+				)
 				.permission("ntrpg.classes.list")
-				.executor((src, args) -> {
-					args.<String>getOne(Text.of("type")).ifPresent(o -> {
-						IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src);
-						Gui.filterClassesByType(character, o);
-					});
-					return CommandResult.success();
-				})
+				.executor(new CharacterShowClassesExecutor())
 				.build();
 
 		Sponge.getCommandManager().register(plugin, classes, "classes");
@@ -439,7 +435,6 @@ public class CommandService {
 				})
 				.build();
 		Sponge.getCommandManager().register(plugin, armor, "armor");
-
 
 		CommandSpec runes = CommandSpec.builder()
 				.permission("ntrpg.runes.list")

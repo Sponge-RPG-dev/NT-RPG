@@ -1,9 +1,12 @@
 package cz.neumimto.rpg.gui;
 
+import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Block;
+import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Item;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.commands.InfoCommand;
+import cz.neumimto.rpg.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
@@ -15,7 +18,11 @@ import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.NDamageType;
+import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillPathData;
+import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.block.BlockTypes;
@@ -39,10 +46,11 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import java.util.*;
-
-import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Block;
-import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Item;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ja on 29.12.2016.
@@ -102,9 +110,7 @@ public class GuiHelper {
 	}
 
 	public static Inventory createMenuInventoryClassDefView(ClassDefinition w) {
-		Inventory.Builder builder = Inventory
-				.builder();
-		Inventory i = builder.of(InventoryArchetypes.DOUBLE_CHEST)
+		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST)
 				.property(InventoryTitle.of(Text.of(w.getName(), w.getPreferedColor(), TextStyles.BOLD)))
 				.build(plugin);
 
@@ -121,14 +127,55 @@ public class GuiHelper {
 
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(3, 3))).offer(createPropertyCommand(w));
 
+		return i;
+	}
+
+	public static Inventory createMenuInventoryClassTypeView(String type) {
+		ClassTypeDefinition classTypeDefinition = NtRpgPlugin.pluginConfig.CLASS_TYPES.get(type);
+		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST)
+				.property(InventoryTitle.of(
+						Text.builder("[ ").color(classTypeDefinition.getSecondaryColor())
+								.append(Text.builder(type).color(classTypeDefinition.getPrimaryColor()).style(TextStyles.BOLD).build())
+								.append(Text.builder(" ]").color(classTypeDefinition.getSecondaryColor()).build())
+								.build()))
+				.build(plugin);
+		GuiHelper.makeBorder(i, classTypeDefinition.getDyeColor());
+
+		NtRpgPlugin.GlobalScope.classService.getClassDefinitions().stream()
+				.filter(a -> a.getClassType().equalsIgnoreCase(type))
+				.forEach(a -> i.offer(GuiHelper.toItemStack(a)));
+
+		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 4))).offer(back("classes", Localizations.BACK.toText()));
 
 		return i;
 	}
 
-	private static ItemStack createPropertyCommand(ClassDefinition group) {
+	public static Inventory createMenuInventoryClassTypesView() {
+		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST)
+				.property(InventoryTitle.of(Localizations.CLASS_TYPES.toText()))
+				.build(plugin);
+
+		makeBorder(i, DyeColors.WHITE);
+
+		for (String type : NtRpgPlugin.pluginConfig.CLASS_TYPES.keySet()) {
+			i.offer(createClassTypeDefinitionCommand(type));
+		}
+
+		return i;
+	}
+
+	public static ItemStack createClassTypeDefinitionCommand(String type) {
+		ItemStack i = itemStack(ItemTypes.CRAFTING_TABLE);
+		i.offer(NKeys.MENU_INVENTORY, true);
+		i.offer(Keys.DISPLAY_NAME, Text.of(NtRpgPlugin.pluginConfig.CLASS_TYPES.get(type).getPrimaryColor(), type));
+		i.offer(new InventoryCommandItemMenuData("classes " + type));
+		return i;
+	}
+
+	public static ItemStack createPropertyCommand(ClassDefinition group) {
 		ItemStack i = itemStack(ItemTypes.BOOK);
 		i.offer(NKeys.MENU_INVENTORY, true);
-		i.offer(Keys.DISPLAY_NAME, Localizations.ATTRIBUTES.toText());
+		i.offer(Keys.DISPLAY_NAME, Localizations.PROPERTIES.toText());
 		String cc = IoC.get().build(InfoCommand.class).getAliases().iterator().next();
 		i.offer(new InventoryCommandItemMenuData(cc + " properties-initial " + group.getName()));
 		return i;
@@ -191,18 +238,18 @@ public class GuiHelper {
 		return of;
 	}
 
+	public static ItemStack back(ClassDefinition g) {
+		ItemStack of = itemStack(ItemTypes.PAPER);
+		of.offer(Keys.DISPLAY_NAME, Localizations.BACK.toText());
+		of.offer(new InventoryCommandItemMenuData("class " + g.getName()));
+		return of;
+	}
+
 	public static ItemStack unclickableInterface() {
 		ItemStack of = itemStack(ItemTypes.STAINED_GLASS_PANE);
 		of.offer(new MenuInventoryData(true));
 		of.offer(Keys.DYE_COLOR, DyeColors.YELLOW);
 		of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
-		return of;
-	}
-
-	public static ItemStack back(ClassDefinition g) {
-		ItemStack of = itemStack(ItemTypes.PAPER);
-		of.offer(Keys.DISPLAY_NAME, Localizations.BACK.toText());
-		of.offer(new InventoryCommandItemMenuData("class " + g.getName()));
 		return of;
 	}
 
@@ -348,8 +395,8 @@ public class GuiHelper {
 			int sp = characterClass.getSkillPoints();
 
 			lore.add(Text.builder("SP: ").color(TextColors.GREEN)
-				.append(Text.builder(String.valueOf(sp)).style(TextStyles.BOLD).build())
-				.build());
+					.append(Text.builder(String.valueOf(sp)).style(TextStyles.BOLD).build())
+					.build());
 		}
 		md.offer(Keys.ITEM_LORE, lore);
 		return md;
@@ -391,33 +438,26 @@ public class GuiHelper {
 	}
 
 	public static void makeBorder(Inventory i, DyeColor dyeColor) {
-		for (int j = 0; j < 9; j++) {
-			ItemStack of = ItemStack.of(ItemTypes.STAINED_GLASS_PANE, 1);
-			of.offer(new MenuInventoryData(true));
-			of.offer(Keys.DYE_COLOR, dyeColor);
-			of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
-			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(j, 0))).offer(of);
+		if (i.getArchetype() == InventoryArchetypes.DOUBLE_CHEST) {
+			for (int j = 0; j < 9; j++) {
+				ItemStack of = unclickableInterface();
+				of.offer(Keys.DYE_COLOR, dyeColor);
+				i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(j, 0))).offer(of);
 
-			of = ItemStack.of(ItemTypes.STAINED_GLASS_PANE, 1);
-			of.offer(new MenuInventoryData(true));
-			of.offer(Keys.DYE_COLOR, dyeColor);
-			of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
-			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(j, 5))).offer(of);
-		}
+				of = unclickableInterface();
+				of.offer(Keys.DYE_COLOR, dyeColor);
+				i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(j, 5))).offer(of);
+			}
 
-		for (int j = 1; j < 5; j++) {
-			ItemStack of = ItemStack.of(ItemTypes.STAINED_GLASS_PANE, 1);
-			of.offer(new MenuInventoryData(true));
-			of.offer(Keys.DYE_COLOR, dyeColor);
-			of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
+			for (int j = 1; j < 5; j++) {
+				ItemStack of = unclickableInterface();
+				of.offer(Keys.DYE_COLOR, dyeColor);
+				i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, j))).offer(of);
 
-			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, j))).offer(of);
-
-			of = ItemStack.of(ItemTypes.STAINED_GLASS_PANE, 1);
-			of.offer(new MenuInventoryData(true));
-			of.offer(Keys.DYE_COLOR, dyeColor);
-			of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
-			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, j))).offer(of);
+				of = unclickableInterface();
+				of.offer(Keys.DYE_COLOR, dyeColor);
+				i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, j))).offer(of);
+			}
 		}
 	}
 }

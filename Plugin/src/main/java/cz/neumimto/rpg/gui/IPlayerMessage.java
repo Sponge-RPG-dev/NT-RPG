@@ -46,7 +46,6 @@ public interface IPlayerMessage {
 
 	void sendCooldownMessage(IActiveCharacter player, String message, double cooldown);
 
-
 	void sendEffectStatus(IActiveCharacter player, EffectStatusType type, IEffect effect);
 
 	void invokeCharacterMenu(Player player, List<CharacterBase> characterBases);
@@ -103,7 +102,9 @@ public interface IPlayerMessage {
 
 	void sendCannotUseItemInOffHandNotification(ItemStack futureOffHand, IActiveCharacter character, CannotUseItemReason reason);
 
-    void skillExecution(IActiveCharacter character, PlayerSkillContext skill);
+	void skillExecution(IActiveCharacter character, PlayerSkillContext skill);
 
-	void filterClassesByType(IActiveCharacter character, String def);
+	void sendClassesByType(IActiveCharacter character, String def);
+
+	void sendClassTypes(IActiveCharacter character);
 }

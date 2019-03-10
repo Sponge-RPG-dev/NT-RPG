@@ -213,7 +213,11 @@ public class Gui {
 		getMessageTypeOf(character).skillExecution(character, skill);
 	}
 
-	public static void filterClassesByType(IActiveCharacter character, String o) {
-		getMessageTypeOf(character).filterClassesByType(character, o);
+	public static void sendClassesByType(IActiveCharacter character, String o) {
+		getMessageTypeOf(character).sendClassesByType(character, o);
+	}
+
+	public static void sendClassTypes(IActiveCharacter character) {
+		getMessageTypeOf(character).sendClassTypes(character);
 	}
 }
