@@ -162,7 +162,8 @@ public class JSLoader {
 					continue;
 				}
 				if (objectTypeEntry.getValue() == JsBinding.Type.CLASS) {
-					bindings.put(objectTypeEntry.getKey().getSimpleName(), objectTypeEntry.getKey());
+					bindings.put(objectTypeEntry.getKey().getSimpleName(),
+							engine.eval("Java.type(\"" + objectTypeEntry.getKey().getCanonicalName() + "\");"));
 					continue;
 				}
 				if (objectTypeEntry.getValue() == JsBinding.Type.OBJECT) {
@@ -178,26 +179,14 @@ public class JSLoader {
 			bindings.put("Folder", scripts_root);
 			bindings.put("GlobalScope", ioc.build(GlobalScope.class));
 			if (pluginConfig.DEBUG.isDevelop()) {
-				info("JSLOADER = Bindings");
+				info("JSLOADER ====== Bindings");
 				Map<String, Object> sorted = new TreeMap<>(bindings);
 				for (Map.Entry<String, Object> e : sorted.entrySet()) {
 					info(e.getKey() + " -> " + e.getValue().toString());
 				}
-			}
-			engine.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
-
-			//im not sure why this is needed yet, todo remove this
-			for (Map.Entry<Class<?>, JsBinding.Type> e : dataToBind.entrySet()) {
-				if (e.getValue() == JsBinding.Type.CLASS) {
-					if (pluginConfig.DEBUG.isDevelop()) {
-						info("var " + e.getKey().getSimpleName() + " = Java.type(\"" + e.getKey().getCanonicalName() + "\");");
-					}
-					engine.eval("var " + e.getKey().getSimpleName() + " = Java.type(\"" + e.getKey().getCanonicalName() + "\");");
-				}
-			}
-			if (pluginConfig.DEBUG.isDevelop()) {
 				info("===== Bindings END =====");
 			}
+			engine.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
 			engine.eval(rs);
 
 		} catch (Exception e) {
