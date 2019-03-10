@@ -4,19 +4,17 @@ import jdk.internal.dynalink.beans.StaticClass;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.junit.Assert;
-import org.junit.Test;
+
+import java.io.File;
+import java.nio.file.Files;
 
 import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
-import java.io.File;
-import java.nio.file.Files;
 
 public class NashornPlayground {
 
 
-
-    @Test
     public void test0() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("playground/test01.js").getFile());

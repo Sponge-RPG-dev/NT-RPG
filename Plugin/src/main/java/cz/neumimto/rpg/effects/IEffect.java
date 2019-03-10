@@ -23,7 +23,6 @@ import cz.neumimto.rpg.IRpgElement;
 import cz.neumimto.rpg.NtRpgPlugin;
 
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * Created by NeumimTo on 17.1.2015.
@@ -68,8 +67,6 @@ public interface IEffect<K> extends IRpgElement {
 	long getDuration();
 
 	void setDuration(long l);
-
-	UUID getUUID();
 
 	String getExpireMessage();
 

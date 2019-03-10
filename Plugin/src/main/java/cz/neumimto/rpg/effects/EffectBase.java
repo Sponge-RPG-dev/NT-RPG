@@ -21,11 +21,9 @@ package cz.neumimto.rpg.effects;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.scripting.JsBinding;
-import cz.neumimto.rpg.utils.UUIDs;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * Created by NeumimTo.
@@ -46,7 +44,6 @@ public class EffectBase<Value> implements IEffect<Value> {
 	private long timeCreated;
 	private String applyMessage;
 	private String expireMessage;
-	private UUID uuid;
 
 	private IEffectSourceProvider effectSourceProvider;
 
@@ -66,7 +63,6 @@ public class EffectBase<Value> implements IEffect<Value> {
 
 	public EffectBase() {
 		timeCreated = System.currentTimeMillis();
-		uuid = UUIDs.random();
 	}
 
 	public static GlobalScope getGlobalScope() {
@@ -140,11 +136,6 @@ public class EffectBase<Value> implements IEffect<Value> {
 	}
 
 	@Override
-	public UUID getUUID() {
-		return uuid;
-	}
-
-	@Override
 	public String getExpireMessage() {
 		return expireMessage;
 	}
@@ -181,27 +172,6 @@ public class EffectBase<Value> implements IEffect<Value> {
 	@Override
 	public void setEffectSourceProvider(IEffectSourceProvider effectSourceProvider) {
 		this.effectSourceProvider = effectSourceProvider;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null) {
-			return false;
-		}
-		if (!(o instanceof EffectBase)) {
-			return false;
-		}
-
-		EffectBase that = (EffectBase) o;
-		return uuid != null ? uuid.equals(that.uuid) : that.uuid == null;
-	}
-
-	@Override
-	public int hashCode() {
-		return uuid.hashCode();
 	}
 
 	@Override

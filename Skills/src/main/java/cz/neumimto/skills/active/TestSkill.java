@@ -46,12 +46,12 @@ public class TestSkill extends ActiveSkill {
 
         @Override
         public void onApply(IEffect self) {
-            self.getConsumer().sendMessage(Text.of("onApply " + getUUID()));
+            self.getConsumer().sendMessage(Text.of("onApply " + hashCode()));
         }
 
         @Override
         public void onRemove(IEffect self) {
-            self.getConsumer().sendMessage(Text.of("onRemove " + getUUID()));
+            self.getConsumer().sendMessage(Text.of("onRemove " + hashCode()));
         }
 
     }

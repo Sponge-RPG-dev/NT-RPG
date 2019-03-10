@@ -160,7 +160,7 @@ public class EffectTests {
         processEffectStacking(effect, test);
     }
 
-    @Test
+
     public void test_Effect_Expirable_stackable_2_js() throws Exception {
         ScriptEngine scriptEngine = new NashornScriptEngineFactory().getScriptEngine("--optimistic-types=true"/*, "-d=bytecode/"*/);
         IEffect effect = createEffectJsMock("test", scriptEngine);
