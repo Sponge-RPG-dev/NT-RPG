@@ -108,7 +108,7 @@ function registerGlobalEffects() {
     log("registerGlobalEffects, " + globalEffects.size())
     for (obj in globalEffects) {
         var g = globalEffects.get(obj);
-        if (g instanceof GlobalEffect) {
+        if (g instanceof Java.type("cz.neumimto.rpg.effects.IGlobalEffect")) {
             GlobalScope.effectService.registerGlobalEffect(g);
         }
     }

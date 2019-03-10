@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.effects;
 
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
@@ -50,8 +51,6 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-
 /**
  * Created by NeumimTo on 17.1.2015.
  */
@@ -81,6 +80,7 @@ public class EffectService {
 	private static final long timingsTicksMax = 100;
 
 	private Task effectTask;
+
 	/**
 	 * calls effect.onApply and registers if effect requires
 	 *
@@ -242,19 +242,22 @@ public class EffectService {
 	/**
 	 * Adds effect to the consumer,
 	 * Effects requiring register are registered into the scheduler one tick later
-	 *  @param iEffect
 	 *
+	 * @param iEffect
 	 */
 	@SuppressWarnings("unchecked")
 	public void addEffect(IEffect iEffect, IEffectSourceProvider effectSourceProvider) {
+		//fallback for lazy devs
+		if (effectSourceProvider == null) effectSourceProvider = InternalEffectSourceProvider.INSTANCE;
+
 		IEffectContainer eff = iEffect.getConsumer().getEffect(iEffect.getName());
 		if (pluginConfig.DEBUG.isDevelop()) {
 			IEffectConsumer consumer1 = iEffect.getConsumer();
 			if (consumer1 instanceof ActiveCharacter) {
 				ActiveCharacter chara = (ActiveCharacter) consumer1;
 				chara.getPlayer().sendMessage(Text.of("Adding effect: " + iEffect.getName() +
-						" container: " + (eff == null ? "null" : eff.getEffects().size()) + " provider: " + effectSourceProvider.getType().getClass()
-						.getSimpleName()));
+						" container: " + (eff == null ? "null" : eff.getEffects().size()) +
+						" provider: " + effectSourceProvider.getType().getClass().getSimpleName()));
 			}
 		}
 		if (eff == null) {
@@ -289,7 +292,7 @@ public class EffectService {
 			IEffectConsumer consumer1 = iEffect.getConsumer();
 			if (consumer1 instanceof ActiveCharacter) {
 				ActiveCharacter chara = (ActiveCharacter) consumer1;
-				chara.getPlayer().sendMessage(Text.of("Adding effect: " + iEffect.getName() +
+				chara.getPlayer().sendMessage(Text.of("Removing effect: " + iEffect.getName() +
 						" container: " + (effect == null ? "null" : effect.getEffects().size())));
 			}
 		}
@@ -389,7 +392,7 @@ public class EffectService {
 	 * @param value
 	 */
 	public void applyGlobalEffectAsEnchantment(IGlobalEffect effect, IEffectConsumer consumer, Map<String, String> value,
-			IEffectSourceProvider effectSourceType) {
+	                                           IEffectSourceProvider effectSourceType) {
 		IEffect construct = effect.construct(consumer, unlimited_duration, value);
 		addEffect(construct, effectSourceType);
 	}
@@ -401,7 +404,7 @@ public class EffectService {
 	 * @param consumer
 	 */
 	public void applyGlobalEffectsAsEnchantments(Map<IGlobalEffect, EffectParams> map, IEffectConsumer consumer,
-			IEffectSourceProvider effectSourceType) {
+	                                             IEffectSourceProvider effectSourceType) {
 		map.forEach((e, l) ->
 				applyGlobalEffectAsEnchantment(e, consumer, l, effectSourceType)
 		);
@@ -409,7 +412,7 @@ public class EffectService {
 
 
 	public void removeGlobalEffectsAsEnchantments(Collection<IGlobalEffect> itemEffects, IActiveCharacter character,
-			IEffectSourceProvider effectSourceProvider) {
+	                                              IEffectSourceProvider effectSourceProvider) {
 		if (pluginConfig.DEBUG.isDevelop()) {
 			character.sendMessage(Text.of(itemEffects.size() + " added echn. effects to remove queue."));
 		}
