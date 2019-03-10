@@ -312,6 +312,7 @@ public class CommandService {
 				.child(cskill, "skill", "s", "sk")
 
 				.child(cattribute, "attribute", "attr", "a")
+				.executor(new CharacterListExecutor()) //default fallback for char list
 				.build();
 
 		Sponge.getCommandManager().register(plugin, characterRoot, "character", "char", "nc");

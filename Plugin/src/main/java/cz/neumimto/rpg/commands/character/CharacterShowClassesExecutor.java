@@ -29,14 +29,14 @@ public class CharacterShowClassesExecutor implements CommandExecutor {
 						.filter(a -> a.getClassType().equalsIgnoreCase(type))
 						.map(ClassDefinition::getName)
 						.collect(Collectors.joining(" "));
-				src.sendMessage(Text.of("Available Classes in ClassType " + classTypeOptional.get() + " : " + classes));
+				src.sendMessage(Text.of("Classes in " + classTypeOptional.get() + " : " + classes));
 			}
 		} else {
 			if (src instanceof Player) {
 				IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src);
 				Gui.sendClassTypes(character);
 			} else {
-				src.sendMessage(Text.of("Available ClassTypes : " + String.join(", ", NtRpgPlugin.pluginConfig.CLASS_TYPES.keySet())));
+				src.sendMessage(Text.of("ClassTypes : " + String.join(", ", NtRpgPlugin.pluginConfig.CLASS_TYPES.keySet())));
 			}
 		}
 		return CommandResult.success();

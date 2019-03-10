@@ -715,7 +715,6 @@ public class VanillaMessaging implements IPlayerMessage {
 
 	@Override
 	public void displaySkillDetailsInventoryMenu(IActiveCharacter character, SkillTree tree, String command) {
-
 		Inventory skillDetailInventoryView = GuiHelper.createSkillDetailInventoryView(character, tree, tree.getSkillById(command));
 		character.getPlayer().openInventory(skillDetailInventoryView);
 	}
