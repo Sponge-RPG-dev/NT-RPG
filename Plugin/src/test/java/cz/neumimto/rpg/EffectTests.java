@@ -9,14 +9,21 @@ import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.common.stacking.MinLongStackingStrategy;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.CharacterBase;
+import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
+import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.Set;
 import java.util.UUID;
+
+import javax.script.Invocable;
+import javax.script.ScriptEngine;
 
 import static org.mockito.Matchers.any;
 
@@ -148,24 +155,48 @@ public class EffectTests {
 
     @Test
     public void test_Effect_Expirable_stackable() {
-        makeEffectStackable(effect);
+        IEffect effect = this.effect;
+        TickableEffect test = createEffectMock("test");
+        processEffectStacking(effect, test);
+    }
 
-        effectService.addEffect(effect, InternalEffectSourceProvider.INSTANCE);
-        Assert.assertNotNull(character.getEffect(effect.getName()));
-        Assert.assertNotSame(effect, character.getEffect(effect.getName()));
+    @Test
+    public void test_Effect_Expirable_stackable_2_js() throws Exception {
+        ScriptEngine scriptEngine = new NashornScriptEngineFactory().getScriptEngine("--optimistic-types=true"/*, "-d=bytecode/"*/);
+        IEffect effect = createEffectJsMock("test", scriptEngine);
+        IEffect test = createEffectJsMock("test", scriptEngine);
+        processEffectStacking(effect, test);
+    }
+
+    private IEffect createEffectJsMock(String test, ScriptEngine scriptEngine) throws Exception {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(getClass().getResource("effects/effect01.js").getFile());
+        byte[] bytes = Files.readAllBytes(file.toPath());
+        scriptEngine.eval(new String(bytes));
+        Invocable invocable = (Invocable) scriptEngine;
+        ScriptObjectMirror mirror = (ScriptObjectMirror) scriptEngine.eval("SuperNiceEffect");
+        return (IEffect) (Object) mirror;
+    }
+
+    private void processEffectStacking(IEffect first, IEffect test) {
+        makeEffectStackable(first);
+
+        effectService.addEffect(first, InternalEffectSourceProvider.INSTANCE);
+        Assert.assertNotNull(character.getEffect(first.getName()));
+        Assert.assertNotSame(first, character.getEffect(first.getName()));
         Assert.assertTrue(character.getEffect("test").getStackedValue().equals(1L));
         effectService.schedule();
 
-        Mockito.verify(effect, Mockito.times(1)).onApply(any());
-        Mockito.verify(effect, Mockito.times(0)).onTick(any());
-        Mockito.verify(effect, Mockito.times(0)).onRemove(any());
+        Mockito.verify(first, Mockito.times(1)).onApply(any());
+        Mockito.verify(first, Mockito.times(0)).onTick(any());
+        Mockito.verify(first, Mockito.times(0)).onRemove(any());
 
-        TickableEffect test = createEffectMock("test");
+
         makeEffectStackable(test);
 
         effectService.addEffect(test, InternalEffectSourceProvider.INSTANCE);
         Mockito.verify(test, Mockito.times(1)).onApply(any());
-        Mockito.verify(effect, Mockito.times(1)).onApply(any());
+        Mockito.verify(first, Mockito.times(1)).onApply(any());
         effectService.schedule();
 
         Assert.assertTrue(character.getEffect("test").getStackedValue().equals(2L));
@@ -184,10 +215,10 @@ public class EffectTests {
         Assert.assertEquals(character.getEffectMap().size(), 1);
         Assert.assertTrue(character.getEffect("test").getStackedValue().equals(1L));
 
-        Mockito.when(effect.getExpireTime()).thenReturn(0L);
+        Mockito.when(first.getExpireTime()).thenReturn(0L);
         effectService.schedule();
         effectService.schedule();
-        Mockito.verify(effect, Mockito.times(1)).onRemove(any());
+        Mockito.verify(first, Mockito.times(1)).onRemove(any());
 
         Assert.assertEquals(processedEffects.size(), 0);
         Assert.assertEquals(character.getEffectMap().size(), 0);
