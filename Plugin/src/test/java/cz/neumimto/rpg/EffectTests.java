@@ -177,6 +177,9 @@ public class EffectTests {
         Mockito.when(test.getExpireTime()).thenReturn(0L);
         effectService.schedule();
         effectService.schedule();
+
+        Mockito.verify(test, Mockito.times(1)).onRemove(any());
+
         Assert.assertEquals(processedEffects.size(), 1);
         Assert.assertEquals(character.getEffectMap().size(), 1);
         Assert.assertTrue(character.getEffect("test").getStackedValue().equals(1L));
@@ -184,6 +187,8 @@ public class EffectTests {
         Mockito.when(effect.getExpireTime()).thenReturn(0L);
         effectService.schedule();
         effectService.schedule();
+        Mockito.verify(effect, Mockito.times(1)).onRemove(any());
+
         Assert.assertEquals(processedEffects.size(), 0);
         Assert.assertEquals(character.getEffectMap().size(), 0);
         Assert.assertNull(character.getEffect("test"));
