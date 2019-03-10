@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.commands;
+package cz.neumimto.rpg.commands.elements;
 
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.IGlobalEffect;
@@ -12,7 +12,6 @@ import org.spongepowered.api.text.serializer.TextSerializers;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import javax.annotation.Nullable;
 
 /**
@@ -26,11 +25,10 @@ public class GlobalEffectCommandElement extends CommandElement {
 
 	@Override
 	protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
-		String skilllc = args.next().replaceAll("_", " ");
-		;
-		IGlobalEffect effect = NtRpgPlugin.GlobalScope.effectService.getGlobalEffect(skilllc);
+		String effectName = args.next().replaceAll("_", " ");
+		IGlobalEffect effect = NtRpgPlugin.GlobalScope.effectService.getGlobalEffect(effectName);
 		if (effect == null) {
-			throw args.createError(TextSerializers.FORMATTING_CODE.deserialize("&CUnknown effect &C\"" + skilllc + "\""));
+			throw args.createError(TextSerializers.FORMATTING_CODE.deserialize("&CUnknown effect &C\"" + effectName + "\""));
 		}
 		return effect;
 	}
@@ -43,14 +41,10 @@ public class GlobalEffectCommandElement extends CommandElement {
 				.map(a -> a.replaceAll(" ", "_"))
 				.filter(a -> {
 					try {
-						if (a.toLowerCase().startsWith(args.next())) {
-							return true;
-						} else {
-							return false;
-						}
-					} catch (ArgumentParseException e) {
+						return a.toLowerCase().startsWith(args.next());
+					} catch (ArgumentParseException ignored) {
 					}
-					return true;
+					return false;
 				})
 				.collect(Collectors.toList());
 	}

@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.commands;
+package cz.neumimto.rpg.commands.elements;
 
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.skills.ISkill;
@@ -9,7 +9,6 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
 import java.util.Optional;
-
 import javax.annotation.Nullable;
 
 /**

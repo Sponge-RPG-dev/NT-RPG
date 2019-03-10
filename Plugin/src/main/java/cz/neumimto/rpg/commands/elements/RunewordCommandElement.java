@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.commands;
+package cz.neumimto.rpg.commands.elements;
 
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
@@ -12,7 +12,6 @@ import org.spongepowered.api.text.serializer.TextSerializers;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.Nullable;
 
 /**

@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.commands;
+package cz.neumimto.rpg.commands.elements;
 
 import cz.neumimto.rpg.NtRpgPlugin;
 import org.spongepowered.api.command.CommandSource;
@@ -10,7 +10,6 @@ import org.spongepowered.api.text.Text;
 
 import java.util.Collections;
 import java.util.List;
-
 import javax.annotation.Nullable;
 
 /**
