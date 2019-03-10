@@ -98,10 +98,13 @@ public class CommandService {
 	public void registerStandartCommands() {
 		registerAdminCommands();
 		registerCharacterCommands();
+		registerItemCommands();
 	}
 
-	public void registerAdminCommands() {
+	private void registerAdminCommands() {
+
 		//==========SKILLS AND EFFECTS==========
+
 		CommandSpec executeSkill = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_EXEC_SKILL_DESC))
 				.arguments(
@@ -122,81 +125,6 @@ public class CommandService {
 						GenericArguments.remainingJoinedStrings(TextHelper.parse("data"))
 				)
 				.executor(new AddEffectExecutor())
-				.build();
-
-		//==========ITEMS==========
-
-		CommandSpec itemAddGlobalEffect = CommandSpec.builder()
-				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_ENCHANT_ADD))
-				.arguments(
-						new GlobalEffectCommandElement(TextHelper.parse("effect")),
-						GenericArguments.remainingJoinedStrings(TextHelper.parse("params"))
-				)
-				.executor(new ItemAddGlobalEffectExecutor())
-				.build();
-
-
-		CommandSpec itemEnchant = CommandSpec.builder()
-				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_ENCHANT))
-				.child(itemAddGlobalEffect, "add", "e")
-				.build();
-
-
-		CommandSpec itemAddSocket = CommandSpec.builder()
-				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_SOCKET))
-				.arguments(
-						GenericArguments.catalogedElement(Text.of("type"), SocketType.class)
-				)
-				.executor(new ItemAddSocketExecutor())
-				.build();
-
-		CommandSpec itemAddRune = CommandSpec.builder()
-				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_RUNE))
-				.arguments(
-						new RuneCommandElement(TextHelper.parse("rune"))
-				)
-				.executor(new GiveRuneToPlayerExecutor())
-				.build();
-
-		CommandSpec itemAddRarity = CommandSpec.builder()
-				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_RARITY))
-				.arguments(
-						GenericArguments.integer(TextHelper.parse("level"))
-				)
-				.executor(new ItemAddRarityExecutor())
-				.build();
-
-		CommandSpec itemAddMeta = CommandSpec.builder()
-				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_RARITY))
-				.arguments(
-						GenericArguments.text(Text.of("meta"), TextSerializers.FORMATTING_CODE, true)
-				)
-				.executor(new ItemAddMetaExecutor())
-				.build();
-
-		CommandSpec itemAddType = CommandSpec.builder()
-				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_ITEM_TYPE))
-				.arguments(
-						GenericArguments.catalogedElement(Text.of("type"), ItemMetaType.class)
-				)
-				.executor(new ItemAddTypeExecutor())
-				.build();
-
-		CommandSpec itemAddGroupRestriction = CommandSpec.builder()
-				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_RARITY))
-				.arguments(
-						new ClassDefCommandElement(Text.of("group")),
-						GenericArguments.integer(Text.of("level"))
-				)
-				.executor(new ItemAddGroupRestrictionExecutor())
-				.build();
-
-		CommandSpec itemAddRuneword = CommandSpec.builder()
-				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_RUNEWORD))
-				.arguments(
-						new RuneCommandElement(TextHelper.parse("rw"))
-				)
-				.executor(new ItemAddRunewordExecutor())
 				.build();
 
 		//=========CHARACTER MANIPULATIONS=========
@@ -262,15 +190,6 @@ public class CommandService {
 				.child(executeSkill, "skill", "s")
 				.child(addEffect, "effect", "ef")
 
-				.child(itemEnchant, "enchant", "e")
-				.child(itemAddSocket, "socket", "sk")
-				.child(itemAddRune, "rune", "r")
-				.child(itemAddRuneword, "runeword", "rw")
-				.child(itemAddRarity, "rarity", "rrty")
-				.child(itemAddMeta, "itemmeta", "imeta", "imt")
-				.child(itemAddGroupRestriction, "grouprequirements", "gr")
-				.child(itemAddType, "itemType", "it", "type")
-
 				.child(exp, "experiences", "exp")
 
 				.child(reload, "reload")
@@ -281,7 +200,7 @@ public class CommandService {
 		Sponge.getCommandManager().register(plugin, adminRoot, "nadmin", "na");
 	}
 
-	public void registerCharacterCommands() {
+	private void registerCharacterCommands() {
 
 		//==========CHARACTER MANIPULATION==========
 
@@ -470,7 +389,7 @@ public class CommandService {
 				.permission("ntrpg.classes.list")
 				.executor((src, args) -> {
 					args.<String>getOne(Text.of("type")).ifPresent(o -> {
-						IActiveCharacter character = globalScope.characterService.getCharacter((Player) src);
+						IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src);
 						Gui.filterClassesByType(character, o);
 					});
 					return CommandResult.success();
@@ -485,7 +404,7 @@ public class CommandService {
 				.arguments(new AnyClassDefCommandElement(Text.of("class"), false))
 				.executor((src, args) -> {
 					args.<ClassDefinition>getOne(Text.of("class")).ifPresent(o -> {
-						IActiveCharacter character = globalScope.characterService.getCharacter((Player) src);
+						IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src);
 						Gui.showClassInfo(character, o);
 					});
 					return CommandResult.success();
@@ -525,12 +444,105 @@ public class CommandService {
 		CommandSpec runes = CommandSpec.builder()
 				.permission("ntrpg.runes.list")
 				.executor((src, args) -> {
-					Gui.sendListOfRunes(globalScope.characterService.getCharacter((Player) src));
+					Gui.sendListOfRunes(NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src));
 					return CommandResult.success();
 				})
 				.build();
 
 		Sponge.getCommandManager().register(plugin, runes, "runes");
+	}
+
+	private void registerItemCommands() {
+		//==========ITEMS==========
+
+		CommandSpec itemAddGlobalEffect = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_ENCHANT_ADD))
+				.arguments(
+						new GlobalEffectCommandElement(TextHelper.parse("effect")),
+						GenericArguments.remainingJoinedStrings(TextHelper.parse("params"))
+				)
+				.executor(new ItemAddGlobalEffectExecutor())
+				.build();
+
+
+		CommandSpec itemEnchant = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_ENCHANT))
+				.child(itemAddGlobalEffect, "add", "e")
+				.build();
+
+
+		CommandSpec itemAddSocket = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_SOCKET))
+				.arguments(
+						GenericArguments.catalogedElement(Text.of("type"), SocketType.class)
+				)
+				.executor(new ItemAddSocketExecutor())
+				.build();
+
+		CommandSpec itemAddRune = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_RUNE))
+				.arguments(
+						new RuneCommandElement(TextHelper.parse("rune"))
+				)
+				.executor(new GiveRuneToPlayerExecutor())
+				.build();
+
+		CommandSpec itemAddRarity = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_RARITY))
+				.arguments(
+						GenericArguments.integer(TextHelper.parse("level"))
+				)
+				.executor(new ItemAddRarityExecutor())
+				.build();
+
+		CommandSpec itemAddMeta = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_RARITY))
+				.arguments(
+						GenericArguments.text(Text.of("meta"), TextSerializers.FORMATTING_CODE, true)
+				)
+				.executor(new ItemAddMetaExecutor())
+				.build();
+
+		CommandSpec itemAddType = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_ITEM_TYPE))
+				.arguments(
+						GenericArguments.catalogedElement(Text.of("type"), ItemMetaType.class)
+				)
+				.executor(new ItemAddTypeExecutor())
+				.build();
+
+		CommandSpec itemAddGroupRestriction = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_RARITY))
+				.arguments(
+						new ClassDefCommandElement(Text.of("group")),
+						GenericArguments.integer(Text.of("level"))
+				)
+				.executor(new ItemAddGroupRestrictionExecutor())
+				.build();
+
+		CommandSpec itemAddRuneword = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_RUNEWORD))
+				.arguments(
+						new RuneCommandElement(TextHelper.parse("rw"))
+				)
+				.executor(new ItemAddRunewordExecutor())
+				.build();
+
+		CommandSpec itemRoot = CommandSpec
+				.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_DESC))
+				.permission("ntrpg.item")
+				.child(itemEnchant, "enchant", "e")
+				.child(itemAddSocket, "socket", "sk")
+				.child(itemAddRune, "rune", "r")
+				.child(itemAddRuneword, "runeword", "rw")
+				.child(itemAddRarity, "rarity", "rrty")
+				.child(itemAddMeta, "itemmeta", "imeta", "imt")
+				.child(itemAddGroupRestriction, "grouprequirements", "gr")
+				.child(itemAddType, "itemType", "it", "type")
+				.build();
+
+		Sponge.getCommandManager().register(plugin, itemRoot, "nitem", "item");
 	}
 
 	public void registerCommand(CommandBase commandCallable) {
