@@ -71,6 +71,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.skills.ISkill;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
@@ -78,6 +79,9 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 /**
  * Created by NeumimTo on 22.7.2015.
@@ -527,5 +531,19 @@ public class CommandService {
 				.build();
 
 		Sponge.getCommandManager().register(plugin, runes, "runes");
+	}
+
+	public void registerCommand(CommandBase commandCallable) {
+		try {
+			Sponge.getCommandManager().register(plugin, commandCallable, commandCallable.getAliases());
+		} catch (NoSuchMethodError e) {
+			try {
+				Object o = Sponge.class.getDeclaredMethod("getCommandDispatcher").invoke(null);
+				o.getClass().getDeclaredMethod("register", Object.class, CommandCallable.class, List.class)
+						.invoke(o, plugin, commandCallable, commandCallable.getAliases());
+			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e1) {
+				e1.printStackTrace();
+			}
+		}
 	}
 }
