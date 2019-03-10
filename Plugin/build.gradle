@@ -26,7 +26,10 @@ dependencies {
     testCompile 'org.spongepowered:spongeapi:' + project.spongeApiVersion
     testCompile 'junit:junit:4.8.2'
     testCompile 'org.powermock:powermock-module-junit4:1.4.9'
-    testCompile 'org.powermock:powermock-api-mockito:1.4.9'
+
+    // https://mvnrepository.com/artifact/org.mockito/mockito-core
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.25.0'
+
 
     jar {
         manifest {

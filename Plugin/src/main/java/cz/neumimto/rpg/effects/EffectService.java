@@ -18,7 +18,6 @@
 
 package cz.neumimto.rpg.effects;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
@@ -50,6 +49,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 17.1.2015.
@@ -202,6 +203,7 @@ public class EffectService {
 			removeEffectContainer(pendingRemoval.getEffectContainer(), pendingRemoval, pendingRemoval.getConsumer());
 			effectSet.remove(pendingRemoval);
 		}
+
 		pendingRemovals.clear();
 		long l = System.currentTimeMillis();
 		for (IEffect e : effectSet) {
@@ -243,13 +245,22 @@ public class EffectService {
 	 * Adds effect to the consumer,
 	 * Effects requiring register are registered into the scheduler one tick later
 	 *
-	 * @param iEffect
+	 * @param iEffect effect
+	 */
+	@SuppressWarnings("unchecked")
+	public void addEffect(IEffect iEffect) {
+		addEffect(iEffect, InternalEffectSourceProvider.INSTANCE);
+	}
+
+	/**
+	 * Adds effect to the consumer,
+	 * Effects requiring register are registered into the scheduler one tick later
+	 *
+	 * @param effectSourceProvider source
+	 * @param iEffect effect
 	 */
 	@SuppressWarnings("unchecked")
 	public void addEffect(IEffect iEffect, IEffectSourceProvider effectSourceProvider) {
-		//fallback for lazy devs
-		if (effectSourceProvider == null) effectSourceProvider = InternalEffectSourceProvider.INSTANCE;
-
 		IEffectContainer eff = iEffect.getConsumer().getEffect(iEffect.getName());
 		if (pluginConfig.DEBUG.isDevelop()) {
 			IEffectConsumer consumer1 = iEffect.getConsumer();

@@ -2,8 +2,8 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.PluginConfig;
-import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.effects.EffectStackingStrategy;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.common.stacking.MinLongStackingStrategy;
@@ -44,24 +44,29 @@ public class EffectTests {
         characterBase = new CharacterBase();
         character = new ActiveCharacter(UUID.randomUUID(), characterBase);
 
-        effect = Mockito.mock(TickableEffect.class);
-
-        Mockito.when(effect.getConsumer()).thenReturn(character);
-        Mockito.when(effect.getDuration()).thenReturn(Long.MAX_VALUE);
-        Mockito.when(effect.getExpireTime()).thenReturn(Long.MAX_VALUE);
-        Mockito.when(effect.getEffectSourceProvider()).thenReturn(InternalEffectSourceProvider.INSTANCE);
-        Mockito.when(effect.getName()).thenReturn("effect");
-        Mockito.when(effect.getValue()).thenReturn(1000L);
-        Mockito.when(effect.getEffectStackingStrategy()).thenReturn(MinLongStackingStrategy.INSTNCE);
-        Mockito.when(effect.requiresRegister()).thenCallRealMethod();
-
-        EffectContainer container = new EffectContainer<>(effect);
-        Mockito.when(effect.constructEffectContainer()).thenReturn(container);
+        effect = createEffectMock("test");
 
     }
 
+    private TickableEffect createEffectMock(String name) {
+        TickableEffect mock = Mockito.mock(TickableEffect.class);
+
+        Mockito.when(mock.getConsumer()).thenReturn(character);
+        Mockito.when(mock.getDuration()).thenReturn(Long.MAX_VALUE);
+        Mockito.when(mock.getExpireTime()).thenReturn(Long.MAX_VALUE);
+        Mockito.when(mock.getEffectSourceProvider()).thenReturn(InternalEffectSourceProvider.INSTANCE);
+        Mockito.when(mock.getName()).thenReturn(name);
+        Mockito.when(mock.getValue()).thenReturn(1L);
+        Mockito.when(mock.getEffectStackingStrategy()).thenReturn(MinLongStackingStrategy.INSTNCE);
+        Mockito.when(mock.requiresRegister()).thenCallRealMethod();
+
+        Mockito.when(mock.constructEffectContainer()).thenCallRealMethod();
+
+        return mock;
+    }
+
     @Test
-    public void test_Effect_Add_And_Remove_unstackable() {
+    public void test_Effect_Expirable_unstackable() {
         effectService.addEffect(effect, InternalEffectSourceProvider.INSTANCE);
         effectService.schedule();
         effectService.schedule();
@@ -81,7 +86,7 @@ public class EffectTests {
     }
 
     @Test
-    public void testEffect_Add_And_Remove_tickable_unstackable() {
+    public void test_Effect_Expirable_tickable_unstackable() {
         Mockito.when(effect.isTickingDisabled()).thenReturn(false);
         Mockito.when(effect.getPeriod()).thenReturn(1L);
 
@@ -116,5 +121,63 @@ public class EffectTests {
 
         effectService.schedule();
         Assert.assertTrue(processedEffects.isEmpty());
+    }
+
+    @Test
+    public void test_Effect_Expirable_stackable_single_instance() {
+        makeEffectStackable(effect);
+
+        effectService.addEffect(effect, InternalEffectSourceProvider.INSTANCE);
+        effectService.schedule();
+        effectService.schedule();
+        Assert.assertNotNull(character.getEffect(effect.getName()));
+        Assert.assertNotSame(effect, character.getEffect(effect.getName()));
+
+        Mockito.verify(effect, Mockito.times(1)).onApply(any());
+        Mockito.verify(effect, Mockito.times(0)).onTick(any());
+        Mockito.verify(effect, Mockito.times(0)).onRemove(any());
+
+        Mockito.when(effect.getExpireTime()).thenReturn(0L);
+        effectService.schedule();
+        effectService.schedule();
+        Mockito.verify(effect, Mockito.times(1)).onRemove(any());
+        Assert.assertNull(character.getEffect(effect.getName()));
+        Assert.assertTrue(processedEffects.isEmpty());
+    }
+
+
+    @Test
+    public void test_Effect_Expirable_stackable() {
+        makeEffectStackable(effect);
+
+        effectService.addEffect(effect, InternalEffectSourceProvider.INSTANCE);
+        Assert.assertNotNull(character.getEffect(effect.getName()));
+        Assert.assertNotSame(effect, character.getEffect(effect.getName()));
+        Assert.assertTrue(character.getEffect("test").getStackedValue().equals(1L));
+
+        Mockito.verify(effect, Mockito.times(1)).onApply(any());
+        Mockito.verify(effect, Mockito.times(0)).onTick(any());
+        Mockito.verify(effect, Mockito.times(0)).onRemove(any());
+
+        TickableEffect test = createEffectMock("test");
+        makeEffectStackable(test);
+
+        effectService.addEffect(test, InternalEffectSourceProvider.INSTANCE);
+        Mockito.verify(test, Mockito.times(1)).onApply(any());
+        Mockito.verify(effect, Mockito.times(1)).onApply(any());
+
+        Assert.assertTrue(character.getEffect("test").getStackedValue().equals(2L));
+    }
+
+    private void makeEffectStackable(IEffect effect) {
+        Mockito.when(effect.isStackable()).thenReturn(true);
+        Mockito.when(effect.getEffectStackingStrategy()).thenReturn(new EffectStackingStrategy<Long>() {
+            @Override
+            public Long mergeValues(Long current, Long toAdd) {
+                return current + toAdd;
+            }
+        });
+        effect.setValue(1L);
+        Mockito.when(effect.getValue()).thenCallRealMethod();
     }
 }

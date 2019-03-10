@@ -23,7 +23,6 @@ public interface IEffectContainer<K, T extends IEffect<K>> extends IEffectSource
 		getEffects().add(t);
 		t.onApply(t);
 		updateStackedValue();
-
 	}
 
 	default void forEach(Consumer<T> consumer) {

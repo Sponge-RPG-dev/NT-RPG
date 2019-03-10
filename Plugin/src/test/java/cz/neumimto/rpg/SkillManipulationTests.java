@@ -2,7 +2,11 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
-import cz.neumimto.rpg.players.*;
+import cz.neumimto.rpg.players.ActionResult;
+import cz.neumimto.rpg.players.ActiveCharacter;
+import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
@@ -14,7 +18,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.EventManager;
@@ -57,7 +61,7 @@ public class SkillManipulationTests {
 
     @Before
     public void before() throws Exception {
-        Log.logger = LoggerFactory.getLogger(getClass());
+        Log.logger = Mockito.mock(Logger.class);
 
         //lets not invoke constructor
         PluginConfig o = (PluginConfig) TestHelper.getUnsafe().allocateInstance(PluginConfig.class);

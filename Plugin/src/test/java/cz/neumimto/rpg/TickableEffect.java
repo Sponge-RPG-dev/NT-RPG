@@ -1,7 +1,9 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.IEffectContainer;
 
 public class TickableEffect extends EffectBase<Long> {
 
@@ -16,4 +18,8 @@ public class TickableEffect extends EffectBase<Long> {
         setPeriod(model);
     }
 
+    @Override
+    public IEffectContainer constructEffectContainer() {
+        return new EffectContainer<>(this);
+    }
 }
