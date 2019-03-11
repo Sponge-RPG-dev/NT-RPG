@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.commands.character;
+package cz.neumimto.rpg.commands.skill;
 
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.NtRpgPlugin;
@@ -15,7 +15,7 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
-public class CharacterSkillUpgradeExecutor implements CommandExecutor {
+public class SkillRefundExecutor implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		args.<ClassDefinition>getOne(Text.of("class")).ifPresent(aClass -> {
@@ -24,7 +24,7 @@ public class CharacterSkillUpgradeExecutor implements CommandExecutor {
 				if (aClass.getSkillTree() != null) {
 					IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player);
 					PlayerClassData playerClassData = character.getClasses().get(aClass.getName());
-					aClass.getSkillTreeType().processUpgradeSkill(character, playerClassData, iSkill);
+					aClass.getSkillTreeType().processRefundSkill(character, playerClassData, iSkill);
 				} else {
 					player.sendMessage(Localizations.CLASS_HAS_NO_SKILLTREE.toText(Arg.arg("class", aClass.getName())));
 				}

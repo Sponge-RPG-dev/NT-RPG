@@ -36,11 +36,6 @@ import cz.neumimto.rpg.commands.character.CharacterDeleteExecutor;
 import cz.neumimto.rpg.commands.character.CharacterListExecutor;
 import cz.neumimto.rpg.commands.character.CharacterShowClassExecutor;
 import cz.neumimto.rpg.commands.character.CharacterShowClassesExecutor;
-import cz.neumimto.rpg.commands.character.CharacterSkillBindExecutor;
-import cz.neumimto.rpg.commands.character.CharacterSkillExecuteExecutor;
-import cz.neumimto.rpg.commands.character.CharacterSkillLearnExecutor;
-import cz.neumimto.rpg.commands.character.CharacterSkillRefundExecutor;
-import cz.neumimto.rpg.commands.character.CharacterSkillUpgradeExecutor;
 import cz.neumimto.rpg.commands.character.CharacterSwitchExecutor;
 import cz.neumimto.rpg.commands.elements.AnyClassDefCommandElement;
 import cz.neumimto.rpg.commands.elements.CharacterAttributeCommandElement;
@@ -65,6 +60,12 @@ import cz.neumimto.rpg.commands.party.PartyAcceptExecutor;
 import cz.neumimto.rpg.commands.party.PartyCreateExecutor;
 import cz.neumimto.rpg.commands.party.PartyInviteExecutor;
 import cz.neumimto.rpg.commands.party.PartyKickExecutor;
+import cz.neumimto.rpg.commands.skill.SkillBindExecutor;
+import cz.neumimto.rpg.commands.skill.SkillCastExecutor;
+import cz.neumimto.rpg.commands.skill.SkillLearnExecutor;
+import cz.neumimto.rpg.commands.skill.SkillRefundExecutor;
+import cz.neumimto.rpg.commands.skill.SkillUpgradeExecutor;
+import cz.neumimto.rpg.commands.skill.SkilltreeExecutor;
 import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
@@ -261,7 +262,7 @@ public class CommandService {
 						new PlayerClassCommandElement(Text.of("class"))
 				)
 				.permission("ntrpg.player.skills")
-				.executor(new CharacterSkillLearnExecutor())
+				.executor(new SkillLearnExecutor())
 				.build();
 
 		CommandSpec characterSkillUpgrade = CommandSpec.builder()
@@ -271,7 +272,7 @@ public class CommandService {
 						new PlayerClassCommandElement(Text.of("class"))
 				)
 				.permission("ntrpg.player.skills")
-				.executor(new CharacterSkillUpgradeExecutor())
+				.executor(new SkillUpgradeExecutor())
 				.build();
 
 		CommandSpec characterSkillRefund = CommandSpec.builder()
@@ -281,7 +282,7 @@ public class CommandService {
 						new PlayerClassCommandElement(Text.of("class"))
 				)
 				.permission("ntrpg.player.skills.refund")
-				.executor(new CharacterSkillRefundExecutor())
+				.executor(new SkillRefundExecutor())
 				.build();
 
 		CommandSpec characterSkill = CommandSpec.builder()
@@ -322,15 +323,15 @@ public class CommandService {
 
 		//==========SKILLS==========
 
-		CommandSpec skillExecute = CommandSpec.builder()
-				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_HP_DESC))
+		CommandSpec skillCast = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_SKILL_DESC))
 				.arguments(
 						new LearnedSkillCommandElement(TextHelper.parse("skill"))
 				)
-				.executor(new CharacterSkillExecuteExecutor())
+				.executor(new SkillCastExecutor())
 				.build();
 
-		Sponge.getCommandManager().register(plugin, skillExecute, "skill", "skl", "ns");
+		Sponge.getCommandManager().register(plugin, skillCast, "skill", "skl", "ns");
 
 		CommandSpec skillBind = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_BIND_DESC))
@@ -338,11 +339,21 @@ public class CommandService {
 				.arguments(
 						new LearnedSkillCommandElement(TextHelper.parse("skill"))
 				)
-				.executor(new CharacterSkillBindExecutor())
+				.executor(new SkillBindExecutor())
 				.build();
 
 		Sponge.getCommandManager().register(plugin, skillBind, "bind", "nb");
 
+		CommandSpec skilltree = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_SKILL_TREE))
+				.arguments(
+						GenericArguments.optional(new AnyClassDefCommandElement(TextHelper.parse("class")))
+				)
+				.executor(new SkilltreeExecutor())
+				.build();
+
+		Sponge.getCommandManager().register(plugin, skilltree, "skilltree");
+		
 		//==========PARTY==========
 
 		CommandSpec partyCreate = CommandSpec.builder()

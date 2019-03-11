@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.commands.character;
+package cz.neumimto.rpg.commands.skill;
 
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.NtRpgPlugin;
@@ -17,7 +17,7 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
-public class CharacterSkillExecuteExecutor implements CommandExecutor {
+public class SkillCastExecutor implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src);

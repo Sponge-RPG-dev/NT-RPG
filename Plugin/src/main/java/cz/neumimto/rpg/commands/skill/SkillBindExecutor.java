@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.commands.character;
+package cz.neumimto.rpg.commands.skill;
 
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localizations;
@@ -17,7 +17,7 @@ import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 
 import java.util.Optional;
 
-public class CharacterSkillBindExecutor implements CommandExecutor {
+public class SkillBindExecutor implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		Optional<ISkill> skill = args.getOne("skill");
