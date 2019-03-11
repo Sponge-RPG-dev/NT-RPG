@@ -21,15 +21,27 @@ package cz.neumimto.rpg.players.groups;
 import cz.neumimto.config.blackjack.and.hookers.annotations.AsCollectionImpl;
 import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
 import cz.neumimto.config.blackjack.and.hookers.annotations.Default;
-import cz.neumimto.rpg.configuration.adapters.*;
-import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.configuration.adapters.AllowedArmorListAdapter;
+import cz.neumimto.rpg.configuration.adapters.AttributeMapAdapter;
+import cz.neumimto.rpg.configuration.adapters.ClassDependencyGraphAdapter;
+import cz.neumimto.rpg.configuration.adapters.ClassExpAdapter;
+import cz.neumimto.rpg.configuration.adapters.ClassTypeAdapter;
+import cz.neumimto.rpg.configuration.adapters.EffectsAdapter;
+import cz.neumimto.rpg.configuration.adapters.PropertiesArrayAdapter;
+import cz.neumimto.rpg.configuration.adapters.SkillTreeLookupAdapter;
+import cz.neumimto.rpg.configuration.adapters.WeaponsAdapter;
+import cz.neumimto.rpg.effects.EffectParams;
+import cz.neumimto.rpg.effects.EffectSourceType;
+import cz.neumimto.rpg.effects.IEffectSource;
+import cz.neumimto.rpg.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.players.ExperienceSource;
+import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.leveling.EmptyLevlProgression;
 import cz.neumimto.rpg.players.leveling.ILevelProgression;
 import cz.neumimto.rpg.players.leveling.SkillTreeType;
-import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
@@ -39,7 +51,14 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by NeumimTo on 27.12.2014.
@@ -103,7 +122,9 @@ public class ClassDefinition implements IEffectSourceProvider {
 	@CustomAdapter(WeaponsAdapter.class)
 	private HashMap<ItemType, Set<ConfigRPGItemType>> weapons = new HashMap<>();
 
-	private Map<ICharacterAttribute, Integer> startingAttributes = new HashMap<>();
+	@Setting("Weapons")
+	@CustomAdapter(AttributeMapAdapter.class)
+	private Map<Attribute, Integer> startingAttributes = new HashMap<>();
 
 	@Setting("Effects")
 	@CustomAdapter(EffectsAdapter.class)
@@ -152,7 +173,7 @@ public class ClassDefinition implements IEffectSourceProvider {
 	public ClassDefinition(String name, String classType) {
 		this.name = name;
 		this.type = classType;
-		classDefinitionDependencyGraph = new DependencyGraph(this);
+		this.classDefinitionDependencyGraph = new DependencyGraph(this);
 	}
 
 	public String getName() {
@@ -175,16 +196,8 @@ public class ClassDefinition implements IEffectSourceProvider {
 		return propBonus;
 	}
 
-	public void setPropBonus(float[] propBonus) {
-		this.propBonus = propBonus;
-	}
-
 	public boolean isShowsInMenu() {
 		return showsInMenu;
-	}
-
-	public void setShowsInMenu(boolean showsInMenu) {
-		this.showsInMenu = showsInMenu;
 	}
 
 	public Set<RPGItemType> getAllowedArmor() {
@@ -227,12 +240,8 @@ public class ClassDefinition implements IEffectSourceProvider {
 		this.description = description;
 	}
 
-	public Map<ICharacterAttribute, Integer> getStartingAttributes() {
+	public Map<Attribute, Integer> getStartingAttributes() {
 		return startingAttributes;
-	}
-
-	public void setStartingAttributes(Map<ICharacterAttribute, Integer> startingAttributes) {
-		this.startingAttributes = startingAttributes;
 	}
 
 	public String getClassType() {
@@ -255,24 +264,12 @@ public class ClassDefinition implements IEffectSourceProvider {
 		return exitCommands;
 	}
 
-	public void setExitCommands(List<String> exitCommands) {
-		this.exitCommands = exitCommands;
-	}
-
 	public List<String> getEnterCommands() {
 		return enterCommands;
 	}
 
-	public void setEnterCommands(List<String> enterCommands) {
-		this.enterCommands = enterCommands;
-	}
-
 	public TextColor getPreferedColor() {
 		return preferedColor;
-	}
-
-	public void setPreferedColor(TextColor preferedColor) {
-		this.preferedColor = preferedColor;
 	}
 
 	public double getExperiencesBonus(String dimmension, EntityType type) {
@@ -286,10 +283,6 @@ public class ClassDefinition implements IEffectSourceProvider {
 
 	public Map<String, Map<EntityType, Double>> getExperiences() {
 		return experiences;
-	}
-
-	public void setExperiences(Map<String, Map<EntityType, Double>> experiences) {
-		this.experiences = experiences;
 	}
 
 	public DependencyGraph getClassDependencyGraph() {

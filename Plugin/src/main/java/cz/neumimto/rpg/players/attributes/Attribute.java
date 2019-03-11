@@ -5,6 +5,7 @@ import cz.neumimto.rpg.configuration.adapters.PropertiesMapAdapter;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.CatalogType;
+import org.spongepowered.api.item.ItemType;
 
 import java.util.Map;
 
@@ -24,6 +25,12 @@ public class Attribute implements CatalogType {
     @CustomAdapter(PropertiesMapAdapter.class)
     private Map<Integer, Float> propBonus;
 
+    @Setting("ItemType")
+    private ItemType itemType;
+
+    @Setting("Description")
+    private String description;
+
     public String getId() {
         return id;
     }
@@ -34,5 +41,21 @@ public class Attribute implements CatalogType {
 
     public Map<Integer, Float> getPropBonus() {
         return propBonus;
+    }
+
+    public String getMaxValue() {
+        return maxValue;
+    }
+
+    public ItemType getItemType() {
+        return itemType;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -310,7 +310,7 @@ public class NtRpgPlugin {
 				.buildAndRegister(plugin);
 
 		Sponge.getRegistry().registerModule(SocketType.class, new SocketTypeRegistry());
-		Sponge.getRegistry().registerModule(ICharacterAttribute.class, new AttributeRegistry());
+		Sponge.getRegistry().registerModule(Attribute.class, new AttributeCatalogTypeRegistry());
 		Sponge.getRegistry().registerModule(PlayerInvHandler.class, new PlayerInvHandlerRegistry());
 		Sponge.getRegistry().registerModule(ItemMetaType.class, new ItemMetaTypeRegistry());
 		Sponge.getRegistry().registerModule(ItemSubtype.class, new ItemSubtypeRegistry());

@@ -60,9 +60,9 @@ import cz.neumimto.rpg.inventory.slotparsers.PlayerInvHandler;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
+import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.properties.PropertyService;
-import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.reloading.Reload;
 import cz.neumimto.rpg.reloading.ReloadService;
 import cz.neumimto.rpg.skills.ISkill;
@@ -467,10 +467,12 @@ public class InventoryService {
 			return CannotUseItemReason.OK;
 		}
 		for (Map.Entry<String, Integer> q : a.entrySet()) {
-			ICharacterAttribute attribute = propertyService.getAttribute(q.getKey());
-			if (attribute == null) {
+			Optional<Attribute> type = Sponge.getRegistry().getType(Attribute.class, q.getKey());
+			if (!type.isPresent()) {
 				continue;
 			}
+
+			Attribute attribute = type.get();
 			Integer attributeValue = character.getAttributeValue(attribute);
 			if (attributeValue == null || attributeValue < q.getValue()) {
 				return CannotUseItemReason.ATTRIBUTE;

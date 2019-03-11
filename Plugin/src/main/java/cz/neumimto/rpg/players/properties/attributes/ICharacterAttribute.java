@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.players.properties.attributes;
 
+import cz.neumimto.rpg.players.attributes.Attributes;
 import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.util.annotation.CatalogedBy;
@@ -34,7 +35,4 @@ public interface ICharacterAttribute extends CatalogType {
 
 	void setMaxValue(int value);
 
-	default boolean hasLimit() {
-		return getMaxValue() > 0;
-	}
 }

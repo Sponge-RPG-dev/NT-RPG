@@ -5,11 +5,12 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 
 /**
  * Created by NeumimTo on 6.1.2019.
  */
-public class SkillTreeLookupAdapter implements AbstractSerializer<SkillTree> {
+public class SkillTreeLookupAdapter implements TypeSerializer<SkillTree> {
 
 	@Override
 	public SkillTree deserialize(TypeToken<?> typeToken, ConfigurationNode configurationNode) throws ObjectMappingException {
@@ -23,6 +24,6 @@ public class SkillTreeLookupAdapter implements AbstractSerializer<SkillTree> {
 
 	@Override
 	public void serialize(TypeToken<?> typeToken, SkillTree skillTree, ConfigurationNode configurationNode) {
-
+		configurationNode.setValue(skillTree.getId());
 	}
 }

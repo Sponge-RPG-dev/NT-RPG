@@ -24,9 +24,9 @@ import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
+import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
-import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
@@ -61,7 +61,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setParty(Party party);
 
-	java.lang.String getName();
+	String getName();
 
 	boolean isStub();
 
@@ -97,15 +97,15 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setAttributePoints(int attributePoints);
 
-	Integer getAttributeValue(java.lang.String name);
+	Integer getAttributeValue(String name);
 
-	default Integer getAttributeValue(ICharacterAttribute attribute) {
+	default Integer getAttributeValue(Attribute attribute) {
 		return getAttributeValue(attribute.getId());
 	}
 
-	Map<java.lang.String, Long> getCooldowns();
+	Map<String, Long> getCooldowns();
 
-	boolean hasCooldown(java.lang.String thing);
+	boolean hasCooldown(String thing);
 
 	double getBaseWeaponDamage(RPGItemType type);
 
@@ -125,21 +125,21 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	IActiveCharacter updateItemRestrictions();
 
-	Map<java.lang.String, PlayerSkillContext> getSkills();
+	Map<String, PlayerSkillContext> getSkills();
 
 	PlayerSkillContext getSkillInfo(ISkill skill);
 
-	boolean hasSkill(java.lang.String name);
+	boolean hasSkill(String name);
 
 	int getLevel();
 
-	PlayerSkillContext getSkillInfo(java.lang.String s);
+	PlayerSkillContext getSkillInfo(String s);
 
 	boolean isSilenced();
 
-	void addSkill(java.lang.String name, PlayerSkillContext info);
+	void addSkill(String name, PlayerSkillContext info);
 
-	PlayerSkillContext getSkill(java.lang.String skillName);
+	PlayerSkillContext getSkill(String skillName);
 
 	void removeAllSkills();
 
@@ -173,7 +173,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setDamageType(DamageType damageType);
 
-	void updateLastKnownLocation(int x, int y, int z, java.lang.String name);
+	void updateLastKnownLocation(int x, int y, int z, String name);
 
 	boolean isInvulnerable();
 
@@ -203,7 +203,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setSecondaryProperties(float[] arr);
 
-	Map<java.lang.String, Integer> getTransientAttributes();
+	Map<String, Integer> getTransientAttributes();
 
 	MessageType getPreferedMessageType();
 
@@ -215,7 +215,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setSlotsToReinitialize(List<Integer> slotsToReinitialize);
 
-	Map<java.lang.String, SkillTreeViewModel> getSkillTreeViewLocation();
+	Map<String, SkillTreeViewModel> getSkillTreeViewLocation();
 
 	SkillTreeViewModel getLastTimeInvokedSkillTreeView();
 

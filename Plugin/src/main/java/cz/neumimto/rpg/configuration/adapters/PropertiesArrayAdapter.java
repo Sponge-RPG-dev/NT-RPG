@@ -5,13 +5,14 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.properties.PropertyService;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 
 import java.util.Map;
 
 /**
  * Created by NeumimTo on 5.1.2019.
  */
-public class PropertiesArrayAdapter implements AbstractSerializer<float[]> {
+public class PropertiesArrayAdapter implements TypeSerializer<float[]> {
 
 	@Override
 	public float[] deserialize(TypeToken<?> typeToken, ConfigurationNode configurationNode) throws ObjectMappingException {
