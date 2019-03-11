@@ -1,6 +1,8 @@
 package cz.neumimto.rpg;
 
 
+import static org.mockito.Mockito.when;
+
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
@@ -10,22 +12,22 @@ import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import static org.mockito.Mockito.when;
+import javax.script.ScriptEngine;
+import javax.script.ScriptException;
 
-@RunWith(PowerMockRunner.class)
 public class Tests {
 
     @Test
@@ -44,7 +46,6 @@ public class Tests {
         } catch (ScriptException | IOException e) {
             Assert.fail(e.getMessage());
         }
-        Assert.assertTrue(true);
     }
 
     @Test
