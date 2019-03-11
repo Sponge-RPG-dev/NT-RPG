@@ -34,6 +34,7 @@ import cz.neumimto.rpg.commands.character.CharacterChooseClassExecutor;
 import cz.neumimto.rpg.commands.character.CharacterCreateExecutor;
 import cz.neumimto.rpg.commands.character.CharacterDeleteExecutor;
 import cz.neumimto.rpg.commands.character.CharacterListExecutor;
+import cz.neumimto.rpg.commands.character.CharacterShowClassExecutor;
 import cz.neumimto.rpg.commands.character.CharacterShowClassesExecutor;
 import cz.neumimto.rpg.commands.character.CharacterSkillBindExecutor;
 import cz.neumimto.rpg.commands.character.CharacterSkillExecuteExecutor;
@@ -68,7 +69,6 @@ import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.inventory.sockets.SocketType;
-import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.skills.ISkill;
 import org.spongepowered.api.Sponge;
@@ -130,7 +130,7 @@ public class CommandService {
 
 		//=========CHARACTER MANIPULATIONS=========
 
-		CommandSpec addExperience = CommandSpec.builder()
+		CommandSpec experienceAdd = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_EXP_ADD))
 				.arguments(
 						GenericArguments.onlyOne(GenericArguments.player(TextHelper.parse("player"))),
@@ -139,8 +139,8 @@ public class CommandService {
 				.executor(new AddExperienceExecutor())
 				.build();
 
-		CommandSpec exp = CommandSpec.builder()
-				.child(addExperience, "add")
+		CommandSpec experience = CommandSpec.builder()
+				.child(experienceAdd, "add")
 				.build();
 
 		//==========UTILITY==========
@@ -191,7 +191,7 @@ public class CommandService {
 				.child(executeSkill, "skill", "s")
 				.child(addEffect, "effect", "ef")
 
-				.child(exp, "experiences", "exp")
+				.child(experience, "experiences", "exp")
 
 				.child(reload, "reload")
 				.child(inspect, "i", "inspect")
@@ -205,7 +205,7 @@ public class CommandService {
 
 		//==========CHARACTER MANIPULATION==========
 
-		CommandSpec createCharacter = CommandSpec.builder()
+		CommandSpec characterCreate = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_CREATE_DESCRIPTION))
 				.arguments(
 						GenericArguments.remainingJoinedStrings(TextHelper.parse("name"))
@@ -214,7 +214,7 @@ public class CommandService {
 				.executor(new CharacterCreateExecutor())
 				.build();
 
-		CommandSpec deleteCharacter = CommandSpec.builder()
+		CommandSpec characterDelete = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_DELETE_DESCRIPTION))
 				.arguments(
 						GenericArguments.remainingJoinedStrings(TextHelper.parse("name"))
@@ -223,7 +223,7 @@ public class CommandService {
 				.executor(new CharacterDeleteExecutor())
 				.build();
 
-		CommandSpec cswitch = CommandSpec.builder()
+		CommandSpec characterSwitch = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_CHOOSE_DESC))
 				.arguments(
 						GenericArguments.remainingJoinedStrings(Text.of("name"))
@@ -231,30 +231,30 @@ public class CommandService {
 				.executor(new CharacterSwitchExecutor())
 				.build();
 
-		CommandSpec cslist = CommandSpec.builder()
+		CommandSpec characterList = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_CHARACTE_LIST))
 				.executor(new CharacterListExecutor())
 				.build();
 
 		//==========CHARACTER CLASS==========
 
-		CommandSpec setclass = CommandSpec.builder()
+		CommandSpec characterChooseClass = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_CHOOSE_DESC))
 				.arguments(
 						new AnyClassDefCommandElement(TextHelper.parse("class"))
 				)
-				.permission("ntrpg.player.set.class")
+				.permission("ntrpg.player.choose.class")
 				.executor(new CharacterChooseClassExecutor())
 				.build();
 
 
-		CommandSpec cset = CommandSpec.builder()
-				.child(setclass, "class", "c")
+		CommandSpec characterChoose = CommandSpec.builder()
+				.child(characterChooseClass, "class", "c")
 				.build();
 
 		//==========CHARACTER SKILLS==========
 
-		CommandSpec learn = CommandSpec.builder()
+		CommandSpec characterSkillLearn = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_SKILL_LEARN))
 				.arguments(
 						new UnlearnedSkillCommandElement(Text.of("skill")),
@@ -264,7 +264,7 @@ public class CommandService {
 				.executor(new CharacterSkillLearnExecutor())
 				.build();
 
-		CommandSpec upgrade = CommandSpec.builder()
+		CommandSpec characterSkillUpgrade = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_SKILL_UPGRADE))
 				.arguments(
 						new UnlearnedSkillCommandElement(Text.of("skill")),
@@ -274,7 +274,7 @@ public class CommandService {
 				.executor(new CharacterSkillUpgradeExecutor())
 				.build();
 
-		CommandSpec refund = CommandSpec.builder()
+		CommandSpec characterSkillRefund = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_SKILL_REFUND))
 				.arguments(
 						new UnlearnedSkillCommandElement(Text.of("skill")),
@@ -284,34 +284,37 @@ public class CommandService {
 				.executor(new CharacterSkillRefundExecutor())
 				.build();
 
-		CommandSpec cskill = CommandSpec.builder()
-				.child(learn, "learn", "l")
-				.child(upgrade, "upgrade", "u")
-				.child(refund, "refund", "r")
+		CommandSpec characterSkill = CommandSpec.builder()
+				.child(characterSkillLearn, "learn", "l")
+				.child(characterSkillUpgrade, "upgrade", "u")
+				.child(characterSkillRefund, "refund", "r")
 				.build();
 
 		//==========CHARACTER ATTRIBUTES==========
 
-		CommandSpec cattribute = CommandSpec.builder()
+		CommandSpec characterAttribute = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE
 						.deserialize(CommandLocalization.COMMAND_ATTRIBUTE))
-				.arguments(new CharacterAttributeCommandElement(Text.of("attribute")),
-						GenericArguments.integer(Text.of("amount")))
+				.arguments(
+						new CharacterAttributeCommandElement(Text.of("attribute")),
+						GenericArguments.integer(Text.of("amount"))
+				)
 				.executor(new CharacterAttributeExecutor())
 				.build();
 
 		CommandSpec characterRoot = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_CHOOSE_DESC))
-				.child(createCharacter, "create", "c")
-				.child(deleteCharacter, "remove", "rm", "delete")
-				.child(cswitch, "switch")
-				.child(cslist, "list")
+				.child(characterCreate, "create", "c")
+				.child(characterDelete, "delete", "remove", "rm")
+				.child(characterSwitch, "switch")
+				.child(characterList, "list")
 
-				.child(cset, "set", "s")
+				.child(characterChoose, "choose", "set")
 
-				.child(cskill, "skill", "s", "sk")
+				.child(characterSkill, "skill", "s", "sk")
 
-				.child(cattribute, "attribute", "attr", "a")
+				.child(characterAttribute, "attribute", "attr", "a")
+
 				.executor(new CharacterListExecutor()) //default fallback for char list
 				.build();
 
@@ -319,7 +322,7 @@ public class CommandService {
 
 		//==========SKILLS==========
 
-		CommandSpec skillexecute = CommandSpec.builder()
+		CommandSpec skillExecute = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_HP_DESC))
 				.arguments(
 						new LearnedSkillCommandElement(TextHelper.parse("skill"))
@@ -327,9 +330,9 @@ public class CommandService {
 				.executor(new CharacterSkillExecuteExecutor())
 				.build();
 
-		Sponge.getCommandManager().register(plugin, skillexecute, "skill", "skl", "ns");
+		Sponge.getCommandManager().register(plugin, skillExecute, "skill", "skl", "ns");
 
-		CommandSpec bind = CommandSpec.builder()
+		CommandSpec skillBind = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_BIND_DESC))
 				.permission("ntrpg.player.skillbind")
 				.arguments(
@@ -338,17 +341,17 @@ public class CommandService {
 				.executor(new CharacterSkillBindExecutor())
 				.build();
 
-		Sponge.getCommandManager().register(plugin, bind, "bind", "nb");
+		Sponge.getCommandManager().register(plugin, skillBind, "bind", "nb");
 
 		//==========PARTY==========
 
-		CommandSpec createparty = CommandSpec.builder()
+		CommandSpec partyCreate = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_BIND_DESC))
 				.permission("ntrpg.player.party")
 				.executor(new PartyCreateExecutor())
 				.build();
 
-		CommandSpec kick = CommandSpec.builder()
+		CommandSpec partyKick = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_BIND_DESC))
 				.permission("ntrpg.player.party")
 				.arguments(
@@ -357,7 +360,7 @@ public class CommandService {
 				.executor(new PartyKickExecutor())
 				.build();
 
-		CommandSpec invite = CommandSpec.builder()
+		CommandSpec partyInvite = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_BIND_DESC))
 				.permission("ntrpg.player.party")
 				.arguments(
@@ -366,7 +369,7 @@ public class CommandService {
 				.executor(new PartyInviteExecutor())
 				.build();
 
-		CommandSpec accept = CommandSpec.builder()
+		CommandSpec partyAccept = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_BIND_DESC))
 				.permission("ntrpg.player.party")
 				.executor(new PartyAcceptExecutor())
@@ -374,17 +377,17 @@ public class CommandService {
 
 		CommandSpec partyRoot = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_CHOOSE_DESC))
-				.child(createparty, "create", "c")
-				.child(kick, "kick", "k")
-				.child(invite, "invite", "i")
-				.child(accept, "accept", "a")
+				.child(partyCreate, "create", "c")
+				.child(partyKick, "kick", "k")
+				.child(partyInvite, "invite", "i")
+				.child(partyAccept, "accept", "a")
 				.build();
 
 		Sponge.getCommandManager().register(plugin, partyRoot, "party", "np", "nparty");
 
 		//==========GROUPS==========
 
-		CommandSpec classes = CommandSpec.builder()
+		CommandSpec showClassTypesOrClasses = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_CLASSES_DESC))
 				.arguments(
 						GenericArguments.optional(new ClassTypeCommandElement(Text.of("type")))
@@ -393,24 +396,19 @@ public class CommandService {
 				.executor(new CharacterShowClassesExecutor())
 				.build();
 
-		Sponge.getCommandManager().register(plugin, classes, "classes");
+		Sponge.getCommandManager().register(plugin, showClassTypesOrClasses, "classes");
 
-		CommandSpec classgui = CommandSpec.builder()
-				.description(TextSerializers.FORMATTING_CODE
-						.deserialize(CommandLocalization.COMMAND_RACE_DESC))
-				.arguments(new AnyClassDefCommandElement(Text.of("class"), false))
-				.executor((src, args) -> {
-					args.<ClassDefinition>getOne(Text.of("class")).ifPresent(o -> {
-						IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src);
-						Gui.showClassInfo(character, o);
-					});
-					return CommandResult.success();
-				})
+		CommandSpec showClass = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_RACE_DESC))
+				.arguments(
+						GenericArguments.optional(new AnyClassDefCommandElement(Text.of("class"), false))
+				)
+				.executor(new CharacterShowClassExecutor())
 				.build();
 
-		Sponge.getCommandManager().register(plugin, classgui, "class");
+		Sponge.getCommandManager().register(plugin, showClass, "class");
 
-		CommandSpec weapon = CommandSpec.builder()
+		CommandSpec showClassWeapons = CommandSpec.builder()
 				.arguments(new ClassDefCommandElement(Text.of("class")))
 				.executor((src, args) -> {
 					args.<ClassDefinition>getOne(Text.of("class"))
@@ -421,9 +419,9 @@ public class CommandService {
 					return CommandResult.success();
 				})
 				.build();
-		Sponge.getCommandManager().register(plugin, weapon, "weapons", "wp");
+		Sponge.getCommandManager().register(plugin, showClassWeapons, "weapons", "wp");
 
-		CommandSpec armor = CommandSpec.builder()
+		CommandSpec showClassArmors = CommandSpec.builder()
 				.arguments(new ClassDefCommandElement(Text.of("class")))
 				.executor((src, args) -> {
 
@@ -435,9 +433,9 @@ public class CommandService {
 					return CommandResult.success();
 				})
 				.build();
-		Sponge.getCommandManager().register(plugin, armor, "armor");
+		Sponge.getCommandManager().register(plugin, showClassArmors, "armor");
 
-		CommandSpec runes = CommandSpec.builder()
+		CommandSpec showRunes = CommandSpec.builder()
 				.permission("ntrpg.runes.list")
 				.executor((src, args) -> {
 					Gui.sendListOfRunes(NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src));
@@ -445,7 +443,7 @@ public class CommandService {
 				})
 				.build();
 
-		Sponge.getCommandManager().register(plugin, runes, "runes");
+		Sponge.getCommandManager().register(plugin, showRunes, "runes");
 	}
 
 	private void registerItemCommands() {
