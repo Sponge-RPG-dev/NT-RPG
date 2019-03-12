@@ -5,13 +5,15 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.inventory.WeaponClass;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Optional;
 
 /**
  * Created by NeumimTo on 6.1.2019.
  */
-public class WeaponClassAdapter implements AbstractSerializer<WeaponClass> {
+public class WeaponClassAdapter implements TypeSerializer<WeaponClass> {
 
 	@Override
 	public WeaponClass deserialize(TypeToken<?> typeToken, ConfigurationNode configurationNode) throws ObjectMappingException {
@@ -22,5 +24,10 @@ public class WeaponClassAdapter implements AbstractSerializer<WeaponClass> {
 			throw new ObjectMappingException("Unknown weapon class \""+string+" \"");
 		}
 		return first.get();
+	}
+
+	@Override
+	public void serialize(TypeToken<?> type, @Nullable WeaponClass obj, ConfigurationNode value) throws ObjectMappingException {
+
 	}
 }

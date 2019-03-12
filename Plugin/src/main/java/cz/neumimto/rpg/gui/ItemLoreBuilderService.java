@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.gui;
 
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
@@ -13,8 +15,8 @@ import cz.neumimto.rpg.inventory.data.DataConstants;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemSocketsData;
 import cz.neumimto.rpg.inventory.sockets.SocketType;
+import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.reloading.Reload;
 import cz.neumimto.rpg.reloading.ReloadService;
 import org.spongepowered.api.Sponge;
@@ -26,10 +28,12 @@ import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 20.1.2018.
@@ -119,7 +123,7 @@ public class ItemLoreBuilderService {
 		public void attributeMapToItemLorePart(Map<String, Integer> a) {
 			int k = 0;
 			for (Map.Entry<String, Integer> e : a.entrySet()) {
-				ICharacterAttribute attribute = NtRpgPlugin.GlobalScope.propertyService.getAttribute(e.getKey());
+				Attribute attribute = Sponge.getRegistry().getType(Attribute.class, e.getKey()).get();
 				String name = attribute.getName();
 				int charsToRead = 3;
 				if (name.startsWith("&")) {

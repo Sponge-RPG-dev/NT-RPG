@@ -1,20 +1,24 @@
 package cz.neumimto.rpg.skills.parents;
 
+import static org.jline.utils.Log.warn;
+
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
+import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
+import org.spongepowered.api.Sponge;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
 
@@ -41,7 +45,7 @@ public class CharacterAttributeSkill extends AbstractSkill {
 		CharacterAttributeSkillData skillData = (CharacterAttributeSkillData) skill.getSkillData();
 		for (Wrapper wrapper : skillData.wrappers) {
 			if (fc.apply(wrapper.level, totalLevel)) {
-				NtRpgPlugin.GlobalScope.characterService.addTemporalAttribute(c, wrapper.getCharacterAttribute(), i * wrapper.value);
+				NtRpgPlugin.GlobalScope.characterService.addTransientAttribute(c, wrapper.getCharacterAttribute(), i * wrapper.value);
 			}
 		}
 	}
@@ -79,12 +83,14 @@ public class CharacterAttributeSkill extends AbstractSkill {
 				String attribute = subc.getString("attribute");
 				int level = subc.getInt("skill-level");
 				int val = subc.getInt("attribute-value");
-				Wrapper wrapper = new Wrapper(NtRpgPlugin.GlobalScope.propertyService.getAttribute(attribute), level, val);
-				if (wrapper.characterAttribute == null) {
-					errors.log("Unknown attribute %s in %s", attribute, context.getId());
-				} else {
-					data.wrappers.add(wrapper);
+				Optional<Attribute> type = Sponge.getRegistry().getType(Attribute.class, attribute);
+				if (!type.isPresent()) {
+					warn("Unknown attribute " +attribute+" in " + context.getId());
+					continue;
 				}
+				Attribute att = type.get();
+				Wrapper wrapper = new Wrapper(att, level, val);
+				data.wrappers.add(wrapper);
 			}
 		} catch (ConfigException ex) {
 
@@ -103,22 +109,18 @@ public class CharacterAttributeSkill extends AbstractSkill {
 
 	public class Wrapper {
 
-		private ICharacterAttribute characterAttribute;
+		private Attribute characterAttribute;
 		private int level;
 		private int value;
 
-		public Wrapper(ICharacterAttribute characterAttribute, int level, int value) {
+		public Wrapper(Attribute characterAttribute, int level, int value) {
 			this.characterAttribute = characterAttribute;
 			this.level = level;
 			this.value = value;
 		}
 
-		public ICharacterAttribute getCharacterAttribute() {
+		public Attribute getCharacterAttribute() {
 			return characterAttribute;
-		}
-
-		public void setCharacterAttribute(ICharacterAttribute characterAttribute) {
-			this.characterAttribute = characterAttribute;
 		}
 
 		public int getLevel() {

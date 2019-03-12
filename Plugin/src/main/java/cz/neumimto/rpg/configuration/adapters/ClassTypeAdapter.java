@@ -4,11 +4,12 @@ import com.google.common.reflect.TypeToken;
 import cz.neumimto.rpg.NtRpgPlugin;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 
 /**
  * Created by NeumimTo on 6.1.2019.
  */
-public class ClassTypeAdapter implements AbstractSerializer<String> {
+public class ClassTypeAdapter implements TypeSerializer<String> {
 
 
     @Override

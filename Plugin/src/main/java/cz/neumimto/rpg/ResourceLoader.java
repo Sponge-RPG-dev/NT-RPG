@@ -21,6 +21,7 @@ package cz.neumimto.rpg;
 import static cz.neumimto.rpg.Log.error;
 import static cz.neumimto.rpg.Log.info;
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.configuration.ConfigurationContainer;
 import cz.neumimto.core.PluginCore;
@@ -39,7 +40,6 @@ import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.effects.model.EffectModelMapper;
 import cz.neumimto.rpg.players.properties.PropertyContainer;
 import cz.neumimto.rpg.players.properties.PropertyService;
-import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.ISkill;
@@ -318,9 +318,6 @@ public class ResourceLoader {
 			info("Found Property container class" + clazz.getName(), pluginConfig.DEBUG);
 			propertyService.processContainer(clazz);
 		}
-		if (clazz.isAnnotationPresent(Attribute.class)) {
-			propertyService.registerAttribute((ICharacterAttribute) clazz.newInstance());
-		}
 		if (clazz.isAnnotationPresent(JsBinding.class)) {
 			IoC.get().build(JSLoader.class).getDataToBind().put(clazz, clazz.getAnnotation(JsBinding.class).value());
 		}
@@ -377,11 +374,6 @@ public class ResourceLoader {
 
 	@Retention(RetentionPolicy.RUNTIME)
 	public @interface Command {
-
-	}
-
-	@Retention(RetentionPolicy.RUNTIME)
-	public @interface Attribute {
 
 	}
 

@@ -4,11 +4,13 @@ import com.google.common.reflect.TypeToken;
 import cz.neumimto.rpg.NtRpgPlugin;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class PropertiesMapAdapter implements AbstractSerializer<Map<Integer, Float>> {
+public class PropertiesMapAdapter implements TypeSerializer<Map<Integer, Float>> {
 
     @Override
     public Map<Integer, Float> deserialize(TypeToken<?> typeToken, ConfigurationNode configurationNode) throws ObjectMappingException {
@@ -27,6 +29,11 @@ public class PropertiesMapAdapter implements AbstractSerializer<Map<Integer, Flo
         }
 
         return map;
+    }
+
+    @Override
+    public void serialize(TypeToken<?> type, @Nullable Map<Integer, Float> obj, ConfigurationNode value) throws ObjectMappingException {
+
     }
 
 }

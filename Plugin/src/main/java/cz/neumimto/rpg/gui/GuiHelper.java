@@ -123,7 +123,9 @@ public class GuiHelper {
 		if (!w.getAllowedArmor().isEmpty()) {
 			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(3, 2))).offer(createArmorCommand(w));
 		}
-		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(2, 3))).offer(createAttributesCommand(w));
+		if (!w.getStartingAttributes().isEmpty()) {
+			i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(2, 3))).offer(createAttributesCommand(w));
+		}
 
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(3, 3))).offer(createPropertyCommand(w));
 

@@ -11,16 +11,24 @@ import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.WeaponClass;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.item.ItemType;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by NeumimTo on 5.1.2019.
  */
 @EnableSetterInjection
-public class WeaponsAdapter implements AbstractSerializer<Map<ItemType, Set<ConfigRPGItemType>>> {
+public class WeaponsAdapter implements TypeSerializer<Map<ItemType, Set<ConfigRPGItemType>>> {
 
 
 	private IEffectSourceProvider provider;

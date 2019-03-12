@@ -21,14 +21,18 @@ package cz.neumimto.rpg.players.properties;
 import static cz.neumimto.rpg.Log.info;
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
+import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.Console;
 import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
+import cz.neumimto.rpg.players.attributes.Attribute;
+import cz.neumimto.rpg.players.attributes.Attributes;
 import cz.neumimto.rpg.utils.Utils;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
+import ninja.leaping.configurate.objectmapping.ObjectMapper;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
 
@@ -76,7 +80,6 @@ public class PropertyService {
 	private Map<Integer, String> nameMap = new HashMap<>();
 
 	private Map<Integer, Float> defaults = new HashMap<>();
-	private Map<String, ICharacterAttribute> attributes = new HashMap<>();
 
 	private Set<Integer> damageRecalc = new HashSet<>();
 
@@ -112,18 +115,6 @@ public class PropertyService {
 		return defaults;
 	}
 
-	public void registerAttribute(ICharacterAttribute attribute) {
-		attributes.put(attribute.getName().toLowerCase(), attribute);
-	}
-
-	public ICharacterAttribute getAttribute(String name) {
-		return attributes.get(name.toLowerCase());
-	}
-
-	public Map<String, ICharacterAttribute> getAttributes() {
-		return attributes;
-	}
-
 	public void init() {
 		Path path = Paths.get(NtRpgPlugin.workingDir + File.separator + "properties_dump.info");
 		StringBuilder s = new StringBuilder();
@@ -151,6 +142,19 @@ public class PropertyService {
 			} catch (IOException e) {
 				throw new IllegalStateException("Could not create Attributes.conf file", e);
 			}
+		}
+	}
+
+	public void reLoadAttributes() {
+		Path path = Paths.get(NtRpgPlugin.workingDir + "/Attributes.conf");
+		try {
+			ObjectMapper<Attributes> mapper = NotSoStupidObjectMapper.forClass(Attributes.class);
+			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(path).build();
+			Attributes attributes = mapper.bind(new Attributes()).populate(hcl.load());
+			attributes.getAttributes().forEach(a -> Sponge.getRegistry().register(Attribute.class, a));
+
+		} catch (ObjectMappingException | IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -195,22 +199,6 @@ public class PropertyService {
 				}
 			} catch (IOException e) {
 				Log.error("Could not append file max_server_property_values.properties", e);
-			}
-		}
-	}
-
-
-	public void setupDefaultProperties(IActiveCharacter character) {
-		if (character.isStub()) {
-			return;
-		}
-		float[] arr = character.getPrimaryProperties();
-		Map<Integer, Float> defaults = getDefaults();
-		for (int i = 0; i < arr.length; i++) {
-			if (defaults.containsKey(i)) {
-				arr[i] = defaults.get(i);
-			} else {
-				arr[i] = 0;
 			}
 		}
 	}

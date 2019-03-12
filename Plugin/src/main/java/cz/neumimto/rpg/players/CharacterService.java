@@ -17,11 +17,6 @@
  */
 package cz.neumimto.rpg.players;
 
-import static cz.neumimto.core.localization.Arg.arg;
-import static cz.neumimto.rpg.Log.error;
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.Log.warn;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.ClassService;
@@ -60,13 +55,13 @@ import cz.neumimto.rpg.persistance.PlayerDao;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.groups.DependencyGraph;
 import cz.neumimto.rpg.players.leveling.SkillTreeType;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.DefaultProperties;
 import cz.neumimto.rpg.players.properties.PropertyService;
-import cz.neumimto.rpg.players.properties.attributes.ICharacterAttribute;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillData;
@@ -98,6 +93,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static cz.neumimto.core.localization.Arg.arg;
+import static cz.neumimto.rpg.Log.error;
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -409,9 +410,11 @@ public class CharacterService {
         Set<BaseCharacterAttribute> baseCharacterAttribute = character.getCharacterBase().getBaseCharacterAttribute();
 
         for (BaseCharacterAttribute at : baseCharacterAttribute) {
-            ICharacterAttribute attribute = propertyService.getAttribute(at.getName());
-            if (attribute != null) {
-                assignAttribute(character, attribute, character.getLevel());
+            Optional<Attribute> type = Sponge.getRegistry().getType(Attribute.class, at.getName());
+            if (type.isPresent()) {
+                assignAttribute(character, type.get(), character.getLevel());
+            } else {
+                warn(" - Unknown attribute stored in the database - " + at.getName());
             }
         }
 
@@ -524,9 +527,24 @@ public class CharacterService {
         activeCharacter.updateItemRestrictions();
         updateArmorRestrictions(activeCharacter);
         updateWeaponRestrictions(activeCharacter);
+        updateAttributes(activeCharacter);
         updateWalkSpeed(activeCharacter);
         updateMaxHealth(activeCharacter);
         updateMaxMana(activeCharacter);
+    }
+
+    private void updateAttributes(IActiveCharacter activeCharacter) {
+        Set<Map.Entry<String, PlayerClassData>> entries = activeCharacter.getClasses().entrySet();
+        for (Map.Entry<String, PlayerClassData> entry : entries) {
+            PlayerClassData value = entry.getValue();
+            ClassDefinition classDefinition = value.getClassDefinition();
+            Map<Attribute, Integer> attributes = classDefinition.getStartingAttributes();
+            if (!attributes.isEmpty()) {
+                for (Map.Entry<Attribute, Integer> ae : attributes.entrySet()) {
+                    addTransientAttribute(activeCharacter, ae.getKey(), ae.getValue());
+                }
+            }
+        }
     }
 
     public void recalculateProperties(IActiveCharacter character) {
@@ -1043,8 +1061,8 @@ public class CharacterService {
     }
 
 
-    public void assignAttribute(IActiveCharacter character, ICharacterAttribute attribute, int levels) {
-        Map<Integer, Float> integerFloatMap = attribute.affectsProperties();
+    public void assignAttribute(IActiveCharacter character, Attribute attribute, int levels) {
+        Map<Integer, Float> integerFloatMap = attribute.getPropBonus();
         for (Map.Entry<Integer, Float> entry : integerFloatMap.entrySet()) {
             character.getPrimaryProperties()[entry.getKey()] = character
                     .getPrimaryProperties()[entry.getKey()] + entry.getValue() * levels;
@@ -1057,7 +1075,7 @@ public class CharacterService {
      * @param i
      * @return
      */
-    public int addAttribute(IActiveCharacter character, ICharacterAttribute attribute, int i) {
+    public int addAttribute(IActiveCharacter character, Attribute attribute, int i) {
         int attributePoints = character.getCharacterBase().getAttributePoints();
         if (attributePoints - i <= 0) {
             return 1;
@@ -1079,12 +1097,25 @@ public class CharacterService {
         return 0;
     }
 
-    public void addAttribute(IActiveCharacter character, ICharacterAttribute attribute) {
+    public void addAttribute(IActiveCharacter character, Attribute attribute) {
         addAttribute(character, attribute, 1);
     }
 
-    public void addTemporalAttribute(IActiveCharacter character, ICharacterAttribute attribute, int amount) {
+    public void addTransientAttribute(IActiveCharacter character, Attribute attribute, int amount) {
         character.getTransientAttributes().merge(attribute.getId(), amount, (a, b) -> a + b);
+        if (!attribute.getPropBonus().isEmpty()) {
+            applyAttributeValue(character, attribute, amount);
+        }
+    }
+
+    private void applyAttributeValue(IActiveCharacter character, Attribute attribute, int amount) {
+        float[] primaryProperties = character.getPrimaryProperties();
+        for (Map.Entry<Integer, Float> entry : attribute.getPropBonus().entrySet()) {
+            int key = entry.getKey();
+            float val = entry.getValue() * amount;
+            float currentVal = primaryProperties[key];
+            primaryProperties[key] = val + currentVal;
+        }
     }
 
     /**
