@@ -17,12 +17,6 @@
  */
 package cz.neumimto.rpg.players;
 
-import static cz.neumimto.core.localization.Arg.arg;
-import static cz.neumimto.rpg.Log.error;
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.Log.warn;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.ClassService;
@@ -99,6 +93,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static cz.neumimto.core.localization.Arg.arg;
+import static cz.neumimto.rpg.Log.error;
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -527,9 +527,24 @@ public class CharacterService {
         activeCharacter.updateItemRestrictions();
         updateArmorRestrictions(activeCharacter);
         updateWeaponRestrictions(activeCharacter);
+        updateAttributes(activeCharacter);
         updateWalkSpeed(activeCharacter);
         updateMaxHealth(activeCharacter);
         updateMaxMana(activeCharacter);
+    }
+
+    private void updateAttributes(IActiveCharacter activeCharacter) {
+        Set<Map.Entry<String, PlayerClassData>> entries = activeCharacter.getClasses().entrySet();
+        for (Map.Entry<String, PlayerClassData> entry : entries) {
+            PlayerClassData value = entry.getValue();
+            ClassDefinition classDefinition = value.getClassDefinition();
+            Map<Attribute, Integer> attributes = classDefinition.getStartingAttributes();
+            if (!attributes.isEmpty()) {
+                for (Map.Entry<Attribute, Integer> ae : attributes.entrySet()) {
+                    addTransientAttribute(activeCharacter, ae.getKey(), ae.getValue());
+                }
+            }
+        }
     }
 
     public void recalculateProperties(IActiveCharacter character) {
@@ -1088,6 +1103,19 @@ public class CharacterService {
 
     public void addTransientAttribute(IActiveCharacter character, Attribute attribute, int amount) {
         character.getTransientAttributes().merge(attribute.getId(), amount, (a, b) -> a + b);
+        if (!attribute.getPropBonus().isEmpty()) {
+            applyAttributeValue(character, attribute, amount);
+        }
+    }
+
+    private void applyAttributeValue(IActiveCharacter character, Attribute attribute, int amount) {
+        float[] primaryProperties = character.getPrimaryProperties();
+        for (Map.Entry<Integer, Float> entry : attribute.getPropBonus().entrySet()) {
+            int key = entry.getKey();
+            float val = entry.getValue() * amount;
+            float currentVal = primaryProperties[key];
+            primaryProperties[key] = val + currentVal;
+        }
     }
 
     /**
