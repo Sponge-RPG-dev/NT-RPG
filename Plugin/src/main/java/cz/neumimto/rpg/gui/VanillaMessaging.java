@@ -18,11 +18,6 @@
 
 package cz.neumimto.rpg.gui;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-import static cz.neumimto.rpg.gui.GuiHelper.back;
-import static cz.neumimto.rpg.gui.GuiHelper.createMenuInventoryClassDefView;
-import static cz.neumimto.rpg.gui.GuiHelper.getItemLore;
-
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
@@ -106,6 +101,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.gui.GuiHelper.back;
+import static cz.neumimto.rpg.gui.GuiHelper.createMenuInventoryClassDefView;
+import static cz.neumimto.rpg.gui.GuiHelper.getItemLore;
 
 /**
  * Created by NeumimTo on 6.8.2015.
@@ -342,8 +342,8 @@ public class VanillaMessaging implements IPlayerMessage {
 
 				b.append(Text.builder(a.getConcatClassNames()).color(TextColors.AQUA).append(Text.of(" ")).build());
 
-				b.append(Text.builder("Level: ").color(TextColors.DARK_GRAY).append(
-						Text.builder(level + "").color(level == m ? TextColors.RED : TextColors.DARK_PURPLE).build()).build());
+                b.append(Text.builder("Level: ").color(TextColors.DARK_GRAY).append(
+                         Text.builder(level + "").color(level == m ? TextColors.RED : TextColors.DARK_PURPLE).build()).build());
 
 				content.add(b.build());
 			});
@@ -473,7 +473,13 @@ public class VanillaMessaging implements IPlayerMessage {
 
 	@Override
 	public void displayAttributes(Player player, ClassDefinition cls) {
-		Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
+		Inventory.Builder builder = Inventory
+                .builder();
+        Text invName = Localizations.ATTRIBUTES.toText();
+        Inventory i = builder.of(InventoryArchetypes.DOUBLE_CHEST)
+                .property(InventoryTitle.of(invName))
+                .build(plugin);
+
 		i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back(cls));
 
         int x = 1;
@@ -481,7 +487,8 @@ public class VanillaMessaging implements IPlayerMessage {
         for (Map.Entry<Attribute, Integer> a : cls.getStartingAttributes().entrySet()) {
             Attribute key = a.getKey();
             Integer value = a.getValue();
-            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(x, y))).offer(createAttributeItem(key, value));
+            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(x, y)))
+                    .offer(createAttributeItem(key, value));
             //somehow format them in square-like structure
             if (x == 7) {
                 x = 1;
@@ -641,16 +648,16 @@ public class VanillaMessaging implements IPlayerMessage {
 		return character.hasClass(classDefinition) ? TextColors.GREEN : TextColors.RED;
 	}
 
-	private ItemStack createAttributeItem(Attribute key, Integer value) {
-		ItemStack of = GuiHelper.itemStack(key.getItemType());
-		of.offer(Keys.DISPLAY_NAME, Text.of(TextColors.DARK_RED, key.getName()));
-		List<Text> lore = new ArrayList<>();
-		of.offer(new MenuInventoryData(true));
-		lore.add(Localizations.INITIAL_VALUE.toText(Arg.arg("value", value)));
-		lore.addAll(getItemLore(key.getDescription()));
-		of.offer(Keys.ITEM_LORE, lore);
-		return of;
-	}
+    private ItemStack createAttributeItem(Attribute key, Integer value) {
+        ItemStack of = GuiHelper.itemStack(key.getItemType());
+        of.offer(Keys.DISPLAY_NAME, Text.of(TextColors.DARK_RED, key.getName()));
+
+        of.offer(new MenuInventoryData(true));List<Text> lore = new ArrayList<>();
+        lore.add(Localizations.INITIAL_VALUE.toText(Arg.arg("value", value)));
+        if (key.getDescription() != null) {lore.addAll(getItemLore(key.getDescription()));}
+        of.offer(Keys.ITEM_LORE, lore);
+        return of;
+    }
 
 
 	@Override
@@ -816,16 +823,17 @@ public class VanillaMessaging implements IPlayerMessage {
 		);
 	}
 
-	@Override
-	public void sendClassesByType(IActiveCharacter character, String type) {
-		Inventory i = GuiHelper.createMenuInventoryClassTypeView(type);
+    @Override
+    public void sendClassesByType(IActiveCharacter character, String type){
+        Inventory i = GuiHelper.createMenuInventoryClassTypeView(type);
 
-		character.getPlayer().openInventory(i);
-	}
+                character.getPlayer().openInventory(i);
+}
 
-	@Override
-	public void sendClassTypes(IActiveCharacter character) {
-		Inventory i = GuiHelper.createMenuInventoryClassTypesView();
+                @Override
+                   public void sendClassTypes(IActiveCharacter character) {
+		Inventory i=GuiHelper.createMenuInventoryClassTypesView(
+        );
 
 		character.getPlayer().openInventory(i);
 	}

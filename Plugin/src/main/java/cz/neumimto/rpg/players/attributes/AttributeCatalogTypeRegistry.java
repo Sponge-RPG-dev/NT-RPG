@@ -25,7 +25,7 @@ public class AttributeCatalogTypeRegistry implements AdditionalCatalogRegistryMo
 
     @Override
     public Optional<Attribute> getById(String id) {
-        return Optional.of(SlotIterators.get(id.toLowerCase()));
+        return Optional.ofNullable(SlotIterators.get(id.toLowerCase()));
     }
 
     @Override

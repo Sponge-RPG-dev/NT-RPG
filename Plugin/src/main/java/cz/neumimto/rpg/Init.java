@@ -54,6 +54,7 @@ public class Init {
 		inventoryService.init();
 		skillService.load();
 		propertyService.init();
+		propertyService.reLoadAttributes();
 		propertyService.loadMaximalServerPropertyValues();
 		jsLoader.initEngine();
 

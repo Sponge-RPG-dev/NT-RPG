@@ -19,6 +19,8 @@
 package cz.neumimto.rpg;
 
 import static cz.neumimto.rpg.Log.info;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.inject.Inject;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.PluginCore;
@@ -117,6 +119,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Resource;
+
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
 
 /**
  * Created by NeumimTo on 29.4.2015.
