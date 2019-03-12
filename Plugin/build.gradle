@@ -22,6 +22,7 @@ dependencies {
     compileOnly 'me.lucko.luckperms:luckperms-api:4.2'
     compileOnly 'com.github.rojo8399:PlaceholderAPI:4.5.1'
     annotationProcessor project(':Generator')
+    compileOnly group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.1'
 
     testCompile 'org.spongepowered:spongeapi:' + project.spongeApiVersion
     testCompile 'junit:junit:4.8.2'
