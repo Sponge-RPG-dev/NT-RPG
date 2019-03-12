@@ -122,7 +122,7 @@ public class ClassDefinition implements IEffectSourceProvider {
 	@CustomAdapter(WeaponsAdapter.class)
 	private HashMap<ItemType, Set<ConfigRPGItemType>> weapons = new HashMap<>();
 
-	@Setting("Weapons")
+	@Setting("Attributes")
 	@CustomAdapter(AttributeMapAdapter.class)
 	private Map<Attribute, Integer> startingAttributes = new HashMap<>();
 
