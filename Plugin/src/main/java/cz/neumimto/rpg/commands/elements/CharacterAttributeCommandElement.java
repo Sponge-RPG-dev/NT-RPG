@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.commands;
+package cz.neumimto.rpg.commands.elements;
 
 import cz.neumimto.rpg.players.attributes.Attribute;
 import org.spongepowered.api.Sponge;
