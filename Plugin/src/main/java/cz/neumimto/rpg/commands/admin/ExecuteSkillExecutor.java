@@ -40,13 +40,13 @@ public class ExecuteSkillExecutor implements CommandExecutor {
 		if (skill instanceof ActiveSkill) {
 			Long l = System.nanoTime();
 
-			PlayerSkillContext playerSkillContext = new PlayerSkillContext(null, skill);
+			PlayerSkillContext playerSkillContext = new PlayerSkillContext(null, skill, character);
 			playerSkillContext.setLevel(level);
 			SkillData skillData = new SkillData(skill.getId());
 			skillData.setSkillSettings(defaultSkillSettings);
 			playerSkillContext.setSkillData(skillData);
 			playerSkillContext.setSkill(skill);
-			ActiveSkill askill = (ActiveSkill) skill;
+
 			SkillContext skillContext = new SkillContext((IActiveSkill) skill, playerSkillContext) {{
 				wrappers.add(new SkillExecutorCallback() {
 					@Override
@@ -56,6 +56,7 @@ public class ExecuteSkillExecutor implements CommandExecutor {
 					}
 				});
 			}};
+
 			skillContext.sort();
 			skillContext.next(character, playerSkillContext, skillContext);
 		}

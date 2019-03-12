@@ -60,7 +60,9 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
-import static cz.neumimto.rpg.Log.*;
+import static cz.neumimto.rpg.Log.error;
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
@@ -140,25 +142,27 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 			callback.doNext(character, null, new SkillContext().result(SkillResult.WRONG_DATA));
 			return;
 		}
-		SkillContext context = esi.getSkill().createSkillExecutorContext(esi);
+
 		int level = esi.getTotalLevel();
 		if (level < 0) {
-			callback.doNext(character, esi, context.result(SkillResult.NEGATIVE_SKILL_LEVEL));
+			callback.doNext(character, esi, new SkillContext().result(SkillResult.NEGATIVE_SKILL_LEVEL));
 			return;
 		}
 		Long aLong = character.getCooldowns().get(esi.getSkill().getName());
 		long servertime = System.currentTimeMillis();
 		if (aLong != null && aLong > servertime) {
 			Gui.sendCooldownMessage(character, esi.getSkill().getName(), ((aLong - servertime) / 1000.0));
-			callback.doNext(character, esi, context.result(SkillResult.ON_COOLDOWN));
+			callback.doNext(character, esi, new SkillContext().result(SkillResult.ON_COOLDOWN));
 			return;
 		}
+
+		SkillContext context = esi.getSkill().createSkillExecutorContext(esi);
 
 		context.addExecutor(SkillPreprocessors.SKILL_COST);
 		context.addExecutor(callback);
 		//skill execution start
 		esi.getSkill().onPreUse(character, context);
-		//skill execution sto
+		//skill execution stop
 	}
 
 	public PlayerSkillContext invokeSkillByCombo(String combo, IActiveCharacter character) {

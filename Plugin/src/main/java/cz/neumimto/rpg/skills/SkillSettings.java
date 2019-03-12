@@ -18,13 +18,17 @@
 
 package cz.neumimto.rpg.skills;
 
-import static cz.neumimto.rpg.Log.error;
-
+import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.scripting.JsBinding;
+import org.spongepowered.api.Sponge;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static cz.neumimto.rpg.Log.error;
 
 /**
  * Created by NeumimTo on 14.2.2015.
@@ -33,6 +37,7 @@ import java.util.Map;
 public class SkillSettings {
 
 	public static final String bonus = "_levelbonus";
+
 	private Map<String, Float> skillSettings = new HashMap<>();
 	private Map<String, String> objMap = new HashMap<>();
 
@@ -107,4 +112,14 @@ public class SkillSettings {
 	public Map<String, Float> getNodes() {
 		return Collections.unmodifiableMap(skillSettings);
 	}
+
+	public static Set<String> getComplexKeySuffixes() {
+		Set<String> collect = Sponge.getRegistry().getAllOf(Attribute.class)
+				.stream()
+				.map(attribute -> "_per_" + attribute.getId())
+				.collect(Collectors.toSet());
+		collect.add(bonus);
+		return collect;
+	}
+
 }

@@ -609,7 +609,7 @@ public class CharacterService {
                     continue;
                 }
 
-                PlayerSkillContext info = new PlayerSkillContext(classDefinitionByName, iSkill);
+                PlayerSkillContext info = new PlayerSkillContext(classDefinitionByName, iSkill, character);
                 info.setLevel(characterSkill.getLevel());
                 PlayerClassData playerClassData = character.getClasses().get(name);
                 SkillData info1 = playerClassData.getClassDefinition().getSkillTree().getSkills().get(iSkill.getId());
@@ -1317,7 +1317,7 @@ public class CharacterService {
         clazz.setUsedSkillPoints(clazz.getUsedSkillPoints() + 1);
 
         ClassDefinition classDef = origin.getClassDefinition();
-        PlayerSkillContext einfo = new PlayerSkillContext(classDef, skill);
+        PlayerSkillContext einfo = new PlayerSkillContext(classDef, skill, character);
         einfo.setLevel(1);
 
         SkillTree skillTree = classDef.getSkillTree();

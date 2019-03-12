@@ -18,10 +18,18 @@
 
 package cz.neumimto.rpg.skills;
 
+import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.skills.mods.ActiveSkillPreProcessorWrapper;
+import it.unimi.dsi.fastutil.objects.AbstractObject2FloatMap;
+import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
+import org.spongepowered.api.Sponge;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -29,11 +37,13 @@ import java.util.Set;
  */
 public class PlayerSkillContext {
 
-	public static PlayerSkillContext Empty = new PlayerSkillContext(null, null) {{
+	public static PlayerSkillContext Empty = new PlayerSkillContext(null, null, null) {{
 		setSkillData(SkillData.EMPTY);
 	}};
 
-	private int level;
+    private final IActiveCharacter character;
+
+    private int level;
 	private SkillData skillData;
 	private Set<ActiveSkillPreProcessorWrapper> mods = new HashSet<>();
 	private int bonusLevel;
@@ -41,9 +51,13 @@ public class PlayerSkillContext {
 	private final ClassDefinition classDefinition;
 	private ISkill skill;
 
-	public PlayerSkillContext(ClassDefinition classDefinition, ISkill skill) {
+	private AbstractObject2FloatMap<String> cachedComputedSkillSettings;
+	private int previousSize = -1;
+
+	public PlayerSkillContext(ClassDefinition classDefinition, ISkill skill, IActiveCharacter character) {
 		this.classDefinition = classDefinition;
 		this.skill = skill;
+		this.character = character;
 	}
 
 	public ISkill getSkill() {
@@ -88,5 +102,62 @@ public class PlayerSkillContext {
 
 	public void setSkill(ISkill skill) {
 		this.skill = skill;
+	}
+
+	public AbstractObject2FloatMap<String> getCachedComputedSkillSettings() {
+		if (cachedComputedSkillSettings == null) {
+			SkillSettings preSet = skillData.getSkillSettings();
+
+			int initial = previousSize == 0 ? preSet.getNodes().size()/2 : previousSize;
+			cachedComputedSkillSettings = new Object2FloatOpenHashMap<>(initial, 0.1f);
+
+			Set<String> complexKeySuffixes = SkillSettings.getComplexKeySuffixes();
+
+            Collection<Attribute> attributes = Sponge.getRegistry().getAllOf(Attribute.class);
+            for (Map.Entry<String, Float> entry : preSet.getNodes().entrySet()) {
+				String key = entry.getKey();
+				Optional<String> first = complexKeySuffixes.stream().filter(a-> !key.endsWith(a)).findFirst();
+				float perLevel = 0;
+				if (first.isPresent()) {
+					float defaultNodeValue = entry.getValue();
+					for (String complexKeySuffix : complexKeySuffixes) {
+						String next = key + complexKeySuffix;
+
+						if (complexKeySuffix.equals(SkillSettings.bonus)) {
+							perLevel += preSet.getNodeValue(next);
+
+						} else if (complexKeySuffix.contains(SkillSettings.bonus)) {
+                            for (Attribute attribute : attributes) {
+                                if (complexKeySuffix.contains(attribute.getId())) {
+                                	if (preSet.getNodes().containsKey(next)) {
+										int attributeValue = character.getAttributeValue(attribute);
+										perLevel += preSet.getNodeValue(next) * attributeValue;
+									}
+								}
+                            }
+
+						} else {
+							for (Attribute attribute : attributes) {
+								if (complexKeySuffix.contains(attribute.getId())) {
+									if (preSet.getNodes().containsKey(next)) {
+										int attributeValue = character.getAttributeValue(attribute);
+										defaultNodeValue += preSet.getNodeValue(next) * attributeValue;
+									}
+								}
+							}
+                        }
+					}
+					cachedComputedSkillSettings.put(key, defaultNodeValue + perLevel * getTotalLevel());
+				}
+			}
+			if (previousSize == 0) {
+            	previousSize = cachedComputedSkillSettings.size();
+			}
+		}
+		return cachedComputedSkillSettings;
+	}
+
+	public void invalidateSkillSettingsCache() {
+		this.cachedComputedSkillSettings = null;
 	}
 }

@@ -33,12 +33,15 @@ public class SkillData {
 	}};
 	private final String skill;
 	private SkillSettings skillSettings;
+
 	private int minPlayerLevel;
 	private int maxSkillLevel;
+
 	private Set<SkillDependency> softDepends = new HashSet<>();
 	private Set<SkillDependency> hardDepends = new HashSet<>();
 	private Set<SkillData> conflicts = new HashSet<>();
 	private Set<SkillData> depending = new HashSet<>();
+
 	private ISkill iskill;
 	private String combination = null;
 	private int relativeX;

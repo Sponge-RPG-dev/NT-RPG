@@ -174,10 +174,10 @@ public class SkillManipulationTests {
 
     @Test
     public void checkSkillSoftDependencies_all_ok() throws Exception {
-        character.addSkill(ssoftDepending0.getSkillId(), new PlayerSkillContext(classDefinition, ssoftDepending0.getSkill()) {{
+        character.addSkill(ssoftDepending0.getSkillId(), new PlayerSkillContext(classDefinition, ssoftDepending0.getSkill(), character) {{
             setLevel(1);
         }});
-        character.addSkill(ssoftDepending1.getSkillId(), new PlayerSkillContext(classDefinition, ssoftDepending1.getSkill()) {{
+        character.addSkill(ssoftDepending1.getSkillId(), new PlayerSkillContext(classDefinition, ssoftDepending1.getSkill(), character) {{
             setLevel(2);
         }});
 
@@ -187,7 +187,7 @@ public class SkillManipulationTests {
 
     @Test
     public void checkSkillSoftDependencies_one_ok() throws Exception {
-        character.addSkill(ssoftDepending0.getSkillId(), new PlayerSkillContext(classDefinition, ssoftDepending0.getSkill()) {{
+        character.addSkill(ssoftDepending0.getSkillId(), new PlayerSkillContext(classDefinition, ssoftDepending0.getSkill(), character) {{
             setLevel(1);
         }});
 
@@ -197,7 +197,7 @@ public class SkillManipulationTests {
 
     @Test
     public void checkSkillSoftDependencies_none_ok() throws Exception {
-        character.addSkill(shardDepending1.getSkillId(), new PlayerSkillContext(classDefinition, shardDepending1.getSkill()) {{
+        character.addSkill(shardDepending1.getSkillId(), new PlayerSkillContext(classDefinition, shardDepending1.getSkill(), character) {{
             setLevel(1);
         }});
 
@@ -225,10 +225,10 @@ public class SkillManipulationTests {
 
     @Test
     public void checkSkillHardDependencies_all_ok() throws Exception {
-        character.addSkill(shardDepending1.getSkillId(), new PlayerSkillContext(classDefinition, shardDepending1.getSkill()) {{
+        character.addSkill(shardDepending1.getSkillId(), new PlayerSkillContext(classDefinition, shardDepending1.getSkill(), character) {{
             setLevel(1);
         }});
-        character.addSkill(shardDepending2.getSkillId(), new PlayerSkillContext(classDefinition, shardDepending2.getSkill()) {{
+        character.addSkill(shardDepending2.getSkillId(), new PlayerSkillContext(classDefinition, shardDepending2.getSkill(), character) {{
             setLevel(2);
         }});
         boolean result = characterService.hasHardSkillDependencies(character, skillData);
@@ -237,10 +237,10 @@ public class SkillManipulationTests {
 
     @Test
     public void checkSkillHardDependencies_only_one() throws Exception {
-        character.addSkill(shardDepending1.getSkillId(), new PlayerSkillContext(classDefinition, shardDepending1.getSkill()) {{
+        character.addSkill(shardDepending1.getSkillId(), new PlayerSkillContext(classDefinition, shardDepending1.getSkill(), character) {{
             setLevel(1);
         }});
-        character.addSkill(shardDepending2.getSkillId(), new PlayerSkillContext(classDefinition, shardDepending2.getSkill()) {{
+        character.addSkill(shardDepending2.getSkillId(), new PlayerSkillContext(classDefinition, shardDepending2.getSkill(), character) {{
             setLevel(1);
         }});
         boolean result = characterService.hasHardSkillDependencies(character, skillData);
@@ -256,7 +256,7 @@ public class SkillManipulationTests {
 
     @Test
     public void checkSkillConflictingDependencies_has_conflicting_node() throws Exception {
-        character.addSkill(sconflicting.getSkillId(), new PlayerSkillContext(classDefinition, sconflicting.getSkill()) {{
+        character.addSkill(sconflicting.getSkillId(), new PlayerSkillContext(classDefinition, sconflicting.getSkill(), character) {{
             setLevel(1);
         }});
         boolean result = characterService.hasConflictingSkillDepedencies(character, new SkillData(""));
@@ -265,13 +265,13 @@ public class SkillManipulationTests {
 
     @Test
     public void mayLearnSkill_ok() {
-        character.addSkill(shardDepending1.getSkillId(), new PlayerSkillContext(classDefinition, shardDepending1.getSkill()) {{
+        character.addSkill(shardDepending1.getSkillId(), new PlayerSkillContext(classDefinition, shardDepending1.getSkill(), character) {{
             setLevel(1);
         }});
-        character.addSkill(shardDepending2.getSkillId(), new PlayerSkillContext(classDefinition, shardDepending2.getSkill()) {{
+        character.addSkill(shardDepending2.getSkillId(), new PlayerSkillContext(classDefinition, shardDepending2.getSkill(), character) {{
             setLevel(2);
         }});
-        character.addSkill(ssoftDepending1.getSkillId(), new PlayerSkillContext(classDefinition, ssoftDepending1.getSkill()) {{
+        character.addSkill(ssoftDepending1.getSkillId(), new PlayerSkillContext(classDefinition, ssoftDepending1.getSkill(), character) {{
             setLevel(2);
         }});
         ActionResult actionResult = characterService.canLearnSkill(character, classDefinition, main);

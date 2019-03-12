@@ -1,12 +1,16 @@
 package cz.neumimto.rpg.skills.mods;
 
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.ISkillNode;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
+import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.parents.IActiveSkill;
 
-import java.util.*;
-
-import static cz.neumimto.rpg.Log.error;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -20,15 +24,12 @@ public class SkillContext {
 	private SkillResult result;
 	private boolean continueExecution;
 	private boolean copy;
-	private Map<String, Float> skillNodes;
 
 	public SkillContext(IActiveSkill activeSkill, PlayerSkillContext esi) {
 		this.esi = esi;
 		cursor = -1;
 		continueExecution = true;
-		skillNodes = esi.getSkillData().getSkillSettings().getNodes();
 		wrappers.add(new ActiveSkillPreProcessorWrapper(PreProcessorTarget.EXECUTION) {
-
 			@Override
 			public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
 				activeSkill.cast(character, info, SkillContext.this);
@@ -91,28 +92,21 @@ public class SkillContext {
 	}
 
 	public Map<String, Float> getSkillNodes() {
-		return skillNodes;
+		return esi.getCachedComputedSkillSettings();
 	}
 
 	public void overrideNode(String key, Float value) {
+		/*todo
 		if (!copy) {
 			copy = true;
 			skillNodes = new HashMap<>(skillNodes);
 		}
 		skillNodes.put(key, value);
+		*/
 	}
 
-    private float getLevelNodeValue(String s, int level) {
-        return getNodeValue(s) + level * getNodeValue(s + SkillSettings.bonus);
-    }
-
-    private float getNodeValue(String node) {
-        Float aFloat = skillNodes.get(node.toLowerCase());
-        if (aFloat == null) {
-            error("Missing skill node " + node);
-            return 0;
-        }
-        return aFloat;
+    private float getLevelNodeValue(String s) {
+        return esi.getCachedComputedSkillSettings().getFloat(s);
     }
 
 	public float getFloatNodeValue(ISkillNode node) {
@@ -120,7 +114,7 @@ public class SkillContext {
 	}
 
 	public float getFloatNodeValue(String node) {
-		return getLevelNodeValue(node, esi.getTotalLevel());
+		return getLevelNodeValue(node);
 	}
 
 	public int getIntNodeValue(ISkillNode node) {
@@ -128,7 +122,7 @@ public class SkillContext {
 	}
 
 	public int getIntNodeValue(String node) {
-		return (int) getLevelNodeValue(node, esi.getTotalLevel());
+		return (int) getLevelNodeValue(node);
 	}
 
 	public long getLongNodeValue(ISkillNode node) {
@@ -136,11 +130,11 @@ public class SkillContext {
 	}
 
 	public long getLongNodeValue(String node) {
-		return (long) getLevelNodeValue(node, esi.getTotalLevel());
+		return (long) getLevelNodeValue(node);
 	}
 
 	public double getDoubleNodeValue(String node) {
-		return getLevelNodeValue(node, esi.getTotalLevel());
+		return getLevelNodeValue(node);
 	}
 
 	public double getDoubleNodeValue(ISkillNode node) {
