@@ -53,7 +53,6 @@ import java.util.stream.Collectors;
 @ResourceLoader.Command
 public class InfoCommand extends CommandBase {
 
-
 	@Inject
 	Game game;
 

@@ -29,6 +29,7 @@ public class CommandLocalization {
 
 	@ConfigValue
 	public static String COMMAND_ADMIN_ENCHANT = "&2Enchants held item with custom enchantment";
+
 	@ConfigValue
 	public static String COMMAND_ADMIN_DESC = "&2Access to administration commands";
 
@@ -71,6 +72,9 @@ public class CommandLocalization {
 
 	@ConfigValue
 	public static String COMMAND_SKILL_LEARN = "Learn a new skill";
+
+	@ConfigValue
+	public static String COMMAND_SKILL_TREE = "Open a skilltree";
 
 	@ConfigValue
 	public static String COMMAND_ATTRIBUTE = "Spends attribute points to improve character's attributes";

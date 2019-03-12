@@ -20,9 +20,67 @@ package cz.neumimto.rpg.commands;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.commands.admin.AddEffectExecutor;
+import cz.neumimto.rpg.commands.admin.AddExperienceExecutor;
+import cz.neumimto.rpg.commands.admin.ExecuteSkillExecutor;
+import cz.neumimto.rpg.commands.admin.InspectPropertyExecutor;
+import cz.neumimto.rpg.commands.admin.InvoceExecutorExecutor;
+import cz.neumimto.rpg.commands.admin.ReloadExecutor;
+import cz.neumimto.rpg.commands.character.CharacterAttributeExecutor;
+import cz.neumimto.rpg.commands.character.CharacterChooseClassExecutor;
+import cz.neumimto.rpg.commands.character.CharacterCreateExecutor;
+import cz.neumimto.rpg.commands.character.CharacterDeleteExecutor;
+import cz.neumimto.rpg.commands.character.CharacterListExecutor;
+import cz.neumimto.rpg.commands.character.CharacterShowClassExecutor;
+import cz.neumimto.rpg.commands.character.CharacterShowClassesExecutor;
+import cz.neumimto.rpg.commands.character.CharacterSwitchExecutor;
+import cz.neumimto.rpg.commands.elements.AnyClassDefCommandElement;
+import cz.neumimto.rpg.commands.elements.CharacterAttributeCommandElement;
+import cz.neumimto.rpg.commands.elements.ClassDefCommandElement;
+import cz.neumimto.rpg.commands.elements.ClassTypeCommandElement;
+import cz.neumimto.rpg.commands.elements.GlobalEffectCommandElement;
+import cz.neumimto.rpg.commands.elements.LearnedSkillCommandElement;
+import cz.neumimto.rpg.commands.elements.PartyMemberCommandElement;
+import cz.neumimto.rpg.commands.elements.PlayerClassCommandElement;
+import cz.neumimto.rpg.commands.elements.RuneCommandElement;
+import cz.neumimto.rpg.commands.elements.UnlearnedSkillCommandElement;
+import cz.neumimto.rpg.commands.item.GiveRuneToPlayerExecutor;
+import cz.neumimto.rpg.commands.item.InspectItemDamageExecutor;
+import cz.neumimto.rpg.commands.item.ItemAddGlobalEffectExecutor;
+import cz.neumimto.rpg.commands.item.ItemAddGroupRestrictionExecutor;
+import cz.neumimto.rpg.commands.item.ItemAddMetaExecutor;
+import cz.neumimto.rpg.commands.item.ItemAddRarityExecutor;
+import cz.neumimto.rpg.commands.item.ItemAddRunewordExecutor;
+import cz.neumimto.rpg.commands.item.ItemAddSocketExecutor;
+import cz.neumimto.rpg.commands.item.ItemAddTypeExecutor;
+import cz.neumimto.rpg.commands.party.PartyAcceptExecutor;
+import cz.neumimto.rpg.commands.party.PartyCreateExecutor;
+import cz.neumimto.rpg.commands.party.PartyInviteExecutor;
+import cz.neumimto.rpg.commands.party.PartyKickExecutor;
+import cz.neumimto.rpg.commands.skill.SkillBindExecutor;
+import cz.neumimto.rpg.commands.skill.SkillCastExecutor;
+import cz.neumimto.rpg.commands.skill.SkillLearnExecutor;
+import cz.neumimto.rpg.commands.skill.SkillRefundExecutor;
+import cz.neumimto.rpg.commands.skill.SkillUpgradeExecutor;
+import cz.neumimto.rpg.commands.skill.SkilltreeExecutor;
+import cz.neumimto.rpg.configuration.CommandLocalization;
+import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.inventory.items.ItemMetaType;
+import cz.neumimto.rpg.inventory.sockets.SocketType;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.skills.ISkill;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCallable;
+import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.args.GenericArguments;
+import org.spongepowered.api.command.spec.CommandSpec;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.serializer.TextSerializers;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -35,6 +93,462 @@ public class CommandService {
 
 	@Inject
 	private NtRpgPlugin plugin;
+
+	@Inject
+	private GlobalScope globalScope;
+
+	public void registerStandartCommands() {
+		registerAdminCommands();
+		registerCharacterCommands();
+		registerItemCommands();
+	}
+
+	private void registerAdminCommands() {
+
+		//==========SKILLS AND EFFECTS==========
+
+		CommandSpec executeSkill = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_EXEC_SKILL_DESC))
+				.arguments(
+						GenericArguments.catalogedElement(Text.of("skill"), ISkill.class),
+						GenericArguments.flags().valueFlag(GenericArguments
+								.integer(TextHelper.parse("level")), "l")
+								.buildWith(GenericArguments.none())
+				)
+				.executor(new ExecuteSkillExecutor())
+				.build();
+
+		CommandSpec addEffect = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_EFFECT_ADD))
+				.arguments(
+						GenericArguments.onlyOne(GenericArguments.player(TextHelper.parse("player"))),
+						new GlobalEffectCommandElement(Text.of("effect")),
+						GenericArguments.longNum(TextHelper.parse("duration")),
+						GenericArguments.remainingJoinedStrings(TextHelper.parse("data"))
+				)
+				.executor(new AddEffectExecutor())
+				.build();
+
+		//=========CHARACTER MANIPULATIONS=========
+
+		CommandSpec experienceAdd = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_EXP_ADD))
+				.arguments(
+						GenericArguments.onlyOne(GenericArguments.player(TextHelper.parse("player"))),
+						GenericArguments.remainingJoinedStrings(TextHelper.parse("data"))
+				)
+				.executor(new AddExperienceExecutor())
+				.build();
+
+		CommandSpec experience = CommandSpec.builder()
+				.child(experienceAdd, "add")
+				.build();
+
+		//==========UTILITY==========
+
+		CommandSpec reload = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_RELOAD))
+				.arguments(GenericArguments.remainingJoinedStrings(TextHelper.parse("args")))
+				.executor(new ReloadExecutor())
+				.build();
+
+		CommandSpec inspectProperty = CommandSpec.builder()
+				.arguments(
+						GenericArguments.onlyOne(GenericArguments.player(TextHelper.parse("player"))),
+						GenericArguments.remainingJoinedStrings(TextHelper.parse("data"))
+				)
+				.executor(new InspectPropertyExecutor())
+				.build();
+
+		CommandSpec inspectItemDamage = CommandSpec.builder()
+				.arguments(
+						GenericArguments.onlyOne(GenericArguments.player(TextHelper.parse("player")))
+				)
+				.executor(new InspectItemDamageExecutor())
+				.build();
+
+		CommandSpec inspect = CommandSpec.builder()
+				.child(inspectProperty, "property", "p")
+				.child(inspectItemDamage, "itemDamage", "idmg")
+				.build();
+
+
+		CommandSpec invoke = CommandSpec.builder()
+				.description(Text.builder("Command which let you execute commands as another player.")
+						.append(Text.builder("/nadmin invoke SomePlayer classes Primary").color(TextColors.LIGHT_PURPLE).build())
+						.append(Text.builder("will class selection GUI on the client side of the player SomePlayer. Does not bypass any permissions.").build()).build())
+				.arguments(
+						GenericArguments.player(Text.of("player")),
+						GenericArguments.remainingJoinedStrings(Text.of("command"))
+				)
+				.executor(new InvoceExecutorExecutor())
+				.build();
+
+
+		CommandSpec adminRoot = CommandSpec
+				.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_DESC))
+				.permission("ntrpg.admin")
+				.child(executeSkill, "skill", "s")
+				.child(addEffect, "effect", "ef")
+
+				.child(experience, "experiences", "exp")
+
+				.child(reload, "reload")
+				.child(inspect, "i", "inspect")
+				.child(invoke, "invoke", "invk")
+				.build();
+
+		Sponge.getCommandManager().register(plugin, adminRoot, "nadmin", "na");
+	}
+
+	private void registerCharacterCommands() {
+
+		//==========CHARACTER MANIPULATION==========
+
+		CommandSpec characterCreate = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_CREATE_DESCRIPTION))
+				.arguments(
+						GenericArguments.remainingJoinedStrings(TextHelper.parse("name"))
+				)
+				.permission("ntrpg.player.character.create")
+				.executor(new CharacterCreateExecutor())
+				.build();
+
+		CommandSpec characterDelete = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_DELETE_DESCRIPTION))
+				.arguments(
+						GenericArguments.remainingJoinedStrings(TextHelper.parse("name"))
+				)
+				.permission("ntrpg.player.character.delete")
+				.executor(new CharacterDeleteExecutor())
+				.build();
+
+		CommandSpec characterSwitch = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_CHOOSE_DESC))
+				.arguments(
+						GenericArguments.remainingJoinedStrings(Text.of("name"))
+				)
+				.executor(new CharacterSwitchExecutor())
+				.build();
+
+		CommandSpec characterList = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_CHARACTE_LIST))
+				.executor(new CharacterListExecutor())
+				.build();
+
+		//==========CHARACTER CLASS==========
+
+		CommandSpec characterChooseClass = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_CHOOSE_DESC))
+				.arguments(
+						new AnyClassDefCommandElement(TextHelper.parse("class"))
+				)
+				.permission("ntrpg.player.choose.class")
+				.executor(new CharacterChooseClassExecutor())
+				.build();
+
+
+		CommandSpec characterChoose = CommandSpec.builder()
+				.child(characterChooseClass, "class", "c")
+				.build();
+
+		//==========CHARACTER SKILLS==========
+
+		CommandSpec characterSkillLearn = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_SKILL_LEARN))
+				.arguments(
+						new UnlearnedSkillCommandElement(Text.of("skill")),
+						new PlayerClassCommandElement(Text.of("class"))
+				)
+				.permission("ntrpg.player.skills")
+				.executor(new SkillLearnExecutor())
+				.build();
+
+		CommandSpec characterSkillUpgrade = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_SKILL_UPGRADE))
+				.arguments(
+						new UnlearnedSkillCommandElement(Text.of("skill")),
+						new PlayerClassCommandElement(Text.of("class"))
+				)
+				.permission("ntrpg.player.skills")
+				.executor(new SkillUpgradeExecutor())
+				.build();
+
+		CommandSpec characterSkillRefund = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_SKILL_REFUND))
+				.arguments(
+						new UnlearnedSkillCommandElement(Text.of("skill")),
+						new PlayerClassCommandElement(Text.of("class"))
+				)
+				.permission("ntrpg.player.skills.refund")
+				.executor(new SkillRefundExecutor())
+				.build();
+
+		CommandSpec characterSkill = CommandSpec.builder()
+				.child(characterSkillLearn, "learn", "l")
+				.child(characterSkillUpgrade, "upgrade", "u")
+				.child(characterSkillRefund, "refund", "r")
+				.build();
+
+		//==========CHARACTER ATTRIBUTES==========
+
+		CommandSpec characterAttribute = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE
+						.deserialize(CommandLocalization.COMMAND_ATTRIBUTE))
+				.arguments(
+						new CharacterAttributeCommandElement(Text.of("attribute")),
+						GenericArguments.integer(Text.of("amount"))
+				)
+				.executor(new CharacterAttributeExecutor())
+				.build();
+
+		CommandSpec characterRoot = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_CHOOSE_DESC))
+				.child(characterCreate, "create", "c")
+				.child(characterDelete, "delete", "remove", "rm")
+				.child(characterSwitch, "switch")
+				.child(characterList, "list")
+
+				.child(characterChoose, "choose", "set")
+
+				.child(characterSkill, "skill", "s", "sk")
+
+				.child(characterAttribute, "attribute", "attr", "a")
+
+				.executor(new CharacterListExecutor()) //default fallback for char list
+				.build();
+
+		Sponge.getCommandManager().register(plugin, characterRoot, "character", "char", "nc");
+
+		//==========SKILLS==========
+
+		CommandSpec skillCast = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_SKILL_DESC))
+				.arguments(
+						new LearnedSkillCommandElement(TextHelper.parse("skill"))
+				)
+				.executor(new SkillCastExecutor())
+				.build();
+
+		Sponge.getCommandManager().register(plugin, skillCast, "skill", "skl", "ns");
+
+		CommandSpec skillBind = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_BIND_DESC))
+				.permission("ntrpg.player.skillbind")
+				.arguments(
+						new LearnedSkillCommandElement(TextHelper.parse("skill"))
+				)
+				.executor(new SkillBindExecutor())
+				.build();
+
+		Sponge.getCommandManager().register(plugin, skillBind, "bind", "nb");
+
+		CommandSpec skilltree = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_SKILL_TREE))
+				.arguments(
+						GenericArguments.optional(new AnyClassDefCommandElement(TextHelper.parse("class")))
+				)
+				.executor(new SkilltreeExecutor())
+				.build();
+
+		Sponge.getCommandManager().register(plugin, skilltree, "skilltree");
+		
+		//==========PARTY==========
+
+		CommandSpec partyCreate = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_BIND_DESC))
+				.permission("ntrpg.player.party")
+				.executor(new PartyCreateExecutor())
+				.build();
+
+		CommandSpec partyKick = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_BIND_DESC))
+				.permission("ntrpg.player.party")
+				.arguments(
+						new PartyMemberCommandElement(TextHelper.parse("player"))
+				)
+				.executor(new PartyKickExecutor())
+				.build();
+
+		CommandSpec partyInvite = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_BIND_DESC))
+				.permission("ntrpg.player.party")
+				.arguments(
+						GenericArguments.player(TextHelper.parse("player"))
+				)
+				.executor(new PartyInviteExecutor())
+				.build();
+
+		CommandSpec partyAccept = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_BIND_DESC))
+				.permission("ntrpg.player.party")
+				.executor(new PartyAcceptExecutor())
+				.build();
+
+		CommandSpec partyRoot = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_CHOOSE_DESC))
+				.child(partyCreate, "create", "c")
+				.child(partyKick, "kick", "k")
+				.child(partyInvite, "invite", "i")
+				.child(partyAccept, "accept", "a")
+				.build();
+
+		Sponge.getCommandManager().register(plugin, partyRoot, "party", "np", "nparty");
+
+		//==========GROUPS==========
+
+		CommandSpec showClassTypesOrClasses = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_CLASSES_DESC))
+				.arguments(
+						GenericArguments.optional(new ClassTypeCommandElement(Text.of("type")))
+				)
+				.permission("ntrpg.classes.list")
+				.executor(new CharacterShowClassesExecutor())
+				.build();
+
+		Sponge.getCommandManager().register(plugin, showClassTypesOrClasses, "classes");
+
+		CommandSpec showClass = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_RACE_DESC))
+				.arguments(
+						GenericArguments.optional(new AnyClassDefCommandElement(Text.of("class"), false))
+				)
+				.executor(new CharacterShowClassExecutor())
+				.build();
+
+		Sponge.getCommandManager().register(plugin, showClass, "class");
+
+		CommandSpec showClassWeapons = CommandSpec.builder()
+				.arguments(new ClassDefCommandElement(Text.of("class")))
+				.executor((src, args) -> {
+					args.<ClassDefinition>getOne(Text.of("class"))
+							.ifPresent(playerGroup -> {
+								Player player = (Player) src;
+								Gui.displayClassWeapons(playerGroup, player);
+							});
+					return CommandResult.success();
+				})
+				.build();
+		Sponge.getCommandManager().register(plugin, showClassWeapons, "weapons", "wp");
+
+		CommandSpec showClassArmors = CommandSpec.builder()
+				.arguments(new ClassDefCommandElement(Text.of("class")))
+				.executor((src, args) -> {
+
+					args.<ClassDefinition>getOne(Text.of("class"))
+							.ifPresent(playerGroup -> {
+								Player player = (Player) src;
+								Gui.displayClassArmor(playerGroup, player);
+							});
+					return CommandResult.success();
+				})
+				.build();
+		Sponge.getCommandManager().register(plugin, showClassArmors, "armor");
+
+		CommandSpec showRunes = CommandSpec.builder()
+				.permission("ntrpg.runes.list")
+				.executor((src, args) -> {
+					Gui.sendListOfRunes(NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src));
+					return CommandResult.success();
+				})
+				.build();
+
+		Sponge.getCommandManager().register(plugin, showRunes, "runes");
+	}
+
+	private void registerItemCommands() {
+		//==========ITEMS==========
+
+		CommandSpec itemAddGlobalEffect = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_ENCHANT_ADD))
+				.arguments(
+						new GlobalEffectCommandElement(TextHelper.parse("effect")),
+						GenericArguments.remainingJoinedStrings(TextHelper.parse("params"))
+				)
+				.executor(new ItemAddGlobalEffectExecutor())
+				.build();
+
+
+		CommandSpec itemEnchant = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_ENCHANT))
+				.child(itemAddGlobalEffect, "add", "e")
+				.build();
+
+
+		CommandSpec itemAddSocket = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_SOCKET))
+				.arguments(
+						GenericArguments.catalogedElement(Text.of("type"), SocketType.class)
+				)
+				.executor(new ItemAddSocketExecutor())
+				.build();
+
+		CommandSpec itemAddRune = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_RUNE))
+				.arguments(
+						new RuneCommandElement(TextHelper.parse("rune"))
+				)
+				.executor(new GiveRuneToPlayerExecutor())
+				.build();
+
+		CommandSpec itemAddRarity = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_RARITY))
+				.arguments(
+						GenericArguments.integer(TextHelper.parse("level"))
+				)
+				.executor(new ItemAddRarityExecutor())
+				.build();
+
+		CommandSpec itemAddMeta = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_RARITY))
+				.arguments(
+						GenericArguments.text(Text.of("meta"), TextSerializers.FORMATTING_CODE, true)
+				)
+				.executor(new ItemAddMetaExecutor())
+				.build();
+
+		CommandSpec itemAddType = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_ITEM_TYPE))
+				.arguments(
+						GenericArguments.catalogedElement(Text.of("type"), ItemMetaType.class)
+				)
+				.executor(new ItemAddTypeExecutor())
+				.build();
+
+		CommandSpec itemAddGroupRestriction = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_RARITY))
+				.arguments(
+						new ClassDefCommandElement(Text.of("group")),
+						GenericArguments.integer(Text.of("level"))
+				)
+				.executor(new ItemAddGroupRestrictionExecutor())
+				.build();
+
+		CommandSpec itemAddRuneword = CommandSpec.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_RUNEWORD))
+				.arguments(
+						new RuneCommandElement(TextHelper.parse("rw"))
+				)
+				.executor(new ItemAddRunewordExecutor())
+				.build();
+
+		CommandSpec itemRoot = CommandSpec
+				.builder()
+				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_DESC))
+				.permission("ntrpg.item")
+				.child(itemEnchant, "enchant", "e")
+				.child(itemAddSocket, "socket", "sk")
+				.child(itemAddRune, "rune", "r")
+				.child(itemAddRuneword, "runeword", "rw")
+				.child(itemAddRarity, "rarity", "rrty")
+				.child(itemAddMeta, "itemmeta", "imeta", "imt")
+				.child(itemAddGroupRestriction, "grouprequirements", "gr")
+				.child(itemAddType, "itemType", "it", "type")
+				.build();
+
+		Sponge.getCommandManager().register(plugin, itemRoot, "nitem", "item");
+	}
 
 	public void registerCommand(CommandBase commandCallable) {
 		try {
@@ -49,6 +563,4 @@ public class CommandService {
 			}
 		}
 	}
-
-
 }

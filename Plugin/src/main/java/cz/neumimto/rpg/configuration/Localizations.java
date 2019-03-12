@@ -143,7 +143,11 @@ public class Localizations {
 
 	public static LocalizableParametrizedText ARMOR_MENU_HELP;
 
+	public static LocalizableParametrizedText PROPERTIES;
+
 	public static LocalizableParametrizedText ATTRIBUTES;
+
+	public static LocalizableParametrizedText CLASS_TYPES;
 
 	public static LocalizableParametrizedText BACK;
 

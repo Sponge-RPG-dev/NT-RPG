@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.commands;
+package cz.neumimto.rpg.commands.elements;
 
 import cz.neumimto.rpg.NtRpgPlugin;
 import org.spongepowered.api.command.CommandSource;
@@ -22,7 +22,6 @@ public class ClassDefCommandElement extends PatternMatchingCommandElement {
 				.filter(a -> source.hasPermission("ntrpg.class." + a.getName().toLowerCase()))
 				.map(a -> a.getName())
 				.collect(Collectors.toList());
-
 	}
 
 	@Override

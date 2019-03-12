@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.commands;
+package cz.neumimto.rpg.commands.elements;
 
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.NtRpgPlugin;
@@ -13,7 +13,6 @@ import org.spongepowered.api.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.Nullable;
 
 /**
@@ -28,10 +27,10 @@ public class CharacterAttributeCommandElement extends CommandElement {
 	@Nullable
 	@Override
 	protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
-		String next = args.next();
-		ICharacterAttribute attribute = NtRpgPlugin.GlobalScope.propertyService.getAttribute(next);
+		String attributeName = args.next();
+		ICharacterAttribute attribute = NtRpgPlugin.GlobalScope.propertyService.getAttribute(attributeName);
 		if (attribute == null) {
-			throw args.createError(Localizations.UNKNOWN_ATTRIBUTE.toText(Arg.arg("attribute", next)));
+			throw args.createError(Localizations.UNKNOWN_ATTRIBUTE.toText(Arg.arg("attribute", attributeName)));
 		}
 		return attribute;
 	}
