@@ -70,6 +70,7 @@ import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.inventory.sockets.SocketType;
+import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.skills.ISkill;
 import org.spongepowered.api.Sponge;
@@ -121,7 +122,7 @@ public class CommandService {
 		CommandSpec addEffect = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_EFFECT_ADD))
 				.arguments(
-						GenericArguments.onlyOne(GenericArguments.player(TextHelper.parse("player"))),
+						GenericArguments.onlyOne(GenericArguments.playerOrSource(TextHelper.parse("player"))),
 						new GlobalEffectCommandElement(Text.of("effect")),
 						GenericArguments.longNum(TextHelper.parse("duration")),
 						GenericArguments.remainingJoinedStrings(TextHelper.parse("data"))
@@ -134,8 +135,10 @@ public class CommandService {
 		CommandSpec experienceAdd = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_EXP_ADD))
 				.arguments(
-						GenericArguments.onlyOne(GenericArguments.player(TextHelper.parse("player"))),
-						GenericArguments.remainingJoinedStrings(TextHelper.parse("data"))
+						GenericArguments.onlyOne(GenericArguments.playerOrSource(TextHelper.parse("player"))),
+						GenericArguments.doubleNum(Text.of("amount")),
+						GenericArguments.optionalWeak(GenericArguments.catalogedElement(Text.of("source"), ExperienceSource.class)),
+						GenericArguments.optional(new ClassDefCommandElement(Text.of("class")))
 				)
 				.executor(new AddExperienceExecutor())
 				.build();
@@ -154,7 +157,7 @@ public class CommandService {
 
 		CommandSpec inspectProperty = CommandSpec.builder()
 				.arguments(
-						GenericArguments.onlyOne(GenericArguments.player(TextHelper.parse("player"))),
+						GenericArguments.onlyOne(GenericArguments.playerOrSource(TextHelper.parse("player"))),
 						GenericArguments.remainingJoinedStrings(TextHelper.parse("data"))
 				)
 				.executor(new InspectPropertyExecutor())
@@ -162,7 +165,7 @@ public class CommandService {
 
 		CommandSpec inspectItemDamage = CommandSpec.builder()
 				.arguments(
-						GenericArguments.onlyOne(GenericArguments.player(TextHelper.parse("player")))
+						GenericArguments.onlyOne(GenericArguments.playerOrSource(TextHelper.parse("player")))
 				)
 				.executor(new InspectItemDamageExecutor())
 				.build();
@@ -178,7 +181,7 @@ public class CommandService {
 						.append(Text.builder("/nadmin invoke SomePlayer classes Primary").color(TextColors.LIGHT_PURPLE).build())
 						.append(Text.builder("will class selection GUI on the client side of the player SomePlayer. Does not bypass any permissions.").build()).build())
 				.arguments(
-						GenericArguments.player(Text.of("player")),
+						GenericArguments.onlyOne(GenericArguments.player(Text.of("player"))),
 						GenericArguments.remainingJoinedStrings(Text.of("command"))
 				)
 				.executor(new InvoceExecutorExecutor())
@@ -268,7 +271,7 @@ public class CommandService {
 		CommandSpec characterSkillUpgrade = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_SKILL_UPGRADE))
 				.arguments(
-						new UnlearnedSkillCommandElement(Text.of("skill")),
+						new LearnedSkillCommandElement(Text.of("skill")),
 						new PlayerClassCommandElement(Text.of("class"))
 				)
 				.permission("ntrpg.player.skills")
@@ -278,7 +281,7 @@ public class CommandService {
 		CommandSpec characterSkillRefund = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_SKILL_REFUND))
 				.arguments(
-						new UnlearnedSkillCommandElement(Text.of("skill")),
+						new LearnedSkillCommandElement(Text.of("skill")),
 						new PlayerClassCommandElement(Text.of("class"))
 				)
 				.permission("ntrpg.player.skills.refund")
@@ -353,7 +356,7 @@ public class CommandService {
 				.build();
 
 		Sponge.getCommandManager().register(plugin, skilltree, "skilltree");
-		
+
 		//==========PARTY==========
 
 		CommandSpec partyCreate = CommandSpec.builder()
@@ -375,7 +378,7 @@ public class CommandService {
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_BIND_DESC))
 				.permission("ntrpg.player.party")
 				.arguments(
-						GenericArguments.player(TextHelper.parse("player"))
+						GenericArguments.onlyOne(GenericArguments.player(TextHelper.parse("player")))
 				)
 				.executor(new PartyInviteExecutor())
 				.build();
