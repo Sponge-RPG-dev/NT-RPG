@@ -22,7 +22,6 @@ import static cz.neumimto.rpg.Log.error;
 import static cz.neumimto.rpg.Log.info;
 import static cz.neumimto.rpg.Log.warn;
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import com.typesafe.config.ConfigFactory;
@@ -626,12 +625,16 @@ public class InventoryService {
 	public IEffectSource getEffectSourceBySlotId(Slot slot) {
 		Slot transform = slot.transform();
 		Class type = transform.parent().getClass();
-		SlotIndex index = transform.getInventoryProperty(SlotIndex.class).get();
-		ManagedInventory managedInventory = managedInventories.get(type);
-		if (managedInventory == null) {
-			return null;
+		//Dunno why this is needed but it causes exceptions when interacting with some modded inventories without this check
+		Optional<SlotIndex> indexOptional = transform.getInventoryProperty(SlotIndex.class);
+		if (indexOptional.isPresent()) {
+			ManagedInventory managedInventory = managedInventories.get(type);
+			if (managedInventory == null) {
+				return null;
+			}
+			return managedInventory.getSlotEffectSourceHashMap().get(indexOptional.get().getValue());
 		}
-		return managedInventory.getSlotEffectSourceHashMap().get(index.getValue());
+		return null;
 	}
 
 	public ManagedInventory getManagedInventory(Class<?> type) {
