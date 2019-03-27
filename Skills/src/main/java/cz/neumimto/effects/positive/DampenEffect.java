@@ -11,7 +11,7 @@ import cz.neumimto.rpg.scripting.JsBinding;
  * Created by NeumimTo on 7.7.2017.
  */
 @JsBinding(JsBinding.Type.CLASS)
-@Generate(id = "name", description = "An effect which cancells all incoming damage to the target, if attacking player has manapool "
+@Generate(id = "name", description = "An effect which cancels all incoming damage to the target, if attacking player has manapool "
 		+ "below specific % value")
 public class DampenEffect extends EffectBase<Double> {
 
