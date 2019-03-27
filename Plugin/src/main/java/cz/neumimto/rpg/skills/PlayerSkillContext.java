@@ -26,11 +26,7 @@ import it.unimi.dsi.fastutil.objects.AbstractObject2FloatMap;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 import org.spongepowered.api.Sponge;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 26.7.2015.
@@ -45,7 +41,7 @@ public class PlayerSkillContext {
 
     private int level;
 	private SkillData skillData;
-	private Set<ActiveSkillPreProcessorWrapper> mods = new HashSet<>();
+	private Set<ActiveSkillPreProcessorWrapper> mods;
 	private int bonusLevel;
 
 	private final ClassDefinition classDefinition;
@@ -58,6 +54,7 @@ public class PlayerSkillContext {
 		this.classDefinition = classDefinition;
 		this.skill = skill;
 		this.character = character;
+		this.mods = new HashSet<>();
 	}
 
 	public ISkill getSkill() {
@@ -108,53 +105,57 @@ public class PlayerSkillContext {
 		if (cachedComputedSkillSettings == null) {
 			SkillSettings preSet = skillData.getSkillSettings();
 
-			int initial = previousSize == 0 ? preSet.getNodes().size()/2 : previousSize;
+			int initial = previousSize == 0 ? preSet.getNodes().size()*3/4 : previousSize;
 			cachedComputedSkillSettings = new Object2FloatOpenHashMap<>(initial, 0.1f);
 
 			Set<String> complexKeySuffixes = SkillSettings.getComplexKeySuffixes();
 
             Collection<Attribute> attributes = Sponge.getRegistry().getAllOf(Attribute.class);
-            for (Map.Entry<String, Float> entry : preSet.getNodes().entrySet()) {
-				String key = entry.getKey();
-				Optional<String> first = complexKeySuffixes.stream().filter(a-> !key.endsWith(a)).findFirst();
-				float perLevel = 0;
-				if (first.isPresent()) {
-					float defaultNodeValue = entry.getValue();
-					for (String complexKeySuffix : complexKeySuffixes) {
-						String next = key + complexKeySuffix;
-
-						if (complexKeySuffix.equals(SkillSettings.bonus)) {
-							perLevel += preSet.getNodeValue(next);
-
-						} else if (complexKeySuffix.contains(SkillSettings.bonus)) {
-                            for (Attribute attribute : attributes) {
-                                if (complexKeySuffix.contains(attribute.getId())) {
-                                	if (preSet.getNodes().containsKey(next)) {
-										int attributeValue = character.getAttributeValue(attribute);
-										perLevel += preSet.getNodeValue(next) * attributeValue;
-									}
-								}
-                            }
-
-						} else {
-							for (Attribute attribute : attributes) {
-								if (complexKeySuffix.contains(attribute.getId())) {
-									if (preSet.getNodes().containsKey(next)) {
-										int attributeValue = character.getAttributeValue(attribute);
-										defaultNodeValue += preSet.getNodeValue(next) * attributeValue;
-									}
-								}
-							}
-                        }
-					}
-					cachedComputedSkillSettings.put(key, defaultNodeValue + perLevel * getTotalLevel());
-				}
-			}
+			populateCache(complexKeySuffixes, attributes);
 			if (previousSize == 0) {
             	previousSize = cachedComputedSkillSettings.size();
 			}
 		}
 		return cachedComputedSkillSettings;
+	}
+
+	public void populateCache(Set<String> complexKeySuffixes, Collection<Attribute> attributes) {
+		SkillSettings preSet = skillData.getSkillSettings();
+		for (Map.Entry<String, Float> entry : preSet.getNodes().entrySet()) {
+			String key = entry.getKey();
+			Optional<String> first = complexKeySuffixes.stream().filter(a-> !key.endsWith(a)).findFirst();
+			float perLevel = 0;
+			if (first.isPresent()) {
+				float defaultNodeValue = entry.getValue();
+				for (String complexKeySuffix : complexKeySuffixes) {
+					String next = key + complexKeySuffix;
+
+					if (complexKeySuffix.equals(SkillSettings.bonus)) {
+						perLevel += preSet.getNodeValue(next);
+
+					} else if (complexKeySuffix.contains(SkillSettings.bonus)) {
+						for (Attribute attribute : attributes) {
+							if (complexKeySuffix.contains(attribute.getId())) {
+								if (preSet.getNodes().containsKey(next)) {
+									int attributeValue = character.getAttributeValue(attribute);
+									perLevel += preSet.getNodeValue(next) * attributeValue;
+								}
+							}
+						}
+					} else {
+						for (Attribute attribute : attributes) {
+							if (complexKeySuffix.contains(attribute.getId())) {
+								if (preSet.getNodes().containsKey(next)) {
+									int attributeValue = character.getAttributeValue(attribute);
+									defaultNodeValue += preSet.getNodeValue(next) * attributeValue;
+								}
+							}
+						}
+					}
+				}
+				cachedComputedSkillSettings.put(key, defaultNodeValue + perLevel * getTotalLevel());
+			}
+		}
 	}
 
 	public void invalidateSkillSettingsCache() {

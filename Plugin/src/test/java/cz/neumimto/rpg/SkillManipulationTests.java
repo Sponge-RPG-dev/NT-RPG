@@ -2,11 +2,7 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
-import cz.neumimto.rpg.players.ActionResult;
-import cz.neumimto.rpg.players.ActiveCharacter;
-import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.PlayerClassData;
+import cz.neumimto.rpg.players.*;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
@@ -278,6 +274,7 @@ public class SkillManipulationTests {
 
         Assert.assertTrue(actionResult.isOk());
     }
+
 
 
 }
