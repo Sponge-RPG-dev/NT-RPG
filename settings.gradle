@@ -3,6 +3,8 @@ rootProject.name = 'NtRpgParent'
 include ':Generator'
 include ':NT-RPG'
 include ':NT-RPG-Skills'
+include ':NT-RPG-WebServer-GUI'
 
 project(':NT-RPG').projectDir = file('Plugin')
 project(':NT-RPG-Skills').projectDir = file('Skills')
+project(':NT-RPG-WebServer-GUI').projectDir = file('NT-RPG-WebServer-GUI')
