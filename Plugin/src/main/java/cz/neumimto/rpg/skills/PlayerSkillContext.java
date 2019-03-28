@@ -22,7 +22,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.skills.mods.ActiveSkillPreProcessorWrapper;
-import it.unimi.dsi.fastutil.objects.AbstractObject2FloatMap;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 import org.spongepowered.api.Sponge;
 
@@ -47,7 +46,7 @@ public class PlayerSkillContext {
 	private final ClassDefinition classDefinition;
 	private ISkill skill;
 
-	private AbstractObject2FloatMap<String> cachedComputedSkillSettings;
+	private Object2FloatOpenHashMap<String> cachedComputedSkillSettings;
 	private int previousSize = -1;
 
 	public PlayerSkillContext(ClassDefinition classDefinition, ISkill skill, IActiveCharacter character) {
@@ -101,7 +100,7 @@ public class PlayerSkillContext {
 		this.skill = skill;
 	}
 
-	public AbstractObject2FloatMap<String> getCachedComputedSkillSettings() {
+	public Object2FloatOpenHashMap<String> getCachedComputedSkillSettings() {
 		if (cachedComputedSkillSettings == null) {
 			SkillSettings preSet = skillData.getSkillSettings();
 
@@ -121,41 +120,42 @@ public class PlayerSkillContext {
 
 	public void populateCache(Set<String> complexKeySuffixes, Collection<Attribute> attributes) {
 		SkillSettings preSet = skillData.getSkillSettings();
+
 		for (Map.Entry<String, Float> entry : preSet.getNodes().entrySet()) {
-			String key = entry.getKey();
-			Optional<String> first = complexKeySuffixes.stream().filter(a-> !key.endsWith(a)).findFirst();
-			float perLevel = 0;
-			if (first.isPresent()) {
-				float defaultNodeValue = entry.getValue();
-				for (String complexKeySuffix : complexKeySuffixes) {
-					String next = key + complexKeySuffix;
-
-					if (complexKeySuffix.equals(SkillSettings.bonus)) {
-						perLevel += preSet.getNodeValue(next);
-
-					} else if (complexKeySuffix.contains(SkillSettings.bonus)) {
-						for (Attribute attribute : attributes) {
-							if (complexKeySuffix.contains(attribute.getId())) {
-								if (preSet.getNodes().containsKey(next)) {
-									int attributeValue = character.getAttributeValue(attribute);
-									perLevel += preSet.getNodeValue(next) * attributeValue;
-								}
-							}
-						}
-					} else {
-						for (Attribute attribute : attributes) {
-							if (complexKeySuffix.contains(attribute.getId())) {
-								if (preSet.getNodes().containsKey(next)) {
-									int attributeValue = character.getAttributeValue(attribute);
-									defaultNodeValue += preSet.getNodeValue(next) * attributeValue;
-								}
-							}
-						}
-					}
-				}
-				cachedComputedSkillSettings.put(key, defaultNodeValue + perLevel * getTotalLevel());
+			Optional<String> complexNode = isComplexNode(complexKeySuffixes, entry.getKey());
+			if (!complexNode.isPresent()) {
+				cachedComputedSkillSettings.put(entry.getKey(), entry.getValue().floatValue());
 			}
 		}
+
+		for (Map.Entry<String, Float> entry : preSet.getNodes().entrySet()) {
+			String key = entry.getKey();
+			Optional<String> first = isComplexNode(complexKeySuffixes, key);
+
+			if (first.isPresent()) {
+				String s = first.get();
+				if (s.endsWith(SkillSettings.bonus)) {
+					String stripped = s.substring(0, s.length() - SkillSettings.bonus.length());
+					cachedComputedSkillSettings.computeFloatIfPresent(stripped, (s1, aFloat) -> aFloat + entry.getValue() * getTotalLevel());
+				}
+				for (Attribute attribute : attributes) {
+					String id = "_per_" + attribute.getId();
+					if (s.endsWith(id)) {
+						String stripped = s.substring(0, s.length() - id.length());
+						cachedComputedSkillSettings.computeFloatIfPresent(stripped, (s1, aFloat) -> aFloat + entry.getValue() * character.getAttributeValue(attribute));
+					}
+				}
+			}
+		}
+	}
+
+	public Optional<String> isComplexNode(Set<String> complexKeySuffixes, String key) {
+		for (String complexKeySuffix : complexKeySuffixes) {
+			if (key.endsWith(complexKeySuffix)) {
+				return Optional.of(key);
+			}
+		}
+		return Optional.empty();
 	}
 
 	public void invalidateSkillSettingsCache() {

@@ -7,6 +7,7 @@ import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.skills.ISkill;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
+import org.slf4j.LoggerFactory;
 import org.spongepowered.api.text.Text;
 import sun.misc.Unsafe;
 
@@ -61,5 +62,9 @@ public class TestHelper {
         for (Field field : fields) {
             field.set(null, mock);
         }
+    }
+
+    public static void setupLog() {
+        Log.logger = LoggerFactory.getLogger("test");
     }
 }
