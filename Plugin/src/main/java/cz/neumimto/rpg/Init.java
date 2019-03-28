@@ -49,7 +49,11 @@ public class Init {
 			PseudoRandomDistribution.C[a] = p.c(i);
 			a++;
 		}
-		resourceLoader.reloadLocalizations(Locale.forLanguageTag(NtRpgPlugin.pluginConfig.LOCALE));
+		try {
+			resourceLoader.reloadLocalizations(Locale.forLanguageTag(NtRpgPlugin.pluginConfig.LOCALE));
+		} catch (Exception e) {
+			Log.error("Could not read localizations in locale " + NtRpgPlugin.pluginConfig.LOCALE + " - " + e.getMessage());
+		}
 		experienceService.load();
 		inventoryService.init();
 		skillService.load();
