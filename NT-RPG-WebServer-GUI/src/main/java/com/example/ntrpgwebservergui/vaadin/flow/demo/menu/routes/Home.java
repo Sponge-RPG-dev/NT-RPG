@@ -16,8 +16,9 @@
 package com.example.ntrpgwebservergui.vaadin.flow.demo.menu.routes;
 
 import com.example.ntrpgwebservergui.vaadin.flow.demo.menu.ApplicationLayout;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.router.Route;
 
 /**
@@ -34,6 +35,9 @@ public class Home extends Div {
     }
 
     private void init() {
-        add(new Label("This is the home target for this demo"));
+        Span span = new Span();
+        Button button = new Button("Apply changes and Reload the plugin ");
+        span.add(button);
+        add(span);
     }
 }
