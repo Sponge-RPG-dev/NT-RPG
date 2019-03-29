@@ -1,5 +1,6 @@
 package cz.neumimto.rpg;
 
+import cz.neumimto.rpg.configuration.AttributeConfiguration;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.attributes.Attribute;
@@ -43,12 +44,14 @@ public class TestSkillExecutorChain {
         complexKeySuffixes.add("_per_ntrpg:agility");
 
         attributes = new HashSet<>();
-        str = new Attribute();
-        TestUtils.setField(str, "id", "ntrpg:agility");
-        attributes.add(str);
+        AttributeConfiguration attributeConfiguration = new AttributeConfiguration();
+        TestUtils.setField(attributeConfiguration, "id", "ntrpg:agility");
+        str = new Attribute(attributeConfiguration);
 
-        agi = new Attribute();
-        TestUtils.setField(agi, "id", "ntrpg:strength");
+        attributes.add(str);
+        TestUtils.setField(attributeConfiguration, "id", "ntrpg:strength");
+        agi = new Attribute(attributeConfiguration);
+
         attributes.add(agi);
 
     }
