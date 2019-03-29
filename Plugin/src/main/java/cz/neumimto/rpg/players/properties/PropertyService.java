@@ -18,9 +18,6 @@
 
 package cz.neumimto.rpg.players.properties;
 
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-
 import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
@@ -36,27 +33,18 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
+
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 28.12.2014.
@@ -151,7 +139,8 @@ public class PropertyService {
 			ObjectMapper<Attributes> mapper = NotSoStupidObjectMapper.forClass(Attributes.class);
 			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(path).build();
 			Attributes attributes = mapper.bind(new Attributes()).populate(hcl.load());
-			attributes.getAttributes().forEach(a -> Sponge.getRegistry().register(Attribute.class, a));
+			attributes.getAttributes().forEach(a -> Sponge.getRegistry().register(Attribute.class, new Attribute(a)));
+
 
 		} catch (ObjectMappingException | IOException e) {
 			e.printStackTrace();

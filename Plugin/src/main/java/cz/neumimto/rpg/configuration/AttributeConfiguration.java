@@ -1,17 +1,16 @@
-package cz.neumimto.rpg.players.attributes;
+package cz.neumimto.rpg.configuration;
 
 import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
-import cz.neumimto.rpg.configuration.AttributeConfiguration;
 import cz.neumimto.rpg.configuration.adapters.PropertiesMapAdapter;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
-import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.item.ItemType;
 
 import java.util.Map;
-
 @ConfigSerializable
-public class Attribute implements CatalogType {
+public class AttributeConfiguration {
+
+
 
     @Setting("Id")
     private String id;
@@ -32,14 +31,6 @@ public class Attribute implements CatalogType {
     @Setting("Description")
     private String description;
 
-    public Attribute(AttributeConfiguration a) {
-        this.id = a.getId();
-        this.name = a.getName();
-        this.propBonus = a.getPropBonus();
-        this.itemType = a.getItemType();
-        this.description = a.getDescription();
-    }
-
     public String getId() {
         return id;
     }
@@ -48,12 +39,12 @@ public class Attribute implements CatalogType {
         return name;
     }
 
-    public Map<Integer, Float> getPropBonus() {
-        return propBonus;
-    }
-
     public float getMaxValue() {
         return maxValue;
+    }
+
+    public Map<Integer, Float> getPropBonus() {
+        return propBonus;
     }
 
     public ItemType getItemType() {
@@ -62,9 +53,5 @@ public class Attribute implements CatalogType {
 
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 }

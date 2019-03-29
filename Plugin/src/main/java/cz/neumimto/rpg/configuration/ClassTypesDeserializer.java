@@ -5,8 +5,8 @@ import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Created by NeumimTo on 24.2.2019.
@@ -16,10 +16,17 @@ public class ClassTypesDeserializer implements TypeSerializer<Map<String, ClassT
     @Override
     public Map<String, ClassTypeDefinition> deserialize(TypeToken<?> typeToken, ConfigurationNode node)
             throws ObjectMappingException {
-        Map<Object, ? extends ConfigurationNode> childrenMap = node.getChildrenMap();
-        TreeMap<String, ClassTypeDefinition> treeMap = new TreeMap();
 
-        return treeMap;
+        Map<Object, ? extends ConfigurationNode> childrenMap = node.getChildrenMap();
+        Map<String, ClassTypeDefinition> classTypeDefinitionMap = new LinkedHashMap<>();
+
+        for (Map.Entry<Object, ? extends ConfigurationNode> entry : childrenMap.entrySet()) {
+            String key = (String) entry.getKey();
+            ClassTypeDefinition value = entry.getValue().getValue(TypeToken.of(ClassTypeDefinition.class));
+            classTypeDefinitionMap.put(key, value);
+        }
+
+        return classTypeDefinitionMap;
     }
 
     @Override

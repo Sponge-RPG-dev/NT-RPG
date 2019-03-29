@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.configuration;
 
+import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
 import cz.neumimto.rpg.inventory.ItemLoreSections;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
@@ -223,6 +224,7 @@ public class PluginConfig {
 	public byte MAX_CLICK_COMBO_LENGTH = new Byte("6");
 
 	@Setting(comment = "Class types")
+	@CustomAdapter(ClassTypesDeserializer.class)
 	public Map<String, ClassTypeDefinition> CLASS_TYPES = new LinkedHashMap<String, ClassTypeDefinition>() {{
 		put("Race", new ClassTypeDefinition(TextColors.GREEN, TextColors.DARK_GREEN, DyeColors.GREEN, false, 1));
 		put("Primary", new ClassTypeDefinition(TextColors.YELLOW, TextColors.GOLD, DyeColors.YELLOW, true, 2));
