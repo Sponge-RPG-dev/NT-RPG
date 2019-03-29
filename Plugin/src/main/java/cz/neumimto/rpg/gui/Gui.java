@@ -220,4 +220,12 @@ public class Gui {
 	public static void sendClassTypes(IActiveCharacter character) {
 		getMessageTypeOf(character).sendClassTypes(character);
 	}
+
+	public static void displayCharacterMenu(IActiveCharacter character) {
+		getMessageTypeOf(character).displayCharacterMenu(character);
+	}
+
+	public static void displayCharacterAttributes(IActiveCharacter character) {
+		getMessageTypeOf(character).displayCharacterAttributes(character);
+	}
 }

@@ -236,4 +236,6 @@ public interface IActiveCharacter extends IEntity<Player> {
 	}
 
 	void addClass(PlayerClassData playerClassData);
+
+	void restartAttributeGuiSession();
 }

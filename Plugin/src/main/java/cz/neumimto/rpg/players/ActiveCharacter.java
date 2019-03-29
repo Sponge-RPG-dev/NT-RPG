@@ -31,11 +31,7 @@ import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.players.properties.PropertyService;
-import cz.neumimto.rpg.skills.IPlayerSkillHandler;
-import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.ItemAccessSkill;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
-import cz.neumimto.rpg.skills.PlayerSkillHandlers;
+import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
 import org.jline.utils.Log;
 import org.spongepowered.api.Sponge;
@@ -49,15 +45,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatType;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
@@ -118,6 +106,8 @@ public class ActiveCharacter implements IActiveCharacter {
 	private Set<SkillTreeSpecialization> specs = new HashSet<>();
 
 	private transient Map<String, SkillTreeViewModel> skillTreeViewLocation;
+	private transient Map<String, Integer> attributeSession = new HashMap<>();
+
 	private CustomItem offHand;
 	private int mainHandSlotId;
 	private CustomItem mainHand;
@@ -745,6 +735,11 @@ public class ActiveCharacter implements IActiveCharacter {
 			exp += playerClassData.getClassDefinition().getExperiencesBonus(name, type);
 		}
 		return exp;
+	}
+
+	@Override
+	public void restartAttributeGuiSession() {
+		attributeSession.clear();
 	}
 
 	@Override

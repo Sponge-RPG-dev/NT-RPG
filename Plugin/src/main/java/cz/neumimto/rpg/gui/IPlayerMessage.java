@@ -107,4 +107,8 @@ public interface IPlayerMessage {
 	void sendClassesByType(IActiveCharacter character, String def);
 
 	void sendClassTypes(IActiveCharacter character);
+
+    void displayCharacterMenu(IActiveCharacter character);
+
+	void displayCharacterAttributes(IActiveCharacter character);
 }

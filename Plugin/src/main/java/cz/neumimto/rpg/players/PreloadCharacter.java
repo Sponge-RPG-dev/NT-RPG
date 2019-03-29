@@ -592,5 +592,8 @@ public class PreloadCharacter implements IActiveCharacter {
 
 	}
 
+	@Override
+	public void restartAttributeGuiSession() {
 
+	}
 }

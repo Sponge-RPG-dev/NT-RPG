@@ -23,49 +23,15 @@ import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.commands.admin.AddEffectExecutor;
-import cz.neumimto.rpg.commands.admin.AddExperienceExecutor;
-import cz.neumimto.rpg.commands.admin.ExecuteSkillExecutor;
-import cz.neumimto.rpg.commands.admin.InspectPropertyExecutor;
-import cz.neumimto.rpg.commands.admin.InvoceExecutorExecutor;
-import cz.neumimto.rpg.commands.admin.ReloadExecutor;
-import cz.neumimto.rpg.commands.character.CharacterAttributeExecutor;
-import cz.neumimto.rpg.commands.character.CharacterChooseClassExecutor;
-import cz.neumimto.rpg.commands.character.CharacterCreateExecutor;
-import cz.neumimto.rpg.commands.character.CharacterDeleteExecutor;
-import cz.neumimto.rpg.commands.character.CharacterListExecutor;
-import cz.neumimto.rpg.commands.character.CharacterShowClassExecutor;
-import cz.neumimto.rpg.commands.character.CharacterShowClassesExecutor;
-import cz.neumimto.rpg.commands.character.CharacterSwitchExecutor;
-import cz.neumimto.rpg.commands.elements.AnyClassDefCommandElement;
-import cz.neumimto.rpg.commands.elements.CharacterAttributeCommandElement;
-import cz.neumimto.rpg.commands.elements.ClassDefCommandElement;
-import cz.neumimto.rpg.commands.elements.ClassTypeCommandElement;
-import cz.neumimto.rpg.commands.elements.GlobalEffectCommandElement;
-import cz.neumimto.rpg.commands.elements.LearnedSkillCommandElement;
-import cz.neumimto.rpg.commands.elements.PartyMemberCommandElement;
-import cz.neumimto.rpg.commands.elements.PlayerClassCommandElement;
-import cz.neumimto.rpg.commands.elements.RuneCommandElement;
-import cz.neumimto.rpg.commands.elements.UnlearnedSkillCommandElement;
-import cz.neumimto.rpg.commands.item.GiveRuneToPlayerExecutor;
-import cz.neumimto.rpg.commands.item.InspectItemDamageExecutor;
-import cz.neumimto.rpg.commands.item.ItemAddGlobalEffectExecutor;
-import cz.neumimto.rpg.commands.item.ItemAddGroupRestrictionExecutor;
-import cz.neumimto.rpg.commands.item.ItemAddMetaExecutor;
-import cz.neumimto.rpg.commands.item.ItemAddRarityExecutor;
-import cz.neumimto.rpg.commands.item.ItemAddRunewordExecutor;
-import cz.neumimto.rpg.commands.item.ItemAddSocketExecutor;
-import cz.neumimto.rpg.commands.item.ItemAddTypeExecutor;
+import cz.neumimto.rpg.commands.admin.*;
+import cz.neumimto.rpg.commands.character.*;
+import cz.neumimto.rpg.commands.elements.*;
+import cz.neumimto.rpg.commands.item.*;
 import cz.neumimto.rpg.commands.party.PartyAcceptExecutor;
 import cz.neumimto.rpg.commands.party.PartyCreateExecutor;
 import cz.neumimto.rpg.commands.party.PartyInviteExecutor;
 import cz.neumimto.rpg.commands.party.PartyKickExecutor;
-import cz.neumimto.rpg.commands.skill.SkillBindExecutor;
-import cz.neumimto.rpg.commands.skill.SkillCastExecutor;
-import cz.neumimto.rpg.commands.skill.SkillLearnExecutor;
-import cz.neumimto.rpg.commands.skill.SkillRefundExecutor;
-import cz.neumimto.rpg.commands.skill.SkillUpgradeExecutor;
-import cz.neumimto.rpg.commands.skill.SkilltreeExecutor;
+import cz.neumimto.rpg.commands.skill.*;
 import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
@@ -306,6 +272,11 @@ public class CommandService {
 				.executor(new CharacterAttributeExecutor())
 				.build();
 
+		CommandSpec characterAttributes = CommandSpec.builder()
+				.executor(new CharacterAttributesExecutor())
+				.build();
+
+
 		CommandSpec characterRoot = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_CHOOSE_DESC))
 				.child(characterCreate, "create", "c")
@@ -318,7 +289,7 @@ public class CommandService {
 				.child(characterSkill, "skill", "s", "sk")
 
 				.child(characterAttribute, "attribute", "attr", "a")
-
+				.child(characterAttributes, "attributes", "al")
 				.executor(new CharacterListExecutor()) //default fallback for char list
 				.build();
 
