@@ -2,7 +2,10 @@ package com.example.ntrpgwebservergui;
 
 import com.vaadin.flow.server.startup.ServletContextListeners;
 import org.eclipse.jetty.annotations.AnnotationConfiguration;
+import org.eclipse.jetty.server.HttpConfiguration;
+import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.thread.ExecutorThreadPool;
 import org.eclipse.jetty.util.thread.ThreadPool;
@@ -50,8 +53,13 @@ public class NTRpgWebGui {
         context.addEventListener(new ServletContextListeners());
 
         ThreadPool threadPool = new ExecutorThreadPool();
-
         Server server = new Server(threadPool);
+
+        HttpConfiguration httpConfiguration = new HttpConfiguration();
+        ServerConnector http = new ServerConnector(server, new HttpConnectionFactory(httpConfiguration));
+        http.setPort(port);
+
+        server.addConnector(http);
         server.setHandler(context);
         server.start();
         server.join();
