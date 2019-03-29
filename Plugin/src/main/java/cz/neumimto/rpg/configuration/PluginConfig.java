@@ -223,7 +223,7 @@ public class PluginConfig {
 	public byte MAX_CLICK_COMBO_LENGTH = new Byte("6");
 
 	@Setting(comment = "Class types")
-	public Map<String, ClassTypeDefinition> CLASS_TYPES = new TreeMap<String, ClassTypeDefinition>() {{
+	public Map<String, ClassTypeDefinition> CLASS_TYPES = new LinkedHashMap<String, ClassTypeDefinition>() {{
 		put("Race", new ClassTypeDefinition(TextColors.GREEN, TextColors.DARK_GREEN, DyeColors.GREEN, false, 1));
 		put("Primary", new ClassTypeDefinition(TextColors.YELLOW, TextColors.GOLD, DyeColors.YELLOW, true, 2));
 		put("Profession", new ClassTypeDefinition(TextColors.GRAY, TextColors.BLACK, DyeColors.GRAY, true, 3));
