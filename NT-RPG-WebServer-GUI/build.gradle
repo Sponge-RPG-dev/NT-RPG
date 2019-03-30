@@ -28,4 +28,12 @@ dependencies {
             configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
         }
     }
+
+
+}
+
+task execute(type:JavaExec) {
+    main = 'com.example.ntrpgwebservergui.NTRpgWebGui'
+    classpath = sourceSets.main.runtimeClasspath
+    debug = true
 }
