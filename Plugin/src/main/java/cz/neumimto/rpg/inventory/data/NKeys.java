@@ -21,7 +21,8 @@ import org.spongepowered.api.text.Text;
  */
 public class NKeys {
 
-	public static Key<Value<String>> COMMAND = null;
+    public static Key<Value<String>> ATTRIBUTE_REF = null;
+    public static Key<Value<String>> COMMAND = null;
 	public static Key<Value<Boolean>> MENU_INVENTORY = null;
 	public static Key<Value<SkillTreeControllsButton>> SKILLTREE_CONTROLLS = null;
 	public static Key<Value<Integer>> ITEM_RARITY = null;
@@ -47,6 +48,14 @@ public class NKeys {
 
 
 	public NKeys() {
+
+		ATTRIBUTE_REF = Key.builder()
+				.type(new TypeToken<Value<String>>() {
+				})
+				.name("Attribute Ref")
+				.query(DataQuery.of(".", "ntrpg.inventory.attrref"))
+				.id("nt-rpg:item_attribute_ref")
+				.build();
 		COMMAND = Key.builder()
 				.type(new TypeToken<Value<String>>() {
 				})

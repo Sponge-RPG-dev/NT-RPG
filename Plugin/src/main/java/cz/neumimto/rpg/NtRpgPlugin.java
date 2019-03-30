@@ -26,10 +26,7 @@ import cz.neumimto.rpg.commands.CommandService;
 import cz.neumimto.rpg.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.configuration.Settings;
-import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
-import cz.neumimto.rpg.inventory.data.MenuInventoryData;
-import cz.neumimto.rpg.inventory.data.NKeys;
-import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
+import cz.neumimto.rpg.inventory.data.*;
 import cz.neumimto.rpg.inventory.data.manipulators.*;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.inventory.items.ItemMetaTypeRegistry;
@@ -130,6 +127,14 @@ public class NtRpgPlugin {
 		PluginCore.MANAGED_JPA_TYPES.add(CharacterClass.class);
 		Sponge.getEventManager().registerListeners(this, new PersistenceHandler(this));
 		new NKeys();
+		DataRegistration.builder()
+				.manipulatorId("item_attribute_ref")
+				.dataName("Attr Ref")
+				.dataClass(AttributeRefMenuData.class)
+				.immutableClass(AttributeRefMenuData.Immutable.class)
+				.builder(new AttributeRefMenuData.AttributeRefMenuDataBuilder())
+				.buildAndRegister(plugin);
+
 		DataRegistration.builder()
 				.manipulatorId("custom_inventory_command")
 				.dataName("Custom Inventory Command")

@@ -456,10 +456,10 @@ public class GuiHelper {
 		}
 	}
 
-	public static Inventory createCharacterEmptyInventory(IActiveCharacter character) {
+	public static Inventory.Builder createCharacterEmptyInventory(IActiveCharacter character) {
 		return Inventory.builder()
 				.of(InventoryArchetypes.DOUBLE_CHEST)
 				.property(InventoryTitle.of(Text.of(character.getCharacterBase().getName(), TextStyles.BOLD)))
-				.build(NtRpgPlugin.GlobalScope.plugin);
+				;
 	}
 }

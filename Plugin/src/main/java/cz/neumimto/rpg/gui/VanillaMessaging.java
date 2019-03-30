@@ -36,9 +36,7 @@ import cz.neumimto.rpg.effects.common.def.ManaBarNotifier;
 import cz.neumimto.rpg.inventory.CannotUseItemReason;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
-import cz.neumimto.rpg.inventory.data.MenuInventoryData;
-import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
+import cz.neumimto.rpg.inventory.data.*;
 import cz.neumimto.rpg.inventory.data.manipulators.SkillTreeNode;
 import cz.neumimto.rpg.inventory.runewords.ItemUpgrade;
 import cz.neumimto.rpg.inventory.runewords.RWService;
@@ -63,15 +61,14 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.Container;
-import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.InventoryArchetypes;
-import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.*;
 import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.item.inventory.property.SlotPos;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
+import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.service.pagination.PaginationService;
@@ -825,11 +822,11 @@ public class VanillaMessaging implements IPlayerMessage {
 
     @Override
     public void displayCharacterMenu(IActiveCharacter character) {
-        Inventory i = GuiHelper.createCharacterEmptyInventory(character);
+        Inventory i = GuiHelper.createCharacterEmptyInventory(character).build(NtRpgPlugin.GlobalScope.plugin);
 
         ItemStack itemStack = GuiHelper.itemStack(ItemTypes.BOOK);
         itemStack.offer(Keys.DISPLAY_NAME, Localizations.ATTRIBUTES.toText());
-        itemStack.offer(new InventoryCommandItemMenuData(" character attributes "));
+        itemStack.offer(new InventoryCommandItemMenuData("character attributes "));
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(1, 1))).offer(itemStack);
 
         //todo more
@@ -839,20 +836,51 @@ public class VanillaMessaging implements IPlayerMessage {
 
     @Override
     public void displayCharacterAttributes(IActiveCharacter character) {
-        Inventory i = GuiHelper.createCharacterEmptyInventory(character);
-        i.offer(back(" character ",Text.of("back")));
+        Inventory i = GuiHelper.createCharacterEmptyInventory(character)
+                .listener(ClickInventoryEvent.Primary.class, event -> {
+                    Player root = (Player) event.getCause().root();
+                    Iterator<SlotTransaction> iterator = event.getTransactions().iterator();
+                    while (iterator.hasNext()) {
+                        SlotTransaction next = iterator.next();
+                        Optional<String> s = next.getFinal().get(NKeys.ATTRIBUTE_REF);
+                        if (s.isPresent()) {
+                            Slot slot = next.getSlot();
+                            Optional<SlotPos> properties = slot.transform().getInventoryProperty(SlotPos.class);
+                            SlotPos slotPos = properties.get();
+                            slotPos = new SlotPos(slotPos.getX(), slotPos.getY() - 1);
+
+                        }
+                        break;
+                    }
+                })
+                .build(NtRpgPlugin.GlobalScope.plugin);
+
+        i.offer(back("character ", Text.of("back")));
+
+        ItemStack commit = GuiHelper.itemStack(ItemTypes.DIAMOND);
+        commit.offer(Keys.DISPLAY_NAME, Text.builder("Commit").color(TextColors.GREEN).build());
+        commit.offer(new InventoryCommandItemMenuData("character attributes tx-commit "));
+
+        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7,0)))
+                .offer(commit);
+
 
         Collection<Attribute> allOf = Sponge.getRegistry().getAllOf(Attribute.class);
 
         int q = 0;
         for (Attribute attribute : allOf) {
+
             ItemStack itemStack = GuiHelper.itemStack(attribute.getItemType());
             itemStack.offer(Keys.DISPLAY_NAME, Text.of(attribute.getName()));
             List<Text> text = TextHelper.splitStringByDelimiter(attribute.getDescription());
-            text.add(Text.builder("Max: " + attribute.getMaxValue()).build());
+            Integer amount = character.getCharacterBase().getAttributes().get(attribute.getId());
+            text.add(Text.builder("Val: " + (amount == null ? 0 : amount) + " / "  + attribute.getMaxValue()).build());
             itemStack.offer(Keys.ITEM_LORE, text);
 
-
+            ItemStack btn = GuiHelper.itemStack(ItemTypes.SUGAR);
+            btn.offer(Keys.DISPLAY_NAME, Text.of(TextColors.GREEN, "+"));
+            btn.offer(new AttributeRefMenuData(attribute.getId()));
+            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(q, 2))).offer(btn);
             i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(q, 3))).offer(itemStack);
             q++;
         }

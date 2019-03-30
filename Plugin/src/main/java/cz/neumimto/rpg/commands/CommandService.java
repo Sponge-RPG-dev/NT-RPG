@@ -290,7 +290,7 @@ public class CommandService {
 
 				.child(characterAttribute, "attribute", "attr", "a")
 				.child(characterAttributes, "attributes", "al")
-				.executor(new CharacterListExecutor()) //default fallback for char list
+				.executor(new CharacterMenuExecutor()) //default fallback for char list
 				.build();
 
 		Sponge.getCommandManager().register(plugin, characterRoot, "character", "char", "nc");
