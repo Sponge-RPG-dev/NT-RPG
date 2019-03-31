@@ -2,7 +2,6 @@ package cz.neumimto.rpg.listeners;
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.rpg.NEventContextKeys;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.damage.SkillDamageSource;
@@ -24,8 +23,6 @@ import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.EventContext;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.cause.entity.damage.source.IndirectEntityDamageSource;
@@ -70,12 +67,10 @@ public class DamageListener {
 
 			try (CauseStackManager.StackFrame frame = causeStackManager.pushCauseFrame()) {
 				if (effect != null) {
-					EventContext build = EventContext.builder().add(NEventContextKeys.EFFECT, effect).build();
-					causeStackManager.pushCause(Cause.of(build, effect));
+					causeStackManager.pushCause(effect);
 				}
 				if (skill != null) {
-					EventContext build = EventContext.builder().add(NEventContextKeys.SKILL, skill).build();
-					causeStackManager.pushCause(Cause.of(build, skill));
+					causeStackManager.pushCause(skill);
 				}
 
 				SkillDamageEvent pre = new SkillDamageEvent(target, skill, finalDamage);
