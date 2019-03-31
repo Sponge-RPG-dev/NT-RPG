@@ -17,7 +17,7 @@ public class ElementalResistanceEffect extends EffectBase<Float> {
 
 	public ElementalResistanceEffect(IEffectConsumer consumer, float percentage, long duration) {
 		super(name, consumer);
-		setStackable(true, new FloatEffectStackingStrategy());
+		setStackable(true, FloatEffectStackingStrategy.INSTANCE);
 		setValue(percentage);
 		setDuration(duration);
 	}

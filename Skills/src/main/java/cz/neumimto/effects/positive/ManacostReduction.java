@@ -17,6 +17,6 @@ public class ManacostReduction extends EffectBase<Double> {
 		super(name, character);
 		setDuration(duration);
 		setValue(value);
-		setStackable(true, new DoubleEffectStackingStrategy());
+		setStackable(true, DoubleEffectStackingStrategy.INSTANCE);
 	}
 }

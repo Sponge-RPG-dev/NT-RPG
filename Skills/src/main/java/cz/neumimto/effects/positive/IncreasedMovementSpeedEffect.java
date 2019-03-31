@@ -18,7 +18,7 @@ public class IncreasedMovementSpeedEffect extends EffectBase<Float> {
 		super(name, consumer);
 		setValue(value);
 		setDuration(duration);
-		setStackable(true, new FloatEffectStackingStrategy());
+		setStackable(true, FloatEffectStackingStrategy.INSTANCE);
 	}
 
 	@Override

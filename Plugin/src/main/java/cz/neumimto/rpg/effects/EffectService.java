@@ -24,6 +24,7 @@ import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
+import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.events.effect.EffectApplyEvent;
 import cz.neumimto.rpg.events.effect.EffectRemoveEvent;
 import cz.neumimto.rpg.players.ActiveCharacter;
@@ -33,6 +34,7 @@ import cz.neumimto.rpg.skills.SkillSettings;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
+import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
@@ -62,6 +64,9 @@ public class EffectService {
 
 	@Inject
 	private NtRpgPlugin plugin;
+
+	@Inject
+	private CauseStackManager causeStackManager;
 
 	private Set<IEffect> effectSet = new HashSet<>();
 	private Set<IEffect> pendingAdditions = new HashSet<>();
@@ -239,27 +244,53 @@ public class EffectService {
 	 * Adds effect to the consumer,
 	 * Effects requiring register are registered into the scheduler one tick later
 	 *
-	 * @param iEffect effect
+	 * @param effect effect
+	 *
+	 * @return true if effect is successfully applied
 	 */
-	@SuppressWarnings("unchecked")
-	public void addEffect(IEffect iEffect) {
-		addEffect(iEffect, InternalEffectSourceProvider.INSTANCE);
+	public boolean addEffect(IEffect effect) {
+		return addEffect(effect, InternalEffectSourceProvider.INSTANCE);
 	}
 
 	/**
 	 * Adds effect to the consumer,
 	 * Effects requiring register are registered into the scheduler one tick later
 	 *
-	 * @param effectSourceProvider source
 	 * @param effect effect
+	 * @param effectSourceProvider source
+	 *
+	 * @return true if effect is successfully applied
+	 */
+	public boolean addEffect(IEffect effect, IEffectSourceProvider effectSourceProvider) {
+		return addEffect(effect, effectSourceProvider, null);
+	}
+
+	/**
+	 * Adds effect to the consumer,
+	 * Effects requiring register are registered into the scheduler one tick later
+	 *
+	 * @param effect effect
+	 * @param effectSourceProvider source
+	 * @param entitySource caster of effect
+	 *
+	 * @return true if effect is successfully applied
 	 */
 	@SuppressWarnings("unchecked")
-	public void addEffect(IEffect effect, IEffectSourceProvider effectSourceProvider) {
+	public boolean addEffect(IEffect effect, IEffectSourceProvider effectSourceProvider, IEntity entitySource) {
 		effect.setEffectSourceProvider(effectSourceProvider);
 
 		EffectApplyEvent event = new EffectApplyEvent(effect);
-		if (Sponge.getEventManager().post(event)) {
-			return;
+		try (CauseStackManager.StackFrame frame = causeStackManager.pushCauseFrame()) {
+			causeStackManager.pushCause(effect);
+			causeStackManager.pushCause(effectSourceProvider);
+			if (entitySource != null) {
+				causeStackManager.pushCause(entitySource);
+			}
+
+			event.setCause(causeStackManager.getCurrentCause());
+			if (Sponge.getEventManager().post(event)) {
+				return false;
+			}
 		}
 
 		IEffectContainer eff = effect.getConsumer().getEffect(effect.getName());
@@ -289,6 +320,8 @@ public class EffectService {
 		if (effect.requiresRegister()) {
 			runEffect(effect);
 		}
+
+		return true;
 	}
 
 	/**
@@ -322,8 +355,13 @@ public class EffectService {
 			return;
 		}
 
-		EffectRemoveEvent event = new EffectRemoveEvent(effect);
-		Sponge.getEventManager().post(event);
+		try (CauseStackManager.StackFrame frame = causeStackManager.pushCauseFrame()) {
+			EffectRemoveEvent event = new EffectRemoveEvent(effect);
+			causeStackManager.pushCause(effect);
+
+			event.setCause(causeStackManager.getCurrentCause());
+			Sponge.getEventManager().post(event);
+		}
 
 		if (effect == container) {
 			if (!effect.getConsumer().isDetached()) {

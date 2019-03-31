@@ -17,6 +17,6 @@ public class DamageToMana extends EffectBase<Double> {
 		super(name, character);
 		setDuration(duration);
 		setValue(percentage);
-		setStackable(true, new DoubleEffectStackingStrategy());
+		setStackable(true, DoubleEffectStackingStrategy.INSTANCE);
 	}
 }

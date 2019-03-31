@@ -3,19 +3,13 @@ package cz.neumimto.rpg;
 import static org.mockito.Matchers.any;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.PluginConfig;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.EffectStackingStrategy;
-import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.common.stacking.MinLongStackingStrategy;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.CharacterBase;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import org.mockito.Mockito;
 
 import java.io.File;
@@ -62,7 +56,7 @@ public class EffectTests {
         Mockito.when(mock.getEffectSourceProvider()).thenReturn(InternalEffectSourceProvider.INSTANCE);
         Mockito.when(mock.getName()).thenReturn(name);
         Mockito.when(mock.getValue()).thenReturn(1L);
-        Mockito.when(mock.getEffectStackingStrategy()).thenReturn(new MinLongStackingStrategy());
+        Mockito.when(mock.getEffectStackingStrategy()).thenReturn(MinLongStackingStrategy.INSTANCE);
         Mockito.when(mock.requiresRegister()).thenCallRealMethod();
 
         Mockito.when(mock.constructEffectContainer()).thenCallRealMethod();

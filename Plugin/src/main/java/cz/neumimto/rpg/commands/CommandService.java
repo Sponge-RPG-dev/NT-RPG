@@ -297,7 +297,7 @@ public class CommandService {
 		CommandSpec skillCast = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_SKILL_DESC))
 				.arguments(
-						new AnySkillCommandElement(TextHelper.parse("skill"))
+						new LearnedSkillCommandElement(TextHelper.parse("skill"))
 				)
 				.executor(new SkillCastExecutor())
 				.build();

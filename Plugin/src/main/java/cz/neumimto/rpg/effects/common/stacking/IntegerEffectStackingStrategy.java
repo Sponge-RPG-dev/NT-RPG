@@ -7,6 +7,11 @@ import cz.neumimto.rpg.effects.EffectStackingStrategy;
  */
 public class IntegerEffectStackingStrategy implements EffectStackingStrategy<Integer> {
 
+	public static final IntegerEffectStackingStrategy INSTANCE = new IntegerEffectStackingStrategy();
+
+	private IntegerEffectStackingStrategy() {
+	}
+
 	@Override
 	public Integer mergeValues(Integer current, Integer toAdd) {
 		return current + toAdd;

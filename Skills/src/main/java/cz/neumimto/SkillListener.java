@@ -7,13 +7,16 @@ import cz.neumimto.effects.ManaDrainEffect;
 import cz.neumimto.effects.ResoluteTechniqueEffect;
 import cz.neumimto.effects.negative.StunEffect;
 import cz.neumimto.effects.positive.*;
-import cz.neumimto.events.*;
+import cz.neumimto.events.CriticalStrikeEvent;
+import cz.neumimto.events.DamageDodgedEvent;
+import cz.neumimto.events.ManaDrainEvent;
 import cz.neumimto.model.*;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.entities.*;
+import cz.neumimto.rpg.events.effect.EffectApplyEvent;
 import cz.neumimto.rpg.events.entity.DamageIEntityEvent;
 import cz.neumimto.rpg.events.entity.IEntityWeaponDamageEvent;
 import cz.neumimto.rpg.gui.Gui;
@@ -205,8 +208,7 @@ public class SkillListener {
 					if (stackedValue.damage != 0) {
 						event.setDamage(event.getDamage() + stackedValue.damage);
 					}
-					if (!game.getEventManager().post(new StunApplyAttemptEvent(source, stunEffect))) {
-						effectService.addEffect(stunEffect, effect);
+					if (effectService.addEffect(stunEffect, effect, source)) {
 						stackedValue.lasttime = time;
 					}
 				}
@@ -237,9 +239,8 @@ public class SkillListener {
 	}
 
 	@Listener
-	public void onStunApply(StunApplyAttemptEvent event) {
-		StunEffect effect = event.getEffect();
-		float f = entityService.getEntityProperty(event.getCaster(), AdditionalProperties.stun_duration_mult);
+	public void onStunApply(EffectApplyEvent event, @First StunEffect effect, @First IEntity source) {
+		float f = entityService.getEntityProperty(source, AdditionalProperties.stun_duration_mult);
 		effect.setDuration((long) (f * event.getEffect().getDuration()));
 	}
 

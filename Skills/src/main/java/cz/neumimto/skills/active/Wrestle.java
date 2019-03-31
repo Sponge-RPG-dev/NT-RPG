@@ -54,7 +54,7 @@ public class Wrestle extends ActiveSkill {
 				if (Utils.canDamage(source, l)) {
 					IEffectConsumer t = entityService.get(l);
 					StunEffect stunEffect = new StunEffect(t, duration);
-					effectService.addEffect(stunEffect, this);
+					effectService.addEffect(stunEffect, this, source);
 					if (damage > 0) {
 						SkillDamageSource s = new SkillDamageSourceBuilder()
 								.fromSkill(this)

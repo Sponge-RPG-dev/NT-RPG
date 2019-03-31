@@ -5,10 +5,10 @@ import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.IRpgElement;
-import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.events.skill.SkillHealEvent;
+import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.properties.PropertyService;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
@@ -35,11 +35,14 @@ public class EntityService {
 	private PropertyService propertyService;
 
 	@Inject
+	private CharacterService characterService;
+
+	@Inject
 	private EffectService effectService;
 
 	public IEntity get(Entity id) {
 		if (id.getType() == EntityTypes.PLAYER) {
-			return NtRpgPlugin.GlobalScope.characterService.getCharacter(id.getUniqueId());
+			return characterService.getCharacter(id.getUniqueId());
 		}
 		IMob iEntity = entityHashMap.get(id.getUniqueId());
 		if (iEntity == null) {
@@ -120,33 +123,39 @@ public class EntityService {
 	 *
 	 * @param entity
 	 * @param amount
+	 *
+	 * @return difference
 	 */
-	public void healEntity(IEntity entity, float amount, IRpgElement source) {
+	public double healEntity(IEntity entity, float amount, IRpgElement source) {
 		if (entity.getHealth().getValue() == entity.getHealth().getMaxValue()) {
-			return;
+			return 0;
 		}
 
 		SkillHealEvent event = new SkillHealEvent(entity, amount, source);
 		Sponge.getGame().getEventManager().post(event);
 		if (event.isCancelled() || event.getAmount() <= 0) {
-			return;
+			return 0;
 		}
 
-		setEntityHealth(event.getTarget(), entity.getHealth().getValue() + event.getAmount());
+		return setEntityHealth(event.getTarget(), entity.getHealth().getValue() + event.getAmount());
 	}
 
 	/**
-	 * sets entity's hp to chosen amount.
+	 * Sets entity's hp to chosen amount.
 	 *
 	 * @param entity
-	 * @param amount
+	 * @param value
+	 *
+	 * @return difference
 	 */
-	public void setEntityHealth(IEntity entity, double amount) {
-		if (amount > entity.getHealth().getMaxValue()) {
+	public double setEntityHealth(IEntity entity, double value) {
+		if (value > entity.getHealth().getMaxValue()) {
 			setEntityToFullHealth(entity);
-			return;
+			return entity.getHealth().getMaxValue() - entity.getHealth().getValue();
 		}
-		entity.getHealth().setValue(amount);
+		double diff = value - entity.getHealth().getValue();
+		entity.getHealth().setValue(value);
+		return diff;
 	}
 
 	/**

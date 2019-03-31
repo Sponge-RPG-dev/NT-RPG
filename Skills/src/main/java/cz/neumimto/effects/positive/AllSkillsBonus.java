@@ -14,7 +14,7 @@ public class AllSkillsBonus extends EffectBase<Integer> {
 	public AllSkillsBonus(IEffectConsumer character, long duration, int value) {
 		super(name, character);
 		setDuration(duration);
-		setStackable(true, new IntegerEffectStackingStrategy());
+		setStackable(true, IntegerEffectStackingStrategy.INSTANCE);
 		setValue(value);
 	}
 

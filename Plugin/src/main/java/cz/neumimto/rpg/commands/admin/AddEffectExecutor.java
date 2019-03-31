@@ -24,7 +24,8 @@ public class AddEffectExecutor implements CommandExecutor {
 		String data = args.<String>getOne("data").get();
 		IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
 		EffectParams params = gson.fromJson(data, EffectParams.class);
-		NtRpgPlugin.GlobalScope.effectService.addEffect(effect.construct(character, k, params), InternalEffectSourceProvider.INSTANCE);
-		return CommandResult.success();
+		if (NtRpgPlugin.GlobalScope.effectService.addEffect(effect.construct(character, k, params), InternalEffectSourceProvider.INSTANCE))
+			return CommandResult.success();
+		else return CommandResult.empty();
 	}
 }

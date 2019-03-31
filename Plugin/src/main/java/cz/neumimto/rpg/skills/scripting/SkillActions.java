@@ -64,14 +64,15 @@ public class SkillActions {
 
 	@SkillComponent(
 			value = "Applies an effect to a specifc entity, each effect has different constructor parameters",
-			usage = "apply_effect(effect, context)",
+			usage = "apply_effect(effect, context, source)",
 			params = {
 					@SkillComponent.Param("effect - The effect to be applied"),
 					@SkillComponent.Param("context - skill context"),
+					@SkillComponent.Param("source - source/caster entity (may be null)")
 			}
 	)
-	public static BiConsumer<IEffect, SkillScriptContext> APPLY_EFFECT = (iEffect1, skillScriptContext) -> {
-		NtRpgPlugin.GlobalScope.effectService.addEffect(iEffect1, skillScriptContext.getSkill());
+	public static TriConsumer<IEffect, SkillScriptContext, IEntity> APPLY_EFFECT = (effect, context, source) -> {
+		NtRpgPlugin.GlobalScope.effectService.addEffect(effect, context.getSkill(), source);
 	};
 
 	@SkillComponent(
