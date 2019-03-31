@@ -19,6 +19,7 @@ import java.util.UUID;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 
+@Ignore
 public class EffectTests {
 
     private EffectService effectService = new EffectService();
@@ -35,6 +36,8 @@ public class EffectTests {
         TestHelper.initLocalizations();
         NtRpgPlugin.pluginConfig = (PluginConfig) TestHelper.getUnsafe().allocateInstance(PluginConfig.class);
         NtRpgPlugin.pluginConfig.DEBUG = DebugLevel.NONE;
+        NtRpgPlugin.GlobalScope = new GlobalScope();
+        NtRpgPlugin.GlobalScope.plugin = new NtRpgPlugin();
     }
 
     @Before
