@@ -350,9 +350,9 @@ public class NtRpgPlugin {
 
 	@Listener
 	public void postInit7(GameRegistryEvent.Register<DamageType> event) {
-		event.register(NDamageType.DAMAGE_CHECK);
 		event.register(NDamageType.ICE);
 		event.register(NDamageType.LIGHTNING);
+		event.register(NDamageType.DAMAGE_CHECK);
 	}
 
 	@Listener

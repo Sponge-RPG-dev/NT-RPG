@@ -43,7 +43,12 @@ public class DamageListener {
 
 	@Listener(order = Order.LATE)
 	public void onEntityDamage(DamageEntityEvent event, @First EntityDamageSource damageSource) {
-		if (damageSource.getType() == NDamageType.DAMAGE_CHECK) {
+		/*if (damageSource.getType() == NDamageType.DAMAGE_CHECK) {
+			return;
+		}
+
+		 */
+		if (damageSource.toString().contains(NDamageType.DAMAGE_CHECK.getName())) {
 			return;
 		}
 

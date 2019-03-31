@@ -136,13 +136,15 @@ public class PlayerSkillContext {
 				String s = first.get();
 				if (s.endsWith(SkillSettings.bonus)) {
 					String stripped = s.substring(0, s.length() - SkillSettings.bonus.length());
-					cachedComputedSkillSettings.computeFloatIfPresent(stripped, (s1, aFloat) -> aFloat + entry.getValue() * getTotalLevel());
+					float aFloat1 = cachedComputedSkillSettings.getFloat(stripped);
+					cachedComputedSkillSettings.put(stripped, aFloat1 + entry.getValue() * getTotalLevel());
 				}
 				for (Attribute attribute : attributes) {
 					String id = "_per_" + attribute.getId();
 					if (s.endsWith(id)) {
 						String stripped = s.substring(0, s.length() - id.length());
-						cachedComputedSkillSettings.computeFloatIfPresent(stripped, (s1, aFloat) -> aFloat + entry.getValue() * character.getAttributeValue(attribute));
+						float aFloat1 = cachedComputedSkillSettings.getFloat(stripped);
+						cachedComputedSkillSettings.put(stripped, aFloat1 + entry.getValue() * getTotalLevel());
 					}
 				}
 			}
