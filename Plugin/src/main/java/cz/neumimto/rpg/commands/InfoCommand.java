@@ -173,7 +173,7 @@ public class InfoCommand extends CommandBase {
 					}
 				}
 			}
-			if (skillTree == SkillTree.Default) {
+			if (skillTree == SkillTree.Default || skillTree == null) {
 				commandSource.sendMessage(Text.of(TextColors.RED, "Unknown class, or the class has no skilltree defined"));
 				return CommandResult.empty();
 			}

@@ -383,7 +383,7 @@ public class CommandService {
 		CommandSpec showClass = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_RACE_DESC))
 				.arguments(
-						GenericArguments.optional(new AnyClassDefCommandElement(Text.of("class"), false))
+						GenericArguments.optional(new AnyClassDefCommandElement(Text.of("class")))
 				)
 				.executor(new CharacterShowClassExecutor())
 				.build();
