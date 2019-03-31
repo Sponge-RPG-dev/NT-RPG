@@ -9,11 +9,11 @@ import org.spongepowered.api.event.cause.Cause;
  * Called when an {@link IEffect} is removed from {@link IEffectConsumer}.
  * Contains {@link IEffect} in {@link Cause}
  *
- * To filter specific effects in listener use "@First YourEffect"
+ * To filter specific effects in listener use EffectRemoveEvent<YourEffect> or "@First YourEffect"
  */
 @JsBinding(JsBinding.Type.CLASS)
-public class EffectRemoveEvent extends AbstractEffectEvent {
-	public EffectRemoveEvent(IEffect effect) {
+public class EffectRemoveEvent<T extends IEffect> extends AbstractEffectEvent<T> {
+	public EffectRemoveEvent(T effect) {
 		super(effect);
 	}
 }

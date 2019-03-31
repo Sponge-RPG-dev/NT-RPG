@@ -12,13 +12,13 @@ import org.spongepowered.api.event.cause.Cause;
  * Called when an {@link IEffect} is applied to {@link IEffectConsumer}.
  * Contains {@link IEffect}, {@link IEffectSourceProvider} and sometimes {@link IEntity} in {@link Cause}
  *
- * To filter specific effects in listener use "@First YourEffect"
+ * To filter specific effects in listener use EffectApplyEvent<YourEffect> or "@First YourEffect"
  */
 @JsBinding(JsBinding.Type.CLASS)
-public class EffectApplyEvent extends AbstractEffectEvent implements Cancellable {
+public class EffectApplyEvent<T extends IEffect> extends AbstractEffectEvent<T> implements Cancellable {
 	protected boolean cancelled;
 
-	public EffectApplyEvent(IEffect effect) {
+	public EffectApplyEvent(T effect) {
 		super(effect);
 	}
 

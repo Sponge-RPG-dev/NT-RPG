@@ -37,6 +37,7 @@ import org.spongepowered.api.effect.sound.SoundTypes;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.EnderPearl;
+import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.entity.projectile.arrow.TippedArrow;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
@@ -118,15 +119,18 @@ public class SkillListener {
 	@Listener
 	@SuppressWarnings("unchecked")
 	public void onEntityDamage(DamageIEntityEvent event, @First EntityDamageSource damageSource) {
+		IEntity source;
+		if (damageSource.getSource() instanceof Projectile)
+			source = entityService.get((Entity) ((Projectile) damageSource.getSource()).getShooter());
+		else source = entityService.get(damageSource.getSource());
+
 		//invis
-		IEntity source = entityService.get(damageSource.getSource());
 		if (event.getTarget().hasEffect(Invisibility.name)) {
 			effectService.removeEffectContainer(event.getTarget().getEffect(Invisibility.name), event.getTarget());
 		}
 		if (source.hasEffect(Invisibility.name)) {
 			effectService.removeEffectContainer(event.getTarget().getEffect(Invisibility.name), source);
 		}
-
 
 		//shadowrun
 		if (event.getTarget().hasEffect(ShadowRunEffect.name)) {
@@ -143,7 +147,6 @@ public class SkillListener {
 	}
 
 	@Listener(order = Order.LAST)
-	@IsCancelled(Tristate.FALSE)
 	public void onEntityDamageLast(DamageIEntityEvent event) {
 		if (event.getTarget().hasEffect(ManaShieldEffect.name)) {
 			IEffectContainer<ManaShieldEffectModel, ManaShieldEffect> effect = event.getTarget().getEffect(ManaShieldEffect.name);
@@ -239,9 +242,9 @@ public class SkillListener {
 	}
 
 	@Listener
-	public void onStunApply(EffectApplyEvent event, @First StunEffect effect, @First IEntity source) {
+	public void onStunApply(EffectApplyEvent<StunEffect> event, @First IEntity source) {
 		float f = entityService.getEntityProperty(source, AdditionalProperties.stun_duration_mult);
-		effect.setDuration((long) (f * event.getEffect().getDuration()));
+		event.getEffect().setDuration((long) (f * event.getEffect().getDuration()));
 	}
 
 	@Listener(order = Order.LATE)
