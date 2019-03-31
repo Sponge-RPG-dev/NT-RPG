@@ -24,7 +24,7 @@ public class SkillBindExecutor implements CommandExecutor {
 		if (skill.isPresent()) {
 			ISkill iSkill = skill.get();
 			if (!(iSkill instanceof ActiveSkill)) {
-				src.sendMessage(Localizations.CANNOT_BIN_NON_EXECUTABLE_SKILL.toText());
+				src.sendMessage(Localizations.CANNOT_BIND_NON_EXECUTABLE_SKILL.toText());
 				return CommandResult.empty();
 			}
 			Player pl = (Player) src;

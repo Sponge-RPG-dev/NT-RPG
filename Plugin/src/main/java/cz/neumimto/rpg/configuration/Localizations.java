@@ -27,7 +27,8 @@ import cz.neumimto.core.localization.Localization;
 @Localization("rpg.main")
 public class Localizations {
 
-	public static LocalizableParametrizedText NO_MANA;
+
+    public static LocalizableParametrizedText NO_MANA;
 
 	public static LocalizableParametrizedText NO_HP;
 
@@ -279,5 +280,7 @@ public class Localizations {
 
 	public static LocalizableParametrizedText CLASS_NOT_SELECTED;
 
-	public static LocalizableParametrizedText CANNOT_BIN_NON_EXECUTABLE_SKILL;
+	public static LocalizableParametrizedText CANNOT_BIND_NON_EXECUTABLE_SKILL;
+
+	public static LocalizableParametrizedText NO_PRIMARY_CLASS;
 }

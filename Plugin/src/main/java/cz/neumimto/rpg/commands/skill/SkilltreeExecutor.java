@@ -5,6 +5,7 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.skills.tree.SkillTree;
@@ -16,6 +17,8 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
+import java.util.Optional;
+
 public class SkilltreeExecutor implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
@@ -26,11 +29,17 @@ public class SkilltreeExecutor implements CommandExecutor {
 				p.sendMessage(Localizations.CHARACTER_IS_REQUIRED.toText());
 				return CommandResult.empty();
 			}
-			ClassDefinition configClass = args.<ClassDefinition>getOne("class").orElse(character.getPrimaryClass().getClassDefinition());
-			if (configClass == null) {
-				Gui.sendMessage(character, Localizations.NON_EXISTING_GROUP, Arg.EMPTY);
-				return CommandResult.builder().build();
+			Optional<ClassDefinition> aClass = args.getOne("class");
+			if (!aClass.isPresent()) {
+				PlayerClassData primaryClass = character.getPrimaryClass();
+				if (primaryClass == null) {
+					Gui.sendMessage(character, Localizations.NO_PRIMARY_CLASS, Arg.EMPTY);
+					return CommandResult.builder().build();
+				}
+				aClass = Optional.of(primaryClass.getClassDefinition());
 			}
+			ClassDefinition configClass = aClass.get();
+
 			SkillTree skillTree = configClass.getSkillTree();
 			for (SkillTreeViewModel treeViewModel : character.getSkillTreeViewLocation().values()) {
 				treeViewModel.setCurrent(false);
