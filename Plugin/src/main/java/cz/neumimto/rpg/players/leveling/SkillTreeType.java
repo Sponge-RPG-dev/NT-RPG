@@ -5,7 +5,7 @@ import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localizations;
-import cz.neumimto.rpg.events.CharacterGainedLevelEvent;
+import cz.neumimto.rpg.events.character.CharacterGainedLevelEvent;
 import cz.neumimto.rpg.persistance.DirectAccessDao;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.players.ActionResult;

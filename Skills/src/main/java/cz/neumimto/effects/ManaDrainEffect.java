@@ -12,7 +12,7 @@ import cz.neumimto.rpg.scripting.JsBinding;
 @Generate(id = "name", description = "An effect whichgives manadrain to the target")
 public class ManaDrainEffect extends EffectBase<Float> {
 
-	public static final String name = "Mana Drain";
+	public static final String name = "CharacterMana Drain";
 
 	public ManaDrainEffect(IEffectConsumer character, long duration, float value) {
 		super(name, character);

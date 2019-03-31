@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg;
 
+import static cz.neumimto.rpg.Log.info;
 import com.google.inject.Inject;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.PluginCore;
@@ -44,10 +45,7 @@ import cz.neumimto.rpg.listeners.DebugListener;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.ExperienceSource;
-import cz.neumimto.rpg.players.ExperienceSourceRegistry;
-import cz.neumimto.rpg.players.ExperienceSources;
+import cz.neumimto.rpg.players.*;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.attributes.AttributeCatalogTypeRegistry;
 import cz.neumimto.rpg.skills.*;
@@ -80,7 +78,6 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.SpongeExecutorService;
 
-import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -89,8 +86,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-
-import static cz.neumimto.rpg.Log.info;
+import javax.annotation.Resource;
 
 /**
  * Created by NeumimTo on 29.4.2015.
@@ -354,10 +350,9 @@ public class NtRpgPlugin {
 
 	@Listener
 	public void postInit7(GameRegistryEvent.Register<DamageType> event) {
-		event.register(NDamageType.DAMAGE_CHECK);
 		event.register(NDamageType.ICE);
 		event.register(NDamageType.LIGHTNING);
-		event.register(NDamageType.MEELE_CRITICAL);
+		event.register(NDamageType.DAMAGE_CHECK);
 	}
 
 	@Listener

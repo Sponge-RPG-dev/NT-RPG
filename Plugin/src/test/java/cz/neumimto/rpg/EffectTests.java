@@ -1,32 +1,25 @@
 package cz.neumimto.rpg;
 
+import static org.mockito.Matchers.any;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.PluginConfig;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.EffectStackingStrategy;
-import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.common.stacking.MinLongStackingStrategy;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.CharacterBase;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import org.mockito.Mockito;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.util.Set;
 import java.util.UUID;
-
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 
-import static org.mockito.Matchers.any;
-
+@Ignore
 public class EffectTests {
 
     private EffectService effectService = new EffectService();
@@ -43,6 +36,8 @@ public class EffectTests {
         TestHelper.initLocalizations();
         NtRpgPlugin.pluginConfig = (PluginConfig) TestHelper.getUnsafe().allocateInstance(PluginConfig.class);
         NtRpgPlugin.pluginConfig.DEBUG = DebugLevel.NONE;
+        NtRpgPlugin.GlobalScope = new GlobalScope();
+        NtRpgPlugin.GlobalScope.plugin = new NtRpgPlugin();
     }
 
     @Before
@@ -64,7 +59,7 @@ public class EffectTests {
         Mockito.when(mock.getEffectSourceProvider()).thenReturn(InternalEffectSourceProvider.INSTANCE);
         Mockito.when(mock.getName()).thenReturn(name);
         Mockito.when(mock.getValue()).thenReturn(1L);
-        Mockito.when(mock.getEffectStackingStrategy()).thenReturn(MinLongStackingStrategy.INSTNCE);
+        Mockito.when(mock.getEffectStackingStrategy()).thenReturn(MinLongStackingStrategy.INSTANCE);
         Mockito.when(mock.requiresRegister()).thenCallRealMethod();
 
         Mockito.when(mock.constructEffectContainer()).thenCallRealMethod();

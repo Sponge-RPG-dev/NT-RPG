@@ -17,21 +17,25 @@
  */
 package cz.neumimto.rpg.damage;
 
-import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.skills.ISkill;
-import org.spongepowered.api.event.cause.entity.damage.source.common.AbstractDamageSourceBuilder;
+import org.spongepowered.api.event.cause.entity.damage.source.common.AbstractEntityDamageSource;
 
 /**
  * Created by NeumimTo on 29.12.2015.
  */
-public class SkillDamageSourceBuilder extends AbstractDamageSourceBuilder<SkillDamageSource, SkillDamageSourceBuilder> {
+public class SkillDamageSourceBuilder extends AbstractEntityDamageSource.AbstractEntityDamageSourceBuilder<SkillDamageSource, SkillDamageSourceBuilder> {
 
+	protected IEntity nSource;
 	protected ISkill skill;
-	protected IEntity caster;
-	protected IEntity target;
 	protected IEffect effect;
+
+	public SkillDamageSourceBuilder fromSkill(ISkill skill) {
+		this.skill = skill;
+		type(skill.getDamageType());
+		return this;
+	}
 
 	public ISkill getSkill() {
 		return skill;
@@ -42,37 +46,13 @@ public class SkillDamageSourceBuilder extends AbstractDamageSourceBuilder<SkillD
 		return this;
 	}
 
-	public SkillDamageSourceBuilder fromSkill(ISkill skill) {
-		this.skill = skill;
-		type(skill.getDamageType());
-		return this;
+	public IEntity getSource() {
+		return nSource;
 	}
 
-	public IEntity getCaster() {
-		return caster;
-	}
-
-	public SkillDamageSourceBuilder setCaster(IEntity caster) {
-		this.caster = caster;
-		return this;
-	}
-
-	public SkillDamageSourceBuilder setCaster(IActiveCharacter caster) {
-		this.caster = caster;
-		return this;
-	}
-
-	@Override
-	public SkillDamageSource build() throws IllegalStateException {
-		return new SkillDamageSource(this);
-	}
-
-	public IEntity getTarget() {
-		return target;
-	}
-
-	public SkillDamageSourceBuilder setTarget(IEntity target) {
-		this.target = target;
+	public SkillDamageSourceBuilder setSource(IEntity source) {
+		this.nSource = source;
+		this.source = source.getEntity();
 		return this;
 	}
 
@@ -83,5 +63,10 @@ public class SkillDamageSourceBuilder extends AbstractDamageSourceBuilder<SkillD
 	public SkillDamageSourceBuilder setEffect(IEffect effect) {
 		this.effect = effect;
 		return this;
+	}
+
+	@Override
+	public SkillDamageSource build() throws IllegalStateException {
+		return new SkillDamageSource(this);
 	}
 }

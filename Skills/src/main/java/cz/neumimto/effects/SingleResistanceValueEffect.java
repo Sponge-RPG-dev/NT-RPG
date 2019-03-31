@@ -14,7 +14,7 @@ public abstract class SingleResistanceValueEffect extends EffectBase<Float> {
 
 	public SingleResistanceValueEffect(String name, IEffectConsumer consumer, int propertyId, float value) {
 		super(name, consumer);
-		setStackable(true, new FloatEffectStackingStrategy());
+		setStackable(true, FloatEffectStackingStrategy.INSTANCE);
 		setValue(value);
 		this.propertyId = propertyId;
 	}

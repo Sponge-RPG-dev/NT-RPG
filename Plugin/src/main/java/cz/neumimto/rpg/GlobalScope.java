@@ -28,7 +28,7 @@ import cz.neumimto.rpg.inventory.ItemService;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.parties.PartyService;
-import cz.neumimto.rpg.players.properties.PropertyService;
+import cz.neumimto.rpg.properties.PropertyService;
 import cz.neumimto.rpg.skills.SkillService;
 import org.spongepowered.api.Game;
 

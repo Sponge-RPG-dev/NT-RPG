@@ -1,17 +1,15 @@
 package cz.neumimto.rpg.listeners;
 
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.rpg.IEntity;
-import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.entities.IEntity;
+import cz.neumimto.rpg.entities.IEntityType;
 import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.ExperienceSource;
-import cz.neumimto.rpg.players.ExperienceSources;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.*;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
@@ -23,15 +21,11 @@ import org.spongepowered.api.event.cause.entity.damage.source.IndirectEntityDama
 import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.user.BanUserEvent;
+import org.spongepowered.api.event.world.chunk.UnloadChunkEvent;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 3.1.2016.
@@ -62,7 +56,7 @@ public class EntityLifecycleListener {
 
     @Listener
     public void onPlayerLogin(ClientConnectionEvent.Join event) {
-        //  IActiveCharacter character = characterService.getCharacter(event.getTargetEntity().getUniqueId());
+        //  IActiveCharacter character = characterService.getTarget(event.getTarget().getUniqueId());
         characterService.checkPlayerDataStatus(event.getTargetEntity());
     }
 
@@ -156,7 +150,7 @@ public class EntityLifecycleListener {
             Optional<SkillDamageSource> sds = event.getCause().first(SkillDamageSource.class);
             if (sds.isPresent()) {
                 SkillDamageSource skillDamageSource = sds.get();
-                IEntity caster = skillDamageSource.getCaster();
+                IEntity caster = skillDamageSource.getSourceIEntity();
                 if (caster.getType() == IEntityType.CHARACTER) {
                     double exp = entityService.getExperiences(event.getTargetEntity());
                     characterService.addExperiences((IActiveCharacter) caster, exp, ExperienceSources.PVE);
@@ -164,6 +158,11 @@ public class EntityLifecycleListener {
             }
             entityService.remove(event.getTargetEntity().getUniqueId());
         }
+    }
+
+    @Listener
+    public void onChunkDespawn(UnloadChunkEvent event) {
+        entityService.remove(event.getTargetChunk().getEntities(Utils::isLivingEntity));
     }
 }
 

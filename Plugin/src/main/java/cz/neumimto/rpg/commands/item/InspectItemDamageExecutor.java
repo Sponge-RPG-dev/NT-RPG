@@ -2,14 +2,12 @@ package cz.neumimto.rpg.commands.item;
 
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.damage.DamageService;
-import cz.neumimto.rpg.inventory.ConfigRPGItemType;
-import cz.neumimto.rpg.inventory.ItemService;
-import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.WeaponClass;
+import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.inventory.*;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
-import cz.neumimto.rpg.players.properties.PropertyService;
+import cz.neumimto.rpg.properties.PropertyService;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -21,14 +19,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 
 public class InspectItemDamageExecutor implements CommandExecutor {
@@ -68,6 +59,7 @@ public class InspectItemDamageExecutor implements CommandExecutor {
 		src.sendMessage(Text.of(TextColors.GOLD, "=================="));
 		DamageService ds = IoC.get().build(DamageService.class);
 		CharacterService cs = IoC.get().build(CharacterService.class);
+		EntityService es = IoC.get().build(EntityService.class);
 		PropertyService ps = IoC.get().build(PropertyService.class);
 		IActiveCharacter character = cs.getCharacter(player);
 		src.sendMessage(Text.of(TextColors.RED, "Damage: ", ds.getCharacterItemDamage(character, fromItemStack)));
@@ -95,14 +87,14 @@ public class InspectItemDamageExecutor implements CommandExecutor {
 			if (!nameById.endsWith("_mult")) {
 				iterator.remove();
 			} else continue;
-			src.sendMessage(Text.of(TextColors.GRAY, "   - ", nameById, ":", cs.getCharacterProperty(character, integer)));
+			src.sendMessage(Text.of(TextColors.GRAY, "   - ", nameById, ":", es.getEntityProperty(character, integer)));
 		}
 		src.sendMessage(Text.of(TextColors.GRAY, "   - Mult: "));
 		iterator = o.iterator();
 		while (iterator.hasNext()) {
 			int integer = iterator.next();
 			String nameById = ps.getNameById(integer);
-			src.sendMessage(Text.of(TextColors.GRAY, "   - ", nameById, ":", cs.getCharacterProperty(character, integer)));
+			src.sendMessage(Text.of(TextColors.GRAY, "   - ", nameById, ":", es.getEntityProperty(character, integer)));
 		}
 
 		return CommandResult.success();

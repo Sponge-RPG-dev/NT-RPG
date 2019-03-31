@@ -1,9 +1,6 @@
 package cz.neumimto.effects;
 
-import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.EffectContainer;
-import cz.neumimto.rpg.effects.Generate;
-import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.common.stacking.MinLongStackingStrategy;
 import cz.neumimto.rpg.scripting.JsBinding;
 
@@ -21,7 +18,7 @@ public class EnderPearlEffect extends EffectBase<Long> {
 		super(name, consumer);
 		setDuration(duration);
 		setValue(value);
-		setStackable(true, MinLongStackingStrategy.INSTNCE);
+		setStackable(true, MinLongStackingStrategy.INSTANCE);
 	}
 
 	@Override

@@ -1,14 +1,13 @@
 package cz.neumimto.skills.active;
 
+import static com.flowpowered.math.TrigMath.cos;
+import static com.flowpowered.math.TrigMath.sin;
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
-import cz.neumimto.rpg.skills.ProjectileProperties;
-import cz.neumimto.rpg.skills.SkillNodes;
-import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
@@ -20,15 +19,13 @@ import org.spongepowered.api.entity.projectile.Snowball;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.world.World;
 
-import static com.flowpowered.math.TrigMath.cos;
-import static com.flowpowered.math.TrigMath.sin;
-
 /**
  * Created by NeumimTo on 23.12.2015.
  */
 @ResourceLoader.Skill("ntrpg:fireball")
 public class SkillFireball extends ActiveSkill {
 
+	@Override
 	public void init() {
 		super.init();
 		setDamageType(DamageTypes.FIRE);
@@ -58,7 +55,7 @@ public class SkillFireball extends ActiveSkill {
 		projectileProperties.setDamage(skillContext.getDoubleNodeValue(SkillNodes.DAMAGE));
 		SkillDamageSourceBuilder build = new SkillDamageSourceBuilder();
 		build.fromSkill(this);
-		build.setCaster(character);
+		build.setSource(character);
 		build.type(getDamageType());
 		projectileProperties.onHit((event, caster, target) -> {
 			target.getEntity().damage(projectileProperties.getDamage(), build.build());

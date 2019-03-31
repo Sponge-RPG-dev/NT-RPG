@@ -1,9 +1,10 @@
 package cz.neumimto.rpg.commands.admin;
 
 import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.properties.PropertyService;
+import cz.neumimto.rpg.properties.PropertyService;
 import cz.neumimto.rpg.utils.TriConsumer;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -29,6 +30,7 @@ public class InspectPropertyExecutor implements CommandExecutor {
 	private TriConsumer<CommandSource, String, Player> PROPERTY_DETAIL = (src, data, player) -> {
 		PropertyService ps = IoC.get().build(PropertyService.class);
 		CharacterService cs = IoC.get().build(CharacterService.class);
+		EntityService es = IoC.get().build(EntityService.class);
 		try {
 			int idByName = ps.getIdByName(data);
 			IActiveCharacter character = cs.getCharacter(player);
@@ -42,7 +44,7 @@ public class InspectPropertyExecutor implements CommandExecutor {
 
 			NumberFormat formatter = new DecimalFormat("#0.00");
 			src.sendMessage(Text.of(TextColors.GOLD, formatter.format(character.getProperty(idByName)), TextColors.WHITE, "/",
-					TextColors.AQUA, formatter.format(cs.getCharacterProperty(character, idByName)), TextColors.WHITE, "/",
+					TextColors.AQUA, formatter.format(es.getEntityProperty(character, idByName)), TextColors.WHITE, "/",
 					TextColors.GRAY, formatter.format(ps.getMaxPropertyValue(idByName))));
 
 			src.sendMessage(Text.of(TextColors.GOLD, "=================="));

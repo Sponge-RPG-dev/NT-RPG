@@ -24,11 +24,7 @@ import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.ClassGenerator;
-import cz.neumimto.rpg.GlobalScope;
-import cz.neumimto.rpg.Log;
-import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.configs.SkillsDefinition;
@@ -43,34 +39,15 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.event.Event;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeMap;
+import java.nio.file.*;
+import java.util.*;
 import java.util.function.Consumer;
-import javax.script.Bindings;
-import javax.script.Invocable;
-import javax.script.ScriptContext;
-import javax.script.ScriptEngine;
-import javax.script.ScriptException;
-import javax.script.SimpleBindings;
+import javax.script.*;
 
 /**
  * Created by NeumimTo on 13.3.2015.
@@ -231,7 +208,7 @@ public class JSLoader {
 		}
 		listener = classGenerator.generateDynamicListener(set);
 		info("Registering js listener: " + listener.getClass().getSimpleName());
-		Sponge.getGame().getEventManager().registerListeners(ioc.build(NtRpgPlugin.class), listener);
+		Sponge.getGame().getEventManager().registerListeners(ntRpgPlugin, listener);
 	}
 
 	public void reloadSkills() {

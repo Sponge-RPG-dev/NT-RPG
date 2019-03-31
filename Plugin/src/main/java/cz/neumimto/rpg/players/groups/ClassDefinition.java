@@ -39,7 +39,7 @@ import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.attributes.Attribute;
-import cz.neumimto.rpg.players.leveling.EmptyLevlProgression;
+import cz.neumimto.rpg.players.leveling.EmptyLevelProgression;
 import cz.neumimto.rpg.players.leveling.ILevelProgression;
 import cz.neumimto.rpg.players.leveling.SkillTreeType;
 import cz.neumimto.rpg.skills.tree.SkillTree;
@@ -149,7 +149,7 @@ public class ClassDefinition implements IEffectSourceProvider {
 	private int attributepointsPerLevel;
 
 	@Setting("Leveling")
-	@Default(EmptyLevlProgression.class)
+	@Default(EmptyLevelProgression.class)
 	private ILevelProgression levels;
 
 	@Setting("SkillTreeType")

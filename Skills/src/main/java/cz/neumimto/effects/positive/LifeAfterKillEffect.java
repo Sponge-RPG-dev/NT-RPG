@@ -16,6 +16,6 @@ public class LifeAfterKillEffect extends EffectBase<Float> {
 		super(name, character);
 		setDuration(duration);
 		setValue(healedAmount);
-		setStackable(true, new FloatEffectStackingStrategy());
+		setStackable(true, FloatEffectStackingStrategy.INSTANCE);
 	}
 }

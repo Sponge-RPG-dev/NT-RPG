@@ -4,12 +4,12 @@ import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.Decorator;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.negative.Blindness;
-import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
@@ -41,6 +41,7 @@ public class Despair extends ActiveSkill {
 	@Inject
 	private EffectService effectService;
 
+	@Override
 	public void init() {
 		super.init();
 		setDamageType(DamageTypes.MAGIC);
@@ -67,8 +68,8 @@ public class Despair extends ActiveSkill {
 					IEntity iEntity = entityService.get(l);
 					SkillDamageSource build = new SkillDamageSourceBuilder()
 							.fromSkill(this)
-							.setTarget(iEntity)
-							.setCaster(character).build();
+							.setSource(iEntity)
+							.build();
 					l.damage(damage, build);
 					Blindness blindness = new Blindness(iEntity, duration);
 					effectService.addEffect(blindness, this);

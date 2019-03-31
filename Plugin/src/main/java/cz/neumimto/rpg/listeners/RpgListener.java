@@ -18,27 +18,18 @@
 
 package cz.neumimto.rpg.listeners;
 
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ClassService;
-import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.events.CharacterChangeGroupEvent;
 import cz.neumimto.rpg.events.PlayerGuiModInitEvent;
+import cz.neumimto.rpg.events.character.CharacterChangeGroupEvent;
 import cz.neumimto.rpg.events.party.PartyJoinEvent;
 import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import org.spongepowered.api.Game;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
-import org.spongepowered.api.event.entity.HealEntityEvent;
-import org.spongepowered.api.event.filter.IsCancelled;
-import org.spongepowered.api.event.filter.cause.First;
-import org.spongepowered.api.util.Tristate;
 
 import java.util.UUID;
-
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 
 /**
@@ -51,13 +42,7 @@ public class RpgListener {
 	private CharacterService characterService;
 
 	@Inject
-	private Game game;
-
-	@Inject
 	private ClassService classService;
-
-	@Inject
-	private NtRpgPlugin plugin;
 
 	@Listener
 	public void onGuiInit(PlayerGuiModInitEvent event) {
@@ -76,14 +61,8 @@ public class RpgListener {
 	}
 
 	@Listener
-	public void onHealthRegen(HealEntityEvent event, @First(typeFilter = Player.class) Player player) {
-
-	}
-
-	@Listener
-	@IsCancelled(Tristate.FALSE)
-	public void onChangeGroup(CharacterChangeGroupEvent event, @First(typeFilter = IActiveCharacter.class) IActiveCharacter character) {
-		classService.removePermissions(character, classService.getPermissionsToRemove(character, event.getOld()));
+	public void onChangeGroup(CharacterChangeGroupEvent event) {
+		classService.removePermissions(event.getTarget(), classService.getPermissionsToRemove(event.getTarget(), event.getOld()));
 	//	classService.addAllPermissions(character, event.getNew());
 	}
 }

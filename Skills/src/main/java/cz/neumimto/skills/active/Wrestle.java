@@ -3,12 +3,12 @@ package cz.neumimto.skills.active;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.negative.StunEffect;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.NDamageType;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
@@ -32,9 +32,10 @@ public class Wrestle extends ActiveSkill {
 	@Inject
 	private EntityService entityService;
 
+	@Override
 	public void init() {
 		super.init();
-		setDamageType(NDamageType.PHYSICAL);
+		setDamageType(DamageTypes.ATTACK);
 		settings.addNode(SkillNodes.RADIUS, 3, 0.5f);
 		settings.addNode(SkillNodes.DURATION, 1, 0.1f);
 		settings.addNode(SkillNodes.DAMAGE, 1, 0.5f);
@@ -44,22 +45,22 @@ public class Wrestle extends ActiveSkill {
 
 	@Override
 	public void cast(IActiveCharacter source, PlayerSkillContext info, SkillContext skillContext) {
-		int intNodeValue = skillContext.getIntNodeValue(SkillNodes.RADIUS);
-		float floatNodeValue = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
+		int radius = skillContext.getIntNodeValue(SkillNodes.RADIUS);
+		float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
 		long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
-		for (Entity entity : source.getPlayer().getNearbyEntities(intNodeValue)) {
+		for (Entity entity : source.getPlayer().getNearbyEntities(radius)) {
 			if (Utils.isLivingEntity(entity)) {
 				Living l = (Living) entity;
 				if (Utils.canDamage(source, l)) {
 					IEffectConsumer t = entityService.get(l);
 					StunEffect stunEffect = new StunEffect(t, duration);
-					effectService.addEffect(stunEffect, this);
-					if (floatNodeValue > 0) {
-						SkillDamageSourceBuilder build = new SkillDamageSourceBuilder();
-						build.fromSkill(this);
-						build.setCaster(source);
-						build.type(DamageTypes.ATTACK);
-						entity.damage(floatNodeValue, build.build());
+					effectService.addEffect(stunEffect, this, source);
+					if (damage > 0) {
+						SkillDamageSource s = new SkillDamageSourceBuilder()
+								.fromSkill(this)
+								.setSource(source)
+								.build();
+						entity.damage(damage, s);
 					}
 				}
 			}

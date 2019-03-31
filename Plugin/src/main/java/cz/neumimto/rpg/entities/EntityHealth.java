@@ -1,13 +1,11 @@
 package cz.neumimto.rpg.entities;
 
-import cz.neumimto.rpg.IEntity;
-import cz.neumimto.rpg.players.IEntityHealth;
 import org.spongepowered.api.data.key.Keys;
 
 /**
  * Created by NeumimTo on 18.6.2017.
  */
-public class EntityHealth implements IEntityHealth {
+public class EntityHealth implements IEntityResource {
 
 	public IEntity entity;
 

@@ -7,7 +7,7 @@ import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
  * Created by NeumimTo on 26.1.2019.
  */
 @ConfigSerializable
-public class Polynomial extends AbstractLevelprogression {
+public class Polynomial extends AbstractLevelProgression {
 
     @Setting("Mult")
     private double mult;

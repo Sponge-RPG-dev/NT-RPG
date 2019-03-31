@@ -2,7 +2,7 @@ package cz.neumimto.rpg.skills.scripting;
 
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.Log;
-import cz.neumimto.rpg.players.properties.PropertyService;
+import cz.neumimto.rpg.properties.PropertyService;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.pipeline.SkillComponent;
 

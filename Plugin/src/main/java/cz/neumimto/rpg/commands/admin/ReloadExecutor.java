@@ -8,11 +8,7 @@ import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.persistance.ClassDefinitionDao;
-import cz.neumimto.rpg.players.ActiveCharacter;
-import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.PreloadCharacter;
+import cz.neumimto.rpg.players.*;
 import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
@@ -27,12 +23,7 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class ReloadExecutor implements CommandExecutor {
 	@Override
@@ -115,7 +106,7 @@ public class ReloadExecutor implements CommandExecutor {
 				Log.info("[RELOAD] Purging effect caches");
 				NtRpgPlugin.GlobalScope.effectService.purgeEffectCache();
 				NtRpgPlugin.GlobalScope.effectService.stop();
-				//todo purge all skills
+				//todo purge all skill
 				//todo purge all skilltrees
 
 				for (CharacterBase characterBase : characterBases) {
@@ -126,10 +117,10 @@ public class ReloadExecutor implements CommandExecutor {
 
 				//we should be ready to start loading stuff back
 				Sponge.getScheduler().createTaskBuilder().execute(() -> {
-					//System.gc(); - for reloading skills its required
+					//System.gc(); - for reloading skill its required
 
 					NtRpgPlugin.GlobalScope.effectService.start();
-					//todo load skills
+					//todo load skill
 					//todo load skilltrees
 
 					NtRpgPlugin.GlobalScope.classService.loadClasses();

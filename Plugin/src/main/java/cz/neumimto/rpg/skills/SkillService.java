@@ -18,6 +18,10 @@
 
 package cz.neumimto.rpg.skills;
 
+import static cz.neumimto.rpg.Log.error;
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.ioc.Singleton;
@@ -36,10 +40,7 @@ import cz.neumimto.rpg.skills.configs.ScriptSkillModel;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.mods.SkillExecutorCallback;
 import cz.neumimto.rpg.skills.mods.SkillPreprocessors;
-import cz.neumimto.rpg.skills.parents.ActiveScriptSkill;
-import cz.neumimto.rpg.skills.parents.PassiveScriptSkill;
-import cz.neumimto.rpg.skills.parents.ScriptSkill;
-import cz.neumimto.rpg.skills.parents.TargettedScriptSkill;
+import cz.neumimto.rpg.skills.parents.*;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.utils.CatalogId;
 import net.bytebuddy.ByteBuddy;
@@ -53,17 +54,9 @@ import org.spongepowered.api.registry.AdditionalCatalogRegistryModule;
 import org.spongepowered.api.registry.util.RegisterCatalog;
 
 import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
-
-import static cz.neumimto.rpg.Log.error;
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.Log.warn;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 1.1.2015.
@@ -276,7 +269,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 		Class type = null;
 		switch (parent.toLowerCase()) {
 			case "targetted":
-				type = TargettedScriptSkill.class;
+				type = TargetedScriptSkill.class;
 				break;
 			case "active":
 				type = ActiveScriptSkill.class;

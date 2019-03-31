@@ -17,54 +17,10 @@
 package cz.neumimto.rpg.skills;
 
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
-import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
 public class NDamageType {
 
-	public static final DamageType MEELE_CRITICAL = new DamageType() {
-		@Override
-		public String getId() {
-			return "ntrpg:meele_critical";
-		}
-
-		@Override
-		public String getName() {
-			return "meelecritical";
-		}
-	};
-	public static DamageType LIGHTNING = new DamageType() {
-		@Override
-		public String getId() {
-			return "ntrpg:lightning";
-		}
-
-		@Override
-		public String getName() {
-			return "lightning";
-		}
-
-		@Override
-		public String toString() {
-			return "Lightning";
-		}
-	};
-	public static DamageType ICE = new DamageType() {
-		@Override
-		public String getId() {
-			return "ntrpg:ice";
-		}
-
-		@Override
-		public String getName() {
-			return "ice";
-		}
-
-		@Override
-		public String toString() {
-			return "Ice";
-		}
-	};
-	public static DamageType DAMAGE_CHECK = new DamageType() {
+	public static final DamageType DAMAGE_CHECK = new DamageType() {
 		@Override
 		public String getId() {
 			return "ntrpg:damagecheck";
@@ -80,6 +36,39 @@ public class NDamageType {
 			return "DAMAGE_CHECK";
 		}
 	};
-	public static DamageType PHYSICAL = DamageTypes.ATTACK;
-	public static DamageType MAGICAL = DamageTypes.MAGIC;
+
+	public static final DamageType LIGHTNING = new DamageType() {
+		@Override
+		public String getId() {
+			return "ntrpg:lightning";
+		}
+
+		@Override
+		public String getName() {
+			return "lightning";
+		}
+
+		@Override
+		public String toString() {
+			return "Lightning";
+		}
+	};
+
+	public static final DamageType ICE = new DamageType() {
+		@Override
+		public String getId() {
+			return "ntrpg:ice";
+		}
+
+		@Override
+		public String getName() {
+			return "ice";
+		}
+
+		@Override
+		public String toString() {
+			return "Ice";
+		}
+	};
+
 }

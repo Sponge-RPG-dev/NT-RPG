@@ -53,7 +53,7 @@ public class PluginConfig {
 
 	@Setting
 	public int SKILLPOINTS_ON_START = 1;
-	
+
 	@Setting
 	public boolean PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR = true;
 
@@ -110,7 +110,7 @@ public class PluginConfig {
 
 	@Setting
 	(comment = "Value lesser than 0 means there will be no party limit. Skills or effects can override this value.")
-	public double MAX_PARTY_SIZE = -68458;
+	public double MAX_PARTY_SIZE = -1;
 
 
 	@Setting
@@ -123,7 +123,7 @@ public class PluginConfig {
 
 	@Setting
 	(comment = "Whenever global chat message will be displayed if any player chooses a skill tree path")
-	public boolean PLAYER_CHOOSED_SKILLTREE_SPECIALIZATIon_GLOBAL_MESSAGE;
+	public boolean PLAYER_CHOOSED_SKILLTREE_SPECIALIZATION_GLOBAL_MESSAGE;
 
 	@Setting
 	(comment = "Whenever a player is able to refund skills, representing root of the path of specialization on any skilltree")

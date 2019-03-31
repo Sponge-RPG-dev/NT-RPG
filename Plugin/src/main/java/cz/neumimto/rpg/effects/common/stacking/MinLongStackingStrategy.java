@@ -7,8 +7,10 @@ import cz.neumimto.rpg.effects.EffectStackingStrategy;
  */
 public class MinLongStackingStrategy implements EffectStackingStrategy<Long> {
 
+	public static final MinLongStackingStrategy INSTANCE = new MinLongStackingStrategy();
 
-	public static MinLongStackingStrategy INSTNCE = new MinLongStackingStrategy();
+	private MinLongStackingStrategy() {
+	}
 
 	@Override
 	public Long mergeValues(Long current, Long toAdd) {

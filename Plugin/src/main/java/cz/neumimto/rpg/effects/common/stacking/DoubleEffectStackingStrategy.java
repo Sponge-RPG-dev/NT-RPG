@@ -7,9 +7,9 @@ import cz.neumimto.rpg.effects.EffectStackingStrategy;
  */
 public class DoubleEffectStackingStrategy implements EffectStackingStrategy<Double> {
 
-	public static DoubleEffectStackingStrategy INSTNCE = new DoubleEffectStackingStrategy();
+	public static final DoubleEffectStackingStrategy INSTANCE = new DoubleEffectStackingStrategy();
 
-	public DoubleEffectStackingStrategy() {
+	private DoubleEffectStackingStrategy() {
 	}
 
 	@Override

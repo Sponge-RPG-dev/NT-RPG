@@ -7,7 +7,7 @@ import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
  * Created by NeumimTo on 27.1.2019.
  */
 @ConfigSerializable
-public class Linear extends AbstractLevelprogression {
+public class Linear extends AbstractLevelProgression {
 
     @Setting("Sequence")
     private double sequence;

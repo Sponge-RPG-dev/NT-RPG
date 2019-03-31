@@ -19,15 +19,14 @@
 package cz.neumimto.rpg.utils;
 
 import static cz.neumimto.rpg.Log.info;
-
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.Console;
 import cz.neumimto.rpg.GlobalScope;
-import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.properties.PropertyService;
+import cz.neumimto.rpg.properties.PropertyService;
 import cz.neumimto.rpg.skills.NDamageType;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
@@ -47,15 +46,9 @@ import org.spongepowered.api.util.blockray.BlockRayHit;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.EntityUniverse;
-import org.spongepowered.common.event.damage.SpongeDamageSourceBuilder;
+import org.spongepowered.common.event.damage.SpongeEntityDamageSourceBuilder;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -175,7 +168,7 @@ public class Utils {
 		return transparentBlocks.contains(e);
 	}
 
-	public static Living getTargettedEntity(IActiveCharacter character, int range) {
+	public static Living getTargetedEntity(IActiveCharacter character, int range) {
 		Player player = character.getPlayer();
 
 		Vector3d r = player.getRotation();
@@ -244,8 +237,10 @@ public class Utils {
 				}
 			}
 		}
-		DamageSource build = new SpongeDamageSourceBuilder()
+		DamageSource build = new SpongeEntityDamageSourceBuilder()
+				.entity(character.getEntity())
 				.type(NDamageType.DAMAGE_CHECK)
+				.bypassesArmor()
 				.absolute()
 				.build();
 
@@ -253,8 +248,10 @@ public class Utils {
 	}
 
 	public static boolean canDamage(IEntity entity, Living l) {
-		DamageSource build = new SpongeDamageSourceBuilder()
+		DamageSource build = new SpongeEntityDamageSourceBuilder()
+				.entity(entity.getEntity())
 				.type(NDamageType.DAMAGE_CHECK)
+				.bypassesArmor()
 				.absolute()
 				.build();
 

@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.players;
 
 import com.flowpowered.math.vector.Vector3d;
+import cz.neumimto.rpg.entities.IReservable;
 import org.spongepowered.api.block.tileentity.CommandBlock;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
@@ -66,7 +67,6 @@ public class CommandblockSkillExecutor extends PreloadCharacter {
 	}
 
 	private static class InfinityPool implements IReservable {
-
 
 		@Override
 		public double getMaxValue() {

@@ -2,25 +2,24 @@ package cz.neumimto.skills.active;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.AllSkillsBonus;
-import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.mods.SkillContext;
-import cz.neumimto.rpg.skills.parents.Targetted;
+import cz.neumimto.rpg.skills.parents.Targeted;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.item.ItemTypes;
 
 /**
  * Created by NeumimTo on 10.8.17.
  */
 @ResourceLoader.Skill("ntrpg:dementia")
-public class Dementia extends Targetted {
+public class Dementia extends Targeted {
 
 	@Inject
 	private EntityService entityService;
@@ -28,6 +27,7 @@ public class Dementia extends Targetted {
 	@Inject
 	private EffectService effectService;
 
+	@Override
 	public void init() {
 		super.init();
 		settings.addNode(SkillNodes.DURATION, 30000, 1500);
@@ -37,11 +37,10 @@ public class Dementia extends Targetted {
 	}
 
 	@Override
-	public void castOn(Living target, IActiveCharacter source, PlayerSkillContext info, SkillContext skillContext) {
-		IEntity iEntity = entityService.get(target);
+	public void castOn(IEntity target, IActiveCharacter source, PlayerSkillContext info, SkillContext skillContext) {
 		long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
 		int skillLevel = skillContext.getIntNodeValue("skill-level");
-		AllSkillsBonus bonus = new AllSkillsBonus(iEntity, duration, -1 * skillLevel);
+		AllSkillsBonus bonus = new AllSkillsBonus(target, duration, -1 * skillLevel);
 		effectService.addEffect(bonus, this);
 		skillContext.next(source, info, SkillResult.OK);
 	}

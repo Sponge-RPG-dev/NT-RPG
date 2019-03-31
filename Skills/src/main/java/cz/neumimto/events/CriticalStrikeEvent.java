@@ -1,14 +1,14 @@
 package cz.neumimto.events;
 
-import cz.neumimto.rpg.IEntity;
-import cz.neumimto.rpg.events.CancellableEvent;
+import cz.neumimto.rpg.entities.IEntity;
+import cz.neumimto.rpg.events.AbstractCancellableNEvent;
 import cz.neumimto.rpg.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 6.7.2017.
  */
 @JsBinding(JsBinding.Type.CLASS)
-public class CriticalStrikeEvent extends CancellableEvent {
+public class CriticalStrikeEvent extends AbstractCancellableNEvent {
 
 	private final IEntity source;
 	private final IEntity target;
@@ -20,6 +20,7 @@ public class CriticalStrikeEvent extends CancellableEvent {
 		this.damage = effect;
 	}
 
+	@Override
 	public IEntity getSource() {
 		return source;
 	}

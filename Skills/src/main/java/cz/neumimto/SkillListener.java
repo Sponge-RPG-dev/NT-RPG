@@ -10,24 +10,20 @@ import cz.neumimto.effects.positive.*;
 import cz.neumimto.events.CriticalStrikeEvent;
 import cz.neumimto.events.DamageDodgedEvent;
 import cz.neumimto.events.ManaDrainEvent;
-import cz.neumimto.events.StunApplyEvent;
 import cz.neumimto.model.*;
-import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.effects.common.positive.Invisibility;
-import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.events.INEntityDamageEvent;
-import cz.neumimto.rpg.events.INEntityWeaponDamageEvent;
-import cz.neumimto.rpg.events.character.CharacterDamageEntityEvent;
+import cz.neumimto.rpg.entities.*;
+import cz.neumimto.rpg.events.effect.EffectApplyEvent;
+import cz.neumimto.rpg.events.entity.DamageIEntityEvent;
+import cz.neumimto.rpg.events.entity.IEntityWeaponDamageEvent;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.IReservable;
-import cz.neumimto.rpg.players.properties.DefaultProperties;
-import cz.neumimto.rpg.players.properties.PropertyService;
+import cz.neumimto.rpg.properties.DefaultProperties;
+import cz.neumimto.rpg.properties.PropertyService;
 import cz.neumimto.rpg.utils.XORShiftRnd;
 import cz.neumimto.skills.active.GrapplingHook;
 import org.spongepowered.api.Game;
@@ -41,12 +37,14 @@ import org.spongepowered.api.effect.sound.SoundTypes;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.EnderPearl;
+import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.entity.projectile.arrow.TippedArrow;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.action.CollideEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
+import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.filter.IsCancelled;
@@ -106,8 +104,9 @@ public class SkillListener {
 		}
 	}
 
-	@Listener
-	public void onDamage(CharacterDamageEntityEvent event) {
+	//todo
+	/*@Listener
+	public void onDamage(DamageIEntityEvent event) {
 		IActiveCharacter character = characterService.getCharacter(event.getDamaged().getUniqueId());
 		if (!character.isStub()) {
 			IEffectContainer container = character.getEffect(DamageToMana.name);
@@ -115,37 +114,40 @@ public class SkillListener {
 				double percentage = (double) container.getStackedValue();
 			}
 		}
-	}
+	}*/
 
 	@Listener
 	@SuppressWarnings("unchecked")
-	public void onEntityDamage(INEntityDamageEvent event) {
+	public void onEntityDamage(DamageIEntityEvent event, @First EntityDamageSource damageSource) {
+		IEntity source;
+		if (damageSource.getSource() instanceof Projectile)
+			source = entityService.get((Entity) ((Projectile) damageSource.getSource()).getShooter());
+		else source = entityService.get(damageSource.getSource());
+
 		//invis
 		if (event.getTarget().hasEffect(Invisibility.name)) {
 			effectService.removeEffectContainer(event.getTarget().getEffect(Invisibility.name), event.getTarget());
 		}
-		if (event.getSource().hasEffect(Invisibility.name)) {
-			effectService.removeEffectContainer(event.getTarget().getEffect(Invisibility.name), event.getSource());
+		if (source.hasEffect(Invisibility.name)) {
+			effectService.removeEffectContainer(event.getTarget().getEffect(Invisibility.name), source);
 		}
-
 
 		//shadowrun
 		if (event.getTarget().hasEffect(ShadowRunEffect.name)) {
 			effectService.removeEffectContainer(event.getTarget().getEffect(ShadowRunEffect.name), event.getTarget());
 		}
-		if (event.getSource().hasEffect(ShadowRunEffect.name) && event.getType() != DamageTypes.FALL) {
-			IEffectContainer<ShadowRunModel, ShadowRunEffect> container = event.getSource().getEffect(ShadowRunEffect.name);
-			if (event.getType() == DamageTypes.ATTACK) {
+		if (source.hasEffect(ShadowRunEffect.name) && damageSource.getType() != DamageTypes.FALL) {
+			IEffectContainer<ShadowRunModel, ShadowRunEffect> container = source.getEffect(ShadowRunEffect.name);
+			if (damageSource.getType() == DamageTypes.ATTACK) {
 				ShadowRunModel stackedValue = container.getStackedValue();
 				event.setDamage(stackedValue.damage + event.getDamage() * stackedValue.attackmult);
 			}
-			effectService.removeEffectContainer(container, event.getSource());
+			effectService.removeEffectContainer(container, source);
 		}
 	}
 
 	@Listener(order = Order.LAST)
-	@IsCancelled(Tristate.FALSE)
-	public void onEntityDamageLast(INEntityDamageEvent event) {
+	public void onEntityDamageLast(DamageIEntityEvent event) {
 		if (event.getTarget().hasEffect(ManaShieldEffect.name)) {
 			IEffectContainer<ManaShieldEffectModel, ManaShieldEffect> effect = event.getTarget().getEffect(ManaShieldEffect.name);
 			if (event.getTarget().getType() == IEntityType.CHARACTER) {
@@ -165,11 +167,14 @@ public class SkillListener {
 
 
 	@Listener
-	public void onWeaponDamage(INEntityWeaponDamageEvent event) {
-		if (event.getTarget().hasEffect(DampenEffect.name)) {
-			if (event.getSource().getType() == IEntityType.CHARACTER) {
+	public void onWeaponDamage(IEntityWeaponDamageEvent event, @First EntityDamageSource damageSource) {
+		IEntity source = entityService.get(damageSource.getSource());
+		IEntity target = event.getTarget();
+
+		if (target.hasEffect(DampenEffect.name)) {
+			if (source.getType() == IEntityType.CHARACTER) {
 				IActiveCharacter character = (IActiveCharacter) event.getSource();
-				IEffectContainer<Double, DampenEffect> effect = event.getTarget().getEffect(DampenEffect.name);
+				IEffectContainer<Double, DampenEffect> effect = target.getEffect(DampenEffect.name);
 				if (character.getMana().getValue() <= effect.getStackedValue()) {
 					event.setCancelled(true);
 					return;
@@ -178,12 +183,12 @@ public class SkillListener {
 		}
 		XORShiftRnd random = new XORShiftRnd();
 		//dodge
-		if (event.getTarget().hasEffect(DodgeEffect.name)) {
-			IEffectContainer<Float, DodgeEffect> effect = event.getSource().getEffect(DodgeEffect.name);
+		if (target.hasEffect(DodgeEffect.name)) {
+			IEffectContainer<Float, DodgeEffect> effect = source.getEffect(DodgeEffect.name);
 			Float stackedValue = effect.getStackedValue();
 			float next = random.nextFloat(100);
 			if (stackedValue <= next) {
-				DamageDodgedEvent event0 = new DamageDodgedEvent(event.getSource(), event.getTarget(), effect);
+				DamageDodgedEvent event0 = new DamageDodgedEvent(source, target, effect);
 				boolean t = game.getEventManager().post(event0);
 				if (t) {
 					event.setCancelled(t);
@@ -193,55 +198,53 @@ public class SkillListener {
 			}
 		}
 		//bash
-		if (event.getSource().hasEffect(Bash.name)) {
-			IEffectContainer<BashModel, Bash> effect = event.getSource().getEffect(Bash.name);
+		if (source.hasEffect(Bash.name)) {
+			IEffectContainer<BashModel, Bash> effect = source.getEffect(Bash.name);
 			BashModel stackedValue = effect.getStackedValue();
 			long time = System.currentTimeMillis();
-			float reduced = entityService.getEntityProperty(event.getTarget(), DefaultProperties.cooldown_reduce);
+			float reduced = entityService.getEntityProperty(target, DefaultProperties.cooldown_reduce_mult);
 			long cooldown = (long) (reduced * (float) stackedValue.cooldown);
 			if (stackedValue.lasttime + cooldown <= time) {
 				int rnd = random.nextInt(100);
 				if (rnd <= stackedValue.chance) {
-					StunEffect stunEffect = new StunEffect(event.getTarget(), stackedValue.stunDuration);
+					StunEffect stunEffect = new StunEffect(target, stackedValue.stunDuration);
 					if (stackedValue.damage != 0) {
 						event.setDamage(event.getDamage() + stackedValue.damage);
 					}
-					if (!game.getEventManager().post(new StunApplyEvent(event.getSource(), event.getTarget(), stunEffect))) {
-						effectService.addEffect(stunEffect, effect);
+					if (effectService.addEffect(stunEffect, effect, source)) {
 						stackedValue.lasttime = time;
 					}
 				}
 			}
 		}
 		//critical
-		if (event.getSource().hasEffect(CriticalEffect.name)) {
-			IEffectContainer<CriticalEffectModel, CriticalEffect> effect = event.getSource().getEffect(CriticalEffect.name);
+		if (source.hasEffect(CriticalEffect.name)) {
+			IEffectContainer<CriticalEffectModel, CriticalEffect> effect = source.getEffect(CriticalEffect.name);
 			CriticalEffectModel stackedValue = effect.getStackedValue();
 			if (stackedValue.chance <= random.nextInt(100)) {
 				CriticalStrikeEvent criticalStrikeEvent =
-						new CriticalStrikeEvent(event.getSource(), event.getTarget(), stackedValue.mult * event.getDamage());
+						new CriticalStrikeEvent(source, target, stackedValue.mult * event.getDamage());
 				if (!game.getEventManager().post(criticalStrikeEvent)) {
-					event.setDamage(event.getDamage() + criticalStrikeEvent.getDamage());
+					event.setDamage(criticalStrikeEvent.getDamage());
 				}
 			}
 		}
 		//manadrain
-		if (event.getTarget().getType() == IEntityType.CHARACTER) {
-			IActiveCharacter character = (IActiveCharacter) event.getTarget();
+		if (target.getType() == IEntityType.CHARACTER) {
+			IActiveCharacter character = (IActiveCharacter) target;
 			if (character.hasEffect(ManaDrainEffect.name)) {
 				IEffectContainer<Float, ManaDrainEffect> container = character.getEffect(ManaDrainEffect.name);
 				IReservable mana = character.getMana();
 				double k = character.getMana().getValue() - container.getStackedValue();
-				ManaDrainEvent mde = new ManaDrainEvent(event.getSource(), character, k);
+				ManaDrainEvent mde = new ManaDrainEvent(source, character, k);
 			}
 		}
 	}
 
 	@Listener
-	public void onStunApply(StunApplyEvent event) {
-		StunEffect effect = event.getEffect();
-		float f = entityService.getEntityProperty(event.getSource(), AdditionalProperties.stun_duration_mult);
-		effect.setDuration((long) (f * event.getEffect().getDuration()));
+	public void onStunApply(EffectApplyEvent<StunEffect> event, @First IEntity source) {
+		float f = entityService.getEntityProperty(source, AdditionalProperties.stun_duration_mult);
+		event.getEffect().setDuration((long) (f * event.getEffect().getDuration()));
 	}
 
 	@Listener(order = Order.LATE)

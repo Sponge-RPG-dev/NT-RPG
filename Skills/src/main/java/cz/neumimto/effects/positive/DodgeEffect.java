@@ -18,7 +18,7 @@ public class DodgeEffect extends EffectBase<Float> {
 	public DodgeEffect(IEffectConsumer character, long duration, float chance) {
 		super(name, character);
 		setValue(chance);
-		setStackable(true, new FloatEffectStackingStrategy());
+		setStackable(true, FloatEffectStackingStrategy.INSTANCE);
 		setDuration(duration);
 	}
 }

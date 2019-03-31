@@ -2,7 +2,7 @@ package cz.neumimto.rpg.configuration.adapters;
 
 import com.google.common.reflect.TypeToken;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.players.properties.PropertyService;
+import cz.neumimto.rpg.properties.PropertyService;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;

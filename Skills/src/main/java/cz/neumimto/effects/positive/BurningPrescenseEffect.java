@@ -3,10 +3,10 @@ package cz.neumimto.effects.positive;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.model.BPModel;
-import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.utils.Utils;
@@ -56,7 +56,7 @@ public class BurningPrescenseEffect extends EffectBase<BPModel> {
                 SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
                 builder.setEffect(this);
                 builder.type(DamageTypes.FIRE);
-                builder.setCaster(character);
+                builder.setSource(character);
                 SkillDamageSource sds = builder.build();
                 for (Entity target : entity.getNearbyEntities(radius)) {
                     if (!Utils.isLivingEntity(target)) {
@@ -74,7 +74,7 @@ public class BurningPrescenseEffect extends EffectBase<BPModel> {
             } else {
                 SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
                 builder.setEffect(this);
-                builder.setCaster((IEntity) getConsumer());
+                builder.setSource((IEntity) getConsumer());
                 builder.type(DamageTypes.FIRE);
                 SkillDamageSource sds = builder.build();
                 for (Entity target : entity.getNearbyEntities(radius)) {

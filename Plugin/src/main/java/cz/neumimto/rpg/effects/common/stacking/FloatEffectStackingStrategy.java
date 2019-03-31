@@ -7,6 +7,11 @@ import cz.neumimto.rpg.effects.EffectStackingStrategy;
  */
 public class FloatEffectStackingStrategy implements EffectStackingStrategy<Float> {
 
+	public static final FloatEffectStackingStrategy INSTANCE = new FloatEffectStackingStrategy();
+
+	private FloatEffectStackingStrategy() {
+	}
+
 	@Override
 	public Float mergeValues(Float current, Float toAdd) {
 		return current + toAdd;

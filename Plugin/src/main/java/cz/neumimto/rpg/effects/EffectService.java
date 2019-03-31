@@ -18,11 +18,15 @@
 
 package cz.neumimto.rpg.effects;
 
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
+import cz.neumimto.rpg.entities.IEntity;
+import cz.neumimto.rpg.events.effect.EffectApplyEvent;
+import cz.neumimto.rpg.events.effect.EffectRemoveEvent;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
@@ -30,6 +34,7 @@ import cz.neumimto.rpg.skills.SkillSettings;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
+import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
@@ -39,18 +44,9 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 17.1.2015.
@@ -68,6 +64,9 @@ public class EffectService {
 
 	@Inject
 	private NtRpgPlugin plugin;
+
+	@Inject
+	private CauseStackManager causeStackManager;
 
 	private Set<IEffect> effectSet = new HashSet<>();
 	private Set<IEffect> pendingAdditions = new HashSet<>();
@@ -245,71 +244,105 @@ public class EffectService {
 	 * Adds effect to the consumer,
 	 * Effects requiring register are registered into the scheduler one tick later
 	 *
-	 * @param iEffect effect
+	 * @param effect effect
+	 *
+	 * @return true if effect is successfully applied
 	 */
-	@SuppressWarnings("unchecked")
-	public void addEffect(IEffect iEffect) {
-		addEffect(iEffect, InternalEffectSourceProvider.INSTANCE);
+	public boolean addEffect(IEffect effect) {
+		return addEffect(effect, InternalEffectSourceProvider.INSTANCE);
 	}
 
 	/**
 	 * Adds effect to the consumer,
 	 * Effects requiring register are registered into the scheduler one tick later
 	 *
+	 * @param effect effect
 	 * @param effectSourceProvider source
-	 * @param iEffect effect
+	 *
+	 * @return true if effect is successfully applied
+	 */
+	public boolean addEffect(IEffect effect, IEffectSourceProvider effectSourceProvider) {
+		return addEffect(effect, effectSourceProvider, null);
+	}
+
+	/**
+	 * Adds effect to the consumer,
+	 * Effects requiring register are registered into the scheduler one tick later
+	 *
+	 * @param effect effect
+	 * @param effectSourceProvider source
+	 * @param entitySource caster of effect
+	 *
+	 * @return true if effect is successfully applied
 	 */
 	@SuppressWarnings("unchecked")
-	public void addEffect(IEffect iEffect, IEffectSourceProvider effectSourceProvider) {
-		IEffectContainer eff = iEffect.getConsumer().getEffect(iEffect.getName());
+	public boolean addEffect(IEffect effect, IEffectSourceProvider effectSourceProvider, IEntity entitySource) {
+		effect.setEffectSourceProvider(effectSourceProvider);
+
+		EffectApplyEvent event = new EffectApplyEvent(effect);
+		try (CauseStackManager.StackFrame frame = causeStackManager.pushCauseFrame()) {
+			causeStackManager.pushCause(effect);
+			causeStackManager.pushCause(effectSourceProvider);
+			if (entitySource != null) {
+				causeStackManager.pushCause(entitySource);
+			}
+
+			event.setCause(causeStackManager.getCurrentCause());
+			if (Sponge.getEventManager().post(event)) {
+				return false;
+			}
+		}
+
+		IEffectContainer eff = effect.getConsumer().getEffect(effect.getName());
 		if (pluginConfig.DEBUG.isDevelop()) {
-			IEffectConsumer consumer1 = iEffect.getConsumer();
+			IEffectConsumer consumer1 = effect.getConsumer();
 			if (consumer1 instanceof ActiveCharacter) {
 				ActiveCharacter chara = (ActiveCharacter) consumer1;
-				chara.getPlayer().sendMessage(Text.of("Adding effect: " + iEffect.getName() +
+				chara.getPlayer().sendMessage(Text.of("Adding effect: " + effect.getName() +
 						" container: " + (eff == null ? "null" : eff.getEffects().size()) +
 						" provider: " + effectSourceProvider.getType().getClass().getSimpleName()));
 			}
 		}
 		if (eff == null) {
-			eff = iEffect.constructEffectContainer();
-			iEffect.getConsumer().addEffect(eff);
-			iEffect.onApply(iEffect);
+			eff = effect.constructEffectContainer();
+			effect.getConsumer().addEffect(eff);
+			effect.onApply(effect);
 		} else if (eff.isStackable()) {
-			eff.stackEffect(iEffect, effectSourceProvider);
+			eff.stackEffect(effect, effectSourceProvider);
 		} else {
 			eff.forEach((Consumer<IEffect>) this::stopEffect); //there should be always only one
 			//on remove will be called one tick later.
-			eff.getEffects().add(iEffect);
-			iEffect.onApply(iEffect);
+			eff.getEffects().add(effect);
+			effect.onApply(effect);
 		}
 
-		iEffect.setEffectContainer(eff);
-		iEffect.setEffectSourceProvider(effectSourceProvider);
-		if (iEffect.requiresRegister()) {
-			runEffect(iEffect);
+		effect.setEffectContainer(eff);
+		if (effect.requiresRegister()) {
+			runEffect(effect);
 		}
+
+		return true;
 	}
 
 	/**
 	 * Removes effect from IEffectConsumer, and stops it. The effect will be removed from the scheduler next tick
 	 *
-	 * @param iEffect
+	 * @param effect
 	 * @param consumer
 	 */
-	public void removeEffect(IEffect iEffect, IEffectConsumer consumer) {
-		IEffectContainer effect = consumer.getEffect(iEffect.getName());
+	public void removeEffect(IEffect effect, IEffectConsumer consumer) {
+		IEffectContainer container = consumer.getEffect(effect.getName());
 		if (pluginConfig.DEBUG.isDevelop()) {
-			IEffectConsumer consumer1 = iEffect.getConsumer();
+			IEffectConsumer consumer1 = effect.getConsumer();
 			if (consumer1 instanceof ActiveCharacter) {
 				ActiveCharacter chara = (ActiveCharacter) consumer1;
-				chara.getPlayer().sendMessage(Text.of("Removing effect: " + iEffect.getName() +
-						" container: " + (effect == null ? "null" : effect.getEffects().size())));
+				chara.getPlayer().sendMessage(Text.of("Removing effect: " + effect.getName() +
+						" container: " + (container == null ? "null" : container.getEffects().size())));
 			}
 		}
-		if (effect != null) {
-			removeEffectContainer(effect, iEffect, consumer);
-			stopEffect(iEffect);
+		if (container != null) {
+			removeEffectContainer(container, effect, consumer);
+			stopEffect(effect);
 		}
 	}
 
@@ -317,19 +350,28 @@ public class EffectService {
 		container.forEach(a -> removeEffect(a, consumer));
 	}
 
-	protected void removeEffectContainer(IEffectContainer container, IEffect iEffect, IEffectConsumer consumer) {
+	protected void removeEffectContainer(IEffectContainer container, IEffect effect, IEffectConsumer consumer) {
 		if (container == null) {
 			return;
 		}
-		if (iEffect == container) {
-			if (!iEffect.getConsumer().isDetached()) {
-				iEffect.onRemove(iEffect);
+
+		try (CauseStackManager.StackFrame frame = causeStackManager.pushCauseFrame()) {
+			EffectRemoveEvent event = new EffectRemoveEvent(effect);
+			causeStackManager.pushCause(effect);
+
+			event.setCause(causeStackManager.getCurrentCause());
+			Sponge.getEventManager().post(event);
+		}
+
+		if (effect == container) {
+			if (!effect.getConsumer().isDetached()) {
+				effect.onRemove(effect);
 			}
 			if (!consumer.isDetached()) {
-				consumer.removeEffect(iEffect);
+				consumer.removeEffect(effect);
 			}
-		} else if (container.getEffects().contains(iEffect)) {
-			container.removeStack(iEffect);
+		} else if (container.getEffects().contains(effect)) {
+			container.removeStack(effect);
 			if (container.getEffects().isEmpty()) {
 				if (consumer != null) {
 					consumer.removeEffect(container);
@@ -411,7 +453,7 @@ public class EffectService {
 	}
 
 	/**
-	 * Applies global effects with unlimited duration
+	 * Applies global effect with unlimited duration
 	 *
 	 * @param map
 	 * @param consumer
@@ -427,7 +469,7 @@ public class EffectService {
 	public void removeGlobalEffectsAsEnchantments(Collection<IGlobalEffect> itemEffects, IActiveCharacter character,
 	                                              IEffectSourceProvider effectSourceProvider) {
 		if (pluginConfig.DEBUG.isDevelop()) {
-			character.sendMessage(Text.of(itemEffects.size() + " added echn. effects to remove queue."));
+			character.sendMessage(Text.of(itemEffects.size() + " added echn. effect to remove queue."));
 		}
 		itemEffects.forEach((e) -> {
 			removeEffect(e.getName(), character, effectSourceProvider);
