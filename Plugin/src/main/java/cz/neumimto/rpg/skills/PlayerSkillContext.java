@@ -47,7 +47,7 @@ public class PlayerSkillContext {
 	private ISkill skill;
 
 	private Object2FloatOpenHashMap<String> cachedComputedSkillSettings;
-	private int previousSize = -1;
+	private int previousSize = 0;
 
 	public PlayerSkillContext(ClassDefinition classDefinition, ISkill skill, IActiveCharacter character) {
 		this.classDefinition = classDefinition;
