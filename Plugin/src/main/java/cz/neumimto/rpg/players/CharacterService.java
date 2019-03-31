@@ -17,35 +17,24 @@
  */
 package cz.neumimto.rpg.players;
 
+import static cz.neumimto.core.localization.Arg.arg;
+import static cz.neumimto.rpg.Log.error;
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.ClassService;
-import cz.neumimto.rpg.IRpgElement;
-import cz.neumimto.rpg.Log;
-import cz.neumimto.rpg.MissingConfigurationException;
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.common.def.ClickComboActionComponent;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.events.CancellableEvent;
-import cz.neumimto.rpg.events.CharacterAttributeChange;
-import cz.neumimto.rpg.events.CharacterEvent;
-import cz.neumimto.rpg.events.CharacterInitializedEvent;
-import cz.neumimto.rpg.events.ManaRegainEvent;
-import cz.neumimto.rpg.events.character.CharacterWeaponUpdateEvent;
-import cz.neumimto.rpg.events.character.EventCharacterArmorPostUpdate;
-import cz.neumimto.rpg.events.character.PlayerDataPreloadComplete;
-import cz.neumimto.rpg.events.party.PartyInviteEvent;
-import cz.neumimto.rpg.events.skills.SkillLearnAttemptEvent;
-import cz.neumimto.rpg.events.skills.SkillRefundEvent;
-import cz.neumimto.rpg.events.skills.SkillUpgradeEvent;
+import cz.neumimto.rpg.events.character.*;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.RPGItemType;
@@ -59,14 +48,9 @@ import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.groups.DependencyGraph;
 import cz.neumimto.rpg.players.leveling.SkillTreeType;
-import cz.neumimto.rpg.players.parties.Party;
-import cz.neumimto.rpg.players.properties.DefaultProperties;
-import cz.neumimto.rpg.players.properties.PropertyService;
-import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillDependency;
-import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.properties.DefaultProperties;
+import cz.neumimto.rpg.properties.PropertyService;
+import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.utils.PermissionUtils;
@@ -78,27 +62,11 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
-import static cz.neumimto.core.localization.Arg.arg;
-import static cz.neumimto.rpg.Log.error;
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.Log.warn;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -341,68 +309,6 @@ public class CharacterService {
         return character;
     }
 
-    /**
-     * Creates party
-     *
-     * @param character
-     */
-    public void createParty(ActiveCharacter character) {
-        CancellableEvent event = new PartyCreateEvent(character);
-        game.getEventManager().post(event);
-        if (!event.isCancelled()) {
-            Party party = new Party(character);
-            party.addPlayer(character);
-        }
-    }
-
-    /**
-     * Changes leader of a party. The old leader is not removed from the party
-     *
-     * @param party
-     * @param newleader
-     */
-    public void changePartyLeader(Party party, ActiveCharacter newleader) {
-        party.setLeader(newleader);
-    }
-
-    /**
-     * @param party
-     * @param character
-     * @return 1 - if player is already in party, 2 player has not been invited
-     */
-    public int partyJoin(Party party, ActiveCharacter character) {
-        if (party.getPlayers().contains(character)) {
-            return 1;
-        }
-        Player player = character.getPlayer();
-        if (party.getInvites().contains(player.getUniqueId())) {
-            party.getInvites().remove(player.getUniqueId());
-            party.addPlayer(character);
-            return 0;
-        }
-        return 2;
-    }
-
-    /**
-     * Invites character to a party
-     *
-     * @param party
-     * @param character
-     * @return 1 - if character is already in the party
-     * 0 - ok
-     */
-    public int inviteToParty(Party party, ActiveCharacter character) {
-        if (party.getPlayers().contains(character)) {
-            return 1;
-        }
-        PartyInviteEvent event = new PartyInviteEvent(party, character);
-        if (!event.isCancelled()) {
-            party.getInvites().add(character.getPlayer().getUniqueId());
-            return 0;
-        }
-        return 1;
-    }
-
     public void initActiveCharacter(IActiveCharacter character) {
         info("Initializing character " + character.getCharacterBase().getId());
         character.sendMessage(Localizations.CURRENT_CHARACTER, arg("character", character.getName()));
@@ -435,7 +341,7 @@ public class CharacterService {
     }
 
     public void addDefaultEffects(IActiveCharacter character) {
-        effectService.addEffect(new CombatEffect(character), InternalEffectSourceProvider.INSTANCE);
+        effectService.addEffect(new CombatEffect(character));
     }
 
     public void removeGroupEffects(IActiveCharacter character, ClassDefinition p) {
@@ -458,9 +364,9 @@ public class CharacterService {
      * @param character
      */
     public void updateMaxMana(IActiveCharacter character) {
-        float max_mana = character.getCharacterPropertyWithoutLevel(DefaultProperties.max_mana);
-        float actreserved = getCharacterProperty(character, DefaultProperties.reserved_mana);
-        float reserved = getCharacterProperty(character, DefaultProperties.reserved_mana_multiplier);
+        float max_mana = entityService.getEntityProperty(character, DefaultProperties.max_mana);
+        float actreserved = entityService.getEntityProperty(character, DefaultProperties.reserved_mana);
+        float reserved = entityService.getEntityProperty(character, DefaultProperties.reserved_mana_multiplier);
         float maxval = max_mana - (actreserved * reserved);
         character.getMana().setMaxValue(maxval);
     }
@@ -471,10 +377,10 @@ public class CharacterService {
      * @param character
      */
     public void updateMaxHealth(IActiveCharacter character) {
-        float max_health =
-                getCharacterProperty(character, DefaultProperties.max_health) - getCharacterProperty(character, DefaultProperties.reserved_health);
-        float actreserved = getCharacterProperty(character, DefaultProperties.reserved_health);
-        float reserved = getCharacterProperty(character, DefaultProperties.reserved_health_multiplier);
+        float max_health = entityService.getEntityProperty(character, DefaultProperties.max_health)
+                        - entityService.getEntityProperty(character, DefaultProperties.reserved_health);
+        float actreserved = entityService.getEntityProperty(character, DefaultProperties.reserved_health);
+        float reserved = entityService.getEntityProperty(character, DefaultProperties.reserved_health_multiplier);
         float maxval = max_health - (actreserved * reserved);
         if (maxval <= 0) {
             maxval = 1;
@@ -735,10 +641,10 @@ public class CharacterService {
             map.put("level", playerSkillContext.getLevel() * playerSkillContext.getSkillData().getLevelGap());
             return ActionResult.withErrorMessage(Localizations.INSUFFICIENT_LEVEL_GAP.toText(arg(map)));
         }
-        SkillUpgradeEvent event = new SkillUpgradeEvent(character, skill, playerSkillContext.getLevel() + 1);
-        game.getEventManager().post(event);
-        if (event.isCancelled()) {
-            return ActionResult.withErrorMessage(event.getMessage());
+
+        CharacterSkillUpgradeEvent event = new CharacterSkillUpgradeEvent(character, skill, playerSkillContext.getLevel() + 1);
+        if (game.getEventManager().post(event)) {
+            return ActionResult.withErrorMessage(event.getFailedMessage());
         }
 
         return ActionResult.ok();
@@ -827,10 +733,10 @@ public class CharacterService {
         }
 
 
-        SkillLearnAttemptEvent event = new SkillLearnAttemptEvent(character, skill);
+        CharacterSkillLearnAttemptEvent event = new CharacterSkillLearnAttemptEvent(character, skill);
         game.getEventManager().post(event);
         if (event.isCancelled()) {
-            return ActionResult.withErrorMessage(event.getMessage());
+            return ActionResult.withErrorMessage(event.getFailedMessage());
         }
 
         return ActionResult.ok();
@@ -870,8 +776,8 @@ public class CharacterService {
      * @param skill
      * @param classDefinition
      * @return 1 - if character has not a single skillpoint in the skill
-     * 2 - if one or more skills are on a path in a skilltree after the skill.
-     * 3 - SkillRefundEvent was cancelled
+     * 2 - if one or more skill are on a path in a skilltree after the skill.
+     * 3 - CharacterSkillRefundEvent was cancelled
      * 4 - Cant refund skill-tree path
      * 0 - ok
      */
@@ -888,7 +794,7 @@ public class CharacterService {
                 return ActionResult.withErrorMessage(Localizations.REFUND_SKILLS_DEPENDING.toText());
             }
         }
-        SkillRefundEvent event = new SkillRefundEvent(character, skill);
+        CharacterSkillRefundEvent event = new CharacterSkillRefundEvent(character, skill);
         game.getEventManager().post(event);
         if (event.isCancelled()) {
             return ActionResult.withErrorMessage(Localizations.UNABLE_TO_REFUND_SKILL.toText());
@@ -1016,7 +922,7 @@ public class CharacterService {
         }
 
         int level = aClass.getLevel();
-        exp = exp * getCharacterProperty(character, DefaultProperties.experiences_mult);
+        exp = exp * entityService.getEntityProperty(character, DefaultProperties.experiences_mult);
 
         double lvlexp = aClass.getExperiencesFromLevel();
 
@@ -1080,7 +986,7 @@ public class CharacterService {
         if (attributePoints - i <= 0) {
             return 1;
         }
-        CharacterEvent event = new CharacterAttributeChange(character, i);
+	    CharacterAttributeChange event = new CharacterAttributeChange(character, i);
         game.getEventManager().post(event);
         if (event.isCancelled()) {
             return 1;
@@ -1121,7 +1027,7 @@ public class CharacterService {
     /**
      * sponge is creating new player object each time a player is (re)spawned @link https://github
      * .com/SpongePowered/SpongeCommon/commit/384180f372fa233bcfc110a7385f43df2a85ef76
-     * character object is heavy, lets do not recreate its instance just reasign player and effects
+     * character object is heavy, lets do not recreate its instance just reasign player and effect
      */
     public void respawnCharacter(IActiveCharacter character) {
         effectService.removeAllEffects(character);
@@ -1139,15 +1045,6 @@ public class CharacterService {
             Double d = character.getHealth().getMaxValue();
             character.getEntity().offer(Keys.HEALTH, d);
         }).delay(1, TimeUnit.MILLISECONDS).submit(plugin);
-    }
-
-    /**
-     * Unlike ActiveCharacter#getProperty this method checks for maximal allowed value, defined in configfile.
-     *
-     * @see PropertyService#loadMaximalServerPropertyValues()
-     */
-    public float getCharacterProperty(IEffectConsumer consumer, int index) {
-        return Math.min(propertyService.getMaxPropertyValue(index), consumer.getProperty(index));
     }
 
     public void setHeathscale(IActiveCharacter character, double i) {
@@ -1190,21 +1087,24 @@ public class CharacterService {
         return playerDao.markCharacterForRemoval(player, charName);
     }
 
-    public void gainMana(IActiveCharacter entity, float manaToAdd, IRpgElement source) {
-        if (entity.getMana().getValue() == entity.getMana().getMaxValue()) {
+    public void gainMana(IActiveCharacter character, double manaToAdd, IRpgElement source) {
+        double current = character.getMana().getValue();
+        double max = character.getMana().getMaxValue();
+        if (current >= max) {
             return;
         }
-        ManaRegainEvent event = null;
 
-        if (entity.getMana().getValue() + manaToAdd > entity.getMana().getMaxValue()) {
-            manaToAdd = (float) ((entity.getMana().getValue() + manaToAdd) - entity.getMana().getMaxValue());
-        }
-        event = new ManaRegainEvent(entity, manaToAdd, source);
+        CharacterManaRegainEvent event = new CharacterManaRegainEvent(character, manaToAdd, source);
         Sponge.getGame().getEventManager().post(event);
         if (event.isCancelled() || event.getAmount() <= 0) {
             return;
         }
-        entity.getMana().setValue(event.getNewVal());
+
+        current += event.getAmount();
+        if (current > max) current = max;
+
+        character.getMana().setValue(current);
+        Gui.displayMana(character);
     }
 
     public ActionResult canGainClass(IActiveCharacter character, ClassDefinition klass) {

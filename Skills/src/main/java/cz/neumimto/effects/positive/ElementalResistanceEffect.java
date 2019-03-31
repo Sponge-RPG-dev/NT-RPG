@@ -1,12 +1,9 @@
 package cz.neumimto.effects.positive;
 
-import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.Generate;
-import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.common.stacking.FloatEffectStackingStrategy;
 import cz.neumimto.rpg.entities.PropertyContainer;
-import cz.neumimto.rpg.players.properties.DefaultProperties;
+import cz.neumimto.rpg.properties.DefaultProperties;
 import cz.neumimto.rpg.scripting.JsBinding;
 
 /**

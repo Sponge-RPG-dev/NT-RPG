@@ -33,6 +33,7 @@ public class SkillSoulbind extends ActiveSkill {
 	@Inject
 	private EffectService effectService;
 
+	@Override
 	public void init() {
 		super.init();
 		settings.addNode(SkillNodes.DURATION, 1000f, 10f);
@@ -43,8 +44,8 @@ public class SkillSoulbind extends ActiveSkill {
 	@Override
 	public void cast(IActiveCharacter iActiveCharacter, PlayerSkillContext playerSkillContext, SkillContext skillContext) {
 		float range = skillContext.getFloatNodeValue(SkillNodes.RANGE);
-		Living targettedEntity = Utils.getTargettedEntity(iActiveCharacter, (int) range);
-		if (targettedEntity != null && targettedEntity == EntityTypes.PLAYER) {
+		Living targettedEntity = Utils.getTargetedEntity(iActiveCharacter, (int) range);
+		if (targettedEntity != null && targettedEntity.getType() == EntityTypes.PLAYER) {
 			IActiveCharacter character = characterService.getCharacter(targettedEntity.getUniqueId());
 			if (iActiveCharacter.getParty().getPlayers().contains(character)) {
 				SoulBindEffect effect = new SoulBindEffect(iActiveCharacter, character);
@@ -58,7 +59,7 @@ public class SkillSoulbind extends ActiveSkill {
 
 	@Listener(order = Order.LAST)
 	public void onEntityDamage(DamageEntityEvent event) {
-		if (event.isCancelled() || event.getFinalDamage() == 0) {
+		if (event.getFinalDamage() == 0) {
 			return;
 		}
 		if (event.getTargetEntity().getType() == EntityTypes.PLAYER) {

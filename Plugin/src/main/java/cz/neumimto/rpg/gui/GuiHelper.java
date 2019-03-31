@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.gui;
 
+import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Block;
+import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Item;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
@@ -7,10 +9,7 @@ import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
-import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
-import cz.neumimto.rpg.inventory.data.MenuInventoryData;
-import cz.neumimto.rpg.inventory.data.NKeys;
-import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
+import cz.neumimto.rpg.inventory.data.*;
 import cz.neumimto.rpg.listeners.SkillTreeInventoryListener;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -42,9 +41,6 @@ import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.*;
 
-import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Block;
-import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Item;
-
 /**
  * Created by ja on 29.12.2016.
  */
@@ -73,9 +69,6 @@ public class GuiHelper {
 		damageTypeToItemStack.put(DamageTypes.MAGIC, Item.of(ItemTypes.ENCHANTED_BOOK));
 
 		damageTypeToItemStack.put(NDamageType.ICE, Block.of(BlockTypes.ICE));
-		damageTypeToItemStack.put(NDamageType.MAGICAL, Item.of(ItemTypes.ENCHANTED_BOOK));
-		damageTypeToItemStack.put(NDamageType.MEELE_CRITICAL, Item.of(ItemTypes.DIAMOND_SWORD));
-		damageTypeToItemStack.put(NDamageType.PHYSICAL, Item.of(ItemTypes.IRON_NUGGET));
 		damageTypeToItemStack.put(NDamageType.LIGHTNING, Item.of(ItemTypes.NETHER_STAR));
 	}
 

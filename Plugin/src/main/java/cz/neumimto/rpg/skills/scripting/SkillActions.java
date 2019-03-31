@@ -1,11 +1,13 @@
 package cz.neumimto.rpg.skills.scripting;
 
+import static cz.neumimto.rpg.Log.info;
 import cz.neumimto.core.localization.TextHelper;
-import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.pipeline.SkillComponent;
 import cz.neumimto.rpg.skills.utils.F;
@@ -21,21 +23,16 @@ import org.spongepowered.api.world.Location;
 
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
-import static cz.neumimto.rpg.Log.info;
+import java.util.function.*;
 
 @JsBinding(JsBinding.Type.CONTAINER)
 public class SkillActions {
 
 	@SkillComponent(
 			value = "Damaging an Entity",
-			usage = "damage(caster, target, damage, context)",
+			usage = "damage(source, target, damage, context)",
 			params = {
-					@SkillComponent.Param("caster - Entity of damage origin"),
+					@SkillComponent.Param("source - Entity of damage origin"),
 					@SkillComponent.Param("target - Entity to be damaged"),
 					@SkillComponent.Param("damage - damage value"),
 					@SkillComponent.Param("context - skill context"),
@@ -43,10 +40,11 @@ public class SkillActions {
 			}
 	)
 	public static F.QuadFunction<IEntity, IEntity, Number, SkillScriptContext, Boolean> DAMAGE = (caster, target, damage, context) -> {
-		SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
-		builder.fromSkill(context.getSkill());
-		builder.setCaster(caster);
-		return target.getEntity().damage(damage.doubleValue(), builder.build());
+		SkillDamageSource s = new SkillDamageSourceBuilder()
+				.fromSkill(context.getSkill())
+				.setSource(caster)
+				.build();
+		return target.getEntity().damage(damage.doubleValue(), s);
 	};
 
 	@SkillComponent(
@@ -184,7 +182,7 @@ public class SkillActions {
 				info(" - " + potionEffectType.getId());
 			}
 			throw new RuntimeException("Unknown Potion Effect Id : " + s);
-		};
+		}
 		return PotionEffect.builder().potionType(type);
 	};
 

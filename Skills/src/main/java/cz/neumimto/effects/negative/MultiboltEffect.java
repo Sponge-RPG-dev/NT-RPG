@@ -3,11 +3,12 @@ package cz.neumimto.effects.negative;
 import cz.neumimto.Decorator;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.model.MultiboltModel;
-import cz.neumimto.rpg.IEntity;
+import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.NDamageType;
 import org.spongepowered.api.entity.living.Living;
@@ -46,11 +47,12 @@ public class MultiboltEffect extends EffectBase<MultiboltModel> {
 
 	public void damage() {
 		Living entity = getConsumer().getEntity();
-		SkillDamageSourceBuilder build = new SkillDamageSourceBuilder();
-		build.setEffect(this);
-		build.setCaster(source);
-		build.type(NDamageType.LIGHTNING);
-		entity.damage(model.damage, build.build());
+		SkillDamageSource s = new SkillDamageSourceBuilder()
+				.setEffect(this)
+				.setSource(source)
+				.type(NDamageType.LIGHTNING)
+				.build();
+		entity.damage(model.damage, s);
 		Decorator.strikeLightning(entity);
 		model.timesToHit--;
 	}

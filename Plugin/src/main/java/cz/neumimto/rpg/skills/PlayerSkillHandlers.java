@@ -46,7 +46,7 @@ public class PlayerSkillHandlers {
         public boolean contains(String name) {
             return skills.containsKey(name);
         }
-    };
+    }
 /*
     public static final IPlayerSkillHandler CLASS_PRIORITY = new IPlayerSkillHandler() {
 

@@ -19,7 +19,7 @@
 package cz.neumimto.rpg.skills.parents;
 
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.rpg.IEntity;
+import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.ProjectileProperties;

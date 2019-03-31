@@ -31,7 +31,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.parents.PassiveSkill;
-import cz.neumimto.rpg.skills.parents.Targetted;
+import cz.neumimto.rpg.skills.parents.Targeted;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.utils.Utils;
@@ -53,6 +53,7 @@ import java.util.*;
  */
 public interface ISkill extends IEffectSourceProvider, CatalogType, IRpgElement {
 
+	@Override
 	String getId();
 
 	Text getLocalizableName();
@@ -156,24 +157,18 @@ public interface ISkill extends IEffectSourceProvider, CatalogType, IRpgElement 
 	default ItemStack toItemStack(IActiveCharacter character, SkillData skillData, SkillTree skillTree) {
 		SkillItemIcon icon = getIcon();
 
-		ItemStack is = null;
-		if (icon == null || icon.itemType == null) {
-			is = GuiHelper.damageTypeToItemStack(getDamageType());
-		} else {
-			is = icon.toItemStack();
-		}
+		ItemStack is = (icon == null || icon.itemType == null) ? GuiHelper.damageTypeToItemStack(getDamageType()) : icon.toItemStack();
 		is.offer(new MenuInventoryData(true));
 
 		List<Text> lore = new ArrayList<>();
-
 		List<Text> desc = getDescription();
 		Text skillTargetType = null;
-		if (this instanceof ActiveSkill) {
+		if (this instanceof Targeted) {
+			skillTargetType = Localizations.SKILL_TYPE_TARGETTED.toText();
+		} else if (this instanceof ActiveSkill) {
 			skillTargetType = Localizations.SKILL_TYPE_ACTIVE.toText();
 		} else if (this instanceof PassiveSkill) {
 			skillTargetType = Localizations.SKILL_TYPE_PASSIVE.toText();
-		} else if (this instanceof Targetted) {
-			skillTargetType = Localizations.SKILL_TYPE_TARGETTED.toText();
 		}
 		if (desc != null) {
 			lore.addAll(desc);

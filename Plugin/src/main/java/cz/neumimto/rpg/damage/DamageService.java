@@ -22,17 +22,15 @@ import com.google.common.collect.Lists;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.ClassService;
-import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
-import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.inventory.ItemService;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.players.properties.DefaultProperties;
+import cz.neumimto.rpg.properties.DefaultProperties;
 import cz.neumimto.rpg.skills.NDamageType;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
@@ -43,7 +41,6 @@ import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 
 import java.util.*;
-import java.util.function.BiFunction;
 
 /**
  * Created by NeumimTo on 4.8.15.
@@ -52,16 +49,11 @@ import java.util.function.BiFunction;
 public class DamageService {
 
 	@Inject
-	public EntityService entityService;
-	public BiFunction<Double, Double, Double> DamageArmorReductionFactor = (damage, armor) -> armor / (armor + 10 * damage);
+	private EntityService entityService;
 	@Inject
 	private CharacterService characterService;
 	@Inject
 	private ClassService classService;
-	@Inject
-	private InventoryService inventoryService;
-	@Inject
-	private ItemService itemService;
 
 	private Map<Double, TextColor> doubleColorMap = new TreeMap<>();
 
@@ -82,13 +74,13 @@ public class DamageService {
 		double base = character.getBaseWeaponDamage(type);
 
 		for (Integer i : type.getWeaponClass().getProperties()) {
-			base += characterService.getCharacterProperty(character, i);
+			base += entityService.getEntityProperty(character, i);
 		}
 
 		if (!type.getWeaponClass().getPropertiesMults().isEmpty()) {
 			double totalMult = 0;
 			for (Integer integer : type.getWeaponClass().getPropertiesMults()) {
-				totalMult += characterService.getCharacterProperty(character, integer);
+				totalMult += entityService.getEntityProperty(character, integer);
 			}
 			base *= totalMult;
 		}
@@ -99,13 +91,12 @@ public class DamageService {
 		if (character.isStub() || type == null) {
 			return 1;
 		}
-		double base =
-				character.getBaseProjectileDamage(type) + characterService.getCharacterProperty(character, DefaultProperties
-						.projectile_damage_bonus);
+		double base = character.getBaseProjectileDamage(type)
+				+ entityService.getEntityProperty(character, DefaultProperties.projectile_damage_bonus);
 		if (type == EntityTypes.SPECTRAL_ARROW || type == EntityTypes.TIPPED_ARROW) {
-			base *= characterService.getCharacterProperty(character, DefaultProperties.arrow_damage_mult);
+			base *= entityService.getEntityProperty(character, DefaultProperties.arrow_damage_mult);
 		} else {
-			base *= characterService.getCharacterProperty(character, DefaultProperties.other_projectile_damage_mult);
+			base *= entityService.getEntityProperty(character, DefaultProperties.other_projectile_damage_mult);
 		}
 		return base;
 	}
@@ -139,11 +130,11 @@ public class DamageService {
 		if (source == DamageTypes.ATTACK) {
 			return entityService.getEntityProperty(entity, DefaultProperties.physical_damage_protection_mult);
 		}
-		if (source == DamageTypes.FIRE) {
-			return entityService.getEntityProperty(entity, DefaultProperties.fire_damage_protection_mult);
-		}
 		if (source == DamageTypes.MAGIC) {
 			return entityService.getEntityProperty(entity, DefaultProperties.magic_damage_protection_mult);
+		}
+		if (source == DamageTypes.FIRE) {
+			return entityService.getEntityProperty(entity, DefaultProperties.fire_damage_protection_mult);
 		}
 		if (source == NDamageType.LIGHTNING) {
 			return entityService.getEntityProperty(entity, DefaultProperties.lightning_damage_protection_mult);
@@ -154,15 +145,15 @@ public class DamageService {
 		return 1;
 	}
 
-	public double getEntityBonusDamage(IEntity entity, DamageType source) {
+	public double getEntityDamageMult(IEntity entity, DamageType source) {
 		if (source == DamageTypes.ATTACK) {
 			return entityService.getEntityProperty(entity, DefaultProperties.physical_damage_bonus_mult);
 		}
-		if (source == DamageTypes.FIRE) {
-			return entityService.getEntityProperty(entity, DefaultProperties.fire_damage_bonus_mult);
-		}
 		if (source == DamageTypes.MAGIC) {
 			return entityService.getEntityProperty(entity, DefaultProperties.magic_damage_bonus_mult);
+		}
+		if (source == DamageTypes.FIRE) {
+			return entityService.getEntityProperty(entity, DefaultProperties.fire_damage_bonus_mult);
 		}
 		if (source == NDamageType.LIGHTNING) {
 			return entityService.getEntityProperty(entity, DefaultProperties.lightning_damage_bonus_mult);
@@ -170,7 +161,7 @@ public class DamageService {
 		if (source == NDamageType.ICE) {
 			return entityService.getEntityProperty(entity, DefaultProperties.ice_damage_bonus_mult);
 		}
-		return 0;
+		return 1;
 	}
 
 	public void createDamageToColorMapping() {

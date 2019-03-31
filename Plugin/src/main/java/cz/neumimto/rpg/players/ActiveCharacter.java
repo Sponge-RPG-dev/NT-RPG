@@ -18,19 +18,21 @@
 
 package cz.neumimto.rpg.players;
 
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.entities.IReservable;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
-import cz.neumimto.rpg.players.properties.PropertyService;
+import cz.neumimto.rpg.properties.PropertyService;
 import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
 import org.jline.utils.Log;
@@ -46,8 +48,6 @@ import org.spongepowered.api.text.chat.ChatType;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
-
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 
 /**
@@ -78,8 +78,8 @@ public class ActiveCharacter implements IActiveCharacter {
 	private transient boolean silenced = false;
 	private transient boolean isusingguimod;
 
-	private IReservable mana = new Mana(this);
-	private IReservable health = new Health(this);
+	private IReservable mana = new CharacterMana(this);
+	private IReservable health = new CharacterHealth(this);
 
 	private transient Party party;
 
@@ -92,7 +92,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	private transient Map<EntityType, Double> projectileDamage = new HashMap<>();
 	private transient Set<RPGItemType> allowedOffHandWeapons = new HashSet<>();
 	private Map<String, Long> cooldowns = new HashMap<>();
-	private transient WeakReference<Party> pendingPartyInvite = new WeakReference<Party>(null);
+	private transient WeakReference<Party> pendingPartyInvite = new WeakReference<>(null);
 	private transient double weaponDamage;
 	private transient double armorvalue;
 
@@ -125,6 +125,7 @@ public class ActiveCharacter implements IActiveCharacter {
 		this.denySlotInteractionArr = new HashSet<>();
 	}
 
+	@Override
 	public boolean isSilenced() {
 		return silenced;
 	}
@@ -612,7 +613,7 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	@Override
 	public void setPendingPartyInvite(Party party) {
-		pendingPartyInvite = new WeakReference<Party>(party);
+		pendingPartyInvite = new WeakReference<>(party);
 	}
 
 	@Override

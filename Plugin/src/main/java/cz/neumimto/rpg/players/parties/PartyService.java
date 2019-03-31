@@ -22,9 +22,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.configuration.Localizations;
-import cz.neumimto.rpg.events.party.PartyInviteEvent;
-import cz.neumimto.rpg.events.party.PartyJoinEvent;
-import cz.neumimto.rpg.events.party.PartyLeaveEvent;
+import cz.neumimto.rpg.events.party.*;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Game;
@@ -41,34 +39,33 @@ public class PartyService {
 	private Game game;
 
 	public void createNewParty(IActiveCharacter leader) {
-		Party party = new Party(leader);
-		leader.setParty(party);
+		PartyCreateEvent event = new PartyCreateEvent(leader);
+		if (!game.getEventManager().post(event)) {
+			Party party = new Party(leader);
+			leader.setParty(party);
+		}
 	}
 
 	public void kickCharacterFromParty(Party party, IActiveCharacter kicked) {
 		if (party.getPlayers().contains(kicked)) {
-			PartyLeaveEvent event = new PartyLeaveEvent(party, kicked);
-			game.getEventManager().post(event);
-			if (event.isCancelled()) {
-				return;
-			}
-			event.getParty().removePlayer(event.getLeaver());
+			PartyLeaveEvent event = new PartyLeaveEvent(kicked, party);
+			if (game.getEventManager().post(event)) return;
+
+			event.getParty().removePlayer(event.getTarget());
 			Player player = kicked.getPlayer();
 			event.getParty().getInvites().remove(player.getUniqueId());
-			event.getLeaver().setParty(null);
+			event.getTarget().setParty(null);
 		}
 	}
 
-	public void sendPartyInvite(Party party, IActiveCharacter tcharacter) {
-		party.sendPartyMessage(Localizations.PLAYER_INVITED_TO_PARTY_PARTY_MSG.toText(Arg.arg("player", tcharacter.getPlayer().getName())));
-		tcharacter.getPlayer().sendMessage(Localizations.PLAYER_INVITED_TO_PARTY.toText(Arg.arg("player", tcharacter.getPlayer().getName())));
-		party.getInvites().add(tcharacter.getPlayer().getUniqueId());
-		PartyInviteEvent event = new PartyInviteEvent(party, tcharacter);
-		game.getEventManager().post(event);
-		if (event.isCancelled()) {
-			return;
-		}
-		event.getCharacter().setPendingPartyInvite(event.getParty());
+	public void sendPartyInvite(Party party, IActiveCharacter character) {
+		PartyInviteEvent event = new PartyInviteEvent(character, party);
+		if (game.getEventManager().post(event)) return;
+
+		party.sendPartyMessage(Localizations.PLAYER_INVITED_TO_PARTY_PARTY_MSG.toText(Arg.arg("player", character.getPlayer().getName())));
+		character.getPlayer().sendMessage(Localizations.PLAYER_INVITED_TO_PARTY.toText(Arg.arg("player", character.getPlayer().getName())));
+		party.getInvites().add(character.getPlayer().getUniqueId());
+		event.getTarget().setPendingPartyInvite(event.getParty());
 	}
 
 	public void addToParty(Party party, IActiveCharacter character) {
@@ -79,17 +76,15 @@ public class PartyService {
 			Gui.sendMessage(character, Localizations.ALREADY_IN_PARTY, Arg.EMPTY);
 			return;
 		}
+		PartyJoinEvent event = new PartyJoinEvent(character, party);
+		if (game.getEventManager().post(event)) return;
+
 		Player player = character.getPlayer();
 		party.getInvites().remove(player.getUniqueId());
-		PartyJoinEvent event = new PartyJoinEvent(character, party);
-		if (event.isCancelled()) {
-			return;
-		}
 		Text msg = Localizations.PARTY_MSG_ON_PLAYER_JOIN.toText(Arg.arg("player", player.getName()));
 		player.sendMessage(Localizations.PLAYER_MSG_ON_JOIN_PARTY.toText());
 		party.sendPartyMessage(msg);
 		party.addPlayer(character);
 		character.setParty(party);
-
 	}
 }

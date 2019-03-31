@@ -20,39 +20,23 @@ package cz.neumimto.rpg.events.character;
 
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.impl.AbstractEvent;
 
 import java.util.Set;
 
 /**
  * Created by NeumimTo on 25.7.2015.
  */
-public class EventCharacterArmorPostUpdate extends AbstractEvent {
+public class EventCharacterArmorPostUpdate extends AbstractCharacterEvent {
 
-	IActiveCharacter character;
-	Set<RPGItemType> armor;
-	private Cause cause = null;
+	private Set<RPGItemType> armor;
 
 	public EventCharacterArmorPostUpdate(IActiveCharacter character, Set<RPGItemType> allowedArmor) {
-		this.character = character;
+		super(character);
 		this.armor = allowedArmor;
-	}
-
-	public IActiveCharacter getCharacter() {
-		return character;
 	}
 
 	public Set<RPGItemType> getArmor() {
 		return armor;
 	}
 
-	@Override
-	public Cause getCause() {
-		return cause;
-	}
-
-	public void setCause(Cause cause) {
-		this.cause = cause;
-	}
 }

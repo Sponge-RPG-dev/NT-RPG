@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.skills.scripting;
 
-import cz.neumimto.rpg.IEntity;
-import cz.neumimto.rpg.IEntityType;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.entities.IEntity;
+import cz.neumimto.rpg.entities.IEntityType;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.pipeline.SkillComponent;
@@ -14,10 +14,7 @@ import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.monster.Monster;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiFunction;
 
 @JsBinding(JsBinding.Type.CONTAINER)
@@ -90,10 +87,10 @@ public class SkillTargetProcessors {
 			}
 		} else if (caster.getType() == IEntityType.CHARACTER) {
 			IActiveCharacter character = (IActiveCharacter) caster;
-			Living targettedEntity = Utils.getTargettedEntity(character, range.intValue());
-			if (targettedEntity != null) {
-				if (Utils.canDamage(character, targettedEntity)) {
-					return NtRpgPlugin.GlobalScope.entityService.get(targettedEntity);
+			Living targetedEntity = Utils.getTargetedEntity(character, range.intValue());
+			if (targetedEntity != null) {
+				if (Utils.canDamage(character, targetedEntity)) {
+					return NtRpgPlugin.GlobalScope.entityService.get(targetedEntity);
 				}
 			}
 		}

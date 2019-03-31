@@ -5,14 +5,14 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.mods.SkillContext;
-import cz.neumimto.rpg.skills.parents.Targetted;
+import cz.neumimto.rpg.skills.parents.Targeted;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
@@ -20,11 +20,12 @@ import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
  * Created by NeumimTo on 7.7.2017.
  */
 @ResourceLoader.Skill("ntrpg:empathy")
-public class Empathy extends Targetted {
+public class Empathy extends Targeted {
 
 	@Inject
 	private EntityService entityService;
 
+	@Override
 	public void init() {
 		super.init();
 		settings.addNode(SkillNodes.MULTIPLIER, 5, 10);
@@ -33,7 +34,7 @@ public class Empathy extends Targetted {
 	}
 
 	@Override
-	public void castOn(Living target, IActiveCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+	public void castOn(IEntity target, IActiveCharacter source, PlayerSkillContext info, SkillContext skillContext) {
 		Player entity = source.getEntity();
 		Double max = entity.get(Keys.MAX_HEALTH).get();
 		Double a = entity.get(Keys.HEALTH).get();
@@ -45,9 +46,9 @@ public class Empathy extends Targetted {
 		}
 		SkillDamageSource build = new SkillDamageSourceBuilder()
 				.fromSkill(this)
-				.setTarget(entityService.get(target))
-				.setCaster(source).build();
-		target.damage(a, build);
+				.setSource(source)
+				.build();
+		target.getEntity().damage(a, build);
 		skillContext.next(source, info, SkillResult.OK);
 	}
 }

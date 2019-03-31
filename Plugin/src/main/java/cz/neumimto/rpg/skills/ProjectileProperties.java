@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.skills;
 
-import cz.neumimto.rpg.IEntity;
+import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.utils.TriConsumer;
 import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.event.entity.DamageEntityEvent;

@@ -1,15 +1,15 @@
 package cz.neumimto.effects.positive;
 
 import cz.neumimto.model.VitalizeEffectModel;
-import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.entities.IEntity;
+import cz.neumimto.rpg.entities.IReservable;
+import cz.neumimto.rpg.players.CharacterMana;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.IReservable;
-import cz.neumimto.rpg.players.Mana;
 import cz.neumimto.rpg.scripting.JsBinding;
 
 /**
@@ -39,7 +39,7 @@ public class VitalizeEffect extends EffectBase<VitalizeEffectModel> {
 		NtRpgPlugin.GlobalScope.entityService.healEntity((IEntity) getConsumer(), getValue().healthPerTick, this);
 		if (character != null) {
 			IReservable mana = character.getMana();
-			if (mana instanceof Mana) {
+			if (mana instanceof CharacterMana) {
 				NtRpgPlugin.GlobalScope.characterService.gainMana(character, getValue().manaPerTick, this);
 			}
 		}

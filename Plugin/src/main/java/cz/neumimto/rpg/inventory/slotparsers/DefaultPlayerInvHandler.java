@@ -105,7 +105,7 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
 
 	/**
 	 * A method which
-	 * - adds enchantments to entity effects cache
+	 * - adds enchantments to entity effect cache
 	 * - todo: apply attribute bonuses
 	 *
 	 * @param character player

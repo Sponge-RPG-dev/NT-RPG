@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.entities;
 
-import cz.neumimto.rpg.IEntity;
-import cz.neumimto.rpg.IEntityType;
 import org.spongepowered.api.entity.living.Living;
 
 /**
@@ -13,6 +11,7 @@ public interface IMob<T extends Living> extends IEntity {
 
 	void setExperiences(double exp);
 
+	@Override
 	default IEntityType getType() {
 		return IEntityType.MOB;
 	}

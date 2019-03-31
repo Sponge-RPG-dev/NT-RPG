@@ -21,7 +21,7 @@ public class EnderPearlEffect extends EffectBase<Long> {
 		super(name, consumer);
 		setDuration(duration);
 		setValue(value);
-		setStackable(true, MinLongStackingStrategy.INSTNCE);
+		setStackable(true, new MinLongStackingStrategy());
 	}
 
 	@Override

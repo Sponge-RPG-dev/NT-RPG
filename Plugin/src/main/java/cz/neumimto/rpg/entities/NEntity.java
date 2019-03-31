@@ -9,14 +9,11 @@ import cz.neumimto.rpg.players.parties.Party;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.entity.living.Creature;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatType;
 import org.spongepowered.api.world.World;
-import org.spongepowered.api.world.extent.Extent;
 
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -48,17 +45,6 @@ public class NEntity implements IMob {
 	@Override
 	public void setExperiences(double exp) {
 		this.experiences = exp;
-	}
-
-	@Override
-
-	public double getHp() {
-		return getEntity().get(Keys.HEALTH).get();
-	}
-
-	@Override
-	public void setHp(double d) {
-		getEntity().offer(Keys.HEALTH, d);
 	}
 
 	@Override

@@ -46,7 +46,7 @@ public class ReloadExecutor implements CommandExecutor {
 			String q = null;
 			while (i < a.length) {
 				q = a[i];
-				if (q.equalsIgnoreCase("skills") || q.equalsIgnoreCase("s")) {
+				if (q.equalsIgnoreCase("skill") || q.equalsIgnoreCase("s")) {
 					jsLoader.reloadSkills();
 					CharacterService build = IoC.get().build(CharacterService.class);
 					SkillService skillService = IoC.get().build(SkillService.class);
@@ -115,7 +115,7 @@ public class ReloadExecutor implements CommandExecutor {
 				Log.info("[RELOAD] Purging effect caches");
 				NtRpgPlugin.GlobalScope.effectService.purgeEffectCache();
 				NtRpgPlugin.GlobalScope.effectService.stop();
-				//todo purge all skills
+				//todo purge all skill
 				//todo purge all skilltrees
 
 				for (CharacterBase characterBase : characterBases) {
@@ -126,10 +126,10 @@ public class ReloadExecutor implements CommandExecutor {
 
 				//we should be ready to start loading stuff back
 				Sponge.getScheduler().createTaskBuilder().execute(() -> {
-					//System.gc(); - for reloading skills its required
+					//System.gc(); - for reloading skill its required
 
 					NtRpgPlugin.GlobalScope.effectService.start();
-					//todo load skills
+					//todo load skill
 					//todo load skilltrees
 
 					NtRpgPlugin.GlobalScope.classService.loadClasses();

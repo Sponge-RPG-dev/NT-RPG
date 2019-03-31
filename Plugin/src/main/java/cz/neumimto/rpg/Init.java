@@ -11,7 +11,7 @@ import cz.neumimto.rpg.gui.VanillaMessaging;
 import cz.neumimto.rpg.inventory.CustomItemFactory;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.runewords.RWService;
-import cz.neumimto.rpg.players.properties.PropertyService;
+import cz.neumimto.rpg.properties.PropertyService;
 import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.utils.PseudoRandomDistribution;

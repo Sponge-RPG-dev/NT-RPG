@@ -5,10 +5,7 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.NDamageType;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
-import cz.neumimto.rpg.skills.SkillNodes;
-import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
@@ -24,6 +21,7 @@ import java.util.Set;
 @ResourceLoader.Skill("ntrpg:megabolt")
 public class SkillMegabolt extends ActiveSkill {
 
+	@Override
 	public void init() {
 		super.init();
 		setDamageType(NDamageType.LIGHTNING);
@@ -35,23 +33,23 @@ public class SkillMegabolt extends ActiveSkill {
 	}
 
 	@Override
-	public void cast(IActiveCharacter iActiveCharacter, PlayerSkillContext playerSkillContext, SkillContext skillContext) {
+	public void cast(IActiveCharacter caster, PlayerSkillContext info, SkillContext skillContext) {
 		int r = skillContext.getIntNodeValue(SkillNodes.RADIUS);
-		Set<Entity> nearbyEntities = Utils.getNearbyEntities(iActiveCharacter.getPlayer().getLocation(), r);
+		Set<Entity> nearbyEntities = Utils.getNearbyEntities(caster.getPlayer().getLocation(), r);
 		float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
-		SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
-		builder.fromSkill(this);
-		builder.setCaster(iActiveCharacter);
-		SkillDamageSource src = builder.build();
+		SkillDamageSource s = new SkillDamageSourceBuilder()
+				.fromSkill(this)
+				.setSource(caster)
+				.build();
 		for (Entity e : nearbyEntities) {
 			if (Utils.isLivingEntity(e)) {
 				Living l = (Living) e;
-				if (Utils.canDamage(iActiveCharacter, l)) {
-					l.damage(damage, src);
+				if (Utils.canDamage(caster, l)) {
+					l.damage(damage, s);
 					Decorator.strikeLightning(l);
 				}
 			}
 		}
-		skillContext.next(iActiveCharacter, playerSkillContext, skillContext.result(SkillResult.OK));
+		skillContext.next(caster, info, skillContext.result(SkillResult.OK));
 	}
 }

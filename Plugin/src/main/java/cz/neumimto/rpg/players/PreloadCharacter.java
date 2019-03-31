@@ -18,18 +18,20 @@
 
 package cz.neumimto.rpg.players;
 
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.entities.IReservable;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
-import cz.neumimto.rpg.players.properties.DefaultProperties;
-import cz.neumimto.rpg.players.properties.PropertyService;
+import cz.neumimto.rpg.properties.DefaultProperties;
+import cz.neumimto.rpg.properties.PropertyService;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
@@ -47,17 +49,15 @@ import org.spongepowered.api.text.chat.ChatType;
 
 import java.util.*;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-
 /**
  * Created by NeumimTo on 23.7.2015.
  */
 public class PreloadCharacter implements IActiveCharacter {
 
-	static float[] characterProperties = new float[PropertyService.LAST_ID];
-	IReservable mana = new Mana(this);
-	UUID uuid;
-	Health health = new HealthStub(this);
+	private static float[] characterProperties = new float[PropertyService.LAST_ID];
+	private IReservable mana = new CharacterMana(this);
+	private UUID uuid;
+	private CharacterHealth health = new CharacterHealthStub(this);
 	private boolean isusinggui;
 	private Player player;
 
@@ -361,7 +361,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public void addPotionEffect(PotionEffectType p, int amplifier, long duration, boolean partciles) {
+	public void addPotionEffect(PotionEffectType p, int amplifier, long duration, boolean particles) {
 
 	}
 

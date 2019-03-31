@@ -9,7 +9,7 @@ import java.util.List;
  * Created by NeumimTo on 26.1.2019.
  */
 @ConfigSerializable
-public class Custom extends AbstractLevelprogression {
+public class Custom extends AbstractLevelProgression {
 
     @Setting("Levels")
     private List<Double> lvlMgrs;

@@ -11,7 +11,7 @@ import java.util.UUID;
  */
 public class PlayerGuiModInitEvent implements Event {
 
-	UUID uuid;
+	private UUID uuid;
 
 	public PlayerGuiModInitEvent(UUID uuid) {
 		this.uuid = uuid;

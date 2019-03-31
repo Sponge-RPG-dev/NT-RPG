@@ -14,10 +14,10 @@ import java.util.TreeMap;
 @ConfigSerializable
 public class SkillsDumpConfiguration {
 
-	@Setting(value = "effects", comment = "List of avalaible effects and its config nodes")
+	@Setting(value = "effect", comment = "List of avalaible effect and its config nodes")
 	private Map<String, EffectDumpConfiguration> effects;
 
-	@Setting(value = "skills", comment = "List of avalaible skills and its config nodes")
+	@Setting(value = "skill", comment = "List of avalaible skill and its config nodes")
 	private List<SkillDumpConfiguration> skills;
 
 	public SkillsDumpConfiguration() {

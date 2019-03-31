@@ -1,29 +1,23 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.Decorator;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
-import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.NDamageType;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
-import cz.neumimto.rpg.skills.SkillNodes;
-import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.skills.mods.SkillContext;
-import cz.neumimto.rpg.skills.parents.Targetted;
+import cz.neumimto.rpg.skills.parents.Targeted;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import org.spongepowered.api.entity.living.Living;
 
 /**
  * Created by NeumimTo on 29.12.2015.
  */
 @ResourceLoader.Skill("ntrpg:lightning")
-public class SkillLightning extends Targetted {
+public class SkillLightning extends Targeted {
 
-	@Inject
-	EntityService entityService;
-
+	@Override
 	public void init() {
 		super.init();
 		setDamageType(NDamageType.LIGHTNING);
@@ -34,13 +28,14 @@ public class SkillLightning extends Targetted {
 	}
 
 	@Override
-	public void castOn(Living target, IActiveCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+	public void castOn(IEntity target, IActiveCharacter source, PlayerSkillContext info, SkillContext skillContext) {
 		float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
-		SkillDamageSourceBuilder build = new SkillDamageSourceBuilder();
-		build.fromSkill(this);
-		build.setCaster(source);
-		target.damage(damage, build.build());
-		Decorator.strikeLightning(target);
+		SkillDamageSource s = new SkillDamageSourceBuilder()
+				.fromSkill(this)
+				.setSource(source)
+				.build();
+		target.getEntity().damage(damage, s);
+		Decorator.strikeLightning(target.getEntity());
 		skillContext.next(source, info, skillContext.result(SkillResult.OK));
 	}
 }

@@ -17,26 +17,24 @@
  */
 package cz.neumimto.rpg.damage;
 
-import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.skills.ISkill;
-import org.spongepowered.api.event.cause.entity.damage.source.common.AbstractDamageSource;
+import org.spongepowered.api.event.cause.entity.damage.source.common.AbstractEntityDamageSource;
 
 /**
  * Created by NeumimTo on 29.12.2015.
  */
-public class SkillDamageSource extends AbstractDamageSource implements ISkillDamageSource {
+public class SkillDamageSource extends AbstractEntityDamageSource implements ISkillDamageSource {
 
-	private ISkill skill;
-	private IEntity caster;
-	private IEntity target;
-	private IEffect effect;
+	private final ISkill skill;
+	private final IEntity nSource;
+	private final IEffect effect;
 
 	public SkillDamageSource(SkillDamageSourceBuilder builder) {
 		super(builder);
 		this.skill = builder.getSkill();
-		this.caster = builder.getCaster();
-		this.target = builder.getTarget();
+		this.nSource = builder.getSource();
 		this.effect = builder.getEffect();
 	}
 
@@ -45,34 +43,13 @@ public class SkillDamageSource extends AbstractDamageSource implements ISkillDam
 		return this.skill;
 	}
 
-	public void setSkill(ISkill skill) {
-		this.skill = skill;
-	}
-
 	@Override
-	public IEntity getCaster() {
-		return caster;
-	}
-
-	public void setCaster(IEntity caster) {
-		this.caster = caster;
-	}
-
-	@Override
-	public IEntity getTarget() {
-		return target;
-	}
-
-	public void setTarget(IEntity target) {
-		this.target = target;
+	public IEntity getSourceIEntity() {
+		return nSource;
 	}
 
 	@Override
 	public IEffect getEffect() {
 		return effect;
-	}
-
-	public void setEffect(IEffect effect) {
-		this.effect = effect;
 	}
 }

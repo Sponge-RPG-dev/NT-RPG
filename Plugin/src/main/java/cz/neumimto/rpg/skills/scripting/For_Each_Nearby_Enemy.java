@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.skills.scripting;
 
-import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.pipeline.SkillComponent;

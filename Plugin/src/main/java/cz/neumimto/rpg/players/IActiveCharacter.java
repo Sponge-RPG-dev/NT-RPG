@@ -19,8 +19,9 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.core.localization.LocalizableParametrizedText;
-import cz.neumimto.rpg.IEntity;
-import cz.neumimto.rpg.IEntityType;
+import cz.neumimto.rpg.entities.IEntity;
+import cz.neumimto.rpg.entities.IEntityType;
+import cz.neumimto.rpg.entities.IReservable;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
@@ -231,6 +232,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	double getExperienceBonusFor(java.lang.String name, EntityType type);
 
+	@Override
 	default void sendMessage(Text t) {
 		getPlayer().sendMessage(t);
 	}

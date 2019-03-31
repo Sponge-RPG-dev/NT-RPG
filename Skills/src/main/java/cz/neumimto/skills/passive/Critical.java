@@ -7,11 +7,11 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.NDamageType;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.parents.PassiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
+import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
 /**
  * Created by ja on 6.7.2017.
@@ -26,7 +26,7 @@ public class Critical extends PassiveSkill {
 		super(CriticalEffect.name);
 		settings.addNode(SkillNodes.CHANCE, 10, 20);
 		settings.addNode(SkillNodes.MULTIPLIER, 10, 20);
-		setDamageType(NDamageType.MEELE_CRITICAL);
+		setDamageType(DamageTypes.ATTACK);
 		addSkillType(SkillType.PHYSICAL);
 	}
 

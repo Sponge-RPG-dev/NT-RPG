@@ -1,5 +1,6 @@
 package cz.neumimto.rpg;
 
+import static org.mockito.Matchers.any;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.effects.EffectService;
@@ -21,11 +22,8 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.Set;
 import java.util.UUID;
-
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
-
-import static org.mockito.Matchers.any;
 
 public class EffectTests {
 
@@ -64,7 +62,7 @@ public class EffectTests {
         Mockito.when(mock.getEffectSourceProvider()).thenReturn(InternalEffectSourceProvider.INSTANCE);
         Mockito.when(mock.getName()).thenReturn(name);
         Mockito.when(mock.getValue()).thenReturn(1L);
-        Mockito.when(mock.getEffectStackingStrategy()).thenReturn(MinLongStackingStrategy.INSTNCE);
+        Mockito.when(mock.getEffectStackingStrategy()).thenReturn(new MinLongStackingStrategy());
         Mockito.when(mock.requiresRegister()).thenCallRealMethod();
 
         Mockito.when(mock.constructEffectContainer()).thenCallRealMethod();

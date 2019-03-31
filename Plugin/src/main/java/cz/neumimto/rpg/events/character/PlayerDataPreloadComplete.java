@@ -19,11 +19,10 @@
 package cz.neumimto.rpg.events.character;
 
 import cz.neumimto.rpg.NEventContextKeys;
-import cz.neumimto.rpg.events.CancellableEvent;
 import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.scripting.JsBinding;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.EventContext;
+import org.spongepowered.api.event.impl.AbstractEvent;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,8 +30,7 @@ import java.util.UUID;
 /**
  * Created by NeumimTo on 10.7.2015.
  */
-@JsBinding(JsBinding.Type.CLASS)
-public class PlayerDataPreloadComplete extends CancellableEvent {
+public class PlayerDataPreloadComplete extends AbstractEvent {
 
 	private UUID player;
 	private List<CharacterBase> characterBases;

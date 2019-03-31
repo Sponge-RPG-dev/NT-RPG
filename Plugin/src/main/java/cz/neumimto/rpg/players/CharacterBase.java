@@ -18,13 +18,13 @@
 
 package cz.neumimto.rpg.players;
 
-import cz.neumimto.rpg.TimestampEntity;
 import cz.neumimto.rpg.persistance.converters.EquipedSlot2Json;
 import cz.neumimto.rpg.persistance.converters.UUID2String;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
+import cz.neumimto.rpg.persistance.model.TimestampEntity;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.skills.ISkill;
 import org.hibernate.annotations.GenericGenerator;
@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;

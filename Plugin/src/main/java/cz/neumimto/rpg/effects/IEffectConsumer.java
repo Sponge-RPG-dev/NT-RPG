@@ -97,25 +97,20 @@ public interface IEffectConsumer<T extends Living> extends PropertyContainer {
 		getEntity().offer(Keys.POTION_EFFECTS, potionEffects);
 	}
 
-	default void addPotionEffect(PotionEffectType p, int amplifier, long duration, boolean partciles) {
-		PotionEffect build = PotionEffect.builder().particles(partciles).potionType(p).amplifier(amplifier).duration((int) duration).build();
+	default void addPotionEffect(PotionEffectType p, int amplifier, long duration, boolean particles) {
+		PotionEffect build = PotionEffect.builder().particles(particles).potionType(p).amplifier(amplifier).duration((int) duration).build();
 		addPotionEffect(build);
 	}
 
 	default void removePotionEffect(PotionEffectType type) {
 		List<PotionEffect> potionEffects = getEntity().get(Keys.POTION_EFFECTS).get();
-		List l = potionEffects.stream().filter(p -> p.getType() != type).collect(Collectors.toList());
+		List<PotionEffect> l = potionEffects.stream().filter(p -> p.getType() != type).collect(Collectors.toList());
 		getEntity().offer(Keys.POTION_EFFECTS, l);
 	}
 
 	default boolean hasPotionEffect(PotionEffectType type) {
 		List<PotionEffect> potionEffects = getEntity().get(Keys.POTION_EFFECTS).get();
-		for (PotionEffect potionEffect : potionEffects) {
-			if (potionEffect.getType() == type) {
-				return true;
-			}
-		}
-		return false;
+		return potionEffects.stream().anyMatch(p -> p.getType() == type);
 	}
 
 	default void addPotionEffect(PotionEffect e) {

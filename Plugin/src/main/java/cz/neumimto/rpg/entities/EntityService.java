@@ -2,16 +2,14 @@ package cz.neumimto.rpg.entities;
 
 import static cz.neumimto.rpg.Log.warn;
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.IRpgElement;
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.events.skills.SkillHealEvent;
-import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.properties.PropertyService;
+import cz.neumimto.rpg.events.skill.SkillHealEvent;
+import cz.neumimto.rpg.properties.PropertyService;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
@@ -28,11 +26,7 @@ import java.util.UUID;
 @Singleton
 public class EntityService {
 
-
 	private HashMap<UUID, IMob> entityHashMap = new HashMap<>();
-
-	@Inject
-	private CharacterService service;
 
 	@Inject
 	private MobSettingsDao dao;
@@ -45,7 +39,7 @@ public class EntityService {
 
 	public IEntity get(Entity id) {
 		if (id.getType() == EntityTypes.PLAYER) {
-			return service.getCharacter(id.getUniqueId());
+			return NtRpgPlugin.GlobalScope.characterService.getCharacter(id.getUniqueId());
 		}
 		IMob iEntity = entityHashMap.get(id.getUniqueId());
 		if (iEntity == null) {
@@ -89,7 +83,7 @@ public class EntityService {
 		if (dimmension != null) {
 			Double aDouble = dimmension.getDamage().get(type.getType());
 			if (aDouble == null) {
-				warn("No max experience drop configured for " + type.getType().getId()
+				warn("No damage configured for " + type.getType().getId()
 						+ " in world " + type.getLocation().getExtent().getName());
 				aDouble = 0D;
 			}
@@ -112,62 +106,51 @@ public class EntityService {
 		return 0;
 	}
 
+	/**
+	 * Unlike {@link IEntity#getProperty} this method checks for maximal allowed value, defined in config file.
+	 *
+	 * @see PropertyService#loadMaximalServerPropertyValues()
+	 */
 	public float getEntityProperty(IEffectConsumer entity, int id) {
 		return Math.min(entity.getProperty(id), propertyService.getMaxPropertyValue(id));
 	}
 
-	public void setEntityProperty(IEntity nEntity, int id, Float value) {
-		nEntity.setProperty(id, value);
-	}
-
-	public void addToEntityProperty(IEntity nEntity, int id, Float value) {
-		Float f = getEntityProperty(nEntity, id);
-		setEntityProperty(nEntity, id, f == null ? value : f + value);
-	}
-
-
 	/**
-	 * Heals the entity and`fire an event
-	 *
-	 * @param entity
-	 * @param healedamount
-	 * @return healed hp
-	 */
-	public double healEntity(IEntity entity, float healedamount, IRpgElement element) {
-		if (entity.getHealth().getValue() == entity.getHealth().getMaxValue()) {
-			return 0;
-		}
-		SkillHealEvent event = null;
-		if (entity.getHealth().getValue() + healedamount > entity.getHealth().getMaxValue()) {
-			healedamount = (float) ((entity.getHealth().getValue() + healedamount) - entity.getHealth().getMaxValue());
-		}
-		event = new SkillHealEvent(entity, healedamount, element);
-		Sponge.getGame().getEventManager().post(event);
-		if (event.isCancelled() || event.getAmount() <= 0) {
-			return 0;
-		}
-		return setEntityHealth(event.getEntity(), event.getAmount());
-	}
-
-	/**
-	 * sets character's hp to choosen amount.
+	 * Heals the entity and fire an event
 	 *
 	 * @param entity
 	 * @param amount
-	 * @return difference
 	 */
-	public double setEntityHealth(IEntity entity, double amount) {
-		if (entity.getHealth().getValue() + amount > entity.getHealth().getMaxValue()) {
-			double k = entity.getHealth().getMaxValue() - (entity.getHealth().getValue() + amount);
-			setEntityToFullHealth(entity);
-			return k;
+	public void healEntity(IEntity entity, float amount, IRpgElement source) {
+		if (entity.getHealth().getValue() == entity.getHealth().getMaxValue()) {
+			return;
 		}
-		entity.getHealth().setValue(entity.getHealth().getValue() + amount);
-		return amount;
+
+		SkillHealEvent event = new SkillHealEvent(entity, amount, source);
+		Sponge.getGame().getEventManager().post(event);
+		if (event.isCancelled() || event.getAmount() <= 0) {
+			return;
+		}
+
+		setEntityHealth(event.getTarget(), entity.getHealth().getValue() + event.getAmount());
 	}
 
 	/**
-	 * sets character to its full health
+	 * sets entity's hp to chosen amount.
+	 *
+	 * @param entity
+	 * @param amount
+	 */
+	public void setEntityHealth(IEntity entity, double amount) {
+		if (amount > entity.getHealth().getMaxValue()) {
+			setEntityToFullHealth(entity);
+			return;
+		}
+		entity.getHealth().setValue(amount);
+	}
+
+	/**
+	 * sets entity to its full health
 	 *
 	 * @param entityToFullHealth
 	 */

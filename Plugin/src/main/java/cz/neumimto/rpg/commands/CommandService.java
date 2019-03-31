@@ -230,7 +230,7 @@ public class CommandService {
 						new UnlearnedSkillCommandElement(Text.of("skill")),
 						new PlayerClassCommandElement(Text.of("class"))
 				)
-				.permission("ntrpg.player.skills")
+				.permission("ntrpg.player.skill")
 				.executor(new SkillLearnExecutor())
 				.build();
 
@@ -240,7 +240,7 @@ public class CommandService {
 						new LearnedSkillCommandElement(Text.of("skill")),
 						new PlayerClassCommandElement(Text.of("class"))
 				)
-				.permission("ntrpg.player.skills")
+				.permission("ntrpg.player.skill")
 				.executor(new SkillUpgradeExecutor())
 				.build();
 
@@ -250,7 +250,7 @@ public class CommandService {
 						new LearnedSkillCommandElement(Text.of("skill")),
 						new PlayerClassCommandElement(Text.of("class"))
 				)
-				.permission("ntrpg.player.skills.refund")
+				.permission("ntrpg.player.skill.refund")
 				.executor(new SkillRefundExecutor())
 				.build();
 
@@ -300,7 +300,7 @@ public class CommandService {
 		CommandSpec skillCast = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_SKILL_DESC))
 				.arguments(
-						new LearnedSkillCommandElement(TextHelper.parse("skill"))
+						new AnySkillCommandElement(TextHelper.parse("skill"))
 				)
 				.executor(new SkillCastExecutor())
 				.build();
