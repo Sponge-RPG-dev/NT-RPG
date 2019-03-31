@@ -3,10 +3,7 @@ package cz.neumimto.rpg.configuration;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 8.7.2018.
@@ -14,10 +11,10 @@ import java.util.TreeMap;
 @ConfigSerializable
 public class SkillsDumpConfiguration {
 
-	@Setting(value = "effect", comment = "List of avalaible effect and its config nodes")
+	@Setting(value = "effects", comment = "List of avalaible effects and its config nodes")
 	private Map<String, EffectDumpConfiguration> effects;
 
-	@Setting(value = "skill", comment = "List of avalaible skill and its config nodes")
+	@Setting(value = "skills", comment = "List of avalaible skills and its config nodes")
 	private List<SkillDumpConfiguration> skills;
 
 	public SkillsDumpConfiguration() {

@@ -1,14 +1,12 @@
 package cz.neumimto.rpg.skills.tree;
 
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillPathData;
-import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.skills.parents.PassiveSkill;
 import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.utils.Utils;
@@ -18,12 +16,7 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.text.Text;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 16.8.17.
@@ -41,7 +34,7 @@ public class SkillTreeSpecialization extends PassiveSkill {
 
 	@Override
 	public void skillLearn(IActiveCharacter IActiveCharacter) {
-		if (pluginConfig.PLAYER_CHOOSED_SKILLTREE_SPECIALIZATIon_GLOBAL_MESSAGE) {
+		if (pluginConfig.PLAYER_CHOOSED_SKILLTREE_SPECIALIZATION_GLOBAL_MESSAGE) {
 			Text t = Localizations.PLAYER_CHOOSED_SKILLTREE_PATH_GLOBAL_MESSAGE_CONTENT.toText(
 					Arg.arg("player", IActiveCharacter.getPlayer().getName())
 							.with("character", IActiveCharacter.getName())

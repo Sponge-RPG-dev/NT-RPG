@@ -27,10 +27,7 @@ import cz.neumimto.rpg.commands.admin.*;
 import cz.neumimto.rpg.commands.character.*;
 import cz.neumimto.rpg.commands.elements.*;
 import cz.neumimto.rpg.commands.item.*;
-import cz.neumimto.rpg.commands.party.PartyAcceptExecutor;
-import cz.neumimto.rpg.commands.party.PartyCreateExecutor;
-import cz.neumimto.rpg.commands.party.PartyInviteExecutor;
-import cz.neumimto.rpg.commands.party.PartyKickExecutor;
+import cz.neumimto.rpg.commands.party.*;
 import cz.neumimto.rpg.commands.skill.*;
 import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.gui.Gui;
@@ -230,7 +227,7 @@ public class CommandService {
 						new UnlearnedSkillCommandElement(Text.of("skill")),
 						new PlayerClassCommandElement(Text.of("class"))
 				)
-				.permission("ntrpg.player.skill")
+				.permission("ntrpg.player.skills")
 				.executor(new SkillLearnExecutor())
 				.build();
 
@@ -240,7 +237,7 @@ public class CommandService {
 						new LearnedSkillCommandElement(Text.of("skill")),
 						new PlayerClassCommandElement(Text.of("class"))
 				)
-				.permission("ntrpg.player.skill")
+				.permission("ntrpg.player.skills")
 				.executor(new SkillUpgradeExecutor())
 				.build();
 
@@ -250,7 +247,7 @@ public class CommandService {
 						new LearnedSkillCommandElement(Text.of("skill")),
 						new PlayerClassCommandElement(Text.of("class"))
 				)
-				.permission("ntrpg.player.skill.refund")
+				.permission("ntrpg.player.skills.refund")
 				.executor(new SkillRefundExecutor())
 				.build();
 

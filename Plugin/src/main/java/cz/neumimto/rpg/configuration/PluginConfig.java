@@ -98,7 +98,7 @@ public class PluginConfig {
 	@Setting
 	public boolean AUTOREMOVE_NONEXISTING_RUNEWORDS = false;
 
-	@Setting(comment = "Enables passing arguments to skill\neg.: /skill Fireball arg1 arg2")
+	@Setting(comment = "Enables passing arguments to skills\neg.: /skill Fireball arg1 arg2")
 	public boolean SKILL_COMMAND_ARGUMENTS = false;
 
 	@Setting
@@ -109,8 +109,8 @@ public class PluginConfig {
 	public double PARTY_EXPERIENCE_SHARE_DISTANCE = 25;
 
 	@Setting
-	(comment = "Value lesser than 0 means there will be no party limit. Skills or effect can override this value.")
-	public double MAX_PARTY_SIZE = -68458;
+	(comment = "Value lesser than 0 means there will be no party limit. Skills or effects can override this value.")
+	public double MAX_PARTY_SIZE = -1;
 
 
 	@Setting
@@ -123,10 +123,10 @@ public class PluginConfig {
 
 	@Setting
 	(comment = "Whenever global chat message will be displayed if any player chooses a skill tree path")
-	public boolean PLAYER_CHOOSED_SKILLTREE_SPECIALIZATIon_GLOBAL_MESSAGE;
+	public boolean PLAYER_CHOOSED_SKILLTREE_SPECIALIZATION_GLOBAL_MESSAGE;
 
 	@Setting
-	(comment = "Whenever a player is able to refund skill, representing root of the path of specialization on any skilltree")
+	(comment = "Whenever a player is able to refund skills, representing root of the path of specialization on any skilltree")
 	public boolean PATH_NODES_SEALED = true;
 
 	@Setting

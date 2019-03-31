@@ -8,11 +8,7 @@ import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.persistance.ClassDefinitionDao;
-import cz.neumimto.rpg.players.ActiveCharacter;
-import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.PreloadCharacter;
+import cz.neumimto.rpg.players.*;
 import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
@@ -27,12 +23,7 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class ReloadExecutor implements CommandExecutor {
 	@Override
@@ -46,7 +37,7 @@ public class ReloadExecutor implements CommandExecutor {
 			String q = null;
 			while (i < a.length) {
 				q = a[i];
-				if (q.equalsIgnoreCase("skill") || q.equalsIgnoreCase("s")) {
+				if (q.equalsIgnoreCase("skills") || q.equalsIgnoreCase("s")) {
 					jsLoader.reloadSkills();
 					CharacterService build = IoC.get().build(CharacterService.class);
 					SkillService skillService = IoC.get().build(SkillService.class);
