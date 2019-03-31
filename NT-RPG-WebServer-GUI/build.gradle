@@ -17,6 +17,8 @@ dependencies {
     compile group: 'org.eclipse.jetty.websocket', name: 'javax-websocket-server-impl', version: '9.4.14.v20181114'
 
     compile group: 'com.vaadin', name: 'vaadin-core', version: '13.0.2'
+// https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
+    testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.26'
 
     jar {
         manifest {

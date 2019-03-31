@@ -2,6 +2,7 @@ package com.example.ntrpgwebservergui.vaadin.flow.demo.menu.routes;
 
 import com.example.ntrpgwebservergui.utils.ConfigurationElement;
 import com.example.ntrpgwebservergui.utils.ElementRenderer;
+import com.example.ntrpgwebservergui.vaadin.flow.demo.menu.ApplicationLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -10,7 +11,7 @@ import cz.neumimto.rpg.configuration.PluginConfig;
 
 import java.util.List;
 
-@Route(value = "settings", layout = SubView.class)
+@Route(value = "settings", layout = ApplicationLayout.class)
 public class SettingsEditorView extends Div {
 
     public SettingsEditorView() {

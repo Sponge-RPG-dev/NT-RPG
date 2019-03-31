@@ -23,6 +23,11 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.page.BodySize;
 import com.vaadin.flow.di.Instantiator;
 import com.vaadin.flow.router.*;
+import com.vaadin.flow.server.InitialPageSettings;
+import com.vaadin.flow.server.PageConfigurator;
+import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.lumo.Lumo;
+import org.omg.CORBA.portable.ValueOutputStream;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -30,10 +35,10 @@ import java.util.Optional;
 /**
  * Main view layout for the application containing the dynamically built menu.
  */
+@Theme(Lumo.class)
 @StyleSheet("frontend://styles/styles.css")
 @BodySize(height = "100vh", width = "100%")
-public class ApplicationLayout extends Div
-        implements RouterLayout, BeforeLeaveObserver {
+public class ApplicationLayout extends Div implements RouterLayout, BeforeLeaveObserver, PageConfigurator {
 
     private final MenuBar menuBar = new MenuBar();
 
@@ -46,6 +51,7 @@ public class ApplicationLayout extends Div
 
     private void init() {
         getElement().getStyle().set("height", "100%");
+        getElement().setAttribute("theme", "dark");
         add(menuBar);
     }
 
@@ -72,5 +78,10 @@ public class ApplicationLayout extends Div
                         .equals(routeTargetType)).findAny();
         return (T) currentInstance.orElseGet(() -> Instantiator.get(ui)
                 .createRouteTarget(routeTargetType, null));
+    }
+
+    @Override
+    public void configurePage(InitialPageSettings settings) {
+
     }
 }
