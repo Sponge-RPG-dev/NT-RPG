@@ -248,7 +248,7 @@ public class EffectService {
 	 *
 	 * @return true if effect is successfully applied
 	 */
-	public boolean addEffect(IEffect effect) {
+	public <T extends IEffect> boolean addEffect(T effect) {
 		return addEffect(effect, InternalEffectSourceProvider.INSTANCE);
 	}
 
@@ -261,7 +261,7 @@ public class EffectService {
 	 *
 	 * @return true if effect is successfully applied
 	 */
-	public boolean addEffect(IEffect effect, IEffectSourceProvider effectSourceProvider) {
+	public <T extends IEffect> boolean addEffect(T effect, IEffectSourceProvider effectSourceProvider) {
 		return addEffect(effect, effectSourceProvider, null);
 	}
 
@@ -276,10 +276,10 @@ public class EffectService {
 	 * @return true if effect is successfully applied
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean addEffect(IEffect effect, IEffectSourceProvider effectSourceProvider, IEntity entitySource) {
+	public <T extends IEffect> boolean addEffect(T effect, IEffectSourceProvider effectSourceProvider, IEntity entitySource) {
 		effect.setEffectSourceProvider(effectSourceProvider);
 
-		EffectApplyEvent event = new EffectApplyEvent(effect);
+		EffectApplyEvent<T> event = new EffectApplyEvent<>(effect);
 		try (CauseStackManager.StackFrame frame = causeStackManager.pushCauseFrame()) {
 			causeStackManager.pushCause(effect);
 			causeStackManager.pushCause(effectSourceProvider);
