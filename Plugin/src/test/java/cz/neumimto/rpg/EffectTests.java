@@ -1,28 +1,33 @@
 package cz.neumimto.rpg;
 
-import static org.mockito.Matchers.any;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.PluginConfig;
-import cz.neumimto.rpg.effects.*;
-import cz.neumimto.rpg.effects.common.stacking.MinLongStackingStrategy;
+import cz.neumimto.rpg.effects.EffectStackingStrategy;
+import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
+import cz.neumimto.rpg.effects.TestEffectService;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.CharacterBase;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.mockito.Mockito;
 
+import javax.script.Invocable;
+import javax.script.ScriptEngine;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.Set;
 import java.util.UUID;
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
 
-@Ignore
+import static org.mockito.Matchers.any;
+
 public class EffectTests {
 
-    private EffectService effectService = new EffectService();
+    private TestEffectService effectService = new TestEffectService();
 
     private TickableEffect effect;
 
@@ -42,7 +47,7 @@ public class EffectTests {
 
     @Before
     public void before() throws Exception{
-        processedEffects = (Set<IEffect>) TestHelper.getField(effectService, "effectSet");
+        processedEffects = effectService.getEffects();
         characterBase = new CharacterBase();
         character = new ActiveCharacter(UUID.randomUUID(), characterBase);
 
@@ -51,7 +56,11 @@ public class EffectTests {
     }
 
     private TickableEffect createEffectMock(String name) {
-        TickableEffect mock = Mockito.mock(TickableEffect.class);
+
+        TickableEffect effect = Mockito.spy(new TickableEffect(name, character, Long.MAX_VALUE, 1));
+        Mockito.when(effect.getExpireTime()).thenReturn(Long.MAX_VALUE);
+        return effect;
+        /*TickableEffect mock = Mockito.mock(TickableEffect.class);
 
         Mockito.when(mock.getConsumer()).thenReturn(character);
         Mockito.when(mock.getDuration()).thenReturn(Long.MAX_VALUE);
@@ -63,13 +72,16 @@ public class EffectTests {
         Mockito.when(mock.requiresRegister()).thenCallRealMethod();
 
         Mockito.when(mock.constructEffectContainer()).thenCallRealMethod();
-
+        Mockito.when(mock.getEffectContainer()).thenCallRealMethod();
         return mock;
+
+*/
     }
 
     @Test
     public void test_Effect_Expirable_unstackable() {
         effectService.addEffect(effect, InternalEffectSourceProvider.INSTANCE);
+        effect.setPeriod(0);
         effectService.schedule();
         effectService.schedule();
         Assert.assertNotNull(character.getEffect(effect.getName()));
@@ -128,7 +140,7 @@ public class EffectTests {
     @Test
     public void test_Effect_Expirable_stackable_single_instance() {
         makeEffectStackable(effect);
-
+        effect.setPeriod(0);
         effectService.addEffect(effect, InternalEffectSourceProvider.INSTANCE);
         effectService.schedule();
         effectService.schedule();

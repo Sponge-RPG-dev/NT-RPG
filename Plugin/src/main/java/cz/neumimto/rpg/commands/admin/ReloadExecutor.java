@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.commands.admin;
 
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.Log.warn;
 import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.Log;
@@ -24,6 +22,9 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
 import java.util.*;
+
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
 
 public class ReloadExecutor implements CommandExecutor {
 	@Override
@@ -105,7 +106,7 @@ public class ReloadExecutor implements CommandExecutor {
 				}
 				Log.info("[RELOAD] Purging effect caches");
 				NtRpgPlugin.GlobalScope.effectService.purgeEffectCache();
-				NtRpgPlugin.GlobalScope.effectService.stop();
+				NtRpgPlugin.GlobalScope.effectService.stopEffectScheduler();
 				//todo purge all skill
 				//todo purge all skilltrees
 
@@ -115,11 +116,11 @@ public class ReloadExecutor implements CommandExecutor {
 				}
 
 
-				//we should be ready to start loading stuff back
+				//we should be ready to startEffectScheduler loading stuff back
 				Sponge.getScheduler().createTaskBuilder().execute(() -> {
 					//System.gc(); - for reloading skill its required
 
-					NtRpgPlugin.GlobalScope.effectService.start();
+					NtRpgPlugin.GlobalScope.effectService.startEffectScheduler();
 					//todo load skill
 					//todo load skilltrees
 

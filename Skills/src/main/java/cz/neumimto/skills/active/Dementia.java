@@ -3,7 +3,7 @@ package cz.neumimto.skills.active;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.AllSkillsBonus;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;

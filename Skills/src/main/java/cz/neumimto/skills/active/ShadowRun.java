@@ -4,7 +4,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.ShadowRunEffect;
 import cz.neumimto.model.ShadowRunModel;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;

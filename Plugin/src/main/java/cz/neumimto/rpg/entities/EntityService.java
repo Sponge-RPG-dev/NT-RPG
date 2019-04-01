@@ -6,7 +6,7 @@ import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.IRpgElement;
-import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.events.skill.SkillHealEvent;
 import cz.neumimto.rpg.players.CharacterService;
@@ -21,6 +21,9 @@ import org.spongepowered.api.entity.living.Living;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
+
+import static cz.neumimto.rpg.Log.warn;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 19.12.2015.

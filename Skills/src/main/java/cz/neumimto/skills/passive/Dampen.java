@@ -3,7 +3,7 @@ package cz.neumimto.skills.passive;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.DampenEffect;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;

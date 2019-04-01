@@ -48,7 +48,7 @@ public class SkillPreprocessors {
 				return;
 			}
 
-			//execute skill start
+			//execute skill startEffectScheduler
 			skillContext.next(character, info, skillContext);
 			//execute skill end
 

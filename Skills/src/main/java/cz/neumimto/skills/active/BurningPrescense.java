@@ -4,7 +4,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.BurningPrescenseEffect;
 import cz.neumimto.model.BPModel;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;

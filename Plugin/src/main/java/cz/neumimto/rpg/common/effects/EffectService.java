@@ -16,27 +16,20 @@
  *
  */
 
-package cz.neumimto.rpg.effects;
+package cz.neumimto.rpg.common.effects;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.entities.IEntity;
-import cz.neumimto.rpg.events.effect.EffectApplyEvent;
-import cz.neumimto.rpg.events.effect.EffectRemoveEvent;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillSettings;
-import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
-import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
-import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
 
 import java.io.File;
@@ -45,41 +38,32 @@ import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 17.1.2015.
  */
-@Singleton
-@ResourceLoader.ListenerClass
-public class EffectService {
+public abstract class EffectService {
 
 	public static final long TICK_PERIOD = 5L;
 
 	private static final long unlimited_duration = -1;
 
 	@Inject
-	private Game game;
+	protected NtRpgPlugin plugin;
 
-	@Inject
-	private NtRpgPlugin plugin;
-
-	@Inject
-	private CauseStackManager causeStackManager;
-
-	private Set<IEffect> effectSet = new HashSet<>();
-	private Set<IEffect> pendingAdditions = new HashSet<>();
-	private Set<IEffect> pendingRemovals = new HashSet<>();
-	private Map<String, IGlobalEffect> globalEffects = new HashMap<>();
+	protected Set<IEffect> effectSet = new HashSet<>();
+	protected Set<IEffect> pendingAdditions = new HashSet<>();
+	protected Set<IEffect> pendingRemovals = new HashSet<>();
+	protected Map<String, IGlobalEffect> globalEffects = new HashMap<>();
 
 	private UUID timings;
 	private long timingsStart;
 	private long timingsTicks;
 
 	private static final long timingsTicksMax = 100;
-
-	private Task effectTask;
 
 	/**
 	 * calls effect.onApply and registers if effect requires
@@ -182,16 +166,10 @@ public class EffectService {
 		}
 
 
-		start();
+		startEffectScheduler();
 	}
 
-	public void start() {
-		effectTask = game.getScheduler().createTaskBuilder().name("EffectTask")
-				.delay(5L, TimeUnit.MILLISECONDS)
-				.interval(TICK_PERIOD, TimeUnit.MILLISECONDS)
-				.execute(this::schedule)
-				.submit(plugin);
-	}
+	public abstract void startEffectScheduler();
 
 
 	public void schedule() {
@@ -277,21 +255,6 @@ public class EffectService {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends IEffect> boolean addEffect(T effect, IEffectSourceProvider effectSourceProvider, IEntity entitySource) {
-		effect.setEffectSourceProvider(effectSourceProvider);
-
-		EffectApplyEvent<T> event = new EffectApplyEvent<>(effect);
-		try (CauseStackManager.StackFrame frame = causeStackManager.pushCauseFrame()) {
-			causeStackManager.pushCause(effect);
-			causeStackManager.pushCause(effectSourceProvider);
-			if (entitySource != null) {
-				causeStackManager.pushCause(entitySource);
-			}
-
-			event.setCause(causeStackManager.getCurrentCause());
-			if (Sponge.getEventManager().post(event)) {
-				return false;
-			}
-		}
 
 		IEffectContainer eff = effect.getConsumer().getEffect(effect.getName());
 		if (pluginConfig.DEBUG.isDevelop()) {
@@ -351,17 +314,6 @@ public class EffectService {
 	}
 
 	protected void removeEffectContainer(IEffectContainer container, IEffect effect, IEffectConsumer consumer) {
-		if (container == null) {
-			return;
-		}
-
-		try (CauseStackManager.StackFrame frame = causeStackManager.pushCauseFrame()) {
-			EffectRemoveEvent event = new EffectRemoveEvent(effect);
-			causeStackManager.pushCause(effect);
-
-			event.setCause(causeStackManager.getCurrentCause());
-			Sponge.getEventManager().post(event);
-		}
 
 		if (effect == container) {
 			if (!effect.getConsumer().isDetached()) {
@@ -500,9 +452,7 @@ public class EffectService {
 		}
 	}
 
-	public void stop() {
-		effectTask.cancel();
-	}
+	public abstract void stopEffectScheduler();
 
 	public void purgeEffectCache() {
 		effectSet.clear();

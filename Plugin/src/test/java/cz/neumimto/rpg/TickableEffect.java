@@ -12,7 +12,7 @@ public class TickableEffect extends EffectBase<Long> {
     public TickableEffect() {
     }
 
-    public TickableEffect(IEffectConsumer character, long duration, long model) {
+    public TickableEffect(String name,IEffectConsumer character, long duration, long model) {
         super(name, character);
         setDuration(duration);
         setPeriod(model);
