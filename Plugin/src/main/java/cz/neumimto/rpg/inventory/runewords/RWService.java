@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.inventory.runewords;
 
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.ClassService;
 import cz.neumimto.rpg.NtRpgPlugin;
@@ -27,6 +25,8 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

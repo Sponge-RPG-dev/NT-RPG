@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.exp;
 
-import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

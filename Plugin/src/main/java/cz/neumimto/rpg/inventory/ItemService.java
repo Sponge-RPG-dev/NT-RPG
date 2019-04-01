@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.inventory;
 
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.properties.PropertyService;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
@@ -10,6 +8,8 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.text.Text;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
 

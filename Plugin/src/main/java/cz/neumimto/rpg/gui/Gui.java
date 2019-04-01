@@ -18,7 +18,8 @@
 
 package cz.neumimto.rpg.gui;
 
-import cz.neumimto.core.ioc.IoC;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.configuration.Localizations;
@@ -48,15 +49,14 @@ import java.util.List;
  * Created by NeumimTo on 12.2.2015.
  */
 @JsBinding(JsBinding.Type.CLASS)
+@Singleton
 public class Gui {
 
-	public static IPlayerMessage vanilla;
+	@Inject
+	public static VanillaMessaging vanilla;
 
 	public static IPlayerMessage mod;
 
-	static {
-		vanilla = IoC.get().build(VanillaMessaging.class);
-	}
 
 	public static IPlayerMessage getMessageTypeOf(IActiveCharacter player) {
 		if (player == null || player.isUsingGuiMod()) {

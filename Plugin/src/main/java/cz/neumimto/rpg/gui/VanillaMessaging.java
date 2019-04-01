@@ -18,9 +18,6 @@
 
 package cz.neumimto.rpg.gui;
 
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.IoC;
-import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.core.localization.TextHelper;
@@ -85,6 +82,8 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -118,6 +117,8 @@ public class VanillaMessaging implements IPlayerMessage {
     private CharacterService characterService;
     @Inject
     private SkillService skillService;
+    @Inject
+    private PlayerDao playerDao;
 
     @Reload(on = ReloadService.PLUGIN_CONFIG)
     public void load() {
@@ -273,8 +274,6 @@ public class VanillaMessaging implements IPlayerMessage {
         PaginationList.Builder builder = paginationService.builder();
         NtRpgPlugin.asyncExecutor.execute(() -> {
 
-            PlayerDao playerDao = IoC.get().build(PlayerDao.class);
-
             List<CharacterBase> playersCharacters = characterService.getPlayersCharacters(player.getPlayer().getUniqueId());
             List<CharacterListModel> list = new ArrayList<>();
             for (CharacterBase playersCharacter : playersCharacters) {
@@ -303,7 +302,7 @@ public class VanillaMessaging implements IPlayerMessage {
             List<Text> content = new ArrayList<>();
             builder.linesPerPage(10);
             builder.padding(Text.builder("=").color(TextColors.DARK_GRAY).build());
-            ClassService s = IoC.get().build(ClassService.class);
+
             String current = player.getName();
 
             list.forEach(a -> {

@@ -1,9 +1,12 @@
 package cz.neumimto.rpg.commands.item;
 
-import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.inventory.*;
+import cz.neumimto.rpg.inventory.ConfigRPGItemType;
+import cz.neumimto.rpg.inventory.ItemService;
+import cz.neumimto.rpg.inventory.RPGItemType;
+import cz.neumimto.rpg.inventory.WeaponClass;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
@@ -26,7 +29,7 @@ public class InspectItemDamageExecutor implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		Player player = args.<Player>getOne("player").get();
-		ItemService is = IoC.get().build(ItemService.class);
+		ItemService is = NtRpgPlugin.GlobalScope.itemService;
 		Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
 		if (!itemInHand.isPresent()) {
 			src.sendMessage(Text.of(player.getName() + " has no item in main hand"));
@@ -57,10 +60,10 @@ public class InspectItemDamageExecutor implements CommandExecutor {
 			src.sendMessage(text);
 		}
 		src.sendMessage(Text.of(TextColors.GOLD, "=================="));
-		DamageService ds = IoC.get().build(DamageService.class);
-		CharacterService cs = IoC.get().build(CharacterService.class);
-		EntityService es = IoC.get().build(EntityService.class);
-		PropertyService ps = IoC.get().build(PropertyService.class);
+		DamageService ds = NtRpgPlugin.GlobalScope.damageService;
+		CharacterService cs = NtRpgPlugin.GlobalScope.characterService;
+		EntityService es = NtRpgPlugin.GlobalScope.entityService;
+		PropertyService ps = NtRpgPlugin.GlobalScope.propertyService;
 		IActiveCharacter character = cs.getCharacter(player);
 		src.sendMessage(Text.of(TextColors.RED, "Damage: ", ds.getCharacterItemDamage(character, fromItemStack)));
 		src.sendMessage(Text.of(TextColors.RED, "Details: "));
@@ -102,7 +105,7 @@ public class InspectItemDamageExecutor implements CommandExecutor {
 
 	private Function<WeaponClass, List<Text>> TO_TEXT = weaponClass -> {
 		List<Text> list = new ArrayList<>();
-		PropertyService ps = IoC.get().build(PropertyService.class);
+		PropertyService ps = NtRpgPlugin.GlobalScope.propertyService;
 		list.add(Text.of(TextColors.GOLD, weaponClass.getName()));
 		for (Integer property : weaponClass.getProperties()) {
 			list.add(Text.of(TextColors.GRAY, " -> ", ps.getNameById(property)));

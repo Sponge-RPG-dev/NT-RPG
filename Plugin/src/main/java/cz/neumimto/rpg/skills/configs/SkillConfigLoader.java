@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.skills.configs;
 
-import static cz.neumimto.rpg.Log.info;
-import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.skills.ISkill;
@@ -9,6 +8,8 @@ import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.text.Text;
+
+import static cz.neumimto.rpg.Log.info;
 
 public class SkillConfigLoader implements CatalogType {
 
@@ -34,7 +35,7 @@ public class SkillConfigLoader implements CatalogType {
 
 	public ISkill build(String id) {
 		info("Generating class for the skill " + id, DebugLevel.DEVELOP);
-		ResourceLoader rl = IoC.get().build(ResourceLoader.class);
+		ResourceLoader rl = NtRpgPlugin.GlobalScope.injector.getInstance(ResourceLoader.class);
 		ByteBuddy byteBuddy = new ByteBuddy();
 		String[] split = id.split(":");
 		String name = split[split.length - 1];

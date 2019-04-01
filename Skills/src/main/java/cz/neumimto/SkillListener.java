@@ -1,7 +1,6 @@
 package cz.neumimto;
 
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.EnderPearlEffect;
 import cz.neumimto.effects.ManaDrainEffect;
 import cz.neumimto.effects.ResoluteTechniqueEffect;
@@ -63,6 +62,8 @@ import org.spongepowered.api.util.Tristate;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -70,6 +71,7 @@ import java.util.function.Consumer;
 /**
  * Created by ja on 21.5.2016.
  */
+@Singleton
 @SuppressWarnings("unchecked")
 @ResourceLoader.ListenerClass
 public class SkillListener {

@@ -17,8 +17,6 @@
  */
 package cz.neumimto.rpg.players;
 
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.configuration.DebugLevel;
@@ -58,6 +56,8 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;

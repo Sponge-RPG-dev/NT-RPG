@@ -18,8 +18,6 @@
 
 package cz.neumimto.rpg.skills.parents;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.Console;
 import cz.neumimto.rpg.Log;
@@ -29,7 +27,10 @@ import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.ISkillType;
+import cz.neumimto.rpg.skills.SkillItemIcon;
+import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.utils.CatalogId;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
@@ -37,14 +38,19 @@ import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 
 /**
  * Created by NeumimTo on 12.3.2015.
  */
+@Singleton
 @JsBinding(JsBinding.Type.CLASS)
 public abstract class AbstractSkill implements ISkill {
 

@@ -1,6 +1,5 @@
 package cz.neumimto.skills.passive;
 
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.Bash;
 import cz.neumimto.model.BashModel;
 import cz.neumimto.rpg.ResourceLoader;
@@ -13,9 +12,13 @@ import cz.neumimto.rpg.skills.parents.PassiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by NeumimTo on 4.7.2017.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:basher")
 public class Basher extends PassiveSkill {
 

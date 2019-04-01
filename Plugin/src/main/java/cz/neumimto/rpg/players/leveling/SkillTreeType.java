@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.players.leveling;
 
 
-import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localizations;
@@ -81,7 +80,7 @@ public enum SkillTreeType {
 
                 CompletableFuture.runAsync(() -> {
                     characterService.save(character.getCharacterBase());
-                    DirectAccessDao dad = IoC.get().build(DirectAccessDao.class);
+                    DirectAccessDao dad = NtRpgPlugin.GlobalScope.injector.getInstance(DirectAccessDao.class);
                     //language=HQL
                     Map<String, Object> params = new HashMap<>();
                     params.put("id", characterSkill);

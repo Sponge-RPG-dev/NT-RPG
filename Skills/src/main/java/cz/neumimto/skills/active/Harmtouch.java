@@ -2,7 +2,6 @@ package cz.neumimto.skills.active;
 
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
@@ -22,9 +21,13 @@ import org.spongepowered.api.util.Color;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by NeumimTo on 20.8.2017.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:harmtouch")
 public class Harmtouch extends Targeted {
 

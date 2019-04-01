@@ -18,11 +18,7 @@
 
 package cz.neumimto.rpg.properties;
 
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.Console;
 import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.NtRpgPlugin;
@@ -35,12 +31,20 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.*;
 import java.lang.reflect.Field;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.text.Collator;
 import java.util.*;
 import java.util.function.Supplier;
+
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 28.12.2014.

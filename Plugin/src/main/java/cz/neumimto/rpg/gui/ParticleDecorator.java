@@ -2,8 +2,6 @@ package cz.neumimto.rpg.gui;
 
 import com.flowpowered.math.TrigMath;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.VectorUtils;
 import org.spongepowered.api.Sponge;
@@ -15,6 +13,8 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.Extent;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -28,6 +28,7 @@ public class ParticleDecorator implements IActionDecorator {
 	public static Vector3d[] smallCircle;
 	public static Vector3d[] tinyCircle;
 	public static Vector3d[][] smallCylinder;
+
 	@Inject
 	private NtRpgPlugin plugin;
 

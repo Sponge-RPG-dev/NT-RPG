@@ -1,6 +1,5 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.effects.EffectBase;
@@ -13,9 +12,13 @@ import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import org.spongepowered.api.text.Text;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by NeumimTo on 10.3.2019.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:test")
 public class TestSkill extends ActiveSkill {
 

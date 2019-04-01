@@ -1,8 +1,5 @@
 package cz.neumimto.rpg.damage;
 
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
@@ -16,10 +13,11 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.scheduler.Task;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.concurrent.TimeUnit;
 
 @Singleton
-@ResourceLoader.ListenerClass
 public class SpongeEffectService extends EffectService {
 
     @Inject

@@ -1,6 +1,5 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.negative.PandemicEffect;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.common.effects.EffectService;
@@ -20,11 +19,14 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Set;
 
 /**
  * Created by NeumimTo on 6.8.2017.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:pandemic")
 public class Pandemic extends ActiveSkill {
 

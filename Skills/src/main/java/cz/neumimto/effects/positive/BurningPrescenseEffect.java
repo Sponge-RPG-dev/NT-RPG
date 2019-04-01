@@ -1,7 +1,6 @@
 package cz.neumimto.effects.positive;
 
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.model.BPModel;
 import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
@@ -16,6 +15,8 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
+
+import javax.inject.Inject;
 
 /**
  * Created by ja on 5.7.2017.

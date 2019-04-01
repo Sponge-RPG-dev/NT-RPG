@@ -1,7 +1,5 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.ResourceBundle;
 import cz.neumimto.core.localization.ResourceBundles;
 import cz.neumimto.rpg.common.effects.EffectService;
@@ -16,6 +14,8 @@ import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.utils.PseudoRandomDistribution;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Locale;
 
 
@@ -28,7 +28,7 @@ import java.util.Locale;
 )
 public class Init {
 
-	@Inject PropertyService propertyService;
+	@Inject	PropertyService propertyService;
 	@Inject JSLoader jsLoader;
 	@Inject InventoryService inventoryService;
 	@Inject VanillaMessaging vanillaMessaging;

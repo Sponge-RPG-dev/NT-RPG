@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.listeners;
 
-import cz.neumimto.core.ioc.Inject;
+import com.google.inject.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.damage.SkillDamageSource;
@@ -27,6 +27,7 @@ import org.spongepowered.api.event.world.chunk.UnloadChunkEvent;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -37,6 +38,7 @@ import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 /**
  * Created by NeumimTo on 3.1.2016.
  */
+@Singleton
 @ResourceLoader.ListenerClass
 public class EntityLifecycleListener {
 

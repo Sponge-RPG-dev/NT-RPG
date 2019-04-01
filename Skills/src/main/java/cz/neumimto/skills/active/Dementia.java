@@ -1,6 +1,5 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.AllSkillsBonus;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.common.effects.EffectService;
@@ -15,9 +14,13 @@ import cz.neumimto.rpg.skills.parents.Targeted;
 import cz.neumimto.rpg.skills.tree.SkillType;
 import org.spongepowered.api.item.ItemTypes;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by NeumimTo on 10.8.17.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:dementia")
 public class Dementia extends Targeted {
 

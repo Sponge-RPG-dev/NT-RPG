@@ -1,7 +1,6 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.Decorator;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -13,9 +12,13 @@ import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
 import org.spongepowered.api.item.ItemTypes;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by NeumimTo on 6.8.2017.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:groupheal")
 public class GroupHeal extends ActiveSkill {
 

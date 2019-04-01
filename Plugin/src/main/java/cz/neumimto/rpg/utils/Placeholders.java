@@ -1,8 +1,5 @@
 package cz.neumimto.rpg.utils;
 
-import static cz.neumimto.rpg.Log.error;
-
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -15,11 +12,16 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Set;
+
+import static cz.neumimto.rpg.Log.error;
 
 /**
  * Created by NeumimTo on 25.8.2018.
  */
+@Singleton
 public class Placeholders {
 
 	@Inject

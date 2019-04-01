@@ -19,7 +19,6 @@
 package cz.neumimto.rpg.persistance;
 
 import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
-import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.ClassTypeDefinition;
@@ -29,6 +28,7 @@ import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

@@ -18,9 +18,6 @@
 
 package cz.neumimto.rpg.skills;
 
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.IoC;
-import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.ClassService;
 import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.ResourceLoader;
@@ -52,6 +49,8 @@ import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.registry.AdditionalCatalogRegistryModule;
 import org.spongepowered.api.registry.util.RegisterCatalog;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
@@ -297,6 +296,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 				.load(classLoader)
 				.getLoaded();
 		try {
+
 			ScriptSkill s = (ScriptSkill) sk.newInstance();
 
 			SkillSettings settings = new SkillSettings();
@@ -307,7 +307,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 			((ISkill) s).setSettings(settings);
 			injectCatalogId((ISkill) s, scriptSkillModel.getId());
 			s.setModel(scriptSkillModel);
-			IoC.get().get(sk, s);
+		//	IoC.get().get(sk, s);
 			s.initScript();
 			if (pluginConfig.DEBUG.isDevelop()) {
 				info("-------- Created skill from skill def.");

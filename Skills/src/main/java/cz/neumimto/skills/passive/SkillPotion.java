@@ -10,6 +10,7 @@ import cz.neumimto.rpg.skills.parents.PassiveSkill;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.potion.PotionEffectType;
 
+import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +18,7 @@ import java.util.Map;
 /**
  * Created by NeumimTo on 20.8.2017.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:potion")
 public class SkillPotion extends PassiveSkill {
 

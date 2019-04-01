@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.commands.admin;
 
-import cz.neumimto.core.ioc.IoC;
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -28,9 +28,10 @@ public class InspectPropertyExecutor implements CommandExecutor {
 	}
 
 	private TriConsumer<CommandSource, String, Player> PROPERTY_DETAIL = (src, data, player) -> {
-		PropertyService ps = IoC.get().build(PropertyService.class);
-		CharacterService cs = IoC.get().build(CharacterService.class);
-		EntityService es = IoC.get().build(EntityService.class);
+		PropertyService ps = NtRpgPlugin.GlobalScope.propertyService;
+		CharacterService cs = NtRpgPlugin.GlobalScope.characterService;;
+		EntityService es = NtRpgPlugin.GlobalScope.entityService;
+
 		try {
 			int idByName = ps.getIdByName(data);
 			IActiveCharacter character = cs.getCharacter(player);

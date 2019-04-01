@@ -2,7 +2,6 @@ package cz.neumimto.skills.active;
 
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.Decorator;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.negative.Blindness;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.common.effects.EffectService;
@@ -27,11 +26,14 @@ import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.util.Color;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Set;
 
 /**
  * Created by NeumimTo on 15.7.2017.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:despair")
 public class Despair extends ActiveSkill {
 

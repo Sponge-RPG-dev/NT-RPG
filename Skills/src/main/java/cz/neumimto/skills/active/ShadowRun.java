@@ -1,6 +1,5 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.ShadowRunEffect;
 import cz.neumimto.model.ShadowRunModel;
 import cz.neumimto.rpg.ResourceLoader;
@@ -17,8 +16,11 @@ import org.spongepowered.api.data.property.block.GroundLuminanceProperty;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 
+@Singleton
 @ResourceLoader.Skill("ntrpg:shadowrun")
 public class ShadowRun extends ActiveSkill {
 

@@ -18,11 +18,10 @@
 
 package cz.neumimto.rpg;
 
-import static cz.neumimto.rpg.Log.info;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.PluginCore;
-import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.commands.CommandService;
 import cz.neumimto.rpg.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.configuration.PluginConfig;
@@ -45,7 +44,10 @@ import cz.neumimto.rpg.listeners.DebugListener;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.players.*;
+import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.players.ExperienceSource;
+import cz.neumimto.rpg.players.ExperienceSourceRegistry;
+import cz.neumimto.rpg.players.ExperienceSources;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.attributes.AttributeCatalogTypeRegistry;
 import cz.neumimto.rpg.skills.*;
@@ -67,7 +69,6 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.data.DataRegistration;
-import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.game.GameRegistryEvent;
@@ -78,6 +79,7 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.SpongeExecutorService;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -86,7 +88,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import javax.annotation.Resource;
+
+import static cz.neumimto.rpg.Log.info;
 
 /**
  * Created by NeumimTo on 29.4.2015.
@@ -100,7 +103,7 @@ public class NtRpgPlugin {
 
 	public static String workingDir;
 	public static File pluginjar;
-	public static GlobalScope GlobalScope;
+
 	public static SpongeExecutorService asyncExecutor;
 	public static PluginConfig pluginConfig;
 
@@ -108,12 +111,26 @@ public class NtRpgPlugin {
 	public Logger logger;
 
 	@Inject
-	PluginContainer plugin;
+	private PluginContainer plugin;
 
 	@Inject
 	@ConfigDir(sharedRoot = false)
 	private Path config;
 
+	@Inject
+	public static GlobalScope GlobalScope;
+
+	@Inject
+	private Injector injector;
+
+	@Inject
+	private ResourceLoader resourceLoader;
+
+	@Inject
+	private CommandService commandService;
+
+	@Inject
+	private SkillService skillService;
 
 	@Listener
 	public void preinit(GamePreInitializationEvent e) {
@@ -379,10 +396,8 @@ public class NtRpgPlugin {
 			e.printStackTrace();
 		}
 		reloadMainPluginConfig();
-		IoC ioc = IoC.get();
 		asyncExecutor = Sponge.getGame().getScheduler().createAsyncExecutor(NtRpgPlugin.this);
 
-		ioc.registerInterfaceImplementation(Logger.class, logger);
 		Game game = Sponge.getGame();
 		Optional<PluginContainer> gui = game.getPluginManager().getPlugin("MinecraftGUIServer");
 		if (gui.isPresent()) {
@@ -390,41 +405,36 @@ public class NtRpgPlugin {
 		} else {
 			Settings.ENABLED_GUI = false;
 		}
-		ioc.registerDependency(this);
-		ioc.registerInterfaceImplementation(CauseStackManager.class, Sponge.getCauseStackManager());
+
 
 		Path path = Paths.get(workingDir);
 		ConfigMapper.init("NtRpg", path);
-		ioc.registerDependency(ConfigMapper.get("NtRpg"));
+
 		try {
 			Files.createDirectories(path);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		ioc.get(IoC.class, ioc);
-		ResourceLoader rl = ioc.build(ResourceLoader.class);
-		rl.loadJarFile(pluginjar, true);
-		GlobalScope = ioc.build(GlobalScope.class);
-		rl.loadExternalJars();
+
+		resourceLoader.loadJarFile(pluginjar, true);
+		resourceLoader.loadExternalJars();
 
 		if (pluginConfig.DEBUG.isBalance()) {
-			Sponge.getEventManager().registerListeners(this, ioc.build(DebugListener.class));
+			Sponge.getEventManager().registerListeners(this, injector.getInstance(DebugListener.class));
 		}
-		IoC.get().build(CommandService.class).registerStandartCommands();
-		IoC.get().build(Init.class).it();
+		commandService.registerStandartCommands();
+		injector.getInstance(Init.class).it();
 
-		Sponge.getRegistry().registerModule(ISkill.class, IoC.get().build(SkillService.class));
+		Sponge.getRegistry().registerModule(ISkill.class, skillService);
 
 		try {
 			Class.forName("me.rojo8399.placeholderapi.PlaceholderService");
-			Placeholders build = IoC.get().build(Placeholders.class);
-			build.init();
+			Placeholders placeholders = injector.getInstance(Placeholders.class);
+			placeholders.init();
 			info("Placeholders Enabled");
 		} catch (ClassNotFoundException e) {
 			info("Placeholders Disabled");
 		}
-
-		ioc.postProcess();
 
 		EditorMappings.dump();
 		double elapsedTime = (System.nanoTime() - start) / 1000000000.0;

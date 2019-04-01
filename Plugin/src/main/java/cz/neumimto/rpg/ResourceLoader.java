@@ -18,12 +18,10 @@
 
 package cz.neumimto.rpg;
 
+import com.google.inject.Injector;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.configuration.ConfigurationContainer;
 import cz.neumimto.core.PluginCore;
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.IoC;
-import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.Localization;
 import cz.neumimto.core.localization.LocalizationService;
 import cz.neumimto.core.localization.ResourceBundle;
@@ -44,6 +42,8 @@ import org.apache.commons.io.FileUtils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.text.Text;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.*;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -71,8 +71,6 @@ public class ResourceLoader {
 
 	public static File classDir, addonDir, skilltreeDir, addonLoadDir, localizations;
 
-	private static IoC ioc;
-
 	private static URLClassLoader localizationsClassLoader;
 
 	static {
@@ -90,7 +88,6 @@ public class ResourceLoader {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
-		ioc = IoC.get();
 
 		try {
 			FileUtils.deleteDirectory(addonLoadDir);
@@ -122,6 +119,15 @@ public class ResourceLoader {
 
 	@Inject
 	private LocalizationService localizationService;
+
+	@Inject
+	private Injector injector;
+
+	@Inject
+	private Game game;
+
+	@Inject
+	private JSLoader jsLoader;
 
 	private Map<String, URLClassLoader> classLoaderMap = new HashMap<>();
 
@@ -266,21 +272,18 @@ public class ResourceLoader {
 		if (clazz.isInterface() && clazz.getAnnotations().length == 0) {
 			return null;
 		}
-		if (clazz.isAnnotationPresent(Singleton.class)) {
-			ioc.build(clazz);
-		}
 		if (clazz.isAnnotationPresent(ListenerClass.class)) {
 			info("Registering listener class" + clazz.getName(), pluginConfig.DEBUG);
-			container = ioc.build(clazz);
-			ioc.build(Game.class).getEventManager().registerListeners(ioc.build(NtRpgPlugin.class), container);
+			container = injector.getInstance(clazz);
+			game.getEventManager().registerListeners(NtRpgPlugin.GlobalScope.plugin, container);
 		}
 		if (clazz.isAnnotationPresent(Command.class)) {
-			container = ioc.build(clazz);
+			container = injector.getInstance(clazz);
 			info("registering command class" + clazz.getName(), pluginConfig.DEBUG);
 			commandService.registerCommand((CommandBase) container);
 		}
 		if (clazz.isAnnotationPresent(Skill.class)) {
-			container = ioc.build(clazz);
+			container = injector.getInstance(clazz);
 			info("registering skill " + clazz.getName(), pluginConfig.DEBUG);
 			ISkill skill = (ISkill) container;
 			Skill sk = clazz.getAnnotation(Skill.class);
@@ -307,7 +310,7 @@ public class ResourceLoader {
 			propertyService.processContainer(clazz);
 		}
 		if (clazz.isAnnotationPresent(JsBinding.class)) {
-			IoC.get().build(JSLoader.class).getDataToBind().put(clazz, clazz.getAnnotation(JsBinding.class).value());
+			jsLoader.getDataToBind().put(clazz, clazz.getAnnotation(JsBinding.class).value());
 		}
 		if (clazz.isAnnotationPresent(ResourceBundles.class)) {
 			ResourceBundles annotation = clazz.getAnnotation(ResourceBundles.class);

@@ -3,12 +3,13 @@ package cz.neumimto.rpg.persistance;
 import cz.neumimto.core.PersistentContext;
 import cz.neumimto.core.Repository;
 import cz.neumimto.core.dao.GenericDao;
-import cz.neumimto.core.ioc.Singleton;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ import java.util.Map;
 @Repository
 public class DirectAccessDao extends GenericDao {
 
-
+	@Inject
 	@PersistentContext("nt-rpg")
 	private SessionFactory sessionFactory;
 	

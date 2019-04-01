@@ -9,9 +9,12 @@ import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.parents.PassiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
 
+import javax.inject.Singleton;
+
 /**
  * Created by NeumimTo on 7.8.17.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:enderpearl")
 public class EnderPearl extends PassiveSkill {
 

@@ -1,7 +1,6 @@
 package cz.neumimto.skills.active;
 
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.gui.ParticleDecorator;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
@@ -9,6 +8,7 @@ import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
 /**
  * Created by ja on 12.8.2017.

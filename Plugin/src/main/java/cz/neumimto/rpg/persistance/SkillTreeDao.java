@@ -19,8 +19,6 @@
 package cz.neumimto.rpg.persistance;
 
 import com.typesafe.config.*;
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.ResourceLoader;
@@ -36,6 +34,8 @@ import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.item.ItemType;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;

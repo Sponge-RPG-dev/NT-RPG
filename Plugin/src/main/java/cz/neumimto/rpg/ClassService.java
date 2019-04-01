@@ -18,8 +18,6 @@
 
 package cz.neumimto.rpg;
 
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.persistance.ClassDefinitionDao;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -31,6 +29,8 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.service.permission.SubjectData;
 import org.spongepowered.api.util.Tristate;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
 /**

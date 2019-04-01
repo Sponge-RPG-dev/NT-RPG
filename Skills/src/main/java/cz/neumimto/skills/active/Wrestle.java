@@ -1,6 +1,5 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.negative.StunEffect;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.common.effects.EffectService;
@@ -20,9 +19,13 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by NeumimTo on 7.7.2017.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:wrestle")
 public class Wrestle extends ActiveSkill {
 

@@ -1,8 +1,5 @@
 package cz.neumimto.rpg.gui;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-
-import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
@@ -28,12 +25,11 @@ import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import javax.inject.Singleton;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 20.1.2018.

@@ -18,7 +18,6 @@
 
 package cz.neumimto.rpg.common.effects;
 
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
@@ -32,6 +31,7 @@ import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.text.Text;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;

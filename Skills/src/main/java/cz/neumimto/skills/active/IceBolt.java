@@ -2,7 +2,6 @@ package cz.neumimto.skills.active;
 
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.negative.SlowPotion;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.common.effects.EffectService;
@@ -21,12 +20,16 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Snowball;
 import org.spongepowered.api.world.World;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import static com.flowpowered.math.TrigMath.cos;
 import static com.flowpowered.math.TrigMath.sin;
 
 /**
  * Created by NeumimTo on 11.8.17.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:icebolt")
 public class IceBolt extends ActiveSkill {
 

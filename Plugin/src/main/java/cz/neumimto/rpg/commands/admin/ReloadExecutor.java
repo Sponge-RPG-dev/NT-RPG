@@ -1,10 +1,8 @@
 package cz.neumimto.rpg.commands.admin;
 
-import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.persistance.ClassDefinitionDao;
 import cz.neumimto.rpg.players.*;
 import cz.neumimto.rpg.scripting.JSLoader;
@@ -31,7 +29,7 @@ public class ReloadExecutor implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		String[] a = args.<String>getOne("args").get().split(" ");
 		if (a[0].equalsIgnoreCase("js")) {
-			JSLoader jsLoader = IoC.get().build(JSLoader.class);
+			JSLoader jsLoader = NtRpgPlugin.GlobalScope.jsLoader;
 			jsLoader.initEngine();
 
 			int i = 1;
@@ -40,8 +38,8 @@ public class ReloadExecutor implements CommandExecutor {
 				q = a[i];
 				if (q.equalsIgnoreCase("skills") || q.equalsIgnoreCase("s")) {
 					jsLoader.reloadSkills();
-					CharacterService build = IoC.get().build(CharacterService.class);
-					SkillService skillService = IoC.get().build(SkillService.class);
+					CharacterService build = NtRpgPlugin.GlobalScope.characterService;
+					SkillService skillService = NtRpgPlugin.GlobalScope.skillService;
 					build.getCharacters()
 							.stream()
 							.forEach(qw -> {
@@ -71,16 +69,16 @@ public class ReloadExecutor implements CommandExecutor {
 				i++;
 			}
 		} else if (a[0].equalsIgnoreCase("skilltree")) {
-			IoC.get().build(SkillService.class).reloadSkillTrees();
+			NtRpgPlugin.GlobalScope.skillService.reloadSkillTrees();
 		} else if (a[0].equalsIgnoreCase("settings")) {
 			NtRpgPlugin.GlobalScope.plugin.reloadMainPluginConfig();
 		} else if (a[0].equalsIgnoreCase("mobs")) {
-			IoC.get().build(EntityService.class).reloadMobConfiguration();
+			NtRpgPlugin.GlobalScope.entityService.reloadMobConfiguration();
 		} else if (a[0].equalsIgnoreCase("classes")) {
 			//Check if configs are ok
 			warn("[RELOAD] Attempting to reload classes from config files...");
 			info("[RELOAD] Checking class files: ");
-			ClassDefinitionDao build = IoC.get().build(ClassDefinitionDao.class);
+			ClassDefinitionDao build = NtRpgPlugin.GlobalScope.injector.getInstance(ClassDefinitionDao.class);
 			try {
 				build.parseClassFiles();
 				info("[RELOAD] Class files ok");

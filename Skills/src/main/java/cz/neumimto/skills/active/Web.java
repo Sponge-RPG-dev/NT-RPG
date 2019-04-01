@@ -1,6 +1,5 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.negative.WebEffect;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.common.effects.EffectService;
@@ -13,9 +12,13 @@ import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.Targeted;
 import org.spongepowered.api.item.ItemTypes;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by NeumimTo on 20.8.2017.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:web")
 public class Web extends Targeted {
 

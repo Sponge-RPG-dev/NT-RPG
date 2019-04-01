@@ -18,15 +18,12 @@
 
 package cz.neumimto.rpg.gui;
 
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.skills.SkillService;
 import org.spongepowered.api.Game;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;

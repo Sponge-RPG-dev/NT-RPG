@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.inventory;
 
-import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import org.spongepowered.api.data.type.HandType;
@@ -11,6 +10,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 
+import javax.inject.Singleton;
 import java.util.HashMap;
 
 

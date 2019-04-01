@@ -1,7 +1,6 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.Decorator;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.negative.Bleeding;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.common.effects.EffectService;
@@ -16,9 +15,13 @@ import cz.neumimto.rpg.skills.parents.Targeted;
 import cz.neumimto.rpg.skills.tree.SkillType;
 import org.spongepowered.api.item.ItemTypes;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by NeumimTo on 5.8.2017.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:bandage")
 public class Bandage extends Targeted {
 

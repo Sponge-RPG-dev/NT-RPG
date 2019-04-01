@@ -1,6 +1,5 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.PortalEffect;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.common.effects.EffectService;
@@ -12,9 +11,13 @@ import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by NeumimTo on 22.7.2017.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:portal")
 public class Portal extends ActiveSkill {
 

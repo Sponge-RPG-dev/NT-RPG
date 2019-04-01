@@ -18,8 +18,7 @@
 
 package cz.neumimto.rpg;
 
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.Singleton;
+import com.google.inject.Injector;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.entities.EntityService;
@@ -29,8 +28,12 @@ import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.parties.PartyService;
 import cz.neumimto.rpg.properties.PropertyService;
+import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.skills.SkillService;
 import org.spongepowered.api.Game;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 6.8.2015.
@@ -76,4 +79,10 @@ public class GlobalScope {
 
 	@Inject
 	public ItemService itemService;
+
+	@Inject
+	public Injector injector;
+
+	@Inject
+	public JSLoader jsLoader;
 }

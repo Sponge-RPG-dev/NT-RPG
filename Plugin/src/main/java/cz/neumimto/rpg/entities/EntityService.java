@@ -18,6 +18,8 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;

@@ -1,15 +1,15 @@
 package cz.neumimto.rpg.gui;
 
-import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Block;
-import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Item;
-import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
-import cz.neumimto.rpg.inventory.data.*;
+import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
+import cz.neumimto.rpg.inventory.data.MenuInventoryData;
+import cz.neumimto.rpg.inventory.data.NKeys;
+import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
 import cz.neumimto.rpg.listeners.SkillTreeInventoryListener;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -41,6 +41,9 @@ import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.*;
 
+import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Block;
+import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Item;
+
 /**
  * Created by ja on 29.12.2016.
  */
@@ -50,7 +53,7 @@ public class GuiHelper {
 	private static NtRpgPlugin plugin;
 
 	static {
-		plugin = IoC.get().build(NtRpgPlugin.class);
+		plugin = NtRpgPlugin.GlobalScope.plugin;
 
 		damageTypeToItemStack.put(DamageTypes.ATTACK, Item.of(ItemTypes.STONE_SWORD));
 		damageTypeToItemStack.put(DamageTypes.CONTACT, Item.of(ItemTypes.CACTUS));
@@ -164,7 +167,7 @@ public class GuiHelper {
 		ItemStack i = itemStack(ItemTypes.BOOK);
 		i.offer(NKeys.MENU_INVENTORY, true);
 		i.offer(Keys.DISPLAY_NAME, Localizations.PROPERTIES.toText());
-		String cc = IoC.get().build(InfoCommand.class).getAliases().iterator().next();
+		String cc = NtRpgPlugin.GlobalScope.injector.getInstance(InfoCommand.class).getAliases().iterator().next();
 		i.offer(new InventoryCommandItemMenuData(cc + " properties-initial " + group.getName()));
 		return i;
 	}
@@ -173,7 +176,7 @@ public class GuiHelper {
 		ItemStack i = itemStack(ItemTypes.BOOK);
 		i.offer(NKeys.MENU_INVENTORY, true);
 		i.offer(Keys.DISPLAY_NAME, Localizations.ATTRIBUTES.toText());
-		String cc = IoC.get().build(InfoCommand.class).getAliases().iterator().next();
+		String cc = NtRpgPlugin.GlobalScope.injector.getInstance(InfoCommand.class).getAliases().iterator().next();
 		i.offer(new InventoryCommandItemMenuData(cc + " attributes-initial " + group.getName()));
 		return i;
 	}
@@ -318,7 +321,7 @@ public class GuiHelper {
 			of.offer(new MenuInventoryData(true));
 			build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(1, 0))).offer(of);
 
-			SkillService skillService = IoC.get().build(SkillService.class);
+			SkillService skillService = NtRpgPlugin.GlobalScope.skillService;
 
 			int i = 0;
 			int j = 2;
