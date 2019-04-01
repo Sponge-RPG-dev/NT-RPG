@@ -16,9 +16,9 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.entities.*;
+import cz.neumimto.rpg.events.damage.DamageIEntityEarlyEvent;
+import cz.neumimto.rpg.events.damage.IEntityWeaponDamageEarlyEvent;
 import cz.neumimto.rpg.events.effect.EffectApplyEvent;
-import cz.neumimto.rpg.events.entity.DamageIEntityEvent;
-import cz.neumimto.rpg.events.entity.IEntityWeaponDamageEvent;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -106,7 +106,7 @@ public class SkillListener {
 
 	//todo
 	/*@Listener
-	public void onDamage(DamageIEntityEvent event) {
+	public void onDamage(DamageIEntityEarlyEvent event) {
 		IActiveCharacter character = characterService.getCharacter(event.getDamaged().getUniqueId());
 		if (!character.isStub()) {
 			IEffectContainer container = character.getEffect(DamageToMana.name);
@@ -118,7 +118,7 @@ public class SkillListener {
 
 	@Listener
 	@SuppressWarnings("unchecked")
-	public void onEntityDamage(DamageIEntityEvent event, @First EntityDamageSource damageSource) {
+	public void onEntityDamage(DamageIEntityEarlyEvent event, @First EntityDamageSource damageSource) {
 		IEntity source;
 		if (damageSource.getSource() instanceof Projectile)
 			source = entityService.get((Entity) ((Projectile) damageSource.getSource()).getShooter());
@@ -147,7 +147,7 @@ public class SkillListener {
 	}
 
 	@Listener(order = Order.LAST)
-	public void onEntityDamageLast(DamageIEntityEvent event) {
+	public void onEntityDamageLast(DamageIEntityEarlyEvent event) {
 		if (event.getTarget().hasEffect(ManaShieldEffect.name)) {
 			IEffectContainer<ManaShieldEffectModel, ManaShieldEffect> effect = event.getTarget().getEffect(ManaShieldEffect.name);
 			if (event.getTarget().getType() == IEntityType.CHARACTER) {
@@ -167,7 +167,7 @@ public class SkillListener {
 
 
 	@Listener
-	public void onWeaponDamage(IEntityWeaponDamageEvent event, @First EntityDamageSource damageSource) {
+	public void onWeaponDamage(IEntityWeaponDamageEarlyEvent event, @First EntityDamageSource damageSource) {
 		IEntity source = entityService.get(damageSource.getSource());
 		IEntity target = event.getTarget();
 

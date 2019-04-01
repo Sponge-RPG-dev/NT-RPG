@@ -7,7 +7,7 @@ import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.IEntity;
-import cz.neumimto.rpg.events.skill.SkillDamageEventLate;
+import cz.neumimto.rpg.events.damage.IEntitySkillDamageLateEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
@@ -57,7 +57,7 @@ public class BrainSap extends Targeted {
 
 	@Listener(order = Order.LAST)
 	@IsCancelled(Tristate.TRUE)
-	public void onDamage(SkillDamageEventLate event, @First ISkillDamageSource damageSource) {
+	public void onDamage(IEntitySkillDamageLateEvent event, @First ISkillDamageSource damageSource) {
 		if (event.getSkill() != null && event.getSkill().getClass() == this.getClass()) {
 			IEntity caster = damageSource.getSourceIEntity();
 			entityService.healEntity(caster, (float) event.getDamage(), this);

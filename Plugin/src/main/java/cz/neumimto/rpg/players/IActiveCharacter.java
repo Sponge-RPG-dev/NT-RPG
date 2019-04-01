@@ -51,7 +51,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	default PlayerClassData getClassByType(String type) {
 		for (PlayerClassData value : getClasses().values()) {
-			if (value.getClassDefinition().getClassType().equals(type)) {
+			if (value.getClassDefinition().getClassType().equalsIgnoreCase(type)) {
 				return value;
 			}
 		}

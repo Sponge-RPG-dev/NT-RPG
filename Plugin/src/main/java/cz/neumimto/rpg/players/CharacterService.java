@@ -34,6 +34,7 @@ import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.effects.common.def.ClickComboActionComponent;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.events.PlayerDataPreloadComplete;
 import cz.neumimto.rpg.events.character.*;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.InventoryService;

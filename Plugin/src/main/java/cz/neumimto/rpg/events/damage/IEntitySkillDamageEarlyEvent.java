@@ -1,22 +1,21 @@
-package cz.neumimto.rpg.events.skill;
+package cz.neumimto.rpg.events.damage;
 
 import cz.neumimto.rpg.damage.ISkillDamageSource;
 import cz.neumimto.rpg.entities.IEntity;
-import cz.neumimto.rpg.events.entity.DamageIEntityEvent;
+import cz.neumimto.rpg.events.skill.SkillEvent;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.ISkill;
 import org.spongepowered.api.event.cause.Cause;
 
 /**
- * Called when IEntity gets damaged by other IEntity by skill or effect
- * Fired after bonuses of source calculation, but before resistances of target
+ * Called when IEntity gets damaged by skill or effect, after damage bonuses of source, but before resistances of target are applied
  * {@link Cause} contains {@link ISkillDamageSource}
  */
 @JsBinding(JsBinding.Type.CLASS)
-public class SkillDamageEvent extends DamageIEntityEvent implements SkillEvent {
+public class IEntitySkillDamageEarlyEvent extends DamageIEntityEarlyEvent implements SkillEvent {
 	private final ISkill skill;
 
-	public SkillDamageEvent(IEntity target, ISkill skill, double damage) {
+	public IEntitySkillDamageEarlyEvent(IEntity target, ISkill skill, double damage) {
 		super(target, damage);
 		this.skill = skill;
 	}

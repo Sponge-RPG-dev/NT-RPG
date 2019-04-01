@@ -16,7 +16,7 @@
  *
  */
 
-package cz.neumimto.rpg.events.character;
+package cz.neumimto.rpg.events;
 
 import cz.neumimto.rpg.NEventContextKeys;
 import cz.neumimto.rpg.players.CharacterBase;
