@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.events.effect;
 
 import com.google.common.reflect.TypeToken;
-import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.events.AbstractNEvent;
 import org.spongepowered.api.event.GenericEvent;

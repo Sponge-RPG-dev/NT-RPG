@@ -1,11 +1,10 @@
 package cz.neumimto.rpg.listeners;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.damage.SkillDamageSource;
-import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.entities.IEntityType;

@@ -5,7 +5,7 @@ import static cz.neumimto.rpg.Log.warn;
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.IRpgElement;
+import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.events.skill.SkillHealEvent;

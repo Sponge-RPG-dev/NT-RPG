@@ -19,6 +19,8 @@
 package cz.neumimto.rpg.common.effects;
 
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.effects.Generate;
+import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.entities.IEntity;
@@ -59,11 +61,6 @@ public abstract class EffectService {
 	protected Set<IEffect> pendingRemovals = new HashSet<>();
 	protected Map<String, IGlobalEffect> globalEffects = new HashMap<>();
 
-	private UUID timings;
-	private long timingsStart;
-	private long timingsTicks;
-
-	private static final long timingsTicksMax = 100;
 
 	/**
 	 * calls effect.onApply and registers if effect requires
@@ -173,9 +170,6 @@ public abstract class EffectService {
 
 
 	public void schedule() {
-		if (timings != null) {
-			timingsTicks++;
-		}
 		for (IEffect pendingRemoval : pendingRemovals) {
 			removeEffectContainer(pendingRemoval.getEffectContainer(), pendingRemoval, pendingRemoval.getConsumer());
 			effectSet.remove(pendingRemoval);
@@ -203,9 +197,6 @@ public abstract class EffectService {
 
 		effectSet.addAll(pendingAdditions);
 		pendingAdditions.clear();
-		if (timings != null) {
-
-		}
 	}
 
 	/**

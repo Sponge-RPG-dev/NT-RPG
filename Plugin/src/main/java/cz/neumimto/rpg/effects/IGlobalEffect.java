@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.effects;
 
+import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.scripting.JsBinding;
 
 import java.util.Map;

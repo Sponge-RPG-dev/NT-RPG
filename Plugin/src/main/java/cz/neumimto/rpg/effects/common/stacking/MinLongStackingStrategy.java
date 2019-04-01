@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.effects.common.stacking;
 
-import cz.neumimto.rpg.effects.EffectStackingStrategy;
+import cz.neumimto.rpg.api.EffectStackingStrategy;
 
 /**
  * Created by fs on 7.8.17.

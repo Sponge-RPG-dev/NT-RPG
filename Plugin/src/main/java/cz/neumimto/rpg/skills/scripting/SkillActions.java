@@ -1,11 +1,10 @@
 package cz.neumimto.rpg.skills.scripting;
 
-import static cz.neumimto.rpg.Log.info;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
-import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.scripting.JsBinding;
@@ -23,7 +22,12 @@ import org.spongepowered.api.world.Location;
 
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
+import static cz.neumimto.rpg.Log.info;
 
 @JsBinding(JsBinding.Type.CONTAINER)
 public class SkillActions {

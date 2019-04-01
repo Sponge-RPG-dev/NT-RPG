@@ -2,8 +2,8 @@ package cz.neumimto.effects.positive;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.model.CriticalEffectModel;
-import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.Generate;
+import cz.neumimto.rpg.api.effects.EffectBase;
+import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.scripting.JsBinding;
 

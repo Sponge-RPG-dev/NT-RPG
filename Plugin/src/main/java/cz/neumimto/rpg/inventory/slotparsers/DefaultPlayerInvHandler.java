@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.inventory.slotparsers;
 
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.effects.IEffectSource;
+import cz.neumimto.rpg.api.effects.IEffectSource;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.CannotUseItemReason;
 import cz.neumimto.rpg.inventory.RPGItemType;

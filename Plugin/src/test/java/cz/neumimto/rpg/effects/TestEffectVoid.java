@@ -1,5 +1,8 @@
 package cz.neumimto.rpg.effects;
 
+import cz.neumimto.rpg.api.effects.EffectBase;
+import cz.neumimto.rpg.api.effects.Generate;
+
 /**
  * Created by NeumimTo on 25.2.2018.
  */

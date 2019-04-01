@@ -18,9 +18,9 @@
 
 package cz.neumimto.rpg.commands;
 
+import cz.neumimto.rpg.api.effects.IEffectSource;
 import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.effects.EffectSourceType;
-import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandException;
@@ -30,11 +30,11 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import javax.annotation.Nullable;
 
 
 public abstract class CommandBase implements CommandCallable, IEffectSourceProvider {

@@ -1,7 +1,7 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.effects.Generate;
-import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.api.effects.Generate;
+import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import jdk.internal.dynalink.beans.StaticClass;
 import org.objectweb.asm.*;

@@ -1,5 +1,9 @@
 package cz.neumimto.rpg.effects;
 
+import cz.neumimto.rpg.api.effects.EffectStackingStrategy;
+import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.effects.IEffectSource;
+
 import java.util.Set;
 import java.util.function.Consumer;
 

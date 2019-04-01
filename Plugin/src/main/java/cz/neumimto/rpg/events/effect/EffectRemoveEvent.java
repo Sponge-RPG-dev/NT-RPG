@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.events.effect;
 
-import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.scripting.JsBinding;
 import org.spongepowered.api.event.cause.Cause;

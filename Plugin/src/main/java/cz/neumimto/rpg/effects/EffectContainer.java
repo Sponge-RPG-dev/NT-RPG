@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.effects;
 
+import cz.neumimto.rpg.api.EffectStackingStrategy;
+import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.effects.common.stacking.UnstackableEffectData;
 
 import java.util.HashSet;
