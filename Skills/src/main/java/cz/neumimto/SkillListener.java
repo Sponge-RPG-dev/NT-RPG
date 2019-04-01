@@ -17,6 +17,7 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.entities.*;
 import cz.neumimto.rpg.events.damage.DamageIEntityEarlyEvent;
+import cz.neumimto.rpg.events.damage.DamageIEntityLateEvent;
 import cz.neumimto.rpg.events.damage.IEntityWeaponDamageEarlyEvent;
 import cz.neumimto.rpg.events.effect.EffectApplyEvent;
 import cz.neumimto.rpg.gui.Gui;
@@ -147,7 +148,7 @@ public class SkillListener {
 	}
 
 	@Listener(order = Order.LAST)
-	public void onEntityDamageLast(DamageIEntityEarlyEvent event) {
+	public void onEntityDamageLast(DamageIEntityLateEvent event) {
 		if (event.getTarget().hasEffect(ManaShieldEffect.name)) {
 			IEffectContainer<ManaShieldEffectModel, ManaShieldEffect> effect = event.getTarget().getEffect(ManaShieldEffect.name);
 			if (event.getTarget().getType() == IEntityType.CHARACTER) {
