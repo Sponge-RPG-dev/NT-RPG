@@ -1,7 +1,6 @@
 package cz.neumimto.effects.negative;
 
 import cz.neumimto.Decorator;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.model.MultiboltModel;
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.IEffect;
@@ -22,7 +21,7 @@ public class MultiboltEffect extends EffectBase<MultiboltModel> {
 	private final IEntity source;
 	private final MultiboltModel model;
 
-	public MultiboltEffect(IEffectConsumer consumer, IEntity source, @Inject MultiboltModel model) {
+	public MultiboltEffect(IEffectConsumer consumer, IEntity source, MultiboltModel model) {
 		super("Multibolt", consumer);
 		this.source = source;
 		this.model = model;

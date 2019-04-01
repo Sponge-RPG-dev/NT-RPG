@@ -1,6 +1,6 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.api.EffectStackingStrategy;
+import cz.neumimto.rpg.api.effects.EffectStackingStrategy;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.PluginConfig;
@@ -218,12 +218,7 @@ public class EffectTests {
 
     private void makeEffectStackable(IEffect effect) {
         Mockito.when(effect.isStackable()).thenReturn(true);
-        Mockito.when(effect.getEffectStackingStrategy()).thenReturn(new EffectStackingStrategy<Long>() {
-            @Override
-            public Long mergeValues(Long current, Long toAdd) {
-                return current == null ? 1 : toAdd + current;
-            }
-        });
+        Mockito.when(effect.getEffectStackingStrategy()).thenReturn((EffectStackingStrategy<Long>) (current, toAdd) -> current == null ? 1 : toAdd + current);
         Mockito.when(effect.getValue()).thenReturn(1L);
     }
 }

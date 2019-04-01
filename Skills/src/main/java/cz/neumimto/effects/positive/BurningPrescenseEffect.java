@@ -21,7 +21,6 @@ import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
-import javax.inject.Inject;
 
 /**
  * Created by ja on 5.7.2017.
@@ -44,7 +43,7 @@ public class BurningPrescenseEffect extends EffectBase<BPModel> {
             .velocity(new Vector3d(0, 1, 0).normalize())
             .build();
 
-    public BurningPrescenseEffect(IEffectConsumer consumer, long duration, @Inject BPModel model) {
+    public BurningPrescenseEffect(IEffectConsumer consumer, long duration, BPModel model) {
         super(name, consumer);
         setDuration(model.duration);
         setPeriod(model.period);

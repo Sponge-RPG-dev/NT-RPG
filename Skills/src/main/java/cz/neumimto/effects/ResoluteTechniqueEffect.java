@@ -14,7 +14,7 @@ public class ResoluteTechniqueEffect extends EffectBase {
 
 	public static final String name = "Resolute Technique";
 
-	public ResoluteTechniqueEffect(IEffectConsumer consumer, long duration, Void value) {
+	public ResoluteTechniqueEffect(IEffectConsumer consumer, long duration) {
 		super(name, consumer);
 		setDuration(duration);
 		setStackable(true, null);

@@ -1,6 +1,5 @@
 package cz.neumimto.effects.positive;
 
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.model.BashModel;
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
@@ -18,7 +17,7 @@ public class Bash extends EffectBase<BashModel> {
 
 	public static final String name = "Bash";
 
-	public Bash(IEffectConsumer consumer, long duration, @Inject BashModel value) {
+	public Bash(IEffectConsumer consumer, long duration,  BashModel value) {
 		super(name, consumer);
 		setValue(value);
 		setDuration(duration);

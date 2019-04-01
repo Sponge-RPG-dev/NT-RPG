@@ -1,6 +1,5 @@
 package cz.neumimto.effects.positive;
 
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.decoration.ParticleSpawner;
 import cz.neumimto.model.ManaShieldEffectModel;
 import cz.neumimto.rpg.NtRpgPlugin;
