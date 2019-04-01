@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.listeners;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.damage.DamageService;
@@ -29,6 +28,8 @@ import org.spongepowered.api.event.cause.entity.damage.source.IndirectEntityDama
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+
 @ResourceLoader.ListenerClass
 public class DamageListener {
 
@@ -43,12 +44,7 @@ public class DamageListener {
 
 	@Listener(order = Order.LATE)
 	public void onEntityDamage(DamageEntityEvent event, @First EntityDamageSource damageSource) {
-		/*if (damageSource.getType() == NDamageType.DAMAGE_CHECK) {
-			return;
-		}
-
-		 */
-		if (damageSource.toString().contains(NDamageType.DAMAGE_CHECK.getName())) {
+		if (damageSource.getType() == NDamageType.DAMAGE_CHECK) {
 			return;
 		}
 
