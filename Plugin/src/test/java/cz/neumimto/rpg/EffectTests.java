@@ -60,22 +60,6 @@ public class EffectTests {
         TickableEffect effect = Mockito.spy(new TickableEffect(name, character, Long.MAX_VALUE, 1));
         Mockito.when(effect.getExpireTime()).thenReturn(Long.MAX_VALUE);
         return effect;
-        /*TickableEffect mock = Mockito.mock(TickableEffect.class);
-
-        Mockito.when(mock.getConsumer()).thenReturn(character);
-        Mockito.when(mock.getDuration()).thenReturn(Long.MAX_VALUE);
-        Mockito.when(mock.getExpireTime()).thenReturn(Long.MAX_VALUE);
-        Mockito.when(mock.getEffectSourceProvider()).thenReturn(InternalEffectSourceProvider.INSTANCE);
-        Mockito.when(mock.getName()).thenReturn(name);
-        Mockito.when(mock.getValue()).thenReturn(1L);
-        Mockito.when(mock.getEffectStackingStrategy()).thenReturn(MinLongStackingStrategy.INSTANCE);
-        Mockito.when(mock.requiresRegister()).thenCallRealMethod();
-
-        Mockito.when(mock.constructEffectContainer()).thenCallRealMethod();
-        Mockito.when(mock.getEffectContainer()).thenCallRealMethod();
-        return mock;
-
-*/
     }
 
     @Test
