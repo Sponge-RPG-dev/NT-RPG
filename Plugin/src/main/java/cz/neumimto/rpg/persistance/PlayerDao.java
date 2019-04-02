@@ -29,7 +29,6 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.Query;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
 import java.util.UUID;
@@ -42,7 +41,6 @@ import java.util.UUID;
 @Repository
 public class PlayerDao extends GenericDao<CharacterBase> {
 
-	@Inject
 	@PersistentContext("nt-rpg")
 	private SessionFactory factory;
 

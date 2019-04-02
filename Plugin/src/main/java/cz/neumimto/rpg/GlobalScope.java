@@ -85,4 +85,7 @@ public class GlobalScope {
 
 	@Inject
 	public JSLoader jsLoader;
+
+	@Inject
+	public ResourceLoader resourceLoader;
 }

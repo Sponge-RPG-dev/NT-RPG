@@ -50,7 +50,10 @@ import cz.neumimto.rpg.players.ExperienceSourceRegistry;
 import cz.neumimto.rpg.players.ExperienceSources;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.attributes.AttributeCatalogTypeRegistry;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.ISkillType;
+import cz.neumimto.rpg.skills.NDamageType;
+import cz.neumimto.rpg.skills.SkillTypeRegistry;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoader;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoaderRegistry;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoaders;
@@ -95,7 +98,7 @@ import static cz.neumimto.rpg.Log.info;
  * Created by NeumimTo on 29.4.2015.
  */
 @Plugin(id = "nt-rpg", version = "@VERSION@", name = "NT-Rpg", description = "RPG features for sponge", dependencies = {
-		@Dependency(id = "nt-core", version = "1.13-SNAPSHOT-6"),
+		@Dependency(id = "nt-core", version = "1.13-SNAPSHOT-10"),
 		@Dependency(id = "placeholderapi", version = "4.5", optional = true)
 })
 @Resource
@@ -117,23 +120,17 @@ public class NtRpgPlugin {
 	@ConfigDir(sharedRoot = false)
 	private Path config;
 
-	@Inject
 	public static GlobalScope GlobalScope;
 
 	@Inject
 	private Injector injector;
 
 	@Inject
-	private ResourceLoader resourceLoader;
-
-	@Inject
 	private CommandService commandService;
-
-	@Inject
-	private SkillService skillService;
 
 	@Listener
 	public void preinit(GamePreInitializationEvent e) {
+		GlobalScope = injector.getInstance(GlobalScope.class);
 		PluginCore.MANAGED_JPA_TYPES.add(CharacterBase.class);
 		PluginCore.MANAGED_JPA_TYPES.add(BaseCharacterAttribute.class);
 		PluginCore.MANAGED_JPA_TYPES.add(CharacterSkill.class);
@@ -416,8 +413,8 @@ public class NtRpgPlugin {
 			e.printStackTrace();
 		}
 
-		resourceLoader.loadJarFile(pluginjar, true);
-		resourceLoader.loadExternalJars();
+		GlobalScope.resourceLoader.loadJarFile(pluginjar, true);
+		GlobalScope.resourceLoader.loadExternalJars();
 
 		if (pluginConfig.DEBUG.isBalance()) {
 			Sponge.getEventManager().registerListeners(this, injector.getInstance(DebugListener.class));
@@ -425,7 +422,7 @@ public class NtRpgPlugin {
 		commandService.registerStandartCommands();
 		injector.getInstance(Init.class).it();
 
-		Sponge.getRegistry().registerModule(ISkill.class, skillService);
+		Sponge.getRegistry().registerModule(ISkill.class, GlobalScope.skillService);
 
 		try {
 			Class.forName("me.rojo8399.placeholderapi.PlaceholderService");
