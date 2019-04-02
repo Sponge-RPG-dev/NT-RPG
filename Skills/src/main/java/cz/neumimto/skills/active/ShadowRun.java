@@ -25,6 +25,7 @@ public class ShadowRun extends ActiveSkill {
 	@Inject
 	private EffectService effectService;
 
+	@Override
 	public void init() {
 		super.init();
 		addSkillType(SkillType.STEALTH);
@@ -49,11 +50,11 @@ public class ShadowRun extends ActiveSkill {
 			double attackmult = skillContext.getDoubleNodeValue(SkillNodes.MULTIPLIER);
 			float walkspeed = skillContext.getFloatNodeValue("walk-speed");
 			ShadowRunModel model = new ShadowRunModel();
-			model.duration = duration;
 			model.damage = damage;
 			model.attackmult = attackmult;
 			model.walkspeed = walkspeed;
 			IEffect effect = new ShadowRunEffect(character, 0, model);
+			effect.setDuration(duration);
 			effectService.addEffect(effect, this);
 		}
 		skillContext.next(character, info, skillContext.result(SkillResult.OK));
