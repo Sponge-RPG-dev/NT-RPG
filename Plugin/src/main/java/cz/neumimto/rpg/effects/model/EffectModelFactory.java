@@ -16,20 +16,12 @@ public class EffectModelFactory {
 	public static Map<Class<?>, EffectModelMapper> typeMappers = new HashMap<>();
 
 	static {
-		typeMappers.put(int.class, new SingleValueModelMapper.Int(Integer.class));
-		typeMappers.put(Integer.class, new SingleValueModelMapper.Int(Integer.class));
-
-		typeMappers.put(float.class, new SingleValueModelMapper.Float(Float.class));
-		typeMappers.put(Float.class, new SingleValueModelMapper.Float(Float.class));
-
-		typeMappers.put(double.class, new SingleValueModelMapper.Double(Double.class));
-		typeMappers.put(Double.class, new SingleValueModelMapper.Double(Double.class));
-
-		typeMappers.put(long.class, new SingleValueModelMapper.Long(Long.class));
-		typeMappers.put(Long.class, new SingleValueModelMapper.Long(Long.class));
-
+		typeMappers.put(Void.TYPE, new SingleValueModelMapper.Void());
+		typeMappers.put(Integer.TYPE, new SingleValueModelMapper.Int(Integer.TYPE));
+		typeMappers.put(Float.TYPE, new SingleValueModelMapper.Float(Float.TYPE));
+		typeMappers.put(Double.TYPE, new SingleValueModelMapper.Double(Double.TYPE));
+		typeMappers.put(Long.TYPE, new SingleValueModelMapper.Long(Long.TYPE));
 		typeMappers.put(String.class, new SingleValueModelMapper.Str(String.class));
-		typeMappers.put(Void.class, new SingleValueModelMapper.Void());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -71,7 +63,7 @@ public class EffectModelFactory {
 			}
 			//todo use annotation
 			if (constructor.getParameterCount() == 2) {
-				return Void.class;
+				return Void.TYPE;
 			}
 		}
 		if (c == null) {

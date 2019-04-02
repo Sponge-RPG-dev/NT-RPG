@@ -20,7 +20,6 @@ package cz.neumimto.rpg.commands;
 
 import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.commands.admin.*;
@@ -75,8 +74,8 @@ public class CommandService {
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_EXEC_SKILL_DESC))
 				.arguments(
 						GenericArguments.catalogedElement(Text.of("skill"), ISkill.class),
-						GenericArguments.flags().valueFlag(GenericArguments
-								.integer(TextHelper.parse("level")), "l")
+						GenericArguments.flags().valueFlag(
+								GenericArguments.integer(Text.of("level")), "l")
 								.buildWith(GenericArguments.none())
 				)
 				.executor(new ExecuteSkillExecutor())
@@ -85,10 +84,10 @@ public class CommandService {
 		CommandSpec addEffect = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_EFFECT_ADD))
 				.arguments(
-						GenericArguments.onlyOne(GenericArguments.playerOrSource(TextHelper.parse("player"))),
+						GenericArguments.onlyOne(GenericArguments.playerOrSource(Text.of("player"))),
 						new GlobalEffectCommandElement(Text.of("effect")),
-						GenericArguments.longNum(TextHelper.parse("duration")),
-						GenericArguments.remainingJoinedStrings(TextHelper.parse("data"))
+						GenericArguments.longNum(Text.of("duration")),
+						GenericArguments.optional(GenericArguments.remainingJoinedStrings(Text.of("data")))
 				)
 				.executor(new AddEffectExecutor())
 				.build();
@@ -98,7 +97,7 @@ public class CommandService {
 		CommandSpec experienceAdd = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_EXP_ADD))
 				.arguments(
-						GenericArguments.onlyOne(GenericArguments.playerOrSource(TextHelper.parse("player"))),
+						GenericArguments.onlyOne(GenericArguments.playerOrSource(Text.of("player"))),
 						GenericArguments.doubleNum(Text.of("amount")),
 						GenericArguments.optionalWeak(GenericArguments.catalogedElement(Text.of("source"), ExperienceSource.class)),
 						GenericArguments.optional(new ClassDefCommandElement(Text.of("class")))
@@ -114,21 +113,21 @@ public class CommandService {
 
 		CommandSpec reload = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_RELOAD))
-				.arguments(GenericArguments.remainingJoinedStrings(TextHelper.parse("args")))
+				.arguments(GenericArguments.remainingJoinedStrings(Text.of("args")))
 				.executor(new ReloadExecutor())
 				.build();
 
 		CommandSpec inspectProperty = CommandSpec.builder()
 				.arguments(
-						GenericArguments.onlyOne(GenericArguments.playerOrSource(TextHelper.parse("player"))),
-						GenericArguments.remainingJoinedStrings(TextHelper.parse("data"))
+						GenericArguments.onlyOne(GenericArguments.playerOrSource(Text.of("player"))),
+						GenericArguments.remainingJoinedStrings(Text.of("data"))
 				)
 				.executor(new InspectPropertyExecutor())
 				.build();
 
 		CommandSpec inspectItemDamage = CommandSpec.builder()
 				.arguments(
-						GenericArguments.onlyOne(GenericArguments.playerOrSource(TextHelper.parse("player")))
+						GenericArguments.onlyOne(GenericArguments.playerOrSource(Text.of("player")))
 				)
 				.executor(new InspectItemDamageExecutor())
 				.build();
@@ -175,7 +174,7 @@ public class CommandService {
 		CommandSpec characterCreate = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_CREATE_DESCRIPTION))
 				.arguments(
-						GenericArguments.remainingJoinedStrings(TextHelper.parse("name"))
+						GenericArguments.remainingJoinedStrings(Text.of("name"))
 				)
 				.permission("ntrpg.player.character.create")
 				.executor(new CharacterCreateExecutor())
@@ -184,7 +183,7 @@ public class CommandService {
 		CommandSpec characterDelete = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_DELETE_DESCRIPTION))
 				.arguments(
-						GenericArguments.remainingJoinedStrings(TextHelper.parse("name"))
+						GenericArguments.remainingJoinedStrings(Text.of("name"))
 				)
 				.permission("ntrpg.player.character.delete")
 				.executor(new CharacterDeleteExecutor())
@@ -208,7 +207,7 @@ public class CommandService {
 		CommandSpec characterChooseClass = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_CHOOSE_DESC))
 				.arguments(
-						new AnyClassDefCommandElement(TextHelper.parse("class"))
+						new AnyClassDefCommandElement(Text.of("class"))
 				)
 				.permission("ntrpg.player.choose.class")
 				.executor(new CharacterChooseClassExecutor())
@@ -297,7 +296,7 @@ public class CommandService {
 		CommandSpec skillCast = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_SKILL_DESC))
 				.arguments(
-						new LearnedSkillCommandElement(TextHelper.parse("skill"))
+						new LearnedSkillCommandElement(Text.of("skill"))
 				)
 				.executor(new SkillCastExecutor())
 				.build();
@@ -308,7 +307,7 @@ public class CommandService {
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_BIND_DESC))
 				.permission("ntrpg.player.skillbind")
 				.arguments(
-						new LearnedSkillCommandElement(TextHelper.parse("skill"))
+						new LearnedSkillCommandElement(Text.of("skill"))
 				)
 				.executor(new SkillBindExecutor())
 				.build();
@@ -318,7 +317,7 @@ public class CommandService {
 		CommandSpec skilltree = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_SKILL_TREE))
 				.arguments(
-						GenericArguments.optional(new AnyClassDefCommandElement(TextHelper.parse("class")))
+						GenericArguments.optional(new AnyClassDefCommandElement(Text.of("class")))
 				)
 				.executor(new SkilltreeExecutor())
 				.build();
@@ -337,7 +336,7 @@ public class CommandService {
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_BIND_DESC))
 				.permission("ntrpg.player.party")
 				.arguments(
-						new PartyMemberCommandElement(TextHelper.parse("player"))
+						new PartyMemberCommandElement(Text.of("player"))
 				)
 				.executor(new PartyKickExecutor())
 				.build();
@@ -346,7 +345,7 @@ public class CommandService {
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_BIND_DESC))
 				.permission("ntrpg.player.party")
 				.arguments(
-						GenericArguments.onlyOne(GenericArguments.player(TextHelper.parse("player")))
+						GenericArguments.onlyOne(GenericArguments.player(Text.of("player")))
 				)
 				.executor(new PartyInviteExecutor())
 				.build();
@@ -434,8 +433,8 @@ public class CommandService {
 		CommandSpec itemAddGlobalEffect = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_ENCHANT_ADD))
 				.arguments(
-						new GlobalEffectCommandElement(TextHelper.parse("effect")),
-						GenericArguments.remainingJoinedStrings(TextHelper.parse("params"))
+						new GlobalEffectCommandElement(Text.of("effect")),
+						GenericArguments.optional(GenericArguments.remainingJoinedStrings(Text.of("data")))
 				)
 				.executor(new ItemAddGlobalEffectExecutor())
 				.build();
@@ -458,7 +457,7 @@ public class CommandService {
 		CommandSpec itemAddRune = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_RUNE))
 				.arguments(
-						new RuneCommandElement(TextHelper.parse("rune"))
+						new RuneCommandElement(Text.of("rune"))
 				)
 				.executor(new GiveRuneToPlayerExecutor())
 				.build();
@@ -466,7 +465,7 @@ public class CommandService {
 		CommandSpec itemAddRarity = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_RARITY))
 				.arguments(
-						GenericArguments.integer(TextHelper.parse("level"))
+						GenericArguments.integer(Text.of("level"))
 				)
 				.executor(new ItemAddRarityExecutor())
 				.build();
@@ -499,7 +498,7 @@ public class CommandService {
 		CommandSpec itemAddRuneword = CommandSpec.builder()
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_RUNEWORD))
 				.arguments(
-						new RuneCommandElement(TextHelper.parse("rw"))
+						new RuneCommandElement(Text.of("rw"))
 				)
 				.executor(new ItemAddRunewordExecutor())
 				.build();

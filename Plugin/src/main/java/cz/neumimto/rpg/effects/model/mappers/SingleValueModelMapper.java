@@ -22,7 +22,7 @@ public abstract class SingleValueModelMapper extends EffectModelMapper {
 			return null;
 		}
 		if (map.size() != 1) {
-			throw new RuntimeException("SingleValueModelMapper but map.size <> 1" + new Gson().toJson(map));
+			throw new RuntimeException("SingleValueModelMapper but map.size != 1 " + new Gson().toJson(map));
 		}
 		return parseStr(map.values().stream().findFirst().get());
 	}

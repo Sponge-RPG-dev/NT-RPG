@@ -19,6 +19,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -29,49 +30,69 @@ public class ItemAddGlobalEffectExecutor implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		IGlobalEffect effect = args.<IGlobalEffect>getOne("effect").get();
+		if (!(src instanceof Player)) {
+			throw new CommandException(Text.of("Only for players"));
+		}
 		Player player = (Player) src;
 		if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
 			ItemStack itemStack = player.getItemInHand(HandTypes.MAIN_HAND).get();
 
-			Optional<String> params = args.getOne("params");
-			String s = params.get();
-			try {
+			Optional<String> dataOptional = args.getOne("data");
+			Class<?> modelType = EffectModelFactory.getModelType(effect.asEffectClass());
+			EffectParams map = new EffectParams();
+
+			if (!dataOptional.isPresent()) {
+				if (modelType != Void.TYPE)
+					throw new CommandException(Text.of("Effect data expected! Use ? as data to list parameters"));
+			} else {
+				String s = dataOptional.get();
 				if (s.equals("?")) {
-					Class<?> modelType = EffectModelFactory.getModelType(effect.asEffectClass());
-					if (Number.class.isAssignableFrom(modelType) || modelType.isPrimitive()) {
+					if (modelType == Void.TYPE) {
+						player.sendMessage(Text.of("No data expected"));
+						return CommandResult.empty();
+					} else if (Number.class.isAssignableFrom(modelType) || modelType.isPrimitive()) {
 						player.sendMessage(Text.of("Expected: " + modelType.getTypeName()));
+						return CommandResult.empty();
 					} else {
 						Map<String, String> q = new HashMap<>();
-						for (Field field : modelType.getDeclaredFields()) {
+						for (Field field : modelType.getFields()) {
 							q.put(field.getName(), field.getType().getName());
 						}
 						player.sendMessage(Text.of("Expected: " + gson.toJson(q)));
+						return CommandResult.empty();
 					}
-				} else {
-					EffectParams map = null;
-					Class<?> modelType = EffectModelFactory.getModelType(effect.asEffectClass());
-					if (Number.class.isAssignableFrom(modelType) || modelType.isPrimitive()) {
-						map = new EffectParams();
-						map.put(effect.asEffectClass().getName(), s);
-					} else {
-						map = gson.fromJson(s, EffectParams.class);
+				}
+				if (modelType == Void.TYPE) {
+					//Just do nothing
+				} else if (Number.class.isAssignableFrom(modelType) || modelType.isPrimitive()) {
+					map.put("value", s);
+				} else try {
+					//Get rid of unused entries in data string and check for missing
+					EffectParams tempMap = gson.fromJson(s, EffectParams.class);
+					for (Field field : modelType.getFields()) {
+						if (Modifier.isTransient(field.getModifiers())) continue;
+						if (!tempMap.containsKey(field.getName())) {
+							throw new CommandException(Text.of("Missing parameter: " + field.getName()));
+						}
+						map.put(field.getName(), tempMap.get(field.getName()));
 					}
-					itemStack = NtRpgPlugin.GlobalScope.inventorySerivce.addEffectsToItemStack(itemStack, effect.getName(), map);
-					itemStack = NtRpgPlugin.GlobalScope.inventorySerivce.updateLore(itemStack);
-					player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
-					player.sendMessage(TextHelper.parse("Enchantment " + effect.getName() + " added"));
+				} catch (JsonSyntaxException e) {
+					Map<String, String> q = new HashMap<>();
+					for (Field field : modelType.getFields()) {
+						q.put(field.getName(), field.getType().getName());
+					}
+					throw new CommandException(Text.of("Expected: " + gson.toJson(q)));
 				}
-			} catch (JsonSyntaxException e) {
-				Class<?> modelType = EffectModelFactory.getModelType(effect.asEffectClass());
-				Map<String, String> q = new HashMap<>();
-				for (Field field : modelType.getDeclaredFields()) {
-					q.put(field.getName(), field.getType().getName());
-				}
-				throw new RuntimeException("Expected: " + gson.toJson(q));
 			}
+
+			itemStack = NtRpgPlugin.GlobalScope.inventorySerivce.addEffectsToItemStack(itemStack, effect.getName(), map);
+			itemStack = NtRpgPlugin.GlobalScope.inventorySerivce.updateLore(itemStack);
+			player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
+			player.sendMessage(TextHelper.parse("Enchantment " + effect.getName() + " added"));
+			return CommandResult.success();
 		} else {
 			player.sendMessage(Localizations.NO_ITEM_IN_HAND.toText());
 		}
-		return CommandResult.success();
+		return CommandResult.empty();
 	}
 }

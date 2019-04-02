@@ -40,10 +40,16 @@ public interface IEffect<K> extends IRpgElement {
 
 	}
 
+	/**
+	 * @param self The reference to the effect currently being processed. IE: self == this is always true. Useful mainly for JavaScript scripts
+	 */
 	default void onApply(IEffect self) {
 
 	}
 
+	/**
+	 * @param self The reference to the effect currently being processed. IE: self == this is always true. Useful mainly for JavaScript scripts
+	 */
 	default void onRemove(IEffect self) {
 
 	}
