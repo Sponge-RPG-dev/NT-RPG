@@ -39,7 +39,6 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -50,7 +49,6 @@ import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 /**
  * Created by NeumimTo on 12.3.2015.
  */
-@Singleton
 @JsBinding(JsBinding.Type.CLASS)
 public abstract class AbstractSkill implements ISkill {
 
@@ -59,14 +57,17 @@ public abstract class AbstractSkill implements ISkill {
 
 	@Inject
 	protected CharacterService characterService;
+
 	protected Text name;
 	protected List<Text> description;
 	protected SkillSettings settings = new SkillSettings();
 	protected SkillItemIcon icon;
 	protected String url;
 	protected ItemType itemType;
+
 	@CatalogId
 	private String catalogId;
+
 	private Set<ISkillType> skillTypes = new HashSet<>();
 	private List<Text> lore;
 	private DamageType damagetype = DamageTypes.GENERIC;

@@ -6,7 +6,6 @@ import cz.neumimto.core.dao.GenericDao;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import org.hibernate.SessionFactory;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
@@ -16,7 +15,6 @@ import javax.inject.Singleton;
 @Repository
 public class CharacterClassDao extends GenericDao<CharacterClass> {
 
-    @Inject
     @PersistentContext("nt-rpg")
     private SessionFactory factory;
 

@@ -20,6 +20,7 @@ package cz.neumimto.rpg.persistance;
 
 import com.typesafe.config.*;
 import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.gui.SkillTreeInterfaceModel;
@@ -34,7 +35,6 @@ import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.item.ItemType;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -51,9 +51,6 @@ import static cz.neumimto.rpg.Log.*;
  */
 @Singleton
 public class SkillTreeDao {
-
-	@Inject
-	SkillService skillService;
 
 	public Map<String, SkillTree> getAll() {
 		Path dir = ResourceLoader.skilltreeDir.toPath();
@@ -111,7 +108,7 @@ public class SkillTreeDao {
 									array[i][j] = Short.parseShort(num.toString());
 									j++;
 								}
-								SkillTreeInterfaceModel guiModelByCharacter = skillService.getGuiModelByCharacter(c1);
+								SkillTreeInterfaceModel guiModelByCharacter = NtRpgPlugin.GlobalScope.skillService.getGuiModelByCharacter(c1);
 								if (guiModelByCharacter != null) {
 									array[i][j] = guiModelByCharacter.getId();
 								}
@@ -139,7 +136,7 @@ public class SkillTreeDao {
 		for (ConfigObject co : sub) {
 			Config c = co.toConfig();
 			String id = c.getString("SkillId");
-			Optional<ISkill> byId = skillService.getById(id);
+			Optional<ISkill> byId = NtRpgPlugin.GlobalScope.skillService.getById(id);
 			if (!byId.isPresent()) {
 
 				ISkill skill = null;
@@ -287,7 +284,7 @@ public class SkillTreeDao {
 			try {
 				info.setSkillName(TextHelper.parse(c.getString("Name")));
 				info(" - Alternate name defined for skill " + info.getSkill().getId() + " > " + info.getSkillName().toPlain());
-				skillService.registerSkillAlternateName(info.getSkillName().toPlain(), info.getSkill());
+				NtRpgPlugin.GlobalScope.skillService.registerSkillAlternateName(info.getSkillName().toPlain(), info.getSkill());
 			} catch (ConfigException missing) {
 				info.setSkillName(info.getSkill().getLocalizableName());
 			}
@@ -376,7 +373,7 @@ public class SkillTreeDao {
 		final String lowercased = id.toLowerCase();
 		SkillData info = tree.getSkills().get(lowercased);
 		if (info == null) {
-			ISkill skill = skillService.getById(lowercased)
+			ISkill skill = NtRpgPlugin.GlobalScope.skillService.getById(lowercased)
 					.orElseThrow(
 							() -> new IllegalStateException("Could not find a skill " + lowercased + " referenced in the skilltree " + tree.getId
 									()));

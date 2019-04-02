@@ -19,6 +19,7 @@
 package cz.neumimto.rpg;
 
 import com.google.inject.Injector;
+import cz.neumimto.rpg.commands.CommandService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.entities.EntityService;
@@ -49,6 +50,9 @@ public class GlobalScope {
 
 	@Inject
 	public ClassService classService;
+
+	@Inject
+	public CommandService commandService;
 
 	@Inject
 	public SkillService skillService;

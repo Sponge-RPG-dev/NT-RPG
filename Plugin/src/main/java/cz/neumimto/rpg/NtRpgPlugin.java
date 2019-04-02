@@ -22,7 +22,6 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.PluginCore;
-import cz.neumimto.rpg.commands.CommandService;
 import cz.neumimto.rpg.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.configuration.Settings;
@@ -125,12 +124,20 @@ public class NtRpgPlugin {
 	@Inject
 	private Injector injector;
 
-	@Inject
-	private CommandService commandService;
-
 	@Listener
 	public void preinit(GamePreInitializationEvent e) {
-		GlobalScope = injector.getInstance(GlobalScope.class);
+		Log.logger = logger;
+		try {
+			workingDir = config.toString();
+			URL url = FileUtils.getPluginUrl();
+			pluginjar = new File(url.toURI());
+		} catch (URISyntaxException us) {
+			us.printStackTrace();
+		}
+		Injector childInjector = injector.createChildInjector(new NtRpgGuiceModule());
+		GlobalScope = childInjector.getInstance(GlobalScope.class);
+
+
 		PluginCore.MANAGED_JPA_TYPES.add(CharacterBase.class);
 		PluginCore.MANAGED_JPA_TYPES.add(BaseCharacterAttribute.class);
 		PluginCore.MANAGED_JPA_TYPES.add(CharacterSkill.class);
@@ -384,14 +391,7 @@ public class NtRpgPlugin {
 	@Listener
 	public void onPluginLoad(GamePostInitializationEvent event) {
 		long start = System.nanoTime();
-		Log.logger = logger;
-		try {
-			workingDir = config.toString();
-			URL url = FileUtils.getPluginUrl();
-			pluginjar = new File(url.toURI());
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
+
 		reloadMainPluginConfig();
 		asyncExecutor = Sponge.getGame().getScheduler().createAsyncExecutor(NtRpgPlugin.this);
 
@@ -419,7 +419,7 @@ public class NtRpgPlugin {
 		if (pluginConfig.DEBUG.isBalance()) {
 			Sponge.getEventManager().registerListeners(this, injector.getInstance(DebugListener.class));
 		}
-		commandService.registerStandartCommands();
+		GlobalScope.commandService.registerStandartCommands();
 		injector.getInstance(Init.class).it();
 
 		Sponge.getRegistry().registerModule(ISkill.class, GlobalScope.skillService);
