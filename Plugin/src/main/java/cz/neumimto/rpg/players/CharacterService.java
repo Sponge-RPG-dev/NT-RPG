@@ -29,7 +29,6 @@ import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.effects.common.def.ClickComboActionComponent;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
@@ -94,7 +93,7 @@ public class CharacterService {
     private ClassService classService;
 
     @Inject
-    private EntityService entityService;
+    public EntityService entityService;
 
     @Inject
     private DamageService damageService;
@@ -334,7 +333,7 @@ public class CharacterService {
 
 
         updateMaxHealth(character);
-        updateWalkSpeed(character);
+        entityService.updateWalkSpeed(character);
 
         CharacterInitializedEvent event = new CharacterInitializedEvent(character);
         game.getEventManager().post(event);
@@ -435,7 +434,7 @@ public class CharacterService {
         updateArmorRestrictions(activeCharacter);
         updateWeaponRestrictions(activeCharacter);
         updateAttributes(activeCharacter);
-        updateWalkSpeed(activeCharacter);
+        entityService.updateWalkSpeed(activeCharacter);
         updateMaxHealth(activeCharacter);
         updateMaxMana(activeCharacter);
     }
@@ -871,19 +870,6 @@ public class CharacterService {
         double percent = Utils.getPercentage(health, max);
         character.getHealth().setMaxValue(newHealht);
         character.getHealth().setValue(newHealht / percent);
-    }
-
-    /**
-     * Updates character walkspeed to match DefaultProperties.walk_speed property
-     *
-     * @param entity
-     */
-    public void updateWalkSpeed(IEffectConsumer entity) {
-        double speed = entityService.getEntityProperty(entity, DefaultProperties.walk_speed);
-        entity.getEntity().offer(Keys.WALKING_SPEED, speed);
-        if (pluginConfig.DEBUG.isBalance()) {
-            info(entity + " setting walk speed to " + speed);
-        }
     }
 
     /**

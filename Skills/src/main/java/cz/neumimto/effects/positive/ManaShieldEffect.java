@@ -4,10 +4,7 @@ import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.decoration.ParticleSpawner;
 import cz.neumimto.model.ManaShieldEffectModel;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.Generate;
-import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.gui.ParticleDecorator;
 import cz.neumimto.rpg.scripting.JsBinding;
 import org.spongepowered.api.Sponge;
@@ -37,9 +34,9 @@ public class ManaShieldEffect extends EffectBase<ManaShieldEffectModel> {
 			.option(ParticleOptions.COLOR, Color.GRAY)
 			.build();
 
-	public ManaShieldEffect(IEffectConsumer consumer, @Inject ManaShieldEffectModel model) {
+	public ManaShieldEffect(IEffectConsumer consumer, long duration, @Inject ManaShieldEffectModel model) {
 		super(name, consumer);
-		setDuration(model.duration);
+		setDuration(duration);
 		setValue(model);
 		setStackable(false, null);
 	}

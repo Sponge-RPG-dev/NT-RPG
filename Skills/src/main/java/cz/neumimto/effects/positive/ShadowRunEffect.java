@@ -24,7 +24,7 @@ public class ShadowRunEffect extends EffectBase<ShadowRunModel> {
 		super(name, character);
 		setStackable(false, null);
 		setValue(shadowRunModel);
-		setDuration(shadowRunModel.duration);
+		setDuration(duration);
 		setPeriod(20);
 	}
 
@@ -34,7 +34,7 @@ public class ShadowRunEffect extends EffectBase<ShadowRunModel> {
 		getConsumer().getEntity().offer(Keys.VANISH, true);
 		getConsumer().getEntity().offer(Keys.VANISH_PREVENTS_TARGETING, true);
 		getConsumer().addProperty(DefaultProperties.walk_speed, getValue().walkspeed);
-		NtRpgPlugin.GlobalScope.characterService.updateWalkSpeed(getConsumer());
+		NtRpgPlugin.GlobalScope.entityService.updateWalkSpeed(getConsumer());
 	}
 
 	@Override
@@ -56,6 +56,6 @@ public class ShadowRunEffect extends EffectBase<ShadowRunModel> {
 		getConsumer().getEntity().offer(Keys.VANISH, false);
 		getConsumer().getEntity().offer(Keys.VANISH_PREVENTS_TARGETING, false);
 		getConsumer().addProperty(DefaultProperties.walk_speed, -getValue().walkspeed);
-		NtRpgPlugin.GlobalScope.characterService.updateWalkSpeed(getConsumer());
+		NtRpgPlugin.GlobalScope.entityService.updateWalkSpeed(getConsumer());
 	}
 }

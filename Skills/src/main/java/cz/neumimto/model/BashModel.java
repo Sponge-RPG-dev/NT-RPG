@@ -1,6 +1,5 @@
 package cz.neumimto.model;
 
-import com.google.gson.annotations.Expose;
 import cz.neumimto.rpg.effects.common.stacking.UnstackableEffectData;
 import cz.neumimto.rpg.scripting.JsBinding;
 
@@ -18,8 +17,7 @@ public class BashModel implements UnstackableEffectData<BashModel> {
 
 	public double damage;
 
-	@Expose(serialize = false, deserialize = false)
-	public long lasttime;
+	public transient long lasttime;
 
 	@Override
 	public int compareTo(BashModel o) {

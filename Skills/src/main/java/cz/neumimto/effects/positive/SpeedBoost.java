@@ -72,7 +72,7 @@ public class SpeedBoost extends EffectBase {
 	public void onApply(IEffect self) {
 		super.onApply(self);
 		getConsumer().setProperty(DefaultProperties.walk_speed, getConsumer().getProperty(DefaultProperties.walk_speed) + speedbonus);
-		getGlobalScope().characterService.updateWalkSpeed(getConsumer());
+		getGlobalScope().entityService.updateWalkSpeed(getConsumer());
 		Location<World> location = getConsumer().getLocation();
 
 		ParticleEffect build = ParticleEffect.builder()
@@ -93,7 +93,7 @@ public class SpeedBoost extends EffectBase {
 		super.onRemove(self);
 		getConsumer().setProperty(DefaultProperties.walk_speed,
 				getGlobalScope().entityService.getEntityProperty(getConsumer(), DefaultProperties.walk_speed) - speedbonus);
-		getGlobalScope().characterService.updateWalkSpeed(getConsumer());
+		getGlobalScope().entityService.updateWalkSpeed(getConsumer());
 		getConsumer().sendMessage(ChatTypes.CHAT, Localizations.SPEED_BOOST_EXPIRE.toText());
 	}
 

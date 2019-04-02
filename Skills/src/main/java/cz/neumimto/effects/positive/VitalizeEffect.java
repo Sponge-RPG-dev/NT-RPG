@@ -2,10 +2,7 @@ package cz.neumimto.effects.positive;
 
 import cz.neumimto.model.VitalizeEffectModel;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.Generate;
-import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.*;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.entities.IReservable;
 import cz.neumimto.rpg.players.CharacterMana;
@@ -23,14 +20,14 @@ public class VitalizeEffect extends EffectBase<VitalizeEffectModel> {
 
 	private IActiveCharacter character;
 
-	public VitalizeEffect(IEffectConsumer consumer, VitalizeEffectModel effectModel) {
+	public VitalizeEffect(IEffectConsumer consumer, long duration, VitalizeEffectModel effectModel) {
 		super(name, consumer);
 		setValue(effectModel);
 		setStackable(false, null);
 		if (consumer instanceof IActiveCharacter) {
 			character = (IActiveCharacter) consumer;
 		}
-		setDuration(effectModel.duration);
+		setDuration(duration);
 		setPeriod(effectModel.period);
 	}
 

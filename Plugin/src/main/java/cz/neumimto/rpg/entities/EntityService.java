@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.entities;
 
+import static cz.neumimto.rpg.Log.info;
 import static cz.neumimto.rpg.Log.warn;
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.core.ioc.Inject;
@@ -9,6 +10,7 @@ import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.events.skill.SkillHealEvent;
 import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.properties.DefaultProperties;
 import cz.neumimto.rpg.properties.PropertyService;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
@@ -169,5 +171,18 @@ public class EntityService {
 
 	public void reloadMobConfiguration() {
 		dao.load(null);
+	}
+
+	/**
+	 * Updates character walkspeed to match DefaultProperties.walk_speed property
+	 *
+	 * @param entity
+	 */
+	public void updateWalkSpeed(IEffectConsumer entity) {
+	    double speed = getEntityProperty(entity, DefaultProperties.walk_speed);
+	    entity.getEntity().offer(Keys.WALKING_SPEED, speed);
+	    if (pluginConfig.DEBUG.isBalance()) {
+	        info(entity + " setting walk speed to " + speed);
+	    }
 	}
 }

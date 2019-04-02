@@ -24,13 +24,13 @@ public class IncreasedMovementSpeedEffect extends EffectBase<Float> {
 	@Override
 	public void onApply(IEffect self) {
 		getConsumer().setProperty(DefaultProperties.walk_speed, getConsumer().getProperty(DefaultProperties.walk_speed) + getValue());
-		getGlobalScope().characterService.updateWalkSpeed(getConsumer());
+		getGlobalScope().entityService.updateWalkSpeed(getConsumer());
 	}
 
 	@Override
 	public void onRemove(IEffect self) {
 		getConsumer().setProperty(DefaultProperties.walk_speed, getConsumer().getProperty(DefaultProperties.walk_speed) - getValue());
-		getGlobalScope().characterService.updateWalkSpeed(getConsumer());
+		getGlobalScope().entityService.updateWalkSpeed(getConsumer());
 	}
 
 	@Override

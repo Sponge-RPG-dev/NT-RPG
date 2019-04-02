@@ -8,11 +8,9 @@ import cz.neumimto.rpg.scripting.JsBinding;
 @JsBinding(JsBinding.Type.CLASS)
 public class VitalizeEffectModel {
 
-	public long duration;
 	public long period;
 	public float manaPerTick;
 	public float healthPerTick;
-
 
 	public VitalizeEffectModel() {
 

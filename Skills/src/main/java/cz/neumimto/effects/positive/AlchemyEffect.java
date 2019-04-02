@@ -14,7 +14,7 @@ public class AlchemyEffect extends EffectBase {
 
 	public static final String name = "Alchemy";
 
-	public AlchemyEffect(IEffectConsumer consumer, long duration, Void v) {
+	public AlchemyEffect(IEffectConsumer consumer, long duration) {
 		super(name, consumer);
 		setDuration(duration);
 	}
