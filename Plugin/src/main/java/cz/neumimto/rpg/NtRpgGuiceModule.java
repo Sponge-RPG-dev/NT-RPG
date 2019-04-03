@@ -61,6 +61,5 @@ public class NtRpgGuiceModule extends AbstractModule {
         bind(RWDao.class);
         bind(RWService.class);
         bind(DefaultPlayerInvHandler.class);
-        bind(Init.class);
     }
 }

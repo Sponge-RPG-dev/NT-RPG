@@ -22,6 +22,7 @@ import com.google.inject.Injector;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.configuration.ConfigurationContainer;
 import cz.neumimto.core.PluginCore;
+import cz.neumimto.core.Repository;
 import cz.neumimto.core.localization.Localization;
 import cz.neumimto.core.localization.LocalizationService;
 import cz.neumimto.core.localization.ResourceBundle;
@@ -332,6 +333,10 @@ public class ResourceLoader {
 		}
 		if (clazz.isAnnotationPresent(Localization.class)) {
 			localizationService.registerClass(clazz);
+		}
+		if (clazz.isAnnotationPresent(Repository.class)) {
+			container = injector.getInstance(clazz);
+			PluginCore.Instance.injectPersistentContext(container);
 		}
 		return container;
 	}

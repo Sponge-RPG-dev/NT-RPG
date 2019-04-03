@@ -23,6 +23,10 @@ import cz.neumimto.rpg.commands.CommandService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.gui.ParticleDecorator;
+import cz.neumimto.rpg.gui.VanillaMessaging;
+import cz.neumimto.rpg.inventory.CustomItemFactory;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.ItemService;
 import cz.neumimto.rpg.inventory.runewords.RWService;
@@ -92,4 +96,25 @@ public class GlobalScope {
 
 	@Inject
 	public ResourceLoader resourceLoader;
+
+	@Inject
+	public EffectService experienceService;
+
+	@Inject
+	public InventoryService inventoryService;
+
+	@Inject
+	public CustomItemFactory customItemFactory;
+
+	@Inject
+	public VanillaMessaging vanillaMessaging;
+
+	@Inject
+	public ParticleDecorator particleDecorator;
+
+	@Inject
+	public RWService rwService;
+
+	@Inject
+	public Gui gui;
 }

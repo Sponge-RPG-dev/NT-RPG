@@ -52,11 +52,14 @@ import java.util.List;
 @Singleton
 public class Gui {
 
-	@Inject
 	public static VanillaMessaging vanilla;
 
 	public static IPlayerMessage mod;
 
+	@Inject
+	public Gui(VanillaMessaging vanilla) {
+		Gui.vanilla = vanilla;
+	}
 
 	public static IPlayerMessage getMessageTypeOf(IActiveCharacter player) {
 		if (player == null || player.isUsingGuiMod()) {

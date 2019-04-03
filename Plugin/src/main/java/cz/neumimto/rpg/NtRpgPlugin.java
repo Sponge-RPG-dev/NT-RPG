@@ -63,6 +63,7 @@ import cz.neumimto.rpg.skills.tree.SkillType;
 import cz.neumimto.rpg.utils.EditorMappings;
 import cz.neumimto.rpg.utils.FileUtils;
 import cz.neumimto.rpg.utils.Placeholders;
+import cz.neumimto.rpg.utils.PseudoRandomDistribution;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -420,7 +421,7 @@ public class NtRpgPlugin {
 			Sponge.getEventManager().registerListeners(this, injector.getInstance(DebugListener.class));
 		}
 		GlobalScope.commandService.registerStandartCommands();
-		injector.getInstance(Init.class).it();
+		postInit();
 
 		Sponge.getRegistry().registerModule(ISkill.class, GlobalScope.skillService);
 
@@ -437,6 +438,8 @@ public class NtRpgPlugin {
 		double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
 		info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
 	}
+
+
 
 	public void reloadMainPluginConfig() {
 		File file = new File(NtRpgPlugin.workingDir);
@@ -463,5 +466,35 @@ public class NtRpgPlugin {
 		} catch (ObjectMappingException | IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void postInit() {
+		int a = 0;
+		PseudoRandomDistribution p = new PseudoRandomDistribution();
+		PseudoRandomDistribution.C = new double[101];
+		for (double i = 0.01; i <= 1; i += 0.01) {
+			PseudoRandomDistribution.C[a] = p.c(i);
+			a++;
+		}
+		try {
+			GlobalScope.resourceLoader.reloadLocalizations(Locale.forLanguageTag(NtRpgPlugin.pluginConfig.LOCALE));
+		} catch (Exception e) {
+			Log.error("Could not read localizations in locale " + NtRpgPlugin.pluginConfig.LOCALE + " - " + e.getMessage());
+		}
+		GlobalScope.experienceService.load();
+		GlobalScope.inventoryService.init();
+		GlobalScope.skillService.load();
+		GlobalScope.propertyService.init();
+		GlobalScope.propertyService.reLoadAttributes();
+		GlobalScope.propertyService.loadMaximalServerPropertyValues();
+		GlobalScope.jsLoader.initEngine();
+		GlobalScope.classService.registerPlaceholders();
+		GlobalScope.rwService.load();
+		GlobalScope.classService.loadClasses();
+		GlobalScope.customItemFactory.initBuilder();
+		GlobalScope.vanillaMessaging.load();
+		GlobalScope.effectService.load();
+		GlobalScope.particleDecorator.initModels();
+
 	}
 }
