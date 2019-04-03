@@ -1,6 +1,8 @@
 package cz.neumimto.rpg.effects;
 
 import com.flowpowered.math.vector.Vector3d;
+import cz.neumimto.rpg.api.effects.EffectBase;
+import cz.neumimto.rpg.api.effects.IEffect;
 
 /**
  * Created by NeumimTo on 29.7.2017.

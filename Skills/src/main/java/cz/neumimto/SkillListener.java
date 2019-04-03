@@ -1,7 +1,6 @@
 package cz.neumimto;
 
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.EnderPearlEffect;
 import cz.neumimto.effects.ManaDrainEffect;
 import cz.neumimto.effects.ResoluteTechniqueEffect;
@@ -13,9 +12,12 @@ import cz.neumimto.events.ManaDrainEvent;
 import cz.neumimto.model.*;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.entities.*;
+import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.entities.IEntity;
+import cz.neumimto.rpg.entities.IEntityType;
+import cz.neumimto.rpg.entities.IReservable;
 import cz.neumimto.rpg.events.damage.DamageIEntityEarlyEvent;
 import cz.neumimto.rpg.events.damage.DamageIEntityLateEvent;
 import cz.neumimto.rpg.events.damage.IEntityWeaponDamageEarlyEvent;
@@ -60,6 +62,8 @@ import org.spongepowered.api.util.Tristate;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -67,6 +71,7 @@ import java.util.function.Consumer;
 /**
  * Created by ja on 21.5.2016.
  */
+@Singleton
 @SuppressWarnings("unchecked")
 @ResourceLoader.ListenerClass
 public class SkillListener {

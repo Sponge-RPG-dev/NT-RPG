@@ -16,10 +16,13 @@
  *
  */
 
-package cz.neumimto.rpg.effects;
+package cz.neumimto.rpg.api.effects;
 
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.scripting.JsBinding;
 
 import java.util.HashSet;

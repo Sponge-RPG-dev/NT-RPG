@@ -18,6 +18,8 @@
 
 package cz.neumimto.rpg.effects;
 
+import cz.neumimto.rpg.api.effects.IEffect;
+
 /**
  * Created by NeumimTo on 6.8.2015.
  */

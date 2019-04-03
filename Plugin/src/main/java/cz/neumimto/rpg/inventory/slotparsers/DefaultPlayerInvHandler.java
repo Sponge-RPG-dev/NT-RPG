@@ -1,9 +1,7 @@
 package cz.neumimto.rpg.inventory.slotparsers;
 
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.effects.IEffectSource;
+import cz.neumimto.rpg.api.effects.IEffectSource;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.CannotUseItemReason;
 import cz.neumimto.rpg.inventory.RPGItemType;
@@ -30,6 +28,8 @@ import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.type.OrderedInventory;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 

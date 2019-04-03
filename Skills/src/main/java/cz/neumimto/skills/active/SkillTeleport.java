@@ -19,11 +19,13 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.TeleportHelper;
 import org.spongepowered.api.world.World;
 
+import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
  * Created by NeumimTo on 29.12.2015.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:teleport")
 public class SkillTeleport extends ActiveSkill {
 

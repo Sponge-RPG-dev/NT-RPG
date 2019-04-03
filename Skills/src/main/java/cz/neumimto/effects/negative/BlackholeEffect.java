@@ -2,7 +2,7 @@ package cz.neumimto.effects.negative;
 
 import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
-import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.ShapedEffectDecorator;
 import cz.neumimto.rpg.players.IActiveCharacter;

@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.commands.character;
 
-import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.players.CharacterService;
@@ -19,7 +18,7 @@ public class CharacterDeleteExecutor implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		String a = args.<String>getOne("name").get();
 		Player player = (Player) src;
-		CharacterService characterService = IoC.get().build(CharacterService.class);
+		CharacterService characterService = NtRpgPlugin.GlobalScope.characterService;
 		IActiveCharacter character = characterService.getCharacter(player);
 		if (character.getName().equalsIgnoreCase(a)) {
 			characterService.removeCachedCharacter(player.getUniqueId());

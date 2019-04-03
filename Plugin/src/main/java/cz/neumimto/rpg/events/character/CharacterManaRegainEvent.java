@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.events.character;
 
-import cz.neumimto.rpg.IRpgElement;
+import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.players.IActiveCharacter;
 
 /**

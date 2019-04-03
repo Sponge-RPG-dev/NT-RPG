@@ -19,8 +19,6 @@
 package cz.neumimto.rpg.damage;
 
 import com.google.common.collect.Lists;
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.ClassService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.IEntity;
@@ -40,6 +38,8 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
 /**
@@ -50,8 +50,10 @@ public class DamageService {
 
 	@Inject
 	private EntityService entityService;
+
 	@Inject
 	private CharacterService characterService;
+
 	@Inject
 	private ClassService classService;
 

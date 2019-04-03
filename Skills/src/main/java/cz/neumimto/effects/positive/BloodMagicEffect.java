@@ -18,10 +18,10 @@
 
 package cz.neumimto.effects.positive;
 
-import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.api.effects.EffectBase;
+import cz.neumimto.rpg.api.effects.Generate;
+import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.effects.EffectStatusType;
-import cz.neumimto.rpg.effects.Generate;
-import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.common.mechanics.DefaultManaRegeneration;
 import cz.neumimto.rpg.gui.Gui;

@@ -18,8 +18,7 @@
 
 package cz.neumimto.rpg.listeners;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-import cz.neumimto.core.ioc.Inject;
+import com.google.inject.Singleton;
 import cz.neumimto.rpg.ClassService;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.events.PlayerGuiModInitEvent;
@@ -29,12 +28,16 @@ import cz.neumimto.rpg.players.CharacterService;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 
+import javax.inject.Inject;
 import java.util.UUID;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 
 /**
  * Created by NeumimTo on 12.2.2015.
  */
+@Singleton
 @ResourceLoader.ListenerClass
 public class RpgListener {
 

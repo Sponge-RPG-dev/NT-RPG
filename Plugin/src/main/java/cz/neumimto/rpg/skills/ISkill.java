@@ -20,10 +20,10 @@ package cz.neumimto.rpg.skills;
 
 import com.typesafe.config.Config;
 import cz.neumimto.core.localization.Arg;
-import cz.neumimto.rpg.IRpgElement;
+import cz.neumimto.rpg.api.IRpgElement;
+import cz.neumimto.rpg.api.effects.IEffectSource;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectSourceType;
-import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.gui.GuiHelper;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;

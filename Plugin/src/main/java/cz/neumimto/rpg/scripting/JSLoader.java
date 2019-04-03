@@ -18,12 +18,7 @@
 
 package cz.neumimto.rpg.scripting;
 
-import static cz.neumimto.rpg.Log.error;
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.IoC;
-import cz.neumimto.core.ioc.Singleton;
+import com.google.inject.Injector;
 import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.skills.SkillService;
@@ -39,6 +34,9 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.event.Event;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.script.*;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -47,7 +45,10 @@ import java.net.URLClassLoader;
 import java.nio.file.*;
 import java.util.*;
 import java.util.function.Consumer;
-import javax.script.*;
+
+import static cz.neumimto.rpg.Log.error;
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 13.3.2015.
@@ -62,7 +63,7 @@ public class JSLoader {
 	private static Object listener;
 
 	@Inject
-	private IoC ioc;
+	private Injector injector;
 
 	@Inject
 	private ClassGenerator classGenerator;
@@ -75,6 +76,9 @@ public class JSLoader {
 
 	@Inject
 	private SkillService skillService;
+
+	@Inject
+	private GlobalScope globalScope;
 
 	private Map<Class<?>, JsBinding.Type> dataToBind = new HashMap<>();
 
@@ -123,7 +127,7 @@ public class JSLoader {
 		List<SkillComponent> skillComponents = new ArrayList<>();
 		try (InputStreamReader rs = new InputStreamReader(new FileInputStream(path.toFile()))) {
 			Bindings bindings = new SimpleBindings();
-			bindings.put("IoC", ioc);
+			bindings.put("Injector", injector);
 			bindings.put("Bindings", new BindingsHelper(engine));
 			for (Map.Entry<Class<?>, JsBinding.Type> objectTypeEntry : dataToBind.entrySet()) {
 				if (objectTypeEntry.getValue() == JsBinding.Type.CONTAINER) {
@@ -154,7 +158,7 @@ public class JSLoader {
 			}
 			dumpDocumentedFunctions(skillComponents);
 			bindings.put("Folder", scripts_root);
-			bindings.put("GlobalScope", ioc.build(GlobalScope.class));
+			bindings.put("GlobalScope", globalScope);
 			if (pluginConfig.DEBUG.isDevelop()) {
 				info("JSLOADER ====== Bindings");
 				Map<String, Object> sorted = new TreeMap<>(bindings);

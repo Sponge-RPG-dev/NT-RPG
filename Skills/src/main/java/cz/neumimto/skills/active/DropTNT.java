@@ -1,6 +1,5 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -18,6 +17,8 @@ import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -26,6 +27,7 @@ import java.util.UUID;
 /**
  * Created by NeumimTo on 27.12.2018.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:droptnt")
 public class DropTNT extends ActiveSkill {
 

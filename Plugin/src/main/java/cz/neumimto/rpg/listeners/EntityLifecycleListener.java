@@ -1,15 +1,17 @@
 package cz.neumimto.rpg.listeners;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-import cz.neumimto.core.ioc.Inject;
+import com.google.inject.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.damage.SkillDamageSource;
-import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.entities.IEntityType;
 import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.players.*;
+import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.players.ExperienceSource;
+import cz.neumimto.rpg.players.ExperienceSources;
+import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
@@ -25,11 +27,18 @@ import org.spongepowered.api.event.world.chunk.UnloadChunkEvent;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.util.*;
+import javax.inject.Inject;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 3.1.2016.
  */
+@Singleton
 @ResourceLoader.ListenerClass
 public class EntityLifecycleListener {
 

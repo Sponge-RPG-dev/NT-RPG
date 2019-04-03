@@ -135,12 +135,12 @@ public class PluginConfig {
 
 	@Setting
 	(comment = "Recognizes pressing Q key (/throwing an item out of inventory) as the click combo option 'Q'" +
-			" This action has priority over throwing item out of the inventory. Click combo may not start whit this action")
+			" This action has priority over throwing item out of the inventory. Click combo may not startEffectScheduler whit this action")
 	public boolean ENABLED_Q;
 
 	@Setting
 	(comment = "Recognizes pressing E key (/opening player inventory) as the click combo option 'E'" +
-			" This action has priority over opening players' inventory. Click combo may not start whit this action")
+			" This action has priority over opening players' inventory. Click combo may not startEffectScheduler whit this action")
 	public boolean ENABLED_E;
 
 	@Setting

@@ -18,12 +18,11 @@
 
 package cz.neumimto.rpg.players;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.effects.EffectSourceType;
-import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.entities.IReservable;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
@@ -48,6 +47,8 @@ import org.spongepowered.api.text.chat.ChatType;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 
 /**

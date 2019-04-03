@@ -2,7 +2,6 @@ package cz.neumimto.skills.active;
 
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -24,6 +23,8 @@ import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -36,6 +37,7 @@ import static com.flowpowered.math.TrigMath.sin;
 /**
  * Created by NeumimTo on 5.8.2017.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:grapplinghook")
 public class GrapplingHook extends ActiveSkill {
 

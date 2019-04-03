@@ -1,7 +1,7 @@
 package cz.neumimto.effects;
 
-import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.Generate;
+import cz.neumimto.rpg.api.effects.EffectBase;
+import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.scripting.JsBinding;
 
@@ -14,7 +14,7 @@ public class ResoluteTechniqueEffect extends EffectBase {
 
 	public static final String name = "Resolute Technique";
 
-	public ResoluteTechniqueEffect(IEffectConsumer consumer, long duration, Void value) {
+	public ResoluteTechniqueEffect(IEffectConsumer consumer, long duration) {
 		super(name, consumer);
 		setDuration(duration);
 		setStackable(true, null);

@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.effects.common.negative;
 
+import cz.neumimto.rpg.api.effects.EffectBase;
+import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.effects.CommonEffectTypes;
-import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 
 /**

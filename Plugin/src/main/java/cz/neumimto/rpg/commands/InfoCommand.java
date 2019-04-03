@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.commands;
 
-import cz.neumimto.core.ioc.Inject;
+import com.google.inject.Singleton;
 import cz.neumimto.rpg.ClassService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
@@ -43,6 +43,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,6 +52,7 @@ import java.util.stream.Collectors;
  * Created by NeumimTo on 23.7.2015.
  */
 @ResourceLoader.Command
+@Singleton
 public class InfoCommand extends CommandBase {
 
 	@Inject

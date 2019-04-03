@@ -1,22 +1,28 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.negative.MultiboltEffect;
 import cz.neumimto.model.MultiboltModel;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.NDamageType;
+import cz.neumimto.rpg.skills.PlayerSkillContext;
+import cz.neumimto.rpg.skills.SkillNodes;
+import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.Targeted;
 import cz.neumimto.rpg.skills.tree.SkillType;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 
 /**
  * Created by NeumimTo on 6.7.2017.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:multibolt")
 public class Multibolt extends Targeted {
 

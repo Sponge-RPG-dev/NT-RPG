@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.listeners;
 
-import cz.neumimto.core.ioc.Inject;
+import com.google.inject.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.gui.Gui;
@@ -52,6 +52,7 @@ import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.util.Tristate;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -60,6 +61,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by NeumimTo on 22.7.2015.
  */
+@Singleton
 @ResourceLoader.ListenerClass
 public class InventoryListener {
 

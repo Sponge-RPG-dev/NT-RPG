@@ -1,11 +1,10 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.negative.StunEffect;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
-import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
@@ -16,9 +15,13 @@ import cz.neumimto.rpg.skills.parents.Targeted;
 import cz.neumimto.rpg.skills.tree.SkillType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by ja on 20.8.2017.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:stun")
 public class Stun extends Targeted {
 

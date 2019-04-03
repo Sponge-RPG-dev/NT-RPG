@@ -1,11 +1,12 @@
 package cz.neumimto.rpg.effects.common.def;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.effects.CoreEffectTypes;
-import cz.neumimto.rpg.effects.EffectBase;
 import cz.neumimto.rpg.players.IActiveCharacter;
 
 import java.lang.ref.WeakReference;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 10.10.2015.

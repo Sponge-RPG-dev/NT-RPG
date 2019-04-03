@@ -1,11 +1,15 @@
 package cz.neumimto.effects.positive;
 
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.model.BPModel;
+import cz.neumimto.rpg.api.effects.EffectBase;
+import cz.neumimto.rpg.api.effects.Generate;
+import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
-import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.effects.EffectContainer;
+import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
@@ -16,6 +20,7 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
+
 
 /**
  * Created by ja on 5.7.2017.
@@ -38,7 +43,7 @@ public class BurningPrescenseEffect extends EffectBase<BPModel> {
             .velocity(new Vector3d(0, 1, 0).normalize())
             .build();
 
-    public BurningPrescenseEffect(IEffectConsumer consumer, long duration, @Inject BPModel model) {
+    public BurningPrescenseEffect(IEffectConsumer consumer, long duration, BPModel model) {
         super(name, consumer);
         setDuration(model.duration);
         setPeriod(model.period);

@@ -16,9 +16,12 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.world.weather.Weathers;
 
+import javax.inject.Singleton;
+
 /**
  * Created by NeumimTo on 3.8.2017.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:astronomy")
 public class Astronomy extends ActiveSkill {
 

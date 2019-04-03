@@ -1,10 +1,9 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.BurningPrescenseEffect;
 import cz.neumimto.model.BPModel;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
@@ -15,9 +14,13 @@ import cz.neumimto.rpg.skills.tree.SkillType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.item.ItemTypes;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by NeumimTo on 4.7.2017.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:burningprescense")
 public class BurningPrescense extends ActiveSkill {
 

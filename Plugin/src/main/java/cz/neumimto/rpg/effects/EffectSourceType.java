@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.effects;
 
+import cz.neumimto.rpg.api.effects.IEffectSource;
+
 /**
  * Created by ja on 1.4.2017.
  */

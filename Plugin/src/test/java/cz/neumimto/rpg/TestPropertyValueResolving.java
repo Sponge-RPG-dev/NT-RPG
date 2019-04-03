@@ -1,13 +1,14 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.PluginConfig;
-import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.inventory.ItemService;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.WeaponClass;
-import cz.neumimto.rpg.players.*;
+import cz.neumimto.rpg.players.ActiveCharacter;
+import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.properties.PropertyService;
 import org.junit.BeforeClass;
 import org.mockito.Mockito;
@@ -26,17 +27,14 @@ public class TestPropertyValueResolving {
         NtRpgPlugin.pluginConfig = Mockito.mock(PluginConfig.class);
         NtRpgPlugin.pluginConfig.DEBUG = DebugLevel.NONE;
         Game mock = Mockito.mock(Game.class);
-        IoC.get().registerInterfaceImplementation(Game.class, mock);
-        IoC.get().registerInterfaceImplementation(ResourceLoader.class, Mockito.mock(ResourceLoader.class));
     }
 
     //@Test
     public void test0() {
-        PropertyService propertyService = IoC.get().build(PropertyService.class);
-        DamageService ds = IoC.get().build(DamageService.class);
-        ItemService i = IoC.get().build(ItemService.class);
+        PropertyService propertyService = NtRpgPlugin.GlobalScope.propertyService;
+        ItemService i = NtRpgPlugin.GlobalScope.itemService;
 
-        CharacterService characterService = IoC.get().build(CharacterService.class);
+        CharacterService characterService = NtRpgPlugin.GlobalScope.characterService;
 
         String b1 = "test_bonus1";
         String b2 = "test_bonus2";

@@ -18,12 +18,13 @@
 
 package cz.neumimto.rpg.gui;
 
-import cz.neumimto.core.ioc.IoC;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
+import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectStatusType;
-import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.common.def.ClickComboActionComponent;
 import cz.neumimto.rpg.inventory.CannotUseItemReason;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
@@ -48,14 +49,16 @@ import java.util.List;
  * Created by NeumimTo on 12.2.2015.
  */
 @JsBinding(JsBinding.Type.CLASS)
+@Singleton
 public class Gui {
 
-	public static IPlayerMessage vanilla;
+	public static VanillaMessaging vanilla;
 
 	public static IPlayerMessage mod;
 
-	static {
-		vanilla = IoC.get().build(VanillaMessaging.class);
+	@Inject
+	public Gui(VanillaMessaging vanilla) {
+		Gui.vanilla = vanilla;
 	}
 
 	public static IPlayerMessage getMessageTypeOf(IActiveCharacter player) {

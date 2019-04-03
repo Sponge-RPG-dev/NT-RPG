@@ -1,6 +1,5 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.damage.ISkillDamageSource;
 import cz.neumimto.rpg.damage.SkillDamageSource;
@@ -23,9 +22,13 @@ import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.util.Tristate;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by NeumimTo on 5.2.2016.
  */
+@Singleton
 @ResourceLoader.ListenerClass
 @ResourceLoader.Skill("ntrpg:brainsap")
 public class BrainSap extends Targeted {

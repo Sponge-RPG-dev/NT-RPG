@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.inventory.items.types;
 
+import cz.neumimto.rpg.api.effects.IEffectSource;
 import cz.neumimto.rpg.effects.EffectParams;
-import cz.neumimto.rpg.effects.IEffectSource;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.RPGItemType;

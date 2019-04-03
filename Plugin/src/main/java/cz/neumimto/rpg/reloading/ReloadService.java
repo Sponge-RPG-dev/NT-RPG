@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.reloading;
 
-import cz.neumimto.core.ioc.Singleton;
-
+import javax.inject.Singleton;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -13,7 +12,6 @@ import java.util.Map;
 public class ReloadService {
 
 	public static final String PLUGIN_CONFIG = "PC";
-
 
 	private Map<String, List<Object>> reload = new HashMap<>();
 

@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.effects.model;
 
-import cz.neumimto.rpg.effects.Generate;
-import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.api.effects.Generate;
+import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.effects.model.mappers.SingleValueModelMapper;
 
 import java.lang.reflect.Constructor;

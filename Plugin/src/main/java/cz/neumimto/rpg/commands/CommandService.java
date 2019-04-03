@@ -18,15 +18,17 @@
 
 package cz.neumimto.rpg.commands;
 
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.Singleton;
+import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.commands.admin.*;
 import cz.neumimto.rpg.commands.character.*;
 import cz.neumimto.rpg.commands.elements.*;
 import cz.neumimto.rpg.commands.item.*;
-import cz.neumimto.rpg.commands.party.*;
+import cz.neumimto.rpg.commands.party.PartyAcceptExecutor;
+import cz.neumimto.rpg.commands.party.PartyCreateExecutor;
+import cz.neumimto.rpg.commands.party.PartyInviteExecutor;
+import cz.neumimto.rpg.commands.party.PartyKickExecutor;
 import cz.neumimto.rpg.commands.skill.*;
 import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.gui.Gui;
@@ -45,6 +47,8 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 

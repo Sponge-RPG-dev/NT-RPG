@@ -18,19 +18,27 @@
 
 package cz.neumimto.rpg;
 
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.Singleton;
+import com.google.inject.Injector;
+import cz.neumimto.rpg.commands.CommandService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.damage.DamageService;
-import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.gui.ParticleDecorator;
+import cz.neumimto.rpg.gui.VanillaMessaging;
+import cz.neumimto.rpg.inventory.CustomItemFactory;
 import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.ItemService;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.parties.PartyService;
 import cz.neumimto.rpg.properties.PropertyService;
+import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.skills.SkillService;
 import org.spongepowered.api.Game;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 6.8.2015.
@@ -46,6 +54,9 @@ public class GlobalScope {
 
 	@Inject
 	public ClassService classService;
+
+	@Inject
+	public CommandService commandService;
 
 	@Inject
 	public SkillService skillService;
@@ -76,4 +87,34 @@ public class GlobalScope {
 
 	@Inject
 	public ItemService itemService;
+
+	@Inject
+	public Injector injector;
+
+	@Inject
+	public JSLoader jsLoader;
+
+	@Inject
+	public ResourceLoader resourceLoader;
+
+	@Inject
+	public EffectService experienceService;
+
+	@Inject
+	public InventoryService inventoryService;
+
+	@Inject
+	public CustomItemFactory customItemFactory;
+
+	@Inject
+	public VanillaMessaging vanillaMessaging;
+
+	@Inject
+	public ParticleDecorator particleDecorator;
+
+	@Inject
+	public RWService rwService;
+
+	@Inject
+	public Gui gui;
 }

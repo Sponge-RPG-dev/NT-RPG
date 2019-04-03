@@ -8,9 +8,12 @@ import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
 
+import javax.inject.Singleton;
+
 /**
  * Created by NeumimTo on 1.8.2017.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:conductivity")
 public class Conductivity extends ActiveSkill {
 

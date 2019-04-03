@@ -18,7 +18,6 @@
 
 package cz.neumimto.rpg.skills.parents;
 
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
@@ -30,6 +29,7 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 
+import javax.inject.Inject;
 import java.util.Optional;
 
 /**

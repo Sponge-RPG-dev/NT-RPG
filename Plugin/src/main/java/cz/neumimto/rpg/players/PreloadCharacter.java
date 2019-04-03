@@ -18,11 +18,10 @@
 
 package cz.neumimto.rpg.players;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
+import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.effects.EffectContainer;
-import cz.neumimto.rpg.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.entities.IReservable;
 import cz.neumimto.rpg.inventory.RPGItemType;
@@ -48,6 +47,8 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatType;
 
 import java.util.*;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 23.7.2015.

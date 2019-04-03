@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.entities;
 
-import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.utils.FileUtils;
@@ -14,6 +13,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.world.storage.WorldProperties;
 
+import javax.inject.Singleton;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;

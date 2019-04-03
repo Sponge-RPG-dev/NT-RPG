@@ -1,10 +1,9 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.ManaShieldEffect;
 import cz.neumimto.model.ManaShieldEffectModel;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.effects.EffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillNodes;
@@ -13,6 +12,10 @@ import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 @ResourceLoader.Skill("ntrpg:manashield")
 public class ManaShield extends ActiveSkill {
 

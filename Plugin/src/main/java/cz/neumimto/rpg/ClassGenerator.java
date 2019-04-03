@@ -1,19 +1,13 @@
 package cz.neumimto.rpg;
 
-import static cz.neumimto.rpg.Log.info;
-
-import cz.neumimto.rpg.effects.Generate;
-import cz.neumimto.rpg.effects.IEffect;
+import cz.neumimto.rpg.api.effects.Generate;
+import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import jdk.internal.dynalink.beans.StaticClass;
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.FieldVisitor;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.*;
 import org.spongepowered.api.event.Event;
 
+import javax.inject.Singleton;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -23,10 +17,12 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import static cz.neumimto.rpg.Log.info;
+
 /**
  * Created by NeumimTo on 12.10.15.
  */
-@cz.neumimto.core.ioc.Singleton
+@Singleton
 public class ClassGenerator implements Opcodes {
 
 	protected static Map<Class<?>, String[]> signaturedictionary = new HashMap<>();

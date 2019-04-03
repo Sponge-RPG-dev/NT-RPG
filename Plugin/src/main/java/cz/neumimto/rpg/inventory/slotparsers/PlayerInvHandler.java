@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.inventory.slotparsers;
 
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.damage.DamageService;
-import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.*;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;

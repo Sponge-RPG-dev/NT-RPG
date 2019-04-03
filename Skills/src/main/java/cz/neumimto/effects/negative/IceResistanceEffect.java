@@ -1,7 +1,7 @@
 package cz.neumimto.effects.negative;
 
 import cz.neumimto.effects.SingleResistanceValueEffect;
-import cz.neumimto.rpg.effects.Generate;
+import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.properties.DefaultProperties;
 import cz.neumimto.rpg.scripting.JsBinding;

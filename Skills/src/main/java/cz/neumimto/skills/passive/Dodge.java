@@ -1,9 +1,7 @@
 package cz.neumimto.skills.passive;
 
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.DodgeEffect;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
@@ -11,14 +9,14 @@ import cz.neumimto.rpg.skills.SkillNodes;
 import cz.neumimto.rpg.skills.parents.PassiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
 
+import javax.inject.Singleton;
+
 /**
  * Created by NeumimTo on 6.7.2017.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:dodge")
 public class Dodge extends PassiveSkill {
-
-	@Inject
-	private EffectService effectService;
 
 	public Dodge() {
 		super(DodgeEffect.name);

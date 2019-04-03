@@ -1,6 +1,5 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -67,14 +66,6 @@ public class TestUtils {
         when(manager.post(any())).thenReturn(true);
         when(g.getEventManager()).thenReturn(manager);
         return g;
-    }
-
-    public static IoC setupIocEnviromentTest() {
-        IoC c = IoC.get();
-        c.registerInterfaceImplementation(Game.class, game);
-        c.registerInterfaceImplementation(EntityManager.class, getEntityManager());
-
-        return c;
     }
 
 

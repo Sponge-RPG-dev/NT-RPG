@@ -12,9 +12,12 @@ import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
 import org.spongepowered.api.data.key.Keys;
 
+import javax.inject.Singleton;
+
 /**
  * Created by NeumimTo on 23.12.2015.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:jump")
 public class SkillJump extends ActiveSkill {
 

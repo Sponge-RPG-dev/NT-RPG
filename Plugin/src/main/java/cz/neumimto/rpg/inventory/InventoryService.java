@@ -18,21 +18,21 @@
 
 package cz.neumimto.rpg.inventory;
 
-import static cz.neumimto.rpg.Log.error;
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.Log.warn;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import com.google.inject.Guice;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import com.typesafe.config.ConfigFactory;
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.IoC;
-import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.core.localization.TextHelper;
-import cz.neumimto.rpg.*;
+import cz.neumimto.rpg.ClassService;
+import cz.neumimto.rpg.Console;
+import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.effects.IEffectSource;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.damage.DamageService;
-import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.effects.EffectParams;
+import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.ItemLoreBuilderService;
 import cz.neumimto.rpg.inventory.data.NKeys;
@@ -73,6 +73,8 @@ import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.text.Text;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -81,6 +83,9 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static cz.neumimto.rpg.Log.*;
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 22.7.2015.
@@ -142,7 +147,7 @@ public class InventoryService {
 			warn("Unknown EQUIPED_SLOT_RESOLVE_SRATEGY, value should be one of " +
 					Sponge.getRegistry().getAllOf(PlayerInvHandler.class).stream
 							().map(PlayerInvHandler::getId).collect(Collectors.joining(", ")));
-			playerInvHandler = IoC.get().build(DefaultPlayerInvHandler.class);
+			playerInvHandler = Guice.createInjector().getInstance(DefaultPlayerInvHandler.class);
 		}
 		playerInvHandler.initHandler();
 	}

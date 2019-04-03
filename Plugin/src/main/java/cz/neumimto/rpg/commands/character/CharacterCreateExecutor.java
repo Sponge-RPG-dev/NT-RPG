@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.commands.character;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.CommandLocalization;
@@ -18,13 +16,15 @@ import org.spongepowered.api.entity.living.player.Player;
 
 import java.util.concurrent.CompletableFuture;
 
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+
 public class CharacterCreateExecutor implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		String a = args.<String>getOne("name").get();
 		CompletableFuture.runAsync(() -> {
 			Player player = (Player) src;
-			CharacterService characterService = IoC.get().build(CharacterService.class);
+			CharacterService characterService = NtRpgPlugin.GlobalScope.characterService;
 			int i = characterService.canCreateNewCharacter(player.getUniqueId(), a);
 			if (i == 1) {
 				src.sendMessage(Localizations.REACHED_CHARACTER_LIMIT.toText());

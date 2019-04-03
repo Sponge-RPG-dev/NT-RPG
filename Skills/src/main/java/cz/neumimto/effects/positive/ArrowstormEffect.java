@@ -2,7 +2,11 @@ package cz.neumimto.effects.positive;
 
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.effects.*;
+import cz.neumimto.rpg.api.effects.EffectBase;
+import cz.neumimto.rpg.api.effects.Generate;
+import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.scripting.JsBinding;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;

@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.events.skill;
 
-import cz.neumimto.rpg.IRpgElement;
+import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.events.entity.AbstractIEntityCancellableEvent;
 import cz.neumimto.rpg.scripting.JsBinding;

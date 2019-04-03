@@ -1,8 +1,8 @@
 package cz.neumimto.rpg;
 
+import com.google.inject.Singleton;
 import cz.neumimto.core.FindDbSchemaMigrationsEvent;
 import cz.neumimto.core.FindPersistenceContextEvent;
-import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.core.migrations.DbMigrationService;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
@@ -21,6 +21,7 @@ import java.util.Optional;
 /**
  * Created by NeumimTo on 1.12.2018.
  */
+@Singleton
 public class PersistenceHandler {
 
     private NtRpgPlugin ntRpgPlugin;
@@ -33,7 +34,7 @@ public class PersistenceHandler {
     @Listener
     public void onFindDbSchemaMigrationsEvent(FindDbSchemaMigrationsEvent event) throws IOException {
         if (event.validForContext("nt-rpg")) {
-            DbMigrationService dms = IoC.get().build(DbMigrationService.class);
+            DbMigrationService dms = NtRpgPlugin.GlobalScope.injector.getInstance(DbMigrationService.class);
             List<String> migrations = Arrays.asList(
                     "sql/%s/040918-init-db.sql",
                     "sql/%s/060119-update-2.0.0.sql"

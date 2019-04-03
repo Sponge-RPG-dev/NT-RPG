@@ -1,11 +1,12 @@
 package cz.neumimto.rpg.skills.scripting;
 
-import cz.neumimto.core.ioc.IoC;
 import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.properties.PropertyService;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.pipeline.SkillComponent;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.function.BiConsumer;
 
 @JsBinding(JsBinding.Type.OBJECT)
@@ -17,17 +18,19 @@ import java.util.function.BiConsumer;
                 @SkillComponent.Param("float - default value")
         }
 )
+@Singleton
 public class Set_Property_Default_Value implements BiConsumer<String, Float> {
+
+    @Inject
+    private PropertyService propertyService;
 
     @Override
     public void accept(String s, Float aFloat) {
-        PropertyService build = IoC.get().build(PropertyService.class);
+        PropertyService build = propertyService;
         try {
             build.overrideMaxPropertyValue(s, aFloat);
         } catch (Throwable t) {
             Log.error("Unknown property value "+s+ "." + " Use one of [" + String.join(", ", build.getAllProperties()) + "] ; Reloading your script wont have any effect on online players");
         }
-
-
     }
 }

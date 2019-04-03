@@ -1,10 +1,9 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.SoulBindEffect;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
-import cz.neumimto.rpg.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
@@ -19,11 +18,14 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.UUID;
 
 /**
  * Created by NeumimTo on 5.2.2016.
  */
+@Singleton
 @ResourceLoader.Skill("ntrpg:soulbind")
 @ResourceLoader.ListenerClass
 public class SkillSoulbind extends ActiveSkill {

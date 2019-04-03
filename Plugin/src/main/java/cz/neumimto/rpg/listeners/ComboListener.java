@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.listeners;
 
-import cz.neumimto.core.ioc.Inject;
+import com.google.inject.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.inventory.UserActionType;
 import cz.neumimto.rpg.players.CharacterService;
@@ -17,7 +17,9 @@ import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
 import org.spongepowered.api.event.item.inventory.InteractItemEvent;
 
+import javax.inject.Inject;
 
+@Singleton
 @ResourceLoader.ListenerClass
 public class ComboListener {
 

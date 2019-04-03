@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.inventory;
 
-import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import org.spongepowered.api.data.type.HandType;
 import org.spongepowered.api.data.type.HandTypes;
@@ -11,6 +9,8 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.HashMap;
 
 
@@ -18,10 +18,13 @@ import java.util.HashMap;
 @Singleton
 public class CustomItemFactory {
 
+	@Inject
 	private static CustomItemBuilder builder;
 
+	@Inject
 	private static InventoryService inventoryService;
 
+	@Inject
 	private static ItemService itemService;
 
 	public static CustomItem createCustomItem(ItemStack is, Slot value) {
@@ -36,9 +39,6 @@ public class CustomItemFactory {
 
 	public void initBuilder() {
 		builder = new CustomItemBuilder();
-		inventoryService = NtRpgPlugin.GlobalScope.inventorySerivce;
-		itemService = NtRpgPlugin.GlobalScope.itemService;
-		//I should create InjectStatic/Inject lazy some day.
 	}
 
 	public static class CustomItemBuilder {

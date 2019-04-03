@@ -1,21 +1,16 @@
 package cz.neumimto.rpg.inventory.runewords;
 
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.Log.warn;
-
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigObject;
-import cz.neumimto.core.ioc.Singleton;
 import cz.neumimto.rpg.Log;
 
+import javax.inject.Singleton;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
+import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.Log.warn;
 
 /**
  * Created by NeumimTo on 29.10.2015.

@@ -1,6 +1,6 @@
 package cz.neumimto.effects.positive;
 
-import cz.neumimto.rpg.effects.EffectBase;
+import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 
 
