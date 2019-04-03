@@ -21,6 +21,7 @@ import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.slotparsers.DefaultPlayerInvHandler;
 import cz.neumimto.rpg.persistance.*;
 import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.players.SpongeCharacterService;
 import cz.neumimto.rpg.players.parties.PartyService;
 import cz.neumimto.rpg.properties.PropertyService;
 import cz.neumimto.rpg.skills.SkillService;
@@ -31,7 +32,7 @@ public class NtRpgGuiceModule extends AbstractModule {
         bind(SkillService.class);
         bind(PropertyService.class);
         bind(PartyService.class);
-        bind(CharacterService.class);
+        bind(CharacterService.class).to(SpongeCharacterService.class);
 
 
         bind(CharacterClassDao.class);

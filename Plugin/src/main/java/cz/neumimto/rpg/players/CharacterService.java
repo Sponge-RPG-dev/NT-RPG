@@ -26,16 +26,14 @@ import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.damage.DamageService;
-import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.effects.common.def.ClickComboActionComponent;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.events.PlayerDataPreloadComplete;
-import cz.neumimto.rpg.events.character.*;
+import cz.neumimto.rpg.events.character.CharacterManaRegainEvent;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.UserActionType;
 import cz.neumimto.rpg.persistance.CharacterClassDao;
 import cz.neumimto.rpg.persistance.PlayerDao;
@@ -53,15 +51,12 @@ import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.utils.PermissionUtils;
 import cz.neumimto.rpg.utils.Utils;
-import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -75,14 +70,10 @@ import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 /**
  * Created by NeumimTo on 26.12.2014.
  */
-@Singleton
-public class CharacterService {
+public abstract class CharacterService {
 
     @Inject
     private SkillService skillService;
-
-    @Inject
-    private Game game;
 
     @Inject
     private NtRpgPlugin plugin;
@@ -144,27 +135,26 @@ public class CharacterService {
 
             if (character != null) {
                 info("Finished initializing of player character " + id + ", [" + (System.currentTimeMillis() - k) + "]ms");
-                final List<CharacterBase> playerChars = playerCharacters;
 
-                game.getScheduler().createTaskBuilder().name("Callback-PlayerDataLoad" + id).execute(() -> {
-                    PlayerDataPreloadComplete event = new PlayerDataPreloadComplete(id, playerChars);
-                    game.getEventManager().post(event);
-
-                    Optional<Player> popt = game.getServer().getPlayer(event.getPlayer());
-                    if (popt.isPresent()) {
-                        setActiveCharacter(event.getPlayer(), character);
-                        invalidateCaches(character);
-                        assignPlayerToCharacter(popt.get());
-                        dataPreparationStageMap.remove(id);
-                    } else {
-                        dataPreparationStageMap.put(id, new DataPreparationStage(DataPreparationStage.Stage.PLAYER_NOT_YET_READY, character));
-                        Log.info("Data for Player " + event.getPlayer() + " prepared but player instance not ready yet, will attempt to initialize later");
-                    }
-                }).submit(plugin);
+                addCharacterToGame(id, character, playerCharacters);
             } else {
                 dataPreparationStageMap.put(id, new DataPreparationStage(DataPreparationStage.Stage.NO_ACTION, playerCharacters));
             }
         }, NtRpgPlugin.asyncExecutor);
+    }
+
+    protected abstract void addCharacterToGame(UUID id, IActiveCharacter character, List<CharacterBase> playerChars);
+
+    protected void finalizePlayerDataPreloadStage(UUID id, IActiveCharacter character, PlayerDataPreloadComplete event, Player popt) {
+        setActiveCharacter(event.getPlayer(), character);
+        invalidateCaches(character);
+        assignPlayerToCharacter(popt);
+        dataPreparationStageMap.remove(id);
+    }
+
+    protected void playerDataPreloadStagePlayerNotReady(UUID id, IActiveCharacter character) {
+        dataPreparationStageMap.put(id, new DataPreparationStage(DataPreparationStage.Stage.PLAYER_NOT_YET_READY, character));
+        Log.info("Data for Player " + id + " prepared but player instance not ready yet, will attempt to initialize later");
     }
 
     public void checkPlayerDataStatus(Player targetEntity) {
@@ -223,22 +213,9 @@ public class CharacterService {
         return true;
     }
 
-    public void updateWeaponRestrictions(IActiveCharacter character) {
-        Map<ItemType, RPGItemWrapper> weapons = character.getAllowedWeapons();
+    public abstract void updateWeaponRestrictions(IActiveCharacter character);
 
-
-        CharacterWeaponUpdateEvent event = new CharacterWeaponUpdateEvent(character, weapons);
-        game.getEventManager().post(event);
-
-    }
-
-    public void updateArmorRestrictions(IActiveCharacter character) {
-        Set<RPGItemType> allowedArmor = character.getAllowedArmor();
-
-        EventCharacterArmorPostUpdate event = new EventCharacterArmorPostUpdate(character, allowedArmor);
-        game.getEventManager().post(event);
-
-    }
+    public abstract void updateArmorRestrictions(IActiveCharacter character);
 
 
     /**
@@ -338,10 +315,6 @@ public class CharacterService {
 
         updateMaxHealth(character);
         entityService.updateWalkSpeed(character);
-
-        CharacterInitializedEvent event = new CharacterInitializedEvent(character);
-        game.getEventManager().post(event);
-
     }
 
     public void addDefaultEffects(IActiveCharacter character) {
@@ -590,18 +563,6 @@ public class CharacterService {
         return 0;
     }
 
-    /**
-     * Invokes synchronous task which activates character for player
-     *
-     * @param uuid
-     * @param character
-     */
-    public void setActiveCharacterSynchronously(UUID uuid, IActiveCharacter character) {
-        game.getScheduler().createTaskBuilder().name("SyncTaskActivateCharOf" + uuid).execute(() -> {
-            setActiveCharacter(uuid, character);
-        }).submit(plugin);
-    }
-
 
     public ActionResult canUpgradeSkill(IActiveCharacter character, ClassDefinition classDef, ISkill skill) {
         CharacterClass cc = null;
@@ -644,11 +605,6 @@ public class CharacterService {
             map.put("skill", skill.getName());
             map.put("level", playerSkillContext.getLevel() * playerSkillContext.getSkillData().getLevelGap());
             return ActionResult.withErrorMessage(Localizations.INSUFFICIENT_LEVEL_GAP.toText(arg(map)));
-        }
-
-        CharacterSkillUpgradeEvent event = new CharacterSkillUpgradeEvent(character, skill, playerSkillContext.getLevel() + 1);
-        if (game.getEventManager().post(event)) {
-            return ActionResult.withErrorMessage(event.getFailedMessage());
         }
 
         return ActionResult.ok();
@@ -736,13 +692,6 @@ public class CharacterService {
             return ActionResult.withErrorMessage(Localizations.SKILL_CONFLICTS.toText(arg(map)));
         }
 
-
-        CharacterSkillLearnAttemptEvent event = new CharacterSkillLearnAttemptEvent(character, skill);
-        game.getEventManager().post(event);
-        if (event.isCancelled()) {
-            return ActionResult.withErrorMessage(event.getFailedMessage());
-        }
-
         return ActionResult.ok();
     }
 
@@ -798,16 +747,12 @@ public class CharacterService {
                 return ActionResult.withErrorMessage(Localizations.REFUND_SKILLS_DEPENDING.toText());
             }
         }
-        CharacterSkillRefundEvent event = new CharacterSkillRefundEvent(character, skill);
-        game.getEventManager().post(event);
-        if (event.isCancelled()) {
-            return ActionResult.withErrorMessage(Localizations.UNABLE_TO_REFUND_SKILL.toText());
-        }
         if (skill instanceof SkillTreeSpecialization && pluginConfig.PATH_NODES_SEALED) {
             return ActionResult.withErrorMessage(Localizations.UNABLE_TO_REFUND_SKILL_SEALED.toText());
         }
         return ActionResult.ok();
     }
+
 
     public CharacterSkill refundSkill(IActiveCharacter character, PlayerSkillContext playerSkillContext, ISkill skill) {
         int level = playerSkillContext.getLevel();
@@ -975,11 +920,6 @@ public class CharacterService {
     public int addAttribute(IActiveCharacter character, Attribute attribute, int i) {
         int attributePoints = character.getCharacterBase().getAttributePoints();
         if (attributePoints - i <= 0) {
-            return 1;
-        }
-	    CharacterAttributeChange event = new CharacterAttributeChange(character, i);
-        game.getEventManager().post(event);
-        if (event.isCancelled()) {
             return 1;
         }
         Set<BaseCharacterAttribute> ap = character.getCharacterBase().getBaseCharacterAttribute();

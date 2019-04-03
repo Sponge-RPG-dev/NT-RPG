@@ -30,26 +30,16 @@ import org.spongepowered.api.text.Text;
 @JsBinding(JsBinding.Type.CLASS)
 public class CharacterSkillUpgradeEvent extends AbstractCharacterCancellableEvent implements SkillEvent {
 	private final ISkill skill;
-	private int level;
 	private Text failedMessage;
 
-	public CharacterSkillUpgradeEvent(IActiveCharacter character, ISkill skill, int level) {
+	public CharacterSkillUpgradeEvent(IActiveCharacter character, ISkill skill) {
 		super(character);
 		this.skill = skill;
-		this.level = level;
 	}
 
 	@Override
 	public ISkill getSkill() {
 		return skill;
-	}
-
-	public int getLevel() {
-		return level;
-	}
-
-	public void setLevel(int level) {
-		this.level = level;
 	}
 
 	public Text getFailedMessage() {

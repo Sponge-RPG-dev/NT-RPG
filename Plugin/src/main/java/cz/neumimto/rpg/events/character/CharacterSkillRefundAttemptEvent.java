@@ -26,11 +26,11 @@ import org.spongepowered.api.text.Text;
 /**
  * Created by NeumimTo on 27.7.2015.
  */
-public class CharacterSkillRefundEvent extends AbstractCharacterCancellableEvent implements SkillEvent {
+public class CharacterSkillRefundAttemptEvent extends AbstractCharacterCancellableEvent implements SkillEvent {
 	private final ISkill skill;
 	private Text failedMessage;
 
-	public CharacterSkillRefundEvent(IActiveCharacter character, ISkill skill) {
+	public CharacterSkillRefundAttemptEvent(IActiveCharacter character, ISkill skill) {
 		super(character);
 		this.skill = skill;
 	}
