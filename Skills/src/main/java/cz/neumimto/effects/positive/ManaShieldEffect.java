@@ -36,7 +36,7 @@ public class ManaShieldEffect extends EffectBase<ManaShieldEffectModel> {
 			.option(ParticleOptions.COLOR, Color.GRAY)
 			.build();
 
-	public ManaShieldEffect(IEffectConsumer consumer, long duration, @Inject ManaShieldEffectModel model) {
+	public ManaShieldEffect(IEffectConsumer consumer, long duration, ManaShieldEffectModel model) {
 		super(name, consumer);
 		setDuration(duration);
 		setValue(model);
