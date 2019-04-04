@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.inventory;
 
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import org.spongepowered.api.data.type.HandType;
 import org.spongepowered.api.data.type.HandTypes;
@@ -9,24 +10,14 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.HashMap;
 
 
 //Just in case somebody would like to inherit from CustomItem class
-@Singleton
 public class CustomItemFactory {
 
-	@Inject
 	private static CustomItemBuilder builder;
-
-	@Inject
-	private static InventoryService inventoryService;
-
-	@Inject
-	private static ItemService itemService;
-
+	
 	public static CustomItem createCustomItem(ItemStack is, Slot value) {
 		Inventory slot = value.transform();
 		SlotIndex index = slot.getInventoryProperty(SlotIndex.class).get();
@@ -45,14 +36,14 @@ public class CustomItemFactory {
 
 		public CustomItem create(ItemStack itemStack, Inventory parent, Integer value) {
 
-			CustomItem customItem = new CustomItem(itemStack, inventoryService.getEffectSourceBySlotId(parent.getClass(), value),
-					itemService.getFromItemStack(itemStack));
+			CustomItem customItem = new CustomItem(itemStack, NtRpgPlugin.GlobalScope.inventoryService.getEffectSourceBySlotId(parent.getClass(), value),
+					NtRpgPlugin.GlobalScope.itemService.getFromItemStack(itemStack));
 			if (itemStack.getType() == ItemTypes.NONE) {
 				customItem.setEffects(new HashMap<>());
 				customItem.setLevel(0);
 			} else {
-				customItem.setEffects(inventoryService.getItemEffects(itemStack));
-				customItem.setLevel(inventoryService.getItemLevel(itemStack));
+				customItem.setEffects(NtRpgPlugin.GlobalScope.inventoryService.getItemEffects(itemStack));
+				customItem.setLevel(NtRpgPlugin.GlobalScope.inventoryService.getItemLevel(itemStack));
 			}
 			return customItem;
 		}
@@ -61,13 +52,13 @@ public class CustomItemFactory {
 
 			CustomItem customItem = new CustomItem(itemStack, handType == HandTypes.OFF_HAND ? SlotEffectSource.OFF_HAND : SlotEffectSource
 					.MAIN_HAND,
-					itemService.getFromItemStack(itemStack));
+					NtRpgPlugin.GlobalScope.itemService.getFromItemStack(itemStack));
 			if (itemStack.getType() == ItemTypes.NONE) {
 				customItem.setEffects(new HashMap<>());
 				customItem.setLevel(0);
 			} else {
-				customItem.setEffects(inventoryService.getItemEffects(itemStack));
-				customItem.setLevel(inventoryService.getItemLevel(itemStack));
+				customItem.setEffects(NtRpgPlugin.GlobalScope.inventoryService.getItemEffects(itemStack));
+				customItem.setLevel(NtRpgPlugin.GlobalScope.inventoryService.getItemLevel(itemStack));
 			}
 			return customItem;
 		}

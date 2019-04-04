@@ -18,7 +18,6 @@
 
 package cz.neumimto.rpg.commands;
 
-import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.commands.admin.*;
