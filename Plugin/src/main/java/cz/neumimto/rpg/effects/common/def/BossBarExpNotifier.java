@@ -69,7 +69,7 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 							.append(Text.builder(" +" + df.format(sessionWrapper.currentSessionExp)).color(TextColors.GREEN).build())
 							.append(Text.builder(" " + df.format(playerClassData.getExperiencesFromLevel())
 									+ " / "
-									+ playerClassData.getClassDefinition().getLevelProgression().getLevelMargins()[playerClassData.getLevel()])
+									+ df.format(playerClassData.getClassDefinition().getLevelProgression().getLevelMargins()[playerClassData.getLevel()]))
 									.color(TextColors.DARK_GRAY)
 									.style(TextStyles.ITALIC)
 									.build())

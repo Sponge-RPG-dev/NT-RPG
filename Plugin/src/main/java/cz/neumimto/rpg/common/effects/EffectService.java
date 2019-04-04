@@ -178,7 +178,7 @@ public abstract class EffectService {
 		pendingRemovals.clear();
 		long l = System.currentTimeMillis();
 		for (IEffect e : effectSet) {
-			if (e.getConsumer() == null) {
+			if (e.getConsumer().isDetached()) {
 				pendingRemovals.add(e);
 				continue;
 			}

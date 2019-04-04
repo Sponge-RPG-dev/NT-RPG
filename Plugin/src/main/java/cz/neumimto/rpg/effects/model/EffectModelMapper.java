@@ -121,22 +121,22 @@ public abstract class EffectModelMapper {
 
 	public double parseDouble(Map<String, String> map, String key) {
 		String s = map.get(key);
-		return s == null ? 0D : Double.parseDouble(s);
+		return s == null ? 0D : Double.parseDouble(Utils.extractNumber(s));
 	}
 
 	public int parseInt(Map<String, String> map, String key) {
 		String s = map.get(key);
-		return s == null ? 0 : Integer.parseInt(s);
+		return s == null ? 0 : Integer.parseInt(Utils.extractNumber(s));
 	}
 
 	public float parseFloat(Map<String, String> map, String key) {
 		String s = map.get(key);
-		return s == null ? 0f : Float.parseFloat(s);
+		return s == null ? 0f : Float.parseFloat(Utils.extractNumber(s));
 	}
 
 	public long parseLong(Map<String, String> map, String key) {
 		String s = map.get(key);
-		return s == null ? 0L : Long.parseLong(s);
+		return s == null ? 0L : Long.parseLong(Utils.extractNumber(s));
 	}
 
 }

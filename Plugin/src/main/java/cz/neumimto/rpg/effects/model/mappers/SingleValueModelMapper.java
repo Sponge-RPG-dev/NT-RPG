@@ -75,7 +75,7 @@ public abstract class SingleValueModelMapper extends EffectModelMapper {
 
 		@Override
 		public Object parseStr(String s) {
-			return java.lang.Float.parseFloat(Utils.extractNumber(s));
+			return Integer.parseUnsignedInt(Utils.extractNumber(s));
 		}
 	}
 
