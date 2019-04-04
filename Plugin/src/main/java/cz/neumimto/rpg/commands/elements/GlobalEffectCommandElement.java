@@ -1,53 +1,40 @@
 package cz.neumimto.rpg.commands.elements;
 
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.effects.IGlobalEffect;
 import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.command.args.ArgumentParseException;
-import org.spongepowered.api.command.args.CommandArgs;
-import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.command.args.CommandElement;
+import org.spongepowered.api.command.args.PatternMatchingCommandElement;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.serializer.TextSerializers;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import javax.annotation.Nullable;
+import java.util.stream.Collectors;
 
 /**
  * Created by NeumimTo on 5.11.2017.
  */
-public class GlobalEffectCommandElement extends CommandElement {
+public class GlobalEffectCommandElement extends PatternMatchingCommandElement {
 
 	public GlobalEffectCommandElement(@Nullable Text key) {
 		super(key);
 	}
 
 	@Override
-	protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
-		String effectName = args.next().replaceAll("_", " ");
-		IGlobalEffect effect = NtRpgPlugin.GlobalScope.effectService.getGlobalEffect(effectName);
-		if (effect == null) {
-			throw args.createError(TextSerializers.FORMATTING_CODE.deserialize("&CUnknown effect &C\"" + effectName + "\""));
-		}
-		return effect;
-	}
-
-	@Override
-	public List<String> complete(CommandSource src, CommandArgs args, CommandContext context) {
+	protected Iterable<String> getChoices(CommandSource source) {
 		return NtRpgPlugin.GlobalScope.effectService.getGlobalEffects()
 				.keySet()
 				.stream()
-				.map(a -> a.replaceAll(" ", "_"))
-				.filter(a -> {
-					try {
-						return a.toLowerCase().startsWith(args.next());
-					} catch (ArgumentParseException ignored) {
-					}
-					return false;
-				})
-				.collect(Collectors.toList());
+				.map(this::normalize).collect(Collectors.toList());
 	}
+
+	private String normalize(String s) {
+		return s.replaceAll("_", " ");
+	}
+
+	@Override
+	protected Object getValue(String choice) throws IllegalArgumentException {
+		choice = choice.replaceAll("_", " ");
+		return NtRpgPlugin.GlobalScope.effectService.getGlobalEffects().get(choice);
+	}
+
 
 	@Override
 	public Text getUsage(CommandSource src) {
