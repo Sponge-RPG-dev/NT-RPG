@@ -18,7 +18,6 @@
 
 package cz.neumimto.rpg.utils;
 
-import static cz.neumimto.rpg.Log.info;
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.Console;
@@ -53,6 +52,8 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static cz.neumimto.rpg.common.logging.Log.info;
 
 /**
  * Created by NeumimTo on 25.7.2015.

@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class ClassManipulationTests {
@@ -26,7 +27,22 @@ public class ClassManipulationTests {
     ClassDefinition ps2;
     ClassDefinition ps3;
 
-    CharacterService characterService = new CharacterService();
+    CharacterService characterService = new CharacterService() {
+        @Override
+        protected void addCharacterToGame(UUID id, IActiveCharacter character, List<CharacterBase> playerChars) {
+
+        }
+
+        @Override
+        public void updateWeaponRestrictions(IActiveCharacter character) {
+
+        }
+
+        @Override
+        public void updateArmorRestrictions(IActiveCharacter character) {
+
+        }
+    };
 
     ActiveCharacter character;
 

@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.configuration.adapters;
 
-import static cz.neumimto.rpg.Log.warn;
-
 import com.google.common.reflect.TypeToken;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -14,6 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static cz.neumimto.rpg.common.logging.Log.warn;
 
 /**
  * Created by NeumimTo on 11.3.2019.

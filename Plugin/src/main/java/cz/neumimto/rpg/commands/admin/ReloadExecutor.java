@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.commands.admin;
 
 import cz.neumimto.core.localization.TextHelper;
-import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.persistance.ClassDefinitionDao;
 import cz.neumimto.rpg.players.*;
 import cz.neumimto.rpg.scripting.JSLoader;
@@ -21,8 +21,8 @@ import org.spongepowered.api.text.Text;
 
 import java.util.*;
 
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.Log.warn;
+import static cz.neumimto.rpg.common.logging.Log.info;
+import static cz.neumimto.rpg.common.logging.Log.warn;
 
 public class ReloadExecutor implements CommandExecutor {
 	@Override

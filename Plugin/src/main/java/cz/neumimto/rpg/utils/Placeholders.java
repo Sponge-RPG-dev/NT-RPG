@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Set;
 
-import static cz.neumimto.rpg.Log.error;
+import static cz.neumimto.rpg.common.logging.Log.error;
 
 /**
  * Created by NeumimTo on 25.8.2018.

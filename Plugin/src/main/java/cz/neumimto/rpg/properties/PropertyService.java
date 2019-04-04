@@ -20,8 +20,8 @@ package cz.neumimto.rpg.properties;
 
 import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
 import cz.neumimto.rpg.Console;
-import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.attributes.Attributes;
 import cz.neumimto.rpg.utils.Utils;
@@ -43,8 +43,8 @@ import java.text.Collator;
 import java.util.*;
 import java.util.function.Supplier;
 
-import static cz.neumimto.rpg.Log.info;
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.common.logging.Log.info;
 
 /**
  * Created by NeumimTo on 28.12.2014.

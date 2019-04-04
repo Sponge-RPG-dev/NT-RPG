@@ -23,7 +23,9 @@ import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.Rpg;
 import cz.neumimto.rpg.gui.SkillTreeInterfaceModel;
+import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoader;
 import cz.neumimto.rpg.skills.mods.ActiveSkillPreProcessorWrapper;
@@ -44,7 +46,7 @@ import java.util.*;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static cz.neumimto.rpg.Log.*;
+import static cz.neumimto.rpg.common.logging.Log.*;
 
 /**
  * Created by NeumimTo on 24.7.2015.
@@ -227,8 +229,8 @@ public class SkillTreeDao {
 				}
 				list = reagent.getObjectList("Insufficient");
 				for (ConfigObject configObject : list) {
-					Optional<SkillPreProcessorFactory> id =
-							Sponge.getRegistry().getType(SkillPreProcessorFactory.class, configObject.get("Id").unwrapped().toString());
+					String preprocessorFactoryId = configObject.get("Id").unwrapped().toString();
+					Optional<SkillPreProcessorFactory> id = Rpg.get().getSkillPreProcessorFactory(preprocessorFactoryId);
 					if (id.isPresent()) {
 						SkillPreProcessorFactory skillPreProcessorFactory = id.get();
 						ActiveSkillPreProcessorWrapper parse = skillPreProcessorFactory.parse(configObject);
@@ -292,13 +294,24 @@ public class SkillTreeDao {
 			SkillSettings skillSettings = new SkillSettings();
 			try {
 				Config settings = c.getConfig("SkillSettings");
-				for (Map.Entry<String, ConfigValue> e : settings.entrySet()) {
+				Collection<Attribute> attributes = Rpg.get().getAttributes();
+				outer: for (Map.Entry<String, ConfigValue> e : settings.entrySet()) {
 					if (e.getKey().endsWith(SkillSettings.bonus)) {
 						continue;
 					}
 					String val = e.getValue().render();
 					if (Utils.isNumeric(val)) {
 						float norm = Float.parseFloat(val);
+						for (Attribute attribute : attributes) {
+							String s = "_per_" + attribute.getId();
+							if (e.getKey().endsWith(s)) {
+								String stripped = s.substring(0, val.length() - s.length());
+								skillSettings.addAttributeNode(stripped, attribute, norm);
+								continue outer;
+							}
+						}
+
+
 						String name = e.getKey();
 						skillSettings.addNode(name, norm);
 						name = name + SkillSettings.bonus;

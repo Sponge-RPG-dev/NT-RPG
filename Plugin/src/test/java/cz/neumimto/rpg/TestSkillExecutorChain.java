@@ -116,8 +116,10 @@ public class TestSkillExecutorChain {
         context.setSkillData(skillData);
         TestUtils.setField(context, "cachedComputedSkillSettings", new Object2FloatOpenHashMap());
         context.setLevel(0);
-        skillData.getSkillSettings().addNode("damage_per_"+agi.getId(),10,0);
-        skillData.getSkillSettings().addNode("range_per_"+str.getId(),10,0);
+
+        skillData.getSkillSettings().addAttributeNode("damage", agi,10);
+        skillData.getSkillSettings().addAttributeNode("range", str,10);
+
         activeCharacter.getTransientAttributes().put(str.getId(), 3);
         activeCharacter.getTransientAttributes().put(agi.getId(), 2);
 

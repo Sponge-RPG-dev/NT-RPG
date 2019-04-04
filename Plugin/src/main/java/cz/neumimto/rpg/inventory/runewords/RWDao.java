@@ -3,14 +3,14 @@ package cz.neumimto.rpg.inventory.runewords;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigObject;
-import cz.neumimto.rpg.Log;
+import cz.neumimto.rpg.common.logging.Log;
 
 import javax.inject.Singleton;
 import java.io.File;
 import java.util.*;
 
-import static cz.neumimto.rpg.Log.info;
-import static cz.neumimto.rpg.Log.warn;
+import static cz.neumimto.rpg.common.logging.Log.info;
+import static cz.neumimto.rpg.common.logging.Log.warn;
 
 /**
  * Created by NeumimTo on 29.10.2015.

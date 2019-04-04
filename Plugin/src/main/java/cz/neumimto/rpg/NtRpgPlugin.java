@@ -22,6 +22,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.PluginCore;
+import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.configuration.Settings;
@@ -75,6 +76,7 @@ import org.spongepowered.api.data.DataRegistration;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.game.GameRegistryEvent;
+import org.spongepowered.api.event.game.state.GameConstructionEvent;
 import org.spongepowered.api.event.game.state.GamePostInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.plugin.Dependency;
@@ -92,7 +94,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.common.logging.Log.info;
 
 /**
  * Created by NeumimTo on 29.4.2015.
@@ -126,8 +128,13 @@ public class NtRpgPlugin {
 	private Injector injector;
 
 	@Listener
+	public void initializeApi(GameConstructionEvent event) {
+		Rpg.impl = new SpongeRpgApi();
+	}
+
+	@Listener
 	public void preinit(GamePreInitializationEvent e) {
-		Log.logger = logger;
+		Log.setLogger(logger);
 		try {
 			workingDir = config.toString();
 			URL url = FileUtils.getPluginUrl();
@@ -497,4 +504,5 @@ public class NtRpgPlugin {
 		GlobalScope.particleDecorator.initModels();
 
 	}
+
 }

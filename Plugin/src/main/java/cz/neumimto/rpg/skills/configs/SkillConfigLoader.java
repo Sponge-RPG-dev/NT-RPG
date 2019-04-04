@@ -9,7 +9,7 @@ import net.bytebuddy.description.annotation.AnnotationDescription;
 import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.text.Text;
 
-import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.common.logging.Log.info;
 
 public class SkillConfigLoader implements CatalogType {
 

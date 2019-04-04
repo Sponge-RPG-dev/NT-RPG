@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.skills.scripting;
 
-import cz.neumimto.rpg.Log;
+import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.properties.PropertyService;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.pipeline.SkillComponent;

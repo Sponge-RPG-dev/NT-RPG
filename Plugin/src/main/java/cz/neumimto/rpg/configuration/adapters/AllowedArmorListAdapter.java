@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.configuration.adapters;
 
 import com.google.common.reflect.TypeToken;
-import cz.neumimto.rpg.Log;
+import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.WeaponClass;
 import ninja.leaping.configurate.ConfigurationNode;

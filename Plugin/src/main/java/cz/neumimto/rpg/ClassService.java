@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg;
 
+import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.persistance.ClassDefinitionDao;
 import cz.neumimto.rpg.players.IActiveCharacter;

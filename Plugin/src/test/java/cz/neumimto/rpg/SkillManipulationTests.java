@@ -1,5 +1,6 @@
 package cz.neumimto.rpg;
 
+import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.*;
@@ -15,17 +16,28 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
-import org.spongepowered.api.Game;
-import org.spongepowered.api.event.Event;
-import org.spongepowered.api.event.EventManager;
 
+import java.util.List;
 import java.util.UUID;
-
-import static org.mockito.Matchers.any;
 
 public class SkillManipulationTests {
 
-    private CharacterService characterService = new CharacterService();
+    private CharacterService characterService = new CharacterService() {
+        @Override
+        protected void addCharacterToGame(UUID id, IActiveCharacter character, List<CharacterBase> playerChars) {
+
+        }
+
+        @Override
+        public void updateWeaponRestrictions(IActiveCharacter character) {
+
+        }
+
+        @Override
+        public void updateArmorRestrictions(IActiveCharacter character) {
+
+        }
+    };
 
     ISkill main;
     ISkill conflicting;
@@ -57,7 +69,7 @@ public class SkillManipulationTests {
 
     @Before
     public void before() throws Exception {
-        Log.logger = Mockito.mock(Logger.class);
+        Log.setLogger(Mockito.mock(Logger.class));
 
         //lets not invoke constructor
         PluginConfig o = (PluginConfig) TestHelper.getUnsafe().allocateInstance(PluginConfig.class);
@@ -125,12 +137,6 @@ public class SkillManipulationTests {
 
         playerClassData = new PlayerClassData(classDefinition, characterClass);
         character.addClass(playerClassData);
-
-        Game mock = Mockito.mock(Game.class);
-        EventManager eventManager = Mockito.mock(EventManager.class);
-        Mockito.when(mock.getEventManager()).thenReturn(eventManager);
-        Mockito.when(eventManager.post(any(Event.class))).thenReturn(false);
-        TestHelper.setField(characterService, "game", mock);
     }
 
     @Test

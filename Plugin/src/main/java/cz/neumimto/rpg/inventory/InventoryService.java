@@ -84,8 +84,8 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static cz.neumimto.rpg.Log.*;
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.common.logging.Log.*;
 
 /**
  * Created by NeumimTo on 22.7.2015.
@@ -211,7 +211,7 @@ public class InventoryService {
 			Config c = ConfigFactory.parseFile(path.toFile());
 			List<String> itemMetaSubtypes = c.getStringList("ItemMetaSubtypes");
 
-			//will break in api 8
+			//will break in get 8
 			itemMetaSubtypes.stream().map(ItemSubtype::new).forEach(a -> Sponge.getRegistry().register(ItemSubtype.class, a));
 
 			List<? extends Config> inventorySlots = c.getConfigList("InventorySlots");

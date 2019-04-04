@@ -1,5 +1,6 @@
 package cz.neumimto.rpg;
 
+import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.inventory.ItemService;
@@ -23,7 +24,7 @@ public class TestPropertyValueResolving {
 
     @BeforeClass
     public static void initLogger() {
-        Log.logger = LoggerFactory.getLogger(NtRpgPlugin.class);
+        Log.setLogger(LoggerFactory.getLogger(NtRpgPlugin.class));
         NtRpgPlugin.pluginConfig = Mockito.mock(PluginConfig.class);
         NtRpgPlugin.pluginConfig.DEBUG = DebugLevel.NONE;
         Game mock = Mockito.mock(Game.class);

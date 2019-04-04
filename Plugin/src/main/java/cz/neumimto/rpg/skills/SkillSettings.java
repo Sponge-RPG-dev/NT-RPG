@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static cz.neumimto.rpg.Log.error;
+import static cz.neumimto.rpg.common.logging.Log.error;
 
 /**
  * Created by NeumimTo on 14.2.2015.
@@ -48,6 +48,14 @@ public class SkillSettings {
 	public void addNode(String n, float val, float levelbonux) {
 		addNode(n, val);
 		addNode(n + bonus, levelbonux);
+	}
+
+	public void addAttributeNode(ISkillNode n, Attribute attribute, float val) {
+		addAttributeNode(n.value(), attribute, val);
+	}
+
+	public void addAttributeNode(String n, Attribute attribute, float val) {
+		addNode(n + "_per_" + attribute.getId(), val);
 	}
 
 	public boolean hasNode(String s) {

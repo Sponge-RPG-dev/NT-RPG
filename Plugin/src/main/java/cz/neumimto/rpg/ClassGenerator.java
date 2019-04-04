@@ -17,7 +17,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import static cz.neumimto.rpg.Log.info;
+import static cz.neumimto.rpg.common.logging.Log.info;
 
 /**
  * Created by NeumimTo on 12.10.15.
@@ -173,8 +173,8 @@ public class ClassGenerator implements Opcodes {
 				String name1 = e.getSimpleName().substring(0, 1).toLowerCase() + e.getSimpleName().substring(1) + "s";
 				mv = cw.visitMethod(ACC_PUBLIC, namee, "(L" + toPath(e) + ";)V", null, null);
 				{
-					av0 = mv.visitAnnotation("Lorg/spongepowered/api/event/Listener;", true);
-					av0.visitEnum("order", "Lorg/spongepowered/api/event/Order;", "BEFORE_POST");
+					av0 = mv.visitAnnotation("Lorg/spongepowered/get/event/Listener;", true);
+					av0.visitEnum("order", "Lorg/spongepowered/get/event/Order;", "BEFORE_POST");
 					av0.visitEnd();
 					mv.visitCode();
 					Label l0 = new Label();

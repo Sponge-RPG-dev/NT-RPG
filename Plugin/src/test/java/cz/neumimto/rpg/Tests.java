@@ -1,8 +1,7 @@
 package cz.neumimto.rpg;
 
 
-import static org.mockito.Mockito.when;
-
+import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
@@ -17,16 +16,13 @@ import org.slf4j.LoggerFactory;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
+
+import static org.mockito.Mockito.when;
 
 public class Tests {
 
@@ -129,7 +125,7 @@ public class Tests {
 
     @BeforeClass
     public static void setupLogger() {
-        Log.logger = LoggerFactory.getLogger(Tests.class);
+        Log.setLogger(LoggerFactory.getLogger(Tests.class));
     }
 
 

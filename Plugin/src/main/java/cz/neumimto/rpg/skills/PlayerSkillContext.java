@@ -18,18 +18,19 @@
 
 package cz.neumimto.rpg.skills;
 
+import cz.neumimto.rpg.Rpg;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.skills.mods.ActiveSkillPreProcessorWrapper;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
-import org.spongepowered.api.Sponge;
 
 import java.util.*;
 
 /**
  * Created by NeumimTo on 26.7.2015.
  */
+//TODO move to API subproject
 public class PlayerSkillContext {
 
 	public static PlayerSkillContext Empty = new PlayerSkillContext(null, null, null) {{
@@ -109,7 +110,7 @@ public class PlayerSkillContext {
 
 			Set<String> complexKeySuffixes = SkillSettings.getComplexKeySuffixes();
 
-            Collection<Attribute> attributes = Sponge.getRegistry().getAllOf(Attribute.class);
+            Collection<Attribute> attributes = Rpg.get().getAttributes();
 			populateCache(complexKeySuffixes, attributes);
 			if (previousSize == 0) {
             	previousSize = cachedComputedSkillSettings.size();
@@ -144,7 +145,8 @@ public class PlayerSkillContext {
 					if (s.endsWith(id)) {
 						String stripped = s.substring(0, s.length() - id.length());
 						float aFloat1 = cachedComputedSkillSettings.getFloat(stripped);
-						cachedComputedSkillSettings.put(stripped, aFloat1 + entry.getValue() * getTotalLevel());
+						cachedComputedSkillSettings.put(stripped, aFloat1 + entry.getValue() * character.getAttributeValue(attribute));
+						break;
 					}
 				}
 			}

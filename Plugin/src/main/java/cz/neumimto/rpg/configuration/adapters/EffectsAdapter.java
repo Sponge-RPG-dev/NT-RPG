@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.configuration.adapters;
 
 import com.google.common.reflect.TypeToken;
-import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import ninja.leaping.configurate.ConfigurationNode;

@@ -3,8 +3,8 @@ package cz.neumimto.rpg.configuration.adapters;
 import com.google.common.reflect.TypeToken;
 import cz.neumimto.config.blackjack.and.hookers.annotations.EnableSetterInjection;
 import cz.neumimto.config.blackjack.and.hookers.annotations.Setter;
-import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.RPGItemType;
@@ -15,14 +15,7 @@ import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.item.ItemType;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 5.1.2019.

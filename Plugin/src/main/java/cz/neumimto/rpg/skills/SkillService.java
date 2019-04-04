@@ -19,8 +19,8 @@
 package cz.neumimto.rpg.skills;
 
 import cz.neumimto.rpg.ClassService;
-import cz.neumimto.rpg.Log;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.SkillTreeInterfaceModel;
 import cz.neumimto.rpg.persistance.SkillTreeDao;
@@ -59,8 +59,8 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
-import static cz.neumimto.rpg.Log.*;
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.common.logging.Log.*;
 
 /**
  * Created by NeumimTo on 1.1.2015.

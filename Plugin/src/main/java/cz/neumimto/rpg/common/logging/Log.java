@@ -1,9 +1,10 @@
-package cz.neumimto.rpg;
+package cz.neumimto.rpg.common.logging;
 
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import org.slf4j.Logger;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 19.8.2018.
@@ -32,5 +33,9 @@ public class Log {
 
 	public static void error(String message) {
 		logger.error(message);
+	}
+
+	public static void setLogger(Logger logger) {
+		Log.logger = logger;
 	}
 }

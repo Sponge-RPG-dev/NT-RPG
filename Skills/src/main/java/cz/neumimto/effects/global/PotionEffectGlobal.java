@@ -2,7 +2,7 @@ package cz.neumimto.effects.global;
 
 import cz.neumimto.effects.positive.PotionEffect;
 import cz.neumimto.model.PotionEffectModel;
-import cz.neumimto.rpg.Log;
+import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import org.spongepowered.api.Sponge;
