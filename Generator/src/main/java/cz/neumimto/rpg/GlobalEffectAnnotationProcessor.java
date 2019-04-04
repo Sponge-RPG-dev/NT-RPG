@@ -1,8 +1,5 @@
 package cz.neumimto.rpg;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.util.*;
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
@@ -11,6 +8,9 @@ import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.tools.JavaFileObject;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.util.*;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes({"cz.neumimto.rpg.effects.Generate"})
@@ -102,7 +102,7 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
 
 		filerUtils = processingEnv.getFiler();
 		elementUtils = processingEnv.getElementUtils();
-		myAnnotationTypeElement = elementUtils.getTypeElement("cz.neumimto.rpg.effects.Generate");
+		myAnnotationTypeElement = elementUtils.getTypeElement("cz.neumimto.rpg.api.effects.Generate");
 	}
 
 	@Override
@@ -281,7 +281,7 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
 
 	@Override
 	public Set<String> getSupportedAnnotationTypes() {
-		return Collections.singleton("cz.neumimto.rpg.effects.Generate");
+		return Collections.singleton("cz.neumimto.rpg.api.effects.Generate");
 	}
 
 }
