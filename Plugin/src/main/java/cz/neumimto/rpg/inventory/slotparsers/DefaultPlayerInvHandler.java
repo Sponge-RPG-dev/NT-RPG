@@ -185,9 +185,12 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
 				CustomItem customItem = character.getMainHand();
 				if (customItem != null) {
 					deInitializeItemStack(character, eq);
+					character.setMainHand(null, -1);
+				} else {
+					character.setMainHand(null, -1);
+					revalidateCaches(character);
 				}
-				character.setMainHand(null, -1);
-				revalidateCaches(character);
+
 				return;
 			}
 			ItemStack itemStack = peek.get();
@@ -196,9 +199,10 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
 				CustomItem customItem = character.getMainHand();
 				if (customItem != null) {
 					deInitializeItemStack(character, eq);
+					character.setMainHand(null, -1);
+					revalidateCaches(character);
 				}
-				character.setMainHand(null, -1);
-				revalidateCaches(character);
+
 				return;
 			}
 			CannotUseItemReason cannotUseItemReason = inventoryService().canUse(itemStack, character, fromItemStack, HandTypes.MAIN_HAND);
