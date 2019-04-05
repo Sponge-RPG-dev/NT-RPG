@@ -106,7 +106,7 @@ public class InfoCommand extends CommandBase {
 				commandSource.sendMessage(Localizations.PLAYER_IS_OFFLINE_MSG.toText());
 			}
 		} else if (args[0].equalsIgnoreCase("character")) {
-			if (!(commandSource instanceof Player)) {
+			if (commandSource instanceof Player) {
 				if (args.length != 2) {
 					Player player = (Player) commandSource;
 					IActiveCharacter target = characterService.getCharacter(player.getUniqueId());
@@ -114,7 +114,7 @@ public class InfoCommand extends CommandBase {
 				}
 			}
 		} else if (args[0].equalsIgnoreCase("characters")) {
-			if (!(commandSource instanceof Player)) {
+			if (commandSource instanceof Player) {
 				if (args.length != 2) {
 					Player player = (Player) commandSource;
 					IActiveCharacter target = characterService.getCharacter(player.getUniqueId());
