@@ -370,7 +370,6 @@ public class InventoryService {
 			return;
 		}
 		playerInvHandler.initializeCharacterInventory(character);
-		damageService.recalculateCharacterWeaponDamage(character);
 	}
 
 	public void dropItem(IActiveCharacter character, ItemStack is, CannotUseItemReason reason) {

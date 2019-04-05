@@ -285,7 +285,6 @@ public abstract class CharacterService {
             deleteCharacterReferences(activeCharacter);
             character.setUsingGuiMod(activeCharacter.isUsingGuiMod());
             characters.put(uuid, character);
-            initActiveCharacter(character);
         }
         return character;
     }
