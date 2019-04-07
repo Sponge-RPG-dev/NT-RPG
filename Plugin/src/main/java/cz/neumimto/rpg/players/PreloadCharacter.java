@@ -42,7 +42,6 @@ import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatType;
 
@@ -302,7 +301,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Map<ItemType, RPGItemWrapper> getAllowedWeapons() {
+	public Map<RpgItemType, Double> getAllowedWeapons() {
 		return Collections.emptyMap();
 	}
 

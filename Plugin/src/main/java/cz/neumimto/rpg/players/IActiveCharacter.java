@@ -35,7 +35,6 @@ import org.spongepowered.api.data.type.HandType;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 
 import java.util.List;
@@ -114,7 +113,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	boolean canWear(RpgItemType armor);
 
-	Map<ItemType, RPGItemWrapper> getAllowedWeapons();
+	Map<RpgItemType, Double> getAllowedWeapons();
 
 	Map<EntityType, Double> getProjectileDamages();
 

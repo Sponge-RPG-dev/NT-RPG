@@ -41,12 +41,12 @@ import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatType;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
@@ -89,7 +89,9 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	private transient Click click = new Click();
 	private transient Set<RpgItemType> allowedArmorIds = new HashSet<>();
-	private transient Map<String, ClassItem> allowedWeapons = new HashMap<>();
+
+	private transient Map<RpgItemType, Double> allowedWeapons = new HashMap<>();
+
 	private transient Map<EntityType, Double> projectileDamage = new HashMap<>();
 	private transient Set<RpgItemType> allowedOffHandWeapons = new HashSet<>();
 	private Map<String, Long> cooldowns = new HashMap<>();
@@ -306,46 +308,22 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	private void mergeWeapons(ClassDefinition g) {
 		mergeWeapons(g.getWeapons());
-		HashMap<ItemType, Set<ConfigRPGItemType>> offHandWeapons = g.getOffHandWeapons();
-		for (Map.Entry<ItemType, Set<ConfigRPGItemType>> e : offHandWeapons.entrySet()) {
-			Set<ConfigRPGItemType> value = e.getValue();
-			for (ConfigRPGItemType configRPGItemType : value) {
-				allowedOffHandWeapons.add(configRPGItemType.getRpgItemType());
-			}
+		Set<ClassItem> offHandWeapons = g.getOffHandWeapons();
+		for (ClassItem e : offHandWeapons) {
+			allowedOffHandWeapons.add(e.getType());
 		}
 	}
 
-	private void mergeWeapons(Map<ItemType, Set<ConfigRPGItemType>> map) {
-		for (Map.Entry<ItemType, Set<ConfigRPGItemType>> toAdd : map.entrySet()) {
-			RPGItemWrapper wrapper = allowedWeapons.get(toAdd.getKey());
-			if (wrapper == null) {
-				wrapper = RPGItemWrapper.createFromSet(toAdd.getValue());
-				allowedWeapons.put(toAdd.getKey(), wrapper);
-			} else {
-				wrapper.addItems(toAdd.getValue());
-			}
-		}
+	private void mergeWeapons(Set<ClassItem> weapons) {
+		allowedWeapons.containsKey()
 	}
 
 	@Override
-	public double getBaseWeaponDamage(RPGItemTypeToRemove weaponItemType) {
-		RPGItemWrapper wrapper = getAllowedWeapons().get(weaponItemType.getItemType());
-		if (wrapper == null) {
+	public double getBaseWeaponDamage(RpgItemType weaponItemType) {
+		Double aDouble = allowedWeapons.get(weaponItemType);
+		if (aDouble == null)
 			return 0D;
-		}
-		for (ConfigRPGItemType configRPGItemType : wrapper.getItems()) {
-			if (weaponItemType.getDisplayName() == null) {
-				if (configRPGItemType.getRpgItemType().getDisplayName() == null) {
-					//todo check if the displayname is reserved
-					return wrapper.getDamage(weaponItemType); //null is first, if both null => can use unnamed item
-				}
-			} else {
-				if (weaponItemType.getDisplayName().equalsIgnoreCase(configRPGItemType.getRpgItemType().getDisplayName())) {
-					return wrapper.getDamage(weaponItemType);
-				}
-			}
-		}
-		return 0D;
+		return aDouble;
 	}
 
 	@Override
@@ -366,23 +344,29 @@ public class ActiveCharacter implements IActiveCharacter {
         allowedArmorIds.clear();
         getProjectileDamages().clear();
 
+
         Iterator<PlayerClassData> iterator = classes.values().iterator();
         //put in first
         if (iterator.hasNext()) {
-            PlayerClassData next = iterator.next();
-            Map<ItemType, Set<ConfigRPGItemType>> weapons = next.getClassDefinition().getWeapons();
-            for (Map.Entry<ItemType, Set<ConfigRPGItemType>> entry : weapons.entrySet()) {
-                allowedWeapons.put(entry.getKey(), RPGItemWrapper.createFromSet(entry.getValue()));
-            }
+        	PlayerClassData next = iterator.next();
+			ClassDefinition classDefinition = next.getClassDefinition();
 
-            HashMap<ItemType, Set<ConfigRPGItemType>> offHandWeapons = next.getClassDefinition().getOffHandWeapons();
-            for (Set<ConfigRPGItemType> configRPGItemTypes : offHandWeapons.values()) {
-                for (ConfigRPGItemType configRPGItemType : configRPGItemTypes) {
-                    allowedOffHandWeapons.add(configRPGItemType.getRpgItemType());
-                }
-            }
-            allowedArmorIds.addAll(next.getClassDefinition().getAllowedArmor());
-            getProjectileDamages().putAll(next.getClassDefinition().getProjectileDamage());
+			Set<ClassItem> items = classDefinition.getWeapons();
+			for (ClassItem weapon : items) {
+				allowedWeapons.put(weapon.getType(), weapon.getDamage());
+			}
+
+			items = classDefinition.getOffHandWeapons();
+			for (ClassItem weapon : items) {
+				allowedOffHandWeapons.add(weapon.getType());
+			}
+
+			items = classDefinition.getAllowedArmor();
+			for (ClassItem weapon : items) {
+				allowedArmorIds.add(weapon.getType());
+			}
+
+            getProjectileDamages().putAll(classDefinition.getProjectileDamage());
         }
 
         //calculate rest
@@ -396,15 +380,21 @@ public class ActiveCharacter implements IActiveCharacter {
             for (PlayerSkillContext playerSkillContext : getSkills().values()) {
                 if (playerSkillContext.getSkill().getType() == EffectSourceType.ITEM_ACCESS_SKILL) {
                     ItemAccessSkill.ItemAccessSkillData skillData = (ItemAccessSkill.ItemAccessSkillData) playerSkillContext.getSkillData();
-                    Map<Integer, Map<ItemType, Set<ConfigRPGItemType>>> items = skillData.getItems();
-                    for (Map.Entry<Integer, Map<ItemType, Set<ConfigRPGItemType>>> ent : items.entrySet()) {
+                    Map<Integer, Set<ClassItem>> items = skillData.getItems();
+
+                    for (Map.Entry<Integer, Set<ClassItem>> ent : items.entrySet()) {
                         if (ent.getKey() <= getLevel()) {
                             mergeWeapons(ent.getValue());
                         }
                     }
                 }
             }
-            allowedArmorIds.addAll(next.getClassDefinition().getAllowedArmor());
+            allowedArmorIds.addAll(next
+					.getClassDefinition()
+					.getAllowedArmor()
+					.stream()
+					.map(ClassItem::getType)
+					.collect(Collectors.toSet()));
         }
 
 		for (PlayerClassData playerClassData : getClasses().values()) {
@@ -425,20 +415,19 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Set<RPGItemTypeToRemove> getAllowedArmor() {
+	public Set<RpgItemType> getAllowedArmor() {
 		return allowedArmorIds;
 	}
 
 	@Override
-	public boolean canWear(RPGItemTypeToRemove armor) {
+	public boolean canWear(RpgItemType armor) {
 		return getAllowedArmor().contains(armor);
 	}
 
 	@Override
-	public boolean canUse(RPGItemTypeToRemove weaponItemType, HandType h) {
+	public boolean canUse(RpgItemType weaponItemType, HandType h) {
 		if (h == HandTypes.MAIN_HAND) {
-			RPGItemWrapper set = getAllowedWeapons().get(weaponItemType.getItemType());
-			return set != null && set.containsItem(weaponItemType);
+			return allowedWeapons.containsKey(weaponItemType);
 		} else {
 			return allowedOffHandWeapons.contains(weaponItemType);
 		}
@@ -446,7 +435,7 @@ public class ActiveCharacter implements IActiveCharacter {
 
 
 	@Override
-	public Map<ItemType, RPGItemWrapper> getAllowedWeapons() {
+	public Map<RpgItemType, Double> getAllowedWeapons() {
 		return allowedWeapons;
 	}
 
