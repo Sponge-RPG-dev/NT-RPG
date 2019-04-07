@@ -19,9 +19,9 @@
 package cz.neumimto.rpg.properties;
 
 import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
-import cz.neumimto.rpg.Console;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.attributes.Attributes;
 import cz.neumimto.rpg.utils.Utils;

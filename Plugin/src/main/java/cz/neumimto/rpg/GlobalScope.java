@@ -27,7 +27,7 @@ import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.ParticleDecorator;
 import cz.neumimto.rpg.gui.VanillaMessaging;
 import cz.neumimto.rpg.inventory.CustomItemFactory;
-import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.inventory.SpongeItemService;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.players.CharacterService;
@@ -71,7 +71,7 @@ public class GlobalScope {
 	public DamageService damageService;
 
 	@Inject
-	public InventoryService inventorySerivce;
+	public SpongeInventoryService inventorySerivce;
 
 	@Inject
 	public RWService runewordService;
@@ -101,7 +101,7 @@ public class GlobalScope {
 	public EffectService experienceService;
 
 	@Inject
-	public InventoryService inventoryService;
+	public SpongeInventoryService spongeInventoryService;
 
 	@Inject
 	public CustomItemFactory customItemFactory;

@@ -10,10 +10,10 @@ import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.CharacterBase;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import javax.script.Invocable;
@@ -36,7 +36,7 @@ public class EffectTests {
 
     private Set<IEffect> processedEffects;
 
-    @BeforeClass
+    @BeforeEach
     public static void init() throws Exception {
         TestHelper.initLocalizations();
         NtRpgPlugin.pluginConfig = (PluginConfig) TestHelper.getUnsafe().allocateInstance(PluginConfig.class);
@@ -45,7 +45,7 @@ public class EffectTests {
         NtRpgPlugin.GlobalScope.plugin = new NtRpgPlugin();
     }
 
-    @Before
+    @BeforeAll
     public void before() throws Exception{
         processedEffects = effectService.getEffects();
         characterBase = new CharacterBase();
@@ -68,8 +68,8 @@ public class EffectTests {
         effect.setPeriod(0);
         effectService.schedule();
         effectService.schedule();
-        Assert.assertNotNull(character.getEffect(effect.getName()));
-        Assert.assertNotSame(effect, character.getEffect(effect.getName()));
+        Assertions.assertNotNull(character.getEffect(effect.getName()));
+        Assertions.assertNotSame(effect, character.getEffect(effect.getName()));
 
         Mockito.verify(effect, Mockito.times(1)).onApply(any());
         Mockito.verify(effect, Mockito.times(0)).onTick(any());
@@ -79,8 +79,8 @@ public class EffectTests {
         effectService.schedule();
         effectService.schedule();
         Mockito.verify(effect, Mockito.times(1)).onRemove(any());
-        Assert.assertNull(character.getEffect(effect.getName()));
-        Assert.assertTrue(processedEffects.isEmpty());
+        Assertions.assertNull(character.getEffect(effect.getName()));
+        Assertions.assertTrue(processedEffects.isEmpty());
     }
 
     @Test
@@ -93,8 +93,8 @@ public class EffectTests {
         effectService.schedule();
         effectService.schedule();
 
-        Assert.assertNotNull(character.getEffect(effect.getName()));
-        Assert.assertNotSame(effect, character.getEffect(effect.getName()));
+        Assertions.assertNotNull(character.getEffect(effect.getName()));
+        Assertions.assertNotSame(effect, character.getEffect(effect.getName()));
         Mockito.verify(effect, Mockito.times(1)).onApply(any());
         Mockito.verify(effect, Mockito.times(1)).onTick(any());
         Mockito.verify(effect, Mockito.times(0)).onRemove(any());
@@ -115,10 +115,10 @@ public class EffectTests {
         Mockito.verify(effect, Mockito.times(1)).onRemove(any());
 
         Mockito.verify(effect, Mockito.times(1)).onRemove(any());
-        Assert.assertNull(character.getEffect(effect.getName()));
+        Assertions.assertNull(character.getEffect(effect.getName()));
 
         effectService.schedule();
-        Assert.assertTrue(processedEffects.isEmpty());
+        Assertions.assertTrue(processedEffects.isEmpty());
     }
 
     @Test
@@ -128,8 +128,8 @@ public class EffectTests {
         effectService.addEffect(effect, InternalEffectSourceProvider.INSTANCE);
         effectService.schedule();
         effectService.schedule();
-        Assert.assertNotNull(character.getEffect(effect.getName()));
-        Assert.assertNotSame(effect, character.getEffect(effect.getName()));
+        Assertions.assertNotNull(character.getEffect(effect.getName()));
+        Assertions.assertNotSame(effect, character.getEffect(effect.getName()));
 
         Mockito.verify(effect, Mockito.times(1)).onApply(any());
         Mockito.verify(effect, Mockito.times(0)).onTick(any());
@@ -139,8 +139,8 @@ public class EffectTests {
         effectService.schedule();
         effectService.schedule();
         Mockito.verify(effect, Mockito.times(1)).onRemove(any());
-        Assert.assertNull(character.getEffect(effect.getName()));
-        Assert.assertTrue(processedEffects.isEmpty());
+        Assertions.assertNull(character.getEffect(effect.getName()));
+        Assertions.assertTrue(processedEffects.isEmpty());
     }
 
 
@@ -173,9 +173,9 @@ public class EffectTests {
         makeEffectStackable(first);
 
         effectService.addEffect(first, InternalEffectSourceProvider.INSTANCE);
-        Assert.assertNotNull(character.getEffect(first.getName()));
-        Assert.assertNotSame(first, character.getEffect(first.getName()));
-        Assert.assertTrue(character.getEffect("test").getStackedValue().equals(1L));
+        Assertions.assertNotNull(character.getEffect(first.getName()));
+        Assertions.assertNotSame(first, character.getEffect(first.getName()));
+        Assertions.assertTrue(character.getEffect("test").getStackedValue().equals(1L));
         effectService.schedule();
 
         Mockito.verify(first, Mockito.times(1)).onApply(any());
@@ -190,10 +190,10 @@ public class EffectTests {
         Mockito.verify(first, Mockito.times(1)).onApply(any());
         effectService.schedule();
 
-        Assert.assertTrue(character.getEffect("test").getStackedValue().equals(2L));
-        Assert.assertEquals(processedEffects.size(), 2);
-        Assert.assertEquals(character.getEffectMap().size(), 1);
-        Assert.assertEquals(character.getEffect("test").getEffects().size(), 2);
+        Assertions.assertTrue(character.getEffect("test").getStackedValue().equals(2L));
+        Assertions.assertSame(processedEffects.size(), 2);
+        Assertions.assertSame(character.getEffectMap().size(), 1);
+        Assertions.assertSame(character.getEffect("test").getEffects().size(), 2);
 
         //expire
         Mockito.when(test.getExpireTime()).thenReturn(0L);
@@ -202,18 +202,18 @@ public class EffectTests {
 
         Mockito.verify(test, Mockito.times(1)).onRemove(any());
 
-        Assert.assertEquals(processedEffects.size(), 1);
-        Assert.assertEquals(character.getEffectMap().size(), 1);
-        Assert.assertTrue(character.getEffect("test").getStackedValue().equals(1L));
+        Assertions.assertSame(processedEffects.size(), 1);
+        Assertions.assertSame(character.getEffectMap().size(), 1);
+        Assertions.assertTrue(character.getEffect("test").getStackedValue().equals(1L));
 
         Mockito.when(first.getExpireTime()).thenReturn(0L);
         effectService.schedule();
         effectService.schedule();
         Mockito.verify(first, Mockito.times(1)).onRemove(any());
 
-        Assert.assertEquals(processedEffects.size(), 0);
-        Assert.assertEquals(character.getEffectMap().size(), 0);
-        Assert.assertNull(character.getEffect("test"));
+        Assertions.assertSame(processedEffects.size(), 0);
+        Assertions.assertSame(character.getEffectMap().size(), 0);
+        Assertions.assertNull(character.getEffect("test"));
     }
 
     private void makeEffectStackable(IEffect effect) {

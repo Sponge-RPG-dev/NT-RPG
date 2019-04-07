@@ -24,7 +24,7 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.items.WeaponClass;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.CannotUseItemReason;
-import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.inventory.SpongeItemService;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.players.CharacterService;
@@ -69,7 +69,7 @@ import java.util.concurrent.TimeUnit;
 public class InventoryListener {
 
 	@Inject
-	private InventoryService inventoryService;
+	private SpongeInventoryService spongeInventoryService;
 
 	@Inject
 	private CharacterService characterService;
@@ -90,7 +90,7 @@ public class InventoryListener {
 			return;
 		}
 
-		inventoryService.processHotbarItemDispense(player);
+		spongeInventoryService.processHotbarItemDispense(player);
 	}
 
 
@@ -103,9 +103,9 @@ public class InventoryListener {
 			ItemStack stack = event.getItemStack().createStack();
 			CannotUseItemReason reason;
 			if (rpgItemType.getWeaponClass() == WeaponClass.ARMOR) {
-				reason = inventoryService.canWear(stack, character, rpgItemType);
+				reason = spongeInventoryService.canWear(stack, character, rpgItemType);
 			} else {
-				reason = inventoryService.canUse(stack, character, rpgItemType, HandTypes.MAIN_HAND);
+				reason = spongeInventoryService.canUse(stack, character, rpgItemType, HandTypes.MAIN_HAND);
 			}
 			if (reason != CannotUseItemReason.OK) {
 				Gui.sendCannotUseItemNotification(character, stack, reason);
@@ -125,7 +125,7 @@ public class InventoryListener {
 		for (SlotTransaction transaction : transactions) {
 			Optional<SlotIndex> inventoryProperty = transaction.getSlot().getInventoryProperty(SlotIndex.class);
 			if (inventoryProperty.isPresent()) {
-				boolean cancel = inventoryService.processSlotInteraction(transaction.getSlot(), player);
+				boolean cancel = spongeInventoryService.processSlotInteraction(transaction.getSlot(), player);
 				if (cancel) {
 					event.setCancelled(cancel);
 				}
@@ -177,7 +177,7 @@ public class InventoryListener {
 	public void onSwapHands(ChangeInventoryEvent.SwapHand event, @Root Player player) {
 		ItemStack futureMainHand = player.getItemInHand(HandTypes.MAIN_HAND).orElse(null);
 		ItemStack futureOffHand = player.getItemInHand(HandTypes.OFF_HAND).orElse(null);
-		boolean cancel = inventoryService.processHotbarSwapHand(player, futureMainHand, futureOffHand);
+		boolean cancel = spongeInventoryService.processHotbarSwapHand(player, futureMainHand, futureOffHand);
 		if (cancel) {
 			event.setCancelled(true);
 		}
@@ -217,7 +217,7 @@ public class InventoryListener {
 			if (aFinal.getType() == ItemTypes.AIR) {
 				RPGItemTypeToRemove rpgItemType = itemService.getFromItemStack(transaction.getOriginal());
 				if (rpgItemType != null) {
-					inventoryService.processHotbarItemDispense(event.getTargetEntity());
+					spongeInventoryService.processHotbarItemDispense(event.getTargetEntity());
 				}
 			}
 		}

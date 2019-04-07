@@ -33,7 +33,7 @@ import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.events.PlayerDataPreloadComplete;
 import cz.neumimto.rpg.events.character.CharacterManaRegainEvent;
 import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.inventory.UserActionType;
 import cz.neumimto.rpg.persistance.CharacterClassDao;
 import cz.neumimto.rpg.persistance.PlayerDao;
@@ -82,7 +82,7 @@ public abstract class CharacterService {
     private PlayerDao playerDao;
 
     @Inject
-    private InventoryService inventoryService;
+    private SpongeInventoryService spongeInventoryService;
 
     @Inject
     private ClassService classService;
@@ -209,7 +209,7 @@ public abstract class CharacterService {
         if (character.getCharacterBase().getHealthScale() != null) {
             pl.offer(Keys.HEALTH_SCALE, character.getCharacterBase().getHealthScale());
         }
-        inventoryService.initializeCharacterInventory(character);
+        spongeInventoryService.initializeCharacterInventory(character);
         return true;
     }
 
@@ -308,7 +308,7 @@ public abstract class CharacterService {
             applyGroupEffects(character, nClass.getClassDefinition());
         }
 
-        inventoryService.initializeCharacterInventory(character);
+        spongeInventoryService.initializeCharacterInventory(character);
         damageService.recalculateCharacterWeaponDamage(character);
 
 
@@ -890,7 +890,7 @@ public abstract class CharacterService {
         characterClass.setExperiences(newcurrentexp);
 
         if (gotLevel) {
-            inventoryService.initializeCharacterInventory(character);
+            spongeInventoryService.initializeCharacterInventory(character);
         }
 
         Gui.showExpChange(character, aClass.getClassDefinition().getName(), exp);
@@ -969,7 +969,7 @@ public abstract class CharacterService {
         character.getMana().setValue(0);
         addDefaultEffects(character);
 
-        inventoryService.initializeCharacterInventory(character);
+        spongeInventoryService.initializeCharacterInventory(character);
         Sponge.getScheduler().createTaskBuilder().execute(() -> {
             invalidateCaches(character);
             Double d = character.getHealth().getMaxValue();

@@ -24,7 +24,7 @@ import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.entities.IEntityType;
 import cz.neumimto.rpg.exp.ExperienceService;
-import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExperienceSources;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -76,7 +76,7 @@ public class BasicListener {
 	private CharacterService characterService;
 
 	@Inject
-	private InventoryService inventoryService;
+	private SpongeInventoryService spongeInventoryService;
 
 	@Inject
 	private EntityService entityService;
@@ -99,7 +99,7 @@ public class BasicListener {
 			}
 			Hotbar h = character.getPlayer().getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
 			int slotIndex = h.getSelectedSlotIndex();
-			inventoryService.onLeftClick(character, h.getSelectedSlotIndex(), h.getSlot(new SlotIndex(slotIndex)).get());
+			spongeInventoryService.onLeftClick(character, h.getSelectedSlotIndex(), h.getSlot(new SlotIndex(slotIndex)).get());
 		}
 
 		IEntity entity = entityService.get(event.getTargetEntity());
@@ -133,7 +133,7 @@ public class BasicListener {
 				}
 				Hotbar h = pl.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
 				int slotIndex = h.getSelectedSlotIndex();
-				inventoryService.onRightClick(character, 0, h.getSlot(new SlotIndex(slotIndex)).get());
+				spongeInventoryService.onRightClick(character, 0, h.getSlot(new SlotIndex(slotIndex)).get());
 			}
 		}
 	}
@@ -146,7 +146,7 @@ public class BasicListener {
 		}
 		Hotbar h = pl.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
 		int slotIndex = h.getSelectedSlotIndex();
-		inventoryService.onLeftClick(character, slotIndex, h.getSlot(new SlotIndex(slotIndex)).get());
+		spongeInventoryService.onLeftClick(character, slotIndex, h.getSlot(new SlotIndex(slotIndex)).get());
 	}
 
 	@Listener
@@ -162,7 +162,7 @@ public class BasicListener {
 		}
 		Hotbar h = pl.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
 		int slotIndex = h.getSelectedSlotIndex();
-		inventoryService.onRightClick(character, slotIndex, h.getSlot(new SlotIndex(slotIndex)).get());
+		spongeInventoryService.onRightClick(character, slotIndex, h.getSlot(new SlotIndex(slotIndex)).get());
 	}
 
 	@Listener

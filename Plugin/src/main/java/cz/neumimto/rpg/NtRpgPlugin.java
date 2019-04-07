@@ -487,7 +487,7 @@ public class NtRpgPlugin {
 			Log.error("Could not read localizations in locale " + NtRpgPlugin.pluginConfig.LOCALE + " - " + e.getMessage());
 		}
 		GlobalScope.experienceService.load();
-		GlobalScope.inventoryService.init();
+		GlobalScope.spongeInventoryService.init();
 		GlobalScope.skillService.load();
 		GlobalScope.propertyService.init();
 		GlobalScope.propertyService.reLoadAttributes();

@@ -24,11 +24,11 @@ import com.typesafe.config.ConfigException;
 import com.typesafe.config.ConfigFactory;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.ClassService;
-import cz.neumimto.rpg.Console;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.effects.IEffectSource;
-import cz.neumimto.rpg.api.items.WeaponClass;
+import cz.neumimto.rpg.api.items.RpgItemType;
+import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.damage.DamageService;
@@ -86,14 +86,15 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-import static cz.neumimto.rpg.api.logging.Log.*;
+import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.api.logging.Log.warn;
 
 /**
  * Created by NeumimTo on 22.7.2015.
  */
 @Singleton
 @ResourceLoader.ListenerClass
-public class InventoryService {
+public class SpongeInventoryService {
 
 	public static ItemType ITEM_SKILL_BIND = ItemTypes.BLAZE_POWDER;
 
@@ -133,13 +134,11 @@ public class InventoryService {
 
 	private PlayerInvHandler playerInvHandler;
 
-	private Map<String, ItemGroup> itemGroups = new HashMap<>();
 	private Map<Class<?>, ManagedInventory> managedInventories = new HashMap<>();
 
 	@Reload(on = ReloadService.PLUGIN_CONFIG)
 	public void init() {
 		NORMAL_RARITY = Localizations.NORMAL_RARITY.toText();
-		loadItemGroups();
 		String s = pluginConfig.EQUIPED_SLOT_RESOLVE_SRATEGY;
 		Optional<PlayerInvHandler> type = Sponge.getRegistry().getType(PlayerInvHandler.class, s);
 		if (type.isPresent()) {
@@ -209,111 +208,28 @@ public class InventoryService {
 		}
 
 		try {
+			//sponge
+			List<? extends Config> inventorySlots = c.getConfigList("InventorySlots");
+			for (Config inventorySlot : inventorySlots) {
+				loadInventorySettings(inventorySlot);
+			}
+
+
 			Config c = ConfigFactory.parseFile(path.toFile());
 			List<String> itemMetaSubtypes = c.getStringList("ItemMetaSubtypes");
 
 			//will break in get 8
 			itemMetaSubtypes.stream().map(ItemSubtype::new).forEach(a -> Sponge.getRegistry().register(ItemSubtype.class, a));
 
-			List<? extends Config> inventorySlots = c.getConfigList("InventorySlots");
-			for (Config inventorySlot : inventorySlots) {
-				loadInventorySettings(inventorySlot);
-			}
 
-			List<? extends Config> itemGroups = c.getConfigList("ItemGroups");
-			loadItemGroups(itemGroups, null);
 
-			for (String armor : c.getStringList("Armor")) {
-				Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, armor);
-				if (type.isPresent()) {
-					itemService.registerItemArmorType(type.get());
-				} else {
-					warn(Console.RED + "Could not find item type " + Console.YELLOW + armor + Console.RED + ".");
-					warn(Console.RED + " - Is the mod loaded and is the name correct?");
-					warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN + "\"modid:my_item\"");
-				}
-			}
-			for (String shield : c.getStringList("Shields")) {
-				Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, shield);
-				if (type.isPresent()) {
-					itemService.registerShieldType(type.get());
-				} else {
-					warn(Console.RED + "Could not find item type " + Console.YELLOW + shield + Console.RED + ".");
-					warn(Console.RED + " - Is the mod loaded and is the name correct?");
-					warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN + "\"modid:my_item\"");
-				}
-			}
+
+			
 		} catch (ConfigException e) {
 			throw new RuntimeException("Could not read ItemGroups.conf ", e);
 		}
 	}
 
-	private void loadItemGroups(List<? extends Config> itemGroups, WeaponClass parent) {
-		for (Config itemGroup : itemGroups) {
-			String weaponClass;
-			try {
-				weaponClass = itemGroup.getString("WeaponClass");
-			} catch (ConfigException e) {
-				error("Could not read \"WeaponClass\" node, skipping. This is a critical miss configuration, some items will not be recognized "
-						+ "as weapons");
-				continue;
-			}
-			info(" - Loading weaponClass" + weaponClass);
-			WeaponClass weapons = new WeaponClass(weaponClass);
-			weapons.setParent(parent);
-
-			try {
-				info("  - Reading \"Items\" config section" + weaponClass);
-				List<String> items = itemGroup.getStringList("Items");
-				for (String item : items) {
-					String[] split = item.split(";");
-					Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, split[0]);
-					if (!type.isPresent()) {
-						warn(Console.RED + "Could not find item type " + Console.YELLOW + split[0] + Console.RED + " defined in ItemGroups.conf.");
-						warn(Console.RED + " - Is the mod loaded and is the name correct?");
-						warn(Console.YELLOW + " - Mod items have to be in the format: " + Console.GREEN + "\"modid:my_item\"");
-					} else {
-						ItemType itemType = type.get();
-						String name = null;
-						double damage = 0;
-						if (split.length > 1) {
-							String part = split[1];
-							try {
-								damage = Double.parseDouble(part);
-							} catch (NumberFormatException ignored) {
-								name = part;
-							}
-						}
-						if (split.length > 2) {
-							String part = split[2];
-							try {
-								damage = Double.parseDouble(part);
-							} catch (NumberFormatException ignored) {
-								name = part;
-							}
-						}
-						itemService.registerItemType(itemType, name, weapons, damage);
-					}
-				}
-			} catch (ConfigException e) {
-				try {
-					loadItemGroups(itemGroup.getConfigList("Items"), weapons);
-				} catch (ConfigException ee) {
-					warn("Could not read nested configuration for weapon class " + weaponClass + "This is a critical miss configuration, some items "
-							+ "will not be recognized as weapons");
-				}
-			}
-
-			try {
-				List<String> properties = itemGroup.getStringList("Properties");
-				for (String property : properties) {
-					itemService.registerProperty(weapons, property.toLowerCase());
-				}
-			} catch (ConfigException e) {
-				warn("Properties configuration section not found, skipping");
-			}
-		}
-	}
 
 	private void loadInventorySettings(Config slots) {
 		String aClass = slots.getString("type");
@@ -345,27 +261,6 @@ public class InventoryService {
 		}
 	}
 
-
-	public ItemGroup getItemGroup(RPGItemTypeToRemove itemType) {
-		for (ItemGroup itemGroup : itemGroups.values()) {
-			for (RPGItemTypeToRemove rpgItemType : itemGroup.getItemTypes()) {
-				if (rpgItemType.getItemType().equals(itemType.getItemType())) {
-					if (rpgItemType.getDisplayName() == null && itemType.getDisplayName() == null
-							&& rpgItemType.getItemType().equals(itemType.getItemType())) {
-						return itemGroup;
-					}
-					if (rpgItemType.getDisplayName() != null &&
-							rpgItemType.getDisplayName().equalsIgnoreCase(itemType.getDisplayName()) &&
-							rpgItemType.getItemType().equals(itemType.getItemType())
-							) {
-						return itemGroup;
-					}
-				}
-			}
-		}
-		return null;
-	}
-
 	public void initializeCharacterInventory(IActiveCharacter character) {
 		if (character.isStub()) {
 			return;
@@ -393,7 +288,7 @@ public class InventoryService {
 		playerInvHandler.onLeftClick(character, slot, hotbarSlot);
 	}
 
-	public CannotUseItemReason canWear(ItemStack itemStack, IActiveCharacter character, RPGItemTypeToRemove type) {
+	public CannotUseItemReason canWear(ItemStack itemStack, IActiveCharacter character, RpgItemType type) {
 		if (itemStack == null) {
 			return CannotUseItemReason.OK;
 		}
@@ -407,7 +302,7 @@ public class InventoryService {
 	}
 
 
-	public CannotUseItemReason canUse(ItemStack itemStack, IActiveCharacter character, RPGItemTypeToRemove type, HandType h) {
+	public CannotUseItemReason canUse(ItemStack itemStack, IActiveCharacter character, RpgItemType type, HandType h) {
 		if (itemStack == null) {
 			return CannotUseItemReason.OK;
 		}

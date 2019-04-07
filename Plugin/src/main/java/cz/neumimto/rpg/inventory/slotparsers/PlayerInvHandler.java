@@ -7,7 +7,7 @@ import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.CannotUseItemReason;
 import cz.neumimto.rpg.inventory.CustomItemFactory;
-import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.inventory.SpongeItemService;
 import cz.neumimto.rpg.inventory.items.types.CustomItemToRemove;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
@@ -150,7 +150,7 @@ public abstract class PlayerInvHandler implements CatalogType {
 	public abstract void onLeftClick(IActiveCharacter character, int slot, Slot hotbarSlot);
 
 
-	protected InventoryService inventoryService() {
+	protected SpongeInventoryService inventoryService() {
 		return NtRpgPlugin.GlobalScope.inventorySerivce;
 	}
 

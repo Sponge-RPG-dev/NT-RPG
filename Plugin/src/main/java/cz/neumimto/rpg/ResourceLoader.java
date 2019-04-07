@@ -27,6 +27,7 @@ import cz.neumimto.core.localization.Localization;
 import cz.neumimto.core.localization.LocalizationService;
 import cz.neumimto.core.localization.ResourceBundle;
 import cz.neumimto.core.localization.ResourceBundles;
+import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.commands.CommandBase;
 import cz.neumimto.rpg.commands.CommandService;
 import cz.neumimto.rpg.common.effects.EffectService;
@@ -248,9 +249,9 @@ public class ResourceLoader {
 				if (!main) {
 					clazz = classLoader.loadClass(className);
 					info("ClassLoader for "
-							+ Console.GREEN_BOLD + classLoader +
-							Console.RESET + " loaded class " +
-							Console.GREEN + clazz.getSimpleName() + Console.RESET, pluginConfig
+							+ cz.neumimto.rpg.api.utils.Console.GREEN_BOLD + classLoader +
+							cz.neumimto.rpg.api.utils.Console.RESET + " loaded class " +
+							cz.neumimto.rpg.api.utils.Console.GREEN + clazz.getSimpleName() + Console.RESET, pluginConfig
 							.DEBUG);
 					loadClass(clazz, classLoader);
 				} else {

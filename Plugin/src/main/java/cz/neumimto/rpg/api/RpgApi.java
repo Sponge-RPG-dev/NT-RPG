@@ -17,4 +17,5 @@ public interface RpgApi {
     ConfigAdapter getConfigAdapter();
 
     ItemService getItemService();
+
 }

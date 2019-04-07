@@ -19,6 +19,8 @@
 package cz.neumimto.rpg.configuration;
 
 import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
+import cz.neumimto.rpg.configuration.itemDamage.ItemDamageProcessor;
+import cz.neumimto.rpg.configuration.itemDamage.Max;
 import cz.neumimto.rpg.inventory.ItemLoreSections;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
@@ -168,6 +170,9 @@ public class PluginConfig {
 
 	@Setting
 	public List<String> ITEM_LORE_ORDER = Stream.of(ItemLoreSections.values()).map(ItemLoreSections::name).collect(Collectors.toList());
+
+	@Setting
+	public ItemDamageProcessor ITEM_DAMAGE_PROCESSOR = new Max();
 
 
 	@Setting

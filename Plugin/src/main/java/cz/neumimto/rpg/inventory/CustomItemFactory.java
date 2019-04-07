@@ -36,14 +36,14 @@ public class CustomItemFactory {
 
 		public CustomItemToRemove create(ItemStack itemStack, Inventory parent, Integer value) {
 
-			CustomItemToRemove customItem = new CustomItemToRemove(itemStack, NtRpgPlugin.GlobalScope.inventoryService.getEffectSourceBySlotId(parent.getClass(), value),
+			CustomItemToRemove customItem = new CustomItemToRemove(itemStack, NtRpgPlugin.GlobalScope.spongeInventoryService.getEffectSourceBySlotId(parent.getClass(), value),
 					NtRpgPlugin.GlobalScope.itemService.getFromItemStack(itemStack));
 			if (itemStack.getType() == ItemTypes.NONE) {
 				customItem.setEffects(new HashMap<>());
 				customItem.setLevel(0);
 			} else {
-				customItem.setEffects(NtRpgPlugin.GlobalScope.inventoryService.getItemEffects(itemStack));
-				customItem.setLevel(NtRpgPlugin.GlobalScope.inventoryService.getItemLevel(itemStack));
+				customItem.setEffects(NtRpgPlugin.GlobalScope.spongeInventoryService.getItemEffects(itemStack));
+				customItem.setLevel(NtRpgPlugin.GlobalScope.spongeInventoryService.getItemLevel(itemStack));
 			}
 			return customItem;
 		}
@@ -57,8 +57,8 @@ public class CustomItemFactory {
 				customItem.setEffects(new HashMap<>());
 				customItem.setLevel(0);
 			} else {
-				customItem.setEffects(NtRpgPlugin.GlobalScope.inventoryService.getItemEffects(itemStack));
-				customItem.setLevel(NtRpgPlugin.GlobalScope.inventoryService.getItemLevel(itemStack));
+				customItem.setEffects(NtRpgPlugin.GlobalScope.spongeInventoryService.getItemEffects(itemStack));
+				customItem.setLevel(NtRpgPlugin.GlobalScope.spongeInventoryService.getItemLevel(itemStack));
 			}
 			return customItem;
 		}

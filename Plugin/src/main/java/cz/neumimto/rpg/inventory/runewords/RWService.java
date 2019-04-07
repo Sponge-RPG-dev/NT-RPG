@@ -8,8 +8,8 @@ import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.events.RebuildRunewordEvent;
-import cz.neumimto.rpg.inventory.InventoryService;
 import cz.neumimto.rpg.inventory.ItemUpgradeTransactionResult;
+import cz.neumimto.rpg.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.inventory.data.DataConstants;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemSocketsData;
@@ -56,7 +56,7 @@ public class RWService {
 	private Game game;
 
 	@Inject
-	private InventoryService inventoryService;
+	private SpongeInventoryService spongeInventoryService;
 
 	@Inject
 	private ClassService classService;
@@ -176,7 +176,7 @@ public class RWService {
 
 		itemStack.offer(socketsData);
 
-		inventoryService.updateLore(itemStack);
+		spongeInventoryService.updateLore(itemStack);
 		return itemStack;
 	}
 
@@ -203,12 +203,12 @@ public class RWService {
 				content.set(iter, rune.get(Keys.DISPLAY_NAME).get());
 				itemStack.offer(NKeys.ITEM_SOCKET_CONTAINER_CONTENT, content);
 				//
-				Map<IGlobalEffect, EffectParams> itemEffects = inventoryService.getItemEffects(rune);
+				Map<IGlobalEffect, EffectParams> itemEffects = spongeInventoryService.getItemEffects(rune);
 				for (Map.Entry<IGlobalEffect, EffectParams> entry : itemEffects.entrySet()) {
 					entry.getValue().put(DataConstants.ITEM_EFFECT_SOCKET_ID_REF, String.valueOf(iter));
-					inventoryService.addEffectsToItemStack(itemStack, entry.getKey().getName(), entry.getValue());
+					spongeInventoryService.addEffectsToItemStack(itemStack, entry.getKey().getName(), entry.getValue());
 				}
-				inventoryService.updateLore(itemStack);
+				spongeInventoryService.updateLore(itemStack);
 				return ItemUpgradeTransactionResult.OK;
 			}
 			iter++;
@@ -282,7 +282,7 @@ public class RWService {
 		}
 		i.offer(Keys.HIDE_ATTRIBUTES, true);
 		i.offer(Keys.HIDE_MISCELLANEOUS, true);
-		inventoryService.updateLore(i);
+		spongeInventoryService.updateLore(i);
 		RebuildRunewordEvent event = new RebuildRunewordEvent(rw, i);
 		Sponge.getEventManager().post(event);
 		i = event.getItemStack();

@@ -25,9 +25,11 @@ dependencies {
     
 
     testCompile 'org.spongepowered:spongeapi:' + project.spongeApiVersion
-    testCompile 'junit:junit:4.8.2'
-    testCompile 'org.powermock:powermock-module-junit4:1.4.9'
 
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
+    testCompile 'org.junit.jupiter:junit-jupiter-engine:5.4.1'
+    testCompile 'org.junit.jupiter:junit-jupiter-params:5.4.1'
+    
     // https://mvnrepository.com/artifact/org.mockito/mockito-core
     testCompile group: 'org.mockito', name: 'mockito-core', version: '2.25.0'
     testCompile group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.1'
