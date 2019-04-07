@@ -21,10 +21,11 @@ package cz.neumimto.rpg.players;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.items.RpgItemStack;
+import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.entities.IReservable;
-import cz.neumimto.rpg.inventory.items.types.CustomItemToRemove;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
@@ -103,7 +104,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Map<EquipedSlot, CustomItemToRemove> getEquipedInventorySlots() {
+	public Map<EquipedSlot, RpgItemStack> getEquipedInventorySlots() {
 		return Collections.emptyMap();
 	}
 
@@ -113,7 +114,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public double getBaseWeaponDamage(RPGItemTypeToRemove type) {
+	public double getBaseWeaponDamage(RpgItemType type) {
 		return 0;
 	}
 
@@ -138,7 +139,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public boolean canUse(RPGItemTypeToRemove weaponItemType, HandType type) {
+	public boolean canUse(RpgItemType weaponItemType, HandType type) {
 		return false;
 	}
 
@@ -291,12 +292,12 @@ public class PreloadCharacter implements IActiveCharacter {
 
 
 	@Override
-	public Set<RPGItemTypeToRemove> getAllowedArmor() {
+	public Set<RpgItemType> getAllowedArmor() {
 		return Collections.emptySet();
 	}
 
 	@Override
-	public boolean canWear(RPGItemTypeToRemove armor) {
+	public boolean canWear(RpgItemType armor) {
 		return false;
 	}
 
@@ -568,12 +569,12 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public CustomItemToRemove getMainHand() {
+	public RpgItemStack getMainHand() {
 		return null;
 	}
 
 	@Override
-	public void setMainHand(CustomItemToRemove customItem, int slot) {
+	public void setMainHand(RpgItemStack customItem, int slot) {
 
 	}
 
@@ -583,12 +584,12 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public CustomItemToRemove getOffHand() {
+	public RpgItemStack getOffHand() {
 		return null;
 	}
 
 	@Override
-	public void setOffHand(CustomItemToRemove customItem) {
+	public void setOffHand(RpgItemStack customItem) {
 
 	}
 

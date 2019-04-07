@@ -2,9 +2,13 @@ package cz.neumimto.rpg.common.items;
 
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.items.WeaponClass;
+import cz.neumimto.rpg.common.impl.TestItemService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.nio.file.Paths;
 
 
 public class AbstractItemServiceTest {
@@ -13,7 +17,7 @@ public class AbstractItemServiceTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        itemService = new AbstractItemService();
+        itemService = new TestItemService();
     }
 
     @Test
@@ -25,9 +29,7 @@ public class AbstractItemServiceTest {
     public void getItemTypesByWeaponClassUnknown() {
         new AbstractItemServiceTest().registerWeaponClassSubClassesExists();
 
-        RpgItemTypeImpl rpgItemType = new RpgItemTypeImpl();
-        rpgItemType.id = "testItem";
-        rpgItemType.modelName = "testModel";
+        RpgItemTypeImpl rpgItemType = new RpgItemTypeImpl("testItem", "testModel", null, 0D, 0D);
         itemService.getWeaponClassByName("test").get().getItems().add(rpgItemType);
     }
 
@@ -50,18 +52,10 @@ public class AbstractItemServiceTest {
     }
 
     @Test
-    public void getRpgItemType() {
+    public void loadItemGroups() {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("testconfig/ItemGroups.conf").getFile());
+        itemService.loadItemGroups(Paths.get(file.getPath()));
     }
 
-    @Test
-    public void registerRpgItemType() {
-    }
-
-    @Test
-    public void registerProperty() {
-    }
-
-    @Test
-    public void createClassItemSpecification() {
-    }
 }

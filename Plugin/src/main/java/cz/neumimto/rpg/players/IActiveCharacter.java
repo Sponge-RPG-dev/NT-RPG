@@ -19,10 +19,11 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.core.localization.LocalizableParametrizedText;
+import cz.neumimto.rpg.api.items.RpgItemStack;
+import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.entities.IEntityType;
 import cz.neumimto.rpg.entities.IReservable;
-import cz.neumimto.rpg.inventory.items.types.CustomItemToRemove;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
@@ -85,7 +86,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setHealth(IReservable health);
 
-	Map<EquipedSlot, CustomItemToRemove> getEquipedInventorySlots();
+	Map<EquipedSlot, RpgItemStack> getEquipedInventorySlots();
 
 	Player getPlayer();
 
@@ -107,11 +108,11 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	boolean hasCooldown(String thing);
 
-	double getBaseWeaponDamage(RPGItemTypeToRemove type);
+	double getBaseWeaponDamage(RpgItemType type);
 
-	Set<RPGItemTypeToRemove> getAllowedArmor();
+	Set<RpgItemType> getAllowedArmor();
 
-	boolean canWear(RPGItemTypeToRemove armor);
+	boolean canWear(RpgItemType armor);
 
 	Map<ItemType, RPGItemWrapper> getAllowedWeapons();
 
@@ -157,7 +158,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setPendingPartyInvite(Party party);
 
-	boolean canUse(RPGItemTypeToRemove weaponItemType, HandType h);
+	boolean canUse(RpgItemType weaponItemType, HandType h);
 
 	double getWeaponDamage();
 
@@ -179,15 +180,15 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setInvulnerable(boolean b);
 
-	CustomItemToRemove getMainHand();
+	RpgItemStack getMainHand();
 
 	int getMainHandSlotId();
 
-	void setMainHand(CustomItemToRemove customItem, int slot);
+	void setMainHand(RpgItemStack customItem, int slot);
 
-	CustomItemToRemove getOffHand();
+	RpgItemStack getOffHand();
 
-	void setOffHand(CustomItemToRemove customItem);
+	void setOffHand(RpgItemStack customItem);
 
 	@Override
 	default IEntityType getType() {

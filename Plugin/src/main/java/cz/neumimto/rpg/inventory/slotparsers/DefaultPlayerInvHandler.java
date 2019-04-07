@@ -5,7 +5,6 @@ import cz.neumimto.rpg.api.effects.IEffectSource;
 import cz.neumimto.rpg.api.items.WeaponClass;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.CannotUseItemReason;
-import cz.neumimto.rpg.inventory.items.types.CustomItemToRemove;
 import cz.neumimto.rpg.persistance.DirectAccessDao;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.CharacterBase;

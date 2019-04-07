@@ -9,6 +9,7 @@ import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
+import cz.neumimto.rpg.items.SpongeRpgItemType;
 import cz.neumimto.rpg.listeners.SkillTreeInventoryListener;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -392,8 +393,8 @@ public class GuiHelper {
 		return md;
 	}
 
-	public static ItemStack rpgItemTypeToItemStack(ConfigRPGItemType configRPGItemType) {
-		ItemStack q = itemStack(configRPGItemType.getRpgItemType().getItemType());
+	public static ItemStack rpgItemTypeToItemStack(SpongeRpgItemType configRPGItemType) {
+		ItemStack q = itemStack(configRPGItemType.getItemType());
 		Text lore = Text.builder().append(Localizations.ITEM_DAMAGE.toText())
 				.append(Text.builder(": " + configRPGItemType.getDamage())
 						.style(TextStyles.BOLD)
@@ -402,8 +403,8 @@ public class GuiHelper {
 				.build();
 		q.offer(Keys.ITEM_LORE, Collections.singletonList(lore));
 		q.offer(new MenuInventoryData(true));
-		if (configRPGItemType.getRpgItemType().getDisplayName() != null) {
-			q.offer(Keys.DISPLAY_NAME, Text.of(configRPGItemType.getRpgItemType().getDisplayName()));
+		if (configRPGItemType.getModelId() != null) {
+			q.offer(Keys.DISPLAY_NAME, Text.of(configRPGItemType.getModelId()));
 		}
 		return q;
 	}

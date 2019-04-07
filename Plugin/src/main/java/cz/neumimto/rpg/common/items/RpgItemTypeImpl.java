@@ -5,9 +5,9 @@ import cz.neumimto.rpg.api.items.WeaponClass;
 
 public class RpgItemTypeImpl implements RpgItemType {
 
-    protected final WeaponClass weaponClass;
-    protected final double damage,armor;
-    protected final String id, modelName;
+    protected WeaponClass weaponClass;
+    protected double damage,armor;
+    protected String id, modelName;
 
     public RpgItemTypeImpl(String id, String modelName, WeaponClass weaponClass, double damage, double armor) {
         this.weaponClass = weaponClass;

@@ -123,13 +123,11 @@ public abstract class AbstractItemService implements ItemService {
             info(" - Loading weaponClass" + weaponClass);
             WeaponClass weapons = new WeaponClass(weaponClass);
             weapons.setParent(parent);
-
+            registerWeaponClass(weapons);
             loadItemGroupsItems(itemGroup, weaponClass, weapons);
             loadItemGroupsProperties(itemGroup, weapons);
         }
     }
-
-    protected abstract Optional<RpgItemType> createRpgItemType(ItemString parsed, WeaponClass weapons);
 
     private void loadItemGroupsItems(Config itemGroup, String weaponClass, WeaponClass weapons) {
         try {
@@ -160,6 +158,8 @@ public abstract class AbstractItemService implements ItemService {
             warn("Properties configuration section not found, skipping");
         }
     }
+
+    protected abstract Optional<RpgItemType> createRpgItemType(ItemString parsed, WeaponClass weapons);
 
 
 
