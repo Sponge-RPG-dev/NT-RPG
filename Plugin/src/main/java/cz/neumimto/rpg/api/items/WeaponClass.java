@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.inventory;
+package cz.neumimto.rpg.api.items;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,7 +20,7 @@ public class WeaponClass {
 
 	private Set<WeaponClass> subClass = new HashSet<>();
 
-	private Set<RPGItemType> items = new HashSet<>();
+	private Set<RpgItemType> items = new HashSet<>();
 
 	private WeaponClass parent;
 
@@ -40,11 +40,11 @@ public class WeaponClass {
 		this.subClass = subClass;
 	}
 
-	public Set<RPGItemType> getItems() {
+	public Set<RpgItemType> getItems() {
 		return items;
 	}
 
-	public void setItems(Set<RPGItemType> items) {
+	public void setItems(Set<RpgItemType> items) {
 		this.items = items;
 	}
 

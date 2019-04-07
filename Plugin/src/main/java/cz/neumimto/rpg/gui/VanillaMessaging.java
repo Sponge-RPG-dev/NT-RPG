@@ -35,8 +35,6 @@ import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.effects.common.def.ManaBarNotifier;
 import cz.neumimto.rpg.inventory.CannotUseItemReason;
-import cz.neumimto.rpg.inventory.ConfigRPGItemType;
-import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.data.*;
 import cz.neumimto.rpg.inventory.data.manipulators.SkillTreeNode;
 import cz.neumimto.rpg.inventory.runewords.ItemUpgrade;
@@ -387,11 +385,11 @@ public class VanillaMessaging implements IPlayerMessage {
     @Override
     public void displayGroupArmor(ClassDefinition g, Player target) {
         Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
-        List<List<RPGItemType>> rows = new ArrayList<>(5);
+        List<List<RPGItemTypeToRemove>> rows = new ArrayList<>(5);
         for (int ki = 0; ki <= 5; ki++) {
             rows.add(new ArrayList<>());
         }
-        for (RPGItemType type : g.getAllowedArmor()) {
+        for (RPGItemTypeToRemove type : g.getAllowedArmor()) {
             if (ItemStackUtils.isHelmet(type.getItemType())) {
                 rows.get(0).add(type);
             } else if (ItemStackUtils.isChestplate(type.getItemType())) {
@@ -410,9 +408,9 @@ public class VanillaMessaging implements IPlayerMessage {
 
         int x = 2;
         int y = 0;
-        for (List<RPGItemType> row : rows) {
+        for (List<RPGItemTypeToRemove> row : rows) {
             y = 0;
-            for (RPGItemType type : row) {
+            for (RPGItemTypeToRemove type : row) {
                 ItemStack armor = GuiHelper.itemStack(type.getItemType());
                 if (type.getDisplayName() != null) {
                     armor.offer(Keys.DISPLAY_NAME, Text.of(type.getDisplayName()));

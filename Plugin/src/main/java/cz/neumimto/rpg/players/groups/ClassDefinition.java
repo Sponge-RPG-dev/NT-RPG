@@ -22,13 +22,12 @@ import cz.neumimto.config.blackjack.and.hookers.annotations.AsCollectionImpl;
 import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
 import cz.neumimto.config.blackjack.and.hookers.annotations.Default;
 import cz.neumimto.rpg.api.effects.IEffectSource;
+import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.configuration.adapters.*;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.effects.IGlobalEffect;
-import cz.neumimto.rpg.inventory.ConfigRPGItemType;
-import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.leveling.EmptyLevelProgression;
@@ -52,25 +51,25 @@ import java.util.*;
 public class ClassDefinition implements IEffectSourceProvider {
 
 	@Setting("Name")
-	private String name;
+	protected String name;
 
 	@Setting("Description")
-	private String description;
+	protected String description;
 
 	@Setting("WelcomeMessage")
-	private Text welcomeMessage;
+	protected Text welcomeMessage;
 
 	@Setting("PreferredTextColor")
-	private TextColor preferedColor;
+	protected TextColor preferedColor;
 
 	@Setting("ItemInfo")
-	private ItemStack info;
+	protected ItemStack info;
 
 	@Setting("ItemType")
-	private ItemType itemType;
+	protected ItemType itemType;
 
 	@Setting("Visible")
-	private boolean showsInMenu = true;
+	protected boolean showsInMenu = true;
 
 	@Setting("ClassType")
 	@CustomAdapter(ClassTypeAdapter.class)
@@ -78,82 +77,82 @@ public class ClassDefinition implements IEffectSourceProvider {
 
 	@Setting("Properties")
 	@CustomAdapter(PropertiesArrayAdapter.class)
-	private float[] propBonus;
+	protected float[] propBonus;
 
 	@Setting("AllowedArmor")
-	@CustomAdapter(AllowedArmorListAdapter.class)
-	private Set<RPGItemType> allowedArmor = new HashSet<>();
+	@CustomAdapter(ClassRpgItemTypeAdapter.class)
+	protected Set<ClassItem> allowedArmor = new HashSet<>();
 
 	@Setting("Permissions")
 	@AsCollectionImpl(TreeSet.class)
-	private Set<PlayerGroupPermission> permissions;
+	protected Set<PlayerGroupPermission> permissions;
 
 	@Setting("PropertiesLevelBonus")
 	@CustomAdapter(PropertiesArrayAdapter.class)
-	private float[] propLevelBonus;
+	protected float[] propLevelBonus;
 
 	@Setting("ExitCommands")
 	@AsCollectionImpl(ArrayList.class)
-	private List<String> exitCommands;
+	protected List<String> exitCommands;
 
 	@Setting("EnterCommands")
 	@AsCollectionImpl(ArrayList.class)
-	private List<String> enterCommands;
+	protected List<String> enterCommands;
 
 	@Setting("ProjectileDamage")
-	private Map<EntityType, Double> projectileDamage = new HashMap<>();
+	protected Map<EntityType, Double> projectileDamage = new HashMap<>();
 
 	@Setting("Weapons")
-	@CustomAdapter(WeaponsAdapter.class)
-	private HashMap<ItemType, Set<ConfigRPGItemType>> weapons = new HashMap<>();
+	@CustomAdapter(ClassRpgItemTypeAdapter.class)
+	protected Set<ClassItem> weapons = new HashSet<>();
 
 	@Setting("Attributes")
 	@CustomAdapter(AttributeMapAdapter.class)
-	private Map<Attribute, Integer> startingAttributes = new HashMap<>();
+	protected Map<Attribute, Integer> startingAttributes = new HashMap<>();
 
 	@Setting("Effects")
 	@CustomAdapter(EffectsAdapter.class)
-	private Map<IGlobalEffect, EffectParams> effects = new HashMap<>();
+	protected Map<IGlobalEffect, EffectParams> effects = new HashMap<>();
 
 	@Setting("Offhand")
-	@CustomAdapter(WeaponsAdapter.class)
-	private HashMap<ItemType, Set<ConfigRPGItemType>> offHandWeapons = new HashMap<>();
+	@CustomAdapter(ClassRpgItemTypeAdapter.class)
+	protected Set<ClassItem> offHandWeapons = new HashSet<>();
 
 	@Setting("Experiences")
 	@CustomAdapter(ClassExpAdapter.class)
-	private Map<String, Map<EntityType, Double>> experiences = new HashMap<>();
+	protected Map<String, Map<EntityType, Double>> experiences = new HashMap<>();
 
 	@Setting("SkillTreeId")
 	@CustomAdapter(SkillTreeLookupAdapter.class)
-	private SkillTree skillTree;
+	protected SkillTree skillTree;
 
 	@Setting("SkillPointsPerLevel")
-	private int skillpointsPerLevel;
+	protected int skillpointsPerLevel;
 
 	@Setting("AttributePointsPerLevel")
-	private int attributepointsPerLevel;
+	protected int attributepointsPerLevel;
 
 	@Setting("Leveling")
 	@Default(EmptyLevelProgression.class)
-	private ILevelProgression levels;
+	protected ILevelProgression levels;
 
 	@Setting("SkillTreeType")
-	private SkillTreeType skillTreeType;
+	protected SkillTreeType skillTreeType;
 
 	@Setting("ExperienceSources")
 	@AsCollectionImpl(HashSet.class)
-	private Set<ExperienceSource> experienceSourceSet;
+	protected Set<ExperienceSource> experienceSourceSet;
 
 	@Setting("Default")
-	private boolean defaultClass;
+	protected boolean defaultClass;
 
 	@Setting("Dependencies")
 	@CustomAdapter(ClassDependencyGraphAdapter.class)
-	private DependencyGraph classDefinitionDependencyGraph;
+	protected DependencyGraph classDefinitionDependencyGraph;
 
 	@Setting("CustomLore")
 	@AsCollectionImpl(ArrayList.class)
-	private List<Text> customLore;
+	protected List<Text> customLore;
 
 	public ClassDefinition(String name, String classType) {
 		this.name = name;
@@ -185,15 +184,15 @@ public class ClassDefinition implements IEffectSourceProvider {
 		return showsInMenu;
 	}
 
-	public Set<RPGItemType> getAllowedArmor() {
+	public Set<ClassItem> getAllowedArmor() {
 		return allowedArmor;
 	}
 
-	public Map<ItemType, Set<ConfigRPGItemType>> getWeapons() {
+	public Set<ClassItem> getWeapons() {
 		return weapons;
 	}
 
-	public HashMap<ItemType, Set<ConfigRPGItemType>> getOffHandWeapons() {
+	public Set<ClassItem> getOffHandWeapons() {
 		return offHandWeapons;
 	}
 

@@ -2,11 +2,10 @@ package cz.neumimto.rpg.inventory.slotparsers;
 
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.api.effects.IEffectSource;
+import cz.neumimto.rpg.api.items.WeaponClass;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.inventory.CannotUseItemReason;
-import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.WeaponClass;
-import cz.neumimto.rpg.inventory.items.types.CustomItem;
+import cz.neumimto.rpg.inventory.items.types.CustomItemToRemove;
 import cz.neumimto.rpg.persistance.DirectAccessDao;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.CharacterBase;
@@ -110,7 +109,7 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
 			Optional<ItemStack> peek = slot.peek();
 			if (peek.isPresent()) {
 				ItemStack itemStack = peek.get();
-				RPGItemType fromItemStack = itemService().getFromItemStack(itemStack);
+				RPGItemTypeToRemove fromItemStack = itemService().getFromItemStack(itemStack);
 				if (fromItemStack != null) {
 					CannotUseItemReason result;
 					if (fromItemStack.getWeaponClass() == WeaponClass.ARMOR || fromItemStack.getWeaponClass() == WeaponClass.SHIELD) {
@@ -135,7 +134,7 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
 			}
 		} else if (inventoryService().getEffectSourceBySlotId(slot) != null) {
 			EquipedSlot equipedSlot = EquipedSlot.from(slot);
-			CustomItem customItem = character.getEquipedInventorySlots().get(equipedSlot);
+			CustomItemToRemove customItem = character.getEquipedInventorySlots().get(equipedSlot);
 			//item has been taken away from the slot
 			if (!slot.peek().isPresent()) {
 				if (customItem != null) {
@@ -145,7 +144,7 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
 				return false;
 			} else {
 				ItemStack itemStack = slot.peek().get();
-				RPGItemType fromItemStack = itemService().getFromItemStack(itemStack);
+				RPGItemTypeToRemove fromItemStack = itemService().getFromItemStack(itemStack);
 				if (fromItemStack == null) {
 					return false;
 				}
@@ -161,11 +160,11 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
 
 				//no item before
 				if (customItem == null) {
-					CustomItem ci = initializeItemStack(character, slot);
+					CustomItemToRemove ci = initializeItemStack(character, slot);
 					character.getEquipedInventorySlots().put(equipedSlot, ci);
 				} else {
 					deInitializeItemStack(character, equipedSlot);
-					CustomItem ci = initializeItemStack(character, slot);
+					CustomItemToRemove ci = initializeItemStack(character, slot);
 					character.getEquipedInventorySlots().put(equipedSlot, ci);
 				}
 				updateEquipOrder(character, equipedSlot);
@@ -182,7 +181,7 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
 			EquipedSlot eq = EquipedSlot.from(theslot);
 			Optional<ItemStack> peek = theslot.peek();
 			if (!peek.isPresent()) {
-				CustomItem customItem = character.getMainHand();
+				CustomItemToRemove customItem = character.getMainHand();
 				if (customItem != null) {
 					deInitializeItemStack(character, eq);
 					character.setMainHand(null, -1);
@@ -194,9 +193,9 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
 				return;
 			}
 			ItemStack itemStack = peek.get();
-			RPGItemType fromItemStack = itemService().getFromItemStack(itemStack);
+			RPGItemTypeToRemove fromItemStack = itemService().getFromItemStack(itemStack);
 			if (fromItemStack == null) {
-				CustomItem customItem = character.getMainHand();
+				CustomItemToRemove customItem = character.getMainHand();
 				if (customItem != null) {
 					deInitializeItemStack(character, eq);
 					character.setMainHand(null, -1);
@@ -207,7 +206,7 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
 			}
 			CannotUseItemReason cannotUseItemReason = inventoryService().canUse(itemStack, character, fromItemStack, HandTypes.MAIN_HAND);
 			if (cannotUseItemReason != CannotUseItemReason.OK) {
-				CustomItem customItem = character.getMainHand();
+				CustomItemToRemove customItem = character.getMainHand();
 				if (customItem != null) {
 					deInitializeItemStack(character, eq);
 					character.setMainHand(null, -1);
@@ -215,7 +214,7 @@ public class DefaultPlayerInvHandler extends PlayerInvHandler {
 				}
 				Gui.sendCannotUseItemNotification(character, itemStack, cannotUseItemReason);
 			} else {
-				CustomItem customItem = initializeItemStack(character, theslot);
+				CustomItemToRemove customItem = initializeItemStack(character, theslot);
 				character.setMainHand(customItem, slot);
 			}
 			revalidateCaches(character);

@@ -28,6 +28,7 @@ import cz.neumimto.rpg.Console;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.effects.IEffectSource;
+import cz.neumimto.rpg.api.items.WeaponClass;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.damage.DamageService;
@@ -85,7 +86,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-import static cz.neumimto.rpg.common.logging.Log.*;
+import static cz.neumimto.rpg.api.logging.Log.*;
 
 /**
  * Created by NeumimTo on 22.7.2015.
@@ -128,7 +129,7 @@ public class InventoryService {
 	private NtRpgPlugin plugin;
 
 	@Inject
-	private ItemService itemService;
+	private SpongeItemService itemService;
 
 	private PlayerInvHandler playerInvHandler;
 
@@ -345,9 +346,9 @@ public class InventoryService {
 	}
 
 
-	public ItemGroup getItemGroup(RPGItemType itemType) {
+	public ItemGroup getItemGroup(RPGItemTypeToRemove itemType) {
 		for (ItemGroup itemGroup : itemGroups.values()) {
-			for (RPGItemType rpgItemType : itemGroup.getItemTypes()) {
+			for (RPGItemTypeToRemove rpgItemType : itemGroup.getItemTypes()) {
 				if (rpgItemType.getItemType().equals(itemType.getItemType())) {
 					if (rpgItemType.getDisplayName() == null && itemType.getDisplayName() == null
 							&& rpgItemType.getItemType().equals(itemType.getItemType())) {
@@ -392,7 +393,7 @@ public class InventoryService {
 		playerInvHandler.onLeftClick(character, slot, hotbarSlot);
 	}
 
-	public CannotUseItemReason canWear(ItemStack itemStack, IActiveCharacter character, RPGItemType type) {
+	public CannotUseItemReason canWear(ItemStack itemStack, IActiveCharacter character, RPGItemTypeToRemove type) {
 		if (itemStack == null) {
 			return CannotUseItemReason.OK;
 		}
@@ -406,7 +407,7 @@ public class InventoryService {
 	}
 
 
-	public CannotUseItemReason canUse(ItemStack itemStack, IActiveCharacter character, RPGItemType type, HandType h) {
+	public CannotUseItemReason canUse(ItemStack itemStack, IActiveCharacter character, RPGItemTypeToRemove type, HandType h) {
 		if (itemStack == null) {
 			return CannotUseItemReason.OK;
 		}

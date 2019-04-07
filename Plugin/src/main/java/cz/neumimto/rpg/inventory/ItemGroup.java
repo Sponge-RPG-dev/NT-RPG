@@ -10,7 +10,7 @@ import java.util.Set;
  */
 public class ItemGroup {
 
-	private Set<RPGItemType> itemTypes = new HashSet<>();
+	private Set<RPGItemTypeToRemove> itemTypes = new HashSet<>();
 	private int damageMultPropertyId;
 	private String groupName;
 	private ItemGroup directParent;
@@ -24,11 +24,11 @@ public class ItemGroup {
 		this.groupName = groupName;
 	}
 
-	public Set<RPGItemType> getItemTypes() {
+	public Set<RPGItemTypeToRemove> getItemTypes() {
 		return itemTypes;
 	}
 
-	public void setItemTypes(Set<RPGItemType> itemTypes) {
+	public void setItemTypes(Set<RPGItemTypeToRemove> itemTypes) {
 		this.itemTypes = itemTypes;
 	}
 

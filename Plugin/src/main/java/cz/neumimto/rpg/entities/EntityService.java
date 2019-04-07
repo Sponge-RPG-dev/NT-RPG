@@ -20,8 +20,8 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-import static cz.neumimto.rpg.common.logging.Log.info;
-import static cz.neumimto.rpg.common.logging.Log.warn;
+import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.api.logging.Log.warn;
 
 /**
  * Created by NeumimTo on 19.12.2015.

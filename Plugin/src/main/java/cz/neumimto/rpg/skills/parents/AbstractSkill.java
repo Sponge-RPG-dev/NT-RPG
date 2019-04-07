@@ -21,7 +21,7 @@ package cz.neumimto.rpg.skills.parents;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.Console;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.players.CharacterService;

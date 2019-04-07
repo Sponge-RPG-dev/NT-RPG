@@ -24,8 +24,7 @@ import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.entities.IReservable;
-import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.items.types.CustomItem;
+import cz.neumimto.rpg.inventory.items.types.CustomItemToRemove;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
@@ -104,7 +103,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Map<EquipedSlot, CustomItem> getEquipedInventorySlots() {
+	public Map<EquipedSlot, CustomItemToRemove> getEquipedInventorySlots() {
 		return Collections.emptyMap();
 	}
 
@@ -114,7 +113,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public double getBaseWeaponDamage(RPGItemType type) {
+	public double getBaseWeaponDamage(RPGItemTypeToRemove type) {
 		return 0;
 	}
 
@@ -139,7 +138,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public boolean canUse(RPGItemType weaponItemType, HandType type) {
+	public boolean canUse(RPGItemTypeToRemove weaponItemType, HandType type) {
 		return false;
 	}
 
@@ -292,12 +291,12 @@ public class PreloadCharacter implements IActiveCharacter {
 
 
 	@Override
-	public Set<RPGItemType> getAllowedArmor() {
+	public Set<RPGItemTypeToRemove> getAllowedArmor() {
 		return Collections.emptySet();
 	}
 
 	@Override
-	public boolean canWear(RPGItemType armor) {
+	public boolean canWear(RPGItemTypeToRemove armor) {
 		return false;
 	}
 
@@ -569,12 +568,12 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public CustomItem getMainHand() {
+	public CustomItemToRemove getMainHand() {
 		return null;
 	}
 
 	@Override
-	public void setMainHand(CustomItem customItem, int slot) {
+	public void setMainHand(CustomItemToRemove customItem, int slot) {
 
 	}
 
@@ -584,12 +583,12 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public CustomItem getOffHand() {
+	public CustomItemToRemove getOffHand() {
 		return null;
 	}
 
 	@Override
-	public void setOffHand(CustomItem customItem) {
+	public void setOffHand(CustomItemToRemove customItem) {
 
 	}
 

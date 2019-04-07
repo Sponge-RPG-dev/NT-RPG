@@ -42,11 +42,11 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
 import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static cz.neumimto.rpg.common.logging.Log.*;
+import static cz.neumimto.rpg.api.logging.Log.*;
 
 /**
  * Created by NeumimTo on 24.7.2015.

@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static cz.neumimto.rpg.common.logging.Log.warn;
+import static cz.neumimto.rpg.api.logging.Log.warn;
 
 /**
  * Created by NeumimTo on 8.4.2017.

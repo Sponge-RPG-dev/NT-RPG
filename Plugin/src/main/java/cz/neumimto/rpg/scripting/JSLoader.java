@@ -23,7 +23,7 @@ import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.configs.SkillsDefinition;
@@ -51,8 +51,8 @@ import java.util.*;
 import java.util.function.Consumer;
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-import static cz.neumimto.rpg.common.logging.Log.error;
-import static cz.neumimto.rpg.common.logging.Log.info;
+import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.api.logging.Log.info;
 
 /**
  * Created by NeumimTo on 13.3.2015.

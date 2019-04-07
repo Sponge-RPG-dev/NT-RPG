@@ -25,9 +25,7 @@ import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.entities.IReservable;
-import cz.neumimto.rpg.inventory.ConfigRPGItemType;
-import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.items.types.CustomItem;
+import cz.neumimto.rpg.inventory.items.types.CustomItemToRemove;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
@@ -88,10 +86,10 @@ public class ActiveCharacter implements IActiveCharacter {
 	private IPlayerSkillHandler skills;
 
 	private transient Click click = new Click();
-	private transient Set<RPGItemType> allowedArmorIds = new HashSet<>();
+	private transient Set<RPGItemTypeToRemove> allowedArmorIds = new HashSet<>();
 	private transient Map<ItemType, RPGItemWrapper> allowedWeapons = new HashMap<>();
 	private transient Map<EntityType, Double> projectileDamage = new HashMap<>();
-	private transient Set<RPGItemType> allowedOffHandWeapons = new HashSet<>();
+	private transient Set<RPGItemTypeToRemove> allowedOffHandWeapons = new HashSet<>();
 	private Map<String, Long> cooldowns = new HashMap<>();
 	private transient WeakReference<Party> pendingPartyInvite = new WeakReference<>(null);
 	private transient double weaponDamage;
@@ -101,7 +99,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	private transient Map<String, Integer> transientAttributes = new HashMap<>();
 
 	private transient List<Integer> slotsToReinitialize;
-	private transient Map<EquipedSlot, CustomItem> equipedArmor;
+	private transient Map<EquipedSlot, CustomItemToRemove> equipedArmor;
 	private Set<EquipedSlot> denySlotInteractionArr;
 
 	private Set<SkillTreeSpecialization> specs = new HashSet<>();
@@ -109,9 +107,9 @@ public class ActiveCharacter implements IActiveCharacter {
 	private transient Map<String, SkillTreeViewModel> skillTreeViewLocation;
 	private transient Map<String, Integer> attributeSession = new HashMap<>();
 
-	private CustomItem offHand;
+	private CustomItemToRemove offHand;
 	private int mainHandSlotId;
-	private CustomItem mainHand;
+	private CustomItemToRemove mainHand;
 	private PlayerClassData primaryClass;
 
 	public ActiveCharacter(UUID uuid, CharacterBase base) {
@@ -246,7 +244,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Map<EquipedSlot, CustomItem> getEquipedInventorySlots() {
+	public Map<EquipedSlot, CustomItemToRemove> getEquipedInventorySlots() {
 		return equipedArmor;
 	}
 
@@ -325,7 +323,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public double getBaseWeaponDamage(RPGItemType weaponItemType) {
+	public double getBaseWeaponDamage(RPGItemTypeToRemove weaponItemType) {
 		RPGItemWrapper wrapper = getAllowedWeapons().get(weaponItemType.getItemType());
 		if (wrapper == null) {
 			return 0D;
@@ -422,17 +420,17 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Set<RPGItemType> getAllowedArmor() {
+	public Set<RPGItemTypeToRemove> getAllowedArmor() {
 		return allowedArmorIds;
 	}
 
 	@Override
-	public boolean canWear(RPGItemType armor) {
+	public boolean canWear(RPGItemTypeToRemove armor) {
 		return getAllowedArmor().contains(armor);
 	}
 
 	@Override
-	public boolean canUse(RPGItemType weaponItemType, HandType h) {
+	public boolean canUse(RPGItemTypeToRemove weaponItemType, HandType h) {
 		if (h == HandTypes.MAIN_HAND) {
 			RPGItemWrapper set = getAllowedWeapons().get(weaponItemType.getItemType());
 			return set != null && set.containsItem(weaponItemType);
@@ -700,7 +698,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public CustomItem getMainHand() {
+	public CustomItemToRemove getMainHand() {
 		return mainHand;
 	}
 
@@ -710,18 +708,18 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public void setMainHand(CustomItem customItem, int slot) {
+	public void setMainHand(CustomItemToRemove customItem, int slot) {
 		this.mainHand = customItem;
 		this.mainHandSlotId = slot;
 	}
 
 	@Override
-	public CustomItem getOffHand() {
+	public CustomItemToRemove getOffHand() {
 		return offHand;
 	}
 
 	@Override
-	public void setOffHand(CustomItem customItem) {
+	public void setOffHand(CustomItemToRemove customItem) {
 		this.offHand = customItem;
 	}
 

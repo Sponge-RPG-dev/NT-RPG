@@ -58,8 +58,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-import static cz.neumimto.rpg.common.logging.Log.error;
-import static cz.neumimto.rpg.common.logging.Log.info;
+import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.api.logging.Log.info;
 
 /**
  * Created by NeumimTo on 27.12.2014.

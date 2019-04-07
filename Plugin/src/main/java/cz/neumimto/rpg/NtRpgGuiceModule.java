@@ -15,7 +15,7 @@ import cz.neumimto.rpg.gui.ParticleDecorator;
 import cz.neumimto.rpg.gui.VanillaMessaging;
 import cz.neumimto.rpg.inventory.CustomItemFactory;
 import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.inventory.ItemService;
+import cz.neumimto.rpg.inventory.SpongeItemService;
 import cz.neumimto.rpg.inventory.runewords.RWDao;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.slotparsers.DefaultPlayerInvHandler;
@@ -58,7 +58,7 @@ public class NtRpgGuiceModule extends AbstractModule {
         bind(VanillaMessaging.class);
         bind(CustomItemFactory.class);
         bind(InventoryService.class);
-        bind(ItemService.class);
+        bind(SpongeItemService.class);
         bind(RWDao.class);
         bind(RWService.class);
         bind(DefaultPlayerInvHandler.class);

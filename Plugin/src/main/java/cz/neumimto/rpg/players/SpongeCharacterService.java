@@ -4,7 +4,6 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.events.PlayerDataPreloadComplete;
 import cz.neumimto.rpg.events.character.*;
-import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.skills.ISkill;
@@ -50,7 +49,7 @@ public class SpongeCharacterService extends CharacterService {
 
     @Override
     public void updateArmorRestrictions(IActiveCharacter character) {
-        Set<RPGItemType> allowedArmor = character.getAllowedArmor();
+        Set<RPGItemTypeToRemove> allowedArmor = character.getAllowedArmor();
 
         EventCharacterArmorPostUpdate event = new EventCharacterArmorPostUpdate(character, allowedArmor);
         game.getEventManager().post(event);

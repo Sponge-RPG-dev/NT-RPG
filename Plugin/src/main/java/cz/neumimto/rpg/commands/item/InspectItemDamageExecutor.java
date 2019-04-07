@@ -1,12 +1,10 @@
 package cz.neumimto.rpg.commands.item;
 
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.items.WeaponClass;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.inventory.ConfigRPGItemType;
-import cz.neumimto.rpg.inventory.ItemService;
-import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.WeaponClass;
+import cz.neumimto.rpg.inventory.SpongeItemService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
@@ -29,14 +27,14 @@ public class InspectItemDamageExecutor implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		Player player = args.<Player>getOne("player").get();
-		ItemService is = NtRpgPlugin.GlobalScope.itemService;
+		SpongeItemService is = NtRpgPlugin.GlobalScope.itemService;
 		Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
 		if (!itemInHand.isPresent()) {
 			src.sendMessage(Text.of(player.getName() + " has no item in main hand"));
 			return CommandResult.empty();
 		}
 		ItemStack itemStack = itemInHand.get();
-		RPGItemType fromItemStack = is.getFromItemStack(itemStack);
+		RPGItemTypeToRemove fromItemStack = is.getFromItemStack(itemStack);
 		WeaponClass weaponClass = fromItemStack.getWeaponClass();
 		List<WeaponClass> parents = new LinkedList<>();
 		WeaponClass parent = weaponClass.getParent();

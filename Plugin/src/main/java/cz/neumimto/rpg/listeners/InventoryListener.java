@@ -21,8 +21,11 @@ package cz.neumimto.rpg.listeners;
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.items.WeaponClass;
 import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.inventory.*;
+import cz.neumimto.rpg.inventory.CannotUseItemReason;
+import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.SpongeItemService;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -72,7 +75,7 @@ public class InventoryListener {
 	private CharacterService characterService;
 
 	@Inject
-	private ItemService itemService;
+	private SpongeItemService itemService;
 
 	@Inject
 	private SkillService skillService;
@@ -95,7 +98,7 @@ public class InventoryListener {
 	public void onHotbarInteract(InteractItemEvent event, @First(typeFilter = Player.class) Player player) {
 		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
 
-		RPGItemType rpgItemType = itemService.getFromItemStack(event.getItemStack());
+		RPGItemTypeToRemove rpgItemType = itemService.getFromItemStack(event.getItemStack());
 		if (rpgItemType != null) {
 			ItemStack stack = event.getItemStack().createStack();
 			CannotUseItemReason reason;
@@ -212,7 +215,7 @@ public class InventoryListener {
 			Transaction<ItemStackSnapshot> transaction = itemStack.get();
 			ItemStackSnapshot aFinal = transaction.getFinal();
 			if (aFinal.getType() == ItemTypes.AIR) {
-				RPGItemType rpgItemType = itemService.getFromItemStack(transaction.getOriginal());
+				RPGItemTypeToRemove rpgItemType = itemService.getFromItemStack(transaction.getOriginal());
 				if (rpgItemType != null) {
 					inventoryService.processHotbarItemDispense(event.getTargetEntity());
 				}

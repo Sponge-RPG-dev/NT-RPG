@@ -21,8 +21,8 @@ import cz.neumimto.rpg.ClassService;
 import cz.neumimto.rpg.MissingConfigurationException;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.api.IRpgElement;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.effects.EffectService;
-import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.damage.DamageService;
@@ -65,7 +65,7 @@ import java.util.stream.Collectors;
 
 import static cz.neumimto.core.localization.Arg.arg;
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-import static cz.neumimto.rpg.common.logging.Log.*;
+import static cz.neumimto.rpg.api.logging.Log.*;
 
 /**
  * Created by NeumimTo on 26.12.2014.

@@ -2,7 +2,7 @@ package cz.neumimto.rpg.configuration.adapters;
 
 import com.google.common.reflect.TypeToken;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.inventory.WeaponClass;
+import cz.neumimto.rpg.api.items.WeaponClass;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;

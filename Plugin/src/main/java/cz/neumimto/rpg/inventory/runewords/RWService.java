@@ -36,7 +36,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-import static cz.neumimto.rpg.common.logging.Log.warn;
+import static cz.neumimto.rpg.api.logging.Log.warn;
 
 /**
  * Created by NeumimTo on 29.10.2015.

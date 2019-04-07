@@ -22,8 +22,7 @@ import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.entities.IEntityType;
 import cz.neumimto.rpg.entities.IReservable;
-import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.items.types.CustomItem;
+import cz.neumimto.rpg.inventory.items.types.CustomItemToRemove;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
@@ -86,7 +85,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setHealth(IReservable health);
 
-	Map<EquipedSlot, CustomItem> getEquipedInventorySlots();
+	Map<EquipedSlot, CustomItemToRemove> getEquipedInventorySlots();
 
 	Player getPlayer();
 
@@ -108,11 +107,11 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	boolean hasCooldown(String thing);
 
-	double getBaseWeaponDamage(RPGItemType type);
+	double getBaseWeaponDamage(RPGItemTypeToRemove type);
 
-	Set<RPGItemType> getAllowedArmor();
+	Set<RPGItemTypeToRemove> getAllowedArmor();
 
-	boolean canWear(RPGItemType armor);
+	boolean canWear(RPGItemTypeToRemove armor);
 
 	Map<ItemType, RPGItemWrapper> getAllowedWeapons();
 
@@ -158,7 +157,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setPendingPartyInvite(Party party);
 
-	boolean canUse(RPGItemType weaponItemType, HandType h);
+	boolean canUse(RPGItemTypeToRemove weaponItemType, HandType h);
 
 	double getWeaponDamage();
 
@@ -180,15 +179,15 @@ public interface IActiveCharacter extends IEntity<Player> {
 
 	void setInvulnerable(boolean b);
 
-	CustomItem getMainHand();
+	CustomItemToRemove getMainHand();
 
 	int getMainHandSlotId();
 
-	void setMainHand(CustomItem customItem, int slot);
+	void setMainHand(CustomItemToRemove customItem, int slot);
 
-	CustomItem getOffHand();
+	CustomItemToRemove getOffHand();
 
-	void setOffHand(CustomItem customItem);
+	void setOffHand(CustomItemToRemove customItem);
 
 	@Override
 	default IEntityType getType() {

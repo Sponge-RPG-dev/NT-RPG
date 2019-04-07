@@ -28,7 +28,7 @@ import cz.neumimto.rpg.gui.ParticleDecorator;
 import cz.neumimto.rpg.gui.VanillaMessaging;
 import cz.neumimto.rpg.inventory.CustomItemFactory;
 import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.inventory.ItemService;
+import cz.neumimto.rpg.inventory.SpongeItemService;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.parties.PartyService;
@@ -86,7 +86,7 @@ public class GlobalScope {
 	public PropertyService propertyService;
 
 	@Inject
-	public ItemService itemService;
+	public SpongeItemService itemService;
 
 	@Inject
 	public Injector injector;

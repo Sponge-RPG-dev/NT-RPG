@@ -7,8 +7,7 @@ import cz.neumimto.rpg.api.effects.IEffectSource;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.gui.GuiHelper;
-import cz.neumimto.rpg.inventory.ConfigRPGItemType;
-import cz.neumimto.rpg.inventory.ItemService;
+import cz.neumimto.rpg.inventory.SpongeItemService;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.mods.SkillContext;
@@ -29,7 +28,7 @@ import java.util.stream.Collectors;
 public class ItemAccessSkill extends AbstractSkill {
 
 	@Inject
-	private ItemService itemService;
+	private SpongeItemService itemService;
 
 	public ItemAccessSkill() {
 		super();

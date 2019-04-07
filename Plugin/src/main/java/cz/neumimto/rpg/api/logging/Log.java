@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.common.logging;
+package cz.neumimto.rpg.api.logging;
 
 
 import cz.neumimto.rpg.configuration.DebugLevel;

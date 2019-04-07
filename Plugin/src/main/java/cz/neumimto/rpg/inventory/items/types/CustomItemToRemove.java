@@ -4,7 +4,6 @@ import cz.neumimto.rpg.api.effects.IEffectSource;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.effects.IGlobalEffect;
-import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -16,16 +15,16 @@ import java.util.Map;
 /**
  * Created by NeumimTo on 26.2.2017.
  */
-public class CustomItem implements IEffectSourceProvider {
+public class CustomItemToRemove implements IEffectSourceProvider {
 
 	private final IEffectSource effectSource;
 	protected Map<IGlobalEffect, EffectParams> effects = new HashMap<>();
 	protected ItemStackSnapshot itemStack;
 	private int slot;
 	private int level;
-	private RPGItemType rpgItemType;
+	private RPGItemTypeToRemove rpgItemType;
 
-	public CustomItem(ItemStack itemStack, IEffectSource effectSource, RPGItemType rpgItemType) {
+	public CustomItemToRemove(ItemStack itemStack, IEffectSource effectSource, RPGItemTypeToRemove rpgItemType) {
 		this.itemStack = itemStack.createSnapshot();
 		this.effectSource = effectSource;
 		this.rpgItemType = rpgItemType;
@@ -68,7 +67,7 @@ public class CustomItem implements IEffectSourceProvider {
 		return itemStack;
 	}
 
-	public RPGItemType getRpgItemType() {
+	public RPGItemTypeToRemove getRpgItemType() {
 		return rpgItemType;
 	}
 }

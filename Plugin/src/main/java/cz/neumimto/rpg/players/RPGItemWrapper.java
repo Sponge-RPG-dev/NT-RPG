@@ -1,11 +1,9 @@
 package cz.neumimto.rpg.players;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-import cz.neumimto.rpg.inventory.ConfigRPGItemType;
-import cz.neumimto.rpg.inventory.RPGItemType;
-
 import java.util.HashSet;
 import java.util.Set;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 public class RPGItemWrapper {
 
@@ -27,7 +25,7 @@ public class RPGItemWrapper {
 		}
 	}
 
-	public boolean containsItem(RPGItemType from) {
+	public boolean containsItem(RPGItemTypeToRemove from) {
 		for (ConfigRPGItemType item : items) {
 			if (item.getRpgItemType().getItemType() == from.getItemType()) {
 				if (item.getRpgItemType().getDisplayName() == null && from.getDisplayName() == null) {
@@ -45,7 +43,7 @@ public class RPGItemWrapper {
 		return items;
 	}
 
-	public double getDamage(RPGItemType rpgItemType) {
+	public double getDamage(RPGItemTypeToRemove rpgItemType) {
 		double damage = 0;
 		switch (pluginConfig.WEAPON_MERGE_STRATEGY) {
 			case 2:

@@ -22,7 +22,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.PluginCore;
-import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.configuration.Settings;
@@ -61,7 +61,6 @@ import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactory;
 import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactoryRegistry;
 import cz.neumimto.rpg.skills.mods.SkillPreprocessorFactories;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.utils.EditorMappings;
 import cz.neumimto.rpg.utils.FileUtils;
 import cz.neumimto.rpg.utils.Placeholders;
 import cz.neumimto.rpg.utils.PseudoRandomDistribution;
@@ -94,7 +93,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-import static cz.neumimto.rpg.common.logging.Log.info;
+import static cz.neumimto.rpg.api.logging.Log.info;
 
 /**
  * Created by NeumimTo on 29.4.2015.
@@ -441,7 +440,6 @@ public class NtRpgPlugin {
 			info("Placeholders Disabled");
 		}
 
-		EditorMappings.dump();
 		double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
 		info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
 	}

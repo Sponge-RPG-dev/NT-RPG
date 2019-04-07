@@ -22,9 +22,7 @@ import com.google.common.collect.Lists;
 import cz.neumimto.rpg.ClassService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.IEntity;
-import cz.neumimto.rpg.inventory.ConfigRPGItemType;
-import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.items.types.CustomItem;
+import cz.neumimto.rpg.inventory.items.types.CustomItemToRemove;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
@@ -69,7 +67,7 @@ public class DamageService {
 			TextColors.GRAY
 	};
 
-	public double getCharacterItemDamage(IActiveCharacter character, RPGItemType type) {
+	public double getCharacterItemDamage(IActiveCharacter character, RPGItemTypeToRemove type) {
 		if (character.isStub() || type == null) {
 			return 1;
 		}
@@ -107,11 +105,11 @@ public class DamageService {
 		if (character.isStub()) {
 			return;
 		}
-		CustomItem mainHand = character.getMainHand();
+		CustomItemToRemove mainHand = character.getMainHand();
 		recalculateCharacterWeaponDamage(character, mainHand);
 	}
 
-	public void recalculateCharacterWeaponDamage(IActiveCharacter character, CustomItem mainHand) {
+	public void recalculateCharacterWeaponDamage(IActiveCharacter character, CustomItemToRemove mainHand) {
 		if (character.isStub()) {
 			return;
 		}
@@ -122,7 +120,7 @@ public class DamageService {
 		}
 	}
 
-	public void recalculateCharacterWeaponDamage(IActiveCharacter character, RPGItemType type) {
+	public void recalculateCharacterWeaponDamage(IActiveCharacter character, RPGItemTypeToRemove type) {
 		double damage = getCharacterItemDamage(character, type);
 		// damage += character.getMainHand().getDamage() + character.getOffHand().getDamage();
 		character.setWeaponDamage(damage);

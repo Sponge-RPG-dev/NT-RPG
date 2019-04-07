@@ -1,11 +1,10 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.api.items.WeaponClass;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.PluginConfig;
-import cz.neumimto.rpg.inventory.ItemService;
-import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.WeaponClass;
+import cz.neumimto.rpg.inventory.SpongeItemService;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.CharacterService;
@@ -33,7 +32,7 @@ public class TestPropertyValueResolving {
     //@Test
     public void test0() {
         PropertyService propertyService = NtRpgPlugin.GlobalScope.propertyService;
-        ItemService i = NtRpgPlugin.GlobalScope.itemService;
+        SpongeItemService i = NtRpgPlugin.GlobalScope.itemService;
 
         CharacterService characterService = NtRpgPlugin.GlobalScope.characterService;
 
@@ -58,7 +57,7 @@ public class TestPropertyValueResolving {
 
         i.registerItemType(ItemTypes.DIAMOND_AXE, null, weaponClass0, 0);
 
-        RPGItemType item = i.getByItemTypeAndName(ItemTypes.DIAMOND_AXE, (Text) null);
+        RPGItemTypeToRemove item = i.getByItemTypeAndName(ItemTypes.DIAMOND_AXE, (Text) null);
 
         UUID uuid = UUID.randomUUID();
         IActiveCharacter character = new ActiveCharacter(uuid, new CharacterBase());

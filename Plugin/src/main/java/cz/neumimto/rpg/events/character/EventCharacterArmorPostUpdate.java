@@ -18,7 +18,6 @@
 
 package cz.neumimto.rpg.events.character;
 
-import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.players.IActiveCharacter;
 
 import java.util.Set;
@@ -28,14 +27,14 @@ import java.util.Set;
  */
 public class EventCharacterArmorPostUpdate extends AbstractCharacterEvent {
 
-	private Set<RPGItemType> armor;
+	private Set<RPGItemTypeToRemove> armor;
 
-	public EventCharacterArmorPostUpdate(IActiveCharacter character, Set<RPGItemType> allowedArmor) {
+	public EventCharacterArmorPostUpdate(IActiveCharacter character, Set<RPGItemTypeToRemove> allowedArmor) {
 		super(character);
 		this.armor = allowedArmor;
 	}
 
-	public Set<RPGItemType> getArmor() {
+	public Set<RPGItemTypeToRemove> getArmor() {
 		return armor;
 	}
 

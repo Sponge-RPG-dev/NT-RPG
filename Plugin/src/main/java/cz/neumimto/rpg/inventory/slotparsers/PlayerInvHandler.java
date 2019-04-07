@@ -1,11 +1,15 @@
 package cz.neumimto.rpg.inventory.slotparsers;
 
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.items.WeaponClass;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.inventory.*;
-import cz.neumimto.rpg.inventory.items.types.CustomItem;
+import cz.neumimto.rpg.inventory.CannotUseItemReason;
+import cz.neumimto.rpg.inventory.CustomItemFactory;
+import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.SpongeItemService;
+import cz.neumimto.rpg.inventory.items.types.CustomItemToRemove;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -72,7 +76,7 @@ public abstract class PlayerInvHandler implements CatalogType {
 		Optional<ItemStack> peek = slot.peek();
 		if (peek.isPresent()) {
 			ItemStack itemStack = peek.get();
-			RPGItemType fromItemStack = itemService().getFromItemStack(itemStack);
+			RPGItemTypeToRemove fromItemStack = itemService().getFromItemStack(itemStack);
 			if (fromItemStack == null) {
 				return true;
 			}
@@ -85,12 +89,12 @@ public abstract class PlayerInvHandler implements CatalogType {
 		return true;
 	}
 
-	protected boolean checkForItem(IActiveCharacter character, ItemStack itemStack, RPGItemType itemType, HandType h) {
+	protected boolean checkForItem(IActiveCharacter character, ItemStack itemStack, RPGItemTypeToRemove itemType, HandType h) {
 		CannotUseItemReason cannotUseItemReason = inventoryService().canUse(itemStack, character, itemType, h);
 		return cannotUseItemReason == CannotUseItemReason.OK;
 	}
 
-	protected boolean checkForArmorItem(IActiveCharacter character, ItemStack itemStack, RPGItemType itemType) {
+	protected boolean checkForArmorItem(IActiveCharacter character, ItemStack itemStack, RPGItemTypeToRemove itemType) {
 		CannotUseItemReason cannotUseItemReason = inventoryService().canWear(itemStack, character, itemType);
 		return cannotUseItemReason == CannotUseItemReason.OK;
 	}
@@ -104,11 +108,11 @@ public abstract class PlayerInvHandler implements CatalogType {
 	 * @param character player
 	 * @param query Slot having an item to be equipied
 	 */
-	protected CustomItem initializeItemStack(IActiveCharacter character, Slot query) {
+	protected CustomItemToRemove initializeItemStack(IActiveCharacter character, Slot query) {
 		Optional<ItemStack> oItemStack = query.peek();
 		if (oItemStack.isPresent()) {
 			ItemStack itemStack = oItemStack.get();
-			CustomItem customItem = CustomItemFactory.createCustomItem(itemStack, query);
+			CustomItemToRemove customItem = CustomItemFactory.createCustomItem(itemStack, query);
 			effectService().applyGlobalEffectsAsEnchantments(customItem.getEffects(), character, customItem); //todo
 			return customItem;
 		}
@@ -116,7 +120,7 @@ public abstract class PlayerInvHandler implements CatalogType {
 	}
 
 	protected void deInitializeItemStack(IActiveCharacter character, EquipedSlot query) {
-		CustomItem item = character.getEquipedInventorySlots().get(query);
+		CustomItemToRemove item = character.getEquipedInventorySlots().get(query);
 		if (item != null) {
 			effectService().removeGlobalEffectsAsEnchantments(item.getEffects().keySet(), character, item);
 		}
@@ -150,7 +154,7 @@ public abstract class PlayerInvHandler implements CatalogType {
 		return NtRpgPlugin.GlobalScope.inventorySerivce;
 	}
 
-	protected ItemService itemService() {
+	protected SpongeItemService itemService() {
 		return NtRpgPlugin.GlobalScope.itemService;
 	}
 
@@ -168,7 +172,7 @@ public abstract class PlayerInvHandler implements CatalogType {
 
 
 	public void processHotbarItemDispense(IActiveCharacter character) {
-		CustomItem mainHand = character.getMainHand();
+		CustomItemToRemove mainHand = character.getMainHand();
 		if (mainHand != null) {
 			Hotbar query = character.getPlayer().getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
 			Optional<Slot> slot = query.getSlot(new SlotIndex(query.getSelectedSlotIndex()));
@@ -194,13 +198,13 @@ public abstract class PlayerInvHandler implements CatalogType {
 		/* Slot dispense */
 		boolean recalc = false;
 		if (futureMainHand == null) {
-			CustomItem mainHand = character.getMainHand();
+			CustomItemToRemove mainHand = character.getMainHand();
 			if (mainHand != null) {
 				deInitializeItemStack(character, HandTypes.MAIN_HAND);
 				recalc = true;
 			}
 		} else {
-			RPGItemType fromItemStack = itemService().getFromItemStack(futureMainHand);
+			RPGItemTypeToRemove fromItemStack = itemService().getFromItemStack(futureMainHand);
 			if (fromItemStack != null) {
 				CannotUseItemReason reason;
 				if (fromItemStack.getWeaponClass() == WeaponClass.SHIELD || fromItemStack.getWeaponClass() == WeaponClass.ARMOR) {
@@ -222,13 +226,13 @@ public abstract class PlayerInvHandler implements CatalogType {
 			}
 		}
 		if (futureOffHand == null) {
-			CustomItem offHand = character.getOffHand();
+			CustomItemToRemove offHand = character.getOffHand();
 			if (offHand != null) {
 				deInitializeItemStack(character, HandTypes.OFF_HAND);
 				recalc = true;
 			}
 		} else {
-			RPGItemType fromItemStack = itemService().getFromItemStack(futureOffHand);
+			RPGItemTypeToRemove fromItemStack = itemService().getFromItemStack(futureOffHand);
 			if (fromItemStack != null) {
 				CannotUseItemReason reason;
 				if (fromItemStack.getWeaponClass() == WeaponClass.SHIELD || fromItemStack.getWeaponClass() == WeaponClass.ARMOR) {
@@ -265,16 +269,16 @@ public abstract class PlayerInvHandler implements CatalogType {
 	 * @return True if damage cache should be re-validated, null if item cannto be used in the offhand
 	 */
 	public Boolean initializeOffHandSlot(IActiveCharacter character, ItemStack futureOffHand) {
-		CustomItem oh = character.getOffHand();
+		CustomItemToRemove oh = character.getOffHand();
 		if (oh != null) {
 			deInitializeItemStack(character, HandTypes.OFF_HAND);
 			return true;
 		}
 		if (futureOffHand != null) {
-			RPGItemType fromItemStack = itemService().getFromItemStack(futureOffHand);
+			RPGItemTypeToRemove fromItemStack = itemService().getFromItemStack(futureOffHand);
 			if (fromItemStack != null && fromItemStack.getWeaponClass() == WeaponClass.SHIELD) {
 				if (character.canWear(fromItemStack)) {
-					CustomItem customItem = CustomItemFactory.createCustomItemForHandSlot(futureOffHand, HandTypes.OFF_HAND);
+					CustomItemToRemove customItem = CustomItemFactory.createCustomItemForHandSlot(futureOffHand, HandTypes.OFF_HAND);
 					initializeItemStack(character, HandTypes.OFF_HAND, customItem);
 				}
 			} else if (inventoryService().canUse(futureOffHand, character, fromItemStack, HandTypes.OFF_HAND) != CannotUseItemReason.OK) {
@@ -284,7 +288,7 @@ public abstract class PlayerInvHandler implements CatalogType {
 		return false;
 	}
 
-	public void initializeItemStack(IActiveCharacter character, HandType handType, CustomItem customItem) {
+	public void initializeItemStack(IActiveCharacter character, HandType handType, CustomItemToRemove customItem) {
 		if (handType == HandTypes.OFF_HAND) {
 			character.setOffHand(customItem);
 		} else {
@@ -297,7 +301,7 @@ public abstract class PlayerInvHandler implements CatalogType {
 	}
 
 	public void deInitializeItemStack(IActiveCharacter character, HandType handType) {
-		CustomItem customItem;
+		CustomItemToRemove customItem;
 		if (handType == HandTypes.OFF_HAND) {
 			customItem = character.getOffHand();
 			character.setOffHand(null);

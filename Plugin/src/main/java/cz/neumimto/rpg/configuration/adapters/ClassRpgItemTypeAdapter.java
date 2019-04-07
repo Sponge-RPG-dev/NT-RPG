@@ -4,11 +4,12 @@ import com.google.common.reflect.TypeToken;
 import cz.neumimto.config.blackjack.and.hookers.annotations.EnableSetterInjection;
 import cz.neumimto.config.blackjack.and.hookers.annotations.Setter;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.Rpg;
+import cz.neumimto.rpg.api.items.ClassItem;
+import cz.neumimto.rpg.api.items.RpgItemType;
+import cz.neumimto.rpg.api.items.WeaponClass;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
-import cz.neumimto.rpg.inventory.ConfigRPGItemType;
-import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.WeaponClass;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
@@ -21,8 +22,7 @@ import java.util.*;
  * Created by NeumimTo on 5.1.2019.
  */
 @EnableSetterInjection
-public class WeaponsAdapter implements TypeSerializer<Map<ItemType, Set<ConfigRPGItemType>>> {
-
+public class ClassRpgItemTypeAdapter implements TypeSerializer<Set<ClassItem>> {
 
 	private IEffectSourceProvider provider;
 
@@ -32,30 +32,34 @@ public class WeaponsAdapter implements TypeSerializer<Map<ItemType, Set<ConfigRP
 	}
 
 	@Override
-	public Map<ItemType, Set<ConfigRPGItemType>> deserialize(TypeToken<?> typeToken, ConfigurationNode configurationNode)
+	public Set<ClassItem> deserialize(TypeToken<?> typeToken, ConfigurationNode configurationNode)
 			throws ObjectMappingException {
-		Map<ItemType, Set<ConfigRPGItemType>> map = new HashMap<>();
-		List<String> list = configurationNode.getList(TypeToken.of(String.class));
+
+
+		Set<ClassItem> items = new HashSet<>();
 
 		Set<WeaponClass> weaponClasses = new HashSet<>();
 
+		List<String> list = configurationNode.getList(TypeToken.of(String.class));
+
+		for (String s : list) {
+
+		}
+
 		Iterator<String> iterator = list.iterator();
 		while (iterator.hasNext()) {
-			String s = iterator.next();
-			if (s.toLowerCase().startsWith("weaponclass:")) {
+			String s = iterator.next().toLowerCase();
+			if (s.startsWith("weaponclass:")) {
 				String clazz = s.split(":")[1];
-				Optional<WeaponClass> first = NtRpgPlugin.GlobalScope.itemService.getWeaponCLasses().stream().filter(a -> a.getName().equalsIgnoreCase(clazz)).findFirst();
-				if (first.isPresent()) {
-						WeaponClass weaponClass = first.get();
-						weaponClasses.add(weaponClass);
-						iterator.remove();
-					}
-				}
+				Set<RpgItemType> itemTypes = Rpg.get().getItemService().getItemTypesByWeaponClass(clazz);
+
 			}
+			Rpg.get().getConfigAdapter()(s.toLowerCase());
+		}
 
 		for (WeaponClass weaponClass : weaponClasses) {
-			Set<RPGItemType> items = weaponClass.getItems();
-			for (RPGItemType item : items) {
+			Set<RPGItemTypeToRemove> items = weaponClass.getItems();
+			for (RPGItemTypeToRemove item : items) {
 				if (!hasSameitemType(list, item)) {
 					list.add(item.toConfigString());
 				}
@@ -86,7 +90,7 @@ public class WeaponsAdapter implements TypeSerializer<Map<ItemType, Set<ConfigRP
 					displayName = split[2];
 				}
 			}
-			RPGItemType byItemTypeAndName = NtRpgPlugin.GlobalScope.itemService.getByItemTypeAndName(type, displayName);
+			RPGItemTypeToRemove byItemTypeAndName = NtRpgPlugin.GlobalScope.itemService.getByItemTypeAndName(type, displayName);
 			if (byItemTypeAndName == null) {
 				Log.warn("Unknown item defined - " + type + " " + displayName + ". Check your ItemGroups.conf");
 				continue;
@@ -98,7 +102,7 @@ public class WeaponsAdapter implements TypeSerializer<Map<ItemType, Set<ConfigRP
 		return map;
 	}
 
-	private boolean hasSameitemType(List<String> list, RPGItemType item) {
+	private boolean hasSameitemType(List<String> list, RPGItemTypeToRemove item) {
 		for (String s : list) {
 			if (s.startsWith(item.getItemType().getId())) {
 				String[] split = s.split(";");
@@ -137,7 +141,7 @@ public class WeaponsAdapter implements TypeSerializer<Map<ItemType, Set<ConfigRP
 	}
 
 	@Override
-	public void serialize(TypeToken<?> typeToken, Map<ItemType, Set<ConfigRPGItemType>> itemTypeSetMap, ConfigurationNode configurationNode) {
+	public void serialize(TypeToken<?> typeToken,Set<ClassItem> itemTypeSetMap, ConfigurationNode configurationNode) {
 
 	}
 }
