@@ -50,16 +50,13 @@ public abstract class AbstractItemService implements ItemService {
 
     @Override
     public void registerWeaponClass(WeaponClass weaponClass) {
-        registerWeaponClassRecursivly(weaponClass);
-    }
+        weaponClassMap.put(weaponClass.getName(), weaponClass);
 
-    private void registerWeaponClassRecursivly(WeaponClass weaponClass) {
         for (WeaponClass subClass : weaponClass.getSubClass()) {
             weaponClassMap.put(subClass.getName(), subClass);
-
-            registerWeaponClassRecursivly(subClass);
         }
     }
+
 
     @Override
     public Optional<RpgItemType> getRpgItemType(String itemId, String model) {
@@ -126,17 +123,18 @@ public abstract class AbstractItemService implements ItemService {
             String weaponClass;
             try {
                 weaponClass = itemGroup.getString("WeaponClass");
+                info(" - Loading weaponClass" + weaponClass);
+                WeaponClass weapons = new WeaponClass(weaponClass);
+                weapons.setParent(parent);
+                if (parent != null) {
+                    parent.getSubClass().add(weapons);
+                }
+                registerWeaponClass(weapons);
+                loadItemGroupsItems(itemGroup, weaponClass, weapons);
+                loadItemGroupsProperties(itemGroup, weapons);
             } catch (ConfigException e) {
-                error("Could not read \"WeaponClass\" node, skipping. This is a critical miss configuration, some items will not be recognized "
-                        + "as weapons");
-                continue;
+                error("Could not read \"WeaponClass\" node, skipping. This is a critical miss configuration, some items will not be recognized as weapons");
             }
-            info(" - Loading weaponClass" + weaponClass);
-            WeaponClass weapons = new WeaponClass(weaponClass);
-            weapons.setParent(parent);
-            registerWeaponClass(weapons);
-            loadItemGroupsItems(itemGroup, weaponClass, weapons);
-            loadItemGroupsProperties(itemGroup, weapons);
         }
     }
 
@@ -148,6 +146,7 @@ public abstract class AbstractItemService implements ItemService {
                 ItemString parsed = ItemString.parse(item);
                 Optional<RpgItemType> rpgItemType = createRpgItemType(parsed, weapons);
                 rpgItemType.ifPresent(this::registerRpgItemType);
+                rpgItemType.ifPresent(a -> weapons.getItems().add(a));
             }
         } catch (ConfigException e) {
             try {

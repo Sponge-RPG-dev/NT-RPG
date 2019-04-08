@@ -44,7 +44,7 @@ public interface ItemService {
         loadItemGroups(config);
     }
 
-    public void loadItemGroups(Config c);
+    void loadItemGroups(Config c);
 
     boolean checkItemType(IActiveCharacter character, RpgItemStack rpgItemStack);
 
