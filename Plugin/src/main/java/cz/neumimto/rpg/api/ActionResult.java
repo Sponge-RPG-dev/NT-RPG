@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.players;
+package cz.neumimto.rpg.api;
 
 import org.spongepowered.api.text.Text;
 

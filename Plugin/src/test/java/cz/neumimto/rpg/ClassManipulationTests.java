@@ -1,6 +1,7 @@
 package cz.neumimto.rpg;
 
 
+import cz.neumimto.rpg.api.ActionResult;
 import cz.neumimto.rpg.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.persistance.model.CharacterClass;

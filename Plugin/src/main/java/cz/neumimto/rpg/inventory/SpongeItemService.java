@@ -1,5 +1,9 @@
 package cz.neumimto.rpg.inventory;
 
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
+import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.items.WeaponClass;
@@ -12,7 +16,10 @@ import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.items.SpongeRpgItemType;
+import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.attributes.Attribute;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -20,6 +27,9 @@ import org.spongepowered.api.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +51,19 @@ public class SpongeItemService extends AbstractItemService {
 	}
 
 	public Optional<RpgItemStack> getRpgItemStack(ItemStack itemStack) {
-		return getRpgItemType(itemStack).map(a -> new RpgItemStackImpl(a, getItemEffects(itemStack)));
+		return getRpgItemType(itemStack).map(a -> new RpgItemStackImpl(a,
+													getItemEffects(itemStack),
+													getItemBonusAttributes(itemStack),
+													getItemMinimalAttributeRequirements(itemStack)
+												));
+	}
+
+	private Map<Attribute, Integer> getItemMinimalAttributeRequirements(ItemStack itemStack) {
+		return Collections.emptyMap();
+	}
+
+	private Map<Attribute, Integer> getItemBonusAttributes(ItemStack itemStack) {
+		return Collections.emptyMap();
 	}
 
 	public Map<IGlobalEffect, EffectParams> getItemEffects(ItemStack is) {
@@ -74,4 +96,38 @@ public class SpongeItemService extends AbstractItemService {
 		return Optional.of(new SpongeRpgItemType(parsed.itemId, parsed.model, wClass, parsed.damage, parsed.armor, itemType));
 	}
 
+
+	@Override
+	public void loadItemGroups(Path path) {
+		File f = path.toFile();
+		if (!f.exists()) {
+			Optional<Asset> asset = Sponge.getAssetManager().getAsset(NtRpgPlugin.GlobalScope.plugin, "ItemGroups.conf");
+			if (!asset.isPresent()) {
+				throw new IllegalStateException("Could not find an asset ItemGroups.conf");
+			}
+			try {
+				asset.get().copyToFile(f.toPath());
+			} catch (IOException e) {
+				throw new IllegalStateException("Could not create ItemGroups.conf file", e);
+			}
+		}
+
+		Config c = ConfigFactory.parseFile(path.toFile());
+		loadItemGroups(c);
+	}
+
+	@Override
+	public boolean checkItemClassRequirements(IActiveCharacter character, RpgItemStack rpgItemStack) {
+		return false;
+	}
+
+	@Override
+	public void removeEquipedItemAttributes(Map<Attribute, Integer> bonusAttributes, IActiveCharacter character) {
+
+	}
+
+	@Override
+	public void removeEquipedItemEffects(Map<IGlobalEffect, EffectParams> enchantments, IActiveCharacter character, ManagedSlot managedSlot) {
+
+	}
 }

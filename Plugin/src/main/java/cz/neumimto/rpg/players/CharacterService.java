@@ -20,6 +20,7 @@ package cz.neumimto.rpg.players;
 import cz.neumimto.rpg.ClassService;
 import cz.neumimto.rpg.MissingConfigurationException;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.ActionResult;
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.effects.EffectService;

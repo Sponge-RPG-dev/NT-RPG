@@ -3,11 +3,11 @@ package cz.neumimto.rpg.players.leveling;
 
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.ActionResult;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.events.character.CharacterGainedLevelEvent;
 import cz.neumimto.rpg.persistance.DirectAccessDao;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.players.ActionResult;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;

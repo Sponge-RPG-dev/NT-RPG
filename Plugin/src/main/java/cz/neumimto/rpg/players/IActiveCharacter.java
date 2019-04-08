@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.core.localization.LocalizableParametrizedText;
+import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.entities.IEntity;
@@ -57,6 +58,8 @@ public interface IActiveCharacter extends IEntity<Player> {
 		return null;
 	}
 
+	RpgInventory getManagedInventory();
+
 	Party getParty();
 
 	void setParty(Party party);
@@ -84,8 +87,6 @@ public interface IActiveCharacter extends IEntity<Player> {
 	void setMana(IReservable mana);
 
 	void setHealth(IReservable health);
-
-	Map<EquipedSlot, RpgItemStack> getEquipedInventorySlots();
 
 	Player getPlayer();
 

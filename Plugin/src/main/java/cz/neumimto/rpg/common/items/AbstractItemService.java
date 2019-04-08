@@ -3,12 +3,10 @@ package cz.neumimto.rpg.common.items;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.api.items.ClassItem;
-import cz.neumimto.rpg.api.items.ItemService;
-import cz.neumimto.rpg.api.items.RpgItemType;
-import cz.neumimto.rpg.api.items.WeaponClass;
+import cz.neumimto.rpg.api.items.*;
 import cz.neumimto.rpg.common.configuration.ItemString;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.properties.PropertyService;
 
 import javax.inject.Inject;
@@ -94,6 +92,15 @@ public abstract class AbstractItemService implements ItemService {
         return new ClassItemImpl(key, value, 0);
     }
 
+    @Override
+    public boolean checkItemType(IActiveCharacter character, RpgItemStack rpgItemStack) {
+        return character.getAllowedWeapons().containsKey(rpgItemStack.getItemType());
+    }
+
+    @Override
+    public boolean checkItemAttributeRequirements(IActiveCharacter character, RpgItemStack rpgItemStack) {
+        return false;
+    }
 
     @Override
     public void loadItemGroups(Config config) {

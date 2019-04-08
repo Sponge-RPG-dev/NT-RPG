@@ -17,7 +17,6 @@ import cz.neumimto.rpg.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.inventory.SpongeItemService;
 import cz.neumimto.rpg.inventory.runewords.RWDao;
 import cz.neumimto.rpg.inventory.runewords.RWService;
-import cz.neumimto.rpg.inventory.slotparsers.DefaultPlayerInvHandler;
 import cz.neumimto.rpg.persistance.*;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.SpongeCharacterService;
@@ -55,11 +54,9 @@ public class NtRpgGuiceModule extends AbstractModule {
         bind(ItemLoreBuilderService.class);
         bind(ParticleDecorator.class);
         bind(VanillaMessaging.class);
-        bind(CustomItemFactory.class);
         bind(SpongeInventoryService.class);
         bind(SpongeItemService.class);
         bind(RWDao.class);
         bind(RWService.class);
-        bind(DefaultPlayerInvHandler.class);
     }
 }

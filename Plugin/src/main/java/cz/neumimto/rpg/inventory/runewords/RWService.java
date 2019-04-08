@@ -10,6 +10,7 @@ import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.events.RebuildRunewordEvent;
 import cz.neumimto.rpg.inventory.ItemUpgradeTransactionResult;
 import cz.neumimto.rpg.inventory.SpongeInventoryService;
+import cz.neumimto.rpg.inventory.SpongeItemService;
 import cz.neumimto.rpg.inventory.data.DataConstants;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.manipulators.ItemSocketsData;
@@ -51,6 +52,10 @@ public class RWService {
 
 	@Inject
 	private EffectService effectService;
+
+	@Inject
+	private SpongeItemService itemService;
+
 
 	@Inject
 	private Game game;
@@ -203,7 +208,7 @@ public class RWService {
 				content.set(iter, rune.get(Keys.DISPLAY_NAME).get());
 				itemStack.offer(NKeys.ITEM_SOCKET_CONTAINER_CONTENT, content);
 				//
-				Map<IGlobalEffect, EffectParams> itemEffects = spongeInventoryService.getItemEffects(rune);
+				Map<IGlobalEffect, EffectParams> itemEffects = itemService.getItemEffects(rune);
 				for (Map.Entry<IGlobalEffect, EffectParams> entry : itemEffects.entrySet()) {
 					entry.getValue().put(DataConstants.ITEM_EFFECT_SOCKET_ID_REF, String.valueOf(iter));
 					spongeInventoryService.addEffectsToItemStack(itemStack, entry.getKey().getName(), entry.getValue());

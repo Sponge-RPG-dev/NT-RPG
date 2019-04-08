@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.api;
 
-import cz.neumimto.rpg.api.config.ConfigAdapter;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactory;
@@ -13,8 +12,6 @@ public interface RpgApi {
     Collection<Attribute> getAttributes();
 
     Optional<SkillPreProcessorFactory> getSkillPreProcessorFactory(String preprocessorFactoryId);
-
-    ConfigAdapter getConfigAdapter();
 
     ItemService getItemService();
 

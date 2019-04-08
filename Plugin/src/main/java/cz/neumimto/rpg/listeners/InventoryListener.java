@@ -19,20 +19,10 @@
 package cz.neumimto.rpg.listeners;
 
 import com.google.inject.Singleton;
-import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.items.WeaponClass;
-import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.inventory.CannotUseItemReason;
-import cz.neumimto.rpg.inventory.SpongeInventoryService;
-import cz.neumimto.rpg.inventory.SpongeItemService;
-import cz.neumimto.rpg.inventory.data.NKeys;
+import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.skills.mods.SkillExecutorCallback;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
@@ -49,16 +39,14 @@ import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.event.item.inventory.InteractItemEvent;
 import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
-import org.spongepowered.api.item.inventory.property.SlotIndex;
-import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
+import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.util.Tristate;
 
 import javax.inject.Inject;
-import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -69,19 +57,10 @@ import java.util.concurrent.TimeUnit;
 public class InventoryListener {
 
 	@Inject
-	private SpongeInventoryService spongeInventoryService;
-
-	@Inject
 	private CharacterService characterService;
 
 	@Inject
-	private SpongeItemService itemService;
-
-	@Inject
-	private SkillService skillService;
-
-	@Inject
-	private NtRpgPlugin plugin;
+	private InventoryHandler inventoryHandler;
 
 	@Listener
 	@IsCancelled(Tristate.FALSE)
@@ -89,29 +68,18 @@ public class InventoryListener {
 		if (!player.getOpenInventory().isPresent()) {
 			return;
 		}
+		IActiveCharacter character = characterService.getCharacter(player);
 
-		spongeInventoryService.processHotbarItemDispense(player);
+		Inventory query = player.getInventory().query(Hotbar.class);
+
+
+		inventoryHandler.handleCharacterUnEquipActionPost(character, null);
 	}
-
 
 	@Listener
 	public void onHotbarInteract(InteractItemEvent event, @First(typeFilter = Player.class) Player player) {
 		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
 
-		RPGItemTypeToRemove rpgItemType = itemService.getFromItemStack(event.getItemStack());
-		if (rpgItemType != null) {
-			ItemStack stack = event.getItemStack().createStack();
-			CannotUseItemReason reason;
-			if (rpgItemType.getWeaponClass() == WeaponClass.ARMOR) {
-				reason = spongeInventoryService.canWear(stack, character, rpgItemType);
-			} else {
-				reason = spongeInventoryService.canUse(stack, character, rpgItemType, HandTypes.MAIN_HAND);
-			}
-			if (reason != CannotUseItemReason.OK) {
-				Gui.sendCannotUseItemNotification(character, stack, reason);
-				event.setCancelled(true);
-			}
-		}
 	}
 
 	@Listener
@@ -121,16 +89,7 @@ public class InventoryListener {
 	})
 	@IsCancelled(Tristate.FALSE)
 	public void onClick(ClickInventoryEvent event, @Root Player player) {
-		List<SlotTransaction> transactions = event.getTransactions();
-		for (SlotTransaction transaction : transactions) {
-			Optional<SlotIndex> inventoryProperty = transaction.getSlot().getInventoryProperty(SlotIndex.class);
-			if (inventoryProperty.isPresent()) {
-				boolean cancel = spongeInventoryService.processSlotInteraction(transaction.getSlot(), player);
-				if (cancel) {
-					event.setCancelled(cancel);
-				}
-			}
-		}
+
 	}
 
 
@@ -140,26 +99,7 @@ public class InventoryListener {
 			ClickInventoryEvent.Secondary.class
 	})
 	public void onInteract(ClickInventoryEvent event, @Root Player player) {
-		for (SlotTransaction t : event.getTransactions()) {
-			Optional<String> s = t.getOriginal().get(NKeys.COMMAND);
-			if (s.isPresent()) {
-				event.setCancelled(true);
-				Sponge.getScheduler().createTaskBuilder()
-						.delay(1L, TimeUnit.MILLISECONDS)
-						.execute(() -> {
 
-							Sponge.getCommandManager().process(player, s.get());
-						})
-						.submit(plugin);
-				return;
-			}
-
-			if (t.getOriginal().get(NKeys.MENU_INVENTORY).isPresent()) {
-				event.setCancelled(true);
-				//t.setCustom(ItemStack.empty());
-				return;
-			}
-		}
 	}
 
 	@Listener
@@ -177,33 +117,12 @@ public class InventoryListener {
 	public void onSwapHands(ChangeInventoryEvent.SwapHand event, @Root Player player) {
 		ItemStack futureMainHand = player.getItemInHand(HandTypes.MAIN_HAND).orElse(null);
 		ItemStack futureOffHand = player.getItemInHand(HandTypes.OFF_HAND).orElse(null);
-		boolean cancel = spongeInventoryService.processHotbarSwapHand(player, futureMainHand, futureOffHand);
-		if (cancel) {
-			event.setCancelled(true);
-		}
+
 	}
 
 	@Listener(order = Order.LAST)
 	@IsCancelled(Tristate.FALSE)
 	public void onScroll(ChangeInventoryEvent.Held event, @Root Player player) {
-		Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
-		if (itemInHand.isPresent()) {
-			if (!player.getOpenInventory().isPresent()) {
-				return;
-			}
-			ItemStack itemStack = itemInHand.get();
-			String skill = itemStack.get(NKeys.SKILLBIND).orElse(null);
-			if (skill != null) {
-				IActiveCharacter character = characterService.getCharacter(player);
-				Optional<ISkill> byId = skillService.getById(skill);
-				if (!byId.isPresent()) {
-					return;
-				}
-				skillService.executeSkill(character, byId.get(), new SkillExecutorCallback());
-
-				event.setCancelled(true);
-			}
-		}
 
 	}
 
@@ -215,10 +134,7 @@ public class InventoryListener {
 			Transaction<ItemStackSnapshot> transaction = itemStack.get();
 			ItemStackSnapshot aFinal = transaction.getFinal();
 			if (aFinal.getType() == ItemTypes.AIR) {
-				RPGItemTypeToRemove rpgItemType = itemService.getFromItemStack(transaction.getOriginal());
-				if (rpgItemType != null) {
-					spongeInventoryService.processHotbarItemDispense(event.getTargetEntity());
-				}
+				inventoryHandler.handleCharacterUnEquipActionPost(null, null);
 			}
 		}
 

@@ -22,6 +22,7 @@ import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
@@ -103,7 +104,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	private transient Map<String, Integer> transientAttributes = new HashMap<>();
 
 	private transient List<Integer> slotsToReinitialize;
-	private transient Map<EquipedSlot, RpgItemStack> equipedArmor;
+
 	private Set<EquipedSlot> denySlotInteractionArr;
 
 	private Set<SkillTreeSpecialization> specs = new HashSet<>();
@@ -111,6 +112,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	private transient Map<String, SkillTreeViewModel> skillTreeViewLocation;
 	private transient Map<String, Integer> attributeSession = new HashMap<>();
 
+	private transient RpgInventory inventory;
 
 	private transient int mainHandSlotId;
 	
@@ -123,7 +125,6 @@ public class ActiveCharacter implements IActiveCharacter {
 		this.pl = uuid;
 		this.primaryProperties = new float[PropertyService.LAST_ID];
 		this.secondaryProperties = new float[PropertyService.LAST_ID];
-		this.equipedArmor = new HashMap<>();
 		this.base = base;
 		this.skills = new PlayerSkillHandlers.SHARED();
 		this.slotsToReinitialize = new ArrayList<>();
@@ -138,6 +139,11 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	public void setSilenced(boolean silenced) {
 		this.silenced = silenced;
+	}
+
+	@Override
+	public RpgInventory getManagedInventory() {
+		return inventory;
 	}
 
 	@Override
@@ -248,11 +254,6 @@ public class ActiveCharacter implements IActiveCharacter {
 	@Override
 	public Player getEntity() {
 		return getPlayer();
-	}
-
-	@Override
-	public Map<EquipedSlot, RpgItemStack> getEquipedInventorySlots() {
-		return equipedArmor;
 	}
 
 	@Override

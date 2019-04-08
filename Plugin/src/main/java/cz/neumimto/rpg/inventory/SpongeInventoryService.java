@@ -18,22 +18,18 @@
 
 package cz.neumimto.rpg.inventory;
 
-import com.google.inject.Guice;
 import com.typesafe.config.Config;
-import com.typesafe.config.ConfigException;
 import com.typesafe.config.ConfigFactory;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.ClassService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.effects.IEffectSource;
-import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.effects.EffectParams;
-import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.ItemLoreBuilderService;
 import cz.neumimto.rpg.inventory.data.NKeys;
@@ -42,8 +38,6 @@ import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtypes;
 import cz.neumimto.rpg.inventory.runewords.RWService;
-import cz.neumimto.rpg.inventory.slotparsers.DefaultPlayerInvHandler;
-import cz.neumimto.rpg.inventory.slotparsers.PlayerInvHandler;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
@@ -61,17 +55,13 @@ import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
-import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.type.HandType;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
-import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.text.Text;
 
 import javax.inject.Inject;
@@ -80,21 +70,18 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.api.logging.Log.warn;
 
 /**
  * Created by NeumimTo on 22.7.2015.
  */
 @Singleton
 @ResourceLoader.ListenerClass
-public class SpongeInventoryService {
+public class SpongeInventoryService extends AbstractInventoryService {
 
 	public static ItemType ITEM_SKILL_BIND = ItemTypes.BLAZE_POWDER;
 
@@ -132,24 +119,13 @@ public class SpongeInventoryService {
 	@Inject
 	private SpongeItemService itemService;
 
-	private PlayerInvHandler playerInvHandler;
 
 	private Map<Class<?>, ManagedInventory> managedInventories = new HashMap<>();
 
 	@Reload(on = ReloadService.PLUGIN_CONFIG)
 	public void init() {
 		NORMAL_RARITY = Localizations.NORMAL_RARITY.toText();
-		String s = pluginConfig.EQUIPED_SLOT_RESOLVE_SRATEGY;
-		Optional<PlayerInvHandler> type = Sponge.getRegistry().getType(PlayerInvHandler.class, s);
-		if (type.isPresent()) {
-			playerInvHandler = type.get();
-		} else {
-			warn("Unknown EQUIPED_SLOT_RESOLVE_SRATEGY, value should be one of " +
-					Sponge.getRegistry().getAllOf(PlayerInvHandler.class).stream
-							().map(PlayerInvHandler::getId).collect(Collectors.joining(", ")));
-			playerInvHandler = Guice.createInjector().getInstance(DefaultPlayerInvHandler.class);
-		}
-		playerInvHandler.initHandler();
+
 	}
 
 	@Listener
@@ -192,81 +168,12 @@ public class SpongeInventoryService {
 		}
 	}
 
-	private void loadItemGroups() {
-		Path path = Paths.get(NtRpgPlugin.workingDir + "/ItemGroups.conf");
-		File f = path.toFile();
-		if (!f.exists()) {
-			Optional<Asset> asset = Sponge.getAssetManager().getAsset(plugin, "ItemGroups.conf");
-			if (!asset.isPresent()) {
-				throw new IllegalStateException("Could not find an asset ItemGroups.conf");
-			}
-			try {
-				asset.get().copyToFile(f.toPath());
-			} catch (IOException e) {
-				throw new IllegalStateException("Could not create ItemGroups.conf file", e);
-			}
-		}
-
-		try {
-			//sponge
-			Config c = null;
-			List<? extends Config> inventorySlots = c.getConfigList("InventorySlots");
-			for (Config inventorySlot : inventorySlots) {
-				loadInventorySettings(inventorySlot);
-			}
-
-
-			Config c = ConfigFactory.parseFile(path.toFile());
-			List<String> itemMetaSubtypes = c.getStringList("ItemMetaSubtypes");
-
-			//will break in get 8
-			itemMetaSubtypes.stream().map(ItemSubtype::new).forEach(a -> Sponge.getRegistry().register(ItemSubtype.class, a));
-
-
-
-
-			
-		} catch (ConfigException e) {
-			throw new RuntimeException("Could not read ItemGroups.conf ", e);
-		}
-	}
-
-
-	private void loadInventorySettings(Config slots) {
-		String aClass = slots.getString("type");
-		try {
-			Class<?> aClass1 = Class.forName(aClass);
-
-			HashMap<Integer, SlotEffectSource> slotEffectSourceHashMap = new HashMap<>();
-			ManagedInventory managedInventory = new ManagedInventory(aClass1, slotEffectSourceHashMap);
-			for (String str : slots.getStringList("slots")) {
-				String[] split = str.split(";");
-				if (split.length == 1) {
-					SlotEffectSource slotEffectSource = new SlotEffectSource(Integer.parseInt(split[0]), ItemSubtypes.ANY);
-					slotEffectSourceHashMap.put(slotEffectSource.getSlotId(), slotEffectSource);
-				} else {
-					Optional<ItemSubtype> type = Sponge.getRegistry().getType(ItemSubtype.class, split[1]);
-					if (!type.isPresent()) {
-						type = Optional.of(ItemSubtypes.ANY);
-						error("Could not find subtype " + split[1]);
-					}
-					SlotEffectSource slotEffectSource = new SlotEffectSource(Integer.parseInt(split[0]), type.get());
-					slotEffectSourceHashMap.put(slotEffectSource.getSlotId(), slotEffectSource);
-				}
-			}
-			managedInventories.put(managedInventory.getType(), managedInventory);
-		} catch (ClassNotFoundException e) {
-			error(Console.RED + "Could not find inventory type " + Console.GREEN + aClass + Console.RED
-					+ " defined in ItemGroups.conf. Is the mod loaded? Is the class name correct? If you are unsure restart plugin with debug mode "
-					+ "ON and interact with desired inventory");
-		}
-	}
 
 	public void initializeCharacterInventory(IActiveCharacter character) {
 		if (character.isStub()) {
 			return;
 		}
-		playerInvHandler.initializeCharacterInventory(character);
+
 	}
 
 	public void dropItem(IActiveCharacter character, ItemStack is, CannotUseItemReason reason) {
@@ -279,41 +186,14 @@ public class SpongeInventoryService {
 		if (character.isStub()) {
 			return;
 		}
-		playerInvHandler.onRightClick(character, slot, hotbarSlot);
+
 	}
 
 	public void onLeftClick(IActiveCharacter character, int slot, Slot hotbarSlot) {
 		if (character.isStub()) {
 			return;
 		}
-		playerInvHandler.onLeftClick(character, slot, hotbarSlot);
-	}
 
-	public CannotUseItemReason canWear(ItemStack itemStack, IActiveCharacter character, RpgItemType type) {
-		if (itemStack == null) {
-			return CannotUseItemReason.OK;
-		}
-		if (type == null) {
-			return CannotUseItemReason.OK; //ItemStack was not recognized as a managed item type. Player may use it
-		}
-		if (!character.canWear(type)) {
-			return CannotUseItemReason.CONFIG;
-		}
-		return checkRestrictions(character, itemStack);
-	}
-
-
-	public CannotUseItemReason canUse(ItemStack itemStack, IActiveCharacter character, RpgItemType type, HandType h) {
-		if (itemStack == null) {
-			return CannotUseItemReason.OK;
-		}
-		if (type == null) {
-			return CannotUseItemReason.OK; //ItemStack was not recognized as a managed item type. Player may use it
-		}
-		if (!character.canUse(type, h)) {
-			return CannotUseItemReason.CONFIG;
-		}
-		return checkRestrictions(character, itemStack);
 	}
 
 	private CannotUseItemReason checkGroupRequirements(IActiveCharacter character, Map<String, Integer> a) {
@@ -362,46 +242,6 @@ public class SpongeInventoryService {
 		return CannotUseItemReason.OK;
 	}
 
-	private CannotUseItemReason checkRestrictions(IActiveCharacter character, DataHolder is) {
-		Optional<Map<String, Integer>> a = is.get(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS);
-		if (a.isPresent()) {
-			Map<String, Integer> stringIntegerMap = a.get();
-			CannotUseItemReason cannotUseItemReason = checkAttributeRequirements(character, stringIntegerMap);
-
-			if (CannotUseItemReason.OK != cannotUseItemReason) {
-				return cannotUseItemReason;
-			}
-		}
-		Optional<Map<String, Integer>> q = is.get(NKeys.ITEM_PLAYER_ALLOWED_GROUPS);
-		if (q.isPresent()) {
-			Map<String, Integer> w = q.get();
-			CannotUseItemReason cannotUseItemReason = checkGroupRequirements(character, w);
-			if (CannotUseItemReason.OK != cannotUseItemReason) {
-				return cannotUseItemReason;
-			}
-		}
-		return CannotUseItemReason.OK;
-	}
-
-	/**
-	 *
-	 * @param slot clicked slot
-	 * @param player who clicked a slot
-	 * @return true to cancell the event
-	 */
-	public boolean processSlotInteraction(Slot slot, Player player) {
-		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-		return character.isStub() || playerInvHandler.processSlotInteraction(character, slot);
-	}
-
-	public void processHotbarItemDispense(Player player) {
-		IActiveCharacter character = characterService.getCharacter(player);
-		if (character.isStub()) {
-			return;
-		}
-		playerInvHandler.processHotbarItemDispense(character);
-	}
-
 	public ItemStack setItemLevel(ItemStack itemStack, int level) {
 		itemStack.offer(new ItemLevelData(level));
 		return updateLore(itemStack);
@@ -413,12 +253,6 @@ public class SpongeInventoryService {
 		is.offer(Keys.HIDE_MISCELLANEOUS, true);
 		is.offer(Keys.HIDE_ATTRIBUTES, true);
 		return is;
-	}
-
-
-	public int getItemLevel(ItemStack itemStack) {
-		Optional<Integer> integer = itemStack.get(NKeys.ITEM_LEVEL);
-		return integer.orElse(0);
 	}
 
 	public ItemStack addEffectsToItemStack(ItemStack is, String effectName, EffectParams effectParams) {
@@ -475,49 +309,6 @@ public class SpongeInventoryService {
 		itemStack.offer(orCreate);
 	}
 
-
-	public IEffectSource getEffectSourceBySlotId(Class<?> type, Integer value) {
-		ManagedInventory managedInventory = managedInventories.get(type);
-		if (managedInventory == null) {
-			return null;
-		}
-		return managedInventory.getSlotEffectSourceHashMap().get(value);
-	}
-
-	public IEffectSource getEffectSourceBySlotId(Slot slot) {
-		Slot transform = slot.transform();
-		Class type = transform.parent().getClass();
-		//Dunno why this is needed but it causes exceptions when interacting with some modded inventories without this check
-		Optional<SlotIndex> indexOptional = transform.getInventoryProperty(SlotIndex.class);
-		if (indexOptional.isPresent()) {
-			ManagedInventory managedInventory = managedInventories.get(type);
-			if (managedInventory == null) {
-				return null;
-			}
-			return managedInventory.getSlotEffectSourceHashMap().get(indexOptional.get().getValue());
-		}
-		return null;
-	}
-
-	public ManagedInventory getManagedInventory(Class<?> type) {
-		return managedInventories.get(type);
-	}
-
-	/**
-	 *
-	 * @param player
-	 * @param futureMainHand
-	 * @param futureOffHand
-	 * @return True if the swap hand event shall be cancelled
-	 */
-	public boolean processHotbarSwapHand(Player player, ItemStack futureMainHand, ItemStack futureOffHand) {
-		IActiveCharacter character = characterService.getCharacter(player);
-		if (character.isStub()) {
-			return true;
-		}
-		return playerInvHandler.processHotbarSwapHand(character, futureMainHand, futureOffHand);
-	}
-
 	public ItemStack createSkillbind(ISkill iSkill) {
 		ItemStack itemStack = ItemStack.of(ItemTypes.PUMPKIN_SEEDS, 1);
 		SkillBindData orCreate = itemStack.getOrCreate(SkillBindData.class).orElse(new SkillBindData(iSkill.getId()));
@@ -525,5 +316,64 @@ public class SpongeInventoryService {
 		itemStack.offer(Keys.DISPLAY_NAME, Text.of(iSkill.getLocalizableName()));
 		itemStack.offer(orCreate);
 		return itemStack;
+	}
+
+
+	@Override
+	public void loadItemGroups(Path path) {
+		File f = path.toFile();
+		if (!f.exists()) {
+			Optional<Asset> asset = Sponge.getAssetManager().getAsset(NtRpgPlugin.GlobalScope.plugin, "ItemGroups.conf");
+			if (!asset.isPresent()) {
+				throw new IllegalStateException("Could not find an asset ItemGroups.conf");
+			}
+			try {
+				asset.get().copyToFile(f.toPath());
+			} catch (IOException e) {
+				throw new IllegalStateException("Could not create ItemGroups.conf file", e);
+			}
+		}
+
+		Config c = ConfigFactory.parseFile(path.toFile());
+
+		List<? extends Config> inventorySlots = c.getConfigList("InventorySlots");
+		for (Config inventorySlot : inventorySlots) {
+			loadInventorySettings(inventorySlot);
+		}
+
+		List<String> itemMetaSubtypes = c.getStringList("ItemMetaSubtypes");
+
+		//will break in get 8
+		itemMetaSubtypes.stream().map(ItemSubtype::new).forEach(a -> Sponge.getRegistry().register(ItemSubtype.class, a));
+	}
+
+	private void loadInventorySettings(Config slots) {
+		String aClass = slots.getString("type");
+		try {
+			Class<?> aClass1 = Class.forName(aClass);
+
+			HashMap<Integer, SlotEffectSource> slotEffectSourceHashMap = new HashMap<>();
+			ManagedInventory managedInventory = new ManagedInventory(aClass1, slotEffectSourceHashMap);
+			for (String str : slots.getStringList("slots")) {
+				String[] split = str.split(";");
+				if (split.length == 1) {
+					SlotEffectSource slotEffectSource = new SlotEffectSource(Integer.parseInt(split[0]), ItemSubtypes.ANY);
+					slotEffectSourceHashMap.put(slotEffectSource.getSlotId(), slotEffectSource);
+				} else {
+					Optional<ItemSubtype> type = Sponge.getRegistry().getType(ItemSubtype.class, split[1]);
+					if (!type.isPresent()) {
+						type = Optional.of(ItemSubtypes.ANY);
+						error("Could not find subtype " + split[1]);
+					}
+					SlotEffectSource slotEffectSource = new SlotEffectSource(Integer.parseInt(split[0]), type.get());
+					slotEffectSourceHashMap.put(slotEffectSource.getSlotId(), slotEffectSource);
+				}
+			}
+			managedInventories.put(managedInventory.getType(), managedInventory);
+		} catch (ClassNotFoundException e) {
+			error(Console.RED + "Could not find inventory type " + Console.GREEN + aClass + Console.RED
+					+ " defined in ItemGroups.conf. Is the mod loaded? Is the class name correct? If you are unsure restart plugin with debug mode "
+					+ "ON and interact with desired inventory");
+		}
 	}
 }

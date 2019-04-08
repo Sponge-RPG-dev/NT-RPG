@@ -1,6 +1,8 @@
 package cz.neumimto.rpg.commands.item;
 
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.items.ClassItem;
+import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.items.WeaponClass;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.entities.EntityService;
@@ -34,7 +36,12 @@ public class InspectItemDamageExecutor implements CommandExecutor {
 			return CommandResult.empty();
 		}
 		ItemStack itemStack = itemInHand.get();
-		RPGItemTypeToRemove fromItemStack = is.getFromItemStack(itemStack);
+		Optional<RpgItemType> rpgItemType = NtRpgPlugin.GlobalScope.itemService.getRpgItemType(itemStack);
+		if (!rpgItemType.isPresent()) {
+			src.sendMessage(Text.of(player.getName() + " has no Managed item in main hand"));
+			return CommandResult.empty();
+		}
+		RpgItemType fromItemStack = rpgItemType.get();
 		WeaponClass weaponClass = fromItemStack.getWeaponClass();
 		List<WeaponClass> parents = new LinkedList<>();
 		WeaponClass parent = weaponClass.getParent();
@@ -69,12 +76,10 @@ public class InspectItemDamageExecutor implements CommandExecutor {
 
 		Collection<PlayerClassData> values = character.getClasses().values();
 		for (PlayerClassData value : values) {
-			Set<ConfigRPGItemType> configRPGItemTypes = value.getClassDefinition().getWeapons().get(itemInHand.get());
-			if (configRPGItemTypes != null) {
-				for (ConfigRPGItemType w : configRPGItemTypes) {
-					if (w.rpgItemType.equals(fromItemStack)) {
-						src.sendMessage(Text.of(TextColors.GRAY, "  - From Class: " + w.damage));
-					}
+			Set<ClassItem> weapons = value.getClassDefinition().getWeapons();
+			for (ClassItem weapon : weapons) {
+				if (weapon.getType() == fromItemStack) {
+					src.sendMessage(Text.of(TextColors.GRAY, "  - From Class: " + weapon.getDamage()));
 				}
 			}
 		}

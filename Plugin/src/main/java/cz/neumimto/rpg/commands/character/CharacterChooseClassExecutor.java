@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.commands.character;
 
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.ActionResult;
 import cz.neumimto.rpg.configuration.Localizations;
-import cz.neumimto.rpg.players.ActionResult;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import org.spongepowered.api.command.CommandException;

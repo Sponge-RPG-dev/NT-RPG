@@ -2,10 +2,16 @@ package cz.neumimto.rpg.api.items;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import cz.neumimto.rpg.api.inventory.ManagedSlot;
+import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.attributes.Attribute;
 
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -39,4 +45,14 @@ public interface ItemService {
     }
 
     public void loadItemGroups(Config c);
+
+    boolean checkItemType(IActiveCharacter character, RpgItemStack rpgItemStack);
+
+    boolean checkItemAttributeRequirements(IActiveCharacter character, RpgItemStack rpgItemStack);
+
+    boolean checkItemClassRequirements(IActiveCharacter character, RpgItemStack rpgItemStack);
+
+    void removeEquipedItemAttributes(Map<Attribute, Integer> bonusAttributes, IActiveCharacter character);
+
+    void removeEquipedItemEffects(Map<IGlobalEffect, EffectParams> enchantments, IActiveCharacter character, ManagedSlot managedSlot);
 }

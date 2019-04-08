@@ -34,9 +34,6 @@ import cz.neumimto.rpg.inventory.items.ItemMetaTypes;
 import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtypeRegistry;
 import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtypes;
-import cz.neumimto.rpg.inventory.slotparsers.DefaultPlayerInvHandler;
-import cz.neumimto.rpg.inventory.slotparsers.PlayerInvHandler;
-import cz.neumimto.rpg.inventory.slotparsers.PlayerInvHandlerRegistry;
 import cz.neumimto.rpg.inventory.sockets.SocketType;
 import cz.neumimto.rpg.inventory.sockets.SocketTypeRegistry;
 import cz.neumimto.rpg.inventory.sockets.SocketTypes;
@@ -317,7 +314,6 @@ public class NtRpgPlugin {
 
 		Sponge.getRegistry().registerModule(SocketType.class, new SocketTypeRegistry());
 		Sponge.getRegistry().registerModule(Attribute.class, new AttributeCatalogTypeRegistry());
-		Sponge.getRegistry().registerModule(PlayerInvHandler.class, new PlayerInvHandlerRegistry());
 		Sponge.getRegistry().registerModule(ItemMetaType.class, new ItemMetaTypeRegistry());
 		Sponge.getRegistry().registerModule(ItemSubtype.class, new ItemSubtypeRegistry());
 		Sponge.getRegistry().registerModule(ISkillType.class, new SkillTypeRegistry());
@@ -332,11 +328,6 @@ public class NtRpgPlugin {
 		event.register(SocketTypes.GEM);
 		event.register(SocketTypes.JEWEL);
 		event.register(SocketTypes.RUNE);
-	}
-
-	@Listener
-	public void postInit1(GameRegistryEvent.Register<PlayerInvHandler> event) {
-		event.register(new DefaultPlayerInvHandler());
 	}
 
 	@Listener
