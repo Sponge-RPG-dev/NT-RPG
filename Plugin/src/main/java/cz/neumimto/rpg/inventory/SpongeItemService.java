@@ -1,10 +1,16 @@
 package cz.neumimto.rpg.inventory;
 
+import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.items.WeaponClass;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.configuration.ItemString;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.items.AbstractItemService;
+import cz.neumimto.rpg.common.items.RpgItemStackImpl;
+import cz.neumimto.rpg.effects.EffectParams;
+import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.items.SpongeRpgItemType;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
@@ -12,7 +18,11 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -22,9 +32,35 @@ import java.util.Optional;
 @Singleton
 public class SpongeItemService extends AbstractItemService {
 
+	@Inject
+	private EffectService effectService;
+
 	public Optional<RpgItemType> getRpgItemType(ItemStack itemStack) {
 		Optional<Text> text = itemStack.get(Keys.DISPLAY_NAME);
 		return getRpgItemType(itemStack.getType().getId(), text.map(Text::toPlain).orElse(null));
+	}
+
+	public Optional<RpgItemStack> getRpgItemStack(ItemStack itemStack) {
+		return getRpgItemType(itemStack).map(a -> new RpgItemStackImpl(a, getItemEffects(itemStack)));
+	}
+
+	public Map<IGlobalEffect, EffectParams> getItemEffects(ItemStack is) {
+		Optional<Map<String, EffectParams>> q = is.get(NKeys.ITEM_EFFECTS);
+		if (q.isPresent()) {
+			return getItemEffects(q.get());
+		}
+		return Collections.emptyMap();
+	}
+
+	private Map<IGlobalEffect, EffectParams> getItemEffects(Map<String, EffectParams> stringEffectParamsMap) {
+		Map<IGlobalEffect, EffectParams> map = new HashMap<>();
+		for (Map.Entry<String, EffectParams> w : stringEffectParamsMap.entrySet()) {
+			IGlobalEffect globalEffect = effectService.getGlobalEffect(w.getKey());
+			if (globalEffect != null) {
+				map.put(globalEffect, w.getValue());
+			}
+		}
+		return map;
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package cz.neumimto.rpg.inventory.slotparsers;
 
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.api.items.RpgItemStack;
+import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.items.WeaponClass;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.damage.DamageService;
@@ -75,11 +76,12 @@ public abstract class PlayerInvHandler implements CatalogType {
 		Optional<ItemStack> peek = slot.peek();
 		if (peek.isPresent()) {
 			ItemStack itemStack = peek.get();
-			RpgItemStack fromItemStack = itemService().getFromItemStack(itemStack);
-			if (fromItemStack == null) {
+			Optional<RpgItemStack> rpgItemStack = itemService().getRpgItemStack(itemStack);
+			if (!rpgItemStack.isPresent()) {
 				return true;
 			}
-			if (fromItemStack.getWeaponClass() == WeaponClass.ARMOR) {
+			RpgItemStack fromItemStack = rpgItemStack.get();
+			if (fromItemStack.getItemType().getWeaponClass() == WeaponClass.ARMOR) {
 				return checkForItem(character, itemStack, fromItemStack, HandTypes.MAIN_HAND);
 			} else {
 				return checkForArmorItem(character, itemStack, fromItemStack);
@@ -203,10 +205,11 @@ public abstract class PlayerInvHandler implements CatalogType {
 				recalc = true;
 			}
 		} else {
-			RPGItemTypeToRemove fromItemStack = itemService().getFromItemStack(futureMainHand);
-			if (fromItemStack != null) {
+			Optional<RpgItemStack> rpgItemStack = itemService().getRpgItemStack(futureMainHand);
+			if (rpgItemStack.isPresent()) {
 				CannotUseItemReason reason;
-				if (fromItemStack.getWeaponClass() == WeaponClass.SHIELD || fromItemStack.getWeaponClass() == WeaponClass.ARMOR) {
+				RpgItemStack fromItemStack = rpgItemStack.get();
+				if (fromItemStack.getItemType().getWeaponClass() == WeaponClass.SHIELD || fromItemStack.getItemType().getWeaponClass() == WeaponClass.ARMOR) {
 					reason = inventoryService().canWear(futureOffHand, character, fromItemStack);
 				} else {
 					reason = inventoryService().canUse(futureOffHand, character, fromItemStack, HandTypes.MAIN_HAND);
@@ -296,7 +299,7 @@ public abstract class PlayerInvHandler implements CatalogType {
 							.getSelectedSlotIndex();
 			character.setMainHand(customItem, slotIndex);
 		}
-		effectService().applyGlobalEffectsAsEnchantments(customItem.getEffects(), character, customItem); //todo
+		effectService().applyGlobalEffectsAsEnchantments(customItem.getEnchantments(), character, customItem); //todo
 	}
 
 	public void deInitializeItemStack(IActiveCharacter character, HandType handType) {

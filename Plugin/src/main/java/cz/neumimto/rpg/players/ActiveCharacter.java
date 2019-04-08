@@ -315,7 +315,13 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	private void mergeWeapons(Set<ClassItem> weapons) {
-		allowedWeapons.containsKey()
+        for (ClassItem weapon : weapons) {
+            if (allowedWeapons.containsKey(weapon.getType())) {
+                allowedWeapons.put(weapon.getType(), weapon.getDamage());
+            } else {
+                allowedWeapons.put(weapon.getType(), pluginConfig.ITEM_DAMAGE_PROCESSOR.get(allowedWeapons.get(weapon.getType()), weapon.getDamage()));
+            }
+        }
 	}
 
 	@Override
@@ -404,10 +410,9 @@ public class ActiveCharacter implements IActiveCharacter {
 				Double aDouble = getProjectileDamages().get(entityType.getKey());
 				if (aDouble == null) {
 					getProjectileDamages().put(entityType.getKey(), entityType.getValue());
-				} else if (pluginConfig.WEAPON_MERGE_STRATEGY == 1) {
-					getProjectileDamages().put(entityType.getKey(), aDouble + entityType.getValue());
-				} else if (pluginConfig.WEAPON_MERGE_STRATEGY == 2) {
-					getProjectileDamages().put(entityType.getKey(), Math.max(aDouble, entityType.getValue()));
+				} else {
+                    double v = pluginConfig.ITEM_DAMAGE_PROCESSOR.get(aDouble, entityType.getValue());
+                    getProjectileDamages().put(entityType.getKey(), v);
 				}
 			}
 		}

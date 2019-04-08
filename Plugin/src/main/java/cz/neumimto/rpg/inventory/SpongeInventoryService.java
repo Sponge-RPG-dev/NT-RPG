@@ -209,6 +209,7 @@ public class SpongeInventoryService {
 
 		try {
 			//sponge
+			Config c = null;
 			List<? extends Config> inventorySlots = c.getConfigList("InventorySlots");
 			for (Config inventorySlot : inventorySlots) {
 				loadInventorySettings(inventorySlot);
@@ -414,25 +415,6 @@ public class SpongeInventoryService {
 		return is;
 	}
 
-
-	public Map<IGlobalEffect, EffectParams> getItemEffects(ItemStack is) {
-		Optional<Map<String, EffectParams>> q = is.get(NKeys.ITEM_EFFECTS);
-		if (q.isPresent()) {
-			return getItemEffects(q.get());
-		}
-		return Collections.emptyMap();
-	}
-
-	private Map<IGlobalEffect, EffectParams> getItemEffects(Map<String, EffectParams> stringEffectParamsMap) {
-		Map<IGlobalEffect, EffectParams> map = new HashMap<>();
-		for (Map.Entry<String, EffectParams> w : stringEffectParamsMap.entrySet()) {
-			IGlobalEffect globalEffect = effectService.getGlobalEffect(w.getKey());
-			if (globalEffect != null) {
-				map.put(globalEffect, w.getValue());
-			}
-		}
-		return map;
-	}
 
 	public int getItemLevel(ItemStack itemStack) {
 		Optional<Integer> integer = itemStack.get(NKeys.ITEM_LEVEL);

@@ -103,9 +103,6 @@ public class GlobalScope {
 	public SpongeInventoryService spongeInventoryService;
 
 	@Inject
-	public CustomItemFactory customItemFactory;
-
-	@Inject
 	public VanillaMessaging vanillaMessaging;
 
 	@Inject

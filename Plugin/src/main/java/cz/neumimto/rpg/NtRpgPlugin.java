@@ -496,7 +496,6 @@ public class NtRpgPlugin {
 		GlobalScope.classService.registerPlaceholders();
 		GlobalScope.rwService.load();
 		GlobalScope.classService.loadClasses();
-		GlobalScope.customItemFactory.initBuilder();
 		GlobalScope.vanillaMessaging.load();
 		GlobalScope.effectService.load();
 		GlobalScope.particleDecorator.initModels();
