@@ -11,10 +11,10 @@ import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillDependency;
 import cz.neumimto.rpg.skills.tree.SkillTree;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 
@@ -63,12 +63,12 @@ public class SkillManipulationTests {
     ActiveCharacter character;
     PlayerClassData playerClassData;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() throws Exception {
         TestHelper.initLocalizations();
     }
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         Log.setLogger(Mockito.mock(Logger.class));
 
@@ -144,10 +144,10 @@ public class SkillManipulationTests {
     public void learnSkill() throws Exception {
         characterService.learnSkill(character, playerClassData, main);
 
-        Assert.assertEquals(0, characterClass.getSkillPoints());
-        Assert.assertEquals(2, characterClass.getUsedSkillPoints());
-        Assert.assertTrue(character.hasSkill(main.getId()));
-        Assert.assertSame(character.getPrimaryClass(), playerClassData);
+        Assertions.assertEquals(0, characterClass.getSkillPoints());
+        Assertions.assertEquals(2, characterClass.getUsedSkillPoints());
+        Assertions.assertTrue(character.hasSkill(main.getId()));
+        Assertions.assertSame(character.getPrimaryClass(), playerClassData);
         Mockito.verify(main, Mockito.times(1)).skillLearn(Mockito.any());
 
     }
@@ -157,14 +157,14 @@ public class SkillManipulationTests {
         characterClass.setSkillPoints(0);
         ActionResult actionResult = characterService.canLearnSkill(character, classDefinition, main);
 
-        Assert.assertTrue(!actionResult.isOk());
+        Assertions.assertTrue(!actionResult.isOk());
     }
 
     @Test
     public void mayLearnSkill_WrongClassSkillOrigin() throws Exception {
         ActionResult actionResult = characterService.canLearnSkill(character, new ClassDefinition("test", "Primary"), main);
 
-        Assert.assertTrue(!actionResult.isOk());
+        Assertions.assertTrue(!actionResult.isOk());
     }
 
     @Test
@@ -172,7 +172,7 @@ public class SkillManipulationTests {
         classDefinition.setSkillTree(null);
         ActionResult actionResult = characterService.canLearnSkill(character, new ClassDefinition("test", "Primary"), main);
 
-        Assert.assertTrue(!actionResult.isOk());
+        Assertions.assertTrue(!actionResult.isOk());
     }
 
     @Test
@@ -185,7 +185,7 @@ public class SkillManipulationTests {
         }});
 
         boolean result = characterService.hasSoftSkillDependencies(character, skillData);
-        Assert.assertTrue(result);
+        Assertions.assertTrue(result);
     }
 
     @Test
@@ -195,7 +195,7 @@ public class SkillManipulationTests {
         }});
 
         boolean result = characterService.hasSoftSkillDependencies(character, skillData);
-        Assert.assertTrue(result);
+        Assertions.assertTrue(result);
     }
 
     @Test
@@ -205,25 +205,25 @@ public class SkillManipulationTests {
         }});
 
         boolean result = characterService.hasSoftSkillDependencies(character, skillData);
-        Assert.assertFalse(result);
+        Assertions.assertFalse(result);
     }
 
     @Test
     public void checkSkillSoftDependencies_empty() throws Exception {
         boolean result = characterService.hasSoftSkillDependencies(character, new SkillData(""));
-        Assert.assertTrue(result);
+        Assertions.assertTrue(result);
     }
 
     @Test
     public void checkSkillHardDependencies_empty() throws Exception {
         boolean result = characterService.hasHardSkillDependencies(character, new SkillData(""));
-        Assert.assertTrue(result);
+        Assertions.assertTrue(result);
     }
 
     @Test
     public void checkSkillHardDependencies_missing() throws Exception {
         boolean result = characterService.hasHardSkillDependencies(character, skillData);
-        Assert.assertFalse(result);
+        Assertions.assertFalse(result);
     }
 
     @Test
@@ -235,7 +235,7 @@ public class SkillManipulationTests {
             setLevel(2);
         }});
         boolean result = characterService.hasHardSkillDependencies(character, skillData);
-        Assert.assertTrue(result);
+        Assertions.assertTrue(result);
     }
 
     @Test
@@ -247,14 +247,14 @@ public class SkillManipulationTests {
             setLevel(1);
         }});
         boolean result = characterService.hasHardSkillDependencies(character, skillData);
-        Assert.assertFalse(result);
+        Assertions.assertFalse(result);
     }
 
 
     @Test
     public void checkSkillConflictingDependencies_empty() throws Exception {
         boolean result = !characterService.hasConflictingSkillDepedencies(character, new SkillData(""));
-        Assert.assertTrue(result);
+        Assertions.assertTrue(result);
     }
 
     @Test
@@ -263,7 +263,7 @@ public class SkillManipulationTests {
             setLevel(1);
         }});
         boolean result = characterService.hasConflictingSkillDepedencies(character, new SkillData(""));
-        Assert.assertFalse(result);
+        Assertions.assertFalse(result);
     }
 
     @Test
@@ -279,7 +279,7 @@ public class SkillManipulationTests {
         }});
         ActionResult actionResult = characterService.canLearnSkill(character, classDefinition, main);
 
-        Assert.assertTrue(actionResult.isOk());
+        Assertions.assertTrue(actionResult.isOk());
     }
 
 

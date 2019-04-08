@@ -36,8 +36,12 @@ public final class ItemString {
                 id = data[0];
                 if (Utils.isNumeric(data[1])) {
                     damage = Double.parseDouble(data[1]);
-                } else {
                     model = data[2];
+                    break;
+                }
+                if (Utils.isNumeric(data[2])) {
+                    damage = Double.parseDouble(data[2]);
+                    model = data[1];
                 }
                 break;
         }

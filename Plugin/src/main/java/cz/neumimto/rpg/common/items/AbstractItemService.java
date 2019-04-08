@@ -3,10 +3,14 @@ package cz.neumimto.rpg.common.items;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.items.*;
 import cz.neumimto.rpg.common.configuration.ItemString;
+import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.properties.PropertyService;
 
 import javax.inject.Inject;
@@ -168,6 +172,20 @@ public abstract class AbstractItemService implements ItemService {
 
     protected abstract Optional<RpgItemType> createRpgItemType(ItemString parsed, WeaponClass weapons);
 
+    @Override
+    public boolean checkItemClassRequirements(IActiveCharacter character, RpgItemStack rpgItemStack) {
+        return false;
+    }
+
+    @Override
+    public void removeEquipedItemAttributes(Map<Attribute, Integer> bonusAttributes, IActiveCharacter character) {
+
+    }
+
+    @Override
+    public void removeEquipedItemEffects(Map<IGlobalEffect, EffectParams> enchantments, IActiveCharacter character, ManagedSlot managedSlot) {
+
+    }
 
 
 }

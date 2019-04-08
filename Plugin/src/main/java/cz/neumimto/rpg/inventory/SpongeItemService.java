@@ -3,7 +3,6 @@ package cz.neumimto.rpg.inventory;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.items.WeaponClass;
@@ -16,7 +15,6 @@ import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.items.SpongeRpgItemType;
-import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
@@ -116,18 +114,5 @@ public class SpongeItemService extends AbstractItemService {
 		loadItemGroups(c);
 	}
 
-	@Override
-	public boolean checkItemClassRequirements(IActiveCharacter character, RpgItemStack rpgItemStack) {
-		return false;
-	}
 
-	@Override
-	public void removeEquipedItemAttributes(Map<Attribute, Integer> bonusAttributes, IActiveCharacter character) {
-
-	}
-
-	@Override
-	public void removeEquipedItemEffects(Map<IGlobalEffect, EffectParams> enchantments, IActiveCharacter character, ManagedSlot managedSlot) {
-
-	}
 }

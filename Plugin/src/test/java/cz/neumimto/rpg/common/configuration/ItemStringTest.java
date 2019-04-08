@@ -14,10 +14,10 @@ class ItemStringTest {
     void parse(String input, ItemString expected) {
         ItemString parsed = ItemString.parse(input);
 
-        Assertions.assertSame(parsed.armor, expected.armor);
-        Assertions.assertSame(parsed.model, expected.model);
-        Assertions.assertSame(parsed.itemId, expected.itemId);
-        Assertions.assertSame(parsed.damage, expected.damage);
+        Assertions.assertEquals(parsed.armor, expected.armor);
+        Assertions.assertEquals(parsed.model, expected.model);
+        Assertions.assertEquals(parsed.itemId, expected.itemId);
+        Assertions.assertEquals(parsed.damage, expected.damage);
     }
 
     private static Stream<Arguments> provideItemStrings() {

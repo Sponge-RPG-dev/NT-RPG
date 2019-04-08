@@ -8,9 +8,9 @@ import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.groups.PlayerGroupPermission;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
@@ -40,7 +40,7 @@ public class Tests {
             MoveEntityEvent moveEntityEvent = Mockito.mock(MoveEntityEvent.class);
             o.getClass().getMethod("onMoveEntityEvent", MoveEntityEvent.class).invoke(o, moveEntityEvent);
         } catch (ScriptException | IOException e) {
-            Assert.fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 
@@ -48,9 +48,9 @@ public class Tests {
     public void k() {
         int x = -256;
         boolean is16 = (x & 0x0F) == 0;
-        Assert.assertTrue(is16);
+        Assertions.assertTrue(is16);
         is16 = x == (x >> 4) << 4;
-        Assert.assertTrue(is16);
+        Assertions.assertTrue(is16);
     }
 
     @Test
@@ -115,15 +115,15 @@ public class Tests {
 
         Set<String> permissionsToRemove = classService.getPermissionsToRemove(character, nClass.getClassDefinition());
 
-        Assert.assertFalse(permissionsToRemove.contains("common2"));
-        Assert.assertFalse(permissionsToRemove.contains("common1"));
-        Assert.assertTrue(permissionsToRemove.contains("class1"));
-        Assert.assertTrue(permissionsToRemove.contains("class2"));
-        Assert.assertTrue(permissionsToRemove.contains("class4"));
+        Assertions.assertFalse(permissionsToRemove.contains("common2"));
+        Assertions.assertFalse(permissionsToRemove.contains("common1"));
+        Assertions.assertTrue(permissionsToRemove.contains("class1"));
+        Assertions.assertTrue(permissionsToRemove.contains("class2"));
+        Assertions.assertTrue(permissionsToRemove.contains("class4"));
     }
 
 
-    @BeforeClass
+    @BeforeAll
     public static void setupLogger() {
         Log.setLogger(LoggerFactory.getLogger(Tests.class));
     }
