@@ -26,13 +26,13 @@ import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
+import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.entities.IReservable;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
-import cz.neumimto.rpg.properties.PropertyService;
 import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
 import org.jline.utils.Log;
@@ -123,8 +123,8 @@ public class ActiveCharacter implements IActiveCharacter {
 
 	public ActiveCharacter(UUID uuid, CharacterBase base) {
 		this.pl = uuid;
-		this.primaryProperties = new float[PropertyService.LAST_ID];
-		this.secondaryProperties = new float[PropertyService.LAST_ID];
+		this.primaryProperties = new float[PropertyServiceImpl.LAST_ID];
+		this.secondaryProperties = new float[PropertyServiceImpl.LAST_ID];
 		this.base = base;
 		this.skills = new PlayerSkillHandlers.SHARED();
 		this.slotsToReinitialize = new ArrayList<>();

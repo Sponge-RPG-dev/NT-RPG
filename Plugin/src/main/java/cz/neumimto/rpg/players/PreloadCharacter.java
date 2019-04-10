@@ -25,6 +25,7 @@ import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
+import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.inventory.RpgInventoryImpl;
 import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.IEffectContainer;
@@ -33,7 +34,6 @@ import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.properties.DefaultProperties;
-import cz.neumimto.rpg.properties.PropertyService;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
@@ -57,7 +57,7 @@ import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
  */
 public class PreloadCharacter implements IActiveCharacter {
 
-	private static float[] characterProperties = new float[PropertyService.LAST_ID];
+	private static float[] characterProperties = new float[PropertyServiceImpl.LAST_ID];
 	private IReservable mana = new CharacterMana(this);
 	private UUID uuid;
 	private CharacterHealth health = new CharacterHealthStub(this);

@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.skills.scripting;
 
 import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.properties.PropertyService;
+import cz.neumimto.rpg.properties.SpongePropertyService;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.pipeline.SkillComponent;
 
@@ -22,11 +22,11 @@ import java.util.function.BiConsumer;
 public class Set_Property_Default_Value implements BiConsumer<String, Float> {
 
     @Inject
-    private PropertyService propertyService;
+    private SpongePropertyService spongePropertyService;
 
     @Override
     public void accept(String s, Float aFloat) {
-        PropertyService build = propertyService;
+        SpongePropertyService build = spongePropertyService;
         try {
             build.overrideMaxPropertyValue(s, aFloat);
         } catch (Throwable t) {

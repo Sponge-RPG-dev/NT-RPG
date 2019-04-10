@@ -201,7 +201,7 @@ public class GuiHelper {
 
 	public static ItemStack propertyToItemStack(int id, float value) {
 		ItemStack i = itemStack(ItemTypes.BOOK);
-		String nameById = NtRpgPlugin.GlobalScope.propertyService.getNameById(id);
+		String nameById = NtRpgPlugin.GlobalScope.spongePropertyService.getNameById(id);
 		nameById = Utils.configNodeToReadableString(nameById);
 		i.offer(Keys.DISPLAY_NAME, TextHelper.makeText(nameById, TextColors.GREEN));
 		if (nameById.endsWith("mult")) {

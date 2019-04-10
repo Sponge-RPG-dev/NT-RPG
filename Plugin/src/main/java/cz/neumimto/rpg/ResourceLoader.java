@@ -35,7 +35,7 @@ import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.effects.model.EffectModelMapper;
 import cz.neumimto.rpg.properties.PropertyContainer;
-import cz.neumimto.rpg.properties.PropertyService;
+import cz.neumimto.rpg.properties.SpongePropertyService;
 import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.ISkill;
@@ -109,7 +109,7 @@ public class ResourceLoader {
 	private EffectService effectService;
 
 	@Inject
-	private PropertyService propertyService;
+	private SpongePropertyService spongePropertyService;
 
 	@Inject
 	private CommandService commandService;
@@ -309,7 +309,7 @@ public class ResourceLoader {
 		}
 		if (clazz.isAnnotationPresent(PropertyContainer.class)) {
 			info("Found Property container class" + clazz.getName(), pluginConfig.DEBUG);
-			propertyService.processContainer(clazz);
+			spongePropertyService.processContainer(clazz);
 		}
 		if (clazz.isAnnotationPresent(JsBinding.class)) {
 			jsLoader.getDataToBind().put(clazz, clazz.getAnnotation(JsBinding.class).value());

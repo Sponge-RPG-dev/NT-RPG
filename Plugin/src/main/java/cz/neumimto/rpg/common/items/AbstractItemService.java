@@ -6,12 +6,13 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.items.*;
 import cz.neumimto.rpg.common.configuration.ItemString;
+import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.attributes.Attribute;
-import cz.neumimto.rpg.properties.PropertyService;
+import cz.neumimto.rpg.properties.SpongePropertyService;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -21,7 +22,7 @@ import static cz.neumimto.rpg.api.logging.Log.*;
 public abstract class AbstractItemService implements ItemService {
 
     @Inject
-    protected PropertyService propertyService;
+    protected SpongePropertyService spongePropertyService;
 
     protected Map<String, RpgItemType> items = new HashMap<>();
 
@@ -71,15 +72,15 @@ public abstract class AbstractItemService implements ItemService {
 
     @Override
     public void registerProperty(WeaponClass weaponClass, String property) {
-        int val = PropertyService.getAndIncrement.get();
+        int val = PropertyServiceImpl.getAndIncrement.get();
 
-        if (!propertyService.exists(property)) {
-            propertyService.registerProperty(property, val);
-            propertyService.addPropertyToRequiresDamageRecalc(propertyService.getIdByName(property));
+        if (!spongePropertyService.exists(property)) {
+            spongePropertyService.registerProperty(property, val);
+            spongePropertyService.addPropertyToRequiresDamageRecalc(spongePropertyService.getIdByName(property));
         }
 
         if (property.endsWith("_mult")) {
-            propertyService.registerDefaultValue(val, 1.0f);
+            spongePropertyService.registerDefaultValue(val, 1.0f);
             weaponClass.getPropertiesMults().add(val);
         } else {
             weaponClass.getProperties().add(val);

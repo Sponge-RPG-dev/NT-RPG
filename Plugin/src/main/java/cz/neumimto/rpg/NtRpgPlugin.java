@@ -480,9 +480,9 @@ public class NtRpgPlugin {
 		GlobalScope.experienceService.load();
 		GlobalScope.spongeInventoryService.init();
 		GlobalScope.skillService.load();
-		GlobalScope.propertyService.init();
-		GlobalScope.propertyService.reLoadAttributes();
-		GlobalScope.propertyService.loadMaximalServerPropertyValues();
+		GlobalScope.spongePropertyService.init(Paths.get(NtRpgPlugin.workingDir + "/Attributes.conf"), Paths.get(NtRpgPlugin.workingDir + File.separator + "properties_dump.info"));
+		GlobalScope.spongePropertyService.reLoadAttributes(Paths.get(NtRpgPlugin.workingDir + "/Attributes.conf"));
+		GlobalScope.spongePropertyService.loadMaximalServerPropertyValues(Paths.get(NtRpgPlugin.workingDir, "max_server_property_values.properties"));
 		GlobalScope.jsLoader.initEngine();
 		GlobalScope.classService.registerPlaceholders();
 		GlobalScope.rwService.load();

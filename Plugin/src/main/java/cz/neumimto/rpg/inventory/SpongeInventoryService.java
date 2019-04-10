@@ -43,7 +43,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.properties.PropertyService;
+import cz.neumimto.rpg.properties.SpongePropertyService;
 import cz.neumimto.rpg.reloading.Reload;
 import cz.neumimto.rpg.reloading.ReloadService;
 import cz.neumimto.rpg.skills.ISkill;
@@ -108,7 +108,7 @@ public class SpongeInventoryService extends AbstractInventoryService {
 	private RWService rwService;
 
 	@Inject
-	private PropertyService propertyService;
+	private SpongePropertyService spongePropertyService;
 
 	@Inject
 	private ClassService classService;

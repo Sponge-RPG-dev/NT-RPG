@@ -46,7 +46,7 @@ import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.groups.DependencyGraph;
 import cz.neumimto.rpg.players.leveling.SkillTreeType;
 import cz.neumimto.rpg.properties.DefaultProperties;
-import cz.neumimto.rpg.properties.PropertyService;
+import cz.neumimto.rpg.properties.SpongePropertyService;
 import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
@@ -95,7 +95,7 @@ public abstract class CharacterService {
     private DamageService damageService;
 
     @Inject
-    private PropertyService propertyService;
+    private SpongePropertyService spongePropertyService;
 
     @Inject
     private CharacterClassDao characterClassDao;
@@ -431,7 +431,7 @@ public abstract class CharacterService {
     }
 
     public void recalculateProperties(IActiveCharacter character) {
-        Map<Integer, Float> defaults = propertyService.getDefaults();
+        Map<Integer, Float> defaults = spongePropertyService.getDefaults();
         float[] primary = character.getPrimaryProperties();
         float[] secondary = character.getSecondaryProperties();
         float pval = 0;

@@ -23,9 +23,9 @@ import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.api.utils.Console;
+import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.properties.PropertyService;
 import cz.neumimto.rpg.skills.NDamageType;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
@@ -215,7 +215,7 @@ public class Utils {
 	 * @param player
 	 */
 	public static void resetPlayerToDefault(Player player) {
-		player.offer(Keys.WALKING_SPEED, PropertyService.WALKING_SPEED);
+		player.offer(Keys.WALKING_SPEED, PropertyServiceImpl.WALKING_SPEED);
 	}
 
 	/**

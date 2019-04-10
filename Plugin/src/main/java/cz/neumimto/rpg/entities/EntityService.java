@@ -6,7 +6,7 @@ import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.events.skill.SkillHealEvent;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.properties.DefaultProperties;
-import cz.neumimto.rpg.properties.PropertyService;
+import cz.neumimto.rpg.properties.SpongePropertyService;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
@@ -35,7 +35,7 @@ public class EntityService {
 	private MobSettingsDao dao;
 
 	@Inject
-	private PropertyService propertyService;
+	private SpongePropertyService spongePropertyService;
 
 	@Inject
 	private CharacterService characterService;
@@ -115,10 +115,10 @@ public class EntityService {
 	/**
 	 * Unlike {@link IEntity#getProperty} this method checks for maximal allowed value, defined in config file.
 	 *
-	 * @see PropertyService#loadMaximalServerPropertyValues()
+	 * @see SpongePropertyService#loadMaximalServerPropertyValues()
 	 */
 	public float getEntityProperty(IEffectConsumer entity, int id) {
-		return Math.min(entity.getProperty(id), propertyService.getMaxPropertyValue(id));
+		return Math.min(entity.getProperty(id), spongePropertyService.getMaxPropertyValue(id));
 	}
 
 	/**
