@@ -14,5 +14,6 @@ public class NtRpgExtension implements BeforeAllCallback {
     public void beforeAll(ExtensionContext context) throws Exception {
         Log.setLogger(LoggerFactory.getLogger("TestLogger"));
         NtRpgPlugin.pluginConfig = new PluginConfig();
+        NtRpgPlugin.workingDir = ".";
     }
 }

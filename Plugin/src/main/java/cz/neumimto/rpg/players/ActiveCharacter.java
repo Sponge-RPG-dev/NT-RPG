@@ -27,6 +27,7 @@ import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
+import cz.neumimto.rpg.common.inventory.RpgInventoryImpl;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.entities.IReservable;
@@ -130,6 +131,7 @@ public class ActiveCharacter implements IActiveCharacter {
 		this.slotsToReinitialize = new ArrayList<>();
 		this.skillTreeViewLocation = new HashMap<>();
 		this.denySlotInteractionArr = new HashSet<>();
+		this.inventory = new RpgInventoryImpl();
 	}
 
 	@Override
