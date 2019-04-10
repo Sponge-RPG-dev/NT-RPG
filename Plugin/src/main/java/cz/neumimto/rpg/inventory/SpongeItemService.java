@@ -16,6 +16,7 @@ import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.items.SpongeRpgItemType;
 import cz.neumimto.rpg.players.attributes.Attribute;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.data.key.Keys;
@@ -52,8 +53,13 @@ public class SpongeItemService extends AbstractItemService {
 		return getRpgItemType(itemStack).map(a -> new RpgItemStackImpl(a,
 													getItemEffects(itemStack),
 													getItemBonusAttributes(itemStack),
-													getItemMinimalAttributeRequirements(itemStack)
+													getItemMinimalAttributeRequirements(itemStack),
+													getClassRequirements(itemStack)
 												));
+	}
+
+	private Map<ClassDefinition, Integer> getClassRequirements(ItemStack itemStack) {
+		return Collections.emptyMap();
 	}
 
 	private Map<Attribute, Integer> getItemMinimalAttributeRequirements(ItemStack itemStack) {

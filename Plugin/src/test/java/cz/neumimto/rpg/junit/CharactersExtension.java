@@ -8,7 +8,6 @@ import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
-import cz.neumimto.rpg.players.groups.ClassDefinition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -18,6 +17,9 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.UUID;
+
+import static cz.neumimto.rpg.junit.TestDictionary.CLASS_PRIMARY;
+import static cz.neumimto.rpg.junit.TestDictionary.CLASS_SECONDARY;
 
 public class CharactersExtension implements ParameterResolver {
 
@@ -51,19 +53,21 @@ public class CharactersExtension implements ParameterResolver {
         CharacterClass primaryCC = new CharacterClass();
         primaryCC.setId(1L);
         primaryCC.setCharacterBase(characterBase);
-        ClassDefinition classDefinitionPrimary = new ClassDefinition("primary","Primary");
-        PlayerClassData playerClassData = new PlayerClassData(classDefinitionPrimary, primaryCC);
+
+        PlayerClassData playerClassData = new PlayerClassData(CLASS_PRIMARY, primaryCC);
+        playerClassData.setLevel(5);
         characterBase.getCharacterClasses().add(primaryCC);
-        activeCharacter.getClasses().put("Primary", playerClassData);
+        activeCharacter.getClasses().put(playerClassData.getClassDefinition().getName(), playerClassData);
 
 
         CharacterClass secondaryCC = new CharacterClass();
         secondaryCC.setId(2L);
         secondaryCC.setCharacterBase(characterBase);
-        ClassDefinition classDefinitionSecondary = new ClassDefinition("secondary","Secondary");
-        PlayerClassData playerClassDataSecondary = new PlayerClassData(classDefinitionSecondary, secondaryCC);
+
+        PlayerClassData playerClassDataSecondary = new PlayerClassData(CLASS_SECONDARY, secondaryCC);
+        playerClassDataSecondary.setLevel(10);
         characterBase.getCharacterClasses().add(secondaryCC);
-        activeCharacter.getClasses().put("Secondary", playerClassDataSecondary);
+        activeCharacter.getClasses().put(playerClassDataSecondary.getClassDefinition().getName(), playerClassDataSecondary);
 
 
         ManagedSlot managedSlot = new FilteredManagedSlotImpl(0,

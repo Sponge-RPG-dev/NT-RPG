@@ -11,7 +11,9 @@ import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.attributes.Attribute;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.properties.SpongePropertyService;
 
 import javax.inject.Inject;
@@ -187,6 +189,15 @@ public abstract class AbstractItemService implements ItemService {
 
     @Override
     public boolean checkItemClassRequirements(IActiveCharacter character, RpgItemStack rpgItemStack) {
+        for (Map.Entry<ClassDefinition, Integer> entry : rpgItemStack.getClassRequirements().entrySet()) {
+            PlayerClassData playerClassData = character.getClasses().get(entry.getKey().getName());
+            if (playerClassData == null) {
+                return false;
+            }
+            if (playerClassData.getLevel() < entry.getValue()) {
+                return false;
+            }
+        }
         return true;
     }
 

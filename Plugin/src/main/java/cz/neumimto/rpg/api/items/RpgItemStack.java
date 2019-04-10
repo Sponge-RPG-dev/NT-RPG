@@ -3,6 +3,7 @@ package cz.neumimto.rpg.api.items;
 import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.players.attributes.Attribute;
+import cz.neumimto.rpg.players.groups.ClassDefinition;
 
 import java.util.Map;
 
@@ -22,5 +23,7 @@ public interface RpgItemStack {
         return getItemType().getArmor();
     }
 
-    Map<Attribute, Integer>  getBonusAttributes();
+    Map<Attribute, Integer> getBonusAttributes();
+
+    Map<ClassDefinition, Integer> getClassRequirements();
 }
