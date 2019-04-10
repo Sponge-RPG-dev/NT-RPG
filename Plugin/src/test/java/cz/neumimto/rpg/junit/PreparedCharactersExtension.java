@@ -14,8 +14,7 @@ public class PreparedCharactersExtension implements ParameterResolver {
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-
-        return false;
+        return parameterContext.getParameter().getType() == IActiveCharacter.class;
     }
 
     @Override
