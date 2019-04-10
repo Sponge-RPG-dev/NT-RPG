@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.junit;
 
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
+import cz.neumimto.rpg.api.items.WeaponClass;
 import cz.neumimto.rpg.common.inventory.FilteredManagedSlotImpl;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.ActiveCharacter;
@@ -66,13 +67,22 @@ public class CharactersExtension implements ParameterResolver {
 
 
         ManagedSlot managedSlot = new FilteredManagedSlotImpl(0,
-                weaponClass -> weaponClass.getName().contains("-"));
+                weaponClass -> weaponClass == WeaponClass.ARMOR);
         ManagedSlot filteredSlot = new FilteredManagedSlotImpl(1,
-                weaponClass -> weaponClass.getName().contains("*"));
+                weaponClass -> weaponClass == TestDictionary.WEAPON_CLASS_1);
 
+
+        activeCharacter.getAllowedWeapons().put(TestDictionary.ITEM_TYPE_WEAPON_1, 20D);
+        activeCharacter.getAllowedArmor().add(TestDictionary.ARMOR_TYPE_1);
 
         activeCharacter.getManagedInventory().getManagedSlots().put(managedSlot.getId(), managedSlot);
         activeCharacter.getManagedInventory().getManagedSlots().put(filteredSlot.getId(), filteredSlot);
+
+
+        characterBase.getAttributes().put(TestDictionary.AGI.getId(), 5);
+        characterBase.getAttributes().put(TestDictionary.STR.getId(), 5);
+        activeCharacter.getTransientAttributes().put(TestDictionary.AGI.getId(), 94);
+        activeCharacter.getTransientAttributes().put(TestDictionary.STR.getId(), 5);
 
         return activeCharacter;
     }

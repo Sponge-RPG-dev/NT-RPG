@@ -42,4 +42,11 @@ public class RpgItemTypeImpl implements RpgItemType {
         return modelName;
     }
 
+    @Override
+    public String toString() {
+        return "RpgItemTypeImpl{" +
+                "weaponClass=" + weaponClass +
+                ", id='" + id + '\'' +
+                '}';
+    }
 }

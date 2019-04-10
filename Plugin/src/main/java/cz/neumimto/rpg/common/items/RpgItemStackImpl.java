@@ -42,4 +42,10 @@ public class RpgItemStackImpl implements RpgItemStack {
         return bonusAttributes;
     }
 
+    @Override
+    public String toString() {
+        return "RpgItemStackImpl{" +
+                "rpgItemType=" + rpgItemType +
+                '}';
+    }
 }

@@ -71,4 +71,11 @@ public class WeaponClass {
 	public Set<Integer> getPropertiesMults() {
 		return propertiesMults;
 	}
+
+	@Override
+	public String toString() {
+		return "WeaponClass{" +
+				"name='" + name + '\'' +
+				'}';
+	}
 }

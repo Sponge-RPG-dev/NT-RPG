@@ -16,4 +16,5 @@ public class NtRpgExtension implements BeforeAllCallback {
         NtRpgPlugin.pluginConfig = new PluginConfig();
         NtRpgPlugin.workingDir = ".";
     }
+
 }

@@ -96,12 +96,25 @@ public abstract class AbstractItemService implements ItemService {
 
     @Override
     public boolean checkItemType(IActiveCharacter character, RpgItemStack rpgItemStack) {
-        return character.getAllowedWeapons().containsKey(rpgItemStack.getItemType());
+        RpgItemType itemType = rpgItemStack.getItemType();
+
+        if (itemType.getWeaponClass() == WeaponClass.ARMOR) {
+            return character.getAllowedArmor().contains(itemType);
+        } else {
+            return character.getAllowedWeapons().containsKey(itemType);
+        }
     }
 
     @Override
     public boolean checkItemAttributeRequirements(IActiveCharacter character, RpgItemStack rpgItemStack) {
-        return false;
+        for (Map.Entry<Attribute, Integer> entry : rpgItemStack.getMinimalAttributeRequirements().entrySet()) {
+            Attribute key = entry.getKey();
+            Integer value = entry.getValue();
+            if (character.getAttributeValue(key) < value) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -174,7 +187,7 @@ public abstract class AbstractItemService implements ItemService {
 
     @Override
     public boolean checkItemClassRequirements(IActiveCharacter character, RpgItemStack rpgItemStack) {
-        return false;
+        return true;
     }
 
     @Override
