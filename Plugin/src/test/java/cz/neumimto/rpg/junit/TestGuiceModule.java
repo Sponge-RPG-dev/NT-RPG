@@ -3,6 +3,7 @@ package cz.neumimto.rpg.junit;
 import com.google.inject.AbstractModule;
 import cz.neumimto.core.localization.LocalizationService;
 import cz.neumimto.rpg.*;
+import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.commands.CommandService;
 import cz.neumimto.rpg.common.effects.EffectService;
@@ -63,7 +64,7 @@ public class TestGuiceModule extends AbstractModule {
         bind(ItemLoreBuilderService.class);
         bind(ParticleDecorator.class);
         bind(VanillaMessaging.class);
-        bind(SpongeInventoryService.class);
+        bind(InventoryService.class).to(SpongeInventoryService.class);
         bind(ItemService.class).to(TestItemService.class);
         bind(RWDao.class);
         bind(RWService.class);

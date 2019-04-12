@@ -3,13 +3,12 @@ package cz.neumimto.rpg.common.items;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.Rpg;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.items.*;
 import cz.neumimto.rpg.common.configuration.ItemString;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
-import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
-import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.attributes.Attribute;
@@ -108,14 +107,25 @@ public abstract class AbstractItemService implements ItemService {
     }
 
     @Override
-    public boolean checkItemAttributeRequirements(IActiveCharacter character, RpgItemStack rpgItemStack) {
+    public boolean checkItemAttributeRequirements(IActiveCharacter character, ManagedSlot managedSlot, RpgItemStack rpgItemStack) {
+        Collection<Attribute> attributes = Rpg.get().getAttributes();
+        Map<Attribute, Integer> inventoryRequirements = new HashMap<>();
+        for (Attribute attribute : attributes) {
+            inventoryRequirements.put(attribute, 0);
+        }
+        character.getMinimalInventoryRequirements(inventoryRequirements);
+
+
         for (Map.Entry<Attribute, Integer> entry : rpgItemStack.getMinimalAttributeRequirements().entrySet()) {
             Attribute key = entry.getKey();
             Integer value = entry.getValue();
-            if (character.getAttributeValue(key) < value) {
+            Integer integer = inventoryRequirements.get(key);
+
+            if (character.getAttributeValue(key) - integer < Math.max(value, integer)) {
                 return false;
             }
         }
+
         return true;
     }
 
@@ -200,17 +210,6 @@ public abstract class AbstractItemService implements ItemService {
         }
         return true;
     }
-
-    @Override
-    public void removeEquipedItemAttributes(Map<Attribute, Integer> bonusAttributes, IActiveCharacter character) {
-
-    }
-
-    @Override
-    public void removeEquipedItemEffects(Map<IGlobalEffect, EffectParams> enchantments, IActiveCharacter character, ManagedSlot managedSlot) {
-
-    }
-
 
 }
 

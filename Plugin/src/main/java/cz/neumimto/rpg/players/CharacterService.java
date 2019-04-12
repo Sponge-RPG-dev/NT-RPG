@@ -422,13 +422,11 @@ public abstract class CharacterService {
             PlayerClassData value = entry.getValue();
             ClassDefinition classDefinition = value.getClassDefinition();
             Map<Attribute, Integer> attributes = classDefinition.getStartingAttributes();
-            if (!attributes.isEmpty()) {
-                for (Map.Entry<Attribute, Integer> ae : attributes.entrySet()) {
-                    addTransientAttribute(activeCharacter, ae.getKey(), ae.getValue());
-                }
-            }
+            addTransientAttribtues(activeCharacter, attributes);
         }
     }
+
+
 
     public void recalculateProperties(IActiveCharacter character) {
         Map<Integer, Float> defaults = spongePropertyService.getDefaults();
@@ -938,8 +936,14 @@ public abstract class CharacterService {
         addAttribute(character, attribute, 1);
     }
 
+    public void addTransientAttribtues(IActiveCharacter activeCharacter, Map<Attribute, Integer> attributes) {
+        for (Map.Entry<Attribute, Integer> ae : attributes.entrySet()) {
+            addTransientAttribute(activeCharacter, ae.getKey(), ae.getValue());
+        }
+    }
+
     public void addTransientAttribute(IActiveCharacter character, Attribute attribute, int amount) {
-        character.getTransientAttributes().merge(attribute.getId(), amount, (a, b) -> a + b);
+        character.getTransientAttributes().merge(attribute.getId(), amount, Integer::sum);
         if (!attribute.getPropBonus().isEmpty()) {
             applyAttributeValue(character, attribute, amount);
         }
@@ -1164,6 +1168,16 @@ public abstract class CharacterService {
         addSkill(character, origin, einfo);
         skill.skillLearn(character);
         Log.info("Character " + character.getCharacterBase().getUuid() + " learned skill " + skill.getId());
+    }
+
+    public void removeTransientAttributes(Map<Attribute, Integer> bonusAttributes, IActiveCharacter character) {
+        for (Map.Entry<Attribute, Integer> entry : bonusAttributes.entrySet()) {
+            removeTransientAttribute(character, entry.getKey(), entry.getValue());
+        }
+    }
+
+    private void removeTransientAttribute(IActiveCharacter character, Attribute key, Integer value) {
+        character.getTransientAttributes().merge(key.getId(), value, (b, a) -> a - b);
     }
 }
 

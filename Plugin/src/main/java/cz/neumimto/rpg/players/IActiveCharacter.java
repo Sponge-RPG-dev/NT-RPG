@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.core.localization.LocalizableParametrizedText;
+import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
@@ -40,6 +41,7 @@ import org.spongepowered.api.text.Text;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -240,4 +242,21 @@ public interface IActiveCharacter extends IEntity<Player> {
 	void addClass(PlayerClassData playerClassData);
 
 	void restartAttributeGuiSession();
+
+    default void getMinimalInventoryRequirements(Map<Attribute, Integer> seed) {
+
+		Map<Integer, ManagedSlot> managedSlots = getManagedInventory().getManagedSlots();
+
+		for (ManagedSlot value : managedSlots.values()) {
+			Optional<RpgItemStack> content = value.getContent();
+			if (content.isPresent()) {
+				RpgItemStack rpgItemStack = content.get();
+				Map<Attribute, Integer> minimalAttributeRequirements = rpgItemStack.getMinimalAttributeRequirements();
+
+				for (Map.Entry<Attribute, Integer> entry : minimalAttributeRequirements.entrySet()) {
+					seed.compute(entry.getKey(), (attribute, integer) -> Math.max(integer, entry.getValue()));
+				}
+			}
+		}
+	}
 }

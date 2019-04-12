@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.common.entity;
 
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.properties.Property;
@@ -13,7 +14,7 @@ import java.util.function.Supplier;
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import static cz.neumimto.rpg.api.logging.Log.info;
 
-public abstract class PropertyServiceImpl {
+public abstract class PropertyServiceImpl implements PropertyService {
 
 
     public static final double WALKING_SPEED = 0.1d;
@@ -40,31 +41,37 @@ public abstract class PropertyServiceImpl {
         nameMap.put(id, name);
     }
 
+    @Override
     public int getIdByName(String name) {
         return idMap.get(name);
     }
 
+    @Override
     public boolean exists(String property) {
         return idMap.containsKey(property);
     }
 
+    @Override
     public String getNameById(Integer id) {
         return nameMap.get(id);
     }
 
+    @Override
     public void registerDefaultValue(int id, float def) {
         defaults.put(id, def);
     }
 
+    @Override
     public float getDefaultValue(int id) {
         return defaults.get(id);
     }
 
+    @Override
     public Map<Integer, Float> getDefaults() {
         return defaults;
     }
 
-
+    @Override
     public void processContainer(Class<?> container) {
         int value;
         for (Field f : container.getDeclaredFields()) {
@@ -87,6 +94,7 @@ public abstract class PropertyServiceImpl {
         }
     }
 
+    @Override
     public float getDefault(Integer key) {
         Float f = defaults.get(key);
         if (f == null) {
@@ -95,15 +103,17 @@ public abstract class PropertyServiceImpl {
         return f;
     }
 
+    @Override
     public float getMaxPropertyValue(int index) {
         return maxValues[index];
     }
 
+    @Override
     public Collection<String> getAllProperties() {
         return nameMap.values();
     }
 
-
+    @Override
     public void overrideMaxPropertyValue(String s, Float aFloat) {
         if (!nameMap.containsValue(s)) {
             Log.info("Attempt to override default value for a property \""+s+"\". But such property does not exists yet. THe property will be created");
@@ -113,14 +123,17 @@ public abstract class PropertyServiceImpl {
         Log.info(" Property \"" + s + "\" default value is now " + aFloat + ". This change wont affect already joined players!");
     }
 
+    @Override
     public boolean updatingRequiresDamageRecalc(int propertyId) {
         return damageRecalc.contains(propertyId);
     }
 
+    @Override
     public void addPropertyToRequiresDamageRecalc(int i) {
         damageRecalc.add(i);
     }
 
+    @Override
     public void loadMaximalServerPropertyValues(Path path) {
         maxValues = new float[LAST_ID];
         for (int i = 0; i < maxValues.length; i++) {
@@ -163,10 +176,5 @@ public abstract class PropertyServiceImpl {
             }
         }
     }
-
-
-    public abstract void reLoadAttributes(Path attributeFilePath);
-
-    public abstract void init(Path attributeConf, Path propertiesDump);
 
 }
