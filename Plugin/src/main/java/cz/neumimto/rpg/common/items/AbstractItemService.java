@@ -115,13 +115,15 @@ public abstract class AbstractItemService implements ItemService {
         }
         character.getMinimalInventoryRequirements(inventoryRequirements);
 
+        Map<Attribute, Integer> bonusAttributes = rpgItemStack.getBonusAttributes();
 
         for (Map.Entry<Attribute, Integer> entry : rpgItemStack.getMinimalAttributeRequirements().entrySet()) {
             Attribute key = entry.getKey();
             Integer value = entry.getValue();
-            Integer integer = inventoryRequirements.get(key);
+            Integer requirement = inventoryRequirements.get(key);
 
-            if (character.getAttributeValue(key) - integer < Math.max(value, integer)) {
+            Integer bonus = bonusAttributes.get(entry.getKey());
+            if (character.getAttributeValue(key) - bonus < Math.max(value, requirement)) {
                 return false;
             }
         }

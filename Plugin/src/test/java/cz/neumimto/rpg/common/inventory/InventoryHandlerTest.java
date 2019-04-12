@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.common.inventory;
 
+import cz.neumimto.rpg.api.inventory.ManagedSlot;
+import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.items.RpgItemStackImpl;
@@ -23,6 +25,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static cz.neumimto.rpg.junit.CharactersExtension.Stage;
@@ -35,6 +38,9 @@ class InventoryHandlerTest {
     @Inject
     private InventoryHandler inventoryHandler;
 
+    @Inject
+    private ItemService itemService;
+
     private IActiveCharacter character;
 
     @BeforeEach
@@ -44,7 +50,7 @@ class InventoryHandlerTest {
 
     @ParameterizedTest
     @MethodSource("methodProvider01")
-    void handleCharacterEquipActionPre(RpgItemStack testItemStack, int i, boolean result) {
+    void handleCharacterEquipActionPreTest(RpgItemStack testItemStack, int i, boolean result) {
         Log.info("Id: {} result: {}");
         boolean mayUse = inventoryHandler.handleCharacterEquipActionPre(character,
                 character.getManagedInventory().getManagedSlots().get(i),
@@ -73,7 +79,10 @@ class InventoryHandlerTest {
                 Arguments.of(new RpgItemStackImpl(TestDictionary.ITEM_TYPE_WEAPON_2, Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap()), 1, false),
 
                 //May not use - allowed weapon, slot matches, not enough str
-                Arguments.of(new RpgItemStackImpl(TestDictionary.ITEM_TYPE_WEAPON_1, Collections.emptyMap(), Collections.emptyMap(), new HashMap<Attribute, Integer>() {{
+                Arguments.of(new RpgItemStackImpl(TestDictionary.ITEM_TYPE_WEAPON_1, Collections.emptyMap(), new HashMap<Attribute, Integer>() {{
+                    put(TestDictionary.STR, 0);
+                    put(TestDictionary.AGI, 0);
+                }}, new HashMap<Attribute, Integer>() {{
                     put(TestDictionary.STR, 60);
                 }}, Collections.emptyMap()), 1, false),
 
@@ -118,6 +127,76 @@ class InventoryHandlerTest {
         );
 
     }
+
+
+    @Test
+    void characterAttemptsToRemoveItemWithAttributes01() {
+        Map<Integer, ManagedSlot> managedSlots = character.getManagedInventory().getManagedSlots();
+
+        ManagedSlotImpl managedSlot = new ManagedSlotImpl(0);
+        Map<Attribute, Integer> minimalRequirements = new HashMap<>();
+        minimalRequirements.put(TestDictionary.STR, 2);
+
+        RpgItemStackImpl rpgItemStack = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), Collections.emptyMap(), minimalRequirements,  Collections.emptyMap());
+        managedSlot.setContent(rpgItemStack);
+        managedSlots.put(0, managedSlot);
+
+        minimalRequirements = new HashMap<>();
+        minimalRequirements.put(TestDictionary.STR, 3);
+        RpgItemStackImpl future = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), new HashMap<Attribute, Integer>() {{put(TestDictionary.STR, 0);}},
+                minimalRequirements, Collections.emptyMap());
+
+        boolean mayUse = itemService.checkItemAttributeRequirements(character, managedSlot, future);
+        Assertions.assertTrue(mayUse);
+    }
+
+    @Test
+    void characterAttemptsToRemoveItemWithAttributes02() {
+        Map<Integer, ManagedSlot> managedSlots = character.getManagedInventory().getManagedSlots();
+
+        ManagedSlotImpl managedSlot = new ManagedSlotImpl(0);
+        Map<Attribute, Integer> minimalRequirements = new HashMap<>();
+        minimalRequirements.put(TestDictionary.STR, 2);
+
+        RpgItemStackImpl rpgItemStack = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), Collections.emptyMap(), minimalRequirements,  Collections.emptyMap());
+        managedSlot.setContent(rpgItemStack);
+        managedSlots.put(0, managedSlot);
+
+        minimalRequirements = new HashMap<>();
+        minimalRequirements.put(TestDictionary.STR, 11); //character has 10 str
+        minimalRequirements.put(TestDictionary.AGI, 0);
+        RpgItemStackImpl future = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(),
+                new HashMap<Attribute, Integer>() {{put(TestDictionary.STR, 0);put(TestDictionary.AGI, 0);}},
+                minimalRequirements, Collections.emptyMap());
+
+        boolean mayUse = itemService.checkItemAttributeRequirements(character, managedSlot, future);
+        Assertions.assertFalse(mayUse);
+    }
+
+    @Test
+    void characterAttemptsToRemoveItemWithAttributes03() {
+        Map<Integer, ManagedSlot> managedSlots = character.getManagedInventory().getManagedSlots();
+
+        ManagedSlotImpl managedSlot = new ManagedSlotImpl(0);
+        Map<Attribute, Integer> minimalRequirements = new HashMap<>();
+        minimalRequirements.put(TestDictionary.STR, 2);
+
+        RpgItemStackImpl rpgItemStack = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), Collections.emptyMap(), minimalRequirements,  Collections.emptyMap());
+        managedSlot.setContent(rpgItemStack);
+        managedSlots.put(0, managedSlot);
+
+        minimalRequirements = new HashMap<>();
+        minimalRequirements.put(TestDictionary.STR, 10); //character has 10 str
+        minimalRequirements.put(TestDictionary.AGI, 0);
+
+        Map<Attribute, Integer> bonusAttributes = new HashMap<>();
+        bonusAttributes.put(TestDictionary.STR, 5);
+        RpgItemStackImpl future = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), bonusAttributes, minimalRequirements, Collections.emptyMap());
+
+        boolean mayUse = itemService.checkItemAttributeRequirements(character, managedSlot, future);
+        Assertions.assertFalse(mayUse);
+    }
+
 
     @Test
     void handleCharacterUnEquipActionPre() {
