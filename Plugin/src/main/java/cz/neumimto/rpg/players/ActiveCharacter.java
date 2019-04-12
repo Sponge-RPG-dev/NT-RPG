@@ -121,6 +121,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	private transient RpgItemStack mainHand;
 	
 	private transient PlayerClassData primaryClass;
+	private boolean requiresDamageRecalculation;
 
 	public ActiveCharacter(UUID uuid, CharacterBase base) {
 		this.pl = uuid;
@@ -742,6 +743,16 @@ public class ActiveCharacter implements IActiveCharacter {
 	@Override
 	public void restartAttributeGuiSession() {
 		attributeSession.clear();
+	}
+
+	@Override
+	public boolean requiresDamageRecalculation() {
+		return requiresDamageRecalculation;
+	}
+
+	@Override
+	public void setRequiresDamageRecalculation(boolean k) {
+		this.requiresDamageRecalculation = k;
 	}
 
 	@Override

@@ -3,12 +3,14 @@ package cz.neumimto.rpg.listeners;
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.entities.IEntityType;
 import cz.neumimto.rpg.events.damage.*;
+import cz.neumimto.rpg.inventory.SpongeItemService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.NDamageType;
@@ -37,6 +39,9 @@ public class DamageListener {
 
 	@Inject
 	private EntityService entityService;
+
+	@Inject
+	private SpongeItemService itemService;
 
 	@Inject
 	private CauseStackManager causeStackManager;
@@ -98,13 +103,11 @@ public class DamageListener {
 
 		if (attacker.getType() == IEntityType.CHARACTER) {
 			IActiveCharacter character = (IActiveCharacter) attacker;
-			/*
-			Hotbar hotbar = character.getPlayer().getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
-            if (hotbar.getSelectedSlotIndex() != character.getSelectedHotbarSlot()) {
-                character.updateSelectedHotbarSlot();
-                damageService.recalculateCharacterWeaponDamage(character);
-            }
-            */
+			if (character.requiresDamageRecalculation()) {
+				RpgItemStack mainHand = character.getMainHand();
+				damageService.recalculateCharacterWeaponDamage(character, mainHand);
+				character.setRequiresDamageRecalculation(false);
+			}
 			newdamage = character.getWeaponDamage();
 		} else {
 			if (!pluginConfig.OVERRIDE_MOBS) {

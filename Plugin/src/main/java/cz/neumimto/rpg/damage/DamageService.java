@@ -80,9 +80,9 @@ public class DamageService {
 		}
 
 		if (!type.getWeaponClass().getPropertiesMults().isEmpty()) {
-			double totalMult = 0;
+			double totalMult = 1;
 			for (Integer integer : type.getWeaponClass().getPropertiesMults()) {
-				totalMult += entityService.getEntityProperty(character, integer);
+				totalMult += entityService.getEntityProperty(character, integer - 1);
 			}
 			base *= totalMult;
 		}

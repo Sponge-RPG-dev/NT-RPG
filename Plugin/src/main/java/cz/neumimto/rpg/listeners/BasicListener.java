@@ -18,7 +18,6 @@
 
 package cz.neumimto.rpg.listeners;
 
-import com.flowpowered.math.vector.Vector3i;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.IEntity;
@@ -231,67 +230,6 @@ public class BasicListener {
 			characterService.addExperiences(character, d, ExperienceSources.FISHING);
 		}
 
-
-//		IActiveCharacter character = characterService.getTarget(player.getUniqueId());
-
-	//	characterService.addExperiences(character, 10, ExperienceSources.FISHING);
-
-	}
-
-	//TODO sponge bug as of 7.1-BETA-15
-    /*
-    @Listener
-    public void onItemForge(ClickInventoryEvent event, @First Player player) {
-        Container i = event.getTargetInventory();
-        if (i.getArchetype() == InventoryArchetypes.ANVIL) {
-            if (i instanceof BlockCarrier) {
-                BlockCarrier b = (BlockCarrier) i;
-                //on item insert
-                if (isSocketingViable(b.getLocation())) {
-                    Optional<ItemStack> peek = event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(0))).peek();
-                    Optional<ItemStack> peek1 = event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(1))).peek();
-                    if (peek.isPresent() && peek1.isPresent()) {
-
-                        ItemStack rune = peek1.get();
-                        if (!rwService.isRune(rune)) {
-                            event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(2))).set(ItemStack.empty());
-                            return;
-                        }
-                        ItemStack itemStack = peek.get();
-                        ItemStack copy = itemStack.copy();
-                        ItemUpgradeTransactionResult result = rwService.insertToNextEmptySocket(copy, rune);
-                        if (result != ItemUpgradeTransactionResult.OK) {
-                            event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(2))).set(ItemStack.empty());
-                        } else {
-                            event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(2))).set(copy);
-                        }
-                    } else {
-                        event.getTargetInventory().query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(2))).set(ItemStack.empty());
-                    }
-                }
-                for (SlotTransaction slotTransaction : event.getTransactions()) {
-                    Slot slot = slotTransaction.getSlot();
-                }
-            }
-        }
-    }
-    */
-
-
-	private boolean isSocketingViable(Location<World> location) {
-		World extent = location.getExtent();
-		for (int i = -1; i <= 1; i++) {
-			for (int j = -1; j <= 1; j++) {
-				if (i == 0 && j == 0) {
-					continue;
-				}
-				Vector3i vector3i = Vector3i.from(location.getBlockX() + i, location.getBlockY(), location.getBlockZ() + j);
-				if (extent.getBlock(vector3i).getType() != BlockTypes.REDSTONE_WIRE) {
-					return false;
-				}
-			}
-		}
-		return true;
 	}
 
 

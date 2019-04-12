@@ -89,6 +89,7 @@ public class InventoryHandler implements CharacterInventoryInteractionHandler {
     @Override
     public void handleInventoryInitializationPost(IActiveCharacter character) {
         RpgInventory managedInventory = character.getManagedInventory();
+        character.setRequiresDamageRecalculation(true);
 
         for (ManagedSlot managedSlot : managedInventory.getManagedSlots().values()) {
             Optional<RpgItemStack> content = managedSlot.getContent();
