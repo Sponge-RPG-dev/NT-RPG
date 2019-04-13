@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.api.items;
 
-import cz.neumimto.rpg.effects.EffectParams;
+import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;

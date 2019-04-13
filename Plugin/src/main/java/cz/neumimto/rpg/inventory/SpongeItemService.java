@@ -3,7 +3,7 @@ package cz.neumimto.rpg.inventory;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.items.WeaponClass;
@@ -12,7 +12,6 @@ import cz.neumimto.rpg.common.configuration.ItemString;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.items.AbstractItemService;
 import cz.neumimto.rpg.common.items.RpgItemStackImpl;
-import cz.neumimto.rpg.effects.EffectParams;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.items.SpongeRpgItemType;
@@ -31,7 +30,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -40,7 +38,6 @@ import java.util.Optional;
  * Created by NeumimTo on 29.4.2018.
  */
 @Singleton
-@ResourceLoader.ListenerClass
 public class SpongeItemService extends AbstractItemService {
 
 	@Inject
@@ -83,27 +80,16 @@ public class SpongeItemService extends AbstractItemService {
     public Map<IGlobalEffect, EffectParams> getItemEffects(ItemStack is) {
 		Optional<Map<String, EffectParams>> q = is.get(NKeys.ITEM_EFFECTS);
 		if (q.isPresent()) {
-			return getItemEffects(q.get());
+			return effectService.parseItemEffects(q.get());
 		}
 		return Collections.emptyMap();
-	}
-
-	private Map<IGlobalEffect, EffectParams> getItemEffects(Map<String, EffectParams> stringEffectParamsMap) {
-		Map<IGlobalEffect, EffectParams> map = new HashMap<>();
-		for (Map.Entry<String, EffectParams> w : stringEffectParamsMap.entrySet()) {
-			IGlobalEffect globalEffect = effectService.getGlobalEffect(w.getKey());
-			if (globalEffect != null) {
-				map.put(globalEffect, w.getValue());
-			}
-		}
-		return map;
 	}
 
 	@Override
 	protected Optional<RpgItemType> createRpgItemType(ItemString parsed, WeaponClass wClass) {
 		Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, parsed.itemId);
 		if (!type.isPresent()) {
-			Log.error(" - Unknown itemtype " + parsed.itemId);
+			Log.error(" - Not Managed ItemType " + parsed.itemId);
 			return Optional.empty();
 		}
 		ItemType itemType = type.get();

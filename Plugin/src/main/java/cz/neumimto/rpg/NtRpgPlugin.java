@@ -312,7 +312,7 @@ public class NtRpgPlugin {
 				.buildAndRegister(plugin);
 
 		Sponge.getRegistry().registerModule(SocketType.class, new SocketTypeRegistry());
-		Sponge.getRegistry().registerModule(Attribute.class, new AttributeCatalogTypeRegistry());
+		Sponge.getRegistry().registerModule(Attribute.class, NtRpgPlugin.GlobalScope.spongePropertyService);
 		Sponge.getRegistry().registerModule(ItemMetaType.class, new ItemMetaTypeRegistry());
 		Sponge.getRegistry().registerModule(ItemSubtype.class, new ItemSubtypeRegistry());
 		Sponge.getRegistry().registerModule(ISkillType.class, new SkillTypeRegistry());

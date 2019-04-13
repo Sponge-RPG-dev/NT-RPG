@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.effects;
+package cz.neumimto.rpg.api.effects;
 
 import java.util.HashMap;
 import java.util.Map;
