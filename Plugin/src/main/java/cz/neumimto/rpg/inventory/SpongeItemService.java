@@ -24,14 +24,15 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 
 /**
@@ -99,7 +100,7 @@ public class SpongeItemService extends AbstractItemService {
 
 	@Override
 	public void loadItemGroups(Path path) {
-		File f = path.toFile();
+		File f = path.resolve("ItemGroups.conf").toFile();
 		if (!f.exists()) {
 			Optional<Asset> asset = Sponge.getAssetManager().getAsset(NtRpgPlugin.GlobalScope.plugin, "ItemGroups.conf");
 			if (!asset.isPresent()) {
@@ -112,7 +113,7 @@ public class SpongeItemService extends AbstractItemService {
 			}
 		}
 
-		Config c = ConfigFactory.parseFile(path.toFile());
+		Config c = ConfigFactory.parseFile(f);
 		loadItemGroups(c);
 	}
 

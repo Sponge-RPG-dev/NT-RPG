@@ -13,7 +13,13 @@ import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -55,7 +61,7 @@ public class ClassRpgItemTypeAdapter implements TypeSerializer<Set<ClassItem>> {
 					RpgItemType rpgItemType1 = rpgItemType.get();
 					map2.put(rpgItemType1, parsed.damage);
 				} else {
-					Log.error("- Unknown item type " + RpgItemType.KEY_BUILDER.apply(parsed.itemId, parsed.model));
+					Log.error("- Not managed item type " + RpgItemType.KEY_BUILDER.apply(parsed.itemId, parsed.model));
 				}
 			}
 		}
