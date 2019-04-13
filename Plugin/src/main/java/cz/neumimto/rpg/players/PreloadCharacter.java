@@ -596,6 +596,16 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
+	public boolean requiresDamageRecalculation() {
+		return false;
+	}
+
+	@Override
+	public void setRequiresDamageRecalculation(boolean k) {
+
+	}
+
+	@Override
 	public RpgInventory getManagedInventory() {
 		return new RpgInventoryImpl() {
 			@Override
