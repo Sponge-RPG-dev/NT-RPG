@@ -21,8 +21,10 @@ package cz.neumimto.rpg.listeners;
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
+import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
@@ -43,10 +45,13 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
+import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.util.Tristate;
 
-import javax.inject.Inject;
+import java.util.List;
 import java.util.Optional;
+
+import javax.inject.Inject;
 
 
 /**
@@ -89,7 +94,19 @@ public class InventoryListener {
 	})
 	@IsCancelled(Tristate.FALSE)
 	public void onClick(ClickInventoryEvent event, @Root Player player) {
-
+		List<SlotTransaction> transactions = event.getTransactions();
+		for (SlotTransaction transaction : transactions) {
+			Optional<String> s = transaction.getOriginal().get(NKeys.COMMAND);
+			if (s.isPresent()) {
+				Sponge.getCommandManager().process(player, s.get());
+			}
+			Optional<Boolean> aBoolean = transaction.getOriginal().get(NKeys.MENU_INVENTORY);
+			if (aBoolean.isPresent()) {
+				if (aBoolean.get()) {
+					event.setCancelled(true);
+				}
+			}
+		}
 	}
 
 
