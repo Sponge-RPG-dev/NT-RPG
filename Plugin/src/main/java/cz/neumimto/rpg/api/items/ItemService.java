@@ -5,8 +5,10 @@ import com.typesafe.config.ConfigFactory;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.attributes.Attribute;
 
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
@@ -48,4 +50,5 @@ public interface ItemService {
 
     boolean checkItemClassRequirements(IActiveCharacter character, RpgItemStack rpgItemStack);
 
+    void registerItemAttributes(Collection<Attribute> attributes);
 }

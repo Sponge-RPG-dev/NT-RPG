@@ -46,7 +46,6 @@ import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.ExperienceSourceRegistry;
 import cz.neumimto.rpg.players.ExperienceSources;
 import cz.neumimto.rpg.players.attributes.Attribute;
-import cz.neumimto.rpg.players.attributes.AttributeCatalogTypeRegistry;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.ISkillType;
 import cz.neumimto.rpg.skills.NDamageType;

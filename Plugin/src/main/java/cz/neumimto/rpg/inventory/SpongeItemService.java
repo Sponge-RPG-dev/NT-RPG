@@ -3,6 +3,7 @@ package cz.neumimto.rpg.inventory;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.items.WeaponClass;
@@ -39,6 +40,7 @@ import java.util.Optional;
  * Created by NeumimTo on 29.4.2018.
  */
 @Singleton
+@ResourceLoader.ListenerClass
 public class SpongeItemService extends AbstractItemService {
 
 	@Inject
@@ -63,14 +65,22 @@ public class SpongeItemService extends AbstractItemService {
 	}
 
 	private Map<Attribute, Integer> getItemMinimalAttributeRequirements(ItemStack itemStack) {
-		return Collections.emptyMap();
+        Optional<Map<String, Integer>> req = itemStack.get(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS);
+        if (req.isPresent()) {
+            return parseItemAttributeMap(req.get());
+        }
+        return super.itemAttributesPlaceholder;
 	}
 
 	private Map<Attribute, Integer> getItemBonusAttributes(ItemStack itemStack) {
-		return Collections.emptyMap();
+        Optional<Map<String, Integer>> req = itemStack.get(NKeys.ITEM_ATTRIBUTE_BONUS);
+        if (req.isPresent()) {
+            return parseItemAttributeMap(req.get());
+        }
+        return super.itemAttributesPlaceholder;
 	}
 
-	public Map<IGlobalEffect, EffectParams> getItemEffects(ItemStack is) {
+    public Map<IGlobalEffect, EffectParams> getItemEffects(ItemStack is) {
 		Optional<Map<String, EffectParams>> q = is.get(NKeys.ITEM_EFFECTS);
 		if (q.isPresent()) {
 			return getItemEffects(q.get());

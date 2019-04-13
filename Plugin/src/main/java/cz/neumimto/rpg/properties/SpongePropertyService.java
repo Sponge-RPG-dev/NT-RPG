@@ -20,6 +20,8 @@ package cz.neumimto.rpg.properties;
 
 import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.Rpg;
+import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.attributes.Attributes;
@@ -29,6 +31,7 @@ import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
+import org.spongepowered.api.registry.AdditionalCatalogRegistryModule;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -38,9 +41,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.text.Collator;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import static cz.neumimto.rpg.api.logging.Log.info;
@@ -50,10 +51,20 @@ import static cz.neumimto.rpg.api.logging.Log.info;
  */
 
 @Singleton
-public class SpongePropertyService extends PropertyServiceImpl {
+public class SpongePropertyService extends PropertyServiceImpl implements AdditionalCatalogRegistryModule<Attribute> {
 
 	@Inject
 	private NtRpgPlugin plugin;
+
+	@Inject
+	private ItemService itemService;
+
+	public Map<String, Attribute> attributeMap = new HashMap<>();
+
+	@Override
+	public Map<String, Attribute> getAttributes() {
+		return attributeMap;
+	}
 
 	@Override
 	public void reLoadAttributes(Path attributeFilePath) {
@@ -62,6 +73,9 @@ public class SpongePropertyService extends PropertyServiceImpl {
 			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(attributeFilePath).build();
 			Attributes attributes = mapper.bind(new Attributes()).populate(hcl.load());
 			attributes.getAttributes().forEach(a -> Sponge.getRegistry().register(Attribute.class, new Attribute(a)));
+
+
+			itemService.registerItemAttributes(Rpg.get().getAttributes());
 		} catch (ObjectMappingException | IOException e) {
 			e.printStackTrace();
 		}
@@ -97,5 +111,20 @@ public class SpongePropertyService extends PropertyServiceImpl {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void registerAdditionalCatalog(Attribute extraCatalog) {
+		getAttributes().put(extraCatalog.getId(), extraCatalog);
+	}
+
+	@Override
+	public Optional<Attribute> getById(String id) {
+		return getAttributeById(id);
+	}
+
+	@Override
+	public Collection<Attribute> getAll() {
+		return getAttributes().values();
 	}
 }

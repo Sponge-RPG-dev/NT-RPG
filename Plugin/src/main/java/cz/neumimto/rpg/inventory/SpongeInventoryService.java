@@ -24,6 +24,7 @@ import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.ClassService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
@@ -40,8 +41,6 @@ import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtypes;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.PlayerClassData;
-import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.properties.SpongePropertyService;
 import cz.neumimto.rpg.reloading.Reload;
@@ -110,6 +109,9 @@ public class SpongeInventoryService extends AbstractInventoryService {
 	@Inject
 	private SpongePropertyService spongePropertyService;
 
+    @Inject
+    private CharacterInventoryInteractionHandler inventoryInteractionHandler;
+
 	@Inject
 	private ClassService classService;
 
@@ -170,9 +172,9 @@ public class SpongeInventoryService extends AbstractInventoryService {
 
 
 	public void initializeCharacterInventory(IActiveCharacter character) {
-		if (character.isStub()) {
-			return;
-		}
+        if (inventoryInteractionHandler.handleInventoryInitializationPre(character)) {
+            inventoryInteractionHandler.handleInventoryInitializationPost(character);
+        }
 
 	}
 
@@ -194,52 +196,6 @@ public class SpongeInventoryService extends AbstractInventoryService {
 			return;
 		}
 
-	}
-
-	private CannotUseItemReason checkGroupRequirements(IActiveCharacter character, Map<String, Integer> a) {
-		if (a.isEmpty()) {
-			return CannotUseItemReason.OK;
-		}
-		int k = 0;
-		Iterator<Map.Entry<String, Integer>> it = a.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry<String, Integer> next = it.next();
-
-				for (PlayerClassData playerClassData : character.getClasses().values()) {
-					if (playerClassData.getClassDefinition().getName().equalsIgnoreCase(next.getKey())) {
-						if (next.getValue() != null && character.getLevel() < playerClassData.getLevel()) {
-							return CannotUseItemReason.LEVEL;
-						}
-						k++;
-					}
-				}
-
-		}
-		if (a.size() == k) {
-			return CannotUseItemReason.OK;
-		} else {
-			return CannotUseItemReason.LORE;
-		}
-	}
-
-	private CannotUseItemReason checkAttributeRequirements(IActiveCharacter character, Map<String, Integer> a) {
-		if (a.isEmpty()) {
-			return CannotUseItemReason.OK;
-		}
-		for (Map.Entry<String, Integer> q : a.entrySet()) {
-			Optional<Attribute> type = Sponge.getRegistry().getType(Attribute.class, q.getKey());
-			if (!type.isPresent()) {
-				continue;
-			}
-
-			Attribute attribute = type.get();
-			Integer attributeValue = character.getAttributeValue(attribute);
-			if (attributeValue == null || attributeValue < q.getValue()) {
-				return CannotUseItemReason.ATTRIBUTE;
-			}
-
-		}
-		return CannotUseItemReason.OK;
 	}
 
 	public ItemStack setItemLevel(ItemStack itemStack, int level) {

@@ -28,6 +28,7 @@ public abstract class AbstractItemService implements ItemService {
     protected Map<String, RpgItemType> items = new HashMap<>();
 
     protected Map<String, WeaponClass> weaponClassMap = new HashMap<>();
+    protected Map<Attribute, Integer> itemAttributesPlaceholder;
 
     @Override
     public Optional<WeaponClass> getWeaponClassByName(String clazz) {
@@ -197,6 +198,17 @@ public abstract class AbstractItemService implements ItemService {
         }
     }
 
+    protected Map<Attribute, Integer> parseItemAttributeMap(Map<String, Integer> stringIntegerMap) {
+        Map<Attribute, Integer> map = new HashMap<>();
+        for (Map.Entry<String, Integer> stringIntegerEntry : stringIntegerMap.entrySet()) {
+            Optional<Attribute> attr = spongePropertyService.getAttributeById(stringIntegerEntry.getKey());
+            if (attr.isPresent()) {
+                map.put(attr.get(), stringIntegerEntry.getValue());
+            }
+        }
+        return map;
+    }
+
     protected abstract Optional<RpgItemType> createRpgItemType(ItemString parsed, WeaponClass weapons);
 
     @Override
@@ -213,6 +225,13 @@ public abstract class AbstractItemService implements ItemService {
         return true;
     }
 
+    @Override
+    public void registerItemAttributes(Collection<Attribute> attributes) {
+        this.itemAttributesPlaceholder = new HashMap<>();
+        for (Attribute attribute : attributes) {
+            itemAttributesPlaceholder.put(attribute, 0);
+        }
+    }
 }
 
 

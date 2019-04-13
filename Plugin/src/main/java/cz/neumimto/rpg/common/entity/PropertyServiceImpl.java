@@ -3,6 +3,7 @@ package cz.neumimto.rpg.common.entity;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.Console;
+import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.properties.Property;
 
 import java.io.*;
@@ -175,6 +176,11 @@ public abstract class PropertyServiceImpl implements PropertyService {
                 Log.error("Could not append file max_server_property_values.properties", e);
             }
         }
+    }
+
+    @Override
+    public Optional<Attribute> getAttributeById(String attribute) {
+        return Optional.ofNullable(getAttributes().get(attribute));
     }
 
 }

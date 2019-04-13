@@ -50,7 +50,7 @@ public class InventoryHandler implements CharacterInventoryInteractionHandler {
 
     @Override
     public boolean handleInventoryInitializationPre(IActiveCharacter character) {
-        return true;
+        return !character.isStub();
     }
 
 
