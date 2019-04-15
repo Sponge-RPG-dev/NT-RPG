@@ -3,6 +3,7 @@ package cz.neumimto.rpg.junit;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.items.WeaponClass;
 import cz.neumimto.rpg.common.inventory.FilteredManagedSlotImpl;
+import cz.neumimto.rpg.common.inventory.RpgInventoryImpl;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.CharacterBase;
@@ -78,9 +79,9 @@ public class CharactersExtension implements ParameterResolver {
 
         activeCharacter.getAllowedWeapons().put(TestDictionary.ITEM_TYPE_WEAPON_1, 20D);
         activeCharacter.getAllowedArmor().add(TestDictionary.ARMOR_TYPE_1);
-
-        activeCharacter.getManagedInventory().getManagedSlots().put(managedSlot.getId(), managedSlot);
-        activeCharacter.getManagedInventory().getManagedSlots().put(filteredSlot.getId(), filteredSlot);
+        activeCharacter.getManagedInventory().put(Object.class, new RpgInventoryImpl());
+        activeCharacter.getManagedInventory().get(Object.class).getManagedSlots().put(managedSlot.getId(), managedSlot);
+        activeCharacter.getManagedInventory().get(Object.class).getManagedSlots().put(filteredSlot.getId(), filteredSlot);
 
 
         characterBase.getAttributes().put(TestDictionary.AGI.getId(), 5);

@@ -88,17 +88,20 @@ public class InventoryHandler implements CharacterInventoryInteractionHandler {
 
     @Override
     public void handleInventoryInitializationPost(IActiveCharacter character) {
-        RpgInventory managedInventory = character.getManagedInventory();
-        character.setRequiresDamageRecalculation(true);
+        Map<Class<?>, RpgInventory> managedInventories = character.getManagedInventory();
 
-        for (ManagedSlot managedSlot : managedInventory.getManagedSlots().values()) {
-            Optional<RpgItemStack> content = managedSlot.getContent();
-            if (content.isPresent()) {
-                RpgItemStack rpgItemStack = content.get();
-                if (isValidItemForSlot(managedSlot, rpgItemStack)) {
-                    handleCharacterEquipActionPost(character, managedSlot, rpgItemStack);
-                } else {
-                    handleCharacterUnEquipActionPost(character, managedSlot, rpgItemStack);
+        for (RpgInventory managedInventory : managedInventories.values()) {
+            character.setRequiresDamageRecalculation(true);
+
+            for (ManagedSlot managedSlot : managedInventory.getManagedSlots().values()) {
+                Optional<RpgItemStack> content = managedSlot.getContent();
+                if (content.isPresent()) {
+                    RpgItemStack rpgItemStack = content.get();
+                    if (isValidItemForSlot(managedSlot, rpgItemStack)) {
+                        handleCharacterEquipActionPost(character, managedSlot, rpgItemStack);
+                    } else {
+                        handleCharacterUnEquipActionPost(character, managedSlot, rpgItemStack);
+                    }
                 }
             }
         }

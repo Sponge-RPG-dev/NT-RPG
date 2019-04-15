@@ -6,5 +6,4 @@ public interface RpgInventory {
 
     Map<Integer, ManagedSlot> getManagedSlots();
 
-
 }

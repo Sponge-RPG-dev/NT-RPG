@@ -53,7 +53,7 @@ class InventoryHandlerTest {
     void handleCharacterEquipActionPreTest(RpgItemStack testItemStack, int i, boolean result) {
         Log.info("Id: {} result: {}");
         boolean mayUse = inventoryHandler.handleCharacterEquipActionPre(character,
-                character.getManagedInventory().getManagedSlots().get(i),
+                character.getManagedInventory().get(Object.class).getManagedSlots().get(i),
                 testItemStack);
 
         Assertions.assertSame(mayUse, result);
@@ -131,7 +131,7 @@ class InventoryHandlerTest {
 
     @Test
     void characterAttemptsToRemoveItemWithAttributes01() {
-        Map<Integer, ManagedSlot> managedSlots = character.getManagedInventory().getManagedSlots();
+        Map<Integer, ManagedSlot> managedSlots = character.getManagedInventory().get(Object.class).getManagedSlots();
 
         ManagedSlotImpl managedSlot = new ManagedSlotImpl(0);
         Map<Attribute, Integer> minimalRequirements = new HashMap<>();
@@ -152,7 +152,7 @@ class InventoryHandlerTest {
 
     @Test
     void characterAttemptsToRemoveItemWithAttributes02() {
-        Map<Integer, ManagedSlot> managedSlots = character.getManagedInventory().getManagedSlots();
+        Map<Integer, ManagedSlot> managedSlots = character.getManagedInventory().get(Object.class).getManagedSlots();
 
         ManagedSlotImpl managedSlot = new ManagedSlotImpl(0);
         Map<Attribute, Integer> minimalRequirements = new HashMap<>();
@@ -175,7 +175,7 @@ class InventoryHandlerTest {
 
     @Test
     void characterAttemptsToRemoveItemWithAttributes03() {
-        Map<Integer, ManagedSlot> managedSlots = character.getManagedInventory().getManagedSlots();
+        Map<Integer, ManagedSlot> managedSlots = character.getManagedInventory().get(Object.class).getManagedSlots();
 
         ManagedSlotImpl managedSlot = new ManagedSlotImpl(0);
         Map<Attribute, Integer> minimalRequirements = new HashMap<>();

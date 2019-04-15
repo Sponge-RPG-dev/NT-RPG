@@ -49,218 +49,220 @@ import java.util.Set;
  */
 public interface IActiveCharacter extends IEntity<Player> {
 
-	Map<String, PlayerClassData> getClasses();
+    Map<String, PlayerClassData> getClasses();
 
-	default PlayerClassData getClassByType(String type) {
-		for (PlayerClassData value : getClasses().values()) {
-			if (value.getClassDefinition().getClassType().equalsIgnoreCase(type)) {
-				return value;
-			}
-		}
-		return null;
-	}
+    default PlayerClassData getClassByType(String type) {
+        for (PlayerClassData value : getClasses().values()) {
+            if (value.getClassDefinition().getClassType().equalsIgnoreCase(type)) {
+                return value;
+            }
+        }
+        return null;
+    }
 
-	RpgInventory getManagedInventory();
+    Map<Class<?>, RpgInventory> getManagedInventory();
 
-	Party getParty();
+    Party getParty();
 
-	void setParty(Party party);
+    void setParty(Party party);
 
-	String getName();
+    String getName();
 
-	boolean isStub();
+    boolean isStub();
 
-	float[] getPrimaryProperties();
+    float[] getPrimaryProperties();
 
-	void setCharacterLevelProperty(int index, float value);
+    void setCharacterLevelProperty(int index, float value);
 
-	float getCharacterPropertyWithoutLevel(int index);
+    float getCharacterPropertyWithoutLevel(int index);
 
-	double getMaxMana();
+    double getMaxMana();
 
-	void setMaxMana(float mana);
+    void setMaxMana(float mana);
 
-	void setMaxHealth(float maxHealth);
+    void setMaxHealth(float maxHealth);
 
-	void setHealth(float maxHealth);
+    void setHealth(float maxHealth);
 
-	IReservable getMana();
+    IReservable getMana();
 
-	void setMana(IReservable mana);
+    void setMana(IReservable mana);
 
-	void setHealth(IReservable health);
+    void setHealth(IReservable health);
 
-	Player getPlayer();
+    Player getPlayer();
 
-	void setPlayer(Player pl);
+    void setPlayer(Player pl);
 
-	void resetRightClicks();
+    void resetRightClicks();
 
-	int getAttributePoints();
+    int getAttributePoints();
 
-	void setAttributePoints(int attributePoints);
+    void setAttributePoints(int attributePoints);
 
-	Integer getAttributeValue(String name);
+    Integer getAttributeValue(String name);
 
-	default Integer getAttributeValue(Attribute attribute) {
-		return getAttributeValue(attribute.getId());
-	}
+    default Integer getAttributeValue(Attribute attribute) {
+        return getAttributeValue(attribute.getId());
+    }
 
-	Map<String, Long> getCooldowns();
+    Map<String, Long> getCooldowns();
 
-	boolean hasCooldown(String thing);
+    boolean hasCooldown(String thing);
 
-	double getBaseWeaponDamage(RpgItemType type);
+    double getBaseWeaponDamage(RpgItemType type);
 
-	Set<RpgItemType> getAllowedArmor();
+    Set<RpgItemType> getAllowedArmor();
 
-	boolean canWear(RpgItemType armor);
+    boolean canWear(RpgItemType armor);
 
-	Map<RpgItemType, Double> getAllowedWeapons();
+    Map<RpgItemType, Double> getAllowedWeapons();
 
-	Map<EntityType, Double> getProjectileDamages();
+    Map<EntityType, Double> getProjectileDamages();
 
-	CharacterBase getCharacterBase();
+    CharacterBase getCharacterBase();
 
-	PlayerClassData getPrimaryClass();
+    PlayerClassData getPrimaryClass();
 
-	double getBaseProjectileDamage(EntityType id);
+    double getBaseProjectileDamage(EntityType id);
 
-	IActiveCharacter updateItemRestrictions();
+    IActiveCharacter updateItemRestrictions();
 
-	Map<String, PlayerSkillContext> getSkills();
+    Map<String, PlayerSkillContext> getSkills();
 
-	PlayerSkillContext getSkillInfo(ISkill skill);
+    PlayerSkillContext getSkillInfo(ISkill skill);
 
-	boolean hasSkill(String name);
+    boolean hasSkill(String name);
 
-	int getLevel();
+    int getLevel();
 
-	PlayerSkillContext getSkillInfo(String s);
+    PlayerSkillContext getSkillInfo(String s);
 
-	boolean isSilenced();
+    boolean isSilenced();
 
-	void addSkill(String name, PlayerSkillContext info);
+    void addSkill(String name, PlayerSkillContext info);
 
-	PlayerSkillContext getSkill(String skillName);
+    PlayerSkillContext getSkill(String skillName);
 
-	void removeAllSkills();
+    void removeAllSkills();
 
-	boolean hasParty();
+    boolean hasParty();
 
-	boolean isInPartyWith(IActiveCharacter character);
+    boolean isInPartyWith(IActiveCharacter character);
 
-	boolean isUsingGuiMod();
+    boolean isUsingGuiMod();
 
-	void setUsingGuiMod(boolean b);
+    void setUsingGuiMod(boolean b);
 
-	boolean isPartyLeader();
+    boolean isPartyLeader();
 
-	Party getPendingPartyInvite();
+    Party getPendingPartyInvite();
 
-	void setPendingPartyInvite(Party party);
+    void setPendingPartyInvite(Party party);
 
-	boolean canUse(RpgItemType weaponItemType, HandType h);
+    boolean canUse(RpgItemType weaponItemType, HandType h);
 
-	double getWeaponDamage();
+    double getWeaponDamage();
 
-	void setWeaponDamage(double damage);
+    void setWeaponDamage(double damage);
 
-	double getArmorValue();
+    double getArmorValue();
 
-	void setArmorValue(double value);
+    void setArmorValue(double value);
 
-	boolean hasPreferedDamageType();
+    boolean hasPreferedDamageType();
 
-	DamageType getDamageType();
+    DamageType getDamageType();
 
-	void setDamageType(DamageType damageType);
+    void setDamageType(DamageType damageType);
 
-	void updateLastKnownLocation(int x, int y, int z, String name);
+    void updateLastKnownLocation(int x, int y, int z, String name);
 
-	boolean isInvulnerable();
+    boolean isInvulnerable();
 
-	void setInvulnerable(boolean b);
+    void setInvulnerable(boolean b);
 
-	RpgItemStack getMainHand();
+    RpgItemStack getMainHand();
 
-	int getMainHandSlotId();
+    int getMainHandSlotId();
 
-	void setMainHand(RpgItemStack customItem, int slot);
+    void setMainHand(RpgItemStack customItem, int slot);
 
-	RpgItemStack getOffHand();
+    RpgItemStack getOffHand();
 
-	void setOffHand(RpgItemStack customItem);
+    void setOffHand(RpgItemStack customItem);
 
-	@Override
-	default IEntityType getType() {
-		return IEntityType.CHARACTER;
-	}
+    @Override
+    default IEntityType getType() {
+        return IEntityType.CHARACTER;
+    }
 
-	@Override
-	Player getEntity();
+    @Override
+    Player getEntity();
 
-	void sendMessage(LocalizableParametrizedText message);
+    void sendMessage(LocalizableParametrizedText message);
 
-	float[] getSecondaryProperties();
+    float[] getSecondaryProperties();
 
-	void setSecondaryProperties(float[] arr);
+    void setSecondaryProperties(float[] arr);
 
-	Map<String, Integer> getTransientAttributes();
+    Map<String, Integer> getTransientAttributes();
 
-	MessageType getPreferedMessageType();
+    MessageType getPreferedMessageType();
 
-	void setPreferedMessageType(MessageType type);
+    void setPreferedMessageType(MessageType type);
 
-	boolean hasClass(ClassDefinition configClass);
+    boolean hasClass(ClassDefinition configClass);
 
-	List<Integer> getSlotsToReinitialize();
+    List<Integer> getSlotsToReinitialize();
 
-	void setSlotsToReinitialize(List<Integer> slotsToReinitialize);
+    void setSlotsToReinitialize(List<Integer> slotsToReinitialize);
 
-	Map<String, SkillTreeViewModel> getSkillTreeViewLocation();
+    Map<String, SkillTreeViewModel> getSkillTreeViewLocation();
 
-	SkillTreeViewModel getLastTimeInvokedSkillTreeView();
+    SkillTreeViewModel getLastTimeInvokedSkillTreeView();
 
-	void addSkillTreeSpecialization(SkillTreeSpecialization specialization);
+    void addSkillTreeSpecialization(SkillTreeSpecialization specialization);
 
-	void removeSkillTreeSpecialization(SkillTreeSpecialization specialization);
+    void removeSkillTreeSpecialization(SkillTreeSpecialization specialization);
 
-	boolean hasSkillTreeSpecialization(SkillTreeSpecialization specialization);
+    boolean hasSkillTreeSpecialization(SkillTreeSpecialization specialization);
 
-	Set<SkillTreeSpecialization> getSkillTreeSpecialization();
+    Set<SkillTreeSpecialization> getSkillTreeSpecialization();
 
-	Set<EquipedSlot> getSlotsCannotBeEquiped();
+    Set<EquipedSlot> getSlotsCannotBeEquiped();
 
-	double getExperienceBonusFor(java.lang.String name, EntityType type);
+    double getExperienceBonusFor(java.lang.String name, EntityType type);
 
-	@Override
-	default void sendMessage(Text t) {
-		getPlayer().sendMessage(t);
-	}
+    @Override
+    default void sendMessage(Text t) {
+        getPlayer().sendMessage(t);
+    }
 
-	void addClass(PlayerClassData playerClassData);
+    void addClass(PlayerClassData playerClassData);
 
-	void restartAttributeGuiSession();
+    void restartAttributeGuiSession();
 
     default void getMinimalInventoryRequirements(Map<Attribute, Integer> seed) {
 
-		Map<Integer, ManagedSlot> managedSlots = getManagedInventory().getManagedSlots();
+        Map<Class<?>, RpgInventory> managedInventory = getManagedInventory();
+        for (RpgInventory inv : managedInventory.values()) {
 
-		for (ManagedSlot value : managedSlots.values()) {
-			Optional<RpgItemStack> content = value.getContent();
-			if (content.isPresent()) {
-				RpgItemStack rpgItemStack = content.get();
-				Map<Attribute, Integer> minimalAttributeRequirements = rpgItemStack.getMinimalAttributeRequirements();
+            for (ManagedSlot value : inv.getManagedSlots().values()) {
+                Optional<RpgItemStack> content = value.getContent();
+                if (content.isPresent()) {
+                    RpgItemStack rpgItemStack = content.get();
+                    Map<Attribute, Integer> minimalAttributeRequirements = rpgItemStack.getMinimalAttributeRequirements();
 
-				for (Map.Entry<Attribute, Integer> entry : minimalAttributeRequirements.entrySet()) {
-					seed.compute(entry.getKey(), (attribute, integer) -> Math.max(integer, entry.getValue()));
-				}
-			}
-		}
-	}
+                    for (Map.Entry<Attribute, Integer> entry : minimalAttributeRequirements.entrySet()) {
+                        seed.compute(entry.getKey(), (attribute, integer) -> Math.max(integer, entry.getValue()));
+                    }
+                }
+            }
+        }
+    }
 
-	boolean requiresDamageRecalculation();
+    boolean requiresDamageRecalculation();
 
-	void setRequiresDamageRecalculation(boolean k);
+    void setRequiresDamageRecalculation(boolean k);
 }

@@ -21,12 +21,10 @@ package cz.neumimto.rpg.players;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
-import cz.neumimto.rpg.common.inventory.RpgInventoryImpl;
 import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.entities.IReservable;
@@ -606,12 +604,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public RpgInventory getManagedInventory() {
-		return new RpgInventoryImpl() {
-			@Override
-			public Map<Integer, ManagedSlot> getManagedSlots() {
-				return Collections.emptyMap();
-			}
-		};
+	public Map<Class<?>, RpgInventory> getManagedInventory() {
+		return Collections.emptyMap();
 	}
 }
