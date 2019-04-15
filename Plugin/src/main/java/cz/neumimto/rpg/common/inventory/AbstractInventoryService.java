@@ -4,6 +4,4 @@ import cz.neumimto.rpg.api.inventory.InventoryService;
 
 public abstract class AbstractInventoryService implements InventoryService {
 
-
-
 }

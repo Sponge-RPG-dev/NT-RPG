@@ -26,9 +26,12 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
+import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
+import cz.neumimto.rpg.common.inventory.ManagedSlotImpl;
+import cz.neumimto.rpg.common.inventory.RpgInventoryImpl;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.gui.Gui;
@@ -175,7 +178,6 @@ public class SpongeInventoryService extends AbstractInventoryService {
         if (inventoryInteractionHandler.handleInventoryInitializationPre(character)) {
             inventoryInteractionHandler.handleInventoryInitializationPost(character);
         }
-
 	}
 
 	public void dropItem(IActiveCharacter character, ItemStack is, CannotUseItemReason reason) {
@@ -301,6 +303,20 @@ public class SpongeInventoryService extends AbstractInventoryService {
 
 		//will break in get 8
 		itemMetaSubtypes.stream().map(ItemSubtype::new).forEach(a -> Sponge.getRegistry().register(ItemSubtype.class, a));
+	}
+
+	@Override
+	public void initializeManagedSlots(IActiveCharacter activeCharacter) {
+		Map<Class<?>, RpgInventory> managedInventory = activeCharacter.getManagedInventory();
+		for (Map.Entry<Class<?>, ManagedInventory> entry : managedInventories.entrySet()) {
+			Class<?> key = entry.getKey();
+			ManagedInventory mi = entry.getValue();
+			RpgInventoryImpl rpgInventory = new RpgInventoryImpl();
+			for (SlotEffectSource value : mi.getSlots().values()) {
+				rpgInventory.getManagedSlots().put(value.getSlotId(), new ManagedSlotImpl(value.getSlotId()));
+			}
+			managedInventory.put(key, rpgInventory);
+		}
 	}
 
 	private void loadInventorySettings(Config slots) {

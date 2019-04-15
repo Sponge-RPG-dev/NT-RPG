@@ -540,6 +540,9 @@ public abstract class CharacterService {
         for (PlayerSkillContext dt : skillData) {
             dt.getSkill().onCharacterInit(activeCharacter, dt.getLevel());
         }
+
+        spongeInventoryService.initializeManagedSlots(activeCharacter);
+
         return activeCharacter;
     }
 
