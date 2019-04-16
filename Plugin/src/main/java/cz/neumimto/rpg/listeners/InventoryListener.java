@@ -32,6 +32,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.entity.ChangeEntityEquipmentEvent;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
+import org.spongepowered.api.event.entity.living.humanoid.HandInteractEvent;
 import org.spongepowered.api.event.filter.IsCancelled;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.cause.Root;
@@ -39,19 +40,18 @@ import org.spongepowered.api.event.filter.type.Include;
 import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
-import org.spongepowered.api.event.item.inventory.InteractItemEvent;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.util.Tristate;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
-
-import javax.inject.Inject;
 
 
 /**
@@ -82,8 +82,17 @@ public class InventoryListener {
 	}
 
 	@Listener
-	public void onHotbarInteract(InteractItemEvent event, @First(typeFilter = Player.class) Player player) {
+	public void onHotbarInteract(HandInteractEvent event, @First(typeFilter = Player.class) Player player) {
 		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+		Hotbar query = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
+		int selectedSlotIndex = query.getSelectedSlotIndex();
+		int last = character.getLastHotbarSlotInteraction();
+		if (selectedSlotIndex != last) {
+			if (inventoryHandler.handleInventoryInitializationPre(character)) {
+				inventoryHandler.handleInventoryInitializationPost(character);
+			}
+			character.setLastHotbarSlotInteraction(last);
+		}
 
 	}
 
@@ -116,6 +125,15 @@ public class InventoryListener {
 			ClickInventoryEvent.Secondary.class
 	})
 	public void onInteract(ClickInventoryEvent event, @Root Player player) {
+		List<SlotTransaction> transactions = event.getTransactions();
+		switch (transactions.size()) {
+			case 1:
+				break;
+			case 2:
+				break;
+			default:
+				return;
+		}
 
 	}
 

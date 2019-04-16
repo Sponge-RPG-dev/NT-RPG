@@ -265,4 +265,8 @@ public interface IActiveCharacter extends IEntity<Player> {
     boolean requiresDamageRecalculation();
 
     void setRequiresDamageRecalculation(boolean k);
+
+    int getLastHotbarSlotInteraction();
+
+    void setLastHotbarSlotInteraction(int last);
 }

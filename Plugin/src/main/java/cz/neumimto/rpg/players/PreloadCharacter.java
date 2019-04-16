@@ -604,6 +604,16 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
+	public int getLastHotbarSlotInteraction() {
+		return 0;
+	}
+
+	@Override
+	public void setLastHotbarSlotInteraction(int last) {
+
+	}
+
+	@Override
 	public Map<Class<?>, RpgInventory> getManagedInventory() {
 		return Collections.emptyMap();
 	}

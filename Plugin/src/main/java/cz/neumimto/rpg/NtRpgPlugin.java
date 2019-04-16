@@ -18,8 +18,6 @@
 
 package cz.neumimto.rpg;
 
-import static cz.neumimto.rpg.api.logging.Log.info;
-
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import cz.neumimto.configuration.ConfigMapper;
@@ -28,27 +26,8 @@ import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.configuration.Settings;
-import cz.neumimto.rpg.inventory.data.AttributeRefMenuData;
-import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
-import cz.neumimto.rpg.inventory.data.MenuInventoryData;
-import cz.neumimto.rpg.inventory.data.NKeys;
-import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
-import cz.neumimto.rpg.inventory.data.manipulators.EffectsData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemAttributesData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemLevelData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaHeader;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemMetaTypeData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemRarityData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemSocketsData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemStackUpgradeData;
-import cz.neumimto.rpg.inventory.data.manipulators.ItemSubtypeData;
-import cz.neumimto.rpg.inventory.data.manipulators.LoreDamageData;
-import cz.neumimto.rpg.inventory.data.manipulators.LoreDurabilityData;
-import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemGroupRequirementsData;
-import cz.neumimto.rpg.inventory.data.manipulators.MinimalItemRequirementsData;
-import cz.neumimto.rpg.inventory.data.manipulators.SectionDelimiterData;
-import cz.neumimto.rpg.inventory.data.manipulators.SkillBindData;
-import cz.neumimto.rpg.inventory.data.manipulators.SkillTreeNode;
+import cz.neumimto.rpg.inventory.data.*;
+import cz.neumimto.rpg.inventory.data.manipulators.*;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.inventory.items.ItemMetaTypeRegistry;
 import cz.neumimto.rpg.inventory.items.ItemMetaTypes;
@@ -100,6 +79,7 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.SpongeExecutorService;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -107,14 +87,9 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-import javax.annotation.Resource;
+import static cz.neumimto.rpg.api.logging.Log.info;
 
 /**
  * Created by NeumimTo on 29.4.2015.
@@ -502,6 +477,8 @@ public class NtRpgPlugin {
 			Log.error("Could not read localizations in locale " + NtRpgPlugin.pluginConfig.LOCALE + " - " + e.getMessage());
 		}
 		GlobalScope.itemService.loadItemGroups(Paths.get(NtRpgPlugin.workingDir));
+		GlobalScope.inventorySerivce.loadItemGroups(Paths.get(NtRpgPlugin.workingDir));
+
 		GlobalScope.experienceService.load();
 		GlobalScope.spongeInventoryService.init();
 		GlobalScope.skillService.load();

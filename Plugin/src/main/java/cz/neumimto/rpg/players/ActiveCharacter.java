@@ -121,6 +121,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	
 	private transient PlayerClassData primaryClass;
 	private boolean requiresDamageRecalculation;
+	private int lastHotbarSlotInteraction = -1;
 
 	public ActiveCharacter(UUID uuid, CharacterBase base) {
 		this.pl = uuid;
@@ -752,6 +753,16 @@ public class ActiveCharacter implements IActiveCharacter {
 	@Override
 	public void setRequiresDamageRecalculation(boolean k) {
 		this.requiresDamageRecalculation = k;
+	}
+
+	@Override
+	public int getLastHotbarSlotInteraction() {
+		return lastHotbarSlotInteraction;
+	}
+
+	@Override
+	public void setLastHotbarSlotInteraction(int last) {
+		lastHotbarSlotInteraction = last;
 	}
 
 	@Override

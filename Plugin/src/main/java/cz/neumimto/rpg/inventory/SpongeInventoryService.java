@@ -279,6 +279,7 @@ public class SpongeInventoryService extends AbstractInventoryService {
 
 	@Override
 	public void loadItemGroups(Path path) {
+		path = path.resolve("ItemGroups.conf");
 		File f = path.toFile();
 		if (!f.exists()) {
 			Optional<Asset> asset = Sponge.getAssetManager().getAsset(NtRpgPlugin.GlobalScope.plugin, "ItemGroups.conf");

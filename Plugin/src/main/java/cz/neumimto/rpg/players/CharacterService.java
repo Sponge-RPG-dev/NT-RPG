@@ -535,13 +535,14 @@ public abstract class CharacterService {
             activeCharacter.addClass(playerClassData);
             classService.addAllPermissions(activeCharacter, playerClassData);
         }
+        spongeInventoryService.initializeManagedSlots(activeCharacter);
+
         Set<PlayerSkillContext> skillData = resolveSkills(characterBase, activeCharacter);
         recalculateProperties(activeCharacter);
         for (PlayerSkillContext dt : skillData) {
             dt.getSkill().onCharacterInit(activeCharacter, dt.getLevel());
         }
 
-        spongeInventoryService.initializeManagedSlots(activeCharacter);
 
         return activeCharacter;
     }
