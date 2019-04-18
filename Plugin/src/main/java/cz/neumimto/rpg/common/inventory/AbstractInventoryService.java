@@ -5,7 +5,6 @@ import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.inventory.ManagedInventory;
 import cz.neumimto.rpg.inventory.SlotEffectSource;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import org.spongepowered.api.item.inventory.Container;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +29,7 @@ public abstract class AbstractInventoryService implements InventoryService {
     }
 
     @Override
-    public boolean isManagedInventory(Class<? extends Container> aClass, int slotId) {
+    public boolean isManagedInventory(Class aClass, int slotId) {
         ManagedInventory managedInventory = managedInventories.get(aClass);
         return managedInventory != null && managedInventory.getSlots().containsKey(slotId);
     }

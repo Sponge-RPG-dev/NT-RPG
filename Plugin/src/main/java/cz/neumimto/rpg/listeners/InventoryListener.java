@@ -46,7 +46,10 @@ import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.*;
+import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
+import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
@@ -135,13 +138,13 @@ public class InventoryListener {
 			ClickInventoryEvent.Secondary.class
 	})
 	public void onInteract(ClickInventoryEvent event, @Root Player player) {
-		Class<? extends Container> aClass = event.getTargetInventory().getClass();
 		final List<SlotTransaction> transactions = event.getTransactions();
 		switch (transactions.size()) {
 			case 1:
 				SlotTransaction slotTransaction = transactions.get(0);
 				Slot slot = slotTransaction.getSlot();
 				Slot transformed = slot.transform();
+				Class aClass = transformed.parent().getClass();
 				int slotId = transformed.getInventoryProperty(SlotIndex.class).get().getValue();
 				if (!inventoryService.isManagedInventory(aClass, slotId)) {
 					return;
