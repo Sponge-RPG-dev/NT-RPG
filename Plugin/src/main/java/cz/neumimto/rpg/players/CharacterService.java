@@ -522,8 +522,6 @@ public abstract class CharacterService {
         characterBase = playerDao.fetchCharacterBase(characterBase);
         ActiveCharacter activeCharacter = new ActiveCharacter(player, characterBase);
 
-        //Collection<ManagedInventory> managedInventories = spongeInventoryService.getManagedInventories();
-
         Set<CharacterClass> characterClasses = characterBase.getCharacterClasses();
 
         for (CharacterClass characterClass : characterClasses) {
@@ -536,7 +534,7 @@ public abstract class CharacterService {
             activeCharacter.addClass(playerClassData);
             classService.addAllPermissions(activeCharacter, playerClassData);
         }
-        spongeInventoryService.initializeManagedSlots(activeCharacter);
+
 
         Set<PlayerSkillContext> skillData = resolveSkills(characterBase, activeCharacter);
         recalculateProperties(activeCharacter);

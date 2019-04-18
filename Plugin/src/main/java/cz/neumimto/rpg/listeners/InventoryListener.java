@@ -20,7 +20,12 @@ package cz.neumimto.rpg.listeners;
 
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.inventory.InventoryService;
+import cz.neumimto.rpg.api.inventory.ManagedSlot;
+import cz.neumimto.rpg.api.inventory.RpgInventory;
+import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
+import cz.neumimto.rpg.inventory.SpongeItemService;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -41,10 +46,9 @@ import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.ItemStackSnapshot;
+import org.spongepowered.api.item.inventory.*;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
+import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.util.Tristate;
@@ -66,6 +70,12 @@ public class InventoryListener {
 
 	@Inject
 	private InventoryHandler inventoryHandler;
+
+	@Inject
+	private InventoryService inventoryService;
+
+	@Inject
+	private SpongeItemService itemService;
 
 	@Listener
 	@IsCancelled(Tristate.FALSE)
@@ -125,13 +135,40 @@ public class InventoryListener {
 			ClickInventoryEvent.Secondary.class
 	})
 	public void onInteract(ClickInventoryEvent event, @Root Player player) {
-		List<SlotTransaction> transactions = event.getTransactions();
+		Class<? extends Container> aClass = event.getTargetInventory().getClass();
+		final List<SlotTransaction> transactions = event.getTransactions();
 		switch (transactions.size()) {
 			case 1:
+				SlotTransaction slotTransaction = transactions.get(0);
+				Slot slot = slotTransaction.getSlot();
+				Slot transformed = slot.transform();
+				int slotId = transformed.getInventoryProperty(SlotIndex.class).get().getValue();
+				if (!inventoryService.isManagedInventory(aClass, slotId)) {
+					return;
+				}
+				IActiveCharacter character = characterService.getCharacter(player);
+				RpgInventory rpgInventory = character.getManagedInventory().get(aClass);
+				ManagedSlot managedSlot = rpgInventory.getManagedSlots().get(slotId);
+				Optional<RpgItemStack> opt = itemService.getRpgItemStack(slotTransaction.getFinal().createStack());
+				if (opt.isPresent()) {
+					RpgItemStack rpgItemStack = opt.get();
+					if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemStack)) {
+						if (managedSlot.getContent().isPresent()) {
+							inventoryHandler.handleCharacterUnEquipActionPost(character, managedSlot);
+						}
+						inventoryHandler.handleCharacterEquipActionPost(character, managedSlot, rpgItemStack);
+						character.requiresDamageRecalculation();
+					}
+				} else {
+					event.setCancelled(true);
+					return;
+				}
 				break;
 			case 2:
+				//???
 				break;
 			default:
+				//???//???
 				return;
 		}
 
@@ -154,13 +191,6 @@ public class InventoryListener {
 		ItemStack futureOffHand = player.getItemInHand(HandTypes.OFF_HAND).orElse(null);
 
 	}
-
-	@Listener(order = Order.LAST)
-	@IsCancelled(Tristate.FALSE)
-	public void onScroll(ChangeInventoryEvent.Held event, @Root Player player) {
-
-	}
-
 
 	@Listener
 	public void onItemDestruct(ChangeEntityEquipmentEvent.TargetPlayer event) {
