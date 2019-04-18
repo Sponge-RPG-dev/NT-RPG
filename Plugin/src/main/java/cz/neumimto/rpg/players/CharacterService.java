@@ -209,6 +209,7 @@ public abstract class CharacterService {
         if (character.getCharacterBase().getHealthScale() != null) {
             pl.offer(Keys.HEALTH_SCALE, character.getCharacterBase().getHealthScale());
         }
+
         spongeInventoryService.initializeCharacterInventory(character);
         return true;
     }
@@ -535,6 +536,7 @@ public abstract class CharacterService {
             classService.addAllPermissions(activeCharacter, playerClassData);
         }
 
+        spongeInventoryService.initializeManagedSlots(activeCharacter);
 
         Set<PlayerSkillContext> skillData = resolveSkills(characterBase, activeCharacter);
         recalculateProperties(activeCharacter);
