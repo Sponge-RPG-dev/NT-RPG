@@ -100,7 +100,6 @@ public abstract class CharacterService {
     @Inject
     private CharacterClassDao characterClassDao;
 
-
     private Map<UUID, IActiveCharacter> characters = new HashMap<>();
 
     private Map<UUID, DataPreparationStage> dataPreparationStageMap = new ConcurrentHashMap<>();
@@ -522,6 +521,8 @@ public abstract class CharacterService {
     public ActiveCharacter createActiveCharacter(UUID player, CharacterBase characterBase) {
         characterBase = playerDao.fetchCharacterBase(characterBase);
         ActiveCharacter activeCharacter = new ActiveCharacter(player, characterBase);
+
+        //Collection<ManagedInventory> managedInventories = spongeInventoryService.getManagedInventories();
 
         Set<CharacterClass> characterClasses = characterBase.getCharacterClasses();
 

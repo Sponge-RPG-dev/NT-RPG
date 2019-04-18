@@ -349,4 +349,9 @@ public class SpongeInventoryService extends AbstractInventoryService {
 					+ "ON and interact with desired inventory");
 		}
 	}
+
+	@Override
+	public Collection<ManagedInventory> getManagedInventories() {
+		return managedInventories.values();
+	}
 }

@@ -120,6 +120,7 @@ public class ActiveCharacter implements IActiveCharacter {
 	private transient RpgItemStack mainHand;
 	
 	private transient PlayerClassData primaryClass;
+
 	private boolean requiresDamageRecalculation;
 	private int lastHotbarSlotInteraction = -1;
 
