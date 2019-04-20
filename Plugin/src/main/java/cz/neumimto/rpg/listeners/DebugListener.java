@@ -19,7 +19,6 @@ package cz.neumimto.rpg.listeners;
 
 
 import cz.neumimto.core.localization.TextHelper;
-import org.spongepowered.api.data.type.HandType;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
@@ -107,7 +106,6 @@ public class DebugListener {
 
 			Class aClass2 = transaction.getSlot().transform().parent().getClass();
 
-
 			inventoryProperty = transaction.getSlot().transform().getInventoryProperty(SlotIndex.class);
 			inventoryProperty.ifPresent(slotIndex -> sendMsg.accept(player, "Transformed Slot ID: " + slotIndex.getValue()));
 			sendMsg.accept(player, "Transformed InventoryClass: " + aClass2.getCanonicalName());
@@ -120,19 +118,15 @@ public class DebugListener {
 	@Listener(order = Order.FIRST)
 	public void onClick(HandInteractEvent event, @Root Player player) {
 
-		HandType handType = event.getHandType();
-		Hotbar hotbar = player.getInventory().query(Hotbar.class);
+		Hotbar hotbar = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
 		int selectedSlotIndex = hotbar.getSelectedSlotIndex();
-
 		BiConsumer<Player, String> sendMsg = (player1, s) -> player1.sendMessage(TextHelper.parse(s));
-		event.getHandType();
 		player.sendMessage(TextHelper.parse("&4-=====================-"));
 		sendMsg.accept(player, "Selected SlotID: " + hotbar.getSelectedSlotIndex());
 		sendMsg.accept(player, "InventoryClass: " + hotbar.getClass().getCanonicalName());
 
-		Slot slot = hotbar.query(QueryOperationTypes.INVENTORY_PROPERTY.of(new SlotIndex(selectedSlotIndex)));
+		Slot slot = hotbar.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(selectedSlotIndex)));
 		Optional<SlotIndex> inventoryProperty = slot.transform().getInventoryProperty(SlotIndex.class);
-
 		sendMsg.accept(player, "Transformed Slot Id: " + inventoryProperty.get().getValue());
 
 	}

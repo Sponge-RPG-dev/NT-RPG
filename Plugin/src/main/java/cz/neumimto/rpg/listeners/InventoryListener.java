@@ -30,12 +30,10 @@ import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
-import org.spongepowered.api.event.entity.ChangeEntityEquipmentEvent;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.entity.living.humanoid.HandInteractEvent;
 import org.spongepowered.api.event.filter.IsCancelled;
@@ -45,10 +43,8 @@ import org.spongepowered.api.event.filter.type.Include;
 import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
-import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
@@ -152,19 +148,40 @@ public class InventoryListener {
 				IActiveCharacter character = characterService.getCharacter(player);
 				RpgInventory rpgInventory = character.getManagedInventory().get(aClass);
 				ManagedSlot managedSlot = rpgInventory.getManagedSlots().get(slotId);
-				Optional<RpgItemStack> opt = itemService.getRpgItemStack(slotTransaction.getFinal().createStack());
-				if (opt.isPresent()) {
-					RpgItemStack rpgItemStack = opt.get();
-					if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemStack)) {
-						if (managedSlot.getContent().isPresent()) {
+				Optional<RpgItemStack> future = itemService.getRpgItemStack(slotTransaction.getFinal().createStack());
+				Optional<RpgItemStack> original = itemService.getRpgItemStack(slotTransaction.getOriginal().createStack());
+
+				if (future.isPresent()) {
+					RpgItemStack rpgItemStackF = future.get();
+					//change
+					if (original.isPresent()) {
+
+						RpgItemStack rpgItemStackO = original.get();
+
+						boolean k = inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemStackF)
+									&& inventoryHandler.handleCharacterUnEquipActionPre(character, managedSlot, rpgItemStackO);
+						if (k) {
+							inventoryHandler.handleCharacterUnEquipActionPost(character, managedSlot);
+							inventoryHandler.handleCharacterEquipActionPost(character, managedSlot, rpgItemStackF);
+
+						} else {
+							event.setCancelled(true);
+						}
+					} else {
+						//equip
+						if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemStackF)) {
+							inventoryHandler.handleCharacterEquipActionPost(character, managedSlot, rpgItemStackF);
+						}
+					}
+
+				} else {
+					//unequip slot
+					if (original.isPresent()) {
+						RpgItemStack rpgItemStack = original.get();
+						if (inventoryHandler.handleCharacterUnEquipActionPre(character, managedSlot, rpgItemStack)) {
 							inventoryHandler.handleCharacterUnEquipActionPost(character, managedSlot);
 						}
-						inventoryHandler.handleCharacterEquipActionPost(character, managedSlot, rpgItemStack);
-						character.requiresDamageRecalculation();
 					}
-				} else {
-					event.setCancelled(true);
-					return;
 				}
 				break;
 			case 2:
@@ -192,19 +209,6 @@ public class InventoryListener {
 	public void onSwapHands(ChangeInventoryEvent.SwapHand event, @Root Player player) {
 		ItemStack futureMainHand = player.getItemInHand(HandTypes.MAIN_HAND).orElse(null);
 		ItemStack futureOffHand = player.getItemInHand(HandTypes.OFF_HAND).orElse(null);
-
-	}
-
-	@Listener
-	public void onItemDestruct(ChangeEntityEquipmentEvent.TargetPlayer event) {
-		Optional<Transaction<ItemStackSnapshot>> itemStack = event.getItemStack();
-		if (itemStack.isPresent()) {
-			Transaction<ItemStackSnapshot> transaction = itemStack.get();
-			ItemStackSnapshot aFinal = transaction.getFinal();
-			if (aFinal.getType() == ItemTypes.AIR) {
-				inventoryHandler.handleCharacterUnEquipActionPost(null, null);
-			}
-		}
 
 	}
 
