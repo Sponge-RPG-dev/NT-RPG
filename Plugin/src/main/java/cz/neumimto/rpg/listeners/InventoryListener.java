@@ -24,6 +24,7 @@ import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.RpgItemStack;
+import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.inventory.SpongeItemService;
 import cz.neumimto.rpg.inventory.data.NKeys;
@@ -43,7 +44,6 @@ import org.spongepowered.api.event.filter.type.Include;
 import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
-import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
@@ -84,10 +84,10 @@ public class InventoryListener {
 		}
 		IActiveCharacter character = characterService.getCharacter(player);
 
-		Inventory query = player.getInventory().query(Hotbar.class);
+		Hotbar query = player.getInventory().query(Hotbar.class);
+        int selectedSlotIndex = query.getSelectedSlotIndex();
 
-
-		inventoryHandler.handleCharacterUnEquipActionPost(character, null);
+        inventoryHandler.handleCharacterUnEquipActionPost(character, null);
 	}
 
 	@Listener
@@ -95,14 +95,22 @@ public class InventoryListener {
 		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
 		Hotbar query = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
 		int selectedSlotIndex = query.getSelectedSlotIndex();
-		int last = character.getLastHotbarSlotInteraction();
-		if (selectedSlotIndex != last) {
-			if (inventoryHandler.handleInventoryInitializationPre(character)) {
-				inventoryHandler.handleInventoryInitializationPost(character);
-			}
-			character.setLastHotbarSlotInteraction(last);
-		}
+		Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
+		if (itemInHand.isPresent()) {
+			ItemStack itemStack = itemInHand.get();
+			Optional<RpgItemType> rpgItemType = itemService.getRpgItemType(itemStack);
+			if (rpgItemType.isPresent()) {
+				RpgItemType rpgItemType1 = rpgItemType.get();
+                int last = character.getLastHotbarSlotInteraction();
+                if (selectedSlotIndex != last) {
+                    character.setLastHotbarSlotInteraction(last);
 
+                    if (inventoryHandler.handleInventoryInitializationPre(character)) {
+                        inventoryHandler.handleInventoryInitializationPost(character);
+                    }
+                }
+			}
+		}
 	}
 
 	@Listener
