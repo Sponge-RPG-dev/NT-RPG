@@ -522,7 +522,10 @@ public abstract class CharacterService {
     public ActiveCharacter createActiveCharacter(UUID player, CharacterBase characterBase) {
         characterBase = playerDao.fetchCharacterBase(characterBase);
         ActiveCharacter activeCharacter = new ActiveCharacter(player, characterBase);
-
+        Set<String> strings = spongePropertyService.getAttributes().keySet();
+        for (String string : strings) {
+            activeCharacter.getTransientAttributes().put(string, 0);
+        }
         Set<CharacterClass> characterClasses = characterBase.getCharacterClasses();
 
         for (CharacterClass characterClass : characterClasses) {
@@ -971,6 +974,12 @@ public abstract class CharacterService {
      */
     public void respawnCharacter(IActiveCharacter character) {
         effectService.removeAllEffects(character);
+
+        Set<String> strings = spongePropertyService.getAttributes().keySet();
+        for (String string : strings) {
+            character.getTransientAttributes().put(string, 0);
+        }
+
 
         for (PlayerClassData nClass : character.getClasses().values()) {
             applyGroupEffects(character, nClass.getClassDefinition());

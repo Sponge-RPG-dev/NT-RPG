@@ -297,8 +297,12 @@ public class ActiveCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Integer getAttributeValue(String name) {
-		return base.getAttributes().get(name) + getTransientAttributes().get(name);
+	public int getAttributeValue(String name) {
+		int i = 0;
+		if (base.getAttributes().containsKey(name)) {
+			i = base.getAttributes().get(name);
+		}
+		return i + getTransientAttributes().get(name);
 	}
 
 	@Override

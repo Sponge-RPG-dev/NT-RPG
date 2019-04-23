@@ -271,7 +271,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Integer getAttributeValue(java.lang.String name) {
+	public int getAttributeValue(java.lang.String name) {
 		return 0;
 	}
 

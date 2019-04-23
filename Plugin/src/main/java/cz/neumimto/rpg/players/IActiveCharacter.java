@@ -100,7 +100,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     void setAttributePoints(int attributePoints);
 
-    Integer getAttributeValue(String name);
+    int getAttributeValue(String name);
 
     default Integer getAttributeValue(Attribute attribute) {
         return getAttributeValue(attribute.getId());
