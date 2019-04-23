@@ -123,6 +123,7 @@ public class InventoryListener {
 							ItemStackUtils.dropItem(player, itemStack);
 							player.setItemInHand(HandTypes.MAIN_HAND, ItemStack.empty());
 							character.setLastHotbarSlotInteraction(-1);
+							event.setCancelled(true);
 						}
 					}
                 }
