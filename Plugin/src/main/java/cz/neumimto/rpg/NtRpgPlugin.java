@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg;
 
+import com.flowpowered.math.vector.Vector3d;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.inject.Inject;
@@ -86,6 +87,7 @@ import cz.neumimto.rpg.skills.tree.SkillType;
 import cz.neumimto.rpg.utils.FileUtils;
 import cz.neumimto.rpg.utils.Placeholders;
 import cz.neumimto.rpg.utils.TriConsumer;
+import cz.neumimto.rpg.utils.Utils;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -95,6 +97,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.GenericArguments;
+import org.spongepowered.api.command.source.CommandBlockSource;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.data.DataRegistration;
@@ -115,6 +118,8 @@ import org.spongepowered.api.scheduler.SpongeExecutorService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import javax.annotation.Resource;
 import java.io.File;
@@ -500,17 +505,62 @@ public class NtRpgPlugin {
 						.deserialize(CommandLocalization.COMMAND_ADMIN_EXEC_SKILL_DESC))
 				.arguments(
 						GenericArguments.catalogedElement(Text.of("skill"), ISkill.class),
-						GenericArguments.flags().valueFlag(GenericArguments
-								.integer(TextHelper.parse("level")), "l")
+						GenericArguments.flags().valueFlag(GenericArguments.integer(TextHelper.parse("level")), "l")
+								.buildWith(GenericArguments.none()),
+						GenericArguments.flags().valueFlag(GenericArguments.string(TextHelper.parse("location")), "2")
 								.buildWith(GenericArguments.none())
+
 				)
 				.executor((src, args) -> {
 					ISkill skill = args.<ISkill>getOne("skill").get();
 					SkillSettings defaultSkillSettings = skill.getSettings();
-					Player player = (Player) src;
-					IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
-					if (character.isStub()) {
-						throw new RuntimeException("Character is required even for an admin.");
+					IActiveCharacter character;
+					if (src instanceof Player) {
+						Player player = (Player) src;
+						character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
+						if (character.isStub()) {
+							throw new RuntimeException("Character is required even for an admin.");
+						}
+					} else if (src instanceof CommandBlockSource) {
+						CommandBlockSource cmdBlock = (CommandBlockSource) src;
+						Location<World> location = cmdBlock.getLocation();
+						character = CommandblockSkillExecutor.wrap(cmdBlock);
+						Optional<String> loc = args.getOne("location");
+						if (loc.isPresent()) {
+							String s = loc.get();
+							String[] split = s.split(",");
+							if (split.length != 3) {
+								throw new RuntimeException("Location format has to be in format x,y,z");
+							}
+							String s1 = split[0];
+							int x,y,z = 0;
+							if (s1.startsWith("~")) {
+								s1 = Utils.extractNumber(s1);
+								x = location.getBlockX() + Integer.parseInt(s1);
+							} else {
+								x = Integer.parseInt(s1);
+							}
+
+							s1 = split[1];
+							if (s1.startsWith("~")) {
+								s1 = Utils.extractNumber(s1);
+								y = location.getBlockY() + Integer.parseInt(s1);
+							} else {
+								y = Integer.parseInt(s1);
+							}
+
+							s1 = split[2];
+							if (s1.startsWith("~")) {
+								s1 = Utils.extractNumber(s1);
+								z = location.getBlockZ() + Integer.parseInt(s1);
+							} else {
+								z = Integer.parseInt(s1);
+							}
+							location.setPosition(new Vector3d(x, y, z));
+							character.getPlayer().setLocation(location);
+						}
+					} else {
+						throw new RuntimeException("Could not construct Character");
 					}
 
 					int level = 1;

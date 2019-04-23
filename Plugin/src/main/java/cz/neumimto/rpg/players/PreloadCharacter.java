@@ -18,8 +18,6 @@
 
 package cz.neumimto.rpg.players;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.effects.EffectContainer;
@@ -50,13 +48,9 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatType;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+
+import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 23.7.2015.
@@ -64,15 +58,21 @@ import java.util.UUID;
 public class PreloadCharacter implements IActiveCharacter {
 
 	static float[] characterProperties = new float[PropertyService.LAST_ID];
-	IReservable mana = new Mana(this);
+	IReservable mana;
 	UUID uuid;
-	Health health = new HealthStub(this);
+	Health health;
 	private boolean isusinggui;
 	private Player player;
 
+	public PreloadCharacter() {
+
+	}
+
 	public PreloadCharacter(UUID uuid) {
 		this.uuid = uuid;
+		mana = new Mana(this);
 		mana.setMaxValue(0);
+		health = new HealthStub(this);
 	}
 
 
