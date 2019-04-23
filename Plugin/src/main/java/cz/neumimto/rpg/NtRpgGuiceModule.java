@@ -1,8 +1,12 @@
 package cz.neumimto.rpg;
 
 import com.google.inject.AbstractModule;
+import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
+import cz.neumimto.rpg.api.inventory.InventoryService;
+import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.commands.CommandService;
 import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.damage.SpongeEffectService;
 import cz.neumimto.rpg.entities.EntityService;
@@ -13,24 +17,22 @@ import cz.neumimto.rpg.gui.GuiService;
 import cz.neumimto.rpg.gui.ItemLoreBuilderService;
 import cz.neumimto.rpg.gui.ParticleDecorator;
 import cz.neumimto.rpg.gui.VanillaMessaging;
-import cz.neumimto.rpg.inventory.CustomItemFactory;
-import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.inventory.ItemService;
+import cz.neumimto.rpg.inventory.SpongeInventoryService;
+import cz.neumimto.rpg.inventory.SpongeItemService;
 import cz.neumimto.rpg.inventory.runewords.RWDao;
 import cz.neumimto.rpg.inventory.runewords.RWService;
-import cz.neumimto.rpg.inventory.slotparsers.DefaultPlayerInvHandler;
 import cz.neumimto.rpg.persistance.*;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.SpongeCharacterService;
 import cz.neumimto.rpg.players.parties.PartyService;
-import cz.neumimto.rpg.properties.PropertyService;
+import cz.neumimto.rpg.properties.SpongePropertyService;
 import cz.neumimto.rpg.skills.SkillService;
 
 public class NtRpgGuiceModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(SkillService.class);
-        bind(PropertyService.class);
+        bind(SpongePropertyService.class);
         bind(PartyService.class);
         bind(CharacterService.class).to(SpongeCharacterService.class);
 
@@ -56,11 +58,11 @@ public class NtRpgGuiceModule extends AbstractModule {
         bind(ItemLoreBuilderService.class);
         bind(ParticleDecorator.class);
         bind(VanillaMessaging.class);
-        bind(CustomItemFactory.class);
-        bind(InventoryService.class);
-        bind(ItemService.class);
+        bind(SpongeInventoryService.class);
+        bind(ItemService.class).to(SpongeItemService.class);
+        bind(CharacterInventoryInteractionHandler.class).to(InventoryHandler.class);
+        bind(InventoryService.class).to(SpongeInventoryService.class);
         bind(RWDao.class);
         bind(RWService.class);
-        bind(DefaultPlayerInvHandler.class);
     }
 }

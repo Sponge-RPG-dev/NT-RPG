@@ -2,7 +2,7 @@ package cz.neumimto.rpg;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by NeumimTo on 16.9.2018.

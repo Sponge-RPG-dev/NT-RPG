@@ -1,21 +1,29 @@
 package cz.neumimto.rpg;
 
 
+import cz.neumimto.rpg.api.ActionResult;
 import cz.neumimto.rpg.configuration.ClassTypeDefinition;
-import cz.neumimto.rpg.configuration.PluginConfig;
+import cz.neumimto.rpg.junit.CharactersExtension;
+import cz.neumimto.rpg.junit.CharactersExtension.Stage;
+import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
-import cz.neumimto.rpg.players.*;
+import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.UUID;
 
+import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
+
+@ExtendWith({CharactersExtension.class, GuiceExtension.class, NtRpgExtension.class})
 public class ClassManipulationTests {
 
     ClassDefinition pc1;
@@ -27,36 +35,15 @@ public class ClassManipulationTests {
     ClassDefinition ps2;
     ClassDefinition ps3;
 
-    CharacterService characterService = new CharacterService() {
-        @Override
-        protected void addCharacterToGame(UUID id, IActiveCharacter character, List<CharacterBase> playerChars) {
+    @Inject
+    CharacterService characterService;
 
-        }
+    private IActiveCharacter character;
 
-        @Override
-        public void updateWeaponRestrictions(IActiveCharacter character) {
+    @BeforeEach
+    public void beforeEach(@Stage(READY) IActiveCharacter character) {
+        this.character = character;
 
-        }
-
-        @Override
-        public void updateArmorRestrictions(IActiveCharacter character) {
-
-        }
-    };
-
-    ActiveCharacter character;
-
-    @BeforeClass
-    public static void init() throws Exception {
-        TestHelper.initLocalizations();
-    }
-
-    @Before
-    public void before() throws Exception {
-        //lets not invoke constructor
-        PluginConfig o = (PluginConfig) TestHelper.getUnsafe().allocateInstance(PluginConfig.class);
-        o.PRIMARY_CLASS_TYPE = "Primary";
-        NtRpgPlugin.pluginConfig = o;
 
         NtRpgPlugin.pluginConfig.CLASS_TYPES = new LinkedHashMap<String, ClassTypeDefinition>() {{
             put("Primary", new ClassTypeDefinition(null, null, null, false, 1));
@@ -79,15 +66,13 @@ public class ClassManipulationTests {
         ps2.getClassDependencyGraph().getConflicts().addAll(Arrays.asList(ps1, ps3));
         ps3.getClassDependencyGraph().getConflicts().addAll(Arrays.asList(ps1, ps2));
 
-        CharacterBase base = new CharacterBase();
-        character = new ActiveCharacter(UUID.randomUUID(), base);
     }
 
 
     @Test
     public void may_assign_primary_primary_as_first() {
         ActionResult result = characterService.canGainClass(character, pc1);
-        Assert.assertTrue(result.isOk());
+        Assertions.assertTrue(result.isOk());
     }
 
     @Test
@@ -96,14 +81,14 @@ public class ClassManipulationTests {
         PlayerClassData playerClassData = new PlayerClassData(pc1, characterClass);
         character.addClass(playerClassData);
         ActionResult result = characterService.canGainClass(character, pc2);
-        Assert.assertTrue(!result.isOk());
+        Assertions.assertTrue(!result.isOk());
     }
 
     @Test
     public void respects_class_selection_order() {
         NtRpgPlugin.pluginConfig.RESPECT_CLASS_SELECTION_ORDER = true;
         ActionResult result = characterService.canGainClass(character, ps2);
-        Assert.assertTrue(!result.isOk());
+        Assertions.assertTrue(!result.isOk());
     }
 
     @Test
@@ -114,14 +99,14 @@ public class ClassManipulationTests {
         character.addClass(playerClassData);
 
         ActionResult result = characterService.canGainClass(character, ps1);
-        Assert.assertTrue(result.isOk());
+        Assertions.assertTrue(result.isOk());
     }
 
     @Test
     public void select_secondary_before_primary() {
         NtRpgPlugin.pluginConfig.RESPECT_CLASS_SELECTION_ORDER = false;
         ActionResult result = characterService.canGainClass(character, ps2);
-        Assert.assertTrue(result.isOk());
+        Assertions.assertTrue(result.isOk());
     }
 
 }

@@ -25,6 +25,7 @@ import cz.neumimto.rpg.ClassService;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.configuration.Localizations;
@@ -35,14 +36,13 @@ import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.effects.common.def.ManaBarNotifier;
 import cz.neumimto.rpg.inventory.CannotUseItemReason;
-import cz.neumimto.rpg.inventory.ConfigRPGItemType;
-import cz.neumimto.rpg.inventory.RPGItemType;
 import cz.neumimto.rpg.inventory.data.*;
 import cz.neumimto.rpg.inventory.data.manipulators.SkillTreeNode;
 import cz.neumimto.rpg.inventory.runewords.ItemUpgrade;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
+import cz.neumimto.rpg.items.SpongeRpgItemType;
 import cz.neumimto.rpg.persistance.PlayerDao;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.*;
@@ -387,11 +387,12 @@ public class VanillaMessaging implements IPlayerMessage {
     @Override
     public void displayGroupArmor(ClassDefinition g, Player target) {
         Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
-        List<List<RPGItemType>> rows = new ArrayList<>(5);
+        List<List<SpongeRpgItemType>> rows = new ArrayList<>(5);
         for (int ki = 0; ki <= 5; ki++) {
             rows.add(new ArrayList<>());
         }
-        for (RPGItemType type : g.getAllowedArmor()) {
+        for (ClassItem ci : g.getAllowedArmor()) {
+            SpongeRpgItemType type = (SpongeRpgItemType) ci.getType();
             if (ItemStackUtils.isHelmet(type.getItemType())) {
                 rows.get(0).add(type);
             } else if (ItemStackUtils.isChestplate(type.getItemType())) {
@@ -410,12 +411,12 @@ public class VanillaMessaging implements IPlayerMessage {
 
         int x = 2;
         int y = 0;
-        for (List<RPGItemType> row : rows) {
+        for (List<SpongeRpgItemType> row : rows) {
             y = 0;
-            for (RPGItemType type : row) {
+            for (SpongeRpgItemType type : row) {
                 ItemStack armor = GuiHelper.itemStack(type.getItemType());
-                if (type.getDisplayName() != null) {
-                    armor.offer(Keys.DISPLAY_NAME, Text.of(type.getDisplayName()));
+                if (type.getModelId() != null) {
+                    armor.offer(Keys.DISPLAY_NAME, Text.of(type.getModelId()));
                 }
                 armor.offer(new MenuInventoryData(true));
                 i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(x, y))).offer(armor);
@@ -434,13 +435,13 @@ public class VanillaMessaging implements IPlayerMessage {
         ItemStack of = back(g);
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(of);
 
-        TreeSet<ConfigRPGItemType> treeSet = new TreeSet<>();
-        for (Map.Entry<ItemType, Set<ConfigRPGItemType>> entry : g.getWeapons().entrySet()) {
-            treeSet.addAll(entry.getValue());
-        }
+        TreeSet<ClassItem> treeSet = new TreeSet<>(Comparator.comparingInt(o -> (int) o.getDamage()));
+        Set<ClassItem> weapons = g.getWeapons();
+        treeSet.addAll(weapons);
 
-        for (ConfigRPGItemType configRPGItemType : treeSet) {
-            ItemStack q = GuiHelper.rpgItemTypeToItemStack(configRPGItemType);
+        for (ClassItem configRPGItemType : treeSet) {
+            SpongeRpgItemType type = (SpongeRpgItemType) configRPGItemType.getType();
+            ItemStack q = GuiHelper.rpgItemTypeToItemStack(type);
             i.offer(q);
         }
 

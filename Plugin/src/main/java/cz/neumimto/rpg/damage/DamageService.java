@@ -20,11 +20,11 @@ package cz.neumimto.rpg.damage;
 
 import com.google.common.collect.Lists;
 import cz.neumimto.rpg.ClassService;
+import cz.neumimto.rpg.api.items.ClassItem;
+import cz.neumimto.rpg.api.items.RpgItemStack;
+import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.IEntity;
-import cz.neumimto.rpg.inventory.ConfigRPGItemType;
-import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
@@ -34,13 +34,13 @@ import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by NeumimTo on 4.8.15.
@@ -69,7 +69,7 @@ public class DamageService {
 			TextColors.GRAY
 	};
 
-	public double getCharacterItemDamage(IActiveCharacter character, RPGItemType type) {
+	public double getCharacterItemDamage(IActiveCharacter character, RpgItemType type) {
 		if (character.isStub() || type == null) {
 			return 1;
 		}
@@ -80,9 +80,9 @@ public class DamageService {
 		}
 
 		if (!type.getWeaponClass().getPropertiesMults().isEmpty()) {
-			double totalMult = 0;
+			double totalMult = 1;
 			for (Integer integer : type.getWeaponClass().getPropertiesMults()) {
-				totalMult += entityService.getEntityProperty(character, integer);
+				totalMult += entityService.getEntityProperty(character, integer - 1);
 			}
 			base *= totalMult;
 		}
@@ -107,22 +107,22 @@ public class DamageService {
 		if (character.isStub()) {
 			return;
 		}
-		CustomItem mainHand = character.getMainHand();
+		RpgItemStack mainHand = character.getMainHand();
 		recalculateCharacterWeaponDamage(character, mainHand);
 	}
 
-	public void recalculateCharacterWeaponDamage(IActiveCharacter character, CustomItem mainHand) {
+	public void recalculateCharacterWeaponDamage(IActiveCharacter character, RpgItemStack mainHand) {
 		if (character.isStub()) {
 			return;
 		}
 		if (mainHand == null) {
 			character.setWeaponDamage(0);
 		} else {
-			recalculateCharacterWeaponDamage(character, mainHand.getRpgItemType());
+			recalculateCharacterWeaponDamage(character, mainHand.getItemType());
 		}
 	}
 
-	public void recalculateCharacterWeaponDamage(IActiveCharacter character, RPGItemType type) {
+	public void recalculateCharacterWeaponDamage(IActiveCharacter character, RpgItemType type) {
 		double damage = getCharacterItemDamage(character, type);
 		// damage += character.getMainHand().getDamage() + character.getOffHand().getDamage();
 		character.setWeaponDamage(damage);
@@ -171,13 +171,8 @@ public class DamageService {
 		Set<Double> list = new TreeSet<>();
 
 		for (ClassDefinition aClass : classes) {
-			Map<ItemType, Set<ConfigRPGItemType>> weapons = aClass.getWeapons();
-			for (Set<ConfigRPGItemType> configRPGItemTypes : weapons.values()) {
-				configRPGItemTypes
-						.stream()
-						.map(ConfigRPGItemType::getDamage)
-						.forEach(list::add);
-			}
+			Set<ClassItem> classItems = aClass.getWeapons();
+			list = classItems.stream().map(ClassItem::getDamage).collect(Collectors.toCollection(TreeSet::new));
 		}
 
 

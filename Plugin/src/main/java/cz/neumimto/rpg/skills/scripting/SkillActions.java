@@ -27,7 +27,7 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static cz.neumimto.rpg.common.logging.Log.info;
+import static cz.neumimto.rpg.api.logging.Log.info;
 
 @JsBinding(JsBinding.Type.CONTAINER)
 public class SkillActions {

@@ -1,28 +1,21 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.api.items.WeaponClass;
+import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.PluginConfig;
-import cz.neumimto.rpg.inventory.ItemService;
-import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.WeaponClass;
-import cz.neumimto.rpg.players.ActiveCharacter;
-import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.inventory.SpongeItemService;
 import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.properties.PropertyService;
-import org.junit.BeforeClass;
+import cz.neumimto.rpg.properties.SpongePropertyService;
+import org.junit.jupiter.api.BeforeAll;
 import org.mockito.Mockito;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.text.Text;
-
-import java.util.UUID;
 
 public class TestPropertyValueResolving {
 
-    @BeforeClass
+    @BeforeAll
     public static void initLogger() {
         Log.setLogger(LoggerFactory.getLogger(NtRpgPlugin.class));
         NtRpgPlugin.pluginConfig = Mockito.mock(PluginConfig.class);
@@ -32,8 +25,8 @@ public class TestPropertyValueResolving {
 
     //@Test
     public void test0() {
-        PropertyService propertyService = NtRpgPlugin.GlobalScope.propertyService;
-        ItemService i = NtRpgPlugin.GlobalScope.itemService;
+        SpongePropertyService spongePropertyService = NtRpgPlugin.GlobalScope.spongePropertyService;
+        SpongeItemService i = NtRpgPlugin.GlobalScope.itemService;
 
         CharacterService characterService = NtRpgPlugin.GlobalScope.characterService;
 
@@ -43,27 +36,27 @@ public class TestPropertyValueResolving {
         String m1 = "test_mult2";
         String m2 = "test_mult2";
 
-        propertyService.registerProperty(b1, PropertyService.getAndIncrement.get());
-        propertyService.registerProperty(b2, PropertyService.getAndIncrement.get());
+        spongePropertyService.registerProperty(b1, PropertyServiceImpl.getAndIncrement.get());
+        spongePropertyService.registerProperty(b2, PropertyServiceImpl.getAndIncrement.get());
 
-        propertyService.registerProperty(m1, PropertyService.getAndIncrement.get());
-        propertyService.registerProperty(m2, PropertyService.getAndIncrement.get());
+        spongePropertyService.registerProperty(m1, PropertyServiceImpl.getAndIncrement.get());
+        spongePropertyService.registerProperty(m2, PropertyServiceImpl.getAndIncrement.get());
 
-        propertyService.registerDefaultValue(propertyService.getIdByName(m1), 1);
-        propertyService.registerDefaultValue(propertyService.getIdByName(m2), 1);
+        spongePropertyService.registerDefaultValue(spongePropertyService.getIdByName(m1), 1);
+        spongePropertyService.registerDefaultValue(spongePropertyService.getIdByName(m2), 1);
 
         WeaponClass weaponClass0 = new WeaponClass("test");
-        weaponClass0.getProperties().add(propertyService.getIdByName(b2));
-        weaponClass0.getPropertiesMults().add(propertyService.getIdByName(m2));
-
+        weaponClass0.getProperties().add(spongePropertyService.getIdByName(b2));
+        weaponClass0.getPropertiesMults().add(spongePropertyService.getIdByName(m2));
+/*
         i.registerItemType(ItemTypes.DIAMOND_AXE, null, weaponClass0, 0);
 
-        RPGItemType item = i.getByItemTypeAndName(ItemTypes.DIAMOND_AXE, (Text) null);
+        RPGItemTypeToRemove item = i.getByItemTypeAndName(ItemTypes.DIAMOND_AXE, (Text) null);
 
         UUID uuid = UUID.randomUUID();
         IActiveCharacter character = new ActiveCharacter(uuid, new CharacterBase());
 
         characterService.initActiveCharacter(character);
-
+*/
     }
 }

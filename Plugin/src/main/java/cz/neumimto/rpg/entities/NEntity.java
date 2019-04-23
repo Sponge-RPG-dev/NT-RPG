@@ -128,7 +128,7 @@ public class NEntity implements IMob {
 		if (properties.containsKey(propertyName)) {
 			return properties.get(propertyName);
 		}
-		return NtRpgPlugin.GlobalScope.propertyService.getDefault(propertyName);
+		return NtRpgPlugin.GlobalScope.spongePropertyService.getDefault(propertyName);
 	}
 
 	@Override

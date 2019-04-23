@@ -18,13 +18,15 @@
 
 package cz.neumimto.rpg.properties;
 
+import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
+
 /**
  * Created by NeumimTo on 30.12.2014.
  */
 @PropertyContainer
 public class DefaultProperties {
 
-	@Property(name = "walk_speed", default_ = (float) PropertyService.WALKING_SPEED)
+	@Property(name = "walk_speed", default_ = (float) PropertyServiceImpl.WALKING_SPEED)
 	public static int walk_speed;
 
 	@Property(name = "mana")

@@ -9,10 +9,10 @@ import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillSettings;
 import it.unimi.dsi.fastutil.objects.AbstractObject2FloatMap;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,7 +33,7 @@ public class TestSkillExecutorChain {
 
     static Attribute agi;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() throws Exception {
         TestHelper.initLocalizations();
         TestHelper.setupLog();
@@ -56,7 +56,7 @@ public class TestSkillExecutorChain {
 
     }
 
-    @Before
+    @BeforeEach
     public void before() {
         skillData = new SkillData("test");
         SkillSettings skillSettings = new SkillSettings();
@@ -89,22 +89,22 @@ public class TestSkillExecutorChain {
 
 
         AbstractObject2FloatMap<String> cachedComputedSkillSettings = context.getCachedComputedSkillSettings();
-        Assert.assertNotNull(cachedComputedSkillSettings);
+        Assertions.assertNotNull(cachedComputedSkillSettings);
 
         for (String s : cachedComputedSkillSettings.keySet()) {
-            Assert.assertTrue(!s.endsWith(SkillSettings.bonus));
+            Assertions.assertTrue(!s.endsWith(SkillSettings.bonus));
         }
 
         for (String s : cachedComputedSkillSettings.keySet()) {
             for (Attribute a : attributes) {
-                Assert.assertTrue(!s.contains(a.getId()));
+                Assertions.assertTrue(!s.contains(a.getId()));
             }
         }
 
-        Assert.assertSame(3, cachedComputedSkillSettings.size());
-        Assert.assertTrue(100.0f + 15 * 3 == cachedComputedSkillSettings.getFloat("damage"));
-        Assert.assertTrue(100.0f + 10 * 3 == cachedComputedSkillSettings.getFloat("range"));
-        Assert.assertTrue(100.0f + -1 * 3 == cachedComputedSkillSettings.getFloat("manacost"));
+        Assertions.assertSame(3, cachedComputedSkillSettings.size());
+        Assertions.assertTrue(100.0f + 15 * 3 == cachedComputedSkillSettings.getFloat("damage"));
+        Assertions.assertTrue(100.0f + 10 * 3 == cachedComputedSkillSettings.getFloat("range"));
+        Assertions.assertTrue(100.0f + -1 * 3 == cachedComputedSkillSettings.getFloat("manacost"));
 
     }
 
@@ -128,22 +128,22 @@ public class TestSkillExecutorChain {
 
 
         AbstractObject2FloatMap<String> cachedComputedSkillSettings = context.getCachedComputedSkillSettings();
-        Assert.assertNotNull(cachedComputedSkillSettings);
+        Assertions.assertNotNull(cachedComputedSkillSettings);
 
         for (String s : cachedComputedSkillSettings.keySet()) {
-            Assert.assertTrue(!s.endsWith(SkillSettings.bonus));
+            Assertions.assertTrue(!s.endsWith(SkillSettings.bonus));
         }
 
         for (String s : cachedComputedSkillSettings.keySet()) {
             for (Attribute a : attributes) {
-                Assert.assertTrue(!s.contains(a.getId()));
+                Assertions.assertTrue(!s.contains(a.getId()));
             }
         }
 
-        Assert.assertSame(3, cachedComputedSkillSettings.size());
-        Assert.assertTrue(100.0f + 10 * 2 == cachedComputedSkillSettings.getFloat("damage"));
-        Assert.assertTrue(100.0f + 10 * 3 == cachedComputedSkillSettings.getFloat("range"));
-        Assert.assertTrue(100.0f == cachedComputedSkillSettings.getFloat("manacost"));
+        Assertions.assertSame(3, cachedComputedSkillSettings.size());
+        Assertions.assertTrue(100.0f + 10 * 2 == cachedComputedSkillSettings.getFloat("damage"));
+        Assertions.assertTrue(100.0f + 10 * 3 == cachedComputedSkillSettings.getFloat("range"));
+        Assertions.assertTrue(100.0f == cachedComputedSkillSettings.getFloat("manacost"));
 
     }
 

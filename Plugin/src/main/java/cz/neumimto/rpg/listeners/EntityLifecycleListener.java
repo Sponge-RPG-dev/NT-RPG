@@ -7,7 +7,7 @@ import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.entities.IEntityType;
-import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.ExperienceSources;
@@ -52,7 +52,7 @@ public class EntityLifecycleListener {
     private EntityService entityService;
 
     @Inject
-    private InventoryService inventoryService;
+    private SpongeInventoryService spongeInventoryService;
 
     @Listener
     public void onPlayerJoin(ClientConnectionEvent.Auth event) {

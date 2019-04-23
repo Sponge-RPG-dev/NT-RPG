@@ -4,20 +4,21 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.api.effects.IEffectSource;
+import cz.neumimto.rpg.api.items.ClassItem;
+import cz.neumimto.rpg.api.items.ItemService;
+import cz.neumimto.rpg.api.items.RpgItemType;
+import cz.neumimto.rpg.common.configuration.ItemString;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.gui.GuiHelper;
-import cz.neumimto.rpg.inventory.ConfigRPGItemType;
-import cz.neumimto.rpg.inventory.ItemService;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
+import cz.neumimto.rpg.items.SpongeRpgItemType;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.AbstractSkill;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 
@@ -91,21 +92,12 @@ public class ItemAccessSkill extends AbstractSkill {
 				int level = item.getInt("level");
 				List<String> citems = item.getStringList("items");
 				for (String allowedWeapon : citems) {
-					String[] split = allowedWeapon.split(";");
-					String s = split[0];
-					double damage = 0;
-					String itemName = null;
-					ItemType type = Sponge.getGame().getRegistry().getType(ItemType.class, s).orElse(null);
-					if (type == null) {
-						errors.log(" - Unknown item type " + s);
-					} else {
-						String s1 = split[1];
-						damage = Double.parseDouble(s1);
-						if (split.length == 3) {
-							itemName = split[2];
-						}
-						ConfigRPGItemType t = new ConfigRPGItemType(itemService.getByItemTypeAndName(type, itemName), data.getSkill(), damage);
-						data.addItemType(level, t);
+					ItemString parsed = ItemString.parse(allowedWeapon);
+					Optional<RpgItemType> type = itemService.getRpgItemType(parsed.itemId, parsed.model);
+					if (type.isPresent()) {
+						ClassItem citem = itemService.createClassItemSpecification(type.get(), parsed.damage, this);
+
+						data.addItemType(level, citem);
 					}
 				}
 			}
@@ -118,9 +110,10 @@ public class ItemAccessSkill extends AbstractSkill {
 	public List<ItemStack> configurationToItemStacks(SkillData skillData) {
 		List<ItemStack> list = new ArrayList<>();
 		ItemAccessSkillData data = (ItemAccessSkillData) skillData;
-		for (Map.Entry<Integer, Map<ItemType, Set<ConfigRPGItemType>>> entry : data.items.entrySet()) {
-			for (Set<ConfigRPGItemType> configRPGItemTypes : entry.getValue().values()) {
-				list.addAll(configRPGItemTypes.stream()
+		for (Map.Entry<Integer, Set<ClassItem>> entry : data.items.entrySet()) {
+				list.addAll(
+						entry.getValue().stream()
+						.map(SpongeRpgItemType.class::cast)
 						.map(GuiHelper::rpgItemTypeToItemStack)
 						.map(a -> {
 							List<Text> texts = a.get(Keys.ITEM_LORE).get();
@@ -132,38 +125,33 @@ public class ItemAccessSkill extends AbstractSkill {
 						}).collect(Collectors.toList()));
 
 			}
-		}
 		return list;
 	}
 
 	public class ItemAccessSkillData extends SkillData {
 
-		private Map<Integer, Map<ItemType, Set<ConfigRPGItemType>>> items = new HashMap<>();
+		private Map<Integer, Set<ClassItem>> items = new HashMap<>();
 
 		public ItemAccessSkillData(String skill) {
 			super(skill);
 		}
 
-		public Map<Integer, Map<ItemType, Set<ConfigRPGItemType>>> getItems() {
+		public Map<Integer, Set<ClassItem>> getItems() {
 			return items;
 		}
 
-		public void setItems(Map<Integer, Map<ItemType, Set<ConfigRPGItemType>>> items) {
+		public void setItems(Map<Integer, Set<ClassItem>> items) {
 			this.items = items;
 		}
 
-		public void addItemType(Integer level, ConfigRPGItemType type) {
-			Map<ItemType, Set<ConfigRPGItemType>> itemTypeTreeSetMap = items.get(level);
-			if (itemTypeTreeSetMap == null) {
-				itemTypeTreeSetMap = new HashMap<>();
-				Set<ConfigRPGItemType> set = new HashSet<>();
-				set.add(type);
-				itemTypeTreeSetMap.put(type.getRpgItemType().getItemType(), set);
-				items.put(level, itemTypeTreeSetMap);
+		public void addItemType(Integer level, ClassItem item) {
+			Set<ClassItem> set = items.get(level);
+			if (set == null) {
+				set = new HashSet<>();
+				set.add(item);
+				items.put(level, set);
 			} else {
-				Set<ConfigRPGItemType> configRPGItemTypes = itemTypeTreeSetMap
-						.computeIfAbsent(type.getRpgItemType().getItemType(), k -> new HashSet<>());
-				configRPGItemTypes.add(type);
+				set.add(item);
 			}
 		}
 	}

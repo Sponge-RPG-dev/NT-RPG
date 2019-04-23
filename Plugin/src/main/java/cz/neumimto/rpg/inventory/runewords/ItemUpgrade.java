@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.inventory.runewords;
 
-import cz.neumimto.rpg.effects.EffectParams;
+import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.inventory.sockets.SocketType;
 import org.spongepowered.api.Sponge;
 

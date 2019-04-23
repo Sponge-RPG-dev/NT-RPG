@@ -1,21 +1,28 @@
 package cz.neumimto.rpg.gui;
 
+import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Block;
+import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Item;
+
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.configuration.Localizations;
-import cz.neumimto.rpg.inventory.ConfigRPGItemType;
 import cz.neumimto.rpg.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.SkillTreeInventoryViewControllsData;
+import cz.neumimto.rpg.items.SpongeRpgItemType;
 import cz.neumimto.rpg.listeners.SkillTreeInventoryListener;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.skills.NDamageType;
+import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillPathData;
+import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.block.BlockTypes;
@@ -39,10 +46,11 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import java.util.*;
-
-import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Block;
-import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Item;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ja on 29.12.2016.
@@ -157,7 +165,7 @@ public class GuiHelper {
 
 	public static ItemStack createClassTypeDefinitionCommand(String type) {
 		ItemStack i = itemStack(ItemTypes.CRAFTING_TABLE);
-		i.offer(NKeys.MENU_INVENTORY, true);
+		i.offer(new MenuInventoryData(true));
 		i.offer(Keys.DISPLAY_NAME, Text.of(NtRpgPlugin.pluginConfig.CLASS_TYPES.get(type).getPrimaryColor(), type));
 		i.offer(new InventoryCommandItemMenuData("classes " + type));
 		return i;
@@ -201,7 +209,7 @@ public class GuiHelper {
 
 	public static ItemStack propertyToItemStack(int id, float value) {
 		ItemStack i = itemStack(ItemTypes.BOOK);
-		String nameById = NtRpgPlugin.GlobalScope.propertyService.getNameById(id);
+		String nameById = NtRpgPlugin.GlobalScope.spongePropertyService.getNameById(id);
 		nameById = Utils.configNodeToReadableString(nameById);
 		i.offer(Keys.DISPLAY_NAME, TextHelper.makeText(nameById, TextColors.GREEN));
 		if (nameById.endsWith("mult")) {
@@ -393,8 +401,8 @@ public class GuiHelper {
 		return md;
 	}
 
-	public static ItemStack rpgItemTypeToItemStack(ConfigRPGItemType configRPGItemType) {
-		ItemStack q = itemStack(configRPGItemType.getRpgItemType().getItemType());
+	public static ItemStack rpgItemTypeToItemStack(SpongeRpgItemType configRPGItemType) {
+		ItemStack q = itemStack(configRPGItemType.getItemType());
 		Text lore = Text.builder().append(Localizations.ITEM_DAMAGE.toText())
 				.append(Text.builder(": " + configRPGItemType.getDamage())
 						.style(TextStyles.BOLD)
@@ -403,8 +411,8 @@ public class GuiHelper {
 				.build();
 		q.offer(Keys.ITEM_LORE, Collections.singletonList(lore));
 		q.offer(new MenuInventoryData(true));
-		if (configRPGItemType.getRpgItemType().getDisplayName() != null) {
-			q.offer(Keys.DISPLAY_NAME, Text.of(configRPGItemType.getRpgItemType().getDisplayName()));
+		if (configRPGItemType.getModelId() != null) {
+			q.offer(Keys.DISPLAY_NAME, Text.of(configRPGItemType.getModelId()));
 		}
 		return q;
 	}

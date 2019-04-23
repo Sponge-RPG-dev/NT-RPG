@@ -21,16 +21,17 @@ package cz.neumimto.rpg.players;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.inventory.RpgInventory;
+import cz.neumimto.rpg.api.items.RpgItemStack;
+import cz.neumimto.rpg.api.items.RpgItemType;
+import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.entities.IReservable;
-import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.items.types.CustomItem;
 import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.properties.DefaultProperties;
-import cz.neumimto.rpg.properties.PropertyService;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
@@ -42,7 +43,6 @@ import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatType;
 
@@ -55,7 +55,7 @@ import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
  */
 public class PreloadCharacter implements IActiveCharacter {
 
-	private static float[] characterProperties = new float[PropertyService.LAST_ID];
+	private static float[] characterProperties = new float[PropertyServiceImpl.LAST_ID];
 	private IReservable mana = new CharacterMana(this);
 	private UUID uuid;
 	private CharacterHealth health = new CharacterHealthStub(this);
@@ -104,17 +104,12 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Map<EquipedSlot, CustomItem> getEquipedInventorySlots() {
-		return Collections.emptyMap();
-	}
-
-	@Override
 	public float getCharacterPropertyWithoutLevel(int index) {
 		return 0;
 	}
 
 	@Override
-	public double getBaseWeaponDamage(RPGItemType type) {
+	public double getBaseWeaponDamage(RpgItemType type) {
 		return 0;
 	}
 
@@ -139,7 +134,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public boolean canUse(RPGItemType weaponItemType, HandType type) {
+	public boolean canUse(RpgItemType weaponItemType, HandType type) {
 		return false;
 	}
 
@@ -276,7 +271,7 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public Integer getAttributeValue(java.lang.String name) {
+	public int getAttributeValue(java.lang.String name) {
 		return 0;
 	}
 
@@ -292,17 +287,17 @@ public class PreloadCharacter implements IActiveCharacter {
 
 
 	@Override
-	public Set<RPGItemType> getAllowedArmor() {
+	public Set<RpgItemType> getAllowedArmor() {
 		return Collections.emptySet();
 	}
 
 	@Override
-	public boolean canWear(RPGItemType armor) {
+	public boolean canWear(RpgItemType armor) {
 		return false;
 	}
 
 	@Override
-	public Map<ItemType, RPGItemWrapper> getAllowedWeapons() {
+	public Map<RpgItemType, Double> getAllowedWeapons() {
 		return Collections.emptyMap();
 	}
 
@@ -569,12 +564,12 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public CustomItem getMainHand() {
+	public RpgItemStack getMainHand() {
 		return null;
 	}
 
 	@Override
-	public void setMainHand(CustomItem customItem, int slot) {
+	public void setMainHand(RpgItemStack customItem, int slot) {
 
 	}
 
@@ -584,17 +579,42 @@ public class PreloadCharacter implements IActiveCharacter {
 	}
 
 	@Override
-	public CustomItem getOffHand() {
+	public RpgItemStack getOffHand() {
 		return null;
 	}
 
 	@Override
-	public void setOffHand(CustomItem customItem) {
+	public void setOffHand(RpgItemStack customItem) {
 
 	}
 
 	@Override
 	public void restartAttributeGuiSession() {
 
+	}
+
+	@Override
+	public boolean requiresDamageRecalculation() {
+		return false;
+	}
+
+	@Override
+	public void setRequiresDamageRecalculation(boolean k) {
+
+	}
+
+	@Override
+	public int getLastHotbarSlotInteraction() {
+		return 0;
+	}
+
+	@Override
+	public void setLastHotbarSlotInteraction(int last) {
+
+	}
+
+	@Override
+	public Map<Class<?>, RpgInventory> getManagedInventory() {
+		return Collections.emptyMap();
 	}
 }

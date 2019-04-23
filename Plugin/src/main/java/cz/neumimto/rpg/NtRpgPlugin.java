@@ -22,7 +22,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.PluginCore;
-import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.configuration.Settings;
@@ -34,9 +34,6 @@ import cz.neumimto.rpg.inventory.items.ItemMetaTypes;
 import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtypeRegistry;
 import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtypes;
-import cz.neumimto.rpg.inventory.slotparsers.DefaultPlayerInvHandler;
-import cz.neumimto.rpg.inventory.slotparsers.PlayerInvHandler;
-import cz.neumimto.rpg.inventory.slotparsers.PlayerInvHandlerRegistry;
 import cz.neumimto.rpg.inventory.sockets.SocketType;
 import cz.neumimto.rpg.inventory.sockets.SocketTypeRegistry;
 import cz.neumimto.rpg.inventory.sockets.SocketTypes;
@@ -49,7 +46,6 @@ import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.ExperienceSourceRegistry;
 import cz.neumimto.rpg.players.ExperienceSources;
 import cz.neumimto.rpg.players.attributes.Attribute;
-import cz.neumimto.rpg.players.attributes.AttributeCatalogTypeRegistry;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.ISkillType;
 import cz.neumimto.rpg.skills.NDamageType;
@@ -61,7 +57,6 @@ import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactory;
 import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactoryRegistry;
 import cz.neumimto.rpg.skills.mods.SkillPreprocessorFactories;
 import cz.neumimto.rpg.skills.tree.SkillType;
-import cz.neumimto.rpg.utils.EditorMappings;
 import cz.neumimto.rpg.utils.FileUtils;
 import cz.neumimto.rpg.utils.Placeholders;
 import cz.neumimto.rpg.utils.PseudoRandomDistribution;
@@ -94,7 +89,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-import static cz.neumimto.rpg.common.logging.Log.info;
+import static cz.neumimto.rpg.api.logging.Log.info;
 
 /**
  * Created by NeumimTo on 29.4.2015.
@@ -317,8 +312,7 @@ public class NtRpgPlugin {
 				.buildAndRegister(plugin);
 
 		Sponge.getRegistry().registerModule(SocketType.class, new SocketTypeRegistry());
-		Sponge.getRegistry().registerModule(Attribute.class, new AttributeCatalogTypeRegistry());
-		Sponge.getRegistry().registerModule(PlayerInvHandler.class, new PlayerInvHandlerRegistry());
+		Sponge.getRegistry().registerModule(Attribute.class, NtRpgPlugin.GlobalScope.spongePropertyService);
 		Sponge.getRegistry().registerModule(ItemMetaType.class, new ItemMetaTypeRegistry());
 		Sponge.getRegistry().registerModule(ItemSubtype.class, new ItemSubtypeRegistry());
 		Sponge.getRegistry().registerModule(ISkillType.class, new SkillTypeRegistry());
@@ -333,11 +327,6 @@ public class NtRpgPlugin {
 		event.register(SocketTypes.GEM);
 		event.register(SocketTypes.JEWEL);
 		event.register(SocketTypes.RUNE);
-	}
-
-	@Listener
-	public void postInit1(GameRegistryEvent.Register<PlayerInvHandler> event) {
-		event.register(new DefaultPlayerInvHandler());
 	}
 
 	@Listener
@@ -441,7 +430,6 @@ public class NtRpgPlugin {
 			info("Placeholders Disabled");
 		}
 
-		EditorMappings.dump();
 		double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
 		info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
 	}
@@ -488,17 +476,19 @@ public class NtRpgPlugin {
 		} catch (Exception e) {
 			Log.error("Could not read localizations in locale " + NtRpgPlugin.pluginConfig.LOCALE + " - " + e.getMessage());
 		}
+		GlobalScope.itemService.loadItemGroups(Paths.get(NtRpgPlugin.workingDir));
+		GlobalScope.inventorySerivce.loadItemGroups(Paths.get(NtRpgPlugin.workingDir));
+
 		GlobalScope.experienceService.load();
-		GlobalScope.inventoryService.init();
+		GlobalScope.spongeInventoryService.init();
 		GlobalScope.skillService.load();
-		GlobalScope.propertyService.init();
-		GlobalScope.propertyService.reLoadAttributes();
-		GlobalScope.propertyService.loadMaximalServerPropertyValues();
+		GlobalScope.spongePropertyService.init(Paths.get(NtRpgPlugin.workingDir + "/Attributes.conf"), Paths.get(NtRpgPlugin.workingDir + File.separator + "properties_dump.info"));
+		GlobalScope.spongePropertyService.reLoadAttributes(Paths.get(NtRpgPlugin.workingDir + "/Attributes.conf"));
+		GlobalScope.spongePropertyService.loadMaximalServerPropertyValues(Paths.get(NtRpgPlugin.workingDir, "max_server_property_values.properties"));
 		GlobalScope.jsLoader.initEngine();
 		GlobalScope.classService.registerPlaceholders();
 		GlobalScope.rwService.load();
 		GlobalScope.classService.loadClasses();
-		GlobalScope.customItemFactory.initBuilder();
 		GlobalScope.vanillaMessaging.load();
 		GlobalScope.effectService.load();
 		GlobalScope.particleDecorator.initModels();

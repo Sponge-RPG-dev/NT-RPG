@@ -33,11 +33,16 @@ public class Attribute implements CatalogType {
     private String description;
 
     public Attribute(AttributeConfiguration a) {
-        this.id = a.getId();
-        this.name = a.getName();
-        this.propBonus = a.getPropBonus();
-        this.itemType = a.getItemType();
-        this.description = a.getDescription();
+        this(a.getId(), a.getName(), a.getMaxValue(), a.getPropBonus(), a.getItemType(), a.getDescription());
+    }
+
+    public Attribute(String id, String name, float maxValue, Map<Integer, Float> propBonus, ItemType itemType, String description) {
+        this.id = id;
+        this.name = name;
+        this.maxValue = maxValue;
+        this.propBonus = propBonus;
+        this.itemType = itemType;
+        this.description = description;
     }
 
     public String getId() {

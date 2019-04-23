@@ -43,7 +43,6 @@ public class SpongeEffectService extends EffectService {
 
     @Override
     protected void removeEffectContainer(IEffectContainer container, IEffect effect, IEffectConsumer consumer) {
-
         try (CauseStackManager.StackFrame frame = causeStackManager.pushCauseFrame()) {
             EffectRemoveEvent<IEffect> event = new EffectRemoveEvent<>(effect);
             causeStackManager.pushCause(effect);

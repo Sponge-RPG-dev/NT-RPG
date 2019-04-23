@@ -27,6 +27,7 @@ import cz.neumimto.core.localization.Localization;
 import cz.neumimto.core.localization.LocalizationService;
 import cz.neumimto.core.localization.ResourceBundle;
 import cz.neumimto.core.localization.ResourceBundles;
+import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.commands.CommandBase;
 import cz.neumimto.rpg.commands.CommandService;
 import cz.neumimto.rpg.common.effects.EffectService;
@@ -34,7 +35,7 @@ import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.effects.model.EffectModelMapper;
 import cz.neumimto.rpg.properties.PropertyContainer;
-import cz.neumimto.rpg.properties.PropertyService;
+import cz.neumimto.rpg.properties.SpongePropertyService;
 import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.ISkill;
@@ -58,8 +59,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-import static cz.neumimto.rpg.common.logging.Log.error;
-import static cz.neumimto.rpg.common.logging.Log.info;
+import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.api.logging.Log.info;
 
 /**
  * Created by NeumimTo on 27.12.2014.
@@ -108,7 +109,7 @@ public class ResourceLoader {
 	private EffectService effectService;
 
 	@Inject
-	private PropertyService propertyService;
+	private SpongePropertyService spongePropertyService;
 
 	@Inject
 	private CommandService commandService;
@@ -248,9 +249,9 @@ public class ResourceLoader {
 				if (!main) {
 					clazz = classLoader.loadClass(className);
 					info("ClassLoader for "
-							+ Console.GREEN_BOLD + classLoader +
-							Console.RESET + " loaded class " +
-							Console.GREEN + clazz.getSimpleName() + Console.RESET, pluginConfig
+							+ cz.neumimto.rpg.api.utils.Console.GREEN_BOLD + classLoader +
+							cz.neumimto.rpg.api.utils.Console.RESET + " loaded class " +
+							cz.neumimto.rpg.api.utils.Console.GREEN + clazz.getSimpleName() + Console.RESET, pluginConfig
 							.DEBUG);
 					loadClass(clazz, classLoader);
 				} else {
@@ -308,7 +309,7 @@ public class ResourceLoader {
 		}
 		if (clazz.isAnnotationPresent(PropertyContainer.class)) {
 			info("Found Property container class" + clazz.getName(), pluginConfig.DEBUG);
-			propertyService.processContainer(clazz);
+			spongePropertyService.processContainer(clazz);
 		}
 		if (clazz.isAnnotationPresent(JsBinding.class)) {
 			jsLoader.getDataToBind().put(clazz, clazz.getAnnotation(JsBinding.class).value());

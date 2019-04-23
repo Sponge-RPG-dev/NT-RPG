@@ -1,16 +1,16 @@
 package cz.neumimto.rpg.commands.item;
 
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.items.ClassItem;
+import cz.neumimto.rpg.api.items.RpgItemType;
+import cz.neumimto.rpg.api.items.WeaponClass;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.inventory.ConfigRPGItemType;
-import cz.neumimto.rpg.inventory.ItemService;
-import cz.neumimto.rpg.inventory.RPGItemType;
-import cz.neumimto.rpg.inventory.WeaponClass;
+import cz.neumimto.rpg.inventory.SpongeItemService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
-import cz.neumimto.rpg.properties.PropertyService;
+import cz.neumimto.rpg.properties.SpongePropertyService;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -29,14 +29,19 @@ public class InspectItemDamageExecutor implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		Player player = args.<Player>getOne("player").get();
-		ItemService is = NtRpgPlugin.GlobalScope.itemService;
+		SpongeItemService is = NtRpgPlugin.GlobalScope.itemService;
 		Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
 		if (!itemInHand.isPresent()) {
 			src.sendMessage(Text.of(player.getName() + " has no item in main hand"));
 			return CommandResult.empty();
 		}
 		ItemStack itemStack = itemInHand.get();
-		RPGItemType fromItemStack = is.getFromItemStack(itemStack);
+		Optional<RpgItemType> rpgItemType = NtRpgPlugin.GlobalScope.itemService.getRpgItemType(itemStack);
+		if (!rpgItemType.isPresent()) {
+			src.sendMessage(Text.of(player.getName() + " has no Managed item in main hand"));
+			return CommandResult.empty();
+		}
+		RpgItemType fromItemStack = rpgItemType.get();
 		WeaponClass weaponClass = fromItemStack.getWeaponClass();
 		List<WeaponClass> parents = new LinkedList<>();
 		WeaponClass parent = weaponClass.getParent();
@@ -63,7 +68,7 @@ public class InspectItemDamageExecutor implements CommandExecutor {
 		DamageService ds = NtRpgPlugin.GlobalScope.damageService;
 		CharacterService cs = NtRpgPlugin.GlobalScope.characterService;
 		EntityService es = NtRpgPlugin.GlobalScope.entityService;
-		PropertyService ps = NtRpgPlugin.GlobalScope.propertyService;
+		SpongePropertyService ps = NtRpgPlugin.GlobalScope.spongePropertyService;
 		IActiveCharacter character = cs.getCharacter(player);
 		src.sendMessage(Text.of(TextColors.RED, "Damage: ", ds.getCharacterItemDamage(character, fromItemStack)));
 		src.sendMessage(Text.of(TextColors.RED, "Details: "));
@@ -71,12 +76,10 @@ public class InspectItemDamageExecutor implements CommandExecutor {
 
 		Collection<PlayerClassData> values = character.getClasses().values();
 		for (PlayerClassData value : values) {
-			Set<ConfigRPGItemType> configRPGItemTypes = value.getClassDefinition().getWeapons().get(itemInHand.get());
-			if (configRPGItemTypes != null) {
-				for (ConfigRPGItemType w : configRPGItemTypes) {
-					if (w.rpgItemType.equals(fromItemStack)) {
-						src.sendMessage(Text.of(TextColors.GRAY, "  - From Class: " + w.damage));
-					}
+			Set<ClassItem> weapons = value.getClassDefinition().getWeapons();
+			for (ClassItem weapon : weapons) {
+				if (weapon.getType() == fromItemStack) {
+					src.sendMessage(Text.of(TextColors.GRAY, "  - From Class: " + weapon.getDamage()));
 				}
 			}
 		}
@@ -105,7 +108,7 @@ public class InspectItemDamageExecutor implements CommandExecutor {
 
 	private Function<WeaponClass, List<Text>> TO_TEXT = weaponClass -> {
 		List<Text> list = new ArrayList<>();
-		PropertyService ps = NtRpgPlugin.GlobalScope.propertyService;
+		SpongePropertyService ps = NtRpgPlugin.GlobalScope.spongePropertyService;
 		list.add(Text.of(TextColors.GOLD, weaponClass.getName()));
 		for (Integer property : weaponClass.getProperties()) {
 			list.add(Text.of(TextColors.GRAY, " -> ", ps.getNameById(property)));

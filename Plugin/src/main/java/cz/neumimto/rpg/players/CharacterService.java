@@ -20,9 +20,10 @@ package cz.neumimto.rpg.players;
 import cz.neumimto.rpg.ClassService;
 import cz.neumimto.rpg.MissingConfigurationException;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.ActionResult;
 import cz.neumimto.rpg.api.IRpgElement;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.effects.EffectService;
-import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.damage.DamageService;
@@ -33,7 +34,7 @@ import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.events.PlayerDataPreloadComplete;
 import cz.neumimto.rpg.events.character.CharacterManaRegainEvent;
 import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.inventory.InventoryService;
+import cz.neumimto.rpg.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.inventory.UserActionType;
 import cz.neumimto.rpg.persistance.CharacterClassDao;
 import cz.neumimto.rpg.persistance.PlayerDao;
@@ -45,7 +46,7 @@ import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.groups.DependencyGraph;
 import cz.neumimto.rpg.players.leveling.SkillTreeType;
 import cz.neumimto.rpg.properties.DefaultProperties;
-import cz.neumimto.rpg.properties.PropertyService;
+import cz.neumimto.rpg.properties.SpongePropertyService;
 import cz.neumimto.rpg.skills.*;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
@@ -65,7 +66,7 @@ import java.util.stream.Collectors;
 
 import static cz.neumimto.core.localization.Arg.arg;
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
-import static cz.neumimto.rpg.common.logging.Log.*;
+import static cz.neumimto.rpg.api.logging.Log.*;
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -82,7 +83,7 @@ public abstract class CharacterService {
     private PlayerDao playerDao;
 
     @Inject
-    private InventoryService inventoryService;
+    private SpongeInventoryService spongeInventoryService;
 
     @Inject
     private ClassService classService;
@@ -94,11 +95,10 @@ public abstract class CharacterService {
     private DamageService damageService;
 
     @Inject
-    private PropertyService propertyService;
+    private SpongePropertyService spongePropertyService;
 
     @Inject
     private CharacterClassDao characterClassDao;
-
 
     private Map<UUID, IActiveCharacter> characters = new HashMap<>();
 
@@ -209,7 +209,8 @@ public abstract class CharacterService {
         if (character.getCharacterBase().getHealthScale() != null) {
             pl.offer(Keys.HEALTH_SCALE, character.getCharacterBase().getHealthScale());
         }
-        inventoryService.initializeCharacterInventory(character);
+
+        spongeInventoryService.initializeCharacterInventory(character);
         return true;
     }
 
@@ -308,7 +309,7 @@ public abstract class CharacterService {
             applyGroupEffects(character, nClass.getClassDefinition());
         }
 
-        inventoryService.initializeCharacterInventory(character);
+        spongeInventoryService.initializeCharacterInventory(character);
         damageService.recalculateCharacterWeaponDamage(character);
 
 
@@ -421,16 +422,14 @@ public abstract class CharacterService {
             PlayerClassData value = entry.getValue();
             ClassDefinition classDefinition = value.getClassDefinition();
             Map<Attribute, Integer> attributes = classDefinition.getStartingAttributes();
-            if (!attributes.isEmpty()) {
-                for (Map.Entry<Attribute, Integer> ae : attributes.entrySet()) {
-                    addTransientAttribute(activeCharacter, ae.getKey(), ae.getValue());
-                }
-            }
+            addTransientAttribtues(activeCharacter, attributes);
         }
     }
 
+
+
     public void recalculateProperties(IActiveCharacter character) {
-        Map<Integer, Float> defaults = propertyService.getDefaults();
+        Map<Integer, Float> defaults = spongePropertyService.getDefaults();
         float[] primary = character.getPrimaryProperties();
         float[] secondary = character.getSecondaryProperties();
         float pval = 0;
@@ -523,7 +522,10 @@ public abstract class CharacterService {
     public ActiveCharacter createActiveCharacter(UUID player, CharacterBase characterBase) {
         characterBase = playerDao.fetchCharacterBase(characterBase);
         ActiveCharacter activeCharacter = new ActiveCharacter(player, characterBase);
-
+        Set<String> strings = spongePropertyService.getAttributes().keySet();
+        for (String string : strings) {
+            activeCharacter.getTransientAttributes().put(string, 0);
+        }
         Set<CharacterClass> characterClasses = characterBase.getCharacterClasses();
 
         for (CharacterClass characterClass : characterClasses) {
@@ -536,11 +538,16 @@ public abstract class CharacterService {
             activeCharacter.addClass(playerClassData);
             classService.addAllPermissions(activeCharacter, playerClassData);
         }
+
+        spongeInventoryService.initializeManagedSlots(activeCharacter);
+
         Set<PlayerSkillContext> skillData = resolveSkills(characterBase, activeCharacter);
         recalculateProperties(activeCharacter);
         for (PlayerSkillContext dt : skillData) {
             dt.getSkill().onCharacterInit(activeCharacter, dt.getLevel());
         }
+
+
         return activeCharacter;
     }
 
@@ -890,7 +897,7 @@ public abstract class CharacterService {
         characterClass.setExperiences(newcurrentexp);
 
         if (gotLevel) {
-            inventoryService.initializeCharacterInventory(character);
+            spongeInventoryService.initializeCharacterInventory(character);
         }
 
         Gui.showExpChange(character, aClass.getClassDefinition().getName(), exp);
@@ -937,8 +944,14 @@ public abstract class CharacterService {
         addAttribute(character, attribute, 1);
     }
 
+    public void addTransientAttribtues(IActiveCharacter activeCharacter, Map<Attribute, Integer> attributes) {
+        for (Map.Entry<Attribute, Integer> ae : attributes.entrySet()) {
+            addTransientAttribute(activeCharacter, ae.getKey(), ae.getValue());
+        }
+    }
+
     public void addTransientAttribute(IActiveCharacter character, Attribute attribute, int amount) {
-        character.getTransientAttributes().merge(attribute.getId(), amount, (a, b) -> a + b);
+        character.getTransientAttributes().merge(attribute.getId(), amount, Integer::sum);
         if (!attribute.getPropBonus().isEmpty()) {
             applyAttributeValue(character, attribute, amount);
         }
@@ -962,6 +975,12 @@ public abstract class CharacterService {
     public void respawnCharacter(IActiveCharacter character) {
         effectService.removeAllEffects(character);
 
+        Set<String> strings = spongePropertyService.getAttributes().keySet();
+        for (String string : strings) {
+            character.getTransientAttributes().put(string, 0);
+        }
+
+        character.setRequiresDamageRecalculation(true);
         for (PlayerClassData nClass : character.getClasses().values()) {
             applyGroupEffects(character, nClass.getClassDefinition());
         }
@@ -969,7 +988,7 @@ public abstract class CharacterService {
         character.getMana().setValue(0);
         addDefaultEffects(character);
 
-        inventoryService.initializeCharacterInventory(character);
+        spongeInventoryService.initializeCharacterInventory(character);
         Sponge.getScheduler().createTaskBuilder().execute(() -> {
             invalidateCaches(character);
             Double d = character.getHealth().getMaxValue();
@@ -1163,6 +1182,16 @@ public abstract class CharacterService {
         addSkill(character, origin, einfo);
         skill.skillLearn(character);
         Log.info("Character " + character.getCharacterBase().getUuid() + " learned skill " + skill.getId());
+    }
+
+    public void removeTransientAttributes(Map<Attribute, Integer> bonusAttributes, IActiveCharacter character) {
+        for (Map.Entry<Attribute, Integer> entry : bonusAttributes.entrySet()) {
+            removeTransientAttribute(character, entry.getKey(), entry.getValue());
+        }
+    }
+
+    private void removeTransientAttribute(IActiveCharacter character, Attribute key, Integer value) {
+        character.getTransientAttributes().merge(key.getId(), value, (b, a) -> a - b);
     }
 }
 

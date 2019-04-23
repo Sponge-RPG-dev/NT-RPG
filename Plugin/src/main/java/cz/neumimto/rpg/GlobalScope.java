@@ -26,13 +26,12 @@ import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.ParticleDecorator;
 import cz.neumimto.rpg.gui.VanillaMessaging;
-import cz.neumimto.rpg.inventory.CustomItemFactory;
-import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.inventory.ItemService;
+import cz.neumimto.rpg.inventory.SpongeInventoryService;
+import cz.neumimto.rpg.inventory.SpongeItemService;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.parties.PartyService;
-import cz.neumimto.rpg.properties.PropertyService;
+import cz.neumimto.rpg.properties.SpongePropertyService;
 import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.skills.SkillService;
 import org.spongepowered.api.Game;
@@ -71,7 +70,7 @@ public class GlobalScope {
 	public DamageService damageService;
 
 	@Inject
-	public InventoryService inventorySerivce;
+	public SpongeInventoryService inventorySerivce;
 
 	@Inject
 	public RWService runewordService;
@@ -83,10 +82,10 @@ public class GlobalScope {
 	public PartyService partyService;
 
 	@Inject
-	public PropertyService propertyService;
+	public SpongePropertyService spongePropertyService;
 
 	@Inject
-	public ItemService itemService;
+	public SpongeItemService itemService;
 
 	@Inject
 	public Injector injector;
@@ -101,10 +100,7 @@ public class GlobalScope {
 	public EffectService experienceService;
 
 	@Inject
-	public InventoryService inventoryService;
-
-	@Inject
-	public CustomItemFactory customItemFactory;
+	public SpongeInventoryService spongeInventoryService;
 
 	@Inject
 	public VanillaMessaging vanillaMessaging;

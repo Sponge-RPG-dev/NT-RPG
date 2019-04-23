@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.events.character;
 
-import cz.neumimto.rpg.inventory.RPGItemType;
+import cz.neumimto.rpg.items.SpongeRpgItemType;
 import cz.neumimto.rpg.players.IActiveCharacter;
 
 import java.util.Set;
@@ -28,14 +28,14 @@ import java.util.Set;
  */
 public class EventCharacterArmorPostUpdate extends AbstractCharacterEvent {
 
-	private Set<RPGItemType> armor;
+	private Set<SpongeRpgItemType> armor;
 
-	public EventCharacterArmorPostUpdate(IActiveCharacter character, Set<RPGItemType> allowedArmor) {
+	public EventCharacterArmorPostUpdate(IActiveCharacter character, Set<SpongeRpgItemType> allowedArmor) {
 		super(character);
 		this.armor = allowedArmor;
 	}
 
-	public Set<RPGItemType> getArmor() {
+	public Set<SpongeRpgItemType> getArmor() {
 		return armor;
 	}
 

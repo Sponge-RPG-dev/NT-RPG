@@ -26,7 +26,7 @@ import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.properties.DefaultProperties;
-import cz.neumimto.rpg.properties.PropertyService;
+import cz.neumimto.rpg.properties.SpongePropertyService;
 import cz.neumimto.rpg.utils.XORShiftRnd;
 import cz.neumimto.skills.active.GrapplingHook;
 import org.spongepowered.api.Game;
@@ -89,7 +89,7 @@ public class SkillListener {
 	private EffectService effectService;
 
 	@Inject
-	private PropertyService propertyService;
+	private SpongePropertyService spongePropertyService;
 
 	@Inject
 	private Game game;
@@ -109,18 +109,6 @@ public class SkillListener {
 			}
 		}
 	}
-
-	//todo
-	/*@Listener
-	public void onDamage(DamageIEntityEarlyEvent event) {
-		IActiveCharacter character = characterService.getCharacter(event.getDamaged().getUniqueId());
-		if (!character.isStub()) {
-			IEffectContainer container = character.getEffect(DamageToMana.name);
-			if (container != null) {
-				double percentage = (double) container.getStackedValue();
-			}
-		}
-	}*/
 
 	@Listener
 	@SuppressWarnings("unchecked")

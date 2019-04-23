@@ -3,15 +3,15 @@ package cz.neumimto.rpg.skills.parents;
 import com.typesafe.config.Config;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
-import cz.neumimto.rpg.Console;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.gui.GuiHelper;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.properties.DefaultProperties;
-import cz.neumimto.rpg.properties.PropertyService;
+import cz.neumimto.rpg.properties.SpongePropertyService;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillResult;
@@ -33,7 +33,7 @@ import java.util.function.BiFunction;
 
 public class PropertySkill extends AbstractSkill {
 
-	private PropertyService propertyService;
+	private SpongePropertyService spongePropertyService;
 
 	private DamageService damageService;
 
@@ -41,7 +41,7 @@ public class PropertySkill extends AbstractSkill {
 
 	public PropertySkill() {
 		super();
-		propertyService = NtRpgPlugin.GlobalScope.propertyService;
+		spongePropertyService = NtRpgPlugin.GlobalScope.spongePropertyService;
 		damageService = NtRpgPlugin.GlobalScope.damageService;
 		entityService = NtRpgPlugin.GlobalScope.entityService;
 	}
@@ -87,7 +87,7 @@ public class PropertySkill extends AbstractSkill {
 					entityService.updateWalkSpeed(character);
 				} else if (property.propertyId == DefaultProperties.max_mana) {
 					characterService.updateMaxMana(character);
-				} else if (propertyService.updatingRequiresDamageRecalc(property.propertyId)) {
+				} else if (spongePropertyService.updatingRequiresDamageRecalc(property.propertyId)) {
 					damageService.recalculateCharacterWeaponDamage(character);
 				}
 			}
@@ -104,7 +104,7 @@ public class PropertySkill extends AbstractSkill {
 			String name = cprop.getString("property-name");
 
 			try {
-				int idByName = NtRpgPlugin.GlobalScope.propertyService.getIdByName(name);
+				int idByName = NtRpgPlugin.GlobalScope.spongePropertyService.getIdByName(name);
 				Wrapper wrapper = new Wrapper(name, idByName, level, value);
 				data.properties.add(wrapper);
 			} catch (NullPointerException e) {

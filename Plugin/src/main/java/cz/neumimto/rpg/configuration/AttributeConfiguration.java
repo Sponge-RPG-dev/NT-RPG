@@ -10,8 +10,6 @@ import java.util.Map;
 @ConfigSerializable
 public class AttributeConfiguration {
 
-
-
     @Setting("Id")
     private String id;
 

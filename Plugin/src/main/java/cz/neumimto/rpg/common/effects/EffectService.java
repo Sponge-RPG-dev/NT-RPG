@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.common.effects;
 
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.effects.*;
@@ -402,7 +403,7 @@ public abstract class EffectService {
 	 * @param consumer
 	 */
 	public void applyGlobalEffectsAsEnchantments(Map<IGlobalEffect, EffectParams> map, IEffectConsumer consumer,
-	                                             IEffectSourceProvider effectSourceType) {
+                                                 IEffectSourceProvider effectSourceType) {
 		map.forEach((e, l) ->
 				applyGlobalEffectAsEnchantment(e, consumer, l, effectSourceType)
 		);
@@ -449,6 +450,18 @@ public abstract class EffectService {
 		effectSet.clear();
 		pendingAdditions.clear();
 		pendingRemovals.clear();
+	}
+
+
+	public Map<IGlobalEffect, EffectParams> parseItemEffects(Map<String, EffectParams> stringEffectParamsMap) {
+		Map<IGlobalEffect, EffectParams> map = new HashMap<>();
+		for (Map.Entry<String, EffectParams> w : stringEffectParamsMap.entrySet()) {
+			IGlobalEffect globalEffect = getGlobalEffect(w.getKey());
+			if (globalEffect != null) {
+				map.put(globalEffect, w.getValue());
+			}
+		}
+		return map;
 	}
 }
 

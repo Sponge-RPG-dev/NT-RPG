@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static cz.neumimto.rpg.common.logging.Log.error;
+import static cz.neumimto.rpg.api.logging.Log.error;
 
 /**
  * Created by NeumimTo on 14.2.2015.

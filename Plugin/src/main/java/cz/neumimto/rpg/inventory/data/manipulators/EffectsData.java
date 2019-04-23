@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.inventory.data.manipulators;
 
-import cz.neumimto.rpg.effects.EffectParams;
+import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
