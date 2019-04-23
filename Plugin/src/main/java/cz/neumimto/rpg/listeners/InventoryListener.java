@@ -24,12 +24,12 @@ import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.RpgItemStack;
-import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.inventory.SpongeItemService;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.utils.ItemStackUtils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
@@ -44,16 +44,19 @@ import org.spongepowered.api.event.filter.type.Include;
 import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
+import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
+import org.spongepowered.api.item.inventory.type.CarriedInventory;
 import org.spongepowered.api.util.Tristate;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -76,6 +79,7 @@ public class InventoryListener {
 	@Inject
 	private SpongeItemService itemService;
 
+
 	@Listener
 	@IsCancelled(Tristate.FALSE)
 	public void onItemDrop(DropItemEvent.Dispense event, @Root Player player) {
@@ -93,21 +97,34 @@ public class InventoryListener {
 	@Listener
 	public void onHotbarInteract(HandInteractEvent event, @First(typeFilter = Player.class) Player player) {
 		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-		Hotbar query = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
+		CarriedInventory<? extends Carrier> inventory = player.getInventory();
+
+		Hotbar query = inventory.query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
 		int selectedSlotIndex = query.getSelectedSlotIndex();
+
 		Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
 		if (itemInHand.isPresent()) {
 			ItemStack itemStack = itemInHand.get();
-			Optional<RpgItemType> rpgItemType = itemService.getRpgItemType(itemStack);
+			Optional<RpgItemStack> rpgItemType = itemService.getRpgItemStack(itemStack);
 			if (rpgItemType.isPresent()) {
-				RpgItemType rpgItemType1 = rpgItemType.get();
+				RpgItemStack rpgItemType1 = rpgItemType.get();
+
                 int last = character.getLastHotbarSlotInteraction();
                 if (selectedSlotIndex != last) {
-                    character.setLastHotbarSlotInteraction(last);
 
-                    if (inventoryHandler.handleInventoryInitializationPre(character)) {
-                        inventoryHandler.handleInventoryInitializationPost(character);
-                    }
+					Map<Integer, ManagedSlot> managedSlots = character.getManagedInventory().get(inventory.getClass()).getManagedSlots();
+
+					if (managedSlots.containsKey(selectedSlotIndex)) {
+						ManagedSlot managedSlot = managedSlots.get(selectedSlotIndex);
+						if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemType1)) {
+							inventoryHandler.handleInventoryInitializationPost(character);
+							character.setLastHotbarSlotInteraction(last);
+						} else {
+							ItemStackUtils.dropItem(player, itemStack);
+							player.setItemInHand(HandTypes.MAIN_HAND, ItemStack.empty());
+							character.setLastHotbarSlotInteraction(-1);
+						}
+					}
                 }
 			}
 		}
