@@ -33,6 +33,7 @@ import cz.neumimto.rpg.utils.ItemStackUtils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
@@ -82,16 +83,22 @@ public class InventoryListener {
 
 	@Listener
 	@IsCancelled(Tristate.FALSE)
-	public void onItemDrop(DropItemEvent.Dispense event, @Root Player player) {
+	@Include({
+			DropItemEvent.Dispense.class,
+			DropItemEvent.Destruct.class,
+	})
+	public void onItemDrop(Event event, @Root Player player) {
 		if (!player.getOpenInventory().isPresent()) {
 			return;
 		}
 		IActiveCharacter character = characterService.getCharacter(player);
 
-		Hotbar query = player.getInventory().query(Hotbar.class);
-        int selectedSlotIndex = query.getSelectedSlotIndex();
+		CarriedInventory<? extends Carrier> inventory = player.getInventory();
 
-        inventoryHandler.handleCharacterUnEquipActionPost(character, null);
+		Hotbar query = inventory.query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
+		int selectedSlotIndex = query.getSelectedSlotIndex();
+
+		inventoryHandler.handleCharacterUnEquipActionPost(character, null);
 	}
 
 	@Listener
