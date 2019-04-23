@@ -134,6 +134,7 @@ public class ActiveCharacter implements IActiveCharacter {
 		this.skillTreeViewLocation = new HashMap<>();
 		this.denySlotInteractionArr = new HashSet<>();
 		this.inventory = new HashMap<>();
+		requiresDamageRecalculation = true;
 	}
 
 	@Override

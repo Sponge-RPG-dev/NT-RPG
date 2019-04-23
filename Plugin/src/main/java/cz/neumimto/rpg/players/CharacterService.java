@@ -980,7 +980,7 @@ public abstract class CharacterService {
             character.getTransientAttributes().put(string, 0);
         }
 
-
+        character.setRequiresDamageRecalculation(true);
         for (PlayerClassData nClass : character.getClasses().values()) {
             applyGroupEffects(character, nClass.getClassDefinition());
         }

@@ -110,18 +110,6 @@ public class SkillListener {
 		}
 	}
 
-	//todo
-	/*@Listener
-	public void onDamage(DamageIEntityEarlyEvent event) {
-		IActiveCharacter character = characterService.getCharacter(event.getDamaged().getUniqueId());
-		if (!character.isStub()) {
-			IEffectContainer container = character.getEffect(DamageToMana.name);
-			if (container != null) {
-				double percentage = (double) container.getStackedValue();
-			}
-		}
-	}*/
-
 	@Listener
 	@SuppressWarnings("unchecked")
 	public void onEntityDamage(DamageIEntityEarlyEvent event, @First EntityDamageSource damageSource) {

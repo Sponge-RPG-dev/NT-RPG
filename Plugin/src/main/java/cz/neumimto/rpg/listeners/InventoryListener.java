@@ -33,7 +33,6 @@ import cz.neumimto.rpg.utils.ItemStackUtils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
@@ -68,181 +67,183 @@ import java.util.Optional;
 @ResourceLoader.ListenerClass
 public class InventoryListener {
 
-	@Inject
-	private CharacterService characterService;
+    @Inject
+    private CharacterService characterService;
 
-	@Inject
-	private InventoryHandler inventoryHandler;
+    @Inject
+    private InventoryHandler inventoryHandler;
 
-	@Inject
-	private InventoryService inventoryService;
+    @Inject
+    private InventoryService inventoryService;
 
-	@Inject
-	private SpongeItemService itemService;
+    @Inject
+    private SpongeItemService itemService;
 
 
-	@Listener
-	@IsCancelled(Tristate.FALSE)
-	@Include({
-			DropItemEvent.Dispense.class,
-			DropItemEvent.Destruct.class,
-	})
-	public void onItemDrop(Event event, @Root Player player) {
-		if (!player.getOpenInventory().isPresent()) {
-			return;
-		}
-		IActiveCharacter character = characterService.getCharacter(player);
+    @Listener
+    @IsCancelled(Tristate.FALSE)
+    @Include({
+            DropItemEvent.Dispense.class,
+            DropItemEvent.Destruct.class,
+    })
+    public void onItemDrop(DropItemEvent event, @Root Player player) {
+        if (!player.getOpenInventory().isPresent()) {
+            return;
+        }
+        IActiveCharacter character = characterService.getCharacter(player);
 
-		CarriedInventory<? extends Carrier> inventory = player.getInventory();
+        CarriedInventory<? extends Carrier> inventory = player.getInventory();
 
-		Hotbar query = inventory.query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
-		int selectedSlotIndex = query.getSelectedSlotIndex();
+        Hotbar query = inventory.query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
+        int selectedSlotIndex = query.getSelectedSlotIndex();
 
-		inventoryHandler.handleCharacterUnEquipActionPost(character, null);
-	}
+        inventoryHandler.handleCharacterUnEquipActionPost(character, null);
+    }
 
-	@Listener
-	public void onHotbarInteract(HandInteractEvent event, @First(typeFilter = Player.class) Player player) {
-		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-		CarriedInventory<? extends Carrier> inventory = player.getInventory();
+    @Listener
+    public void onHotbarInteract(HandInteractEvent event, @First(typeFilter = Player.class) Player player) {
+        IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+        CarriedInventory<? extends Carrier> inventory = player.getInventory();
 
-		Hotbar query = inventory.query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
-		int selectedSlotIndex = query.getSelectedSlotIndex();
+        Hotbar query = inventory.query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
+        int selectedSlotIndex = query.getSelectedSlotIndex();
 
-		Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
-		if (itemInHand.isPresent()) {
-			ItemStack itemStack = itemInHand.get();
-			Optional<RpgItemStack> rpgItemType = itemService.getRpgItemStack(itemStack);
-			if (rpgItemType.isPresent()) {
-				RpgItemStack rpgItemType1 = rpgItemType.get();
+        Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
+        if (itemInHand.isPresent()) {
+            ItemStack itemStack = itemInHand.get();
+            Optional<RpgItemStack> rpgItemType = itemService.getRpgItemStack(itemStack);
+            if (rpgItemType.isPresent()) {
+                RpgItemStack rpgItemType1 = rpgItemType.get();
 
                 int last = character.getLastHotbarSlotInteraction();
                 if (selectedSlotIndex != last) {
 
-					Map<Integer, ManagedSlot> managedSlots = character.getManagedInventory().get(inventory.getClass()).getManagedSlots();
+                    Map<Integer, ManagedSlot> managedSlots = character.getManagedInventory().get(inventory.getClass()).getManagedSlots();
 
-					if (managedSlots.containsKey(selectedSlotIndex)) {
-						ManagedSlot managedSlot = managedSlots.get(selectedSlotIndex);
-						if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemType1)) {
-							inventoryHandler.handleInventoryInitializationPost(character);
-							character.setLastHotbarSlotInteraction(last);
-						} else {
-							ItemStackUtils.dropItem(player, itemStack);
-							player.setItemInHand(HandTypes.MAIN_HAND, ItemStack.empty());
-							character.setLastHotbarSlotInteraction(-1);
-							event.setCancelled(true);
-						}
-					}
+                    if (managedSlots.containsKey(selectedSlotIndex)) {
+                        ManagedSlot managedSlot = managedSlots.get(selectedSlotIndex);
+                        if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemType1)) {
+                            inventoryHandler.handleInventoryInitializationPost(character);
+                            character.setLastHotbarSlotInteraction(last);
+                            character.setMainHand(rpgItemType1, last);
+                        } else {
+                            ItemStackUtils.dropItem(player, itemStack);
+                            player.setItemInHand(HandTypes.MAIN_HAND, ItemStack.empty());
+                            character.setLastHotbarSlotInteraction(-1);
+                            event.setCancelled(true);
+                            character.setRequiresDamageRecalculation(true);
+                        }
+                    }
                 }
-			}
-		}
-	}
+            }
+        }
+    }
 
-	@Listener
-	@Include({
-			ClickInventoryEvent.Primary.class,
-			ClickInventoryEvent.Secondary.class
-	})
-	@IsCancelled(Tristate.FALSE)
-	public void onClick(ClickInventoryEvent event, @Root Player player) {
-		List<SlotTransaction> transactions = event.getTransactions();
-		for (SlotTransaction transaction : transactions) {
-			Optional<String> s = transaction.getOriginal().get(NKeys.COMMAND);
-			if (s.isPresent()) {
-				Sponge.getCommandManager().process(player, s.get());
-			}
-			Optional<Boolean> aBoolean = transaction.getOriginal().get(NKeys.MENU_INVENTORY);
-			if (aBoolean.isPresent()) {
-				if (aBoolean.get()) {
-					event.setCancelled(true);
-				}
-			}
-		}
-	}
-
-
-	@Listener
-	@Include({
-			ClickInventoryEvent.Primary.class,
-			ClickInventoryEvent.Secondary.class
-	})
-	public void onInteract(ClickInventoryEvent event, @Root Player player) {
-		final List<SlotTransaction> transactions = event.getTransactions();
-		switch (transactions.size()) {
-			case 1:
-				SlotTransaction slotTransaction = transactions.get(0);
-				Slot slot = slotTransaction.getSlot();
-				Slot transformed = slot.transform();
-				Class aClass = transformed.parent().getClass();
-				int slotId = transformed.getInventoryProperty(SlotIndex.class).get().getValue();
-				if (!inventoryService.isManagedInventory(aClass, slotId)) {
-					return;
-				}
-				IActiveCharacter character = characterService.getCharacter(player);
-				RpgInventory rpgInventory = character.getManagedInventory().get(aClass);
-				ManagedSlot managedSlot = rpgInventory.getManagedSlots().get(slotId);
-				Optional<RpgItemStack> future = itemService.getRpgItemStack(slotTransaction.getFinal().createStack());
-				Optional<RpgItemStack> original = itemService.getRpgItemStack(slotTransaction.getOriginal().createStack());
-
-				if (future.isPresent()) {
-					RpgItemStack rpgItemStackF = future.get();
-					//change
-					if (original.isPresent()) {
-
-						RpgItemStack rpgItemStackO = original.get();
-
-						boolean k = inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemStackF)
-									&& inventoryHandler.handleCharacterUnEquipActionPre(character, managedSlot, rpgItemStackO);
-						if (k) {
-							inventoryHandler.handleCharacterUnEquipActionPost(character, managedSlot);
-							inventoryHandler.handleCharacterEquipActionPost(character, managedSlot, rpgItemStackF);
-
-						} else {
-							event.setCancelled(true);
-						}
-					} else {
-						//equip
-						if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemStackF)) {
-							inventoryHandler.handleCharacterEquipActionPost(character, managedSlot, rpgItemStackF);
-						}
-					}
-
-				} else {
-					//unequip slot
-					if (original.isPresent()) {
-						RpgItemStack rpgItemStack = original.get();
-						if (inventoryHandler.handleCharacterUnEquipActionPre(character, managedSlot, rpgItemStack)) {
-							inventoryHandler.handleCharacterUnEquipActionPost(character, managedSlot);
-						}
-					}
-				}
-				break;
-			case 2:
-				//???
-				break;
-			default:
-				//???//???
-				return;
-		}
-
-	}
-
-	@Listener
-	@IsCancelled(Tristate.FALSE)
-	public void onDimensionTravel(MoveEntityEvent.Teleport.Portal event, @Root Player player) {
-		IActiveCharacter character = characterService.getCharacter(player);
-		if (!character.isStub()) {
-			characterService.respawnCharacter(character);
-		}
-	}
+    @Listener
+    @Include({
+            ClickInventoryEvent.Primary.class,
+            ClickInventoryEvent.Secondary.class
+    })
+    @IsCancelled(Tristate.FALSE)
+    public void onClick(ClickInventoryEvent event, @Root Player player) {
+        List<SlotTransaction> transactions = event.getTransactions();
+        for (SlotTransaction transaction : transactions) {
+            Optional<String> s = transaction.getOriginal().get(NKeys.COMMAND);
+            if (s.isPresent()) {
+                Sponge.getCommandManager().process(player, s.get());
+            }
+            Optional<Boolean> aBoolean = transaction.getOriginal().get(NKeys.MENU_INVENTORY);
+            if (aBoolean.isPresent()) {
+                if (aBoolean.get()) {
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
 
 
-	@Listener(order = Order.LAST)
-	@IsCancelled(Tristate.FALSE)
-	public void onSwapHands(ChangeInventoryEvent.SwapHand event, @Root Player player) {
-		ItemStack futureMainHand = player.getItemInHand(HandTypes.MAIN_HAND).orElse(null);
-		ItemStack futureOffHand = player.getItemInHand(HandTypes.OFF_HAND).orElse(null);
+    @Listener
+    @Include({
+            ClickInventoryEvent.Primary.class,
+            ClickInventoryEvent.Secondary.class
+    })
+    public void onInteract(ClickInventoryEvent event, @Root Player player) {
+        final List<SlotTransaction> transactions = event.getTransactions();
+        switch (transactions.size()) {
+            case 1:
+                SlotTransaction slotTransaction = transactions.get(0);
+                Slot slot = slotTransaction.getSlot();
+                Slot transformed = slot.transform();
+                Class aClass = transformed.parent().getClass();
+                int slotId = transformed.getInventoryProperty(SlotIndex.class).get().getValue();
+                if (!inventoryService.isManagedInventory(aClass, slotId)) {
+                    return;
+                }
+                IActiveCharacter character = characterService.getCharacter(player);
+                RpgInventory rpgInventory = character.getManagedInventory().get(aClass);
+                ManagedSlot managedSlot = rpgInventory.getManagedSlots().get(slotId);
+                Optional<RpgItemStack> future = itemService.getRpgItemStack(slotTransaction.getFinal().createStack());
+                Optional<RpgItemStack> original = itemService.getRpgItemStack(slotTransaction.getOriginal().createStack());
 
-	}
+                if (future.isPresent()) {
+                    RpgItemStack rpgItemStackF = future.get();
+                    //change
+                    if (original.isPresent()) {
+
+                        RpgItemStack rpgItemStackO = original.get();
+
+                        boolean k = inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemStackF)
+                                && inventoryHandler.handleCharacterUnEquipActionPre(character, managedSlot, rpgItemStackO);
+                        if (k) {
+                            inventoryHandler.handleCharacterUnEquipActionPost(character, managedSlot);
+                            inventoryHandler.handleCharacterEquipActionPost(character, managedSlot, rpgItemStackF);
+
+                        } else {
+                            event.setCancelled(true);
+                        }
+                    } else {
+                        //equip
+                        if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemStackF)) {
+                            inventoryHandler.handleCharacterEquipActionPost(character, managedSlot, rpgItemStackF);
+                        }
+                    }
+
+                } else {
+                    //unequip slot
+                    if (original.isPresent()) {
+                        RpgItemStack rpgItemStack = original.get();
+                        if (inventoryHandler.handleCharacterUnEquipActionPre(character, managedSlot, rpgItemStack)) {
+                            inventoryHandler.handleCharacterUnEquipActionPost(character, managedSlot);
+                        }
+                    }
+                }
+                break;
+            case 2:
+                //???
+                break;
+            default:
+                //???//???
+                return;
+        }
+
+    }
+
+    @Listener
+    @IsCancelled(Tristate.FALSE)
+    public void onDimensionTravel(MoveEntityEvent.Teleport.Portal event, @Root Player player) {
+        IActiveCharacter character = characterService.getCharacter(player);
+        if (!character.isStub()) {
+            characterService.respawnCharacter(character);
+        }
+    }
+
+
+    @Listener(order = Order.LAST)
+    @IsCancelled(Tristate.FALSE)
+    public void onSwapHands(ChangeInventoryEvent.SwapHand event, @Root Player player) {
+        ItemStack futureMainHand = player.getItemInHand(HandTypes.MAIN_HAND).orElse(null);
+        ItemStack futureOffHand = player.getItemInHand(HandTypes.OFF_HAND).orElse(null);
+
+    }
 
 }
