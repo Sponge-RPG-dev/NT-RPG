@@ -46,6 +46,7 @@ import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
@@ -82,14 +83,11 @@ public class InventoryListener {
 
     @Listener
     @IsCancelled(Tristate.FALSE)
-    @Include({
-            DropItemEvent.Dispense.class,
-            DropItemEvent.Destruct.class,
-    })
-    public void onItemDrop(DropItemEvent event, @Root Player player) {
+    public void onItemDrop(DropItemEvent.Pre event, @Root Player player) {
         if (!player.getOpenInventory().isPresent()) {
             return;
         }
+        List<ItemStackSnapshot> droppedItems = event.getDroppedItems();
         IActiveCharacter character = characterService.getCharacter(player);
 
         CarriedInventory<? extends Carrier> inventory = player.getInventory();

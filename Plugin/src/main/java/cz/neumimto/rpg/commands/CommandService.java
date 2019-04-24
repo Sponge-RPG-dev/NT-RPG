@@ -301,7 +301,7 @@ public class CommandService {
 				.arguments(
 						new LearnedSkillCommandElement(Text.of("skill"))
 				)
-				.executor(new SkillCastExecutor())
+				.executor(new PlayerSkillCastExecutor())
 				.build();
 
 		Sponge.getCommandManager().register(plugin, skillCast, "skill", "skl", "ns");

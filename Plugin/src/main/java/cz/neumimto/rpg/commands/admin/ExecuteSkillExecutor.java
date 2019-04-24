@@ -1,6 +1,8 @@
 package cz.neumimto.rpg.commands.admin;
 
+import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.players.CommandblockSkillExecutor;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
@@ -10,13 +12,16 @@ import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.mods.SkillExecutorCallback;
 import cz.neumimto.rpg.skills.parents.ActiveSkill;
 import cz.neumimto.rpg.skills.parents.IActiveSkill;
+import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
+import org.spongepowered.api.command.source.CommandBlockSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.world.Location;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -25,12 +30,40 @@ public class ExecuteSkillExecutor implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		ISkill skill = args.<ISkill>getOne("skill").get();
-		SkillSettings defaultSkillSettings = skill.getSettings();
-		Player player = (Player) src;
-		IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
-		if (character.isStub()) {
-			throw new RuntimeException("Character is required even for an admin.");
+
+		IActiveCharacter character;
+		SkillSettings defaultSkillSettings;
+		if (src instanceof CommandBlockSource) {
+			CommandBlockSource source = (CommandBlockSource) src;
+			Optional<Object> olocation = args.getOne("location");
+			Location location = source.getLocation();
+			if (olocation.isPresent()) {
+				String o = (String) olocation.get();
+				location = Utils.getLocationRelative(o, location);
+			}
+
+			Optional<String> head = args.getOne("head");
+			Vector3d headRotation = head.map(s -> {
+				String[] split = s.split(";");
+				return new Vector3d(
+					Double.parseDouble(Utils.extractNumber(split[0])),
+					Double.parseDouble(Utils.extractNumber(split[1])),
+					Double.parseDouble(Utils.extractNumber(split[2]))
+				);
+			}).orElse(new Vector3d());
+			character = CommandblockSkillExecutor.wrap(source, location, headRotation);
+
+			defaultSkillSettings = new SkillSettings();
+		} else {
+			defaultSkillSettings = skill.getSettings();
+			Player player = (Player) src;
+			character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
+			if (character.isStub()) {
+				throw new RuntimeException("Character is required even for an admin.");
+			}
 		}
+
+
 
 		int level = 1;
 		Optional<Integer> optional = args.getOne("level");

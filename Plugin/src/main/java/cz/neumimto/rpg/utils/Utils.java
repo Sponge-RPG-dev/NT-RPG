@@ -319,4 +319,29 @@ public class Utils {
 			}
 		}
 	}
+
+	public static Location getLocationRelative(String location, Location original) {
+		String[] split = location.split(";");
+		String s = split[0];
+		double x = original.getBlockX();
+		x = getSinglePoint(s, x);
+
+		s = split[1];
+		double y = original.getBlockY();
+		y = getSinglePoint(s, x);
+
+		double z = original.getBlockZ();
+		z = getSinglePoint(s, x);
+
+
+		return new Location(original.getExtent(), x, y, z);
+	}
+
+	private static double getSinglePoint(String s, double n) {
+		if (s.startsWith("~")) {
+			return n + Double.parseDouble(extractNumber(s));
+		} else {
+			return Double.parseDouble(extractNumber(s));
+		}
+	}
 }
