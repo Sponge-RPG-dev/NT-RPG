@@ -33,13 +33,22 @@ public class ExecuteSkillExecutor implements CommandExecutor {
 
 		IActiveCharacter character;
 		SkillSettings defaultSkillSettings;
-		if (src instanceof CommandBlockSource) {
-			CommandBlockSource source = (CommandBlockSource) src;
-			Optional<Object> olocation = args.getOne("location");
-			Location location = source.getLocation();
-			if (olocation.isPresent()) {
-				String o = (String) olocation.get();
-				location = Utils.getLocationRelative(o, location);
+		if (!(src instanceof Player)) {
+			Location location = null;
+			if (src instanceof CommandBlockSource) {
+				CommandBlockSource source = (CommandBlockSource) src;
+				Optional<Object> olocation = args.getOne("loc");
+				location = source.getLocation();
+				if (olocation.isPresent()) {
+					String o = (String) olocation.get();
+					location = Utils.getLocationRelative(o, location);
+				}
+			} else {
+				Optional<String> olocation = args.getOne("loc");
+				if (!olocation.isPresent()) {
+					throw new CommandException(Text.of("Loc flag needs to be present"));
+				}
+				location = Utils.getLocationRelative(olocation.get());
 			}
 
 			Optional<String> head = args.getOne("head");
@@ -51,9 +60,19 @@ public class ExecuteSkillExecutor implements CommandExecutor {
 					Double.parseDouble(Utils.extractNumber(split[2]))
 				);
 			}).orElse(new Vector3d());
-			character = CommandblockSkillExecutor.wrap(source, location, headRotation);
+			character = CommandblockSkillExecutor.wrap(location, headRotation);
 
-			defaultSkillSettings = new SkillSettings();
+			defaultSkillSettings = args.<String>getOne("settings").map(o -> {
+                SkillSettings skillSettings = new SkillSettings();
+                String[] split = o.split(";");
+                for (String s : split) {
+                    String[] w = s.split(":");
+                    skillSettings.addNode(w[0], Float.parseFloat(w[1]),0f);
+                }
+                return skillSettings;
+            }).orElse(skill.getDefaultSkillSettings());
+
+
 		} else {
 			defaultSkillSettings = skill.getSettings();
 			Player player = (Player) src;

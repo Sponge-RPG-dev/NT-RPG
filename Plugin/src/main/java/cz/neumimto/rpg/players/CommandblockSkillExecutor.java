@@ -8,7 +8,6 @@ import org.spongepowered.api.advancement.AdvancementProgress;
 import org.spongepowered.api.advancement.AdvancementTree;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.command.source.CommandBlockSource;
 import org.spongepowered.api.data.*;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.manipulator.DataManipulator;
@@ -70,17 +69,15 @@ public class CommandblockSkillExecutor extends PreloadCharacter {
 
 
 	private static IReservable INFINITY_POOL = new InfinityPool();
-	private CommandBlockSource c;
 	private Player mock;
 
-	private CommandblockSkillExecutor(CommandBlockSource cb, Location<Extent> location, Vector3d headRotation) {
+	private CommandblockSkillExecutor(Location<Extent> location, Vector3d headRotation) {
 		super(null);
-		this.c = cb;
 		mock = new CommandblockPlayer(location, headRotation);
 	}
 
-	public static CommandblockSkillExecutor wrap(CommandBlockSource commandBlock, Location<Extent> location, Vector3d headRotation) {
-		return new CommandblockSkillExecutor(commandBlock, location, headRotation);
+	public static CommandblockSkillExecutor wrap(Location<Extent> location, Vector3d headRotation) {
+		return new CommandblockSkillExecutor(location, headRotation);
 	}
 
 	@Override
@@ -101,7 +98,7 @@ public class CommandblockSkillExecutor extends PreloadCharacter {
 
 	@Override
 	public Location<World> getLocation() {
-		return c.getLocation();
+		return mock.getLocation();
 	}
 
 	@Override

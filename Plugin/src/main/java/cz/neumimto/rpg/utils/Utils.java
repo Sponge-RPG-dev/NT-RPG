@@ -328,13 +328,22 @@ public class Utils {
 
 		s = split[1];
 		double y = original.getBlockY();
-		y = getSinglePoint(s, x);
+		y = getSinglePoint(s, y);
 
 		double z = original.getBlockZ();
-		z = getSinglePoint(s, x);
+		z = getSinglePoint(s, z);
 
 
 		return new Location(original.getExtent(), x, y, z);
+	}
+
+	public static Location getLocationRelative(String location) {
+		String[] split = location.split(";");
+		return new Location(Sponge.getServer().getWorld(split[0]).get(),
+				Double.parseDouble(split[1]),
+				Double.parseDouble(split[2]),
+				Double.parseDouble(split[3])
+		);
 	}
 
 	private static double getSinglePoint(String s, double n) {

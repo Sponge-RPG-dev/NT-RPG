@@ -49,9 +49,9 @@ public class SkillFireball extends ActiveSkill {
 		Player p = character.getPlayer();
 		World world = p.getWorld();
 		Entity optional = world.createEntity(EntityTypes.SNOWBALL, p.getLocation().getPosition()
-				.add(cos((p.getRotation().getX() - 90) % 360) * 0.2, 1.8, sin((p.getRotation().getX() - 90) % 360) * 0.2));
+				.add(cos((p.getHeadRotation().getX() - 90) % 360) * 0.2, 1.8, sin((p.getHeadRotation().getX() - 90) % 360) * 0.2));
 
-		Vector3d rotation = p.getRotation();
+		Vector3d rotation = p.getHeadRotation();
 		Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();
 		Snowball sb = (Snowball) optional;
 		sb.offer(Keys.VELOCITY, direction.mul(skillContext.getFloatNodeValue(SkillNodes.VELOCITY)));

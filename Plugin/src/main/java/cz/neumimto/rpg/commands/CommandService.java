@@ -77,9 +77,11 @@ public class CommandService {
 				.description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_EXEC_SKILL_DESC))
 				.arguments(
 						GenericArguments.catalogedElement(Text.of("skill"), ISkill.class),
-						GenericArguments.flags().valueFlag(
-								GenericArguments.integer(Text.of("level")), "l")
-								.buildWith(GenericArguments.none())
+						GenericArguments.flags().valueFlag(GenericArguments.string(Text.of("loc")), "1")
+							.valueFlag(GenericArguments.string(Text.of("loc")), "1")
+							.valueFlag(GenericArguments.string(Text.of("head")), "2")
+							.valueFlag(GenericArguments.string(Text.of("settings")), "3")
+						.buildWith(GenericArguments.none())
 				)
 				.executor(new ExecuteSkillExecutor())
 				.build();
