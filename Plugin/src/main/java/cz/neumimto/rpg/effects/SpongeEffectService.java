@@ -1,10 +1,7 @@
-package cz.neumimto.rpg.damage;
+package cz.neumimto.rpg.effects;
 
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.common.effects.EffectService;
-import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.events.effect.EffectApplyEvent;
 import cz.neumimto.rpg.events.effect.EffectRemoveEvent;
