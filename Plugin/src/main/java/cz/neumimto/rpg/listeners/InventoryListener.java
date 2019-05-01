@@ -95,7 +95,16 @@ public class InventoryListener {
         Hotbar query = inventory.query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
         int selectedSlotIndex = query.getSelectedSlotIndex();
 
-        inventoryHandler.handleCharacterUnEquipActionPost(character, null);
+        RpgInventory rpgInventory = character.getManagedInventory().get(inventory);
+        if (rpgInventory.getManagedSlots().containsKey(selectedSlotIndex)) {
+            ItemStackSnapshot itemStackSnapshot = droppedItems.get(0);
+            Optional<RpgItemStack> rpgItemStack = itemService.getRpgItemStack(itemStackSnapshot.createStack());
+            rpgItemStack.ifPresent(i -> {
+                ManagedSlot managedSlot = rpgInventory.getManagedSlots().get(selectedSlotIndex);
+                inventoryHandler.handleCharacterUnEquipActionPost(character, managedSlot);
+                character.setRequiresDamageRecalculation(true);
+            });
+        }
     }
 
     @Listener
