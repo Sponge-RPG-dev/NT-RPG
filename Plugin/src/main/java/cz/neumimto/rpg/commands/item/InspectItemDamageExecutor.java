@@ -90,9 +90,11 @@ public class InspectItemDamageExecutor implements CommandExecutor {
 		while (iterator.hasNext()) {
 			int integer = iterator.next();
 			String nameById = ps.getNameById(integer);
-			if (!nameById.endsWith("_mult")) {
+
+			if (nameById != null && !nameById.endsWith("_mult")) {
 				iterator.remove();
 			} else continue;
+
 			src.sendMessage(Text.of(TextColors.GRAY, "   - ", nameById, ":", es.getEntityProperty(character, integer)));
 		}
 		src.sendMessage(Text.of(TextColors.GRAY, "   - Mult: "));

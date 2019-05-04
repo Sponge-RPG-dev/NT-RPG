@@ -46,7 +46,6 @@ import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
@@ -87,7 +86,7 @@ public class InventoryListener {
         if (!player.getOpenInventory().isPresent()) {
             return;
         }
-        List<ItemStackSnapshot> droppedItems = event.getDroppedItems();
+
         IActiveCharacter character = characterService.getCharacter(player);
 
         CarriedInventory<? extends Carrier> inventory = player.getInventory();
@@ -95,13 +94,12 @@ public class InventoryListener {
         Hotbar query = inventory.query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
         int selectedSlotIndex = query.getSelectedSlotIndex();
 
-        RpgInventory rpgInventory = character.getManagedInventory().get(inventory);
+        RpgInventory rpgInventory = character.getManagedInventory().get(inventory.getClass());
         if (rpgInventory.getManagedSlots().containsKey(selectedSlotIndex)) {
-            ItemStackSnapshot itemStackSnapshot = droppedItems.get(0);
-            Optional<RpgItemStack> rpgItemStack = itemService.getRpgItemStack(itemStackSnapshot.createStack());
-            rpgItemStack.ifPresent(i -> {
-                ManagedSlot managedSlot = rpgInventory.getManagedSlots().get(selectedSlotIndex);
-                inventoryHandler.handleCharacterUnEquipActionPost(character, managedSlot);
+            ManagedSlot currentHand = rpgInventory.getManagedSlots().get(selectedSlotIndex);
+            Optional<RpgItemStack> content = currentHand.getContent();
+            content.ifPresent(i -> {
+                inventoryHandler.handleCharacterUnEquipActionPost(character, currentHand);
                 character.setRequiresDamageRecalculation(true);
             });
         }
