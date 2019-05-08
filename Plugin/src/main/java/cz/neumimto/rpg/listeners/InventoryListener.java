@@ -83,6 +83,7 @@ public class InventoryListener {
 
 	private final int OFFHAND_SLOT_ID = 40;
 
+
     @Listener
     @IsCancelled(Tristate.FALSE)
     public void onItemDrop(DropItemEvent.Pre event, @Root Player player) {
@@ -94,10 +95,11 @@ public class InventoryListener {
 
         CarriedInventory<? extends Carrier> inventory = player.getInventory();
 
+        RpgInventory rpgInventory = character.getManagedInventory().get(inventory.getClass());
+
         Hotbar query = inventory.query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
         int selectedSlotIndex = query.getSelectedSlotIndex();
 
-        RpgInventory rpgInventory = character.getManagedInventory().get(inventory);
         if (rpgInventory.getManagedSlots().containsKey(selectedSlotIndex)) {
             ItemStackSnapshot itemStackSnapshot = droppedItems.get(0);
             Optional<RpgItemStack> rpgItemStack = itemService.getRpgItemStack(itemStackSnapshot.createStack());
@@ -108,6 +110,7 @@ public class InventoryListener {
             });
         }
     }
+
 
     @Listener
     public void onHotbarInteract(HandInteractEvent event, @First(typeFilter = Player.class) Player player) {
@@ -158,9 +161,7 @@ public class InventoryListener {
         List<SlotTransaction> transactions = event.getTransactions();
         for (SlotTransaction transaction : transactions) {
             Optional<String> s = transaction.getOriginal().get(NKeys.COMMAND);
-            if (s.isPresent()) {
-                Sponge.getCommandManager().process(player, s.get());
-            }
+            s.ifPresent(value -> Sponge.getCommandManager().process(player, value));
             Optional<Boolean> aBoolean = transaction.getOriginal().get(NKeys.MENU_INVENTORY);
             if (aBoolean.isPresent()) {
                 if (aBoolean.get()) {
