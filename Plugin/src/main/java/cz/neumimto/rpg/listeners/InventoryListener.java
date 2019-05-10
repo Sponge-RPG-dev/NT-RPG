@@ -78,20 +78,23 @@ public class InventoryListener {
     @Inject
     private SpongeItemService itemService;
 
-	private final int OFFHAND_SLOT_ID = 40;
+	private final static int OFFHAND_SLOT_ID = 40;
 
+	static {
+
+    }
 
 	@Listener
     @IsCancelled(Tristate.FALSE)
     public void onItemPickup(ChangeInventoryEvent.Pickup event, @Root Player player) {
 	    player.getInventory();
-        Inventory targetInventory = event.getTargetInventory();
+        Inventory targetInventory = player.getInventory();
         IActiveCharacter character = characterService.getCharacter(player);
         if (character.isStub()) {
             return;
         }
+
         SlotTransaction slotTransaction = event.getTransactions().get(0);
-        Inventory parent = slotTransaction.getSlot().parent();
 
         RpgInventory rpgInventory = character.getManagedInventory().get(targetInventory.getClass());
         if (rpgInventory != null) {
@@ -143,6 +146,7 @@ public class InventoryListener {
                 ManagedSlot managedSlot = rpgInventory.getManagedSlots().get(selectedSlotIndex);
                 inventoryHandler.handleCharacterUnEquipActionPost(character, managedSlot);
                 character.setRequiresDamageRecalculation(true);
+                character.setMainHand(null, -1);
             });
         }
     }
