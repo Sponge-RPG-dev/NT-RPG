@@ -45,10 +45,7 @@ import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.Carrier;
-import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.ItemStackSnapshot;
-import org.spongepowered.api.item.inventory.Slot;
+import org.spongepowered.api.item.inventory.*;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
@@ -84,12 +81,51 @@ public class InventoryListener {
 	private final int OFFHAND_SLOT_ID = 40;
 
 
+	@Listener
+    @IsCancelled(Tristate.FALSE)
+    public void onItemPickup(ChangeInventoryEvent.Pickup event, @Root Player player) {
+	    player.getInventory();
+        Inventory targetInventory = event.getTargetInventory();
+        IActiveCharacter character = characterService.getCharacter(player);
+        if (character.isStub()) {
+            return;
+        }
+        SlotTransaction slotTransaction = event.getTransactions().get(0);
+        Inventory parent = slotTransaction.getSlot().parent();
+
+        RpgInventory rpgInventory = character.getManagedInventory().get(targetInventory.getClass());
+        if (rpgInventory != null) {
+
+
+
+            Slot slot = slotTransaction.getSlot();
+            Optional<SlotIndex> inventoryProperty = slot.transform().getInventoryProperty(SlotIndex.class);
+            SlotIndex slotIndex = inventoryProperty.get();
+            Integer value = slotIndex.getValue();
+            if (rpgInventory.getManagedSlots().containsKey(value)) {
+
+                Optional<RpgItemStack> rpgItemStack = itemService.getRpgItemStack(slotTransaction.getFinal().createStack());
+                rpgItemStack.ifPresent(itemStack -> {
+                    ManagedSlot managedSlot = rpgInventory.getManagedSlots().get(value);
+                    if (inventoryHandler.isValidItemForSlot(managedSlot, itemStack) &&
+                        inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, itemStack)) {
+                        inventoryHandler.handleCharacterEquipActionPost(character, managedSlot, itemStack);
+                        character.setRequiresDamageRecalculation(true);
+                    } else {
+                        event.setCancelled(true);
+                    }
+                });
+            }
+        }
+    }
+
     @Listener
     @IsCancelled(Tristate.FALSE)
     public void onItemDrop(DropItemEvent.Pre event, @Root Player player) {
         if (!player.getOpenInventory().isPresent()) {
             return;
         }
+
         List<ItemStackSnapshot> droppedItems = event.getDroppedItems();
         IActiveCharacter character = characterService.getCharacter(player);
 
