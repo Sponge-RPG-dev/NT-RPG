@@ -80,10 +80,6 @@ public class InventoryListener {
 
 	private final static int OFFHAND_SLOT_ID = 40;
 
-	static {
-
-    }
-
 	@Listener
     @IsCancelled(Tristate.FALSE)
     public void onItemPickup(ChangeInventoryEvent.Pickup event, @Root Player player) {
@@ -131,7 +127,9 @@ public class InventoryListener {
 
         List<ItemStackSnapshot> droppedItems = event.getDroppedItems();
         IActiveCharacter character = characterService.getCharacter(player);
-
+        if (character.isStub()) {
+            return;
+        }
         CarriedInventory<? extends Carrier> inventory = player.getInventory();
 
         RpgInventory rpgInventory = character.getManagedInventory().get(inventory.getClass());
