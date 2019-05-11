@@ -22,4 +22,11 @@ public interface F {
 
 		X accept(T t, U u, V v, W w);
 	}
+
+	@FunctionalInterface
+	interface PentaFunction<S, T, U, V, W, X> {
+
+		X accept(S s, T t, U u, V v, W w);
+	}
+
 }

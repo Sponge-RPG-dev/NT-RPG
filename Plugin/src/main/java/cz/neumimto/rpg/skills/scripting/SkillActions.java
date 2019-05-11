@@ -17,15 +17,18 @@ import org.spongepowered.api.effect.potion.PotionEffectType;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.api.logging.Log.info;
 
@@ -46,6 +49,36 @@ public class SkillActions {
 	public static F.QuadFunction<IEntity, IEntity, Number, SkillScriptContext, Boolean> DAMAGE = (caster, target, damage, context) -> {
 		SkillDamageSource s = new SkillDamageSourceBuilder()
 				.fromSkill(context.getSkill())
+				.setSource(caster)
+				.build();
+		return target.getEntity().damage(damage.doubleValue(), s);
+	};
+
+	@SkillComponent(
+			value = "Damaging an Entity with specific damage type",
+			usage = "damage(source, target, damage, type, context)",
+			params = {
+					@SkillComponent.Param("source - Entity of damage origin"),
+					@SkillComponent.Param("target - Entity to be damaged"),
+					@SkillComponent.Param("damage - damage value"),
+					@SkillComponent.Param("type - damage type"),
+					@SkillComponent.Param("context - skill context"),
+					@SkillComponent.Param("@returns - true if the damage was dealt"),
+			}
+	)
+	public static F.PentaFunction<IEntity, IEntity, Number, String, SkillScriptContext, Boolean> DAMAGE_WITH_TYPE = (caster, target, damage, damageType, context) -> {
+		Optional<DamageType> type = Sponge.getRegistry().getType(DamageType.class, damageType);
+		if (!type.isPresent()) {
+			throw new RuntimeException(
+					String.format("Unknown damage type %s, Use one of [%s]",
+						damageType,
+						Sponge.getRegistry().getAllOf(DamageType.class).stream().map(DamageType::getId).collect(Collectors.joining(", "))
+					)
+			);
+		}
+		SkillDamageSource s = new SkillDamageSourceBuilder()
+				.fromSkill(context.getSkill())
+				.type(type.get())
 				.setSource(caster)
 				.build();
 		return target.getEntity().damage(damage.doubleValue(), s);
