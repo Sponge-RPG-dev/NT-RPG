@@ -29,14 +29,12 @@ import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.configs.SkillsDefinition;
 import cz.neumimto.rpg.skills.pipeline.SkillComponent;
 import cz.neumimto.rpg.utils.FileUtils;
-import jdk.internal.dynalink.beans.StaticClass;
 import net.bytebuddy.dynamic.loading.MultipleParentClassLoader;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
-import org.spongepowered.api.event.Event;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -48,7 +46,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.*;
 import java.util.*;
-import java.util.function.Consumer;
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import static cz.neumimto.rpg.api.logging.Log.error;
@@ -209,12 +206,12 @@ public class JSLoader {
 
 	}
 
-	public void generateDynamicListener(Map<StaticClass, Set<Consumer<? extends Event>>> set) {
+	public void generateDynamicListener(List list) {
 		if (listener != null) {
 			info("Found JS listener: " + listener.getClass().getSimpleName() + " Unregistering");
 			Sponge.getGame().getEventManager().unregisterListeners(listener);
 		}
-		listener = classGenerator.generateDynamicListener(set);
+		listener = classGenerator.generateDynamicListener(list);
 		info("Registering js listener: " + listener.getClass().getSimpleName());
 		Sponge.getGame().getEventManager().registerListeners(ntRpgPlugin, listener);
 	}

@@ -17,13 +17,13 @@ var Optional = Java.type("com.google.common.base.Optional");
 /* https://wiki.openjdk.java.net/display/Nashorn/Nashorn+extensions */
 
 /* Also available:
-var IoC // cz.neumimto.core.ioc.IoC
 var Folder // java.nio.file.Path of scripts folder
 var GlobalScope // GlobalScope, containing characterService, effectService, entityService and others.
 See https://github.com/Sponge-RPG-dev/NT-RPG/blob/master/Plugin/src/main/java/cz/neumimto/rpg/GlobalScope.java
  */
 
-var events = new HashMap();
+var events = new ArrayList();
+
 var skills = new ArrayList();
 var globalEffects = new ArrayList();
 var attributes = new ArrayList();
@@ -73,13 +73,20 @@ function getLevelNode(extendedSkillInfo, node) {
     return extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node, extendedSkillInfo.getLevel());
 }
 
-function registerEventListener(eventclass, consumer) {
-    var cls = events.get(eventclass);
-    if (cls == null) {
-        cls = new HashSet();
-        events.put(eventclass, cls);
+function registerEventListener(eventData) {
+    if (eventData == null) {
+        log("Could not register Event listener defined via JS, parametr EventData is null")
+        return;
     }
-    cls.add(consumer);
+    if (eventData.consumer == null) {
+        log("Could not register Event listener defined via JS, parametr EventData.consumer is null")
+        return;
+    }
+    if (eventData.type == null) {
+        log("Could not register Event listener defined via JS, parametr EventData.type is null")
+        return;
+    }
+    events.add(eventData);
 }
 
 function registerAttributes() {
@@ -117,7 +124,7 @@ function registerGlobalEffects() {
 function generateListener() {
     if (!events.isEmpty()) {
         log("generateListener")
-        IoC.build(Java.type("cz.neumimto.rpg.scripting.JSLoader").class).generateDynamicListener(events);
+        GlobalScope.jsLoader.generateDynamicListener(events);
     }
     events.clear();
 }

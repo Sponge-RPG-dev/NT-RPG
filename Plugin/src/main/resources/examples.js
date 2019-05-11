@@ -69,8 +69,12 @@ registerSkill(Heal);
 registerSkill(SuperJump);
 registerSkill(SkillSpeed);
 
-registerEventListener(Java.type('org.spongepowered.api.event.entity.DamageEntityEvent'), new (Java.extend(Consumer, {
+var eventConsumer = new (Java.extend(Consumer, {
     accept: function (event) {
         log("Im Javascript event handler");
     }
-})));
+}))
+
+//Only "consumer" property in second parameter is mandatory
+var DamageEntityEvent = Java.type('org.spongepowered.api.event.entity.DamageEntityEvent')
+registerEventListener({type: DamageEntityEvent, consumer: eventConsumer, order:"BEFORE_POST", beforeModifications: true});

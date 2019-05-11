@@ -13,8 +13,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.LoggerFactory;
-import org.spongepowered.api.event.entity.DamageEntityEvent;
-import org.spongepowered.api.event.entity.MoveEntityEvent;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
@@ -33,12 +31,9 @@ public class Tests {
         ClassGenerator classGenerator = new ClassGenerator();
         try (InputStreamReader rs = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("js/eventgen/test.js"))) {
             engine.eval(rs);
-            HashMap map = (HashMap) engine.get("events");
-            Object o = classGenerator.generateDynamicListener(map);
-            DamageEntityEvent damageEntityEvent = Mockito.mock(DamageEntityEvent.class);
-            o.getClass().getMethod("onDamageEntityEvent", DamageEntityEvent.class).invoke(o, damageEntityEvent);
-            MoveEntityEvent moveEntityEvent = Mockito.mock(MoveEntityEvent.class);
-            o.getClass().getMethod("onMoveEntityEvent", MoveEntityEvent.class).invoke(o, moveEntityEvent);
+            List list = (List) engine.get("events");
+            Object o = classGenerator.generateDynamicListener(list);
+            Assertions.assertSame(o.getClass().getDeclaredMethods().length, 3);
         } catch (ScriptException | IOException e) {
             Assertions.fail(e.getMessage());
         }
