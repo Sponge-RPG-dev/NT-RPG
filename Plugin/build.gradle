@@ -22,8 +22,9 @@ dependencies {
     compileOnly 'com.github.rojo8399:PlaceholderAPI:4.5.1'
     annotationProcessor project(':Generator')
     compileOnly group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.1'
-    
 
+    compile 'com.scireum:parsii:1.5'
+    
     testCompile 'org.spongepowered:spongeapi:' + project.spongeApiVersion
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
