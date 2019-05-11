@@ -26,6 +26,9 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
+import cz.neumimto.rpg.api.inventory.ManagedSlot;
+import cz.neumimto.rpg.api.inventory.RpgInventory;
+import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
@@ -55,12 +58,16 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
+import org.spongepowered.api.item.inventory.property.SlotIndex;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.text.Text;
 
 import javax.inject.Inject;
@@ -171,8 +178,29 @@ public class SpongeInventoryService extends AbstractInventoryService {
 
 	public void initializeCharacterInventory(IActiveCharacter character) {
         if (inventoryInteractionHandler.handleInventoryInitializationPre(character)) {
+        	fillInventory(character);
             inventoryInteractionHandler.handleInventoryInitializationPost(character);
         }
+	}
+
+	private void fillInventory(IActiveCharacter character) {
+		Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
+		Player player = character.getPlayer();
+		for (Map.Entry<Class<?>, RpgInventory> e : managedInventory.entrySet()) {
+			Class<?> key = e.getKey();
+			Inventory query = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of((Class<? extends Inventory>) key));
+			RpgInventory rInv = e.getValue();
+			for (Map.Entry<Integer, ManagedSlot> rInvE : rInv.getManagedSlots().entrySet()) {
+				Inventory slot = query.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(rInvE.getKey())));
+				Optional<ItemStack> content = slot.peek();
+				if (content.isPresent()) {
+					Optional<RpgItemStack> rpgItemStack = itemService.getRpgItemStack(content.get());
+					if (rpgItemStack.isPresent()) {
+						rInvE.getValue().setContent(rpgItemStack.get());
+					}
+				}
+			}
+		}
 	}
 
 	public void dropItem(IActiveCharacter character, ItemStack is, CannotUseItemReason reason) {

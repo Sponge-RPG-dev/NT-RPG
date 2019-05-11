@@ -111,4 +111,5 @@ public class InventoryHandler implements CharacterInventoryInteractionHandler {
     public boolean isValidItemForSlot(ManagedSlot futureSlot, RpgItemStack rpgItemStack) {
         return futureSlot.getFilter().test(rpgItemStack.getItemType().getWeaponClass());
     }
+
 }

@@ -8,7 +8,7 @@ import cz.neumimto.rpg.commands.CommandService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.damage.DamageService;
-import cz.neumimto.rpg.damage.SpongeEffectService;
+import cz.neumimto.rpg.effects.SpongeEffectService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.MobSettingsDao;
 import cz.neumimto.rpg.exp.ExperienceDAO;
