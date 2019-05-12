@@ -134,7 +134,7 @@ public class SkillManipulationTests {
         characterBase = new CharacterBase();
         characterBase.getCharacterClasses().add(characterClass);
 
-        character = new ActiveCharacter(UUID.randomUUID(), characterBase);
+        character = new ActiveCharacter(UUID.randomUUID(), characterBase, 0);
 
         playerClassData = new PlayerClassData(classDefinition, characterClass);
         character.addClass(playerClassData);

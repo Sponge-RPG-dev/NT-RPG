@@ -33,7 +33,7 @@ import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
 import cz.neumimto.rpg.configuration.Localizations;
-import cz.neumimto.rpg.damage.DamageService;
+import cz.neumimto.rpg.damage.SpongeDamageService;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.ItemLoreBuilderService;
 import cz.neumimto.rpg.inventory.data.NKeys;
@@ -108,7 +108,7 @@ public class SpongeInventoryService extends AbstractInventoryService {
 	private EffectService effectService;
 
 	@Inject
-	private DamageService damageService;
+	private SpongeDamageService spongeDamageService;
 
 	@Inject
 	private RWService rwService;

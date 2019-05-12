@@ -29,7 +29,7 @@ import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.configuration.Localizations;
-import cz.neumimto.rpg.damage.DamageService;
+import cz.neumimto.rpg.damage.SpongeDamageService;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
@@ -112,7 +112,7 @@ public class VanillaMessaging implements IPlayerMessage {
     @Inject
     private InfoCommand infoCommand;
     @Inject
-    private DamageService damageService;
+    private SpongeDamageService spongeDamageService;
     @Inject
     private CharacterService characterService;
     @Inject

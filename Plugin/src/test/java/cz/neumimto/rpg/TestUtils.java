@@ -1,8 +1,6 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.EventManager;
@@ -30,11 +28,6 @@ public class TestUtils {
 
     static {
         game = buildGameImpl();
-    }
-
-    public static IActiveCharacter buildCharacter(UUID player, CharacterBase characterBase) {
-        ActiveCharacter character = new ActiveCharacter(player, characterBase);
-        return character;
     }
 
     public static EntityManager buildEntityManager() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {

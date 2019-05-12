@@ -33,7 +33,7 @@ public abstract class PropertyServiceImpl implements PropertyService {
 
     private Set<Integer> damageRecalc = new HashSet<>();
 
-    private float[] maxValues;
+    protected float[] maxValues;
 
 
     public void registerProperty(String name, int id) {

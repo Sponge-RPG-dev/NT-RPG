@@ -1,13 +1,14 @@
 package cz.neumimto.rpg;
 
 import com.google.inject.AbstractModule;
+import cz.neumimto.rpg.api.DamageService;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.commands.CommandService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
-import cz.neumimto.rpg.damage.DamageService;
+import cz.neumimto.rpg.damage.SpongeDamageService;
 import cz.neumimto.rpg.effects.SpongeEffectService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.MobSettingsDao;
@@ -48,7 +49,7 @@ public class NtRpgGuiceModule extends AbstractModule {
         bind(GlobalScope.class);
         bind(ResourceLoader.class);
         bind(CommandService.class);
-        bind(DamageService.class);
+        bind(DamageService.class).to(SpongeDamageService.class);
         bind(EffectService.class).to(SpongeEffectService.class);
         bind(EntityService.class);
         bind(MobSettingsDao.class);
@@ -58,7 +59,6 @@ public class NtRpgGuiceModule extends AbstractModule {
         bind(ItemLoreBuilderService.class);
         bind(ParticleDecorator.class);
         bind(VanillaMessaging.class);
-        bind(SpongeInventoryService.class);
         bind(ItemService.class).to(SpongeItemService.class);
         bind(CharacterInventoryInteractionHandler.class).to(InventoryHandler.class);
         bind(InventoryService.class).to(SpongeInventoryService.class);

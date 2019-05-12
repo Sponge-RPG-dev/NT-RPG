@@ -4,7 +4,7 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.items.WeaponClass;
-import cz.neumimto.rpg.damage.DamageService;
+import cz.neumimto.rpg.damage.SpongeDamageService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.inventory.SpongeItemService;
 import cz.neumimto.rpg.players.CharacterService;
@@ -65,7 +65,7 @@ public class InspectItemDamageExecutor implements CommandExecutor {
 			src.sendMessage(text);
 		}
 		src.sendMessage(Text.of(TextColors.GOLD, "=================="));
-		DamageService ds = NtRpgPlugin.GlobalScope.damageService;
+		SpongeDamageService ds = NtRpgPlugin.GlobalScope.damageService;
 		CharacterService cs = NtRpgPlugin.GlobalScope.characterService;
 		EntityService es = NtRpgPlugin.GlobalScope.entityService;
 		SpongePropertyService ps = NtRpgPlugin.GlobalScope.spongePropertyService;

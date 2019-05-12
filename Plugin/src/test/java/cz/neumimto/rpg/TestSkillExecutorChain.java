@@ -72,7 +72,7 @@ public class TestSkillExecutorChain {
         objectObjectHashMap.put(agi.getId(), 0);
         TestUtils.setField(characterBase, "cachedAttributes", objectObjectHashMap);
 
-        activeCharacter = new ActiveCharacter(UUID.randomUUID(), characterBase);
+        activeCharacter = new ActiveCharacter(UUID.randomUUID(), characterBase, 0);
 
 
     }

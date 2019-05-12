@@ -24,9 +24,10 @@ import cz.neumimto.rpg.api.ActionResult;
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.Localizations;
-import cz.neumimto.rpg.damage.DamageService;
+import cz.neumimto.rpg.damage.SpongeDamageService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.effects.common.def.ClickComboActionComponent;
 import cz.neumimto.rpg.effects.common.def.CombatEffect;
@@ -92,7 +93,7 @@ public abstract class CharacterService {
     public EntityService entityService;
 
     @Inject
-    private DamageService damageService;
+    private SpongeDamageService spongeDamageService;
 
     @Inject
     private SpongePropertyService spongePropertyService;
@@ -311,7 +312,7 @@ public abstract class CharacterService {
         }
 
         spongeInventoryService.initializeCharacterInventory(character);
-        damageService.recalculateCharacterWeaponDamage(character);
+        spongeDamageService.recalculateCharacterWeaponDamage(character);
 
 
         updateMaxHealth(character);
@@ -522,7 +523,7 @@ public abstract class CharacterService {
      */
     public ActiveCharacter createActiveCharacter(UUID player, CharacterBase characterBase) {
         characterBase = playerDao.fetchCharacterBase(characterBase);
-        ActiveCharacter activeCharacter = new ActiveCharacter(player, characterBase);
+        ActiveCharacter activeCharacter = new ActiveCharacter(player, characterBase, PropertyServiceImpl.LAST_ID);
         Set<String> strings = spongePropertyService.getAttributes().keySet();
         for (String string : strings) {
             activeCharacter.getTransientAttributes().put(string, 0);

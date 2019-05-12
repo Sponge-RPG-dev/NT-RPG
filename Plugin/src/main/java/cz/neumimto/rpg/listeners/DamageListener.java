@@ -4,8 +4,8 @@ import com.google.inject.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.items.RpgItemStack;
-import cz.neumimto.rpg.damage.DamageService;
 import cz.neumimto.rpg.damage.SkillDamageSource;
+import cz.neumimto.rpg.damage.SpongeDamageService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.entities.IEntityType;
@@ -35,7 +35,7 @@ import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 public class DamageListener {
 
 	@Inject
-	private DamageService damageService;
+	private SpongeDamageService spongeDamageService;
 
 	@Inject
 	private EntityService entityService;
@@ -105,7 +105,7 @@ public class DamageListener {
 			IActiveCharacter character = (IActiveCharacter) attacker;
 			if (character.requiresDamageRecalculation()) {
 				RpgItemStack mainHand = character.getMainHand();
-				damageService.recalculateCharacterWeaponDamage(character, mainHand);
+				spongeDamageService.recalculateCharacterWeaponDamage(character, mainHand);
 				character.setRequiresDamageRecalculation(false);
 			}
 			newdamage = character.getWeaponDamage();
@@ -114,7 +114,7 @@ public class DamageListener {
 				newdamage = entityService.getMobDamage(attacker.getEntity());
 			}
 		}
-		newdamage *= damageService.getEntityDamageMult(attacker, source.getType());
+		newdamage *= spongeDamageService.getEntityDamageMult(attacker, source.getType());
 
 		IEntityWeaponDamageEarlyEvent e = new IEntityWeaponDamageEarlyEvent(target, newdamage);
 		e.setCause(causeStackManager.getCurrentCause());
@@ -129,7 +129,7 @@ public class DamageListener {
 
 	private void processWeaponDamageLate(DamageEntityEvent event, EntityDamageSource source, IEntity attacker, IEntity target) {
 		double newdamage = event.getBaseDamage();
-		newdamage *= damageService.getEntityResistance(target, source.getType());
+		newdamage *= spongeDamageService.getEntityResistance(target, source.getType());
 
 		IEntityWeaponDamageLateEvent e = new IEntityWeaponDamageLateEvent(target, newdamage);
 		e.setCause(causeStackManager.getCurrentCause());
@@ -152,7 +152,7 @@ public class DamageListener {
 				type = c.getDamageType();
 			}
 		}
-		double newdamage = event.getBaseDamage() * damageService.getEntityDamageMult(attacker, type);
+		double newdamage = event.getBaseDamage() * spongeDamageService.getEntityDamageMult(attacker, type);
 
 		try (CauseStackManager.StackFrame frame = causeStackManager.pushCauseFrame()) {
 			if (effect != null) {
@@ -187,7 +187,7 @@ public class DamageListener {
 			if (skill != null) {
 				causeStackManager.pushCause(skill);
 			}
-			newdamage *= damageService.getEntityResistance(target, type);
+			newdamage *= spongeDamageService.getEntityResistance(target, type);
 
 			IEntitySkillDamageLateEvent e = new IEntitySkillDamageLateEvent(target, skill, newdamage);
 			e.setCause(causeStackManager.getCurrentCause());
@@ -205,7 +205,7 @@ public class DamageListener {
 		double newdamage = event.getBaseDamage();
 		if (attacker.getType() == IEntityType.CHARACTER) {
 			IActiveCharacter c = (IActiveCharacter) attacker;
-			newdamage = damageService.getCharacterProjectileDamage(c, projectile.getType());
+			newdamage = spongeDamageService.getCharacterProjectileDamage(c, projectile.getType());
 		} else if (attacker.getType() == IEntityType.MOB) {
 			if (!pluginConfig.OVERRIDE_MOBS) {
 				newdamage = entityService.getMobDamage(attacker.getEntity());
@@ -225,7 +225,7 @@ public class DamageListener {
 
 	private void processProjectileDamageLate(DamageEntityEvent event, IndirectEntityDamageSource source, IEntity attacker, IEntity target, Projectile projectile) {
 		double newdamage = event.getBaseDamage();
-		newdamage *= damageService.getEntityResistance(target, source.getType());
+		newdamage *= spongeDamageService.getEntityResistance(target, source.getType());
 
 		IEntityProjectileDamageLateEvent hit = new IEntityProjectileDamageLateEvent(target, newdamage, projectile);
 		hit.setCause(causeStackManager.getCurrentCause());

@@ -1,12 +1,12 @@
 package cz.neumimto.rpg.entities;
 
 import cz.neumimto.rpg.api.IRpgElement;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.events.skill.SkillHealEvent;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.properties.DefaultProperties;
-import cz.neumimto.rpg.properties.SpongePropertyService;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
@@ -15,6 +15,7 @@ import org.spongepowered.api.entity.living.Living;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
@@ -35,7 +36,7 @@ public class EntityService {
 	private MobSettingsDao dao;
 
 	@Inject
-	private SpongePropertyService spongePropertyService;
+	private PropertyService spongePropertyService;
 
 	@Inject
 	private CharacterService characterService;
@@ -115,7 +116,7 @@ public class EntityService {
 	/**
 	 * Unlike {@link IEntity#getProperty} this method checks for maximal allowed value, defined in config file.
 	 *
-	 * @see SpongePropertyService#loadMaximalServerPropertyValues()
+	 * @see PropertyService#loadMaximalServerPropertyValues(Path) ()
 	 */
 	public float getEntityProperty(IEffectConsumer entity, int id) {
 		return Math.min(entity.getProperty(id), spongePropertyService.getMaxPropertyValue(id));

@@ -6,7 +6,7 @@ import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.configuration.Localizations;
-import cz.neumimto.rpg.damage.DamageService;
+import cz.neumimto.rpg.damage.SpongeDamageService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.gui.GuiHelper;
 import cz.neumimto.rpg.players.IActiveCharacter;
@@ -35,14 +35,14 @@ public class PropertySkill extends AbstractSkill {
 
 	private SpongePropertyService spongePropertyService;
 
-	private DamageService damageService;
+	private SpongeDamageService spongeDamageService;
 
 	private EntityService entityService;
 
 	public PropertySkill() {
 		super();
 		spongePropertyService = NtRpgPlugin.GlobalScope.spongePropertyService;
-		damageService = NtRpgPlugin.GlobalScope.damageService;
+		spongeDamageService = NtRpgPlugin.GlobalScope.damageService;
 		entityService = NtRpgPlugin.GlobalScope.entityService;
 	}
 
@@ -88,7 +88,7 @@ public class PropertySkill extends AbstractSkill {
 				} else if (property.propertyId == DefaultProperties.max_mana) {
 					characterService.updateMaxMana(character);
 				} else if (spongePropertyService.updatingRequiresDamageRecalc(property.propertyId)) {
-					damageService.recalculateCharacterWeaponDamage(character);
+					spongeDamageService.recalculateCharacterWeaponDamage(character);
 				}
 			}
 		}

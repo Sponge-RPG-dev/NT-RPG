@@ -3,14 +3,17 @@ package cz.neumimto.rpg.junit;
 import com.google.inject.AbstractModule;
 import cz.neumimto.core.localization.LocalizationService;
 import cz.neumimto.rpg.*;
+import cz.neumimto.rpg.api.DamageService;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.commands.CommandService;
 import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.common.entity.TestPropertyService;
 import cz.neumimto.rpg.common.impl.TestItemService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
-import cz.neumimto.rpg.damage.DamageService;
+import cz.neumimto.rpg.damage.SpongeDamageService;
 import cz.neumimto.rpg.effects.TestEffectService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.MobSettingsDao;
@@ -27,7 +30,6 @@ import cz.neumimto.rpg.persistance.*;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.SpongeCharacterService;
 import cz.neumimto.rpg.players.parties.PartyService;
-import cz.neumimto.rpg.properties.SpongePropertyService;
 import cz.neumimto.rpg.skills.SkillService;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
@@ -40,7 +42,7 @@ public class TestGuiceModule extends AbstractModule {
         @Override
         protected void configure() {
         bind(SkillService.class);
-        bind(SpongePropertyService.class);
+        bind(PropertyService.class).to(TestPropertyService.class);
         bind(PartyService.class);
         bind(CharacterService.class).to(SpongeCharacterService.class);
 
@@ -56,7 +58,7 @@ public class TestGuiceModule extends AbstractModule {
         bind(GlobalScope.class);
         bind(ResourceLoader.class);
         bind(CommandService.class);
-        bind(DamageService.class);
+        bind(DamageService.class).to(SpongeDamageService.class);
         bind(EffectService.class).to(TestEffectService.class);
         bind(EntityService.class);
         bind(MobSettingsDao.class);

@@ -26,7 +26,6 @@ import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
-import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.entities.IReservable;
@@ -124,17 +123,17 @@ public class ActiveCharacter implements IActiveCharacter {
 	private boolean requiresDamageRecalculation;
 	private int lastHotbarSlotInteraction = -1;
 
-	public ActiveCharacter(UUID uuid, CharacterBase base) {
+	public ActiveCharacter(UUID uuid, CharacterBase base, int propertyCount) {
 		this.pl = uuid;
-		this.primaryProperties = new float[PropertyServiceImpl.LAST_ID];
-		this.secondaryProperties = new float[PropertyServiceImpl.LAST_ID];
+		this.primaryProperties = new float[propertyCount];
+		this.secondaryProperties = new float[propertyCount];
 		this.base = base;
 		this.skills = new PlayerSkillHandlers.SHARED();
 		this.slotsToReinitialize = new ArrayList<>();
 		this.skillTreeViewLocation = new HashMap<>();
 		this.denySlotInteractionArr = new HashSet<>();
 		this.inventory = new HashMap<>();
-		requiresDamageRecalculation = true;
+		this.requiresDamageRecalculation = true;
 	}
 
 	@Override

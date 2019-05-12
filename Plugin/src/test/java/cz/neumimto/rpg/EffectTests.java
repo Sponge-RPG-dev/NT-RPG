@@ -49,7 +49,7 @@ public class EffectTests {
     public void before() throws Exception{
         processedEffects = effectService.getEffects();
         characterBase = new CharacterBase();
-        character = new ActiveCharacter(UUID.randomUUID(), characterBase);
+        character = new ActiveCharacter(UUID.randomUUID(), characterBase, 1);
 
         effect = createEffectMock("test");
 

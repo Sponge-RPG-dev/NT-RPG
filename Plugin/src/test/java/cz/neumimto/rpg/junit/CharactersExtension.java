@@ -2,6 +2,7 @@ package cz.neumimto.rpg.junit;
 
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.items.WeaponClass;
+import cz.neumimto.rpg.common.entity.TestPropertyService;
 import cz.neumimto.rpg.common.inventory.FilteredManagedSlotImpl;
 import cz.neumimto.rpg.common.inventory.RpgInventoryImpl;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
@@ -48,7 +49,8 @@ public class CharactersExtension implements ParameterResolver {
 
     private IActiveCharacter initializedCharacter() {
         CharacterBase characterBase = new CharacterBase();
-        ActiveCharacter activeCharacter = new ActiveCharacter(UUID.randomUUID(), characterBase);
+
+        ActiveCharacter activeCharacter = new ActiveCharacter(UUID.randomUUID(), characterBase, TestPropertyService.LAST_ID);
 
 
         CharacterClass primaryCC = new CharacterClass();

@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface PropertyService {
+
     void init(Path attributeConf, Path propertiesDump);
 
     void reLoadAttributes(Path attributeFilePath);
@@ -39,6 +40,7 @@ public interface PropertyService {
     void addPropertyToRequiresDamageRecalc(int i);
 
     void loadMaximalServerPropertyValues(Path path);
+
     Optional<Attribute> getAttributeById(String attribute);
 
     Map<String, Attribute> getAttributes();

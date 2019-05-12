@@ -21,7 +21,7 @@ package cz.neumimto.rpg;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.commands.CommandService;
 import cz.neumimto.rpg.common.effects.EffectService;
-import cz.neumimto.rpg.damage.DamageService;
+import cz.neumimto.rpg.damage.SpongeDamageService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.ParticleDecorator;
@@ -67,7 +67,7 @@ public class GlobalScope {
 	public Game game;
 
 	@Inject
-	public DamageService damageService;
+	public SpongeDamageService damageService;
 
 	@Inject
 	public SpongeInventoryService inventorySerivce;

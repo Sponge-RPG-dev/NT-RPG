@@ -96,10 +96,8 @@ public class InventoryListener {
         SlotTransaction slotTransaction = event.getTransactions().get(0);
 
         RpgInventory rpgInventory = character.getManagedInventory().get(targetInventory.getClass());
+
         if (rpgInventory != null) {
-
-
-
             Slot slot = slotTransaction.getSlot();
             Optional<SlotIndex> inventoryProperty = slot.transform().getInventoryProperty(SlotIndex.class);
             SlotIndex slotIndex = inventoryProperty.get();
@@ -329,5 +327,7 @@ public class InventoryListener {
 
         character.setRequiresDamageRecalculation(true);
     }
+
+
 
 }

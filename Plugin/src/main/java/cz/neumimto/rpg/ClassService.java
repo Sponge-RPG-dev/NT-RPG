@@ -19,7 +19,7 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.damage.DamageService;
+import cz.neumimto.rpg.damage.SpongeDamageService;
 import cz.neumimto.rpg.persistance.ClassDefinitionDao;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
@@ -43,7 +43,7 @@ public class ClassService {
 	private static final String CLASS_ACCESS_PERM = "ntrpg.class.";
 
 	@Inject
-	private DamageService damageService;
+	private SpongeDamageService spongeDamageService;
 
 	@Inject
 	private ClassDefinitionDao classDefinitionDao;
@@ -62,7 +62,7 @@ public class ClassService {
 	}
 
 	public void registerPlaceholders() {
-		damageService.createDamageToColorMapping();
+		spongeDamageService.createDamageToColorMapping();
 	}
 
 	public boolean existsClass(String s) {

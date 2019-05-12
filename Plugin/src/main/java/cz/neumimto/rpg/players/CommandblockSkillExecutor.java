@@ -234,6 +234,11 @@ public class CommandblockSkillExecutor extends PreloadCharacter {
 		}
 
 		@Override
+		public Optional<Container> openInventory(Inventory inventory, Text displayName) {
+			return Optional.empty();
+		}
+
+		@Override
 		public boolean closeInventory() throws IllegalArgumentException {
 			return false;
 		}
@@ -618,6 +623,21 @@ public class CommandblockSkillExecutor extends PreloadCharacter {
 		}
 
 		@Override
+		public Vector3d getPosition() {
+			return null;
+		}
+
+		@Override
+		public Optional<UUID> getWorldUniqueId() {
+			return Optional.empty();
+		}
+
+		@Override
+		public boolean setLocation(Vector3d position, UUID world) {
+			return false;
+		}
+
+		@Override
 		public boolean validateRawData(DataView container) {
 			return false;
 		}
@@ -849,4 +869,5 @@ public class CommandblockSkillExecutor extends PreloadCharacter {
 			return null;
 		}
 	}
+
 }
