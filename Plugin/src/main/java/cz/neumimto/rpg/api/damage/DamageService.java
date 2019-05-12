@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.api;
+package cz.neumimto.rpg.api.damage;
 
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;

@@ -1,7 +1,7 @@
 package cz.neumimto.rpg;
 
 import com.google.inject.AbstractModule;
-import cz.neumimto.rpg.api.DamageService;
+import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.items.ItemService;
