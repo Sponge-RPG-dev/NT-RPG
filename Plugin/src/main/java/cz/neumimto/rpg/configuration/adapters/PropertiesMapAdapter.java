@@ -34,7 +34,19 @@ public class PropertiesMapAdapter implements TypeSerializer<Map<Integer, Float>>
 
     @Override
     public void serialize(TypeToken<?> type, @Nullable Map<Integer, Float> obj, ConfigurationNode value) throws ObjectMappingException {
-
+        if (obj == null) {
+            return;
+        }
+        Map<String, Float> floatMap = new HashMap<>();
+        for (Map.Entry<Integer, Float> integerFloatEntry : obj.entrySet()) {
+            Integer key = integerFloatEntry.getKey();
+            String nameById = NtRpgPlugin.GlobalScope.spongePropertyService.getNameById(key);
+            if (nameById == null) {
+                continue;
+            }
+            floatMap.put(nameById, integerFloatEntry.getValue());
+        }
+        value.setValue(floatMap);
     }
 
 }
