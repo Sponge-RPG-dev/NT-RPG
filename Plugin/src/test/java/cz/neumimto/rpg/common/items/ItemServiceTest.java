@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.common.items;
 
+import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.items.RpgItemType;
-import cz.neumimto.rpg.api.items.WeaponClass;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
@@ -38,17 +38,17 @@ public class ItemServiceTest {
 
     @Test
     public void registerWeaponClass() {
-        WeaponClass weaponClass = new WeaponClass("test");
-        itemService.registerWeaponClass(weaponClass);
+        ItemClass itemClass = new ItemClass("test");
+        itemService.registerWeaponClass(itemClass);
         Assertions.assertTrue(itemService.getWeaponClassByName("test").isPresent());
     }
 
     @Test
     public void registerWeaponClassSubClassesExists() {
-        WeaponClass weaponClass = new WeaponClass("test");
-        WeaponClass ts = new WeaponClass("testsub");
-        weaponClass.getSubClass().add(ts);
-        itemService.registerWeaponClass(weaponClass);
+        ItemClass itemClass = new ItemClass("test");
+        ItemClass ts = new ItemClass("testsub");
+        itemClass.getSubClass().add(ts);
+        itemService.registerWeaponClass(itemClass);
 
         Assertions.assertTrue(itemService.getWeaponClassByName("test").isPresent());
         Assertions.assertTrue(itemService.getWeaponClassByName("testsub").isPresent());
@@ -60,14 +60,14 @@ public class ItemServiceTest {
         File file = new File(classLoader.getResource("testconfig/ItemGroups.conf").getFile());
         itemService.loadItemGroups(Paths.get(file.getPath()));
 
-        Optional<WeaponClass> blades = itemService.getWeaponClassByName("Blades");
+        Optional<ItemClass> blades = itemService.getWeaponClassByName("Blades");
         Assertions.assertTrue(blades.isPresent());
-        WeaponClass weaponClass = blades.get();
-        Assertions.assertEquals(2, weaponClass.getSubClass().size());
+        ItemClass itemClass = blades.get();
+        Assertions.assertEquals(2, itemClass.getSubClass().size());
 
         boolean cFound = false;
         boolean bFound = false;
-        for (WeaponClass subClass : weaponClass.getSubClass()) {
+        for (ItemClass subClass : itemClass.getSubClass()) {
 
             if (subClass.getName().equalsIgnoreCase("Cleaving")) {
                 Assertions.assertEquals(5, subClass.getItems().size());

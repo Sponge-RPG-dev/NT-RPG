@@ -1,19 +1,19 @@
 package cz.neumimto.rpg.common.inventory;
 
-import cz.neumimto.rpg.api.items.WeaponClass;
+import cz.neumimto.rpg.api.items.ItemClass;
 
 import java.util.function.Predicate;
 
 public class FilteredManagedSlotImpl extends ManagedSlotImpl {
-    private final Predicate<WeaponClass> filter;
+    private final Predicate<ItemClass> filter;
 
-    public FilteredManagedSlotImpl(int id, Predicate<WeaponClass> filter) {
+    public FilteredManagedSlotImpl(int id, Predicate<ItemClass> filter) {
         super(id);
         this.filter = filter;
     }
 
     @Override
-    public Predicate<WeaponClass> getFilter() {
+    public Predicate<ItemClass> getFilter() {
         return filter;
     }
 }

@@ -1,16 +1,16 @@
 package cz.neumimto.rpg.common.items;
 
+import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.RpgItemType;
-import cz.neumimto.rpg.api.items.WeaponClass;
 
 public class RpgItemTypeImpl implements RpgItemType {
 
-    protected WeaponClass weaponClass;
+    protected ItemClass itemClass;
     protected double damage,armor;
     protected String id, modelName;
 
-    public RpgItemTypeImpl(String id, String modelName, WeaponClass weaponClass, double damage, double armor) {
-        this.weaponClass = weaponClass;
+    public RpgItemTypeImpl(String id, String modelName, ItemClass itemClass, double damage, double armor) {
+        this.itemClass = itemClass;
         this.damage = damage;
         this.armor = armor;
         this.id = id;
@@ -18,8 +18,8 @@ public class RpgItemTypeImpl implements RpgItemType {
     }
 
     @Override
-    public WeaponClass getWeaponClass() {
-        return weaponClass;
+    public ItemClass getItemClass() {
+        return itemClass;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class RpgItemTypeImpl implements RpgItemType {
     @Override
     public String toString() {
         return "RpgItemTypeImpl{" +
-                "weaponClass=" + weaponClass +
+                "itemClass=" + itemClass +
                 ", id='" + id + '\'' +
                 '}';
     }

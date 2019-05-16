@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.items;
 
-import cz.neumimto.rpg.api.items.WeaponClass;
+import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.common.items.RpgItemTypeImpl;
 import org.spongepowered.api.item.ItemType;
 
@@ -8,8 +8,8 @@ public final class SpongeRpgItemType extends RpgItemTypeImpl {
 
     private final ItemType itemType;
 
-    public SpongeRpgItemType(String id, String modelName, WeaponClass weaponClass, double damage, double armor, ItemType itemType) {
-        super(id, modelName, weaponClass, damage, armor);
+    public SpongeRpgItemType(String id, String modelName, ItemClass itemClass, double damage, double armor, ItemType itemType) {
+        super(id, modelName, itemClass, damage, armor);
         this.itemType = itemType;
     }
 

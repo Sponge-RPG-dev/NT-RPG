@@ -1,42 +1,49 @@
 package cz.neumimto.rpg.api.items;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Created by NeumimTo on 29.4.2018.
  */
-public class WeaponClass {
+public class ItemClass {
 
-	public static final WeaponClass ARMOR = new WeaponClass("Armor");
+	public static final ItemClass ARMOR = new ItemClass("Armor");
 
-	public static final WeaponClass SHIELD = new WeaponClass("Shield");
+	public static final ItemClass SHIELD = new ItemClass("Shield");
+
+	public static final ItemClass ACCESSORY = new ItemClass("Accessory");
 
 	static {
 		SHIELD.parent = ARMOR;
+		ACCESSORY.items = Collections.emptySet();
+		ACCESSORY.properties = Collections.emptySet();
+		ACCESSORY.propertiesMults = Collections.emptySet();
+		ACCESSORY.subClass = Collections.emptySet();
 	}
 
 	private final String name;
 
-	private Set<WeaponClass> subClass = new HashSet<>();
+	private Set<ItemClass> subClass = new HashSet<>();
 
 	private Set<RpgItemType> items = new HashSet<>();
 
-	private WeaponClass parent;
+	private ItemClass parent;
 
 	private Set<Integer> properties = new HashSet<>();
 
 	private Set<Integer> propertiesMults = new HashSet<>();
 
-	public WeaponClass(String name) {
+	public ItemClass(String name) {
 		this.name = name;
 	}
 
-	public Set<WeaponClass> getSubClass() {
+	public Set<ItemClass> getSubClass() {
 		return subClass;
 	}
 
-	public void setSubClass(Set<WeaponClass> subClass) {
+	public void setSubClass(Set<ItemClass> subClass) {
 		this.subClass = subClass;
 	}
 
@@ -56,11 +63,11 @@ public class WeaponClass {
 		this.properties = properties;
 	}
 
-	public WeaponClass getParent() {
+	public ItemClass getParent() {
 		return parent;
 	}
 
-	public void setParent(WeaponClass parent) {
+	public void setParent(ItemClass parent) {
 		this.parent = parent;
 	}
 
@@ -74,7 +81,7 @@ public class WeaponClass {
 
 	@Override
 	public String toString() {
-		return "WeaponClass{" +
+		return "ItemClass{" +
 				"name='" + name + '\'' +
 				'}';
 	}

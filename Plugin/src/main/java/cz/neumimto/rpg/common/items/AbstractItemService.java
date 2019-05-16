@@ -27,23 +27,23 @@ public abstract class AbstractItemService implements ItemService {
 
     protected Map<String, RpgItemType> items = new HashMap<>();
 
-    protected Map<String, WeaponClass> weaponClassMap = new HashMap<>();
+    protected Map<String, ItemClass> weaponClassMap = new HashMap<>();
     protected Map<Attribute, Integer> itemAttributesPlaceholder;
 
     @Override
-    public Optional<WeaponClass> getWeaponClassByName(String clazz) {
+    public Optional<ItemClass> getWeaponClassByName(String clazz) {
         return Optional.ofNullable(weaponClassMap.get(clazz));
     }
 
     @Override
-    public Set<RpgItemType> getItemTypesByWeaponClass(WeaponClass clazz) {
+    public Set<RpgItemType> getItemTypesByWeaponClass(ItemClass clazz) {
         Set<RpgItemType> itemTypes = new HashSet<>();
         itemTypes.addAll(clazz.getItems());
         return getItemTypesByWeaponClass(clazz, itemTypes);
     }
 
-    private Set<RpgItemType> getItemTypesByWeaponClass(WeaponClass clazz, Set<RpgItemType> itemTypes) {
-        for (WeaponClass subClass : clazz.getSubClass()) {
+    private Set<RpgItemType> getItemTypesByWeaponClass(ItemClass clazz, Set<RpgItemType> itemTypes) {
+        for (ItemClass subClass : clazz.getSubClass()) {
             itemTypes.addAll(subClass.getItems());
 
             getItemTypesByWeaponClass(clazz, itemTypes);
@@ -52,10 +52,10 @@ public abstract class AbstractItemService implements ItemService {
     }
 
     @Override
-    public void registerWeaponClass(WeaponClass weaponClass) {
-        weaponClassMap.put(weaponClass.getName(), weaponClass);
+    public void registerWeaponClass(ItemClass itemClass) {
+        weaponClassMap.put(itemClass.getName(), itemClass);
 
-        for (WeaponClass subClass : weaponClass.getSubClass()) {
+        for (ItemClass subClass : itemClass.getSubClass()) {
             weaponClassMap.put(subClass.getName(), subClass);
         }
     }
@@ -68,12 +68,12 @@ public abstract class AbstractItemService implements ItemService {
 
     @Override
     public void registerRpgItemType(RpgItemType rpgItemType) {
-        rpgItemType.getWeaponClass().getItems().add(rpgItemType);
+        rpgItemType.getItemClass().getItems().add(rpgItemType);
         items.put(RpgItemType.KEY_BUILDER.apply(rpgItemType.getId(), rpgItemType.getModelId()), rpgItemType);
     }
 
     @Override
-    public void registerProperty(WeaponClass weaponClass, String property) {
+    public void registerProperty(ItemClass itemClass, String property) {
         int val = PropertyServiceImpl.getAndIncrement.get();
 
         if (!spongePropertyService.exists(property)) {
@@ -83,9 +83,9 @@ public abstract class AbstractItemService implements ItemService {
 
         if (property.endsWith("_mult")) {
             spongePropertyService.registerDefaultValue(val, 1.0f);
-            weaponClass.getPropertiesMults().add(val);
+            itemClass.getPropertiesMults().add(val);
         } else {
-            weaponClass.getProperties().add(val);
+            itemClass.getProperties().add(val);
         }
 
     }
@@ -100,7 +100,7 @@ public abstract class AbstractItemService implements ItemService {
     public boolean checkItemType(IActiveCharacter character, RpgItemStack rpgItemStack) {
         RpgItemType itemType = rpgItemStack.getItemType();
 
-        if (itemType.getWeaponClass() == WeaponClass.ARMOR) {
+        if (itemType.getItemClass() == ItemClass.ARMOR) {
             return character.getAllowedArmor().contains(itemType);
         } else {
             return character.getAllowedWeapons().containsKey(itemType);
@@ -138,22 +138,22 @@ public abstract class AbstractItemService implements ItemService {
         loadWeaponGroups(itemGroups, null);
 
         for (String shield : config.getStringList("Armor")) {
-            Optional<RpgItemType> rpgItemType = createRpgItemType(ItemString.parse(shield), WeaponClass.ARMOR);
+            Optional<RpgItemType> rpgItemType = createRpgItemType(ItemString.parse(shield), ItemClass.ARMOR);
             rpgItemType.ifPresent(this::registerRpgItemType);
         }
         for (String shield : config.getStringList("Shields")) {
-            Optional<RpgItemType> rpgItemType = createRpgItemType(ItemString.parse(shield), WeaponClass.SHIELD);
+            Optional<RpgItemType> rpgItemType = createRpgItemType(ItemString.parse(shield), ItemClass.SHIELD);
             rpgItemType.ifPresent(this::registerRpgItemType);
         }
     }
 
-    private void loadWeaponGroups(List<? extends Config> itemGroups, WeaponClass parent) {
+    private void loadWeaponGroups(List<? extends Config> itemGroups, ItemClass parent) {
         for (Config itemGroup : itemGroups) {
             String weaponClass;
             try {
                 weaponClass = itemGroup.getString("WeaponClass");
-                info(" - Loading weaponClass" + weaponClass);
-                WeaponClass weapons = new WeaponClass(weaponClass);
+                info(" - Loading WeaponClass" + weaponClass);
+                ItemClass weapons = new ItemClass(weaponClass);
                 weapons.setParent(parent);
                 if (parent != null) {
                     parent.getSubClass().add(weapons);
@@ -167,7 +167,7 @@ public abstract class AbstractItemService implements ItemService {
         }
     }
 
-    private void loadItemGroupsItems(Config itemGroup, String weaponClass, WeaponClass weapons) {
+    private void loadItemGroupsItems(Config itemGroup, String weaponClass, ItemClass weapons) {
         try {
             info("  - Reading \"Items\" config section" + weaponClass);
             List<String> items = itemGroup.getStringList("Items");
@@ -187,7 +187,7 @@ public abstract class AbstractItemService implements ItemService {
         }
     }
 
-    private void loadItemGroupsProperties(Config itemGroup, WeaponClass weapons) {
+    private void loadItemGroupsProperties(Config itemGroup, ItemClass weapons) {
         try {
             List<String> properties = itemGroup.getStringList("Properties");
             for (String property : properties) {
@@ -209,7 +209,7 @@ public abstract class AbstractItemService implements ItemService {
         return map;
     }
 
-    protected abstract Optional<RpgItemType> createRpgItemType(ItemString parsed, WeaponClass weapons);
+    protected abstract Optional<RpgItemType> createRpgItemType(ItemString parsed, ItemClass weapons);
 
     @Override
     public boolean checkItemClassRequirements(IActiveCharacter character, RpgItemStack rpgItemStack) {

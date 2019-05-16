@@ -1,6 +1,6 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.api.items.WeaponClass;
+import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.configuration.DebugLevel;
@@ -45,11 +45,11 @@ public class TestPropertyValueResolving {
         spongePropertyService.registerDefaultValue(spongePropertyService.getIdByName(m1), 1);
         spongePropertyService.registerDefaultValue(spongePropertyService.getIdByName(m2), 1);
 
-        WeaponClass weaponClass0 = new WeaponClass("test");
-        weaponClass0.getProperties().add(spongePropertyService.getIdByName(b2));
-        weaponClass0.getPropertiesMults().add(spongePropertyService.getIdByName(m2));
+        ItemClass itemClass0 = new ItemClass("test");
+        itemClass0.getProperties().add(spongePropertyService.getIdByName(b2));
+        itemClass0.getPropertiesMults().add(spongePropertyService.getIdByName(m2));
 /*
-        i.registerItemType(ItemTypes.DIAMOND_AXE, null, weaponClass0, 0);
+        i.registerItemType(ItemTypes.DIAMOND_AXE, null, itemClass0, 0);
 
         RPGItemTypeToRemove item = i.getByItemTypeAndName(ItemTypes.DIAMOND_AXE, (Text) null);
 

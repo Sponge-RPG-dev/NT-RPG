@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.junit;
 
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
-import cz.neumimto.rpg.api.items.WeaponClass;
+import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.common.entity.TestPropertyService;
 import cz.neumimto.rpg.common.inventory.FilteredManagedSlotImpl;
 import cz.neumimto.rpg.common.inventory.RpgInventoryImpl;
@@ -74,7 +74,7 @@ public class CharactersExtension implements ParameterResolver {
 
 
         ManagedSlot managedSlot = new FilteredManagedSlotImpl(0,
-                weaponClass -> weaponClass == WeaponClass.ARMOR);
+                weaponClass -> weaponClass == ItemClass.ARMOR);
         ManagedSlot filteredSlot = new FilteredManagedSlotImpl(1,
                 weaponClass -> weaponClass == TestDictionary.WEAPON_CLASS_1);
 

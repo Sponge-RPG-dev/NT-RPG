@@ -15,25 +15,25 @@ import java.util.Set;
 
 public interface ItemService {
 
-    Optional<WeaponClass> getWeaponClassByName(String clazz);
+    Optional<ItemClass> getWeaponClassByName(String clazz);
 
-    Set<RpgItemType> getItemTypesByWeaponClass(WeaponClass clazz);
+    Set<RpgItemType> getItemTypesByWeaponClass(ItemClass clazz);
 
     default Set<RpgItemType> getItemTypesByWeaponClass(String clazz) {
-        Optional<WeaponClass> weaponClassByName = getWeaponClassByName(clazz);
+        Optional<ItemClass> weaponClassByName = getWeaponClassByName(clazz);
         if (weaponClassByName.isPresent()) {
             return getItemTypesByWeaponClass(weaponClassByName.get().getName());
         }
         return Collections.emptySet();
     }
 
-    void registerWeaponClass(WeaponClass weaponClass);
+    void registerWeaponClass(ItemClass itemClass);
 
     Optional<RpgItemType> getRpgItemType(String itemId, String model);
 
     void registerRpgItemType(RpgItemType rpgItemType);
 
-    void registerProperty(WeaponClass weaponClass, String property);
+    void registerProperty(ItemClass itemClass, String property);
 
     ClassItem createClassItemSpecification(RpgItemType key, Double value, IEffectSourceProvider provider);
 

@@ -4,9 +4,9 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.api.effects.EffectParams;
+import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
-import cz.neumimto.rpg.api.items.WeaponClass;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.configuration.ItemString;
 import cz.neumimto.rpg.common.effects.EffectService;
@@ -86,7 +86,7 @@ public class SpongeItemService extends AbstractItemService {
 	}
 
 	@Override
-	protected Optional<RpgItemType> createRpgItemType(ItemString parsed, WeaponClass wClass) {
+	protected Optional<RpgItemType> createRpgItemType(ItemString parsed, ItemClass wClass) {
 		Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, parsed.itemId);
 		if (!type.isPresent()) {
 			Log.error(" - Not Managed ItemType " + parsed.itemId);

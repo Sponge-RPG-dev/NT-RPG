@@ -28,13 +28,13 @@ public class DamageServiceImpl implements DamageService {
         }
         double base = character.getBaseWeaponDamage(type);
 
-        for (Integer i : type.getWeaponClass().getProperties()) {
+        for (Integer i : type.getItemClass().getProperties()) {
             base += entityService.getEntityProperty(character, i);
         }
 
-        if (!type.getWeaponClass().getPropertiesMults().isEmpty()) {
+        if (!type.getItemClass().getPropertiesMults().isEmpty()) {
             double totalMult = 1;
-            for (Integer integer : type.getWeaponClass().getPropertiesMults()) {
+            for (Integer integer : type.getItemClass().getPropertiesMults()) {
                 totalMult += entityService.getEntityProperty(character, integer) - 1;
             }
             base *= totalMult;

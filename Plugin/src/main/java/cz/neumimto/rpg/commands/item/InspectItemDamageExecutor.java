@@ -2,8 +2,8 @@ package cz.neumimto.rpg.commands.item;
 
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.api.items.ClassItem;
+import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.RpgItemType;
-import cz.neumimto.rpg.api.items.WeaponClass;
 import cz.neumimto.rpg.damage.SpongeDamageService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.inventory.SpongeItemService;
@@ -42,23 +42,23 @@ public class InspectItemDamageExecutor implements CommandExecutor {
 			return CommandResult.empty();
 		}
 		RpgItemType fromItemStack = rpgItemType.get();
-		WeaponClass weaponClass = fromItemStack.getWeaponClass();
-		List<WeaponClass> parents = new LinkedList<>();
-		WeaponClass parent = weaponClass.getParent();
+		ItemClass itemClass = fromItemStack.getItemClass();
+		List<ItemClass> parents = new LinkedList<>();
+		ItemClass parent = itemClass.getParent();
 		List<Integer> o = new ArrayList<>();
-		o.addAll(weaponClass.getProperties());
-		o.addAll(weaponClass.getPropertiesMults());
+		o.addAll(itemClass.getProperties());
+		o.addAll(itemClass.getPropertiesMults());
 		while (parent != null) {
 			parents.add(parent);
 			o.addAll(parent.getPropertiesMults());
 			o.addAll(parent.getProperties());
 			parent = parent.getParent();
 		}
-		parents.add(weaponClass);
+		parents.add(itemClass);
 		Collections.reverse(parents);
 
 		List<Text> a = new ArrayList<>();
-		for (WeaponClass wc : parents) {
+		for (ItemClass wc : parents) {
 			a.addAll(TO_TEXT.apply(wc));
 		}
 		for (Text text : a) {
@@ -85,7 +85,7 @@ public class InspectItemDamageExecutor implements CommandExecutor {
 		}
 
 
-		src.sendMessage(Text.of(TextColors.GRAY, " - From WeaponClass: "));
+		src.sendMessage(Text.of(TextColors.GRAY, " - From ItemClass: "));
 		Iterator<Integer> iterator = o.iterator();
 		while (iterator.hasNext()) {
 			int integer = iterator.next();
@@ -108,7 +108,7 @@ public class InspectItemDamageExecutor implements CommandExecutor {
 		return CommandResult.success();
 	}
 
-	private Function<WeaponClass, List<Text>> TO_TEXT = weaponClass -> {
+	private Function<ItemClass, List<Text>> TO_TEXT = weaponClass -> {
 		List<Text> list = new ArrayList<>();
 		SpongePropertyService ps = NtRpgPlugin.GlobalScope.spongePropertyService;
 		list.add(Text.of(TextColors.GOLD, weaponClass.getName()));
