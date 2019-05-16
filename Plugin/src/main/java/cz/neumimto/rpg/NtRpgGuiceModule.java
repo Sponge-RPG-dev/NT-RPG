@@ -2,6 +2,7 @@ package cz.neumimto.rpg;
 
 import com.google.inject.AbstractModule;
 import cz.neumimto.rpg.api.damage.DamageService;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.items.ItemService;
@@ -33,7 +34,7 @@ public class NtRpgGuiceModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(SkillService.class);
-        bind(SpongePropertyService.class);
+        bind(PropertyService.class).to(SpongePropertyService.class);
         bind(PartyService.class);
         bind(CharacterService.class).to(SpongeCharacterService.class);
 
