@@ -2,6 +2,7 @@ package cz.neumimto.rpg.configuration.adapters;
 
 import com.google.common.reflect.TypeToken;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.logging.Log;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
@@ -24,7 +25,7 @@ public class PropertiesMapAdapter implements TypeSerializer<Map<Integer, Float>>
                 int idByName = NtRpgPlugin.GlobalScope.spongePropertyService.getIdByName(propertyName);
                 map.put(idByName, f);
             } else {
-                throw new ObjectMappingException("Unknown property " + propertyName);
+                Log.warn("Unknown property " + propertyName);
             }
         }
 
