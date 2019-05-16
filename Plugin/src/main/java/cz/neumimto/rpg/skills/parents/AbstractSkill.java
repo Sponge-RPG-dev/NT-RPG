@@ -79,8 +79,19 @@ public abstract class AbstractSkill implements ISkill {
 		}
 	}
 
+    /**
+     * Sets catalog id, if null.
+     * @throws IllegalStateException if catalogId not null
+     * @param catalogId
+     */
+    public void setCatalogId(String catalogId) {
+	    if (this.catalogId == null || !this.catalogId.equalsIgnoreCase(catalogId)) {
+	        throw new IllegalStateException("CatalogId already set");
+        }
+        this.catalogId = catalogId;
+    }
 
-	@Override
+    @Override
 	public String getName() {
 		return name.toPlain();
 	}

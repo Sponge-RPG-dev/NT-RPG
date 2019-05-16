@@ -22,6 +22,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
@@ -224,5 +225,18 @@ public class SkillActions {
 		return PotionEffect.builder().potionType(type);
 	};
 
+	@SkillComponent(
+			value = "Converts a string to Text object.",
+			usage = "var text = to_text(\"&aColored Text\")",
+			params = {}
+	)
+	public static Function<String, Text> TO_TEXT = TextHelper::parse;
+
+	@SkillComponent(
+			value = "Converts a string to multiline (list) of Text objects.",
+			usage = "var textList = to_multiline_text(\"&aFirst Line:nSecondLine\")",
+			params = {}
+	)
+	public static Function<String, List<Text>> TO_MULTILINE_TEXT = TextHelper::splitStringByDelimiter;
 
 }

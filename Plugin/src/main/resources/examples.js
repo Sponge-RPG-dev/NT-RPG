@@ -1,8 +1,9 @@
 var SkillSpeed = new (Java.extend(ActiveSkill, {
     init: function () {
         var s = Java.super(SkillSpeed);
-        s.setName("Speed");
-        s.setDescription("For a duration boosts player's speed");
+        s.setCatalogId("myprefix:speed");
+        s.setLocalizableName(to_text("Speed"));
+        s.setDescription(to_multiline_text("For a duration boosts player's speed"));
         var SkillSpeedSettings = new SkillSettings();
         SkillSpeedSettings.addNode(SkillNodes.COOLDOWN, 8000, -500);
         SkillSpeedSettings.addNode(SkillNodes.MANACOST, 350, -10);
@@ -22,8 +23,9 @@ var SkillSpeed = new (Java.extend(ActiveSkill, {
 var SuperJump = new (Java.extend(ActiveSkill, {
     init: function () {
         var s = Java.super(SuperJump);
-        s.setName("SuperJump");
-        s.setDescription("Launches player into air");
+        s.setCatalogId("myprefix:superjump");
+        s.setLocalizableName(to_text("SuperJump"));
+        s.setDescription(to_multiline_text("Launches player into air"));
         var SkillSpeedSettings = new SkillSettings();
         SkillSpeedSettings.addNode(SkillNodes.COOLDOWN, 8000, -500);
         SkillSpeedSettings.addNode(SkillNodes.MANACOST, 350, -10);
@@ -41,8 +43,9 @@ var SuperJump = new (Java.extend(ActiveSkill, {
 var Heal = new (Java.extend(ActiveSkill, {
     init: function () {
         var s = Java.super(Heal);
-        s.setName("Heal");
-        s.setDescription("After a delay heals the caster");
+        s.setCatalogId("myprefix:heal");
+        s.setLocalizableName(to_text("Heal"));
+        s.setDescription(to_multiline_text("After a delay heals the caster"));
         var HealSettings = new SkillSettings();
         HealSettings.addNode(SkillNodes.COOLDOWN, 80000, -300);
         HealSettings.addNode("delay", 3500, -100);
@@ -76,5 +79,5 @@ var eventConsumer = new (Java.extend(Consumer, {
 }))
 
 //Only "consumer" property in second parameter is mandatory
-var DamageEntityEvent = Java.type('org.spongepowered.api.event.entity.DamageEntityEvent')
-registerEventListener({type: DamageEntityEvent, consumer: eventConsumer, order:"BEFORE_POST", beforeModifications: true});
+var DamageEntityEvent = Java.type('org.spongepowered.api.event.network.ClientConnectionEvent')
+registerEventListener({type: DamageEntityEvent, consumer: eventConsumer, order:"BEFORE_POST", beforeModifications: false});

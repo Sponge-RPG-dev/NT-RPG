@@ -29,6 +29,7 @@ var globalEffects = new ArrayList();
 var attributes = new ArrayList();
 
 var folder = Folder;
+
 with (imports) {
     Files.walkFileTree(folder, new (Java.extend(Java.type("java.nio.file.SimpleFileVisitor"), {
         visitFile: function (file, attrs) {
@@ -106,7 +107,7 @@ function registerSkills() {
     for (obj in skills) {
         var s = skills.get(obj);
         s.init();
-        GlobalScope.skillService.addSkill(s);
+        GlobalScope.skillService.registerAdditionalCatalog(s);
     }
 }
 
