@@ -16,6 +16,9 @@ import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.NDamageType;
 import cz.neumimto.rpg.skills.ProjectileProperties;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.type.HandTypes;
+import org.spongepowered.api.entity.ArmorEquipable;
+import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.event.Listener;
@@ -27,6 +30,7 @@ import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
@@ -94,13 +98,14 @@ public class DamageListener {
 		} else if (damageSource instanceof IndirectEntityDamageSource) {
 			processProjectileDamageLate(event, (IndirectEntityDamageSource) damageSource, attacker, target, (Projectile) damageSource.getSource());
 		} else {
-			processWeaponDamageLate(event, damageSource, attacker, target);
+			processWeaponDamageLate(event, damageSource, target);
 		}
 	}
 
 	private void processWeaponDamageEarly(DamageEntityEvent event, EntityDamageSource source, IEntity attacker, IEntity target) {
 		double newdamage = event.getBaseDamage();
 
+		RpgItemStack rpgItemStack = null;
 		if (attacker.getType() == IEntityType.CHARACTER) {
 			IActiveCharacter character = (IActiveCharacter) attacker;
 			if (character.requiresDamageRecalculation()) {
@@ -109,14 +114,24 @@ public class DamageListener {
 				character.setRequiresDamageRecalculation(false);
 			}
 			newdamage = character.getWeaponDamage();
+			rpgItemStack = character.getMainHand();
 		} else {
+			Living entity = attacker.getEntity();
 			if (!pluginConfig.OVERRIDE_MOBS) {
-				newdamage = entityService.getMobDamage(attacker.getEntity());
+				newdamage = entityService.getMobDamage(entity);
+			}
+			if (entity instanceof ArmorEquipable) {
+				Optional<RpgItemStack> rpgItemStack1 = ((ArmorEquipable) entity).getItemInHand(HandTypes.MAIN_HAND)
+						.map(itemStack -> itemService.getRpgItemStack(itemStack)).get();
+				if (rpgItemStack1.isPresent()) {
+					rpgItemStack = rpgItemStack1.get();
+				}
 			}
 		}
 		newdamage *= spongeDamageService.getEntityDamageMult(attacker, source.getType());
 
-		IEntityWeaponDamageEarlyEvent e = new IEntityWeaponDamageEarlyEvent(target, newdamage);
+		IEntityWeaponDamageEarlyEvent e = new IEntityWeaponDamageEarlyEvent(target, newdamage, rpgItemStack);
+
 		e.setCause(causeStackManager.getCurrentCause());
 		Sponge.getEventManager().post(e);
 		if (e.isCancelled() || e.getDamage() <= 0) {
@@ -127,7 +142,7 @@ public class DamageListener {
 		event.setBaseDamage(e.getDamage());
 	}
 
-	private void processWeaponDamageLate(DamageEntityEvent event, EntityDamageSource source, IEntity attacker, IEntity target) {
+	private void processWeaponDamageLate(DamageEntityEvent event, EntityDamageSource source, IEntity target) {
 		double newdamage = event.getBaseDamage();
 		newdamage *= spongeDamageService.getEntityResistance(target, source.getType());
 
