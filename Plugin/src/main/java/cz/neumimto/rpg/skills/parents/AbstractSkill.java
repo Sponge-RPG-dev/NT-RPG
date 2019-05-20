@@ -59,6 +59,7 @@ public abstract class AbstractSkill implements ISkill {
 	protected CharacterService characterService;
 
 	protected Text name;
+	protected String strName;
 	protected List<Text> description;
 	protected SkillSettings settings = new SkillSettings();
 	protected SkillItemIcon icon;
@@ -85,15 +86,12 @@ public abstract class AbstractSkill implements ISkill {
      * @param catalogId
      */
     public void setCatalogId(String catalogId) {
-	    if (this.catalogId == null || !this.catalogId.equalsIgnoreCase(catalogId)) {
-	        throw new IllegalStateException("CatalogId already set");
-        }
         this.catalogId = catalogId;
     }
 
     @Override
 	public String getName() {
-		return name.toPlain();
+		return strName;
 	}
 
 	@Override
@@ -104,6 +102,7 @@ public abstract class AbstractSkill implements ISkill {
 	@Override
 	public void setLocalizableName(Text name) {
 		this.name = name;
+		this.strName = name.toPlain();
 	}
 
 	@Override

@@ -230,7 +230,9 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 
 		skills.put(extraCatalog.getId().toLowerCase(), extraCatalog);
 		skillByNames.put(extraCatalog.getName(), extraCatalog);
-		skillByNames.put(extraCatalog.getLocalizableName().toPlain(), extraCatalog);
+		if (extraCatalog.getLocalizableName() != null) {
+			skillByNames.put(extraCatalog.getLocalizableName().toPlain(), extraCatalog);
+		}
 	}
 
 	@Override

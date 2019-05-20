@@ -61,77 +61,82 @@ public class SkillTreeDao {
 			paths.forEach(path -> {
 				info("Loading skilltree from a file " + path.getFileName());
 				Config config = ConfigFactory.parseFile(path.toFile());
-				SkillTree skillTree = new SkillTree();
-				try {
-					skillTree.setDescription(config.getString("Description"));
-				} catch (ConfigException e) {
-					skillTree.setDescription("");
-					warn("Missing \"Description\" node");
-				}
-				try {
-					skillTree.setId(config.getString("Name"));
-				} catch (ConfigException e) {
-					warn("Missing \"Name\" skipping to another file");
-					return;
-				}
-				skillTree.getSkills().put(StartingPoint.name.toPlain(), StartingPoint.SKILL_DATA);
-				try {
-					List<? extends ConfigObject> skills = config.getObjectList("Skills");
-					createConfigSkills(skills, skillTree);
-					loadSkills(skills, skillTree);
-				} catch (ConfigException e) {
-					warn("Missing \"Skills\" section. No skills defined");
-
-				}
-
-				try {
-					List<String> asciiMap = config.getStringList("AsciiMap");
-					Optional<String> max = asciiMap.stream().max(Comparator.comparingInt(String::length));
-					if (max.isPresent()) {
-						int length = max.get().length();
-						int rows = asciiMap.size();
-
-						short[][] array = new short[rows][length];
-
-						int i = 0;
-						int j = 0;
-						StringBuilder num = new StringBuilder();
-						for (String s : asciiMap) {
-							for (char c1 : s.toCharArray()) {
-								if (Character.isDigit(c1)) {
-									num.append(c1);
-									continue;
-								} else if (c1 == 'X') {
-									skillTree.setCenter(new Pair<>(i, j));
-									j++;
-									continue;
-								}
-								if (!num.toString().equals("")) {
-									array[i][j] = Short.parseShort(num.toString());
-									j++;
-								}
-								SkillTreeInterfaceModel guiModelByCharacter = NtRpgPlugin.GlobalScope.skillService.getGuiModelByCharacter(c1);
-								if (guiModelByCharacter != null) {
-									array[i][j] = guiModelByCharacter.getId();
-								}
-								num = new StringBuilder();
-								j++;
-							}
-							j = 0;
-							i++;
-						}
-						skillTree.setSkillTreeMap(array);
-					}
-				} catch (ConfigException | ArrayIndexOutOfBoundsException ignored) {
-					error("Could not read ascii map in the skilltree " + skillTree.getId(), ignored);
-					skillTree.setSkillTreeMap(new short[][]{});
-				}
-				map.put(skillTree.getId(), skillTree);
+				populateMap(map, config);
 			});
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return map;
+	}
+
+	protected void populateMap(Map<String, SkillTree> map, Config config) {
+
+		SkillTree skillTree = new SkillTree();
+		try {
+			skillTree.setDescription(config.getString("Description"));
+		} catch (ConfigException e) {
+			skillTree.setDescription("");
+			warn("Missing \"Description\" node");
+		}
+		try {
+			skillTree.setId(config.getString("Name"));
+		} catch (ConfigException e) {
+			warn("Missing \"Name\" skipping to another file");
+			return;
+		}
+		skillTree.getSkills().put(StartingPoint.NODE_NAME, StartingPoint.SKILL_DATA);
+		try {
+			List<? extends ConfigObject> skills = config.getObjectList("Skills");
+			createConfigSkills(skills, skillTree);
+			loadSkills(skills, skillTree);
+		} catch (ConfigException e) {
+			warn("Missing \"Skills\" section. No skills defined");
+
+		}
+
+		try {
+			List<String> asciiMap = config.getStringList("AsciiMap");
+			Optional<String> max = asciiMap.stream().max(Comparator.comparingInt(String::length));
+			if (max.isPresent()) {
+				int length = max.get().length();
+				int rows = asciiMap.size();
+
+				short[][] array = new short[rows][length];
+
+				int i = 0;
+				int j = 0;
+				StringBuilder num = new StringBuilder();
+				for (String s : asciiMap) {
+					for (char c1 : s.toCharArray()) {
+						if (Character.isDigit(c1)) {
+							num.append(c1);
+							continue;
+						} else if (c1 == 'X') {
+							skillTree.setCenter(new Pair<>(i, j));
+							j++;
+							continue;
+						}
+						if (!num.toString().equals("")) {
+							array[i][j] = Short.parseShort(num.toString());
+							j++;
+						}
+						SkillTreeInterfaceModel guiModelByCharacter = NtRpgPlugin.GlobalScope.skillService.getGuiModelByCharacter(c1);
+						if (guiModelByCharacter != null) {
+							array[i][j] = guiModelByCharacter.getId();
+						}
+						num = new StringBuilder();
+						j++;
+					}
+					j = 0;
+					i++;
+				}
+				skillTree.setSkillTreeMap(array);
+			}
+		} catch (ConfigException | ArrayIndexOutOfBoundsException ignored) {
+			error("Could not read ascii map in the skilltree " + skillTree.getId(), ignored);
+			skillTree.setSkillTreeMap(new short[][]{});
+		}
+		map.put(skillTree.getId(), skillTree);
 	}
 
 	private void createConfigSkills(List<? extends ConfigObject> sub, SkillTree skillTree) {
