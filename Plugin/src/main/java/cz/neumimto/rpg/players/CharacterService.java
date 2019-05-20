@@ -939,6 +939,7 @@ public abstract class CharacterService {
         character.getCharacterBase().setAttributePoints(attributePoints - i);
         assignAttribute(character, attribute, i);
         recalculateProperties(character);
+        character.setRequiresDamageRecalculation(true);
         return 0;
     }
 
