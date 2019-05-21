@@ -27,17 +27,17 @@ import static org.mockito.Matchers.any;
 
 public class EffectTests {
 
-    private TestEffectService effectService = new TestEffectService();
+    private static TestEffectService effectService = new TestEffectService();
 
-    private TickableEffect effect;
+    private static TickableEffect effect;
 
-    ActiveCharacter character;
-    CharacterBase characterBase;
+    static ActiveCharacter character;
+    static CharacterBase characterBase;
 
-    private Set<IEffect> processedEffects;
+    private static Set<IEffect> processedEffects;
 
     @BeforeEach
-    public static void init() throws Exception {
+    public void init() throws Exception {
         TestHelper.initLocalizations();
         NtRpgPlugin.pluginConfig = (PluginConfig) TestHelper.getUnsafe().allocateInstance(PluginConfig.class);
         NtRpgPlugin.pluginConfig.DEBUG = DebugLevel.NONE;
@@ -46,7 +46,7 @@ public class EffectTests {
     }
 
     @BeforeAll
-    public void before() throws Exception{
+    public static void before() throws Exception{
         processedEffects = effectService.getEffects();
         characterBase = new CharacterBase();
         character = new ActiveCharacter(UUID.randomUUID(), characterBase, 1);
@@ -55,7 +55,7 @@ public class EffectTests {
 
     }
 
-    private TickableEffect createEffectMock(String name) {
+    private static TickableEffect createEffectMock(String name) {
 
         TickableEffect effect = Mockito.spy(new TickableEffect(name, character, Long.MAX_VALUE, 1));
         Mockito.when(effect.getExpireTime()).thenReturn(Long.MAX_VALUE);

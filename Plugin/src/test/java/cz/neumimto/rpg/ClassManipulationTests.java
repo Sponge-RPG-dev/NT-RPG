@@ -6,12 +6,14 @@ import cz.neumimto.rpg.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
 import cz.neumimto.rpg.junit.NtRpgExtension;
+import cz.neumimto.rpg.junit.TestGuiceModule;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
+import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +26,7 @@ import java.util.LinkedHashMap;
 import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
 
 @ExtendWith({CharactersExtension.class, GuiceExtension.class, NtRpgExtension.class})
+@IncludeModule(TestGuiceModule.class)
 public class ClassManipulationTests {
 
     ClassDefinition pc1;
@@ -85,10 +88,18 @@ public class ClassManipulationTests {
     }
 
     @Test
-    public void respects_class_selection_order() {
+    public void respects_class_selection_order_ok() {
         NtRpgPlugin.pluginConfig.RESPECT_CLASS_SELECTION_ORDER = true;
         ActionResult result = characterService.canGainClass(character, ps2);
-        Assertions.assertTrue(!result.isOk());
+        Assertions.assertTrue(result.isOk());
+    }
+
+    @Test
+    public void respects_class_selection_order() {
+        NtRpgPlugin.pluginConfig.RESPECT_CLASS_SELECTION_ORDER = true;
+        character.getClasses().remove("primary");
+        ActionResult result = characterService.canGainClass(character, ps2);
+        Assertions.assertFalse(result.isOk());
     }
 
     @Test

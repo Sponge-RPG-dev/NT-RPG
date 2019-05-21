@@ -11,6 +11,7 @@ import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.commands.CommandService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.entity.TestPropertyService;
+import cz.neumimto.rpg.common.impl.TestCharacterService;
 import cz.neumimto.rpg.common.impl.TestItemService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.damage.SpongeDamageService;
@@ -28,7 +29,6 @@ import cz.neumimto.rpg.inventory.runewords.RWDao;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.persistance.*;
 import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.SpongeCharacterService;
 import cz.neumimto.rpg.players.parties.PartyService;
 import cz.neumimto.rpg.skills.SkillService;
 import org.mockito.Mockito;
@@ -44,7 +44,7 @@ public class TestGuiceModule extends AbstractModule {
         bind(SkillService.class);
         bind(PropertyService.class).to(TestPropertyService.class);
         bind(PartyService.class);
-        bind(CharacterService.class).to(SpongeCharacterService.class);
+        bind(CharacterService.class).to(TestCharacterService.class);
 
 
         bind(CharacterClassDao.class);

@@ -48,6 +48,7 @@ public class DamageServiceTest {
     void recalculateCharacterWeaponDamage02(@Stage(READY) IActiveCharacter character) {
 
         RpgItemType itemType = TestDictionary.ITEM_TYPE_WEAPON_1;
+        itemType.getItemClass().getPropertiesMults().clear();
         itemType.getItemClass().getProperties().add(1);
 
         RpgItemStack rpgItemStack = testItemService.getRpgItemStack(itemType);
@@ -62,7 +63,8 @@ public class DamageServiceTest {
 
     @Test
     void recalculateCharacterWeaponDamage03(@Stage(READY) IActiveCharacter character) {
-        RpgItemType itemType = TestDictionary.ITEM_TYPE_WEAPON_1;
+        RpgItemType itemType = TestDictionary.ITEM_TYPE_WEAPON_2;
+        itemType.getItemClass().getPropertiesMults().clear();
         itemType.getItemClass().getPropertiesMults().add(1);
 
         RpgItemStack rpgItemStack = testItemService.getRpgItemStack(itemType);
