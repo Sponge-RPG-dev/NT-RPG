@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.skills.parents;
 
+import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkillType;
 import cz.neumimto.rpg.skills.PlayerSkillContext;
@@ -43,7 +44,7 @@ public class ActiveScriptSkill extends ActiveSkill implements ScriptSkill<Script
 		setLore(model.getLore());
 		setDamageType(model.getDamageType());
 		setDescription(model.getDescription());
-		setLocalizableName(model.getName());
+		setLocalizableName(TextHelper.parse(model.getName()));
 		List<ISkillType> skillTypes = model.getSkillTypes();
 		skillTypes.forEach(super::addSkillType);
 	}

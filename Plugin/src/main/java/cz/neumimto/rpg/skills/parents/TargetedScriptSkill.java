@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.skills.parents;
 
+import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkillType;
@@ -45,7 +46,7 @@ public class TargetedScriptSkill extends Targeted implements ITargetedScriptSkil
 		setLore(model.getLore());
 		setDamageType(model.getDamageType());
 		setDescription(model.getDescription());
-		setLocalizableName(model.getName());
+		setLocalizableName(TextHelper.parse(model.getName()));
 		List<ISkillType> skillTypes = model.getSkillTypes();
 		skillTypes.forEach(super::addSkillType);
 	}

@@ -248,17 +248,21 @@ public class JSLoader {
 
 
 		for (File confFile : ResourceLoader.addonDir.listFiles(pathname -> pathname.isFile() && pathname.getName().endsWith(".conf"))) {
-			info("Loading skills from file " + confFile.getName());
-			try {
-				ObjectMapper<SkillsDefinition> mapper = ObjectMapper.forClass(SkillsDefinition.class);
-				HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(confFile.toPath()).build();
-				SkillsDefinition definition = mapper.bind(new SkillsDefinition()).populate(hcl.load());
-				definition.getSkills().stream()
-						.map(a -> skillService.skillDefinitionToSkill(a, urlClassLoader))
-						.forEach(a -> skillService.registerAdditionalCatalog(a));
-			} catch (Exception e) {
-				throw new RuntimeException("Could not load file " + confFile, e);
-			}
+			loadSkillDefinitionFile(urlClassLoader, confFile);
+		}
+	}
+
+	public void loadSkillDefinitionFile(URLClassLoader urlClassLoader, File confFile) {
+		info("Loading skills from file " + confFile.getName());
+		try {
+			ObjectMapper<SkillsDefinition> mapper = ObjectMapper.forClass(SkillsDefinition.class);
+			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(confFile.toPath()).build();
+			SkillsDefinition definition = mapper.bind(new SkillsDefinition()).populate(hcl.load());
+			definition.getSkills().stream()
+					.map(a -> skillService.skillDefinitionToSkill(a, urlClassLoader))
+					.forEach(a -> skillService.registerAdditionalCatalog(a));
+		} catch (Exception e) {
+			throw new RuntimeException("Could not load file " + confFile, e);
 		}
 	}
 

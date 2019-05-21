@@ -290,7 +290,7 @@ public class SkillService implements AdditionalCatalogRegistryModule<ISkill> {
 
 		Class sk = new ByteBuddy()
 				.subclass(type)
-				.name("cz.neumimto.skills.scripts." + scriptSkillModel.getName().toPlain())
+				.name("cz.neumimto.skills.scripts." + scriptSkillModel.getName())
 				.annotateType(AnnotationDescription.Builder.ofType(ResourceLoader.Skill.class)
 						.define("value", scriptSkillModel.getId())
 						.build())
