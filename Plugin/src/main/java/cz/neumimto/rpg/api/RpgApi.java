@@ -19,4 +19,5 @@ public interface RpgApi {
 
     void broadcastLocalizableMessage(String message, String[] keys, String[] args);
 
+    void broadcastLocalizableMessage(String playerLearnedSkillGlobalMessage, String name, String localizableName);
 }

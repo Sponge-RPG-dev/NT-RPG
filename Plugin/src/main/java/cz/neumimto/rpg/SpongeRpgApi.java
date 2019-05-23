@@ -45,4 +45,9 @@ public final class SpongeRpgApi implements RpgApi {
     public void broadcastLocalizableMessage(String message, String[] keys, String[] args) {
         broadcastMessage(TextHelper.parse(NtRpgPlugin.GlobalScope.localizationService.translate(message, keys, args)));
     }
+
+    @Override
+    public void broadcastLocalizableMessage(String message, String singleKey, String singleArg) {
+        broadcastMessage(TextHelper.parse(NtRpgPlugin.GlobalScope.localizationService.translate(message, singleKey, singleArg)));
+    }
 }

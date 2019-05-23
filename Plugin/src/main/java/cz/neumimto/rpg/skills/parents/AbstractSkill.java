@@ -21,7 +21,6 @@ package cz.neumimto.rpg.skills.parents;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.Rpg;
-import cz.neumimto.rpg.api.damage.RpgDamageType;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.ISkill;
@@ -36,7 +35,6 @@ import cz.neumimto.rpg.skills.SkillItemIcon;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.utils.CatalogId;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.text.Text;
 
 import javax.inject.Inject;
@@ -71,7 +69,7 @@ public abstract class AbstractSkill implements ISkill {
 
 	private Set<ISkillType> skillTypes = new HashSet<>();
 	private List<String> lore;
-	private RpgDamageType damagetype = DamageTypes.GENERIC;
+	private String damageType = null;
 
 	public AbstractSkill() {
 		ResourceLoader.Skill sk = this.getClass().getAnnotation(ResourceLoader.Skill.class);
@@ -190,13 +188,13 @@ public abstract class AbstractSkill implements ISkill {
 	}
 
 	@Override
-	public RpgDamageType getDamageType() {
-		return damagetype;
+	public String getDamageType() {
+		return damageType;
 	}
 
 	@Override
-	public void setDamageType(RpgDamageType type) {
-		damagetype = type;
+	public void setDamageType(String type) {
+		damageType = type;
 	}
 
 	public void addSkillType(ISkillType type) {

@@ -23,4 +23,10 @@ public class LocalizationServiceImpl implements LocalizationService {
         String s = map.get(key);
         return StringUtils.replaceEachRepeatedly(s, keys, args);
     }
+
+    @Override
+    public String translate(String message, String singleKey, String singleArg) {
+        String s = map.get(message);
+        return StringUtils.replace(s, singleKey, singleArg);
+    }
 }

@@ -20,7 +20,6 @@ package cz.neumimto.rpg.api.skills;
 
 import com.typesafe.config.Config;
 import cz.neumimto.rpg.api.IRpgElement;
-import cz.neumimto.rpg.api.damage.RpgDamageType;
 import cz.neumimto.rpg.api.effects.IEffectSource;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
@@ -76,9 +75,9 @@ public interface ISkill extends IEffectSourceProvider, IRpgElement {
 
 	void setIcon(String icon);
 
-	RpgDamageType getDamageType();
+	String getDamageType();
 
-	void setDamageType(RpgDamageType type);
+	void setDamageType(String type);
 
 	default String getItemType() {
 		return "stone";
