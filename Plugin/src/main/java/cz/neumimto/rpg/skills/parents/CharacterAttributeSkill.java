@@ -1,26 +1,22 @@
 package cz.neumimto.rpg.skills.parents;
 
-import static org.jline.utils.Log.warn;
-
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.attributes.Attribute;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
 import org.spongepowered.api.Sponge;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiFunction;
+
+import static org.jline.utils.Log.warn;
 
 public class CharacterAttributeSkill extends AbstractSkill {
 

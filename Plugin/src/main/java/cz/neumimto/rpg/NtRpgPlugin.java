@@ -23,6 +23,7 @@ import com.google.inject.Injector;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.PluginCore;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.configuration.Settings;
@@ -46,7 +47,6 @@ import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.ExperienceSourceRegistry;
 import cz.neumimto.rpg.players.ExperienceSources;
 import cz.neumimto.rpg.players.attributes.Attribute;
-import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.ISkillType;
 import cz.neumimto.rpg.skills.NDamageType;
 import cz.neumimto.rpg.skills.SkillTypeRegistry;
@@ -119,6 +119,8 @@ public class NtRpgPlugin {
 
 	public static GlobalScope GlobalScope;
 
+	public static final Set<String> INTEGRATIONS = new HashSet<>();
+
 	@Inject
 	private Injector injector;
 
@@ -137,7 +139,17 @@ public class NtRpgPlugin {
 		} catch (URISyntaxException us) {
 			us.printStackTrace();
 		}
+
+		try {
+			Class.forName("me.rojo8399.placeholderapi.PlaceholderService");
+			INTEGRATIONS.add("Placeholders");
+			info("Placeholders Enabled");
+		} catch (ClassNotFoundException ignored) {
+			info("Placeholders Disabled");
+		}
+
 		Injector childInjector = injector.createChildInjector(new NtRpgGuiceModule());
+
 		GlobalScope = childInjector.getInstance(GlobalScope.class);
 
 
@@ -395,7 +407,7 @@ public class NtRpgPlugin {
 		Game game = Sponge.getGame();
 		Optional<PluginContainer> gui = game.getPluginManager().getPlugin("MinecraftGUIServer");
 		if (gui.isPresent()) {
-			//ioc.registerInterfaceImplementation(MinecraftGuiService.class, game.getServiceManager().provide(MinecraftGuiService.class).get());
+
 		} else {
 			Settings.ENABLED_GUI = false;
 		}
@@ -421,14 +433,13 @@ public class NtRpgPlugin {
 
 		Sponge.getRegistry().registerModule(ISkill.class, GlobalScope.skillService);
 
-		try {
-			Class.forName("me.rojo8399.placeholderapi.PlaceholderService");
+
+		if (INTEGRATIONS.contains("Placeholders")) {
 			Placeholders placeholders = injector.getInstance(Placeholders.class);
 			placeholders.init();
-			info("Placeholders Enabled");
-		} catch (ClassNotFoundException e) {
-			info("Placeholders Disabled");
+			info("Placeholders Initialized");
 		}
+
 
 		double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
 		info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");

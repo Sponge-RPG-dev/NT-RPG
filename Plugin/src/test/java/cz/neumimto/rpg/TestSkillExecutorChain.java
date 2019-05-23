@@ -1,10 +1,10 @@
 package cz.neumimto.rpg;
 
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.configuration.AttributeConfiguration;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.attributes.Attribute;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillSettings;
 import it.unimi.dsi.fastutil.objects.AbstractObject2FloatMap;

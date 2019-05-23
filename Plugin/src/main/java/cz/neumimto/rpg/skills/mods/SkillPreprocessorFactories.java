@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.skills.mods;
 
 import com.typesafe.config.ConfigObject;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JSLoader;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
 
 import javax.script.ScriptException;
 

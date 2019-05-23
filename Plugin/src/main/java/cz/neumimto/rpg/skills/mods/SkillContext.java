@@ -1,11 +1,11 @@
 package cz.neumimto.rpg.skills.mods;
 
+import cz.neumimto.rpg.api.skills.IActiveSkill;
+import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.ISkillNode;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
-import cz.neumimto.rpg.skills.SkillResult;
-import cz.neumimto.rpg.skills.parents.IActiveSkill;
 
 import java.util.ArrayList;
 import java.util.Comparator;

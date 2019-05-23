@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.skills;
+package cz.neumimto.rpg.api.skills;
 
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 

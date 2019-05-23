@@ -1,8 +1,5 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.api.effects.Generate;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.effects.IGlobalEffect;
 import jdk.internal.dynalink.beans.StaticClass;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import net.bytebuddy.ByteBuddy;
@@ -16,14 +13,10 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 
 import javax.inject.Singleton;
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
-
-import static cz.neumimto.rpg.api.logging.Log.info;
 
 /**
  * Created by NeumimTo on 12.10.15.
@@ -49,10 +42,6 @@ public class ClassGenerator implements Opcodes {
 	private String packagee = "cz/neumimto/rpg/asm/";
 
 	public ClassGenerator() {
-	}
-
-	private String toPath(Class<?> cl) {
-		return cl.getName().replaceAll("\\.", "/");
 	}
 
 	public Object generateDynamicListener(List<ScriptObjectMirror> list) {
@@ -111,42 +100,4 @@ public class ClassGenerator implements Opcodes {
 	private <T> T extract(ScriptObjectMirror obj, String key, T def) {
 		return obj.hasMember(key) ? (T) obj.get(key) : def;
 	}
-
-	protected Class<?> loadClass(String className, byte[] b, ClassLoader loader) {
-		Class<?> clazz = null;
-		try {
-			info("Loading class " + className + " size " + b.length + " using a classloader " + loader.toString());
-			//ClassLoader loader = getClass().getClassLoader();
-			Class<?> cls = Class.forName("java.lang.ClassLoader");
-			java.lang.reflect.Method method = cls.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class);
-
-			method.setAccessible(true);
-			try {
-				Object[] args = new Object[]{className, b, 0, b.length};
-				clazz = (Class<?>) method.invoke(loader, args);
-			} finally {
-				method.setAccessible(false);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return clazz;
-	}
-
-	public <T extends IEffect> void injectGlobalEffectField(Class<T> t, IGlobalEffect<T> toInject) {
-		Generate g = t.getAnnotation(Generate.class);
-		if (g.inject()) {
-			Stream.of(t.getFields())
-					.filter(f -> f.getType().isAssignableFrom(IGlobalEffect.class) && Modifier.isStatic(f.getModifiers()))
-					.forEach(f -> {
-						try {
-							f.set(null, toInject);
-						} catch (IllegalAccessException e) {
-							e.printStackTrace();
-						}
-					});
-		}
-	}
-
-
 }

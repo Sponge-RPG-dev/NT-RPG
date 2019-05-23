@@ -4,7 +4,6 @@ import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
 import cz.neumimto.rpg.configuration.adapters.PropertiesMapAdapter;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
-import org.spongepowered.api.item.ItemType;
 
 import java.util.Map;
 @ConfigSerializable
@@ -24,7 +23,7 @@ public class AttributeConfiguration {
     private Map<Integer, Float> propBonus;
 
     @Setting("ItemType")
-    private ItemType itemType;
+    private String itemType;
 
     @Setting("Description")
     private String description;
@@ -45,7 +44,7 @@ public class AttributeConfiguration {
         return propBonus;
     }
 
-    public ItemType getItemType() {
+    public String getItemType() {
         return itemType;
     }
 

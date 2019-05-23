@@ -1,4 +1,6 @@
-package cz.neumimto.rpg.skills;
+package cz.neumimto.rpg.api.skills;
+
+import cz.neumimto.rpg.skills.SkillData;
 
 import java.util.ArrayList;
 import java.util.HashMap;

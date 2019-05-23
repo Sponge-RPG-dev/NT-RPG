@@ -6,7 +6,6 @@ import cz.neumimto.rpg.configuration.adapters.PropertiesMapAdapter;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.CatalogType;
-import org.spongepowered.api.item.ItemType;
 
 import java.util.Map;
 
@@ -27,7 +26,7 @@ public class Attribute implements CatalogType {
     private Map<Integer, Float> propBonus;
 
     @Setting("ItemType")
-    private ItemType itemType;
+    private String itemType;
 
     @Setting("Description")
     private String description;
@@ -36,7 +35,7 @@ public class Attribute implements CatalogType {
         this(a.getId(), a.getName(), a.getMaxValue(), a.getPropBonus(), a.getItemType(), a.getDescription());
     }
 
-    public Attribute(String id, String name, float maxValue, Map<Integer, Float> propBonus, ItemType itemType, String description) {
+    public Attribute(String id, String name, float maxValue, Map<Integer, Float> propBonus, String itemType, String description) {
         this.id = id;
         this.name = name;
         this.maxValue = maxValue;
@@ -61,7 +60,7 @@ public class Attribute implements CatalogType {
         return maxValue;
     }
 
-    public ItemType getItemType() {
+    public String getItemType() {
         return itemType;
     }
 

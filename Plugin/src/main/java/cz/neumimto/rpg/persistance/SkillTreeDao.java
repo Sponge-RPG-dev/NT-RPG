@@ -19,14 +19,19 @@
 package cz.neumimto.rpg.persistance;
 
 import com.typesafe.config.*;
-import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.Rpg;
+import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.SkillCost;
+import cz.neumimto.rpg.api.skills.SkillDependency;
+import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.gui.SkillTreeInterfaceModel;
 import cz.neumimto.rpg.players.attributes.Attribute;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillItemCost;
+import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoader;
 import cz.neumimto.rpg.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactory;
@@ -155,16 +160,18 @@ public class SkillTreeDao {
 					skill = type1.build(id.toLowerCase());
 
 				} catch (ConfigException.Missing ignored) {
+					warn("Missing Type node, skipping");
+					continue;
 				}
 
 				try {
 					List<String> description = c.getStringList("Description");
-					skill.setDescription(description.stream().map(TextHelper::parse).collect(Collectors.toList()));
+					skill.setDescription(description);
 				} catch (ConfigException.Missing ignored) {}
 
 				try {
 					List<String> lore = c.getStringList("Lore");
-					skill.setDescription(lore.stream().map(TextHelper::parse).collect(Collectors.toList()));
+					skill.setDescription(lore);
 				} catch (ConfigException.Missing ignored) {}
 
 			} else {
@@ -289,9 +296,9 @@ public class SkillTreeDao {
 			}
 
 			try {
-				info.setSkillName(TextHelper.parse(c.getString("Name")));
-				info(" - Alternate name defined for skill " + info.getSkill().getId() + " > " + info.getSkillName().toPlain());
-				NtRpgPlugin.GlobalScope.skillService.registerSkillAlternateName(info.getSkillName().toPlain(), info.getSkill());
+				info.setSkillName(c.getString("Name"));
+				info(" - Alternate name defined for skill " + info.getSkill().getId() + " > " + info.getSkillName());
+				NtRpgPlugin.GlobalScope.skillService.registerSkillAlternateName(info.getSkillName(), info.getSkill());
 			} catch (ConfigException missing) {
 				info.setSkillName(info.getSkill().getLocalizableName());
 			}

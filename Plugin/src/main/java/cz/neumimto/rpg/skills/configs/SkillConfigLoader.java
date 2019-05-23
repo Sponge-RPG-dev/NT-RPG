@@ -2,8 +2,8 @@ package cz.neumimto.rpg.skills.configs;
 
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.configuration.DebugLevel;
-import cz.neumimto.rpg.skills.ISkill;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 import org.spongepowered.api.CatalogType;

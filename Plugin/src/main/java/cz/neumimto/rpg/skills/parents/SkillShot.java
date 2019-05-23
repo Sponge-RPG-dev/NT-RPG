@@ -18,11 +18,11 @@
 
 package cz.neumimto.rpg.skills.parents;
 
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.ProjectileProperties;
-import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.utils.TriConsumer;
 import org.spongepowered.api.Game;

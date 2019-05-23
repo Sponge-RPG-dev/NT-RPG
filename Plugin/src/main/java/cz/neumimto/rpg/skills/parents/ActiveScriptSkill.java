@@ -1,10 +1,10 @@
 package cz.neumimto.rpg.skills.parents;
 
 import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkillType;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
-import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.configs.ScriptSkillModel;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.scripting.ScriptExecutorSkill;

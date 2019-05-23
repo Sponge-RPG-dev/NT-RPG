@@ -1,10 +1,13 @@
 package cz.neumimto.rpg;
 
+import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactory;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -27,5 +30,19 @@ public final class SpongeRpgApi implements RpgApi {
     @Override
     public ItemService getItemService() {
         return NtRpgPlugin.GlobalScope.itemService;
+    }
+
+    private void broadcastMessage(Text text) {
+        Collection<Player> onlinePlayers = Sponge.getServer().getOnlinePlayers();
+    }
+
+    @Override
+    public void broadcastMessage(String message) {
+        broadcastMessage(TextHelper.parse(message));
+    }
+
+    @Override
+    public void broadcastLocalizableMessage(String message, String[] keys, String[] args) {
+        broadcastMessage(TextHelper.parse(NtRpgPlugin.GlobalScope.localizationService.translate(message, keys, args)));
     }
 }

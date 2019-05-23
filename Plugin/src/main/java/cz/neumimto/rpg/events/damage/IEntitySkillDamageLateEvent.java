@@ -1,10 +1,10 @@
 package cz.neumimto.rpg.events.damage;
 
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.damage.ISkillDamageSource;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.events.skill.SkillEvent;
 import cz.neumimto.rpg.scripting.JsBinding;
-import cz.neumimto.rpg.skills.ISkill;
 import org.spongepowered.api.event.cause.Cause;
 
 /**

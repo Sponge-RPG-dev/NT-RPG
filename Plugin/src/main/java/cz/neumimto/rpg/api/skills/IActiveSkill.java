@@ -1,7 +1,6 @@
-package cz.neumimto.rpg.skills.parents;
+package cz.neumimto.rpg.api.skills;
 
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 
 public interface IActiveSkill {

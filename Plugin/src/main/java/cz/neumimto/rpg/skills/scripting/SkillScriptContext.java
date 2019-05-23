@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.skills.scripting;
 
-import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
-import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillResult;
 
 /**
  * Created by NeumimTo on 12.8.2018.

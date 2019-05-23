@@ -1,14 +1,14 @@
 package cz.neumimto.rpg.commands.elements;
 
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.skills.ISkill;
+import cz.neumimto.rpg.api.skills.ISkill;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.PatternMatchingCommandElement;
 import org.spongepowered.api.text.Text;
 
-import java.util.Optional;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class AnySkillCommandElement extends PatternMatchingCommandElement {
 

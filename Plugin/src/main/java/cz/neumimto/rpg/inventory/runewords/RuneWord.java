@@ -2,14 +2,8 @@ package cz.neumimto.rpg.inventory.runewords;
 
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import org.spongepowered.api.item.ItemType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 29.10.2015.
@@ -22,7 +16,7 @@ public class RuneWord {
 	private Set<ClassDefinition> allowedGroups = new HashSet<>();
 
 	private Map<IGlobalEffect, String> effects = new HashMap<>();
-	private Set<ItemType> allowedItems = new HashSet<>();
+	private Set<String> allowedItems = new HashSet<String>();
 
 	private String lore;
 
@@ -66,11 +60,11 @@ public class RuneWord {
 		this.effects = effects;
 	}
 
-	public Set<ItemType> getAllowedItems() {
+	public Set<String> getAllowedItems() {
 		return allowedItems;
 	}
 
-	public void setAllowedItems(Set<ItemType> allowedItems) {
+	public void setAllowedItems(Set<String> allowedItems) {
 		this.allowedItems = allowedItems;
 	}
 

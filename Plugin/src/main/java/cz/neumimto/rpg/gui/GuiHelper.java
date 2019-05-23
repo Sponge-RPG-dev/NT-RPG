@@ -1,10 +1,9 @@
 package cz.neumimto.rpg.gui;
 
-import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Block;
-import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Item;
-
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.SkillPathData;
 import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.configuration.Localizations;
@@ -18,10 +17,8 @@ import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.NDamageType;
 import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillPathData;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.utils.Utils;
@@ -33,7 +30,6 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
@@ -46,11 +42,10 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Block;
+import static cz.neumimto.rpg.gui.CatalogTypeItemStackBuilder.Item;
 
 /**
  * Created by ja on 29.12.2016.
@@ -83,7 +78,7 @@ public class GuiHelper {
 		damageTypeToItemStack.put(NDamageType.LIGHTNING, Item.of(ItemTypes.NETHER_STAR));
 	}
 
-	public static ItemStack itemStack(ItemType type) {
+	public static ItemStack itemStack(String type) {
 		ItemStack is = ItemStack.of(type, 1);
 		is.offer(Keys.HIDE_ATTRIBUTES, true);
 		is.offer(Keys.HIDE_MISCELLANEOUS, true);
@@ -357,7 +352,7 @@ public class GuiHelper {
 				build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(1, 1))).offer(damageTypeToItemStack(type));
 			}
 
-			List<ItemStack> itemStacks = skillData.getSkill().configurationToItemStacks(skillData);
+			List<ItemStack> itemStacks = configurationToItemStacks(skillData);
 			int m, n, i = 0;
 
 			for (m = 0; m < 8; m++) {
@@ -373,6 +368,43 @@ public class GuiHelper {
 		return build;
 
 	}
+
+
+	private static List<ItemStack> configurationToItemStacks(SkillData skillData) {
+		List<ItemStack> a = new ArrayList<>();
+		if (skillData.getSkillSettings() != null) {
+			Map<String, Float> nodes = skillData.getSkillSettings().getNodes();
+			for (Map.Entry<String, Float> s : nodes.entrySet()) {
+				if (!s.getKey().endsWith("_levelbonus")) {
+					String s1 = Utils.configNodeToReadableString(s.getKey());
+					Float init = s.getValue();
+					Float lbonus = nodes.get(s.getKey() + "_levelbonus");
+					ItemStack of = GuiHelper.itemStack(ItemTypes.PAPER);
+					of.offer(Keys.DISPLAY_NAME, Text.builder(s1).build());
+					of.offer(new MenuInventoryData(true));
+					of.offer(Keys.ITEM_LORE, Arrays.asList(
+							Text.builder().append(Localizations.SKILL_VALUE_STARTS_AT.toText())
+									.style(TextStyles.BOLD)
+									.color(TextColors.GOLD)
+									.append(Text.builder(": " + init)
+											.color(TextColors.GREEN).style(TextStyles.BOLD)
+											.build())
+									.build()
+							,
+							Text.builder().append(Localizations.SKILL_VALUE_PER_LEVEL.toText())
+									.style(TextStyles.BOLD).color(TextColors.GOLD)
+									.append(Text.builder(": " + lbonus)
+											.color(TextColors.GREEN).style(TextStyles.BOLD)
+											.build())
+									.build()
+					));
+					a.add(of);
+				}
+			}
+		}
+		return a;
+	}
+
 
 	public static ItemStack interactiveModeToitemStack(IActiveCharacter character, SkillTreeViewModel.InteractiveMode interactiveMode) {
 		ItemStack md = itemStack(interactiveMode.getItemType());

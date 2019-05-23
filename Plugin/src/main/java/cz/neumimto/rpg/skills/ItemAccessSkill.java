@@ -7,6 +7,7 @@ import cz.neumimto.rpg.api.effects.IEffectSource;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.items.RpgItemType;
+import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.common.configuration.ItemString;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectSourceType;

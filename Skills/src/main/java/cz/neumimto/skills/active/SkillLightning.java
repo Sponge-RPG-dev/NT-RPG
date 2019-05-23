@@ -2,14 +2,14 @@ package cz.neumimto.skills.active;
 
 import cz.neumimto.Decorator;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillNodes;
+import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.NDamageType;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
-import cz.neumimto.rpg.skills.SkillNodes;
-import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.parents.Targeted;
 import cz.neumimto.rpg.skills.tree.SkillType;

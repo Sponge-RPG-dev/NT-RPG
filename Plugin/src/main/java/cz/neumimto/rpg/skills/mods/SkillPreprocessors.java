@@ -1,14 +1,14 @@
 package cz.neumimto.rpg.skills.mods;
 
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillNodes;
+import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.events.skill.SkillPostUsageEvent;
 import cz.neumimto.rpg.events.skill.SkillPreUsageEvent;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.properties.DefaultProperties;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
-import cz.neumimto.rpg.skills.SkillNodes;
-import cz.neumimto.rpg.skills.SkillResult;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 

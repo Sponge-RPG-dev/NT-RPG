@@ -18,10 +18,10 @@
 
 package cz.neumimto.rpg.skills;
 
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.gui.GuiHelper;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.property.item.UseLimitProperty;
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
@@ -33,7 +33,7 @@ import java.util.Optional;
  */
 public class SkillItemIcon {
 
-	public ItemType itemType;
+	public String itemType;
 	public String skillName;
 
 	public ISkill skill;

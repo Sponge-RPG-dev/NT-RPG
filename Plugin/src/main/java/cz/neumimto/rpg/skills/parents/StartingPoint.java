@@ -18,9 +18,9 @@
 
 package cz.neumimto.rpg.skills.parents;
 
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkillType;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillSettings;
 import org.spongepowered.api.item.ItemTypes;

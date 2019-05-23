@@ -16,12 +16,14 @@
  *
  */
 
-package cz.neumimto.rpg.skills;
+package cz.neumimto.rpg.api.skills;
 
 import cz.neumimto.rpg.Rpg;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.skills.mods.ActiveSkillPreProcessorWrapper;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 
@@ -30,7 +32,6 @@ import java.util.*;
 /**
  * Created by NeumimTo on 26.7.2015.
  */
-//TODO move to API subproject
 public class PlayerSkillContext {
 
 	public static PlayerSkillContext Empty = new PlayerSkillContext(null, null, null) {{

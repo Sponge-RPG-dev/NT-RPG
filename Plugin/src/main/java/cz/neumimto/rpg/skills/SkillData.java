@@ -18,7 +18,9 @@
 
 package cz.neumimto.rpg.skills;
 
-import org.spongepowered.api.text.Text;
+import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.SkillCost;
+import cz.neumimto.rpg.api.skills.SkillDependency;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -48,7 +50,7 @@ public class SkillData {
 	private int relativeY;
 	private int skillTreeId;
 	private int levelGap;
-	private Text skillName;
+	private String skillName;
 	private SkillCost invokeCost;
 
 	public SkillData(String skill) {
@@ -163,11 +165,11 @@ public class SkillData {
 		this.levelGap = levelGap;
 	}
 
-	public Text getSkillName() {
+	public String getSkillName() {
 		return skillName;
 	}
 
-	public void setSkillName(Text skillName) {
+	public void setSkillName(String skillName) {
 		this.skillName = skillName;
 	}
 

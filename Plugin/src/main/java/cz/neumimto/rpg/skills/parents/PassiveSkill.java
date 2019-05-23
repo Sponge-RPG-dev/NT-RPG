@@ -19,12 +19,12 @@
 package cz.neumimto.rpg.skills.parents;
 
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
-import cz.neumimto.rpg.skills.SkillResult;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 
 import javax.inject.Inject;

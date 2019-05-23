@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.skills.mods;
 
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
 
 /**
  * Created by NeumimTo on 27.10.2018.

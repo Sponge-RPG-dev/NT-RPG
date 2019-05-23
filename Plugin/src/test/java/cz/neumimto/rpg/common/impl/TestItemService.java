@@ -7,6 +7,7 @@ import cz.neumimto.rpg.common.configuration.ItemString;
 import cz.neumimto.rpg.common.items.AbstractItemService;
 import cz.neumimto.rpg.common.items.RpgItemStackImpl;
 import cz.neumimto.rpg.common.items.TestItemType;
+import cz.neumimto.rpg.items.SpongeRpgItemType;
 
 import javax.inject.Singleton;
 import java.util.Collections;
@@ -16,7 +17,7 @@ import java.util.Optional;
 public class TestItemService extends AbstractItemService {
 
     @Override
-    protected Optional<RpgItemType> createRpgItemType(ItemString parsed, ItemClass weapons) {
+    protected Optional<SpongeRpgItemType> createRpgItemType(ItemString parsed, ItemClass weapons) {
         return Optional.of(new TestItemType(parsed.itemId, parsed.model, weapons, parsed.damage, parsed.armor));
     }
 

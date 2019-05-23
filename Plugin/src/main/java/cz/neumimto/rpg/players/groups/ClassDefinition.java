@@ -37,7 +37,6 @@ import cz.neumimto.rpg.skills.tree.SkillTree;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.entity.EntityType;
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
@@ -66,7 +65,7 @@ public class ClassDefinition implements IEffectSourceProvider {
 	protected ItemStack info;
 
 	@Setting("ItemType")
-	protected ItemType itemType;
+	protected String itemType;
 
 	@Setting("Visible")
 	protected boolean showsInMenu = true;
@@ -208,11 +207,11 @@ public class ClassDefinition implements IEffectSourceProvider {
 		return propLevelBonus;
 	}
 
-	public ItemType getItemType() {
+	public String getItemType() {
 		return itemType;
 	}
 
-	public void setItemType(ItemType itemType) {
+	public void setItemType(String itemType) {
 		this.itemType = itemType;
 	}
 

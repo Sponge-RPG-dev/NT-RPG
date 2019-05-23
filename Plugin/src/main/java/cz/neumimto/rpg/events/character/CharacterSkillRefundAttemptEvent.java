@@ -18,9 +18,9 @@
 
 package cz.neumimto.rpg.events.character;
 
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.events.skill.SkillEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ISkill;
 import org.spongepowered.api.text.Text;
 
 /**

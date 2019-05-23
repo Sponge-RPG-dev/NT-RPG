@@ -2,10 +2,10 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.skills.ISkill;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.skills.pipeline;
+package cz.neumimto.rpg.skills.scripting;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

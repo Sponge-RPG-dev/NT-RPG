@@ -20,22 +20,23 @@ package cz.neumimto.rpg.skills.parents;
 
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.Rpg;
+import cz.neumimto.rpg.api.damage.RpgDamageType;
+import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
-import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.ISkillType;
 import cz.neumimto.rpg.skills.SkillItemIcon;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.utils.CatalogId;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 
 import javax.inject.Inject;
@@ -58,20 +59,19 @@ public abstract class AbstractSkill implements ISkill {
 	@Inject
 	protected CharacterService characterService;
 
-	protected Text name;
 	protected String strName;
-	protected List<Text> description;
+	protected List<String> description;
 	protected SkillSettings settings = new SkillSettings();
 	protected SkillItemIcon icon;
-	protected String url;
-	protected ItemType itemType;
+
+	protected String itemType;
 
 	@CatalogId
 	private String catalogId;
 
 	private Set<ISkillType> skillTypes = new HashSet<>();
-	private List<Text> lore;
-	private DamageType damagetype = DamageTypes.GENERIC;
+	private List<String> lore;
+	private RpgDamageType damagetype = DamageTypes.GENERIC;
 
 	public AbstractSkill() {
 		ResourceLoader.Skill sk = this.getClass().getAnnotation(ResourceLoader.Skill.class);
@@ -95,22 +95,19 @@ public abstract class AbstractSkill implements ISkill {
 	}
 
 	@Override
-	public Text getLocalizableName() {
-		return name;
+	public String getLocalizableName() {
+		return strName;
 	}
 
 	@Override
-	public void setLocalizableName(Text name) {
-		this.name = name;
-		this.strName = name.toPlain();
+	public void setLocalizableName(String name) {
+		this.strName = name;
 	}
 
 	@Override
 	public void skillLearn(IActiveCharacter IActiveCharacter) {
 		if (pluginConfig.PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE) {
-			Text t = Localizations.PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE
-					.toText(Arg.arg("player", IActiveCharacter.getName()).with("skill", getName()));
-			game.getServer().getOnlinePlayers().forEach(p -> p.sendMessage(t));
+			Rpg.get().broadcastLocalizableMessage(LocalizationKeys.PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE, IActiveCharacter.getName(), getLocalizableName());
 		}
 	}
 
@@ -162,12 +159,12 @@ public abstract class AbstractSkill implements ISkill {
 	}
 
 	@Override
-	public List<Text> getDescription() {
+	public List<String> getDescription() {
 		return description;
 	}
 
 	@Override
-	public void setDescription(List<Text> description) {
+	public void setDescription(List<String> description) {
 		this.description = description;
 	}
 
@@ -177,48 +174,28 @@ public abstract class AbstractSkill implements ISkill {
 	}
 
 	@Override
-	public boolean showsToPlayers() {
-		return true;
-	}
-
-	@Override
-	public SkillItemIcon getIcon() {
-		return icon;
-	}
-
-	@Override
-	public void setIcon(ItemType icon) {
+	public void setIcon(String icon) {
 		this.itemType = icon;
 		this.icon = new SkillItemIcon(this);
 	}
 
 	@Override
-	public String getIconURL() {
-		return url;
-	}
-
-	@Override
-	public void setIconURL(String url) {
-		this.url = url;
-	}
-
-	@Override
-	public List<Text> getLore() {
+	public List<String> getLore() {
 		return lore;
 	}
 
 	@Override
-	public void setLore(List<Text> lore) {
+	public void setLore(List<String> lore) {
 		this.lore = lore;
 	}
 
 	@Override
-	public DamageType getDamageType() {
+	public RpgDamageType getDamageType() {
 		return damagetype;
 	}
 
 	@Override
-	public void setDamageType(DamageType type) {
+	public void setDamageType(RpgDamageType type) {
 		damagetype = type;
 	}
 
@@ -246,7 +223,7 @@ public abstract class AbstractSkill implements ISkill {
 	}
 
 	@Override
-	public ItemType getItemType() {
+	public String getItemType() {
 		return itemType;
 	}
 

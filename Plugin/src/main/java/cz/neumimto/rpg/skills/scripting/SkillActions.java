@@ -8,7 +8,6 @@ import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.scripting.JsBinding;
-import cz.neumimto.rpg.skills.pipeline.SkillComponent;
 import cz.neumimto.rpg.skills.utils.F;
 import cz.neumimto.rpg.utils.TriConsumer;
 import org.spongepowered.api.Sponge;

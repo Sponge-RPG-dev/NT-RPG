@@ -29,6 +29,7 @@ import cz.neumimto.rpg.players.SpongeCharacterService;
 import cz.neumimto.rpg.players.parties.PartyService;
 import cz.neumimto.rpg.properties.SpongePropertyService;
 import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.utils.Placeholders;
 
 public class NtRpgGuiceModule extends AbstractModule {
     @Override
@@ -65,5 +66,10 @@ public class NtRpgGuiceModule extends AbstractModule {
         bind(InventoryService.class).to(SpongeInventoryService.class);
         bind(RWDao.class);
         bind(RWService.class);
+
+
+        if (NtRpgPlugin.INTEGRATIONS.contains("Placeholders")) {
+            bind(Placeholders.class);
+        }
     }
 }

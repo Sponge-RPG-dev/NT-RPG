@@ -16,15 +16,23 @@
  *
  */
 
-package cz.neumimto.rpg.skills;
+package cz.neumimto.rpg.api.skills;
 
-import cz.neumimto.rpg.entities.IEntity;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.mods.SkillContext;
+import cz.neumimto.rpg.scripting.JsBinding;
 
 /**
- * Created by NeumimTo on 1.1.2015.
+ * Created by NeumimTo on 26.7.2015.
  */
-public interface ITargeted {
-	void castOn(IEntity target, IActiveCharacter source, PlayerSkillContext info, SkillContext skillContext);
+@JsBinding(JsBinding.Type.CLASS)
+public enum SkillResult {
+	OK,
+	FAIL,
+	CANCELLED,
+	CASTER_SILENCED,
+	NO_TARGET,
+	NO_HP,
+	NO_MANA,
+	ON_COOLDOWN,
+	WRONG_DATA,
+	NEGATIVE_SKILL_LEVEL
 }

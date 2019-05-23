@@ -3,7 +3,6 @@ package cz.neumimto.rpg.skills.scripting;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.properties.SpongePropertyService;
 import cz.neumimto.rpg.scripting.JsBinding;
-import cz.neumimto.rpg.skills.pipeline.SkillComponent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

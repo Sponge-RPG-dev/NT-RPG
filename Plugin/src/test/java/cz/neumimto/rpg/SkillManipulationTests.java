@@ -2,14 +2,14 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.ActionResult;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillDependency;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.*;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillDependency;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;

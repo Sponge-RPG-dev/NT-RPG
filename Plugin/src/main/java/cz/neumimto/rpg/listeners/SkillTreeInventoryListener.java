@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.listeners;
 
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.gui.SkillTreeControllsButton;
 import cz.neumimto.rpg.inventory.data.NKeys;
@@ -9,7 +10,6 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.skills.ISkill;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import org.spongepowered.api.Sponge;

@@ -15,4 +15,8 @@ public interface RpgApi {
 
     ItemService getItemService();
 
+    void broadcastMessage(String message);
+
+    void broadcastLocalizableMessage(String message, String[] keys, String[] args);
+
 }

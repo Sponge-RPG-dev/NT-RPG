@@ -2,11 +2,11 @@ package cz.neumimto.rpg.commands.skill;
 
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ISkill;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.mods.SkillExecutorCallback;
 import org.spongepowered.api.command.CommandException;

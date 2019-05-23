@@ -4,7 +4,6 @@ import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.skills.tree.SkillTree;
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.text.Text;
 
@@ -79,9 +78,9 @@ public class SkillTreeViewModel {
 		DETAILED(Localizations.INTERACTIVE_SKILLTREE_MOD_DETAILS.toText(), ItemTypes.BOOK),
 		FAST(Localizations.INTERACTIVE_SKILLTREE_MOD_FAST.toText(), ItemTypes.GOLD_NUGGET);
 		private Text transltion;
-		private ItemType type;
+		private String type;
 
-		InteractiveMode(Text interactiveSkilltreeModFast, ItemType type) {
+		InteractiveMode(Text interactiveSkilltreeModFast, String type) {
 			this.transltion = interactiveSkilltreeModFast;
 			this.type = type;
 		}
@@ -94,7 +93,7 @@ public class SkillTreeViewModel {
 			return this == DETAILED ? FAST : DETAILED;
 		}
 
-		public ItemType getItemType() {
+		public String getItemType() {
 			return type;
 		}
 	}

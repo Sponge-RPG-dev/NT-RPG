@@ -5,7 +5,6 @@ import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.entities.IEntityType;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
-import cz.neumimto.rpg.skills.pipeline.SkillComponent;
 import cz.neumimto.rpg.utils.Utils;
 import org.apache.commons.lang3.NotImplementedException;
 import org.spongepowered.api.data.key.Keys;
@@ -14,7 +13,10 @@ import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.monster.Monster;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.BiFunction;
 
 @JsBinding(JsBinding.Type.CONTAINER)

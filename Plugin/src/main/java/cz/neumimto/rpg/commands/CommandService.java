@@ -20,6 +20,7 @@ package cz.neumimto.rpg.commands;
 
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.commands.admin.*;
 import cz.neumimto.rpg.commands.character.*;
 import cz.neumimto.rpg.commands.elements.*;
@@ -35,7 +36,6 @@ import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.inventory.sockets.SocketType;
 import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.skills.ISkill;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandResult;

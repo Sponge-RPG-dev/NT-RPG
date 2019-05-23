@@ -9,6 +9,7 @@ import cz.neumimto.rpg.api.items.*;
 import cz.neumimto.rpg.common.configuration.ItemString;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.items.SpongeRpgItemType;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.attributes.Attribute;
@@ -138,11 +139,11 @@ public abstract class AbstractItemService implements ItemService {
         loadWeaponGroups(itemGroups, null);
 
         for (String shield : config.getStringList("Armor")) {
-            Optional<RpgItemType> rpgItemType = createRpgItemType(ItemString.parse(shield), ItemClass.ARMOR);
+            Optional<SpongeRpgItemType> rpgItemType = createRpgItemType(ItemString.parse(shield), ItemClass.ARMOR);
             rpgItemType.ifPresent(this::registerRpgItemType);
         }
         for (String shield : config.getStringList("Shields")) {
-            Optional<RpgItemType> rpgItemType = createRpgItemType(ItemString.parse(shield), ItemClass.SHIELD);
+            Optional<SpongeRpgItemType> rpgItemType = createRpgItemType(ItemString.parse(shield), ItemClass.SHIELD);
             rpgItemType.ifPresent(this::registerRpgItemType);
         }
     }
@@ -173,7 +174,7 @@ public abstract class AbstractItemService implements ItemService {
             List<String> items = itemGroup.getStringList("Items");
             for (String item : items) {
                 ItemString parsed = ItemString.parse(item);
-                Optional<RpgItemType> rpgItemType = createRpgItemType(parsed, weapons);
+                Optional<SpongeRpgItemType> rpgItemType = createRpgItemType(parsed, weapons);
                 rpgItemType.ifPresent(this::registerRpgItemType);
                 rpgItemType.ifPresent(a -> weapons.getItems().add(a));
             }
@@ -209,7 +210,7 @@ public abstract class AbstractItemService implements ItemService {
         return map;
     }
 
-    protected abstract Optional<RpgItemType> createRpgItemType(ItemString parsed, ItemClass weapons);
+    protected abstract Optional<SpongeRpgItemType> createRpgItemType(ItemString parsed, ItemClass weapons);
 
     @Override
     public boolean checkItemClassRequirements(IActiveCharacter character, RpgItemStack rpgItemStack) {

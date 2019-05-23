@@ -15,9 +15,9 @@
  */
 package cz.neumimto.rpg.events.skill;
 
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.events.entity.AbstractIEntityCancellableEvent;
-import cz.neumimto.rpg.skills.ISkill;
 
 public class SkillTargetAttemptEvent extends AbstractIEntityCancellableEvent implements SkillEvent {
 	private final IEntity caster;

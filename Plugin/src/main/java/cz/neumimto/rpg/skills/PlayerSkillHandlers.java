@@ -1,5 +1,8 @@
 package cz.neumimto.rpg.skills;
 
+import cz.neumimto.rpg.api.skills.IPlayerSkillHandler;
+import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 
 import java.util.Collections;

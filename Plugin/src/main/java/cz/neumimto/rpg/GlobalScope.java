@@ -19,6 +19,7 @@
 package cz.neumimto.rpg;
 
 import com.google.inject.Injector;
+import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.commands.CommandService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.damage.SpongeDamageService;
@@ -113,4 +114,7 @@ public class GlobalScope {
 
 	@Inject
 	public Gui gui;
+
+	@Inject
+	public LocalizationService localizationService;
 }

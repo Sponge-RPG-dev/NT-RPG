@@ -86,13 +86,13 @@ public class SpongeItemService extends AbstractItemService {
 	}
 
 	@Override
-	protected Optional<RpgItemType> createRpgItemType(ItemString parsed, ItemClass wClass) {
+	protected Optional<SpongeRpgItemType> createRpgItemType(ItemString parsed, ItemClass wClass) {
 		Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, parsed.itemId);
 		if (!type.isPresent()) {
 			Log.error(" - Not Managed ItemType " + parsed.itemId);
 			return Optional.empty();
 		}
-		ItemType itemType = type.get();
+		String itemType = type.get();
 		return Optional.of(new SpongeRpgItemType(parsed.itemId, parsed.model, wClass, parsed.damage, parsed.armor, itemType));
 	}
 

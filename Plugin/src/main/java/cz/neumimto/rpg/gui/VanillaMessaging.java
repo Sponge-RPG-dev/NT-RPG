@@ -26,6 +26,7 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.items.ClassItem;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.commands.InfoCommand;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.configuration.Localizations;
@@ -50,7 +51,6 @@ import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.reloading.Reload;
 import cz.neumimto.rpg.reloading.ReloadService;
-import cz.neumimto.rpg.skills.PlayerSkillContext;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.skills.tree.SkillTree;
@@ -585,7 +585,7 @@ public class VanillaMessaging implements IPlayerMessage {
                 .offer(back("runeword " + rw.getName(), Localizations.RUNEWORD_DETAILS_MENU.toText()));
         int x = 1;
         int y = 2;
-        for (ItemType type : rw.getAllowedItems()) {
+        for (String type : rw.getAllowedItems()) {
             i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(x, y))).offer(GuiHelper.itemStack(type));
             if (x == 7) {
                 x = 1;
