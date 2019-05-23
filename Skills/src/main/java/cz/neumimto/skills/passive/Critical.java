@@ -9,7 +9,7 @@ import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.types.PassiveSkill;
-import cz.neumimto.rpg.skills.tree.SkillType;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
 import javax.inject.Inject;

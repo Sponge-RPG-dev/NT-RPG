@@ -9,7 +9,7 @@ import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.entity.EntityTypes;

@@ -1,23 +1,22 @@
 package cz.neumimto.rpg.skills.mods;
 
 import com.typesafe.config.ConfigObject;
-import org.spongepowered.api.CatalogType;
+import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
+import cz.neumimto.rpg.api.skills.mods.PreProcessorTarget;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Created by ja on 22.10.2016.
  */
-public abstract class SkillPreProcessorFactory implements CatalogType {
+public abstract class SkillPreProcessorFactory {
 
 	private final String name;
 	private final Set<PreProcessorTarget> targetExcutions;
 
-	public SkillPreProcessorFactory(String name, PreProcessorTarget... targetExcutions) {
+	public SkillPreProcessorFactory(String name, Set<PreProcessorTarget> targetExcutions) {
 		this.name = name.toLowerCase();
-		this.targetExcutions = new HashSet<>(Arrays.asList(targetExcutions));
+		this.targetExcutions = targetExcutions;
 	}
 
 	public Set<PreProcessorTarget> allowedTargets() {
@@ -26,12 +25,10 @@ public abstract class SkillPreProcessorFactory implements CatalogType {
 
 	public abstract ActiveSkillPreProcessorWrapper parse(ConfigObject configObject);
 
-	@Override
 	public String getName() {
 		return name;
 	}
 
-	@Override
     public String getId() {
 		return "ntrpg:" + getName();
 	}

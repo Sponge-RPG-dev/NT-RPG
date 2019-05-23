@@ -1,19 +1,20 @@
 package cz.neumimto.rpg.skills.parents;
 
+import com.google.inject.Inject;
 import com.typesafe.config.Config;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.damage.DamageService;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.types.AbstractSkill;
 import cz.neumimto.rpg.api.utils.Console;
-import cz.neumimto.rpg.damage.SpongeDamageService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.properties.DefaultProperties;
-import cz.neumimto.rpg.properties.SpongePropertyService;
 import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.mods.SkillContext;
-import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
 
 import java.util.ArrayList;
@@ -23,18 +24,14 @@ import java.util.function.BiFunction;
 
 public class PropertySkill extends AbstractSkill {
 
-	private SpongePropertyService spongePropertyService;
+	@Inject
+	private PropertyService propertyService;
 
-	private SpongeDamageService spongeDamageService;
+	@Inject
+	private DamageService damageService;
 
+	@Inject
 	private EntityService entityService;
-
-	public PropertySkill() {
-		super();
-		spongePropertyService = NtRpgPlugin.GlobalScope.spongePropertyService;
-		spongeDamageService = NtRpgPlugin.GlobalScope.damageService;
-		entityService = NtRpgPlugin.GlobalScope.entityService;
-	}
 
 	@Override
 	public void onPreUse(IActiveCharacter character, SkillContext skillContext) {
@@ -77,8 +74,8 @@ public class PropertySkill extends AbstractSkill {
 					entityService.updateWalkSpeed(character);
 				} else if (property.propertyId == DefaultProperties.max_mana) {
 					characterService.updateMaxMana(character);
-				} else if (spongePropertyService.updatingRequiresDamageRecalc(property.propertyId)) {
-					spongeDamageService.recalculateCharacterWeaponDamage(character);
+				} else if (propertyService.updatingRequiresDamageRecalc(property.propertyId)) {
+					damageService.recalculateCharacterWeaponDamage(character);
 				}
 			}
 		}

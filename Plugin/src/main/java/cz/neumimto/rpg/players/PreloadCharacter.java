@@ -34,7 +34,7 @@ import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.properties.DefaultProperties;
-import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
+import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.type.HandType;
 import org.spongepowered.api.effect.potion.PotionEffect;

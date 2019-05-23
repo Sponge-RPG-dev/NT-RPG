@@ -26,8 +26,8 @@ import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
-import cz.neumimto.rpg.skills.mods.SkillContext;
-import cz.neumimto.rpg.skills.tree.SkillType;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
 
 /**
  * Created by NeumimTo on 26.7.2015.

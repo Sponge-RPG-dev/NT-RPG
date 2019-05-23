@@ -3,7 +3,7 @@ package cz.neumimto.rpg.skills.scripting;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
-import cz.neumimto.rpg.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
 
 @FunctionalInterface
 @JsBinding(JsBinding.Type.CLASS)

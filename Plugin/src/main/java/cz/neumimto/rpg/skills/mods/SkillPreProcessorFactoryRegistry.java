@@ -11,23 +11,23 @@ import java.util.Optional;
 /**
  * Created by NeumimTo on 14.10.2018.
  */
-public class SkillPreProcessorFactoryRegistry implements AdditionalCatalogRegistryModule<SkillPreProcessorFactory> {
+public class SkillPreProcessorFactoryRegistry implements AdditionalCatalogRegistryModule<SkillPreProcessorFactorySpongeWrapper> {
 
 	@RegisterCatalog(SkillPreProcessorFactory.class)
-	private Map<String, SkillPreProcessorFactory> cache = new HashMap<>();
+	private Map<String, SkillPreProcessorFactorySpongeWrapper> cache = new HashMap<>();
 
 	@Override
-	public void registerAdditionalCatalog(SkillPreProcessorFactory extraCatalog) {
+	public void registerAdditionalCatalog(SkillPreProcessorFactorySpongeWrapper extraCatalog) {
 		cache.put(extraCatalog.getId().toLowerCase(), extraCatalog);
 	}
 
 	@Override
-	public Optional<SkillPreProcessorFactory> getById(String id) {
+	public Optional<SkillPreProcessorFactorySpongeWrapper> getById(String id) {
 		return Optional.ofNullable(cache.get(id.toLowerCase()));
 	}
 
 	@Override
-	public Collection<SkillPreProcessorFactory> getAll() {
+	public Collection<SkillPreProcessorFactorySpongeWrapper> getAll() {
 		return cache.values();
 	}
 }

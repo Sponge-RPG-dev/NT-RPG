@@ -25,8 +25,8 @@ import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.events.skill.SkillTargetAttemptEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.mods.SkillContext;
-import cz.neumimto.rpg.skills.tree.SkillType;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.entity.living.Living;
 

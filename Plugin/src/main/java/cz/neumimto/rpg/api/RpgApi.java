@@ -6,6 +6,8 @@ import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactory;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface RpgApi {
@@ -25,4 +27,6 @@ public interface RpgApi {
     void broadcastLocalizableMessage(String playerLearnedSkillGlobalMessage, String name, String localizableName);
 
     String getTextAssetContent(String templateName);
+
+    void executeCommandBatch(Map<String, String> args, List<String> enterCommands);
 }

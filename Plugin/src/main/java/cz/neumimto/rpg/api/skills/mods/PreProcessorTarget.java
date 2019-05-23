@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.skills.mods;
+package cz.neumimto.rpg.api.skills.mods;
 
 public enum PreProcessorTarget {
     EARLY,

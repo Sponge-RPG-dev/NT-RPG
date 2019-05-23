@@ -1,27 +1,21 @@
-package cz.neumimto.rpg.skills.tree;
+package cz.neumimto.rpg.api.skills.tree;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.core.localization.Arg;
+import cz.neumimto.rpg.Rpg;
+import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillPathData;
-import cz.neumimto.rpg.configuration.Localizations;
+import cz.neumimto.rpg.api.skills.types.PassiveSkill;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillSettings;
-import cz.neumimto.rpg.api.skills.types.PassiveSkill;
 import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
-import cz.neumimto.rpg.utils.Utils;
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.text.Text;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 
@@ -34,19 +28,17 @@ public class SkillTreeSpecialization extends PassiveSkill {
 	public SkillTreeSpecialization() {
 		super();
 		SkillSettings settings = new SkillSettings();
-		addSkillType(SkillType.PATH);
-		setIcon(ItemTypes.BOOK);
 		super.setSettings(settings);
 	}
 
 	@Override
 	public void skillLearn(IActiveCharacter IActiveCharacter) {
 		if (pluginConfig.PLAYER_CHOOSED_SKILLTREE_SPECIALIZATION_GLOBAL_MESSAGE) {
-			Text t = Localizations.PLAYER_CHOOSED_SKILLTREE_PATH_GLOBAL_MESSAGE_CONTENT.toText(
+			Rpg.get().broadcastLocalizableMessage(LocalizationKeys.PLAYER_CHOOSED_SKILLTREE_PATH_GLOBAL_MESSAGE_CONTENT,
 					Arg.arg("player", IActiveCharacter.getPlayer().getName())
 							.with("character", IActiveCharacter.getName())
 							.with("path", getName()));
-			game.getServer().getOnlinePlayers().forEach(p -> p.sendMessage(t));
+
 		}
 		onCharacterInit(IActiveCharacter, 1);
 	}
@@ -65,10 +57,8 @@ public class SkillTreeSpecialization extends PassiveSkill {
 
 		if (pdata.getEnterCommands() != null) {
 			Map<String, String> args = new HashMap<>();
-			Player pl = c.getPlayer();
-			args.put("player", pl.getName());
-			args.put("uuid", pl.getUniqueId().toString());
-			Utils.executeCommandBatch(args, pdata.getEnterCommands());
+			args.put("player", c.getName());
+			Rpg.get().executeCommandBatch(args, pdata.getEnterCommands());
 		}
 
 		for (Map.Entry<String, Integer> entry : pdata.getSkillBonus().entrySet()) {
@@ -86,10 +76,8 @@ public class SkillTreeSpecialization extends PassiveSkill {
 
 		if (pdata.getEnterCommands() != null) {
 			Map<String, String> args = new HashMap<>();
-			Player player = c.getPlayer();
-			args.put("player", player.getName());
-			args.put("uuid", player.getUniqueId().toString());
-			Utils.executeCommandBatch(args, pdata.getExitCommands());
+			args.put("player", c.getName());
+			Rpg.get().executeCommandBatch(args, pdata.getExitCommands());
 		}
 	}
 
@@ -147,8 +135,7 @@ public class SkillTreeSpecialization extends PassiveSkill {
 		}
 		try {
 			String a = c.getString("ItemIcon");
-			Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, a);
-			type.ifPresent(this::setIcon);
+			setIcon(a);
 		} catch (ConfigException e) {
 
 		}

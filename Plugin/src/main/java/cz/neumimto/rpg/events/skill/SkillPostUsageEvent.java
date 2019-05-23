@@ -22,7 +22,7 @@ import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.events.entity.AbstractIEntityCancellableEvent;
 import cz.neumimto.rpg.scripting.JsBinding;
-import cz.neumimto.rpg.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
 
 /**
  * Created by NeumimTo on 7.8.2015.

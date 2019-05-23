@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.skills.mods;
+package cz.neumimto.rpg.api.skills.mods;
 
 import cz.neumimto.rpg.api.skills.types.IActiveSkill;
 import cz.neumimto.rpg.api.skills.ISkill;

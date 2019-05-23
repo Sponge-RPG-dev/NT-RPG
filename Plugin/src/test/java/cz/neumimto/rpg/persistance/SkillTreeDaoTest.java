@@ -7,7 +7,7 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.api.skills.types.AbstractSkill;
-import cz.neumimto.rpg.skills.tree.SkillTree;
+import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

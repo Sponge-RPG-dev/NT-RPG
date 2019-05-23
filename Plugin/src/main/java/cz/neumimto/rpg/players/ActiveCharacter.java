@@ -37,7 +37,7 @@ import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.skills.ItemAccessSkill;
 import cz.neumimto.rpg.skills.PlayerSkillHandlers;
-import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
+import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import org.jline.utils.Log;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.type.HandType;

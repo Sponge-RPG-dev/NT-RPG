@@ -11,7 +11,7 @@ import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.skills.SkillService;
-import cz.neumimto.rpg.skills.tree.SkillTree;
+import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;

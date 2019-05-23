@@ -33,7 +33,7 @@ import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.leveling.EmptyLevelProgression;
 import cz.neumimto.rpg.players.leveling.ILevelProgression;
 import cz.neumimto.rpg.players.leveling.SkillTreeType;
-import cz.neumimto.rpg.skills.tree.SkillTree;
+import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.entity.EntityType;

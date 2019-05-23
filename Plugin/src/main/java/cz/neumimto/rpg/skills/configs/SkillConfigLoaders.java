@@ -3,7 +3,7 @@ package cz.neumimto.rpg.skills.configs;
 import cz.neumimto.rpg.skills.ItemAccessSkill;
 import cz.neumimto.rpg.api.skills.types.CharacterAttributeSkill;
 import cz.neumimto.rpg.skills.parents.PropertySkill;
-import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
+import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 
 public class SkillConfigLoaders {
 

@@ -24,7 +24,7 @@ import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillSettings;
-import cz.neumimto.rpg.skills.mods.ActiveSkillPreProcessorWrapper;
+import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 
 import java.util.*;

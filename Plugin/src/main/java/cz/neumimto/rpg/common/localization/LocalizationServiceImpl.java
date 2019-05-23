@@ -31,4 +31,9 @@ public class LocalizationServiceImpl implements LocalizationService {
         String s = map.get(message);
         return StringUtils.replace(s, singleKey, singleArg);
     }
+
+    @Override
+    public String translate(String staticMessage) {
+        return map.get(staticMessage);
+    }
 }

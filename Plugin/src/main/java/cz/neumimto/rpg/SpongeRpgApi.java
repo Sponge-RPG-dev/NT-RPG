@@ -6,12 +6,15 @@ import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactory;
+import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public final class SpongeRpgApi implements RpgApi {
@@ -65,5 +68,10 @@ public final class SpongeRpgApi implements RpgApi {
         } catch (IOException e) {
             throw new IllegalArgumentException("Unknown template " + templateName);
         }
+    }
+
+    @Override
+    public void executeCommandBatch(Map<String, String> args, List<String> cmd) {
+        Utils.executeCommandBatch(args, cmd);
     }
 }

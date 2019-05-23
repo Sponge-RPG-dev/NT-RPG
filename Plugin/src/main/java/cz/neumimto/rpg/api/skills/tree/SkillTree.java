@@ -16,7 +16,7 @@
  *
  */
 
-package cz.neumimto.rpg.skills.tree;
+package cz.neumimto.rpg.api.skills.tree;
 
 import cz.neumimto.rpg.Pair;
 import cz.neumimto.rpg.skills.SkillData;

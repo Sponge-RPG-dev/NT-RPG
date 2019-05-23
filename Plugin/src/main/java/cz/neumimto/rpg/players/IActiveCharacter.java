@@ -32,7 +32,7 @@ import cz.neumimto.rpg.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
-import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
+import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import org.spongepowered.api.data.type.HandType;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;

@@ -16,7 +16,7 @@
  *
  */
 
-package cz.neumimto.rpg.skills.parents;
+package cz.neumimto.rpg.api.skills.types;
 
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.types.PassiveSkill;
@@ -47,17 +47,12 @@ public final class StartingPoint extends PassiveSkill {
 	}
 
 	@Override
-	public boolean showsToPlayers() {
-		return false;
-	}
-
-	@Override
 	public String getName() {
 		return name.toPlain();
 	}
 
 	@Override
-	public List<Text> getDescription() {
+	public List<String> getDescription() {
 		return Collections.emptyList();
 	}
 

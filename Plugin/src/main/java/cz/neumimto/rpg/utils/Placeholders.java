@@ -4,7 +4,7 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
-import cz.neumimto.rpg.skills.tree.SkillTreeSpecialization;
+import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import me.rojo8399.placeholderapi.Placeholder;
 import me.rojo8399.placeholderapi.PlaceholderService;
 import me.rojo8399.placeholderapi.Source;

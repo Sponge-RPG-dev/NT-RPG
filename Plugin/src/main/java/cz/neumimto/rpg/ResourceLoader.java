@@ -24,9 +24,9 @@ import cz.neumimto.configuration.ConfigurationContainer;
 import cz.neumimto.core.PluginCore;
 import cz.neumimto.core.Repository;
 import cz.neumimto.core.localization.Localization;
-import cz.neumimto.core.localization.LocalizationService;
 import cz.neumimto.core.localization.ResourceBundle;
 import cz.neumimto.core.localization.ResourceBundles;
+import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.commands.CommandBase;
@@ -292,14 +292,14 @@ public class ResourceLoader {
 			if (sk.dynamicLocalizationNodes()) {
 				String[] split = sk.value().split(":");
 				String key = split[0] + ".skills." + split[1];
-				skill.setLocalizableName(localizationService.getText(key + ".name"));
-				skill.setDescription(localizationService.getTextList(key + ".desc"));
-				skill.setLore(localizationService.getTextList(key + ".lore"));
+				skill.setLocalizableName(localizationService.translate(key + ".name"));
+				skill.setDescription(localizationService.translateMultiline(key + ".desc"));
+				skill.setLore(localizationService.translateMultiline(key + ".lore"));
 			}
 			if (skill.getLocalizableName().isEmpty()) {
 				String name = skill.getClass().getSimpleName();
 				name = name.startsWith("Skill") ? name.substring("Skill".length()) : name;
-				skill.setLocalizableName(Text.of(name));
+				skill.setLocalizableName(name);
 			}
 			skillService.registerAdditionalCatalog(skill);
 		}

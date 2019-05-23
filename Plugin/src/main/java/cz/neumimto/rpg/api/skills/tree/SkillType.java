@@ -16,14 +16,13 @@
  *
  */
 
-package cz.neumimto.rpg.skills.tree;
+package cz.neumimto.rpg.api.skills.tree;
 
-import static org.spongepowered.api.util.Tristate.FALSE;
-import static org.spongepowered.api.util.Tristate.TRUE;
-import static org.spongepowered.api.util.Tristate.UNDEFINED;
 
+import cz.neumimto.rpg.api.utils.TriState;
 import cz.neumimto.rpg.skills.ISkillType;
-import org.spongepowered.api.util.Tristate;
+
+import static cz.neumimto.rpg.api.utils.TriState.*;
 
 /**
  * Created by NeumimTo on 26.7.2015.
@@ -58,18 +57,18 @@ public enum SkillType implements ISkillType {
 	 */
 	PATH(UNDEFINED, "ntrpg:path", "Path");
 
-	private Tristate negative;
+	private TriState negative;
 	private String id;
 	private String name;
 
-	SkillType(Tristate negative, String id, String name) {
+	SkillType(TriState negative, String id, String name) {
 		this.negative = negative;
 		this.id = id;
 		this.name = name;
 	}
 
 	@Override
-	public Tristate isNegative() {
+	public TriState isNegative() {
 		return negative;
 	}
 

@@ -51,12 +51,11 @@ public class SkillConfigLoader implements CatalogType {
 		Object o = null;
 		try {
 			o = rl.loadClass(value, getClass().getClassLoader());
-
 		} catch (IllegalAccessException | InstantiationException e) {
 			e.printStackTrace();
 		}
 		ISkill o1 = (ISkill) o;
-		o1.setLocalizableName(Text.of(name));
+		o1.setLocalizableName(name);
 		return o1;
 	}
 
