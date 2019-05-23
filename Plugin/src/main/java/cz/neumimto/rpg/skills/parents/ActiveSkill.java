@@ -19,6 +19,8 @@
 package cz.neumimto.rpg.skills.parents;
 
 import cz.neumimto.rpg.api.skills.*;
+import cz.neumimto.rpg.api.skills.types.AbstractSkill;
+import cz.neumimto.rpg.api.skills.types.IActiveSkill;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;

@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.skills.mods;
 
-import cz.neumimto.rpg.api.skills.IActiveSkill;
+import cz.neumimto.rpg.api.skills.types.IActiveSkill;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;

@@ -16,8 +16,9 @@
  *
  */
 
-package cz.neumimto.rpg.api.skills;
+package cz.neumimto.rpg.api.skills.types;
 
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.mods.SkillContext;

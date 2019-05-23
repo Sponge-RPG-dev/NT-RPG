@@ -6,6 +6,7 @@ import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.api.skills.types.AbstractSkill;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.damage.SpongeDamageService;

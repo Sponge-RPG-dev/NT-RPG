@@ -16,7 +16,7 @@
  *
  */
 
-package cz.neumimto.rpg.skills.parents;
+package cz.neumimto.rpg.api.skills.types;
 
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.ResourceLoader;
@@ -34,8 +34,6 @@ import cz.neumimto.rpg.skills.ISkillType;
 import cz.neumimto.rpg.skills.SkillItemIcon;
 import cz.neumimto.rpg.skills.SkillSettings;
 import cz.neumimto.rpg.utils.CatalogId;
-import org.spongepowered.api.Game;
-import org.spongepowered.api.text.Text;
 
 import javax.inject.Inject;
 import java.util.HashSet;
@@ -50,9 +48,6 @@ import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
  */
 @JsBinding(JsBinding.Type.CLASS)
 public abstract class AbstractSkill implements ISkill {
-
-	@Inject
-	protected Game game;
 
 	@Inject
 	protected CharacterService characterService;
@@ -112,20 +107,19 @@ public abstract class AbstractSkill implements ISkill {
 	@Override
 	public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
 		if (pluginConfig.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE) {
-			Text t = Localizations.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE.toText(
+			Rpg.get().broadcastLocalizableMessage(LocalizationKeys.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE,
 					Arg.arg("player", IActiveCharacter.getName())
-							.with("skill", getName())
-							.with("level", level));
-			game.getServer().getOnlinePlayers().forEach(p -> p.sendMessage(t));
+					.with("skill", getName())
+					.with("level", level));
 		}
 	}
 
 	@Override
 	public void skillRefund(IActiveCharacter IActiveCharacter) {
 		if (pluginConfig.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE) {
-			Text t = Localizations.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE.toText(
-					Arg.arg("%player%", IActiveCharacter.getName()).with("skill", getName()));
-			game.getServer().getOnlinePlayers().forEach(p -> p.sendMessage(t));
+			Rpg.get().broadcastLocalizableMessage(LocalizationKeys.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE,
+					Arg.arg("%player%", IActiveCharacter.getName())
+					.with("skill", getName()));
 		}
 	}
 

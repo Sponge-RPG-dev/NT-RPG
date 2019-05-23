@@ -21,6 +21,7 @@ package cz.neumimto.rpg.skills.parents;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.api.skills.types.AbstractSkill;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.players.IActiveCharacter;

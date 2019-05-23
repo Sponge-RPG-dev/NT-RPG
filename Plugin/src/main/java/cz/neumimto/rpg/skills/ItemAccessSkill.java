@@ -16,7 +16,7 @@ import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.items.SpongeRpgItemType;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.mods.SkillContext;
-import cz.neumimto.rpg.skills.parents.AbstractSkill;
+import cz.neumimto.rpg.api.skills.types.AbstractSkill;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
 import org.spongepowered.api.data.key.Keys;

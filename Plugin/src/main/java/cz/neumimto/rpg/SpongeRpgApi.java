@@ -1,5 +1,6 @@
 package cz.neumimto.rpg;
 
+import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.items.ItemService;
@@ -42,8 +43,8 @@ public final class SpongeRpgApi implements RpgApi {
     }
 
     @Override
-    public void broadcastLocalizableMessage(String message, String[] keys, String[] args) {
-        broadcastMessage(TextHelper.parse(NtRpgPlugin.GlobalScope.localizationService.translate(message, keys, args)));
+    public void broadcastLocalizableMessage(String message, Arg arg) {
+        broadcastMessage(TextHelper.parse(NtRpgPlugin.GlobalScope.localizationService.translate(message, arg)));
     }
 
     @Override

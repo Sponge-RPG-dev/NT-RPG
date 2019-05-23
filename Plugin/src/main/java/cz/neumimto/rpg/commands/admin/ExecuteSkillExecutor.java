@@ -2,7 +2,7 @@ package cz.neumimto.rpg.commands.admin;
 
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.api.skills.IActiveSkill;
+import cz.neumimto.rpg.api.skills.types.IActiveSkill;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.players.CommandblockSkillExecutor;

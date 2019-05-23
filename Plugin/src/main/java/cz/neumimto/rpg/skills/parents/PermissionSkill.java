@@ -17,6 +17,7 @@
 package cz.neumimto.rpg.skills.parents;
 
 import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.api.skills.types.AbstractSkill;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 

@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.common.localization;
 
+import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,13 +16,14 @@ public class LocalizationServiceImpl implements LocalizationService {
     @Override
     public void addTranslationKey(String key, String translation) {
         map.put(key, translation);
-
     }
 
+    //todo benchamrk this
     @Override
-    public String translate(String key, String[] keys, String[] args) {
+    public String translate(String key, Arg args) {
         String s = map.get(key);
-        return StringUtils.replaceEachRepeatedly(s, keys, args);
+        Map<String, Object> params = args.getParams();
+        return StringUtils.replaceEach(s, params.keySet().stream().toArray(String[]::new), params.values().stream().map(Object::toString).toArray(String[]::new));
     }
 
     @Override
