@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package cz.neumimto.rpg.skills.parents;
+package cz.neumimto.rpg.api.skills.types;
 
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.types.AbstractSkill;

@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.skills.parents;
+package cz.neumimto.rpg.api.skills.types;
 
 import cz.neumimto.rpg.skills.scripting.TargetedScriptExecutorSkill;
 

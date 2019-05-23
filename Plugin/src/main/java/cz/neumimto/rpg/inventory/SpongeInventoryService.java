@@ -30,6 +30,8 @@ import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillCost;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
@@ -49,7 +51,9 @@ import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.properties.SpongePropertyService;
 import cz.neumimto.rpg.reloading.Reload;
 import cz.neumimto.rpg.reloading.ReloadService;
+import cz.neumimto.rpg.skills.SkillItemCost;
 import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import ninja.leaping.configurate.SimpleConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
@@ -66,6 +70,7 @@ import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
+import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.text.Text;
@@ -358,5 +363,50 @@ public class SpongeInventoryService extends AbstractInventoryService {
 					+ " defined in ItemGroups.conf. Is the mod loaded? Is the class name correct? If you are unsure restart plugin with debug mode "
 					+ "ON and interact with desired inventory");
 		}
+	}
+
+	@Override
+	public Set<ActiveSkillPreProcessorWrapper> processItemCost(IActiveCharacter character, PlayerSkillContext skillInfo) {
+		SkillCost invokeCost = skillInfo.getSkillData().getInvokeCost();
+		if (invokeCost == null) {
+			return Collections.emptySet();
+		}
+		Player player = character.getPlayer();
+		Inventory query = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
+		Map<Inventory, Result> itemsToTake = new HashMap<>();
+		int c = 0;
+		outer:
+		for (SkillItemCost skillItemCost : invokeCost.getItemCost()) {
+			ItemType itemType = skillItemCost.getItemType();
+			int requiredAmount = skillItemCost.getAmount();
+			for (Inventory inventory : query) {
+				Optional<ItemStack> peek = inventory.peek();
+				if (peek.isPresent()) {
+					ItemStack itemStack = peek.get();
+					if (itemStack.getType() == itemType) {
+						if (itemStack.getQuantity() - requiredAmount < 0) {
+							itemsToTake.put(inventory, new Result(itemStack.getQuantity(), skillItemCost.consumeItems()));
+							requiredAmount-=itemStack.getQuantity();
+						} else {
+							itemsToTake.put(inventory, new Result(requiredAmount, skillItemCost.consumeItems()));
+							c++;
+							break outer;
+						}
+					}
+				}
+			}
+		}
+		if (c == invokeCost.getItemCost().size()) {
+			for (Map.Entry<Inventory, Result> e : itemsToTake.entrySet()) {
+				Result result = e.getValue();
+				if (result.consume) {
+					Inventory slot = e.getKey();
+					slot.poll(result.amount);
+				}
+			}
+		} else {
+			return invokeCost.getInsufficientProcessors();
+		}
+		return Collections.emptySet();
 	}
 }

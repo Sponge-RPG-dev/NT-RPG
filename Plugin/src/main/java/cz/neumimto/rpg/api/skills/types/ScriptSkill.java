@@ -1,12 +1,8 @@
-package cz.neumimto.rpg.skills.parents;
+package cz.neumimto.rpg.api.skills.types;
 
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.Rpg;
+import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.scripting.JSLoader;
-import cz.neumimto.rpg.skills.configs.ScriptSkillModel;
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.asset.Asset;
-
-import java.io.IOException;
 
 import javax.script.ScriptException;
 
@@ -31,17 +27,11 @@ public interface ScriptSkill<T> {
 	void setModel(ScriptSkillModel model);
 
 	default String bindScriptToTemplate(ScriptSkillModel model) {
-		Asset asset = Sponge.getAssetManager().getAsset(NtRpgPlugin.GlobalScope.plugin, getTemplateName()).get();
-		try {
-			String s = asset.readString();
-			s = s.replaceAll("\\{\\{skill\\.id}}", model.getId().replaceAll(":", ""));
-			s = s.replaceAll("\\{\\{userScript}}", model.getScript());
-			s = fill(s);
-			return s;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return "";
+		String s = Rpg.get().getTextAssetContent(getTemplateName());
+		s = s.replaceAll("\\{\\{skill\\.id}}", model.getId().replaceAll(":", ""));
+		s = s.replaceAll("\\{\\{userScript}}", model.getScript());
+		s = fill(s);
+		return s;
 	}
 
 	String getTemplateName();

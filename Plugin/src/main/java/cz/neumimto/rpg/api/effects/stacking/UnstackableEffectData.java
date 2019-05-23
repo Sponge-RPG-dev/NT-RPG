@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.effects.common.stacking;
+package cz.neumimto.rpg.api.effects.stacking;
 
 /**
  * Created by NeumimTo on 5.7.2017.

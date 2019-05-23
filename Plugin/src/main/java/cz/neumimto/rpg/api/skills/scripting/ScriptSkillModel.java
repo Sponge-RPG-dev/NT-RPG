@@ -1,10 +1,8 @@
-package cz.neumimto.rpg.skills.configs;
+package cz.neumimto.rpg.api.skills.scripting;
 
 import cz.neumimto.rpg.skills.ISkillType;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
-import org.spongepowered.api.event.cause.entity.damage.DamageType;
-import org.spongepowered.api.text.Text;
 
 import java.util.List;
 import java.util.Map;
@@ -25,13 +23,13 @@ public class ScriptSkillModel {
 	private List<ISkillType> skillTypes;
 
 	@Setting("Damage-Type")
-	private DamageType damageType;
+	private String damageType;
 
 	@Setting("Lore")
-	private List<Text> lore;
+	private List<String> lore;
 
 	@Setting("Description")
-	private List<Text> description;
+	private List<String> description;
 
 	@Setting("Settings")
 	private Map<String, Float> settings;
@@ -62,15 +60,15 @@ public class ScriptSkillModel {
 		return skillTypes;
 	}
 
-	public DamageType getDamageType() {
+	public String getDamageType() {
 		return damageType;
 	}
 
-	public List<Text> getLore() {
+	public List<String> getLore() {
 		return lore;
 	}
 
-	public List<Text> getDescription() {
+	public List<String> getDescription() {
 		return description;
 	}
 

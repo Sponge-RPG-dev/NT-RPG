@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.skills.parents;
 
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.types.PassiveSkill;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.ISkillType;
 import cz.neumimto.rpg.skills.SkillData;
@@ -43,7 +44,6 @@ public final class StartingPoint extends PassiveSkill {
 
 	public StartingPoint() {
 		super();
-		setIcon(ItemTypes.WOOL);
 	}
 
 	@Override

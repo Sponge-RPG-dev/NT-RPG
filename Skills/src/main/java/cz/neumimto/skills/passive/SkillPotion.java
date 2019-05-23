@@ -6,7 +6,7 @@ import cz.neumimto.effects.positive.PotionEffect;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.parents.PassiveSkill;
+import cz.neumimto.rpg.api.skills.types.PassiveSkill;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.potion.PotionEffectType;
 

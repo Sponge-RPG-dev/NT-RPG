@@ -9,7 +9,7 @@ import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.mods.SkillContext;
-import cz.neumimto.rpg.skills.parents.ActiveSkill;
+import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import org.spongepowered.api.text.Text;
 
 import javax.inject.Inject;

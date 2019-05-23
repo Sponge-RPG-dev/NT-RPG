@@ -12,6 +12,8 @@ public interface RpgApi {
 
     Collection<Attribute> getAttributes();
 
+    Optional<Attribute> getAttributeById(String id);
+
     Optional<SkillPreProcessorFactory> getSkillPreProcessorFactory(String preprocessorFactoryId);
 
     ItemService getItemService();
@@ -21,4 +23,6 @@ public interface RpgApi {
     void broadcastLocalizableMessage(String message, Arg arg);
 
     void broadcastLocalizableMessage(String playerLearnedSkillGlobalMessage, String name, String localizableName);
+
+    String getTextAssetContent(String templateName);
 }

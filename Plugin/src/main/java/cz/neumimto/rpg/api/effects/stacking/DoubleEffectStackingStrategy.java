@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.effects.common.stacking;
+package cz.neumimto.rpg.api.effects.stacking;
 
 import cz.neumimto.rpg.api.effects.EffectStackingStrategy;
 

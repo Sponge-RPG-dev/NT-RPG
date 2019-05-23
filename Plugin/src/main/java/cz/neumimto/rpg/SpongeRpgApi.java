@@ -10,6 +10,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -21,6 +22,11 @@ public final class SpongeRpgApi implements RpgApi {
     @Override
     public Collection<Attribute> getAttributes() {
         return Sponge.getRegistry().getAllOf(Attribute.class);
+    }
+
+    @Override
+    public Optional<Attribute> getAttributeById(String id) {
+        return Sponge.getRegistry().getType(Attribute.class, id);
     }
 
     @Override
@@ -50,5 +56,14 @@ public final class SpongeRpgApi implements RpgApi {
     @Override
     public void broadcastLocalizableMessage(String message, String singleKey, String singleArg) {
         broadcastMessage(TextHelper.parse(NtRpgPlugin.GlobalScope.localizationService.translate(message, singleKey, singleArg)));
+    }
+
+    @Override
+    public String getTextAssetContent(String templateName) {
+        try {
+            return Sponge.getAssetManager().getAsset(NtRpgPlugin.GlobalScope.plugin, templateName).get().readString();
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Unknown template " + templateName);
+        }
     }
 }

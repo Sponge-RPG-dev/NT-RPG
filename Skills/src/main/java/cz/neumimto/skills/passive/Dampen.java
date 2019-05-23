@@ -6,7 +6,7 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.parents.PassiveSkill;
+import cz.neumimto.rpg.api.skills.types.PassiveSkill;
 import cz.neumimto.rpg.skills.tree.SkillType;
 
 import javax.inject.Inject;

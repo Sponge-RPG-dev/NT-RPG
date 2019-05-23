@@ -4,7 +4,7 @@ import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.effects.EffectContainer;
 import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.effects.common.stacking.MinLongStackingStrategy;
+import cz.neumimto.rpg.api.effects.stacking.MinLongStackingStrategy;
 import cz.neumimto.rpg.scripting.JsBinding;
 
 

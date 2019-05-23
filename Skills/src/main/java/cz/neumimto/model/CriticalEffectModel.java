@@ -1,6 +1,6 @@
 package cz.neumimto.model;
 
-import cz.neumimto.rpg.effects.common.stacking.UnstackableEffectData;
+import cz.neumimto.rpg.api.effects.stacking.UnstackableEffectData;
 import cz.neumimto.rpg.scripting.JsBinding;
 
 /**

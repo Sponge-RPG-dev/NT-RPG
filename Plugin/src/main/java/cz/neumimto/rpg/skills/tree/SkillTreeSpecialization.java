@@ -9,7 +9,7 @@ import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillSettings;
-import cz.neumimto.rpg.skills.parents.PassiveSkill;
+import cz.neumimto.rpg.api.skills.types.PassiveSkill;
 import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Sponge;

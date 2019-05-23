@@ -1,8 +1,9 @@
-package cz.neumimto.rpg.skills.parents;
+package cz.neumimto.rpg.api.skills.types;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.Rpg;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.types.AbstractSkill;
@@ -12,7 +13,6 @@ import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
-import org.spongepowered.api.Sponge;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -80,7 +80,7 @@ public class CharacterAttributeSkill extends AbstractSkill {
 				String attribute = subc.getString("attribute");
 				int level = subc.getInt("skill-level");
 				int val = subc.getInt("attribute-value");
-				Optional<Attribute> type = Sponge.getRegistry().getType(Attribute.class, attribute);
+				Optional<Attribute> type = Rpg.get().getAttributeById(attribute);
 				if (!type.isPresent()) {
 					warn("Unknown attribute " +attribute+" in " + context.getId());
 					continue;

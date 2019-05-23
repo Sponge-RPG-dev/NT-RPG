@@ -1,17 +1,13 @@
 package cz.neumimto.rpg.skills.parents;
 
 import com.typesafe.config.Config;
-import cz.neumimto.core.localization.Arg;
-import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.types.AbstractSkill;
 import cz.neumimto.rpg.api.utils.Console;
-import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.damage.SpongeDamageService;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.gui.GuiHelper;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.properties.DefaultProperties;
 import cz.neumimto.rpg.properties.SpongePropertyService;
@@ -19,13 +15,6 @@ import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.mods.SkillContext;
 import cz.neumimto.rpg.skills.tree.SkillTree;
 import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
-import cz.neumimto.rpg.utils.Utils;
-import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,31 +102,6 @@ public class PropertySkill extends AbstractSkill {
 			}
 
 		}
-	}
-
-	@Override
-	public List<ItemStack> configurationToItemStacks(SkillData skillData) {
-		PropertySkillData data = (PropertySkillData) skillData;
-		List<ItemStack> arrayList = new ArrayList<>();
-		for (Wrapper wrapper : data.properties) {
-			ItemStack is = GuiHelper.itemStack(ItemTypes.PAPER);
-			List<Text> lore = new ArrayList<>();
-			is.offer(Keys.DISPLAY_NAME, TextHelper.makeText(Utils.configNodeToReadableString(wrapper.propertyName), TextColors.GREEN));
-			lore.add(Localizations.SKILL_LEVEL.toText(Arg.arg("level", wrapper.level)));
-			lore.add(Text.builder(Utils.configNodeToReadableString(wrapper.propertyName))
-					.style(TextStyles.BOLD)
-					.color(TextColors.GOLD)
-					.append(
-							Text.builder(": " + (wrapper.value < 0 ? "-" : "+") + wrapper.value)
-									.style(TextStyles.BOLD)
-									.color(wrapper.value < 0 ? TextColors.RED : TextColors.GREEN)
-									.build()
-
-					).build());
-			is.offer(Keys.ITEM_LORE, lore);
-			arrayList.add(is);
-		}
-		return arrayList;
 	}
 
 	@Override
