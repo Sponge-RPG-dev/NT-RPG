@@ -6,12 +6,10 @@ import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
-import org.spongepowered.api.CatalogType;
-import org.spongepowered.api.text.Text;
 
 import static cz.neumimto.rpg.api.logging.Log.info;
 
-public class SkillConfigLoader implements CatalogType {
+public class SkillConfigLoader {
 
 	private final String id;
 	private final String name;
@@ -23,14 +21,16 @@ public class SkillConfigLoader implements CatalogType {
 		this.type = type;
 	}
 
-	@Override
 	public String getId() {
 		return id;
 	}
 
-	@Override
 	public String getName() {
 		return name;
+	}
+
+	public Class<? extends ISkill> getType() {
+		return type;
 	}
 
 	public ISkill build(String id) {

@@ -53,10 +53,8 @@ import cz.neumimto.rpg.skills.ISkillType;
 import cz.neumimto.rpg.skills.NDamageType;
 import cz.neumimto.rpg.skills.SkillTypeRegistry;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoader;
-import cz.neumimto.rpg.skills.configs.SkillConfigLoaderRegistry;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoaders;
 import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactory;
-import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactoryRegistry;
 import cz.neumimto.rpg.sponge.SpongeGuiceModule;
 import cz.neumimto.rpg.sponge.SpongeRpgApi;
 import cz.neumimto.rpg.sponge.listeners.DebugListener;
@@ -332,8 +330,6 @@ public class NtRpgPlugin {
 		Sponge.getRegistry().registerModule(ItemSubtype.class, new ItemSubtypeRegistry());
 		Sponge.getRegistry().registerModule(ISkillType.class, new SkillTypeRegistry());
 		Sponge.getRegistry().registerModule(ExperienceSource.class, new ExperienceSourceRegistry());
-		Sponge.getRegistry().registerModule(SkillConfigLoader.class, new SkillConfigLoaderRegistry());
-		Sponge.getRegistry().registerModule(SkillPreProcessorFactory.class, new SkillPreProcessorFactoryRegistry());
 	}
 
 	@Listener

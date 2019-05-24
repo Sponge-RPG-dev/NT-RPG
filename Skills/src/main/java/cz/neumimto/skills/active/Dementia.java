@@ -5,13 +5,13 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
-import cz.neumimto.rpg.skills.parents.Targeted;
-import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.sponge.skills.types.Targeted;
 import org.spongepowered.api.item.ItemTypes;
 
 import javax.inject.Inject;
