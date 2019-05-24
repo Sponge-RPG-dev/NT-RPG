@@ -19,29 +19,29 @@
 package cz.neumimto.rpg.events.skill;
 
 import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.common.scripting.JsBinding;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.events.entity.AbstractIEntityCancellableEvent;
-import cz.neumimto.rpg.common.scripting.JsBinding;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 
 /**
  * Created by NeumimTo on 7.8.2015.
  */
 @JsBinding(JsBinding.Type.CLASS)
 public class SkillPostUsageEvent extends AbstractIEntityCancellableEvent implements SkillEvent {
-	private final SkillContext context;
+    private final SkillContext context;
 
-	public SkillPostUsageEvent(IEntity target, SkillContext context) {
-		super(target);
-		this.context = context;
-	}
+    public SkillPostUsageEvent(IEntity target, SkillContext context) {
+        super(target);
+        this.context = context;
+    }
 
-	public SkillContext getSkillContext() {
-		return context;
-	}
+    public SkillContext getSkillContext() {
+        return context;
+    }
 
-	@Override
-	public ISkill getSkill() {
-		return context.getSkill();
-	}
+    @Override
+    public ISkill getSkill() {
+        return context.getSkill();
+    }
 }

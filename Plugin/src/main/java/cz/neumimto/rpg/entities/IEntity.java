@@ -9,9 +9,9 @@ import org.spongepowered.api.entity.living.Living;
  */
 public interface IEntity<T extends Living> extends IEffectConsumer<T> {
 
-	IEntityType getType();
+    IEntityType getType();
 
-	IEntityResource getHealth();
+    IEntityResource getHealth();
 
-	boolean isFriendlyTo(IActiveCharacter character);
+    boolean isFriendlyTo(IActiveCharacter character);
 }

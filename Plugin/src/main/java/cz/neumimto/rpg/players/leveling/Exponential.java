@@ -28,7 +28,7 @@ public class Exponential extends AbstractLevelProgression {
         double[] arr = new double[getMaxLevel()];
         arr[0] = sequence;
         for (int i = 1; i < getMaxLevel(); i++) {
-            arr[i] = factor * arr[i-1];
+            arr[i] = factor * arr[i - 1];
         }
         return arr;
     }

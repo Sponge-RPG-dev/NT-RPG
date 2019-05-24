@@ -27,29 +27,29 @@ import org.spongepowered.api.event.cause.entity.damage.source.common.AbstractEnt
  */
 public class SkillDamageSource extends AbstractEntityDamageSource implements ISkillDamageSource {
 
-	private final ISkill skill;
-	private final IEntity nSource;
-	private final IEffect effect;
+    private final ISkill skill;
+    private final IEntity nSource;
+    private final IEffect effect;
 
-	public SkillDamageSource(SkillDamageSourceBuilder builder) {
-		super(builder);
-		this.skill = builder.getSkill();
-		this.nSource = builder.getSource();
-		this.effect = builder.getEffect();
-	}
+    public SkillDamageSource(SkillDamageSourceBuilder builder) {
+        super(builder);
+        this.skill = builder.getSkill();
+        this.nSource = builder.getSource();
+        this.effect = builder.getEffect();
+    }
 
-	@Override
-	public final ISkill getSkill() {
-		return this.skill;
-	}
+    @Override
+    public final ISkill getSkill() {
+        return this.skill;
+    }
 
-	@Override
-	public IEntity getSourceIEntity() {
-		return nSource;
-	}
+    @Override
+    public IEntity getSourceIEntity() {
+        return nSource;
+    }
 
-	@Override
-	public IEffect getEffect() {
-		return effect;
-	}
+    @Override
+    public IEffect getEffect() {
+        return effect;
+    }
 }

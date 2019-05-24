@@ -15,23 +15,23 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import java.util.Optional;
 
 public class ItemAddTypeExecutor implements CommandExecutor {
-	@Override
-	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		Player player = (Player) src;
-		Optional<ItemMetaType> type = args.getOne("type");
-		if (type.isPresent()) {
-			Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
-			if (itemInHand.isPresent()) {
-				ItemStack itemStack = itemInHand.get();
-				NtRpgPlugin.GlobalScope.inventorySerivce.createItemMetaSectionIfMissing(itemStack);
-				NtRpgPlugin.GlobalScope.inventorySerivce.setItemMetaType(itemStack, type.get());
-				NtRpgPlugin.GlobalScope.inventorySerivce.updateLore(itemStack);
-				player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
-				return CommandResult.builder().affectedItems(1).build();
-			}
-			src.sendMessage(Localizations.NO_ITEM_IN_HAND.toText());
-			return CommandResult.empty();
-		}
-		return CommandResult.empty();
-	}
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        Player player = (Player) src;
+        Optional<ItemMetaType> type = args.getOne("type");
+        if (type.isPresent()) {
+            Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
+            if (itemInHand.isPresent()) {
+                ItemStack itemStack = itemInHand.get();
+                NtRpgPlugin.GlobalScope.inventorySerivce.createItemMetaSectionIfMissing(itemStack);
+                NtRpgPlugin.GlobalScope.inventorySerivce.setItemMetaType(itemStack, type.get());
+                NtRpgPlugin.GlobalScope.inventorySerivce.updateLore(itemStack);
+                player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
+                return CommandResult.builder().affectedItems(1).build();
+            }
+            src.sendMessage(Localizations.NO_ITEM_IN_HAND.toText());
+            return CommandResult.empty();
+        }
+        return CommandResult.empty();
+    }
 }

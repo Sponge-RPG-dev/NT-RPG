@@ -11,26 +11,26 @@ import java.util.Set;
  */
 public abstract class SkillPreProcessorFactory {
 
-	private final String name;
-	private final Set<PreProcessorTarget> targetExcutions;
+    private final String name;
+    private final Set<PreProcessorTarget> targetExcutions;
 
-	public SkillPreProcessorFactory(String name, Set<PreProcessorTarget> targetExcutions) {
-		this.name = name.toLowerCase();
-		this.targetExcutions = targetExcutions;
-	}
+    public SkillPreProcessorFactory(String name, Set<PreProcessorTarget> targetExcutions) {
+        this.name = name.toLowerCase();
+        this.targetExcutions = targetExcutions;
+    }
 
-	public Set<PreProcessorTarget> allowedTargets() {
-		return targetExcutions;
-	}
+    public Set<PreProcessorTarget> allowedTargets() {
+        return targetExcutions;
+    }
 
-	public abstract ActiveSkillPreProcessorWrapper parse(ConfigObject configObject);
+    public abstract ActiveSkillPreProcessorWrapper parse(ConfigObject configObject);
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
     public String getId() {
-		return "ntrpg:" + getName();
-	}
+        return "ntrpg:" + getName();
+    }
 
 }

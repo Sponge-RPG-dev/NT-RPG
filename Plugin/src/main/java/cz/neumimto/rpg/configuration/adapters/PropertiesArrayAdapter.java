@@ -14,27 +14,27 @@ import java.util.Map;
  */
 public class PropertiesArrayAdapter implements TypeSerializer<float[]> {
 
-	@Override
-	public float[] deserialize(TypeToken<?> typeToken, ConfigurationNode configurationNode) throws ObjectMappingException {
-		float[] arr = new float[PropertyServiceImpl.LAST_ID];
+    @Override
+    public float[] deserialize(TypeToken<?> typeToken, ConfigurationNode configurationNode) throws ObjectMappingException {
+        float[] arr = new float[PropertyServiceImpl.LAST_ID];
 
-		Map<Object, ? extends ConfigurationNode> childrenMap = configurationNode.getChildrenMap();
-		for (Map.Entry<Object, ? extends ConfigurationNode> objectEntry : childrenMap.entrySet()) {
-			String propertyName = ((String) objectEntry.getKey()).toLowerCase();
-			float f = ((Number) objectEntry.getValue().getValue()).floatValue();
-			if (NtRpgPlugin.GlobalScope.spongePropertyService.exists(propertyName)) {
-				int idByName = NtRpgPlugin.GlobalScope.spongePropertyService.getIdByName(propertyName);
-				arr[idByName] = f;
-			} else {
-				throw new ObjectMappingException("Unknown property " + propertyName);
-			}
-		}
+        Map<Object, ? extends ConfigurationNode> childrenMap = configurationNode.getChildrenMap();
+        for (Map.Entry<Object, ? extends ConfigurationNode> objectEntry : childrenMap.entrySet()) {
+            String propertyName = ((String) objectEntry.getKey()).toLowerCase();
+            float f = ((Number) objectEntry.getValue().getValue()).floatValue();
+            if (NtRpgPlugin.GlobalScope.spongePropertyService.exists(propertyName)) {
+                int idByName = NtRpgPlugin.GlobalScope.spongePropertyService.getIdByName(propertyName);
+                arr[idByName] = f;
+            } else {
+                throw new ObjectMappingException("Unknown property " + propertyName);
+            }
+        }
 
-		return arr;
-	}
+        return arr;
+    }
 
-	@Override
-	public void serialize(TypeToken<?> typeToken, float[] floats, ConfigurationNode configurationNode) throws ObjectMappingException {
+    @Override
+    public void serialize(TypeToken<?> typeToken, float[] floats, ConfigurationNode configurationNode) throws ObjectMappingException {
 
-	}
+    }
 }

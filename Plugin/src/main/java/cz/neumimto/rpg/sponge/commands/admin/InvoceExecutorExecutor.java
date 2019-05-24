@@ -10,13 +10,13 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
 public class InvoceExecutorExecutor implements CommandExecutor {
-	@Override
-	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		args.<Player>getOne(Text.of("player")).ifPresent(p -> {
-			args.<String>getOne(Text.of("command")).ifPresent(c -> {
-				Sponge.getCommandManager().process(p, c);
-			});
-		});
-		return CommandResult.success();
-	}
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        args.<Player>getOne(Text.of("player")).ifPresent(p -> {
+            args.<String>getOne(Text.of("command")).ifPresent(c -> {
+                Sponge.getCommandManager().process(p, c);
+            });
+        });
+        return CommandResult.success();
+    }
 }

@@ -2,10 +2,10 @@ package cz.neumimto.rpg.api.skills.mods;
 
 import com.typesafe.config.ConfigObject;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.api.skills.SkillPreProcessorFactory;
 import cz.neumimto.rpg.api.skills.SkillPreprocessors;
+import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.scripting.JSLoader;
 
 import javax.script.ScriptException;
 import java.util.Arrays;
@@ -21,6 +21,7 @@ public class SkillPreprocessorFactories {
 
     public static final SkillPreProcessorFactory ADJUSTED_SKILL_SETTINGS = new SkillPreProcessorFactory("adjusted_skill_settings_value", new HashSet<>(Arrays.asList(PreProcessorTarget.BEFORE))) {
         final static String expr = "\\{\\{value}}";
+
         @Override
         public ActiveSkillPreProcessorWrapper parse(ConfigObject configObject) {
             final String key = configObject.get("Key").unwrapped().toString();

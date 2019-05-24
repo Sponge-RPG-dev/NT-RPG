@@ -33,86 +33,86 @@ import java.util.Set;
  */
 public interface IEffect<K> extends IRpgElement {
 
-	static GlobalScope getGlobalScope() {
-		return NtRpgPlugin.GlobalScope;
-	}
+    static GlobalScope getGlobalScope() {
+        return NtRpgPlugin.GlobalScope;
+    }
 
-	/**
-	 * @param self The reference to the effect currently being processed. IE: self == this is always true. Useful mainly for JavaScript scripts
-	 */
-	default void onTick(IEffect self) {
+    /**
+     * @param self The reference to the effect currently being processed. IE: self == this is always true. Useful mainly for JavaScript scripts
+     */
+    default void onTick(IEffect self) {
 
-	}
+    }
 
-	/**
-	 * @param self The reference to the effect currently being processed. IE: self == this is always true. Useful mainly for JavaScript scripts
-	 */
-	default void onApply(IEffect self) {
+    /**
+     * @param self The reference to the effect currently being processed. IE: self == this is always true. Useful mainly for JavaScript scripts
+     */
+    default void onApply(IEffect self) {
 
-	}
+    }
 
-	/**
-	 * @param self The reference to the effect currently being processed. IE: self == this is always true. Useful mainly for JavaScript scripts
-	 */
-	default void onRemove(IEffect self) {
+    /**
+     * @param self The reference to the effect currently being processed. IE: self == this is always true. Useful mainly for JavaScript scripts
+     */
+    default void onRemove(IEffect self) {
 
-	}
+    }
 
-	boolean isStackable();
+    boolean isStackable();
 
-	void setStackable(boolean b, EffectStackingStrategy<K> stackingStrategy);
+    void setStackable(boolean b, EffectStackingStrategy<K> stackingStrategy);
 
-	boolean requiresRegister();
+    boolean requiresRegister();
 
-	long getPeriod();
+    long getPeriod();
 
-	void setPeriod(long period);
+    void setPeriod(long period);
 
-	long getLastTickTime();
+    long getLastTickTime();
 
-	void setLastTickTime(long currTime);
+    void setLastTickTime(long currTime);
 
-	long getExpireTime();
+    long getExpireTime();
 
-	long getDuration();
+    long getDuration();
 
-	void setDuration(long l);
+    void setDuration(long l);
 
-	String getExpireMessage();
+    String getExpireMessage();
 
-	void setExpireMessage(String expireMessage);
+    void setExpireMessage(String expireMessage);
 
-	String getApplyMessage();
+    String getApplyMessage();
 
-	void setApplyMessage(String applyMessage);
+    void setApplyMessage(String applyMessage);
 
-	IEffectConsumer getConsumer();
+    IEffectConsumer getConsumer();
 
-	void setConsumer(IEffectConsumer consumer);
+    void setConsumer(IEffectConsumer consumer);
 
-	Set<EffectType> getEffectTypes();
+    Set<EffectType> getEffectTypes();
 
-	IEffectSourceProvider getEffectSourceProvider();
+    IEffectSourceProvider getEffectSourceProvider();
 
-	void setEffectSourceProvider(IEffectSourceProvider effectSourceProvider);
+    void setEffectSourceProvider(IEffectSourceProvider effectSourceProvider);
 
-	K getValue();
+    K getValue();
 
-	void setValue(K k);
+    void setValue(K k);
 
-	default <T extends IEffect<K>> IEffectContainer<K, T> constructEffectContainer() {
-		return new EffectContainer(this);
-	}
+    default <T extends IEffect<K>> IEffectContainer<K, T> constructEffectContainer() {
+        return new EffectContainer(this);
+    }
 
-	EffectStackingStrategy<K> getEffectStackingStrategy();
+    EffectStackingStrategy<K> getEffectStackingStrategy();
 
-	void setEffectStackingStrategy(EffectStackingStrategy<K> effectStackingStrategy);
+    void setEffectStackingStrategy(EffectStackingStrategy<K> effectStackingStrategy);
 
-	IEffectContainer<K, IEffect<K>> getEffectContainer();
+    IEffectContainer<K, IEffect<K>> getEffectContainer();
 
-	void setEffectContainer(IEffectContainer<K, IEffect<K>> iEffectContainer);
+    void setEffectContainer(IEffectContainer<K, IEffect<K>> iEffectContainer);
 
-	boolean isTickingDisabled();
+    boolean isTickingDisabled();
 
-	void setTickingDisabled(boolean tickingDisabled);
+    void setTickingDisabled(boolean tickingDisabled);
 }

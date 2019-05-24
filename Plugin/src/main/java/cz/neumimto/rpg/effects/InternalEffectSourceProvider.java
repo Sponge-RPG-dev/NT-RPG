@@ -8,10 +8,10 @@ import cz.neumimto.rpg.common.scripting.JsBinding;
  */
 @JsBinding(JsBinding.Type.CLASS)
 public enum InternalEffectSourceProvider implements IEffectSourceProvider {
-	INSTANCE {
-		@Override
-		public IEffectSource getType() {
-			return EffectSourceType.INTERNAL;
-		}
-	}
+    INSTANCE {
+        @Override
+        public IEffectSource getType() {
+            return EffectSourceType.INTERNAL;
+        }
+    }
 }

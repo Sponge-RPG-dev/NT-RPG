@@ -19,9 +19,9 @@
 package cz.neumimto.rpg.events.skill;
 
 import cz.neumimto.rpg.api.IRpgElement;
+import cz.neumimto.rpg.common.scripting.JsBinding;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.events.entity.AbstractIEntityCancellableEvent;
-import cz.neumimto.rpg.common.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 7.8.2015.
@@ -29,26 +29,26 @@ import cz.neumimto.rpg.common.scripting.JsBinding;
 @JsBinding(JsBinding.Type.CLASS)
 public class SkillHealEvent extends AbstractIEntityCancellableEvent {
 
-	private final IRpgElement source;
-	private float amount;
+    private final IRpgElement source;
+    private float amount;
 
-	public SkillHealEvent(IEntity target, float amount, IRpgElement skill) {
-		super(target);
-		this.source = skill;
-		this.amount = amount;
-	}
+    public SkillHealEvent(IEntity target, float amount, IRpgElement skill) {
+        super(target);
+        this.source = skill;
+        this.amount = amount;
+    }
 
-	public float getAmount() {
-		return amount;
-	}
+    public float getAmount() {
+        return amount;
+    }
 
-	public void setAmount(float amount) {
-		this.amount = amount;
-	}
+    public void setAmount(float amount) {
+        this.amount = amount;
+    }
 
-	@Override
-	public IRpgElement getSource() {
-		return source;
-	}
+    @Override
+    public IRpgElement getSource() {
+        return source;
+    }
 
 }

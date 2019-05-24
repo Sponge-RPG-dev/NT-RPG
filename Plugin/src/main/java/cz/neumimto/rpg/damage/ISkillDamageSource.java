@@ -24,9 +24,9 @@ import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource
 
 public interface ISkillDamageSource extends EntityDamageSource {
 
-	ISkill getSkill();
+    ISkill getSkill();
 
-	IEffect getEffect();
+    IEffect getEffect();
 
-	IEntity getSourceIEntity();
+    IEntity getSourceIEntity();
 }

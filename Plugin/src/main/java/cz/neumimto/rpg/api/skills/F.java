@@ -5,28 +5,28 @@ package cz.neumimto.rpg.api.skills;
  */
 public interface F {
 
-	@FunctionalInterface
-	interface QuadConsumer<T, U, V, W> {
+    @FunctionalInterface
+    interface QuadConsumer<T, U, V, W> {
 
-		void accept(T t, U u, V v, W w);
-	}
+        void accept(T t, U u, V v, W w);
+    }
 
-	@FunctionalInterface
-	interface TriFunction<T, U, V, R> {
+    @FunctionalInterface
+    interface TriFunction<T, U, V, R> {
 
-		R apply(T t, U u, V v);
-	}
+        R apply(T t, U u, V v);
+    }
 
-	@FunctionalInterface
-	interface QuadFunction<T, U, V, W, X> {
+    @FunctionalInterface
+    interface QuadFunction<T, U, V, W, X> {
 
-		X accept(T t, U u, V v, W w);
-	}
+        X accept(T t, U u, V v, W w);
+    }
 
-	@FunctionalInterface
-	interface PentaFunction<S, T, U, V, W, X> {
+    @FunctionalInterface
+    interface PentaFunction<S, T, U, V, W, X> {
 
-		X accept(S s, T t, U u, V v, W w);
-	}
+        X accept(S s, T t, U u, V v, W w);
+    }
 
 }

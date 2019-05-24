@@ -33,37 +33,37 @@ import org.spongepowered.api.entity.living.Living;
 
 public abstract class Targeted extends ActiveSkill implements ITargeted {
 
-	@Override
-	public void init() {
-		super.init();
-		settings.addNode(SkillNodes.RANGE, 10, 10);
-	}
+    @Override
+    public void init() {
+        super.init();
+        settings.addNode(SkillNodes.RANGE, 10, 10);
+    }
 
-	@Override
-	public void cast(IActiveCharacter caster, PlayerSkillContext info, SkillContext skillContext) {
-		int range = skillContext.getIntNodeValue(SkillNodes.RANGE);
-		Living l = Utils.getTargetedEntity(caster, range);
-		if (l == null) {
-			if (getDamageType() == null && !getSkillTypes().contains(SkillType.CANNOT_BE_SELF_CASTED)) {
-				l = caster.getEntity();
-			} else {
-				skillContext.next(caster, info, SkillResult.NO_TARGET); //dont chain
-				return;
-			}
-		}
-		if (getDamageType() != null && !Utils.canDamage(caster, l)) {
-			skillContext.next(caster, info, SkillResult.CANCELLED); //dont chain
-			return;
-		}
-		IEntity target = NtRpgPlugin.GlobalScope.entityService.get(l);
+    @Override
+    public void cast(IActiveCharacter caster, PlayerSkillContext info, SkillContext skillContext) {
+        int range = skillContext.getIntNodeValue(SkillNodes.RANGE);
+        Living l = Utils.getTargetedEntity(caster, range);
+        if (l == null) {
+            if (getDamageType() == null && !getSkillTypes().contains(SkillType.CANNOT_BE_SELF_CASTED)) {
+                l = caster.getEntity();
+            } else {
+                skillContext.next(caster, info, SkillResult.NO_TARGET); //dont chain
+                return;
+            }
+        }
+        if (getDamageType() != null && !Utils.canDamage(caster, l)) {
+            skillContext.next(caster, info, SkillResult.CANCELLED); //dont chain
+            return;
+        }
+        IEntity target = NtRpgPlugin.GlobalScope.entityService.get(l);
 
-		SkillTargetAttemptEvent event = new SkillTargetAttemptEvent(caster, target, this);
+        SkillTargetAttemptEvent event = new SkillTargetAttemptEvent(caster, target, this);
 
-		if (Rpg.get().postEvent(event)) {
-			//todo https://github.com/Sponge-RPG-dev/NT-RPG/issues/111
-			skillContext.next((IActiveCharacter) event.getCaster(), info, SkillResult.CANCELLED); //dont chain
-			return;
-		}
-		castOn(event.getTarget(), (IActiveCharacter) event.getCaster(), info, skillContext);
-	}
+        if (Rpg.get().postEvent(event)) {
+            //todo https://github.com/Sponge-RPG-dev/NT-RPG/issues/111
+            skillContext.next((IActiveCharacter) event.getCaster(), info, SkillResult.CANCELLED); //dont chain
+            return;
+        }
+        castOn(event.getTarget(), (IActiveCharacter) event.getCaster(), info, skillContext);
+    }
 }

@@ -7,5 +7,5 @@ import cz.neumimto.rpg.api.effects.IEffectSource;
  */
 public interface IEffectSourceProvider {
 
-	IEffectSource getType();
+    IEffectSource getType();
 }

@@ -12,14 +12,14 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD, ElementType.TYPE})
 public @interface SkillComponent {
 
-	String value();
+    String value();
 
-	Param[] params();
+    Param[] params();
 
-	String usage();
+    String usage();
 
-	@interface Param {
+    @interface Param {
 
-		String value();
-	}
+        String value();
+    }
 }

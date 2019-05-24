@@ -18,8 +18,8 @@
 
 package cz.neumimto.rpg.sponge.skills;
 
-import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.api.utils.TriConsumer;
+import cz.neumimto.rpg.entities.IEntity;
 import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 
@@ -37,34 +37,34 @@ public class ProjectileProperties {
         }
     };*/
 
-	public static Map<Projectile, ProjectileProperties> cache = new WeakHashMap<>();
-	public TriConsumer<DamageEntityEvent, IEntity, IEntity> consumer;
-	//protected Projectile t;
-	private double damage;
-	// private long lifetime;
-	private IEntity caster;
+    public static Map<Projectile, ProjectileProperties> cache = new WeakHashMap<>();
+    public TriConsumer<DamageEntityEvent, IEntity, IEntity> consumer;
+    //protected Projectile t;
+    private double damage;
+    // private long lifetime;
+    private IEntity caster;
 
-	public ProjectileProperties(Projectile t, IEntity caster) {
-		//  this.t = t;
-		cache.put(t, this);
-		//   lifetime = System.currentTimeMillis()+5000;
-		this.caster = caster;
-	}
+    public ProjectileProperties(Projectile t, IEntity caster) {
+        //  this.t = t;
+        cache.put(t, this);
+        //   lifetime = System.currentTimeMillis()+5000;
+        this.caster = caster;
+    }
 
-	public void onHit(TriConsumer<DamageEntityEvent, IEntity, IEntity> consumer) {
-		this.consumer = consumer;
-	}
+    public void onHit(TriConsumer<DamageEntityEvent, IEntity, IEntity> consumer) {
+        this.consumer = consumer;
+    }
 
-	public void process(DamageEntityEvent event, IEntity target) {
-		consumer.accept(event, caster, target);
-	}
+    public void process(DamageEntityEvent event, IEntity target) {
+        consumer.accept(event, caster, target);
+    }
 
-	public double getDamage() {
-		return damage;
-	}
+    public double getDamage() {
+        return damage;
+    }
 
-	public void setDamage(double damage) {
-		this.damage = damage;
-	}
+    public void setDamage(double damage) {
+        this.damage = damage;
+    }
 
 }

@@ -21,11 +21,11 @@ package cz.neumimto.rpg.api.skills.types;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.common.scripting.JsBinding;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.common.scripting.JsBinding;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 
 import javax.inject.Inject;
 
@@ -35,52 +35,52 @@ import javax.inject.Inject;
 @JsBinding(JsBinding.Type.CLASS)
 public abstract class PassiveSkill extends AbstractSkill {
 
-	@Inject
-	protected EffectService effectService;
+    @Inject
+    protected EffectService effectService;
 
-	protected String relevantEffectName;
+    protected String relevantEffectName;
 
-	public PassiveSkill() {
-	}
+    public PassiveSkill() {
+    }
 
-	public PassiveSkill(String name) {
-		this.relevantEffectName = name;
-	}
+    public PassiveSkill(String name) {
+        this.relevantEffectName = name;
+    }
 
-	@Override
-	public void onPreUse(IActiveCharacter character, SkillContext skillContext) {
-		character.sendMessage(Localizations.CANT_USE_PASSIVE_SKILL);
-		skillContext.result(SkillResult.CANCELLED);
-	}
+    @Override
+    public void onPreUse(IActiveCharacter character, SkillContext skillContext) {
+        character.sendMessage(Localizations.CANT_USE_PASSIVE_SKILL);
+        skillContext.result(SkillResult.CANCELLED);
+    }
 
-	private void update(IActiveCharacter IActiveCharacter) {
-		NtRpgPlugin.GlobalScope.inventorySerivce.initializeCharacterInventory(IActiveCharacter);
-		PlayerSkillContext skill = IActiveCharacter.getSkill(getId());
-		applyEffect(skill, IActiveCharacter);
-	}
+    private void update(IActiveCharacter IActiveCharacter) {
+        NtRpgPlugin.GlobalScope.inventorySerivce.initializeCharacterInventory(IActiveCharacter);
+        PlayerSkillContext skill = IActiveCharacter.getSkill(getId());
+        applyEffect(skill, IActiveCharacter);
+    }
 
-	@Override
-	public void onCharacterInit(IActiveCharacter c, int level) {
-		super.onCharacterInit(c, level);
-		update(c);
-	}
+    @Override
+    public void onCharacterInit(IActiveCharacter c, int level) {
+        super.onCharacterInit(c, level);
+        update(c);
+    }
 
-	@Override
-	public void skillLearn(IActiveCharacter IActiveCharacter) {
-		super.skillLearn(IActiveCharacter);
-		update(IActiveCharacter);
-	}
+    @Override
+    public void skillLearn(IActiveCharacter IActiveCharacter) {
+        super.skillLearn(IActiveCharacter);
+        update(IActiveCharacter);
+    }
 
-	@Override
-	public void skillRefund(IActiveCharacter IActiveCharacter) {
-		super.skillRefund(IActiveCharacter);
-		PlayerSkillContext skillInfo = IActiveCharacter.getSkillInfo(this);
-		if (skillInfo.getLevel() <= 0) {
-			effectService.removeEffect(relevantEffectName, IActiveCharacter, this);
-		} else {
-			update(IActiveCharacter);
-		}
-	}
+    @Override
+    public void skillRefund(IActiveCharacter IActiveCharacter) {
+        super.skillRefund(IActiveCharacter);
+        PlayerSkillContext skillInfo = IActiveCharacter.getSkillInfo(this);
+        if (skillInfo.getLevel() <= 0) {
+            effectService.removeEffect(relevantEffectName, IActiveCharacter, this);
+        } else {
+            update(IActiveCharacter);
+        }
+    }
 
-	public abstract void applyEffect(PlayerSkillContext info, IActiveCharacter character);
+    public abstract void applyEffect(PlayerSkillContext info, IActiveCharacter character);
 }

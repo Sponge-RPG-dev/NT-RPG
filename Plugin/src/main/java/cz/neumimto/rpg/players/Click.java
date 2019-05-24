@@ -23,22 +23,22 @@ package cz.neumimto.rpg.players;
  */
 public class Click {
 
-	private long lastTime;
-	private int times;
+    private long lastTime;
+    private int times;
 
-	public long getLastTime() {
-		return lastTime;
-	}
+    public long getLastTime() {
+        return lastTime;
+    }
 
-	public void setLastTime(long lastTime) {
-		this.lastTime = lastTime;
-	}
+    public void setLastTime(long lastTime) {
+        this.lastTime = lastTime;
+    }
 
-	public int getTimes() {
-		return times;
-	}
+    public int getTimes() {
+        return times;
+    }
 
-	public void setTimes(int times) {
-		this.times = times;
-	}
+    public void setTimes(int times) {
+        this.times = times;
+    }
 }

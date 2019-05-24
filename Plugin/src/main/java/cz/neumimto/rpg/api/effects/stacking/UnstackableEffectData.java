@@ -5,7 +5,7 @@ package cz.neumimto.rpg.api.effects.stacking;
  */
 public interface UnstackableEffectData<T> extends Comparable<T> {
 
-	default boolean isInferiorTo(T replacement) {
-		return this != replacement && compareTo(replacement) > 0;
-	}
+    default boolean isInferiorTo(T replacement) {
+        return this != replacement && compareTo(replacement) > 0;
+    }
 }

@@ -8,18 +8,18 @@ import cz.neumimto.rpg.api.effects.EffectStackingStrategy;
  */
 public class FloatEffectStackingStrategy implements EffectStackingStrategy<Float> {
 
-	public static final FloatEffectStackingStrategy INSTANCE = new FloatEffectStackingStrategy();
+    public static final FloatEffectStackingStrategy INSTANCE = new FloatEffectStackingStrategy();
 
-	private FloatEffectStackingStrategy() {
-	}
+    private FloatEffectStackingStrategy() {
+    }
 
-	@Override
-	public Float mergeValues(Float current, Float toAdd) {
-		return current + toAdd;
-	}
+    @Override
+    public Float mergeValues(Float current, Float toAdd) {
+        return current + toAdd;
+    }
 
-	@Override
-	public Float getDefaultValue() {
-		return 0f;
-	}
+    @Override
+    public Float getDefaultValue() {
+        return 0f;
+    }
 }

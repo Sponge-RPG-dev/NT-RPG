@@ -7,8 +7,8 @@ import cz.neumimto.rpg.players.IActiveCharacter;
  */
 public class CharacterInitializedEvent extends AbstractCharacterEvent {
 
-	public CharacterInitializedEvent(IActiveCharacter character) {
-		super(character);
-	}
+    public CharacterInitializedEvent(IActiveCharacter character) {
+        super(character);
+    }
 
 }

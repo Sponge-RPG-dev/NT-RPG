@@ -27,24 +27,24 @@ import org.spongepowered.api.text.Text;
  * Created by NeumimTo on 27.7.2015.
  */
 public class CharacterSkillRefundAttemptEvent extends AbstractCharacterCancellableEvent implements SkillEvent {
-	private final ISkill skill;
-	private Text failedMessage;
+    private final ISkill skill;
+    private Text failedMessage;
 
-	public CharacterSkillRefundAttemptEvent(IActiveCharacter character, ISkill skill) {
-		super(character);
-		this.skill = skill;
-	}
+    public CharacterSkillRefundAttemptEvent(IActiveCharacter character, ISkill skill) {
+        super(character);
+        this.skill = skill;
+    }
 
-	@Override
-	public ISkill getSkill() {
-		return skill;
-	}
+    @Override
+    public ISkill getSkill() {
+        return skill;
+    }
 
-	public Text getFailedMessage() {
-		return failedMessage == null ? Text.EMPTY : failedMessage;
-	}
+    public Text getFailedMessage() {
+        return failedMessage == null ? Text.EMPTY : failedMessage;
+    }
 
-	public void setFailedMessage(Text failedMessage) {
-		this.failedMessage = failedMessage;
-	}
+    public void setFailedMessage(Text failedMessage) {
+        this.failedMessage = failedMessage;
+    }
 }

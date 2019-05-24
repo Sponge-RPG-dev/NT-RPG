@@ -5,14 +5,14 @@ package cz.neumimto.rpg.events.character;
  */
 public class CharacterAttributeChange extends AbstractCharacterCancellableEvent {
 
-	private final int attributeChange;
+    private final int attributeChange;
 
-	public CharacterAttributeChange(cz.neumimto.rpg.players.IActiveCharacter character, int attributeChange) {
-		super(character);
-		this.attributeChange = attributeChange;
-	}
+    public CharacterAttributeChange(cz.neumimto.rpg.players.IActiveCharacter character, int attributeChange) {
+        super(character);
+        this.attributeChange = attributeChange;
+    }
 
-	public int getAttributeChange() {
-		return attributeChange;
-	}
+    public int getAttributeChange() {
+        return attributeChange;
+    }
 }

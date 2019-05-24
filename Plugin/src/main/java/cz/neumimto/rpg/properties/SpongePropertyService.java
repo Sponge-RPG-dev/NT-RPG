@@ -53,78 +53,78 @@ import static cz.neumimto.rpg.api.logging.Log.info;
 @Singleton
 public class SpongePropertyService extends PropertyServiceImpl implements AdditionalCatalogRegistryModule<Attribute> {
 
-	@Inject
-	private NtRpgPlugin plugin;
+    @Inject
+    private NtRpgPlugin plugin;
 
-	@Inject
-	private ItemService itemService;
+    @Inject
+    private ItemService itemService;
 
-	public Map<String, Attribute> attributeMap = new HashMap<>();
+    public Map<String, Attribute> attributeMap = new HashMap<>();
 
-	@Override
-	public Map<String, Attribute> getAttributes() {
-		return attributeMap;
-	}
+    @Override
+    public Map<String, Attribute> getAttributes() {
+        return attributeMap;
+    }
 
-	@Override
-	public void reLoadAttributes(Path attributeFilePath) {
-		try {
-			ObjectMapper<Attributes> mapper = NotSoStupidObjectMapper.forClass(Attributes.class);
-			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(attributeFilePath).build();
-			Attributes attributes = mapper.bind(new Attributes()).populate(hcl.load());
-			attributes.getAttributes().forEach(a -> Sponge.getRegistry().register(Attribute.class, new Attribute(a)));
-
-
-			itemService.registerItemAttributes(Rpg.get().getAttributes());
-		} catch (ObjectMappingException | IOException e) {
-			e.printStackTrace();
-		}
-	}
+    @Override
+    public void reLoadAttributes(Path attributeFilePath) {
+        try {
+            ObjectMapper<Attributes> mapper = NotSoStupidObjectMapper.forClass(Attributes.class);
+            HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(attributeFilePath).build();
+            Attributes attributes = mapper.bind(new Attributes()).populate(hcl.load());
+            attributes.getAttributes().forEach(a -> Sponge.getRegistry().register(Attribute.class, new Attribute(a)));
 
 
-	@Override
-	public void init(Path attributeConf, Path propertiesDump) {
-		{
-			StringBuilder s = new StringBuilder();
-			List<String> l = new ArrayList<>(idMap.keySet());
-			info(" - found " + l.size() + " Properties", pluginConfig.DEBUG);
-			l.sort(Collator.getInstance());
-			for (String s1 : l) {
-				s.append(s1).append(Utils.LineSeparator);
-			}
-			try {
-				Files.write(propertiesDump, s.toString().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+            itemService.registerItemAttributes(Rpg.get().getAttributes());
+        } catch (ObjectMappingException | IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-			File f = attributeConf.toFile();
-			if (!f.exists()) {
-				Optional<Asset> asset = Sponge.getAssetManager().getAsset(plugin, "Attributes.conf");
-				if (!asset.isPresent()) {
-					throw new IllegalStateException("Could not find an asset Attributes.conf");
-				}
-				try {
-					asset.get().copyToFile(f.toPath());
-				} catch (IOException e) {
-					throw new IllegalStateException("Could not create Attributes.conf file", e);
-				}
-			}
-		}
-	}
 
-	@Override
-	public void registerAdditionalCatalog(Attribute extraCatalog) {
-		getAttributes().put(extraCatalog.getId(), extraCatalog);
-	}
+    @Override
+    public void init(Path attributeConf, Path propertiesDump) {
+        {
+            StringBuilder s = new StringBuilder();
+            List<String> l = new ArrayList<>(idMap.keySet());
+            info(" - found " + l.size() + " Properties", pluginConfig.DEBUG);
+            l.sort(Collator.getInstance());
+            for (String s1 : l) {
+                s.append(s1).append(Utils.LineSeparator);
+            }
+            try {
+                Files.write(propertiesDump, s.toString().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-	@Override
-	public Optional<Attribute> getById(String id) {
-		return getAttributeById(id);
-	}
+            File f = attributeConf.toFile();
+            if (!f.exists()) {
+                Optional<Asset> asset = Sponge.getAssetManager().getAsset(plugin, "Attributes.conf");
+                if (!asset.isPresent()) {
+                    throw new IllegalStateException("Could not find an asset Attributes.conf");
+                }
+                try {
+                    asset.get().copyToFile(f.toPath());
+                } catch (IOException e) {
+                    throw new IllegalStateException("Could not create Attributes.conf file", e);
+                }
+            }
+        }
+    }
 
-	@Override
-	public Collection<Attribute> getAll() {
-		return getAttributes().values();
-	}
+    @Override
+    public void registerAdditionalCatalog(Attribute extraCatalog) {
+        getAttributes().put(extraCatalog.getId(), extraCatalog);
+    }
+
+    @Override
+    public Optional<Attribute> getById(String id) {
+        return getAttributeById(id);
+    }
+
+    @Override
+    public Collection<Attribute> getAll() {
+        return getAttributes().values();
+    }
 }

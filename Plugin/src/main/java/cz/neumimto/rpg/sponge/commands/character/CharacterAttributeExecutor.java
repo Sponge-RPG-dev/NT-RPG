@@ -12,14 +12,14 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
 public class CharacterAttributeExecutor implements CommandExecutor {
-	@Override
-	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		args.<Attribute>getOne(Text.of("attribute")).ifPresent(iCharacterAttribute -> {
-			Integer i = args.<Integer>getOne("amount").orElse(1);
-			IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src);
-			NtRpgPlugin.GlobalScope.characterService.addAttribute(character, iCharacterAttribute, i);
-			NtRpgPlugin.GlobalScope.characterService.putInSaveQueue(character.getCharacterBase());
-		});
-		return CommandResult.empty();
-	}
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        args.<Attribute>getOne(Text.of("attribute")).ifPresent(iCharacterAttribute -> {
+            Integer i = args.<Integer>getOne("amount").orElse(1);
+            IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src);
+            NtRpgPlugin.GlobalScope.characterService.addAttribute(character, iCharacterAttribute, i);
+            NtRpgPlugin.GlobalScope.characterService.putInSaveQueue(character.getCharacterBase());
+        });
+        return CommandResult.empty();
+    }
 }

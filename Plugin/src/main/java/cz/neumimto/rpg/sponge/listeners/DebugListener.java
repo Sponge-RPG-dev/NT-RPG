@@ -51,83 +51,83 @@ import java.util.function.BiConsumer;
 public class DebugListener {
 
 
-	@Listener(order = Order.LAST)
-	public void debug(DamageEntityEvent event, @First(typeFilter = EntityDamageSource.class) EntityDamageSource entityDamageSource) {
-		Entity targetEntity = event.getTargetEntity();
+    @Listener(order = Order.LAST)
+    public void debug(DamageEntityEvent event, @First(typeFilter = EntityDamageSource.class) EntityDamageSource entityDamageSource) {
+        Entity targetEntity = event.getTargetEntity();
 
-		Entity source = entityDamageSource.getSource();
-		if (source.getType() == EntityTypes.PLAYER) {
-			((Player) source).sendMessage(Text.of("[Debug] >> " + event.getFinalDamage()));
-		}
-		if (targetEntity.getType() == EntityTypes.PLAYER) {
-			((Player) targetEntity).sendMessage(Text.of("[Debug] << " + event.getFinalDamage()));
-		}
-	}
+        Entity source = entityDamageSource.getSource();
+        if (source.getType() == EntityTypes.PLAYER) {
+            ((Player) source).sendMessage(Text.of("[Debug] >> " + event.getFinalDamage()));
+        }
+        if (targetEntity.getType() == EntityTypes.PLAYER) {
+            ((Player) targetEntity).sendMessage(Text.of("[Debug] << " + event.getFinalDamage()));
+        }
+    }
 
-	@Listener(order = Order.LAST)
-	public void debugi(DamageEntityEvent event, @First(typeFilter = IndirectEntityDamageSource.class) IndirectEntityDamageSource
-			entityDamageSource) {
-		Entity targetEntity = event.getTargetEntity();
+    @Listener(order = Order.LAST)
+    public void debugi(DamageEntityEvent event, @First(typeFilter = IndirectEntityDamageSource.class) IndirectEntityDamageSource
+            entityDamageSource) {
+        Entity targetEntity = event.getTargetEntity();
 
-		Entity source = entityDamageSource.getIndirectSource();
-		if (source.getType() == EntityTypes.PLAYER) {
-			((Player) source).sendMessage(Text.of("[Debug] >> " + event.getFinalDamage()));
-		}
-		if (targetEntity.getType() == EntityTypes.PLAYER) {
-			((Player) targetEntity).sendMessage(Text.of("[Debug] << " + event.getFinalDamage()));
-		}
-	}
+        Entity source = entityDamageSource.getIndirectSource();
+        if (source.getType() == EntityTypes.PLAYER) {
+            ((Player) source).sendMessage(Text.of("[Debug] >> " + event.getFinalDamage()));
+        }
+        if (targetEntity.getType() == EntityTypes.PLAYER) {
+            ((Player) targetEntity).sendMessage(Text.of("[Debug] << " + event.getFinalDamage()));
+        }
+    }
 
-	@Listener(order = Order.LAST)
-	public void onPlayerJoin(ClientConnectionEvent.Join event) {
-		event.getTargetEntity().sendMessage(TextHelper.parse("&4-=====================-"));
-		event.getTargetEntity().sendMessage(TextHelper.parse("&a  Debug logging Enabled "));
-		event.getTargetEntity().sendMessage(TextHelper.parse("&4-=====================-"));
-	}
+    @Listener(order = Order.LAST)
+    public void onPlayerJoin(ClientConnectionEvent.Join event) {
+        event.getTargetEntity().sendMessage(TextHelper.parse("&4-=====================-"));
+        event.getTargetEntity().sendMessage(TextHelper.parse("&a  Debug logging Enabled "));
+        event.getTargetEntity().sendMessage(TextHelper.parse("&4-=====================-"));
+    }
 
-	@Listener(order = Order.FIRST)
-	@Include({
-			ClickInventoryEvent.Primary.class,
-				ClickInventoryEvent.Secondary.class
-	})
-	public void onClick(ClickInventoryEvent event, @Root Player player) {
-		List<SlotTransaction> transactions = event.getTransactions();
+    @Listener(order = Order.FIRST)
+    @Include({
+            ClickInventoryEvent.Primary.class,
+            ClickInventoryEvent.Secondary.class
+    })
+    public void onClick(ClickInventoryEvent event, @Root Player player) {
+        List<SlotTransaction> transactions = event.getTransactions();
 
-		BiConsumer<Player, String> sendMsg = (player1, s) -> player1.sendMessage(TextHelper.parse(s));
+        BiConsumer<Player, String> sendMsg = (player1, s) -> player1.sendMessage(TextHelper.parse(s));
 
-		for (SlotTransaction transaction : transactions) {
-			Optional<SlotIndex> inventoryProperty = transaction.getSlot().getInventoryProperty(SlotIndex.class);
-			Class<? extends Inventory> aClass = transaction.getSlot().parent().getClass();
+        for (SlotTransaction transaction : transactions) {
+            Optional<SlotIndex> inventoryProperty = transaction.getSlot().getInventoryProperty(SlotIndex.class);
+            Class<? extends Inventory> aClass = transaction.getSlot().parent().getClass();
 
-			player.sendMessage(TextHelper.parse("&4-=====================-"));
-			inventoryProperty.ifPresent(slotIndex -> sendMsg.accept(player, "Slot ID: " + slotIndex.getValue()));
-			sendMsg.accept(player, "InventoryClass: " + aClass.getCanonicalName());
+            player.sendMessage(TextHelper.parse("&4-=====================-"));
+            inventoryProperty.ifPresent(slotIndex -> sendMsg.accept(player, "Slot ID: " + slotIndex.getValue()));
+            sendMsg.accept(player, "InventoryClass: " + aClass.getCanonicalName());
 
 
-			Class aClass2 = transaction.getSlot().transform().parent().getClass();
+            Class aClass2 = transaction.getSlot().transform().parent().getClass();
 
-			inventoryProperty = transaction.getSlot().transform().getInventoryProperty(SlotIndex.class);
-			inventoryProperty.ifPresent(slotIndex -> sendMsg.accept(player, "Transformed Slot ID: " + slotIndex.getValue()));
-			sendMsg.accept(player, "Transformed InventoryClass: " + aClass2.getCanonicalName());
+            inventoryProperty = transaction.getSlot().transform().getInventoryProperty(SlotIndex.class);
+            inventoryProperty.ifPresent(slotIndex -> sendMsg.accept(player, "Transformed Slot ID: " + slotIndex.getValue()));
+            sendMsg.accept(player, "Transformed InventoryClass: " + aClass2.getCanonicalName());
 
-			player.sendMessage(TextHelper.parse("&4-=====================-"));
+            player.sendMessage(TextHelper.parse("&4-=====================-"));
 
-		}
-	}
+        }
+    }
 
-	@Listener(order = Order.FIRST)
-	public void onClick(HandInteractEvent event, @Root Player player) {
+    @Listener(order = Order.FIRST)
+    public void onClick(HandInteractEvent event, @Root Player player) {
 
-		Hotbar hotbar = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
-		int selectedSlotIndex = hotbar.getSelectedSlotIndex();
-		BiConsumer<Player, String> sendMsg = (player1, s) -> player1.sendMessage(TextHelper.parse(s));
-		player.sendMessage(TextHelper.parse("&4-=====================-"));
-		sendMsg.accept(player, "Selected SlotID: " + hotbar.getSelectedSlotIndex());
-		sendMsg.accept(player, "InventoryClass: " + hotbar.getClass().getCanonicalName());
+        Hotbar hotbar = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
+        int selectedSlotIndex = hotbar.getSelectedSlotIndex();
+        BiConsumer<Player, String> sendMsg = (player1, s) -> player1.sendMessage(TextHelper.parse(s));
+        player.sendMessage(TextHelper.parse("&4-=====================-"));
+        sendMsg.accept(player, "Selected SlotID: " + hotbar.getSelectedSlotIndex());
+        sendMsg.accept(player, "InventoryClass: " + hotbar.getClass().getCanonicalName());
 
-		Slot slot = hotbar.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(selectedSlotIndex)));
-		Optional<SlotIndex> inventoryProperty = slot.transform().getInventoryProperty(SlotIndex.class);
-		sendMsg.accept(player, "Transformed Slot Id: " + inventoryProperty.get().getValue());
+        Slot slot = hotbar.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(selectedSlotIndex)));
+        Optional<SlotIndex> inventoryProperty = slot.transform().getInventoryProperty(SlotIndex.class);
+        sendMsg.accept(player, "Transformed Slot Id: " + inventoryProperty.get().getValue());
 
-	}
+    }
 }

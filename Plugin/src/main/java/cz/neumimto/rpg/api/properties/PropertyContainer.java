@@ -16,18 +16,15 @@
  *
  */
 
-package cz.neumimto.rpg.properties;
+package cz.neumimto.rpg.api.properties;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
- * Created by NeumimTo on 27.12.2014.
+ * Created by NeumimTo on 30.12.2014.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
-public @interface Property {
+public @interface PropertyContainer {
 
-	public String name() default "";
-
-	public float default_() default 0;
 }

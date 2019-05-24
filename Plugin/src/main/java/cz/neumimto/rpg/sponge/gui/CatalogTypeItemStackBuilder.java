@@ -9,39 +9,39 @@ import org.spongepowered.api.item.inventory.ItemStack;
  */
 public abstract class CatalogTypeItemStackBuilder {
 
-	public abstract ItemStack toItemStack();
+    public abstract ItemStack toItemStack();
 
-	public static class Block extends CatalogTypeItemStackBuilder {
+    public static class Block extends CatalogTypeItemStackBuilder {
 
-		private BlockType blockType;
+        private BlockType blockType;
 
-		public static CatalogTypeItemStackBuilder of(BlockType type) {
-			Block block = new Block();
-			block.blockType = type;
-			return block;
-		}
+        public static CatalogTypeItemStackBuilder of(BlockType type) {
+            Block block = new Block();
+            block.blockType = type;
+            return block;
+        }
 
-		@Override
-		public ItemStack toItemStack() {
-			return ItemStack.of(blockType.getItem().get(), 1);
-		}
-	}
+        @Override
+        public ItemStack toItemStack() {
+            return ItemStack.of(blockType.getItem().get(), 1);
+        }
+    }
 
-	public static class Item extends CatalogTypeItemStackBuilder {
+    public static class Item extends CatalogTypeItemStackBuilder {
 
-		private ItemType itemType;
+        private ItemType itemType;
 
-		public static CatalogTypeItemStackBuilder of(ItemType type) {
-			Item block = new Item();
-			block.itemType = type;
-			return block;
-		}
+        public static CatalogTypeItemStackBuilder of(ItemType type) {
+            Item block = new Item();
+            block.itemType = type;
+            return block;
+        }
 
-		@Override
-		public ItemStack toItemStack() {
-			return ItemStack.of(itemType, 1);
-		}
-	}
+        @Override
+        public ItemStack toItemStack() {
+            return ItemStack.of(itemType, 1);
+        }
+    }
 
 
 }

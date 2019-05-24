@@ -11,10 +11,10 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 
 public class CharacterListExecutor implements CommandExecutor {
-	@Override
-	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(((Player) src).getUniqueId());
-		Gui.sendListOfCharacters(character, character.getCharacterBase());
-		return CommandResult.success();
-	}
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(((Player) src).getUniqueId());
+        Gui.sendListOfCharacters(character, character.getCharacterBase());
+        return CommandResult.success();
+    }
 }

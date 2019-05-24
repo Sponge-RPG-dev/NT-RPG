@@ -12,63 +12,63 @@ import java.util.function.Consumer;
  */
 public interface IEffectContainer<K, T extends IEffect<K>> extends IEffectSourceProvider {
 
-	Set<T> getEffects();
+    Set<T> getEffects();
 
-	String getName();
+    String getName();
 
-	boolean isStackable();
+    boolean isStackable();
 
-	default void mergeWith(IEffectContainer<K, T> IEffectContainer) {
-		getEffects().addAll(IEffectContainer.getEffects());
-		updateStackedValue();
-	}
+    default void mergeWith(IEffectContainer<K, T> IEffectContainer) {
+        getEffects().addAll(IEffectContainer.getEffects());
+        updateStackedValue();
+    }
 
-	default void stackEffect(T t, IEffectSourceProvider effectSourceProvider) {
-		getEffects().add(t);
-		t.onApply(t);
-		updateStackedValue();
-	}
+    default void stackEffect(T t, IEffectSourceProvider effectSourceProvider) {
+        getEffects().add(t);
+        t.onApply(t);
+        updateStackedValue();
+    }
 
-	default void forEach(Consumer<T> consumer) {
-		for (T t : getEffects()) {
-			consumer.accept(t);
-		}
-	}
+    default void forEach(Consumer<T> consumer) {
+        for (T t : getEffects()) {
+            consumer.accept(t);
+        }
+    }
 
-	default void updateStackedValue() {
-		if (getEffectStackingStrategy() != null) {
-			setStackedValue(getEffectStackingStrategy().getDefaultValue());
-			for (T t : getEffects()) {
-				setStackedValue(t.getEffectStackingStrategy().mergeValues(getStackedValue(), t.getValue()));
-			}
-		}
-	}
+    default void updateStackedValue() {
+        if (getEffectStackingStrategy() != null) {
+            setStackedValue(getEffectStackingStrategy().getDefaultValue());
+            for (T t : getEffects()) {
+                setStackedValue(t.getEffectStackingStrategy().mergeValues(getStackedValue(), t.getValue()));
+            }
+        }
+    }
 
-	EffectStackingStrategy<K> getEffectStackingStrategy();
+    EffectStackingStrategy<K> getEffectStackingStrategy();
 
-	K getStackedValue();
+    K getStackedValue();
 
-	void setStackedValue(K k);
+    void setStackedValue(K k);
 
-	default void removeStack(T iEffect) {
-		getEffects().remove(iEffect);
-		if (iEffect.getConsumer() != null) {
-			iEffect.onRemove(iEffect);
-		}
-	}
+    default void removeStack(T iEffect) {
+        getEffects().remove(iEffect);
+        if (iEffect.getConsumer() != null) {
+            iEffect.onRemove(iEffect);
+        }
+    }
 
-	default void updateValue(K value, IEffectSourceProvider provider) {
-		for (T t : getEffects()) {
-			if (t.getEffectSourceProvider() == provider) {
-				t.setValue(value);
-				break;
-			}
-		}
-		updateStackedValue();
-	}
+    default void updateValue(K value, IEffectSourceProvider provider) {
+        for (T t : getEffects()) {
+            if (t.getEffectSourceProvider() == provider) {
+                t.setValue(value);
+                break;
+            }
+        }
+        updateStackedValue();
+    }
 
-	@Override
-	default IEffectSource getType() {
-		return EffectSourceType.EFFECT;
-	}
+    @Override
+    default IEffectSource getType() {
+        return EffectSourceType.EFFECT;
+    }
 }

@@ -8,18 +8,18 @@ import cz.neumimto.rpg.api.effects.EffectStackingStrategy;
  */
 public class IntegerEffectStackingStrategy implements EffectStackingStrategy<Integer> {
 
-	public static final IntegerEffectStackingStrategy INSTANCE = new IntegerEffectStackingStrategy();
+    public static final IntegerEffectStackingStrategy INSTANCE = new IntegerEffectStackingStrategy();
 
-	private IntegerEffectStackingStrategy() {
-	}
+    private IntegerEffectStackingStrategy() {
+    }
 
-	@Override
-	public Integer mergeValues(Integer current, Integer toAdd) {
-		return current + toAdd;
-	}
+    @Override
+    public Integer mergeValues(Integer current, Integer toAdd) {
+        return current + toAdd;
+    }
 
-	@Override
-	public Integer getDefaultValue() {
-		return 0;
-	}
+    @Override
+    public Integer getDefaultValue() {
+        return 0;
+    }
 }

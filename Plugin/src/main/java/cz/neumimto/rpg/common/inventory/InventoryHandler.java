@@ -38,9 +38,9 @@ public class InventoryHandler implements CharacterInventoryInteractionHandler {
     @Override
     public boolean handleCharacterEquipActionPre(IActiveCharacter character, ManagedSlot managedSlot, RpgItemStack rpgItemStack) {
         return isValidItemForSlot(managedSlot, rpgItemStack) &&
-               itemService.checkItemType(character, rpgItemStack) &&
-               itemService.checkItemAttributeRequirements(character, managedSlot, rpgItemStack) &&
-               itemService.checkItemClassRequirements(character, rpgItemStack);
+                itemService.checkItemType(character, rpgItemStack) &&
+                itemService.checkItemAttributeRequirements(character, managedSlot, rpgItemStack) &&
+                itemService.checkItemClassRequirements(character, rpgItemStack);
     }
 
     @Override

@@ -5,14 +5,14 @@ package cz.neumimto.rpg.players;
  */
 public class PlayerNotInGameException extends RuntimeException {
 
-	private final PreloadCharacter preloadCharacter;
+    private final PreloadCharacter preloadCharacter;
 
-	public PlayerNotInGameException(String format, PreloadCharacter preloadCharacter) {
-		super(format);
-		this.preloadCharacter = preloadCharacter;
-	}
+    public PlayerNotInGameException(String format, PreloadCharacter preloadCharacter) {
+        super(format);
+        this.preloadCharacter = preloadCharacter;
+    }
 
-	public PreloadCharacter getPreloadCharacter() {
-		return preloadCharacter;
-	}
+    public PreloadCharacter getPreloadCharacter() {
+        return preloadCharacter;
+    }
 }

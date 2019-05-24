@@ -11,11 +11,11 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 
 public class PartyKickExecutor implements CommandExecutor {
-	@Override
-	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		args.<IActiveCharacter>getOne(TextHelper.parse("player")).ifPresent(o -> {
-			NtRpgPlugin.GlobalScope.partyService.kickCharacterFromParty(NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src).getParty(), o);
-		});
-		return CommandResult.success();
-	}
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        args.<IActiveCharacter>getOne(TextHelper.parse("player")).ifPresent(o -> {
+            NtRpgPlugin.GlobalScope.partyService.kickCharacterFromParty(NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src).getParty(), o);
+        });
+        return CommandResult.success();
+    }
 }

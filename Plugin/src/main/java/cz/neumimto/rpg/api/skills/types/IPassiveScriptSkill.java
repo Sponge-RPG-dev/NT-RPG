@@ -7,8 +7,8 @@ import cz.neumimto.rpg.sponge.skills.scripting.PassiveScriptSkillHandler;
  */
 public interface IPassiveScriptSkill extends ScriptSkill<PassiveScriptSkillHandler> {
 
-	@Override
-	default String getTemplateName() {
-		return "templates/passive.js";
-	}
+    @Override
+    default String getTemplateName() {
+        return "templates/passive.js";
+    }
 }

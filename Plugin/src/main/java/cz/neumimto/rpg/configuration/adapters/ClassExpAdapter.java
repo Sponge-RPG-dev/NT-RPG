@@ -24,7 +24,7 @@ public class ClassExpAdapter implements TypeSerializer<Map<String, Map<EntityTyp
             Map<EntityType, Double> dimmMap = new HashMap<>();
             for (Map.Entry<Object, ? extends ConfigurationNode> e : c.entrySet()) {
                 String s = (String) e.getKey();
-                double d = ((Number)e.getValue().getValue()).doubleValue();
+                double d = ((Number) e.getValue().getValue()).doubleValue();
                 Optional<EntityType> type1 = Sponge.getRegistry().getType(EntityType.class, s.toLowerCase());
                 if (type1.isPresent()) {
                     EntityType entityType = type1.get();

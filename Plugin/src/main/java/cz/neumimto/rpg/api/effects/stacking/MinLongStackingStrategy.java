@@ -8,18 +8,18 @@ import cz.neumimto.rpg.api.effects.EffectStackingStrategy;
  */
 public class MinLongStackingStrategy implements EffectStackingStrategy<Long> {
 
-	public static final MinLongStackingStrategy INSTANCE = new MinLongStackingStrategy();
+    public static final MinLongStackingStrategy INSTANCE = new MinLongStackingStrategy();
 
-	private MinLongStackingStrategy() {
-	}
+    private MinLongStackingStrategy() {
+    }
 
-	@Override
-	public Long mergeValues(Long current, Long toAdd) {
-		return Math.min(current, toAdd);
-	}
+    @Override
+    public Long mergeValues(Long current, Long toAdd) {
+        return Math.min(current, toAdd);
+    }
 
-	@Override
-	public Long getDefaultValue() {
-		return 0L;
-	}
+    @Override
+    public Long getDefaultValue() {
+        return 0L;
+    }
 }

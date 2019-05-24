@@ -19,9 +19,9 @@
 package cz.neumimto.rpg.events.character;
 
 import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.common.scripting.JsBinding;
 import cz.neumimto.rpg.events.skill.SkillEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.common.scripting.JsBinding;
 import org.spongepowered.api.text.Text;
 
 /**
@@ -29,24 +29,24 @@ import org.spongepowered.api.text.Text;
  */
 @JsBinding(JsBinding.Type.CLASS)
 public class CharacterSkillUpgradeEvent extends AbstractCharacterCancellableEvent implements SkillEvent {
-	private final ISkill skill;
-	private Text failedMessage;
+    private final ISkill skill;
+    private Text failedMessage;
 
-	public CharacterSkillUpgradeEvent(IActiveCharacter character, ISkill skill) {
-		super(character);
-		this.skill = skill;
-	}
+    public CharacterSkillUpgradeEvent(IActiveCharacter character, ISkill skill) {
+        super(character);
+        this.skill = skill;
+    }
 
-	@Override
-	public ISkill getSkill() {
-		return skill;
-	}
+    @Override
+    public ISkill getSkill() {
+        return skill;
+    }
 
-	public Text getFailedMessage() {
-		return failedMessage == null ? Text.EMPTY : failedMessage;
-	}
+    public Text getFailedMessage() {
+        return failedMessage == null ? Text.EMPTY : failedMessage;
+    }
 
-	public void setFailedMessage(Text failedMessage) {
-		this.failedMessage = failedMessage;
-	}
+    public void setFailedMessage(Text failedMessage) {
+        this.failedMessage = failedMessage;
+    }
 }

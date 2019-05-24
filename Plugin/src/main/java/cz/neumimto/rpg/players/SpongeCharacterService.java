@@ -66,7 +66,7 @@ public class SpongeCharacterService extends CharacterService {
 
     @Override
     public ActionResult canUpgradeSkill(IActiveCharacter character, ClassDefinition classDef, ISkill skill) {
-        ActionResult actionResult =  super.canUpgradeSkill(character, classDef, skill);
+        ActionResult actionResult = super.canUpgradeSkill(character, classDef, skill);
         if (actionResult.isOk()) {
             CharacterSkillUpgradeEvent event = new CharacterSkillUpgradeEvent(character, skill);
             if (game.getEventManager().post(event)) {

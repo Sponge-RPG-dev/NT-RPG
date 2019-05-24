@@ -18,7 +18,7 @@ public class Polynomial extends AbstractLevelProgression {
     @Override
     public double[] initCurve() {
         double[] arr = new double[getMaxLevel()];
-        for (int i = 1; i < getMaxLevel()+1; i++) {
+        for (int i = 1; i < getMaxLevel() + 1; i++) {
             arr[i] = mult * Math.pow(i, factor);
         }
         return arr;

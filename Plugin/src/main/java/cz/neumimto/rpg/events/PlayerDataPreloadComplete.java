@@ -32,28 +32,28 @@ import java.util.UUID;
  */
 public class PlayerDataPreloadComplete extends AbstractEvent {
 
-	private UUID player;
-	private List<CharacterBase> characterBases;
+    private UUID player;
+    private List<CharacterBase> characterBases;
 
-	public PlayerDataPreloadComplete(UUID player, List<CharacterBase> characterBases) {
-		this.player = player;
-		this.characterBases = characterBases;
-	}
+    public PlayerDataPreloadComplete(UUID player, List<CharacterBase> characterBases) {
+        this.player = player;
+        this.characterBases = characterBases;
+    }
 
-	public UUID getPlayer() {
-		return player;
-	}
+    public UUID getPlayer() {
+        return player;
+    }
 
-	public List<CharacterBase> getCharacterBases() {
-		return characterBases;
-	}
+    public List<CharacterBase> getCharacterBases() {
+        return characterBases;
+    }
 
-	public void setCharacterBases(List<CharacterBase> characterBases) {
-		this.characterBases = characterBases;
-	}
+    public void setCharacterBases(List<CharacterBase> characterBases) {
+        this.characterBases = characterBases;
+    }
 
-	@Override
-	public Cause getCause() {
-		return Cause.of(EventContext.builder().add(NEventContextKeys.GAME_PROFILE, player).build(), player);
-	}
+    @Override
+    public Cause getCause() {
+        return Cause.of(EventContext.builder().add(NEventContextKeys.GAME_PROFILE, player).build(), player);
+    }
 }

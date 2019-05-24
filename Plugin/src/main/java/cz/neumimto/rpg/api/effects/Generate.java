@@ -6,19 +6,19 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Generate {
 
-	String id();
+    String id();
 
-	boolean inject() default false;
+    boolean inject() default false;
 
-	String description();
+    String description();
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface Constructor {
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface Constructor {
 
-	}
+    }
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface Model {
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface Model {
 
-	}
+    }
 }

@@ -20,59 +20,59 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.entities.IReservable;
-import cz.neumimto.rpg.properties.DefaultProperties;
+import cz.neumimto.rpg.properties.SpongeDefaultProperties;
 
 /**
  * Created by NeumimTo on 30.12.2014.
  */
 public class CharacterMana implements IReservable {
 
-	private final IActiveCharacter character;
+    private final IActiveCharacter character;
 
-	public CharacterMana(IActiveCharacter activeCharacter) {
-		this.character = activeCharacter;
-	}
+    public CharacterMana(IActiveCharacter activeCharacter) {
+        this.character = activeCharacter;
+    }
 
-	@Override
-	public double getMaxValue() {
-		return NtRpgPlugin.GlobalScope.entityService.getEntityProperty(character, DefaultProperties.max_mana);
-	}
+    @Override
+    public double getMaxValue() {
+        return NtRpgPlugin.GlobalScope.entityService.getEntityProperty(character, SpongeDefaultProperties.max_mana);
+    }
 
-	@Override
-	public void setMaxValue(double f) {
-		character.setProperty(DefaultProperties.max_mana, (float) f);
-	}
+    @Override
+    public void setMaxValue(double f) {
+        character.setProperty(SpongeDefaultProperties.max_mana, (float) f);
+    }
 
-	@Override
-	public void setReservedAmnout(float f) {
-		character.setProperty(DefaultProperties.reserved_mana, f);
-	}
+    @Override
+    public void setReservedAmnout(float f) {
+        character.setProperty(SpongeDefaultProperties.reserved_mana, f);
+    }
 
-	@Override
-	public double getReservedAmount() {
-		return NtRpgPlugin.GlobalScope.entityService.getEntityProperty(character, DefaultProperties.reserved_mana);
-	}
+    @Override
+    public double getReservedAmount() {
+        return NtRpgPlugin.GlobalScope.entityService.getEntityProperty(character, SpongeDefaultProperties.reserved_mana);
+    }
 
-	@Override
-	public double getValue() {
-		return NtRpgPlugin.GlobalScope.entityService.getEntityProperty(character, DefaultProperties.mana);
-	}
+    @Override
+    public double getValue() {
+        return NtRpgPlugin.GlobalScope.entityService.getEntityProperty(character, SpongeDefaultProperties.mana);
+    }
 
-	@Override
-	public void setValue(double f) {
-		if (character.getMana().getMaxValue() < f) {
-			f = character.getMana().getMaxValue();
-		}
-		character.setProperty(DefaultProperties.mana, (float) f);
-	}
+    @Override
+    public void setValue(double f) {
+        if (character.getMana().getMaxValue() < f) {
+            f = character.getMana().getMaxValue();
+        }
+        character.setProperty(SpongeDefaultProperties.mana, (float) f);
+    }
 
-	@Override
-	public double getRegen() {
-		return NtRpgPlugin.GlobalScope.entityService.getEntityProperty(character, DefaultProperties.mana_regen);
-	}
+    @Override
+    public double getRegen() {
+        return NtRpgPlugin.GlobalScope.entityService.getEntityProperty(character, SpongeDefaultProperties.mana_regen);
+    }
 
-	@Override
-	public void setRegen(float f) {
-		character.setProperty(DefaultProperties.mana_regen, f);
-	}
+    @Override
+    public void setRegen(float f) {
+        character.setProperty(SpongeDefaultProperties.mana_regen, f);
+    }
 }

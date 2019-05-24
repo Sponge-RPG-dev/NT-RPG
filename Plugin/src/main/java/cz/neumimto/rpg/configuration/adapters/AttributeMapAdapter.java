@@ -34,10 +34,10 @@ public class AttributeMapAdapter implements TypeSerializer<Map<Attribute, Intege
                 map.put(attribute, anInt);
             } else {
                 warn("Unknown attribute " + key + ". Should be one of: " +
-                    Sponge.getRegistry().getAllOf(Attribute.class)
-                            .stream()
-                            .map(Attribute::getId)
-                            .collect(Collectors.joining(", "))
+                        Sponge.getRegistry().getAllOf(Attribute.class)
+                                .stream()
+                                .map(Attribute::getId)
+                                .collect(Collectors.joining(", "))
                 );
             }
         }

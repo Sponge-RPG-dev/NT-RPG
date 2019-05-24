@@ -24,7 +24,7 @@ import cz.neumimto.rpg.common.damage.DamageServiceImpl;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.properties.DefaultProperties;
+import cz.neumimto.rpg.properties.SpongeDefaultProperties;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
@@ -43,103 +43,103 @@ import java.util.stream.Collectors;
 @Singleton
 public class SpongeDamageService extends DamageServiceImpl {
 
-	private Map<Double, TextColor> doubleColorMap = new TreeMap<>();
+    private Map<Double, TextColor> doubleColorMap = new TreeMap<>();
 
-	private TextColor[] colorScale = new TextColor[]{
-			TextColors.WHITE,
-			TextColors.YELLOW,
-			TextColors.GOLD,
-			TextColors.RED,
-			TextColors.DARK_RED,
-			TextColors.DARK_PURPLE,
-			TextColors.GRAY
-	};
+    private TextColor[] colorScale = new TextColor[]{
+            TextColors.WHITE,
+            TextColors.YELLOW,
+            TextColors.GOLD,
+            TextColors.RED,
+            TextColors.DARK_RED,
+            TextColors.DARK_PURPLE,
+            TextColors.GRAY
+    };
 
-	public double getCharacterProjectileDamage(IActiveCharacter character, EntityType type) {
-		if (character.isStub() || type == null) {
-			return 1;
-		}
-		double base = character.getBaseProjectileDamage(type)
-				+ entityService.getEntityProperty(character, DefaultProperties.projectile_damage_bonus);
-		if (type == EntityTypes.SPECTRAL_ARROW || type == EntityTypes.TIPPED_ARROW) {
-			base *= entityService.getEntityProperty(character, DefaultProperties.arrow_damage_mult);
-		} else {
-			base *= entityService.getEntityProperty(character, DefaultProperties.other_projectile_damage_mult);
-		}
-		return base;
-	}
+    public double getCharacterProjectileDamage(IActiveCharacter character, EntityType type) {
+        if (character.isStub() || type == null) {
+            return 1;
+        }
+        double base = character.getBaseProjectileDamage(type)
+                + entityService.getEntityProperty(character, SpongeDefaultProperties.projectile_damage_bonus);
+        if (type == EntityTypes.SPECTRAL_ARROW || type == EntityTypes.TIPPED_ARROW) {
+            base *= entityService.getEntityProperty(character, SpongeDefaultProperties.arrow_damage_mult);
+        } else {
+            base *= entityService.getEntityProperty(character, SpongeDefaultProperties.other_projectile_damage_mult);
+        }
+        return base;
+    }
 
-	public double getEntityResistance(IEntity entity, DamageType source) {
-		if (source == DamageTypes.ATTACK) {
-			return entityService.getEntityProperty(entity, DefaultProperties.physical_damage_protection_mult);
-		}
-		if (source == DamageTypes.MAGIC) {
-			return entityService.getEntityProperty(entity, DefaultProperties.magic_damage_protection_mult);
-		}
-		if (source == DamageTypes.FIRE) {
-			return entityService.getEntityProperty(entity, DefaultProperties.fire_damage_protection_mult);
-		}
-		if (source == NDamageType.LIGHTNING) {
-			return entityService.getEntityProperty(entity, DefaultProperties.lightning_damage_protection_mult);
-		}
-		if (source == NDamageType.ICE) {
-			return entityService.getEntityProperty(entity, DefaultProperties.ice_damage_protection_mult);
-		}
-		return 1;
-	}
+    public double getEntityResistance(IEntity entity, DamageType source) {
+        if (source == DamageTypes.ATTACK) {
+            return entityService.getEntityProperty(entity, SpongeDefaultProperties.physical_damage_protection_mult);
+        }
+        if (source == DamageTypes.MAGIC) {
+            return entityService.getEntityProperty(entity, SpongeDefaultProperties.magic_damage_protection_mult);
+        }
+        if (source == DamageTypes.FIRE) {
+            return entityService.getEntityProperty(entity, SpongeDefaultProperties.fire_damage_protection_mult);
+        }
+        if (source == NDamageType.LIGHTNING) {
+            return entityService.getEntityProperty(entity, SpongeDefaultProperties.lightning_damage_protection_mult);
+        }
+        if (source == NDamageType.ICE) {
+            return entityService.getEntityProperty(entity, SpongeDefaultProperties.ice_damage_protection_mult);
+        }
+        return 1;
+    }
 
-	public double getEntityDamageMult(IEntity entity, DamageType source) {
-		if (source == DamageTypes.ATTACK) {
-			return entityService.getEntityProperty(entity, DefaultProperties.physical_damage_bonus_mult);
-		}
-		if (source == DamageTypes.MAGIC) {
-			return entityService.getEntityProperty(entity, DefaultProperties.magic_damage_bonus_mult);
-		}
-		if (source == DamageTypes.FIRE) {
-			return entityService.getEntityProperty(entity, DefaultProperties.fire_damage_bonus_mult);
-		}
-		if (source == NDamageType.LIGHTNING) {
-			return entityService.getEntityProperty(entity, DefaultProperties.lightning_damage_bonus_mult);
-		}
-		if (source == NDamageType.ICE) {
-			return entityService.getEntityProperty(entity, DefaultProperties.ice_damage_bonus_mult);
-		}
-		return 1;
-	}
+    public double getEntityDamageMult(IEntity entity, DamageType source) {
+        if (source == DamageTypes.ATTACK) {
+            return entityService.getEntityProperty(entity, SpongeDefaultProperties.physical_damage_bonus_mult);
+        }
+        if (source == DamageTypes.MAGIC) {
+            return entityService.getEntityProperty(entity, SpongeDefaultProperties.magic_damage_bonus_mult);
+        }
+        if (source == DamageTypes.FIRE) {
+            return entityService.getEntityProperty(entity, SpongeDefaultProperties.fire_damage_bonus_mult);
+        }
+        if (source == NDamageType.LIGHTNING) {
+            return entityService.getEntityProperty(entity, SpongeDefaultProperties.lightning_damage_bonus_mult);
+        }
+        if (source == NDamageType.ICE) {
+            return entityService.getEntityProperty(entity, SpongeDefaultProperties.ice_damage_bonus_mult);
+        }
+        return 1;
+    }
 
-	public void createDamageToColorMapping() {
-		Collection<ClassDefinition> classes = classService.getClassDefinitions();
-		Set<Double> list = new TreeSet<>();
+    public void createDamageToColorMapping() {
+        Collection<ClassDefinition> classes = classService.getClassDefinitions();
+        Set<Double> list = new TreeSet<>();
 
-		for (ClassDefinition aClass : classes) {
-			Set<ClassItem> classItems = aClass.getWeapons();
-			list = classItems.stream().map(ClassItem::getDamage).collect(Collectors.toCollection(TreeSet::new));
-		}
+        for (ClassDefinition aClass : classes) {
+            Set<ClassItem> classItems = aClass.getWeapons();
+            list = classItems.stream().map(ClassItem::getDamage).collect(Collectors.toCollection(TreeSet::new));
+        }
 
 
-		int size = list.size();
-		if (size >= colorScale.length) {
-			int l = list.size() / colorScale.length;
-			int w = 0;
-			for (List<Double> partition : Lists.partition(new ArrayList<>(list), l + 1)) {
-				OptionalDouble max = partition.stream().mapToDouble(d -> d).max();
-				doubleColorMap.put(max.getAsDouble(), colorScale[w]);
-				w++;
-			}
-		}
-	}
+        int size = list.size();
+        if (size >= colorScale.length) {
+            int l = list.size() / colorScale.length;
+            int w = 0;
+            for (List<Double> partition : Lists.partition(new ArrayList<>(list), l + 1)) {
+                OptionalDouble max = partition.stream().mapToDouble(d -> d).max();
+                doubleColorMap.put(max.getAsDouble(), colorScale[w]);
+                w++;
+            }
+        }
+    }
 
-	public TextColor getColorByDamage(Double damage) {
-		if (doubleColorMap.size() != colorScale.length) {
-			return TextColors.RED;
-		}
-		TextColor val = TextColors.RED;
-		for (Map.Entry<Double, TextColor> aDouble : doubleColorMap.entrySet()) {
-			if (damage <= aDouble.getKey() || aDouble.getValue() == colorScale[colorScale.length - 1]) {
-				val = aDouble.getValue();
-			}
-		}
-		return val;
-	}
+    public TextColor getColorByDamage(Double damage) {
+        if (doubleColorMap.size() != colorScale.length) {
+            return TextColors.RED;
+        }
+        TextColor val = TextColors.RED;
+        for (Map.Entry<Double, TextColor> aDouble : doubleColorMap.entrySet()) {
+            if (damage <= aDouble.getKey() || aDouble.getValue() == colorScale[colorScale.length - 1]) {
+                val = aDouble.getValue();
+            }
+        }
+        return val;
+    }
 
 }

@@ -28,12 +28,12 @@ import java.util.UUID;
 //todo move this to ntcore
 public class UUIDs {
 
-	/*
-	 * UUID.randomUUID uses secure random, which is slow and we arent
-	 * using it for crypthography
-	 * */
-	public static UUID random() {
-		XORShiftRnd r = new XORShiftRnd();
-		return new UUID(r.nextLong(), r.nextLong());
-	}
+    /*
+     * UUID.randomUUID uses secure random, which is slow and we arent
+     * using it for crypthography
+     * */
+    public static UUID random() {
+        XORShiftRnd r = new XORShiftRnd();
+        return new UUID(r.nextLong(), r.nextLong());
+    }
 }

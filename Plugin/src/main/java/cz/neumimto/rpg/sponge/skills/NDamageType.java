@@ -20,55 +20,55 @@ import org.spongepowered.api.event.cause.entity.damage.DamageType;
 
 public class NDamageType {
 
-	public static final DamageType DAMAGE_CHECK = new DamageType() {
-		@Override
-		public String getId() {
-			return "ntrpg:damagecheck";
-		}
+    public static final DamageType DAMAGE_CHECK = new DamageType() {
+        @Override
+        public String getId() {
+            return "ntrpg:damagecheck";
+        }
 
-		@Override
-		public String getName() {
-			return "damagecheck";
-		}
+        @Override
+        public String getName() {
+            return "damagecheck";
+        }
 
-		@Override
-		public String toString() {
-			return "DAMAGE_CHECK";
-		}
-	};
+        @Override
+        public String toString() {
+            return "DAMAGE_CHECK";
+        }
+    };
 
-	public static final DamageType LIGHTNING = new DamageType() {
-		@Override
-		public String getId() {
-			return "ntrpg:lightning";
-		}
+    public static final DamageType LIGHTNING = new DamageType() {
+        @Override
+        public String getId() {
+            return "ntrpg:lightning";
+        }
 
-		@Override
-		public String getName() {
-			return "lightning";
-		}
+        @Override
+        public String getName() {
+            return "lightning";
+        }
 
-		@Override
-		public String toString() {
-			return "Lightning";
-		}
-	};
+        @Override
+        public String toString() {
+            return "Lightning";
+        }
+    };
 
-	public static final DamageType ICE = new DamageType() {
-		@Override
-		public String getId() {
-			return "ntrpg:ice";
-		}
+    public static final DamageType ICE = new DamageType() {
+        @Override
+        public String getId() {
+            return "ntrpg:ice";
+        }
 
-		@Override
-		public String getName() {
-			return "ice";
-		}
+        @Override
+        public String getName() {
+            return "ice";
+        }
 
-		@Override
-		public String toString() {
-			return "Ice";
-		}
-	};
+        @Override
+        public String toString() {
+            return "Ice";
+        }
+    };
 
 }

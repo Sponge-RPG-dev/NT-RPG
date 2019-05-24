@@ -25,7 +25,7 @@ import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.properties.DefaultProperties;
+import cz.neumimto.rpg.properties.SpongeDefaultProperties;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
@@ -75,7 +75,7 @@ public class SpeedBoost extends EffectBase {
 	@Override
 	public void onApply(IEffect self) {
 		super.onApply(self);
-		getConsumer().setProperty(DefaultProperties.walk_speed, getConsumer().getProperty(DefaultProperties.walk_speed) + speedbonus);
+		getConsumer().setProperty(SpongeDefaultProperties.walk_speed, getConsumer().getProperty(SpongeDefaultProperties.walk_speed) + speedbonus);
 		getGlobalScope().entityService.updateWalkSpeed(getConsumer());
 		Location<World> location = getConsumer().getLocation();
 
@@ -95,8 +95,8 @@ public class SpeedBoost extends EffectBase {
 	@Override
 	public void onRemove(IEffect self) {
 		super.onRemove(self);
-		getConsumer().setProperty(DefaultProperties.walk_speed,
-				getGlobalScope().entityService.getEntityProperty(getConsumer(), DefaultProperties.walk_speed) - speedbonus);
+		getConsumer().setProperty(SpongeDefaultProperties.walk_speed,
+				getGlobalScope().entityService.getEntityProperty(getConsumer(), SpongeDefaultProperties.walk_speed) - speedbonus);
 		getGlobalScope().entityService.updateWalkSpeed(getConsumer());
 		getConsumer().sendMessage(ChatTypes.CHAT, Localizations.SPEED_BOOST_EXPIRE.toText());
 	}

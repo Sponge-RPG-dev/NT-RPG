@@ -6,15 +6,15 @@ import cz.neumimto.rpg.players.parties.Party;
 
 public abstract class AbstractPartyEvent extends AbstractCharacterCancellableEvent {
 
-	protected final Party party;
+    protected final Party party;
 
-	public AbstractPartyEvent(IActiveCharacter character, Party party) {
-		super(character);
-		this.party = party;
-	}
+    public AbstractPartyEvent(IActiveCharacter character, Party party) {
+        super(character);
+        this.party = party;
+    }
 
-	public Party getParty() {
-		return party;
-	}
+    public Party getParty() {
+        return party;
+    }
 
 }

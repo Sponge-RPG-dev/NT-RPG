@@ -12,20 +12,20 @@ import java.util.stream.Collectors;
  */
 public class ClassDefCommandElement extends PatternMatchingCommandElement {
 
-	public ClassDefCommandElement(Text cls) {
-		super(cls);
-	}
+    public ClassDefCommandElement(Text cls) {
+        super(cls);
+    }
 
-	@Override
-	protected Iterable<String> getChoices(CommandSource source) {
-		return NtRpgPlugin.GlobalScope.classService.getClassDefinitions().stream()
-				.filter(a -> source.hasPermission("ntrpg.class." + a.getName().toLowerCase()))
-				.map(a -> a.getName())
-				.collect(Collectors.toList());
-	}
+    @Override
+    protected Iterable<String> getChoices(CommandSource source) {
+        return NtRpgPlugin.GlobalScope.classService.getClassDefinitions().stream()
+                .filter(a -> source.hasPermission("ntrpg.class." + a.getName().toLowerCase()))
+                .map(a -> a.getName())
+                .collect(Collectors.toList());
+    }
 
-	@Override
-	protected Object getValue(String choice) throws IllegalArgumentException {
-		return NtRpgPlugin.GlobalScope.classService.getClassDefinitionByName(choice);
-	}
+    @Override
+    protected Object getValue(String choice) throws IllegalArgumentException {
+        return NtRpgPlugin.GlobalScope.classService.getClassDefinitionByName(choice);
+    }
 }

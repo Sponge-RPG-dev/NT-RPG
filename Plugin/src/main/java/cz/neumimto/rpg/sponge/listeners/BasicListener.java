@@ -71,167 +71,166 @@ import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 @ResourceLoader.ListenerClass
 public class BasicListener {
 
-	@Inject
-	private CharacterService characterService;
+    @Inject
+    private CharacterService characterService;
 
-	@Inject
-	private SpongeInventoryService spongeInventoryService;
+    @Inject
+    private SpongeInventoryService spongeInventoryService;
 
-	@Inject
-	private EntityService entityService;
+    @Inject
+    private EntityService entityService;
 
-	@Inject
-	private ExperienceService experienceService;
+    @Inject
+    private ExperienceService experienceService;
 
-	@Listener(order = Order.LATE)
-	public void onAttack(InteractEntityEvent.Primary event) {
-		if (!Utils.isLivingEntity(event.getTargetEntity())) {
-			return;
-		}
+    @Listener(order = Order.LATE)
+    public void onAttack(InteractEntityEvent.Primary event) {
+        if (!Utils.isLivingEntity(event.getTargetEntity())) {
+            return;
+        }
 
-		Optional<Player> first = event.getCause().first(Player.class);
-		IActiveCharacter character = null;
-		if (first.isPresent()) {
-			character = characterService.getCharacter(first.get().getUniqueId());
-			if (character.isStub()) {
-				return;
-			}
-			Hotbar h = character.getPlayer().getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
-			int slotIndex = h.getSelectedSlotIndex();
-			spongeInventoryService.onLeftClick(character, h.getSelectedSlotIndex(), h.getSlot(new SlotIndex(slotIndex)).get());
-		}
+        Optional<Player> first = event.getCause().first(Player.class);
+        IActiveCharacter character = null;
+        if (first.isPresent()) {
+            character = characterService.getCharacter(first.get().getUniqueId());
+            if (character.isStub()) {
+                return;
+            }
+            Hotbar h = character.getPlayer().getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
+            int slotIndex = h.getSelectedSlotIndex();
+            spongeInventoryService.onLeftClick(character, h.getSelectedSlotIndex(), h.getSlot(new SlotIndex(slotIndex)).get());
+        }
 
-		IEntity entity = entityService.get(event.getTargetEntity());
+        IEntity entity = entityService.get(event.getTargetEntity());
 
-		if (entity.getType() == IEntityType.CHARACTER) {
-			IActiveCharacter target = characterService.getCharacter(event.getTargetEntity().getUniqueId());
-			if (target.isStub() && !pluginConfig.ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS) {
-				event.setCancelled(true);
-				return;
-			}
-			if (first.isPresent()) {
-				if (character.getParty() == target.getParty() && !character.getParty().isFriendlyfire()) {
-					event.setCancelled(true);
-				}
-			}
-		}
-	}
+        if (entity.getType() == IEntityType.CHARACTER) {
+            IActiveCharacter target = characterService.getCharacter(event.getTargetEntity().getUniqueId());
+            if (target.isStub() && !pluginConfig.ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS) {
+                event.setCancelled(true);
+                return;
+            }
+            if (first.isPresent()) {
+                if (character.getParty() == target.getParty() && !character.getParty().isFriendlyfire()) {
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
 
-	@Listener
-	public void onRightClick(InteractEntityEvent.Secondary event, @First Player pl) {
-		Optional<ItemStack> itemInHand = pl.getItemInHand(HandTypes.MAIN_HAND);
-		if (itemInHand.isPresent()) {
-			ItemStack itemStack = itemInHand.get();
-			if (ItemStackUtils.any_armor.contains(itemStack.getType())) {
-				event.setCancelled(true); //restrict armor equip on rightclick
-				return;
-			} else {
-				IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());
-				if (character.isStub()) {
-					return;
-				}
-				Hotbar h = pl.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
-				int slotIndex = h.getSelectedSlotIndex();
-				spongeInventoryService.onRightClick(character, 0, h.getSlot(new SlotIndex(slotIndex)).get());
-			}
-		}
-	}
+    @Listener
+    public void onRightClick(InteractEntityEvent.Secondary event, @First Player pl) {
+        Optional<ItemStack> itemInHand = pl.getItemInHand(HandTypes.MAIN_HAND);
+        if (itemInHand.isPresent()) {
+            ItemStack itemStack = itemInHand.get();
+            if (ItemStackUtils.any_armor.contains(itemStack.getType())) {
+                event.setCancelled(true); //restrict armor equip on rightclick
+                return;
+            } else {
+                IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());
+                if (character.isStub()) {
+                    return;
+                }
+                Hotbar h = pl.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
+                int slotIndex = h.getSelectedSlotIndex();
+                spongeInventoryService.onRightClick(character, 0, h.getSlot(new SlotIndex(slotIndex)).get());
+            }
+        }
+    }
 
-	@Listener
-	public void onBlockClick(InteractBlockEvent.Primary event, @First Player pl) {
-		IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());
-		if (character.isStub()) {
-			return;
-		}
-		Hotbar h = pl.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
-		int slotIndex = h.getSelectedSlotIndex();
-		spongeInventoryService.onLeftClick(character, slotIndex, h.getSlot(new SlotIndex(slotIndex)).get());
-	}
+    @Listener
+    public void onBlockClick(InteractBlockEvent.Primary event, @First Player pl) {
+        IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());
+        if (character.isStub()) {
+            return;
+        }
+        Hotbar h = pl.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
+        int slotIndex = h.getSelectedSlotIndex();
+        spongeInventoryService.onLeftClick(character, slotIndex, h.getSlot(new SlotIndex(slotIndex)).get());
+    }
 
-	@Listener
-	public void onBlockRightClick(InteractBlockEvent.Secondary event, @First Player pl) {
-		IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());
-		Optional<ItemStack> itemInHand = pl.getItemInHand(HandTypes.MAIN_HAND);
-		if (itemInHand.isPresent() && ItemStackUtils.any_armor.contains(itemInHand.get().getType())) {
-			event.setCancelled(true); //restrict armor equip on rightclick
-			return;
-		}
-		if (character.isStub()) {
-			return;
-		}
-		Hotbar h = pl.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
-		int slotIndex = h.getSelectedSlotIndex();
-		spongeInventoryService.onRightClick(character, slotIndex, h.getSlot(new SlotIndex(slotIndex)).get());
-	}
+    @Listener
+    public void onBlockRightClick(InteractBlockEvent.Secondary event, @First Player pl) {
+        IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());
+        Optional<ItemStack> itemInHand = pl.getItemInHand(HandTypes.MAIN_HAND);
+        if (itemInHand.isPresent() && ItemStackUtils.any_armor.contains(itemInHand.get().getType())) {
+            event.setCancelled(true); //restrict armor equip on rightclick
+            return;
+        }
+        if (character.isStub()) {
+            return;
+        }
+        Hotbar h = pl.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
+        int slotIndex = h.getSelectedSlotIndex();
+        spongeInventoryService.onRightClick(character, slotIndex, h.getSlot(new SlotIndex(slotIndex)).get());
+    }
 
-	@Listener
-	public void onRespawn(RespawnPlayerEvent event) {
-		Entity type = event.getTargetEntity();
-		if (type.getType() == EntityTypes.PLAYER) {
-			IActiveCharacter character = characterService.getCharacter(type.getUniqueId());
-			if (character.isStub()) {
-				return;
-			}
-			characterService.respawnCharacter(character);
-		}
-	}
+    @Listener
+    public void onRespawn(RespawnPlayerEvent event) {
+        Entity type = event.getTargetEntity();
+        if (type.getType() == EntityTypes.PLAYER) {
+            IActiveCharacter character = characterService.getCharacter(type.getUniqueId());
+            if (character.isStub()) {
+                return;
+            }
+            characterService.respawnCharacter(character);
+        }
+    }
 
-	@Listener(order = Order.POST)
-	public void onBlockBreak(ChangeBlockEvent.Break event, @First Player player) {
-		IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-		for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
-			BlockType type = transaction.getOriginal().getState().getType();
-			Double d = experienceService.getMinningExperiences(type);
-			if (d != null) {
-				characterService.addExperiences(character, d, ExperienceSources.MINING);
-				return;
-			}
-			d = experienceService.getFarmingExperiences(type);
-			if (d != null) {
-				characterService.addExperiences(character, d, ExperienceSources.FARMING);
-				return;
-			}
-			d = experienceService.getLoggingExperiences(type);
-			if (d != null) {
-				characterService.addExperiences(character, d, ExperienceSources.LOGGING);
-				return;
-			}
-		}
-	}
+    @Listener(order = Order.POST)
+    public void onBlockBreak(ChangeBlockEvent.Break event, @First Player player) {
+        IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+        for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
+            BlockType type = transaction.getOriginal().getState().getType();
+            Double d = experienceService.getMinningExperiences(type);
+            if (d != null) {
+                characterService.addExperiences(character, d, ExperienceSources.MINING);
+                return;
+            }
+            d = experienceService.getFarmingExperiences(type);
+            if (d != null) {
+                characterService.addExperiences(character, d, ExperienceSources.FARMING);
+                return;
+            }
+            d = experienceService.getLoggingExperiences(type);
+            if (d != null) {
+                characterService.addExperiences(character, d, ExperienceSources.LOGGING);
+                return;
+            }
+        }
+    }
 
-	@Listener(order = Order.POST)
-	@Exclude({FishingEvent.Start.class, FishingEvent.HookEntity.class})
-	public void onFishCatch(FishingEvent.Stop event, @First Player player) {
-		FishHook fishHook = event.getFishHook();
-		List<Transaction<ItemStackSnapshot>> transactions = event.getTransactions();
-		if (transactions.isEmpty()) {
-			return;
-		}
-		Transaction<ItemStackSnapshot> transaction = transactions.get(0);
-		ItemStackSnapshot aFinal = transaction.getFinal();
-		Optional<Fish> ofish = aFinal.get(Keys.FISH_TYPE);
+    @Listener(order = Order.POST)
+    @Exclude({FishingEvent.Start.class, FishingEvent.HookEntity.class})
+    public void onFishCatch(FishingEvent.Stop event, @First Player player) {
+        FishHook fishHook = event.getFishHook();
+        List<Transaction<ItemStackSnapshot>> transactions = event.getTransactions();
+        if (transactions.isEmpty()) {
+            return;
+        }
+        Transaction<ItemStackSnapshot> transaction = transactions.get(0);
+        ItemStackSnapshot aFinal = transaction.getFinal();
+        Optional<Fish> ofish = aFinal.get(Keys.FISH_TYPE);
 
-		if (ofish.isPresent()) {
-			Fish fish = ofish.get();
-			Double d = experienceService.getFishingExperience(fish);
-			if (d == null) {
-				return;
-			}
-			Location<World> location = fishHook.getLocation();
-			BlockType blockType = location.getBlockType();
-			if (blockType != BlockTypes.WATER) {
-				location = location.add(0, -1, 0);
-				blockType = location.getBlockType();
-				if (blockType != BlockTypes.WATER) {
-					return;
-				}
-			}
-			IActiveCharacter character = characterService.getCharacter(player);
-			characterService.addExperiences(character, d, ExperienceSources.FISHING);
-		}
+        if (ofish.isPresent()) {
+            Fish fish = ofish.get();
+            Double d = experienceService.getFishingExperience(fish);
+            if (d == null) {
+                return;
+            }
+            Location<World> location = fishHook.getLocation();
+            BlockType blockType = location.getBlockType();
+            if (blockType != BlockTypes.WATER) {
+                location = location.add(0, -1, 0);
+                blockType = location.getBlockType();
+                if (blockType != BlockTypes.WATER) {
+                    return;
+                }
+            }
+            IActiveCharacter character = characterService.getCharacter(player);
+            characterService.addExperiences(character, d, ExperienceSources.FISHING);
+        }
 
-	}
-
+    }
 
 
 }

@@ -14,15 +14,15 @@ import java.util.function.Consumer;
  */
 public interface IActionDecorator {
 
-	void strikeLightning(Location<World> location);
+    void strikeLightning(Location<World> location);
 
-	void createTrajectory(Entity entity, int interval, int maxticks, BiConsumer<Task, Entity> e);
+    void createTrajectory(Entity entity, int interval, int maxticks, BiConsumer<Task, Entity> e);
 
-	void circle(Location location, int count, double radius, Consumer<Location> callback);
+    void circle(Location location, int count, double radius, Consumer<Location> callback);
 
-	void ellipse(Vector3d[] vector3ds, double a, double b, double vecmult, Vector3d rotationAngle);
+    void ellipse(Vector3d[] vector3ds, double a, double b, double vecmult, Vector3d rotationAngle);
 
-	void spiral(double radius, double sides, double coils,
-			double rotation,
-			Consumer<Vector3d> cb);
+    void spiral(double radius, double sides, double coils,
+                double rotation,
+                Consumer<Vector3d> cb);
 }

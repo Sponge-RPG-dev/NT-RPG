@@ -8,32 +8,32 @@ import cz.neumimto.rpg.common.scripting.JsBinding;
 @JsBinding(JsBinding.Type.CLASS)
 public enum SkillNodes implements ISkillNode {
 
-	DAMAGE("damage"),
-	RADIUS("radius"),
-	MANACOST("manacost"),
-	COOLDOWN("cooldown"),
-	VELOCITY("velocity"),
-	HPCOST("hpcost"),
-	PROJECTILE_TYPE("projectile-type"),
-	RANGE("range"),
-	DURATION("duration"),
-	AMOUNT("amount"),
-	PERIOD("period"),
-	CHANCE("chance"),
-	MULTIPLIER("multiplier"),
-	HEALED_AMOUNT("healed_amount"),
-	AMPLIFIER("amplifier");
+    DAMAGE("damage"),
+    RADIUS("radius"),
+    MANACOST("manacost"),
+    COOLDOWN("cooldown"),
+    VELOCITY("velocity"),
+    HPCOST("hpcost"),
+    PROJECTILE_TYPE("projectile-type"),
+    RANGE("range"),
+    DURATION("duration"),
+    AMOUNT("amount"),
+    PERIOD("period"),
+    CHANCE("chance"),
+    MULTIPLIER("multiplier"),
+    HEALED_AMOUNT("healed_amount"),
+    AMPLIFIER("amplifier");
 
-	private final String str;
+    private final String str;
 
-	SkillNodes(String str) {
-		this.str = str;
-	}
+    SkillNodes(String str) {
+        this.str = str;
+    }
 
-	@Override
-	public String value() {
-		return str;
-	}
+    @Override
+    public String value() {
+        return str;
+    }
 
 
 }

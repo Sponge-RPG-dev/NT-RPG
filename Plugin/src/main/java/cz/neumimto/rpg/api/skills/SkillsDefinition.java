@@ -10,10 +10,10 @@ import java.util.List;
 @ConfigSerializable
 public class SkillsDefinition {
 
-	@Setting("Skills")
-	private List<ScriptSkillModel> skills = new ArrayList<>();
+    @Setting("Skills")
+    private List<ScriptSkillModel> skills = new ArrayList<>();
 
-	public List<ScriptSkillModel> getSkills() {
-		return skills;
-	}
+    public List<ScriptSkillModel> getSkills() {
+        return skills;
+    }
 }

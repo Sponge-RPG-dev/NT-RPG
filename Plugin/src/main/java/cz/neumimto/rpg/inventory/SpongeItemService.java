@@ -40,80 +40,80 @@ import java.util.Optional;
 @Singleton
 public class SpongeItemService extends AbstractItemService {
 
-	@Inject
-	private EffectService effectService;
+    @Inject
+    private EffectService effectService;
 
-	public Optional<RpgItemType> getRpgItemType(ItemStack itemStack) {
-		Optional<Text> text = itemStack.get(Keys.DISPLAY_NAME);
-		return getRpgItemType(itemStack.getType().getId(), text.map(Text::toPlain).orElse(null));
-	}
+    public Optional<RpgItemType> getRpgItemType(ItemStack itemStack) {
+        Optional<Text> text = itemStack.get(Keys.DISPLAY_NAME);
+        return getRpgItemType(itemStack.getType().getId(), text.map(Text::toPlain).orElse(null));
+    }
 
-	public Optional<RpgItemStack> getRpgItemStack(ItemStack itemStack) {
-		return getRpgItemType(itemStack).map(a -> new RpgItemStackImpl(a,
-													getItemEffects(itemStack),
-													getItemBonusAttributes(itemStack),
-													getItemMinimalAttributeRequirements(itemStack),
-													getClassRequirements(itemStack)
-												));
-	}
+    public Optional<RpgItemStack> getRpgItemStack(ItemStack itemStack) {
+        return getRpgItemType(itemStack).map(a -> new RpgItemStackImpl(a,
+                getItemEffects(itemStack),
+                getItemBonusAttributes(itemStack),
+                getItemMinimalAttributeRequirements(itemStack),
+                getClassRequirements(itemStack)
+        ));
+    }
 
-	private Map<ClassDefinition, Integer> getClassRequirements(ItemStack itemStack) {
-		return Collections.emptyMap();
-	}
+    private Map<ClassDefinition, Integer> getClassRequirements(ItemStack itemStack) {
+        return Collections.emptyMap();
+    }
 
-	private Map<Attribute, Integer> getItemMinimalAttributeRequirements(ItemStack itemStack) {
+    private Map<Attribute, Integer> getItemMinimalAttributeRequirements(ItemStack itemStack) {
         Optional<Map<String, Integer>> req = itemStack.get(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS);
         if (req.isPresent()) {
             return parseItemAttributeMap(req.get());
         }
         return super.itemAttributesPlaceholder;
-	}
+    }
 
-	private Map<Attribute, Integer> getItemBonusAttributes(ItemStack itemStack) {
+    private Map<Attribute, Integer> getItemBonusAttributes(ItemStack itemStack) {
         Optional<Map<String, Integer>> req = itemStack.get(NKeys.ITEM_ATTRIBUTE_BONUS);
         if (req.isPresent()) {
             return parseItemAttributeMap(req.get());
         }
         return super.itemAttributesPlaceholder;
-	}
+    }
 
     public Map<IGlobalEffect, EffectParams> getItemEffects(ItemStack is) {
-		Optional<Map<String, EffectParams>> q = is.get(NKeys.ITEM_EFFECTS);
-		if (q.isPresent()) {
-			return effectService.parseItemEffects(q.get());
-		}
-		return Collections.emptyMap();
-	}
+        Optional<Map<String, EffectParams>> q = is.get(NKeys.ITEM_EFFECTS);
+        if (q.isPresent()) {
+            return effectService.parseItemEffects(q.get());
+        }
+        return Collections.emptyMap();
+    }
 
-	@Override
-	protected Optional<SpongeRpgItemType> createRpgItemType(ItemString parsed, ItemClass wClass) {
-		Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, parsed.itemId);
-		if (!type.isPresent()) {
-			Log.error(" - Not Managed ItemType " + parsed.itemId);
-			return Optional.empty();
-		}
-		String itemType = type.get();
-		return Optional.of(new SpongeRpgItemType(parsed.itemId, parsed.model, wClass, parsed.damage, parsed.armor, itemType));
-	}
+    @Override
+    protected Optional<SpongeRpgItemType> createRpgItemType(ItemString parsed, ItemClass wClass) {
+        Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, parsed.itemId);
+        if (!type.isPresent()) {
+            Log.error(" - Not Managed ItemType " + parsed.itemId);
+            return Optional.empty();
+        }
+        String itemType = type.get();
+        return Optional.of(new SpongeRpgItemType(parsed.itemId, parsed.model, wClass, parsed.damage, parsed.armor, itemType));
+    }
 
 
-	@Override
-	public void loadItemGroups(Path path) {
-		File f = path.resolve("ItemGroups.conf").toFile();
-		if (!f.exists()) {
-			Optional<Asset> asset = Sponge.getAssetManager().getAsset(NtRpgPlugin.GlobalScope.plugin, "ItemGroups.conf");
-			if (!asset.isPresent()) {
-				throw new IllegalStateException("Could not find an asset ItemGroups.conf");
-			}
-			try {
-				asset.get().copyToFile(f.toPath());
-			} catch (IOException e) {
-				throw new IllegalStateException("Could not create ItemGroups.conf file", e);
-			}
-		}
+    @Override
+    public void loadItemGroups(Path path) {
+        File f = path.resolve("ItemGroups.conf").toFile();
+        if (!f.exists()) {
+            Optional<Asset> asset = Sponge.getAssetManager().getAsset(NtRpgPlugin.GlobalScope.plugin, "ItemGroups.conf");
+            if (!asset.isPresent()) {
+                throw new IllegalStateException("Could not find an asset ItemGroups.conf");
+            }
+            try {
+                asset.get().copyToFile(f.toPath());
+            } catch (IOException e) {
+                throw new IllegalStateException("Could not create ItemGroups.conf file", e);
+            }
+        }
 
-		Config c = ConfigFactory.parseFile(f);
-		loadItemGroups(c);
-	}
+        Config c = ConfigFactory.parseFile(f);
+        loadItemGroups(c);
+    }
 
 }

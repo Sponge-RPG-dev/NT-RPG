@@ -5,7 +5,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 
 /**
  * Created by NeumimTo on 27.10.2018.
- *
+ * <p>
  * Always last in the skill executor chain, may not call chain next
  */
 public class SkillExecutorCallback extends ActiveSkillPreProcessorWrapper {

@@ -5,14 +5,14 @@ package cz.neumimto.rpg.inventory;
  */
 public class LoreDurability {
 
-	public int current;
-	public int max;
+    public int current;
+    public int max;
 
-	public LoreDurability(int current, int max) {
-		this.current = current;
-		this.max = max;
-	}
+    public LoreDurability(int current, int max) {
+        this.current = current;
+        this.max = max;
+    }
 
-	public LoreDurability() {
-	}
+    public LoreDurability() {
+    }
 }

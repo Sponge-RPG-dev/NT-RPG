@@ -3,11 +3,11 @@ package cz.neumimto.effects.positive;
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.api.effects.stacking.FloatEffectStackingStrategy;
-import cz.neumimto.rpg.entities.PropertyContainer;
-import cz.neumimto.rpg.properties.DefaultProperties;
 import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.entities.PropertyContainer;
+import cz.neumimto.rpg.properties.SpongeDefaultProperties;
 
 /**
  * Created by NeumimTo on 29.3.17.
@@ -32,14 +32,14 @@ public class ElementalResistanceEffect extends EffectBase<Float> {
 	}
 
 	private void apply(int i, PropertyContainer propertyContainer) {
-		float characterProperty = propertyContainer.getProperty(DefaultProperties.fire_damage_protection_mult);
-		propertyContainer.setProperty(DefaultProperties.fire_damage_protection_mult, characterProperty + getValue() * i);
+		float characterProperty = propertyContainer.getProperty(SpongeDefaultProperties.fire_damage_protection_mult);
+		propertyContainer.setProperty(SpongeDefaultProperties.fire_damage_protection_mult, characterProperty + getValue() * i);
 
-		characterProperty = propertyContainer.getProperty(DefaultProperties.ice_damage_protection_mult);
-		propertyContainer.setProperty(DefaultProperties.ice_damage_protection_mult, characterProperty + getValue() * i);
+		characterProperty = propertyContainer.getProperty(SpongeDefaultProperties.ice_damage_protection_mult);
+		propertyContainer.setProperty(SpongeDefaultProperties.ice_damage_protection_mult, characterProperty + getValue() * i);
 
-		characterProperty = propertyContainer.getProperty(DefaultProperties.lightning_damage_protection_mult);
-		propertyContainer.setProperty(DefaultProperties.lightning_damage_protection_mult, characterProperty + getValue() * i);
+		characterProperty = propertyContainer.getProperty(SpongeDefaultProperties.lightning_damage_protection_mult);
+		propertyContainer.setProperty(SpongeDefaultProperties.lightning_damage_protection_mult, characterProperty + getValue() * i);
 	}
 
 	@Override

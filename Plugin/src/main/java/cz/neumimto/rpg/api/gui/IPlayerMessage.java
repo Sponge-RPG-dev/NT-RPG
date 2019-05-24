@@ -22,6 +22,7 @@ import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.inventory.CannotUseItemReason;
 import cz.neumimto.rpg.inventory.runewords.RuneWord;
@@ -29,7 +30,6 @@ import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.api.skills.tree.SkillTree;
 
 import java.util.List;
 
@@ -38,77 +38,77 @@ import java.util.List;
  */
 public interface IPlayerMessage {
 
-	boolean isClientSideGui();
+    boolean isClientSideGui();
 
-	void sendMessage(IActiveCharacter player, LocalizableParametrizedText message, Arg arg);
+    void sendMessage(IActiveCharacter player, LocalizableParametrizedText message, Arg arg);
 
-	void sendCooldownMessage(IActiveCharacter player, String message, double cooldown);
+    void sendCooldownMessage(IActiveCharacter player, String message, double cooldown);
 
-	void sendEffectStatus(IActiveCharacter player, EffectStatusType type, IEffect effect);
+    void sendEffectStatus(IActiveCharacter player, EffectStatusType type, IEffect effect);
 
-	void invokeCharacterMenu(IActiveCharacter player, List<CharacterBase> characterBases);
+    void invokeCharacterMenu(IActiveCharacter player, List<CharacterBase> characterBases);
 
-	void sendPlayerInfo(IActiveCharacter character, List<CharacterBase> target);
+    void sendPlayerInfo(IActiveCharacter character, List<CharacterBase> target);
 
-	void sendPlayerInfo(IActiveCharacter character, IActiveCharacter target);
+    void sendPlayerInfo(IActiveCharacter character, IActiveCharacter target);
 
-	void showExpChange(IActiveCharacter character, String classname, double expchange);
+    void showExpChange(IActiveCharacter character, String classname, double expchange);
 
-	void showLevelChange(IActiveCharacter character, PlayerClassData clazz, int level);
+    void showLevelChange(IActiveCharacter character, PlayerClassData clazz, int level);
 
-	void sendStatus(IActiveCharacter character);
+    void sendStatus(IActiveCharacter character);
 
-	void invokerDefaultMenu(IActiveCharacter character);
+    void invokerDefaultMenu(IActiveCharacter character);
 
-	void sendListOfCharacters(IActiveCharacter player, CharacterBase currentlyCreated);
+    void sendListOfCharacters(IActiveCharacter player, CharacterBase currentlyCreated);
 
-	void showClassInfo(IActiveCharacter character, ClassDefinition cc);
+    void showClassInfo(IActiveCharacter character, ClassDefinition cc);
 
-	void sendListOfRunes(IActiveCharacter character);
+    void sendListOfRunes(IActiveCharacter character);
 
-	void displayGroupArmor(ClassDefinition g, IActiveCharacter target);
+    void displayGroupArmor(ClassDefinition g, IActiveCharacter target);
 
-	void displayGroupWeapon(ClassDefinition g, IActiveCharacter target);
+    void displayGroupWeapon(ClassDefinition g, IActiveCharacter target);
 
-	void sendClassInfo(IActiveCharacter target, ClassDefinition configClass);
+    void sendClassInfo(IActiveCharacter target, ClassDefinition configClass);
 
-	void displayAttributes(IActiveCharacter target, ClassDefinition group);
+    void displayAttributes(IActiveCharacter target, ClassDefinition group);
 
-	void displayRuneword(IActiveCharacter character, RuneWord rw, boolean linkToRWList);
+    void displayRuneword(IActiveCharacter character, RuneWord rw, boolean linkToRWList);
 
-	void displayRunewordBlockedGroups(IActiveCharacter character, RuneWord rw);
+    void displayRunewordBlockedGroups(IActiveCharacter character, RuneWord rw);
 
-	void displayRunewordRequiredGroups(IActiveCharacter character, RuneWord rw);
+    void displayRunewordRequiredGroups(IActiveCharacter character, RuneWord rw);
 
-	void displayRunewordAllowedGroups(IActiveCharacter character, RuneWord rw);
+    void displayRunewordAllowedGroups(IActiveCharacter character, RuneWord rw);
 
-	void displayRunewordAllowedItems(IActiveCharacter character, RuneWord rw);
+    void displayRunewordAllowedItems(IActiveCharacter character, RuneWord rw);
 
-	void displayHealth(IActiveCharacter character);
+    void displayHealth(IActiveCharacter character);
 
-	void displayMana(IActiveCharacter character);
+    void displayMana(IActiveCharacter character);
 
-	void sendCannotUseItemNotification(IActiveCharacter character, String item, CannotUseItemReason reason);
+    void sendCannotUseItemNotification(IActiveCharacter character, String item, CannotUseItemReason reason);
 
-	void openSkillTreeMenu(IActiveCharacter player);
+    void openSkillTreeMenu(IActiveCharacter player);
 
-	void moveSkillTreeMenu(IActiveCharacter character);
+    void moveSkillTreeMenu(IActiveCharacter character);
 
-	void displaySkillDetailsInventoryMenu(IActiveCharacter character, SkillTree tree, String command);
+    void displaySkillDetailsInventoryMenu(IActiveCharacter character, SkillTree tree, String command);
 
-	void displayInitialProperties(ClassDefinition byName, IActiveCharacter player);
+    void displayInitialProperties(ClassDefinition byName, IActiveCharacter player);
 
-	void sendCannotUseItemInOffHandNotification(String futureOffHandItem, IActiveCharacter character, CannotUseItemReason reason);
+    void sendCannotUseItemInOffHandNotification(String futureOffHandItem, IActiveCharacter character, CannotUseItemReason reason);
 
-	void skillExecution(IActiveCharacter character, PlayerSkillContext skill);
+    void skillExecution(IActiveCharacter character, PlayerSkillContext skill);
 
-	void sendClassesByType(IActiveCharacter character, String def);
+    void sendClassesByType(IActiveCharacter character, String def);
 
-	void sendClassTypes(IActiveCharacter character);
+    void sendClassTypes(IActiveCharacter character);
 
     void displayCharacterMenu(IActiveCharacter character);
 
-	void displayCharacterAttributes(IActiveCharacter character);
+    void displayCharacterAttributes(IActiveCharacter character);
 
-	void displayCurrentClicks(IActiveCharacter character, String combo);
+    void displayCurrentClicks(IActiveCharacter character, String combo);
 }

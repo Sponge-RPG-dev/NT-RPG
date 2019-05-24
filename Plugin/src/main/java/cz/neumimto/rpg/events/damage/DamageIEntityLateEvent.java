@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.events.damage;
 
+import cz.neumimto.rpg.common.scripting.JsBinding;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.events.entity.AbstractIEntityCancellableEvent;
-import cz.neumimto.rpg.common.scripting.JsBinding;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 
@@ -12,19 +12,19 @@ import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
  */
 @JsBinding(JsBinding.Type.CLASS)
 public class DamageIEntityLateEvent extends AbstractIEntityCancellableEvent {
-	protected double damage;
+    protected double damage;
 
-	public DamageIEntityLateEvent(IEntity target, double damage) {
-		super(target);
-		this.damage = damage;
-	}
+    public DamageIEntityLateEvent(IEntity target, double damage) {
+        super(target);
+        this.damage = damage;
+    }
 
-	public double getDamage() {
-		return damage;
-	}
+    public double getDamage() {
+        return damage;
+    }
 
-	public void setDamage(double damage) {
-		this.damage = damage;
-	}
+    public void setDamage(double damage) {
+        this.damage = damage;
+    }
 
 }

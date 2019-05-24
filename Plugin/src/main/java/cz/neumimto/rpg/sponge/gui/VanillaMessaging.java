@@ -27,9 +27,14 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
 import cz.neumimto.rpg.api.items.ClassItem;
+import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.sponge.commands.InfoCommand;
+import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.common.reloading.Reload;
+import cz.neumimto.rpg.common.reloading.ReloadService;
+import cz.neumimto.rpg.common.skills.SkillData;
+import cz.neumimto.rpg.common.utils.model.CharacterListModel;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.damage.SpongeDamageService;
 import cz.neumimto.rpg.effects.EffectStatusType;
@@ -50,14 +55,9 @@ import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.*;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.common.reloading.Reload;
-import cz.neumimto.rpg.common.reloading.ReloadService;
-import cz.neumimto.rpg.common.skills.SkillData;
-import cz.neumimto.rpg.api.skills.ISkillService;
-import cz.neumimto.rpg.api.skills.tree.SkillTree;
+import cz.neumimto.rpg.sponge.commands.InfoCommand;
 import cz.neumimto.rpg.sponge.utils.ItemStackUtils;
 import cz.neumimto.rpg.sponge.utils.Utils;
-import cz.neumimto.rpg.common.utils.model.CharacterListModel;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
@@ -868,7 +868,7 @@ public class VanillaMessaging implements IPlayerMessage {
         commit.offer(Keys.DISPLAY_NAME, Text.builder("Commit").color(TextColors.GREEN).build());
         commit.offer(new InventoryCommandItemMenuData("character attributes tx-commit "));
 
-        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7,0)))
+        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 0)))
                 .offer(commit);
 
 
@@ -881,7 +881,7 @@ public class VanillaMessaging implements IPlayerMessage {
             itemStack.offer(Keys.DISPLAY_NAME, Text.of(attribute.getName()));
             List<Text> text = TextHelper.splitStringByDelimiter(attribute.getDescription());
             Integer amount = character.getCharacterBase().getAttributes().get(attribute.getId());
-            text.add(Text.builder("Val: " + (amount == null ? 0 : amount) + " / "  + attribute.getMaxValue()).build());
+            text.add(Text.builder("Val: " + (amount == null ? 0 : amount) + " / " + attribute.getMaxValue()).build());
             itemStack.offer(Keys.ITEM_LORE, text);
 
             ItemStack btn = GuiHelper.itemStack(ItemTypes.SUGAR);

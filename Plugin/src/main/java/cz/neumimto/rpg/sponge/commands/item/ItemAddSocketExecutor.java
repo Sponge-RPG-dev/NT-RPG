@@ -15,20 +15,20 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import java.util.Optional;
 
 public class ItemAddSocketExecutor implements CommandExecutor {
-	@Override
-	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		Player player = (Player) src;
-		Optional<SocketType> type = args.getOne("type");
-		if (type.isPresent()) {
-			Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
-			if (itemInHand.isPresent()) {
-				ItemStack itemStack = NtRpgPlugin.GlobalScope.runewordService.createSocket(itemInHand.get(), type.get());
-				player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
-				return CommandResult.builder().affectedItems(1).build();
-			}
-			src.sendMessage(Localizations.NO_ITEM_IN_HAND.toText());
-			return CommandResult.empty();
-		}
-		return CommandResult.empty();
-	}
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        Player player = (Player) src;
+        Optional<SocketType> type = args.getOne("type");
+        if (type.isPresent()) {
+            Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
+            if (itemInHand.isPresent()) {
+                ItemStack itemStack = NtRpgPlugin.GlobalScope.runewordService.createSocket(itemInHand.get(), type.get());
+                player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
+                return CommandResult.builder().affectedItems(1).build();
+            }
+            src.sendMessage(Localizations.NO_ITEM_IN_HAND.toText());
+            return CommandResult.empty();
+        }
+        return CommandResult.empty();
+    }
 }

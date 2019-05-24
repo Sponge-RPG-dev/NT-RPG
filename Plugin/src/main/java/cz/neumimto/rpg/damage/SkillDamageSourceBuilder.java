@@ -27,46 +27,46 @@ import org.spongepowered.api.event.cause.entity.damage.source.common.AbstractEnt
  */
 public class SkillDamageSourceBuilder extends AbstractEntityDamageSource.AbstractEntityDamageSourceBuilder<SkillDamageSource, SkillDamageSourceBuilder> {
 
-	protected IEntity nSource;
-	protected ISkill skill;
-	protected IEffect effect;
+    protected IEntity nSource;
+    protected ISkill skill;
+    protected IEffect effect;
 
-	public SkillDamageSourceBuilder fromSkill(ISkill skill) {
-		this.skill = skill;
-		type(skill.getDamageType());
-		return this;
-	}
+    public SkillDamageSourceBuilder fromSkill(ISkill skill) {
+        this.skill = skill;
+        type(skill.getDamageType());
+        return this;
+    }
 
-	public ISkill getSkill() {
-		return skill;
-	}
+    public ISkill getSkill() {
+        return skill;
+    }
 
-	public SkillDamageSourceBuilder setSkill(ISkill skill) {
-		this.skill = skill;
-		return this;
-	}
+    public SkillDamageSourceBuilder setSkill(ISkill skill) {
+        this.skill = skill;
+        return this;
+    }
 
-	public IEntity getSource() {
-		return nSource;
-	}
+    public IEntity getSource() {
+        return nSource;
+    }
 
-	public SkillDamageSourceBuilder setSource(IEntity source) {
-		this.nSource = source;
-		this.source = source.getEntity();
-		return this;
-	}
+    public SkillDamageSourceBuilder setSource(IEntity source) {
+        this.nSource = source;
+        this.source = source.getEntity();
+        return this;
+    }
 
-	public IEffect getEffect() {
-		return effect;
-	}
+    public IEffect getEffect() {
+        return effect;
+    }
 
-	public SkillDamageSourceBuilder setEffect(IEffect effect) {
-		this.effect = effect;
-		return this;
-	}
+    public SkillDamageSourceBuilder setEffect(IEffect effect) {
+        this.effect = effect;
+        return this;
+    }
 
-	@Override
-	public SkillDamageSource build() throws IllegalStateException {
-		return new SkillDamageSource(this);
-	}
+    @Override
+    public SkillDamageSource build() throws IllegalStateException {
+        return new SkillDamageSource(this);
+    }
 }

@@ -5,10 +5,10 @@ import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.properties.DefaultProperties;
-import cz.neumimto.rpg.common.scripting.JsBinding;
 import cz.neumimto.rpg.api.utils.rng.XORShiftRnd;
+import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.properties.SpongeDefaultProperties;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
@@ -36,7 +36,7 @@ public class ShadowRunEffect extends EffectBase<ShadowRunModel> {
 		super.onApply(self);
 		getConsumer().getEntity().offer(Keys.VANISH, true);
 		getConsumer().getEntity().offer(Keys.VANISH_PREVENTS_TARGETING, true);
-		getConsumer().addProperty(DefaultProperties.walk_speed, getValue().walkspeed);
+		getConsumer().addProperty(SpongeDefaultProperties.walk_speed, getValue().walkspeed);
 		NtRpgPlugin.GlobalScope.entityService.updateWalkSpeed(getConsumer());
 	}
 
@@ -58,7 +58,7 @@ public class ShadowRunEffect extends EffectBase<ShadowRunModel> {
 		super.onRemove(self);
 		getConsumer().getEntity().offer(Keys.VANISH, false);
 		getConsumer().getEntity().offer(Keys.VANISH_PREVENTS_TARGETING, false);
-		getConsumer().addProperty(DefaultProperties.walk_speed, -getValue().walkspeed);
+		getConsumer().addProperty(SpongeDefaultProperties.walk_speed, -getValue().walkspeed);
 		NtRpgPlugin.GlobalScope.entityService.updateWalkSpeed(getConsumer());
 	}
 }

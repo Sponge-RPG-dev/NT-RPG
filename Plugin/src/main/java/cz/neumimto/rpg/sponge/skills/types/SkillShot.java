@@ -22,10 +22,10 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.api.utils.TriConsumer;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.skills.ProjectileProperties;
-import cz.neumimto.rpg.api.utils.TriConsumer;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
@@ -38,27 +38,27 @@ import java.util.Optional;
  */
 public abstract class SkillShot extends ActiveSkill {
 
-	@Inject
-	private Game game;
+    @Inject
+    private Game game;
 
 
-	@Override
-	public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext modifier) {
-		Optional<Projectile> projectile = character.getPlayer().launchProjectile(getProjectile(character, info));
-		if (projectile.isPresent()) {
-			ProjectileProperties projectileProperties = getProjectileProperties(character, info, modifier, projectile.get());
-			projectileProperties.onHit(getHitConsumer());
-			modifier.result(SkillResult.OK);
+    @Override
+    public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext modifier) {
+        Optional<Projectile> projectile = character.getPlayer().launchProjectile(getProjectile(character, info));
+        if (projectile.isPresent()) {
+            ProjectileProperties projectileProperties = getProjectileProperties(character, info, modifier, projectile.get());
+            projectileProperties.onHit(getHitConsumer());
+            modifier.result(SkillResult.OK);
             return;
-		}
-		modifier.result(SkillResult.CANCELLED);
-	}
+        }
+        modifier.result(SkillResult.CANCELLED);
+    }
 
-	protected abstract ProjectileProperties getProjectileProperties(IActiveCharacter character, PlayerSkillContext info, SkillContext modifier,
+    protected abstract ProjectileProperties getProjectileProperties(IActiveCharacter character, PlayerSkillContext info, SkillContext modifier,
                                                                     Projectile projectile);
 
-	protected abstract Class<Projectile> getProjectile(IActiveCharacter character, PlayerSkillContext info);
+    protected abstract Class<Projectile> getProjectile(IActiveCharacter character, PlayerSkillContext info);
 
-	protected abstract TriConsumer<DamageEntityEvent, IEntity, IEntity> getHitConsumer();
+    protected abstract TriConsumer<DamageEntityEvent, IEntity, IEntity> getHitConsumer();
 
 }

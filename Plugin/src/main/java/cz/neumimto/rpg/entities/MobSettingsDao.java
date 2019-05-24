@@ -26,48 +26,48 @@ import java.util.List;
 @ResourceLoader.ListenerClass
 public class MobSettingsDao {
 
-	private RootMobConfig cache;
+    private RootMobConfig cache;
 
-	@Listener
-	public void load(GameStartedServerEvent event) {
-		cache = createDefaults("MobSettings.conf");
-	}
+    @Listener
+    public void load(GameStartedServerEvent event) {
+        cache = createDefaults("MobSettings.conf");
+    }
 
-	private RootMobConfig createDefaults(String s) {
-		File properties = new File(NtRpgPlugin.workingDir, s);
-		if (!properties.exists()) {
-			Collection<EntityType> types = Sponge.getGame().getRegistry().getAllOf(EntityType.class);
-			List<EntityType> livingEntities = new ArrayList<>();
+    private RootMobConfig createDefaults(String s) {
+        File properties = new File(NtRpgPlugin.workingDir, s);
+        if (!properties.exists()) {
+            Collection<EntityType> types = Sponge.getGame().getRegistry().getAllOf(EntityType.class);
+            List<EntityType> livingEntities = new ArrayList<>();
 
-			types.stream()
-					.filter(e -> Living.class.isAssignableFrom(e.getEntityClass()))
-					.filter(e -> !Human.class.isAssignableFrom(e.getEntityClass()))
-					.forEach(livingEntities::add);
+            types.stream()
+                    .filter(e -> Living.class.isAssignableFrom(e.getEntityClass()))
+                    .filter(e -> !Human.class.isAssignableFrom(e.getEntityClass()))
+                    .forEach(livingEntities::add);
 
-			RootMobConfig rootMobConfig = new RootMobConfig();
-			MobsConfig overWorldMobConfig = new MobsConfig();
-			for (EntityType livingEntity : livingEntities) {
-				overWorldMobConfig.getDamage().put(livingEntity, 10D);
-				overWorldMobConfig.getExperiences().put(livingEntity, 10D);
-				overWorldMobConfig.getHealth().put(livingEntity, 10D);
-			}
-			Collection<WorldProperties> allWorldProperties = Sponge.getServer().getAllWorldProperties();
-			for (WorldProperties allWorldProperty : allWorldProperties) {
-				rootMobConfig.getDimmensions().put(allWorldProperty.getWorldName(), overWorldMobConfig);
-			}
-			FileUtils.generateConfigFile(rootMobConfig, properties);
+            RootMobConfig rootMobConfig = new RootMobConfig();
+            MobsConfig overWorldMobConfig = new MobsConfig();
+            for (EntityType livingEntity : livingEntities) {
+                overWorldMobConfig.getDamage().put(livingEntity, 10D);
+                overWorldMobConfig.getExperiences().put(livingEntity, 10D);
+                overWorldMobConfig.getHealth().put(livingEntity, 10D);
+            }
+            Collection<WorldProperties> allWorldProperties = Sponge.getServer().getAllWorldProperties();
+            for (WorldProperties allWorldProperty : allWorldProperties) {
+                rootMobConfig.getDimmensions().put(allWorldProperty.getWorldName(), overWorldMobConfig);
+            }
+            FileUtils.generateConfigFile(rootMobConfig, properties);
 
-		}
-		try {
-			ObjectMapper<RootMobConfig> mapper = ObjectMapper.forClass(RootMobConfig.class);
-			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(properties.toPath()).build();
-			return mapper.bind(new RootMobConfig()).populate(hcl.load());
-		} catch (Exception e) {
-			throw new RuntimeException("Could not load file " + s, e);
-		}
-	}
+        }
+        try {
+            ObjectMapper<RootMobConfig> mapper = ObjectMapper.forClass(RootMobConfig.class);
+            HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(properties.toPath()).build();
+            return mapper.bind(new RootMobConfig()).populate(hcl.load());
+        } catch (Exception e) {
+            throw new RuntimeException("Could not load file " + s, e);
+        }
+    }
 
-	public RootMobConfig getCache() {
-		return cache;
-	}
+    public RootMobConfig getCache() {
+        return cache;
+    }
 }

@@ -16,20 +16,20 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
 public class SkillRefundExecutor implements CommandExecutor {
-	@Override
-	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		args.<ClassDefinition>getOne(Text.of("class")).ifPresent(aClass -> {
-			args.<ISkill>getOne("skill").ifPresent(iSkill -> {
-				Player player = (Player) src;
-				if (aClass.getSkillTree() != null) {
-					IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player);
-					PlayerClassData playerClassData = character.getClasses().get(aClass.getName());
-					aClass.getSkillTreeType().processRefundSkill(character, playerClassData, iSkill);
-				} else {
-					player.sendMessage(Localizations.CLASS_HAS_NO_SKILLTREE.toText(Arg.arg("class", aClass.getName())));
-				}
-			});
-		});
-		return CommandResult.success();
-	}
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        args.<ClassDefinition>getOne(Text.of("class")).ifPresent(aClass -> {
+            args.<ISkill>getOne("skill").ifPresent(iSkill -> {
+                Player player = (Player) src;
+                if (aClass.getSkillTree() != null) {
+                    IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player);
+                    PlayerClassData playerClassData = character.getClasses().get(aClass.getName());
+                    aClass.getSkillTreeType().processRefundSkill(character, playerClassData, iSkill);
+                } else {
+                    player.sendMessage(Localizations.CLASS_HAS_NO_SKILLTREE.toText(Arg.arg("class", aClass.getName())));
+                }
+            });
+        });
+        return CommandResult.success();
+    }
 }

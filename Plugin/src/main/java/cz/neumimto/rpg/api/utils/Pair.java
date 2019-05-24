@@ -23,14 +23,14 @@ package cz.neumimto.rpg.api.utils;
  */
 public class Pair<K, V> {
 
-	public K key;
-	public V value;
+    public K key;
+    public V value;
 
-	public Pair(K key, V value) {
-		this.key = key;
-		this.value = value;
-	}
+    public Pair(K key, V value) {
+        this.key = key;
+        this.value = value;
+    }
 
-	public Pair() {
-	}
+    public Pair() {
+    }
 }

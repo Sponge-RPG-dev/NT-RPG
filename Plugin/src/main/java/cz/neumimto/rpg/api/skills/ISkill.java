@@ -21,13 +21,13 @@ package cz.neumimto.rpg.api.skills;
 import com.typesafe.config.Config;
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.effects.IEffectSource;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.tree.SkillTree;
+import cz.neumimto.rpg.common.skills.SkillData;
+import cz.neumimto.rpg.common.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.common.skills.SkillData;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
-import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.common.skills.utils.SkillLoadingErrors;
 
 import java.util.List;
 import java.util.Set;
@@ -37,64 +37,64 @@ import java.util.Set;
  */
 public interface ISkill extends IEffectSourceProvider, IRpgElement {
 
-	String getId();
+    String getId();
 
-	String getLocalizableName();
+    String getLocalizableName();
 
-	void setLocalizableName(String name);
+    void setLocalizableName(String name);
 
-	void init();
+    void init();
 
-	void skillLearn(IActiveCharacter character);
+    void skillLearn(IActiveCharacter character);
 
-	void skillUpgrade(IActiveCharacter character, int level);
+    void skillUpgrade(IActiveCharacter character, int level);
 
-	void skillRefund(IActiveCharacter character);
+    void skillRefund(IActiveCharacter character);
 
-	SkillSettings getDefaultSkillSettings();
+    SkillSettings getDefaultSkillSettings();
 
-	void onCharacterInit(IActiveCharacter c, int level);
+    void onCharacterInit(IActiveCharacter c, int level);
 
-	void onPreUse(IActiveCharacter character, SkillContext skillContext);
+    void onPreUse(IActiveCharacter character, SkillContext skillContext);
 
-	Set<ISkillType> getSkillTypes();
+    Set<ISkillType> getSkillTypes();
 
-	SkillSettings getSettings();
+    SkillSettings getSettings();
 
-	void setSettings(SkillSettings settings);
+    void setSettings(SkillSettings settings);
 
-	List<String> getDescription();
+    List<String> getDescription();
 
-	void setDescription(List<String> description);
+    void setDescription(List<String> description);
 
-	List<String> getLore();
+    List<String> getLore();
 
-	void setLore(List<String> lore);
+    void setLore(List<String> lore);
 
-	void setIcon(String icon);
+    void setIcon(String icon);
 
-	String getDamageType();
+    String getDamageType();
 
-	void setDamageType(String type);
+    void setDamageType(String type);
 
-	default String getItemType() {
-		return "stone";
-	}
+    default String getItemType() {
+        return "stone";
+    }
 
-	@Override
-	default IEffectSource getType() {
-		return EffectSourceType.SKILL;
-	}
+    @Override
+    default IEffectSource getType() {
+        return EffectSourceType.SKILL;
+    }
 
-	default <T extends SkillData> T constructSkillData() {
-		return (T) new SkillData(getName());
-	}
+    default <T extends SkillData> T constructSkillData() {
+        return (T) new SkillData(getName());
+    }
 
-	default <T extends SkillData> void loadSkillData(T skillData, SkillTree context, SkillLoadingErrors errors, Config c) {
+    default <T extends SkillData> void loadSkillData(T skillData, SkillTree context, SkillLoadingErrors errors, Config c) {
 
-	}
+    }
 
-	default SkillContext createSkillExecutorContext(PlayerSkillContext esi) {
-		return new SkillContext();
-	}
+    default SkillContext createSkillExecutorContext(PlayerSkillContext esi) {
+        return new SkillContext();
+    }
 }

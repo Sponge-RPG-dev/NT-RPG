@@ -12,33 +12,33 @@ import java.util.Set;
 @ConfigSerializable
 public class PlayerGroupPermission implements Comparable<PlayerGroupPermission> {
 
-	@Setting("Level")
-	private int level;
+    @Setting("Level")
+    private int level;
 
-	@Setting("Permissions")
-	private Set<String> permissions;
+    @Setting("Permissions")
+    private Set<String> permissions;
 
-	public int getLevel() {
-		return level;
-	}
+    public int getLevel() {
+        return level;
+    }
 
-	public void setLevel(int level) {
-		this.level = level;
-	}
+    public void setLevel(int level) {
+        this.level = level;
+    }
 
-	public Set<String> getPermissions() {
-		if (permissions == null) {
-			permissions = new HashSet<>();
-		}
-		return permissions;
-	}
+    public Set<String> getPermissions() {
+        if (permissions == null) {
+            permissions = new HashSet<>();
+        }
+        return permissions;
+    }
 
-	public void setPermissions(Set<String> permissions) {
-		this.permissions = permissions;
-	}
+    public void setPermissions(Set<String> permissions) {
+        this.permissions = permissions;
+    }
 
-	@Override
-	public int compareTo(PlayerGroupPermission o) {
-		return level - o.getLevel();
-	}
+    @Override
+    public int compareTo(PlayerGroupPermission o) {
+        return level - o.getLevel();
+    }
 }

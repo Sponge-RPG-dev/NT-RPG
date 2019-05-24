@@ -15,30 +15,30 @@ import java.util.Set;
 @Generate(id = "name", description = "A component which enables default health regeneration")
 public class DefaultHealthRegeneration extends EffectBase implements IEffectContainer {
 
-	public static final String name = "DefaultHealthRegen";
+    public static final String name = "DefaultHealthRegen";
 
-	public DefaultHealthRegeneration(IEffectConsumer character, long duration, Void value) {
-		super(name, character);
-	}
+    public DefaultHealthRegeneration(IEffectConsumer character, long duration, Void value) {
+        super(name, character);
+    }
 
-	@Override
-	public Set<DefaultHealthRegeneration> getEffects() {
-		return new HashSet<>(Collections.singletonList(this));
-	}
+    @Override
+    public Set<DefaultHealthRegeneration> getEffects() {
+        return new HashSet<>(Collections.singletonList(this));
+    }
 
 
-	@Override
-	public DefaultHealthRegeneration constructEffectContainer() {
-		return this;
-	}
+    @Override
+    public DefaultHealthRegeneration constructEffectContainer() {
+        return this;
+    }
 
-	@Override
-	public Object getStackedValue() {
-		return null;
-	}
+    @Override
+    public Object getStackedValue() {
+        return null;
+    }
 
-	@Override
-	public void setStackedValue(Object o) {
+    @Override
+    public void setStackedValue(Object o) {
 
-	}
+    }
 }

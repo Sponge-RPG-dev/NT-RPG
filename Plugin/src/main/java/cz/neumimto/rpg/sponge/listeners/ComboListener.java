@@ -23,45 +23,45 @@ import javax.inject.Inject;
 @ResourceLoader.ListenerClass
 public class ComboListener {
 
-	@Inject
-	private CharacterService characterService;
+    @Inject
+    private CharacterService characterService;
 
-	@Listener
-	@Include({
-			InteractItemEvent.Secondary.MainHand.class,
-	})
-	public void onRMBClick(InteractEvent e, @Root Player player) {
-		if (player.get(Keys.GAME_MODE).get() == GameModes.SURVIVAL) {
-			IActiveCharacter character = characterService.getCharacter(player);
-			e.setCancelled(characterService.processUserAction(character, UserActionType.R));
-		}
-	}
+    @Listener
+    @Include({
+            InteractItemEvent.Secondary.MainHand.class,
+    })
+    public void onRMBClick(InteractEvent e, @Root Player player) {
+        if (player.get(Keys.GAME_MODE).get() == GameModes.SURVIVAL) {
+            IActiveCharacter character = characterService.getCharacter(player);
+            e.setCancelled(characterService.processUserAction(character, UserActionType.R));
+        }
+    }
 
-	@Listener
-	@Include({
-			InteractItemEvent.Primary.MainHand.class
-	})
-	public void onLMBClick(InteractEvent e, @Root Player player) {
-		if (player.get(Keys.GAME_MODE).get() == GameModes.SURVIVAL) {
-			IActiveCharacter character = characterService.getCharacter(player);
-			e.setCancelled(characterService.processUserAction(character, UserActionType.L));
-		}
-	}
+    @Listener
+    @Include({
+            InteractItemEvent.Primary.MainHand.class
+    })
+    public void onLMBClick(InteractEvent e, @Root Player player) {
+        if (player.get(Keys.GAME_MODE).get() == GameModes.SURVIVAL) {
+            IActiveCharacter character = characterService.getCharacter(player);
+            e.setCancelled(characterService.processUserAction(character, UserActionType.L));
+        }
+    }
 
-	@Listener(order = Order.EARLY)
-	public void onQPress(DropItemEvent.Pre e, @Root Player player) {
-		if (player.get(Keys.GAME_MODE).get() == GameModes.SURVIVAL) {
-			IActiveCharacter character = characterService.getCharacter(player);
-			e.setCancelled(characterService.processUserAction(character, UserActionType.Q));
-		}
-	}
+    @Listener(order = Order.EARLY)
+    public void onQPress(DropItemEvent.Pre e, @Root Player player) {
+        if (player.get(Keys.GAME_MODE).get() == GameModes.SURVIVAL) {
+            IActiveCharacter character = characterService.getCharacter(player);
+            e.setCancelled(characterService.processUserAction(character, UserActionType.Q));
+        }
+    }
 
-	@Listener(order = Order.EARLY)
-	public void onInventoryOpen(InteractInventoryEvent.Open e, @Root Player player) {
-		if (player.get(Keys.GAME_MODE).get() == GameModes.SURVIVAL) {
-			IActiveCharacter character = characterService.getCharacter(player);
-			e.setCancelled(characterService.processUserAction(character, UserActionType.E));
-		}
-	}
+    @Listener(order = Order.EARLY)
+    public void onInventoryOpen(InteractInventoryEvent.Open e, @Root Player player) {
+        if (player.get(Keys.GAME_MODE).get() == GameModes.SURVIVAL) {
+            IActiveCharacter character = characterService.getCharacter(player);
+            e.setCancelled(characterService.processUserAction(character, UserActionType.E));
+        }
+    }
 
 }

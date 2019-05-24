@@ -23,8 +23,8 @@ package cz.neumimto.rpg.entities;
  */
 public interface IReservable extends IEntityResource {
 
-	void setReservedAmnout(float f);
+    void setReservedAmnout(float f);
 
-	double getReservedAmount();
+    double getReservedAmount();
 
 }

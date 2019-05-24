@@ -7,18 +7,18 @@ import cz.neumimto.rpg.api.effects.EffectStackingStrategy;
  */
 public class DoubleEffectStackingStrategy implements EffectStackingStrategy<Double> {
 
-	public static final DoubleEffectStackingStrategy INSTANCE = new DoubleEffectStackingStrategy();
+    public static final DoubleEffectStackingStrategy INSTANCE = new DoubleEffectStackingStrategy();
 
-	private DoubleEffectStackingStrategy() {
-	}
+    private DoubleEffectStackingStrategy() {
+    }
 
-	@Override
-	public Double mergeValues(Double current, Double toAdd) {
-		return current + toAdd;
-	}
+    @Override
+    public Double mergeValues(Double current, Double toAdd) {
+        return current + toAdd;
+    }
 
-	@Override
-	public Double getDefaultValue() {
-		return 0d;
-	}
+    @Override
+    public Double getDefaultValue() {
+        return 0d;
+    }
 }

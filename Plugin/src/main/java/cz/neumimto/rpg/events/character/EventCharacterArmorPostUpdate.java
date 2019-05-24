@@ -28,15 +28,15 @@ import java.util.Set;
  */
 public class EventCharacterArmorPostUpdate extends AbstractCharacterEvent {
 
-	private Set<SpongeRpgItemType> armor;
+    private Set<SpongeRpgItemType> armor;
 
-	public EventCharacterArmorPostUpdate(IActiveCharacter character, Set<SpongeRpgItemType> allowedArmor) {
-		super(character);
-		this.armor = allowedArmor;
-	}
+    public EventCharacterArmorPostUpdate(IActiveCharacter character, Set<SpongeRpgItemType> allowedArmor) {
+        super(character);
+        this.armor = allowedArmor;
+    }
 
-	public Set<SpongeRpgItemType> getArmor() {
-		return armor;
-	}
+    public Set<SpongeRpgItemType> getArmor() {
+        return armor;
+    }
 
 }

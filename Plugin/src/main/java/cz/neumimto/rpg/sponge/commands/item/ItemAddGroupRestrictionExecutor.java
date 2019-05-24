@@ -16,21 +16,21 @@ import org.spongepowered.api.text.format.TextColors;
 import java.util.Optional;
 
 public class ItemAddGroupRestrictionExecutor implements CommandExecutor {
-	@Override
-	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		Player player = (Player) src;
-		Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
-		if (!itemInHand.isPresent()) {
-			src.sendMessage(Text.builder("No item in main hand").color(TextColors.RED).build());
-			return CommandResult.empty();
-		}
-		ItemStack itemStack = itemInHand.get();
-		ClassDefinition group = args.<ClassDefinition>getOne("group").get();
-		Integer integer = args.<Integer>getOne("level").orElse(0);
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        Player player = (Player) src;
+        Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
+        if (!itemInHand.isPresent()) {
+            src.sendMessage(Text.builder("No item in main hand").color(TextColors.RED).build());
+            return CommandResult.empty();
+        }
+        ItemStack itemStack = itemInHand.get();
+        ClassDefinition group = args.<ClassDefinition>getOne("group").get();
+        Integer integer = args.<Integer>getOne("level").orElse(0);
 
-		NtRpgPlugin.GlobalScope.inventorySerivce.addGroupRestriction(itemStack, group, integer);
-		NtRpgPlugin.GlobalScope.inventorySerivce.updateLore(itemStack);
-		player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
-		return CommandResult.success();
-	}
+        NtRpgPlugin.GlobalScope.inventorySerivce.addGroupRestriction(itemStack, group, integer);
+        NtRpgPlugin.GlobalScope.inventorySerivce.updateLore(itemStack);
+        player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
+        return CommandResult.success();
+    }
 }

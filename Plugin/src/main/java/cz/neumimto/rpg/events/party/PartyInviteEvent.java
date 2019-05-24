@@ -4,7 +4,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.parties.Party;
 
 public class PartyInviteEvent extends AbstractPartyEvent {
-	public PartyInviteEvent(IActiveCharacter character, Party party) {
-		super(character, party);
-	}
+    public PartyInviteEvent(IActiveCharacter character, Party party) {
+        super(character, party);
+    }
 }

@@ -20,22 +20,22 @@ import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.events.entity.AbstractIEntityCancellableEvent;
 
 public class SkillTargetAttemptEvent extends AbstractIEntityCancellableEvent implements SkillEvent {
-	private final IEntity caster;
-	private final ISkill skill;
+    private final IEntity caster;
+    private final ISkill skill;
 
-	public SkillTargetAttemptEvent(IEntity caster, IEntity target, ISkill skill) {
-		super(target);
-		this.caster = caster;
-		this.skill = skill;
-	}
+    public SkillTargetAttemptEvent(IEntity caster, IEntity target, ISkill skill) {
+        super(target);
+        this.caster = caster;
+        this.skill = skill;
+    }
 
-	public IEntity getCaster() {
-		return caster;
-	}
+    public IEntity getCaster() {
+        return caster;
+    }
 
-	@Override
-	public ISkill getSkill() {
-		return skill;
-	}
+    @Override
+    public ISkill getSkill() {
+        return skill;
+    }
 
 }

@@ -18,8 +18,8 @@
 
 package cz.neumimto.rpg.api.effects;
 
-import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.effects.IEffectConsumer;
 
 import java.util.Map;
 
@@ -29,9 +29,9 @@ import java.util.Map;
 @JsBinding(JsBinding.Type.CLASS)
 public interface IGlobalEffect<T extends IEffect> {
 
-	T construct(IEffectConsumer consumer, long duration, Map<String, String> data);
+    T construct(IEffectConsumer consumer, long duration, Map<String, String> data);
 
-	String getName();
+    String getName();
 
-	Class<T> asEffectClass();
+    Class<T> asEffectClass();
 }

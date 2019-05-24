@@ -18,11 +18,11 @@
 
 package cz.neumimto.rpg.persistance.model;
 
-import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import java.util.Date;
 
 /**
  * Created by NeumimTo on 24.7.2015.
@@ -30,35 +30,35 @@ import javax.persistence.PreUpdate;
 @MappedSuperclass
 public abstract class TimestampEntity {
 
-	@Column(name = "updated")
-	private Date updated;
+    @Column(name = "updated")
+    private Date updated;
 
-	@Column(name = "created")
-	private Date created;
+    @Column(name = "created")
+    private Date created;
 
-	@PrePersist
-	public void onCreate() {
-		updated = created = new Date();
-	}
+    @PrePersist
+    public void onCreate() {
+        updated = created = new Date();
+    }
 
-	@PreUpdate
-	public void onUpdate() {
-		updated = new Date();
-	}
+    @PreUpdate
+    public void onUpdate() {
+        updated = new Date();
+    }
 
-	public Date getUpdated() {
-		return updated;
-	}
+    public Date getUpdated() {
+        return updated;
+    }
 
-	public void setUpdated(Date updated) {
-		this.updated = updated;
-	}
+    public void setUpdated(Date updated) {
+        this.updated = updated;
+    }
 
-	public Date getCreated() {
-		return created;
-	}
+    public Date getCreated() {
+        return created;
+    }
 
-	public void setCreated(Date created) {
-		this.created = created;
-	}
+    public void setCreated(Date created) {
+        this.created = created;
+    }
 }

@@ -10,13 +10,13 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 
 public class PartyInviteExecutor implements CommandExecutor {
-	@Override
-	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		args.<Player>getOne(TextHelper.parse("player")).ifPresent(o -> {
-			NtRpgPlugin.GlobalScope.partyService.sendPartyInvite(
-					NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src).getParty(),
-					NtRpgPlugin.GlobalScope.characterService.getCharacter(o));
-		});
-		return CommandResult.success();
-	}
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        args.<Player>getOne(TextHelper.parse("player")).ifPresent(o -> {
+            NtRpgPlugin.GlobalScope.partyService.sendPartyInvite(
+                    NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src).getParty(),
+                    NtRpgPlugin.GlobalScope.characterService.getCharacter(o));
+        });
+        return CommandResult.success();
+    }
 }

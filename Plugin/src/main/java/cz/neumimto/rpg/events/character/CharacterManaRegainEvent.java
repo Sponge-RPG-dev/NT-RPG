@@ -26,26 +26,26 @@ import cz.neumimto.rpg.players.IActiveCharacter;
  */
 public class CharacterManaRegainEvent extends AbstractCharacterCancellableEvent {
 
-	private final IRpgElement source;
-	private double amount;
+    private final IRpgElement source;
+    private double amount;
 
-	public CharacterManaRegainEvent(IActiveCharacter character, double amount, IRpgElement source) {
-		super(character);
-		this.amount = amount;
-		this.source = source;
-	}
+    public CharacterManaRegainEvent(IActiveCharacter character, double amount, IRpgElement source) {
+        super(character);
+        this.amount = amount;
+        this.source = source;
+    }
 
-	public double getAmount() {
-		return amount;
-	}
+    public double getAmount() {
+        return amount;
+    }
 
-	public void setAmount(double amount) {
-		this.amount = amount;
-	}
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
 
-	@Override
-	public IRpgElement getSource() {
-		return source;
-	}
+    @Override
+    public IRpgElement getSource() {
+        return source;
+    }
 
 }

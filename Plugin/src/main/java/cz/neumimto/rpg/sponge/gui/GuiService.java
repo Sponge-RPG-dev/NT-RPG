@@ -34,29 +34,29 @@ import java.util.Map;
 @Singleton
 public class GuiService {
 
-	@Inject
-	private Game game;
+    @Inject
+    private Game game;
 
-	@Inject
-	private ISkillService skillService;
+    @Inject
+    private ISkillService skillService;
 
-	private Map<String, String> skillIconsUrls = new HashMap<>();
+    private Map<String, String> skillIconsUrls = new HashMap<>();
 
-	private BufferedImage createImageFromText(String text) {
-		BufferedImage img = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g = img.createGraphics();
-		Font font = new Font("Arial", Font.BOLD, 12);
-		g.setFont(font);
-		FontMetrics fm = g.getFontMetrics();
-		g.setBackground(Color.WHITE);
-		g.clearRect(0, 0, img.getWidth(), img.getHeight());
-		g.setColor(Color.black);
-		g.drawString(text, 2, (img.getHeight() + fm.getHeight()) / 2);
-		g.dispose();
-		return img;
-	}
+    private BufferedImage createImageFromText(String text) {
+        BufferedImage img = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = img.createGraphics();
+        Font font = new Font("Arial", Font.BOLD, 12);
+        g.setFont(font);
+        FontMetrics fm = g.getFontMetrics();
+        g.setBackground(Color.WHITE);
+        g.clearRect(0, 0, img.getWidth(), img.getHeight());
+        g.setColor(Color.black);
+        g.drawString(text, 2, (img.getHeight() + fm.getHeight()) / 2);
+        g.dispose();
+        return img;
+    }
 
-	public String getIconURI(String skill) {
-		return skillIconsUrls.get(skill);
-	}
+    public String getIconURI(String skill) {
+        return skillIconsUrls.get(skill);
+    }
 }

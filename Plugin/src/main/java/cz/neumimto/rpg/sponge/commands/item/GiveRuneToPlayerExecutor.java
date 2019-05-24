@@ -12,13 +12,13 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 public class GiveRuneToPlayerExecutor implements CommandExecutor {
-	@Override
-	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		Rune runee = args.<Rune>getOne("rune").get();
-		Player player = (Player) src;
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        Rune runee = args.<Rune>getOne("rune").get();
+        Player player = (Player) src;
 
-		ItemStack is = NtRpgPlugin.GlobalScope.runewordService.createRune(SocketTypes.RUNE, runee.getName());
-		player.getInventory().offer(is);
-		return CommandResult.success();
-	}
+        ItemStack is = NtRpgPlugin.GlobalScope.runewordService.createRune(SocketTypes.RUNE, runee.getName());
+        player.getInventory().offer(is);
+        return CommandResult.success();
+    }
 }

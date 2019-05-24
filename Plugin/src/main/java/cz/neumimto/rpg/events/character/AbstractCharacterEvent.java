@@ -26,13 +26,13 @@ import cz.neumimto.rpg.players.IActiveCharacter;
  */
 public abstract class AbstractCharacterEvent extends AbstractIEntityEvent implements TargetCharacterEvent {
 
-	public AbstractCharacterEvent(IActiveCharacter character) {
-		super(character);
-	}
+    public AbstractCharacterEvent(IActiveCharacter character) {
+        super(character);
+    }
 
-	@Override
-	public IActiveCharacter getTarget() {
-		return (IActiveCharacter) target;
-	}
+    @Override
+    public IActiveCharacter getTarget() {
+        return (IActiveCharacter) target;
+    }
 
 }

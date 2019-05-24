@@ -34,91 +34,91 @@ import java.util.UUID;
  */
 public class Party {
 
-	private Set<IActiveCharacter> players = new HashSet<>();
-	private IActiveCharacter leader;
-	private Set<UUID> invites = new HashSet<>();
-	private Team team;
+    private Set<IActiveCharacter> players = new HashSet<>();
+    private IActiveCharacter leader;
+    private Set<UUID> invites = new HashSet<>();
+    private Team team;
 
-	public Party(IActiveCharacter leader) {
-		this.leader = leader;
-		addPlayer(leader);
-	}
+    public Party(IActiveCharacter leader) {
+        this.leader = leader;
+        addPlayer(leader);
+    }
 
-	public void addPlayer(IActiveCharacter character) {
-		players.add(character);
-		if (team == null) {
-			team = Team.builder()
-					.name(character.getName())
-					.prefix(Text.of(TextColors.GREEN))
-					.allowFriendlyFire(false)
-					.canSeeFriendlyInvisibles(true)
-					.color(TextColors.GREEN)
-					.build();
-		}
-		team.addMember(character.getPlayer().getTeamRepresentation());
-	}
+    public void addPlayer(IActiveCharacter character) {
+        players.add(character);
+        if (team == null) {
+            team = Team.builder()
+                    .name(character.getName())
+                    .prefix(Text.of(TextColors.GREEN))
+                    .allowFriendlyFire(false)
+                    .canSeeFriendlyInvisibles(true)
+                    .color(TextColors.GREEN)
+                    .build();
+        }
+        team.addMember(character.getPlayer().getTeamRepresentation());
+    }
 
-	public IActiveCharacter getLeader() {
-		return leader;
-	}
+    public IActiveCharacter getLeader() {
+        return leader;
+    }
 
-	public void setLeader(IActiveCharacter leader) {
-		this.leader = leader;
-	}
+    public void setLeader(IActiveCharacter leader) {
+        this.leader = leader;
+    }
 
-	public void removePlayer(IActiveCharacter character) {
-		players.remove(character);
-		team.removeMember(character.getPlayer().getTeamRepresentation());
-	}
+    public void removePlayer(IActiveCharacter character) {
+        players.remove(character);
+        team.removeMember(character.getPlayer().getTeamRepresentation());
+    }
 
-	public Set<IActiveCharacter> getPlayers() {
-		return Collections.unmodifiableSet(players);
-	}
+    public Set<IActiveCharacter> getPlayers() {
+        return Collections.unmodifiableSet(players);
+    }
 
-	public void setPlayers(Set<IActiveCharacter> players) {
-		this.players = players;
-	}
+    public void setPlayers(Set<IActiveCharacter> players) {
+        this.players = players;
+    }
 
-	public Set<UUID> getInvites() {
-		return invites;
-	}
+    public Set<UUID> getInvites() {
+        return invites;
+    }
 
-	public void setInvites(Set<UUID> invites) {
-		this.invites = invites;
-	}
+    public void setInvites(Set<UUID> invites) {
+        this.invites = invites;
+    }
 
-	public boolean isFriendlyfire() {
-		return team.allowFriendlyFire();
-	}
+    public boolean isFriendlyfire() {
+        return team.allowFriendlyFire();
+    }
 
-	public void setFriendlyfire(boolean friendlyfire) {
-		team.setAllowFriendlyFire(friendlyfire);
-	}
+    public void setFriendlyfire(boolean friendlyfire) {
+        team.setAllowFriendlyFire(friendlyfire);
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-		Party party = (Party) o;
+        Party party = (Party) o;
 
-		return leader.equals(party.leader);
+        return leader.equals(party.leader);
 
-	}
+    }
 
-	public void sendPartyMessage(Text t) {
-		Text text = Text.builder().append(Localizations.PARTY_CHAT_PREFIX.toText()).append(t).build();
-		for (IActiveCharacter player : players) {
-			player.getPlayer().sendMessage(text);
-		}
-	}
+    public void sendPartyMessage(Text t) {
+        Text text = Text.builder().append(Localizations.PARTY_CHAT_PREFIX.toText()).append(t).build();
+        for (IActiveCharacter player : players) {
+            player.getPlayer().sendMessage(text);
+        }
+    }
 
-	@Override
-	public int hashCode() {
-		return invites.size() * 77 * players.size();
-	}
+    @Override
+    public int hashCode() {
+        return invites.size() * 77 * players.size();
+    }
 }

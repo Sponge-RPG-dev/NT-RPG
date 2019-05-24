@@ -18,97 +18,97 @@ import static cz.neumimto.rpg.api.logging.Log.warn;
 @Singleton
 public class RWDao {
 
-	public Set<Rune> getAllRunes(File p) {
-		Set<Rune> s = new HashSet<>();
-		Config config = ConfigFactory.parseFile(p);
-		info("Loading runes from " + p.getName());
-		List<String> runes = config.getStringList("Runes");
-		for (String a : runes) {
-			Rune r = new Rune();
-			r.setName(a);
-			s.add(r);
-		}
-		return s;
-	}
+    public Set<Rune> getAllRunes(File p) {
+        Set<Rune> s = new HashSet<>();
+        Config config = ConfigFactory.parseFile(p);
+        info("Loading runes from " + p.getName());
+        List<String> runes = config.getStringList("Runes");
+        for (String a : runes) {
+            Rune r = new Rune();
+            r.setName(a);
+            s.add(r);
+        }
+        return s;
+    }
 
-	public Set<RuneWordTemplate> getAllRws(File p) {
-		Set<RuneWordTemplate> s = new HashSet<>();
-		Config configr = ConfigFactory.parseFile(p);
-		info("Loading runewords from " + p.getName());
-		final String root = "RuneWords";
-
-
-		List<? extends ConfigObject> objectList = configr.getObjectList(root);
-		for (ConfigObject configObject : objectList) {
-			Config config = configObject.toConfig();
-			RuneWordTemplate rw = new RuneWordTemplate();
-			try {
-				String name = config.getString("Name");
-				rw.setName(name);
-			} catch (RuntimeException e) {
-				Log.error("Runeword at index: " + s.size() + 1 + " wont be loaded, missing Name node");
-				continue;
-			}
-
-			int minlevel = 0;
-			try {
-				minlevel = config.getInt("MinLevel");
-			} catch (RuntimeException ignored) {
-			}
-
-			List<String> allowed;
-			try {
-				allowed = config.getStringList("AllowedGroups");
-			} catch (RuntimeException e) {
-				allowed = new ArrayList<>();
-			}
-			List<String> allowedItems;
-
-			try {
-				allowedItems = config.getStringList("AllowedItems");
-			} catch (RuntimeException e) {
-				allowedItems = new ArrayList<>();
-			}
+    public Set<RuneWordTemplate> getAllRws(File p) {
+        Set<RuneWordTemplate> s = new HashSet<>();
+        Config configr = ConfigFactory.parseFile(p);
+        info("Loading runewords from " + p.getName());
+        final String root = "RuneWords";
 
 
-			rw.setAllowedItems(allowedItems);
+        List<? extends ConfigObject> objectList = configr.getObjectList(root);
+        for (ConfigObject configObject : objectList) {
+            Config config = configObject.toConfig();
+            RuneWordTemplate rw = new RuneWordTemplate();
+            try {
+                String name = config.getString("Name");
+                rw.setName(name);
+            } catch (RuntimeException e) {
+                Log.error("Runeword at index: " + s.size() + 1 + " wont be loaded, missing Name node");
+                continue;
+            }
 
-			try {
-				List<String> eff = config.getStringList("Effects");
-				Map<String, String> map = new HashMap<>();
-				for (String s1 : eff) {
-					String[] split = s1.split(":");
-					String k = split[0];
-					String v = "";
-					if (split.length > 1) {
-						v = split[1];
-					}
-					map.put(k, v);
-				}
-				rw.setEffects(map);
-			} catch (RuntimeException ignored) {
+            int minlevel = 0;
+            try {
+                minlevel = config.getInt("MinLevel");
+            } catch (RuntimeException ignored) {
+            }
 
-			}
+            List<String> allowed;
+            try {
+                allowed = config.getStringList("AllowedGroups");
+            } catch (RuntimeException e) {
+                allowed = new ArrayList<>();
+            }
+            List<String> allowedItems;
 
-
-			List<String> runes;
-			try {
-				runes = config.getStringList("Runes");
-			} catch (RuntimeException e) {
-				runes = new ArrayList<>();
-				warn("Runeword " + rw.getName() + " has no rune combination defined");
-			}
+            try {
+                allowedItems = config.getStringList("AllowedItems");
+            } catch (RuntimeException e) {
+                allowedItems = new ArrayList<>();
+            }
 
 
-			rw.setMinLevel(minlevel);
-			rw.setAllowedGroups(allowed);
-			rw.setRunes(runes);
+            rw.setAllowedItems(allowedItems);
 
-			s.add(rw);
-		}
+            try {
+                List<String> eff = config.getStringList("Effects");
+                Map<String, String> map = new HashMap<>();
+                for (String s1 : eff) {
+                    String[] split = s1.split(":");
+                    String k = split[0];
+                    String v = "";
+                    if (split.length > 1) {
+                        v = split[1];
+                    }
+                    map.put(k, v);
+                }
+                rw.setEffects(map);
+            } catch (RuntimeException ignored) {
 
-		return s;
-	}
+            }
+
+
+            List<String> runes;
+            try {
+                runes = config.getStringList("Runes");
+            } catch (RuntimeException e) {
+                runes = new ArrayList<>();
+                warn("Runeword " + rw.getName() + " has no rune combination defined");
+            }
+
+
+            rw.setMinLevel(minlevel);
+            rw.setAllowedGroups(allowed);
+            rw.setRunes(runes);
+
+            s.add(rw);
+        }
+
+        return s;
+    }
 
 
 }

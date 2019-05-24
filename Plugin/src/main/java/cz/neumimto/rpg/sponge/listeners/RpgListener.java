@@ -41,31 +41,31 @@ import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 @ResourceLoader.ListenerClass
 public class RpgListener {
 
-	@Inject
-	private CharacterService characterService;
+    @Inject
+    private CharacterService characterService;
 
-	@Inject
-	private ClassService classService;
+    @Inject
+    private ClassService classService;
 
-	@Listener
-	public void onGuiInit(PlayerGuiModInitEvent event) {
-		UUID uuid = event.getUuid();
-		characterService.getCharacter(uuid).setUsingGuiMod(true);
-	}
+    @Listener
+    public void onGuiInit(PlayerGuiModInitEvent event) {
+        UUID uuid = event.getUuid();
+        characterService.getCharacter(uuid).setUsingGuiMod(true);
+    }
 
 
-	@Listener(order = Order.EARLY)
-	public void onPartyJoin(PartyJoinEvent event) {
-		if (pluginConfig.MAX_PARTY_SIZE > -1) {
-			if (event.getParty().getPlayers().size() > pluginConfig.MAX_PARTY_SIZE) {
-				event.setCancelled(true);
-			}
-		}
-	}
+    @Listener(order = Order.EARLY)
+    public void onPartyJoin(PartyJoinEvent event) {
+        if (pluginConfig.MAX_PARTY_SIZE > -1) {
+            if (event.getParty().getPlayers().size() > pluginConfig.MAX_PARTY_SIZE) {
+                event.setCancelled(true);
+            }
+        }
+    }
 
-	@Listener
-	public void onChangeGroup(CharacterChangeGroupEvent event) {
-		classService.removePermissions(event.getTarget(), classService.getPermissionsToRemove(event.getTarget(), event.getOld()));
-	//	classService.addAllPermissions(character, event.getNew());
-	}
+    @Listener
+    public void onChangeGroup(CharacterChangeGroupEvent event) {
+        classService.removePermissions(event.getTarget(), classService.getPermissionsToRemove(event.getTarget(), event.getOld()));
+        //	classService.addAllPermissions(character, event.getNew());
+    }
 }

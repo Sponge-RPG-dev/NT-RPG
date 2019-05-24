@@ -25,14 +25,14 @@ import cz.neumimto.rpg.common.scripting.JsBinding;
  */
 @JsBinding(JsBinding.Type.CLASS)
 public enum SkillResult {
-	OK,
-	FAIL,
-	CANCELLED,
-	CASTER_SILENCED,
-	NO_TARGET,
-	NO_HP,
-	NO_MANA,
-	ON_COOLDOWN,
-	WRONG_DATA,
-	NEGATIVE_SKILL_LEVEL
+    OK,
+    FAIL,
+    CANCELLED,
+    CASTER_SILENCED,
+    NO_TARGET,
+    NO_HP,
+    NO_MANA,
+    ON_COOLDOWN,
+    WRONG_DATA,
+    NEGATIVE_SKILL_LEVEL
 }

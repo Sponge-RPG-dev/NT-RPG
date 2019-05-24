@@ -13,7 +13,7 @@ public class ClassTypeAdapter implements TypeSerializer<String> {
 
 
     @Override
-    public String deserialize(TypeToken<?> typeToken, ConfigurationNode configurationNode) throws ObjectMappingException{
+    public String deserialize(TypeToken<?> typeToken, ConfigurationNode configurationNode) throws ObjectMappingException {
         String string = configurationNode.getString();
         for (String class_type : NtRpgPlugin.pluginConfig.CLASS_TYPES.keySet()) {
             if (string.equalsIgnoreCase(class_type)) {
@@ -21,7 +21,7 @@ public class ClassTypeAdapter implements TypeSerializer<String> {
             }
         }
         String all = String.join(", ", NtRpgPlugin.pluginConfig.CLASS_TYPES.keySet());
-        throw new ObjectMappingException("Unknown class type \""+string+"\", must be one of " + all);
+        throw new ObjectMappingException("Unknown class type \"" + string + "\", must be one of " + all);
     }
 
     @Override

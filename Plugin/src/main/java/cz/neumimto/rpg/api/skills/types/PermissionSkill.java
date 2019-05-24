@@ -17,35 +17,35 @@
 package cz.neumimto.rpg.api.skills.types;
 
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.players.IActiveCharacter;
 
 public class PermissionSkill extends AbstractSkill {
 
-	@Override
-	public void onPreUse(IActiveCharacter character, SkillContext skillContext) {
-		skillContext.result(SkillResult.CANCELLED);
-	}
+    @Override
+    public void onPreUse(IActiveCharacter character, SkillContext skillContext) {
+        skillContext.result(SkillResult.CANCELLED);
+    }
 
-	@Override
-	public void onCharacterInit(IActiveCharacter c, int level) {
-		super.onCharacterInit(c, level);
+    @Override
+    public void onCharacterInit(IActiveCharacter c, int level) {
+        super.onCharacterInit(c, level);
 
-	}
+    }
 
-	@Override
-	public void skillLearn(IActiveCharacter IActiveCharacter) {
-		super.skillLearn(IActiveCharacter);
-	}
+    @Override
+    public void skillLearn(IActiveCharacter IActiveCharacter) {
+        super.skillLearn(IActiveCharacter);
+    }
 
-	@Override
-	public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
-		super.skillUpgrade(IActiveCharacter, level);
-	}
+    @Override
+    public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
+        super.skillUpgrade(IActiveCharacter, level);
+    }
 
-	@Override
-	public void skillRefund(IActiveCharacter IActiveCharacter) {
-		super.skillRefund(IActiveCharacter);
-	}
+    @Override
+    public void skillRefund(IActiveCharacter IActiveCharacter) {
+        super.skillRefund(IActiveCharacter);
+    }
 
 }

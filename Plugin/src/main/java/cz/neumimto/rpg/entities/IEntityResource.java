@@ -6,15 +6,15 @@ package cz.neumimto.rpg.entities;
  */
 public interface IEntityResource {
 
-	double getMaxValue();
+    double getMaxValue();
 
-	void setMaxValue(double f);
+    void setMaxValue(double f);
 
-	double getValue();
+    double getValue();
 
-	void setValue(double f);
+    void setValue(double f);
 
-	double getRegen();
+    double getRegen();
 
-	void setRegen(float f);
+    void setRegen(float f);
 }

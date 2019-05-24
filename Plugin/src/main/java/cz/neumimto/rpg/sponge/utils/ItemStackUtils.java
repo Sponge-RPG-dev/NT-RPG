@@ -49,97 +49,97 @@ import static org.spongepowered.api.item.ItemTypes.*;
  * Created by NeumimTo on 27.3.2015.
  */
 public class ItemStackUtils {
-	/*If you want to add custom type of sword/axe/armor... via mod or resourcepack(remodeled potatoes) put them into these collections */
+    /*If you want to add custom type of sword/axe/armor... via mod or resourcepack(remodeled potatoes) put them into these collections */
 
-	public static Set<ItemType> consumables = new HashSet<ItemType>() {{
-		addAll(Arrays.asList(APPLE,
-				GOLDEN_APPLE,
-				BAKED_POTATO,
-				CARROT, POTION, BREAD, POTATO,
-				POISONOUS_POTATO, ROTTEN_FLESH, PORKCHOP, COOKED_BEEF, COOKED_CHICKEN, COOKED_MUTTON,
-				COOKIE, COOKED_RABBIT, COOKED_FISH, FISH, CHICKEN, MELON));
-	}};
+    public static Set<ItemType> consumables = new HashSet<ItemType>() {{
+        addAll(Arrays.asList(APPLE,
+                GOLDEN_APPLE,
+                BAKED_POTATO,
+                CARROT, POTION, BREAD, POTATO,
+                POISONOUS_POTATO, ROTTEN_FLESH, PORKCHOP, COOKED_BEEF, COOKED_CHICKEN, COOKED_MUTTON,
+                COOKIE, COOKED_RABBIT, COOKED_FISH, FISH, CHICKEN, MELON));
+    }};
 
-	public static Set<ItemType> boots = new HashSet<ItemType>() {{
-		addAll(Arrays.asList(DIAMOND_BOOTS, GOLDEN_BOOTS, IRON_BOOTS, CHAINMAIL_BOOTS, LEATHER_BOOTS));
-	}};
+    public static Set<ItemType> boots = new HashSet<ItemType>() {{
+        addAll(Arrays.asList(DIAMOND_BOOTS, GOLDEN_BOOTS, IRON_BOOTS, CHAINMAIL_BOOTS, LEATHER_BOOTS));
+    }};
 
-	public static Set<ItemType> chestplates = new HashSet<ItemType>() {{
-		addAll(Arrays.asList(DIAMOND_CHESTPLATE, GOLDEN_CHESTPLATE, IRON_CHESTPLATE,
-				CHAINMAIL_CHESTPLATE, LEATHER_CHESTPLATE));
-	}};
+    public static Set<ItemType> chestplates = new HashSet<ItemType>() {{
+        addAll(Arrays.asList(DIAMOND_CHESTPLATE, GOLDEN_CHESTPLATE, IRON_CHESTPLATE,
+                CHAINMAIL_CHESTPLATE, LEATHER_CHESTPLATE));
+    }};
 
-	public static Set<ItemType> leggings = new HashSet<ItemType>() {{
-		addAll(Arrays.asList(DIAMOND_LEGGINGS, GOLDEN_LEGGINGS, IRON_LEGGINGS,
-				CHAINMAIL_LEGGINGS, LEATHER_LEGGINGS));
-	}};
+    public static Set<ItemType> leggings = new HashSet<ItemType>() {{
+        addAll(Arrays.asList(DIAMOND_LEGGINGS, GOLDEN_LEGGINGS, IRON_LEGGINGS,
+                CHAINMAIL_LEGGINGS, LEATHER_LEGGINGS));
+    }};
 
-	public static Set<ItemType> helmet = new HashSet<ItemType>() {{
-		addAll(Arrays.asList(DIAMOND_HELMET, GOLDEN_HELMET,
-				IRON_HELMET, CHAINMAIL_HELMET, LEATHER_HELMET));
-	}};
+    public static Set<ItemType> helmet = new HashSet<ItemType>() {{
+        addAll(Arrays.asList(DIAMOND_HELMET, GOLDEN_HELMET,
+                IRON_HELMET, CHAINMAIL_HELMET, LEATHER_HELMET));
+    }};
 
-	public static Set<ItemType> any_armor = new HashSet<>();
+    public static Set<ItemType> any_armor = new HashSet<>();
 
-	protected static String DAMAGE = "damage";
-	protected static String DISPLAY_NAME = "name";
+    protected static String DAMAGE = "damage";
+    protected static String DISPLAY_NAME = "name";
 
-	protected static GlobalScope globalScope = NtRpgPlugin.GlobalScope;
-	private static BiFunction<String, String, String> formatedConfig = (k, v) -> Utils.newLine(k + ": " + v + ";");
-	private static Pattern pattern = Pattern.compile("\\((.*?)\\)");
+    protected static GlobalScope globalScope = NtRpgPlugin.GlobalScope;
+    private static BiFunction<String, String, String> formatedConfig = (k, v) -> Utils.newLine(k + ": " + v + ";");
+    private static Pattern pattern = Pattern.compile("\\((.*?)\\)");
 
-	public static boolean isHelmet(String type) {
-		return helmet.contains(type);
-	}
+    public static boolean isHelmet(String type) {
+        return helmet.contains(type);
+    }
 
-	public static boolean isChestplate(String type) {
-		return chestplates.contains(type);
-	}
+    public static boolean isChestplate(String type) {
+        return chestplates.contains(type);
+    }
 
-	public static boolean isLeggings(String type) {
-		return leggings.contains(type);
-	}
+    public static boolean isLeggings(String type) {
+        return leggings.contains(type);
+    }
 
-	public static boolean isBoots(String type) {
-		return boots.contains(type);
-	}
+    public static boolean isBoots(String type) {
+        return boots.contains(type);
+    }
 
-	public static boolean isConsumable(ItemType type) {
-		return consumables.contains(type);
-	}
+    public static boolean isConsumable(ItemType type) {
+        return consumables.contains(type);
+    }
 
-	public static boolean hasSockets(ItemStack itemStack) {
-		return globalScope.runewordService.getSocketCount(itemStack) > 0;
-	}
+    public static boolean hasSockets(ItemStack itemStack) {
+        return globalScope.runewordService.getSocketCount(itemStack) > 0;
+    }
 
-	/**
-	 * https://github.com/SpongePowered/SpongeForge/issues/470
-	 *
-	 * @param itemStack
-	 */
-	public static void createEnchantmentGlow(ItemStack itemStack) {
-		itemStack.offer(Sponge.getDataManager().getManipulatorBuilder(EnchantmentData.class).get().create());
-	}
+    /**
+     * https://github.com/SpongePowered/SpongeForge/issues/470
+     *
+     * @param itemStack
+     */
+    public static void createEnchantmentGlow(ItemStack itemStack) {
+        itemStack.offer(Sponge.getDataManager().getManipulatorBuilder(EnchantmentData.class).get().create());
+    }
 
-	public static boolean isCharm(ItemStack is) {
-		Optional<ItemMetaType> itemMetaType = is.get(NKeys.ITEM_META_TYPE);
-		return itemMetaType.map(itemMetaType1 -> itemMetaType1.getId().equalsIgnoreCase(ItemMetaTypes.CHARM.getId())).orElse(false);
-	}
+    public static boolean isCharm(ItemStack is) {
+        Optional<ItemMetaType> itemMetaType = is.get(NKeys.ITEM_META_TYPE);
+        return itemMetaType.map(itemMetaType1 -> itemMetaType1.getId().equalsIgnoreCase(ItemMetaTypes.CHARM.getId())).orElse(false);
+    }
 
-	public static void dropItem(Player p, ItemStack itemStack) {
-		Entity optional = p.getLocation().getExtent()
-				.createEntity(EntityTypes.ITEM, p.getLocation()
-						.getPosition()
-						.add(TrigMath.cos((p.getRotation().getX() - 90) % 360) * 0.2, 1,
-								TrigMath.sin((p.getRotation().getX() - 90) % 360) * 0.2));
-		Vector3d rotation = p.getRotation();
-		Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();
-		Item item = (Item) optional;
-		item.offer(Keys.VELOCITY, direction.mul(0.33));
-		item.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
-		item.offer(Keys.PICKUP_DELAY, 50);
-		p.getLocation().getExtent().spawnEntity(item);
+    public static void dropItem(Player p, ItemStack itemStack) {
+        Entity optional = p.getLocation().getExtent()
+                .createEntity(EntityTypes.ITEM, p.getLocation()
+                        .getPosition()
+                        .add(TrigMath.cos((p.getRotation().getX() - 90) % 360) * 0.2, 1,
+                                TrigMath.sin((p.getRotation().getX() - 90) % 360) * 0.2));
+        Vector3d rotation = p.getRotation();
+        Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();
+        Item item = (Item) optional;
+        item.offer(Keys.VELOCITY, direction.mul(0.33));
+        item.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
+        item.offer(Keys.PICKUP_DELAY, 50);
+        p.getLocation().getExtent().spawnEntity(item);
 
-	}
+    }
 
 }

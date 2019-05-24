@@ -19,13 +19,13 @@
 package cz.neumimto.rpg.api.skills.types;
 
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 
 /**
  * Created by NeumimTo on 1.1.2015.
  */
 public interface ITargeted {
-	void castOn(IEntity target, IActiveCharacter source, PlayerSkillContext info, SkillContext skillContext);
+    void castOn(IEntity target, IActiveCharacter source, PlayerSkillContext info, SkillContext skillContext);
 }

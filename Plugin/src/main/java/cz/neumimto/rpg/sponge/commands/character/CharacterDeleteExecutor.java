@@ -14,20 +14,20 @@ import org.spongepowered.api.entity.living.player.Player;
 import java.util.concurrent.CompletableFuture;
 
 public class CharacterDeleteExecutor implements CommandExecutor {
-	@Override
-	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		String a = args.<String>getOne("name").get();
-		Player player = (Player) src;
-		CharacterService characterService = NtRpgPlugin.GlobalScope.characterService;
-		IActiveCharacter character = characterService.getCharacter(player);
-		if (character.getName().equalsIgnoreCase(a)) {
-			characterService.removeCachedCharacter(player.getUniqueId());
-			characterService.registerDummyChar(characterService.buildDummyChar(player.getUniqueId()));
-		}
-		CompletableFuture.runAsync(() -> {
-			characterService.markCharacterForRemoval(player.getUniqueId(), a);
-			player.sendMessage(Localizations.CHAR_DELETED_FEEDBACK.toText());
-		}, NtRpgPlugin.asyncExecutor);
-		return CommandResult.success();
-	}
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        String a = args.<String>getOne("name").get();
+        Player player = (Player) src;
+        CharacterService characterService = NtRpgPlugin.GlobalScope.characterService;
+        IActiveCharacter character = characterService.getCharacter(player);
+        if (character.getName().equalsIgnoreCase(a)) {
+            characterService.removeCachedCharacter(player.getUniqueId());
+            characterService.registerDummyChar(characterService.buildDummyChar(player.getUniqueId()));
+        }
+        CompletableFuture.runAsync(() -> {
+            characterService.markCharacterForRemoval(player.getUniqueId(), a);
+            player.sendMessage(Localizations.CHAR_DELETED_FEEDBACK.toText());
+        }, NtRpgPlugin.asyncExecutor);
+        return CommandResult.success();
+    }
 }

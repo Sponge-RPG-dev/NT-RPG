@@ -5,14 +5,14 @@ package cz.neumimto.rpg.inventory;
  */
 public class ItemDamage {
 
-	public double min;
-	public double max;
+    public double min;
+    public double max;
 
-	public ItemDamage() {
-	}
+    public ItemDamage() {
+    }
 
-	public ItemDamage(double min, double max) {
-		this.min = min;
-		this.max = max;
-	}
+    public ItemDamage(double min, double max) {
+        this.min = min;
+        this.max = max;
+    }
 }

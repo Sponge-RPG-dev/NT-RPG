@@ -12,21 +12,21 @@ import java.util.Optional;
 
 public class AnySkillCommandElement extends PatternMatchingCommandElement {
 
-	public AnySkillCommandElement(@Nullable Text key) {
-		super(key);
-	}
+    public AnySkillCommandElement(@Nullable Text key) {
+        super(key);
+    }
 
-	@Override
-	protected Iterable<String> getChoices(CommandSource source) {
-		return NtRpgPlugin.GlobalScope.skillService.getSkills().keySet();
-	}
+    @Override
+    protected Iterable<String> getChoices(CommandSource source) {
+        return NtRpgPlugin.GlobalScope.skillService.getSkills().keySet();
+    }
 
-	@Override
-	protected Object getValue(String choice) {
-		Optional<ISkill> ret = Sponge.getGame().getRegistry().getType(ISkill.class, choice);
-		if (!ret.isPresent()) {
-			ret = Optional.ofNullable(NtRpgPlugin.GlobalScope.skillService.getSkillByLocalizedName(choice));
-		}
-		return ret.get();
-	}
+    @Override
+    protected Object getValue(String choice) {
+        Optional<ISkill> ret = Sponge.getGame().getRegistry().getType(ISkill.class, choice);
+        if (!ret.isPresent()) {
+            ret = Optional.ofNullable(NtRpgPlugin.GlobalScope.skillService.getSkillByLocalizedName(choice));
+        }
+        return ret.get();
+    }
 }

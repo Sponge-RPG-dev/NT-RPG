@@ -9,25 +9,25 @@ import java.util.Set;
 @ConfigSerializable
 public class SkillDumpConfiguration {
 
-	@Setting
-	private String skillId;
+    @Setting
+    private String skillId;
 
-	@Setting
-	private Set<String> floatNodes;
+    @Setting
+    private Set<String> floatNodes;
 
-	public SkillDumpConfiguration() {
-		this.floatNodes = new HashSet<>();
-	}
+    public SkillDumpConfiguration() {
+        this.floatNodes = new HashSet<>();
+    }
 
-	public String getSkillId() {
-		return skillId;
-	}
+    public String getSkillId() {
+        return skillId;
+    }
 
-	public void setSkillId(String skillId) {
-		this.skillId = skillId;
-	}
+    public void setSkillId(String skillId) {
+        this.skillId = skillId;
+    }
 
-	public Set<String> getFloatNodes() {
-		return floatNodes;
-	}
+    public Set<String> getFloatNodes() {
+        return floatNodes;
+    }
 }

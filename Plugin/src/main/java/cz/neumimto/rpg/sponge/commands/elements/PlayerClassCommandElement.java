@@ -11,19 +11,19 @@ import javax.annotation.Nullable;
 
 public class PlayerClassCommandElement extends PatternMatchingCommandElement {
 
-	public PlayerClassCommandElement(@Nullable Text key) {
-		super(key);
-	}
+    public PlayerClassCommandElement(@Nullable Text key) {
+        super(key);
+    }
 
-	@Override
-	protected Iterable<String> getChoices(CommandSource source) {
-		Player player = (Player) source;
-		IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player);
-		return character.getClasses().keySet();
-	}
+    @Override
+    protected Iterable<String> getChoices(CommandSource source) {
+        Player player = (Player) source;
+        IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player);
+        return character.getClasses().keySet();
+    }
 
-	@Override
-	protected Object getValue(String choice) throws IllegalArgumentException {
-		return NtRpgPlugin.GlobalScope.classService.getClassDefinitionByName(choice);
-	}
+    @Override
+    protected Object getValue(String choice) throws IllegalArgumentException {
+        return NtRpgPlugin.GlobalScope.classService.getClassDefinitionByName(choice);
+    }
 }

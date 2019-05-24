@@ -6,7 +6,7 @@ import cz.neumimto.rpg.api.items.RpgItemType;
 public class RpgItemTypeImpl implements RpgItemType {
 
     protected ItemClass itemClass;
-    protected double damage,armor;
+    protected double damage, armor;
     protected String id, modelName;
 
     public RpgItemTypeImpl(String id, String modelName, ItemClass itemClass, double damage, double armor) {

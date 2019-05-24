@@ -23,17 +23,17 @@ package cz.neumimto.rpg.players;
  */
 public class CharacterHealthStub extends CharacterHealth {
 
-	public CharacterHealthStub(IActiveCharacter activeCharacter) {
-		super(activeCharacter);
-	}
+    public CharacterHealthStub(IActiveCharacter activeCharacter) {
+        super(activeCharacter);
+    }
 
-	@Override
-	public double getValue() {
-		return 20;
-	}
+    @Override
+    public double getValue() {
+        return 20;
+    }
 
-	@Override
-	public void setValue(double f) {
+    @Override
+    public void setValue(double f) {
 
-	}
+    }
 }

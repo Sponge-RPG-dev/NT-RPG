@@ -24,5 +24,5 @@ package cz.neumimto.rpg.api.skills;
  */
 public interface ISkillNode {
 
-	String value();
+    String value();
 }

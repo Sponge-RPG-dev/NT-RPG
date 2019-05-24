@@ -2,9 +2,9 @@ package cz.neumimto.rpg.common.entity;
 
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.properties.Property;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.players.attributes.Attribute;
-import cz.neumimto.rpg.properties.Property;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -117,7 +117,7 @@ public abstract class PropertyServiceImpl implements PropertyService {
     @Override
     public void overrideMaxPropertyValue(String s, Float aFloat) {
         if (!nameMap.containsValue(s)) {
-            Log.info("Attempt to override default value for a property \""+s+"\". But such property does not exists yet. THe property will be created");
+            Log.info("Attempt to override default value for a property \"" + s + "\". But such property does not exists yet. THe property will be created");
             registerProperty(s, getAndIncrement.get());
         }
         defaults.put(getIdByName(s), aFloat);

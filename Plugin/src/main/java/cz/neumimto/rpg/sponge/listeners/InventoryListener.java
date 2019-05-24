@@ -81,12 +81,12 @@ public class InventoryListener {
     @Inject
     private SpongeItemService itemService;
 
-	private final static int OFFHAND_SLOT_ID = 40;
+    private final static int OFFHAND_SLOT_ID = 40;
 
-	@Listener
+    @Listener
     @IsCancelled(Tristate.FALSE)
     public void onItemPickup(ChangeInventoryEvent.Pickup event, @Root Player player) {
-	    player.getInventory();
+        player.getInventory();
         Inventory targetInventory = player.getInventory();
         IActiveCharacter character = characterService.getCharacter(player);
         if (character.isStub()) {
@@ -108,7 +108,7 @@ public class InventoryListener {
                 rpgItemStack.ifPresent(itemStack -> {
                     ManagedSlot managedSlot = rpgInventory.getManagedSlots().get(value);
                     if (inventoryHandler.isValidItemForSlot(managedSlot, itemStack) &&
-                        inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, itemStack)) {
+                            inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, itemStack)) {
                         inventoryHandler.handleCharacterEquipActionPost(character, managedSlot, itemStack);
                         character.setRequiresDamageRecalculation(true);
                     } else {
@@ -288,11 +288,11 @@ public class InventoryListener {
     public void onSwapHands(ChangeInventoryEvent.SwapHand event, @Root Player player) {
         ItemStack futureMainHand = player.getItemInHand(HandTypes.MAIN_HAND).get();
         ItemStack futureOffHand = player.getItemInHand(HandTypes.OFF_HAND).get();
-		if (futureMainHand.getType() == ItemTypes.AIR && futureOffHand.getType() == ItemTypes.AIR) {
-			return;
-		}
+        if (futureMainHand.getType() == ItemTypes.AIR && futureOffHand.getType() == ItemTypes.AIR) {
+            return;
+        }
 
-		IActiveCharacter character = characterService.getCharacter(player);
+        IActiveCharacter character = characterService.getCharacter(player);
         if (character.isStub()) {
             return;
         }
@@ -302,7 +302,7 @@ public class InventoryListener {
         if (!rpgItemStackMain.isPresent() && !rpgItemStackOff.isPresent()) {
             return;
         } else {
-			RpgItemStack futureOff = rpgItemStackOff.get();
+            RpgItemStack futureOff = rpgItemStackOff.get();
             RpgItemStack futureMain = rpgItemStackMain.get();
             RpgInventory rpgInventory = character.getManagedInventory().get(player.getInventory());
 
@@ -313,21 +313,20 @@ public class InventoryListener {
             ManagedSlot managedSlotM = rpgInventory.getManagedSlots().get(selectedSlotIndex);
             ManagedSlot offHandSlotO = rpgInventory.getManagedSlots().get(OFFHAND_SLOT_ID);
 
-			if (inventoryHandler.isValidItemForSlot(offHandSlotO, futureOff) &&
-                inventoryHandler.isValidItemForSlot(managedSlotM, futureMain)
+            if (inventoryHandler.isValidItemForSlot(offHandSlotO, futureOff) &&
+                    inventoryHandler.isValidItemForSlot(managedSlotM, futureMain)
             ) {
                 Optional<RpgItemStack> content = managedSlotM.getContent();
                 Optional<RpgItemStack> content1 = offHandSlotO.getContent();
                 content.ifPresent(offHandSlotO::setContent);
                 content1.ifPresent(managedSlotM::setContent);
             } else {
-			    event.setCancelled(true);
+                event.setCancelled(true);
             }
-		}
+        }
 
         character.setRequiresDamageRecalculation(true);
     }
-
 
 
 }

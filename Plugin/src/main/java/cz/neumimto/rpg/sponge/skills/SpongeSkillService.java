@@ -18,10 +18,10 @@
 
 package cz.neumimto.rpg.sponge.skills;
 
-import cz.neumimto.rpg.common.skills.SkillServiceimpl;
-import cz.neumimto.rpg.sponge.gui.SkillTreeInterfaceModel;
 import cz.neumimto.rpg.common.reloading.Reload;
 import cz.neumimto.rpg.common.reloading.ReloadService;
+import cz.neumimto.rpg.common.skills.SkillServiceimpl;
+import cz.neumimto.rpg.sponge.gui.SkillTreeInterfaceModel;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.item.ItemType;
@@ -38,31 +38,29 @@ import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 @Singleton
 public class SpongeSkillService extends SkillServiceimpl {
 
-	private static int id = 0;
+    private static int id = 0;
 
-	@Inject
-	private Game game;
-
-
+    @Inject
+    private Game game;
 
 
-	@Override
-	@Reload(on = ReloadService.PLUGIN_CONFIG)
-	public void initGuis() {
-		int i = 0;
+    @Override
+    @Reload(on = ReloadService.PLUGIN_CONFIG)
+    public void initGuis() {
+        int i = 0;
 
-		for (String str : pluginConfig.SKILLTREE_RELATIONS) {
-			String[] split = str.split(",");
+        for (String str : pluginConfig.SKILLTREE_RELATIONS) {
+            String[] split = str.split(",");
 
-			short k = (short) (Short.MAX_VALUE - i);
-			SkillTreeInterfaceModel model = new SkillTreeInterfaceModel(Integer.parseInt(split[3]),
-					Sponge.getRegistry().getType(ItemType.class, split[1]).orElse(ItemTypes.STICK),
-					split[2], k);
+            short k = (short) (Short.MAX_VALUE - i);
+            SkillTreeInterfaceModel model = new SkillTreeInterfaceModel(Integer.parseInt(split[3]),
+                    Sponge.getRegistry().getType(ItemType.class, split[1]).orElse(ItemTypes.STICK),
+                    split[2], k);
 
-			guiModelById.put(k, model);
-			guiModelByCharacter.put(split[0].charAt(0), model);
-			i++;
-		}
+            guiModelById.put(k, model);
+            guiModelByCharacter.put(split[0].charAt(0), model);
+            i++;
+        }
 
-	}
+    }
 }

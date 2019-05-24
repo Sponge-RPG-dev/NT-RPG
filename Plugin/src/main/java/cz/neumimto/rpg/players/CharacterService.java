@@ -18,16 +18,21 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.ClassService;
-import cz.neumimto.rpg.common.utils.exceptions.MissingConfigurationException;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.api.ActionResult;
 import cz.neumimto.rpg.api.IRpgElement;
+import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillDependency;
+import cz.neumimto.rpg.api.skills.tree.SkillTree;
+import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
+import cz.neumimto.rpg.common.skills.SkillData;
+import cz.neumimto.rpg.common.utils.exceptions.MissingConfigurationException;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.damage.SpongeDamageService;
@@ -37,7 +42,6 @@ import cz.neumimto.rpg.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.events.PlayerDataPreloadComplete;
 import cz.neumimto.rpg.events.character.CharacterManaRegainEvent;
-import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.inventory.UserActionType;
 import cz.neumimto.rpg.persistance.CharacterClassDao;
@@ -49,12 +53,8 @@ import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.groups.DependencyGraph;
 import cz.neumimto.rpg.players.leveling.SkillTreeType;
-import cz.neumimto.rpg.properties.DefaultProperties;
+import cz.neumimto.rpg.properties.SpongeDefaultProperties;
 import cz.neumimto.rpg.properties.SpongePropertyService;
-import cz.neumimto.rpg.common.skills.SkillData;
-import cz.neumimto.rpg.api.skills.ISkillService;
-import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.sponge.utils.PermissionUtils;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.Sponge;
@@ -347,9 +347,9 @@ public abstract class CharacterService {
      * @param character
      */
     public void updateMaxMana(IActiveCharacter character) {
-        float max_mana = entityService.getEntityProperty(character, DefaultProperties.max_mana);
-        float actreserved = entityService.getEntityProperty(character, DefaultProperties.reserved_mana);
-        float reserved = entityService.getEntityProperty(character, DefaultProperties.reserved_mana_multiplier);
+        float max_mana = entityService.getEntityProperty(character, SpongeDefaultProperties.max_mana);
+        float actreserved = entityService.getEntityProperty(character, SpongeDefaultProperties.reserved_mana);
+        float reserved = entityService.getEntityProperty(character, SpongeDefaultProperties.reserved_mana_multiplier);
         float maxval = max_mana - (actreserved * reserved);
         character.getMana().setMaxValue(maxval);
     }
@@ -360,10 +360,10 @@ public abstract class CharacterService {
      * @param character
      */
     public void updateMaxHealth(IActiveCharacter character) {
-        float max_health = entityService.getEntityProperty(character, DefaultProperties.max_health)
-                        - entityService.getEntityProperty(character, DefaultProperties.reserved_health);
-        float actreserved = entityService.getEntityProperty(character, DefaultProperties.reserved_health);
-        float reserved = entityService.getEntityProperty(character, DefaultProperties.reserved_health_multiplier);
+        float max_health = entityService.getEntityProperty(character, SpongeDefaultProperties.max_health)
+                - entityService.getEntityProperty(character, SpongeDefaultProperties.reserved_health);
+        float actreserved = entityService.getEntityProperty(character, SpongeDefaultProperties.reserved_health);
+        float reserved = entityService.getEntityProperty(character, SpongeDefaultProperties.reserved_health_multiplier);
         float maxval = max_health - (actreserved * reserved);
         if (maxval <= 0) {
             maxval = 1;
@@ -431,7 +431,6 @@ public abstract class CharacterService {
             addTransientAttribtues(activeCharacter, attributes);
         }
     }
-
 
 
     public void recalculateProperties(IActiveCharacter character) {
@@ -649,7 +648,7 @@ public abstract class CharacterService {
             }
         }
 
-        if (skillTree == null || nClass == null)  {
+        if (skillTree == null || nClass == null) {
             return ActionResult.withErrorMessage(Localizations.NO_ACCESS_TO_SKILL.toText());
         }
 
@@ -780,7 +779,7 @@ public abstract class CharacterService {
         Iterator<CharacterSkill> iterator = characterBase.getCharacterSkills().iterator();
         while (iterator.hasNext()) {
             CharacterSkill next = iterator.next();
-            if (next.getFromClass().getName().equalsIgnoreCase(playerSkillContext.getClassDefinition().getName())){
+            if (next.getFromClass().getName().equalsIgnoreCase(playerSkillContext.getClassDefinition().getName())) {
                 if (next.getCatalogId().equalsIgnoreCase(skill.getId())) {
                     iterator.remove();
                     return next;
@@ -870,7 +869,7 @@ public abstract class CharacterService {
         }
 
         int level = aClass.getLevel();
-        exp = exp * entityService.getEntityProperty(character, DefaultProperties.experiences_mult);
+        exp = exp * entityService.getEntityProperty(character, SpongeDefaultProperties.experiences_mult);
 
         double lvlexp = aClass.getExperiencesFromLevel();
 
@@ -1075,7 +1074,7 @@ public abstract class CharacterService {
         boolean ok = classDependencyGraph.isValidFor(c);
 
         if (!ok) {
-           return ActionResult.withErrorMessage(Localizations.MISSING_CLASS_DEPENDENCIES.toText());
+            return ActionResult.withErrorMessage(Localizations.MISSING_CLASS_DEPENDENCIES.toText());
         }
 
         if (NtRpgPlugin.pluginConfig.RESPECT_CLASS_SELECTION_ORDER) {
@@ -1163,6 +1162,7 @@ public abstract class CharacterService {
     /**
      * Takes away one skillpoint and adds skill to player
      * Does not update the character state
+     *
      * @param character
      * @param origin
      * @param skill

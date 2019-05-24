@@ -5,6 +5,6 @@ package cz.neumimto.rpg.players;
  */
 public enum MessageType {
 
-	CHAT, CUSTOM, INVENTORY;
+    CHAT, CUSTOM, INVENTORY;
 
 }

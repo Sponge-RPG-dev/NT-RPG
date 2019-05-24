@@ -8,22 +8,22 @@ import org.spongepowered.api.text.format.TextColors;
  */
 public class LoreSectionDelimiter {
 
-	public static Text defaultFirstPart;
-	public static Text defaultSecondPart;
+    public static Text defaultFirstPart;
+    public static Text defaultSecondPart;
 
-	static {
-		defaultFirstPart = Text.builder("=======[ ").color(TextColors.WHITE).build();
-		defaultSecondPart = Text.builder(" ]=======").color(TextColors.WHITE).build();
-	}
+    static {
+        defaultFirstPart = Text.builder("=======[ ").color(TextColors.WHITE).build();
+        defaultSecondPart = Text.builder(" ]=======").color(TextColors.WHITE).build();
+    }
 
-	public Text firstPart;
-	public Text secondPart;
+    public Text firstPart;
+    public Text secondPart;
 
-	public LoreSectionDelimiter(Text firstPart, Text secondPart) {
-		this.firstPart = firstPart;
-		this.secondPart = secondPart;
-	}
+    public LoreSectionDelimiter(Text firstPart, Text secondPart) {
+        this.firstPart = firstPart;
+        this.secondPart = secondPart;
+    }
 
-	public LoreSectionDelimiter() {
-	}
+    public LoreSectionDelimiter() {
+    }
 }

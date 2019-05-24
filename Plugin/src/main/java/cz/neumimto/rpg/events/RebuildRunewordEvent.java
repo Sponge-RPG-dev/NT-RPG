@@ -11,28 +11,28 @@ import org.spongepowered.api.item.inventory.ItemStack;
  */
 public class RebuildRunewordEvent extends AbstractEvent {
 
-	private final RuneWord runeWord;
-	private ItemStack itemStack;
+    private final RuneWord runeWord;
+    private ItemStack itemStack;
 
-	public RebuildRunewordEvent(RuneWord rw, ItemStack i) {
-		this.runeWord = rw;
-		this.itemStack = i;
-	}
+    public RebuildRunewordEvent(RuneWord rw, ItemStack i) {
+        this.runeWord = rw;
+        this.itemStack = i;
+    }
 
-	public RuneWord getRuneWord() {
-		return runeWord;
-	}
+    public RuneWord getRuneWord() {
+        return runeWord;
+    }
 
-	public ItemStack getItemStack() {
-		return itemStack;
-	}
+    public ItemStack getItemStack() {
+        return itemStack;
+    }
 
-	public void setItemStack(ItemStack itemStack) {
-		this.itemStack = itemStack;
-	}
+    public void setItemStack(ItemStack itemStack) {
+        this.itemStack = itemStack;
+    }
 
-	@Override
-	public Cause getCause() {
-		return Cause.of(EventContext.empty(), runeWord);
-	}
+    @Override
+    public Cause getCause() {
+        return Cause.of(EventContext.empty(), runeWord);
+    }
 }

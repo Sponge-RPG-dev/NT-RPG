@@ -5,7 +5,7 @@ package cz.neumimto.rpg.common.utils.exceptions;
  */
 public class MissingConfigurationException extends RuntimeException {
 
-	public MissingConfigurationException(String s) {
-		super(s);
-	}
+    public MissingConfigurationException(String s) {
+        super(s);
+    }
 }

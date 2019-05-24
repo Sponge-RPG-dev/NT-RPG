@@ -14,16 +14,16 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import java.util.Optional;
 
 public class ItemAddRunewordExecutor implements CommandExecutor {
-	@Override
-	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		RuneWord r = args.<RuneWord>getOne("rw").get();
-		Player p = (Player) src;
-		Optional<ItemStack> itemInHand = p.getItemInHand(HandTypes.MAIN_HAND);
-		if (itemInHand.isPresent()) {
-			ItemStack itemStack = itemInHand.get();
-			ItemStack itemStack1 = NtRpgPlugin.GlobalScope.runewordService.reBuildRuneword(itemStack, r);
-			p.setItemInHand(HandTypes.MAIN_HAND, itemStack1);
-		}
-		return CommandResult.success();
-	}
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        RuneWord r = args.<RuneWord>getOne("rw").get();
+        Player p = (Player) src;
+        Optional<ItemStack> itemInHand = p.getItemInHand(HandTypes.MAIN_HAND);
+        if (itemInHand.isPresent()) {
+            ItemStack itemStack = itemInHand.get();
+            ItemStack itemStack1 = NtRpgPlugin.GlobalScope.runewordService.reBuildRuneword(itemStack, r);
+            p.setItemInHand(HandTypes.MAIN_HAND, itemStack1);
+        }
+        return CommandResult.success();
+    }
 }

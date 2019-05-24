@@ -25,193 +25,193 @@ import java.util.Optional;
 public class MinimalItemRequirementsData extends AbstractData<MinimalItemRequirementsData, MinimalItemRequirementsData.Immutable> {
 
 
-	private Map<String, Integer> attributeRequirements;
-	private Map<String, Integer> allowedGroups;
+    private Map<String, Integer> attributeRequirements;
+    private Map<String, Integer> allowedGroups;
 
 
-	public MinimalItemRequirementsData(Map<String, Integer> attributeRequirements, Map<String, Integer> allowedGroups) {
-		this.attributeRequirements = attributeRequirements;
-		this.allowedGroups = allowedGroups;
-		registerGettersAndSetters();
-	}
+    public MinimalItemRequirementsData(Map<String, Integer> attributeRequirements, Map<String, Integer> allowedGroups) {
+        this.attributeRequirements = attributeRequirements;
+        this.allowedGroups = allowedGroups;
+        registerGettersAndSetters();
+    }
 
 
-	public MinimalItemRequirementsData() {
-		this(new HashMap<>(), new HashMap<>());
-	}
+    public MinimalItemRequirementsData() {
+        this(new HashMap<>(), new HashMap<>());
+    }
 
-	@Override
-	protected void registerGettersAndSetters() {
-		registerKeyValue(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS, this::attributeRequirements);
-		registerKeyValue(NKeys.ITEM_PLAYER_ALLOWED_GROUPS, this::allowedGroups);
-
-
-		registerFieldGetter(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS, this::getAttributeRequirements);
-		registerFieldGetter(NKeys.ITEM_PLAYER_ALLOWED_GROUPS, this::getAllowedGroups);
-
-		registerFieldSetter(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS, this::setAttributeRequirements);
-		registerFieldSetter(NKeys.ITEM_PLAYER_ALLOWED_GROUPS, this::setAllowedGroups);
-	}
-
-	public MapValue<String, Integer> attributeRequirements() {
-		return Sponge.getRegistry().getValueFactory()
-				.createMapValue(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS, this.attributeRequirements);
-	}
-
-	public MapValue<String, Integer> allowedGroups() {
-		return Sponge.getRegistry().getValueFactory()
-				.createMapValue(NKeys.ITEM_PLAYER_ALLOWED_GROUPS, this.allowedGroups);
-	}
+    @Override
+    protected void registerGettersAndSetters() {
+        registerKeyValue(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS, this::attributeRequirements);
+        registerKeyValue(NKeys.ITEM_PLAYER_ALLOWED_GROUPS, this::allowedGroups);
 
 
-	private Map<String, Integer> getAttributeRequirements() {
-		return attributeRequirements;
-	}
+        registerFieldGetter(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS, this::getAttributeRequirements);
+        registerFieldGetter(NKeys.ITEM_PLAYER_ALLOWED_GROUPS, this::getAllowedGroups);
 
-	private void setAttributeRequirements(Map<String, Integer> attributeRequirements) {
-		this.attributeRequirements = attributeRequirements;
-	}
+        registerFieldSetter(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS, this::setAttributeRequirements);
+        registerFieldSetter(NKeys.ITEM_PLAYER_ALLOWED_GROUPS, this::setAllowedGroups);
+    }
 
-	private Map<String, Integer> getAllowedGroups() {
-		return allowedGroups;
-	}
+    public MapValue<String, Integer> attributeRequirements() {
+        return Sponge.getRegistry().getValueFactory()
+                .createMapValue(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS, this.attributeRequirements);
+    }
 
-	private void setAllowedGroups(Map<String, Integer> allowedGroups) {
-		this.allowedGroups = allowedGroups;
-	}
-
-	@Override
-	public Optional<MinimalItemRequirementsData> fill(DataHolder dataHolder, MergeFunction overlap) {
-		Optional<MinimalItemRequirementsData> a = dataHolder.get(MinimalItemRequirementsData.class);
-		if (a.isPresent()) {
-			MinimalItemRequirementsData otherData = a.get();
-			MinimalItemRequirementsData finalData = overlap.merge(this, otherData);
-			this.attributeRequirements = finalData.attributeRequirements;
-			this.allowedGroups = finalData.allowedGroups;
-		}
-		return Optional.of(this);
-	}
-
-	@Override
-	public Optional<MinimalItemRequirementsData> from(DataContainer container) {
-		if (!container.contains(NKeys.ITEM_ATTRIBUTE_BONUS) || !container.contains(NKeys.ITEM_PROPERTY_BONUS)) {
-			return Optional.empty();
-		}
-		this.attributeRequirements = (Map<String, Integer>) container.getMap(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS.getQuery()).get();
-		this.allowedGroups = (Map<String, Integer>) container.getMap(NKeys.ITEM_PLAYER_ALLOWED_GROUPS.getQuery()).get();
-		return Optional.of(this);
-	}
-
-	@Override
-	public MinimalItemRequirementsData copy() {
-		return new MinimalItemRequirementsData(attributeRequirements, allowedGroups);
-	}
-
-	@Override
-	public MinimalItemRequirementsData.Immutable asImmutable() {
-		return new MinimalItemRequirementsData.Immutable(attributeRequirements, allowedGroups);
-	}
-
-	@Override
-	public int getContentVersion() {
-		return MinimalItemRequirementsData.Builder.CONTENT_VERSION;
-	}
-
-	@Override
-	public DataContainer toContainer() {
-		DataContainer dataContainer = super.toContainer();
-		dataContainer.set(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS.getQuery(), attributeRequirements);
-		dataContainer.set(NKeys.ITEM_PLAYER_ALLOWED_GROUPS.getQuery(), allowedGroups);
-		return dataContainer;
-	}
-
-	public static class Builder extends AbstractDataBuilder<MinimalItemRequirementsData>
-			implements DataManipulatorBuilder<MinimalItemRequirementsData, MinimalItemRequirementsData.Immutable> {
-
-		public static final int CONTENT_VERSION = 1;
-
-		public Builder() {
-			super(MinimalItemRequirementsData.class, CONTENT_VERSION);
-		}
-
-		@Override
-		public MinimalItemRequirementsData create() {
-			return new MinimalItemRequirementsData();
-		}
-
-		@Override
-		public Optional<MinimalItemRequirementsData> createFrom(DataHolder dataHolder) {
-			return create().fill(dataHolder);
-		}
-
-		@Override
-		@SuppressWarnings("unchecked")
-		protected Optional<MinimalItemRequirementsData> buildContent(DataView container) throws InvalidDataException {
-			return create().from((DataContainer) container);
-		}
-	}
-
-	public class Immutable extends AbstractImmutableData<MinimalItemRequirementsData.Immutable, MinimalItemRequirementsData> {
-
-		private Map<String, Integer> attributeRequirements;
-		private Map<String, Integer> allowedGroups;
+    public MapValue<String, Integer> allowedGroups() {
+        return Sponge.getRegistry().getValueFactory()
+                .createMapValue(NKeys.ITEM_PLAYER_ALLOWED_GROUPS, this.allowedGroups);
+    }
 
 
-		public Immutable(Map<String, Integer> attributeRequirements, Map<String, Integer> allowedGroups) {
-			this.attributeRequirements = attributeRequirements;
-			this.allowedGroups = allowedGroups;
-			registerGetters();
-		}
+    private Map<String, Integer> getAttributeRequirements() {
+        return attributeRequirements;
+    }
 
-		public Immutable() {
-			this(Collections.emptyMap(), Collections.emptyMap());
-		}
+    private void setAttributeRequirements(Map<String, Integer> attributeRequirements) {
+        this.attributeRequirements = attributeRequirements;
+    }
 
-		@Override
-		protected void registerGetters() {
-			registerKeyValue(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS, this::attributeRequirements);
-			registerKeyValue(NKeys.ITEM_PLAYER_ALLOWED_GROUPS, this::allowedGroups);
+    private Map<String, Integer> getAllowedGroups() {
+        return allowedGroups;
+    }
 
-			registerFieldGetter(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS, this::getAttributeRequirements);
-			registerFieldGetter(NKeys.ITEM_PLAYER_ALLOWED_GROUPS, this::getAllowedGroups);
-		}
+    private void setAllowedGroups(Map<String, Integer> allowedGroups) {
+        this.allowedGroups = allowedGroups;
+    }
 
-		public ImmutableMapValue<String, Integer> attributeRequirements() {
-			return Sponge.getRegistry().getValueFactory()
-					.createMapValue(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS, this.attributeRequirements)
-					.asImmutable();
-		}
+    @Override
+    public Optional<MinimalItemRequirementsData> fill(DataHolder dataHolder, MergeFunction overlap) {
+        Optional<MinimalItemRequirementsData> a = dataHolder.get(MinimalItemRequirementsData.class);
+        if (a.isPresent()) {
+            MinimalItemRequirementsData otherData = a.get();
+            MinimalItemRequirementsData finalData = overlap.merge(this, otherData);
+            this.attributeRequirements = finalData.attributeRequirements;
+            this.allowedGroups = finalData.allowedGroups;
+        }
+        return Optional.of(this);
+    }
+
+    @Override
+    public Optional<MinimalItemRequirementsData> from(DataContainer container) {
+        if (!container.contains(NKeys.ITEM_ATTRIBUTE_BONUS) || !container.contains(NKeys.ITEM_PROPERTY_BONUS)) {
+            return Optional.empty();
+        }
+        this.attributeRequirements = (Map<String, Integer>) container.getMap(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS.getQuery()).get();
+        this.allowedGroups = (Map<String, Integer>) container.getMap(NKeys.ITEM_PLAYER_ALLOWED_GROUPS.getQuery()).get();
+        return Optional.of(this);
+    }
+
+    @Override
+    public MinimalItemRequirementsData copy() {
+        return new MinimalItemRequirementsData(attributeRequirements, allowedGroups);
+    }
+
+    @Override
+    public MinimalItemRequirementsData.Immutable asImmutable() {
+        return new MinimalItemRequirementsData.Immutable(attributeRequirements, allowedGroups);
+    }
+
+    @Override
+    public int getContentVersion() {
+        return MinimalItemRequirementsData.Builder.CONTENT_VERSION;
+    }
+
+    @Override
+    public DataContainer toContainer() {
+        DataContainer dataContainer = super.toContainer();
+        dataContainer.set(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS.getQuery(), attributeRequirements);
+        dataContainer.set(NKeys.ITEM_PLAYER_ALLOWED_GROUPS.getQuery(), allowedGroups);
+        return dataContainer;
+    }
+
+    public static class Builder extends AbstractDataBuilder<MinimalItemRequirementsData>
+            implements DataManipulatorBuilder<MinimalItemRequirementsData, MinimalItemRequirementsData.Immutable> {
+
+        public static final int CONTENT_VERSION = 1;
+
+        public Builder() {
+            super(MinimalItemRequirementsData.class, CONTENT_VERSION);
+        }
+
+        @Override
+        public MinimalItemRequirementsData create() {
+            return new MinimalItemRequirementsData();
+        }
+
+        @Override
+        public Optional<MinimalItemRequirementsData> createFrom(DataHolder dataHolder) {
+            return create().fill(dataHolder);
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        protected Optional<MinimalItemRequirementsData> buildContent(DataView container) throws InvalidDataException {
+            return create().from((DataContainer) container);
+        }
+    }
+
+    public class Immutable extends AbstractImmutableData<MinimalItemRequirementsData.Immutable, MinimalItemRequirementsData> {
+
+        private Map<String, Integer> attributeRequirements;
+        private Map<String, Integer> allowedGroups;
 
 
-		public ImmutableMapValue<String, Integer> allowedGroups() {
-			return Sponge.getRegistry().getValueFactory()
-					.createMapValue(NKeys.ITEM_PLAYER_ALLOWED_GROUPS, this.allowedGroups).asImmutable();
-		}
+        public Immutable(Map<String, Integer> attributeRequirements, Map<String, Integer> allowedGroups) {
+            this.attributeRequirements = attributeRequirements;
+            this.allowedGroups = allowedGroups;
+            registerGetters();
+        }
 
-		private Map<String, Integer> getAttributeRequirements() {
-			return attributeRequirements;
-		}
+        public Immutable() {
+            this(Collections.emptyMap(), Collections.emptyMap());
+        }
 
-		private Map<String, Integer> getAllowedGroups() {
-			return allowedGroups;
-		}
+        @Override
+        protected void registerGetters() {
+            registerKeyValue(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS, this::attributeRequirements);
+            registerKeyValue(NKeys.ITEM_PLAYER_ALLOWED_GROUPS, this::allowedGroups);
 
-		@Override
-		public MinimalItemRequirementsData asMutable() {
-			return new MinimalItemRequirementsData(attributeRequirements, allowedGroups);
-		}
+            registerFieldGetter(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS, this::getAttributeRequirements);
+            registerFieldGetter(NKeys.ITEM_PLAYER_ALLOWED_GROUPS, this::getAllowedGroups);
+        }
 
-		@Override
-		public int getContentVersion() {
-			return MinimalItemRequirementsData.Builder.CONTENT_VERSION;
-		}
+        public ImmutableMapValue<String, Integer> attributeRequirements() {
+            return Sponge.getRegistry().getValueFactory()
+                    .createMapValue(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS, this.attributeRequirements)
+                    .asImmutable();
+        }
 
-		@Override
-		public DataContainer toContainer() {
-			DataContainer dataContainer = super.toContainer();
-			dataContainer.set(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS.getQuery(), attributeRequirements);
-			dataContainer.set(NKeys.ITEM_PLAYER_ALLOWED_GROUPS.getQuery(), allowedGroups);
-			return dataContainer;
-		}
-	}
+
+        public ImmutableMapValue<String, Integer> allowedGroups() {
+            return Sponge.getRegistry().getValueFactory()
+                    .createMapValue(NKeys.ITEM_PLAYER_ALLOWED_GROUPS, this.allowedGroups).asImmutable();
+        }
+
+        private Map<String, Integer> getAttributeRequirements() {
+            return attributeRequirements;
+        }
+
+        private Map<String, Integer> getAllowedGroups() {
+            return allowedGroups;
+        }
+
+        @Override
+        public MinimalItemRequirementsData asMutable() {
+            return new MinimalItemRequirementsData(attributeRequirements, allowedGroups);
+        }
+
+        @Override
+        public int getContentVersion() {
+            return MinimalItemRequirementsData.Builder.CONTENT_VERSION;
+        }
+
+        @Override
+        public DataContainer toContainer() {
+            DataContainer dataContainer = super.toContainer();
+            dataContainer.set(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS.getQuery(), attributeRequirements);
+            dataContainer.set(NKeys.ITEM_PLAYER_ALLOWED_GROUPS.getQuery(), allowedGroups);
+            return dataContainer;
+        }
+    }
 }

@@ -29,67 +29,67 @@ import java.util.Map;
  */
 public class SkillTree {
 
-	public static SkillTree Default = new SkillTree() {{
-		setId("None");
-		setDescription("No skill tree");
-	}};
+    public static SkillTree Default = new SkillTree() {{
+        setId("None");
+        setDescription("No skill tree");
+    }};
 
-	private String id;
+    private String id;
 
-	private Map<String, SkillData> skills = new HashMap<>();
+    private Map<String, SkillData> skills = new HashMap<>();
 
-	private String description;
+    private String description;
 
-	private short[][] skillTreeMap;
+    private short[][] skillTreeMap;
 
-	private Pair<Integer, Integer> center = new Pair<>(0, 0);
+    private Pair<Integer, Integer> center = new Pair<>(0, 0);
 
-	public Map<String, SkillData> getSkills() {
-		return skills;
-	}
+    public Map<String, SkillData> getSkills() {
+        return skills;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public SkillData getSkillById(int id) {
-		for (SkillData skillData : skills.values()) {
-			if (skillData.getSkillTreeId() == id) {
-				return skillData;
-			}
-		}
-		return null;
-	}
+    public SkillData getSkillById(int id) {
+        for (SkillData skillData : skills.values()) {
+            if (skillData.getSkillTreeId() == id) {
+                return skillData;
+            }
+        }
+        return null;
+    }
 
-	public SkillData getSkillById(String id) {
-		return skills.get(id);
-	}
+    public SkillData getSkillById(String id) {
+        return skills.get(id);
+    }
 
-	public short[][] getSkillTreeMap() {
-		return skillTreeMap;
-	}
+    public short[][] getSkillTreeMap() {
+        return skillTreeMap;
+    }
 
-	public void setSkillTreeMap(short[][] skillTreeMap) {
-		this.skillTreeMap = skillTreeMap;
-	}
+    public void setSkillTreeMap(short[][] skillTreeMap) {
+        this.skillTreeMap = skillTreeMap;
+    }
 
-	public Pair<Integer, Integer> getCenter() {
-		return center;
-	}
+    public Pair<Integer, Integer> getCenter() {
+        return center;
+    }
 
-	public void setCenter(Pair<Integer, Integer> center) {
-		this.center = center;
-	}
+    public void setCenter(Pair<Integer, Integer> center) {
+        this.center = center;
+    }
 }

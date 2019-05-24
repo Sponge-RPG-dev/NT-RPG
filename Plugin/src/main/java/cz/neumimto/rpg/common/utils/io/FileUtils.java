@@ -39,69 +39,69 @@ import java.security.CodeSource;
 public class FileUtils {
 
 
-	public static String getJarContainingFolder(Class<?> aclass) throws Exception {
-		CodeSource codeSource = aclass.getProtectionDomain().getCodeSource();
-		String str = codeSource.getLocation().toURI().toString().split("!")[0].substring(10);
-		return str;
-	}
+    public static String getJarContainingFolder(Class<?> aclass) throws Exception {
+        CodeSource codeSource = aclass.getProtectionDomain().getCodeSource();
+        String str = codeSource.getLocation().toURI().toString().split("!")[0].substring(10);
+        return str;
+    }
 
-	public static URL getPluginUrl() {
-		URL clsUrl = NtRpgPlugin.class.getResource(NtRpgPlugin.class.getSimpleName() + ".class");
-		if (clsUrl != null) {
-			try {
-				URLConnection conn = clsUrl.openConnection();
-				if (conn instanceof JarURLConnection) {
-					JarURLConnection connection = (JarURLConnection) conn;
-					return connection.getJarFileURL();
-				}
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-		}
-		return null;
-	}
-
-
-	public static void createFileIfNotExists(Path path) {
-		if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
-			try {
-				Files.createFile(path);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	public static Path createDirectoryIfNotExists(Path path) {
-		if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
-			try {
-				Files.createDirectory(path);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return path;
-	}
+    public static URL getPluginUrl() {
+        URL clsUrl = NtRpgPlugin.class.getResource(NtRpgPlugin.class.getSimpleName() + ".class");
+        if (clsUrl != null) {
+            try {
+                URLConnection conn = clsUrl.openConnection();
+                if (conn instanceof JarURLConnection) {
+                    JarURLConnection connection = (JarURLConnection) conn;
+                    return connection.getJarFileURL();
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return null;
+    }
 
 
-	public static void generateConfigFile(Object data, File file) {
-		try {
-			if (file.exists()) {
-				file.delete();
-			}
-			file.createNewFile();
-			ObjectMapper.BoundInstance configMapper = ObjectMapper.forObject(data);
-			HoconConfigurationLoader hcl = HoconConfigurationLoader.builder()
-					.setPath(file.toPath())
-					.build();
-			SimpleCommentedConfigurationNode scn = SimpleCommentedConfigurationNode.root();
-			configMapper.serialize(scn);
+    public static void createFileIfNotExists(Path path) {
+        if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
+            try {
+                Files.createFile(path);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-			hcl.save(scn);
-		} catch (Exception e) {
-			throw new RuntimeException("Could not create file " + file, e);
-		}
-	}
+    public static Path createDirectoryIfNotExists(Path path) {
+        if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
+            try {
+                Files.createDirectory(path);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return path;
+    }
+
+
+    public static void generateConfigFile(Object data, File file) {
+        try {
+            if (file.exists()) {
+                file.delete();
+            }
+            file.createNewFile();
+            ObjectMapper.BoundInstance configMapper = ObjectMapper.forObject(data);
+            HoconConfigurationLoader hcl = HoconConfigurationLoader.builder()
+                    .setPath(file.toPath())
+                    .build();
+            SimpleCommentedConfigurationNode scn = SimpleCommentedConfigurationNode.root();
+            configMapper.serialize(scn);
+
+            hcl.save(scn);
+        } catch (Exception e) {
+            throw new RuntimeException("Could not create file " + file, e);
+        }
+    }
 }
 
 

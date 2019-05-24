@@ -2,10 +2,10 @@ package cz.neumimto.rpg.effects.common.mechanics;
 
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.common.scripting.JsBinding;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
-import cz.neumimto.rpg.common.scripting.JsBinding;
 import org.spongepowered.api.effect.potion.PotionEffect;
 
 import java.util.Collections;
@@ -18,53 +18,53 @@ import java.util.Set;
 @JsBinding(JsBinding.Type.CLASS)
 public abstract class RPGPotionEffect extends EffectBase<Long> implements IEffectContainer<Long, RPGPotionEffect> {
 
-	private Set<PotionEffect> potions;
+    private Set<PotionEffect> potions;
 
-	public RPGPotionEffect(String name, IEffectConsumer iEffectConsumer,
-						   long duration,
-						   PotionEffect.Builder pe) {
-		super(name, iEffectConsumer);
-		pe.duration((int) (20 * duration / 1000));
-		potions = new HashSet<>();
-		getPotions().add(pe.build());
-	}
+    public RPGPotionEffect(String name, IEffectConsumer iEffectConsumer,
+                           long duration,
+                           PotionEffect.Builder pe) {
+        super(name, iEffectConsumer);
+        pe.duration((int) (20 * duration / 1000));
+        potions = new HashSet<>();
+        getPotions().add(pe.build());
+    }
 
-	@Override
-	public void onApply(IEffect self) {
-		for (PotionEffect potion : potions) {
-			getConsumer().addPotionEffect(potion);
-		}
-	}
+    @Override
+    public void onApply(IEffect self) {
+        for (PotionEffect potion : potions) {
+            getConsumer().addPotionEffect(potion);
+        }
+    }
 
-	@Override
-	public void onRemove(IEffect self) {
-		for (PotionEffect potion : potions) {
-			getConsumer().removePotionEffect(potion.getType());
-		}
-	}
+    @Override
+    public void onRemove(IEffect self) {
+        for (PotionEffect potion : potions) {
+            getConsumer().removePotionEffect(potion.getType());
+        }
+    }
 
-	public Set<PotionEffect> getPotions() {
-		return potions;
-	}
+    public Set<PotionEffect> getPotions() {
+        return potions;
+    }
 
-	@Override
-	public Set<RPGPotionEffect> getEffects() {
-		return new HashSet<>(Collections.singletonList(this));
-	}
+    @Override
+    public Set<RPGPotionEffect> getEffects() {
+        return new HashSet<>(Collections.singletonList(this));
+    }
 
-	@Override
-	public Long getStackedValue() {
-		return getDuration();
-	}
+    @Override
+    public Long getStackedValue() {
+        return getDuration();
+    }
 
-	@Override
-	public void setStackedValue(Long aLong) {
-		setDuration(aLong);
-	}
+    @Override
+    public void setStackedValue(Long aLong) {
+        setDuration(aLong);
+    }
 
-	@Override
-	public void stackEffect(RPGPotionEffect rpgPotionEffect, IEffectSourceProvider effectSourceProvider) {
-		setStackedValue(getStackedValue() + rpgPotionEffect.getStackedValue());
-	}
+    @Override
+    public void stackEffect(RPGPotionEffect rpgPotionEffect, IEffectSourceProvider effectSourceProvider) {
+        setStackedValue(getStackedValue() + rpgPotionEffect.getStackedValue());
+    }
 
 }

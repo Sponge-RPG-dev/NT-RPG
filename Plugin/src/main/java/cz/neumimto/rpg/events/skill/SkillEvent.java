@@ -4,5 +4,5 @@ import cz.neumimto.rpg.api.skills.ISkill;
 import org.spongepowered.api.event.Event;
 
 public interface SkillEvent extends Event {
-	ISkill getSkill();
+    ISkill getSkill();
 }

@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.events.damage;
 
-import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.entities.IEntity;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 
@@ -12,8 +12,8 @@ import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource
 @JsBinding(JsBinding.Type.CLASS)
 public class IEntityWeaponDamageLateEvent extends DamageIEntityEarlyEvent {
 
-	public IEntityWeaponDamageLateEvent(IEntity target, double damage) {
-		super(target, damage);
-	}
+    public IEntityWeaponDamageLateEvent(IEntity target, double damage) {
+        super(target, damage);
+    }
 
 }

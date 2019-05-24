@@ -5,5 +5,5 @@ package cz.neumimto.rpg.api.effects;
  */
 public interface IEffectSource {
 
-	boolean multiple();
+    boolean multiple();
 }

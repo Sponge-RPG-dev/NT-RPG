@@ -20,7 +20,7 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.entities.IReservable;
-import cz.neumimto.rpg.properties.DefaultProperties;
+import cz.neumimto.rpg.properties.SpongeDefaultProperties;
 import org.spongepowered.api.data.key.Keys;
 
 /**
@@ -28,51 +28,51 @@ import org.spongepowered.api.data.key.Keys;
  */
 public class CharacterHealth implements IReservable {
 
-	private final IActiveCharacter activeCharacter;
+    private final IActiveCharacter activeCharacter;
 
-	public CharacterHealth(IActiveCharacter activeCharacter) {
-		this.activeCharacter = activeCharacter;
-	}
+    public CharacterHealth(IActiveCharacter activeCharacter) {
+        this.activeCharacter = activeCharacter;
+    }
 
-	@Override
-	public double getMaxValue() {
-		return activeCharacter.getPlayer().get(Keys.MAX_HEALTH).get();
-	}
+    @Override
+    public double getMaxValue() {
+        return activeCharacter.getPlayer().get(Keys.MAX_HEALTH).get();
+    }
 
-	@Override
-	public void setMaxValue(double f) {
-		activeCharacter.getPlayer().offer(Keys.MAX_HEALTH, f);
-	}
+    @Override
+    public void setMaxValue(double f) {
+        activeCharacter.getPlayer().offer(Keys.MAX_HEALTH, f);
+    }
 
-	//todo useservice instead
-	//todo implement reserved amounts
-	@Override
-	public void setReservedAmnout(float f) {
-		activeCharacter.setProperty(DefaultProperties.reserved_health, f);
-	}
+    //todo useservice instead
+    //todo implement reserved amounts
+    @Override
+    public void setReservedAmnout(float f) {
+        activeCharacter.setProperty(SpongeDefaultProperties.reserved_health, f);
+    }
 
-	@Override
-	public double getReservedAmount() {
-		return NtRpgPlugin.GlobalScope.entityService.getEntityProperty(activeCharacter, DefaultProperties.reserved_health);
-	}
+    @Override
+    public double getReservedAmount() {
+        return NtRpgPlugin.GlobalScope.entityService.getEntityProperty(activeCharacter, SpongeDefaultProperties.reserved_health);
+    }
 
-	@Override
-	public double getValue() {
-		return activeCharacter.getPlayer().get(Keys.HEALTH).get();
-	}
+    @Override
+    public double getValue() {
+        return activeCharacter.getPlayer().get(Keys.HEALTH).get();
+    }
 
-	@Override
-	public void setValue(double f) {
-		activeCharacter.getPlayer().offer(Keys.HEALTH, f);
-	}
+    @Override
+    public void setValue(double f) {
+        activeCharacter.getPlayer().offer(Keys.HEALTH, f);
+    }
 
-	@Override
-	public double getRegen() {
-		return NtRpgPlugin.GlobalScope.entityService.getEntityProperty(activeCharacter, DefaultProperties.health_regen);
-	}
+    @Override
+    public double getRegen() {
+        return NtRpgPlugin.GlobalScope.entityService.getEntityProperty(activeCharacter, SpongeDefaultProperties.health_regen);
+    }
 
-	@Override
-	public void setRegen(float f) {
-		activeCharacter.setProperty(DefaultProperties.health_regen, f);
-	}
+    @Override
+    public void setRegen(float f) {
+        activeCharacter.setProperty(SpongeDefaultProperties.health_regen, f);
+    }
 }

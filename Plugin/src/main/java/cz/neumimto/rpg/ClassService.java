@@ -40,136 +40,136 @@ import java.util.*;
 @Singleton
 public class ClassService {
 
-	private static final String CLASS_ACCESS_PERM = "ntrpg.class.";
+    private static final String CLASS_ACCESS_PERM = "ntrpg.class.";
 
-	@Inject
-	private SpongeDamageService spongeDamageService;
+    @Inject
+    private SpongeDamageService spongeDamageService;
 
-	@Inject
-	private ClassDefinitionDao classDefinitionDao;
+    @Inject
+    private ClassDefinitionDao classDefinitionDao;
 
-	private Map<String, ClassDefinition> classes = new HashMap<>();
+    private Map<String, ClassDefinition> classes = new HashMap<>();
 
-	public Map<String, ClassDefinition> getClasses() {
-		return classes;
-	}
+    public Map<String, ClassDefinition> getClasses() {
+        return classes;
+    }
 
-	public ClassDefinition getClassDefinitionByName(String name) {
-		if (name == null) {
-			return null;
-		}
-		return getClasses().get(name.toLowerCase());
-	}
+    public ClassDefinition getClassDefinitionByName(String name) {
+        if (name == null) {
+            return null;
+        }
+        return getClasses().get(name.toLowerCase());
+    }
 
-	public void registerPlaceholders() {
-		spongeDamageService.createDamageToColorMapping();
-	}
+    public void registerPlaceholders() {
+        spongeDamageService.createDamageToColorMapping();
+    }
 
-	public boolean existsClass(String s) {
-		return getClasses().containsKey(s.toLowerCase());
-	}
+    public boolean existsClass(String s) {
+        return getClasses().containsKey(s.toLowerCase());
+    }
 
-	public Collection<ClassDefinition> getClassDefinitions() {
-		return getClasses().values();
-	}
+    public Collection<ClassDefinition> getClassDefinitions() {
+        return getClasses().values();
+    }
 
-	public Set<ClassDefinition> filterByPlayerAndType(Player player, String type) {
-		Set<ClassDefinition> defs = new HashSet<>();
-		for (Map.Entry<String, ClassDefinition> entry : getClasses().entrySet()) {
-			ClassDefinition value = entry.getValue();
-			if (value.getClassType().equalsIgnoreCase(type)) {
-				if (player.hasPermission(CLASS_ACCESS_PERM + value.getName().toLowerCase())) {
-					defs.add(value);
-				}
-			}
-		}
-		return defs;
-	}
+    public Set<ClassDefinition> filterByPlayerAndType(Player player, String type) {
+        Set<ClassDefinition> defs = new HashSet<>();
+        for (Map.Entry<String, ClassDefinition> entry : getClasses().entrySet()) {
+            ClassDefinition value = entry.getValue();
+            if (value.getClassType().equalsIgnoreCase(type)) {
+                if (player.hasPermission(CLASS_ACCESS_PERM + value.getName().toLowerCase())) {
+                    defs.add(value);
+                }
+            }
+        }
+        return defs;
+    }
 
-	public Set<String> getPermissionsToRemove(IActiveCharacter character, ClassDefinition toBeReplaced) {
-		Set<String> intersection = new HashSet<>();
+    public Set<String> getPermissionsToRemove(IActiveCharacter character, ClassDefinition toBeReplaced) {
+        Set<String> intersection = new HashSet<>();
 
-		Set<String> toBeRemoved = new HashSet<>();
+        Set<String> toBeRemoved = new HashSet<>();
 
-		for (PlayerClassData nClass : character.getClasses().values()) {
-			ClassDefinition configClass = nClass.getClassDefinition();
-			if (configClass == toBeReplaced) {
-				for (PlayerGroupPermission pgp : configClass.getPermissions()) {
-					if (pgp.getLevel() <= character.getLevel()) {
-						toBeRemoved.addAll(pgp.getPermissions());
-					}
-				}
-			} else {
-				for (PlayerGroupPermission playerGroupPermission : configClass.getPermissions()) {
-					if (playerGroupPermission.getLevel() <= character.getLevel()) {
-						intersection.addAll(playerGroupPermission.getPermissions());
-					}
-				}
-			}
-		}
-
-
-		intersection.removeIf(next -> !toBeRemoved.contains(next));
-
-		toBeRemoved.removeAll(intersection);
-		return toBeRemoved;
-	}
-
-	public void removePermissions(IActiveCharacter character, Set<String> perms) {
-		SubjectData transientSubjectData = character.getPlayer().getTransientSubjectData();
-		for (String perm : perms) {
-			transientSubjectData.setPermission(SubjectData.GLOBAL_CONTEXT, perm, Tristate.UNDEFINED);
-		}
-	}
+        for (PlayerClassData nClass : character.getClasses().values()) {
+            ClassDefinition configClass = nClass.getClassDefinition();
+            if (configClass == toBeReplaced) {
+                for (PlayerGroupPermission pgp : configClass.getPermissions()) {
+                    if (pgp.getLevel() <= character.getLevel()) {
+                        toBeRemoved.addAll(pgp.getPermissions());
+                    }
+                }
+            } else {
+                for (PlayerGroupPermission playerGroupPermission : configClass.getPermissions()) {
+                    if (playerGroupPermission.getLevel() <= character.getLevel()) {
+                        intersection.addAll(playerGroupPermission.getPermissions());
+                    }
+                }
+            }
+        }
 
 
-	public void addPermissions(IActiveCharacter character, Set<String> perms) {
-		SubjectData transientSubjectData = character.getPlayer().getTransientSubjectData();
-		for (String perm : perms) {
-			transientSubjectData.setPermission(SubjectData.GLOBAL_CONTEXT, perm, Tristate.TRUE);
-		}
-	}
+        intersection.removeIf(next -> !toBeRemoved.contains(next));
 
-	public void addAllPermissions(IActiveCharacter character, PlayerClassData classDefinition) {
-		for (PlayerGroupPermission playerGroupPermission : classDefinition.getClassDefinition().getPermissions()) {
-			if (playerGroupPermission.getLevel() <= classDefinition.getLevel()) {
-				addPermissions(character, playerGroupPermission.getPermissions());
-			}
-		}
-	}
+        toBeRemoved.removeAll(intersection);
+        return toBeRemoved;
+    }
 
-	public void addPermissions(IActiveCharacter character, PlayerClassData classDefinition) {
-		for (PlayerGroupPermission playerGroupPermission : classDefinition.getClassDefinition().getPermissions()) {
-			if (playerGroupPermission.getLevel() == classDefinition.getLevel()) {
-				addPermissions(character, playerGroupPermission.getPermissions());
-			}
-		}
-	}
+    public void removePermissions(IActiveCharacter character, Set<String> perms) {
+        SubjectData transientSubjectData = character.getPlayer().getTransientSubjectData();
+        for (String perm : perms) {
+            transientSubjectData.setPermission(SubjectData.GLOBAL_CONTEXT, perm, Tristate.UNDEFINED);
+        }
+    }
 
-	public void loadClasses() {
-		try {
-			Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles();
-			classes.clear();
 
-			classDefinitions.forEach(a -> classes.put(a.getName().toLowerCase(), a));
+    public void addPermissions(IActiveCharacter character, Set<String> perms) {
+        SubjectData transientSubjectData = character.getPlayer().getTransientSubjectData();
+        for (String perm : perms) {
+            transientSubjectData.setPermission(SubjectData.GLOBAL_CONTEXT, perm, Tristate.TRUE);
+        }
+    }
 
-			for (ClassDefinition result : classDefinitions) {
-				Map<String, ClassDefinition> classes = NtRpgPlugin.GlobalScope.classService.getClasses();
-				for (ClassDefinition classDefinition : classes.values()) {
-					if (classDefinition.getName().equalsIgnoreCase(result.getName())) {
-						continue;
-					}
-					if (classDefinition.getClassType().equalsIgnoreCase(result.getClassType())) {
-						result.getClassDependencyGraph().getConflicts().add(classDefinition);
-					}
-				}
+    public void addAllPermissions(IActiveCharacter character, PlayerClassData classDefinition) {
+        for (PlayerGroupPermission playerGroupPermission : classDefinition.getClassDefinition().getPermissions()) {
+            if (playerGroupPermission.getLevel() <= classDefinition.getLevel()) {
+                addPermissions(character, playerGroupPermission.getPermissions());
+            }
+        }
+    }
 
-			}
+    public void addPermissions(IActiveCharacter character, PlayerClassData classDefinition) {
+        for (PlayerGroupPermission playerGroupPermission : classDefinition.getClassDefinition().getPermissions()) {
+            if (playerGroupPermission.getLevel() == classDefinition.getLevel()) {
+                addPermissions(character, playerGroupPermission.getPermissions());
+            }
+        }
+    }
 
-			Log.info("Successfully loaded " + classes.size() + " classes");
+    public void loadClasses() {
+        try {
+            Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles();
+            classes.clear();
 
-		} catch (ObjectMappingException e) {
-			Log.error("Could not load classes, ", e);
-		}
-	}
+            classDefinitions.forEach(a -> classes.put(a.getName().toLowerCase(), a));
+
+            for (ClassDefinition result : classDefinitions) {
+                Map<String, ClassDefinition> classes = NtRpgPlugin.GlobalScope.classService.getClasses();
+                for (ClassDefinition classDefinition : classes.values()) {
+                    if (classDefinition.getName().equalsIgnoreCase(result.getName())) {
+                        continue;
+                    }
+                    if (classDefinition.getClassType().equalsIgnoreCase(result.getClassType())) {
+                        result.getClassDependencyGraph().getConflicts().add(classDefinition);
+                    }
+                }
+
+            }
+
+            Log.info("Successfully loaded " + classes.size() + " classes");
+
+        } catch (ObjectMappingException e) {
+            Log.error("Could not load classes, ", e);
+        }
+    }
 }

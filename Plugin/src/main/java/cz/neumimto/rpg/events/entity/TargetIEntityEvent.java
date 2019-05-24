@@ -7,6 +7,6 @@ import cz.neumimto.rpg.events.effect.TargetIEffectConsumer;
  * Base event for when a {@link IEntity} is a target.
  */
 public interface TargetIEntityEvent extends TargetIEffectConsumer {
-	@Override
-	IEntity getTarget();
+    @Override
+    IEntity getTarget();
 }

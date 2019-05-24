@@ -10,77 +10,77 @@ import java.util.Map;
 @ConfigSerializable
 public class ScriptSkillModel {
 
-	@Setting("Id")
-	private String id;
+    @Setting("Id")
+    private String id;
 
-	@Setting("Name")
-	private String name;
+    @Setting("Name")
+    private String name;
 
-	@Setting("Parent")
-	private String parent;
+    @Setting("Parent")
+    private String parent;
 
-	@Setting("Skill-Types")
-	private List<ISkillType> skillTypes;
+    @Setting("Skill-Types")
+    private List<ISkillType> skillTypes;
 
-	@Setting("Damage-Type")
-	private String damageType;
+    @Setting("Damage-Type")
+    private String damageType;
 
-	@Setting("Lore")
-	private List<String> lore;
+    @Setting("Lore")
+    private List<String> lore;
 
-	@Setting("Description")
-	private List<String> description;
+    @Setting("Description")
+    private List<String> description;
 
-	@Setting("Settings")
-	private Map<String, Float> settings;
+    @Setting("Settings")
+    private Map<String, Float> settings;
 
-	@Setting("Loader")
-	private String loader;
+    @Setting("Loader")
+    private String loader;
 
-	@Setting("Script")
-	private String script;
+    @Setting("Script")
+    private String script;
 
-	public String getId() {
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getParent() {
-		return parent;
-	}
+    public String getParent() {
+        return parent;
+    }
 
-	public List<ISkillType> getSkillTypes() {
-		return skillTypes;
-	}
+    public List<ISkillType> getSkillTypes() {
+        return skillTypes;
+    }
 
-	public String getDamageType() {
-		return damageType;
-	}
+    public String getDamageType() {
+        return damageType;
+    }
 
-	public List<String> getLore() {
-		return lore;
-	}
+    public List<String> getLore() {
+        return lore;
+    }
 
-	public List<String> getDescription() {
-		return description;
-	}
+    public List<String> getDescription() {
+        return description;
+    }
 
-	public Map<String, Float> getSettings() {
-		return settings;
-	}
+    public Map<String, Float> getSettings() {
+        return settings;
+    }
 
-	public String getLoader() {
-		return loader;
-	}
+    public String getLoader() {
+        return loader;
+    }
 
-	public String getScript() {
-		return script;
-	}
+    public String getScript() {
+        return script;
+    }
 }

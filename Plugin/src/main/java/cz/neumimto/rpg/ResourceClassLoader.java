@@ -28,30 +28,30 @@ import java.net.URLStreamHandlerFactory;
 public class ResourceClassLoader extends URLClassLoader {
 
 
-	private final String name;
+    private final String name;
 
-	public ResourceClassLoader(String name, URL[] urls, ClassLoader parent) {
-		super(urls, parent);
-		this.name = name;
-	}
+    public ResourceClassLoader(String name, URL[] urls, ClassLoader parent) {
+        super(urls, parent);
+        this.name = name;
+    }
 
-	public ResourceClassLoader(String name, URL[] urls) {
-		super(urls);
-		this.name = name;
-	}
+    public ResourceClassLoader(String name, URL[] urls) {
+        super(urls);
+        this.name = name;
+    }
 
-	public ResourceClassLoader(String name, URL[] urls, ClassLoader parent, URLStreamHandlerFactory factory) {
-		super(urls, parent, factory);
-		this.name = name;
-	}
+    public ResourceClassLoader(String name, URL[] urls, ClassLoader parent, URLStreamHandlerFactory factory) {
+        super(urls, parent, factory);
+        this.name = name;
+    }
 
-	@Override
-	public String toString() {
-		return name;
-	}
+    @Override
+    public String toString() {
+        return name;
+    }
 
-	@Override
-	public void addURL(URL url) {
-		super.addURL(url);
-	}
+    @Override
+    public void addURL(URL url) {
+        super.addURL(url);
+    }
 }

@@ -24,15 +24,15 @@ import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.ISkillType;
+import cz.neumimto.rpg.api.skills.SkillSettings;
 import cz.neumimto.rpg.api.utils.Console;
+import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.common.utils.annotations.CatalogId;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.common.scripting.JsBinding;
-import cz.neumimto.rpg.api.skills.ISkillType;
-import cz.neumimto.rpg.api.skills.SkillSettings;
-import cz.neumimto.rpg.common.utils.annotations.CatalogId;
 
 import javax.inject.Inject;
 import java.util.HashSet;
@@ -48,176 +48,177 @@ import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 @JsBinding(JsBinding.Type.CLASS)
 public abstract class AbstractSkill implements ISkill {
 
-	@Inject
-	protected CharacterService characterService;
+    @Inject
+    protected CharacterService characterService;
 
-	protected String strName;
-	protected List<String> description;
-	protected SkillSettings settings = new SkillSettings();
+    protected String strName;
+    protected List<String> description;
+    protected SkillSettings settings = new SkillSettings();
 
-	protected String itemType;
+    protected String itemType;
 
-	@CatalogId
-	private String catalogId;
+    @CatalogId
+    private String catalogId;
 
-	private Set<ISkillType> skillTypes = new HashSet<>();
-	private List<String> lore;
-	private String damageType = null;
+    private Set<ISkillType> skillTypes = new HashSet<>();
+    private List<String> lore;
+    private String damageType = null;
 
-	public AbstractSkill() {
-		ResourceLoader.Skill sk = this.getClass().getAnnotation(ResourceLoader.Skill.class);
-		if (sk != null) {
-			catalogId = sk.value().toLowerCase();
-		}
-	}
+    public AbstractSkill() {
+        ResourceLoader.Skill sk = this.getClass().getAnnotation(ResourceLoader.Skill.class);
+        if (sk != null) {
+            catalogId = sk.value().toLowerCase();
+        }
+    }
 
     /**
      * Sets catalog id, if null.
-     * @throws IllegalStateException if catalogId not null
+     *
      * @param catalogId
+     * @throws IllegalStateException if catalogId not null
      */
     public void setCatalogId(String catalogId) {
         this.catalogId = catalogId;
     }
 
     @Override
-	public String getName() {
-		return strName;
-	}
+    public String getName() {
+        return strName;
+    }
 
-	@Override
-	public String getLocalizableName() {
-		return strName;
-	}
+    @Override
+    public String getLocalizableName() {
+        return strName;
+    }
 
-	@Override
-	public void setLocalizableName(String name) {
-		this.strName = name;
-	}
+    @Override
+    public void setLocalizableName(String name) {
+        this.strName = name;
+    }
 
-	@Override
-	public void skillLearn(IActiveCharacter IActiveCharacter) {
-		if (pluginConfig.PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE) {
-			Rpg.get().broadcastLocalizableMessage(LocalizationKeys.PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE, IActiveCharacter.getName(), getLocalizableName());
-		}
-	}
+    @Override
+    public void skillLearn(IActiveCharacter IActiveCharacter) {
+        if (pluginConfig.PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE) {
+            Rpg.get().broadcastLocalizableMessage(LocalizationKeys.PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE, IActiveCharacter.getName(), getLocalizableName());
+        }
+    }
 
-	@Override
-	public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
-		if (pluginConfig.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE) {
-			Rpg.get().broadcastLocalizableMessage(LocalizationKeys.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE,
-					Arg.arg("player", IActiveCharacter.getName())
-					.with("skill", getName())
-					.with("level", level));
-		}
-	}
+    @Override
+    public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
+        if (pluginConfig.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE) {
+            Rpg.get().broadcastLocalizableMessage(LocalizationKeys.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE,
+                    Arg.arg("player", IActiveCharacter.getName())
+                            .with("skill", getName())
+                            .with("level", level));
+        }
+    }
 
-	@Override
-	public void skillRefund(IActiveCharacter IActiveCharacter) {
-		if (pluginConfig.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE) {
-			Rpg.get().broadcastLocalizableMessage(LocalizationKeys.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE,
-					Arg.arg("%player%", IActiveCharacter.getName())
-					.with("skill", getName()));
-		}
-	}
+    @Override
+    public void skillRefund(IActiveCharacter IActiveCharacter) {
+        if (pluginConfig.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE) {
+            Rpg.get().broadcastLocalizableMessage(LocalizationKeys.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE,
+                    Arg.arg("%player%", IActiveCharacter.getName())
+                            .with("skill", getName()));
+        }
+    }
 
-	@Override
-	public SkillSettings getDefaultSkillSettings() {
-		return settings;
-	}
+    @Override
+    public SkillSettings getDefaultSkillSettings() {
+        return settings;
+    }
 
-	@Override
-	public void onCharacterInit(IActiveCharacter c, int level) {
-		if (pluginConfig.SKILLGAIN_MESSAGES_AFTER_LOGIN) {
-			c.sendMessage(Localizations.PLAYER_GAINED_SKILL, Arg.arg("skill", getName()));
-		}
-	}
+    @Override
+    public void onCharacterInit(IActiveCharacter c, int level) {
+        if (pluginConfig.SKILLGAIN_MESSAGES_AFTER_LOGIN) {
+            c.sendMessage(Localizations.PLAYER_GAINED_SKILL, Arg.arg("skill", getName()));
+        }
+    }
 
-	@Override
-	public void init() {
-	}
+    @Override
+    public void init() {
+    }
 
-	@Override
-	public SkillSettings getSettings() {
-		return settings;
-	}
+    @Override
+    public SkillSettings getSettings() {
+        return settings;
+    }
 
-	@Override
-	public void setSettings(SkillSettings settings) {
-		this.settings = settings;
-	}
+    @Override
+    public void setSettings(SkillSettings settings) {
+        this.settings = settings;
+    }
 
-	@Override
-	public List<String> getDescription() {
-		return description;
-	}
+    @Override
+    public List<String> getDescription() {
+        return description;
+    }
 
-	@Override
-	public void setDescription(List<String> description) {
-		this.description = description;
-	}
+    @Override
+    public void setDescription(List<String> description) {
+        this.description = description;
+    }
 
-	@Override
-	public Set<ISkillType> getSkillTypes() {
-		return skillTypes;
-	}
+    @Override
+    public Set<ISkillType> getSkillTypes() {
+        return skillTypes;
+    }
 
-	@Override
-	public void setIcon(String icon) {
-		this.itemType = icon;
-	}
+    @Override
+    public void setIcon(String icon) {
+        this.itemType = icon;
+    }
 
-	@Override
-	public List<String> getLore() {
-		return lore;
-	}
+    @Override
+    public List<String> getLore() {
+        return lore;
+    }
 
-	@Override
-	public void setLore(List<String> lore) {
-		this.lore = lore;
-	}
+    @Override
+    public void setLore(List<String> lore) {
+        this.lore = lore;
+    }
 
-	@Override
-	public String getDamageType() {
-		return damageType;
-	}
+    @Override
+    public String getDamageType() {
+        return damageType;
+    }
 
-	@Override
-	public void setDamageType(String type) {
-		damageType = type;
-	}
+    @Override
+    public void setDamageType(String type) {
+        damageType = type;
+    }
 
-	public void addSkillType(ISkillType type) {
-		if (skillTypes == null) {
-			skillTypes = new HashSet<>();
-		}
-		skillTypes.add(type);
-	}
+    public void addSkillType(ISkillType type) {
+        if (skillTypes == null) {
+            skillTypes = new HashSet<>();
+        }
+        skillTypes.add(type);
+    }
 
-	/* Skills are singletons */
-	@Override
-	public boolean equals(Object o) {
-		return this == o;
-	}
+    /* Skills are singletons */
+    @Override
+    public boolean equals(Object o) {
+        return this == o;
+    }
 
-	@Override
-	public int hashCode() {
-		return catalogId.hashCode() * 77;
-	}
+    @Override
+    public int hashCode() {
+        return catalogId.hashCode() * 77;
+    }
 
-	@Override
-	public String getId() {
-		return catalogId;
-	}
+    @Override
+    public String getId() {
+        return catalogId;
+    }
 
-	@Override
-	public String getItemType() {
-		return itemType;
-	}
+    @Override
+    public String getItemType() {
+        return itemType;
+    }
 
-	@Override
-	protected void finalize() throws Throwable {
-		super.finalize();
-		Log.info(Console.PURPLE + "Destroying " + getId() + " classloader: " + getClass().getClassLoader().toString(), DebugLevel.DEVELOP);
-	}
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        Log.info(Console.PURPLE + "Destroying " + getId() + " classloader: " + getClass().getClassLoader().toString(), DebugLevel.DEVELOP);
+    }
 }

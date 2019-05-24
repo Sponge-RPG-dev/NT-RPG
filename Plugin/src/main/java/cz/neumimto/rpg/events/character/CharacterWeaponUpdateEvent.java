@@ -2,7 +2,6 @@ package cz.neumimto.rpg.events.character;
 
 import cz.neumimto.rpg.items.SpongeRpgItemType;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import org.spongepowered.api.item.ItemType;
 
 import java.util.Map;
 
@@ -11,14 +10,14 @@ import java.util.Map;
  */
 public class CharacterWeaponUpdateEvent extends AbstractCharacterEvent {
 
-	private final Map<SpongeRpgItemType, Double> weapons;
+    private final Map<SpongeRpgItemType, Double> weapons;
 
-	public CharacterWeaponUpdateEvent(IActiveCharacter character, Map<SpongeRpgItemType, Double> weapons) {
-		super(character);
-		this.weapons = weapons;
-	}
+    public CharacterWeaponUpdateEvent(IActiveCharacter character, Map<SpongeRpgItemType, Double> weapons) {
+        super(character);
+        this.weapons = weapons;
+    }
 
-	public Map<SpongeRpgItemType, Double> getAllowedWeapons() {
-		return weapons;
-	}
+    public Map<SpongeRpgItemType, Double> getAllowedWeapons() {
+        return weapons;
+    }
 }

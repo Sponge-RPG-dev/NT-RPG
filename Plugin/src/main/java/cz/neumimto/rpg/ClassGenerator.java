@@ -24,80 +24,80 @@ import java.util.function.Consumer;
 @Singleton
 public class ClassGenerator implements Opcodes {
 
-	protected static Map<Class<?>, String[]> signaturedictionary = new HashMap<>();
+    protected static Map<Class<?>, String[]> signaturedictionary = new HashMap<>();
 
-	static {
-		signaturedictionary.put(int.class, new String[]{"java/lang/Integer", "intValue", "I"});
-		signaturedictionary.put(Integer.class, new String[]{"java/lang/Integer", "intValue", "I"});
-		signaturedictionary.put(double.class, new String[]{"java/lang/Double", "doubleValue", "D"});
-		signaturedictionary.put(Double.class, new String[]{"java/lang/Double", "doubleValue", "D"});
-		signaturedictionary.put(Float.class, new String[]{"java/lang/Float", "floatValue", "F"});
-		signaturedictionary.put(float.class, new String[]{"java/lang/Float", "floatValue", "F"});
-		signaturedictionary.put(Long.class, new String[]{"java/lang/Long", "longValue", "J"});
-		signaturedictionary.put(long.class, new String[]{"java/lang/Long", "longValue", "J"});
+    static {
+        signaturedictionary.put(int.class, new String[]{"java/lang/Integer", "intValue", "I"});
+        signaturedictionary.put(Integer.class, new String[]{"java/lang/Integer", "intValue", "I"});
+        signaturedictionary.put(double.class, new String[]{"java/lang/Double", "doubleValue", "D"});
+        signaturedictionary.put(Double.class, new String[]{"java/lang/Double", "doubleValue", "D"});
+        signaturedictionary.put(Float.class, new String[]{"java/lang/Float", "floatValue", "F"});
+        signaturedictionary.put(float.class, new String[]{"java/lang/Float", "floatValue", "F"});
+        signaturedictionary.put(Long.class, new String[]{"java/lang/Long", "longValue", "J"});
+        signaturedictionary.put(long.class, new String[]{"java/lang/Long", "longValue", "J"});
 
-		signaturedictionary.put(String.class, new String[]{"java/lang/String", "toString", "Ljava/lang/String;"});
-	}
+        signaturedictionary.put(String.class, new String[]{"java/lang/String", "toString", "Ljava/lang/String;"});
+    }
 
-	private String packagee = "cz/neumimto/rpg/asm/";
+    private String packagee = "cz/neumimto/rpg/asm/";
 
-	public ClassGenerator() {
-	}
+    public ClassGenerator() {
+    }
 
-	public Object generateDynamicListener(List<ScriptObjectMirror> list) {
-		Object o = null;
-		try {
-			String name = "DynamicListener" + System.currentTimeMillis();
+    public Object generateDynamicListener(List<ScriptObjectMirror> list) {
+        Object o = null;
+        try {
+            String name = "DynamicListener" + System.currentTimeMillis();
 
-			DynamicType.Builder<Object> classBuilder = new ByteBuddy()
-					.subclass(Object.class)
-					.name(name);
+            DynamicType.Builder<Object> classBuilder = new ByteBuddy()
+                    .subclass(Object.class)
+                    .name(name);
 
-			int i = 0;
-			for (ScriptObjectMirror obj : list) {
-				Class<?> type = ((StaticClass)obj.get("type")).getRepresentedClass();
-				Consumer consumer = (Consumer) obj.get("consumer");
-				boolean beforeModifications = extract(obj,"beforeModifications", false);
-				Order order = Order.valueOf(extract(obj, "order", "DEFAULT"));
-				i++;
-				String methodName = extract(obj, "methodName", "on" + type.getSimpleName() + "" + i);
-
-
-				AnnotationDescription annotation = AnnotationDescription.Builder.ofType(Listener.class)
-						.define("beforeModifications", beforeModifications)
-						.define("order", order)
-						.build();
+            int i = 0;
+            for (ScriptObjectMirror obj : list) {
+                Class<?> type = ((StaticClass) obj.get("type")).getRepresentedClass();
+                Consumer consumer = (Consumer) obj.get("consumer");
+                boolean beforeModifications = extract(obj, "beforeModifications", false);
+                Order order = Order.valueOf(extract(obj, "order", "DEFAULT"));
+                i++;
+                String methodName = extract(obj, "methodName", "on" + type.getSimpleName() + "" + i);
 
 
-				classBuilder = classBuilder.defineMethod(methodName, void.class, Visibility.PUBLIC)
-							.withParameter(type)
-							.intercept(MethodDelegation.to(new EventHandlerInterceptor(consumer)))
-							.annotateMethod(annotation);
+                AnnotationDescription annotation = AnnotationDescription.Builder.ofType(Listener.class)
+                        .define("beforeModifications", beforeModifications)
+                        .define("order", order)
+                        .build();
 
 
-			}
-			Class<?> loaded = classBuilder.make().load(getClass().getClassLoader()).getLoaded();
-			o = loaded.newInstance();
+                classBuilder = classBuilder.defineMethod(methodName, void.class, Visibility.PUBLIC)
+                        .withParameter(type)
+                        .intercept(MethodDelegation.to(new EventHandlerInterceptor(consumer)))
+                        .annotateMethod(annotation);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return o;
-	}
 
-	public static class EventHandlerInterceptor {
-		private final Consumer consumer;
+            }
+            Class<?> loaded = classBuilder.make().load(getClass().getClassLoader()).getLoaded();
+            o = loaded.newInstance();
 
-		public EventHandlerInterceptor(Consumer consumer) {
-			this.consumer = consumer;
-		}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return o;
+    }
 
-		public void intercept(@Argument(0) Object object) {
-			this.consumer.accept(object);
-		}
-	}
+    public static class EventHandlerInterceptor {
+        private final Consumer consumer;
 
-	private <T> T extract(ScriptObjectMirror obj, String key, T def) {
-		return obj.hasMember(key) ? (T) obj.get(key) : def;
-	}
+        public EventHandlerInterceptor(Consumer consumer) {
+            this.consumer = consumer;
+        }
+
+        public void intercept(@Argument(0) Object object) {
+            this.consumer.accept(object);
+        }
+    }
+
+    private <T> T extract(ScriptObjectMirror obj, String key, T def) {
+        return obj.hasMember(key) ? (T) obj.get(key) : def;
+    }
 }

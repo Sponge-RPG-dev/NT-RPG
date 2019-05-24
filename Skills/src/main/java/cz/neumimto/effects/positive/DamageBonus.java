@@ -23,7 +23,7 @@ import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.properties.DefaultProperties;
+import cz.neumimto.rpg.properties.SpongeDefaultProperties;
 import org.spongepowered.api.entity.EntityTypes;
 
 import java.util.Map;
@@ -61,8 +61,8 @@ public class DamageBonus extends EffectBase {
 
 	@Override
 	public void onApply(IEffect self) {
-		getConsumer().setProperty(DefaultProperties.weapon_damage_bonus,
-				getConsumer().getProperty(DefaultProperties.weapon_damage_bonus) + bonusDamage);
+		getConsumer().setProperty(SpongeDefaultProperties.weapon_damage_bonus,
+				getConsumer().getProperty(SpongeDefaultProperties.weapon_damage_bonus) + bonusDamage);
 		if (getConsumer().getEntity().getType() == EntityTypes.PLAYER) {
 			getGlobalScope().damageService.recalculateCharacterWeaponDamage((IActiveCharacter) getConsumer());
 		}
@@ -70,8 +70,8 @@ public class DamageBonus extends EffectBase {
 
 	@Override
 	public void onRemove(IEffect self) {
-		getConsumer().setProperty(DefaultProperties.weapon_damage_bonus,
-				getConsumer().getProperty(DefaultProperties.weapon_damage_bonus) - bonusDamage);
+		getConsumer().setProperty(SpongeDefaultProperties.weapon_damage_bonus,
+				getConsumer().getProperty(SpongeDefaultProperties.weapon_damage_bonus) - bonusDamage);
 		if (getConsumer().getEntity().getType() == EntityTypes.PLAYER) {
 			getGlobalScope().damageService.recalculateCharacterWeaponDamage((IActiveCharacter) getConsumer());
 		}

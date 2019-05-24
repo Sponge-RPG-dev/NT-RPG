@@ -9,28 +9,28 @@ import cz.neumimto.rpg.api.skills.SkillResult;
  */
 public class SkillScriptContext {
 
-	private final ISkill skill;
-	private final PlayerSkillContext skillInfo;
-	private SkillResult result;
+    private final ISkill skill;
+    private final PlayerSkillContext skillInfo;
+    private SkillResult result;
 
-	public SkillScriptContext(ISkill skill, PlayerSkillContext skillInfo) {
-		this.skill = skill;
-		this.skillInfo = skillInfo;
-	}
+    public SkillScriptContext(ISkill skill, PlayerSkillContext skillInfo) {
+        this.skill = skill;
+        this.skillInfo = skillInfo;
+    }
 
-	public ISkill getSkill() {
-		return skill;
-	}
+    public ISkill getSkill() {
+        return skill;
+    }
 
-	public PlayerSkillContext getSkillInfo() {
-		return skillInfo;
-	}
+    public PlayerSkillContext getSkillInfo() {
+        return skillInfo;
+    }
 
-	public SkillResult getResult() {
-		return result;
-	}
+    public SkillResult getResult() {
+        return result;
+    }
 
-	public void setResult(SkillResult result) {
-		this.result = result;
-	}
+    public void setResult(SkillResult result) {
+        this.result = result;
+    }
 }

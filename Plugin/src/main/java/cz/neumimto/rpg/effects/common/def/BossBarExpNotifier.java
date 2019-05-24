@@ -24,126 +24,126 @@ import java.util.*;
  */
 public class BossBarExpNotifier extends EffectBase<Object> implements IEffectContainer<Object, BossBarExpNotifier> {
 
-	public static final String name = "BossBarExp";
-	private Map<String, SessionWrapper> bossBarMap = new HashMap<>();
+    public static final String name = "BossBarExp";
+    private Map<String, SessionWrapper> bossBarMap = new HashMap<>();
 
-	public BossBarExpNotifier(IActiveCharacter consumer) {
-		super(name, consumer);
-		effectTypes.add(CoreEffectTypes.GUI);
-		setPeriod(5000);
-		setDuration(-1);
-	}
+    public BossBarExpNotifier(IActiveCharacter consumer) {
+        super(name, consumer);
+        effectTypes.add(CoreEffectTypes.GUI);
+        setPeriod(5000);
+        setDuration(-1);
+    }
 
-	public void notifyExpChange(IActiveCharacter character, String clazz, double exps) {
-		final String classname = clazz.toLowerCase();
-		Optional<PlayerClassData> first =
-				character.getClasses().values().stream().filter(a -> a.getClassDefinition().getName().equalsIgnoreCase(classname)).findFirst();
-		if (first.isPresent()) {
-			SessionWrapper sessionWrapper = bossBarMap.computeIfAbsent(classname, s -> new SessionWrapper());
-			ServerBossBar serverBossBar = sessionWrapper.serverBossBar;
-			if (serverBossBar == null) {
-				serverBossBar = ServerBossBar.builder()
-						.visible(false)
-						.playEndBossMusic(false)
-						.darkenSky(false)
-						.name(Text.of("bossbarexp"))
-						.overlay(BossBarOverlays.NOTCHED_10)
-						.color(BossBarColors.BLUE)
-						.createFog(false)
-						.percent(0)
-						.build();
-				serverBossBar.addPlayer(character.getPlayer());
-				sessionWrapper.serverBossBar = serverBossBar;
-			}
-			PlayerClassData playerClassData = first.get();
+    public void notifyExpChange(IActiveCharacter character, String clazz, double exps) {
+        final String classname = clazz.toLowerCase();
+        Optional<PlayerClassData> first =
+                character.getClasses().values().stream().filter(a -> a.getClassDefinition().getName().equalsIgnoreCase(classname)).findFirst();
+        if (first.isPresent()) {
+            SessionWrapper sessionWrapper = bossBarMap.computeIfAbsent(classname, s -> new SessionWrapper());
+            ServerBossBar serverBossBar = sessionWrapper.serverBossBar;
+            if (serverBossBar == null) {
+                serverBossBar = ServerBossBar.builder()
+                        .visible(false)
+                        .playEndBossMusic(false)
+                        .darkenSky(false)
+                        .name(Text.of("bossbarexp"))
+                        .overlay(BossBarOverlays.NOTCHED_10)
+                        .color(BossBarColors.BLUE)
+                        .createFog(false)
+                        .percent(0)
+                        .build();
+                serverBossBar.addPlayer(character.getPlayer());
+                sessionWrapper.serverBossBar = serverBossBar;
+            }
+            PlayerClassData playerClassData = first.get();
 
-			sessionWrapper.currentSessionExp += exps;
-			DecimalFormat df = new DecimalFormat("#.00");
-
-
-			serverBossBar.setName(
-					Text.builder(Utils.capitalizeFirst(classname)).color(playerClassData.getClassDefinition().getPreferedColor())
-							.append(Text.builder(" ").append(Localizations.LEVEL.toText()).append(Text.of(": ")).color(TextColors.DARK_GRAY)
-					.build())
-							.append(Text.builder(String.valueOf(playerClassData.getLevel())).color(TextColors.GOLD).build())
-							.append(Text.builder(" +" + df.format(sessionWrapper.currentSessionExp)).color(TextColors.GREEN).build())
-							.append(Text.builder(" " + df.format(playerClassData.getExperiencesFromLevel())
-									+ " / "
-									+ df.format(playerClassData.getClassDefinition().getLevelProgression().getLevelMargins()[playerClassData.getLevel()]))
-									.color(TextColors.DARK_GRAY)
-									.style(TextStyles.ITALIC)
-									.build())
-							.build());
+            sessionWrapper.currentSessionExp += exps;
+            DecimalFormat df = new DecimalFormat("#.00");
 
 
-			serverBossBar.setPercent((float) Utils
-					.getPercentage(playerClassData.getExperiencesFromLevel(), playerClassData.getClassDefinition().getLevelProgression().getLevelMargins()[playerClassData.getLevel()])
-					/ 100);
-			serverBossBar.setVisible(true);
-			setLastTickTime(System.currentTimeMillis());
+            serverBossBar.setName(
+                    Text.builder(Utils.capitalizeFirst(classname)).color(playerClassData.getClassDefinition().getPreferedColor())
+                            .append(Text.builder(" ").append(Localizations.LEVEL.toText()).append(Text.of(": ")).color(TextColors.DARK_GRAY)
+                                    .build())
+                            .append(Text.builder(String.valueOf(playerClassData.getLevel())).color(TextColors.GOLD).build())
+                            .append(Text.builder(" +" + df.format(sessionWrapper.currentSessionExp)).color(TextColors.GREEN).build())
+                            .append(Text.builder(" " + df.format(playerClassData.getExperiencesFromLevel())
+                                    + " / "
+                                    + df.format(playerClassData.getClassDefinition().getLevelProgression().getLevelMargins()[playerClassData.getLevel()]))
+                                    .color(TextColors.DARK_GRAY)
+                                    .style(TextStyles.ITALIC)
+                                    .build())
+                            .build());
 
-		}
-	}
 
-	@Override
-	public void onTick(IEffect self) {
-		for (SessionWrapper sessionWrapper : bossBarMap.values()) {
-			if (sessionWrapper.serverBossBar != null) {
-				ServerBossBar bossBar = sessionWrapper.serverBossBar;
-				if (bossBar.isVisible()) {
-					bossBar.setVisible(false);
-					sessionWrapper.currentSessionExp = 0;
-				}
-			}
-		}
-	}
+            serverBossBar.setPercent((float) Utils
+                    .getPercentage(playerClassData.getExperiencesFromLevel(), playerClassData.getClassDefinition().getLevelProgression().getLevelMargins()[playerClassData.getLevel()])
+                    / 100);
+            serverBossBar.setVisible(true);
+            setLastTickTime(System.currentTimeMillis());
 
-	@Override
-	public void onRemove(IEffect self) {
-		for (SessionWrapper sessionWrapper : bossBarMap.values()) {
-			if (sessionWrapper.serverBossBar != null) {
-				sessionWrapper.serverBossBar.removePlayer(((IActiveCharacter) getConsumer()).getPlayer());
-			}
-		}
-	}
+        }
+    }
 
-	@Override
-	public void setDuration(long l) {
-		if (l >= 0) {
-			throw new IllegalArgumentException();
-		}
-		super.setDuration(l);
-	}
+    @Override
+    public void onTick(IEffect self) {
+        for (SessionWrapper sessionWrapper : bossBarMap.values()) {
+            if (sessionWrapper.serverBossBar != null) {
+                ServerBossBar bossBar = sessionWrapper.serverBossBar;
+                if (bossBar.isVisible()) {
+                    bossBar.setVisible(false);
+                    sessionWrapper.currentSessionExp = 0;
+                }
+            }
+        }
+    }
 
-	@Override
-	public Set<BossBarExpNotifier> getEffects() {
-		return new HashSet<>(Collections.singletonList(this));
-	}
+    @Override
+    public void onRemove(IEffect self) {
+        for (SessionWrapper sessionWrapper : bossBarMap.values()) {
+            if (sessionWrapper.serverBossBar != null) {
+                sessionWrapper.serverBossBar.removePlayer(((IActiveCharacter) getConsumer()).getPlayer());
+            }
+        }
+    }
 
-	@Override
-	public BossBarExpNotifier getStackedValue() {
-		return this;
-	}
+    @Override
+    public void setDuration(long l) {
+        if (l >= 0) {
+            throw new IllegalArgumentException();
+        }
+        super.setDuration(l);
+    }
 
-	@Override
-	public void setStackedValue(Object o) {
+    @Override
+    public Set<BossBarExpNotifier> getEffects() {
+        return new HashSet<>(Collections.singletonList(this));
+    }
 
-	}
+    @Override
+    public BossBarExpNotifier getStackedValue() {
+        return this;
+    }
 
-	@Override
-	public BossBarExpNotifier constructEffectContainer() {
-		return this;
-	}
+    @Override
+    public void setStackedValue(Object o) {
 
-	@Override
-	public void stackEffect(BossBarExpNotifier bossBarExpNotifier, IEffectSourceProvider effectSourceProvider) {
+    }
 
-	}
+    @Override
+    public BossBarExpNotifier constructEffectContainer() {
+        return this;
+    }
 
-	private static class SessionWrapper {
-		ServerBossBar serverBossBar;
-		double currentSessionExp;
-	}
+    @Override
+    public void stackEffect(BossBarExpNotifier bossBarExpNotifier, IEffectSourceProvider effectSourceProvider) {
+
+    }
+
+    private static class SessionWrapper {
+        ServerBossBar serverBossBar;
+        double currentSessionExp;
+    }
 }
 
 

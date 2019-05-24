@@ -9,9 +9,9 @@ import java.util.UUID;
  */
 public class NEventContextKeys {
 
-	public static final EventContextKey<UUID> GAME_PROFILE = EventContextKey
-			.builder(UUID.class)
-			.name("gameprofile")
-			.id("ntrpg.gameprofile")
-			.build();
+    public static final EventContextKey<UUID> GAME_PROFILE = EventContextKey
+            .builder(UUID.class)
+            .name("gameprofile")
+            .id("ntrpg.gameprofile")
+            .build();
 }

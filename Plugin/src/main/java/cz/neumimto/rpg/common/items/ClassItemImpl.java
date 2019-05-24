@@ -7,7 +7,7 @@ public class ClassItemImpl implements ClassItem {
 
     private final RpgItemType type;
     private final double damage;
-    private final double  armor;
+    private final double armor;
 
     public ClassItemImpl(RpgItemType type, double damage, double armor) {
         this.type = type;

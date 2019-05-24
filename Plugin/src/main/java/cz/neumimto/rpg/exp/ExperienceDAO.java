@@ -16,49 +16,49 @@ import java.util.Properties;
 @Singleton
 public class ExperienceDAO {
 
-	public Map<String, Double> getExperiencesForMinerals() {
-		File defaults = createDefaults("Minning_experiences.properties");
-		return getStringDoubleMap(defaults);
-	}
+    public Map<String, Double> getExperiencesForMinerals() {
+        File defaults = createDefaults("Minning_experiences.properties");
+        return getStringDoubleMap(defaults);
+    }
 
-	public Map<String, Double> getExperiencesForWoodenBlocks() {
-		File defaults = createDefaults("Logging_experiences.properties");
-		return getStringDoubleMap(defaults);
-	}
+    public Map<String, Double> getExperiencesForWoodenBlocks() {
+        File defaults = createDefaults("Logging_experiences.properties");
+        return getStringDoubleMap(defaults);
+    }
 
-	public Map<String, Double> getExperiencesForFishing() {
-		File defaults = createDefaults("Fishing_experiences.properties");
-		return getStringDoubleMap(defaults);
-	}
+    public Map<String, Double> getExperiencesForFishing() {
+        File defaults = createDefaults("Fishing_experiences.properties");
+        return getStringDoubleMap(defaults);
+    }
 
-	public Map<String, Double> getExperiencesForFarming() {
-		File defaults = createDefaults("Farming_experiences.properties");
-		return getStringDoubleMap(defaults);
-	}
+    public Map<String, Double> getExperiencesForFarming() {
+        File defaults = createDefaults("Farming_experiences.properties");
+        return getStringDoubleMap(defaults);
+    }
 
-	private Map<String, Double> getStringDoubleMap(File defaults) {
-		Map<String, Double> map = new HashMap<>();
-		try (FileInputStream stream = new FileInputStream(defaults)) {
-			Properties properties = new Properties();
-			properties.load(stream);
-			for (Map.Entry<Object, Object> entry : properties.entrySet()) {
-				map.put(entry.getKey().toString(), Double.parseDouble(entry.getValue().toString()));
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return map;
-	}
+    private Map<String, Double> getStringDoubleMap(File defaults) {
+        Map<String, Double> map = new HashMap<>();
+        try (FileInputStream stream = new FileInputStream(defaults)) {
+            Properties properties = new Properties();
+            properties.load(stream);
+            for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+                map.put(entry.getKey().toString(), Double.parseDouble(entry.getValue().toString()));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
 
-	private File createDefaults(String s) {
-		File properties = new File(NtRpgPlugin.workingDir, s);
-		if (!properties.exists()) {
-			try {
-				properties.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return properties;
-	}
+    private File createDefaults(String s) {
+        File properties = new File(NtRpgPlugin.workingDir, s);
+        if (!properties.exists()) {
+            try {
+                properties.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return properties;
+    }
 }

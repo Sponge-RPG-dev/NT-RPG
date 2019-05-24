@@ -12,29 +12,29 @@ import java.util.Map;
 @ConfigSerializable
 public class EffectDumpConfiguration {
 
-	@Setting
-	private String description;
+    @Setting
+    private String description;
 
-	@Setting
-	private Map<String, String> settingNodes;
+    @Setting
+    private Map<String, String> settingNodes;
 
-	public EffectDumpConfiguration() {
-		this.settingNodes = new HashMap<>();
-	}
+    public EffectDumpConfiguration() {
+        this.settingNodes = new HashMap<>();
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public Map<String, String> getSettingNodes() {
-		return settingNodes;
-	}
+    public Map<String, String> getSettingNodes() {
+        return settingNodes;
+    }
 
-	public void setSettingNodes(Map<String, String> settingNodes) {
-		this.settingNodes = settingNodes;
-	}
+    public void setSettingNodes(Map<String, String> settingNodes) {
+        this.settingNodes = settingNodes;
+    }
 }

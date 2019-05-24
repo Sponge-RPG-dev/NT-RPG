@@ -7,47 +7,47 @@ import org.spongepowered.api.data.key.Keys;
  */
 public class EntityHealth implements IEntityResource {
 
-	public IEntity entity;
+    public IEntity entity;
 
-	public EntityHealth(IEntity entity) {
-		this.entity = entity;
-	}
+    public EntityHealth(IEntity entity) {
+        this.entity = entity;
+    }
 
-	public IEntity getEntity() {
-		return entity;
-	}
+    public IEntity getEntity() {
+        return entity;
+    }
 
-	public void setEntity(IEntity entity) {
-		this.entity = entity;
-	}
+    public void setEntity(IEntity entity) {
+        this.entity = entity;
+    }
 
-	@Override
-	public double getMaxValue() {
-		return entity.getEntity().maxHealth().getMaxValue();
-	}
+    @Override
+    public double getMaxValue() {
+        return entity.getEntity().maxHealth().getMaxValue();
+    }
 
-	@Override
-	public void setMaxValue(double f) {
-		entity.getEntity().offer(Keys.MAX_HEALTH, f);
-	}
+    @Override
+    public void setMaxValue(double f) {
+        entity.getEntity().offer(Keys.MAX_HEALTH, f);
+    }
 
-	@Override
-	public double getValue() {
-		return entity.getEntity().get(Keys.HEALTH).get();
-	}
+    @Override
+    public double getValue() {
+        return entity.getEntity().get(Keys.HEALTH).get();
+    }
 
-	@Override
-	public void setValue(double f) {
-		entity.getEntity().offer(Keys.HEALTH, f);
-	}
+    @Override
+    public void setValue(double f) {
+        entity.getEntity().offer(Keys.HEALTH, f);
+    }
 
-	@Override
-	public double getRegen() {
-		return 0;
-	}
+    @Override
+    public double getRegen() {
+        return 0;
+    }
 
-	@Override
-	public void setRegen(float f) {
+    @Override
+    public void setRegen(float f) {
 
-	}
+    }
 }

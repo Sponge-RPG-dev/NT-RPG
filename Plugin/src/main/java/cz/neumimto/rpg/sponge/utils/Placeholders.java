@@ -1,10 +1,10 @@
 package cz.neumimto.rpg.sponge.utils;
 
 import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
-import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import me.rojo8399.placeholderapi.Placeholder;
 import me.rojo8399.placeholderapi.PlaceholderService;
 import me.rojo8399.placeholderapi.Source;
@@ -24,68 +24,68 @@ import static cz.neumimto.rpg.api.logging.Log.error;
 @Singleton
 public class Placeholders {
 
-	@Inject
-	private CharacterService characterService;
+    @Inject
+    private CharacterService characterService;
 
-	public void init() {
-		Sponge.getServiceManager().provide(PlaceholderService.class).ifPresent(a -> {
-			a.loadAll(this, NtRpgPlugin.GlobalScope.plugin)
-					.stream()
-					.map(builder -> builder.author("NeumimTo").plugin(NtRpgPlugin.GlobalScope.plugin).version("0.0.1-Test"))
-					.forEach(builder -> {
-						try {
-							builder.buildAndRegister();
-						} catch (Exception e) {
-							error("Could not register placeholder ", e);
-						}
-					});
-		});
-	}
+    public void init() {
+        Sponge.getServiceManager().provide(PlaceholderService.class).ifPresent(a -> {
+            a.loadAll(this, NtRpgPlugin.GlobalScope.plugin)
+                    .stream()
+                    .map(builder -> builder.author("NeumimTo").plugin(NtRpgPlugin.GlobalScope.plugin).version("0.0.1-Test"))
+                    .forEach(builder -> {
+                        try {
+                            builder.buildAndRegister();
+                        } catch (Exception e) {
+                            error("Could not register placeholder ", e);
+                        }
+                    });
+        });
+    }
 
 
-	@Placeholder(id = "class")
-	public Text getClass(@Source Player src) {
-		PlayerClassData primaryClass = characterService.getCharacter(src).getPrimaryClass();
-		return Text.of(primaryClass.getClassDefinition().getPreferedColor(), primaryClass.getClassDefinition().getName());
-	}
+    @Placeholder(id = "class")
+    public Text getClass(@Source Player src) {
+        PlayerClassData primaryClass = characterService.getCharacter(src).getPrimaryClass();
+        return Text.of(primaryClass.getClassDefinition().getPreferedColor(), primaryClass.getClassDefinition().getName());
+    }
 
-	@Placeholder(id = "cIhar_name")
-	public Text getCharName(@Source Player src) {
-		IActiveCharacter character = characterService.getCharacter(src);
-		return Text.of(character.getName());
-	}
+    @Placeholder(id = "cIhar_name")
+    public Text getCharName(@Source Player src) {
+        IActiveCharacter character = characterService.getCharacter(src);
+        return Text.of(character.getName());
+    }
 
-	@Placeholder(id = "primary_class_or_spec")
-	public Text getClassOrSpec(@Source Player src) {
-		IActiveCharacter character = characterService.getCharacter(src);
-		PlayerClassData primaryClass = character.getPrimaryClass();
-		Set<SkillTreeSpecialization> skillTreeSpecialization = character.getSkillTreeSpecialization();
-		//todo
-		return Text.of(primaryClass.getClassDefinition().getPreferedColor(), primaryClass.getClassDefinition().getName());
-	}
+    @Placeholder(id = "primary_class_or_spec")
+    public Text getClassOrSpec(@Source Player src) {
+        IActiveCharacter character = characterService.getCharacter(src);
+        PlayerClassData primaryClass = character.getPrimaryClass();
+        Set<SkillTreeSpecialization> skillTreeSpecialization = character.getSkillTreeSpecialization();
+        //todo
+        return Text.of(primaryClass.getClassDefinition().getPreferedColor(), primaryClass.getClassDefinition().getName());
+    }
 
-	@Placeholder(id = "primary_class_level")
-	public Integer getPrimaryClassLevel(@Source Player src) {
-		IActiveCharacter character = characterService.getCharacter(src);
-		return character.getLevel();
-	}
+    @Placeholder(id = "primary_class_level")
+    public Integer getPrimaryClassLevel(@Source Player src) {
+        IActiveCharacter character = characterService.getCharacter(src);
+        return character.getLevel();
+    }
 
-	@Placeholder(id = "mana")
-	public Double getMana(@Source Player src) {
-		IActiveCharacter character = characterService.getCharacter(src);
-		return character.getMana().getValue();
-	}
+    @Placeholder(id = "mana")
+    public Double getMana(@Source Player src) {
+        IActiveCharacter character = characterService.getCharacter(src);
+        return character.getMana().getValue();
+    }
 
-	@Placeholder(id = "max_mana")
-	public Double getMaxMana(@Source Player src) {
-		IActiveCharacter character = characterService.getCharacter(src);
-		return character.getMana().getMaxValue();
-	}
+    @Placeholder(id = "max_mana")
+    public Double getMaxMana(@Source Player src) {
+        IActiveCharacter character = characterService.getCharacter(src);
+        return character.getMana().getMaxValue();
+    }
 
-	@Placeholder(id = "max_hp")
-	public Double getMaxHealth(@Source Player src) {
-		IActiveCharacter character = characterService.getCharacter(src);
-		return character.getHealth().getMaxValue();
-	}
+    @Placeholder(id = "max_hp")
+    public Double getMaxHealth(@Source Player src) {
+        IActiveCharacter character = characterService.getCharacter(src);
+        return character.getHealth().getMaxValue();
+    }
 
 }

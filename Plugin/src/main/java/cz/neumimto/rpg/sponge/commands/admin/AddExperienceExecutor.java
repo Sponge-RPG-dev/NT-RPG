@@ -17,27 +17,27 @@ import java.util.Collection;
 import java.util.Optional;
 
 public class AddExperienceExecutor implements CommandExecutor {
-	@Override
-	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		Player player = args.<Player>getOne("player").get();
-		Double amount = args.<Double>getOne("amount").get();
-		Optional<ClassDefinition> classDefinition = args.getOne("class");
-		Optional<ExperienceSource> expSource = args.getOne("source");
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        Player player = args.<Player>getOne("player").get();
+        Double amount = args.<Double>getOne("amount").get();
+        Optional<ClassDefinition> classDefinition = args.getOne("class");
+        Optional<ExperienceSource> expSource = args.getOne("source");
 
-		IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
-		Collection<PlayerClassData> classes = character.getClasses().values();
+        IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
+        Collection<PlayerClassData> classes = character.getClasses().values();
 
-		if (classDefinition.isPresent()) {
-			classes.stream()
-					.filter(PlayerClassData::takesExp)
-					.filter(c -> c.getClassDefinition().getName().equalsIgnoreCase(classDefinition.get().getName()))
-					.forEach(c -> NtRpgPlugin.GlobalScope.characterService.addExperiences(character, amount, c));
-		} else if (expSource.isPresent()) {
-			NtRpgPlugin.GlobalScope.characterService.addExperiences(character, amount, expSource.get());
-		} else {
-			src.sendMessage(Text.of("Specify class or experience source!"));
-			return CommandResult.empty();
-		}
-		return CommandResult.success();
-	}
+        if (classDefinition.isPresent()) {
+            classes.stream()
+                    .filter(PlayerClassData::takesExp)
+                    .filter(c -> c.getClassDefinition().getName().equalsIgnoreCase(classDefinition.get().getName()))
+                    .forEach(c -> NtRpgPlugin.GlobalScope.characterService.addExperiences(character, amount, c));
+        } else if (expSource.isPresent()) {
+            NtRpgPlugin.GlobalScope.characterService.addExperiences(character, amount, expSource.get());
+        } else {
+            src.sendMessage(Text.of("Specify class or experience source!"));
+            return CommandResult.empty();
+        }
+        return CommandResult.success();
+    }
 }

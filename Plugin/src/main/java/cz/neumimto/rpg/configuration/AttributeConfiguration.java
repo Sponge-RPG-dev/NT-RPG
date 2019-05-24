@@ -6,6 +6,7 @@ import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
 import java.util.Map;
+
 @ConfigSerializable
 public class AttributeConfiguration {
 

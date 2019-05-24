@@ -5,6 +5,6 @@ package cz.neumimto.rpg.inventory.items;
  */
 public class ItemMetaTypes {
 
-	public static ItemMetaType CHARM = new ItemMetaType("charm");
-	public static ItemMetaType RUNEWORD = new ItemMetaType("runeword");
+    public static ItemMetaType CHARM = new ItemMetaType("charm");
+    public static ItemMetaType RUNEWORD = new ItemMetaType("runeword");
 }

@@ -10,23 +10,23 @@ import java.util.Optional;
 
 public class ItemSubtypeRegistry implements AdditionalCatalogRegistryModule<ItemSubtype> {
 
-	@RegisterCatalog(ItemSubtype.class)
-	private final Map<String, ItemSubtype> types = Maps.newHashMap();
+    @RegisterCatalog(ItemSubtype.class)
+    private final Map<String, ItemSubtype> types = Maps.newHashMap();
 
 
-	@Override
-	public void registerAdditionalCatalog(ItemSubtype extraCatalog) {
-		types.put(extraCatalog.getId(), extraCatalog);
-	}
+    @Override
+    public void registerAdditionalCatalog(ItemSubtype extraCatalog) {
+        types.put(extraCatalog.getId(), extraCatalog);
+    }
 
-	@Override
-	public Optional<ItemSubtype> getById(String id) {
-		return Optional.ofNullable(types.get(id.toLowerCase()));
-	}
+    @Override
+    public Optional<ItemSubtype> getById(String id) {
+        return Optional.ofNullable(types.get(id.toLowerCase()));
+    }
 
 
-	@Override
-	public Collection<ItemSubtype> getAll() {
-		return types.values();
-	}
+    @Override
+    public Collection<ItemSubtype> getAll() {
+        return types.values();
+    }
 }

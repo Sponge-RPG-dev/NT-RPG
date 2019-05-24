@@ -3,10 +3,10 @@ package cz.neumimto.effects.positive;
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.api.effects.stacking.FloatEffectStackingStrategy;
-import cz.neumimto.rpg.properties.DefaultProperties;
 import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.properties.SpongeDefaultProperties;
 
 /**
  * Created by NeumimTo on 3.7.2017.
@@ -26,13 +26,13 @@ public class IncreasedMovementSpeedEffect extends EffectBase<Float> {
 
 	@Override
 	public void onApply(IEffect self) {
-		getConsumer().setProperty(DefaultProperties.walk_speed, getConsumer().getProperty(DefaultProperties.walk_speed) + getValue());
+		getConsumer().setProperty(SpongeDefaultProperties.walk_speed, getConsumer().getProperty(SpongeDefaultProperties.walk_speed) + getValue());
 		getGlobalScope().entityService.updateWalkSpeed(getConsumer());
 	}
 
 	@Override
 	public void onRemove(IEffect self) {
-		getConsumer().setProperty(DefaultProperties.walk_speed, getConsumer().getProperty(DefaultProperties.walk_speed) - getValue());
+		getConsumer().setProperty(SpongeDefaultProperties.walk_speed, getConsumer().getProperty(SpongeDefaultProperties.walk_speed) - getValue());
 		getGlobalScope().entityService.updateWalkSpeed(getConsumer());
 	}
 
