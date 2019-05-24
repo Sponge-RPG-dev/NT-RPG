@@ -27,7 +27,7 @@ import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.SkillCost;
 import cz.neumimto.rpg.api.skills.SkillDependency;
 import cz.neumimto.rpg.api.skills.SkillNodes;
-import cz.neumimto.rpg.gui.SkillTreeInterfaceModel;
+import cz.neumimto.rpg.sponge.gui.SkillTreeInterfaceModel;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.skills.SkillData;
 import cz.neumimto.rpg.skills.SkillItemCost;

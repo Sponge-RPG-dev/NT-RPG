@@ -11,7 +11,7 @@ import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.common.configuration.ItemString;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectSourceType;
-import cz.neumimto.rpg.gui.GuiHelper;
+import cz.neumimto.rpg.sponge.gui.GuiHelper;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.items.SpongeRpgItemType;
 import cz.neumimto.rpg.players.IActiveCharacter;

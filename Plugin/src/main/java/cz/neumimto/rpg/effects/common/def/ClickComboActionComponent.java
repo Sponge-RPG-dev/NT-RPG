@@ -5,10 +5,12 @@ import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
+import org.spongepowered.api.text.chat.ChatTypes;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -126,7 +128,7 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 	public void cancel(boolean byShift) {
 		length = 0;
 		combination = null;
-		Gui.resetCurrentClicks(this, byShift);
+		resetCurrentClicks(this, byShift);
 		notifyIfCancelled = false;
 	}
 
@@ -170,4 +172,10 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 	public boolean hasStarted() {
 		return combination != null;
 	}
+
+	public static void resetCurrentClicks(ClickComboActionComponent clickComboActionComponent, boolean byShift) {
+
+		clickComboActionComponent.getConsumer().sendMessage(ChatTypes.ACTION_BAR, Localizations.CANCELLED.toText());
+	}
+
 }

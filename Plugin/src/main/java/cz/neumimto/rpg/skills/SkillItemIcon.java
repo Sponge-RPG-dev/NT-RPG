@@ -19,7 +19,7 @@
 package cz.neumimto.rpg.skills;
 
 import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.gui.GuiHelper;
+import cz.neumimto.rpg.sponge.gui.GuiHelper;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.property.item.UseLimitProperty;
 import org.spongepowered.api.item.ItemTypes;

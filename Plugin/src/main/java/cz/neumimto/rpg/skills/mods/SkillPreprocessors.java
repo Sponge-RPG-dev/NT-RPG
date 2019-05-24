@@ -9,7 +9,7 @@ import cz.neumimto.rpg.api.skills.mods.PreProcessorTarget;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.events.skill.SkillPostUsageEvent;
 import cz.neumimto.rpg.events.skill.SkillPreUsageEvent;
-import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.properties.DefaultProperties;
 import org.spongepowered.api.Sponge;

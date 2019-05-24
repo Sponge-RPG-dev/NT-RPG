@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.inventory.data;
 
-import cz.neumimto.rpg.gui.SkillTreeControllsButton;
+import cz.neumimto.rpg.sponge.gui.SkillTreeControllsButton;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;

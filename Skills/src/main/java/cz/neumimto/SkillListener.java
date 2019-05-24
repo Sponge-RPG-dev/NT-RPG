@@ -22,7 +22,7 @@ import cz.neumimto.rpg.events.damage.DamageIEntityEarlyEvent;
 import cz.neumimto.rpg.events.damage.DamageIEntityLateEvent;
 import cz.neumimto.rpg.events.damage.IEntityWeaponDamageEarlyEvent;
 import cz.neumimto.rpg.events.effect.EffectApplyEvent;
-import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.properties.DefaultProperties;

@@ -2,7 +2,7 @@ package cz.neumimto;
 
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.gui.ParticleDecorator;
+import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.entity.Entity;

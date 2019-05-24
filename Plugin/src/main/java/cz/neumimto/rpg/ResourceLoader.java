@@ -29,8 +29,8 @@ import cz.neumimto.core.localization.ResourceBundles;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.utils.Console;
-import cz.neumimto.rpg.commands.CommandBase;
-import cz.neumimto.rpg.commands.CommandService;
+import cz.neumimto.rpg.sponge.commands.CommandBase;
+import cz.neumimto.rpg.sponge.commands.CommandService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
@@ -42,7 +42,6 @@ import cz.neumimto.rpg.scripting.JsBinding;
 import cz.neumimto.rpg.skills.SkillService;
 import org.apache.commons.io.FileUtils;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

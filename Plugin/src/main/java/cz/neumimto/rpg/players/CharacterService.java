@@ -37,7 +37,7 @@ import cz.neumimto.rpg.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.events.PlayerDataPreloadComplete;
 import cz.neumimto.rpg.events.character.CharacterManaRegainEvent;
-import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.inventory.UserActionType;
 import cz.neumimto.rpg.persistance.CharacterClassDao;

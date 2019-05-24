@@ -38,7 +38,7 @@ import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtypes;
 import cz.neumimto.rpg.inventory.sockets.SocketType;
 import cz.neumimto.rpg.inventory.sockets.SocketTypeRegistry;
 import cz.neumimto.rpg.inventory.sockets.SocketTypes;
-import cz.neumimto.rpg.listeners.DebugListener;
+import cz.neumimto.rpg.sponge.listeners.DebugListener;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;

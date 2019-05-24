@@ -25,7 +25,7 @@ import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IGlobalEffect;
-import cz.neumimto.rpg.gui.ParticleDecorator;
+import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import cz.neumimto.rpg.properties.DefaultProperties;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;

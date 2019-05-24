@@ -24,7 +24,7 @@ import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.common.mechanics.DefaultManaRegeneration;
-import cz.neumimto.rpg.gui.Gui;
+import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.players.CharacterHealth;
 import cz.neumimto.rpg.players.CharacterMana;
 import cz.neumimto.rpg.players.IActiveCharacter;

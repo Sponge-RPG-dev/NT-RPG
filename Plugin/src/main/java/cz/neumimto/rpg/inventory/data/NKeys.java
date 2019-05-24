@@ -2,7 +2,7 @@ package cz.neumimto.rpg.inventory.data;
 
 import com.google.common.reflect.TypeToken;
 import cz.neumimto.rpg.api.effects.EffectParams;
-import cz.neumimto.rpg.gui.SkillTreeControllsButton;
+import cz.neumimto.rpg.sponge.gui.SkillTreeControllsButton;
 import cz.neumimto.rpg.inventory.ItemDamage;
 import cz.neumimto.rpg.inventory.LoreDurability;
 import cz.neumimto.rpg.inventory.LoreSectionDelimiter;

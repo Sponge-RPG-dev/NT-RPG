@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.effects;
 
 import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.commands.CommandBase;
+import cz.neumimto.rpg.sponge.commands.CommandBase;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 
 import java.util.ArrayList;
