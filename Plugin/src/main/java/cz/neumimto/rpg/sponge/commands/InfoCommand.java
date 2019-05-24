@@ -20,7 +20,7 @@ package cz.neumimto.rpg.sponge.commands;
 
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.ClassService;
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.skills.ISkillService;

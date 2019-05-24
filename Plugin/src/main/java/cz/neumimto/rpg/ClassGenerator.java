@@ -24,23 +24,6 @@ import java.util.function.Consumer;
 @Singleton
 public class ClassGenerator implements Opcodes {
 
-    protected static Map<Class<?>, String[]> signaturedictionary = new HashMap<>();
-
-    static {
-        signaturedictionary.put(int.class, new String[]{"java/lang/Integer", "intValue", "I"});
-        signaturedictionary.put(Integer.class, new String[]{"java/lang/Integer", "intValue", "I"});
-        signaturedictionary.put(double.class, new String[]{"java/lang/Double", "doubleValue", "D"});
-        signaturedictionary.put(Double.class, new String[]{"java/lang/Double", "doubleValue", "D"});
-        signaturedictionary.put(Float.class, new String[]{"java/lang/Float", "floatValue", "F"});
-        signaturedictionary.put(float.class, new String[]{"java/lang/Float", "floatValue", "F"});
-        signaturedictionary.put(Long.class, new String[]{"java/lang/Long", "longValue", "J"});
-        signaturedictionary.put(long.class, new String[]{"java/lang/Long", "longValue", "J"});
-
-        signaturedictionary.put(String.class, new String[]{"java/lang/String", "toString", "Ljava/lang/String;"});
-    }
-
-    private String packagee = "cz/neumimto/rpg/asm/";
-
     public ClassGenerator() {
     }
 

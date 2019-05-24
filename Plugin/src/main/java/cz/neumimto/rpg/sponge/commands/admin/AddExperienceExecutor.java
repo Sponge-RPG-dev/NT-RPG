@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.sponge.commands.admin;
 
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;

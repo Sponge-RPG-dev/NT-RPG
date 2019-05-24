@@ -19,7 +19,7 @@
 package cz.neumimto.rpg.persistance;
 
 import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.players.groups.ClassDefinition;

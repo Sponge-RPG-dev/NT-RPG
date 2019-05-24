@@ -19,7 +19,7 @@
 package cz.neumimto.rpg.api.effects;
 
 import cz.neumimto.rpg.GlobalScope;
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.common.scripting.JsBinding;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;

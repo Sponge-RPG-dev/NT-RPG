@@ -32,7 +32,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 import static cz.neumimto.rpg.api.logging.Log.*;
 
 public abstract class SkillServiceimpl implements ISkillService {

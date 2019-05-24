@@ -18,7 +18,7 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.ClassService;
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.ActionResult;
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.gui.Gui;
@@ -70,7 +70,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static cz.neumimto.core.localization.Arg.arg;
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 import static cz.neumimto.rpg.api.logging.Log.*;
 
 /**

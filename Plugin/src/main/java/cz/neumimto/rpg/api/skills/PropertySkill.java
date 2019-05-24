@@ -2,7 +2,7 @@ package cz.neumimto.rpg.api.skills;
 
 import com.google.inject.Inject;
 import com.typesafe.config.Config;
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;

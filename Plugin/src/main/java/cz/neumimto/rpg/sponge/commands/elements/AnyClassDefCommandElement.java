@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.sponge.commands.elements;
 
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import org.spongepowered.api.command.CommandSource;

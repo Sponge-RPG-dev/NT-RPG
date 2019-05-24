@@ -2,7 +2,7 @@ package cz.neumimto.rpg.sponge.gui;
 
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.common.reloading.Reload;
@@ -29,7 +29,7 @@ import javax.inject.Singleton;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 20.1.2018.

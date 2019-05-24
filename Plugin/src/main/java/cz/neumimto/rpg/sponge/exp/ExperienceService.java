@@ -1,13 +1,13 @@
-package cz.neumimto.rpg.exp;
+package cz.neumimto.rpg.sponge.exp;
 
-import cz.neumimto.rpg.players.ExperienceSources;
+import cz.neumimto.rpg.common.exp.ExperienceDAO;
+import cz.neumimto.rpg.common.exp.ExperienceServiceImpl;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.data.type.Fish;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -17,23 +17,20 @@ import static cz.neumimto.rpg.api.logging.Log.warn;
  * Created by NeumimTo on 8.4.2017.
  */
 @Singleton
-public class ExperienceService {
-
-    private Map<BlockType, Double> minerals = new HashMap<>();
-    private Map<BlockType, Double> woodenBlocks = new HashMap<>();
-    private Map<BlockType, Double> farming = new HashMap<>();
+public class ExperienceService extends ExperienceServiceImpl {
 
     @Inject
     private ExperienceDAO experienceDAO;
-    private Map<Fish, Double> fishing = new HashMap<>();
 
+
+    @Override
     public void load() {
         Map<String, Double> experiencesForMinerals = experienceDAO.getExperiencesForMinerals();
 
         for (Map.Entry<String, Double> entry : experiencesForMinerals.entrySet()) {
             Optional<BlockType> type = Sponge.getGame().getRegistry().getType(BlockType.class, entry.getKey());
             if (type.isPresent()) {
-                minerals.put(type.get(), entry.getValue());
+                minerals.put(type.get().getId(), entry.getValue());
             } else {
                 warn("Unknown block type: " + entry.getKey());
             }
@@ -43,7 +40,7 @@ public class ExperienceService {
         for (Map.Entry<String, Double> entry : experiencesForWoodenBlocks.entrySet()) {
             Optional<BlockType> type = Sponge.getGame().getRegistry().getType(BlockType.class, entry.getKey());
             if (type.isPresent()) {
-                woodenBlocks.put(type.get(), entry.getValue());
+                woodenBlocks.put(type.get().getId(), entry.getValue());
             } else {
                 warn("Unknown block type: " + entry.getKey());
             }
@@ -53,7 +50,7 @@ public class ExperienceService {
         for (Map.Entry<String, Double> entry : fe.entrySet()) {
             Optional<Fish> type = Sponge.getGame().getRegistry().getType(Fish.class, entry.getKey());
             if (type.isPresent()) {
-                fishing.put(type.get(), entry.getValue());
+                fishing.put(type.get().getId(), entry.getValue());
             } else {
                 warn("Unknown entity type: " + entry.getKey());
             }
@@ -63,7 +60,7 @@ public class ExperienceService {
         for (Map.Entry<String, Double> entry : fm.entrySet()) {
             Optional<BlockType> type = Sponge.getGame().getRegistry().getType(BlockType.class, entry.getKey());
             if (type.isPresent()) {
-                farming.put(type.get(), entry.getValue());
+                farming.put(type.get().getId(), entry.getValue());
             } else {
                 warn("Unknown block type: " + entry.getKey());
             }
@@ -72,29 +69,4 @@ public class ExperienceService {
     }
 
 
-    public Double getMinningExperiences(BlockType type) {
-        return minerals.get(type);
-    }
-
-    public Double getLoggingExperiences(BlockType type) {
-        return minerals.get(type);
-    }
-
-    public String getExperienceSourceByBlockType(BlockType type) {
-        if (minerals.containsKey(type)) {
-            return ExperienceSources.MINING;
-        }
-        if (woodenBlocks.containsKey(type)) {
-            return ExperienceSources.LOGGING;
-        }
-        return null;
-    }
-
-    public Double getFishingExperience(Fish type) {
-        return fishing.get(type);
-    }
-
-    public Double getFarmingExperiences(BlockType type) {
-        return farming.get(type);
-    }
 }

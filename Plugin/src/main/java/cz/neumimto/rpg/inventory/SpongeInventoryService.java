@@ -22,7 +22,7 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.ClassService;
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.gui.Gui;
@@ -84,7 +84,7 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 import static cz.neumimto.rpg.api.logging.Log.error;
 
 /**

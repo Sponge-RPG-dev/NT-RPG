@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.sponge.utils;
 
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;

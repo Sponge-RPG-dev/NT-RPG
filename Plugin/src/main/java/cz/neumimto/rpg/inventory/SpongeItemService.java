@@ -2,7 +2,7 @@ package cz.neumimto.rpg.inventory;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.items.ItemClass;

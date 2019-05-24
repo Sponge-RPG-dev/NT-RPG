@@ -38,6 +38,7 @@ import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.effects.model.EffectModelMapper;
 import cz.neumimto.rpg.properties.SpongePropertyService;
 import cz.neumimto.rpg.scripting.JSLoader;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.commands.CommandBase;
 import cz.neumimto.rpg.sponge.commands.CommandService;
 import org.apache.commons.io.FileUtils;
@@ -57,7 +58,7 @@ import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 import static cz.neumimto.rpg.api.logging.Log.error;
 import static cz.neumimto.rpg.api.logging.Log.info;
 

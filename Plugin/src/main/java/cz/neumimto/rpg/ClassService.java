@@ -25,6 +25,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.groups.PlayerGroupPermission;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.service.permission.SubjectData;

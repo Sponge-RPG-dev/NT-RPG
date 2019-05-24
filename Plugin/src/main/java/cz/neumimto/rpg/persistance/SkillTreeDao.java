@@ -19,7 +19,7 @@
 package cz.neumimto.rpg.persistance;
 
 import com.typesafe.config.*;
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.skills.*;

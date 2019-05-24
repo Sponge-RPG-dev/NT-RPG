@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.sponge.commands.item;
 
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.inventory.runewords.Rune;
 import cz.neumimto.rpg.inventory.sockets.SocketTypes;
 import org.spongepowered.api.command.CommandException;

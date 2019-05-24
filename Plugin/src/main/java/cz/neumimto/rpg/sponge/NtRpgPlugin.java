@@ -16,12 +16,14 @@
  *
  */
 
-package cz.neumimto.rpg;
+package cz.neumimto.rpg.sponge;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.PluginCore;
+import cz.neumimto.rpg.GlobalScope;
+import cz.neumimto.rpg.PersistenceHandler;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.ISkill;
@@ -90,7 +92,7 @@ import static cz.neumimto.rpg.api.logging.Log.info;
         @Dependency(id = "placeholderapi", version = "4.5", optional = true)
 })
 @Resource
-public class NtRpgPlugin {
+public class NtRpgPlugin extends Rpg {
 
     public static String workingDir;
     public static File pluginjar;
@@ -108,7 +110,7 @@ public class NtRpgPlugin {
     @ConfigDir(sharedRoot = false)
     private Path config;
 
-    public static GlobalScope GlobalScope;
+    public static cz.neumimto.rpg.GlobalScope GlobalScope;
 
     public static final Set<String> INTEGRATIONS = new HashSet<>();
 
@@ -384,9 +386,6 @@ public class NtRpgPlugin {
         }
         GlobalScope.commandService.registerStandartCommands();
         postInit();
-
-        Sponge.getRegistry().registerModule(ISkill.class, GlobalScope.skillService);
-
 
         if (INTEGRATIONS.contains("Placeholders")) {
             Placeholders placeholders = injector.getInstance(Placeholders.class);

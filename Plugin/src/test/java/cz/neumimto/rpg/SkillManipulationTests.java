@@ -11,6 +11,7 @@ import cz.neumimto.rpg.players.*;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;

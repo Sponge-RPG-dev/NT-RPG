@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.common.effects;
 
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
@@ -47,7 +47,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.function.Consumer;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 17.1.2015.

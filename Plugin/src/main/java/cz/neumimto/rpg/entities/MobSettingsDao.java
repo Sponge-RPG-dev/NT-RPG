@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.entities;
 
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.common.utils.io.FileUtils;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;

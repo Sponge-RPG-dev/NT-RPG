@@ -3,7 +3,7 @@ package cz.neumimto.rpg.sponge.commands.item;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import cz.neumimto.core.localization.TextHelper;
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.configuration.Localizations;

@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.junit;
 
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.RpgTest;
 import cz.neumimto.rpg.TestHelper;
 import cz.neumimto.rpg.api.logging.Log;

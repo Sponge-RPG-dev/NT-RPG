@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.commands.character;
 
 import cz.neumimto.core.localization.TextHelper;
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.configuration.CommandLocalization;
 import cz.neumimto.rpg.configuration.Localizations;
@@ -16,7 +16,7 @@ import org.spongepowered.api.entity.living.player.Player;
 
 import java.util.concurrent.CompletableFuture;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 public class CharacterCreateExecutor implements CommandExecutor {
     @Override

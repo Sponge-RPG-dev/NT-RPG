@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.commands.admin;
 
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillSettings;

@@ -2,7 +2,7 @@ package cz.neumimto.rpg.common.items;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.items.*;

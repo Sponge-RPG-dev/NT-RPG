@@ -6,7 +6,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 
 import java.lang.ref.WeakReference;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 10.10.2015.

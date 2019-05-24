@@ -3,7 +3,7 @@ package cz.neumimto.rpg.configuration.adapters;
 import com.google.common.reflect.TypeToken;
 import cz.neumimto.config.blackjack.and.hookers.annotations.EnableSetterInjection;
 import cz.neumimto.config.blackjack.and.hookers.annotations.Setter;
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.groups.DependencyGraph;
 import ninja.leaping.configurate.ConfigurationNode;

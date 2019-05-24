@@ -1,6 +1,6 @@
-package cz.neumimto.rpg.exp;
+package cz.neumimto.rpg.common.exp;
 
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 
 import javax.inject.Singleton;
 import java.io.File;

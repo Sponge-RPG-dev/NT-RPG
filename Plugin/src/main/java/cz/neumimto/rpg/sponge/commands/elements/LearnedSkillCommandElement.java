@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.sponge.commands.elements;
 
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.skills.ISkill;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;

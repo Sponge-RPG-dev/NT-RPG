@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.sponge.skills.scripting;
 
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.common.scripting.JsBinding;
 import org.spongepowered.api.Sponge;
 

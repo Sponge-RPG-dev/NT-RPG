@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.api.skills;
 
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import net.bytebuddy.ByteBuddy;

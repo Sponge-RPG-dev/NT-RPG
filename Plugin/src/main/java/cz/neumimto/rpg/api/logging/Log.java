@@ -4,7 +4,7 @@ package cz.neumimto.rpg.api.logging;
 import cz.neumimto.rpg.configuration.DebugLevel;
 import org.slf4j.Logger;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 19.8.2018.

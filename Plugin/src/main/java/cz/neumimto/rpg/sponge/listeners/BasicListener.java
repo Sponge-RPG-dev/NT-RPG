@@ -22,7 +22,7 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.entities.IEntityType;
-import cz.neumimto.rpg.exp.ExperienceService;
+import cz.neumimto.rpg.sponge.exp.ExperienceService;
 import cz.neumimto.rpg.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExperienceSources;
@@ -62,7 +62,7 @@ import javax.inject.Singleton;
 import java.util.List;
 import java.util.Optional;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 12.2.2015.
@@ -180,7 +180,8 @@ public class BasicListener {
     public void onBlockBreak(ChangeBlockEvent.Break event, @First Player player) {
         IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
         for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
-            BlockType type = transaction.getOriginal().getState().getType();
+            String type = transaction.getOriginal().getState().getType().getId();
+
             Double d = experienceService.getMinningExperiences(type);
             if (d != null) {
                 characterService.addExperiences(character, d, ExperienceSources.MINING);

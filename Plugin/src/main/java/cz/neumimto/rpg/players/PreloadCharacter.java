@@ -48,7 +48,7 @@ import org.spongepowered.api.text.chat.ChatType;
 
 import java.util.*;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 23.7.2015.

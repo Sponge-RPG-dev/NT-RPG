@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.players;
 
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.ActionResult;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.configuration.Localizations;

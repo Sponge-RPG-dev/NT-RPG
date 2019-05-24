@@ -9,7 +9,7 @@ import org.spongepowered.api.service.ProviderRegistration;
 import java.util.SortedSet;
 import java.util.UUID;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 public class PermissionUtils {
 

@@ -19,7 +19,7 @@
 package cz.neumimto.rpg.properties;
 
 import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
@@ -43,7 +43,7 @@ import java.nio.file.StandardOpenOption;
 import java.text.Collator;
 import java.util.*;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 import static cz.neumimto.rpg.api.logging.Log.info;
 
 /**

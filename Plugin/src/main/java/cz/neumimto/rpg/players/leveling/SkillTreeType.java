@@ -2,7 +2,7 @@ package cz.neumimto.rpg.players.leveling;
 
 
 import cz.neumimto.core.localization.Arg;
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.ActionResult;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;

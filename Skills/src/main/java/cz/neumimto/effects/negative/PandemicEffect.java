@@ -1,6 +1,6 @@
 package cz.neumimto.effects.negative;
 
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.damage.SkillDamageSource;

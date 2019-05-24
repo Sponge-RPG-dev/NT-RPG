@@ -30,7 +30,7 @@ import org.spongepowered.api.item.ItemTypes;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 1.1.2015.

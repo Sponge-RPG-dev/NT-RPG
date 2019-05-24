@@ -21,7 +21,7 @@ package cz.neumimto.rpg.scripting;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.ClassGenerator;
 import cz.neumimto.rpg.GlobalScope;
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.ISkillService;
@@ -48,7 +48,7 @@ import java.net.URLClassLoader;
 import java.nio.file.*;
 import java.util.*;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 import static cz.neumimto.rpg.api.logging.Log.error;
 import static cz.neumimto.rpg.api.logging.Log.info;
 

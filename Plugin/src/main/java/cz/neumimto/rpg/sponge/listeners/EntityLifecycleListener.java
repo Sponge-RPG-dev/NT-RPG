@@ -32,7 +32,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 3.1.2016.

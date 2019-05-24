@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.configuration.adapters;
 
 import com.google.common.reflect.TypeToken;
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.logging.Log;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;

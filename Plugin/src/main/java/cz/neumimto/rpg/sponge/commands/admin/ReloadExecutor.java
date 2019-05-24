@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.commands.admin;
 
 import cz.neumimto.core.localization.TextHelper;
-import cz.neumimto.rpg.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.ISkillService;
