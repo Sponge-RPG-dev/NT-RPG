@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.common.configuration;
 
-import cz.neumimto.rpg.utils.Utils;
+import cz.neumimto.rpg.sponge.utils.Utils;
 
 public final class ItemString {
     public final String itemId;

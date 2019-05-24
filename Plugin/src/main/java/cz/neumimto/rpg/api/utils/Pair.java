@@ -16,7 +16,7 @@
  *
  */
 
-package cz.neumimto.rpg;
+package cz.neumimto.rpg.api.utils;
 
 /**
  * Created by NeumimTo on 12.3.2015.

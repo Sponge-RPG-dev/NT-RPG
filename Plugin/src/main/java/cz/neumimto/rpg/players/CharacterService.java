@@ -18,7 +18,7 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.ClassService;
-import cz.neumimto.rpg.MissingConfigurationException;
+import cz.neumimto.rpg.common.utils.exceptions.MissingConfigurationException;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.api.ActionResult;
 import cz.neumimto.rpg.api.IRpgElement;
@@ -55,8 +55,8 @@ import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
-import cz.neumimto.rpg.utils.PermissionUtils;
-import cz.neumimto.rpg.utils.Utils;
+import cz.neumimto.rpg.sponge.utils.PermissionUtils;
+import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
@@ -849,7 +849,7 @@ public abstract class CharacterService {
         putInSaveQueue(character.getCharacterBase());
     }
 
-    public void addExperiences(IActiveCharacter character, double exp, ExperienceSource source) {
+    public void addExperiences(IActiveCharacter character, double exp, String source) {
         Map<String, PlayerClassData> classes = character.getClasses();
         for (Map.Entry<String, PlayerClassData> entry : classes.entrySet()) {
             PlayerClassData value = entry.getValue();

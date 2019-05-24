@@ -5,7 +5,7 @@ import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.IEffectContainer;
 import cz.neumimto.rpg.api.effects.stacking.ValueProcessor;
-import cz.neumimto.rpg.scripting.JsBinding;
+import cz.neumimto.rpg.common.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 7.7.2017.

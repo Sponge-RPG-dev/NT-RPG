@@ -2,7 +2,7 @@ package cz.neumimto.rpg.entities;
 
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.utils.FileUtils;
+import cz.neumimto.rpg.common.utils.io.FileUtils;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import org.spongepowered.api.Sponge;

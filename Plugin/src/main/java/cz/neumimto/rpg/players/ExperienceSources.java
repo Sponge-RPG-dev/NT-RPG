@@ -2,11 +2,11 @@ package cz.neumimto.rpg.players;
 
 public class ExperienceSources {
 
-	public static ExperienceSource PVP = new ExperienceSource("pvp");
-	public static ExperienceSource PVE = new ExperienceSource("pve");
-	public static ExperienceSource MINING = new ExperienceSource("mining");
-	public static ExperienceSource LOGGING = new ExperienceSource("logging");
-	public static ExperienceSource QUESTING = new ExperienceSource("questing");
-	public static ExperienceSource FISHING = new ExperienceSource("fishing");
-	public static ExperienceSource FARMING = new ExperienceSource("harvesting");
+	public static String PVP = "pvp";
+	public static String PVE = "pve";
+	public static String MINING = "mining";
+	public static String LOGGING = "logging";
+	public static String QUESTING = "questing";
+	public static String FISHING = "fishing";
+	public static String FARMING = "harvesting";
 }

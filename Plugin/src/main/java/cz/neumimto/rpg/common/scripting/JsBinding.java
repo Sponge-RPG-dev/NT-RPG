@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.scripting;
+package cz.neumimto.rpg.common.scripting;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

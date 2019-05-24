@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.utils;
+package cz.neumimto.rpg.sponge.utils;
 
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.players.CharacterService;

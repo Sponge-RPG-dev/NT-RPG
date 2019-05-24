@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.reloading;
+package cz.neumimto.rpg.common.reloading;
 
 import javax.inject.Singleton;
 import java.lang.reflect.InvocationTargetException;

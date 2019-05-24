@@ -72,13 +72,11 @@ public enum SkillType implements ISkillType {
 		return negative;
 	}
 
-	@Override
 	public String getId() {
 		return id;
 	}
 
-	@Override
-	public String getName() {
+	public String getTranslationKey() {
 		return name;
 	}
 }

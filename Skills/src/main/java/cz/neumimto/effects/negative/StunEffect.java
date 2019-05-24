@@ -7,7 +7,7 @@ import cz.neumimto.rpg.effects.CommonEffectTypes;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.effects.ShapedEffectDecorator;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
-import cz.neumimto.rpg.scripting.JsBinding;
+import cz.neumimto.rpg.common.scripting.JsBinding;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.world.Location;

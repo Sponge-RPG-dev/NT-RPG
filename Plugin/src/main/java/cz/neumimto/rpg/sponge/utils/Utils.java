@@ -16,7 +16,7 @@
  *
  */
 
-package cz.neumimto.rpg.utils;
+package cz.neumimto.rpg.sponge.utils;
 
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
@@ -75,35 +75,6 @@ public class Utils {
 		transparentBlocks.addAll(Arrays.asList(BlockTypes.AIR,
 				BlockTypes.GRASS, BlockTypes.TALLGRASS, BlockTypes.GRASS, BlockTypes.BED,
 				BlockTypes.WHEAT, BlockTypes.FLOWER_POT, BlockTypes.FIRE, BlockTypes.WATER, BlockTypes.LAVA, BlockTypes.FLOWING_WATER));
-	}
-
-	public static void applyOnNearbyPartyMembers(IActiveCharacter character, int distance, Consumer<IActiveCharacter> c) {
-		double k = Math.pow(distance, 2);
-		Player pl = character.getPlayer();
-		for (IActiveCharacter iActiveCharacter : character.getParty().getPlayers()) {
-			if (iActiveCharacter.getPlayer().getLocation().getPosition()
-					.distanceSquared(pl.getLocation().getPosition()) <= k) {
-				c.accept(iActiveCharacter);
-			}
-		}
-	}
-
-	public static void applyOnNearby(IActiveCharacter character, int distance, Consumer<Entity> e) {
-		Player pl = character.getPlayer();
-		pl.getWorld()
-				.getIntersectingEntities(pl, distance, hit -> hit.getEntity() != pl)
-				.stream().map(EntityUniverse.EntityHit::getEntity)
-				.filter(Utils::isLivingEntity)
-				.forEach(e);
-	}
-
-	public static void applyOnNearbyAndSelf(IActiveCharacter character, int distance, Consumer<Entity> e) {
-		Player pl = character.getPlayer();
-		pl.getWorld()
-				.getIntersectingEntities(pl, distance)
-				.stream().map(EntityUniverse.EntityHit::getEntity)
-				.filter(Utils::isLivingEntity)
-				.forEach(e);
 	}
 
 	public static double getPercentage(double n, double total) {

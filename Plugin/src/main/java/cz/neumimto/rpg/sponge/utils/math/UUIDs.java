@@ -16,7 +16,9 @@
  *
  */
 
-package cz.neumimto.rpg.utils;
+package cz.neumimto.rpg.sponge.utils.math;
+
+import cz.neumimto.rpg.api.utils.rng.XORShiftRnd;
 
 import java.util.UUID;
 

@@ -21,7 +21,7 @@ import cz.neumimto.rpg.sponge.skills.NDamageType;
 import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.utils.Utils;
+import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.DyeColor;

@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.utils;
+package cz.neumimto.rpg.api.utils;
 
 /**
  * Created by NeumimTo on 29.4.2018.

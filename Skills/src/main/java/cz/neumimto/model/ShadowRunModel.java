@@ -1,7 +1,7 @@
 package cz.neumimto.model;
 
 import cz.neumimto.rpg.api.effects.stacking.UnstackableEffectData;
-import cz.neumimto.rpg.scripting.JsBinding;
+import cz.neumimto.rpg.common.scripting.JsBinding;
 
 @JsBinding(JsBinding.Type.CLASS)
 public class ShadowRunModel implements UnstackableEffectData<ShadowRunModel> {

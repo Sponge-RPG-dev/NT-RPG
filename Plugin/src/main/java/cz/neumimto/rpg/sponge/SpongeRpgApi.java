@@ -7,7 +7,7 @@ import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.api.skills.SkillPreProcessorFactory;
-import cz.neumimto.rpg.utils.Utils;
+import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Event;

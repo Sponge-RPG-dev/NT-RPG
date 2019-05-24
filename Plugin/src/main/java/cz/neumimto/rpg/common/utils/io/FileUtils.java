@@ -16,7 +16,7 @@
  *
  */
 
-package cz.neumimto.rpg.utils;
+package cz.neumimto.rpg.common.utils.io;
 
 import cz.neumimto.rpg.NtRpgPlugin;
 import ninja.leaping.configurate.commented.SimpleCommentedConfigurationNode;

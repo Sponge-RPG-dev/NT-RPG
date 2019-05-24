@@ -27,7 +27,7 @@ import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.properties.DefaultProperties;
 import cz.neumimto.rpg.properties.SpongePropertyService;
-import cz.neumimto.rpg.utils.XORShiftRnd;
+import cz.neumimto.rpg.api.utils.rng.XORShiftRnd;
 import cz.neumimto.skills.active.GrapplingHook;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;

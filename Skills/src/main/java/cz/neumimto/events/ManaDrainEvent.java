@@ -3,7 +3,7 @@ package cz.neumimto.events;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.events.AbstractCancellableNEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.scripting.JsBinding;
+import cz.neumimto.rpg.common.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 7.7.2017.

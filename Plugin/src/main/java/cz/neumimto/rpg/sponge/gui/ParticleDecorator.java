@@ -3,7 +3,7 @@ package cz.neumimto.rpg.sponge.gui;
 import com.flowpowered.math.TrigMath;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.VectorUtils;
+import cz.neumimto.rpg.sponge.utils.math.VectorUtils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.entity.Entity;

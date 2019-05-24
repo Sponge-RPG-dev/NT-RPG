@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.inventory.data.manipulators;
 
-import cz.neumimto.rpg.Pair;
+import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;

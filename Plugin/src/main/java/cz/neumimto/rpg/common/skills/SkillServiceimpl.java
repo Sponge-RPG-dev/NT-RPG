@@ -19,7 +19,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.api.skills.SkillSettings;
 import cz.neumimto.rpg.sponge.gui.SkillTreeInterfaceModel;
-import cz.neumimto.rpg.utils.CatalogId;
+import cz.neumimto.rpg.common.utils.annotations.CatalogId;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 import org.apache.commons.lang3.reflect.FieldUtils;

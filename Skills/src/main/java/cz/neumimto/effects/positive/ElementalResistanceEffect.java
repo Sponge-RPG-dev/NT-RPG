@@ -7,7 +7,7 @@ import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.api.effects.stacking.FloatEffectStackingStrategy;
 import cz.neumimto.rpg.entities.PropertyContainer;
 import cz.neumimto.rpg.properties.DefaultProperties;
-import cz.neumimto.rpg.scripting.JsBinding;
+import cz.neumimto.rpg.common.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 29.3.17.

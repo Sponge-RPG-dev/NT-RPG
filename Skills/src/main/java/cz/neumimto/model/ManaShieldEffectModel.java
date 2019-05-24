@@ -1,6 +1,6 @@
 package cz.neumimto.model;
 
-import cz.neumimto.rpg.scripting.JsBinding;
+import cz.neumimto.rpg.common.scripting.JsBinding;
 
 @JsBinding(JsBinding.Type.CLASS)
 public class ManaShieldEffectModel {

@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.utils.model;
+package cz.neumimto.rpg.common.utils.model;
 
 /**
  * Created by ja on 8.10.2016.

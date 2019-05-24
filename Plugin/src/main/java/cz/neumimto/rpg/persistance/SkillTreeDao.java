@@ -20,7 +20,7 @@ package cz.neumimto.rpg.persistance;
 
 import com.typesafe.config.*;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.Pair;
+import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.skills.ISkill;
@@ -38,7 +38,7 @@ import cz.neumimto.rpg.api.skills.SkillConfigLoader;
 import cz.neumimto.rpg.api.skills.SkillPreProcessorFactory;
 import cz.neumimto.rpg.common.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.sponge.gui.SkillTreeInterfaceModel;
-import cz.neumimto.rpg.utils.Utils;
+import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.item.ItemType;
 

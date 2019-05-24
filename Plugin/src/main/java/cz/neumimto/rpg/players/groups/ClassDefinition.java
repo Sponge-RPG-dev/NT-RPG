@@ -29,7 +29,6 @@ import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.configuration.adapters.*;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
-import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.leveling.EmptyLevelProgression;
 import cz.neumimto.rpg.players.leveling.ILevelProgression;
@@ -140,7 +139,7 @@ public class ClassDefinition implements IEffectSourceProvider {
 
 	@Setting("ExperienceSources")
 	@AsCollectionImpl(HashSet.class)
-	protected Set<ExperienceSource> experienceSourceSet;
+	protected Set<String> experienceSourceSet;
 
 	@Setting("Default")
 	protected boolean defaultClass;
@@ -272,7 +271,7 @@ public class ClassDefinition implements IEffectSourceProvider {
 		return classDefinitionDependencyGraph;
 	}
 
-	public boolean hasExperienceSource(ExperienceSource source) {
+	public boolean hasExperienceSource(String source) {
 		return experienceSourceSet.contains(source);
 	}
 

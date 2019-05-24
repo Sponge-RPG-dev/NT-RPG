@@ -58,9 +58,9 @@ import cz.neumimto.rpg.api.skills.SkillPreProcessorFactory;
 import cz.neumimto.rpg.sponge.SpongeGuiceModule;
 import cz.neumimto.rpg.sponge.SpongeRpgApi;
 import cz.neumimto.rpg.sponge.listeners.DebugListener;
-import cz.neumimto.rpg.utils.FileUtils;
-import cz.neumimto.rpg.utils.Placeholders;
-import cz.neumimto.rpg.utils.PseudoRandomDistribution;
+import cz.neumimto.rpg.common.utils.io.FileUtils;
+import cz.neumimto.rpg.sponge.utils.Placeholders;
+import cz.neumimto.rpg.api.utils.rng.PseudoRandomDistribution;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -328,8 +328,6 @@ public class NtRpgPlugin {
 		Sponge.getRegistry().registerModule(Attribute.class, NtRpgPlugin.GlobalScope.spongePropertyService);
 		Sponge.getRegistry().registerModule(ItemMetaType.class, new ItemMetaTypeRegistry());
 		Sponge.getRegistry().registerModule(ItemSubtype.class, new ItemSubtypeRegistry());
-		Sponge.getRegistry().registerModule(ISkillType.class, new SkillTypeRegistry());
-		Sponge.getRegistry().registerModule(ExperienceSource.class, new ExperienceSourceRegistry());
 	}
 
 	@Listener

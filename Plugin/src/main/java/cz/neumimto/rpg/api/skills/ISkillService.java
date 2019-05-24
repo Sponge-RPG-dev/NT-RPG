@@ -1,13 +1,11 @@
 package cz.neumimto.rpg.api.skills;
 
-import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.mods.SkillExecutorCallback;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.reloading.Reload;
-import cz.neumimto.rpg.reloading.ReloadService;
+import cz.neumimto.rpg.common.reloading.Reload;
+import cz.neumimto.rpg.common.reloading.ReloadService;
 import cz.neumimto.rpg.sponge.gui.SkillTreeInterfaceModel;
 
 import java.util.Collection;

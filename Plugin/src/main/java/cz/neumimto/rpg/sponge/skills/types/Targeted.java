@@ -28,7 +28,7 @@ import cz.neumimto.rpg.api.skills.types.ITargeted;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.events.skill.SkillTargetAttemptEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.utils.Utils;
+import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.entity.living.Living;
 
 public abstract class Targeted extends ActiveSkill implements ITargeted {

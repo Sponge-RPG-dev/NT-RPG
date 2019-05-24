@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.utils;
+package cz.neumimto.rpg.sponge.utils;
 
 import static cz.neumimto.rpg.NtRpgPlugin.pluginConfig;
 import me.lucko.luckperms.api.LuckPermsApi;

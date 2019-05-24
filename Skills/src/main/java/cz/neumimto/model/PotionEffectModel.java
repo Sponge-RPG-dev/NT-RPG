@@ -1,6 +1,6 @@
 package cz.neumimto.model;
 
-import cz.neumimto.rpg.scripting.JsBinding;
+import cz.neumimto.rpg.common.scripting.JsBinding;
 import org.spongepowered.api.effect.potion.PotionEffectType;
 
 import java.util.HashMap;

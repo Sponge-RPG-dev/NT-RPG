@@ -30,7 +30,7 @@ import cz.neumimto.rpg.sponge.gui.GuiService;
 import cz.neumimto.rpg.sponge.gui.ItemLoreBuilderService;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
-import cz.neumimto.rpg.utils.Placeholders;
+import cz.neumimto.rpg.sponge.utils.Placeholders;
 
 public class SpongeGuiceModule extends AbstractModule {
     @Override

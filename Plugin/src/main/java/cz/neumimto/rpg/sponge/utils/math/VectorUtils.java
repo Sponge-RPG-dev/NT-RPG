@@ -1,4 +1,4 @@
-package cz.neumimto.rpg;
+package cz.neumimto.rpg.sponge.utils.math;
 
 import com.flowpowered.math.TrigMath;
 import com.flowpowered.math.imaginary.Quaterniond;

@@ -5,7 +5,7 @@ import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.properties.SpongePropertyService;
-import cz.neumimto.rpg.utils.TriConsumer;
+import cz.neumimto.rpg.api.utils.TriConsumer;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;

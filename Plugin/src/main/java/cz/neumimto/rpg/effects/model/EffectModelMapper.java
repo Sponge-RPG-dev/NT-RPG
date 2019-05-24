@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.effects.model;
 
-import cz.neumimto.rpg.utils.Utils;
+import cz.neumimto.rpg.sponge.utils.Utils;
 
 import java.util.HashMap;
 import java.util.Map;

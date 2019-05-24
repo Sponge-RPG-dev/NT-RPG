@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.api.skills;
 
-import cz.neumimto.rpg.scripting.JsBinding;
+import cz.neumimto.rpg.common.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 26.7.2015.

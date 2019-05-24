@@ -5,7 +5,7 @@ import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.api.effects.stacking.DoubleEffectStackingStrategy;
-import cz.neumimto.rpg.scripting.JsBinding;
+import cz.neumimto.rpg.common.scripting.JsBinding;
 
 @JsBinding(JsBinding.Type.CLASS)
 @Generate(id = "name", description = "An effect which redirects incoming % of damage to mana pool")

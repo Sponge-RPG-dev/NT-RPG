@@ -3,7 +3,7 @@ package cz.neumimto.effects.negative;
 import cz.neumimto.effects.SingleResistanceValueEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.properties.DefaultProperties;
-import cz.neumimto.rpg.scripting.JsBinding;
+import cz.neumimto.rpg.common.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 30.12.2017.

@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.effects;
 
 import cz.neumimto.rpg.api.effects.IEffectSource;
-import cz.neumimto.rpg.scripting.JsBinding;
+import cz.neumimto.rpg.common.scripting.JsBinding;
 
 /**
  * Created by ja on 1.4.2017.
