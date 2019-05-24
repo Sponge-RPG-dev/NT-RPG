@@ -20,7 +20,7 @@ package cz.neumimto.rpg.api.skills.types;
 
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.Rpg;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.ISkill;

@@ -22,8 +22,11 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.PluginCore;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.mods.SkillPreprocessorFactories;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.configuration.PluginConfig;
 import cz.neumimto.rpg.configuration.Settings;
@@ -38,7 +41,6 @@ import cz.neumimto.rpg.inventory.items.subtypes.ItemSubtypes;
 import cz.neumimto.rpg.inventory.sockets.SocketType;
 import cz.neumimto.rpg.inventory.sockets.SocketTypeRegistry;
 import cz.neumimto.rpg.inventory.sockets.SocketTypes;
-import cz.neumimto.rpg.sponge.listeners.DebugListener;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistance.model.CharacterSkill;
@@ -55,8 +57,9 @@ import cz.neumimto.rpg.skills.configs.SkillConfigLoaderRegistry;
 import cz.neumimto.rpg.skills.configs.SkillConfigLoaders;
 import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactory;
 import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactoryRegistry;
-import cz.neumimto.rpg.api.skills.mods.SkillPreprocessorFactories;
-import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.sponge.SpongeGuiceModule;
+import cz.neumimto.rpg.sponge.SpongeRpgApi;
+import cz.neumimto.rpg.sponge.listeners.DebugListener;
 import cz.neumimto.rpg.utils.FileUtils;
 import cz.neumimto.rpg.utils.Placeholders;
 import cz.neumimto.rpg.utils.PseudoRandomDistribution;
@@ -148,7 +151,7 @@ public class NtRpgPlugin {
 			info("Placeholders Disabled");
 		}
 
-		Injector childInjector = injector.createChildInjector(new NtRpgGuiceModule());
+		Injector childInjector = injector.createChildInjector(new SpongeGuiceModule());
 
 		GlobalScope = childInjector.getInstance(GlobalScope.class);
 

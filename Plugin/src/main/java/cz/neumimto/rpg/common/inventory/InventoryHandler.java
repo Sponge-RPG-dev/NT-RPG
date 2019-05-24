@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.common.inventory;
 
 import cz.neumimto.rpg.api.effects.EffectParams;
+import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
@@ -8,7 +9,6 @@ import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.common.effects.EffectService;
-import cz.neumimto.rpg.effects.IGlobalEffect;
 import cz.neumimto.rpg.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;

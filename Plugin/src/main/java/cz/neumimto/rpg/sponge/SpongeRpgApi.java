@@ -1,7 +1,8 @@
-package cz.neumimto.rpg;
+package cz.neumimto.rpg.sponge;
 
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.players.attributes.Attribute;
@@ -9,6 +10,7 @@ import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactory;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Event;
 import org.spongepowered.api.text.Text;
 
 import java.io.IOException;
@@ -73,5 +75,10 @@ public final class SpongeRpgApi implements RpgApi {
     @Override
     public void executeCommandBatch(Map<String, String> args, List<String> cmd) {
         Utils.executeCommandBatch(args, cmd);
+    }
+
+    @Override
+    public boolean postEvent(Object event) {
+        return Sponge.getEventManager().post((Event) event);
     }
 }

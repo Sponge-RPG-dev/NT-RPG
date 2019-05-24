@@ -20,7 +20,7 @@ package cz.neumimto.rpg.properties;
 
 import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
 import cz.neumimto.rpg.NtRpgPlugin;
-import cz.neumimto.rpg.Rpg;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.players.attributes.Attribute;

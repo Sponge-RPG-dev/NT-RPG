@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.api.skills.types;
 
-import cz.neumimto.rpg.Rpg;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.scripting.JSLoader;
 

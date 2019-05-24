@@ -29,4 +29,6 @@ public interface RpgApi {
     String getTextAssetContent(String templateName);
 
     void executeCommandBatch(Map<String, String> args, List<String> enterCommands);
+
+    boolean postEvent(Object event);
 }

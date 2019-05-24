@@ -1,7 +1,7 @@
 package {{package}}
 
 import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import {{import.effect}};
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
 

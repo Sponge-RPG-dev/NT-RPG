@@ -1,24 +1,19 @@
-package cz.neumimto.rpg;
+package cz.neumimto.rpg.sponge;
 
 import com.google.inject.AbstractModule;
+import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.items.ItemService;
-import cz.neumimto.rpg.sponge.commands.CommandService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.damage.SpongeDamageService;
-import cz.neumimto.rpg.effects.SpongeEffectService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.MobSettingsDao;
 import cz.neumimto.rpg.exp.ExperienceDAO;
 import cz.neumimto.rpg.exp.ExperienceService;
-import cz.neumimto.rpg.sponge.gui.GuiService;
-import cz.neumimto.rpg.sponge.gui.ItemLoreBuilderService;
-import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
-import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 import cz.neumimto.rpg.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.inventory.SpongeItemService;
 import cz.neumimto.rpg.inventory.runewords.RWDao;
@@ -29,9 +24,15 @@ import cz.neumimto.rpg.players.SpongeCharacterService;
 import cz.neumimto.rpg.players.parties.PartyService;
 import cz.neumimto.rpg.properties.SpongePropertyService;
 import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.sponge.commands.CommandService;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectService;
+import cz.neumimto.rpg.sponge.gui.GuiService;
+import cz.neumimto.rpg.sponge.gui.ItemLoreBuilderService;
+import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
+import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 import cz.neumimto.rpg.utils.Placeholders;
 
-public class NtRpgGuiceModule extends AbstractModule {
+public class SpongeGuiceModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(SkillService.class);

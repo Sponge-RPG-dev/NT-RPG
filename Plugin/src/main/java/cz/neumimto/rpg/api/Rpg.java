@@ -1,6 +1,4 @@
-package cz.neumimto.rpg;
-
-import cz.neumimto.rpg.api.RpgApi;
+package cz.neumimto.rpg.api;
 
 public class Rpg {
 

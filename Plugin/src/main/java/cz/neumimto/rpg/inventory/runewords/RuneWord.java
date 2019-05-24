@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.inventory.runewords;
 
-import cz.neumimto.rpg.effects.IGlobalEffect;
+import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 
 import java.util.*;

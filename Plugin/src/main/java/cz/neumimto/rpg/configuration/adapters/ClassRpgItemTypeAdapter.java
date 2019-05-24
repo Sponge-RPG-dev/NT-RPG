@@ -3,7 +3,7 @@ package cz.neumimto.rpg.configuration.adapters;
 import com.google.common.reflect.TypeToken;
 import cz.neumimto.config.blackjack.and.hookers.annotations.EnableSetterInjection;
 import cz.neumimto.config.blackjack.and.hookers.annotations.Setter;
-import cz.neumimto.rpg.Rpg;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.logging.Log;
@@ -13,13 +13,7 @@ import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**

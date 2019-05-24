@@ -36,6 +36,9 @@ dependencies {
     testCompile group: 'org.mockito', name: 'mockito-core', version: '2.25.0'
     testCompile group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.1'
 
+     // https://mvnrepository.com/artifact/org.projectlombok/lombok
+    provided group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
+
     jar {
         manifest {
             attributes(
