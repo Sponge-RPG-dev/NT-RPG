@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.api.skills;
 
-import cz.neumimto.rpg.skills.SkillItemCost;
+import cz.neumimto.rpg.sponge.skills.SkillItemCost;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 
 import java.util.HashSet;

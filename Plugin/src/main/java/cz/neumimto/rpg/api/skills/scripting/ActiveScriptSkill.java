@@ -3,12 +3,12 @@ package cz.neumimto.rpg.api.skills.scripting;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ISkillType;
+import cz.neumimto.rpg.api.skills.ISkillType;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.types.ScriptSkill;
-import cz.neumimto.rpg.skills.scripting.ScriptExecutorSkill;
-import cz.neumimto.rpg.skills.scripting.SkillScriptContext;
+import cz.neumimto.rpg.sponge.skills.scripting.ScriptExecutorSkill;
+import cz.neumimto.rpg.sponge.skills.scripting.SkillScriptContext;
 
 import java.util.List;
 

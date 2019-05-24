@@ -10,7 +10,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -28,7 +28,7 @@ public class SkillTreeInventoryListener {
 
 	private final NtRpgPlugin plugin;
 
-	private final SkillService skillService;
+	private final ISkillService skillService;
 
 	public SkillTreeInventoryListener() {
 		characterService = NtRpgPlugin.GlobalScope.characterService;

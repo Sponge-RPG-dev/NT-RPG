@@ -9,9 +9,9 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillPathData;
 import cz.neumimto.rpg.api.skills.types.PassiveSkill;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillSettings;
-import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
+import cz.neumimto.rpg.common.skills.SkillData;
+import cz.neumimto.rpg.api.skills.SkillSettings;
+import cz.neumimto.rpg.common.skills.utils.SkillLoadingErrors;
 
 import java.util.HashMap;
 import java.util.List;

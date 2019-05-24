@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.api.skills.types;
 
-import cz.neumimto.rpg.skills.scripting.TargetedScriptExecutorSkill;
+import cz.neumimto.rpg.sponge.skills.scripting.TargetedScriptExecutorSkill;
 
 /**
  * Created by NeumimTo on 3.9.2018.

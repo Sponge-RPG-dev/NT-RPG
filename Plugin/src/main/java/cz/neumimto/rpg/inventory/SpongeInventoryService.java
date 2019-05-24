@@ -51,8 +51,8 @@ import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.properties.SpongePropertyService;
 import cz.neumimto.rpg.reloading.Reload;
 import cz.neumimto.rpg.reloading.ReloadService;
-import cz.neumimto.rpg.skills.SkillItemCost;
-import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.sponge.skills.SkillItemCost;
+import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import ninja.leaping.configurate.SimpleConfigurationNode;
@@ -101,7 +101,7 @@ public class SpongeInventoryService extends AbstractInventoryService {
 	public static Text NORMAL_RARITY;
 
 	@Inject
-	private SkillService skillService;
+	private ISkillService skillService;
 
 	@Inject
 	private Game game;

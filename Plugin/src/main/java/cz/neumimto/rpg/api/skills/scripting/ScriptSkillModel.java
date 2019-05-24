@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.api.skills.scripting;
 
-import cz.neumimto.rpg.skills.ISkillType;
+import cz.neumimto.rpg.api.skills.ISkillType;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 

@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.sponge.gui;
 
-import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.api.skills.ISkillService;
 import org.spongepowered.api.Game;
 
 import javax.inject.Inject;
@@ -38,7 +38,7 @@ public class GuiService {
 	private Game game;
 
 	@Inject
-	private SkillService skillService;
+	private ISkillService skillService;
 
 	private Map<String, String> skillIconsUrls = new HashMap<>();
 

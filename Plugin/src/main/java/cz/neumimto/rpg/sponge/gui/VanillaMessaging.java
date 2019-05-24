@@ -52,8 +52,8 @@ import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.reloading.Reload;
 import cz.neumimto.rpg.reloading.ReloadService;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.common.skills.SkillData;
+import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.utils.ItemStackUtils;
 import cz.neumimto.rpg.utils.Utils;
@@ -117,7 +117,7 @@ public class VanillaMessaging implements IPlayerMessage {
     @Inject
     private CharacterService characterService;
     @Inject
-    private SkillService skillService;
+    private ISkillService skillService;
     @Inject
     private PlayerDao playerDao;
 

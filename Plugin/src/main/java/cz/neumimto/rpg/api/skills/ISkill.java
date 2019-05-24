@@ -24,12 +24,10 @@ import cz.neumimto.rpg.api.effects.IEffectSource;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ISkillType;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.skills.utils.SkillLoadingErrors;
+import cz.neumimto.rpg.common.skills.utils.SkillLoadingErrors;
 
 import java.util.List;
 import java.util.Set;

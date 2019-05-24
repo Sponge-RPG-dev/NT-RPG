@@ -3,7 +3,7 @@ package cz.neumimto.rpg;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
 import cz.neumimto.rpg.scripting.JSLoader;
-import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.api.skills.ISkillService;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import java.net.URLClassLoader;
 public class AssetsLoadingTest {
 
     @Inject
-    private SkillService skillService;
+    private ISkillService skillService;
 
     @Inject
     private JSLoader jsLoader;

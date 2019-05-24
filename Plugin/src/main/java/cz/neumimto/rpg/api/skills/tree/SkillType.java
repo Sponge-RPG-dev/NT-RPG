@@ -20,7 +20,7 @@ package cz.neumimto.rpg.api.skills.tree;
 
 
 import cz.neumimto.rpg.api.utils.TriState;
-import cz.neumimto.rpg.skills.ISkillType;
+import cz.neumimto.rpg.api.skills.ISkillType;
 
 import static cz.neumimto.rpg.api.utils.TriState.*;
 

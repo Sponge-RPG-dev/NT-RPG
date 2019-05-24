@@ -5,9 +5,9 @@ import com.typesafe.config.ConfigFactory;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.junit.NtRpgExtension;
-import cz.neumimto.rpg.skills.SkillService;
 import cz.neumimto.rpg.api.skills.types.AbstractSkill;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
+import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +22,7 @@ class SkillTreeDaoTest {
     @BeforeAll
     public static void beforeAll() {
         NtRpgPlugin.GlobalScope = new GlobalScope();
-        NtRpgPlugin.GlobalScope.skillService = new SkillService();
+        NtRpgPlugin.GlobalScope.skillService = new SpongeSkillService();
         AbstractSkill spy = Mockito.spy(AbstractSkill.class);
         Mockito.doNothing().when(spy).init();
         Mockito.when(spy.getName()).thenReturn("test");

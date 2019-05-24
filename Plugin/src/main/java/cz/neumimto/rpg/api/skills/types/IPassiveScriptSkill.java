@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.api.skills.types;
 
-import cz.neumimto.rpg.skills.scripting.PassiveScriptSkillHandler;
+import cz.neumimto.rpg.sponge.skills.scripting.PassiveScriptSkillHandler;
 
 /**
  * Created by NeumimTo on 7.10.2018.

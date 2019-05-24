@@ -30,9 +30,8 @@ import cz.neumimto.rpg.configuration.Localizations;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JsBinding;
-import cz.neumimto.rpg.skills.ISkillType;
-import cz.neumimto.rpg.skills.SkillItemIcon;
-import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.api.skills.ISkillType;
+import cz.neumimto.rpg.api.skills.SkillSettings;
 import cz.neumimto.rpg.utils.CatalogId;
 
 import javax.inject.Inject;
@@ -55,7 +54,6 @@ public abstract class AbstractSkill implements ISkill {
 	protected String strName;
 	protected List<String> description;
 	protected SkillSettings settings = new SkillSettings();
-	protected SkillItemIcon icon;
 
 	protected String itemType;
 
@@ -137,7 +135,6 @@ public abstract class AbstractSkill implements ISkill {
 
 	@Override
 	public void init() {
-		icon = new SkillItemIcon(this);
 	}
 
 	@Override
@@ -168,7 +165,6 @@ public abstract class AbstractSkill implements ISkill {
 	@Override
 	public void setIcon(String icon) {
 		this.itemType = icon;
-		this.icon = new SkillItemIcon(this);
 	}
 
 	@Override

@@ -2,10 +2,10 @@ package cz.neumimto.rpg.api.skills.types;
 
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ISkillType;
+import cz.neumimto.rpg.api.skills.ISkillType;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
-import cz.neumimto.rpg.skills.scripting.PassiveScriptSkillHandler;
-import cz.neumimto.rpg.skills.scripting.SkillScriptContext;
+import cz.neumimto.rpg.sponge.skills.scripting.PassiveScriptSkillHandler;
+import cz.neumimto.rpg.sponge.skills.scripting.SkillScriptContext;
 
 import java.util.List;
 

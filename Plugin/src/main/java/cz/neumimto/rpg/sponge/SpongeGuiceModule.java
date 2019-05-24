@@ -23,7 +23,7 @@ import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.SpongeCharacterService;
 import cz.neumimto.rpg.players.parties.PartyService;
 import cz.neumimto.rpg.properties.SpongePropertyService;
-import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
 import cz.neumimto.rpg.sponge.commands.CommandService;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectService;
 import cz.neumimto.rpg.sponge.gui.GuiService;
@@ -35,7 +35,7 @@ import cz.neumimto.rpg.utils.Placeholders;
 public class SpongeGuiceModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(SkillService.class);
+        bind(SpongeSkillService.class);
         bind(PropertyService.class).to(SpongePropertyService.class);
         bind(PartyService.class);
         bind(CharacterService.class).to(SpongeCharacterService.class);

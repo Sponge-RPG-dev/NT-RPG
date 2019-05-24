@@ -3,7 +3,7 @@ package cz.neumimto.rpg;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.junit.TestDictionary;
 import cz.neumimto.rpg.players.attributes.Attribute;
-import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactory;
+import cz.neumimto.rpg.api.skills.SkillPreProcessorFactory;
 
 import java.util.Arrays;
 import java.util.Collection;

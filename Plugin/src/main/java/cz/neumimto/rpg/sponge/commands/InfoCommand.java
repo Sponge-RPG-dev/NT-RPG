@@ -33,7 +33,7 @@ import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.command.CommandResult;
@@ -62,7 +62,7 @@ public class InfoCommand extends CommandBase {
 	private CharacterService characterService;
 
 	@Inject
-	private SkillService skillService;
+	private ISkillService skillService;
 
 	@Inject
 	private NtRpgPlugin plugin;

@@ -32,7 +32,7 @@ import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.api.skills.SkillSettings;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;

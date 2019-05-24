@@ -37,7 +37,7 @@ import cz.neumimto.rpg.properties.PropertyContainer;
 import cz.neumimto.rpg.properties.SpongePropertyService;
 import cz.neumimto.rpg.scripting.JSLoader;
 import cz.neumimto.rpg.scripting.JsBinding;
-import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.sponge.commands.CommandBase;
 import cz.neumimto.rpg.sponge.commands.CommandService;
 import org.apache.commons.io.FileUtils;
@@ -99,7 +99,7 @@ public class ResourceLoader {
 	}
 
 	@Inject
-	private SkillService skillService;
+	private ISkillService skillService;
 
 	@Inject
 	private ClassService classService;

@@ -8,6 +8,7 @@ import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.items.ItemService;
+import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
 import cz.neumimto.rpg.sponge.commands.CommandService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.entity.TestPropertyService;
@@ -31,7 +32,6 @@ import cz.neumimto.rpg.persistance.*;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.parties.PartyService;
 import cz.neumimto.rpg.scripting.JSLoader;
-import cz.neumimto.rpg.skills.SkillService;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,7 @@ public class TestGuiceModule extends AbstractModule {
 
         @Override
         protected void configure() {
-        bind(SkillService.class);
+        bind(SpongeSkillService.class);
         bind(PropertyService.class).to(TestPropertyService.class);
         bind(PartyService.class);
         bind(CharacterService.class).to(TestCharacterService.class);

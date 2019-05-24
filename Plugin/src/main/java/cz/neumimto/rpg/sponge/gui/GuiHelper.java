@@ -17,9 +17,9 @@ import cz.neumimto.rpg.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.SkillTreeViewModel;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.skills.NDamageType;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.sponge.skills.NDamageType;
+import cz.neumimto.rpg.common.skills.SkillData;
+import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.utils.Utils;
 import org.spongepowered.api.block.BlockTypes;
@@ -324,7 +324,7 @@ public class GuiHelper {
 			of.offer(new MenuInventoryData(true));
 			build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(1, 0))).offer(of);
 
-			SkillService skillService = NtRpgPlugin.GlobalScope.skillService;
+			ISkillService skillService = NtRpgPlugin.GlobalScope.skillService;
 
 			int i = 0;
 			int j = 2;

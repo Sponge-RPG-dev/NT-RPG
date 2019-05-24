@@ -19,7 +19,7 @@
 package cz.neumimto.rpg.api.skills.tree;
 
 import cz.neumimto.rpg.Pair;
-import cz.neumimto.rpg.skills.SkillData;
+import cz.neumimto.rpg.common.skills.SkillData;
 
 import java.util.HashMap;
 import java.util.Map;

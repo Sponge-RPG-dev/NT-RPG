@@ -4,8 +4,8 @@ import com.typesafe.config.ConfigObject;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.scripting.JSLoader;
-import cz.neumimto.rpg.skills.mods.SkillPreProcessorFactory;
-import cz.neumimto.rpg.skills.mods.SkillPreprocessors;
+import cz.neumimto.rpg.api.skills.SkillPreProcessorFactory;
+import cz.neumimto.rpg.api.skills.SkillPreprocessors;
 
 import javax.script.ScriptException;
 import java.util.Arrays;

@@ -51,8 +51,8 @@ import cz.neumimto.rpg.players.groups.DependencyGraph;
 import cz.neumimto.rpg.players.leveling.SkillTreeType;
 import cz.neumimto.rpg.properties.DefaultProperties;
 import cz.neumimto.rpg.properties.SpongePropertyService;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillService;
+import cz.neumimto.rpg.common.skills.SkillData;
+import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.utils.PermissionUtils;
@@ -79,7 +79,7 @@ import static cz.neumimto.rpg.api.logging.Log.*;
 public abstract class CharacterService {
 
     @Inject
-    private SkillService skillService;
+    private ISkillService skillService;
 
     @Inject
     private NtRpgPlugin plugin;

@@ -19,12 +19,10 @@
 package cz.neumimto.rpg.api.skills.types;
 
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.types.PassiveSkill;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ISkillType;
-import cz.neumimto.rpg.skills.SkillData;
-import cz.neumimto.rpg.skills.SkillSettings;
-import org.spongepowered.api.item.ItemTypes;
+import cz.neumimto.rpg.api.skills.ISkillType;
+import cz.neumimto.rpg.common.skills.SkillData;
+import cz.neumimto.rpg.api.skills.SkillSettings;
 import org.spongepowered.api.text.Text;
 
 import java.util.Collections;
