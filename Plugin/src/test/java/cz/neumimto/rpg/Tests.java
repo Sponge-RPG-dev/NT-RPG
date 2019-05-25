@@ -2,7 +2,7 @@ package cz.neumimto.rpg;
 
 
 import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.persistance.model.CharacterClass;
+import cz.neumimto.rpg.common.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.groups.ClassDefinition;

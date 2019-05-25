@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.players;
 
-import cz.neumimto.rpg.persistance.model.CharacterClass;
+import cz.neumimto.rpg.common.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.leveling.ILevelProgression;
 

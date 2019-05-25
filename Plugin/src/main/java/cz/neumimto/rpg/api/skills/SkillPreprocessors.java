@@ -8,7 +8,7 @@ import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.events.skill.SkillPostUsageEvent;
 import cz.neumimto.rpg.events.skill.SkillPreUsageEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.properties.SpongeDefaultProperties;
+import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 

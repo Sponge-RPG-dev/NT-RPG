@@ -13,7 +13,7 @@ import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.common.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.properties.SpongeDefaultProperties;
+import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 
 import java.util.ArrayList;
 import java.util.List;

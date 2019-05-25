@@ -6,7 +6,7 @@ import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.persistance.ClassDefinitionDao;
+import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.players.*;
 import cz.neumimto.rpg.scripting.JSLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;

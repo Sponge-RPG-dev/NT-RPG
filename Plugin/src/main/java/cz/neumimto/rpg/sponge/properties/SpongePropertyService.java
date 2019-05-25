@@ -16,7 +16,7 @@
  *
  */
 
-package cz.neumimto.rpg.properties;
+package cz.neumimto.rpg.sponge.properties;
 
 import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;

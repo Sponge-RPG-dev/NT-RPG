@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.persistance.model;
+package cz.neumimto.rpg.common.persistance.model;
 
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.Slot;

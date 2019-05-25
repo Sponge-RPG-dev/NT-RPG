@@ -19,9 +19,9 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.persistance.converters.EquipedSlot2Json;
-import cz.neumimto.rpg.persistance.converters.UUID2String;
-import cz.neumimto.rpg.persistance.model.*;
+import cz.neumimto.rpg.common.persistance.converters.EquipedSlot2Json;
+import cz.neumimto.rpg.common.persistance.converters.UUID2String;
+import cz.neumimto.rpg.common.persistance.model.*;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import org.hibernate.annotations.GenericGenerator;
 

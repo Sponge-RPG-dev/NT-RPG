@@ -16,7 +16,7 @@
  *
  */
 
-package cz.neumimto.rpg.properties;
+package cz.neumimto.rpg.sponge.properties;
 
 import cz.neumimto.rpg.api.properties.Property;
 import cz.neumimto.rpg.api.properties.PropertyContainer;

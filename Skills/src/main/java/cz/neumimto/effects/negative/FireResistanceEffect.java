@@ -4,7 +4,7 @@ import cz.neumimto.effects.SingleResistanceValueEffect;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.common.scripting.JsBinding;
 import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.properties.SpongeDefaultProperties;
+import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 
 /**
  * Created by NeumimTo on 28.3.2017.

@@ -1,9 +1,9 @@
-package cz.neumimto.rpg.persistance;
+package cz.neumimto.rpg.common.persistance.dao;
 
 import cz.neumimto.core.PersistentContext;
 import cz.neumimto.core.Repository;
 import cz.neumimto.core.dao.GenericDao;
-import cz.neumimto.rpg.persistance.model.CharacterClass;
+import cz.neumimto.rpg.common.persistance.model.CharacterClass;
 import org.hibernate.SessionFactory;
 
 import javax.inject.Singleton;

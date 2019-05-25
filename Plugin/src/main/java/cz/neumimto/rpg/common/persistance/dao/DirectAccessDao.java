@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.persistance;
+package cz.neumimto.rpg.common.persistance.dao;
 
 import cz.neumimto.core.PersistentContext;
 import cz.neumimto.core.Repository;

@@ -16,7 +16,7 @@
  *
  */
 
-package cz.neumimto.rpg.persistance.model;
+package cz.neumimto.rpg.common.persistance.model;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;

@@ -20,7 +20,7 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.damage.SpongeDamageService;
-import cz.neumimto.rpg.persistance.ClassDefinitionDao;
+import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.groups.ClassDefinition;

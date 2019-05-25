@@ -14,7 +14,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.properties.SpongePropertyService;
+import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 
 import javax.inject.Inject;
 import java.util.*;

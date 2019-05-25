@@ -1,7 +1,7 @@
-package cz.neumimto.rpg.persistance.converters;
+package cz.neumimto.rpg.common.persistance.converters;
 
 import com.google.gson.*;
-import cz.neumimto.rpg.persistance.model.EquipedSlot;
+import cz.neumimto.rpg.common.persistance.model.EquipedSlot;
 
 import java.lang.reflect.Type;
 

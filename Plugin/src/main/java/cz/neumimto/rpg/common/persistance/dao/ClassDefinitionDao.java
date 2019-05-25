@@ -16,7 +16,7 @@
  *
  */
 
-package cz.neumimto.rpg.persistance;
+package cz.neumimto.rpg.common.persistance.dao;
 
 import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;

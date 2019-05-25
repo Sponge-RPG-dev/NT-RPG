@@ -16,7 +16,7 @@
  *
  */
 
-package cz.neumimto.rpg.persistance.converters;
+package cz.neumimto.rpg.common.persistance.converters;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
