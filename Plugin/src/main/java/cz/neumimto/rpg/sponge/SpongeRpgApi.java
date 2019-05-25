@@ -35,17 +35,15 @@ public final class SpongeRpgApi implements RpgApi {
     }
 
     @Override
-    public Optional<SkillPreProcessorFactory> getSkillPreProcessorFactory(String preprocessorFactoryId) {
-        return Sponge.getRegistry().getType(SkillPreProcessorFactory.class, preprocessorFactoryId);
-    }
-
-    @Override
     public ItemService getItemService() {
         return NtRpgPlugin.GlobalScope.itemService;
     }
 
     private void broadcastMessage(Text text) {
         Collection<Player> onlinePlayers = Sponge.getServer().getOnlinePlayers();
+        for (Player onlinePlayer : onlinePlayers) {
+            onlinePlayer.sendMessage(text);
+        }
     }
 
     @Override

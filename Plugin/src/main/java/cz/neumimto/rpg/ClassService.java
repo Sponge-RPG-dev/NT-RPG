@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg;
 
+import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.damage.SpongeDamageService;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
@@ -44,7 +45,7 @@ public class ClassService {
     private static final String CLASS_ACCESS_PERM = "ntrpg.class.";
 
     @Inject
-    private SpongeDamageService spongeDamageService;
+    private DamageService spongeDamageService;
 
     @Inject
     private ClassDefinitionDao classDefinitionDao;
