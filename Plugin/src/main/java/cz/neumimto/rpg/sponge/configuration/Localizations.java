@@ -16,7 +16,7 @@
  *
  */
 
-package cz.neumimto.rpg.configuration;
+package cz.neumimto.rpg.sponge.configuration;
 
 import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.core.localization.Localization;

@@ -29,4 +29,8 @@ public interface RpgApi {
     void executeCommandBatch(Map<String, String> args, List<String> enterCommands);
 
     boolean postEvent(Object event);
+
+    void unregisterListeners(Object listener);
+
+    void registerListeners(Object listener);
 }

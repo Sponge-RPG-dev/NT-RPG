@@ -16,7 +16,7 @@
  *
  */
 
-package cz.neumimto.rpg.configuration;
+package cz.neumimto.rpg.sponge.configuration;
 
 /**
  * Created by NeumimTo on 27.12.2014.

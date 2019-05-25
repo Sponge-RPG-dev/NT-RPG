@@ -37,7 +37,7 @@ import cz.neumimto.rpg.common.scripting.JsBinding;
 import cz.neumimto.rpg.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.effects.model.EffectModelMapper;
 import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
-import cz.neumimto.rpg.scripting.JSLoader;
+import cz.neumimto.rpg.common.scripting.JSLoader;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.commands.CommandBase;
 import cz.neumimto.rpg.sponge.commands.CommandService;

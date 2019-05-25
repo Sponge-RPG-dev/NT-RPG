@@ -2,7 +2,7 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
-import cz.neumimto.rpg.scripting.JSLoader;
+import cz.neumimto.rpg.common.scripting.JSLoader;
 import cz.neumimto.rpg.api.skills.ISkillService;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;

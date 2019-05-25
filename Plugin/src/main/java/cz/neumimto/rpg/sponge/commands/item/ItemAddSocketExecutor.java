@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.commands.item;
 
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.configuration.Localizations;
+import cz.neumimto.rpg.sponge.configuration.Localizations;
 import cz.neumimto.rpg.inventory.sockets.SocketType;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;

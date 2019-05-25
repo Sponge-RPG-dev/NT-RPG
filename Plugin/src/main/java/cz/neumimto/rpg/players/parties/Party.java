@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.players.parties;
 
-import cz.neumimto.rpg.configuration.Localizations;
+import cz.neumimto.rpg.sponge.configuration.Localizations;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.scoreboard.Team;
 import org.spongepowered.api.text.Text;

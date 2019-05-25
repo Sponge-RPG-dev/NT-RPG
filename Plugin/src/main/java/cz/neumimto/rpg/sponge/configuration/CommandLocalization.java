@@ -16,7 +16,7 @@
  *
  */
 
-package cz.neumimto.rpg.configuration;
+package cz.neumimto.rpg.sponge.configuration;
 
 import cz.neumimto.configuration.ConfigValue;
 import cz.neumimto.configuration.ConfigurationContainer;

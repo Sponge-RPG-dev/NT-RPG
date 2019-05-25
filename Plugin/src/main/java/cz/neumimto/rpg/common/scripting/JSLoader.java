@@ -16,27 +16,24 @@
  *
  */
 
-package cz.neumimto.rpg.scripting;
+package cz.neumimto.rpg.common.scripting;
 
 import com.google.inject.Injector;
-import cz.neumimto.rpg.ClassGenerator;
-import cz.neumimto.rpg.GlobalScope;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.common.scripting.ClassGenerator;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.SkillsDefinition;
 import cz.neumimto.rpg.common.scripting.JsBinding;
 import cz.neumimto.rpg.common.utils.io.FileUtils;
-import cz.neumimto.rpg.configuration.DebugLevel;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.configuration.DebugLevel;
 import cz.neumimto.rpg.sponge.skills.scripting.SkillComponent;
 import net.bytebuddy.dynamic.loading.MultipleParentClassLoader;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
-import org.spongepowered.api.CatalogType;
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.asset.Asset;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.script.*;
@@ -74,13 +71,10 @@ public class JSLoader {
     private ResourceLoader resourceLoader;
 
     @Inject
-    private NtRpgPlugin ntRpgPlugin;
-
-    @Inject
     private ISkillService skillService;
 
     @Inject
-    private GlobalScope globalScope;
+    private AssetService assetService;
 
     private Map<Class<?>, JsBinding.Type> dataToBind = new HashMap<>();
 
@@ -116,7 +110,7 @@ public class JSLoader {
                 .invoke(fct, pluginConfig.JJS_ARGS.split(" "), multipleParentClassLoader);
     }
 
-    private <T extends CatalogType> void setup() {
+    private void setup() {
         Path path = Paths.get(scripts_root + File.separator + "Main.js");
         if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
             try (InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("Main.js")) {
@@ -160,7 +154,7 @@ public class JSLoader {
             }
             dumpDocumentedFunctions(skillComponents);
             bindings.put("Folder", scripts_root);
-            bindings.put("GlobalScope", globalScope);
+            bindings.put("Rpg", Rpg.get());
             if (pluginConfig.DEBUG.isDevelop()) {
                 info("JSLOADER ====== Bindings");
                 Map<String, Object> sorted = new TreeMap<>(bindings);
@@ -182,14 +176,10 @@ public class JSLoader {
         if (file.exists()) {
             file.delete();
         }
-
-        Optional<Asset> asset = Sponge.getAssetManager().getAsset(ntRpgPlugin, "templates/function.md");
-        Asset a = asset.get();
         try {
             file.createNewFile();
-
             for (SkillComponent skillComponent : skillComponents) {
-                String s = a.readString();
+                String s = assetService.getAssetAsString("templates/function.md");
                 s = s.replaceAll("\\{\\{function\\.name}}", skillComponent.value());
                 s = s.replaceAll("\\{\\{function\\.usage}}", skillComponent.usage());
 
@@ -210,11 +200,11 @@ public class JSLoader {
     public void generateDynamicListener(List list) {
         if (listener != null) {
             info("Found JS listener: " + listener.getClass().getSimpleName() + " Unregistering");
-            Sponge.getGame().getEventManager().unregisterListeners(listener);
+            Rpg.get().unregisterListeners(listener);
         }
         listener = classGenerator.generateDynamicListener(list);
         info("Registering js listener: " + listener.getClass().getSimpleName());
-        Sponge.getGame().getEventManager().registerListeners(ntRpgPlugin, listener);
+        Rpg.get().registerListeners(listener);
     }
 
     public void reloadSkills() {
@@ -226,12 +216,7 @@ public class JSLoader {
         }
         File file = new File(ResourceLoader.addonDir, "Skills-Definition.conf");
         if (!file.exists()) {
-            Asset asset = Sponge.getAssetManager().getAsset(ntRpgPlugin, "Skills-Definitions.conf").get();
-            try {
-                asset.copyToFile(file.toPath());
-            } catch (IOException e) {
-                Log.error("Could not copy file Skills-Definition.conf into the directory " + ResourceLoader.addonDir, e);
-            }
+            assetService.copyToFile("Skills-Definitions.conf", file.toPath());
         }
 
         URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{}, this.getClass().getClassLoader()) {

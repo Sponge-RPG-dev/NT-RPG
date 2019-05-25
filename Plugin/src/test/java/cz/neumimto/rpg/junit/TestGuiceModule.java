@@ -36,7 +36,7 @@ import cz.neumimto.rpg.inventory.runewords.RWDao;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.parties.PartyService;
-import cz.neumimto.rpg.scripting.JSLoader;
+import cz.neumimto.rpg.common.scripting.JSLoader;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

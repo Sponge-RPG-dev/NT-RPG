@@ -16,11 +16,11 @@
  *
  */
 
-package cz.neumimto.rpg.configuration;
+package cz.neumimto.rpg.sponge.configuration;
 
 import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
-import cz.neumimto.rpg.configuration.itemDamage.ItemDamageProcessor;
-import cz.neumimto.rpg.configuration.itemDamage.Max;
+import cz.neumimto.rpg.sponge.configuration.itemDamage.ItemDamageProcessor;
+import cz.neumimto.rpg.sponge.configuration.itemDamage.Max;
 import cz.neumimto.rpg.inventory.ItemLoreSections;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;

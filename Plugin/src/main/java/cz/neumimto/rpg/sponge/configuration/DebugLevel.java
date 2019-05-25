@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.configuration;
+package cz.neumimto.rpg.sponge.configuration;
 
 public enum DebugLevel {
     NONE(0, false, false),

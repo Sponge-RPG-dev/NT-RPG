@@ -14,7 +14,7 @@ import cz.neumimto.rpg.api.skills.types.AbstractSkill;
 import cz.neumimto.rpg.common.configuration.ItemString;
 import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.common.skills.utils.SkillLoadingErrors;
-import cz.neumimto.rpg.configuration.Localizations;
+import cz.neumimto.rpg.sponge.configuration.Localizations;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.items.SpongeRpgItemType;

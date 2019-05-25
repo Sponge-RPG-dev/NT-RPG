@@ -40,7 +40,7 @@ import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
 import cz.neumimto.rpg.common.reloading.Reload;
 import cz.neumimto.rpg.common.reloading.ReloadService;
-import cz.neumimto.rpg.configuration.Localizations;
+import cz.neumimto.rpg.sponge.configuration.Localizations;
 import cz.neumimto.rpg.damage.SpongeDamageService;
 import cz.neumimto.rpg.inventory.data.NKeys;
 import cz.neumimto.rpg.inventory.data.manipulators.*;

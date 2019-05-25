@@ -3,7 +3,7 @@ package cz.neumimto.rpg.players;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.ActionResult;
 import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.configuration.Localizations;
+import cz.neumimto.rpg.sponge.configuration.Localizations;
 import cz.neumimto.rpg.events.PlayerDataPreloadComplete;
 import cz.neumimto.rpg.events.character.*;
 import cz.neumimto.rpg.players.attributes.Attribute;

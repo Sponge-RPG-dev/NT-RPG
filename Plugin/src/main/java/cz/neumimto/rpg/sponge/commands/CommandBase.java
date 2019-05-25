@@ -19,7 +19,7 @@
 package cz.neumimto.rpg.sponge.commands;
 
 import cz.neumimto.rpg.api.effects.IEffectSource;
-import cz.neumimto.rpg.configuration.CommandLocalization;
+import cz.neumimto.rpg.sponge.configuration.CommandLocalization;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import org.spongepowered.api.command.CommandCallable;

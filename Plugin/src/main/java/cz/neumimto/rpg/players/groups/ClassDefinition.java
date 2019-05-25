@@ -26,7 +26,7 @@ import cz.neumimto.rpg.api.effects.IEffectSource;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.configuration.adapters.*;
+import cz.neumimto.rpg.sponge.configuration.adapters.*;
 import cz.neumimto.rpg.effects.EffectSourceType;
 import cz.neumimto.rpg.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.players.attributes.Attribute;

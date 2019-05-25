@@ -22,7 +22,7 @@ import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.configuration.CommandLocalization;
+import cz.neumimto.rpg.sponge.configuration.CommandLocalization;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.inventory.sockets.SocketType;
 import cz.neumimto.rpg.players.groups.ClassDefinition;

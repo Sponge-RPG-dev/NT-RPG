@@ -21,7 +21,7 @@ package cz.neumimto.rpg.players.parties;
 
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.api.gui.Gui;
-import cz.neumimto.rpg.configuration.Localizations;
+import cz.neumimto.rpg.sponge.configuration.Localizations;
 import cz.neumimto.rpg.events.party.PartyCreateEvent;
 import cz.neumimto.rpg.events.party.PartyInviteEvent;
 import cz.neumimto.rpg.events.party.PartyJoinEvent;

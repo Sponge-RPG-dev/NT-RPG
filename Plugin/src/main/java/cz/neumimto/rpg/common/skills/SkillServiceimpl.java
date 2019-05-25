@@ -17,7 +17,7 @@ import cz.neumimto.rpg.common.utils.annotations.CatalogId;
 import cz.neumimto.rpg.common.configuration.SkillTreeDao;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.scripting.JSLoader;
+import cz.neumimto.rpg.common.scripting.JSLoader;
 import cz.neumimto.rpg.sponge.gui.SkillTreeInterfaceModel;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;

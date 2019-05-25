@@ -79,4 +79,14 @@ public final class SpongeRpgApi implements RpgApi {
     public boolean postEvent(Object event) {
         return Sponge.getEventManager().post((Event) event);
     }
+
+    @Override
+    public void unregisterListeners(Object listener) {
+        Sponge.getEventManager().unregisterListeners(listener);
+    }
+
+    @Override
+    public void registerListeners(Object listener) {
+        Sponge.getEventManager().registerListeners(NtRpgPlugin.GlobalScope.plugin, listener);
+    }
 }
