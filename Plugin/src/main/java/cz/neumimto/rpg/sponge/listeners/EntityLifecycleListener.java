@@ -7,7 +7,7 @@ import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.entities.IEntityType;
-import cz.neumimto.rpg.inventory.SpongeInventoryService;
+import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.ExperienceSources;
 import cz.neumimto.rpg.players.IActiveCharacter;

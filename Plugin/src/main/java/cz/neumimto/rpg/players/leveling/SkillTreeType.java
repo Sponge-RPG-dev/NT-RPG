@@ -2,6 +2,7 @@ package cz.neumimto.rpg.players.leveling;
 
 
 import cz.neumimto.core.localization.Arg;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.ActionResult;
 import cz.neumimto.rpg.api.skills.ISkill;
@@ -9,13 +10,14 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.sponge.configuration.Localizations;
-import cz.neumimto.rpg.events.character.CharacterGainedLevelEvent;
+import cz.neumimto.rpg.api.events.character.CharacterGainedLevelEvent;
 import cz.neumimto.rpg.common.persistance.dao.DirectAccessDao;
 import cz.neumimto.rpg.common.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.sponge.configuration.PluginConfig;
 import org.spongepowered.api.Sponge;
 
 import java.util.HashMap;
@@ -26,12 +28,13 @@ public enum SkillTreeType {
     MANUAL {
         @Override
         public void processClassLevelUp(IActiveCharacter character, PlayerClassData playerClassData, int level) {
-            CharacterGainedLevelEvent event =
-                    new CharacterGainedLevelEvent(character, playerClassData, level,
-                            playerClassData.getClassDefinition().getSkillpointsPerLevel(),
-                            playerClassData.getClassDefinition().getAttributepointsPerLevel());
-
-            Sponge.getGame().getEventManager().post(event);
+            CharacterGainedLevelEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterGainedLevelEvent.class);
+            event.setTarget(character);
+            event.setLevel(level);
+            event.setPlayerClassData(playerClassData);
+            event.setSkillpointsPerLevel(playerClassData.getClassDefinition().getSkillpointsPerLevel());
+            event.setAttributepointsPerLevel(playerClassData.getClassDefinition().getAttributepointsPerLevel());
+            Rpg.get().postEvent(event);
 
             NtRpgPlugin.GlobalScope.characterService.addSkillPoint(character, playerClassData, event.getSkillpointsPerLevel());
         }
@@ -99,9 +102,14 @@ public enum SkillTreeType {
             if (skillTree == null) {
                 return;
             }
-            CharacterGainedLevelEvent event =
-                    new CharacterGainedLevelEvent(character, playerClassData, level, 0, classDefinition.getAttributepointsPerLevel());
-            Sponge.getGame().getEventManager().post(event);
+
+            CharacterGainedLevelEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterGainedLevelEvent.class);
+            event.setTarget(character);
+            event.setLevel(level);
+            event.setPlayerClassData(playerClassData);
+            event.setSkillpointsPerLevel(playerClassData.getClassDefinition().getSkillpointsPerLevel());
+            event.setAttributepointsPerLevel(playerClassData.getClassDefinition().getAttributepointsPerLevel());
+            Rpg.get().postEvent(event);
 
             Map<String, SkillData> skills = skillTree.getSkills();
             for (Map.Entry<String, SkillData> stringSkillDataEntry : skills.entrySet()) {

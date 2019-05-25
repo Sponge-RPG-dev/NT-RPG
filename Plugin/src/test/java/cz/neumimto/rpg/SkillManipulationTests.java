@@ -29,16 +29,6 @@ public class SkillManipulationTests {
         protected void addCharacterToGame(UUID id, IActiveCharacter character, List<CharacterBase> playerChars) {
 
         }
-
-        @Override
-        public void updateWeaponRestrictions(IActiveCharacter character) {
-
-        }
-
-        @Override
-        public void updateArmorRestrictions(IActiveCharacter character) {
-
-        }
     };
 
     ISkill main;

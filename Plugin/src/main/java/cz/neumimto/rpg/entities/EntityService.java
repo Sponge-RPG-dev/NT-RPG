@@ -1,10 +1,11 @@
 package cz.neumimto.rpg.entities;
 
 import cz.neumimto.rpg.api.IRpgElement;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.events.skill.SkillHealEvent;
+import cz.neumimto.rpg.api.events.skill.SkillHealEvent;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 import org.spongepowered.api.Sponge;
@@ -134,13 +135,21 @@ public class EntityService {
             return 0;
         }
 
-        SkillHealEvent event = new SkillHealEvent(entity, amount, source);
-        Sponge.getGame().getEventManager().post(event);
-        if (event.isCancelled() || event.getAmount() <= 0) {
+        SkillHealEvent event = Rpg.get().getEventFactory().createEventInstance(SkillHealEvent.class);
+
+        event.setSource(source);
+        event.setAmount(amount);
+        event.setEntity(entity);
+
+        if (Rpg.get().postEvent(event)) {
             return 0;
         }
 
-        return setEntityHealth(event.getTarget(), entity.getHealth().getValue() + event.getAmount());
+        if (event.getAmount() <= 0) {
+            return 0;
+        }
+
+        return setEntityHealth(event.getEntity(), entity.getHealth().getValue() + event.getAmount());
     }
 
     /**

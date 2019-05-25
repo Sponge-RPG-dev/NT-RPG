@@ -18,6 +18,8 @@
 package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.ClassService;
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.events.character.*;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.ActionResult;
 import cz.neumimto.rpg.api.IRpgElement;
@@ -40,9 +42,8 @@ import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.sponge.effects.common.def.ClickComboActionComponent;
 import cz.neumimto.rpg.sponge.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.events.PlayerDataPreloadComplete;
-import cz.neumimto.rpg.events.character.CharacterManaRegainEvent;
-import cz.neumimto.rpg.inventory.SpongeInventoryService;
+import cz.neumimto.rpg.sponge.events.PlayerDataPreloadComplete;
+import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.inventory.UserActionType;
 import cz.neumimto.rpg.common.persistance.dao.CharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.PlayerDao;
@@ -175,7 +176,7 @@ public abstract class CharacterService {
             dataPreparationStageMap.remove(uniqueId);
         } else if (dataPreparationStage.stage == DataPreparationStage.Stage.NO_ACTION) {
             if (!dataPreparationStage.characters.isEmpty()) {
-                Gui.invokeCharacterMenu(targetEntity, dataPreparationStage.characters);
+                Gui.invokeCharacterMenu(getCharacter(targetEntity), dataPreparationStage.characters);
             } else {
                 //todo message
             }
@@ -219,9 +220,21 @@ public abstract class CharacterService {
         return true;
     }
 
-    public abstract void updateWeaponRestrictions(IActiveCharacter character);
+    public void updateWeaponRestrictions(IActiveCharacter character) {
+        Map weapons = character.getAllowedWeapons();
+        CharacterWeaponUpdateEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterWeaponUpdateEvent.class);
+        event.setWeapons(weapons);
+        event.setTarget(character);
+        Rpg.get().postEvent(event);
+    }
 
-    public abstract void updateArmorRestrictions(IActiveCharacter character);
+    public void updateArmorRestrictions(IActiveCharacter character) {
+        Set allowedArmor = character.getAllowedArmor();
+        EventCharacterArmorPostUpdate event = Rpg.get().getEventFactory().createEventInstance(EventCharacterArmorPostUpdate.class);
+        event.setArmor(allowedArmor);
+        event.setTarget(character);
+        Rpg.get().postEvent(event);
+    }
 
 
     /**
@@ -321,6 +334,10 @@ public abstract class CharacterService {
 
         updateMaxHealth(character);
         entityService.updateWalkSpeed(character);
+
+        CharacterInitializedEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterInitializedEvent.class);
+        event.setTarget(character);
+        Rpg.get().postEvent(event);
     }
 
     public void addDefaultEffects(IActiveCharacter character) {
@@ -618,6 +635,14 @@ public abstract class CharacterService {
             return ActionResult.withErrorMessage(Localizations.INSUFFICIENT_LEVEL_GAP.toText(arg(map)));
         }
 
+        CharacterSkillUpgradeEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterSkillUpgradeEvent.class);
+        event.setTarget(character);
+        event.setSkill(skill);
+
+        if (Rpg.get().postEvent(event)) {
+            return ActionResult.withErrorMessage(event.getFailedTranslationKey());
+        }
+
         return ActionResult.ok();
     }
 
@@ -703,6 +728,14 @@ public abstract class CharacterService {
             return ActionResult.withErrorMessage(Localizations.SKILL_CONFLICTS.toText(arg(map)));
         }
 
+        CharacterSkillLearnAttemptEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterSkillLearnAttemptEvent.class);
+        event.setTarget(character);
+        event.setSkill(skill);
+
+        if (Rpg.get().postEvent(event)) {
+            return ActionResult.withErrorMessage(event.getFailedTranslationKey());
+        }
+
         return ActionResult.ok();
     }
 
@@ -761,6 +794,15 @@ public abstract class CharacterService {
         if (skill instanceof SkillTreeSpecialization && pluginConfig.PATH_NODES_SEALED) {
             return ActionResult.withErrorMessage(Localizations.UNABLE_TO_REFUND_SKILL_SEALED.toText());
         }
+
+        CharacterSkillRefundAttemptEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterSkillRefundAttemptEvent.class);
+        event.setTarget(character);
+        event.setSkill(skill);
+
+        if (Rpg.get().postEvent(event)) {
+            return ActionResult.withErrorMessage(event.getFailedTranslationKey());
+        }
+
         return ActionResult.ok();
     }
 
@@ -929,6 +971,15 @@ public abstract class CharacterService {
      * @return
      */
     public int addAttribute(IActiveCharacter character, Attribute attribute, int i) {
+        CharacterAttributeChange event = Rpg.get().getEventFactory().createEventInstance(CharacterAttributeChange.class);
+
+        event.setTarget(character);
+        event.setAttribute(attribute);
+
+        if (Rpg.get().postEvent(event)) {
+            return 1;
+        }
+
         int attributePoints = character.getCharacterBase().getAttributePoints();
         if (attributePoints - i <= 0) {
             return 1;
@@ -1049,9 +1100,16 @@ public abstract class CharacterService {
             return;
         }
 
-        CharacterManaRegainEvent event = new CharacterManaRegainEvent(character, manaToAdd, source);
-        Sponge.getGame().getEventManager().post(event);
-        if (event.isCancelled() || event.getAmount() <= 0) {
+        CharacterManaRegainEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterManaRegainEvent.class);
+
+        event.setAmount(manaToAdd);
+        event.setTarget(character);
+        event.setSource(source);
+
+        if (Rpg.get().postEvent(event)) {
+            return;
+        }
+        if (event.getAmount() <= 0) {
             return;
         }
 

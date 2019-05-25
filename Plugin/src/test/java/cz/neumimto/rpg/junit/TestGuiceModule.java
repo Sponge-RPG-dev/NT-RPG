@@ -31,7 +31,7 @@ import cz.neumimto.rpg.sponge.gui.GuiService;
 import cz.neumimto.rpg.sponge.gui.ItemLoreBuilderService;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
-import cz.neumimto.rpg.inventory.SpongeInventoryService;
+import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.inventory.runewords.RWDao;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.players.CharacterService;

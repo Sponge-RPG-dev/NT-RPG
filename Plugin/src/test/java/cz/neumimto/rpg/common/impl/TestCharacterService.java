@@ -16,13 +16,4 @@ public class TestCharacterService extends CharacterService {
 
     }
 
-    @Override
-    public void updateWeaponRestrictions(IActiveCharacter character) {
-
-    }
-
-    @Override
-    public void updateArmorRestrictions(IActiveCharacter character) {
-
-    }
 }

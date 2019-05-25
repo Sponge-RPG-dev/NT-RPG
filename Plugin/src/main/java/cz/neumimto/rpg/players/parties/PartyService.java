@@ -20,12 +20,13 @@ package cz.neumimto.rpg.players.parties;
 
 
 import cz.neumimto.core.localization.Arg;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.sponge.configuration.Localizations;
-import cz.neumimto.rpg.events.party.PartyCreateEvent;
-import cz.neumimto.rpg.events.party.PartyInviteEvent;
-import cz.neumimto.rpg.events.party.PartyJoinEvent;
-import cz.neumimto.rpg.events.party.PartyLeaveEvent;
+import cz.neumimto.rpg.api.events.party.PartyCreateEvent;
+import cz.neumimto.rpg.api.events.party.PartyInviteEvent;
+import cz.neumimto.rpg.api.events.party.PartyJoinEvent;
+import cz.neumimto.rpg.api.events.party.PartyLeaveEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
@@ -40,37 +41,45 @@ import javax.inject.Singleton;
 @Singleton
 public class PartyService {
 
-    @Inject
-    private Game game;
-
     public void createNewParty(IActiveCharacter leader) {
-        PartyCreateEvent event = new PartyCreateEvent(leader);
-        if (!game.getEventManager().post(event)) {
-            Party party = new Party(leader);
-            leader.setParty(party);
+        PartyCreateEvent event = Rpg.get().getEventFactory().createEventInstance(PartyCreateEvent.class);
+        event.setCharacter(leader);
+        event.setParty(new Party(leader));
+        if (!Rpg.get().postEvent(event)) {
+            leader.setParty(event.getParty());
         }
     }
 
     public void kickCharacterFromParty(Party party, IActiveCharacter kicked) {
         if (party.getPlayers().contains(kicked)) {
-            PartyLeaveEvent event = new PartyLeaveEvent(kicked, party);
-            if (game.getEventManager().post(event)) return;
+            PartyLeaveEvent event = Rpg.get().getEventFactory().createEventInstance(PartyLeaveEvent.class);
+            event.setCharacter(kicked);
+            event.setParty(party);
 
-            event.getParty().removePlayer(event.getTarget());
+            if (Rpg.get().postEvent(event)) {
+                return;
+            }
+
+            event.getParty().removePlayer(event.getCharacter());
             Player player = kicked.getPlayer();
             event.getParty().getInvites().remove(player.getUniqueId());
-            event.getTarget().setParty(null);
+            event.getCharacter().setParty(null);
         }
     }
 
     public void sendPartyInvite(Party party, IActiveCharacter character) {
-        PartyInviteEvent event = new PartyInviteEvent(character, party);
-        if (game.getEventManager().post(event)) return;
+        PartyInviteEvent event = Rpg.get().getEventFactory().createEventInstance(PartyInviteEvent.class);
+        event.setCharacter(character);
+        event.setParty(party);
+
+        if (Rpg.get().postEvent(event)) {
+            return;
+        }
 
         party.sendPartyMessage(Localizations.PLAYER_INVITED_TO_PARTY_PARTY_MSG.toText(Arg.arg("player", character.getPlayer().getName())));
         character.getPlayer().sendMessage(Localizations.PLAYER_INVITED_TO_PARTY.toText(Arg.arg("player", character.getPlayer().getName())));
         party.getInvites().add(character.getPlayer().getUniqueId());
-        event.getTarget().setPendingPartyInvite(event.getParty());
+        event.getCharacter().setPendingPartyInvite(event.getParty());
     }
 
     public void addToParty(Party party, IActiveCharacter character) {
@@ -81,8 +90,14 @@ public class PartyService {
             Gui.sendMessage(character, Localizations.ALREADY_IN_PARTY, Arg.EMPTY);
             return;
         }
-        PartyJoinEvent event = new PartyJoinEvent(character, party);
-        if (game.getEventManager().post(event)) return;
+
+        PartyJoinEvent event = Rpg.get().getEventFactory().createEventInstance(PartyJoinEvent.class);
+        event.setCharacter(character);
+        event.setParty(party);
+
+        if (Rpg.get().postEvent(event)) {
+            return;
+        }
 
         Player player = character.getPlayer();
         party.getInvites().remove(player.getUniqueId());

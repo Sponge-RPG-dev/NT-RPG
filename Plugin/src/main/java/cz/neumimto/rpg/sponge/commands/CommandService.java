@@ -19,6 +19,9 @@
 package cz.neumimto.rpg.sponge.commands;
 
 import cz.neumimto.rpg.GlobalScope;
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.skills.ISkill;
@@ -61,6 +64,9 @@ public class CommandService {
 
     @Inject
     private GlobalScope globalScope;
+
+    @Inject
+    private CharacterService characterService;
 
     public void registerStandartCommands() {
         registerAdminCommands();
@@ -399,7 +405,8 @@ public class CommandService {
                     args.<ClassDefinition>getOne(Text.of("class"))
                             .ifPresent(playerGroup -> {
                                 Player player = (Player) src;
-                                Gui.displayClassWeapons(playerGroup, player);
+                                IActiveCharacter character = characterService.getCharacter(player);
+                                Gui.displayClassWeapons(playerGroup, character);
                             });
                     return CommandResult.success();
                 })
@@ -413,7 +420,8 @@ public class CommandService {
                     args.<ClassDefinition>getOne(Text.of("class"))
                             .ifPresent(playerGroup -> {
                                 Player player = (Player) src;
-                                Gui.displayClassArmor(playerGroup, player);
+                                IActiveCharacter character = characterService.getCharacter(player);
+                                Gui.displayClassArmor(playerGroup, character);
                             });
                     return CommandResult.success();
                 })

@@ -2,6 +2,7 @@ package cz.neumimto.rpg.sponge;
 
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.api.events.effect.EventFactoryService;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.items.ItemService;
@@ -88,5 +89,10 @@ public final class SpongeRpgApi implements RpgApi {
     @Override
     public void registerListeners(Object listener) {
         Sponge.getEventManager().registerListeners(NtRpgPlugin.GlobalScope.plugin, listener);
+    }
+
+    @Override
+    public EventFactoryService getEventFactory() {
+        return NtRpgPlugin.GlobalScope.eventFactory;
     }
 }

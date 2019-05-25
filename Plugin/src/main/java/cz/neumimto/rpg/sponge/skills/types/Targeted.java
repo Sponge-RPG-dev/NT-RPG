@@ -26,7 +26,7 @@ import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.types.ITargeted;
 import cz.neumimto.rpg.entities.IEntity;
-import cz.neumimto.rpg.events.skill.SkillTargetAttemptEvent;
+import cz.neumimto.rpg.api.events.skill.SkillTargetAttemptEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.entity.living.Living;
@@ -57,7 +57,10 @@ public abstract class Targeted extends ActiveSkill implements ITargeted {
         }
         IEntity target = NtRpgPlugin.GlobalScope.entityService.get(l);
 
-        SkillTargetAttemptEvent event = new SkillTargetAttemptEvent(caster, target, this);
+        SkillTargetAttemptEvent event = Rpg.get().getEventFactory().createEventInstance(SkillTargetAttemptEvent.class);
+        event.setSkill(this);
+        event.setCaster(caster);
+        event.setTarget(target);
 
         if (Rpg.get().postEvent(event)) {
             //todo https://github.com/Sponge-RPG-dev/NT-RPG/issues/111

@@ -1,12 +1,13 @@
 package cz.neumimto.rpg.api.skills;
 
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.api.skills.mods.PreProcessorTarget;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
-import cz.neumimto.rpg.events.skill.SkillPostUsageEvent;
-import cz.neumimto.rpg.events.skill.SkillPreUsageEvent;
+import cz.neumimto.rpg.api.events.skill.SkillPostUsageEvent;
+import cz.neumimto.rpg.api.events.skill.SkillPreUsageEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 import org.spongepowered.api.Sponge;
@@ -25,8 +26,12 @@ public class SkillPreprocessors {
     public static ActiveSkillPreProcessorWrapper SKILL_COST = new ActiveSkillPreProcessorWrapper(PreProcessorTarget.BEFORE) {
         @Override
         public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
-            SkillPreUsageEvent eventPre = new SkillPreUsageEvent(character, skillContext);
-            if (Sponge.getGame().getEventManager().post(eventPre)) {
+            SkillPreUsageEvent eventPre = Rpg.get().getEventFactory().createEventInstance(SkillPreUsageEvent.class);
+            eventPre.setSkillContext(skillContext);
+            eventPre.setSkill(skillContext.getSkill());
+            eventPre.setEntity(character);
+
+            if (Rpg.get().postEvent(eventPre)) {
                 skillContext.continueExecution(false);
                 skillContext.next(character, info, skillContext.result(SkillResult.FAIL));
                 return;
@@ -56,8 +61,14 @@ public class SkillPreprocessors {
             if (result != SkillResult.OK) {
                 skillContext.endWith(character, info, skillContext.result(result));
             } else {
-                SkillPostUsageEvent eventPost = new SkillPostUsageEvent(character, skillContext);
-                if (Sponge.getGame().getEventManager().post(eventPost)) return;
+                SkillPostUsageEvent eventPost = Rpg.get().getEventFactory().createEventInstance(SkillPostUsageEvent.class);
+                eventPost.setSkillContext(skillContext);
+                eventPost.setSkill(skillContext.getSkill());
+                eventPost.setEntity(character);
+
+                if (Rpg.get().postEvent(eventPost)) {
+                    return;
+                }
 
                 float hpCostPost = skillContext.getFloatNodeValue(SkillNodes.HPCOST)
                         * NtRpgPlugin.GlobalScope.entityService.getEntityProperty(character, SpongeDefaultProperties.health_cost_reduce);

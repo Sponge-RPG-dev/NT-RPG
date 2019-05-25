@@ -19,7 +19,7 @@ import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.MobSettingsDao;
 import cz.neumimto.rpg.common.exp.ExperienceDAO;
 import cz.neumimto.rpg.sponge.exp.ExperienceService;
-import cz.neumimto.rpg.inventory.SpongeInventoryService;
+import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.inventory.SpongeItemService;
 import cz.neumimto.rpg.inventory.runewords.RWDao;
 import cz.neumimto.rpg.inventory.runewords.RWService;

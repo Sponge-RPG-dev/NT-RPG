@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.sponge.scripting;
 
-import cz.neumimto.rpg.common.scripting.ClassGenerator;
+import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import jdk.internal.dynalink.beans.StaticClass;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import net.bytebuddy.ByteBuddy;

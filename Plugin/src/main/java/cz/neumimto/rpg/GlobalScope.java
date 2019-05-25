@@ -19,12 +19,13 @@
 package cz.neumimto.rpg;
 
 import com.google.inject.Injector;
+import cz.neumimto.rpg.api.events.effect.EventFactoryService;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.damage.SpongeDamageService;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.inventory.SpongeInventoryService;
+import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.inventory.SpongeItemService;
 import cz.neumimto.rpg.inventory.runewords.RWService;
 import cz.neumimto.rpg.players.CharacterService;
@@ -118,4 +119,7 @@ public class GlobalScope {
 
     @Inject
     public LocalizationService localizationService;
+
+    @Inject
+    public EventFactoryService eventFactory;
 }

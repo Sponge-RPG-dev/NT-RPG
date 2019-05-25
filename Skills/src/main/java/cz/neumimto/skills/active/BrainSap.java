@@ -11,7 +11,7 @@ import cz.neumimto.rpg.damage.SkillDamageSource;
 import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.IEntity;
-import cz.neumimto.rpg.events.damage.IEntitySkillDamageLateEvent;
+import cz.neumimto.rpg.api.events.damage.IEntitySkillDamageLateEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.skills.types.Targeted;
 import org.spongepowered.api.event.Listener;

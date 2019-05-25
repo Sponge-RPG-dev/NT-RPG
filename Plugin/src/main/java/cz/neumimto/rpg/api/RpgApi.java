@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.api;
 
 import cz.neumimto.core.localization.Arg;
+import cz.neumimto.rpg.api.events.effect.EventFactoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.skills.SkillPreProcessorFactory;
 import cz.neumimto.rpg.players.attributes.Attribute;
@@ -33,4 +34,6 @@ public interface RpgApi {
     void unregisterListeners(Object listener);
 
     void registerListeners(Object listener);
+
+    EventFactoryService getEventFactory();
 }
