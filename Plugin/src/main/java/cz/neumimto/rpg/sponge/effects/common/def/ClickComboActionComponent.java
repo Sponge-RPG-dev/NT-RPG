@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.effects.common.def;
+package cz.neumimto.rpg.sponge.effects.common.def;
 
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.effects.EffectBase;
@@ -8,7 +8,7 @@ import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.sponge.configuration.Localizations;
 import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.text.chat.ChatTypes;
 

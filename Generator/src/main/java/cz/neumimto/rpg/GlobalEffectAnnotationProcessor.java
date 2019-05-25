@@ -24,7 +24,7 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
 			"\n" +
 					"import cz.neumimto.rpg.effects.IEffectConsumer;\n" +
 					"import cz.neumimto.rpg.api.effects.IGlobalEffect;\n" +
-					"import cz.neumimto.rpg.effects.model.EffectModelFactory;\n" +
+					"import cz.neumimto.rpg.api.effects.model.EffectModelFactory;\n" +
 					"\n" +
 					"import java.util.Map;\n" +
 					"\n" +
@@ -60,7 +60,7 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
 	private String modelTemplate = ""
 			+ "\n"
 			+ "import java.util.Map;\n"
-			+ "import cz.neumimto.rpg.effects.model.EffectModelMapper;\n"
+			+ "import cz.neumimto.rpg.api.effects.model.EffectModelMapper;\n"
 			+ "import cz.neumimto.rpg.scripting.JsBinding;\n"
 			+ "\n"
 			+ "@JsBinding(JsBinding.Type.CLASS)\n"

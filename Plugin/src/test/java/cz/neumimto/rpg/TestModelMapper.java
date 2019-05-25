@@ -1,6 +1,6 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.effects.model.EffectModelMapper;
+import cz.neumimto.rpg.api.effects.model.EffectModelMapper;
 
 import java.util.Map;
 

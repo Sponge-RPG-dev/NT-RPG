@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.effects;
+package cz.neumimto.rpg.api.effects;
 
 import cz.neumimto.rpg.api.effects.EffectType;
 

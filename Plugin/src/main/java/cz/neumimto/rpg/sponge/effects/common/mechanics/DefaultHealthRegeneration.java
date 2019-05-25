@@ -1,9 +1,9 @@
-package cz.neumimto.rpg.effects.common.mechanics;
+package cz.neumimto.rpg.sponge.effects.common.mechanics;
 
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.api.effects.IEffectContainer;
 
 import java.util.Collections;
 import java.util.HashSet;

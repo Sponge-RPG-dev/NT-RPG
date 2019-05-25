@@ -22,8 +22,6 @@ import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.common.scripting.JsBinding;
 import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.effects.IEffectSourceProvider;
 
 import java.util.HashSet;
 import java.util.Set;

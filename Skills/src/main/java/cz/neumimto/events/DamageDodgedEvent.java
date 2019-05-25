@@ -1,7 +1,7 @@
 package cz.neumimto.events;
 
 import cz.neumimto.effects.positive.DodgeEffect;
-import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.events.AbstractCancellableNEvent;
 import cz.neumimto.rpg.common.scripting.JsBinding;

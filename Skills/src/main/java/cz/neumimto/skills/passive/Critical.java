@@ -6,7 +6,7 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.common.effects.EffectService;
-import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.types.PassiveSkill;
 import cz.neumimto.rpg.api.skills.tree.SkillType;

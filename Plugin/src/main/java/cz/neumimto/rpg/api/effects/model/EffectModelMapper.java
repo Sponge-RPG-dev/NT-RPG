@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.effects.model;
+package cz.neumimto.rpg.api.effects.model;
 
 import cz.neumimto.rpg.sponge.utils.Utils;
 

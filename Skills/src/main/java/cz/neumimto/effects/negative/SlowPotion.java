@@ -1,7 +1,7 @@
 package cz.neumimto.effects.negative;
 
 import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.effects.common.mechanics.RPGPotionEffect;
+import cz.neumimto.rpg.sponge.effects.common.mechanics.RPGPotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectTypes;
 

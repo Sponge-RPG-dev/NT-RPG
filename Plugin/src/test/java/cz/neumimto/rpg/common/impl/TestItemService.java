@@ -7,7 +7,7 @@ import cz.neumimto.rpg.common.configuration.ItemString;
 import cz.neumimto.rpg.common.items.AbstractItemService;
 import cz.neumimto.rpg.common.items.RpgItemStackImpl;
 import cz.neumimto.rpg.common.items.TestItemType;
-import cz.neumimto.rpg.items.SpongeRpgItemType;
+import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
 
 import javax.inject.Singleton;
 import java.util.Collections;

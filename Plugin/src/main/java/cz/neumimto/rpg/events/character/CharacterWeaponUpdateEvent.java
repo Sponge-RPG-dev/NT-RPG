@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.events.character;
 
-import cz.neumimto.rpg.items.SpongeRpgItemType;
+import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
 import cz.neumimto.rpg.players.IActiveCharacter;
 
 import java.util.Map;

@@ -1,10 +1,10 @@
-package cz.neumimto.rpg.effects.common.def;
+package cz.neumimto.rpg.sponge.effects.common.def;
 
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.effects.CoreEffectTypes;
-import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.common.effects.CoreEffectTypes;
+import cz.neumimto.rpg.api.effects.IEffectContainer;
+import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.boss.BossBarColors;

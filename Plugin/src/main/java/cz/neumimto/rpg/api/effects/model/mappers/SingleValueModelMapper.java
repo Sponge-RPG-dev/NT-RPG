@@ -1,7 +1,7 @@
-package cz.neumimto.rpg.effects.model.mappers;
+package cz.neumimto.rpg.api.effects.model.mappers;
 
 import com.google.gson.Gson;
-import cz.neumimto.rpg.effects.model.EffectModelMapper;
+import cz.neumimto.rpg.api.effects.model.EffectModelMapper;
 import cz.neumimto.rpg.sponge.utils.Utils;
 
 import java.util.Map;

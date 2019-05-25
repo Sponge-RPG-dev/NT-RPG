@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.api.items;
 
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
-import cz.neumimto.rpg.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
 
 public interface EquipedItemStack extends IEffectSourceProvider {
     RpgItemStack getRpgItemStack();

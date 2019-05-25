@@ -1,7 +1,5 @@
-package cz.neumimto.rpg.effects;
+package cz.neumimto.rpg.api.effects;
 
-import cz.neumimto.rpg.api.effects.EffectStackingStrategy;
-import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.stacking.UnstackableEffectData;
 
 import java.util.HashSet;
@@ -12,7 +10,7 @@ import java.util.Set;
  */
 public class EffectContainer<K, T extends IEffect<K>> implements IEffectContainer<K, T> {
 
-    final Set<T> effects = new HashSet<>();
+    final protected Set<T> effects = new HashSet<>();
 
     final String name;
 

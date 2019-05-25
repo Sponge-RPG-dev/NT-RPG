@@ -4,7 +4,7 @@ import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.effects.ShapedEffectDecorator;
+import cz.neumimto.rpg.sponge.effects.ShapedEffectDecorator;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.entity.Entity;

@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.api.effects.stacking;
 
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.effects.EffectContainer;
+import cz.neumimto.rpg.api.effects.EffectContainer;
 
 /**
  * Created by NeumimTo on 7.7.2017.

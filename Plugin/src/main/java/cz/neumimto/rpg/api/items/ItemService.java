@@ -3,7 +3,7 @@ package cz.neumimto.rpg.api.items;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
-import cz.neumimto.rpg.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.attributes.Attribute;
 

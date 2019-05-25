@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.items;
+package cz.neumimto.rpg.sponge.items;
 
 import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.common.items.RpgItemTypeImpl;

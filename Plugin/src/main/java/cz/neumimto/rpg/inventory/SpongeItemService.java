@@ -14,7 +14,7 @@ import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.items.AbstractItemService;
 import cz.neumimto.rpg.common.items.RpgItemStackImpl;
 import cz.neumimto.rpg.inventory.data.NKeys;
-import cz.neumimto.rpg.items.SpongeRpgItemType;
+import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import org.spongepowered.api.Sponge;

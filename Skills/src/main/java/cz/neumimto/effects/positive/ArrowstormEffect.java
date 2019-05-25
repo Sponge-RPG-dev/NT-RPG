@@ -6,7 +6,7 @@ import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.effects.IEffectContainer;
+import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.common.scripting.JsBinding;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
