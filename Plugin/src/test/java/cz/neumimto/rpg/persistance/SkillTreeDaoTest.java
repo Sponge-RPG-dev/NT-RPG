@@ -3,6 +3,7 @@ package cz.neumimto.rpg.persistance;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import cz.neumimto.rpg.GlobalScope;
+import cz.neumimto.rpg.common.configuration.SkillTreeDao;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.api.skills.types.AbstractSkill;

@@ -53,7 +53,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.properties.SpongePropertyService;
 import cz.neumimto.rpg.sponge.gui.ItemLoreBuilderService;
-import cz.neumimto.rpg.sponge.skills.SkillItemCost;
+import cz.neumimto.rpg.common.configuration.SkillItemCost;
 import cz.neumimto.rpg.sponge.utils.ItemStackUtils;
 import ninja.leaping.configurate.SimpleConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;

@@ -1,5 +1,6 @@
-package cz.neumimto.rpg.api.skills;
+package cz.neumimto.rpg.common.skills;
 
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.configuration.DebugLevel;

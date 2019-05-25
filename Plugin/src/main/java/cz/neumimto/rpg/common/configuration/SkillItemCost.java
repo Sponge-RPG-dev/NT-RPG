@@ -1,13 +1,11 @@
-package cz.neumimto.rpg.sponge.skills;
-
-import org.spongepowered.api.item.ItemType;
+package cz.neumimto.rpg.common.configuration;
 
 /**
  * Created by NeumimTo on 4.11.2018.
  */
 public class SkillItemCost {
 
-    private ItemType itemType;
+    private ItemString item;
     private Integer modelId;
     private Integer amount;
     private boolean consumeItems;
@@ -16,12 +14,12 @@ public class SkillItemCost {
     }
 
 
-    public ItemType getItemType() {
-        return itemType;
+    public ItemString getItemType() {
+        return item;
     }
 
-    public void setItemType(ItemType itemType) {
-        this.itemType = itemType;
+    public void setItemType(ItemString itemType) {
+        this.item = itemType;
     }
 
     public Integer getModelId() {

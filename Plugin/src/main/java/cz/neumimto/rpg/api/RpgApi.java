@@ -16,8 +16,6 @@ public interface RpgApi {
 
     Optional<Attribute> getAttributeById(String id);
 
-    Optional<SkillPreProcessorFactory> getSkillPreProcessorFactory(String preprocessorFactoryId);
-
     ItemService getItemService();
 
     void broadcastMessage(String message);
