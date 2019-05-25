@@ -16,8 +16,9 @@
  *
  */
 
-package cz.neumimto.rpg.sponge.effects.common.mechanics;
+package cz.neumimto.rpg.common.effects.core;
 
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
@@ -29,7 +30,6 @@ import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.api.events.character.CharacterManaRegainEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
-import org.spongepowered.api.Sponge;
 
 /**
  * Created by NeumimTo on 9.8.2015.
@@ -72,8 +72,12 @@ public class DefaultManaRegeneration extends EffectBase {
         double regen = character.getMana().getRegen()
                 * NtRpgPlugin.GlobalScope.entityService.getEntityProperty(character, SpongeDefaultProperties.mana_regen_mult);
 
-        CharacterManaRegainEvent event = new CharacterManaRegainEvent(character, regen, this);
-        if (Sponge.getEventManager().post(event)) return;
+        CharacterManaRegainEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterManaRegainEvent.class);
+        event.setTarget(character);
+        event.setAmount(regen);
+        event.setSource(this);
+
+        if (Rpg.get().postEvent(event)) return;
 
         current += event.getAmount();
         if (current > max) current = max;

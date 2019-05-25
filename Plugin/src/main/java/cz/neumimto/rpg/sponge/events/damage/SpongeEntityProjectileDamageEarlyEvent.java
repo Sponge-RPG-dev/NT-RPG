@@ -9,9 +9,15 @@ import org.spongepowered.api.event.cause.entity.damage.source.IndirectEntityDama
  * Called when IEntity gets damaged by projectile, after damage bonuses of source, but before resistances of target are applied
  * {@link Cause} contains {@link IndirectEntityDamageSource}
  */
-public interface IEntityProjectileDamageEarlyEvent extends DamageIEntityEarlyEvent {
+public class SpongeEntityProjectileDamageEarlyEvent extends SpongeAbstractDamageEvent implements DamageIEntityEarlyEvent {
 
-    Projectile getProjectile();
+    private Projectile projectile;
 
-    void setProjectile(Projectile projectile);
+    public Projectile getProjectile() {
+        return projectile;
+    }
+
+    public void setProjectile(Projectile projectile) {
+        this.projectile = projectile;
+    }
 }

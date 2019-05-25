@@ -21,7 +21,7 @@ import java.util.function.Consumer;
  * Created by NeumimTo on 12.10.15.
  */
 @Singleton
-public class SpongeClassGenerator implements Opcodes, ClassGenerator {
+public class SpongeClassGenerator extends ClassGenerator implements Opcodes {
 
     @Override
     public Object generateDynamicListener(List<ScriptObjectMirror> list) {

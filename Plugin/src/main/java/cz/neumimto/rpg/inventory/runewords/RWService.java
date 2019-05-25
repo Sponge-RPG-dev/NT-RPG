@@ -106,12 +106,7 @@ public class RWService {
                 .collect(Collectors.toList()));
         rw.setMinLevel(template.getMinLevel());
 
-        rw.setAllowedItems(template.getAllowedItems()
-                .stream()
-                .map(a -> game.getRegistry().getType(ItemType.class, a))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toSet()));
+        rw.setAllowedItems(new HashSet<>(template.getAllowedItems()));
 
         rw.setEffects(template.getEffects().entrySet().stream()
                 .filter(l -> effectService.isGlobalEffect(l.getKey()))

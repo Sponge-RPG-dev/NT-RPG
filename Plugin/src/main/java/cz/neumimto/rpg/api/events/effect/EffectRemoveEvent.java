@@ -10,6 +10,6 @@ import org.spongepowered.api.event.cause.Cause;
  * <p>
  * To filter specific effects in listener use EffectRemoveEvent<YourEffect> or "@First YourEffect"
  */
-public interface EffectRemoveEvent<T extends IEffect> extends TargetEffectEvent{
+public interface EffectRemoveEvent<T extends IEffect> extends TargetEffectEvent {
 
 }

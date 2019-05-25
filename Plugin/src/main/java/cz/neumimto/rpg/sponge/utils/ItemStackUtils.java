@@ -88,19 +88,19 @@ public class ItemStackUtils {
     private static BiFunction<String, String, String> formatedConfig = (k, v) -> Utils.newLine(k + ": " + v + ";");
     private static Pattern pattern = Pattern.compile("\\((.*?)\\)");
 
-    public static boolean isHelmet(String type) {
+    public static boolean isHelmet(ItemType type) {
         return helmet.contains(type);
     }
 
-    public static boolean isChestplate(String type) {
+    public static boolean isChestplate(ItemType type) {
         return chestplates.contains(type);
     }
 
-    public static boolean isLeggings(String type) {
+    public static boolean isLeggings(ItemType type) {
         return leggings.contains(type);
     }
 
-    public static boolean isBoots(String type) {
+    public static boolean isBoots(ItemType type) {
         return boots.contains(type);
     }
 

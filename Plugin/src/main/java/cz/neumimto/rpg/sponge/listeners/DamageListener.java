@@ -2,19 +2,19 @@ package cz.neumimto.rpg.sponge.listeners;
 
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.damage.SkillDamageSource;
-import cz.neumimto.rpg.damage.SpongeDamageService;
+import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.entities.IEntityType;
 import cz.neumimto.rpg.api.events.damage.*;
 import cz.neumimto.rpg.inventory.SpongeItemService;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.sponge.events.damage.IEntityProjectileDamageEarlyEvent;
-import cz.neumimto.rpg.sponge.events.damage.IEntityProjectileDamageLateEvent;
+import cz.neumimto.rpg.sponge.events.damage.*;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
 import cz.neumimto.rpg.sponge.skills.ProjectileProperties;
 import org.spongepowered.api.Sponge;
@@ -132,14 +132,23 @@ public class DamageListener {
         }
         newdamage *= spongeDamageService.getEntityDamageMult(attacker, source.getType());
 
-        IEntityWeaponDamageEarlyEvent e = new IEntityWeaponDamageEarlyEvent(target, newdamage, rpgItemStack);
+        SpongeEntityWeaponDamageEarlyEvent e = Rpg.get().getEventFactory().createEventInstance(SpongeEntityWeaponDamageEarlyEvent.class);
+        e.setWeapon(rpgItemStack);
+        e.setDamage(newdamage);
+        e.setTarget(target);
+
 
         e.setCause(causeStackManager.getCurrentCause());
-        Sponge.getEventManager().post(e);
-        if (e.isCancelled() || e.getDamage() <= 0) {
+
+
+        if (Rpg.get().postEvent(e)) {
             event.setCancelled(true);
             return;
         }
+
+         if (e.getDamage() <= 0) {
+             return;
+         }
 
         event.setBaseDamage(e.getDamage());
     }
@@ -148,11 +157,18 @@ public class DamageListener {
         double newdamage = event.getBaseDamage();
         newdamage *= spongeDamageService.getEntityResistance(target, source.getType());
 
-        IEntityWeaponDamageLateEvent e = new IEntityWeaponDamageLateEvent(target, newdamage);
+        SpongeEntityWeaponDamageLateEvent e = Rpg.get().getEventFactory().createEventInstance(SpongeEntityWeaponDamageLateEvent.class);
+        e.setTarget(target);
+        e.setDamage(newdamage);
+
         e.setCause(causeStackManager.getCurrentCause());
-        Sponge.getEventManager().post(e);
-        if (e.isCancelled() || e.getDamage() <= 0) {
+
+        if (Rpg.get().postEvent(e)) {
             event.setCancelled(true);
+            return;
+        }
+
+        if (e.getDamage() <= 0) {
             return;
         }
 
@@ -179,11 +195,19 @@ public class DamageListener {
                 causeStackManager.pushCause(skill);
             }
 
-            IEntitySkillDamageEarlyEvent e = new IEntitySkillDamageEarlyEvent(target, skill, newdamage);
+            SpongeEntitySkillDamageEarlyEvent e = Rpg.get().getEventFactory().createEventInstance(SpongeEntitySkillDamageEarlyEvent.class);
+            e.setTarget(target);
+            e.setDamage(newdamage);
+            e.setSkill(skill);
+
             e.setCause(causeStackManager.getCurrentCause());
-            Sponge.getEventManager().post(e);
-            if (e.isCancelled() || e.getDamage() <= 0) {
+
+            if (Rpg.get().postEvent(e)) {
                 event.setCancelled(true);
+                return;
+            }
+
+            if (e.getDamage() <= 0) {
                 return;
             }
 
@@ -206,11 +230,20 @@ public class DamageListener {
             }
             newdamage *= spongeDamageService.getEntityResistance(target, type);
 
-            IEntitySkillDamageLateEvent e = new IEntitySkillDamageLateEvent(target, skill, newdamage);
+
+            SpongeEntitySkillDamageLateEvent e = Rpg.get().getEventFactory().createEventInstance(SpongeEntitySkillDamageLateEvent.class);
+            e.setTarget(target);
+            e.setDamage(newdamage);
+            e.setSkill(skill);
+
             e.setCause(causeStackManager.getCurrentCause());
-            Sponge.getEventManager().post(e);
-            if (e.isCancelled() || e.getDamage() <= 0) {
+
+            if (Rpg.get().postEvent(e)) {
                 event.setCancelled(true);
+                return;
+            }
+
+            if (e.getDamage() <= 0) {
                 return;
             }
 
@@ -229,29 +262,46 @@ public class DamageListener {
             }
         }
 
-        IEntityProjectileDamageEarlyEvent hit = new IEntityProjectileDamageEarlyEvent(target, newdamage, projectile);
-        hit.setCause(causeStackManager.getCurrentCause());
-        Sponge.getEventManager().post(hit);
-        if (hit.isCancelled() || hit.getDamage() <= 0) {
+        SpongeEntityProjectileDamageEarlyEvent e = Rpg.get().getEventFactory().createEventInstance(SpongeEntityProjectileDamageEarlyEvent.class);
+        e.setTarget(target);
+        e.setDamage(newdamage);
+        e.setProjectile(projectile);
+
+        e.setCause(causeStackManager.getCurrentCause());
+
+        if (Rpg.get().postEvent(e)) {
             event.setCancelled(true);
             return;
         }
 
-        event.setBaseDamage(hit.getDamage());
+        if (e.getDamage() <= 0) {
+            return;
+        }
+
+        event.setBaseDamage(e.getDamage());
     }
 
     private void processProjectileDamageLate(DamageEntityEvent event, IndirectEntityDamageSource source, IEntity attacker, IEntity target, Projectile projectile) {
         double newdamage = event.getBaseDamage();
         newdamage *= spongeDamageService.getEntityResistance(target, source.getType());
 
-        IEntityProjectileDamageLateEvent hit = new IEntityProjectileDamageLateEvent(target, newdamage, projectile);
-        hit.setCause(causeStackManager.getCurrentCause());
-        Sponge.getEventManager().post(hit);
-        if (hit.isCancelled() || hit.getDamage() <= 0) {
+
+        SpongeEntityProjectileDamageLateEvent e = Rpg.get().getEventFactory().createEventInstance(SpongeEntityProjectileDamageLateEvent.class);
+        e.setTarget(target);
+        e.setDamage(newdamage);
+        e.setProjectile(projectile);
+
+        e.setCause(causeStackManager.getCurrentCause());
+
+        if (Rpg.get().postEvent(e)) {
             event.setCancelled(true);
             return;
         }
 
-        event.setBaseDamage(hit.getDamage());
+        if (e.getDamage() <= 0) {
+            return;
+        }
+
+        event.setBaseDamage(e.getDamage());
     }
 }

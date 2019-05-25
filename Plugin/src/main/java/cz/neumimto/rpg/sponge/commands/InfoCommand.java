@@ -149,13 +149,15 @@ public class InfoCommand extends CommandBase {
             if (byName == null) {
                 return CommandResult.empty();
             }
-            Gui.displayInitialAttributes(byName, (Player) commandSource);
+            IActiveCharacter character = characterService.getCharacter((Player) commandSource);
+            Gui.displayInitialAttributes(byName, character);
         } else if (args[0].equalsIgnoreCase("properties-initial")) {
             ClassDefinition byName = classService.getClassDefinitionByName(args[1]);
             if (byName == null) {
                 return CommandResult.empty();
             }
-            Gui.displayInitialProperties(byName, (Player) commandSource);
+            IActiveCharacter character = characterService.getCharacter((Player) commandSource);
+            Gui.displayInitialProperties(byName, character);
         } else if (args[0].equalsIgnoreCase("stats")) {
             Player player = (Player) commandSource;
             IActiveCharacter character = characterService.getCharacter(player.getUniqueId());

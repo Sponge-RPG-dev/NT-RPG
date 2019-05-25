@@ -37,7 +37,7 @@ import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.common.utils.exceptions.MissingConfigurationException;
 import cz.neumimto.rpg.sponge.configuration.DebugLevel;
 import cz.neumimto.rpg.sponge.configuration.Localizations;
-import cz.neumimto.rpg.damage.SpongeDamageService;
+import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.sponge.effects.common.def.ClickComboActionComponent;
 import cz.neumimto.rpg.sponge.effects.common.def.CombatEffect;

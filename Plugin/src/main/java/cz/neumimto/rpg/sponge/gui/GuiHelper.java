@@ -22,6 +22,7 @@ import cz.neumimto.rpg.sponge.commands.InfoCommand;
 import cz.neumimto.rpg.sponge.listeners.SkillTreeInventoryListener;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
 import cz.neumimto.rpg.sponge.utils.Utils;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.DyeColor;
@@ -30,6 +31,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
+import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
@@ -78,14 +80,14 @@ public class GuiHelper {
         damageTypeToItemStack.put(NDamageType.LIGHTNING, Item.of(ItemTypes.NETHER_STAR));
     }
 
-    public static ItemStack itemStack(String type) {
+    public static ItemStack itemStack(ItemType type) {
         ItemStack is = ItemStack.of(type, 1);
         is.offer(Keys.HIDE_ATTRIBUTES, true);
         is.offer(Keys.HIDE_MISCELLANEOUS, true);
         return is;
     }
 
-    public static ItemStack damageTypeToItemStack(DamageType type) {
+    public static ItemStack damageTypeToItemStack(String type) {
         if (type == null) {
             return itemStack(ItemTypes.STONE);
         }
@@ -97,7 +99,7 @@ public class GuiHelper {
             is = a.toItemStack();
         }
         is.offer(new MenuInventoryData(true));
-        is.offer(Keys.DISPLAY_NAME, Text.of(type.getName()));
+        is.offer(Keys.DISPLAY_NAME, Text.of(type));
         return is;
     }
 
@@ -248,7 +250,12 @@ public class GuiHelper {
     }
 
     public static ItemStack skillToItemStack(IActiveCharacter character, SkillData skillData, SkillTree skillTree) {
-        return skillData.getSkill().toItemStack(character, skillData, skillTree);
+        return toItemStack(skillData.getSkill(), character, skillData, skillTree);
+    }
+
+    private static ItemStack toItemStack(ISkill skill, IActiveCharacter character, SkillData skillData, SkillTree skillTree) {
+        //todo
+        throw new RuntimeException("//TODO");
     }
 
 
@@ -309,7 +316,7 @@ public class GuiHelper {
     public static Inventory createSkillDetailInventoryView(IActiveCharacter character, SkillTree skillTree, SkillData skillData) {
         Inventory build = Inventory.builder()
                 .of(InventoryArchetypes.DOUBLE_CHEST)
-                .property(InventoryTitle.of(skillData.getSkill().getLocalizableName().toBuilder().color(TextColors.DARK_GREEN).style(TextStyles.BOLD)
+                .property(InventoryTitle.of(Text.builder(skillData.getSkill().getLocalizableName()).color(TextColors.DARK_GREEN).style(TextStyles.BOLD)
                         .build()))
                 .build(plugin);
 
@@ -347,7 +354,7 @@ public class GuiHelper {
             }
 
         } else {
-            DamageType type = skillData.getSkill().getDamageType();
+            String type = skillData.getSkill().getDamageType();
             if (type != null) {
                 build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(1, 1))).offer(damageTypeToItemStack(type));
             }
@@ -450,7 +457,9 @@ public class GuiHelper {
     }
 
     public static ItemStack toItemStack(ClassDefinition a) {
-        ItemStack itemStack = itemStack(a.getItemType());
+        String sItemType = a.getItemType();
+        ItemType type = Sponge.getRegistry().getType(ItemType.class, sItemType).orElse(ItemTypes.STONE);
+        ItemStack itemStack = itemStack(type);
         itemStack.offer(Keys.DISPLAY_NAME, Text.builder(a.getName()).color(a.getPreferedColor()).style(TextStyles.BOLD).build());
 
         if (a.getCustomLore().isEmpty()) {
@@ -497,5 +506,9 @@ public class GuiHelper {
                 .of(InventoryArchetypes.DOUBLE_CHEST)
                 .property(InventoryTitle.of(Text.of(character.getCharacterBase().getName(), TextStyles.BOLD)))
                 ;
+    }
+
+    public static ItemStack itemStack(String itemType) {
+        return itemStack(Sponge.getRegistry().getType(ItemType.class, itemType).orElse(ItemTypes.STONE));
     }
 }

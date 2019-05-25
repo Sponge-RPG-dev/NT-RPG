@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.sponge.commands.admin;
 
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.players.ExperienceSource;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
@@ -22,7 +21,7 @@ public class AddExperienceExecutor implements CommandExecutor {
         Player player = args.<Player>getOne("player").get();
         Double amount = args.<Double>getOne("amount").get();
         Optional<ClassDefinition> classDefinition = args.getOne("class");
-        Optional<ExperienceSource> expSource = args.getOne("source");
+        Optional<String> expSource = args.getOne("source");
 
         IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
         Collection<PlayerClassData> classes = character.getClasses().values();

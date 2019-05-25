@@ -34,7 +34,6 @@ import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
-import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.text.Text;
 
 import javax.inject.Inject;
@@ -132,16 +131,16 @@ public abstract class EffectService {
             for (ISkill iSkill : NtRpgPlugin.GlobalScope.skillService.getAll()) {
                 String s = asset.readString();
 
-                DamageType damageType = iSkill.getDamageType();
+                String damageType = iSkill.getDamageType();
 
-                s = s.replaceAll("\\{\\{skill\\.damageType}}", damageType == null ? "Deals no damage" : damageType.getName());
+                s = s.replaceAll("\\{\\{skill\\.damageType}}", damageType == null ? "Deals no damage" : damageType);
 
-                List<Text> description = iSkill.getDescription();
-                String desc = "";
-                for (Text text : description) {
-                    desc += text.toPlain();
+                List<String> description = iSkill.getDescription();
+                StringBuilder desc = new StringBuilder();
+                for (String text : description) {
+                    desc.append(text);
                 }
-                s = s.replaceAll("\\{\\{skill\\.description}}", desc);
+                s = s.replaceAll("\\{\\{skill\\.description}}", desc.toString());
 
                 String id = iSkill.getId();
                 s = s.replaceAll("\\{\\{skill\\.id}}", id);

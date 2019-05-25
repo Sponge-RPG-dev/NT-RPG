@@ -93,7 +93,7 @@ public class SpongeItemService extends AbstractItemService {
             return Optional.empty();
         }
         ItemType itemType = type.get();
-        return Optional.of(new SpongeRpgItemType(parsed.itemId, parsed.model, wClass, parsed.damage, parsed.armor, itemType.getId()));
+        return Optional.of(new SpongeRpgItemType(parsed.itemId, parsed.model, wClass, parsed.damage, parsed.armor, itemType));
     }
 
 

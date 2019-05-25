@@ -23,7 +23,7 @@ import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.EffectStatusType;
 import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.sponge.effects.common.mechanics.DefaultManaRegeneration;
+import cz.neumimto.rpg.common.effects.core.DefaultManaRegeneration;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.players.CharacterHealth;
 import cz.neumimto.rpg.players.CharacterMana;

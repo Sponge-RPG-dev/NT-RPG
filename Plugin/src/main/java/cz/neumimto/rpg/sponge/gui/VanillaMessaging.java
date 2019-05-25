@@ -36,7 +36,7 @@ import cz.neumimto.rpg.common.reloading.ReloadService;
 import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.common.utils.model.CharacterListModel;
 import cz.neumimto.rpg.sponge.configuration.Localizations;
-import cz.neumimto.rpg.damage.SpongeDamageService;
+import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.api.effects.EffectStatusType;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
@@ -459,7 +459,8 @@ public class VanillaMessaging implements IPlayerMessage {
     }
 
     @Override
-    public void displayAttributes(Player player, ClassDefinition cls) {
+    public void displayAttributes(IActiveCharacter target, ClassDefinition cls) {
+
         Inventory.Builder builder = Inventory
                 .builder();
         Text invName = Localizations.ATTRIBUTES.toText();
@@ -484,7 +485,7 @@ public class VanillaMessaging implements IPlayerMessage {
                 x++;
             }
         }
-        player.openInventory(i);
+        target.getPlayer().openInventory(i);
     }
 
     @Override
@@ -589,7 +590,8 @@ public class VanillaMessaging implements IPlayerMessage {
         int x = 1;
         int y = 2;
         for (String type : rw.getAllowedItems()) {
-            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(x, y))).offer(GuiHelper.itemStack(type));
+            ItemType itemType = Sponge.getRegistry().getType(ItemType.class, type).orElse(ItemTypes.STONE);
+            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(x, y))).offer(GuiHelper.itemStack(itemType));
             if (x == 7) {
                 x = 1;
                 y++;
@@ -674,7 +676,7 @@ public class VanillaMessaging implements IPlayerMessage {
     }
 
     @Override
-    public void sendCannotUseItemNotification(IActiveCharacter character, ItemStack is, CannotUseItemReason reason) {
+    public void sendCannotUseItemNotification(IActiveCharacter character, String item, CannotUseItemReason reason) {
         if (reason == CannotUseItemReason.CONFIG) {
             character.getPlayer()
                     .sendMessage(ChatTypes.ACTION_BAR, Text.of(TextColors.RED, Localizations.CANNOT_USE_ITEM_CONFIGURATION_REASON.toText()));
@@ -684,6 +686,7 @@ public class VanillaMessaging implements IPlayerMessage {
             character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Text.of(TextColors.RED, Localizations.CANNOT_USE_ITEM_LORE_REASON.toText()));
         }
     }
+
 
     @Override
     public void openSkillTreeMenu(IActiveCharacter player) {
@@ -718,9 +721,20 @@ public class VanillaMessaging implements IPlayerMessage {
     }
 
     @Override
-    public void displayInitialProperties(ClassDefinition g, Player p) {
-        ItemStack back = GuiHelper.back(g);
+    public void displayInitialProperties(ClassDefinition byName, IActiveCharacter player) {
+        ItemStack back = GuiHelper.back(byName);
 
+    }
+
+    @Override
+    public void sendCannotUseItemInOffHandNotification(String futureOffHandItem, IActiveCharacter character, CannotUseItemReason reason) {
+        if (reason == CannotUseItemReason.CONFIG) {
+            character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Localizations.CANNOT_USE_ITEM_CONFIGURATION_REASON_OFFHAND.toText());
+        } else if (reason == CannotUseItemReason.LEVEL) {
+            character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Localizations.CANNOT_USE_ITEM_LEVEL_REASON.toText());
+        } else if (reason == CannotUseItemReason.LORE) {
+            character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Localizations.CANNOT_USE_ITEM_LORE_REASON.toText());
+        }
     }
 
     private void createSkillTreeView(IActiveCharacter character, Inventory skillTreeInventoryViewTemplate) {
@@ -789,17 +803,6 @@ public class VanillaMessaging implements IPlayerMessage {
                     query.offer(GuiHelper.createSkillTreeInventoryMenuBoundary());
                 }
             }
-        }
-    }
-
-    @Override
-    public void sendCannotUseItemInOffHandNotification(ItemStack futureOffHand, IActiveCharacter character, CannotUseItemReason reason) {
-        if (reason == CannotUseItemReason.CONFIG) {
-            character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Localizations.CANNOT_USE_ITEM_CONFIGURATION_REASON_OFFHAND.toText());
-        } else if (reason == CannotUseItemReason.LEVEL) {
-            character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Localizations.CANNOT_USE_ITEM_LEVEL_REASON.toText());
-        } else if (reason == CannotUseItemReason.LORE) {
-            character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, Localizations.CANNOT_USE_ITEM_LORE_REASON.toText());
         }
     }
 

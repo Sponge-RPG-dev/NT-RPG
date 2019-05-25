@@ -25,6 +25,7 @@ import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.sponge.commands.arguments.CommandSkillArgument;
 import cz.neumimto.rpg.sponge.configuration.CommandLocalization;
 import cz.neumimto.rpg.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.inventory.sockets.SocketType;
@@ -81,7 +82,7 @@ public class CommandService {
         CommandSpec executeSkill = CommandSpec.builder()
                 .description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_EXEC_SKILL_DESC))
                 .arguments(
-                        GenericArguments.catalogedElement(Text.of("skill"), ISkill.class),
+                        new CommandSkillArgument(Text.of("skill")),
                         GenericArguments.flags().valueFlag(GenericArguments.string(Text.of("loc")), "1")
                                 .valueFlag(GenericArguments.string(Text.of("loc")), "1")
                                 .valueFlag(GenericArguments.string(Text.of("head")), "2")
@@ -109,7 +110,7 @@ public class CommandService {
                 .arguments(
                         GenericArguments.onlyOne(GenericArguments.playerOrSource(Text.of("player"))),
                         GenericArguments.doubleNum(Text.of("amount")),
-                        GenericArguments.optionalWeak(GenericArguments.catalogedElement(Text.of("source"), ExperienceSource.class)),
+                        GenericArguments.optionalWeak(GenericArguments.string(Text.of("source"))),
                         GenericArguments.optional(new ClassDefCommandElement(Text.of("class")))
                 )
                 .executor(new AddExperienceExecutor())

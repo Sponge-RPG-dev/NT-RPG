@@ -14,5 +14,5 @@ public interface IEntityWeaponDamageEarlyEvent extends DamageIEntityEarlyEvent {
 
     Optional<RpgItemStack> getWeapon();
 
-    void setWeapon(Optional<RpgItemStack> weapon);
+    void setWeapon(RpgItemStack weapon);
 }

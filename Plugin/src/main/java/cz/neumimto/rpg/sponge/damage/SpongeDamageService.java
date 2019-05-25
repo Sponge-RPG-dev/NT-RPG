@@ -16,7 +16,7 @@
  *
  */
 
-package cz.neumimto.rpg.damage;
+package cz.neumimto.rpg.sponge.damage;
 
 import com.google.common.collect.Lists;
 import cz.neumimto.rpg.api.items.ClassItem;

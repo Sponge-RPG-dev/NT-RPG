@@ -16,7 +16,7 @@
  *
  */
 
-package cz.neumimto.rpg.damage;
+package cz.neumimto.rpg.sponge.damage;
 
 
 import org.spongepowered.api.entity.EntityType;
