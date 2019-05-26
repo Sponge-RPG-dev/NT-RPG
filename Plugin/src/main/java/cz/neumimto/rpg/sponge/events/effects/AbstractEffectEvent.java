@@ -7,12 +7,9 @@ import cz.neumimto.rpg.sponge.events.AbstractNEvent;
 import cz.neumimto.rpg.api.events.effect.TargetIEffectConsumer;
 import org.spongepowered.api.event.GenericEvent;
 
-public abstract class AbstractEffectEvent<T extends IEffect> extends AbstractNEvent implements TargetIEffectConsumer, GenericEvent<T> {
-    protected final T effect;
-
-    public AbstractEffectEvent(T effect) {
-        this.effect = effect;
-    }
+public abstract class AbstractEffectEvent<T extends IEffect> extends AbstractNEvent
+        implements TargetIEffectConsumer, GenericEvent<T> {
+    protected T effect;
 
     @Override
     public IEffectConsumer getTarget() {
@@ -21,6 +18,10 @@ public abstract class AbstractEffectEvent<T extends IEffect> extends AbstractNEv
 
     public T getEffect() {
         return effect;
+    }
+
+    public void setEffect(T effect) {
+        this.effect = effect;
     }
 
     @SuppressWarnings("unchecked")

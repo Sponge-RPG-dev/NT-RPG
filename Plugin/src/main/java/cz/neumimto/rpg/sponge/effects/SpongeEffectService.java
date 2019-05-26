@@ -1,13 +1,13 @@
 package cz.neumimto.rpg.sponge.effects;
 
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.common.effects.EffectService;
-import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.entities.IEntity;
-import cz.neumimto.rpg.api.events.effect.EffectApplyEvent;
-import cz.neumimto.rpg.api.events.effect.EffectRemoveEvent;
+import cz.neumimto.rpg.sponge.events.effects.SpongeEffectApplyEvent;
+import cz.neumimto.rpg.sponge.events.effects.SpongeEffectRemoveEvent;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.CauseStackManager;
@@ -44,7 +44,8 @@ public class SpongeEffectService extends EffectService {
     @Override
     protected void removeEffectContainer(IEffectContainer container, IEffect effect, IEffectConsumer consumer) {
         try (CauseStackManager.StackFrame frame = causeStackManager.pushCauseFrame()) {
-            EffectRemoveEvent<IEffect> event = new EffectRemoveEvent<>(effect);
+            SpongeEffectRemoveEvent event = new SpongeEffectRemoveEvent();
+            event.setEffect(effect);
             causeStackManager.pushCause(effect);
 
             event.setCause(causeStackManager.getCurrentCause());
@@ -56,7 +57,8 @@ public class SpongeEffectService extends EffectService {
     @Override
     public boolean addEffect(IEffect effect, IEffectSourceProvider effectSourceProvider, IEntity entitySource) {
         effect.setEffectSourceProvider(effectSourceProvider);
-        EffectApplyEvent event = new EffectApplyEvent(effect);
+        SpongeEffectApplyEvent event = new SpongeEffectApplyEvent();
+        event.setEffect(effect);
         try (CauseStackManager.StackFrame frame = causeStackManager.pushCauseFrame()) {
             causeStackManager.pushCause(effect);
             causeStackManager.pushCause(effectSourceProvider);
