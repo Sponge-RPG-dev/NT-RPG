@@ -13,6 +13,7 @@ import java.nio.file.Path;
 
 @Singleton
 public class SpongeAssetService implements AssetService {
+
     @Override
     public String getAssetAsString(String path) {
         try {

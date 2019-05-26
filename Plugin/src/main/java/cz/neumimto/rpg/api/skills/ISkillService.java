@@ -7,6 +7,7 @@ import cz.neumimto.rpg.common.reloading.Reload;
 import cz.neumimto.rpg.common.reloading.ReloadService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.gui.SkillTreeInterfaceModel;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Collection;
 import java.util.Map;
@@ -16,7 +17,7 @@ public interface ISkillService {
     void load();
 
     @Reload(on = ReloadService.PLUGIN_CONFIG)
-    void initGuis();
+    void init();
 
     Map<String, ISkill> getSkills();
 
@@ -47,4 +48,8 @@ public interface ISkillService {
     ISkill skillDefinitionToSkill(ScriptSkillModel scriptSkillModel, ClassLoader classLoader);
 
     void injectCatalogId(ISkill skill, String name);
+
+    Optional<ISkillType> getSkillType(String id);
+
+    void registerSkillType(@NonNull ISkillType skillType);
 }

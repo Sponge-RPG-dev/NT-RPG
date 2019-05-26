@@ -8,7 +8,10 @@ import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.junit.TestDictionary;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.api.skills.SkillPreProcessorFactory;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import org.apache.commons.io.IOUtils;
 
+import java.io.InputStream;
 import java.util.*;
 
 public class TestApiImpl implements RpgApi {
@@ -24,7 +27,7 @@ public class TestApiImpl implements RpgApi {
 
     @Override
     public ItemService getItemService() {
-        return null;
+        return NtRpgPlugin.GlobalScope.itemService;
     }
 
     @Override
@@ -44,7 +47,8 @@ public class TestApiImpl implements RpgApi {
 
     @Override
     public String getTextAssetContent(String templateName) {
-        return null;
+        InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(templateName);
+        return new Scanner(resourceAsStream, "utf-8").useDelimiter("\\Z").next();
     }
 
     @Override
@@ -74,6 +78,6 @@ public class TestApiImpl implements RpgApi {
 
     @Override
     public ISkillService getSkillService() {
-        return null;
+        return NtRpgPlugin.GlobalScope.skillService;
     }
 }

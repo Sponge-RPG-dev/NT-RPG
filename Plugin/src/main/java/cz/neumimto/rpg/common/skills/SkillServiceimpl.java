@@ -10,6 +10,7 @@ import cz.neumimto.rpg.api.skills.mods.SkillExecutorCallback;
 import cz.neumimto.rpg.api.skills.scripting.ActiveScriptSkill;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.PassiveScriptSkill;
 import cz.neumimto.rpg.api.skills.types.ScriptSkill;
 import cz.neumimto.rpg.api.skills.types.TargetedScriptSkill;
@@ -22,6 +23,7 @@ import cz.neumimto.rpg.sponge.gui.SkillTreeInterfaceModel;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import javax.inject.Inject;
 import java.lang.reflect.Field;
@@ -59,10 +61,12 @@ public abstract class SkillServiceimpl implements ISkillService {
 
     protected Map<String, ISkill> skillByNames = new HashMap<>();
 
+    protected Map<String, ISkillType> skillTypes = new HashMap<>();
+
 
     @Override
     public void load() {
-        initGuis();
+        init();
         skillTrees.putAll(skillTreeDao.getAll());
     }
 
@@ -292,5 +296,20 @@ public abstract class SkillServiceimpl implements ISkillService {
         } catch (IllegalAccessException e) {
             error("Could not inject CatalogId to the skill", e);
         }
+    }
+
+    @Override
+    public Optional<ISkillType> getSkillType(@NonNull String id) {
+        return Optional.ofNullable(skillTypes.get(id.toLowerCase()));
+    }
+
+    @Override
+    public void registerSkillType(@NonNull ISkillType skillType) {
+        skillTypes.put(skillType.getId().toLowerCase(), skillType);
+    }
+
+    @Override
+    public void init() {
+        Stream.of(SkillType.values()).forEach(this::registerSkillType);
     }
 }

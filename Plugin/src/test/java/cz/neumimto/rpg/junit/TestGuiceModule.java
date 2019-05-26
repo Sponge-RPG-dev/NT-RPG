@@ -11,6 +11,7 @@ import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.api.skills.ISkillService;
+import cz.neumimto.rpg.assets.TestAssetService;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.configuration.SkillTreeDao;
@@ -20,9 +21,7 @@ import cz.neumimto.rpg.common.persistance.dao.CharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.common.persistance.dao.DirectAccessDao;
 import cz.neumimto.rpg.common.persistance.dao.PlayerDao;
-import cz.neumimto.rpg.common.skills.SkillServiceimpl;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.sponge.assets.SpongeAssetService;
 import cz.neumimto.rpg.sponge.permission.TestPermissionService;
 import cz.neumimto.rpg.sponge.scripting.SpongeClassGenerator;
 import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
@@ -102,7 +101,7 @@ public class TestGuiceModule extends AbstractModule {
         bind(EventFactoryService.class).to(EventFactoryImpl.class);
         bind(LocalizationService.class).to(LocalizationServiceImpl.class);
         bind(ISkillService.class).to(SpongeSkillService.class);
-        bind(AssetService.class).to(SpongeAssetService.class);
+        bind(AssetService.class).to(TestAssetService.class);
     }
 }
 

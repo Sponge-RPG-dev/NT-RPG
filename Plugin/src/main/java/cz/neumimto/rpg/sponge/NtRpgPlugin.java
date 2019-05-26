@@ -107,7 +107,7 @@ public class NtRpgPlugin extends Rpg {
     @ConfigDir(sharedRoot = false)
     private Path config;
 
-    public static cz.neumimto.rpg.GlobalScope GlobalScope;
+    public static GlobalScope GlobalScope;
 
     public static final Set<String> INTEGRATIONS = new HashSet<>();
 

@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.api.skills.types;
 
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.ISkillType;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
@@ -12,6 +14,7 @@ import cz.neumimto.rpg.sponge.skills.scripting.TargetedScriptExecutorSkill;
 import cz.neumimto.rpg.sponge.skills.types.Targeted;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by NeumimTo on 3.9.2018.
@@ -47,8 +50,19 @@ public class TargetedScriptSkill extends Targeted implements ITargetedScriptSkil
         setDamageType(model.getDamageType());
         setDescription(model.getDescription());
         setLocalizableName(model.getName());
-        List<ISkillType> skillTypes = model.getSkillTypes();
-        skillTypes.forEach(super::addSkillType);
+        setLore(model.getLore());
+        setDamageType(model.getDamageType());
+        setDescription(model.getDescription());
+        setLocalizableName(model.getName());
+        List<String> configTypes = model.getSkillTypes();
+        for (String configType : configTypes) {
+            Optional<ISkillType> skillType = Rpg.get().getSkillService().getSkillType(configType);
+            if (skillType.isPresent()) {
+                addSkillType(skillType.get());
+            } else {
+                Log.warn("Unknown skill type " + configType);
+            }
+        }
     }
 
 

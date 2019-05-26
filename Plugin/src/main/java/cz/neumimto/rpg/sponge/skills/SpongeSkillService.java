@@ -46,7 +46,8 @@ public class SpongeSkillService extends SkillServiceimpl {
 
     @Override
     @Reload(on = ReloadService.PLUGIN_CONFIG)
-    public void initGuis() {
+    public void init() {
+        super.init();
         int i = 0;
 
         for (String str : pluginConfig.SKILLTREE_RELATIONS) {
@@ -61,6 +62,5 @@ public class SpongeSkillService extends SkillServiceimpl {
             guiModelByCharacter.put(split[0].charAt(0), model);
             i++;
         }
-
     }
 }

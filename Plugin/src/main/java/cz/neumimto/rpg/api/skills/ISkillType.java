@@ -8,4 +8,9 @@ import cz.neumimto.rpg.api.utils.TriState;
 public interface ISkillType {
 
     TriState isNegative();
+
+
+    String getId();
+
+    String getTranslationKey();
 }
