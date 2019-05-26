@@ -19,16 +19,14 @@
 package cz.neumimto.rpg.sponge.commands;
 
 import cz.neumimto.rpg.GlobalScope;
-import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.gui.Gui;
-import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.sponge.commands.arguments.CommandSkillArgument;
 import cz.neumimto.rpg.sponge.configuration.CommandLocalization;
-import cz.neumimto.rpg.inventory.items.ItemMetaType;
-import cz.neumimto.rpg.inventory.sockets.SocketType;
+import cz.neumimto.rpg.sponge.inventory.items.ItemMetaType;
+import cz.neumimto.rpg.sponge.inventory.sockets.SocketType;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.sponge.commands.admin.*;
 import cz.neumimto.rpg.sponge.commands.character.*;

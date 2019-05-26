@@ -36,7 +36,7 @@ import java.util.*;
  * Created by NeumimTo on 28.12.2014.
  */
 @Singleton
-public class ClassService {
+public class ClassService  {
 
     private static final String CLASS_ACCESS_PERM = "ntrpg.class.";
 

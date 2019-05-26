@@ -3,7 +3,7 @@ package cz.neumimto.rpg.sponge.listeners;
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.common.effects.EffectService;
-import cz.neumimto.rpg.damage.SkillDamageSource;
+import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.entities.IEntityType;

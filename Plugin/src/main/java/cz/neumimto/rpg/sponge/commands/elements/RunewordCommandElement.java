@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.commands.elements;
 
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.inventory.runewords.RuneWord;
+import cz.neumimto.rpg.sponge.inventory.runewords.RuneWord;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.ArgumentParseException;
 import org.spongepowered.api.command.args.CommandArgs;

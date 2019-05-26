@@ -1,9 +1,8 @@
 package cz.neumimto.rpg.sponge.events.damage;
 
 import cz.neumimto.rpg.api.events.damage.IEntitySkillDamageLateEvent;
-import cz.neumimto.rpg.api.events.skill.SkillEvent;
 import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.damage.ISkillDamageSource;
+import cz.neumimto.rpg.sponge.damage.ISkillDamageSource;
 import org.spongepowered.api.event.cause.Cause;
 
 /**

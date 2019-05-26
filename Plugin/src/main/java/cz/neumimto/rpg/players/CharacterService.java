@@ -45,7 +45,7 @@ import cz.neumimto.rpg.sponge.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.sponge.events.PlayerDataPreloadComplete;
 import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
-import cz.neumimto.rpg.inventory.UserActionType;
+import cz.neumimto.rpg.sponge.inventory.UserActionType;
 import cz.neumimto.rpg.common.persistance.dao.CharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.PlayerDao;
 import cz.neumimto.rpg.common.persistance.model.BaseCharacterAttribute;

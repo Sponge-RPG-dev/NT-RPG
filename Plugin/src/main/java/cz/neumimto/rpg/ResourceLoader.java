@@ -333,9 +333,6 @@ public class ResourceLoader {
             EffectModelMapper o = (EffectModelMapper) clazz.newInstance();
             EffectModelFactory.typeMappers.put(o.getType(), o);
         }
-        if (clazz.isAnnotationPresent(Localization.class)) {
-            localizationService.registerClass(clazz);
-        }
         if (clazz.isAnnotationPresent(Repository.class)) {
             container = injector.getInstance(clazz);
             PluginCore.Instance.injectPersistentContext(container);

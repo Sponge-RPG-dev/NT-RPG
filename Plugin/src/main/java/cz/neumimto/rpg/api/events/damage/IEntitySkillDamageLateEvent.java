@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.api.events.damage;
 
-import cz.neumimto.rpg.damage.ISkillDamageSource;
+import cz.neumimto.rpg.sponge.damage.ISkillDamageSource;
 import cz.neumimto.rpg.api.events.skill.SkillEvent;
 import org.spongepowered.api.event.cause.Cause;
 
