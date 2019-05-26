@@ -446,13 +446,12 @@ public class NtRpgPlugin extends Rpg {
         GlobalScope.spongePropertyService.reLoadAttributes(Paths.get(NtRpgPlugin.workingDir + "/Attributes.conf"));
         GlobalScope.spongePropertyService.loadMaximalServerPropertyValues(Paths.get(NtRpgPlugin.workingDir, "max_server_property_values.properties"));
         GlobalScope.jsLoader.initEngine();
-        GlobalScope.classService.registerPlaceholders();
         GlobalScope.rwService.load();
         GlobalScope.classService.loadClasses();
         GlobalScope.vanillaMessaging.load();
         GlobalScope.effectService.load();
         GlobalScope.particleDecorator.initModels();
-
+        GlobalScope.damageService.createDamageToColorMapping();
     }
 
 }

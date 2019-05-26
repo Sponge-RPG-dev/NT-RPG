@@ -27,11 +27,7 @@ public class LearnedSkillCommandElement extends PatternMatchingCommandElement {
 
     @Override
     protected Object getValue(String choice) {
-        Optional<ISkill> ret = Sponge.getGame().getRegistry().getType(ISkill.class, choice);
-        if (!ret.isPresent()) {
-            ret = Optional.ofNullable(NtRpgPlugin.GlobalScope.skillService.getSkillByLocalizedName(choice));
-        }
-        return ret.get();
+        Optional.ofNullable(NtRpgPlugin.GlobalScope.skillService.getSkillByLocalizedName(choice));
     }
 
 }

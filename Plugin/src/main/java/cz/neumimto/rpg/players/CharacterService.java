@@ -20,6 +20,7 @@ package cz.neumimto.rpg.players;
 import cz.neumimto.rpg.ClassService;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.events.character.*;
+import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.ActionResult;
 import cz.neumimto.rpg.api.IRpgElement;
@@ -113,6 +114,8 @@ public abstract class CharacterService {
     @Inject
     private EffectService effectService;
 
+    @Inject
+    private PermissionService permissionService;
 
     public void loadPlayerData(UUID id, String playerName) {
         dataPreparationStageMap.put(id, new DataPreparationStage(DataPreparationStage.Stage.LOADING));
@@ -558,7 +561,7 @@ public abstract class CharacterService {
             }
             PlayerClassData playerClassData = new PlayerClassData(classDef, characterClass);
             activeCharacter.addClass(playerClassData);
-            classService.addAllPermissions(activeCharacter, playerClassData);
+            permissionService.addAllPermissions(activeCharacter, playerClassData);
         }
 
         spongeInventoryService.initializeManagedSlots(activeCharacter);
@@ -930,7 +933,7 @@ public abstract class CharacterService {
             }
             gotLevel = true;
 
-            classService.addPermissions(character, aClass);
+            permissionService.addPermissions(character, aClass);
             if (!aClass.takesExp()) {
                 break;
             }
@@ -1180,7 +1183,7 @@ public abstract class CharacterService {
 
         scheduleNextTick(() -> {
             recalculateProperties(character);
-            classService.addPermissions(character, playerClassData);
+            permissionService.addPermissions(character, playerClassData);
             scheduleNextTick(() -> {
                 recalculateSecondaryPropertiesOnly(character);
                 applyGroupEffects(character, klass);

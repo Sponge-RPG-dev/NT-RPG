@@ -1,8 +1,7 @@
-package cz.neumimto.rpg.sponge.skills;
+package cz.neumimto.rpg.common.skills.types;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
-import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.api.effects.IEffectSource;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.ItemService;
@@ -12,21 +11,13 @@ import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.types.AbstractSkill;
 import cz.neumimto.rpg.common.configuration.ItemString;
+import cz.neumimto.rpg.common.effects.EffectSourceType;
 import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.common.skills.utils.SkillLoadingErrors;
-import cz.neumimto.rpg.sponge.configuration.Localizations;
-import cz.neumimto.rpg.common.effects.EffectSourceType;
-import cz.neumimto.rpg.inventory.data.MenuInventoryData;
-import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.sponge.gui.GuiHelper;
-import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.text.Text;
 
 import javax.inject.Inject;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 public class ItemAccessSkill extends AbstractSkill {
@@ -106,28 +97,6 @@ public class ItemAccessSkill extends AbstractSkill {
         } catch (ConfigException e) {
 
         }
-    }
-
-    @Override
-    public List<ItemStack> configurationToItemStacks(SkillData skillData) {
-        List<ItemStack> list = new ArrayList<>();
-        ItemAccessSkillData data = (ItemAccessSkillData) skillData;
-        for (Map.Entry<Integer, Set<ClassItem>> entry : data.items.entrySet()) {
-            list.addAll(
-                    entry.getValue().stream()
-                            .map(SpongeRpgItemType.class::cast)
-                            .map(GuiHelper::rpgItemTypeToItemStack)
-                            .map(a -> {
-                                List<Text> texts = a.get(Keys.ITEM_LORE).get();
-                                texts.add(Text.EMPTY);
-                                texts.add(Localizations.SKILL_LEVEL.toText(Arg.arg("level", entry.getKey())));
-                                a.offer(Keys.ITEM_LORE, texts);
-                                a.offer(new MenuInventoryData(true));
-                                return a;
-                            }).collect(Collectors.toList()));
-
-        }
-        return list;
     }
 
     public class ItemAccessSkillData extends SkillData {

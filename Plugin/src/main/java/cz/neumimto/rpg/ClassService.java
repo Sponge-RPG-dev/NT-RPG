@@ -20,16 +20,13 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.groups.PlayerGroupPermission;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.service.permission.SubjectData;
-import org.spongepowered.api.util.Tristate;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -44,10 +41,14 @@ public class ClassService {
     private static final String CLASS_ACCESS_PERM = "ntrpg.class.";
 
     @Inject
-    private DamageService spongeDamageService;
+    private DamageService damageService;
 
     @Inject
     private ClassDefinitionDao classDefinitionDao;
+
+    @Inject
+    private PermissionService permissionService;
+
 
     private Map<String, ClassDefinition> classes = new HashMap<>();
 
@@ -62,10 +63,6 @@ public class ClassService {
         return getClasses().get(name.toLowerCase());
     }
 
-    public void registerPlaceholders() {
-        spongeDamageService.createDamageToColorMapping();
-    }
-
     public boolean existsClass(String s) {
         return getClasses().containsKey(s.toLowerCase());
     }
@@ -74,12 +71,12 @@ public class ClassService {
         return getClasses().values();
     }
 
-    public Set<ClassDefinition> filterByPlayerAndType(Player player, String type) {
+    public Set<ClassDefinition> filterByPlayerAndType(IActiveCharacter player, String type) {
         Set<ClassDefinition> defs = new HashSet<>();
         for (Map.Entry<String, ClassDefinition> entry : getClasses().entrySet()) {
             ClassDefinition value = entry.getValue();
             if (value.getClassType().equalsIgnoreCase(type)) {
-                if (player.hasPermission(CLASS_ACCESS_PERM + value.getName().toLowerCase())) {
+                if (permissionService.hasPermission(player, CLASS_ACCESS_PERM + value.getName().toLowerCase())) {
                     defs.add(value);
                 }
             }
@@ -116,37 +113,6 @@ public class ClassService {
         return toBeRemoved;
     }
 
-    public void removePermissions(IActiveCharacter character, Set<String> perms) {
-        SubjectData transientSubjectData = character.getPlayer().getTransientSubjectData();
-        for (String perm : perms) {
-            transientSubjectData.setPermission(SubjectData.GLOBAL_CONTEXT, perm, Tristate.UNDEFINED);
-        }
-    }
-
-
-    public void addPermissions(IActiveCharacter character, Set<String> perms) {
-        SubjectData transientSubjectData = character.getPlayer().getTransientSubjectData();
-        for (String perm : perms) {
-            transientSubjectData.setPermission(SubjectData.GLOBAL_CONTEXT, perm, Tristate.TRUE);
-        }
-    }
-
-    public void addAllPermissions(IActiveCharacter character, PlayerClassData classDefinition) {
-        for (PlayerGroupPermission playerGroupPermission : classDefinition.getClassDefinition().getPermissions()) {
-            if (playerGroupPermission.getLevel() <= classDefinition.getLevel()) {
-                addPermissions(character, playerGroupPermission.getPermissions());
-            }
-        }
-    }
-
-    public void addPermissions(IActiveCharacter character, PlayerClassData classDefinition) {
-        for (PlayerGroupPermission playerGroupPermission : classDefinition.getClassDefinition().getPermissions()) {
-            if (playerGroupPermission.getLevel() == classDefinition.getLevel()) {
-                addPermissions(character, playerGroupPermission.getPermissions());
-            }
-        }
-    }
-
     public void loadClasses() {
         try {
             Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles();
@@ -155,7 +121,7 @@ public class ClassService {
             classDefinitions.forEach(a -> classes.put(a.getName().toLowerCase(), a));
 
             for (ClassDefinition result : classDefinitions) {
-                Map<String, ClassDefinition> classes = NtRpgPlugin.GlobalScope.classService.getClasses();
+                Map<String, ClassDefinition> classes = getClasses();
                 for (ClassDefinition classDefinition : classes.values()) {
                     if (classDefinition.getName().equalsIgnoreCase(result.getName())) {
                         continue;
