@@ -24,9 +24,7 @@ import cz.neumimto.core.localization.Localization;
 /**
  * Created by NeumimTo on 31.1.2015.
  */
-@Localization("rpg.main")
 public class Localizations {
-
 
     public static LocalizableParametrizedText NO_MANA;
 

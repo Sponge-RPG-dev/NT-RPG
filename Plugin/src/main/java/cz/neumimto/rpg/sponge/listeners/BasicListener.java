@@ -214,7 +214,7 @@ public class BasicListener {
 
         if (ofish.isPresent()) {
             Fish fish = ofish.get();
-            Double d = experienceService.getFishingExperience(fish);
+            Double d = experienceService.getFishingExperience(fish.getId());
             if (d == null) {
                 return;
             }

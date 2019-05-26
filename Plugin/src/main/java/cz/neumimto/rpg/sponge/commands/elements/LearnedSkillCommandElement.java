@@ -27,7 +27,7 @@ public class LearnedSkillCommandElement extends PatternMatchingCommandElement {
 
     @Override
     protected Object getValue(String choice) {
-        Optional.ofNullable(NtRpgPlugin.GlobalScope.skillService.getSkillByLocalizedName(choice));
+        return NtRpgPlugin.GlobalScope.skillService.getSkillByLocalizedName(choice);
     }
 
 }

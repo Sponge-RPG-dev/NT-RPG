@@ -3,6 +3,7 @@ package cz.neumimto.rpg.players.leveling;
 
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.messaging.MessageLevel;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.ActionResult;
 import cz.neumimto.rpg.api.skills.ISkill;
@@ -54,7 +55,7 @@ public enum SkillTreeType {
                 characterService.learnSkill(character, playerClassData, iSkill);
                 characterService.putInSaveQueue(character.getCharacterBase());
             } else {
-                character.getPlayer().sendMessage(actionResult.getErrorMesage());
+                MessageLevel.ERROR.sendMessage(character, actionResult.getErrorMesage());
             }
         }
 
@@ -68,7 +69,7 @@ public enum SkillTreeType {
                 characterService.upgradeSkill(character, skillInfo, iSkill);
                 characterService.putInSaveQueue(character.getCharacterBase());
             } else {
-                character.getPlayer().sendMessage(actionResult.getErrorMesage());
+                MessageLevel.ERROR.sendMessage(character, actionResult.getErrorMesage());
             }
         }
 
@@ -90,7 +91,7 @@ public enum SkillTreeType {
                     dad.update("delete from CharacterSkill where skillId = :id", params);
                 }, NtRpgPlugin.asyncExecutor);
             } else {
-                character.getPlayer().sendMessage(actionResult.getErrorMesage());
+                MessageLevel.ERROR.sendMessage(character, actionResult.getErrorMesage());
             }
         }
     },

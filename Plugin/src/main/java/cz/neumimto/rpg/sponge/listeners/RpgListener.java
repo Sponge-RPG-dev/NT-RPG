@@ -21,6 +21,7 @@ package cz.neumimto.rpg.sponge.listeners;
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.ClassService;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.sponge.events.PlayerGuiModInitEvent;
 import cz.neumimto.rpg.api.events.character.CharacterChangeGroupEvent;
 import cz.neumimto.rpg.api.events.party.PartyJoinEvent;
@@ -47,6 +48,9 @@ public class RpgListener {
     @Inject
     private ClassService classService;
 
+    @Inject
+    private PermissionService permissionService;
+
     @Listener
     public void onGuiInit(PlayerGuiModInitEvent event) {
         UUID uuid = event.getUuid();
@@ -65,7 +69,7 @@ public class RpgListener {
 
     @Listener
     public void onChangeGroup(CharacterChangeGroupEvent event) {
-        classService.removePermissions(event.getTarget(), classService.getPermissionsToRemove(event.getTarget(), event.getOld()));
+        permissionService.removePermissions(event.getTarget(), classService.getPermissionsToRemove(event.getTarget(), event.getOldClass()));
         //	classService.addAllPermissions(character, event.getNew());
     }
 }

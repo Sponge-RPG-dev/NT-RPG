@@ -11,6 +11,7 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
 
 public class CharacterChooseClassExecutor implements CommandExecutor {
     @Override
@@ -34,7 +35,7 @@ public class CharacterChooseClassExecutor implements CommandExecutor {
         if (result.isOk()) {
             NtRpgPlugin.GlobalScope.characterService.addNewClass(character, configClass);
         } else {
-            src.sendMessage(result.getErrorMesage());
+            src.sendMessage(Text.of(result.getErrorMesage()));
         }
         return CommandResult.success();
     }

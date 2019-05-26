@@ -1,13 +1,11 @@
 package cz.neumimto.rpg.api;
 
-import org.spongepowered.api.text.Text;
-
 public class ActionResult {
 
     private final boolean ok;
-    private Text errorMesage;
+    private String errorMesage;
 
-    private ActionResult(boolean ok, Text errorMesage) {
+    private ActionResult(boolean ok, String errorMesage) {
         this.ok = ok;
         this.errorMesage = errorMesage;
     }
@@ -20,11 +18,11 @@ public class ActionResult {
         return ok;
     }
 
-    public Text getErrorMesage() {
+    public String getErrorMesage() {
         return errorMesage;
     }
 
-    public static ActionResult withErrorMessage(Text text) {
+    public static ActionResult withErrorMessage(String text) {
         return new ActionResult(false, text);
     }
 
