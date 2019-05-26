@@ -44,4 +44,6 @@ public interface PropertyService {
     Optional<Attribute> getAttributeById(String attribute);
 
     Map<String, Attribute> getAttributes();
+
+    void registerProperty(String property, int val);
 }

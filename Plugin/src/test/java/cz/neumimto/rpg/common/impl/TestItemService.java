@@ -17,7 +17,7 @@ import java.util.Optional;
 public class TestItemService extends AbstractItemService {
 
     @Override
-    protected Optional<SpongeRpgItemType> createRpgItemType(ItemString parsed, ItemClass weapons) {
+    protected Optional<RpgItemType> createRpgItemType(ItemString parsed, ItemClass weapons) {
         return Optional.of(new TestItemType(parsed.itemId, parsed.model, weapons, parsed.damage, parsed.armor));
     }
 

@@ -8,12 +8,14 @@ import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.items.ItemService;
+import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.configuration.SkillTreeDao;
 import cz.neumimto.rpg.common.persistance.dao.CharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.common.persistance.dao.DirectAccessDao;
 import cz.neumimto.rpg.common.persistance.dao.PlayerDao;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.scripting.SpongeClassGenerator;
 import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
 import cz.neumimto.rpg.sponge.commands.CommandService;
 import cz.neumimto.rpg.common.effects.EffectService;
@@ -59,7 +61,7 @@ public class TestGuiceModule extends AbstractModule {
         bind(PlayerDao.class);
         bind(SkillTreeDao.class);
 
-        bind(ClassGenerator.class);
+        bind(ClassGenerator.class).to(SpongeClassGenerator.class);
         bind(ClassService.class);
         bind(GlobalScope.class);
         bind(ResourceLoader.class);

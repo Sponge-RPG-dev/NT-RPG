@@ -2,6 +2,7 @@ package cz.neumimto.rpg.common.items;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
@@ -9,12 +10,10 @@ import cz.neumimto.rpg.api.items.*;
 import cz.neumimto.rpg.common.configuration.ItemString;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
-import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -24,7 +23,7 @@ import static cz.neumimto.rpg.api.logging.Log.*;
 public abstract class AbstractItemService implements ItemService {
 
     @Inject
-    protected SpongePropertyService spongePropertyService;
+    protected PropertyService propertyService;
 
     protected Map<String, RpgItemType> items = new HashMap<>();
 
@@ -77,13 +76,13 @@ public abstract class AbstractItemService implements ItemService {
     public void registerProperty(ItemClass itemClass, String property) {
         int val = PropertyServiceImpl.getAndIncrement.get();
 
-        if (!spongePropertyService.exists(property)) {
-            spongePropertyService.registerProperty(property, val);
-            spongePropertyService.addPropertyToRequiresDamageRecalc(spongePropertyService.getIdByName(property));
+        if (!propertyService.exists(property)) {
+            propertyService.registerProperty(property, val);
+            propertyService.addPropertyToRequiresDamageRecalc(propertyService.getIdByName(property));
         }
 
         if (property.endsWith("_mult")) {
-            spongePropertyService.registerDefaultValue(val, 1.0f);
+            propertyService.registerDefaultValue(val, 1.0f);
             itemClass.getPropertiesMults().add(val);
         } else {
             itemClass.getProperties().add(val);
@@ -139,11 +138,11 @@ public abstract class AbstractItemService implements ItemService {
         loadWeaponGroups(itemGroups, null);
 
         for (String shield : config.getStringList("Armor")) {
-            Optional<SpongeRpgItemType> rpgItemType = createRpgItemType(ItemString.parse(shield), ItemClass.ARMOR);
+            Optional<RpgItemType> rpgItemType = createRpgItemType(ItemString.parse(shield), ItemClass.ARMOR);
             rpgItemType.ifPresent(this::registerRpgItemType);
         }
         for (String shield : config.getStringList("Shields")) {
-            Optional<SpongeRpgItemType> rpgItemType = createRpgItemType(ItemString.parse(shield), ItemClass.SHIELD);
+            Optional<RpgItemType> rpgItemType = createRpgItemType(ItemString.parse(shield), ItemClass.SHIELD);
             rpgItemType.ifPresent(this::registerRpgItemType);
         }
     }
@@ -174,7 +173,7 @@ public abstract class AbstractItemService implements ItemService {
             List<String> items = itemGroup.getStringList("Items");
             for (String item : items) {
                 ItemString parsed = ItemString.parse(item);
-                Optional<SpongeRpgItemType> rpgItemType = createRpgItemType(parsed, weapons);
+                Optional<RpgItemType> rpgItemType = createRpgItemType(parsed, weapons);
                 rpgItemType.ifPresent(this::registerRpgItemType);
                 rpgItemType.ifPresent(a -> weapons.getItems().add(a));
             }
@@ -202,7 +201,7 @@ public abstract class AbstractItemService implements ItemService {
     protected Map<Attribute, Integer> parseItemAttributeMap(Map<String, Integer> stringIntegerMap) {
         Map<Attribute, Integer> map = new HashMap<>();
         for (Map.Entry<String, Integer> stringIntegerEntry : stringIntegerMap.entrySet()) {
-            Optional<Attribute> attr = spongePropertyService.getAttributeById(stringIntegerEntry.getKey());
+            Optional<Attribute> attr = propertyService.getAttributeById(stringIntegerEntry.getKey());
             if (attr.isPresent()) {
                 map.put(attr.get(), stringIntegerEntry.getValue());
             }
@@ -210,7 +209,7 @@ public abstract class AbstractItemService implements ItemService {
         return map;
     }
 
-    protected abstract Optional<SpongeRpgItemType> createRpgItemType(ItemString parsed, ItemClass weapons);
+    protected abstract Optional<RpgItemType> createRpgItemType(ItemString parsed, ItemClass weapons);
 
     @Override
     public boolean checkItemClassRequirements(IActiveCharacter character, RpgItemStack rpgItemStack) {

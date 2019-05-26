@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.persistance;
+package cz.neumimto.rpg.common.configuration;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;

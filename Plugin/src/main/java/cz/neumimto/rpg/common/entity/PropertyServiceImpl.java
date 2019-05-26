@@ -36,6 +36,7 @@ public abstract class PropertyServiceImpl implements PropertyService {
     protected float[] maxValues;
 
 
+    @Override
     public void registerProperty(String name, int id) {
         info("A new property " + name + "; assigned id: " + id, pluginConfig.DEBUG);
         idMap.put(name, id);

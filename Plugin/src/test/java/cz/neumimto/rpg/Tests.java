@@ -2,11 +2,13 @@ package cz.neumimto.rpg;
 
 
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.groups.PlayerGroupPermission;
+import cz.neumimto.rpg.sponge.scripting.SpongeClassGenerator;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -28,7 +30,7 @@ public class Tests {
     public void testDynamicListener() throws Exception {
         Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
         ScriptEngine engine = new NashornScriptEngineFactory().getScriptEngine();
-        ClassGenerator classGenerator = new ClassGenerator();
+        ClassGenerator classGenerator = new SpongeClassGenerator();
         try (InputStreamReader rs = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("js/eventgen/test.js"))) {
             engine.eval(rs);
             List list = (List) engine.get("events");
