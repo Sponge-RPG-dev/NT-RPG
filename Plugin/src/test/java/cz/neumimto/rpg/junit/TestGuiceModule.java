@@ -1,20 +1,29 @@
 package cz.neumimto.rpg.junit;
 
 import com.google.inject.AbstractModule;
-import cz.neumimto.core.localization.LocalizationService;
 import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.events.effect.EventFactoryService;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.items.ItemService;
+import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.api.permissions.PermissionService;
+import cz.neumimto.rpg.api.skills.ISkillService;
+import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.configuration.SkillTreeDao;
+import cz.neumimto.rpg.common.events.EventFactoryImpl;
+import cz.neumimto.rpg.common.localization.LocalizationServiceImpl;
 import cz.neumimto.rpg.common.persistance.dao.CharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.common.persistance.dao.DirectAccessDao;
 import cz.neumimto.rpg.common.persistance.dao.PlayerDao;
+import cz.neumimto.rpg.common.skills.SkillServiceimpl;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.assets.SpongeAssetService;
+import cz.neumimto.rpg.sponge.permission.TestPermissionService;
 import cz.neumimto.rpg.sponge.scripting.SpongeClassGenerator;
 import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
 import cz.neumimto.rpg.sponge.commands.CommandService;
@@ -86,9 +95,14 @@ public class TestGuiceModule extends AbstractModule {
         bind(PluginContainer.class).toInstance(Mockito.mock(PluginContainer.class));
         bind(NtRpgPlugin.class).toProvider(NtRpgPlugin::new);
         bind(Game.class).toInstance(Mockito.mock(Game.class));
-        bind(LocalizationService.class).toInstance(new LocalizationService());
 
         bind(JSLoader.class);
+
+        bind(PermissionService.class).to(TestPermissionService.class);
+        bind(EventFactoryService.class).to(EventFactoryImpl.class);
+        bind(LocalizationService.class).to(LocalizationServiceImpl.class);
+        bind(ISkillService.class).to(SpongeSkillService.class);
+        bind(AssetService.class).to(SpongeAssetService.class);
     }
 }
 

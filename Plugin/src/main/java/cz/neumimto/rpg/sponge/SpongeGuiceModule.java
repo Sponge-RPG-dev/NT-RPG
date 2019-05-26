@@ -4,17 +4,26 @@ import com.google.inject.AbstractModule;
 import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.events.effect.EventFactoryService;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.items.ItemService;
+import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.api.permissions.PermissionService;
+import cz.neumimto.rpg.api.skills.ISkillService;
+import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.configuration.SkillTreeDao;
 import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.common.events.EventFactoryImpl;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
+import cz.neumimto.rpg.common.localization.LocalizationServiceImpl;
 import cz.neumimto.rpg.common.persistance.dao.CharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.common.persistance.dao.DirectAccessDao;
 import cz.neumimto.rpg.common.persistance.dao.PlayerDao;
+import cz.neumimto.rpg.common.skills.SkillServiceimpl;
+import cz.neumimto.rpg.sponge.assets.SpongeAssetService;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.MobSettingsDao;
@@ -27,6 +36,7 @@ import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.SpongeCharacterService;
 import cz.neumimto.rpg.players.parties.PartyService;
+import cz.neumimto.rpg.sponge.permission.SpongePermissionService;
 import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import cz.neumimto.rpg.sponge.commands.CommandService;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectService;
@@ -78,5 +88,11 @@ public class SpongeGuiceModule extends AbstractModule {
         if (NtRpgPlugin.INTEGRATIONS.contains("Placeholders")) {
             bind(Placeholders.class);
         }
+
+        bind(PermissionService.class).to(SpongePermissionService.class);
+        bind(EventFactoryService.class).to(EventFactoryImpl.class);
+        bind(LocalizationService.class).to(LocalizationServiceImpl.class);
+        bind(ISkillService.class).to(SpongeSkillService.class);
+        bind(AssetService.class).to(SpongeAssetService.class);
     }
 }
