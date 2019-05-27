@@ -10,6 +10,7 @@ import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
 import cz.neumimto.rpg.sponge.skills.scripting.ScriptExecutorSkill;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,5 +56,6 @@ public class AssetsLoadingTest {
     public void testJSSkillLoading() throws URISyntaxException {
         File file = new File(getClass().getClassLoader().getResource("testconfig/Skills-Definition.conf").getFile());
         jsLoader.loadSkillDefinitionFile(new URLClassLoader(new URL[]{}, this.getClass().getClassLoader()), file);
+        Assertions.assertTrue(skillService.getById("ntrpg:jstest").isPresent());
     }
 }
