@@ -26,6 +26,8 @@ import cz.neumimto.rpg.sponge.events.PlayerGuiModInitEvent;
 import cz.neumimto.rpg.api.events.character.CharacterChangeGroupEvent;
 import cz.neumimto.rpg.api.events.party.PartyJoinEvent;
 import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.sponge.events.character.SpongeCharacterChangeGroupEvent;
+import cz.neumimto.rpg.sponge.events.party.SpongePartyJoinEvent;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 
@@ -59,7 +61,7 @@ public class RpgListener {
 
 
     @Listener(order = Order.EARLY)
-    public void onPartyJoin(PartyJoinEvent event) {
+    public void onPartyJoin(SpongePartyJoinEvent event) {
         if (pluginConfig.MAX_PARTY_SIZE > -1) {
             if (event.getParty().getPlayers().size() > pluginConfig.MAX_PARTY_SIZE) {
                 event.setCancelled(true);
@@ -68,7 +70,7 @@ public class RpgListener {
     }
 
     @Listener
-    public void onChangeGroup(CharacterChangeGroupEvent event) {
+    public void onChangeGroup(SpongeCharacterChangeGroupEvent event) {
         permissionService.removePermissions(event.getTarget(), classService.getPermissionsToRemove(event.getTarget(), event.getOldClass()));
         //	classService.addAllPermissions(character, event.getNew());
     }

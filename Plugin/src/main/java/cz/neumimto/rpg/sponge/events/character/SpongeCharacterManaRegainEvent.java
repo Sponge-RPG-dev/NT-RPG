@@ -16,16 +16,36 @@
  *
  */
 
-package cz.neumimto.rpg.api.events.character;
+package cz.neumimto.rpg.sponge.events.character;
 
-import cz.neumimto.rpg.api.events.skill.SkillEvent;
+import cz.neumimto.rpg.api.IRpgElement;
+import cz.neumimto.rpg.api.events.character.CharacterManaRegainEvent;
 
 /**
- * Created by NeumimTo on 26.7.2015.
+ * Created by NeumimTo on 9.8.2015.
  */
-public interface CharacterSkillUpgradeEvent extends TargetCharacterEvent, SkillEvent {
+public class SpongeCharacterManaRegainEvent extends AbstractCharacterEvent implements CharacterManaRegainEvent {
 
-    String getFailedTranslationKey();
+    private double amount;
+    private IRpgElement source;
 
-    void setFailedTranslationKey(String failedMessage);
+    @Override
+    public double getAmount() {
+        return amount;
+    }
+
+    @Override
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    @Override
+    public IRpgElement getSource() {
+        return source;
+    }
+
+    @Override
+    public void setSource(IRpgElement source) {
+        this.source = source;
+    }
 }

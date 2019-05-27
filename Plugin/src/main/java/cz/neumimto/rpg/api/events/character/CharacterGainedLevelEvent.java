@@ -17,8 +17,6 @@ public interface CharacterGainedLevelEvent extends TargetCharacterEvent {
 
     int getSkillpointsPerLevel();
 
-    int setSkillpointsPerLevel();
-
     void setSkillpointsPerLevel(int skillpointsPerLevel);
 
     int getAttributepointsPerLevel();

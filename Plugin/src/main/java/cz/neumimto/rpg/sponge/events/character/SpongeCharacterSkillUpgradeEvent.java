@@ -16,16 +16,35 @@
  *
  */
 
-package cz.neumimto.rpg.api.events.character;
+package cz.neumimto.rpg.sponge.events.character;
 
-import cz.neumimto.rpg.api.events.skill.SkillEvent;
+import cz.neumimto.rpg.api.events.character.CharacterSkillUpgradeEvent;
+import cz.neumimto.rpg.api.skills.ISkill;
 
 /**
  * Created by NeumimTo on 26.7.2015.
  */
-public interface CharacterSkillUpgradeEvent extends TargetCharacterEvent, SkillEvent {
+public class SpongeCharacterSkillUpgradeEvent extends AbstractCharacterEvent implements CharacterSkillUpgradeEvent {
 
-    String getFailedTranslationKey();
+    private ISkill skill;
+    private String failedTranslationKey;
 
-    void setFailedTranslationKey(String failedMessage);
+    @Override
+    public ISkill getSkill() {
+        return skill;
+    }
+
+    @Override
+    public void setSkill(ISkill skill) {
+        this.skill = skill;
+    }
+
+    @Override
+    public String getFailedTranslationKey() {
+        return failedTranslationKey;
+    }
+
+    public void setFailedTranslationKey(String failedTranslationKey) {
+        this.failedTranslationKey = failedTranslationKey;
+    }
 }

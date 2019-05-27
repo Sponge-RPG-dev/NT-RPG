@@ -16,16 +16,27 @@
  *
  */
 
-package cz.neumimto.rpg.api.events.character;
+package cz.neumimto.rpg.sponge.events.character;
 
-import cz.neumimto.rpg.api.events.skill.SkillEvent;
+import cz.neumimto.rpg.api.events.character.EventCharacterArmorPostUpdate;
+import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
+
+import java.util.Set;
 
 /**
- * Created by NeumimTo on 26.7.2015.
+ * Created by NeumimTo on 25.7.2015.
  */
-public interface CharacterSkillUpgradeEvent extends TargetCharacterEvent, SkillEvent {
+public class SpongeEventCharacterArmorPostUpdate extends AbstractCharacterEvent implements EventCharacterArmorPostUpdate {
 
-    String getFailedTranslationKey();
+    private Set<SpongeRpgItemType> armor;
 
-    void setFailedTranslationKey(String failedMessage);
+    @Override
+    public Set<SpongeRpgItemType> getArmor() {
+        return armor;
+    }
+
+    @Override
+    public void setArmor(Set<SpongeRpgItemType> armor) {
+        this.armor = armor;
+    }
 }

@@ -11,8 +11,8 @@ public interface CharacterChangeGroupEvent extends TargetCharacterEvent {
 
     ClassDefinition getOldClass();
 
-    ClassDefinition setNewClass(ClassDefinition classDefinition);
+    void setNewClass(ClassDefinition classDefinition);
 
-    ClassDefinition setOldClass(ClassDefinition classDefinition);
+    void setOldClass(ClassDefinition classDefinition);
 
 }

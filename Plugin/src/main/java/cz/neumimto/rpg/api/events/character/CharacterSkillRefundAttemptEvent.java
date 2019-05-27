@@ -27,5 +27,5 @@ public interface CharacterSkillRefundAttemptEvent extends TargetCharacterEvent, 
 
     String getFailedTranslationKey();
 
-    void setFailedMessage(String failedMessage);
+    void setFailedTranslationKey(String failedMessage);
 }

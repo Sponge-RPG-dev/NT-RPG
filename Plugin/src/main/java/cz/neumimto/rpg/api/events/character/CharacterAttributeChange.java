@@ -9,9 +9,9 @@ public interface CharacterAttributeChange extends TargetCharacterEvent {
 
     int getAttributeChange();
 
-    void setAttributeChange();
+    void setAttributeChange(int c);
 
     void setAttribute(Attribute attribute);
 
-    void getAttribute(Attribute attribute);
+    Attribute getAttribute();
 }
