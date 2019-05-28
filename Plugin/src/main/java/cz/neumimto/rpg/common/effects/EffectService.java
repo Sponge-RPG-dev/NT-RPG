@@ -18,30 +18,15 @@
 
 package cz.neumimto.rpg.common.effects;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.api.effects.EffectParams;
-import cz.neumimto.rpg.api.effects.Generate;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.effects.IGlobalEffect;
-import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.skills.SkillSettings;
+import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
-import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.asset.Asset;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import org.spongepowered.api.text.Text;
 
 import javax.inject.Inject;
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -85,92 +70,10 @@ public abstract class EffectService {
         }
     }
 
-    public void load() {
-        File file1 = new File(NtRpgPlugin.workingDir, "SkillsAndEffects.md");
-        if (file1.exists()) {
-            file1.delete();
-        }
 
-        try {
-            String finalString = "";
-            file1.createNewFile();
-            Asset asset = Sponge.getAssetManager().getAsset(plugin, "templates/Effect.md").get();
-            for (Map.Entry<String, IGlobalEffect> effect : globalEffects.entrySet()) {
-                String s = asset.readString();
-                Class aClass = effect.getValue().asEffectClass();
-                if (aClass != null && aClass.isAnnotationPresent(Generate.class)) {
-                    Generate meta = (Generate) aClass.getAnnotation(Generate.class);
-                    String description = meta.description();
-                    String name = effect.getKey();
-
-                    Class<?> modelType = EffectModelFactory.getModelType(aClass);
-
-                    s = s.replaceAll("\\{\\{effect\\.name}}", name);
-                    s = s.replaceAll("\\{\\{effect\\.description}}", description);
-
-                    if (EffectModelFactory.typeMappers.containsKey(modelType)) {
-                        s = s.replaceAll("\\{\\{effect\\.parameter}}", modelType.getSimpleName());
-                        s = s.replaceAll("\\{\\{effect\\.parameters}}", "");
-                    } else {
-                        Field[] fields = modelType.getFields();
-                        s = s.replaceAll("\\{\\{effect\\.parameter}}", "");
-                        StringBuilder buffer = new StringBuilder();
-                        for (Field field : fields) {
-                            String fname = field.getName();
-                            String type = field.getType().getSimpleName();
-                            buffer.append("   * " + fname + " - " + type + "\n\n");
-                        }
-                        s = s.replaceAll("\\{\\{effect\\.parameters}}", buffer.toString());
-                    }
-                    finalString += s;
-                }
-            }
-
-            asset = Sponge.getAssetManager().getAsset(plugin, "templates/Skill.md").get();
-            String skills = "";
-            for (ISkill iSkill : NtRpgPlugin.GlobalScope.skillService.getAll()) {
-                String s = asset.readString();
-
-                String damageType = iSkill.getDamageType();
-
-                s = s.replaceAll("\\{\\{skill\\.damageType}}", damageType == null ? "Deals no damage" : damageType);
-
-                List<String> description = iSkill.getDescription();
-                StringBuilder desc = new StringBuilder();
-                for (String text : description) {
-                    desc.append(text);
-                }
-                s = s.replaceAll("\\{\\{skill\\.description}}", desc.toString());
-
-                String id = iSkill.getId();
-                s = s.replaceAll("\\{\\{skill\\.id}}", id);
-
-
-                s = s.replaceAll("\\{\\{skill\\.name}}", iSkill.getName());
-
-                SkillSettings defaultSkillSettings = iSkill.getDefaultSkillSettings();
-
-                StringBuilder buffer = new StringBuilder();
-                for (Map.Entry<String, Float> stringFloatEntry : defaultSkillSettings.getNodes().entrySet()) {
-                    buffer.append("   * " + stringFloatEntry.getKey() + "\n\n");
-                }
-                s = s.replaceAll("\\{\\{skill\\.parameters}}", buffer.toString());
-                skills += s;
-            }
-            asset = Sponge.getAssetManager().getAsset(plugin, "templates/SE.md").get();
-            String a = asset.readString();
-            Files.write(file1.toPath(), a.replaceAll("\\{\\{effects}}", finalString)
-                    .replaceAll("\\{\\{skills}}", skills).getBytes(), StandardOpenOption.APPEND);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        startEffectScheduler();
-    }
+    public abstract void load();
 
     public abstract void startEffectScheduler();
-
 
     public void schedule() {
         for (IEffect pendingRemoval : pendingRemovals) {
@@ -181,7 +84,7 @@ public abstract class EffectService {
         pendingRemovals.clear();
         long l = System.currentTimeMillis();
         for (IEffect e : effectSet) {
-            if (e.getConsumer().isDetached()) {
+            if (!mayTick(e)) {
                 pendingRemovals.add(e);
                 continue;
             }
@@ -201,6 +104,8 @@ public abstract class EffectService {
         effectSet.addAll(pendingAdditions);
         pendingAdditions.clear();
     }
+
+    protected abstract boolean mayTick(IEffect e);
 
     /**
      * Calls onTick and increments tickCount
@@ -222,7 +127,6 @@ public abstract class EffectService {
     public <T extends IEffect> boolean addEffect(T effect) {
         return addEffect(effect, InternalEffectSourceProvider.INSTANCE);
     }
-
     /**
      * Adds effect to the consumer,
      * Effects requiring register are registered into the scheduler one tick later

@@ -450,6 +450,7 @@ public class NtRpgPlugin extends Rpg {
         GlobalScope.classService.loadClasses();
         GlobalScope.vanillaMessaging.load();
         GlobalScope.effectService.load();
+        GlobalScope.effectService.startEffectScheduler();
         GlobalScope.particleDecorator.initModels();
         GlobalScope.damageService.createDamageToColorMapping();
     }
