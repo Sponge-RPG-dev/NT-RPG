@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 @Singleton
 public class EventFactoryImpl implements EventFactoryService {
 
-    private Map<Class<?>, Supplier<?>> cache = new HashMap<>();
+    protected Map<Class<?>, Supplier<?>> cache = new HashMap<>();
 
     @Override
     public <T> T createEventInstance(Class<? extends T> clazz) {

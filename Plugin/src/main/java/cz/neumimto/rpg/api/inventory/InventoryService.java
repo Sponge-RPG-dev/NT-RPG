@@ -16,4 +16,6 @@ public interface InventoryService {
     boolean isManagedInventory(Class aClass, int slotId);
 
     Set<ActiveSkillPreProcessorWrapper> processItemCost(IActiveCharacter character, PlayerSkillContext info);
+
+    void initializeCharacterInventory(IActiveCharacter character);
 }

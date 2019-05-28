@@ -1,10 +1,13 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.ActionResult;
+import cz.neumimto.rpg.api.events.effect.EventFactoryService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillDependency;
+import cz.neumimto.rpg.junit.NtRpgExtension;
+import cz.neumimto.rpg.junit.TestGuiceModule;
 import cz.neumimto.rpg.sponge.configuration.PluginConfig;
 import cz.neumimto.rpg.common.persistance.model.CharacterClass;
 import cz.neumimto.rpg.players.*;
@@ -12,24 +15,30 @@ import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
+import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.UUID;
 
+@ExtendWith({NtRpgExtension.class, GuiceExtension.class})
+@IncludeModule(TestGuiceModule.class)
 public class SkillManipulationTests {
 
-    private CharacterService characterService = new CharacterService() {
-        @Override
-        protected void addCharacterToGame(UUID id, IActiveCharacter character, List<CharacterBase> playerChars) {
+    @Inject
+    private CharacterService characterService;
 
-        }
-    };
+    @Inject
+    private EventFactoryService eventFactoryService;
+
 
     ISkill main;
     ISkill conflicting;
@@ -62,6 +71,8 @@ public class SkillManipulationTests {
     @BeforeEach
     public void before() throws Exception {
         Log.setLogger(Mockito.mock(Logger.class));
+
+        NtRpgPlugin.GlobalScope.eventFactory = eventFactoryService;
 
         //lets not invoke constructor
         PluginConfig o = (PluginConfig) TestHelper.getUnsafe().allocateInstance(PluginConfig.class);

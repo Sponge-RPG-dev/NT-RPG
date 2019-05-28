@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.junit;
 
+import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.RpgTest;
 import cz.neumimto.rpg.TestHelper;
@@ -19,6 +20,7 @@ public class NtRpgExtension implements BeforeAllCallback {
         Log.setLogger(LoggerFactory.getLogger("TestLogger"));
         NtRpgPlugin.pluginConfig = new PluginConfig();
         NtRpgPlugin.workingDir = ".";
+        NtRpgPlugin.GlobalScope = new GlobalScope();
     }
 
 }

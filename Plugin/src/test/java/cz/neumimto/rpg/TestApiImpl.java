@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.util.*;
 
 public class TestApiImpl implements RpgApi {
+
     @Override
     public Collection<Attribute> getAttributes() {
         return Arrays.asList(TestDictionary.AGI, TestDictionary.STR);
@@ -58,7 +59,8 @@ public class TestApiImpl implements RpgApi {
 
     @Override
     public boolean postEvent(Object event) {
-        return TestEventBus.BUS.add(event);
+        TestEventBus.BUS.add(event);
+        return false;
     }
 
     @Override
@@ -73,7 +75,7 @@ public class TestApiImpl implements RpgApi {
 
     @Override
     public EventFactoryService getEventFactory() {
-        return null;
+        return NtRpgPlugin.GlobalScope.eventFactory;
     }
 
     @Override

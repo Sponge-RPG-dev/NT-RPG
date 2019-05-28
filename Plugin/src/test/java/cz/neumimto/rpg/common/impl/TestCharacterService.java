@@ -10,10 +10,8 @@ import java.util.UUID;
 
 @Singleton
 public class TestCharacterService extends CharacterService {
-
     @Override
     protected void addCharacterToGame(UUID id, IActiveCharacter character, List<CharacterBase> playerChars) {
 
     }
-
 }

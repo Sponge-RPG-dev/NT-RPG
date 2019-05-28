@@ -19,8 +19,10 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.ClassService;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.events.character.*;
+import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.permissions.PermissionService;
@@ -41,13 +43,11 @@ import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.common.utils.exceptions.MissingConfigurationException;
 import cz.neumimto.rpg.sponge.configuration.DebugLevel;
 import cz.neumimto.rpg.sponge.configuration.Localizations;
-import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.sponge.effects.common.def.ClickComboActionComponent;
 import cz.neumimto.rpg.sponge.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.sponge.events.PlayerDataPreloadComplete;
-import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.sponge.inventory.UserActionType;
 import cz.neumimto.rpg.common.persistance.dao.CharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.PlayerDao;
@@ -59,7 +59,6 @@ import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.groups.DependencyGraph;
 import cz.neumimto.rpg.players.leveling.SkillTreeType;
 import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
-import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import cz.neumimto.rpg.sponge.utils.PermissionUtils;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.Sponge;
@@ -93,19 +92,19 @@ public abstract class CharacterService {
     private PlayerDao playerDao;
 
     @Inject
-    private SpongeInventoryService spongeInventoryService;
+    private InventoryService inventoryService;
 
     @Inject
     private ClassService classService;
 
     @Inject
-    public EntityService entityService;
+    private EntityService entityService;
 
     @Inject
-    private SpongeDamageService spongeDamageService;
+    private DamageService damageService;
 
     @Inject
-    private PropertyService spongePropertyService;
+    private PropertyService propertyService;
 
     @Inject
     private LocalizationService localizationService;
@@ -150,7 +149,6 @@ public abstract class CharacterService {
 
             if (character != null) {
                 info("Finished initializing of player character " + id + ", [" + (System.currentTimeMillis() - k) + "]ms");
-
                 addCharacterToGame(id, character, playerCharacters);
             } else {
                 dataPreparationStageMap.put(id, new DataPreparationStage(DataPreparationStage.Stage.NO_ACTION, playerCharacters));
@@ -225,7 +223,7 @@ public abstract class CharacterService {
             pl.offer(Keys.HEALTH_SCALE, character.getCharacterBase().getHealthScale());
         }
 
-        spongeInventoryService.initializeCharacterInventory(character);
+        inventoryService.initializeCharacterInventory(character);
         return true;
     }
 
@@ -337,8 +335,8 @@ public abstract class CharacterService {
             applyGroupEffects(character, nClass.getClassDefinition());
         }
 
-        spongeInventoryService.initializeCharacterInventory(character);
-        spongeDamageService.recalculateCharacterWeaponDamage(character);
+        inventoryService.initializeCharacterInventory(character);
+        damageService.recalculateCharacterWeaponDamage(character);
 
 
         updateMaxHealth(character);
@@ -460,7 +458,7 @@ public abstract class CharacterService {
 
 
     public void recalculateProperties(IActiveCharacter character) {
-        Map<Integer, Float> defaults = spongePropertyService.getDefaults();
+        Map<Integer, Float> defaults = propertyService.getDefaults();
         float[] primary = character.getPrimaryProperties();
         float[] secondary = character.getSecondaryProperties();
         float pval = 0;
@@ -553,7 +551,7 @@ public abstract class CharacterService {
     public ActiveCharacter createActiveCharacter(UUID player, CharacterBase characterBase) {
         characterBase = playerDao.fetchCharacterBase(characterBase);
         ActiveCharacter activeCharacter = new ActiveCharacter(player, characterBase, PropertyServiceImpl.LAST_ID);
-        Set<String> strings = spongePropertyService.getAttributes().keySet();
+        Set<String> strings = propertyService.getAttributes().keySet();
         for (String string : strings) {
             activeCharacter.getTransientAttributes().put(string, 0);
         }
@@ -570,7 +568,7 @@ public abstract class CharacterService {
             permissionService.addAllPermissions(activeCharacter, playerClassData);
         }
 
-        spongeInventoryService.initializeManagedSlots(activeCharacter);
+        inventoryService.initializeManagedSlots(activeCharacter);
 
         Set<PlayerSkillContext> skillData = resolveSkills(characterBase, activeCharacter);
         recalculateProperties(activeCharacter);
@@ -972,7 +970,7 @@ public abstract class CharacterService {
         characterClass.setExperiences(newcurrentexp);
 
         if (gotLevel) {
-            spongeInventoryService.initializeCharacterInventory(character);
+            inventoryService.initializeCharacterInventory(character);
         }
 
         Gui.showExpChange(character, aClass.getClassDefinition().getName(), exp);
@@ -1060,7 +1058,7 @@ public abstract class CharacterService {
     public void respawnCharacter(IActiveCharacter character) {
         effectService.removeAllEffects(character);
 
-        Set<String> strings = spongePropertyService.getAttributes().keySet();
+        Set<String> strings = propertyService.getAttributes().keySet();
         for (String string : strings) {
             character.getTransientAttributes().put(string, 0);
         }
@@ -1073,7 +1071,7 @@ public abstract class CharacterService {
         character.getMana().setValue(0);
         addDefaultEffects(character);
 
-        spongeInventoryService.initializeCharacterInventory(character);
+        inventoryService.initializeCharacterInventory(character);
         Sponge.getScheduler().createTaskBuilder().execute(() -> {
             invalidateCaches(character);
             Double d = character.getHealth().getMaxValue();
