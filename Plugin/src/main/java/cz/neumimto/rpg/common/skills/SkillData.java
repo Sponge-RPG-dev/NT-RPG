@@ -24,6 +24,7 @@ import cz.neumimto.rpg.api.skills.SkillDependency;
 import cz.neumimto.rpg.api.skills.SkillSettings;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -53,6 +54,7 @@ public class SkillData {
     private int levelGap;
     private String skillName;
     private SkillCost invokeCost;
+    private List<String> description;
 
     public SkillData(String skill) {
         this.skill = skill;
@@ -180,5 +182,13 @@ public class SkillData {
 
     public void setInvokeCost(SkillCost invokeCost) {
         this.invokeCost = invokeCost;
+    }
+
+    public List<String> getDescription() {
+        return description;
+    }
+
+    public void setDescription(List<String> description) {
+        this.description = description;
     }
 }

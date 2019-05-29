@@ -254,7 +254,6 @@ public class GuiHelper {
     }
 
     private static ItemStack toItemStack(ISkill skill, IActiveCharacter character, SkillData skillData, SkillTree skillTree) {
-        //todo
         throw new RuntimeException("//TODO");
     }
 

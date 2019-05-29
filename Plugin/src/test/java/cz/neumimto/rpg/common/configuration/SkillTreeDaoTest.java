@@ -9,11 +9,13 @@ import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.api.skills.types.AbstractSkill;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +29,15 @@ class SkillTreeDaoTest {
         AbstractSkill spy = Mockito.spy(AbstractSkill.class);
         Mockito.doNothing().when(spy).init();
         Mockito.when(spy.getName()).thenReturn("test");
+        spy.setDescription(Arrays.asList("test"));
         spy.setCatalogId("test");
+        NtRpgPlugin.GlobalScope.skillService.registerAdditionalCatalog(spy);
+
+        spy = Mockito.spy(AbstractSkill.class);
+        Mockito.doNothing().when(spy).init();
+        Mockito.when(spy.getName()).thenReturn("test2");
+        spy.setDescription(Arrays.asList("test"));
+        spy.setCatalogId("test2");
         NtRpgPlugin.GlobalScope.skillService.registerAdditionalCatalog(spy);
     }
 
@@ -36,6 +46,12 @@ class SkillTreeDaoTest {
         Map<String, SkillTree> skillTreeMap = new HashMap<>();
         Config config = ConfigFactory.load(getClass().getClassLoader(), "testconfig/SkillTree01.conf");
         new SkillTreeDao().populateMap(skillTreeMap, config);
-        skillTreeMap.containsKey("test");
+        Assertions.assertTrue(skillTreeMap.containsKey("Test"));
+        Assertions.assertTrue(skillTreeMap.get("Test").getSkills().containsKey("test"));
+        Assertions.assertTrue(skillTreeMap.get("Test").getSkills().containsKey("test2"));
+
+        SkillTree test2 = skillTreeMap.get("Test");
+        Assertions.assertTrue(test2.getSkillById("test2").getDescription().get(0).equalsIgnoreCase("asdf"));
+        Assertions.assertTrue(test2.getSkillById("test").getDescription().get(0).equalsIgnoreCase("test"));
     }
 }

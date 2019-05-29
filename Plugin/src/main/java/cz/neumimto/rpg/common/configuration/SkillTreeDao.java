@@ -212,6 +212,12 @@ public class SkillTreeDao {
             warn("Missing \"LevelGap\" node for a skill \"" + info.getSkillId() + "\", setting to 1");
         }
 
+        try {
+            info.setDescription(c.getStringList("Description"));
+        } catch (ConfigException e) {
+            info.setDescription(info.getSkill().getDescription());
+        }
+
 
         try {
             Config reagent = c.getConfig("InvokeCost");
