@@ -10,7 +10,6 @@ import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.skills.SkillData;
-import cz.neumimto.rpg.sponge.configuration.Localizations;
 import cz.neumimto.rpg.api.events.character.CharacterGainedLevelEvent;
 import cz.neumimto.rpg.common.persistance.dao.DirectAccessDao;
 import cz.neumimto.rpg.common.persistance.model.CharacterSkill;
@@ -18,8 +17,6 @@ import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.sponge.configuration.PluginConfig;
-import org.spongepowered.api.Sponge;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -22,17 +22,14 @@ package cz.neumimto.rpg.players.parties;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.gui.Gui;
-import cz.neumimto.rpg.sponge.configuration.Localizations;
 import cz.neumimto.rpg.api.events.party.PartyCreateEvent;
 import cz.neumimto.rpg.api.events.party.PartyInviteEvent;
 import cz.neumimto.rpg.api.events.party.PartyJoinEvent;
 import cz.neumimto.rpg.api.events.party.PartyLeaveEvent;
 import cz.neumimto.rpg.players.IActiveCharacter;
-import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**

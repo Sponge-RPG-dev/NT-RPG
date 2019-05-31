@@ -3,7 +3,7 @@ package cz.neumimto.rpg;
 import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
-import cz.neumimto.rpg.sponge.configuration.DebugLevel;
+import cz.neumimto.rpg.common.utils.DebugLevel;
 import cz.neumimto.rpg.sponge.configuration.PluginConfig;
 import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
 import cz.neumimto.rpg.players.CharacterService;

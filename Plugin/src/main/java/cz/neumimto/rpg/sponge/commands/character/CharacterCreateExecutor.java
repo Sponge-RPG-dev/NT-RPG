@@ -4,7 +4,6 @@ import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.sponge.configuration.CommandLocalization;
-import cz.neumimto.rpg.sponge.configuration.Localizations;
 import cz.neumimto.rpg.players.CharacterBase;
 import cz.neumimto.rpg.players.CharacterService;
 import org.spongepowered.api.command.CommandException;

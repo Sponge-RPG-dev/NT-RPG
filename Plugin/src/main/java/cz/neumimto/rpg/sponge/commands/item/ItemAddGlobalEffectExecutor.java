@@ -6,7 +6,6 @@ import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
-import cz.neumimto.rpg.sponge.configuration.Localizations;
 import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;

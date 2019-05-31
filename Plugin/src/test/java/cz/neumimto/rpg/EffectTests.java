@@ -2,7 +2,7 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.effects.EffectStackingStrategy;
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.sponge.configuration.DebugLevel;
+import cz.neumimto.rpg.common.utils.DebugLevel;
 import cz.neumimto.rpg.sponge.configuration.PluginConfig;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.TestEffectService;

@@ -5,7 +5,9 @@ import java.util.function.Supplier;
 public interface EventFactoryService {
     <T> T createEventInstance(Class<? extends T> clazz);
 
-    void registerProvider(Class<?> clazz, Supplier<?> provider);
+    <T> void registerProvider(Class<T> clazz, Supplier<? extends T> provider);
 
     <T> void registerProvider(Class<T> clazz, Class<? extends T> implementation);
+
+    void registerEventProviders();
 }

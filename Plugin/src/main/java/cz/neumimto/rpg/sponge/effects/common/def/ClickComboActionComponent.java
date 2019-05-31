@@ -6,7 +6,6 @@ import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.sponge.configuration.Localizations;
 import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.players.IActiveCharacter;

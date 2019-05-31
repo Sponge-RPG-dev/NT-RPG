@@ -2,7 +2,6 @@ package cz.neumimto.rpg.players;
 
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.utils.Pair;
-import cz.neumimto.rpg.sponge.configuration.Localizations;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;

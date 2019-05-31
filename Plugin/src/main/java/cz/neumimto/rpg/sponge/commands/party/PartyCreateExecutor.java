@@ -3,7 +3,6 @@ package cz.neumimto.rpg.sponge.commands.party;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.gui.Gui;
-import cz.neumimto.rpg.sponge.configuration.Localizations;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.parties.Party;
 import org.spongepowered.api.command.CommandException;

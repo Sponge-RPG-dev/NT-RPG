@@ -7,7 +7,6 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.common.reloading.Reload;
 import cz.neumimto.rpg.common.reloading.ReloadService;
-import cz.neumimto.rpg.sponge.configuration.Localizations;
 import cz.neumimto.rpg.sponge.inventory.ItemLoreSections;
 import cz.neumimto.rpg.sponge.inventory.LoreSectionDelimiter;
 import cz.neumimto.rpg.sponge.inventory.data.DataConstants;

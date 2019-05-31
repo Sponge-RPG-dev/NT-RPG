@@ -29,8 +29,7 @@ import cz.neumimto.rpg.api.skills.SkillSettings;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.scripting.JsBinding;
 import cz.neumimto.rpg.common.utils.annotations.CatalogId;
-import cz.neumimto.rpg.sponge.configuration.DebugLevel;
-import cz.neumimto.rpg.sponge.configuration.Localizations;
+import cz.neumimto.rpg.common.utils.DebugLevel;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 

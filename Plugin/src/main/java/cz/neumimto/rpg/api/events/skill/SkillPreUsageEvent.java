@@ -29,7 +29,7 @@ public interface SkillPreUsageEvent extends SkillEvent {
 
     void setSkillContext(SkillContext  context);
 
-    void setEntity(IEntity iEntity);
+    void setCaster(IEntity iEntity);
 
-    IEntity getEntity();
+    IEntity getCaster();
 }

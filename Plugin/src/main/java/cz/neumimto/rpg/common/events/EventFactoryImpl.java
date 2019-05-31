@@ -7,8 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-@Singleton
-public class EventFactoryImpl implements EventFactoryService {
+public abstract class EventFactoryImpl implements EventFactoryService {
 
     protected Map<Class<?>, Supplier<?>> cache = new HashMap<>();
 
@@ -18,7 +17,7 @@ public class EventFactoryImpl implements EventFactoryService {
     }
 
     @Override
-    public void registerProvider(Class<?> clazz, Supplier<?> provider) {
+    public <T> void registerProvider(Class<T> clazz, Supplier<? extends T> provider) {
         cache.put(clazz, provider);
     }
 
