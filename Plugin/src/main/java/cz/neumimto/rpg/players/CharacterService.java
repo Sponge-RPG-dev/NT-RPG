@@ -17,20 +17,20 @@
  */
 package cz.neumimto.rpg.players;
 
-import cz.neumimto.rpg.api.classes.ClassService;
+import cz.neumimto.rpg.api.ActionResult;
+import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.damage.DamageService;
+import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.events.character.*;
+import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
-import cz.neumimto.rpg.api.permissions.PermissionService;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.api.ActionResult;
-import cz.neumimto.rpg.api.IRpgElement;
-import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -38,43 +38,38 @@ import cz.neumimto.rpg.api.skills.SkillDependency;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.common.effects.EffectService;
-import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
-import cz.neumimto.rpg.common.skills.SkillData;
-import cz.neumimto.rpg.common.utils.exceptions.MissingConfigurationException;
-import cz.neumimto.rpg.common.utils.DebugLevel;
-import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.sponge.effects.common.def.ClickComboActionComponent;
-import cz.neumimto.rpg.sponge.effects.common.def.CombatEffect;
-import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.sponge.events.PlayerDataPreloadComplete;
-import cz.neumimto.rpg.sponge.inventory.UserActionType;
 import cz.neumimto.rpg.common.persistance.dao.CharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.PlayerDao;
 import cz.neumimto.rpg.common.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.common.persistance.model.CharacterClass;
 import cz.neumimto.rpg.common.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.common.skills.SkillData;
+import cz.neumimto.rpg.common.utils.DebugLevel;
+import cz.neumimto.rpg.common.utils.exceptions.MissingConfigurationException;
+import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.groups.DependencyGraph;
 import cz.neumimto.rpg.players.leveling.SkillTreeType;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.configuration.PluginConfig;
+import cz.neumimto.rpg.sponge.effects.common.def.ClickComboActionComponent;
+import cz.neumimto.rpg.sponge.effects.common.def.CombatEffect;
+import cz.neumimto.rpg.sponge.events.PlayerDataPreloadComplete;
+import cz.neumimto.rpg.sponge.inventory.UserActionType;
 import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 import cz.neumimto.rpg.sponge.utils.PermissionUtils;
 import cz.neumimto.rpg.sponge.utils.Utils;
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Text;
 
 import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static cz.neumimto.core.localization.Arg.arg;
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
-import static cz.neumimto.rpg.api.logging.Log.*;
+import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.api.logging.Log.warn;
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -91,7 +86,7 @@ public abstract class CharacterService {
     private PlayerDao playerDao;
 
     @Inject
-    private InventoryService inventoryService;
+    protected InventoryService inventoryService;
 
     @Inject
     private ClassService classService;
@@ -111,8 +106,6 @@ public abstract class CharacterService {
     @Inject
     private CharacterClassDao characterClassDao;
 
-    private Map<UUID, IActiveCharacter> characters = new HashMap<>();
-
     private Map<UUID, DataPreparationStage> dataPreparationStageMap = new ConcurrentHashMap<>();
 
     @Inject
@@ -121,17 +114,36 @@ public abstract class CharacterService {
     @Inject
     private PermissionService permissionService;
 
+
+    protected abstract void addCharacterToGame(UUID id, IActiveCharacter character, List<CharacterBase> playerChars);
+
+    public abstract PreloadCharacter buildDummyChar(UUID uuid);
+
+    protected abstract boolean hasCharacter(UUID uniqueId);
+
+    public abstract void registerDummyChar(IActiveCharacter dummy);
+
+    /**
+     * @param uuid
+     * @return character, never returns null
+     */
+    public abstract IActiveCharacter getCharacter(UUID uuid);
+
+    public abstract Collection<? extends IActiveCharacter> getCharacters();
+
+    protected abstract void addCharacter(UUID uuid, IActiveCharacter character);
+
     public void loadPlayerData(UUID id, String playerName) {
         dataPreparationStageMap.put(id, new DataPreparationStage(DataPreparationStage.Stage.LOADING));
 
-        characters.put(id, buildDummyChar(id));
+        addCharacter(id, buildDummyChar(id));
         CompletableFuture.runAsync(() -> {
             info("Loading player - " + id);
             long k = System.currentTimeMillis();
             List<CharacterBase> playerCharacters = playerDao.getPlayersCharacters(id);
             k = System.currentTimeMillis() - k;
             info("Finished loading of player data" + id + ", loaded " + playerCharacters.size() + " characters   [" + k + "]ms");
-
+            PluginConfig pluginConfig = Rpg.get().getPluginConfig();
             if (playerCharacters.isEmpty() && pluginConfig.CREATE_FIRST_CHAR_AFTER_LOGIN) {
                 CharacterBase cb = createCharacterBase(playerName, id);
                 createAndUpdate(cb);
@@ -155,12 +167,10 @@ public abstract class CharacterService {
         }, NtRpgPlugin.asyncExecutor);
     }
 
-    protected abstract void addCharacterToGame(UUID id, IActiveCharacter character, List<CharacterBase> playerChars);
 
-    protected void finalizePlayerDataPreloadStage(UUID id, IActiveCharacter character, PlayerDataPreloadComplete event, Player popt) {
+    protected void finalizePlayerDataPreloadStage(UUID id, IActiveCharacter character, PlayerDataPreloadComplete event) {
         setActiveCharacter(event.getPlayer(), character);
         invalidateCaches(character);
-        assignPlayerToCharacter(popt);
         dataPreparationStageMap.remove(id);
     }
 
@@ -169,25 +179,26 @@ public abstract class CharacterService {
         Log.info("Data for Player " + id + " prepared but player instance not ready yet, will attempt to initialize later");
     }
 
-    public void checkPlayerDataStatus(Player targetEntity) {
-        UUID uniqueId = targetEntity.getUniqueId();
-        if (!characters.containsKey(uniqueId)) {
+    public void checkPlayerDataStatus(UUID uniqueId) {
+        if (!hasCharacter(uniqueId)) {
             return;
         }
         DataPreparationStage dataPreparationStage = dataPreparationStageMap.get(uniqueId);
         if (dataPreparationStage.stage == DataPreparationStage.Stage.PLAYER_NOT_YET_READY) {
             setActiveCharacter(uniqueId, dataPreparationStage.character);
-            invalidateCaches(characters.get(targetEntity.getUniqueId()));
-            assignPlayerToCharacter(targetEntity);
+            invalidateCaches(getCharacter(uniqueId));
+            assignPlayerToCharacter(uniqueId);
             dataPreparationStageMap.remove(uniqueId);
         } else if (dataPreparationStage.stage == DataPreparationStage.Stage.NO_ACTION) {
             if (!dataPreparationStage.characters.isEmpty()) {
-                Gui.invokeCharacterMenu(getCharacter(targetEntity), dataPreparationStage.characters);
+                Gui.invokeCharacterMenu(getCharacter(uniqueId), dataPreparationStage.characters);
             } else {
                 //todo message
             }
         }
     }
+
+
 
     /**
      * @param name
@@ -197,34 +208,12 @@ public abstract class CharacterService {
         CharacterBase characterBase = new CharacterBase();
         characterBase.setName(name);
         characterBase.setUuid(uuid);
+        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
         characterBase.setAttributePoints(pluginConfig.ATTRIBUTEPOINTS_ON_START);
         return characterBase;
     }
 
-    public void registerDummyChar(PreloadCharacter dummy) {
-        characters.put(dummy.getPlayer().getUniqueId(), dummy);
-    }
-
-    public boolean assignPlayerToCharacter(Player pl) {
-        if (pl == null) {
-            return false;
-        }
-        info("Assigning player to character " + pl.getName());
-        if (!characters.containsKey(pl.getUniqueId())) {
-            error("Could not find any character for player " + pl.getName() + " Auth event not fired?");
-            return false;
-        }
-        IActiveCharacter character = characters.get(pl.getUniqueId());
-        if (character.isStub()) {
-            return false;
-        }
-        if (character.getCharacterBase().getHealthScale() != null) {
-            pl.offer(Keys.HEALTH_SCALE, character.getCharacterBase().getHealthScale());
-        }
-
-        inventoryService.initializeCharacterInventory(character);
-        return true;
-    }
+    public abstract boolean assignPlayerToCharacter(UUID uniqueId);
 
     public void updateWeaponRestrictions(IActiveCharacter character) {
         Map weapons = character.getAllowedWeapons();
@@ -278,21 +267,7 @@ public abstract class CharacterService {
         playerDao.createAndUpdate(base);
     }
 
-    /**
-     * @param uuid
-     * @return character, never returns null
-     */
-    public IActiveCharacter getCharacter(UUID uuid) {
-        return characters.get(uuid);
-    }
 
-    public IActiveCharacter getCharacter(Player player) {
-        return characters.get(player.getUniqueId());
-    }
-
-    public Collection<IActiveCharacter> getCharacters() {
-        return characters.values();
-    }
 
     /**
      * Activates character for specified player, replaces old
@@ -305,11 +280,11 @@ public abstract class CharacterService {
         info("Setting active character player " + uuid + " character " + character.getName());
         IActiveCharacter activeCharacter = getCharacter(uuid);
         if (activeCharacter == null) {
-            characters.put(uuid, character);
+            addCharacter(uuid, character);
         } else {
             deleteCharacterReferences(activeCharacter);
             character.setUsingGuiMod(activeCharacter.isUsingGuiMod());
-            characters.put(uuid, character);
+            addCharacter(uuid, character);
         }
         initActiveCharacter(character);
         return character;
@@ -317,12 +292,14 @@ public abstract class CharacterService {
 
     public void initActiveCharacter(IActiveCharacter character) {
         info("Initializing character " + character.getCharacterBase().getId());
-        character.sendMessage(Localizations.CURRENT_CHARACTER, arg("character", character.getName()));
+        String msg = localizationService.translate(LocalizationKeys.CHARACTER_INITIALIZED, arg("character", character.getName()));
+        character.sendMessage(msg);
         addDefaultEffects(character);
         Set<BaseCharacterAttribute> baseCharacterAttribute = character.getCharacterBase().getBaseCharacterAttribute();
 
+
         for (BaseCharacterAttribute at : baseCharacterAttribute) {
-            Optional<Attribute> type = Sponge.getRegistry().getType(Attribute.class, at.getName());
+            Optional<Attribute> type = propertyService.getAttributeById(at.getName());
             if (type.isPresent()) {
                 assignAttribute(character, type.get(), character.getLevel());
             } else {
@@ -401,8 +378,10 @@ public abstract class CharacterService {
     }
 
     public IActiveCharacter removeCachedCharacter(UUID uuid) {
-        return deleteCharacterReferences(characters.remove(uuid));
+        return deleteCharacterReferences(removeCharacter(uuid));
     }
+
+    protected abstract IActiveCharacter removeCharacter(UUID uuid);
 
     protected IActiveCharacter deleteCharacterReferences(IActiveCharacter character) {
         effectService.removeAllEffects(character);
@@ -422,17 +401,6 @@ public abstract class CharacterService {
     public void removePlayerData(UUID uniqueId) {
         removeCachedWrapper(uniqueId);
         playerDao.deleteData(uniqueId);
-    }
-
-    /**
-     * builds dummy character as a placeholder, Almost all actions are restricted
-     *
-     * @param uuid
-     * @return
-     */
-    public PreloadCharacter buildDummyChar(UUID uuid) {
-        info("Creating a dummy character for " + uuid);
-        return new PreloadCharacter(uuid);
     }
 
     public void invalidateCaches(final IActiveCharacter activeCharacter) {
@@ -549,7 +517,7 @@ public abstract class CharacterService {
      */
     public ActiveCharacter createActiveCharacter(UUID player, CharacterBase characterBase) {
         characterBase = playerDao.fetchCharacterBase(characterBase);
-        ActiveCharacter activeCharacter = new ActiveCharacter(player, characterBase, PropertyServiceImpl.LAST_ID);
+        ActiveCharacter activeCharacter = createCharacter(player, characterBase);
         Set<String> strings = propertyService.getAttributes().keySet();
         for (String string : strings) {
             activeCharacter.getTransientAttributes().put(string, 0);
@@ -578,6 +546,8 @@ public abstract class CharacterService {
 
         return activeCharacter;
     }
+
+    public abstract ActiveCharacter createCharacter(UUID player, CharacterBase characterBase);
 
     /**
      * @param uniqueId player's uuid
@@ -815,6 +785,7 @@ public abstract class CharacterService {
                 return ActionResult.withErrorMessage(text);
             }
         }
+        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
         if (skill instanceof SkillTreeSpecialization && pluginConfig.PATH_NODES_SEALED) {
             String text = localizationService.translate(LocalizationKeys.UNABLE_TO_REFUND_SKILL_SEALED);
             return ActionResult.withErrorMessage(text);
@@ -910,8 +881,9 @@ public abstract class CharacterService {
         CharacterClass cc = character.getCharacterBase().getCharacterClass(clazz);
         cc.setSkillPoints(cc.getSkillPoints() + skillpoint);
         character.setAttributePoints(character.getAttributePoints() + attributepoint);
-        character.sendMessage(Localizations.CHARACTER_GAINED_POINTS,
+        String msg = localizationService.translate(LocalizationKeys.CHARACTER_GAINED_POINTS,
                 arg("skillpoints", skillpoint).with("attributes", attributepoint));
+        character.sendMessage(msg);
         putInSaveQueue(character.getCharacterBase());
     }
 
@@ -1071,17 +1043,6 @@ public abstract class CharacterService {
         addDefaultEffects(character);
 
         inventoryService.initializeCharacterInventory(character);
-        Sponge.getScheduler().createTaskBuilder().execute(() -> {
-            invalidateCaches(character);
-            Double d = character.getHealth().getMaxValue();
-            character.getEntity().offer(Keys.HEALTH, d);
-        }).delay(1, TimeUnit.MILLISECONDS).submit(plugin);
-    }
-
-    public void setHeathscale(IActiveCharacter character, double i) {
-        character.getCharacterBase().setHealthScale(i);
-        character.getPlayer().offer(Keys.HEALTH_SCALE, i);
-        putInSaveQueue(character.getCharacterBase());
     }
 
     /**
@@ -1103,6 +1064,7 @@ public abstract class CharacterService {
             e.processRMB();
             return false;
         }
+        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
         if (userActionType == UserActionType.Q && pluginConfig.ENABLED_Q && e.hasStarted()) {
             e.processQ();
             return true;
@@ -1162,7 +1124,8 @@ public abstract class CharacterService {
             return ActionResult.withErrorMessage(text);
         }
 
-        if (NtRpgPlugin.pluginConfig.RESPECT_CLASS_SELECTION_ORDER) {
+        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
+        if (pluginConfig.RESPECT_CLASS_SELECTION_ORDER) {
             Set<String> classTypes = pluginConfig.CLASS_TYPES.keySet();
             Iterator<String> ctype = classTypes.iterator();
             String first = classTypes.iterator().next();
@@ -1216,9 +1179,10 @@ public abstract class CharacterService {
                 scheduleNextTick(() -> {
                     invalidateCaches(character);
                     character.updateItemRestrictions();
-                    Text message = klass.getWelcomeMessage();
+                    String message = klass.getWelcomeMessage();
                     if (message == null) {
-                        message = Localizations.PLAYER_CHOOSED_CLASS.toText();
+                        message = localizationService.translate(LocalizationKeys.CLASS_WELCOME_MESSAGE,
+                                arg("class", klass.getName()));
                     }
                     character.sendMessage(message);
                 });
@@ -1227,10 +1191,7 @@ public abstract class CharacterService {
         return ActionResult.ok();
     }
 
-    private void scheduleNextTick(Runnable r) {
-        Sponge.getScheduler().createTaskBuilder().delay(1, TimeUnit.MILLISECONDS)
-                .execute(r).submit(NtRpgPlugin.GlobalScope.plugin);
-    }
+    protected abstract void scheduleNextTick(Runnable r);
 
     public void addSkillPoint(IActiveCharacter character, PlayerClassData playerClassData, int skillpointsPerLevel) {
         CharacterClass characterClass = character.getCharacterBase().getCharacterClass(playerClassData.getClassDefinition());

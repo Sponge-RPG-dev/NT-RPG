@@ -11,7 +11,6 @@ import java.util.function.Consumer;
 
 public class ParticleSpawner implements Consumer<Task> {
 
-
 	private final ParticleEffect pe;
 	private final Entity e;
 	private final double layerSpace;

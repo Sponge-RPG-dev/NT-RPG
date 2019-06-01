@@ -1,12 +1,11 @@
 package cz.neumimto.rpg.sponge.effects.common.mechanics;
 
 
-import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
@@ -21,16 +20,15 @@ import java.util.Set;
  * Created by NeumimTo on 26.4.17.
  */
 @Generate(id = "name", description = "A component which will be displaying cooldowns in the action bar")
-public class CooldownObserver extends EffectBase implements IEffectContainer {
+public class CooldownObserver extends SpongeEffectBase implements IEffectContainer {
 
     public static final String name = "CooldownObserver";
 
-    private IActiveCharacter character;
+    private SpongeCharacter character;
 
-
-    public CooldownObserver(IEffectConsumer character, long duration, String value) {
+    public CooldownObserver(SpongeCharacter character, long duration, String value) {
         super(name, character);
-        this.character = (IActiveCharacter) character;
+        this.character = character;
         setDuration(duration);
         String s = Utils.extractNumber(value);
         long l = 1000;

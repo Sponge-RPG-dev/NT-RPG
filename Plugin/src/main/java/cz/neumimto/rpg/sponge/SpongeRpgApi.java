@@ -2,13 +2,13 @@ package cz.neumimto.rpg.sponge;
 
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
-import cz.neumimto.rpg.api.events.effect.EventFactoryService;
-import cz.neumimto.rpg.api.skills.ISkillService;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.RpgApi;
+import cz.neumimto.rpg.api.events.effect.EventFactoryService;
 import cz.neumimto.rpg.api.items.ItemService;
-import cz.neumimto.rpg.api.skills.SkillPreProcessorFactory;
+import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.players.attributes.Attribute;
+import cz.neumimto.rpg.sponge.configuration.PluginConfig;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -100,5 +100,15 @@ public final class SpongeRpgApi implements RpgApi {
     @Override
     public ISkillService getSkillService() {
         return NtRpgPlugin.GlobalScope.skillService;
+    }
+
+    @Override
+    public LocalizationService getLocalizationService() {
+        return NtRpgPlugin.GlobalScope.localizationService;
+    }
+
+    @Override
+    public PluginConfig getPluginConfig() {
+        return NtRpgPlugin.pluginConfig;
     }
 }

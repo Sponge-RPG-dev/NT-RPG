@@ -1,6 +1,9 @@
 package cz.neumimto.rpg.sponge.gui;
 
 import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.localization.LocalizationKeys;
+import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.ISkillService;
@@ -40,6 +43,7 @@ import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.item.inventory.property.SlotPos;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.TextElement;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
@@ -412,12 +416,28 @@ public class GuiHelper {
 
 
     public static ItemStack interactiveModeToitemStack(IActiveCharacter character, SkillTreeViewModel.InteractiveMode interactiveMode) {
-        ItemStack md = itemStack(interactiveMode.getItemType());
+
+        String translation = null;
+        ItemType itemType = null;
+
+        switch (interactiveMode) {
+            case FAST:
+                translation = LocalizationKeys.INTERACTIVE_SKILLTREE_MOD_FAST;
+                itemType = ItemTypes.GOLD_NUGGET;
+                break;
+            case DETAILED:
+                translation = LocalizationKeys.INTERACTIVE_SKILLTREE_MOD_DETAILS;
+                itemType = ItemTypes.BOOK;
+                break;
+        }
+        LocalizationService localizationService = Rpg.get().getLocalizationService();
+        Text interactiveModeName = TextHelper.parse(localizationService.translate(translation));
+        ItemStack md = itemStack(itemType);
         List<Text> lore = new ArrayList<>();
 
         md.offer(new SkillTreeInventoryViewControllsData(SkillTreeControllsButton.MODE));
         md.offer(new MenuInventoryData(true));
-        lore.add(interactiveMode.getTransltion());
+        lore.add(interactiveModeName);
         lore.add(Text.EMPTY);
         lore.add(Text.builder("Level: ").color(TextColors.YELLOW)
                 .append(Text.builder(String.valueOf(character.getLevel())).style(TextStyles.BOLD).build())
@@ -426,7 +446,8 @@ public class GuiHelper {
         ClassDefinition viewedClass = character.getLastTimeInvokedSkillTreeView().getViewedClass();
         CharacterClass characterClass = character.getCharacterBase().getCharacterClass(viewedClass);
         if (characterClass == null) {
-            lore.add(Localizations.CLASS_NOT_SELECTED.toText());
+            String translate = localizationService.translate(LocalizationKeys.CLASS_NOT_SELECTED);
+            lore.add(TextHelper.parse(translate));
         } else {
             int sp = characterClass.getSkillPoints();
 

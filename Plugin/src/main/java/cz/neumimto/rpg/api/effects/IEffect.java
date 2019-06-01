@@ -85,7 +85,7 @@ public interface IEffect<K> extends IRpgElement {
 
     IEffectConsumer getConsumer();
 
-    void setConsumer(IEffectConsumer consumer);
+    <T extends IEffectConsumer> void setConsumer(T consumer);
 
     Set<EffectType> getEffectTypes();
 

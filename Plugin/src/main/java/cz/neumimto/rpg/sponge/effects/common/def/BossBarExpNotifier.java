@@ -1,12 +1,13 @@
 package cz.neumimto.rpg.sponge.effects.common.def;
 
-import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.common.effects.CoreEffectTypes;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.common.effects.CoreEffectTypes;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.PlayerClassData;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.boss.BossBarColors;
 import org.spongepowered.api.boss.BossBarOverlays;
@@ -21,19 +22,19 @@ import java.util.*;
 /**
  * Created by NeumimTo on 25.6.2016.
  */
-public class BossBarExpNotifier extends EffectBase<Object> implements IEffectContainer<Object, BossBarExpNotifier> {
+public class BossBarExpNotifier extends SpongeEffectBase<Object> implements IEffectContainer<Object, BossBarExpNotifier> {
 
     public static final String name = "BossBarExp";
     private Map<String, SessionWrapper> bossBarMap = new HashMap<>();
 
-    public BossBarExpNotifier(IActiveCharacter consumer) {
+    public BossBarExpNotifier(SpongeCharacter consumer) {
         super(name, consumer);
         effectTypes.add(CoreEffectTypes.GUI);
         setPeriod(5000);
         setDuration(-1);
     }
 
-    public void notifyExpChange(IActiveCharacter character, String clazz, double exps) {
+    public void notifyExpChange(SpongeCharacter character, String clazz, double exps) {
         final String classname = clazz.toLowerCase();
         Optional<PlayerClassData> first =
                 character.getClasses().values().stream().filter(a -> a.getClassDefinition().getName().equalsIgnoreCase(classname)).findFirst();
@@ -101,7 +102,7 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
     public void onRemove(IEffect self) {
         for (SessionWrapper sessionWrapper : bossBarMap.values()) {
             if (sessionWrapper.serverBossBar != null) {
-                sessionWrapper.serverBossBar.removePlayer(((IActiveCharacter) getConsumer()).getPlayer());
+                sessionWrapper.serverBossBar.removePlayer(((SpongeCharacter) getConsumer()).getPlayer());
             }
         }
     }

@@ -19,9 +19,8 @@
 package cz.neumimto.rpg.api.effects;
 
 import cz.neumimto.rpg.GlobalScope;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.common.scripting.JsBinding;
 import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,15 +28,13 @@ import java.util.Set;
 /**
  * Created by NeumimTo.
  */
-@JsBinding(JsBinding.Type.CLASS)
-public class EffectBase<Value> implements IEffect<Value> {
+public abstract class EffectBase<Value> implements IEffect<Value> {
 
     protected Set<EffectType> effectTypes = new HashSet<>();
     private boolean stackable = false;
 
     private String name;
 
-    private IEffectConsumer consumer;
     private long duration = -1;
     private long period = -1;
     private long lastTickTime;
@@ -59,7 +56,7 @@ public class EffectBase<Value> implements IEffect<Value> {
     public EffectBase(String name, IEffectConsumer consumer) {
         this();
         this.name = name;
-        this.consumer = consumer;
+        setConsumer(consumer);
     }
 
     public EffectBase() {
@@ -89,16 +86,6 @@ public class EffectBase<Value> implements IEffect<Value> {
     public void setStackable(boolean b, EffectStackingStrategy<Value> stackingStrategy) {
         this.stackable = b;
         setEffectStackingStrategy(stackingStrategy);
-    }
-
-    public IEffectConsumer getConsumer() {
-        return consumer;
-    }
-
-    public void setConsumer(IEffectConsumer consumer) {
-        if (consumer != null) {
-            this.consumer = consumer;
-        }
     }
 
     @Override
@@ -223,9 +210,9 @@ public class EffectBase<Value> implements IEffect<Value> {
     }
 
     public void init(IEffectConsumer consumer, String name, long duration, long period) {
-        this.consumer = consumer;
+        this.setConsumer(consumer);
         this.name = name;
-        this.period = period;
-        this.duration = duration;
+        this.setPeriod(period);
+        this.setDuration(duration);
     }
 }

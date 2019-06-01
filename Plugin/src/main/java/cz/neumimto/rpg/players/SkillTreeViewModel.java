@@ -75,26 +75,11 @@ public class SkillTreeViewModel {
     }
 
     public enum InteractiveMode {
-        DETAILED(Localizations.INTERACTIVE_SKILLTREE_MOD_DETAILS.toText(), ItemTypes.BOOK),
-        FAST(Localizations.INTERACTIVE_SKILLTREE_MOD_FAST.toText(), ItemTypes.GOLD_NUGGET);
-        private Text transltion;
-        private ItemType type;
-
-        InteractiveMode(Text interactiveSkilltreeModFast, ItemType type) {
-            this.transltion = interactiveSkilltreeModFast;
-            this.type = type;
-        }
-
-        public Text getTransltion() {
-            return transltion;
-        }
+        DETAILED,
+        FAST;
 
         public InteractiveMode opposite() {
             return this == DETAILED ? FAST : DETAILED;
-        }
-
-        public ItemType getItemType() {
-            return type;
         }
     }
 }

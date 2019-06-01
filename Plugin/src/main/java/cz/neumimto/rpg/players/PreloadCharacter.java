@@ -18,9 +18,9 @@
 
 package cz.neumimto.rpg.players;
 
-import cz.neumimto.core.localization.Arg;
-import cz.neumimto.core.localization.LocalizableParametrizedText;
+import cz.neumimto.rpg.api.effects.EffectContainer;
 import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
@@ -28,23 +28,15 @@ import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
-import cz.neumimto.rpg.api.effects.EffectContainer;
-import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.entities.IReservable;
 import cz.neumimto.rpg.common.persistance.model.EquipedSlot;
+import cz.neumimto.rpg.entities.IReservable;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
 import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.type.HandType;
-import org.spongepowered.api.effect.potion.PotionEffect;
-import org.spongepowered.api.effect.potion.PotionEffectType;
 import org.spongepowered.api.entity.EntityType;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.chat.ChatType;
 
 import java.util.*;
 
@@ -53,14 +45,13 @@ import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 /**
  * Created by NeumimTo on 23.7.2015.
  */
-public class PreloadCharacter implements IActiveCharacter {
+public abstract class PreloadCharacter implements IActiveCharacter {
 
     private static float[] characterProperties = new float[PropertyServiceImpl.LAST_ID];
     private IReservable mana = new CharacterMana(this);
-    private UUID uuid;
+    protected UUID uuid;
     private CharacterHealth health = new CharacterHealthStub(this);
     private boolean isusinggui;
-    private Player player;
 
     public PreloadCharacter(UUID uuid) {
         this.uuid = uuid;
@@ -89,7 +80,7 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public Map<java.lang.String, Integer> getTransientAttributes() {
+    public Map<String, Integer> getTransientAttributes() {
         return null;
     }
 
@@ -236,24 +227,6 @@ public class PreloadCharacter implements IActiveCharacter {
 
     }
 
-    @Override
-    public Player getPlayer() {
-        if (this.player == null) {
-            Optional<Player> player = Sponge.getServer().getPlayer(uuid);
-            if (player.isPresent()) {
-                this.player = player.get();
-            } else {
-                throw new PlayerNotInGameException(String.format(
-                        "Player object with uuid=%s has not been constructed yet. Calling PreloadCharacter.getCharacter in a wrong state"), this);
-            }
-        }
-        return this.player;
-    }
-
-    @Override
-    public void setPlayer(Player pl) {
-
-    }
 
     @Override
     public void resetRightClicks() {
@@ -271,17 +244,17 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public int getAttributeValue(java.lang.String name) {
+    public int getAttributeValue(String name) {
         return 0;
     }
 
     @Override
-    public Map<java.lang.String, Long> getCooldowns() {
+    public Map<String, Long> getCooldowns() {
         return Collections.emptyMap();
     }
 
     @Override
-    public boolean hasCooldown(java.lang.String thing) {
+    public boolean hasCooldown(String thing) {
         return true;
     }
 
@@ -332,12 +305,12 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public EffectContainer getEffect(java.lang.String cl) {
+    public EffectContainer getEffect(String cl) {
         return null;
     }
 
     @Override
-    public boolean hasEffect(java.lang.String cl) {
+    public boolean hasEffect(String cl) {
         return false;
     }
 
@@ -347,47 +320,13 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public void removeEffect(java.lang.String cl) {
+    public void removeEffect(String cl) {
 
     }
 
-    @Override
-    public void addPotionEffect(PotionEffectType p, int amplifier, long duration) {
-
-    }
 
     @Override
-    public void addPotionEffect(PotionEffectType p, int amplifier, long duration, boolean particles) {
-
-    }
-
-    @Override
-    public void removePotionEffect(PotionEffectType type) {
-
-    }
-
-    @Override
-    public boolean hasPotionEffect(PotionEffectType type) {
-        return false;
-    }
-
-    @Override
-    public void addPotionEffect(PotionEffect e) {
-
-    }
-
-    @Override
-    public void sendMessage(LocalizableParametrizedText message, Arg arg) {
-        getPlayer().sendMessage(message.toText(arg));
-    }
-
-    @Override
-    public void sendMessage(ChatType chatType, Text message) {
-
-    }
-
-    @Override
-    public Map<java.lang.String, PlayerSkillContext> getSkills() {
+    public Map<String, PlayerSkillContext> getSkills() {
         return Collections.emptyMap();
     }
 
@@ -397,12 +336,12 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public boolean hasSkill(java.lang.String name) {
+    public boolean hasSkill(String name) {
         return false;
     }
 
     @Override
-    public PlayerSkillContext getSkillInfo(java.lang.String s) {
+    public PlayerSkillContext getSkillInfo(String s) {
         return PlayerSkillContext.Empty;
     }
 
@@ -412,12 +351,12 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public void addSkill(java.lang.String name, PlayerSkillContext info) {
+    public void addSkill(String name, PlayerSkillContext info) {
 
     }
 
     @Override
-    public PlayerSkillContext getSkill(java.lang.String skillName) {
+    public PlayerSkillContext getSkill(String skillName) {
         return PlayerSkillContext.Empty;
     }
 
@@ -478,17 +417,6 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public Player getEntity() {
-        return getPlayer();
-    }
-
-    @Override
-    public void sendMessage(LocalizableParametrizedText message) {
-        getPlayer().sendMessage(message.toText());
-    }
-
-
-    @Override
     public MessageType getPreferedMessageType() {
         return MessageType.CHAT;
     }
@@ -535,7 +463,7 @@ public class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public double getExperienceBonusFor(java.lang.String name, EntityType type) {
+    public double getExperienceBonusFor(String name, EntityType type) {
         return 0;
     }
 

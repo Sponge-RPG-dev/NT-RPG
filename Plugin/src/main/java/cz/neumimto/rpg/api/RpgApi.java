@@ -3,12 +3,14 @@ package cz.neumimto.rpg.api;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.api.events.effect.EventFactoryService;
 import cz.neumimto.rpg.api.items.ItemService;
+import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.messaging.MessageLevel;
 import cz.neumimto.rpg.api.messaging.MessageProcessor;
 import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.SkillPreProcessorFactory;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.players.attributes.Attribute;
+import cz.neumimto.rpg.sponge.configuration.PluginConfig;
 
 import java.util.Collection;
 import java.util.List;
@@ -43,4 +45,7 @@ public interface RpgApi {
 
     ISkillService getSkillService();
 
+    LocalizationService getLocalizationService();
+
+    PluginConfig getPluginConfig();
 }

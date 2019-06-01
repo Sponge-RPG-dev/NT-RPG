@@ -24,7 +24,6 @@ import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.players.ActiveCharacter;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import org.spongepowered.api.text.Text;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -154,11 +153,11 @@ public abstract class EffectService {
         IEffectContainer eff = effect.getConsumer().getEffect(effect.getName());
         if (pluginConfig.DEBUG.isDevelop()) {
             IEffectConsumer consumer1 = effect.getConsumer();
-            if (consumer1 instanceof ActiveCharacter) {
-                ActiveCharacter chara = (ActiveCharacter) consumer1;
-                chara.getPlayer().sendMessage(Text.of("Adding effect: " + effect.getName() +
+            if (consumer1 instanceof IActiveCharacter) {
+                IActiveCharacter chara = (IActiveCharacter) consumer1;
+                chara.sendMessage("Adding effect: " + effect.getName() +
                         " container: " + (eff == null ? "null" : eff.getEffects().size()) +
-                        " provider: " + effectSourceProvider.getType().getClass().getSimpleName()));
+                        " provider: " + effectSourceProvider.getType().getClass().getSimpleName());
             }
         }
         if (eff == null) {
@@ -194,8 +193,8 @@ public abstract class EffectService {
             IEffectConsumer consumer1 = effect.getConsumer();
             if (consumer1 instanceof ActiveCharacter) {
                 ActiveCharacter chara = (ActiveCharacter) consumer1;
-                chara.getPlayer().sendMessage(Text.of("Removing effect: " + effect.getName() +
-                        " container: " + (container == null ? "null" : container.getEffects().size())));
+                chara.sendMessage("Removing effect: " + effect.getName() +
+                        " container: " + (container == null ? "null" : container.getEffects().size()));
             }
         }
         if (container != null) {
@@ -316,7 +315,7 @@ public abstract class EffectService {
     public void removeGlobalEffectsAsEnchantments(Collection<IGlobalEffect> itemEffects, IActiveCharacter character,
                                                   IEffectSourceProvider effectSourceProvider) {
         if (pluginConfig.DEBUG.isDevelop()) {
-            character.sendMessage(Text.of(itemEffects.size() + " added echn. effect to remove queue."));
+            character.sendMessage(itemEffects.size() + " added echn. effect to remove queue.");
         }
         itemEffects.forEach((e) -> {
             removeEffect(e.getName(), character, effectSourceProvider);
@@ -332,7 +331,7 @@ public abstract class EffectService {
     /**
      * Called only in cases when entities dies, or players logs off
      */
-    public void removeAllEffects(IEffectConsumer<?> character) {
+    public void removeAllEffects(IEffectConsumer character) {
         Iterator<IEffectContainer<Object, IEffect<Object>>> iterator1 = character.getEffects().iterator();
         while (iterator1.hasNext()) {
             IEffectContainer<Object, IEffect<Object>> next = iterator1.next();

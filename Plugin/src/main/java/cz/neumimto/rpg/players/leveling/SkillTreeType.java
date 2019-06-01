@@ -3,6 +3,7 @@ package cz.neumimto.rpg.players.leveling;
 
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.messaging.MessageLevel;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.ActionResult;
@@ -148,7 +149,8 @@ public enum SkillTreeType {
         }
 
         private void sendErrorMessage(IActiveCharacter player, String className) {
-            player.sendMessage(Localizations.NOT_ALLOWED_MANUAL_SKILLTREE_MANAGEMENT.toText(Arg.arg("class", className)));
+            String aClass = Rpg.get().getLocalizationService().translate(LocalizationKeys.NOT_ALLOWED_MANUAL_SKILLTREE_MANAGEMENT, Arg.arg("class", className));
+
         }
     };
 

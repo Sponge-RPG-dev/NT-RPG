@@ -1,11 +1,11 @@
 package cz.neumimto.rpg.sponge.effects.common.mechanics;
 
-import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.common.scripting.JsBinding;
-import cz.neumimto.rpg.effects.IEffectConsumer;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
+import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import org.spongepowered.api.effect.potion.PotionEffect;
 
 import java.util.Collections;
@@ -16,11 +16,11 @@ import java.util.Set;
  * Created by NeumimTo on 12.8.2017.
  */
 @JsBinding(JsBinding.Type.CLASS)
-public abstract class RPGPotionEffect extends EffectBase<Long> implements IEffectContainer<Long, RPGPotionEffect> {
+public abstract class RPGPotionEffect extends SpongeEffectBase<Long> implements IEffectContainer<Long, RPGPotionEffect> {
 
     private Set<PotionEffect> potions;
 
-    public RPGPotionEffect(String name, IEffectConsumer iEffectConsumer,
+    public RPGPotionEffect(String name, ISpongeEntity iEffectConsumer,
                            long duration,
                            PotionEffect.Builder pe) {
         super(name, iEffectConsumer);

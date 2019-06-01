@@ -18,10 +18,9 @@
 
 package cz.neumimto.rpg.players;
 
-import cz.neumimto.core.localization.Arg;
-import cz.neumimto.core.localization.LocalizableParametrizedText;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.effects.IEffectContainer;
+import cz.neumimto.rpg.api.entity.EntityHand;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.RpgItemStack;
@@ -30,23 +29,15 @@ import cz.neumimto.rpg.api.skills.IPlayerSkillHandler;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
-import cz.neumimto.rpg.common.skills.PlayerSkillHandlers;
 import cz.neumimto.rpg.common.effects.EffectSourceType;
-import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.entities.IReservable;
 import cz.neumimto.rpg.common.persistance.model.EquipedSlot;
+import cz.neumimto.rpg.common.skills.PlayerSkillHandlers;
+import cz.neumimto.rpg.common.skills.types.ItemAccessSkill;
+import cz.neumimto.rpg.entities.IReservable;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
-import cz.neumimto.rpg.common.skills.types.ItemAccessSkill;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import org.jline.utils.Log;
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.data.type.HandType;
-import org.spongepowered.api.data.type.HandTypes;
-import org.spongepowered.api.entity.EntityType;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.cause.entity.damage.DamageType;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.chat.ChatType;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
@@ -59,10 +50,10 @@ import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
  * Created by NeumimTo on 26.12.2014.
  */
 
-public class ActiveCharacter implements IActiveCharacter {
+public abstract class ActiveCharacter implements IActiveCharacter {
 
-    private transient UUID pl;
-    private CharacterBase base;
+    protected transient UUID pl;
+    protected CharacterBase base;
 
     private Map<String, PlayerClassData> classes = new HashMap<>();
 
@@ -96,14 +87,14 @@ public class ActiveCharacter implements IActiveCharacter {
 
     private transient Map<RpgItemType, Double> allowedWeapons = new HashMap<>();
 
-    private transient Map<EntityType, Double> projectileDamage = new HashMap<>();
+    private transient Map<String, Double> projectileDamage = new HashMap<>();
     private transient Set<RpgItemType> allowedOffHandWeapons = new HashSet<>();
     private Map<String, Long> cooldowns = new HashMap<>();
     private transient WeakReference<Party> pendingPartyInvite = new WeakReference<>(null);
     private transient double weaponDamage;
     private transient double armorvalue;
 
-    private transient DamageType preferedDamageType = null;
+    private transient String preferedDamageType = null;
     private transient Map<String, Integer> transientAttributes = new HashMap<>();
 
     private transient List<Integer> slotsToReinitialize;
@@ -258,25 +249,9 @@ public class ActiveCharacter implements IActiveCharacter {
         this.health = health;
     }
 
-
-    @Override
-    public Player getEntity() {
-        return getPlayer();
-    }
-
     @Override
     public Map<String, IEffectContainer<Object, IEffect<Object>>> getEffectMap() {
         return effects;
-    }
-
-    @Override
-    public Player getPlayer() {
-        return Sponge.getServer().getPlayer(pl).orElse(null);
-    }
-
-    @Override
-    public void setPlayer(Player pl) {
-        this.pl = pl.getUniqueId();
     }
 
     @Override
@@ -346,7 +321,7 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
-    public double getBaseProjectileDamage(EntityType id) {
+    public double getBaseProjectileDamage(String id) {
         Double d = getProjectileDamages().get(id);
         if (d == null) {
             return 0;
@@ -418,8 +393,8 @@ public class ActiveCharacter implements IActiveCharacter {
 
         for (PlayerClassData playerClassData : getClasses().values()) {
             ClassDefinition configClass = playerClassData.getClassDefinition();
-            Map<EntityType, Double> projectileDamage = configClass.getProjectileDamage();
-            for (Map.Entry<EntityType, Double> entityType : projectileDamage.entrySet()) {
+            Map<String, Double> projectileDamage = configClass.getProjectileDamage();
+            for (Map.Entry<String, Double> entityType : projectileDamage.entrySet()) {
                 Double aDouble = getProjectileDamages().get(entityType.getKey());
                 if (aDouble == null) {
                     getProjectileDamages().put(entityType.getKey(), entityType.getValue());
@@ -443,8 +418,8 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
-    public boolean canUse(RpgItemType weaponItemType, HandType h) {
-        if (h == HandTypes.MAIN_HAND) {
+    public boolean canUse(RpgItemType weaponItemType, EntityHand h) {
+        if (h == EntityHand.MAIN) {
             return allowedWeapons.containsKey(weaponItemType);
         } else {
             return allowedOffHandWeapons.contains(weaponItemType);
@@ -458,7 +433,7 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
-    public Map<EntityType, Double> getProjectileDamages() {
+    public Map<String, Double> getProjectileDamages() {
         return projectileDamage;
     }
 
@@ -468,23 +443,8 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
-    public void sendMessage(LocalizableParametrizedText message, Arg arg) {
-        getPlayer().sendMessage(message.toText(arg));
-    }
-
-    @Override
-    public void sendMessage(ChatType chatType, Text message) {
-        getPlayer().sendMessage(chatType, Text.of(message));
-    }
-
-    @Override
     public Map<String, PlayerSkillContext> getSkills() {
         return skills.getSkills();
-    }
-
-    @Override
-    public void sendMessage(LocalizableParametrizedText message) {
-        sendMessage(message, Arg.EMPTY);
     }
 
     @Override
@@ -593,12 +553,12 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
-    public DamageType getDamageType() {
+    public String getDamageType() {
         return preferedDamageType;
     }
 
     @Override
-    public void setDamageType(DamageType damageType) {
+    public void setDamageType(String damageType) {
         this.preferedDamageType = damageType;
     }
 
@@ -654,12 +614,6 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
-    public boolean isDetached() {
-        return getPlayer() == null;
-    }
-
-
-    @Override
     public boolean isFriendlyTo(IActiveCharacter character) {
         if (character == this) {
             return true;
@@ -668,7 +622,7 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
-    public Map<java.lang.String, SkillTreeViewModel> getSkillTreeViewLocation() {
+    public Map<String, SkillTreeViewModel> getSkillTreeViewLocation() {
         return skillTreeViewLocation;
     }
 
@@ -736,12 +690,7 @@ public class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
-    public int hashCode() {
-        return getPlayer().getUniqueId().hashCode() * 37;
-    }
-
-    @Override
-    public double getExperienceBonusFor(java.lang.String name, EntityType type) {
+    public double getExperienceBonusFor(String name, String type) {
         double exp = 0;
         for (PlayerClassData playerClassData : getClasses().values()) {
             exp += playerClassData.getClassDefinition().getExperiencesBonus(name, type);

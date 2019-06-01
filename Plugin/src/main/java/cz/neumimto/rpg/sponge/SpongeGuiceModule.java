@@ -27,6 +27,7 @@ import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.entities.MobSettingsDao;
 import cz.neumimto.rpg.common.exp.ExperienceDAO;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.events.SpongeEventFactory;
 import cz.neumimto.rpg.sponge.exp.ExperienceService;
 import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
@@ -34,7 +35,6 @@ import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWDao;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.SpongeCharacterService;
 import cz.neumimto.rpg.players.parties.PartyService;
 import cz.neumimto.rpg.sponge.permission.SpongePermissionService;
 import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
@@ -54,7 +54,7 @@ public class SpongeGuiceModule extends AbstractModule {
         bind(SpongeSkillService.class);
         bind(PropertyService.class).to(SpongePropertyService.class);
         bind(PartyService.class);
-        bind(CharacterService.class).to(SpongeCharacterService.class);
+        bind(CharacterService.class).to(SpongeCharacterServise.class);
 
 
         bind(CharacterClassDao.class);

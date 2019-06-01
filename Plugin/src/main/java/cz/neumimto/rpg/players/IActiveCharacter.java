@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.players;
 
-import cz.neumimto.core.localization.LocalizableParametrizedText;
+import cz.neumimto.rpg.api.entity.EntityHand;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.RpgItemStack;
@@ -26,30 +26,24 @@ import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
+import cz.neumimto.rpg.common.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.entities.IEntity;
 import cz.neumimto.rpg.entities.IEntityType;
 import cz.neumimto.rpg.entities.IReservable;
-import cz.neumimto.rpg.common.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.groups.ClassDefinition;
 import cz.neumimto.rpg.players.parties.Party;
-import org.spongepowered.api.data.type.HandType;
-import org.spongepowered.api.entity.EntityType;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.cause.entity.damage.DamageType;
-import org.spongepowered.api.text.Text;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 23.7.2015.
  */
-public interface IActiveCharacter extends IEntity<Player> {
+public interface IActiveCharacter extends IEntity {
 
     Map<String, PlayerClassData> getClasses();
+
+    UUID getUUID();
 
     default PlayerClassData getClassByType(String type) {
         for (PlayerClassData value : getClasses().values()) {
@@ -90,10 +84,6 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     void setHealth(IReservable health);
 
-    Player getPlayer();
-
-    void setPlayer(Player pl);
-
     void resetRightClicks();
 
     int getAttributePoints();
@@ -118,13 +108,13 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     Map<RpgItemType, Double> getAllowedWeapons();
 
-    Map<EntityType, Double> getProjectileDamages();
+    Map<String, Double> getProjectileDamages();
 
     CharacterBase getCharacterBase();
 
     PlayerClassData getPrimaryClass();
 
-    double getBaseProjectileDamage(EntityType id);
+    double getBaseProjectileDamage(String id);
 
     IActiveCharacter updateItemRestrictions();
 
@@ -160,7 +150,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     void setPendingPartyInvite(Party party);
 
-    boolean canUse(RpgItemType weaponItemType, HandType h);
+    boolean canUse(RpgItemType weaponItemType, EntityHand h);
 
     double getWeaponDamage();
 
@@ -172,9 +162,9 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     boolean hasPreferedDamageType();
 
-    DamageType getDamageType();
+    String getDamageType();
 
-    void setDamageType(DamageType damageType);
+    void setDamageType(String damageType);
 
     void updateLastKnownLocation(int x, int y, int z, String name);
 
@@ -197,10 +187,7 @@ public interface IActiveCharacter extends IEntity<Player> {
         return IEntityType.CHARACTER;
     }
 
-    @Override
-    Player getEntity();
-
-    void sendMessage(LocalizableParametrizedText message);
+    void sendMessage(String message);
 
     float[] getSecondaryProperties();
 
@@ -232,12 +219,7 @@ public interface IActiveCharacter extends IEntity<Player> {
 
     Set<EquipedSlot> getSlotsCannotBeEquiped();
 
-    double getExperienceBonusFor(java.lang.String name, EntityType type);
-
-    @Override
-    default void sendMessage(Text t) {
-        getPlayer().sendMessage(t);
-    }
+    double getExperienceBonusFor(String dimmension, String type);
 
     void addClass(PlayerClassData playerClassData);
 

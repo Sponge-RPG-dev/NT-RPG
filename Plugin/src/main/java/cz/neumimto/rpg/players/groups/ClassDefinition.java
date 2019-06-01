@@ -23,19 +23,18 @@ import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
 import cz.neumimto.config.blackjack.and.hookers.annotations.Default;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.IEffectSource;
+import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.sponge.configuration.adapters.*;
 import cz.neumimto.rpg.common.effects.EffectSourceType;
-import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.players.attributes.Attribute;
 import cz.neumimto.rpg.players.leveling.EmptyLevelProgression;
 import cz.neumimto.rpg.players.leveling.ILevelProgression;
 import cz.neumimto.rpg.players.leveling.SkillTreeType;
+import cz.neumimto.rpg.sponge.configuration.adapters.*;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
-import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
@@ -55,7 +54,7 @@ public class ClassDefinition implements IEffectSourceProvider {
     protected String description;
 
     @Setting("WelcomeMessage")
-    protected Text welcomeMessage;
+    protected String welcomeMessage;
 
     @Setting("PreferredTextColor")
     protected TextColor preferedColor;
@@ -98,7 +97,7 @@ public class ClassDefinition implements IEffectSourceProvider {
     protected List<String> enterCommands;
 
     @Setting("ProjectileDamage")
-    protected Map<EntityType, Double> projectileDamage = new HashMap<>();
+    protected Map<String, Double> projectileDamage = new HashMap<>();
 
     @Setting("Weapons")
     @CustomAdapter(ClassRpgItemTypeAdapter.class)
@@ -118,7 +117,7 @@ public class ClassDefinition implements IEffectSourceProvider {
 
     @Setting("Experiences")
     @CustomAdapter(ClassExpAdapter.class)
-    protected Map<String, Map<EntityType, Double>> experiences = new HashMap<>();
+    protected Map<String, Map<String, Double>> experiences = new HashMap<>();
 
     @Setting("SkillTreeId")
     @CustomAdapter(SkillTreeLookupAdapter.class)
@@ -238,7 +237,7 @@ public class ClassDefinition implements IEffectSourceProvider {
         this.effects = effects;
     }
 
-    public Map<EntityType, Double> getProjectileDamage() {
+    public Map<String, Double> getProjectileDamage() {
         return projectileDamage;
     }
 
@@ -254,8 +253,8 @@ public class ClassDefinition implements IEffectSourceProvider {
         return preferedColor;
     }
 
-    public double getExperiencesBonus(String dimmension, EntityType type) {
-        Map<EntityType, Double> entityTypeDoubleMap = getExperiences().get(dimmension);
+    public double getExperiencesBonus(String dimmension, String type) {
+        Map<String, Double> entityTypeDoubleMap = getExperiences().get(dimmension);
         if (entityTypeDoubleMap == null) {
             return 0;
         }
@@ -263,7 +262,7 @@ public class ClassDefinition implements IEffectSourceProvider {
         return aDouble == null ? 0 : aDouble;
     }
 
-    public Map<String, Map<EntityType, Double>> getExperiences() {
+    public Map<String, Map<String, Double>> getExperiences() {
         return experiences;
     }
 
@@ -304,7 +303,7 @@ public class ClassDefinition implements IEffectSourceProvider {
         return levels;
     }
 
-    public Text getWelcomeMessage() {
+    public String getWelcomeMessage() {
         return welcomeMessage;
     }
 

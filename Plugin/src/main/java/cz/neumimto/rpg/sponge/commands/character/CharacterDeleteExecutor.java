@@ -1,7 +1,9 @@
 package cz.neumimto.rpg.sponge.commands.character;
 
+import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.sponge.configuration.Localizations;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.players.IActiveCharacter;
 import org.spongepowered.api.command.CommandException;
@@ -26,7 +28,8 @@ public class CharacterDeleteExecutor implements CommandExecutor {
         }
         CompletableFuture.runAsync(() -> {
             characterService.markCharacterForRemoval(player.getUniqueId(), a);
-            player.sendMessage(Localizations.CHAR_DELETED_FEEDBACK.toText());
+            String translated = Rpg.get().getLocalizationService().translate(LocalizationKeys.CHAR_DELETED_FEEDBACK);
+            player.sendMessage(TextHelper.parse(translated));
         }, NtRpgPlugin.asyncExecutor);
         return CommandResult.success();
     }
