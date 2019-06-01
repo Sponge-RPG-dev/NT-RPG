@@ -2,6 +2,7 @@ package cz.neumimto.rpg.junit;
 
 import com.google.inject.AbstractModule;
 import cz.neumimto.rpg.*;
+import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.events.effect.EventFactoryService;

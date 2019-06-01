@@ -16,7 +16,7 @@
  *
  */
 
-package cz.neumimto.rpg;
+package cz.neumimto.rpg.api.classes;
 
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.logging.Log;

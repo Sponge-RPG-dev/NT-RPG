@@ -19,12 +19,10 @@
 package cz.neumimto.rpg.sponge.listeners;
 
 import com.google.inject.Singleton;
-import cz.neumimto.rpg.ClassService;
+import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.sponge.events.PlayerGuiModInitEvent;
-import cz.neumimto.rpg.api.events.character.CharacterChangeGroupEvent;
-import cz.neumimto.rpg.api.events.party.PartyJoinEvent;
 import cz.neumimto.rpg.players.CharacterService;
 import cz.neumimto.rpg.sponge.events.character.SpongeCharacterChangeGroupEvent;
 import cz.neumimto.rpg.sponge.events.party.SpongePartyJoinEvent;

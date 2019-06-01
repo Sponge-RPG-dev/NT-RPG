@@ -21,7 +21,7 @@ package cz.neumimto.rpg.sponge.inventory;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import cz.neumimto.core.localization.TextHelper;
-import cz.neumimto.rpg.ClassService;
+import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.common.configuration.ItemString;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;

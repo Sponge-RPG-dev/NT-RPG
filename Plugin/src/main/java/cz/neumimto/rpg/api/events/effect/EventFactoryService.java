@@ -7,7 +7,5 @@ public interface EventFactoryService {
 
     <T> void registerProvider(Class<T> clazz, Supplier<? extends T> provider);
 
-    <T> void registerProvider(Class<T> clazz, Class<? extends T> implementation);
-
     void registerEventProviders();
 }

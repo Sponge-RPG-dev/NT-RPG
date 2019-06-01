@@ -21,7 +21,7 @@ package cz.neumimto.rpg.sponge.gui;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.core.localization.TextHelper;
-import cz.neumimto.rpg.ClassService;
+import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.effects.IEffect;

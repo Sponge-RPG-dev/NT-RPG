@@ -8,7 +8,9 @@ import net.bytebuddy.matcher.ElementMatchers;
 
 import javax.inject.Singleton;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.function.Supplier;
 
 @Singleton
 public class TestEventFactory extends EventFactoryImpl {
@@ -20,7 +22,8 @@ public class TestEventFactory extends EventFactoryImpl {
             return super.createEventInstance(iFace);
         }
 
-        Class<?> proxyType = new ByteBuddy()
+        @SuppressWarnings("unchecked")
+        Class<T> proxyType = (Class<T>) new ByteBuddy()
                 .subclass(Object.class)
                 .implement(iFace)
                 .method(ElementMatchers.any())
@@ -28,18 +31,17 @@ public class TestEventFactory extends EventFactoryImpl {
                 .make().load(iFace.getClassLoader(), ClassLoadingStrategy.Default.WRAPPER)
                 .getLoaded();
 
+        try {
+            return proxyType.getConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        throw new RuntimeException("Cannot initiate Event Proxy ");
+    }
 
-        registerProvider(iFace, () -> {
-            try {
-                return proxyType.newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-            throw new RuntimeException("");
-        });
+    @Override
+    public void registerEventProviders() {
 
-
-        return super.createEventInstance(iFace);
     }
 
     public class MethodInterceptor implements InvocationHandler {

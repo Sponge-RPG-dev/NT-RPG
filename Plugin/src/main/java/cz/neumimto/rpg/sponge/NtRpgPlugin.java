@@ -23,7 +23,7 @@ import com.google.inject.Injector;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.PluginCore;
 import cz.neumimto.rpg.GlobalScope;
-import cz.neumimto.rpg.PersistenceHandler;
+import cz.neumimto.rpg.common.persistance.PersistenceHandler;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.rng.PseudoRandomDistribution;

@@ -1,4 +1,4 @@
-package cz.neumimto.rpg;
+package cz.neumimto.rpg.common.persistance;
 
 import com.google.inject.Singleton;
 import cz.neumimto.core.FindDbSchemaMigrationsEvent;

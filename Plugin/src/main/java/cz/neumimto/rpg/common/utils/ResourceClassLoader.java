@@ -16,7 +16,7 @@
  *
  */
 
-package cz.neumimto.rpg;
+package cz.neumimto.rpg.common.utils;
 
 import java.net.URL;
 import java.net.URLClassLoader;

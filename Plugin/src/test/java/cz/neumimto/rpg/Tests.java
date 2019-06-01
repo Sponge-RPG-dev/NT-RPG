@@ -1,6 +1,7 @@
 package cz.neumimto.rpg;
 
 
+import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.persistance.model.CharacterClass;

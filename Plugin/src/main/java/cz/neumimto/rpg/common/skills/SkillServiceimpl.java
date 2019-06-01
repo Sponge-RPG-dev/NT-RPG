@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.common.skills;
 
-import cz.neumimto.rpg.ClassService;
+import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.logging.Log;
