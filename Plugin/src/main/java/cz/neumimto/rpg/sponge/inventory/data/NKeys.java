@@ -52,7 +52,7 @@ public class NKeys {
         ATTRIBUTE_REF = Key.builder()
                 .type(new TypeToken<Value<String>>() {
                 })
-                .name("Attribute Ref")
+                .name("AttributeConfig Ref")
                 .query(DataQuery.of(".", "ntrpg.inventory.attrref"))
                 .id("nt-rpg:item_attribute_ref")
                 .build();

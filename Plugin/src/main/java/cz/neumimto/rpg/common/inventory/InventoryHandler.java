@@ -10,9 +10,9 @@ import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
-import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.attributes.Attribute;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -62,7 +62,7 @@ public class InventoryHandler implements CharacterInventoryInteractionHandler {
         Map<IGlobalEffect, EffectParams> enchantments = rpgItemStack.getEnchantments();
         effectService.applyGlobalEffectsAsEnchantments(enchantments, character, InternalEffectSourceProvider.INSTANCE);
 
-        Map<Attribute, Integer> bonusAttributes = rpgItemStack.getBonusAttributes();
+        Map<AttributeConfig, Integer> bonusAttributes = rpgItemStack.getBonusAttributes();
         characterService.addTransientAttribtues(character, bonusAttributes);
     }
 
@@ -80,7 +80,7 @@ public class InventoryHandler implements CharacterInventoryInteractionHandler {
         Map<IGlobalEffect, EffectParams> enchantments = equiped.getEnchantments();
         effectService.removeGlobalEffectsAsEnchantments(enchantments.keySet(), character, InternalEffectSourceProvider.INSTANCE);
 
-        Map<Attribute, Integer> bonusAttributes = equiped.getBonusAttributes();
+        Map<AttributeConfig, Integer> bonusAttributes = equiped.getBonusAttributes();
         characterService.removeTransientAttributes(bonusAttributes, character);
 
         managedSlot.setContent(null);

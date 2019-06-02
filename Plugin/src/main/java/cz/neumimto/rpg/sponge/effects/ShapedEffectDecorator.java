@@ -3,7 +3,7 @@ package cz.neumimto.rpg.sponge.effects;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
 
 /**
  * Created by NeumimTo on 29.7.2017.

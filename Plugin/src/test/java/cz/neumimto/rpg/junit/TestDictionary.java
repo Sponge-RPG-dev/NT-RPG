@@ -3,8 +3,8 @@ package cz.neumimto.rpg.junit;
 import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.common.items.RpgItemTypeImpl;
-import cz.neumimto.rpg.players.attributes.Attribute;
-import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 
 import java.util.Collections;
 
@@ -18,8 +18,8 @@ public class TestDictionary {
 
     public static final RpgItemType ARMOR_TYPE_1 = new RpgItemTypeImpl("armor1", null, ItemClass.ARMOR, 0, 100);
 
-    public static final Attribute STR = new Attribute("str", "str", 100, Collections.emptyMap(), null, null);
-    public static final Attribute AGI = new Attribute("agi", "agi", 100, Collections.emptyMap(), null, null);
+    public static final AttributeConfig STR = new AttributeConfig("str", "str", 100, Collections.emptyMap(), null, null);
+    public static final AttributeConfig AGI = new AttributeConfig("agi", "agi", 100, Collections.emptyMap(), null, null);
 
 
     public static final ClassDefinition CLASS_PRIMARY = new ClassDefinition("primary","Primary");

@@ -7,7 +7,7 @@ import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;

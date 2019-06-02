@@ -1,8 +1,8 @@
 package cz.neumimto.events;
 
-import cz.neumimto.rpg.entities.IEntity;
+import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.sponge.events.AbstractCancellableNEvent;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.scripting.JsBinding;
 
 /**

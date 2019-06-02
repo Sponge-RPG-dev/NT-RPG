@@ -11,7 +11,7 @@ import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
 import cz.neumimto.rpg.sponge.skills.ProjectileProperties;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;

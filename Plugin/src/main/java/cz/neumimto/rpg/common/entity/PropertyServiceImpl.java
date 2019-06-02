@@ -4,7 +4,7 @@ import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.properties.Property;
 import cz.neumimto.rpg.api.utils.Console;
-import cz.neumimto.rpg.players.attributes.Attribute;
+import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -180,7 +180,7 @@ public abstract class PropertyServiceImpl implements PropertyService {
     }
 
     @Override
-    public Optional<Attribute> getAttributeById(String attribute) {
+    public Optional<AttributeConfig> getAttributeById(String attribute) {
         return Optional.ofNullable(getAttributes().get(attribute));
     }
 

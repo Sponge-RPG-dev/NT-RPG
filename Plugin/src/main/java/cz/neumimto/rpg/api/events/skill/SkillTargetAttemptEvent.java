@@ -15,7 +15,7 @@
  */
 package cz.neumimto.rpg.api.events.skill;
 
-import cz.neumimto.rpg.entities.IEntity;
+import cz.neumimto.rpg.api.entity.IEntity;
 
 public interface SkillTargetAttemptEvent extends SkillEvent {
     IEntity getCaster();

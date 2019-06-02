@@ -1,17 +1,16 @@
 package cz.neumimto.rpg.entities;
 
-import cz.neumimto.core.localization.Arg;
-import cz.neumimto.core.localization.LocalizableParametrizedText;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.IMob;
+import cz.neumimto.rpg.api.entity.IReservable;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.players.parties.Party;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.entities.SpongeEntityHealth;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.chat.ChatType;
 import org.spongepowered.api.world.World;
 
 import java.util.HashMap;
@@ -22,20 +21,15 @@ import java.util.UUID;
 /**
  * Created by NeumimTo on 19.12.2015.
  */
-//todo use mixins
 public class NEntity implements IMob {
 
     private double experiences;
     //	private WeakReference<Living> entity;
     private Map<String, IEffectContainer> effectSet = new HashMap<>();
     private Map<Integer, Float> properties = new HashMap<>();
-    private EntityHealth entityHealth;
+    private IReservable entityHealth;
     private UUID uuid;
     private UUID extent;
-
-    protected NEntity(Living l) {
-        attach(l);
-    }
 
     @Override
     public double getExperiences() {
@@ -48,7 +42,7 @@ public class NEntity implements IMob {
     }
 
     @Override
-    public EntityHealth getHealth() {
+    public SpongeEntityHealth getHealth() {
         return entityHealth;
     }
 
@@ -75,19 +69,17 @@ public class NEntity implements IMob {
     }
 
     @Override
-    public void attach(Living creature) {
-        //this.entity = new WeakReference<>(creature);
-        this.uuid = creature.getUniqueId();
-        this.extent = creature.getWorld().getUniqueId();
-        this.entityHealth = new EntityHealth(this);
+    public void attach(UUID objectId, UUID extend, IReservable health) {
+        this.uuid = objectId;
+        this.extent = extend;
+        this.entityHealth = health;
     }
 
     @Override
     public void detach() {
-        entityHealth = null;
+        this.entityHealth = null;
         this.uuid = null;
         this.extent = null;
-        //this.entity = null;
     }
 
 
@@ -106,21 +98,6 @@ public class NEntity implements IMob {
     @Override
     public Map<String, IEffectContainer> getEffectMap() {
         return effectSet;
-    }
-
-    @Override
-    public void sendMessage(LocalizableParametrizedText message, Arg arg) {
-
-    }
-
-    @Override
-    public void sendMessage(ChatType chatType, Text message) {
-
-    }
-
-    @Override
-    public void sendMessage(Text t) {
-
     }
 
     @Override

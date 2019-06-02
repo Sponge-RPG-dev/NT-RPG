@@ -1,13 +1,17 @@
 package cz.neumimto.rpg.sponge.commands.admin;
 
 import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.CharacterBase;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
+import cz.neumimto.rpg.common.entity.players.PreloadCharacter;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
-import cz.neumimto.rpg.players.*;
 import cz.neumimto.rpg.common.scripting.JSLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.Sponge;

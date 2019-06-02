@@ -4,8 +4,8 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.attributes.Attribute;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
 
 import java.nio.file.Path;
 import java.util.Collection;
@@ -50,5 +50,5 @@ public interface ItemService {
 
     boolean checkItemClassRequirements(IActiveCharacter character, RpgItemStack rpgItemStack);
 
-    void registerItemAttributes(Collection<Attribute> attributes);
+    void registerItemAttributes(Collection<AttributeConfig> attributes);
 }

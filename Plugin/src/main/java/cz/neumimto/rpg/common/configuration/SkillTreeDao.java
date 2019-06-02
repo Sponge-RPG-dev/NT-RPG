@@ -32,7 +32,7 @@ import cz.neumimto.rpg.api.skills.types.StartingPoint;
 import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.common.skills.utils.SkillLoadingErrors;
-import cz.neumimto.rpg.players.attributes.Attribute;
+import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.sponge.gui.SkillTreeInterfaceModel;
 import cz.neumimto.rpg.sponge.utils.Utils;
 
@@ -309,7 +309,7 @@ public class SkillTreeDao {
         SkillSettings skillSettings = new SkillSettings();
         try {
             Config settings = c.getConfig("SkillSettings");
-            Collection<Attribute> attributes = Rpg.get().getAttributes();
+            Collection<AttributeConfig> attributes = Rpg.get().getAttributes();
             outer:
             for (Map.Entry<String, ConfigValue> e : settings.entrySet()) {
                 if (e.getKey().endsWith(SkillSettings.bonus)) {
@@ -318,7 +318,7 @@ public class SkillTreeDao {
                 String val = e.getValue().render();
                 if (Utils.isNumeric(val)) {
                     float norm = Float.parseFloat(val);
-                    for (Attribute attribute : attributes) {
+                    for (AttributeConfig attribute : attributes) {
                         String s = "_per_" + attribute.getId();
                         if (e.getKey().endsWith(s)) {
                             String stripped = s.substring(0, val.length() - s.length());

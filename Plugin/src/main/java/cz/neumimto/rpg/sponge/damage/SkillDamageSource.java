@@ -19,7 +19,7 @@ package cz.neumimto.rpg.sponge.damage;
 
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.entities.IEntity;
+import cz.neumimto.rpg.api.entity.IEntity;
 import org.spongepowered.api.event.cause.entity.damage.source.common.AbstractEntityDamageSource;
 
 /**

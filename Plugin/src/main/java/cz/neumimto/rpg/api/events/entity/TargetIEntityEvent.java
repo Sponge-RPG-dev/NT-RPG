@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.api.events.entity;
 
-import cz.neumimto.rpg.entities.IEntity;
+import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.events.effect.TargetIEffectConsumer;
 
 /**

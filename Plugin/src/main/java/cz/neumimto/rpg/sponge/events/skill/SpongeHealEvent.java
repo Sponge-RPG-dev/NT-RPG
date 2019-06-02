@@ -20,7 +20,7 @@ package cz.neumimto.rpg.sponge.events.skill;
 
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.events.skill.SkillHealEvent;
-import cz.neumimto.rpg.entities.IEntity;
+import cz.neumimto.rpg.api.entity.IEntity;
 
 /**
  * Created by NeumimTo on 7.8.2015.

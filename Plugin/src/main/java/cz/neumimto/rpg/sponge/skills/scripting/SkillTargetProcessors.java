@@ -2,9 +2,9 @@ package cz.neumimto.rpg.sponge.skills.scripting;
 
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.common.scripting.JsBinding;
-import cz.neumimto.rpg.entities.IEntity;
-import cz.neumimto.rpg.entities.IEntityType;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.entity.IEntityType;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.apache.commons.lang3.NotImplementedException;
 import org.spongepowered.api.data.key.Keys;

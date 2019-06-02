@@ -2,13 +2,14 @@ package cz.neumimto.rpg.entities;
 
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.entity.IMob;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.common.effects.EffectService;
-import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.events.skill.SkillHealEvent;
-import cz.neumimto.rpg.players.CharacterService;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;

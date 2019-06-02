@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.entities;
 
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.PotionEffectData;
 import org.spongepowered.api.effect.potion.PotionEffect;

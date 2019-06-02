@@ -20,13 +20,13 @@ package cz.neumimto.rpg.sponge.listeners;
 
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.entities.IEntity;
-import cz.neumimto.rpg.entities.IEntityType;
+import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.entity.IEntityType;
 import cz.neumimto.rpg.sponge.exp.ExperienceService;
 import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
-import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.ExperienceSources;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
+import cz.neumimto.rpg.common.exp.ExperienceSources;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.utils.ItemStackUtils;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.block.BlockSnapshot;

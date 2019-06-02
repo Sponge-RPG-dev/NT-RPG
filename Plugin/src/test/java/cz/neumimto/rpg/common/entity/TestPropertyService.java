@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.common.entity;
 
 import com.google.inject.Singleton;
-import cz.neumimto.rpg.players.attributes.Attribute;
+import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
 
 import java.nio.file.Path;
 import java.util.Map;
@@ -28,7 +28,7 @@ public class TestPropertyService extends PropertyServiceImpl {
     }
 
     @Override
-    public Map<String, Attribute> getAttributes() {
+    public Map<String, AttributeConfig> getAttributes() {
         return null;
     }
 }

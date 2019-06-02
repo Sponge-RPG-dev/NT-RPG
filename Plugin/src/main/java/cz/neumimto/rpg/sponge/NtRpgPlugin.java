@@ -29,7 +29,7 @@ import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.rng.PseudoRandomDistribution;
 import cz.neumimto.rpg.common.utils.io.FileUtils;
 import cz.neumimto.rpg.sponge.configuration.ClassTypeDefinition;
-import cz.neumimto.rpg.sponge.configuration.PluginConfig;
+import cz.neumimto.rpg.common.configuration.PluginConfig;
 import cz.neumimto.rpg.sponge.configuration.Settings;
 import cz.neumimto.rpg.sponge.inventory.data.*;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.*;
@@ -45,8 +45,8 @@ import cz.neumimto.rpg.sponge.inventory.sockets.SocketTypes;
 import cz.neumimto.rpg.common.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.common.persistance.model.CharacterClass;
 import cz.neumimto.rpg.common.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.attributes.Attribute;
+import cz.neumimto.rpg.common.entity.players.CharacterBase;
+import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.sponge.listeners.DebugListener;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
 import cz.neumimto.rpg.sponge.utils.Placeholders;
@@ -314,7 +314,7 @@ public class NtRpgPlugin extends Rpg {
                 .buildAndRegister(plugin);
 
         Sponge.getRegistry().registerModule(SocketType.class, new SocketTypeRegistry());
-        Sponge.getRegistry().registerModule(Attribute.class, NtRpgPlugin.GlobalScope.spongePropertyService);
+        Sponge.getRegistry().registerModule(AttributeConfig.class, NtRpgPlugin.GlobalScope.spongePropertyService);
         Sponge.getRegistry().registerModule(ItemMetaType.class, new ItemMetaTypeRegistry());
         Sponge.getRegistry().registerModule(ItemSubtype.class, new ItemSubtypeRegistry());
     }
@@ -346,7 +346,7 @@ public class NtRpgPlugin extends Rpg {
     }
 
     @Listener
-    public void postInit9(GameRegistryEvent.Register<Attribute> event) {
+    public void postInit9(GameRegistryEvent.Register<AttributeConfig> event) {
         //?
     }
 

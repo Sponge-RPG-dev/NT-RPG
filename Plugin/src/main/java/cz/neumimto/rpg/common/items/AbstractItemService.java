@@ -3,6 +3,7 @@ package cz.neumimto.rpg.common.items;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
@@ -10,10 +11,9 @@ import cz.neumimto.rpg.api.items.*;
 import cz.neumimto.rpg.common.configuration.ItemString;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.PlayerClassData;
-import cz.neumimto.rpg.players.attributes.Attribute;
-import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -28,7 +28,7 @@ public abstract class AbstractItemService implements ItemService {
     protected Map<String, RpgItemType> items = new HashMap<>();
 
     protected Map<String, ItemClass> weaponClassMap = new HashMap<>();
-    protected Map<Attribute, Integer> itemAttributesPlaceholder;
+    protected Map<AttributeConfig, Integer> itemAttributesPlaceholder;
 
     @Override
     public Optional<ItemClass> getWeaponClassByName(String clazz) {
@@ -109,17 +109,17 @@ public abstract class AbstractItemService implements ItemService {
 
     @Override
     public boolean checkItemAttributeRequirements(IActiveCharacter character, ManagedSlot managedSlot, RpgItemStack rpgItemStack) {
-        Collection<Attribute> attributes = Rpg.get().getAttributes();
-        Map<Attribute, Integer> inventoryRequirements = new HashMap<>();
-        for (Attribute attribute : attributes) {
+        Collection<AttributeConfig> attributes = Rpg.get().getAttributes();
+        Map<AttributeConfig, Integer> inventoryRequirements = new HashMap<>();
+        for (AttributeConfig attribute : attributes) {
             inventoryRequirements.put(attribute, 0);
         }
         character.getMinimalInventoryRequirements(inventoryRequirements);
 
-        Map<Attribute, Integer> bonusAttributes = rpgItemStack.getBonusAttributes();
+        Map<AttributeConfig, Integer> bonusAttributes = rpgItemStack.getBonusAttributes();
 
-        for (Map.Entry<Attribute, Integer> entry : rpgItemStack.getMinimalAttributeRequirements().entrySet()) {
-            Attribute key = entry.getKey();
+        for (Map.Entry<AttributeConfig, Integer> entry : rpgItemStack.getMinimalAttributeRequirements().entrySet()) {
+            AttributeConfig key = entry.getKey();
             Integer value = entry.getValue();
             Integer requirement = inventoryRequirements.get(key);
 
@@ -198,10 +198,10 @@ public abstract class AbstractItemService implements ItemService {
         }
     }
 
-    protected Map<Attribute, Integer> parseItemAttributeMap(Map<String, Integer> stringIntegerMap) {
-        Map<Attribute, Integer> map = new HashMap<>();
+    protected Map<AttributeConfig, Integer> parseItemAttributeMap(Map<String, Integer> stringIntegerMap) {
+        Map<AttributeConfig, Integer> map = new HashMap<>();
         for (Map.Entry<String, Integer> stringIntegerEntry : stringIntegerMap.entrySet()) {
-            Optional<Attribute> attr = propertyService.getAttributeById(stringIntegerEntry.getKey());
+            Optional<AttributeConfig> attr = propertyService.getAttributeById(stringIntegerEntry.getKey());
             if (attr.isPresent()) {
                 map.put(attr.get(), stringIntegerEntry.getValue());
             }
@@ -226,9 +226,9 @@ public abstract class AbstractItemService implements ItemService {
     }
 
     @Override
-    public void registerItemAttributes(Collection<Attribute> attributes) {
+    public void registerItemAttributes(Collection<AttributeConfig> attributes) {
         this.itemAttributesPlaceholder = new HashMap<>();
-        for (Attribute attribute : attributes) {
+        for (AttributeConfig attribute : attributes) {
             itemAttributesPlaceholder.put(attribute, 0);
         }
     }

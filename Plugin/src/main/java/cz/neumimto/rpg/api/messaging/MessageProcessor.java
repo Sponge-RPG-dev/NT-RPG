@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.api.messaging;
 
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
 @FunctionalInterface
 public interface MessageProcessor {

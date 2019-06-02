@@ -13,8 +13,8 @@ import cz.neumimto.rpg.sponge.inventory.data.DataConstants;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.ItemSocketsData;
 import cz.neumimto.rpg.sponge.inventory.sockets.SocketType;
-import cz.neumimto.rpg.players.attributes.Attribute;
-import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
@@ -118,7 +118,7 @@ public class ItemLoreBuilderService {
         public void attributeMapToItemLorePart(Map<String, Integer> a) {
             int k = 0;
             for (Map.Entry<String, Integer> e : a.entrySet()) {
-                Attribute attribute = Sponge.getRegistry().getType(Attribute.class, e.getKey()).get();
+                AttributeConfig attribute = Sponge.getRegistry().getType(AttributeConfig.class, e.getKey()).get();
                 String name = attribute.getName();
                 int charsToRead = 3;
                 if (name.startsWith("&")) {

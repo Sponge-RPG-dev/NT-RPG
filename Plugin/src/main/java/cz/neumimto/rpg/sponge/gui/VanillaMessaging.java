@@ -22,6 +22,11 @@ import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.classes.ClassService;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.common.entity.players.CharacterBase;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
+import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.effects.IEffect;
@@ -51,9 +56,7 @@ import cz.neumimto.rpg.sponge.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
 import cz.neumimto.rpg.common.persistance.dao.PlayerDao;
 import cz.neumimto.rpg.common.persistance.model.CharacterClass;
-import cz.neumimto.rpg.players.*;
-import cz.neumimto.rpg.players.attributes.Attribute;
-import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.sponge.commands.InfoCommand;
 import cz.neumimto.rpg.sponge.utils.ItemStackUtils;
 import cz.neumimto.rpg.sponge.utils.Utils;
@@ -242,7 +245,7 @@ public class VanillaMessaging implements IPlayerMessage {
                     .toText();
             content.add(t);
         }
-        content.add(Text.builder().append(Text.of("Attribute points: ", TextColors.GREEN))
+        content.add(Text.builder().append(Text.of("AttributeConfig points: ", TextColors.GREEN))
                 .append(Text.of(character.getCharacterBase().getAttributePoints(), TextColors.AQUA))
                 .append(Text.of(String.format("(%s)", character.getCharacterBase().getUsedAttributePoints(), TextColors.GRAY))).toText());
 
@@ -471,8 +474,8 @@ public class VanillaMessaging implements IPlayerMessage {
 
         int x = 1;
         int y = 1;
-        for (Map.Entry<Attribute, Integer> a : cls.getStartingAttributes().entrySet()) {
-            Attribute key = a.getKey();
+        for (Map.Entry<AttributeConfig, Integer> a : cls.getStartingAttributes().entrySet()) {
+            AttributeConfig key = a.getKey();
             Integer value = a.getValue();
             i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(x, y)))
                     .offer(createAttributeItem(key, value));
@@ -519,7 +522,7 @@ public class VanillaMessaging implements IPlayerMessage {
                     )
             );
             is.offer(Keys.HIDE_ATTRIBUTES, true);
-            is.offer(new InventoryCommandItemMenuData("runeword " + rw.getName() + " allowed-groups"));
+            is.offer(new InventoryCommandItemMenuData("runeword " + rw.getName() + " allowed-classes"));
             commands.add(is);
         }
 
@@ -531,7 +534,7 @@ public class VanillaMessaging implements IPlayerMessage {
                             Localizations.RUNEWORD_BLOCKED_GROUPS_MENU_TOOLTIP.toText(Arg.arg("runeword", rw.getName()))
                     )
             );
-            is.offer(new InventoryCommandItemMenuData("runeword " + rw.getName() + " blocked-groups"));
+            is.offer(new InventoryCommandItemMenuData("runeword " + rw.getName() + " blocked-classes"));
             commands.add(is);
         }
 
@@ -636,7 +639,7 @@ public class VanillaMessaging implements IPlayerMessage {
         return character.hasClass(classDefinition) ? TextColors.GREEN : TextColors.RED;
     }
 
-    private ItemStack createAttributeItem(Attribute key, Integer value) {
+    private ItemStack createAttributeItem(AttributeConfig key, Integer value) {
         ItemStack of = GuiHelper.itemStack(key.getItemType());
         of.offer(Keys.DISPLAY_NAME, Text.of(TextColors.DARK_RED, key.getName()));
 
@@ -874,10 +877,10 @@ public class VanillaMessaging implements IPlayerMessage {
                 .offer(commit);
 
 
-        Collection<Attribute> allOf = Sponge.getRegistry().getAllOf(Attribute.class);
+        Collection<AttributeConfig> allOf = Sponge.getRegistry().getAllOf(AttributeConfig.class);
 
         int q = 0;
-        for (Attribute attribute : allOf) {
+        for (AttributeConfig attribute : allOf) {
 
             ItemStack itemStack = GuiHelper.itemStack(attribute.getItemType());
             itemStack.offer(Keys.DISPLAY_NAME, Text.of(attribute.getName()));

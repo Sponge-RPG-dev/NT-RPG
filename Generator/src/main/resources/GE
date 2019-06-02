@@ -1,6 +1,6 @@
 package {{package}}
 
-import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import {{import.effect}};
 import cz.neumimto.rpg.api.effects.model.EffectModelFactory;

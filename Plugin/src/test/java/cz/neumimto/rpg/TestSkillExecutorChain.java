@@ -1,10 +1,10 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.sponge.configuration.AttributeConfiguration;
-import cz.neumimto.rpg.players.ActiveCharacter;
-import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.attributes.Attribute;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.CharacterBase;
 import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.api.skills.SkillSettings;
 import it.unimi.dsi.fastutil.objects.AbstractObject2FloatMap;
@@ -27,11 +27,11 @@ public class TestSkillExecutorChain {
 
     private static Set<String> complexKeySuffixes;
 
-    private static Set<Attribute> attributes;
+    private static Set<AttributeConfig> attributes;
 
-    static Attribute str;
+    static AttributeConfig str;
 
-    static Attribute agi;
+    static AttributeConfig agi;
 
     @BeforeAll
     public static void init() throws Exception {
@@ -46,11 +46,11 @@ public class TestSkillExecutorChain {
         attributes = new HashSet<>();
         AttributeConfiguration attributeConfiguration = new AttributeConfiguration();
         TestUtils.setField(attributeConfiguration, "id", "ntrpg:agility");
-        str = new Attribute(attributeConfiguration);
+        str = new AttributeConfig(attributeConfiguration);
 
         attributes.add(str);
         TestUtils.setField(attributeConfiguration, "id", "ntrpg:strength");
-        agi = new Attribute(attributeConfiguration);
+        agi = new AttributeConfig(attributeConfiguration);
 
         attributes.add(agi);
 
@@ -96,7 +96,7 @@ public class TestSkillExecutorChain {
         }
 
         for (String s : cachedComputedSkillSettings.keySet()) {
-            for (Attribute a : attributes) {
+            for (AttributeConfig a : attributes) {
                 Assertions.assertTrue(!s.contains(a.getId()));
             }
         }
@@ -135,7 +135,7 @@ public class TestSkillExecutorChain {
         }
 
         for (String s : cachedComputedSkillSettings.keySet()) {
-            for (Attribute a : attributes) {
+            for (AttributeConfig a : attributes) {
                 Assertions.assertTrue(!s.contains(a.getId()));
             }
         }

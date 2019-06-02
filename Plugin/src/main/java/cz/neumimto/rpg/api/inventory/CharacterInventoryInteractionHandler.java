@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.api.inventory;
 
 import cz.neumimto.rpg.api.items.RpgItemStack;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
 public interface CharacterInventoryInteractionHandler {
 

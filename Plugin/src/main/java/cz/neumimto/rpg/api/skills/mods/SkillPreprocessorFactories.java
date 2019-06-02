@@ -4,7 +4,7 @@ import com.typesafe.config.ConfigObject;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillPreProcessorFactory;
 import cz.neumimto.rpg.api.skills.SkillPreprocessors;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.scripting.JSLoader;
 import org.checkerframework.checker.nullness.qual.NonNull;
 

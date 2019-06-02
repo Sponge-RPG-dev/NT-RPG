@@ -22,7 +22,7 @@ import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.sponge.configuration.ClassTypeDefinition;
-import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;

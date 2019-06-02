@@ -22,7 +22,7 @@ import cz.neumimto.rpg.api.skills.ISkillType;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillSettings;
 import cz.neumimto.rpg.common.skills.SkillData;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import org.spongepowered.api.text.Text;
 
 import java.util.Collections;

@@ -5,7 +5,7 @@ import cz.neumimto.rpg.api.skills.ISkillNode;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.types.IActiveSkill;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
 import java.util.ArrayList;
 import java.util.Comparator;

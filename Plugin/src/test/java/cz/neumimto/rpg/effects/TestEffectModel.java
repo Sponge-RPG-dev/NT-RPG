@@ -3,6 +3,7 @@ package cz.neumimto.rpg.effects;
 import cz.neumimto.rpg.TestModel;
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
 
 /**
  * Created by NeumimTo on 25.2.2018.

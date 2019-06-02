@@ -2,8 +2,8 @@ package cz.neumimto.rpg.api.items;
 
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
-import cz.neumimto.rpg.players.attributes.Attribute;
-import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 
 import java.util.Map;
 
@@ -13,7 +13,7 @@ public interface RpgItemStack {
 
     Map<IGlobalEffect, EffectParams> getEnchantments();
 
-    Map<Attribute, Integer> getMinimalAttributeRequirements();
+    Map<AttributeConfig, Integer> getMinimalAttributeRequirements();
 
     default double getDamage() {
         return getItemType().getDamage();
@@ -23,7 +23,7 @@ public interface RpgItemStack {
         return getItemType().getArmor();
     }
 
-    Map<Attribute, Integer> getBonusAttributes();
+    Map<AttributeConfig, Integer> getBonusAttributes();
 
     Map<ClassDefinition, Integer> getClassRequirements();
 }

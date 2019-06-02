@@ -1,9 +1,11 @@
 package cz.neumimto.rpg.sponge.permission;
 
 import cz.neumimto.rpg.api.permissions.PermissionService;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.PlayerClassData;
-import cz.neumimto.rpg.players.groups.PlayerGroupPermission;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassPermission;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
 import org.spongepowered.api.service.permission.SubjectData;
 import org.spongepowered.api.util.Tristate;
 
@@ -34,18 +36,18 @@ public class SpongePermissionService implements PermissionService {
 
     @Override
     public void addAllPermissions(IActiveCharacter character, PlayerClassData classDefinition) {
-        for (PlayerGroupPermission playerGroupPermission : classDefinition.getClassDefinition().getPermissions()) {
-            if (playerGroupPermission.getLevel() <= classDefinition.getLevel()) {
-                addPermissions(character, playerGroupPermission.getPermissions());
+        for (PlayerClassPermission playerClassPermission : classDefinition.getClassDefinition().getPermissions()) {
+            if (playerClassPermission.getLevel() <= classDefinition.getLevel()) {
+                addPermissions(character, playerClassPermission.getPermissions());
             }
         }
     }
 
     @Override
     public void addPermissions(IActiveCharacter character, PlayerClassData classDefinition) {
-        for (PlayerGroupPermission playerGroupPermission : classDefinition.getClassDefinition().getPermissions()) {
-            if (playerGroupPermission.getLevel() == classDefinition.getLevel()) {
-                addPermissions(character, playerGroupPermission.getPermissions());
+        for (PlayerClassPermission playerClassPermission : classDefinition.getClassDefinition().getPermissions()) {
+            if (playerClassPermission.getLevel() == classDefinition.getLevel()) {
+                addPermissions(character, playerClassPermission.getPermissions());
             }
         }
     }

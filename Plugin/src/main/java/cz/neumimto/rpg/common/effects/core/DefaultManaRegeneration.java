@@ -26,9 +26,9 @@ import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.common.effects.CoreEffectTypes;
 import cz.neumimto.rpg.api.effects.EffectStatusType;
-import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.events.character.CharacterManaRegainEvent;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 
 /**

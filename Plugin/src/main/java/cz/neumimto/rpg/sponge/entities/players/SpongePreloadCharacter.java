@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.entities.players;
 
-import cz.neumimto.rpg.players.PlayerNotInGameException;
-import cz.neumimto.rpg.players.PreloadCharacter;
+import cz.neumimto.rpg.common.entity.players.PlayerNotInGameException;
+import cz.neumimto.rpg.common.entity.players.PreloadCharacter;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 

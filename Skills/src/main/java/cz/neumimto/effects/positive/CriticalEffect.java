@@ -3,7 +3,7 @@ package cz.neumimto.effects.positive;
 import cz.neumimto.model.CriticalEffectModel;
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
-import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.common.scripting.JsBinding;
 
 /**

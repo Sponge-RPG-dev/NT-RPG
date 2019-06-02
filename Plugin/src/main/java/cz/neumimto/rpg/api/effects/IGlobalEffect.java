@@ -19,7 +19,7 @@
 package cz.neumimto.rpg.api.effects;
 
 import cz.neumimto.rpg.common.scripting.JsBinding;
-import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
 
 import java.util.Map;
 

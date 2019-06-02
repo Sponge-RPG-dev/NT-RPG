@@ -10,8 +10,8 @@ import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.common.effects.EffectService;
-import cz.neumimto.rpg.entities.IEntity;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
 import cz.neumimto.rpg.sponge.skills.types.Targeted;
 

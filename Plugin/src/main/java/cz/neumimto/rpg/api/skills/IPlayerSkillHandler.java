@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.api.skills;
 
-import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 
 import java.util.Map;
 

@@ -26,7 +26,7 @@ import cz.neumimto.rpg.api.events.party.PartyCreateEvent;
 import cz.neumimto.rpg.api.events.party.PartyInviteEvent;
 import cz.neumimto.rpg.api.events.party.PartyJoinEvent;
 import cz.neumimto.rpg.api.events.party.PartyLeaveEvent;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 

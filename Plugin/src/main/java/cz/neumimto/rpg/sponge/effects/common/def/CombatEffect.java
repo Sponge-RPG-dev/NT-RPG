@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.effects.common.def;
 
 import cz.neumimto.rpg.common.effects.CoreEffectTypes;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
 

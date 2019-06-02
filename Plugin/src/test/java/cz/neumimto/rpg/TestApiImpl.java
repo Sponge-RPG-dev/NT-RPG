@@ -6,10 +6,8 @@ import cz.neumimto.rpg.api.events.effect.EventFactoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.junit.TestDictionary;
-import cz.neumimto.rpg.players.attributes.Attribute;
-import cz.neumimto.rpg.api.skills.SkillPreProcessorFactory;
+import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import org.apache.commons.io.IOUtils;
 
 import java.io.InputStream;
 import java.util.*;
@@ -17,12 +15,12 @@ import java.util.*;
 public class TestApiImpl implements RpgApi {
 
     @Override
-    public Collection<Attribute> getAttributes() {
+    public Collection<AttributeConfig> getAttributes() {
         return Arrays.asList(TestDictionary.AGI, TestDictionary.STR);
     }
 
     @Override
-    public Optional<Attribute> getAttributeById(String id) {
+    public Optional<AttributeConfig> getAttributeById(String id) {
         return Optional.empty();
     }
 

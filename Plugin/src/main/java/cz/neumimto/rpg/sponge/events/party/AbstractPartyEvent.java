@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.events.party;
 
 import cz.neumimto.rpg.api.events.party.PartyEvent;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.players.parties.Party;
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.cause.Cause;

@@ -4,8 +4,8 @@ import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
-import cz.neumimto.rpg.players.attributes.Attribute;
-import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 
 import java.util.Map;
 
@@ -13,11 +13,11 @@ public class RpgItemStackImpl implements RpgItemStack {
 
     protected RpgItemType rpgItemType;
     protected Map<IGlobalEffect, EffectParams> enchantments;
-    private Map<Attribute, Integer> bonusAttributes;
-    private Map<Attribute, Integer> minimalAttributeRequirements;
+    private Map<AttributeConfig, Integer> bonusAttributes;
+    private Map<AttributeConfig, Integer> minimalAttributeRequirements;
     private Map<ClassDefinition, Integer> classRequirements;
 
-    public RpgItemStackImpl(RpgItemType rpgItemType, Map<IGlobalEffect, EffectParams> enchantments, Map<Attribute, Integer> bonusAttributes, Map<Attribute, Integer> minimalAttributeRequirements, Map<ClassDefinition, Integer> classRequirements) {
+    public RpgItemStackImpl(RpgItemType rpgItemType, Map<IGlobalEffect, EffectParams> enchantments, Map<AttributeConfig, Integer> bonusAttributes, Map<AttributeConfig, Integer> minimalAttributeRequirements, Map<ClassDefinition, Integer> classRequirements) {
         this.rpgItemType = rpgItemType;
         this.enchantments = enchantments;
         this.bonusAttributes = bonusAttributes;
@@ -36,12 +36,12 @@ public class RpgItemStackImpl implements RpgItemStack {
     }
 
     @Override
-    public Map<Attribute, Integer> getMinimalAttributeRequirements() {
+    public Map<AttributeConfig, Integer> getMinimalAttributeRequirements() {
         return minimalAttributeRequirements;
     }
 
     @Override
-    public Map<Attribute, Integer> getBonusAttributes() {
+    public Map<AttributeConfig, Integer> getBonusAttributes() {
         return bonusAttributes;
     }
 

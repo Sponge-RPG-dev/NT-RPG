@@ -1,15 +1,15 @@
 package cz.neumimto.rpg.sponge.effects.common.def;
 
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
-import org.spongepowered.api.text.chat.ChatTypes;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -21,7 +21,7 @@ import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
  * Created by NeumimTo on 28.8.2017.
  */
 @Generate(id = "name", description = "A component which enables click-combos")
-public class ClickComboActionComponent extends SpongeEffectBase implements IEffectContainer {
+public class ClickComboActionComponent extends EffectBase implements IEffectContainer {
 
     public static final String name = "ClickCombos";
 
@@ -40,7 +40,7 @@ public class ClickComboActionComponent extends SpongeEffectBase implements IEffe
     private static long MIN_DELAY = 125L;
 
     @Generate.Constructor
-    public ClickComboActionComponent(IEffectConsumer t, long duration, Void literallyNothing) {
+    public ClickComboActionComponent(IEffectConsumer t, long duration) {
         this(t);
     }
 
@@ -174,7 +174,7 @@ public class ClickComboActionComponent extends SpongeEffectBase implements IEffe
 
     public static void resetCurrentClicks(ClickComboActionComponent clickComboActionComponent, boolean byShift) {
 
-        clickComboActionComponent.getConsumer().sendMessage(ChatTypes.ACTION_BAR, Localizations.CANCELLED.toText());
+        Rpg.get().getCharacterService().sendClientNotification(clickComboActionComponent.getConsumer(). Localizations.CANCELLED.toText());
     }
 
 }

@@ -2,7 +2,7 @@ package cz.neumimto.rpg.sponge.events.character;
 
 
 import cz.neumimto.rpg.api.events.character.TargetCharacterEvent;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.EventContext;

@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.api.entity;
 
-import cz.neumimto.rpg.players.attributes.Attribute;
+import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
 
 import java.nio.file.Path;
 import java.util.Collection;
@@ -41,9 +41,9 @@ public interface PropertyService {
 
     void loadMaximalServerPropertyValues(Path path);
 
-    Optional<Attribute> getAttributeById(String attribute);
+    Optional<AttributeConfig> getAttributeById(String attribute);
 
-    Map<String, Attribute> getAttributes();
+    Map<String, AttributeConfig> getAttributes();
 
     void registerProperty(String property, int val);
 }

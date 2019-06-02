@@ -19,10 +19,10 @@
 package cz.neumimto.rpg.common.effects;
 
 import cz.neumimto.rpg.api.effects.*;
-import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.entities.IEntity;
-import cz.neumimto.rpg.players.ActiveCharacter;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 
 import javax.inject.Inject;

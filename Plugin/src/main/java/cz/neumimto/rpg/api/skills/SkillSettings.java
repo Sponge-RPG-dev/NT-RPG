@@ -19,7 +19,7 @@
 package cz.neumimto.rpg.api.skills;
 
 import cz.neumimto.rpg.common.scripting.JsBinding;
-import cz.neumimto.rpg.players.attributes.Attribute;
+import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
 import org.spongepowered.api.Sponge;
 
 import java.util.Collections;
@@ -50,11 +50,11 @@ public class SkillSettings {
         addNode(n + bonus, levelbonux);
     }
 
-    public void addAttributeNode(ISkillNode n, Attribute attribute, float val) {
+    public void addAttributeNode(ISkillNode n, AttributeConfig attribute, float val) {
         addAttributeNode(n.value(), attribute, val);
     }
 
-    public void addAttributeNode(String n, Attribute attribute, float val) {
+    public void addAttributeNode(String n, AttributeConfig attribute, float val) {
         addNode(n + "_per_" + attribute.getId(), val);
     }
 
@@ -122,7 +122,7 @@ public class SkillSettings {
     }
 
     public static Set<String> getComplexKeySuffixes() {
-        Set<String> collect = Sponge.getRegistry().getAllOf(Attribute.class)
+        Set<String> collect = Sponge.getRegistry().getAllOf(AttributeConfig.class)
                 .stream()
                 .map(attribute -> "_per_" + attribute.getId())
                 .collect(Collectors.toSet());

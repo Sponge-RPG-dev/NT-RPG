@@ -2,6 +2,7 @@ package cz.neumimto.rpg.api.skills.types;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
+import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -10,8 +11,7 @@ import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.common.skills.utils.SkillLoadingErrors;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.attributes.Attribute;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -79,12 +79,12 @@ public class CharacterAttributeSkill extends AbstractSkill {
                 String attribute = subc.getString("attribute");
                 int level = subc.getInt("skill-level");
                 int val = subc.getInt("attribute-value");
-                Optional<Attribute> type = Rpg.get().getAttributeById(attribute);
+                Optional<AttributeConfig> type = Rpg.get().getAttributeById(attribute);
                 if (!type.isPresent()) {
                     warn("Unknown attribute " + attribute + " in " + context.getId());
                     continue;
                 }
-                Attribute att = type.get();
+                AttributeConfig att = type.get();
                 Wrapper wrapper = new Wrapper(att, level, val);
                 data.wrappers.add(wrapper);
             }
@@ -105,17 +105,17 @@ public class CharacterAttributeSkill extends AbstractSkill {
 
     public class Wrapper {
 
-        private Attribute characterAttribute;
+        private AttributeConfig characterAttribute;
         private int level;
         private int value;
 
-        public Wrapper(Attribute characterAttribute, int level, int value) {
+        public Wrapper(AttributeConfig characterAttribute, int level, int value) {
             this.characterAttribute = characterAttribute;
             this.level = level;
             this.value = value;
         }
 
-        public Attribute getCharacterAttribute() {
+        public AttributeConfig getCharacterAttribute() {
             return characterAttribute;
         }
 

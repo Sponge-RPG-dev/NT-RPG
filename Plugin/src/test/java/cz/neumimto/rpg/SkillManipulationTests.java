@@ -1,17 +1,20 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.ActionResult;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.events.effect.EventFactoryService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillDependency;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.CharacterBase;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
-import cz.neumimto.rpg.sponge.configuration.PluginConfig;
+import cz.neumimto.rpg.common.configuration.PluginConfig;
 import cz.neumimto.rpg.common.persistance.model.CharacterClass;
-import cz.neumimto.rpg.players.*;
-import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
@@ -26,7 +29,6 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
-import java.util.List;
 import java.util.UUID;
 
 @ExtendWith({NtRpgExtension.class, GuiceExtension.class})

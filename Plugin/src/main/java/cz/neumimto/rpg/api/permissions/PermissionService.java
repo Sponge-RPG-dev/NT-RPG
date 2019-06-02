@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.api.permissions;
 
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.PlayerClassData;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 
 import java.util.Set;
 

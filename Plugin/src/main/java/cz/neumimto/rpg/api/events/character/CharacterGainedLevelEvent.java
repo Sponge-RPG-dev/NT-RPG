@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.api.events.character;
 
-import cz.neumimto.rpg.players.PlayerClassData;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 
 /**
  * Created by NeumimTo on 27.12.2015.

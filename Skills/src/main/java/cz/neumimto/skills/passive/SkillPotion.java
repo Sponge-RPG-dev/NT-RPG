@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import cz.neumimto.effects.positive.PotionEffect;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.types.PassiveSkill;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.potion.PotionEffectType;

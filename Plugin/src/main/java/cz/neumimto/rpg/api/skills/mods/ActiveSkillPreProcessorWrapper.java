@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.api.skills.mods;
 
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
 public abstract class ActiveSkillPreProcessorWrapper {
 

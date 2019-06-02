@@ -15,8 +15,8 @@ import cz.neumimto.rpg.common.items.AbstractItemService;
 import cz.neumimto.rpg.common.items.RpgItemStackImpl;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
-import cz.neumimto.rpg.players.attributes.Attribute;
-import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.data.key.Keys;
@@ -61,7 +61,7 @@ public class SpongeItemService extends AbstractItemService {
         return Collections.emptyMap();
     }
 
-    private Map<Attribute, Integer> getItemMinimalAttributeRequirements(ItemStack itemStack) {
+    private Map<AttributeConfig, Integer> getItemMinimalAttributeRequirements(ItemStack itemStack) {
         Optional<Map<String, Integer>> req = itemStack.get(NKeys.ITEM_ATTRIBUTE_REQUIREMENTS);
         if (req.isPresent()) {
             return parseItemAttributeMap(req.get());
@@ -69,7 +69,7 @@ public class SpongeItemService extends AbstractItemService {
         return super.itemAttributesPlaceholder;
     }
 
-    private Map<Attribute, Integer> getItemBonusAttributes(ItemStack itemStack) {
+    private Map<AttributeConfig, Integer> getItemBonusAttributes(ItemStack itemStack) {
         Optional<Map<String, Integer>> req = itemStack.get(NKeys.ITEM_ATTRIBUTE_BONUS);
         if (req.isPresent()) {
             return parseItemAttributeMap(req.get());

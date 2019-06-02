@@ -2,7 +2,7 @@ package cz.neumimto.rpg.sponge.commands.elements;
 
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.PatternMatchingCommandElement;
 import org.spongepowered.api.text.Text;

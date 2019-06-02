@@ -2,8 +2,7 @@ package cz.neumimto.rpg.sponge.events.effects;
 
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.events.effect.EffectRemoveEvent;
-import cz.neumimto.rpg.api.events.effect.TargetEffectEvent;
-import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import org.spongepowered.api.event.cause.Cause;
 
 /**

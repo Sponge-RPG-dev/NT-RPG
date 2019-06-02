@@ -4,24 +4,21 @@ import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.api.events.effect.EventFactoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.LocalizationService;
-import cz.neumimto.rpg.api.messaging.MessageLevel;
-import cz.neumimto.rpg.api.messaging.MessageProcessor;
 import cz.neumimto.rpg.api.skills.ISkillService;
-import cz.neumimto.rpg.api.skills.SkillPreProcessorFactory;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.attributes.Attribute;
-import cz.neumimto.rpg.sponge.configuration.PluginConfig;
+import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
+import cz.neumimto.rpg.common.configuration.PluginConfig;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.Executor;
 
 public interface RpgApi {
 
-    Collection<Attribute> getAttributes();
+    Collection<AttributeConfig> getAttributes();
 
-    Optional<Attribute> getAttributeById(String id);
+    Optional<AttributeConfig> getAttributeById(String id);
 
     ItemService getItemService();
 
@@ -48,4 +45,6 @@ public interface RpgApi {
     LocalizationService getLocalizationService();
 
     PluginConfig getPluginConfig();
+
+    Executor getAsyncExecutor();
 }

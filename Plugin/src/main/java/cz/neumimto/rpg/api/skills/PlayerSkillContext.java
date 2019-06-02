@@ -21,9 +21,9 @@ package cz.neumimto.rpg.api.skills;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.common.skills.SkillData;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.attributes.Attribute;
-import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 
 import java.util.*;
@@ -110,7 +110,7 @@ public class PlayerSkillContext {
 
             Set<String> complexKeySuffixes = SkillSettings.getComplexKeySuffixes();
 
-            Collection<Attribute> attributes = Rpg.get().getAttributes();
+            Collection<AttributeConfig> attributes = Rpg.get().getAttributes();
             populateCache(complexKeySuffixes, attributes);
             if (previousSize == 0) {
                 previousSize = cachedComputedSkillSettings.size();
@@ -119,7 +119,7 @@ public class PlayerSkillContext {
         return cachedComputedSkillSettings;
     }
 
-    public void populateCache(Set<String> complexKeySuffixes, Collection<Attribute> attributes) {
+    public void populateCache(Set<String> complexKeySuffixes, Collection<AttributeConfig> attributes) {
         SkillSettings preSet = skillData.getSkillSettings();
 
         for (Map.Entry<String, Float> entry : preSet.getNodes().entrySet()) {
@@ -140,7 +140,7 @@ public class PlayerSkillContext {
                     float aFloat1 = cachedComputedSkillSettings.getFloat(stripped);
                     cachedComputedSkillSettings.put(stripped, aFloat1 + entry.getValue() * getTotalLevel());
                 }
-                for (Attribute attribute : attributes) {
+                for (AttributeConfig attribute : attributes) {
                     String id = "_per_" + attribute.getId();
                     if (s.endsWith(id)) {
                         String stripped = s.substring(0, s.length() - id.length());

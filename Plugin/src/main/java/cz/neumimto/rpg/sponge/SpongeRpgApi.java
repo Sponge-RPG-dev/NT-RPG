@@ -7,8 +7,8 @@ import cz.neumimto.rpg.api.events.effect.EventFactoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.ISkillService;
-import cz.neumimto.rpg.players.attributes.Attribute;
-import cz.neumimto.rpg.sponge.configuration.PluginConfig;
+import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
+import cz.neumimto.rpg.common.configuration.PluginConfig;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.Executor;
 
 public final class SpongeRpgApi implements RpgApi {
 
@@ -27,13 +28,13 @@ public final class SpongeRpgApi implements RpgApi {
     }
 
     @Override
-    public Collection<Attribute> getAttributes() {
-        return Sponge.getRegistry().getAllOf(Attribute.class);
+    public Collection<AttributeConfig> getAttributes() {
+        return Sponge.getRegistry().getAllOf(AttributeConfig.class);
     }
 
     @Override
-    public Optional<Attribute> getAttributeById(String id) {
-        return Sponge.getRegistry().getType(Attribute.class, id);
+    public Optional<AttributeConfig> getAttributeById(String id) {
+        return Sponge.getRegistry().getType(AttributeConfig.class, id);
     }
 
     @Override
@@ -110,5 +111,10 @@ public final class SpongeRpgApi implements RpgApi {
     @Override
     public PluginConfig getPluginConfig() {
         return NtRpgPlugin.pluginConfig;
+    }
+
+    @Override
+    public Executor getAsyncExecutor() {
+        return NtRpgPlugin.asyncExecutor;
     }
 }

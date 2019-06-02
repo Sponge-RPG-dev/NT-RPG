@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.sponge.commands.elements;
 
-import cz.neumimto.rpg.players.attributes.Attribute;
+import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.PatternMatchingCommandElement;
@@ -21,13 +21,13 @@ public class CharacterAttributeCommandElement extends PatternMatchingCommandElem
 
     @Override
     protected Iterable<String> getChoices(CommandSource source) {
-        Collection<Attribute> allOf = Sponge.getRegistry().getAllOf(Attribute.class);
-        return allOf.stream().map(Attribute::getId).collect(Collectors.toSet());
+        Collection<AttributeConfig> allOf = Sponge.getRegistry().getAllOf(AttributeConfig.class);
+        return allOf.stream().map(AttributeConfig::getId).collect(Collectors.toSet());
     }
 
     @Override
     protected Object getValue(String choice) {
-        return Sponge.getRegistry().getType(Attribute.class, choice).orElse(null);
+        return Sponge.getRegistry().getType(AttributeConfig.class, choice).orElse(null);
     }
 
 }

@@ -18,7 +18,7 @@ package cz.neumimto.rpg.api.skills.types;
 
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
 public class PermissionSkill extends AbstractSkill {
 

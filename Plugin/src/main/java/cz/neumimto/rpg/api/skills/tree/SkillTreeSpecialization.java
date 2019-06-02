@@ -11,7 +11,7 @@ import cz.neumimto.rpg.api.skills.SkillSettings;
 import cz.neumimto.rpg.api.skills.types.PassiveSkill;
 import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.common.skills.utils.SkillLoadingErrors;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
 import java.util.HashMap;
 import java.util.List;

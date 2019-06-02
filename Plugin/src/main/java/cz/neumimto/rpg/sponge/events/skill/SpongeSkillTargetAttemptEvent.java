@@ -16,7 +16,7 @@
 package cz.neumimto.rpg.sponge.events.skill;
 
 import cz.neumimto.rpg.api.events.skill.SkillTargetAttemptEvent;
-import cz.neumimto.rpg.entities.IEntity;
+import cz.neumimto.rpg.api.entity.IEntity;
 
 public class SpongeSkillTargetAttemptEvent extends AbstractSkillEvent implements SkillTargetAttemptEvent {
 

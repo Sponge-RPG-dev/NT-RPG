@@ -2,7 +2,8 @@ package cz.neumimto.rpg.players;
 
 import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
-import cz.neumimto.rpg.entities.IReservable;
+import cz.neumimto.rpg.common.entity.players.PreloadCharacter;
+import cz.neumimto.rpg.api.entity.IReservable;
 import org.spongepowered.api.advancement.Advancement;
 import org.spongepowered.api.advancement.AdvancementProgress;
 import org.spongepowered.api.advancement.AdvancementTree;

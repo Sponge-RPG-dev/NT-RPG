@@ -20,7 +20,7 @@ package cz.neumimto.rpg.sponge.events.skill;
 
 import cz.neumimto.rpg.api.events.skill.SkillPreUsageEvent;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
-import cz.neumimto.rpg.entities.IEntity;
+import cz.neumimto.rpg.api.entity.IEntity;
 
 /**
  * Created by NeumimTo on 1.8.2015.

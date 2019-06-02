@@ -1,7 +1,9 @@
 package cz.neumimto.rpg.sponge.entities.players;
 
-import cz.neumimto.rpg.players.ActiveCharacter;
-import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.CharacterBase;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.channel.MessageChannel;
 
 import java.util.UUID;
 
@@ -14,6 +16,14 @@ public class SpongeCharacter extends ActiveCharacter implements ISpongeCharacter
     @Override
     public UUID getUUID() {
         return pl;
+    }
+
+    @Override
+    public void sendMessage(MessageChannel channel, String message) {
+        Player player = getPlayer();
+        switch (channel) {
+
+        }
     }
 
     @Override

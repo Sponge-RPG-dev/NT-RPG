@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.inventory.runewords;
 
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
-import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 
 import java.util.*;
 

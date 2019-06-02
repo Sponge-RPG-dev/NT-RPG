@@ -22,10 +22,10 @@ import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.PlayerClassData;
-import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.players.groups.PlayerGroupPermission;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassPermission;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
 import javax.inject.Inject;
@@ -92,15 +92,15 @@ public class ClassService  {
         for (PlayerClassData nClass : character.getClasses().values()) {
             ClassDefinition configClass = nClass.getClassDefinition();
             if (configClass == toBeReplaced) {
-                for (PlayerGroupPermission pgp : configClass.getPermissions()) {
+                for (PlayerClassPermission pgp : configClass.getPermissions()) {
                     if (pgp.getLevel() <= character.getLevel()) {
                         toBeRemoved.addAll(pgp.getPermissions());
                     }
                 }
             } else {
-                for (PlayerGroupPermission playerGroupPermission : configClass.getPermissions()) {
-                    if (playerGroupPermission.getLevel() <= character.getLevel()) {
-                        intersection.addAll(playerGroupPermission.getPermissions());
+                for (PlayerClassPermission playerClassPermission : configClass.getPermissions()) {
+                    if (playerClassPermission.getLevel() <= character.getLevel()) {
+                        intersection.addAll(playerClassPermission.getPermissions());
                     }
                 }
             }

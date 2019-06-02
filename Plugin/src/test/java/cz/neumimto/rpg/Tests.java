@@ -5,10 +5,10 @@ import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.persistance.model.CharacterClass;
-import cz.neumimto.rpg.players.ActiveCharacter;
-import cz.neumimto.rpg.players.PlayerClassData;
-import cz.neumimto.rpg.players.groups.ClassDefinition;
-import cz.neumimto.rpg.players.groups.PlayerGroupPermission;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassPermission;
 import cz.neumimto.rpg.sponge.scripting.SpongeClassGenerator;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.junit.jupiter.api.Assertions;
@@ -58,12 +58,12 @@ public class Tests {
         when(character.getLevel()).thenReturn(2);
 
         ClassDefinition race = new ClassDefinition("a", "Primary");
-        race.setPermissions(new HashSet<PlayerGroupPermission>() {{
-            add(new PlayerGroupPermission() {{
+        race.setPermissions(new HashSet<PlayerClassPermission>() {{
+            add(new PlayerClassPermission() {{
                 setLevel(1);
                 setPermissions(new HashSet<>(Arrays.asList("race1", "race2", "common2")));
             }});
-            add(new PlayerGroupPermission() {{
+            add(new PlayerClassPermission() {{
                 setLevel(2);
                 setPermissions(new HashSet<>(Arrays.asList("race3", "common1")));
             }});
@@ -76,13 +76,13 @@ public class Tests {
 
         ClassDefinition c = new ClassDefinition("b", "Primary");
 
-        c.setPermissions(new HashSet<PlayerGroupPermission>() {
+        c.setPermissions(new HashSet<PlayerClassPermission>() {
             {
-                add(new PlayerGroupPermission() {{
+                add(new PlayerClassPermission() {{
                     setLevel(1);
                     setPermissions(new HashSet<>(Arrays.asList("class1", "class2", "common2")));
                 }});
-                add(new PlayerGroupPermission() {{
+                add(new PlayerClassPermission() {{
                     setLevel(2);
                     setPermissions(new HashSet<>(Arrays.asList("class4", "common1")));
                 }});
@@ -104,8 +104,8 @@ public class Tests {
         when(character.getClasses()).thenReturn(map);
 
         ClassDefinition changeTo = new ClassDefinition("c", "Primary");
-        changeTo.setPermissions(new HashSet<PlayerGroupPermission>() {{
-            add(new PlayerGroupPermission() {{
+        changeTo.setPermissions(new HashSet<PlayerClassPermission>() {{
+            add(new PlayerClassPermission() {{
                 setLevel(1);
                 setPermissions(new HashSet<>(Arrays.asList("class1", "class4", "common2")));
             }});

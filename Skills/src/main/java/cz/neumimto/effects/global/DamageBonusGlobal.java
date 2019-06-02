@@ -20,7 +20,7 @@ package cz.neumimto.effects.global;
 
 import cz.neumimto.effects.positive.DamageBonus;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
-import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
 
 import java.util.Map;

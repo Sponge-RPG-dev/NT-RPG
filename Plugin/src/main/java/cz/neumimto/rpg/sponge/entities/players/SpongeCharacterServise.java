@@ -1,8 +1,10 @@
 package cz.neumimto.rpg.sponge.entities.players;
 
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
-import cz.neumimto.rpg.players.*;
+import cz.neumimto.rpg.common.entity.players.CharacterBase;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.sponge.events.PlayerDataPreloadComplete;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
@@ -18,7 +20,7 @@ import static cz.neumimto.rpg.api.logging.Log.error;
 import static cz.neumimto.rpg.api.logging.Log.info;
 
 @Singleton
-public class SpongeCharacterServise extends CharacterService {
+public class SpongeCharacterServise extends CharacterService<ISpongeCharacter> {
 
     @Inject
     private Game game;
@@ -34,12 +36,12 @@ public class SpongeCharacterServise extends CharacterService {
     }
 
     @Override
-    protected void addCharacter(UUID uuid, IActiveCharacter character) {
-        characters.put(uuid, (ISpongeCharacter) character);
+    protected void addCharacter(UUID uuid, ISpongeCharacter character) {
+        characters.put(uuid, character);
     }
 
     @Override
-    protected IActiveCharacter removeCharacter(UUID uuid) {
+    protected ISpongeCharacter removeCharacter(UUID uuid) {
         return characters.remove(uuid);
     }
 
@@ -49,17 +51,20 @@ public class SpongeCharacterServise extends CharacterService {
     }
 
     @Override
-    public ActiveCharacter createCharacter(UUID player, CharacterBase characterBase) {
-        return new SpongeCharacter(player, characterBase, PropertyServiceImpl.LAST_ID);
+    public ISpongeCharacter createCharacter(UUID player, CharacterBase characterBase) {
+        SpongeCharacter spongeCharacter = new SpongeCharacter(player, characterBase, PropertyServiceImpl.LAST_ID);
+        spongeCharacter.setMana(new CharacterMana(spongeCharacter));
+        spongeCharacter.setHealth(new CharacterHealth(spongeCharacter));
+        return spongeCharacter;
     }
 
     @Override
-    public void registerDummyChar(IActiveCharacter dummy) {
+    public void registerDummyChar(ISpongeCharacter dummy) {
         characters.put(dummy.getUUID(), (ISpongeCharacter) dummy);
     }
 
     @Override
-    public PreloadCharacter buildDummyChar(UUID uuid) {
+    public ISpongeCharacter buildDummyChar(UUID uuid) {
         info("Creating a dummy character for " + uuid);
         return new SpongePreloadCharacter(uuid);
     }
@@ -74,7 +79,7 @@ public class SpongeCharacterServise extends CharacterService {
     }
 
     @Override
-    protected void addCharacterToGame(UUID id, IActiveCharacter character, List<CharacterBase> playerChars) {
+    protected void addCharacterToGame(UUID id, ISpongeCharacter character, List<CharacterBase> playerChars) {
         game.getScheduler().createTaskBuilder().name("Callback-PlayerDataLoad" + id).execute(() -> {
             PlayerDataPreloadComplete event = new PlayerDataPreloadComplete(id, playerChars);
             game.getEventManager().post(event);
@@ -118,12 +123,12 @@ public class SpongeCharacterServise extends CharacterService {
     }
 
     @Override
-    public void respawnCharacter(IActiveCharacter character) {
+    public void respawnCharacter(ISpongeCharacter character) {
         super.respawnCharacter(character);
         Sponge.getScheduler().createTaskBuilder().execute(() -> {
             invalidateCaches(character);
             Double d = character.getHealth().getMaxValue();
-            ((ISpongeCharacter)character).getPlayer().offer(Keys.HEALTH, d);
+            character.getPlayer().offer(Keys.HEALTH, d);
         }).delay(1, TimeUnit.MILLISECONDS).submit(plugin);
     }
 
@@ -132,4 +137,10 @@ public class SpongeCharacterServise extends CharacterService {
         Sponge.getScheduler().createTaskBuilder().delay(1, TimeUnit.MILLISECONDS)
                 .execute(r).submit(NtRpgPlugin.GlobalScope.plugin);
     }
+
+    @Override
+    public void addDefaultEffects(ISpongeCharacter character) {
+        effectService.addEffect(new CombatEffect(character));
+    }
+
 }

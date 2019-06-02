@@ -21,7 +21,7 @@ package cz.neumimto.rpg.api.effects;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.IRpgElement;
-import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
 
 import java.util.Set;
 

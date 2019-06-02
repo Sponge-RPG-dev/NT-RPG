@@ -32,8 +32,8 @@ import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.scripting.JsBinding;
 import cz.neumimto.rpg.common.utils.annotations.CatalogId;
 import cz.neumimto.rpg.common.utils.DebugLevel;
-import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
 import javax.inject.Inject;
 import java.util.HashSet;

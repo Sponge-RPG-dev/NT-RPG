@@ -3,7 +3,7 @@ package cz.neumimto.rpg.common.skills;
 import cz.neumimto.rpg.api.skills.IPlayerSkillHandler;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 
 import java.util.Collections;
 import java.util.HashMap;

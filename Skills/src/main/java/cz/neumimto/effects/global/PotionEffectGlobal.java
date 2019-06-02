@@ -4,7 +4,7 @@ import cz.neumimto.effects.positive.PotionEffect;
 import cz.neumimto.model.PotionEffectModel;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.potion.PotionEffectType;
 

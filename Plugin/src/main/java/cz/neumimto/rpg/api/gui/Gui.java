@@ -29,10 +29,10 @@ import cz.neumimto.rpg.common.scripting.JsBinding;
 import cz.neumimto.rpg.api.effects.EffectStatusType;
 import cz.neumimto.rpg.sponge.inventory.CannotUseItemReason;
 import cz.neumimto.rpg.sponge.inventory.runewords.RuneWord;
-import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.PlayerClassData;
-import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.common.entity.players.CharacterBase;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 
 import java.util.List;

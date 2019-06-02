@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.common.impl;
 
-import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.CharacterBase;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
 import javax.inject.Singleton;
 import java.util.List;

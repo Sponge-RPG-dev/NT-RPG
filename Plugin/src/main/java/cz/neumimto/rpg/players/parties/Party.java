@@ -18,10 +18,11 @@
 
 package cz.neumimto.rpg.players.parties;
 
-import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.entity.players.party.IParty;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import org.spongepowered.api.scoreboard.Team;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
@@ -34,19 +35,21 @@ import java.util.UUID;
 /**
  * Created by NeumimTo on 10.8.2015.
  */
-public class Party {
+public class Party implements IParty {
 
-    private Set<IActiveCharacter> players = new HashSet<>();
-    private IActiveCharacter leader;
+    private Set<ISpongeCharacter> players = new HashSet<>();
+    private ISpongeCharacter leader;
     private Set<UUID> invites = new HashSet<>();
     private Team team;
 
-    public Party(IActiveCharacter leader) {
+    public Party(ISpongeCharacter leader) {
         this.leader = leader;
         addPlayer(leader);
     }
 
-    public void addPlayer(IActiveCharacter character) {
+    @Override
+    public void addPlayer(IActiveCharacter c) {
+        ISpongeCharacter character = (ISpongeCharacter) c;
         players.add(character);
         if (team == null) {
             team = Team.builder()
@@ -60,33 +63,29 @@ public class Party {
         team.addMember(character.getPlayer().getTeamRepresentation());
     }
 
+    @Override
     public IActiveCharacter getLeader() {
         return leader;
     }
 
+    @Override
     public void setLeader(IActiveCharacter leader) {
-        this.leader = leader;
+        this.leader = (ISpongeCharacter) leader;
     }
 
+    @Override
     public void removePlayer(IActiveCharacter character) {
         players.remove(character);
-        team.removeMember(character.getPlayer().getTeamRepresentation());
+        team.removeMember(((ISpongeCharacter)character).getPlayer().getTeamRepresentation());
     }
 
+    @Override
     public Set<IActiveCharacter> getPlayers() {
         return Collections.unmodifiableSet(players);
     }
 
-    public void setPlayers(Set<IActiveCharacter> players) {
-        this.players = players;
-    }
-
     public Set<UUID> getInvites() {
         return invites;
-    }
-
-    public void setInvites(Set<UUID> invites) {
-        this.invites = invites;
     }
 
     public boolean isFriendlyfire() {
@@ -112,11 +111,12 @@ public class Party {
 
     }
 
-    public void sendPartyMessage(Text t) {
+    @Override
+    public void sendPartyMessage(String t) {
         String translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.PARTY_CHAT_PREFIX);
-        Text text = TextHelper.parse(translate);
+        String text = translate + t;
         for (IActiveCharacter player : players) {
-            player.getPlayer().sendMessage(text);
+            player.sendMessage(text);
         }
     }
 

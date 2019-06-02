@@ -21,7 +21,7 @@ package cz.neumimto.rpg.common.persistance.dao;
 import cz.neumimto.core.PersistentContext;
 import cz.neumimto.core.Repository;
 import cz.neumimto.core.dao.GenericDao;
-import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.common.entity.players.CharacterBase;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;

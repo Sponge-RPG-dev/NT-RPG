@@ -29,11 +29,11 @@ import cz.neumimto.rpg.sponge.configuration.CommandLocalization;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import cz.neumimto.rpg.sponge.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.common.persistance.model.CharacterClass;
-import cz.neumimto.rpg.players.CharacterBase;
-import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.players.SkillTreeViewModel;
-import cz.neumimto.rpg.players.groups.ClassDefinition;
+import cz.neumimto.rpg.common.entity.players.CharacterBase;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -134,11 +134,11 @@ public class InfoCommand extends CommandBase {
                     String a = args[2];
                     if (a.equalsIgnoreCase("allowed-items")) {
                         Gui.displayRunewordAllowedItems(character, rw);
-                    } else if (a.equalsIgnoreCase("allowed-groups")) {
+                    } else if (a.equalsIgnoreCase("allowed-classes")) {
                         Gui.displayRunewordAllowedGroups(character, rw);
-                    } else if (a.equalsIgnoreCase("required-groups")) {
+                    } else if (a.equalsIgnoreCase("required-classes")) {
                         Gui.displayRunewordRequiredGroups(character, rw);
-                    } else if (a.equalsIgnoreCase("blocked-groups")) {
+                    } else if (a.equalsIgnoreCase("blocked-classes")) {
                         Gui.displayRunewordBlockedGroups(character, rw);
                     }
                 }

@@ -7,7 +7,7 @@ import cz.neumimto.core.migrations.DbMigrationService;
 import cz.neumimto.rpg.common.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.common.persistance.model.CharacterClass;
 import cz.neumimto.rpg.common.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.players.CharacterBase;
+import cz.neumimto.rpg.common.entity.players.CharacterBase;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;

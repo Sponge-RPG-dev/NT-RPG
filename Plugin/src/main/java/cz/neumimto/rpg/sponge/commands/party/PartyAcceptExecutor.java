@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.commands.party;
 
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;

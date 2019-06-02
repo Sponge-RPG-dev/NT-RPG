@@ -5,7 +5,7 @@ import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.ISkillType;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.skills.scripting.PassiveScriptSkillHandler;
 import cz.neumimto.rpg.sponge.skills.scripting.SkillScriptContext;
 

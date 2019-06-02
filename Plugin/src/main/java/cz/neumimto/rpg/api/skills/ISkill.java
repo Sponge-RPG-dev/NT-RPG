@@ -27,7 +27,7 @@ import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.common.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.common.effects.EffectSourceType;
 import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
 import java.util.List;
 import java.util.Set;

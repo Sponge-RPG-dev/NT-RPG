@@ -23,8 +23,8 @@ import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
-import cz.neumimto.rpg.players.attributes.Attribute;
-import cz.neumimto.rpg.players.attributes.Attributes;
+import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
+import cz.neumimto.rpg.common.entity.players.attributes.Attributes;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
@@ -51,7 +51,7 @@ import static cz.neumimto.rpg.api.logging.Log.info;
  */
 
 @Singleton
-public class SpongePropertyService extends PropertyServiceImpl implements AdditionalCatalogRegistryModule<Attribute> {
+public class SpongePropertyService extends PropertyServiceImpl implements AdditionalCatalogRegistryModule<AttributeConfig> {
 
     @Inject
     private NtRpgPlugin plugin;
@@ -59,10 +59,10 @@ public class SpongePropertyService extends PropertyServiceImpl implements Additi
     @Inject
     private ItemService itemService;
 
-    public Map<String, Attribute> attributeMap = new HashMap<>();
+    public Map<String, AttributeConfig> attributeMap = new HashMap<>();
 
     @Override
-    public Map<String, Attribute> getAttributes() {
+    public Map<String, AttributeConfig> getAttributes() {
         return attributeMap;
     }
 
@@ -72,7 +72,7 @@ public class SpongePropertyService extends PropertyServiceImpl implements Additi
             ObjectMapper<Attributes> mapper = NotSoStupidObjectMapper.forClass(Attributes.class);
             HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(attributeFilePath).build();
             Attributes attributes = mapper.bind(new Attributes()).populate(hcl.load());
-            attributes.getAttributes().forEach(a -> Sponge.getRegistry().register(Attribute.class, new Attribute(a)));
+            attributes.getAttributes().forEach(a -> Sponge.getRegistry().register(AttributeConfig.class, new AttributeConfig(a)));
 
 
             itemService.registerItemAttributes(Rpg.get().getAttributes());
@@ -114,17 +114,17 @@ public class SpongePropertyService extends PropertyServiceImpl implements Additi
     }
 
     @Override
-    public void registerAdditionalCatalog(Attribute extraCatalog) {
+    public void registerAdditionalCatalog(AttributeConfig extraCatalog) {
         getAttributes().put(extraCatalog.getId(), extraCatalog);
     }
 
     @Override
-    public Optional<Attribute> getById(String id) {
+    public Optional<AttributeConfig> getById(String id) {
         return getAttributeById(id);
     }
 
     @Override
-    public Collection<Attribute> getAll() {
+    public Collection<AttributeConfig> getAll() {
         return getAttributes().values();
     }
 }

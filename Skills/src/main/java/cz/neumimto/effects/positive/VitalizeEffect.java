@@ -5,11 +5,11 @@ import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.entities.IEntity;
-import cz.neumimto.rpg.entities.IReservable;
-import cz.neumimto.rpg.players.CharacterMana;
-import cz.neumimto.rpg.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.entity.IReservable;
+import cz.neumimto.rpg.sponge.entities.players.CharacterMana;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.scripting.JsBinding;
 
 /**

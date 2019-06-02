@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.api.events.effect;
 
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import org.spongepowered.api.event.cause.Cause;
 
 /**
