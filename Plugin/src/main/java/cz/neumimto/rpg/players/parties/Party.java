@@ -38,11 +38,11 @@ import java.util.UUID;
 public class Party implements IParty {
 
     private Set<ISpongeCharacter> players = new HashSet<>();
-    private ISpongeCharacter leader;
+    private IActiveCharacter leader;
     private Set<UUID> invites = new HashSet<>();
     private Team team;
 
-    public Party(ISpongeCharacter leader) {
+    public Party(IActiveCharacter leader) {
         this.leader = leader;
         addPlayer(leader);
     }
@@ -70,7 +70,7 @@ public class Party implements IParty {
 
     @Override
     public void setLeader(IActiveCharacter leader) {
-        this.leader = (ISpongeCharacter) leader;
+        this.leader = leader;
     }
 
     @Override

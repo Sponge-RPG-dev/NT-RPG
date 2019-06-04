@@ -35,7 +35,7 @@ import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.effects.TestEffectService;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.entities.MobSettingsDao;
+import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.exp.ExperienceDAO;
 import cz.neumimto.rpg.sponge.exp.ExperienceService;
 import cz.neumimto.rpg.sponge.gui.GuiService;
@@ -46,7 +46,7 @@ import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWDao;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.players.parties.PartyService;
+import cz.neumimto.rpg.players.parties.PartyServiceImpl;
 import cz.neumimto.rpg.common.scripting.JSLoader;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
@@ -60,7 +60,7 @@ public class TestGuiceModule extends AbstractModule {
         protected void configure() {
         bind(SpongeSkillService.class);
         bind(PropertyService.class).to(TestPropertyService.class);
-        bind(PartyService.class);
+        bind(PartyServiceImpl.class);
         bind(CharacterService.class).to(TestCharacterService.class);
 
 

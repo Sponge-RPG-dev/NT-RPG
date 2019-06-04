@@ -36,7 +36,7 @@ import javax.inject.Singleton;
  * Created by NeumimTo on 2.9.2015.
  */
 @Singleton
-public class PartyService {
+public class PartyServiceImpl {
 
     public void createNewParty(IActiveCharacter leader) {
         PartyCreateEvent event = Rpg.get().getEventFactory().createEventInstance(PartyCreateEvent.class);

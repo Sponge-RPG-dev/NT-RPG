@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.entities;
+package cz.neumimto.rpg.common.entity.configuration;
 
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
@@ -14,13 +14,13 @@ import java.util.Map;
 public class MobsConfig {
 
     @Setting(value = "damage", comment = "Entity Damage")
-    private Map<EntityType, Double> damage;
+    private Map<String, Double> damage;
 
     @Setting(value = "experiences", comment = "Entity experience gain")
-    private Map<EntityType, Double> experiences;
+    private Map<String, Double> experiences;
 
     @Setting(value = "health", comment = "Entity Maximum health")
-    private Map<EntityType, Double> health;
+    private Map<String, Double> health;
 
     public MobsConfig() {
         this.damage = new HashMap<>();
@@ -28,27 +28,27 @@ public class MobsConfig {
         this.health = new HashMap<>();
     }
 
-    public Map<EntityType, Double> getDamage() {
+    public Map<String, Double> getDamage() {
         return damage;
     }
 
-    public void setDamage(Map<EntityType, Double> damage) {
+    public void setDamage(Map<String, Double> damage) {
         this.damage = damage;
     }
 
-    public Map<EntityType, Double> getExperiences() {
+    public Map<String, Double> getExperiences() {
         return experiences;
     }
 
-    public void setExperiences(Map<EntityType, Double> experiences) {
+    public void setExperiences(Map<String, Double> experiences) {
         this.experiences = experiences;
     }
 
-    public Map<EntityType, Double> getHealth() {
+    public Map<String, Double> getHealth() {
         return health;
     }
 
-    public void setHealth(Map<EntityType, Double> health) {
+    public void setHealth(Map<String, Double> health) {
         this.health = health;
     }
 }

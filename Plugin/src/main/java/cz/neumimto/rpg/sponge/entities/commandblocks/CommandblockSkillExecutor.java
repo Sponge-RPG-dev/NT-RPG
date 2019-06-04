@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.players;
+package cz.neumimto.rpg.sponge.entities.commandblocks;
 
 import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
@@ -82,11 +82,6 @@ public class CommandblockSkillExecutor extends PreloadCharacter {
     }
 
     @Override
-    public Player getEntity() {
-        return mock;
-    }
-
-    @Override
     public IReservable getMana() {
         return INFINITY_POOL;
     }
@@ -94,12 +89,6 @@ public class CommandblockSkillExecutor extends PreloadCharacter {
     @Override
     public IReservable getHealth() {
         return INFINITY_POOL;
-    }
-
-
-    @Override
-    public Location<World> getLocation() {
-        return mock.getLocation();
     }
 
     @Override
@@ -113,13 +102,23 @@ public class CommandblockSkillExecutor extends PreloadCharacter {
     }
 
     @Override
+    public void sendMessage(String message) {
+
+    }
+
+    @Override
+    public void sendMessage(int channel, String message) {
+
+    }
+
+    @Override
     public boolean hasCooldown(String thing) {
         return false;
     }
 
     @Override
-    public Vector3d getRotation() {
-        return getPlayer().getHeadRotation();
+    public UUID getUUID() {
+        return UUID.randomUUID();
     }
 
     @Override

@@ -10,7 +10,7 @@ import cz.neumimto.rpg.api.skills.mods.SkillExecutorCallback;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.types.IActiveSkill;
 import cz.neumimto.rpg.common.skills.SkillData;
-import cz.neumimto.rpg.players.CommandblockSkillExecutor;
+import cz.neumimto.rpg.sponge.entities.commandblocks.CommandblockSkillExecutor;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.command.CommandException;

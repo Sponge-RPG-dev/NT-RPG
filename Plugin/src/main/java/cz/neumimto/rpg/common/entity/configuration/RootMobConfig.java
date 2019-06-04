@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.entities;
+package cz.neumimto.rpg.common.entity.configuration;
 
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;

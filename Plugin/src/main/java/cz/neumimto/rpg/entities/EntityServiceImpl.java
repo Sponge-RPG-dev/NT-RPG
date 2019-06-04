@@ -2,12 +2,12 @@ package cz.neumimto.rpg.entities;
 
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.IMob;
-import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.*;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.effects.EffectService;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.events.skill.SkillHealEvent;
+import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
+import cz.neumimto.rpg.common.entity.configuration.MobsConfig;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 import org.spongepowered.api.data.key.Keys;
@@ -30,7 +30,7 @@ import static cz.neumimto.rpg.api.logging.Log.warn;
  * Created by NeumimTo on 19.12.2015.
  */
 @Singleton
-public class EntityService {
+public class EntityServiceImpl implements EntityService {
 
     private HashMap<UUID, IMob> entityHashMap = new HashMap<>();
 
@@ -41,12 +41,13 @@ public class EntityService {
     private PropertyService spongePropertyService;
 
     @Inject
-    private CharacterService characterService;
+    private CharacterService<IActiveCharacter> characterService;
 
     @Inject
     private EffectService effectService;
 
-    public IEntity get(Entity id) {
+    @Override
+    public IEntity get(UUID id) {
         if (id.getType() == EntityTypes.PLAYER) {
             return characterService.getCharacter(id.getUniqueId());
         }
@@ -71,6 +72,7 @@ public class EntityService {
 
     }
 
+    @Override
     public void remove(UUID e) {
         if (entityHashMap.containsKey(e)) {
             IMob iMob = entityHashMap.get(e);
@@ -80,6 +82,7 @@ public class EntityService {
         }
     }
 
+    @Override
     public void remove(Collection<Entity> l) {
         for (Entity a : l) {
             UUID uniqueId = a.getUniqueId();
@@ -87,13 +90,14 @@ public class EntityService {
         }
     }
 
-    public double getMobDamage(Entity type) {
-        MobsConfig dimmension = dao.getCache().getDimmension(type.getLocation().getExtent().getName());
+    @Override
+    public double getMobDamage(String dimension, String type) {
+        MobsConfig dimmension = dao.getCache().getDimmension(dimension);
         if (dimmension != null) {
-            Double aDouble = dimmension.getDamage().get(type.getType());
+            Double aDouble = dimmension.getDamage().get(type);
             if (aDouble == null) {
-                warn("No damage configured for " + type.getType().getId()
-                        + " in world " + type.getLocation().getExtent().getName());
+                warn("No damage configured for " + type
+                        + " in world " + dimension);
                 aDouble = 0D;
             }
             return aDouble;
@@ -101,13 +105,14 @@ public class EntityService {
         return 0;
     }
 
-    public double getExperiences(Entity type) {
-        MobsConfig dimmension = dao.getCache().getDimmension(type.getLocation().getExtent().getName());
+    @Override
+    public double getExperiences(String dimension, String type) {
+        MobsConfig dimmension = dao.getCache().getDimmension(dimension);
         if (dimmension != null) {
-            Double aDouble = dimmension.getExperiences().get(type.getType());
+            Double aDouble = dimmension.getExperiences().get(type);
             if (aDouble == null) {
-                warn("No max experience drop configured for " + type.getType().getId()
-                        + " in world " + type.getLocation().getExtent().getName());
+                warn("No max experience drop configured for " + type
+                        + " in world " + dimension);
                 aDouble = 0D;
             }
             return aDouble;
@@ -120,6 +125,7 @@ public class EntityService {
      *
      * @see PropertyService#loadMaximalServerPropertyValues(Path) ()
      */
+    @Override
     public float getEntityProperty(IEffectConsumer entity, int id) {
         return Math.min(entity.getProperty(id), spongePropertyService.getMaxPropertyValue(id));
     }
@@ -131,6 +137,7 @@ public class EntityService {
      * @param amount
      * @return difference
      */
+    @Override
     public double healEntity(IEntity entity, float amount, IRpgElement source) {
         if (entity.getHealth().getValue() == entity.getHealth().getMaxValue()) {
             return 0;

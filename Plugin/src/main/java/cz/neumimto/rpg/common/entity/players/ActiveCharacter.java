@@ -84,7 +84,6 @@ public abstract class ActiveCharacter implements IActiveCharacter {
     private transient Map<String, IEffectContainer<Object, IEffect<Object>>> effects = new HashMap<>();
     private IPlayerSkillHandler skills;
 
-    private transient Click click = new Click();
     private transient Set<RpgItemType> allowedArmorIds = new HashSet<>();
 
     private transient Map<RpgItemType, Double> allowedWeapons = new HashMap<>();
@@ -254,12 +253,6 @@ public abstract class ActiveCharacter implements IActiveCharacter {
     @Override
     public Map<String, IEffectContainer<Object, IEffect<Object>>> getEffectMap() {
         return effects;
-    }
-
-    @Override
-    public void resetRightClicks() {
-        click.setTimes(0);
-        click.setLastTime(0);
     }
 
     @Override

@@ -87,8 +87,6 @@ public interface IActiveCharacter extends IEntity {
 
     void setHealth(IReservable health);
 
-    void resetRightClicks();
-
     int getAttributePoints();
 
     void setAttributePoints(int attributePoints);

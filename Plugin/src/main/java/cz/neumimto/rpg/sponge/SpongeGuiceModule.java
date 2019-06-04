@@ -14,6 +14,7 @@ import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
+import cz.neumimto.rpg.common.classes.ClassServiceImpl;
 import cz.neumimto.rpg.common.configuration.SkillTreeDao;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
@@ -25,7 +26,7 @@ import cz.neumimto.rpg.common.persistance.dao.PlayerDao;
 import cz.neumimto.rpg.sponge.assets.SpongeAssetService;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.entities.MobSettingsDao;
+import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.exp.ExperienceDAO;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.events.SpongeEventFactory;
@@ -35,7 +36,7 @@ import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWDao;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.players.parties.PartyService;
+import cz.neumimto.rpg.players.parties.PartyServiceImpl;
 import cz.neumimto.rpg.sponge.permission.SpongePermissionService;
 import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import cz.neumimto.rpg.sponge.commands.CommandService;
@@ -53,7 +54,7 @@ public class SpongeGuiceModule extends AbstractModule {
     protected void configure() {
         bind(SpongeSkillService.class);
         bind(PropertyService.class).to(SpongePropertyService.class);
-        bind(PartyService.class);
+        bind(PartyServiceImpl.class);
         bind(CharacterService.class).to(SpongeCharacterServise.class);
 
 
@@ -64,7 +65,7 @@ public class SpongeGuiceModule extends AbstractModule {
         bind(SkillTreeDao.class);
 
         bind(ClassGenerator.class).to(SpongeClassGenerator.class);
-        bind(ClassService.class);
+        bind(ClassService.class).to(ClassServiceImpl.class);
         bind(GlobalScope.class);
         bind(ResourceLoader.class);
         bind(CommandService.class);

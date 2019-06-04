@@ -1,16 +1,16 @@
-package cz.neumimto.rpg.entities;
+package cz.neumimto.rpg.sponge.entities.configuration;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
+import cz.neumimto.rpg.common.entity.configuration.MobsConfig;
+import cz.neumimto.rpg.common.entity.configuration.RootMobConfig;
 import cz.neumimto.rpg.common.utils.io.FileUtils;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.entity.living.Living;
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import javax.inject.Singleton;
@@ -19,21 +19,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * Created by NeumimTo on 20.12.2015.
- */
 @Singleton
-@ResourceLoader.ListenerClass
-public class MobSettingsDao {
+public class SpongeMobSettingsDao extends MobSettingsDao {
 
-    private RootMobConfig cache;
-
-    @Listener
-    public void load(GameStartedServerEvent event) {
-        cache = createDefaults("MobSettings.conf");
-    }
-
-    private RootMobConfig createDefaults(String s) {
+    @Override
+    protected RootMobConfig createDefaults(String s)  {
         File properties = new File(NtRpgPlugin.workingDir, s);
         if (!properties.exists()) {
             Collection<EntityType> types = Sponge.getGame().getRegistry().getAllOf(EntityType.class);
@@ -47,9 +37,9 @@ public class MobSettingsDao {
             RootMobConfig rootMobConfig = new RootMobConfig();
             MobsConfig overWorldMobConfig = new MobsConfig();
             for (EntityType livingEntity : livingEntities) {
-                overWorldMobConfig.getDamage().put(livingEntity, 10D);
-                overWorldMobConfig.getExperiences().put(livingEntity, 10D);
-                overWorldMobConfig.getHealth().put(livingEntity, 10D);
+                overWorldMobConfig.getDamage().put(livingEntity.getId(), 10D);
+                overWorldMobConfig.getExperiences().put(livingEntity.getId(), 10D);
+                overWorldMobConfig.getHealth().put(livingEntity.getId(), 10D);
             }
             Collection<WorldProperties> allWorldProperties = Sponge.getServer().getAllWorldProperties();
             for (WorldProperties allWorldProperty : allWorldProperties) {
@@ -67,7 +57,6 @@ public class MobSettingsDao {
         }
     }
 
-    public RootMobConfig getCache() {
-        return cache;
-    }
+
+
 }

@@ -31,7 +31,7 @@ import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.players.parties.PartyService;
+import cz.neumimto.rpg.players.parties.PartyServiceImpl;
 import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import cz.neumimto.rpg.common.scripting.JSLoader;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
@@ -84,7 +84,7 @@ public class GlobalScope {
     public EntityService entityService;
 
     @Inject
-    public PartyService partyService;
+    public PartyServiceImpl partyService;
 
     @Inject
     public SpongePropertyService spongePropertyService;
