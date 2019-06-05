@@ -43,7 +43,7 @@ import cz.neumimto.rpg.api.skills.SkillDependency;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.common.configuration.PluginConfig;
-import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.common.entity.CommonProperties;
 import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.common.entity.players.leveling.SkillTreeType;

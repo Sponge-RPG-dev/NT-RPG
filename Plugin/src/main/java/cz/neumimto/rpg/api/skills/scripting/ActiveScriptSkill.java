@@ -10,7 +10,6 @@ import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.types.ScriptSkill;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.skills.scripting.ScriptExecutorSkill;
-import cz.neumimto.rpg.sponge.skills.scripting.SkillScriptContext;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.sponge.skills.scripting;
 
 import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.api.skills.scripting.SkillScriptContext;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.skills.F;

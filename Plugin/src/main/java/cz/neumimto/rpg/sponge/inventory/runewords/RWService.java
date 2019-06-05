@@ -7,7 +7,7 @@ import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.api.utils.rng.XORShiftRnd;
-import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.sponge.events.RebuildRunewordEvent;
 import cz.neumimto.rpg.sponge.inventory.ItemUpgradeTransactionResult;
 import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;

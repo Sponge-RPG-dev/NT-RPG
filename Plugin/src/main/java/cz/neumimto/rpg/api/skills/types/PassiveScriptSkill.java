@@ -6,8 +6,8 @@ import cz.neumimto.rpg.api.skills.ISkillType;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.sponge.skills.scripting.PassiveScriptSkillHandler;
-import cz.neumimto.rpg.sponge.skills.scripting.SkillScriptContext;
+import cz.neumimto.rpg.api.skills.scripting.PassiveScriptSkillHandler;
+import cz.neumimto.rpg.api.skills.scripting.SkillScriptContext;
 
 import java.util.List;
 import java.util.Optional;

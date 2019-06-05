@@ -19,7 +19,6 @@
 package cz.neumimto.rpg.api.skills.types;
 
 import cz.neumimto.core.localization.Arg;
-import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;

@@ -19,15 +19,15 @@
 package cz.neumimto.rpg.api.skills.types;
 
 import cz.neumimto.core.localization.Arg;
-import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
-import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+
 
 import javax.inject.Inject;
 
@@ -39,6 +39,9 @@ public abstract class PassiveSkill extends AbstractSkill {
 
     @Inject
     protected EffectService effectService;
+
+    @Inject
+    protected InventoryService inventoryService;
 
     protected String relevantEffectName;
 
@@ -52,12 +55,12 @@ public abstract class PassiveSkill extends AbstractSkill {
     @Override
     public void onPreUse(IActiveCharacter character, SkillContext skillContext) {
         String msg = localizationService.translate(LocalizationKeys.CANT_USE_PASSIVE_SKILL, Arg.arg("skill", getName()));
-        character.sendMessage(TextHelper.parse(msg));
+        character.sendMessage(msg);
         skillContext.result(SkillResult.CANCELLED);
     }
 
     private void update(IActiveCharacter IActiveCharacter) {
-        NtRpgPlugin.GlobalScope.inventorySerivce.initializeCharacterInventory(IActiveCharacter);
+        inventoryService.initializeCharacterInventory(IActiveCharacter);
         PlayerSkillContext skill = IActiveCharacter.getSkill(getId());
         applyEffect(skill, IActiveCharacter);
     }

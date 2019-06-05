@@ -16,20 +16,17 @@
  *
  */
 
-package cz.neumimto.rpg.common.effects;
+package cz.neumimto.rpg.api.effects;
 
-import cz.neumimto.rpg.api.effects.*;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
 
-import javax.inject.Inject;
 import java.util.*;
 import java.util.function.Consumer;
 
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 17.1.2015.
@@ -39,9 +36,6 @@ public abstract class EffectService {
     public static final long TICK_PERIOD = 5L;
 
     private static final long unlimited_duration = -1;
-
-    @Inject
-    protected NtRpgPlugin plugin;
 
     protected Set<IEffect> effectSet = new HashSet<>();
     protected Set<IEffect> pendingAdditions = new HashSet<>();
@@ -151,7 +145,7 @@ public abstract class EffectService {
     public <T extends IEffect> boolean addEffect(T effect, IEffectSourceProvider effectSourceProvider, IEntity entitySource) {
 
         IEffectContainer eff = effect.getConsumer().getEffect(effect.getName());
-        if (pluginConfig.DEBUG.isDevelop()) {
+        if (Rpg.get().getPluginConfig().DEBUG.isDevelop()) {
             IEffectConsumer consumer1 = effect.getConsumer();
             if (consumer1 instanceof IActiveCharacter) {
                 IActiveCharacter chara = (IActiveCharacter) consumer1;
@@ -189,10 +183,10 @@ public abstract class EffectService {
      */
     public void removeEffect(IEffect effect, IEffectConsumer consumer) {
         IEffectContainer container = consumer.getEffect(effect.getName());
-        if (pluginConfig.DEBUG.isDevelop()) {
+        if (Rpg.get().getPluginConfig().DEBUG.isDevelop()) {
             IEffectConsumer consumer1 = effect.getConsumer();
-            if (consumer1 instanceof ActiveCharacter) {
-                ActiveCharacter chara = (ActiveCharacter) consumer1;
+            if (consumer1 instanceof IActiveCharacter) {
+                IActiveCharacter chara = (IActiveCharacter) consumer1;
                 chara.sendMessage("Removing effect: " + effect.getName() +
                         " container: " + (container == null ? "null" : container.getEffects().size()));
             }
@@ -314,7 +308,7 @@ public abstract class EffectService {
 
     public void removeGlobalEffectsAsEnchantments(Collection<IGlobalEffect> itemEffects, IActiveCharacter character,
                                                   IEffectSourceProvider effectSourceProvider) {
-        if (pluginConfig.DEBUG.isDevelop()) {
+        if (Rpg.get().getPluginConfig().DEBUG.isDevelop()) {
             character.sendMessage(itemEffects.size() + " added echn. effect to remove queue.");
         }
         itemEffects.forEach((e) -> {

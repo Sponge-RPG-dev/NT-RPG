@@ -10,7 +10,7 @@ import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.configuration.ItemString;
-import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.common.items.AbstractItemService;
 import cz.neumimto.rpg.common.items.RpgItemStackImpl;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;

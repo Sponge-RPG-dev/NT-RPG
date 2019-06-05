@@ -23,7 +23,6 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillSettings;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import org.spongepowered.api.text.Text;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +35,6 @@ import java.util.Set;
 public final class StartingPoint extends PassiveSkill {
 
     public static final String NODE_NAME = "StartingPoint";
-    public static final Text name = Text.of(NODE_NAME);
     public static SkillData SKILL_DATA = new SkillData(NODE_NAME);
     private static SkillSettings skillSettings = new SkillSettings();
 
@@ -46,7 +44,7 @@ public final class StartingPoint extends PassiveSkill {
 
     @Override
     public String getName() {
-        return name.toPlain();
+        return NODE_NAME;
     }
 
     @Override

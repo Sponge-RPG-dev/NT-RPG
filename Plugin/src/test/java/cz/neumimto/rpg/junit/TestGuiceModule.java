@@ -28,7 +28,7 @@ import cz.neumimto.rpg.sponge.permission.TestPermissionService;
 import cz.neumimto.rpg.sponge.scripting.SpongeClassGenerator;
 import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
 import cz.neumimto.rpg.sponge.commands.CommandService;
-import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.common.entity.TestPropertyService;
 import cz.neumimto.rpg.common.impl.TestItemService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;

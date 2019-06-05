@@ -35,7 +35,7 @@ import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.common.reloading.Reload;
 import cz.neumimto.rpg.common.reloading.ReloadService;
 import cz.neumimto.rpg.api.skills.SkillData;

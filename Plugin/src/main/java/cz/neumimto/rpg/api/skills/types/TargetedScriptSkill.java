@@ -9,8 +9,8 @@ import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.sponge.skills.scripting.SkillScriptContext;
-import cz.neumimto.rpg.sponge.skills.scripting.TargetedScriptExecutorSkill;
+import cz.neumimto.rpg.api.skills.scripting.SkillScriptContext;
+import cz.neumimto.rpg.api.skills.scripting.TargetedScriptExecutorSkill;
 import cz.neumimto.rpg.sponge.skills.types.Targeted;
 
 import java.util.List;

@@ -4,7 +4,7 @@ import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.SkillSettings;
-import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
