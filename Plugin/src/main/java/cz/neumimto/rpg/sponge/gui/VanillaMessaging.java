@@ -38,7 +38,7 @@ import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.reloading.Reload;
 import cz.neumimto.rpg.common.reloading.ReloadService;
-import cz.neumimto.rpg.common.skills.SkillData;
+import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.common.utils.model.CharacterListModel;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.api.effects.EffectStatusType;

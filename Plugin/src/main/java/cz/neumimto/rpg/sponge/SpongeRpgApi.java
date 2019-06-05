@@ -3,6 +3,8 @@ package cz.neumimto.rpg.sponge;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.RpgApi;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.events.effect.EventFactoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.LocalizationService;
@@ -116,5 +118,10 @@ public final class SpongeRpgApi implements RpgApi {
     @Override
     public Executor getAsyncExecutor() {
         return NtRpgPlugin.asyncExecutor;
+    }
+
+    @Override
+    public ICharacterService<IActiveCharacter> getCharacterService() {
+        return NtRpgPlugin.GlobalScope.characterService;
     }
 }

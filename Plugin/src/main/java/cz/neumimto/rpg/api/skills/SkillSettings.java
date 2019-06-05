@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.api.skills;
 
-import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
 import org.spongepowered.api.Sponge;
 

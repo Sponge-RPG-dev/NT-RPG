@@ -1,7 +1,7 @@
 package cz.neumimto.model;
 
 import cz.neumimto.rpg.api.effects.stacking.UnstackableEffectData;
-import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 6.7.2017.

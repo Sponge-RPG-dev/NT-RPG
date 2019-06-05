@@ -1,7 +1,7 @@
 package cz.neumimto.rpg;
 
 
-import cz.neumimto.rpg.api.ActionResult;
+import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.sponge.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;

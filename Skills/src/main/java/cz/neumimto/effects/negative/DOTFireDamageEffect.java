@@ -4,7 +4,7 @@ import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
-import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import org.spongepowered.api.event.cause.entity.damage.source.DamageSources;
 
 @JsBinding(JsBinding.Type.CLASS)

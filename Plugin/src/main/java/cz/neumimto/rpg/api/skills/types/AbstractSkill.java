@@ -22,6 +22,7 @@ import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
@@ -29,10 +30,9 @@ import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.ISkillType;
 import cz.neumimto.rpg.api.skills.SkillSettings;
 import cz.neumimto.rpg.api.utils.Console;
-import cz.neumimto.rpg.common.scripting.JsBinding;
-import cz.neumimto.rpg.common.utils.annotations.CatalogId;
-import cz.neumimto.rpg.common.utils.DebugLevel;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.api.utils.annotations.CatalogId;
+import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
 import javax.inject.Inject;
@@ -50,7 +50,7 @@ import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 public abstract class AbstractSkill implements ISkill {
 
     @Inject
-    protected CharacterService characterService;
+    protected ICharacterService characterService;
 
     @Inject
     protected LocalizationService localizationService;
@@ -135,7 +135,7 @@ public abstract class AbstractSkill implements ISkill {
     public void onCharacterInit(IActiveCharacter c, int level) {
         if (pluginConfig.SKILLGAIN_MESSAGES_AFTER_LOGIN) {
             String msg = localizationService.translate(LocalizationKeys.PLAYER_GAINED_SKILL, Arg.arg("skill", getName()));
-            c.sendMessage(TextHelper.parse(msg));
+            c.sendMessage(msg);
         }
     }
 

@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.api.skills;
 
-import cz.neumimto.rpg.common.skills.SkillData;
-
 public class SkillDependency {
     public final SkillData skillData;
     public final int minSkillLevel;

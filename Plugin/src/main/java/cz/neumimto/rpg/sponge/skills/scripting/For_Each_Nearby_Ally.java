@@ -2,7 +2,7 @@ package cz.neumimto.rpg.sponge.skills.scripting;
 
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.utils.TriConsumer;
-import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityType;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;

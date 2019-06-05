@@ -9,8 +9,8 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillPathData;
 import cz.neumimto.rpg.api.skills.SkillSettings;
 import cz.neumimto.rpg.api.skills.types.PassiveSkill;
-import cz.neumimto.rpg.common.skills.SkillData;
-import cz.neumimto.rpg.common.skills.utils.SkillLoadingErrors;
+import cz.neumimto.rpg.api.skills.SkillData;
+import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
 import java.util.HashMap;
@@ -35,7 +35,7 @@ public class SkillTreeSpecialization extends PassiveSkill {
     public void skillLearn(IActiveCharacter IActiveCharacter) {
         if (pluginConfig.PLAYER_CHOOSED_SKILLTREE_SPECIALIZATION_GLOBAL_MESSAGE) {
             Rpg.get().broadcastLocalizableMessage(LocalizationKeys.PLAYER_CHOOSED_SKILLTREE_PATH_GLOBAL_MESSAGE_CONTENT,
-                    Arg.arg("player", IActiveCharacter.getPlayer().getName())
+                    Arg.arg("player", IActiveCharacter.getName())
                             .with("character", IActiveCharacter.getName())
                             .with("path", getName()));
 

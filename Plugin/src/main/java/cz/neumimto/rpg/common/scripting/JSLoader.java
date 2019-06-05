@@ -20,6 +20,7 @@ package cz.neumimto.rpg.common.scripting;
 
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.ResourceLoader;
@@ -28,7 +29,7 @@ import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.SkillsDefinition;
 import cz.neumimto.rpg.common.utils.io.FileUtils;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.common.utils.DebugLevel;
+import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.sponge.skills.scripting.SkillComponent;
 import net.bytebuddy.dynamic.loading.MultipleParentClassLoader;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;

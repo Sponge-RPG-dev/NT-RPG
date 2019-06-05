@@ -1,6 +1,6 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.api.ActionResult;
+import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.events.effect.EventFactoryService;
 import cz.neumimto.rpg.api.logging.Log;
@@ -15,7 +15,7 @@ import cz.neumimto.rpg.junit.TestGuiceModule;
 import cz.neumimto.rpg.common.configuration.PluginConfig;
 import cz.neumimto.rpg.common.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.common.skills.SkillData;
+import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;

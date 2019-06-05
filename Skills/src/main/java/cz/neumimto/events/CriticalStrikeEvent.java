@@ -3,7 +3,7 @@ package cz.neumimto.events;
 import cz.neumimto.rpg.api.events.Cancellable;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.sponge.events.AbstractCancellableNEvent;
-import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import org.spongepowered.api.event.Event;
 
 /**

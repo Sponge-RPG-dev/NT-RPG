@@ -16,12 +16,7 @@
  *
  */
 
-package cz.neumimto.rpg.common.skills;
-
-import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.skills.SkillCost;
-import cz.neumimto.rpg.api.skills.SkillDependency;
-import cz.neumimto.rpg.api.skills.SkillSettings;
+package cz.neumimto.rpg.api.skills;
 
 import java.util.HashSet;
 import java.util.List;

@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.common.skills.utils;
+package cz.neumimto.rpg.api.skills.utils;
 
 import java.util.ArrayList;
 import java.util.List;

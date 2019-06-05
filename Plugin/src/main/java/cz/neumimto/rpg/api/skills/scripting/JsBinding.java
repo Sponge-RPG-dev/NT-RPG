@@ -1,15 +1,19 @@
-package cz.neumimto.rpg.common.utils.annotations;
+package cz.neumimto.rpg.api.skills.scripting;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Created by NeumimTo on 1.7.2018.
- */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface CatalogId {
+@Target(ElementType.TYPE)
+public @interface JsBinding {
 
+    Type value();
+
+    enum Type {
+        CLASS,
+        OBJECT,
+        CONTAINER
+    }
 }

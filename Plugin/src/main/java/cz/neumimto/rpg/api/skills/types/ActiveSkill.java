@@ -20,12 +20,14 @@ package cz.neumimto.rpg.api.skills.types;
 
 import com.google.inject.Inject;
 import cz.neumimto.rpg.api.inventory.InventoryService;
+import cz.neumimto.rpg.api.localization.LocalizationKeys;
+import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
-import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
 /**
@@ -36,6 +38,9 @@ public abstract class ActiveSkill extends AbstractSkill implements IActiveSkill 
 
     @Inject
     private InventoryService inventoryService;
+
+    @Inject
+    private LocalizationService localizationService;
 
     @Override
     public void init() {
@@ -50,7 +55,8 @@ public abstract class ActiveSkill extends AbstractSkill implements IActiveSkill 
         PlayerSkillContext info = character.getSkillInfo(this);
 
         if (character.isSilenced() && !getSkillTypes().contains(SkillType.CAN_CAST_WHILE_SILENCED)) {
-            character.sendMessage(Localizations.PLAYER_IS_SILENCED);
+            String translate = localizationService.translate(LocalizationKeys.PLAYER_SILENCED);
+            character.sendMessage(translate);
             skillContext.result(SkillResult.CASTER_SILENCED);
             return;
         }

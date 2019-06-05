@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.api.logging;
 
 
-import cz.neumimto.rpg.common.utils.DebugLevel;
+import cz.neumimto.rpg.api.utils.DebugLevel;
 import org.slf4j.Logger;
 
 import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;

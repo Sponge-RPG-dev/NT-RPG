@@ -48,4 +48,6 @@ public class LocalizationKeys {
     public static final String ALREADY_IN_PARTY = "player.join-while-in-party.message";
     public static final String PARTY_MSG_PLAYER_JOINED = "party.player-joined.message";
     public static final String PLAYER_MSG_PARTY_JOINED = "player.party-joined.message";
+
+    public static final String PLAYER_SILENCED = "player.silenced.message";
 }

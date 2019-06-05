@@ -5,7 +5,7 @@ import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.sponge.configuration.AttributeConfiguration;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.CharacterBase;
-import cz.neumimto.rpg.common.skills.SkillData;
+import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.SkillSettings;
 import it.unimi.dsi.fastutil.objects.AbstractObject2FloatMap;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;

@@ -5,7 +5,7 @@ import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.skills.F;
 import cz.neumimto.rpg.api.utils.TriConsumer;
-import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;

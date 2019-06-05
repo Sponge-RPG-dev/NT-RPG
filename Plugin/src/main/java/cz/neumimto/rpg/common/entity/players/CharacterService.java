@@ -17,7 +17,7 @@
  */
 package cz.neumimto.rpg.common.entity.players;
 
-import cz.neumimto.rpg.api.ActionResult;
+import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
@@ -52,8 +52,8 @@ import cz.neumimto.rpg.common.persistance.dao.PlayerDao;
 import cz.neumimto.rpg.common.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.common.persistance.model.CharacterClass;
 import cz.neumimto.rpg.common.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.common.skills.SkillData;
-import cz.neumimto.rpg.common.utils.DebugLevel;
+import cz.neumimto.rpg.api.skills.SkillData;
+import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.common.utils.exceptions.MissingConfigurationException;
 import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.sponge.events.PlayerDataPreloadComplete;

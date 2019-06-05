@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.effects;
 
 import cz.neumimto.rpg.api.effects.EffectBase;
-import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 

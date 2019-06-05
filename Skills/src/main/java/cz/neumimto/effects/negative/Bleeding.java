@@ -5,7 +5,7 @@ import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;

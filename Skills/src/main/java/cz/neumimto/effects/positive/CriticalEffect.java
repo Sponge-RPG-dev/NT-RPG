@@ -4,7 +4,7 @@ import cz.neumimto.model.CriticalEffectModel;
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
-import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 6.7.2017.

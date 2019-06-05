@@ -1,6 +1,6 @@
 package cz.neumimto.model;
 
-import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 16.9.2018.

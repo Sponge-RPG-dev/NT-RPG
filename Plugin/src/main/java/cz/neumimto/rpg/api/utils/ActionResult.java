@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.api;
+package cz.neumimto.rpg.api.utils;
 
 public class ActionResult {
 

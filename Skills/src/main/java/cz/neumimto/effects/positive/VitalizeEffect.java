@@ -10,7 +10,7 @@ import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IReservable;
 import cz.neumimto.rpg.sponge.entities.players.CharacterMana;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 16.9.2018.

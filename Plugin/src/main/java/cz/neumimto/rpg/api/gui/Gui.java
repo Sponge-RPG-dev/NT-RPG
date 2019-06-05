@@ -25,7 +25,7 @@ import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.effects.EffectStatusType;
 import cz.neumimto.rpg.sponge.inventory.CannotUseItemReason;
 import cz.neumimto.rpg.sponge.inventory.runewords.RuneWord;

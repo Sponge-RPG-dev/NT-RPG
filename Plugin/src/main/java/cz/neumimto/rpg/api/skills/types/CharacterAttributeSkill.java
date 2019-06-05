@@ -3,14 +3,13 @@ package cz.neumimto.rpg.api.skills.types;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.common.skills.SkillData;
-import cz.neumimto.rpg.common.skills.utils.SkillLoadingErrors;
+import cz.neumimto.rpg.api.skills.SkillData;
+import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
 import java.util.*;
@@ -41,7 +40,7 @@ public class CharacterAttributeSkill extends AbstractSkill {
         CharacterAttributeSkillData skillData = (CharacterAttributeSkillData) skill.getSkillData();
         for (Wrapper wrapper : skillData.wrappers) {
             if (fc.apply(wrapper.level, totalLevel)) {
-                NtRpgPlugin.GlobalScope.characterService.addTransientAttribute(c, wrapper.getCharacterAttribute(), i * wrapper.value);
+                Rpg.get().getCharacterService().addTransientAttribute(c, wrapper.getCharacterAttribute(), i * wrapper.value);
             }
         }
     }

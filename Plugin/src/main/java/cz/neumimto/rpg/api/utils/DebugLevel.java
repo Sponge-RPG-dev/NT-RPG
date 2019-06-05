@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.common.utils;
+package cz.neumimto.rpg.api.utils;
 
 public enum DebugLevel {
     NONE(0, false, false),

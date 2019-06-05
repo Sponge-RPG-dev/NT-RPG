@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.api.utils.rng;
 
-import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 
 import static java.lang.Math.*;
 

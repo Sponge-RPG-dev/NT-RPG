@@ -12,7 +12,7 @@ import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.sponge.effects.ShapedEffectDecorator;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.utils.rng.XORShiftRnd;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;

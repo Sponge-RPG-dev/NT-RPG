@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.api.entity.players;
 
-import cz.neumimto.rpg.api.ActionResult;
+import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
@@ -9,7 +9,7 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.entity.players.CharacterBase;
 import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.common.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.common.skills.SkillData;
+import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.common.entity.players.UserActionType;
 
 import java.util.Collection;

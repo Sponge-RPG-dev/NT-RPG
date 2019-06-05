@@ -4,7 +4,7 @@ import cz.neumimto.effects.positive.DodgeEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.sponge.events.AbstractCancellableNEvent;
-import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 6.7.2017.

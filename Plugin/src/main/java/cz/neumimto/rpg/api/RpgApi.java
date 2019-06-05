@@ -1,6 +1,8 @@
 package cz.neumimto.rpg.api;
 
 import cz.neumimto.core.localization.Arg;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.events.effect.EventFactoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.LocalizationService;
@@ -47,4 +49,6 @@ public interface RpgApi {
     PluginConfig getPluginConfig();
 
     Executor getAsyncExecutor();
+
+    ICharacterService<IActiveCharacter> getCharacterService();
 }

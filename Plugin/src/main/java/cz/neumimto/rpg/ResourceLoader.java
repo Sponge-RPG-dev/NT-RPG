@@ -34,7 +34,7 @@ import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.effects.EffectService;
-import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.api.effects.model.EffectModelMapper;
 import cz.neumimto.rpg.common.utils.ResourceClassLoader;

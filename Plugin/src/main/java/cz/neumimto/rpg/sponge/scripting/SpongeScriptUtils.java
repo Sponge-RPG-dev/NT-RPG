@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.scripting;
 
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.common.scripting.JsBinding;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import org.spongepowered.api.Sponge;
 
 import java.util.concurrent.TimeUnit;
