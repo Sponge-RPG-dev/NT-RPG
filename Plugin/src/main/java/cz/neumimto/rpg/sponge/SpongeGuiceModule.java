@@ -5,6 +5,7 @@ import cz.neumimto.rpg.*;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.events.effect.EventFactoryService;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.api.inventory.InventoryService;
@@ -29,6 +30,7 @@ import cz.neumimto.rpg.entities.EntityService;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.exp.ExperienceDAO;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
 import cz.neumimto.rpg.sponge.events.SpongeEventFactory;
 import cz.neumimto.rpg.sponge.exp.ExperienceService;
 import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
@@ -36,7 +38,7 @@ import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWDao;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.players.parties.PartyServiceImpl;
+import cz.neumimto.rpg.common.entity.parties.PartyServiceImpl;
 import cz.neumimto.rpg.sponge.permission.SpongePermissionService;
 import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import cz.neumimto.rpg.sponge.commands.CommandService;
@@ -54,7 +56,7 @@ public class SpongeGuiceModule extends AbstractModule {
     protected void configure() {
         bind(SpongeSkillService.class);
         bind(PropertyService.class).to(SpongePropertyService.class);
-        bind(PartyServiceImpl.class);
+        bind(PartyService.class).to(SpongePartyService.class);
         bind(CharacterService.class).to(SpongeCharacterServise.class);
 
 

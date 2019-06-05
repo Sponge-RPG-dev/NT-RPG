@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.sponge.entities.players;
 
+import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.entity.players.CharacterBase;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
@@ -28,6 +29,9 @@ public class SpongeCharacterServise extends CharacterService<ISpongeCharacter> {
     @Inject
     private NtRpgPlugin plugin;
 
+    @Inject
+    private PartyService partyService;
+
     protected Map<UUID, ISpongeCharacter> characters = new HashMap<>();
 
     @Override
@@ -36,7 +40,7 @@ public class SpongeCharacterServise extends CharacterService<ISpongeCharacter> {
     }
 
     @Override
-    protected void addCharacter(UUID uuid, ISpongeCharacter character) {
+    public void addCharacter(UUID uuid, ISpongeCharacter character) {
         characters.put(uuid, character);
     }
 
@@ -55,12 +59,13 @@ public class SpongeCharacterServise extends CharacterService<ISpongeCharacter> {
         SpongeCharacter spongeCharacter = new SpongeCharacter(player, characterBase, PropertyServiceImpl.LAST_ID);
         spongeCharacter.setMana(new CharacterMana(spongeCharacter));
         spongeCharacter.setHealth(new CharacterHealth(spongeCharacter));
+        partyService.createNewParty(spongeCharacter);
         return spongeCharacter;
     }
 
     @Override
     public void registerDummyChar(ISpongeCharacter dummy) {
-        characters.put(dummy.getUUID(), (ISpongeCharacter) dummy);
+        characters.put(dummy.getUUID(), dummy);
     }
 
     @Override

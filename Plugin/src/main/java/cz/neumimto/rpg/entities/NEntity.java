@@ -4,7 +4,7 @@ import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.IMob;
 import cz.neumimto.rpg.api.entity.IReservable;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.players.parties.Party;
+import cz.neumimto.rpg.sponge.entities.players.party.SpongeParty;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityHealth;
 import org.spongepowered.api.Sponge;
@@ -56,7 +56,7 @@ public class NEntity implements IMob {
                 if (character.getPlayer().getUniqueId().equals(uuid2)) {
                     return true;
                 }
-                Party party = character.getParty();
+                SpongeParty party = character.getParty();
                 for (IActiveCharacter iActiveCharacter : party.getPlayers()) {
                     UUID uniqueId = iActiveCharacter.getPlayer().getUniqueId();
                     if (uuid2.equals(uniqueId)) {

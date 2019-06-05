@@ -46,7 +46,7 @@ import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWDao;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.players.parties.PartyServiceImpl;
+import cz.neumimto.rpg.common.entity.parties.PartyServiceImpl;
 import cz.neumimto.rpg.common.scripting.JSLoader;
 import org.mockito.Mockito;
 import org.slf4j.Logger;

@@ -4,7 +4,7 @@ import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.players.parties.Party;
+import cz.neumimto.rpg.sponge.entities.players.party.SpongeParty;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -24,7 +24,7 @@ public class PartyCreateExecutor implements CommandExecutor {
             Gui.sendMessage(character, Localizations.ALREADY_IN_PARTY, Arg.EMPTY);
             return CommandResult.success();
         }
-        Party party = new Party(character);
+        SpongeParty party = new SpongeParty(character);
         character.setParty(party);
         Gui.sendMessage(character, Localizations.PARTY_CREATED, Arg.EMPTY);
         return CommandResult.success();

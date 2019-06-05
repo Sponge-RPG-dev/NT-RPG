@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.api.localization;
 
+import cz.neumimto.core.localization.LocalizableParametrizedText;
+
 public class LocalizationKeys {
     public static final String PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE = "player.skill.learned.global.message";
     public static final String PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE = "player.skill.upgraded.global.message";
@@ -41,4 +43,9 @@ public class LocalizationKeys {
     public static final String CHARACTER_GAINED_POINTS = "player.character.gained.points.message";
 
     public static final String CLASS_WELCOME_MESSAGE = "player.class.welcome-text.message";
+    public static final String PLAYER_INVITED_TO_PARTY_PARTY_MSG = "party.player-invited.message";
+    public static final String PLAYER_INVITED_TO_PARTY = "player.received-party-invite.message";
+    public static final String ALREADY_IN_PARTY = "player.join-while-in-party.message";
+    public static final String PARTY_MSG_PLAYER_JOINED = "party.player-joined.message";
+    public static final String PLAYER_MSG_PARTY_JOINED = "player.party-joined.message";
 }

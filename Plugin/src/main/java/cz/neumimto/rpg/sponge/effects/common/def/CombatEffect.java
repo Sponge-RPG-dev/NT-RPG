@@ -3,6 +3,7 @@ package cz.neumimto.rpg.sponge.effects.common.def;
 import cz.neumimto.rpg.common.effects.CoreEffectTypes;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
 
 import java.lang.ref.WeakReference;
@@ -20,7 +21,7 @@ public class CombatEffect extends SpongeEffectBase {
     private WeakReference<IActiveCharacter> opponent;
     private long initiation;
 
-    public CombatEffect(SpongeCharacter consumer) {
+    public CombatEffect(ISpongeCharacter consumer) {
         super(name, consumer);
         this.character = consumer;
         opponent = new WeakReference<>(null);

@@ -1,25 +1,25 @@
 package cz.neumimto.rpg.sponge.events.party;
 
+import cz.neumimto.rpg.api.entity.players.party.IParty;
 import cz.neumimto.rpg.api.events.party.PartyEvent;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.players.parties.Party;
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.EventContext;
 
 public class AbstractPartyEvent implements PartyEvent, Event {
 
-    private Party party;
+    private IParty party;
     private IActiveCharacter character;
     private boolean cancelled;
 
     @Override
-    public Party getParty() {
+    public IParty getParty() {
         return party;
     }
 
     @Override
-    public void setParty(Party party) {
+    public void setParty(IParty party) {
         this.party = party;
     }
 

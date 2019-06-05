@@ -16,7 +16,7 @@
  *
  */
 
-package cz.neumimto.rpg.players.parties;
+package cz.neumimto.rpg.sponge.entities.players.party;
 
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.party.IParty;
@@ -35,14 +35,14 @@ import java.util.UUID;
 /**
  * Created by NeumimTo on 10.8.2015.
  */
-public class Party implements IParty {
+public class SpongeParty implements IParty {
 
     private Set<ISpongeCharacter> players = new HashSet<>();
     private IActiveCharacter leader;
     private Set<UUID> invites = new HashSet<>();
     private Team team;
 
-    public Party(IActiveCharacter leader) {
+    public SpongeParty(IActiveCharacter leader) {
         this.leader = leader;
         addPlayer(leader);
     }
@@ -84,14 +84,17 @@ public class Party implements IParty {
         return Collections.unmodifiableSet(players);
     }
 
+    @Override
     public Set<UUID> getInvites() {
         return invites;
     }
 
+    @Override
     public boolean isFriendlyfire() {
         return team.allowFriendlyFire();
     }
 
+    @Override
     public void setFriendlyfire(boolean friendlyfire) {
         team.setAllowFriendlyFire(friendlyfire);
     }
@@ -105,7 +108,7 @@ public class Party implements IParty {
             return false;
         }
 
-        Party party = (Party) o;
+        SpongeParty party = (SpongeParty) o;
 
         return leader.equals(party.leader);
 
