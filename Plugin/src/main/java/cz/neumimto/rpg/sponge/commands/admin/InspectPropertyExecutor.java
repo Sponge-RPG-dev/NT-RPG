@@ -2,7 +2,7 @@ package cz.neumimto.rpg.sponge.commands.admin;
 
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.utils.TriConsumer;
-import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.sponge.entities.entities.EntityService;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.properties.SpongePropertyService;

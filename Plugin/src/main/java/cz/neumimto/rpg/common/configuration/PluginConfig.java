@@ -27,8 +27,6 @@ import cz.neumimto.rpg.sponge.configuration.itemDamage.Max;
 import cz.neumimto.rpg.sponge.inventory.ItemLoreSections;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
-import org.spongepowered.api.data.type.DyeColors;
-import org.spongepowered.api.text.format.TextColors;
 
 import java.util.*;
 import java.util.stream.Collectors;

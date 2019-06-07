@@ -8,7 +8,7 @@ import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
-import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.sponge.entities.entities.EntityService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityType;
 import cz.neumimto.rpg.sponge.inventory.SpongeItemService;

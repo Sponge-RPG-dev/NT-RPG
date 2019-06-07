@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.common.exp;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+
+import cz.neumimto.rpg.api.Rpg;
 
 import javax.inject.Singleton;
 import java.io.File;
@@ -51,7 +52,7 @@ public class ExperienceDAO {
     }
 
     private File createDefaults(String s) {
-        File properties = new File(NtRpgPlugin.workingDir, s);
+        File properties = new File(Rpg.get().getWorkingDirectory(), s);
         if (!properties.exists()) {
             try {
                 properties.createNewFile();

@@ -35,12 +35,6 @@ import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.api.entity.IReservable;
-import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
-import cz.neumimto.rpg.sponge.entities.players.party.SpongeParty;
-import cz.neumimto.rpg.sponge.entities.players.CharacterHealth;
-import cz.neumimto.rpg.sponge.entities.players.CharacterHealthStub;
-import cz.neumimto.rpg.sponge.entities.players.CharacterMana;
-import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 
 import java.util.*;
 

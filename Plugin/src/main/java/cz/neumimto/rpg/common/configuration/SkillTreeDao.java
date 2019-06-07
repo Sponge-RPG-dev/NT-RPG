@@ -22,7 +22,6 @@ import com.typesafe.config.*;
 import cz.neumimto.rpg.api.skills.mods.SkillPreprocessorFactories;
 import cz.neumimto.rpg.common.skills.SkillConfigLoader;
 import cz.neumimto.rpg.common.skills.SkillConfigLoaders;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.skills.*;
@@ -33,8 +32,6 @@ import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
-import cz.neumimto.rpg.sponge.gui.SkillTreeInterfaceModel;
-import cz.neumimto.rpg.sponge.utils.Utils;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;

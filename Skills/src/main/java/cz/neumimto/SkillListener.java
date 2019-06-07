@@ -10,13 +10,14 @@ import cz.neumimto.events.CriticalStrikeEvent;
 import cz.neumimto.events.DamageDodgedEvent;
 import cz.neumimto.events.ManaDrainEvent;
 import cz.neumimto.model.*;
+import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.utils.rng.XORShiftRnd;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.sponge.entities.entities.EntityService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityType;
 import cz.neumimto.rpg.api.entity.IReservable;
@@ -115,8 +116,8 @@ public class SkillListener {
 	public void onEntityDamage(DamageIEntityEarlyEvent event, @First EntityDamageSource damageSource) {
 		IEntity source;
 		if (damageSource.getSource() instanceof Projectile)
-			source = entityService.get((Entity) ((Projectile) damageSource.getSource()).getShooter());
-		else source = entityService.get(damageSource.getSource());
+			source = entityService.get(((Projectile) damageSource.getSource()).getShooter());
+		else source = entityService.get(damageSource.getSource().getUniqueId());
 
 		//invis
 		if (event.getTarget().hasEffect(Invisibility.name)) {

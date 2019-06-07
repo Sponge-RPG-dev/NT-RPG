@@ -17,8 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
-
 /**
  * Created by NeumimTo on 16.8.17.
  */

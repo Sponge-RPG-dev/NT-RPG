@@ -34,7 +34,7 @@ import cz.neumimto.rpg.common.impl.TestItemService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.effects.TestEffectService;
-import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.sponge.entities.entities.EntityService;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.exp.ExperienceDAO;
 import cz.neumimto.rpg.sponge.exp.ExperienceService;

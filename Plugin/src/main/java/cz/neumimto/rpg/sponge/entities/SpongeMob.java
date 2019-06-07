@@ -1,17 +1,16 @@
-package cz.neumimto.rpg.entities;
+package cz.neumimto.rpg.sponge.entities;
 
+import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
+import cz.neumimto.rpg.api.entity.IEntityResource;
 import cz.neumimto.rpg.api.entity.IMob;
-import cz.neumimto.rpg.api.entity.IReservable;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.party.IParty;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongeParty;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.sponge.entities.SpongeEntityHealth;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
-import org.spongepowered.api.world.World;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,15 +20,17 @@ import java.util.UUID;
 /**
  * Created by NeumimTo on 19.12.2015.
  */
-public class NEntity implements IMob {
+public class SpongeMob implements ISpongeEntity<Living>, IMob {
 
     private double experiences;
-    //	private WeakReference<Living> entity;
-    private Map<String, IEffectContainer> effectSet = new HashMap<>();
+    private Living entity;
+    private Map<String, IEffectContainer<Object, IEffect<Object>>> effectSet = new HashMap<>();
     private Map<Integer, Float> properties = new HashMap<>();
-    private IReservable entityHealth;
-    private UUID uuid;
-    private UUID extent;
+    private IEntityResource entityHealth;
+
+    public SpongeMob(Living entity) {
+        this.entity = entity;
+    }
 
     @Override
     public double getExperiences() {
@@ -42,23 +43,25 @@ public class NEntity implements IMob {
     }
 
     @Override
-    public SpongeEntityHealth getHealth() {
+    public IEntityResource getHealth() {
         return entityHealth;
     }
 
+    //todo remove casts
     @Override
-    public boolean isFriendlyTo(IActiveCharacter character) {
+    public boolean isFriendlyTo(IActiveCharacter characterr) {
         Optional<Optional<UUID>> uuid = getEntity().get(Keys.TAMED_OWNER);
         if (uuid.isPresent()) {
+            SpongeCharacter character = (SpongeCharacter) characterr;
             Optional<UUID> uuid1 = uuid.get();
             if (uuid1.isPresent()) {
                 UUID uuid2 = uuid1.get();
                 if (character.getPlayer().getUniqueId().equals(uuid2)) {
                     return true;
                 }
-                SpongeParty party = character.getParty();
+                IParty party = character.getParty();
                 for (IActiveCharacter iActiveCharacter : party.getPlayers()) {
-                    UUID uniqueId = iActiveCharacter.getPlayer().getUniqueId();
+                    UUID uniqueId = ((SpongeCharacter)iActiveCharacter).getPlayer().getUniqueId();
                     if (uuid2.equals(uniqueId)) {
                         return true;
                     }
@@ -69,34 +72,27 @@ public class NEntity implements IMob {
     }
 
     @Override
-    public void attach(UUID objectId, UUID extend, IReservable health) {
-        this.uuid = objectId;
-        this.extent = extend;
-        this.entityHealth = health;
-    }
-
-    @Override
     public void detach() {
         this.entityHealth = null;
-        this.uuid = null;
-        this.extent = null;
+        this.entity = null;
     }
 
+    public Living getEntity() {
+        return entity;
+    }
 
     @Override
-    public Living getEntity() {
-        World world = Sponge.getServer().getWorld(extent).get();
-        Entity entity = world.getEntity(uuid).get();
-        return (Living) entity;
+    public UUID getUUID() {
+        return entity.getUniqueId();
     }
 
     @Override
     public boolean isDetached() {
-        return uuid == null || getEntity() == null;
+        return entity == null;
     }
 
     @Override
-    public Map<String, IEffectContainer> getEffectMap() {
+    public Map<String, IEffectContainer<Object, IEffect<Object>>> getEffectMap() {
         return effectSet;
     }
 

@@ -1,23 +1,21 @@
 package cz.neumimto.rpg.common.persistance;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import cz.neumimto.core.FindDbSchemaMigrationsEvent;
 import cz.neumimto.core.FindPersistenceContextEvent;
 import cz.neumimto.core.migrations.DbMigrationService;
+import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.common.entity.players.CharacterBase;
 import cz.neumimto.rpg.common.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.common.persistance.model.CharacterClass;
 import cz.neumimto.rpg.common.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.common.entity.players.CharacterBase;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.event.Listener;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by NeumimTo on 1.12.2018.
@@ -25,17 +23,16 @@ import java.util.Optional;
 @Singleton
 public class PersistenceHandler {
 
-    private NtRpgPlugin ntRpgPlugin;
+    @Inject
+    private Injector injector;
 
-    public PersistenceHandler(NtRpgPlugin ntRpgPlugin) {
-
-        this.ntRpgPlugin = ntRpgPlugin;
-    }
+    @Inject
+    private AssetService assetService;
 
     @Listener
     public void onFindDbSchemaMigrationsEvent(FindDbSchemaMigrationsEvent event) throws IOException {
         if (event.validForContext("nt-rpg")) {
-            DbMigrationService dms = NtRpgPlugin.GlobalScope.injector.getInstance(DbMigrationService.class);
+            DbMigrationService dms =  injector.getInstance(DbMigrationService.class);
             List<String> migrations = Arrays.asList(
                     "sql/%s/040918-init-db.sql",
                     "sql/%s/060119-update-2.0.0.sql"
@@ -43,10 +40,11 @@ public class PersistenceHandler {
 
             for (String migration : migrations) {
                 migration = migration.replaceAll("%s", dms.getDatabaseProductName().toLowerCase());
-                Optional<Asset> sql = Sponge.getAssetManager().getAsset(ntRpgPlugin, migration);
-                if (sql.isPresent()) {
-                    dms.addMigration(sql.get().readString(Charset.forName("UTF-8")));
-                } else {
+
+                try {
+                    String sql = assetService.getAssetAsString(migration);
+                    dms.addMigration(sql);
+                } catch (Exception e) {
                     System.out.println("You are using a database which is not officialy supported, nor tested. " +
                             "While the plugin will most likely keep working all DDL changes have to be done manually, If you want to have a simpler life  please consider switching to either mysql or postgres. " +
                             "Or in the best case submit a pr containing Database schema migrations.");

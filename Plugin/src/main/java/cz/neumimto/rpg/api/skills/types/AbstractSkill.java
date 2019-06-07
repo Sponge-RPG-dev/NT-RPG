@@ -39,7 +39,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 
 /**
@@ -101,14 +100,14 @@ public abstract class AbstractSkill implements ISkill {
 
     @Override
     public void skillLearn(IActiveCharacter IActiveCharacter) {
-        if (pluginConfig.PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE) {
+        if (Rpg.get().getPluginConfig().PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE) {
             Rpg.get().broadcastLocalizableMessage(LocalizationKeys.PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE, IActiveCharacter.getName(), getLocalizableName());
         }
     }
 
     @Override
     public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
-        if (pluginConfig.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE) {
+        if (Rpg.get().getPluginConfig().PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE) {
             Rpg.get().broadcastLocalizableMessage(LocalizationKeys.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE,
                     Arg.arg("player", IActiveCharacter.getName())
                             .with("skill", getName())
@@ -118,7 +117,7 @@ public abstract class AbstractSkill implements ISkill {
 
     @Override
     public void skillRefund(IActiveCharacter IActiveCharacter) {
-        if (pluginConfig.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE) {
+        if (Rpg.get().getPluginConfig().PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE) {
             Rpg.get().broadcastLocalizableMessage(LocalizationKeys.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE,
                     Arg.arg("%player%", IActiveCharacter.getName())
                             .with("skill", getName()));
@@ -132,7 +131,7 @@ public abstract class AbstractSkill implements ISkill {
 
     @Override
     public void onCharacterInit(IActiveCharacter c, int level) {
-        if (pluginConfig.SKILLGAIN_MESSAGES_AFTER_LOGIN) {
+        if (Rpg.get().getPluginConfig().SKILLGAIN_MESSAGES_AFTER_LOGIN) {
             String msg = localizationService.translate(LocalizationKeys.PLAYER_GAINED_SKILL, Arg.arg("skill", getName()));
             c.sendMessage(msg);
         }

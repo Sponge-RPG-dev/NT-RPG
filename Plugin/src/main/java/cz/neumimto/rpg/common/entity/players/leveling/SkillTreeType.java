@@ -5,7 +5,7 @@ import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.messaging.MessageLevel;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;

@@ -12,7 +12,6 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Supplier;
 
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 import static cz.neumimto.rpg.api.logging.Log.info;
 
 public abstract class PropertyServiceImpl implements PropertyService {

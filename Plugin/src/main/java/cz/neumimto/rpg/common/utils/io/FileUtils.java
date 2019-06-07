@@ -18,7 +18,6 @@
 
 package cz.neumimto.rpg.common.utils.io;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import ninja.leaping.configurate.commented.SimpleCommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;

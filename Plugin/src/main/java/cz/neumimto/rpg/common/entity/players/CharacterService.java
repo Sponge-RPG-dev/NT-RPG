@@ -55,7 +55,7 @@ import cz.neumimto.rpg.common.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.common.utils.exceptions.MissingConfigurationException;
-import cz.neumimto.rpg.entities.EntityService;
+
 import cz.neumimto.rpg.sponge.events.PlayerDataPreloadComplete;
 
 import javax.inject.Inject;

@@ -19,7 +19,7 @@
 package cz.neumimto.rpg.sponge.listeners;
 
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.entities.EntityService;
+import cz.neumimto.rpg.sponge.entities.entities.EntityService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityType;
 import cz.neumimto.rpg.sponge.exp.ExperienceService;

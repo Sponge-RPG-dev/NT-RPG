@@ -39,7 +39,6 @@ import cz.neumimto.rpg.common.skills.PlayerSkillHandlers;
 import cz.neumimto.rpg.common.skills.types.ItemAccessSkill;
 import cz.neumimto.rpg.api.entity.IReservable;
 import cz.neumimto.rpg.api.entity.players.party.IParty;
-import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
 import org.jline.utils.Log;
 
 import java.lang.ref.WeakReference;

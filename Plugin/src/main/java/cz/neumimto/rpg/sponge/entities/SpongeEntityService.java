@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.entities;
+package cz.neumimto.rpg.sponge.entities;
 
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.Rpg;
@@ -30,9 +30,9 @@ import static cz.neumimto.rpg.api.logging.Log.warn;
  * Created by NeumimTo on 19.12.2015.
  */
 @Singleton
-public class EntityServiceImpl implements EntityService {
+public class SpongeEntityService implements EntityService<Living> {
 
-    private HashMap<UUID, IMob> entityHashMap = new HashMap<>();
+    private HashMap<UUID, SpongeMob> entityHashMap = new HashMap<>();
 
     @Inject
     private MobSettingsDao dao;
@@ -46,47 +46,44 @@ public class EntityServiceImpl implements EntityService {
     @Inject
     private EffectService effectService;
 
+
     @Override
-    public IEntity get(UUID id) {
+    public IEntity get(Living id) {
         if (id.getType() == EntityTypes.PLAYER) {
             return characterService.getCharacter(id.getUniqueId());
         }
         IMob iEntity = entityHashMap.get(id.getUniqueId());
         if (iEntity == null) {
-            iEntity = new NEntity((Living) id);
-            iEntity.setExperiences(-1);
-            entityHashMap.put(id.getUniqueId(), iEntity);
-            MobsConfig dimmension = dao.getCache().getDimmension(id.getLocation().getExtent().getName());
-            if (!pluginConfig.OVERRIDE_MOBS && dimmension != null) {
-                Double aDouble = dimmension.getHealth().get(id.getType());
-                if (aDouble == null) {
-                    warn("No max health configured for " + id.getType().getId() + " in world " + id.getLocation().getExtent().getName());
-                } else {
-                    id.offer(Keys.MAX_HEALTH, aDouble);
-                    id.offer(Keys.HEALTH, aDouble);
-                }
+            iEntity = createEntity(id);
+        }
+        return iEntity;
+    }
+
+    private IMob createEntity(Living entity) {
+        SpongeMob iEntity = new SpongeMob(entity);
+        iEntity.setExperiences(-1);
+        entityHashMap.put(entity.getUniqueId(), iEntity);
+        MobsConfig dimmension = dao.getCache().getDimmension(entity.getLocation().getExtent().getName());
+        if (!pluginConfig.OVERRIDE_MOBS && dimmension != null) {
+            Double aDouble = dimmension.getHealth().get(entity.getType().getId());
+            if (aDouble == null) {
+                warn("No max health configured for " + entity.getType().getId() + " in world " + entity.getLocation().getExtent().getName());
+            } else {
+                entity.offer(Keys.MAX_HEALTH, aDouble);
+                entity.offer(Keys.HEALTH, aDouble);
             }
         }
-
         return iEntity;
-
     }
 
     @Override
-    public void remove(UUID e) {
-        if (entityHashMap.containsKey(e)) {
-            IMob iMob = entityHashMap.get(e);
+    public void remove(Living e) {
+        UUID uuid = e.getUniqueId();
+        if (entityHashMap.containsKey(uuid)) {
+            IMob iMob = entityHashMap.get(uuid);
             effectService.removeAllEffects(iMob);
-            entityHashMap.remove(e);
+            entityHashMap.remove(uuid);
             iMob.detach();
-        }
-    }
-
-    @Override
-    public void remove(Collection<Entity> l) {
-        for (Entity a : l) {
-            UUID uniqueId = a.getUniqueId();
-            remove(uniqueId);
         }
     }
 
@@ -195,7 +192,7 @@ public class EntityServiceImpl implements EntityService {
      *
      * @param entity
      */
-    public void updateWalkSpeed(IEffectConsumer entity) {
+    public void updateWalkSpeed(IEntity entity) {
         double speed = getEntityProperty(entity, SpongeDefaultProperties.walk_speed);
         entity.getEntity().offer(Keys.WALKING_SPEED, speed);
         if (pluginConfig.DEBUG.isBalance()) {

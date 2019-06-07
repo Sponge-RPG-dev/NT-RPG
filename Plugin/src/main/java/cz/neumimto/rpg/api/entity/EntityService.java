@@ -1,18 +1,13 @@
 package cz.neumimto.rpg.api.entity;
 
 import cz.neumimto.rpg.api.IRpgElement;
-import org.spongepowered.api.entity.Entity;
 
-import java.util.Collection;
-import java.util.UUID;
 
-public interface EntityService {
+public interface EntityService<T> {
 
-    IEntity get(UUID id);
+    IEntity get(T entity);
 
-    void remove(UUID e);
-
-    void remove(Collection<Entity> l);
+    void remove(T entity);
 
     double getMobDamage(String dimension, String type);
 

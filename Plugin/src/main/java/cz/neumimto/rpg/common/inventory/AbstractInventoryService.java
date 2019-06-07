@@ -2,8 +2,6 @@ package cz.neumimto.rpg.common.inventory;
 
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
-import cz.neumimto.rpg.sponge.inventory.ManagedInventory;
-import cz.neumimto.rpg.sponge.inventory.SlotEffectSource;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
 import java.util.HashMap;

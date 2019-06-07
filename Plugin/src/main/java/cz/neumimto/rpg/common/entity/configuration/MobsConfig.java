@@ -2,7 +2,6 @@ package cz.neumimto.rpg.common.entity.configuration;
 
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
-import org.spongepowered.api.entity.EntityType;
 
 import java.util.HashMap;
 import java.util.Map;

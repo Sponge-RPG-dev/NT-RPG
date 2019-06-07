@@ -19,7 +19,6 @@
 package cz.neumimto.rpg.common.effects.core;
 
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
@@ -29,7 +28,6 @@ import cz.neumimto.rpg.api.effects.EffectStatusType;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.events.character.CharacterManaRegainEvent;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 
 /**
  * Created by NeumimTo on 9.8.2015.
