@@ -16,13 +16,12 @@
  *
  */
 
-package cz.neumimto.rpg.common.entity.players;
+package cz.neumimto.rpg.api.persistance.model;
 
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.common.persistance.converters.EquipedSlot2Json;
 import cz.neumimto.rpg.common.persistance.converters.UUID2String;
-import cz.neumimto.rpg.common.persistance.model.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;

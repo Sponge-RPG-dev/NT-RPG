@@ -3,7 +3,7 @@ package cz.neumimto.rpg.sponge.commands.admin;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
-import cz.neumimto.rpg.common.entity.players.CharacterBase;
+import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.PreloadCharacter;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;

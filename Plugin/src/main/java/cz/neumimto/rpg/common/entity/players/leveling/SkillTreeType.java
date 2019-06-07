@@ -13,7 +13,7 @@ import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.events.character.CharacterGainedLevelEvent;
 import cz.neumimto.rpg.common.persistance.dao.DirectAccessDao;
-import cz.neumimto.rpg.common.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;

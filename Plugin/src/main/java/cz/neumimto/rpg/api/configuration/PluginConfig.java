@@ -16,7 +16,7 @@
  *
  */
 
-package cz.neumimto.rpg.common.configuration;
+package cz.neumimto.rpg.api.configuration;
 
 import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
 import cz.neumimto.rpg.api.utils.DebugLevel;

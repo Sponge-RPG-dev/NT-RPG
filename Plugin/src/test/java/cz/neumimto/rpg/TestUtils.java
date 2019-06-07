@@ -1,6 +1,6 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.common.entity.players.CharacterBase;
+import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;

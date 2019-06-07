@@ -1,6 +1,5 @@
-package cz.neumimto.rpg.common.persistance.model;
+package cz.neumimto.rpg.api.persistance.model;
 
-import cz.neumimto.rpg.common.entity.players.CharacterBase;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;

@@ -7,10 +7,10 @@ import cz.neumimto.core.FindDbSchemaMigrationsEvent;
 import cz.neumimto.core.FindPersistenceContextEvent;
 import cz.neumimto.core.migrations.DbMigrationService;
 import cz.neumimto.rpg.common.assets.AssetService;
-import cz.neumimto.rpg.common.entity.players.CharacterBase;
-import cz.neumimto.rpg.common.persistance.model.BaseCharacterAttribute;
-import cz.neumimto.rpg.common.persistance.model.CharacterClass;
-import cz.neumimto.rpg.common.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.api.persistance.model.BaseCharacterAttribute;
+import cz.neumimto.rpg.api.persistance.model.CharacterClass;
+import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import org.spongepowered.api.event.Listener;
 
 import java.io.IOException;

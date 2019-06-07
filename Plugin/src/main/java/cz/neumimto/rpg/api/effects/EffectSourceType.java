@@ -1,6 +1,4 @@
-package cz.neumimto.rpg.common.effects;
-
-import cz.neumimto.rpg.api.effects.IEffectSource;
+package cz.neumimto.rpg.api.effects;
 
 /**
  * Created by ja on 1.4.2017.

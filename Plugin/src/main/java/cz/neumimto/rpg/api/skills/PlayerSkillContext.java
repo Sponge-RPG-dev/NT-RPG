@@ -21,7 +21,7 @@ package cz.neumimto.rpg.api.skills;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
+import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 

@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.common.entity.players.attributes;
+package cz.neumimto.rpg.api.entity.players.attributes;
 
 import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
 import cz.neumimto.rpg.sponge.configuration.AttributeConfiguration;

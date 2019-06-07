@@ -31,7 +31,7 @@ import cz.neumimto.rpg.api.skills.types.StartingPoint;
 import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
-import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
+import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;

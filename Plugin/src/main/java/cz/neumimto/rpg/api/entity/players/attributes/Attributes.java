@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.common.entity.players.attributes;
+package cz.neumimto.rpg.api.entity.players.attributes;
 
 import cz.neumimto.rpg.sponge.configuration.AttributeConfiguration;
 import ninja.leaping.configurate.objectmapping.Setting;

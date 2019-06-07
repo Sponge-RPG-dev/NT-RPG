@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.api.effects;
 
-import cz.neumimto.rpg.common.effects.EffectSourceType;
-
 import java.util.Set;
 import java.util.function.Consumer;
 

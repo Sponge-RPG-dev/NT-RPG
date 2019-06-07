@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.events.character;
 
 import cz.neumimto.rpg.api.events.character.CharacterAttributeChange;
-import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
+import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 
 /**
  * Created by NeumimTo on 23.1.2016.

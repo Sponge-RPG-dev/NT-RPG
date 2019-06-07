@@ -20,7 +20,7 @@ package cz.neumimto.rpg.api.skills;
 
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
-import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
+import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 
 import java.util.Collections;
 import java.util.HashMap;

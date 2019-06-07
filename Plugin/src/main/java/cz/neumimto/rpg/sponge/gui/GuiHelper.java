@@ -16,7 +16,7 @@ import cz.neumimto.rpg.sponge.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.sponge.inventory.data.SkillTreeInventoryViewControllsData;
 import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
-import cz.neumimto.rpg.common.persistance.model.CharacterClass;
+import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.sponge.commands.InfoCommand;

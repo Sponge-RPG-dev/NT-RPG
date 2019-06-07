@@ -7,7 +7,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.Route;
-import cz.neumimto.rpg.common.configuration.PluginConfig;
+import cz.neumimto.rpg.api.configuration.PluginConfig;
 
 import java.util.List;
 

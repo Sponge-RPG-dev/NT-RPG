@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.common.entity.players;
 
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 
 import java.util.List;
 
