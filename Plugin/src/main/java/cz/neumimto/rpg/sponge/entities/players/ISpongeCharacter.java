@@ -6,7 +6,7 @@ import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 
-public interface ISpongeCharacter extends IActiveCharacter, ISpongeEntity<Player> {
+public interface ISpongeCharacter extends IActiveCharacter<Player>, ISpongeEntity<Player> {
 
     @Override
     default void sendMessage(String message) {

@@ -19,6 +19,11 @@ public class SpongeCharacter extends ActiveCharacter implements ISpongeCharacter
     }
 
     @Override
+    public void sendMessage(int channel, String message) {
+
+    }
+
+    @Override
     public void sendMessage(MessageChannel channel, String message) {
         Player player = getPlayer();
         switch (channel) {
@@ -29,5 +34,10 @@ public class SpongeCharacter extends ActiveCharacter implements ISpongeCharacter
     @Override
     public boolean isDetached() {
         return getPlayer() == null;
+    }
+
+    @Override
+    public void sendMessage(String message) {
+
     }
 }

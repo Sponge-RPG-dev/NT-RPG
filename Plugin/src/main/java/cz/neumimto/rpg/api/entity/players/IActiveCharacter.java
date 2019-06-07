@@ -42,7 +42,7 @@ import java.util.*;
 /**
  * Created by NeumimTo on 23.7.2015.
  */
-public interface IActiveCharacter extends IEntity {
+public interface IActiveCharacter<T> extends IEntity<T> {
 
     Map<String, PlayerClassData> getClasses();
 
