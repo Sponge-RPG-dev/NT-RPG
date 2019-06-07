@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.sponge.inventory;
+package cz.neumimto.rpg.common.inventory;
 
 import java.util.HashMap;
 

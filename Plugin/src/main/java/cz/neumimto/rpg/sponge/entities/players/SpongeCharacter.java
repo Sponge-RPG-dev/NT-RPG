@@ -25,7 +25,7 @@ public class SpongeCharacter extends ActiveCharacter implements ISpongeCharacter
 
     @Override
     public void sendMessage(MessageChannel channel, String message) {
-        Player player = getPlayer();
+        Player player = getEntity();
         switch (channel) {
 
         }

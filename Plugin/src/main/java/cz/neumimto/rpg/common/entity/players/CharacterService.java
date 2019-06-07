@@ -17,6 +17,7 @@
  */
 package cz.neumimto.rpg.common.entity.players;
 
+import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.Rpg;
@@ -44,7 +45,7 @@ import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.common.configuration.PluginConfig;
 import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.common.entity.CommonProperties;
+import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.common.entity.players.leveling.SkillTreeType;
 import cz.neumimto.rpg.common.persistance.dao.CharacterClassDao;
@@ -1271,6 +1272,18 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
 
     private void removeTransientAttribute(T character, AttributeConfig key, Integer value) {
         character.getTransientAttributes().merge(key.getId(), value, (b, a) -> a - b);
+    }
+
+    @Override
+    public void changePropertyValue(T character, int propertyId, float value) {
+        character.addProperty(propertyId, value);
+        if (propertyId == CommonProperties.max_health) {
+            updateMaxHealth(character);
+        } else if (propertyId == CommonProperties.max_mana) {
+            updateMaxMana(character);
+        } else if (propertyService.updatingRequiresDamageRecalc(propertyId)) {
+            damageService.recalculateCharacterWeaponDamage(character);
+        }
     }
 }
 

@@ -66,7 +66,6 @@ public class Utils {
             (Predicate<BlockRayHit<World>>)
                     a -> !isTransparent(a.getExtent()
                             .getBlockType(a.getBlockX(), a.getBlockY(), a.getBlockZ()));
-    public static Pattern REGEXP_NUMBER = Pattern.compile("[-+]?\\d+([\\.,]\\d+)?");
     public static Pattern REGEXP_CLASS_MEMBER = Pattern.compile("^[a-z_]\\w*$");
     private static GlobalScope globalScope = NtRpgPlugin.GlobalScope;
 
@@ -74,28 +73,6 @@ public class Utils {
         transparentBlocks.addAll(Arrays.asList(BlockTypes.AIR,
                 BlockTypes.GRASS, BlockTypes.TALLGRASS, BlockTypes.GRASS, BlockTypes.BED,
                 BlockTypes.WHEAT, BlockTypes.FLOWER_POT, BlockTypes.FIRE, BlockTypes.WATER, BlockTypes.LAVA, BlockTypes.FLOWING_WATER));
-    }
-
-    public static double getPercentage(double n, double total) {
-        return (n / total) * 100;
-    }
-
-    public static boolean isMoreThanPercentage(double a, double b, double percentage) {
-        return ((a / b) * 100 - 100) >= percentage;
-    }
-
-    public static double round(double value, int precision) {
-        int scale = (int) Math.pow(10, precision);
-        return (double) Math.round(value * scale) / scale;
-    }
-
-    public static double round(float value, int precision) {
-        int scale = (int) Math.pow(10, precision);
-        return Math.round(value * scale) / scale;
-    }
-
-    public static boolean isNumeric(String str) {
-        return str.matches("-?\\d+(\\.\\d+)?");
     }
 
     public static Set<Entity> getNearbyEntities(Location l, int radius) {
@@ -252,14 +229,6 @@ public class Utils {
 
     public static String capitalizeFirst(String str) {
         return (Character.toUpperCase(str.charAt(0)) + str.substring(1)).replaceAll("_", " ");
-    }
-
-    public static String extractNumber(String string) {
-        Matcher matcher = REGEXP_NUMBER.matcher(string);
-        if (matcher.find()) {
-            return matcher.group();
-        }
-        return null;
     }
 
     public static String extractClassMember(String string) {

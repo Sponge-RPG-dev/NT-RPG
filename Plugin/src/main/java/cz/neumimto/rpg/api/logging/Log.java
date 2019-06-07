@@ -1,10 +1,10 @@
 package cz.neumimto.rpg.api.logging;
 
 
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 import org.slf4j.Logger;
 
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 19.8.2018.
@@ -18,7 +18,7 @@ public class Log {
     }
 
     public static void info(String message, DebugLevel debugLevel) {
-        if (debugLevel.getLevel() <= pluginConfig.DEBUG.getLevel()) {
+        if (debugLevel.getLevel() <= Rpg.get().getPluginConfig().DEBUG.getLevel()) {
             logger.info(message);
         }
     }

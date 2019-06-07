@@ -35,7 +35,7 @@ import cz.neumimto.rpg.sponge.events.SpongeEventFactory;
 import cz.neumimto.rpg.sponge.exp.ExperienceService;
 import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
-import cz.neumimto.rpg.sponge.inventory.runewords.RWDao;
+import RWDao;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.sponge.permission.SpongePermissionService;

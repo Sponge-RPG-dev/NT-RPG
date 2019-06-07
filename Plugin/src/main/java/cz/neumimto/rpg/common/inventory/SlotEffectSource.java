@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.sponge.inventory;
+package cz.neumimto.rpg.common.inventory;
 
 import cz.neumimto.rpg.api.effects.IEffectSource;
 import cz.neumimto.rpg.sponge.inventory.items.subtypes.ItemSubtype;

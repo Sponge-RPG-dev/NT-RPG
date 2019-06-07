@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.sponge.inventory.runewords;
+package cz.neumimto.rpg.common.inventory.crafting.runewords;
 
 import java.util.List;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.common.entity;
+package cz.neumimto.rpg.api.entity;
 
 import cz.neumimto.rpg.api.properties.Property;
 import cz.neumimto.rpg.api.properties.PropertyContainer;

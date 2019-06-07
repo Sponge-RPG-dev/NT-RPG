@@ -30,6 +30,9 @@ import org.spongepowered.api.item.ItemTypes;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**
@@ -43,6 +46,9 @@ public class SpongeSkillService extends SkillServiceimpl {
     @Inject
     private Game game;
 
+    Map<Character, SkillTreeInterfaceModel> guiModelByCharacter = new HashMap<>();
+
+    Map<Short, SkillTreeInterfaceModel> guiModelById = new HashMap<>();
 
     @Override
     @Reload(on = ReloadService.PLUGIN_CONFIG)
@@ -63,4 +69,14 @@ public class SpongeSkillService extends SkillServiceimpl {
             i++;
         }
     }
+
+    public SkillTreeInterfaceModel getGuiModelByCharacter(Character character) {
+        return guiModelByCharacter.get(character);
+    }
+
+
+    public SkillTreeInterfaceModel getGuiModelById(Short k) {
+        return guiModelById.get(k);
+    }
+
 }

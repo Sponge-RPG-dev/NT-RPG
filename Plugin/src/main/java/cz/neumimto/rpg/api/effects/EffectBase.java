@@ -18,9 +18,7 @@
 
 package cz.neumimto.rpg.api.effects;
 
-import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -61,10 +59,6 @@ public abstract class EffectBase<Value> implements IEffect<Value> {
 
     public EffectBase() {
         timeCreated = System.currentTimeMillis();
-    }
-
-    public static GlobalScope getGlobalScope() {
-        return NtRpgPlugin.GlobalScope;
     }
 
     @Override

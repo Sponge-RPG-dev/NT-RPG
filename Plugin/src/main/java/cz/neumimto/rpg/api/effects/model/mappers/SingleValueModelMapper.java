@@ -2,7 +2,7 @@ package cz.neumimto.rpg.api.effects.model.mappers;
 
 import com.google.gson.Gson;
 import cz.neumimto.rpg.api.effects.model.EffectModelMapper;
-import cz.neumimto.rpg.sponge.utils.Utils;
+import cz.neumimto.rpg.api.utils.MathUtils;
 
 import java.util.Map;
 
@@ -39,7 +39,7 @@ public abstract class SingleValueModelMapper extends EffectModelMapper {
 
         @Override
         public Object parseStr(String s) {
-            return Integer.parseInt(Utils.extractNumber(s));
+            return Integer.parseInt(MathUtils.extractNumber(s));
         }
     }
 
@@ -51,7 +51,7 @@ public abstract class SingleValueModelMapper extends EffectModelMapper {
 
         @Override
         public Object parseStr(String s) {
-            return java.lang.Double.parseDouble(Utils.extractNumber(s));
+            return java.lang.Double.parseDouble(MathUtils.extractNumber(s));
         }
     }
 
@@ -63,7 +63,7 @@ public abstract class SingleValueModelMapper extends EffectModelMapper {
 
         @Override
         public Object parseStr(String s) {
-            return java.lang.Float.parseFloat(Utils.extractNumber(s));
+            return java.lang.Float.parseFloat(MathUtils.extractNumber(s));
         }
     }
 
@@ -75,7 +75,7 @@ public abstract class SingleValueModelMapper extends EffectModelMapper {
 
         @Override
         public Object parseStr(String s) {
-            return Integer.parseUnsignedInt(Utils.extractNumber(s));
+            return Integer.parseUnsignedInt(MathUtils.extractNumber(s));
         }
     }
 

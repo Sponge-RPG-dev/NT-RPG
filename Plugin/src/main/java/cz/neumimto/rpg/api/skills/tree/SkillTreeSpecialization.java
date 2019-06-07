@@ -31,7 +31,7 @@ public class SkillTreeSpecialization extends PassiveSkill {
 
     @Override
     public void skillLearn(IActiveCharacter IActiveCharacter) {
-        if (pluginConfig.PLAYER_CHOOSED_SKILLTREE_SPECIALIZATION_GLOBAL_MESSAGE) {
+        if (Rpg.get().getPluginConfig().PLAYER_CHOOSED_SKILLTREE_SPECIALIZATION_GLOBAL_MESSAGE) {
             Rpg.get().broadcastLocalizableMessage(LocalizationKeys.PLAYER_CHOOSED_SKILLTREE_PATH_GLOBAL_MESSAGE_CONTENT,
                     Arg.arg("player", IActiveCharacter.getName())
                             .with("character", IActiveCharacter.getName())

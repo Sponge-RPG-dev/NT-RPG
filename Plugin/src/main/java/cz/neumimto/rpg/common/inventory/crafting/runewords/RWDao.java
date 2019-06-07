@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.sponge.inventory.runewords;
+package cz.neumimto.rpg.common.inventory.crafting.runewords;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;

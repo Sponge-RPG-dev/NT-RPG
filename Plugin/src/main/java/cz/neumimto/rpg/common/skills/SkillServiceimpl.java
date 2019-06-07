@@ -7,13 +7,14 @@ import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.mods.SkillExecutorCallback;
+import cz.neumimto.rpg.api.skills.preprocessors.SkillPreprocessors;
 import cz.neumimto.rpg.api.skills.scripting.ActiveScriptSkill;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.PassiveScriptSkill;
 import cz.neumimto.rpg.api.skills.types.ScriptSkill;
-import cz.neumimto.rpg.api.skills.types.TargetedScriptSkill;
+import cz.neumimto.rpg.sponge.skills.types.TargetedScriptSkill;
 import cz.neumimto.rpg.api.utils.annotations.CatalogId;
 import cz.neumimto.rpg.common.configuration.SkillTreeDao;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
@@ -52,10 +53,6 @@ public abstract class SkillServiceimpl implements ISkillService {
     protected Map<String, ISkill> skills = new HashMap<>();
 
     protected Map<String, SkillTree> skillTrees = new ConcurrentHashMap<>();
-
-    protected Map<Character, SkillTreeInterfaceModel> guiModelByCharacter = new HashMap<>();
-
-    protected Map<Short, SkillTreeInterfaceModel> guiModelById = new HashMap<>();
 
     protected Map<String, ISkill> skillByNames = new HashMap<>();
 
@@ -165,15 +162,6 @@ public abstract class SkillServiceimpl implements ISkillService {
         }
     }
 
-    @Override
-    public SkillTreeInterfaceModel getGuiModelByCharacter(Character character) {
-        return guiModelByCharacter.get(character);
-    }
-
-    @Override
-    public SkillTreeInterfaceModel getGuiModelById(Short k) {
-        return guiModelById.get(k);
-    }
 
     @Override
     public void registerAdditionalCatalog(ISkill extraCatalog) {

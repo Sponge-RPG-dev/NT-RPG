@@ -1,12 +1,15 @@
 package cz.neumimto.rpg.sponge.entities.players;
 
+import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.entity.players.CharacterBase;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.effects.common.def.CombatEffect;
+import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.events.PlayerDataPreloadComplete;
+import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
@@ -28,6 +31,9 @@ public class SpongeCharacterServise extends CharacterService<ISpongeCharacter> {
 
     @Inject
     private NtRpgPlugin plugin;
+
+    @Inject
+    private SpongeEntityService spongeEntityService;
 
     @Inject
     private PartyService partyService;
@@ -148,4 +154,11 @@ public class SpongeCharacterServise extends CharacterService<ISpongeCharacter> {
         effectService.addEffect(new CombatEffect(character));
     }
 
+    @Override
+    public void changePropertyValue(ISpongeCharacter character, int propertyId, float value) {
+        super.changePropertyValue(character, propertyId, value);
+        if (propertyId == SpongeDefaultProperties.walk_speed) {
+            spongeEntityService.updateWalkSpeed(character);
+        }
+    }
 }

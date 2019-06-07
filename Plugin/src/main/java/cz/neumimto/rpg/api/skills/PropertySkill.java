@@ -2,17 +2,16 @@ package cz.neumimto.rpg.api.skills;
 
 import com.google.inject.Inject;
 import com.typesafe.config.Config;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.damage.DamageService;
+import cz.neumimto.rpg.api.entity.CommonProperties;
+import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.types.AbstractSkill;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
-import cz.neumimto.rpg.sponge.entities.entities.EntityService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,16 +63,7 @@ public class PropertySkill extends AbstractSkill {
         PropertySkillData skillData = (PropertySkillData) skill.getSkillData();
         for (Wrapper property : skillData.properties) {
             if (fc.apply(property.level, skill.getTotalLevel())) {
-                character.addProperty(property.propertyId, property.value * i);
-                if (property.propertyId == SpongeDefaultProperties.max_health) {
-                    characterService.updateMaxHealth(character);
-                } else if (property.propertyId == SpongeDefaultProperties.walk_speed) {
-                    entityService.updateWalkSpeed(character);
-                } else if (property.propertyId == SpongeDefaultProperties.max_mana) {
-                    characterService.updateMaxMana(character);
-                } else if (propertyService.updatingRequiresDamageRecalc(property.propertyId)) {
-                    damageService.recalculateCharacterWeaponDamage(character);
-                }
+                characterService.changePropertyValue(character, property.propertyId, property.value * i);
             }
         }
     }
@@ -88,7 +78,7 @@ public class PropertySkill extends AbstractSkill {
             String name = cprop.getString("property-name");
 
             try {
-                int idByName = NtRpgPlugin.GlobalScope.spongePropertyService.getIdByName(name);
+                int idByName = propertyService.getIdByName(name);
                 Wrapper wrapper = new Wrapper(name, idByName, level, value);
                 data.properties.add(wrapper);
             } catch (NullPointerException e) {

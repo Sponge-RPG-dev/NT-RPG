@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.api.events.character;
 
-import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
+import cz.neumimto.rpg.api.items.RpgItemType;
 
 import java.util.Set;
 
@@ -27,7 +27,7 @@ import java.util.Set;
  */
 public interface EventCharacterArmorPostUpdate extends TargetCharacterEvent {
 
-    Set<SpongeRpgItemType> getArmor();
+    Set<RpgItemType> getArmor();
 
-    void setArmor(Set<SpongeRpgItemType> armor);
+    void setArmor(Set<RpgItemType> armor);
 }

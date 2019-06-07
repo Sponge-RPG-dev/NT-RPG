@@ -43,7 +43,7 @@ import cz.neumimto.rpg.sponge.gui.ItemLoreBuilderService;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
-import cz.neumimto.rpg.sponge.inventory.runewords.RWDao;
+import RWDao;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.parties.PartyServiceImpl;

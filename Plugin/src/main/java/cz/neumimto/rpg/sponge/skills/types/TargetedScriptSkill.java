@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.api.skills.types;
+package cz.neumimto.rpg.sponge.skills.types;
 
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.logging.Log;
@@ -11,7 +11,7 @@ import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.scripting.SkillScriptContext;
 import cz.neumimto.rpg.api.skills.scripting.TargetedScriptExecutorSkill;
-import cz.neumimto.rpg.sponge.skills.types.Targeted;
+import cz.neumimto.rpg.api.skills.types.ITargetedScriptSkill;
 
 import java.util.List;
 import java.util.Optional;

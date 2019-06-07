@@ -6,8 +6,6 @@ import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.reloading.Reload;
 import cz.neumimto.rpg.common.reloading.ReloadService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.sponge.gui.SkillTreeInterfaceModel;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Collection;
 import java.util.Map;
@@ -31,10 +29,6 @@ public interface ISkillService {
 
     void reloadSkillTrees();
 
-    SkillTreeInterfaceModel getGuiModelByCharacter(Character character);
-
-    SkillTreeInterfaceModel getGuiModelById(Short k);
-
     void registerAdditionalCatalog(ISkill extraCatalog);
 
     Optional<ISkill> getById(String id);
@@ -51,5 +45,5 @@ public interface ISkillService {
 
     Optional<ISkillType> getSkillType(String id);
 
-    void registerSkillType(@NonNull ISkillType skillType);
+    void registerSkillType(ISkillType skillType);
 }

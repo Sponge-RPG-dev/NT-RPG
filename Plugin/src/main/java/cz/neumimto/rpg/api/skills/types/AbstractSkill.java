@@ -48,7 +48,7 @@ import java.util.Set;
 public abstract class AbstractSkill implements ISkill {
 
     @Inject
-    protected ICharacterService characterService;
+    protected ICharacterService<IActiveCharacter> characterService;
 
     @Inject
     protected LocalizationService localizationService;

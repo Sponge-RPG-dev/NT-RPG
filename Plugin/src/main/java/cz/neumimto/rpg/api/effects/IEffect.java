@@ -18,8 +18,6 @@
 
 package cz.neumimto.rpg.api.effects;
 
-import cz.neumimto.rpg.GlobalScope;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 
@@ -29,10 +27,6 @@ import java.util.Set;
  * Created by NeumimTo on 17.1.2015.
  */
 public interface IEffect<K> extends IRpgElement {
-
-    static GlobalScope getGlobalScope() {
-        return NtRpgPlugin.GlobalScope;
-    }
 
     /**
      * @param self The reference to the effect currently being processed. IE: self == this is always true. Useful mainly for JavaScript scripts

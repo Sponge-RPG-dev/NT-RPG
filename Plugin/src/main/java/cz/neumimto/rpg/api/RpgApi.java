@@ -1,6 +1,8 @@
 package cz.neumimto.rpg.api;
 
 import cz.neumimto.core.localization.Arg;
+import cz.neumimto.rpg.api.entity.EntityService;
+import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.events.effect.EventFactoryService;
@@ -51,4 +53,6 @@ public interface RpgApi {
     Executor getAsyncExecutor();
 
     ICharacterService<IActiveCharacter> getCharacterService();
+
+    EntityService<IEntity> getEntityService();
 }

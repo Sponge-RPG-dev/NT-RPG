@@ -27,7 +27,7 @@ import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.sponge.configuration.CommandLocalization;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
-import cz.neumimto.rpg.sponge.inventory.runewords.RuneWord;
+import cz.neumimto.rpg.common.inventory.crafting.runewords.RuneWord;
 import cz.neumimto.rpg.common.persistance.model.CharacterClass;
 import cz.neumimto.rpg.common.entity.players.CharacterBase;
 import cz.neumimto.rpg.common.entity.players.CharacterService;

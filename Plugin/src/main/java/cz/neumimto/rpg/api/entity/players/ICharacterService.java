@@ -139,4 +139,6 @@ public interface ICharacterService<T> {
     void learnSkill(T character, PlayerClassData origin, ISkill skill);
 
     void removeTransientAttributes(Map<AttributeConfig, Integer> bonusAttributes, T character);
+
+    void changePropertyValue(T character, int propertyId, float value);
 }

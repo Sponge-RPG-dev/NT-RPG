@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.sponge.inventory.runewords;
+package cz.neumimto.rpg.common.inventory.crafting.runewords;
 
 import cz.neumimto.rpg.sponge.inventory.sockets.SocketType;
 import cz.neumimto.rpg.sponge.inventory.sockets.SocketTypes;

@@ -18,9 +18,9 @@
 
 package cz.neumimto.rpg.api.skills;
 
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.common.entity.players.attributes.AttributeConfig;
-import org.spongepowered.api.Sponge;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -122,8 +122,7 @@ public class SkillSettings {
     }
 
     public static Set<String> getComplexKeySuffixes() {
-        Set<String> collect = Sponge.getRegistry().getAllOf(AttributeConfig.class)
-                .stream()
+        Set<String> collect = Rpg.get().getAttributes().stream()
                 .map(attribute -> "_per_" + attribute.getId())
                 .collect(Collectors.toSet());
         collect.add(bonus);

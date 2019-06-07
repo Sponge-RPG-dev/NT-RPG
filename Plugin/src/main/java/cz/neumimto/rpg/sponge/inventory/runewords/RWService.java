@@ -2,6 +2,11 @@ package cz.neumimto.rpg.sponge.inventory.runewords;
 
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.classes.ClassService;
+import RWDao;
+import cz.neumimto.rpg.common.inventory.crafting.runewords.ItemUpgrade;
+import cz.neumimto.rpg.common.inventory.crafting.runewords.Rune;
+import cz.neumimto.rpg.common.inventory.crafting.runewords.RuneWord;
+import cz.neumimto.rpg.common.inventory.crafting.runewords.RuneWordTemplate;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;

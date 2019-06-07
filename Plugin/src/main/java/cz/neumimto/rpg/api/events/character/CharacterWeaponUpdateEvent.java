@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.api.events.character;
 
-import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
+import cz.neumimto.rpg.api.items.RpgItemType;
 
 import java.util.Map;
 
@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public interface CharacterWeaponUpdateEvent extends TargetCharacterEvent {
 
-    Map<SpongeRpgItemType, Double> getAllowedWeapons();
+    Map<RpgItemType, Double> getAllowedWeapons();
 
-    void setWeapons(Map<SpongeRpgItemType, Double> weapons);
+    void setWeapons(Map<RpgItemType, Double> weapons);
 }

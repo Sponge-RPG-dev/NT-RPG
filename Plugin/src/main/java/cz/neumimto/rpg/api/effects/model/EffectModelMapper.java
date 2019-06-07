@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.api.effects.model;
 
-import cz.neumimto.rpg.sponge.utils.Utils;
+
+import cz.neumimto.rpg.api.utils.MathUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +21,7 @@ public abstract class EffectModelMapper {
             if (s == null) {
                 return 0;
             }
-            s = Utils.extractNumber(s);
+            s = MathUtils.extractNumber(s);
             if (s == null) {
                 return 0;
             }
@@ -30,7 +31,7 @@ public abstract class EffectModelMapper {
             if (s == null) {
                 return null;
             }
-            s = Utils.extractNumber(s);
+            s = MathUtils.extractNumber(s);
             if (s == null) {
                 return null;
             }
@@ -40,7 +41,7 @@ public abstract class EffectModelMapper {
             if (s == null) {
                 return 0D;
             }
-            s = Utils.extractNumber(s);
+            s = MathUtils.extractNumber(s);
             if (s == null) {
                 return 0D;
             }
@@ -50,7 +51,7 @@ public abstract class EffectModelMapper {
             if (s == null) {
                 return null;
             }
-            s = Utils.extractNumber(s);
+            s = MathUtils.extractNumber(s);
             if (s == null) {
                 return null;
             }
@@ -60,7 +61,7 @@ public abstract class EffectModelMapper {
             if (s == null) {
                 return 0f;
             }
-            s = Utils.extractNumber(s);
+            s = MathUtils.extractNumber(s);
             if (s == null) {
                 return 0f;
             }
@@ -70,7 +71,7 @@ public abstract class EffectModelMapper {
             if (s == null) {
                 return null;
             }
-            s = Utils.extractNumber(s);
+            s = MathUtils.extractNumber(s);
             if (s == null) {
                 return null;
             }
@@ -80,7 +81,7 @@ public abstract class EffectModelMapper {
             if (s == null) {
                 return 0L;
             }
-            s = Utils.extractNumber(s);
+            s = MathUtils.extractNumber(s);
             if (s == null) {
                 return 0L;
             }
@@ -90,7 +91,7 @@ public abstract class EffectModelMapper {
             if (s == null) {
                 return null;
             }
-            s = Utils.extractNumber(s);
+            s = MathUtils.extractNumber(s);
             if (s == null) {
                 return null;
             }
@@ -121,22 +122,22 @@ public abstract class EffectModelMapper {
 
     public double parseDouble(Map<String, String> map, String key) {
         String s = map.get(key);
-        return s == null ? 0D : Double.parseDouble(Utils.extractNumber(s));
+        return s == null ? 0D : Double.parseDouble(MathUtils.extractNumber(s));
     }
 
     public int parseInt(Map<String, String> map, String key) {
         String s = map.get(key);
-        return s == null ? 0 : Integer.parseInt(Utils.extractNumber(s));
+        return s == null ? 0 : Integer.parseInt(MathUtils.extractNumber(s));
     }
 
     public float parseFloat(Map<String, String> map, String key) {
         String s = map.get(key);
-        return s == null ? 0f : Float.parseFloat(Utils.extractNumber(s));
+        return s == null ? 0f : Float.parseFloat(MathUtils.extractNumber(s));
     }
 
     public long parseLong(Map<String, String> map, String key) {
         String s = map.get(key);
-        return s == null ? 0L : Long.parseLong(Utils.extractNumber(s));
+        return s == null ? 0L : Long.parseLong(MathUtils.extractNumber(s));
     }
 
 }
