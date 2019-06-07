@@ -1,6 +1,7 @@
 package cz.neumimto.rpg;
 
 
+import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.sponge.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.junit.CharactersExtension;
@@ -81,7 +82,7 @@ public class ClassManipulationTests {
 
     @Test
     public void may_not_select_same_type() {
-        CharacterClass characterClass = new CharacterClass();
+        CharacterClass characterClass = new JPACharacterClass();
         PlayerClassData playerClassData = new PlayerClassData(pc1, characterClass);
         character.addClass(playerClassData);
         ActionResult result = characterService.canGainClass(character, pc2);
@@ -106,7 +107,7 @@ public class ClassManipulationTests {
     @Test
     public void select_secondary_class() {
         NtRpgPlugin.pluginConfig.RESPECT_CLASS_SELECTION_ORDER = true;
-        CharacterClass characterClass = new CharacterClass();
+        CharacterClass characterClass = new JPACharacterClass();
         PlayerClassData playerClassData = new PlayerClassData(pc1, characterClass);
         character.addClass(playerClassData);
 

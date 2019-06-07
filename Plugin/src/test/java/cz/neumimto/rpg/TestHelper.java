@@ -2,6 +2,7 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
@@ -34,7 +35,7 @@ public class TestHelper {
 
 
     public static CharacterClass createCharacterClass() throws Exception {
-        CharacterClass characterClass = new CharacterClass();
+        CharacterClass characterClass = new JPACharacterClass();
         characterClass.setId(1L);
         characterClass.setName("testClassDef");
         return characterClass;

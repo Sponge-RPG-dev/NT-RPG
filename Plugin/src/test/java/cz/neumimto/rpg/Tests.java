@@ -3,6 +3,7 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
@@ -69,7 +70,7 @@ public class Tests {
             }});
         }});
 
-        CharacterClass characterClass = new CharacterClass();
+        CharacterClass characterClass = new JPACharacterClass();
         characterClass.setLevel(2);
 
         PlayerClassData nClass = new PlayerClassData(race, characterClass);
@@ -96,7 +97,7 @@ public class Tests {
         map.put(race.getName(), new PlayerClassData(race, characterClass));
 
 
-        CharacterClass characterClass2 = new CharacterClass();
+        CharacterClass characterClass2 = new JPACharacterClass();
         characterClass.setLevel(2);
 
         map.put(c.getName(), new PlayerClassData(c, characterClass2));

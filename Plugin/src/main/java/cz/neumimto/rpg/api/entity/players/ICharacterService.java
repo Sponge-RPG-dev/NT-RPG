@@ -10,7 +10,6 @@ import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.api.skills.SkillData;
-import cz.neumimto.rpg.common.entity.players.UserActionType;
 
 import java.util.Collection;
 import java.util.List;
@@ -120,8 +119,6 @@ public interface ICharacterService<T> {
 
     void respawnCharacter(T character);
 
-    boolean processUserAction(T character, UserActionType userActionType);
-
     int markCharacterForRemoval(UUID player, String charName);
 
     void gainMana(T character, double manaToAdd, IRpgElement source);
@@ -141,4 +138,6 @@ public interface ICharacterService<T> {
     void removeTransientAttributes(Map<AttributeConfig, Integer> bonusAttributes, T character);
 
     void changePropertyValue(T character, int propertyId, float value);
+
+    void removePersistantSkill(CharacterSkill characterSkill);
 }

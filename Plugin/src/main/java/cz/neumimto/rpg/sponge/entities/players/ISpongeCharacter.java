@@ -2,6 +2,7 @@ package cz.neumimto.rpg.sponge.entities.players;
 
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.UserActionType;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -20,4 +21,6 @@ public interface ISpongeCharacter extends IActiveCharacter<Player>, ISpongeEntit
     default Player getEntity() {
         return getPlayer();
     }
+
+
 }

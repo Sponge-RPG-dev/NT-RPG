@@ -18,13 +18,12 @@
 package cz.neumimto.rpg.common.entity.players;
 
 import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.api.persistance.model.*;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;
@@ -48,14 +47,14 @@ import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
-import cz.neumimto.rpg.common.entity.players.leveling.SkillTreeType;
+import cz.neumimto.rpg.api.entity.players.leveling.SkillTreeType;
 import cz.neumimto.rpg.common.persistance.dao.CharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.PlayerDao;
-import cz.neumimto.rpg.api.persistance.model.BaseCharacterAttribute;
-import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.utils.DebugLevel;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterSkill;
 import cz.neumimto.rpg.common.utils.exceptions.MissingConfigurationException;
 
 import cz.neumimto.rpg.sponge.events.PlayerDataPreloadComplete;
@@ -128,7 +127,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
             info("Finished loading of player data" + id + ", loaded " + playerCharacters.size() + " characters   [" + k + "]ms");
             PluginConfig pluginConfig = Rpg.get().getPluginConfig();
             if (playerCharacters.isEmpty() && pluginConfig.CREATE_FIRST_CHAR_AFTER_LOGIN) {
-                CharacterBase cb = createCharacterBase(playerName, id);
+                JPACharacterBase cb = createCharacterBase(playerName, id);
                 createAndUpdate(cb);
 
                 playerCharacters = Collections.singletonList(cb);
@@ -189,8 +188,8 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
      * @return Initialized CharacterBase in the default state, The entity is not persisted yet
      */
     @Override
-    public CharacterBase createCharacterBase(String name, UUID uuid) {
-        CharacterBase characterBase = new CharacterBase();
+    public JPACharacterBase createCharacterBase(String name, UUID uuid) {
+        JPACharacterBase characterBase = new JPACharacterBase();
         characterBase.setName(name);
         characterBase.setUuid(uuid);
         PluginConfig pluginConfig = Rpg.get().getPluginConfig();
@@ -230,7 +229,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     }
 
     @Override
-    public void putInSaveQueue(CharacterBase base) {
+    public void putInSaveQueue(JPACharacterBase base) {
         CompletableFuture.runAsync(() -> {
             long k = System.currentTimeMillis();
             info("Saving player " + base.getUuid() + " character " + base.getName());
@@ -245,13 +244,13 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
      * @param base
      */
     @Override
-    public void save(CharacterBase base) {
+    public void save(JPACharacterBase base) {
         base.onUpdate();
         playerDao.update(base);
     }
 
     @Override
-    public void createAndUpdate(CharacterBase base) {
+    public void createAndUpdate(JPACharacterBase base) {
         base.onCreate();
         playerDao.createAndUpdate(base);
     }
@@ -513,7 +512,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
      * @return
      */
     @Override
-    public T createActiveCharacter(UUID player, CharacterBase characterBase) {
+    public T createActiveCharacter(UUID player, JPACharacterBase characterBase) {
         characterBase = playerDao.fetchCharacterBase(characterBase);
         T activeCharacter = createCharacter(player, characterBase);
         Set<String> strings = propertyService.getAttributes().keySet();
@@ -546,7 +545,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     }
 
 
-    protected abstract T createCharacter(UUID player, CharacterBase characterBase);
+    protected abstract T createCharacter(UUID player, JPACharacterBase characterBase);
 
     /**
      * @param uniqueId player's uuid
@@ -844,7 +843,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
      */
     @Override
     public int characterResetSkills(T character, boolean force) {
-        CharacterBase characterBase = character.getCharacterBase();
+        JPACharacterBase characterBase = character.getCharacterBase();
         if (characterBase.isCanResetskills() || force) {
             characterBase.setCanResetskills(false);
             characterBase.setLastReset(new Date(System.currentTimeMillis()));
@@ -1061,37 +1060,6 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
         inventoryService.initializeCharacterInventory(character);
     }
 
-    /**
-     * @param character
-     * @param userActionType
-     * @return true whenever root event should be cancelled
-     */
-    @Override
-    public boolean processUserAction(T character, UserActionType userActionType) {
-        IEffectContainer effect = character.getEffect(ClickComboActionComponent.name);
-        if (effect == null) {
-            return false;
-        }
-        ClickComboActionComponent e = (ClickComboActionComponent) effect;
-        if (userActionType == UserActionType.L && e.hasStarted()) {
-            e.processLMB();
-            return false;
-        }
-        if (userActionType == UserActionType.R) {
-            e.processRMB();
-            return false;
-        }
-        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
-        if (userActionType == UserActionType.Q && pluginConfig.ENABLED_Q && e.hasStarted()) {
-            e.processQ();
-            return true;
-        }
-        if (userActionType == UserActionType.E && pluginConfig.ENABLED_E && e.hasStarted()) {
-            e.processE();
-            return true;
-        }
-        return false;
-    }
 
     @Override
     public int markCharacterForRemoval(UUID player, java.lang.String charName) {
@@ -1175,8 +1143,8 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
 
     @Override
     public ActionResult addNewClass(T character, ClassDefinition klass) {
-        CharacterBase characterBase = character.getCharacterBase();
-        CharacterClass cc = new CharacterClass();
+        JPACharacterBase characterBase = character.getCharacterBase();
+        CharacterClass cc = new JPACharacterClass();
         cc.setName(klass.getName());
         cc.setCharacterBase(characterBase);
         cc.setExperiences(0D);
@@ -1252,7 +1220,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
         SkillTree skillTree = classDef.getSkillTree();
         einfo.setSkillData(skillTree.getSkills().get(skill.getId()));
 
-        CharacterSkill skill1 = new CharacterSkill();
+        CharacterSkill skill1 = new JPACharacterSkill();
         skill1.setLevel(1);
         skill1.setCharacterBase(character.getCharacterBase());
         skill1.setFromClass(clazz);
@@ -1286,5 +1254,6 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
             damageService.recalculateCharacterWeaponDamage(character);
         }
     }
+
 }
 

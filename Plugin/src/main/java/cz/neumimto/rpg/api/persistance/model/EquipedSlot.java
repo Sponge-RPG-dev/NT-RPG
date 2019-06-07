@@ -40,11 +40,6 @@ public final class EquipedSlot {
         return className;
     }
 
-    @SuppressWarnings("unchecked")
-    public Class<? extends Inventory> getRuntimeInventoryClass() {
-        return (Class<? extends Inventory>) runtimeInventoryClass;
-    }
-
     public int getSlotIndex() {
         return slotIndex;
     }

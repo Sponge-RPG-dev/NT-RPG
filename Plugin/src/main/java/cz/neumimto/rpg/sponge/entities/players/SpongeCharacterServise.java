@@ -1,10 +1,18 @@
 package cz.neumimto.rpg.sponge.entities.players;
 
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.configuration.PluginConfig;
+import cz.neumimto.rpg.api.effects.IEffectContainer;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
+import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.common.entity.players.UserActionType;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.effects.common.def.ClickComboActionComponent;
 import cz.neumimto.rpg.sponge.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.events.PlayerDataPreloadComplete;
@@ -60,7 +68,7 @@ public class SpongeCharacterServise extends CharacterService<ISpongeCharacter> {
     }
 
     @Override
-    public ISpongeCharacter createCharacter(UUID player, CharacterBase characterBase) {
+    public ISpongeCharacter createCharacter(UUID player, JPACharacterBase characterBase) {
         SpongeCharacter spongeCharacter = new SpongeCharacter(player, characterBase, PropertyServiceImpl.LAST_ID);
         spongeCharacter.setMana(new CharacterMana(spongeCharacter));
         spongeCharacter.setHealth(new CharacterHealth(spongeCharacter));
@@ -159,5 +167,40 @@ public class SpongeCharacterServise extends CharacterService<ISpongeCharacter> {
         if (propertyId == SpongeDefaultProperties.walk_speed) {
             spongeEntityService.updateWalkSpeed(character);
         }
+    }
+
+    public boolean processUserAction(IActiveCharacter character, UserActionType userActionType) {
+        IEffectContainer effect = character.getEffect(ClickComboActionComponent.name);
+        if (effect == null) {
+            return false;
+        }
+        ClickComboActionComponent e = (ClickComboActionComponent) effect;
+        if (userActionType == UserActionType.L && e.hasStarted()) {
+            e.processLMB();
+            return false;
+        }
+        if (userActionType == UserActionType.R) {
+            e.processRMB();
+            return false;
+        }
+        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
+        if (userActionType == UserActionType.Q && pluginConfig.ENABLED_Q && e.hasStarted()) {
+            e.processQ();
+            return true;
+        }
+        if (userActionType == UserActionType.E && pluginConfig.ENABLED_E && e.hasStarted()) {
+            e.processE();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void removePersistantSkill(CharacterSkill characterSkill) {
+        //language=HQL
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", characterSkill);
+        dad.update("delete from CharacterSkill where skillId = :id", params);
+
     }
 }

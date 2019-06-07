@@ -1,5 +1,6 @@
 package cz.neumimto.rpg;
 
+import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.events.effect.EventFactoryService;
@@ -8,7 +9,6 @@ import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillDependency;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
@@ -53,7 +53,7 @@ public class SkillManipulationTests {
 
     CharacterClass characterClass;
 
-    CharacterBase characterBase;
+    JPACharacterBase characterBase;
 
     SkillData skillData;
     SkillData sconflicting;
@@ -135,7 +135,7 @@ public class SkillManipulationTests {
             getSkills().put(softDepending1.getId(), ssoftDepending1);
         }});
 
-        characterBase = new CharacterBase();
+        characterBase = new JPACharacterBase();
         characterBase.getCharacterClasses().add(characterClass);
 
         character = new ActiveCharacter(UUID.randomUUID(), characterBase, 0);

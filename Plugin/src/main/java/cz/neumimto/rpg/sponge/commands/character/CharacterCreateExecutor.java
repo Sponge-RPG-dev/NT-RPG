@@ -1,10 +1,10 @@
 package cz.neumimto.rpg.sponge.commands.character;
 
 import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.sponge.configuration.CommandLocalization;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -30,7 +30,7 @@ public class CharacterCreateExecutor implements CommandExecutor {
             } else if (i == 2) {
                 src.sendMessage(Localizations.CHARACTER_EXISTS.toText());
             } else if (i == 0) {
-                CharacterBase characterBase = new CharacterBase();
+                JPACharacterBase characterBase = new JPACharacterBase();
                 characterBase.setUuid(player.getUniqueId());
                 characterBase.setName(a);
                 characterBase.setAttributePoints(pluginConfig.ATTRIBUTEPOINTS_ON_START);

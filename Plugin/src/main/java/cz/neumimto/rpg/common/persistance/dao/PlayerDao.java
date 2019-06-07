@@ -22,6 +22,7 @@ import cz.neumimto.core.PersistentContext;
 import cz.neumimto.core.Repository;
 import cz.neumimto.core.dao.GenericDao;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -59,9 +60,9 @@ public class PlayerDao extends GenericDao<CharacterBase> {
         return list;
     }
 
-    public CharacterBase fetchCharacterBase(CharacterBase base) {
+    public JPACharacterBase fetchCharacterBase(CharacterBase base) {
         Session session = getFactory().openSession();
-        CharacterBase cb = (CharacterBase) session.merge(base);
+        JPACharacterBase cb = (JPACharacterBase) session.merge(base);
         session.beginTransaction();
         cb.getCharacterSkills().size();
         cb.getCharacterClasses().size();
@@ -74,7 +75,7 @@ public class PlayerDao extends GenericDao<CharacterBase> {
 
     public CharacterBase getLastPlayed(UUID uuid) {
         Session session = getFactory().openSession();
-        List r = session.createCriteria(CharacterBase.class)
+        List r = session.createCriteria(JPACharacterBase.class)
                 .add(Restrictions.eq("uuid", uuid.toString()))
                 .addOrder(Order.desc("updated"))
                 .add(Restrictions.ne("markedForRemoval", true))

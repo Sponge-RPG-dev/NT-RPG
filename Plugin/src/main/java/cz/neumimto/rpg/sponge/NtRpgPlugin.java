@@ -27,6 +27,10 @@ import cz.neumimto.rpg.common.persistance.PersistenceHandler;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.rng.PseudoRandomDistribution;
+import cz.neumimto.rpg.common.persistance.model.JPABaseCharacterAttribute;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterSkill;
 import cz.neumimto.rpg.common.utils.io.FileUtils;
 import cz.neumimto.rpg.sponge.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
@@ -42,10 +46,6 @@ import cz.neumimto.rpg.sponge.inventory.items.subtypes.ItemSubtypes;
 import cz.neumimto.rpg.sponge.inventory.sockets.SocketType;
 import cz.neumimto.rpg.sponge.inventory.sockets.SocketTypeRegistry;
 import cz.neumimto.rpg.sponge.inventory.sockets.SocketTypes;
-import cz.neumimto.rpg.api.persistance.model.BaseCharacterAttribute;
-import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.sponge.listeners.DebugListener;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
@@ -143,10 +143,10 @@ public class NtRpgPlugin extends Rpg {
         GlobalScope = childInjector.getInstance(GlobalScope.class);
 
 
-        PluginCore.MANAGED_JPA_TYPES.add(CharacterBase.class);
-        PluginCore.MANAGED_JPA_TYPES.add(BaseCharacterAttribute.class);
-        PluginCore.MANAGED_JPA_TYPES.add(CharacterSkill.class);
-        PluginCore.MANAGED_JPA_TYPES.add(CharacterClass.class);
+        PluginCore.MANAGED_JPA_TYPES.add(JPACharacterBase.class);
+        PluginCore.MANAGED_JPA_TYPES.add(JPABaseCharacterAttribute.class);
+        PluginCore.MANAGED_JPA_TYPES.add(JPACharacterSkill.class);
+        PluginCore.MANAGED_JPA_TYPES.add(JPACharacterClass.class);
         Sponge.getEventManager().registerListeners(this, new PersistenceHandler(this));
         new NKeys();
         DataRegistration.builder()

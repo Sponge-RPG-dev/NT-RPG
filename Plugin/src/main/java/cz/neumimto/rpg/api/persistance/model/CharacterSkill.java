@@ -1,82 +1,27 @@
 package cz.neumimto.rpg.api.persistance.model;
 
-import org.hibernate.annotations.GenericGenerator;
+public interface CharacterSkill extends TimestampEntity {
+    Long getId();
 
-import javax.persistence.*;
+    void setId(Long id);
 
-/**
- * Created by ja on 8.10.2016.
- */
-@Entity(name = "rpg_character_skill")
-public class CharacterSkill {
+    CharacterBase getCharacterBase();
 
-    @Id
-    @GeneratedValue(generator = "native")
-    @GenericGenerator(name = "native", strategy = "native")
-    @Column(name = "skill_id")
-    private Long skillId;
+    void setCharacterBase(CharacterBase characterBase);
 
-    @ManyToOne
-    @JoinColumn(name = "character_id")
-    private CharacterBase characterBase;
+    int getLevel();
 
-    private int level;
+    void setLevel(int level);
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "class_id", nullable = true)
-    private CharacterClass fromClass;
+    CharacterClass getFromClass();
 
-    @Column(name = "catalog_id")
-    private String catalogId;
+    void setFromClass(CharacterClass fromClass);
 
-    @Column(name = "cooldown")
-    private Long cooldown;
+    String getCatalogId();
 
-    public Long getId() {
-        return skillId;
-    }
+    void setCatalogId(String catalogId);
 
-    public void setId(Long id) {
-        this.skillId = id;
-    }
+    Long getCooldown();
 
-    public CharacterBase getCharacterBase() {
-        return characterBase;
-    }
-
-    public void setCharacterBase(CharacterBase characterBase) {
-        this.characterBase = characterBase;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-    public CharacterClass getFromClass() {
-        return fromClass;
-    }
-
-    public void setFromClass(CharacterClass fromClass) {
-        this.fromClass = fromClass;
-    }
-
-    public String getCatalogId() {
-        return catalogId;
-    }
-
-    public void setCatalogId(String catalogId) {
-        this.catalogId = catalogId;
-    }
-
-    public Long getCooldown() {
-        return cooldown;
-    }
-
-    public void setCooldown(Long cooldown) {
-        this.cooldown = cooldown;
-    }
+    void setCooldown(Long cooldown);
 }

@@ -2,12 +2,12 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.effects.EffectStackingStrategy;
 import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.effects.TestEffectService;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
@@ -33,7 +33,7 @@ public class EffectTests {
     private static TickableEffect effect;
 
     static ActiveCharacter character;
-    static CharacterBase characterBase;
+    static JPACharacterBase characterBase;
 
     private static Set<IEffect> processedEffects;
 
@@ -49,7 +49,7 @@ public class EffectTests {
     @BeforeAll
     public static void before() throws Exception{
         processedEffects = effectService.getEffects();
-        characterBase = new CharacterBase();
+        characterBase = new JPACharacterBase();
         character = new ActiveCharacter(UUID.randomUUID(), characterBase, 1);
 
         effect = createEffectMock("test");

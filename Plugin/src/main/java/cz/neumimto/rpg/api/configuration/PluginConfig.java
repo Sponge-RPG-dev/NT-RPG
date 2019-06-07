@@ -202,17 +202,7 @@ public class PluginConfig {
 
     @Setting
     public String EQUIPED_SLOT_RESOLVE_SRATEGY = "nt-rpg:persisted_slot_order";
-/*
-	@Setting
-	@Comment(content = "1 - Drops item out of player inventory, 2 - Drops items only from hotbar, 3 - Only warning")
-	public Integer PLAYER_IS_UNABLE_TO_USE_ITEM_RESOLVE_STRATEGY = 1;
 
-
-	@Setting
-	@Comment(content = "Player may put standard item into accessory slot")
-	public boolean ACCESSORIES_BLOCK_JUNK_ITEMS = true;
-
-	*/
 
     @Setting(comment = "The plugin attempts to create a list of items present on the server, which might fall into categories of weapons/armors/shields. "
             + "The final list might, or might not be complete.")
@@ -228,14 +218,6 @@ public class PluginConfig {
 
     @Setting
     public byte MAX_CLICK_COMBO_LENGTH = new Byte("6");
-
-    @Setting(comment = "Class types")
-    @CustomAdapter(ClassTypesDeserializer.class)
-    public Map<String, ClassTypeDefinition> CLASS_TYPES = new LinkedHashMap<String, ClassTypeDefinition>() {{
-        put("Race", new ClassTypeDefinition(TextColors.GREEN, TextColors.DARK_GREEN, DyeColors.GREEN, false, 1));
-        put("Primary", new ClassTypeDefinition(TextColors.YELLOW, TextColors.GOLD, DyeColors.YELLOW, true, 2));
-        put("Profession", new ClassTypeDefinition(TextColors.GRAY, TextColors.BLACK, DyeColors.GRAY, true, 3));
-    }};
 
     @Setting(comment = "Primary class. Level of primary class determines character level.")
     public String PRIMARY_CLASS_TYPE = "Primary";

@@ -29,7 +29,7 @@ import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
 import cz.neumimto.rpg.api.skills.IPlayerSkillHandler;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -54,7 +54,7 @@ import java.util.stream.Collectors;
 public abstract class ActiveCharacter implements IActiveCharacter {
 
     protected transient UUID pl;
-    protected CharacterBase base;
+    protected JPACharacterBase base;
 
     private Map<String, PlayerClassData> classes = new HashMap<>();
 
@@ -118,7 +118,7 @@ public abstract class ActiveCharacter implements IActiveCharacter {
     private boolean requiresDamageRecalculation;
     private int lastHotbarSlotInteraction = -1;
 
-    public ActiveCharacter(UUID uuid, CharacterBase base, int propertyCount) {
+    public ActiveCharacter(UUID uuid, JPACharacterBase base, int propertyCount) {
         this.pl = uuid;
         this.primaryProperties = new float[propertyCount];
         this.secondaryProperties = new float[propertyCount];
@@ -432,7 +432,7 @@ public abstract class ActiveCharacter implements IActiveCharacter {
     }
 
     @Override
-    public CharacterBase getCharacterBase() {
+    public JPACharacterBase getCharacterBase() {
         return base;
     }
 

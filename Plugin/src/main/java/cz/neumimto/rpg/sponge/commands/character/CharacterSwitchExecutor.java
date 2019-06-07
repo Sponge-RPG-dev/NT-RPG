@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.sponge.commands.character;
 
+import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
@@ -28,7 +29,7 @@ public class CharacterSwitchExecutor implements CommandExecutor {
             CompletableFuture.runAsync(() -> {
                 List<CharacterBase> playersCharacters = NtRpgPlugin.GlobalScope.characterService.getPlayersCharacters(player.getUniqueId());
                 boolean b = false;
-                for (CharacterBase playersCharacter : playersCharacters) {
+                for (JPACharacterBase playersCharacter : playersCharacters) {
                     if (playersCharacter.getName().equalsIgnoreCase(s)) {
                         ActiveCharacter character =
                                 NtRpgPlugin.GlobalScope.characterService.createActiveCharacter(player.getUniqueId(), playersCharacter);

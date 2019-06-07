@@ -7,10 +7,10 @@ import cz.neumimto.core.FindDbSchemaMigrationsEvent;
 import cz.neumimto.core.FindPersistenceContextEvent;
 import cz.neumimto.core.migrations.DbMigrationService;
 import cz.neumimto.rpg.common.assets.AssetService;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.persistance.model.BaseCharacterAttribute;
-import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.common.persistance.model.JPABaseCharacterAttribute;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterSkill;
 import org.spongepowered.api.event.Listener;
 
 import java.io.IOException;
@@ -57,10 +57,10 @@ public class PersistenceHandler {
     @Listener
     public void registerEntities(FindPersistenceContextEvent event) {
         if (event.validForContext("nt-rpg")) {
-            event.getClasses().add(CharacterBase.class);
-            event.getClasses().add(BaseCharacterAttribute.class);
-            event.getClasses().add(CharacterSkill.class);
-            event.getClasses().add(CharacterClass.class);
+            event.getClasses().add(JPACharacterBase.class);
+            event.getClasses().add(JPABaseCharacterAttribute.class);
+            event.getClasses().add(JPACharacterSkill.class);
+            event.getClasses().add(JPACharacterClass.class);
         }
     }
 }

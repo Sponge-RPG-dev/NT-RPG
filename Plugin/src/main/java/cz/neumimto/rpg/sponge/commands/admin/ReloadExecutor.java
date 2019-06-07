@@ -2,6 +2,7 @@ package cz.neumimto.rpg.sponge.commands.admin;
 
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
@@ -112,7 +113,7 @@ public class ReloadExecutor implements CommandExecutor {
                 //todo purge all skill
                 //todo purge all skilltrees
 
-                for (CharacterBase characterBase : characterBases) {
+                for (JPACharacterBase characterBase : characterBases) {
                     Log.info("[RELOAD] saving character " + characterBase.getLastKnownPlayerName());
                     NtRpgPlugin.GlobalScope.characterService.save(characterBase);
                 }
@@ -127,14 +128,14 @@ public class ReloadExecutor implements CommandExecutor {
                     //todo load skilltrees
 
                     NtRpgPlugin.GlobalScope.classService.loadClasses();
-                    Comparator<CharacterBase> cmp = Comparator.comparing(CharacterBase::getUpdated);
+                    Comparator<CharacterBase> cmp = Comparator.comparing(JPACharacterBase::getUpdated);
                     for (Player player : Sponge.getServer().getOnlinePlayers()) {
                         List<CharacterBase> playersCharacters =
                                 NtRpgPlugin.GlobalScope.characterService.getPlayersCharacters(player.getUniqueId());
                         if (playersCharacters.isEmpty()) {
                             continue;
                         }
-                        CharacterBase max = playersCharacters.stream().max(cmp).get();
+                        JPACharacterBase max = playersCharacters.stream().max(cmp).get();
                         ActiveCharacter activeCharacter = NtRpgPlugin.GlobalScope.characterService.createActiveCharacter(player.getUniqueId(), max);
                         NtRpgPlugin.GlobalScope.characterService.setActiveCharacter(player.getUniqueId(), activeCharacter);
                         NtRpgPlugin.GlobalScope.characterService.invalidateCaches(activeCharacter);

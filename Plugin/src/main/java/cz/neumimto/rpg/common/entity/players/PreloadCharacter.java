@@ -29,7 +29,7 @@ import cz.neumimto.rpg.api.entity.players.party.IParty;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
@@ -284,8 +284,8 @@ public abstract class PreloadCharacter implements IActiveCharacter {
     }
 
     @Override
-    public CharacterBase getCharacterBase() {
-        return new CharacterBase();
+    public JPACharacterBase getCharacterBase() {
+        return new JPACharacterBase();
     }
 
     @Override

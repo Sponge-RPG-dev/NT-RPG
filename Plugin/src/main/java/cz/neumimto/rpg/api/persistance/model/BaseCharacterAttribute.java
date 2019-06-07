@@ -1,78 +1,19 @@
 package cz.neumimto.rpg.api.persistance.model;
 
-import org.hibernate.annotations.GenericGenerator;
+public interface BaseCharacterAttribute extends TimestampEntity {
+    Long getId();
 
-import javax.persistence.*;
+    void setId(Long id);
 
-/**
- * Created by NeumimTo on 8.10.2016.
- */
-@Entity(name = "rpg_character_attribute")
-public class BaseCharacterAttribute {
+    CharacterBase getCharacterBase();
 
-    @Id
-    @GeneratedValue(generator = "native")
-    @GenericGenerator(name = "native", strategy = "native")
-    @Column(name = "attribute_id")
-    private Long id;
+    void setCharacterBase(CharacterBase characterBase);
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "character_id", nullable = false)
-    private CharacterBase characterBase;
+    String getName();
 
-    private String name;
+    void setName(String name);
 
-    private int level;
+    int getLevel();
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public CharacterBase getCharacterBase() {
-        return characterBase;
-    }
-
-    public void setCharacterBase(CharacterBase characterBase) {
-        this.characterBase = characterBase;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        BaseCharacterAttribute that = (BaseCharacterAttribute) o;
-
-        return id.equals(that.id);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 1236411;
-    }
+    void setLevel(int level);
 }

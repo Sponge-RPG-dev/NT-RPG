@@ -1,25 +1,22 @@
-package cz.neumimto.rpg.common.entity.players.leveling;
+package cz.neumimto.rpg.api.entity.players.leveling;
 
 
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.ICharacterService;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.api.events.character.CharacterGainedLevelEvent;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.messaging.MessageLevel;
-
-import cz.neumimto.rpg.api.utils.ActionResult;
+import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.SkillData;
-import cz.neumimto.rpg.api.events.character.CharacterGainedLevelEvent;
-import cz.neumimto.rpg.common.persistance.dao.DirectAccessDao;
-import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.skills.tree.SkillTree;
+import cz.neumimto.rpg.api.utils.ActionResult;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -34,8 +31,7 @@ public enum SkillTreeType {
             event.setSkillpointsPerLevel(playerClassData.getClassDefinition().getSkillpointsPerLevel());
             event.setAttributepointsPerLevel(playerClassData.getClassDefinition().getAttributepointsPerLevel());
             Rpg.get().postEvent(event);
-
-            NtRpgPlugin.GlobalScope.characterService.addSkillPoint(character, playerClassData, event.getSkillpointsPerLevel());
+            Rpg.get().getCharacterService().addSkillPoint(character, playerClassData, event.getSkillpointsPerLevel());
         }
 
         @Override
@@ -45,7 +41,7 @@ public enum SkillTreeType {
 
         @Override
         public void processLearnSkill(IActiveCharacter character, PlayerClassData playerClassData, ISkill iSkill) {
-            CharacterService characterService = NtRpgPlugin.GlobalScope.characterService;
+            ICharacterService<IActiveCharacter> characterService = Rpg.get().getCharacterService();
             ClassDefinition classDefinition = playerClassData.getClassDefinition();
 
             ActionResult actionResult = characterService.canLearnSkill(character, classDefinition, iSkill);
@@ -59,7 +55,7 @@ public enum SkillTreeType {
 
         @Override
         public void processUpgradeSkill(IActiveCharacter character, PlayerClassData playerClassData, ISkill iSkill) {
-            CharacterService characterService = NtRpgPlugin.GlobalScope.characterService;
+            ICharacterService<IActiveCharacter> characterService = Rpg.get().getCharacterService();
             ClassDefinition classDefinition = playerClassData.getClassDefinition();
             ActionResult actionResult = characterService.canUpgradeSkill(character, classDefinition, iSkill);
             if (actionResult.isOk()) {
@@ -73,7 +69,7 @@ public enum SkillTreeType {
 
         @Override
         public void processRefundSkill(IActiveCharacter character, PlayerClassData playerClassData, ISkill iSkill) {
-            CharacterService characterService = NtRpgPlugin.GlobalScope.characterService;
+            ICharacterService<IActiveCharacter> characterService = Rpg.get().getCharacterService();
             ClassDefinition classDefinition = playerClassData.getClassDefinition();
             ActionResult actionResult = characterService.canRefundSkill(character, classDefinition, iSkill);
             if (actionResult.isOk()) {
@@ -82,12 +78,8 @@ public enum SkillTreeType {
 
                 CompletableFuture.runAsync(() -> {
                     characterService.save(character.getCharacterBase());
-                    DirectAccessDao dad = NtRpgPlugin.GlobalScope.injector.getInstance(DirectAccessDao.class);
-                    //language=HQL
-                    Map<String, Object> params = new HashMap<>();
-                    params.put("id", characterSkill);
-                    dad.update("delete from CharacterSkill where skillId = :id", params);
-                }, NtRpgPlugin.asyncExecutor);
+                    Rpg.get().getCharacterService().removePersistantSkill(characterSkill);
+                }, Rpg.get().getAsyncExecutor());
             } else {
                 MessageLevel.ERROR.sendMessage(character, actionResult.getErrorMesage());
             }
@@ -118,7 +110,7 @@ public enum SkillTreeType {
                     playerSkillContext.setLevel(1);
                     playerSkillContext.setSkillData(skillData);
 
-                    NtRpgPlugin.GlobalScope.characterService.addSkill(character, playerClassData, playerSkillContext);
+                    Rpg.get().getCharacterService().addSkill(character, playerClassData, playerSkillContext);
                 }
             }
         }

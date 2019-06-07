@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.common.entity.players.leveling;
+package cz.neumimto.rpg.api.entity.players.leveling;
 
 public class EmptyLevelProgression implements ILevelProgression {
     @Override
