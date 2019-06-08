@@ -6,6 +6,7 @@ import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.api.skills.mods.PreProcessorTarget;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.common.skills.preprocessors.SkillCostPreprocessor;
 
 public class SkillPreprocessors {
 
@@ -16,5 +17,5 @@ public class SkillPreprocessors {
         }
     };
 
-    public static ActiveSkillPreProcessorWrapper SKILL_COST;
+    public static ActiveSkillPreProcessorWrapper SKILL_COST = new SkillCostPreprocessor();
 }

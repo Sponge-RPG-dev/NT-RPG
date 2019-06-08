@@ -29,7 +29,7 @@ import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.SkillsDefinition;
 import cz.neumimto.rpg.common.utils.io.FileUtils;
 import cz.neumimto.rpg.api.utils.DebugLevel;
-import cz.neumimto.rpg.sponge.skills.scripting.SkillComponent;
+import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
 import net.bytebuddy.dynamic.loading.MultipleParentClassLoader;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;

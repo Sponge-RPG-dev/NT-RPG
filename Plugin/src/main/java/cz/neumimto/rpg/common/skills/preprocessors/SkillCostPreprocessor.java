@@ -15,7 +15,8 @@ import cz.neumimto.rpg.api.skills.mods.PreProcessorTarget;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 
-public abstract class SkillCostPreprocessor extends ActiveSkillPreProcessorWrapper {
+public class SkillCostPreprocessor extends ActiveSkillPreProcessorWrapper {
+
     public SkillCostPreprocessor() {
         super(PreProcessorTarget.BEFORE);
     }
@@ -92,5 +93,7 @@ public abstract class SkillCostPreprocessor extends ActiveSkillPreProcessorWrapp
         }
     }
 
-    protected abstract void killCaster(IActiveCharacter character);
+    protected void killCaster(IActiveCharacter character) {
+        Rpg.get().getDamageService().damageEntity(character, Double.MAX_VALUE);
+    }
 }

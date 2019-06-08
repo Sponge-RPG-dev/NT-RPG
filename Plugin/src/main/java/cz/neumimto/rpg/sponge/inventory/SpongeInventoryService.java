@@ -46,7 +46,7 @@ import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.*;
 import cz.neumimto.rpg.sponge.inventory.items.ItemMetaType;
-import cz.neumimto.rpg.sponge.inventory.items.subtypes.ItemSubtype;
+import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.sponge.inventory.items.subtypes.ItemSubtypes;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import cz.neumimto.rpg.common.entity.players.CharacterService;

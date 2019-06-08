@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.sponge.skills.scripting;
 
+import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.entity.IEntity;

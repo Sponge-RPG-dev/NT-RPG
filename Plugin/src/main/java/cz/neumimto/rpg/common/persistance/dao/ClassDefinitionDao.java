@@ -20,7 +20,7 @@ package cz.neumimto.rpg.common.persistance.dao;
 
 import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.sponge.configuration.ClassTypeDefinition;
+import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;

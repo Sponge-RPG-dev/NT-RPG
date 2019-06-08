@@ -21,7 +21,7 @@ import cz.neumimto.rpg.sponge.inventory.data.DataConstants;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.ItemSocketsData;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.ItemStackUpgradeData;
-import cz.neumimto.rpg.sponge.inventory.sockets.SocketType;
+import cz.neumimto.rpg.common.inventory.sockets.SocketType;
 import cz.neumimto.rpg.sponge.inventory.sockets.SocketTypes;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.Game;

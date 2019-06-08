@@ -17,7 +17,6 @@ import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.utils.rng.XORShiftRnd;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.sponge.entities.entities.EntityService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityType;
 import cz.neumimto.rpg.api.entity.IReservable;

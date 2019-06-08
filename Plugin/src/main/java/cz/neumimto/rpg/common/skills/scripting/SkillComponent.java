@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.sponge.skills.scripting;
+package cz.neumimto.rpg.common.skills.scripting;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.inventory.data.manipulators;
 
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
-import cz.neumimto.rpg.sponge.inventory.sockets.SocketType;
+import cz.neumimto.rpg.common.inventory.sockets.SocketType;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;

@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.common.persistance;
+package cz.neumimto.rpg.sponge.persistance;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;

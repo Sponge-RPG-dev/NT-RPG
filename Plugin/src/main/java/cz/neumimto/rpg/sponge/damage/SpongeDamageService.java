@@ -28,8 +28,10 @@ import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
+import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 
@@ -41,7 +43,7 @@ import java.util.stream.Collectors;
  * Created by NeumimTo on 4.8.15.
  */
 @Singleton
-public class SpongeDamageService extends DamageServiceImpl {
+public class SpongeDamageService extends DamageServiceImpl<Living> {
 
     private Map<Double, TextColor> doubleColorMap = new TreeMap<>();
 
@@ -142,4 +144,9 @@ public class SpongeDamageService extends DamageServiceImpl {
         return val;
     }
 
+
+    @Override
+    public void damageEntity(IEntity<Living> entity, double value) {
+        entity.getEntity().damage(value, DamageSource.builder().build());
+    }
 }

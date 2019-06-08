@@ -26,7 +26,7 @@ import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.sponge.commands.arguments.CommandSkillArgument;
 import cz.neumimto.rpg.sponge.configuration.CommandLocalization;
 import cz.neumimto.rpg.sponge.inventory.items.ItemMetaType;
-import cz.neumimto.rpg.sponge.inventory.sockets.SocketType;
+import cz.neumimto.rpg.common.inventory.sockets.SocketType;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.sponge.commands.admin.*;
 import cz.neumimto.rpg.sponge.commands.character.*;

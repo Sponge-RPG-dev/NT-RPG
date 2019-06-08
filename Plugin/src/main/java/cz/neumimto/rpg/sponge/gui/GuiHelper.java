@@ -10,7 +10,7 @@ import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.SkillPathData;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.SkillData;
-import cz.neumimto.rpg.sponge.configuration.ClassTypeDefinition;
+import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.sponge.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.sponge.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;

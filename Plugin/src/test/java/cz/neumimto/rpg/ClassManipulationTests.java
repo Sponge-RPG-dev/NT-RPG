@@ -3,7 +3,7 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
 import cz.neumimto.rpg.api.utils.ActionResult;
-import cz.neumimto.rpg.sponge.configuration.ClassTypeDefinition;
+import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
 import cz.neumimto.rpg.junit.NtRpgExtension;

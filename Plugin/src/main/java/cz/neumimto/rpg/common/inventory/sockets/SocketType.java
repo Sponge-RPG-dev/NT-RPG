@@ -1,10 +1,7 @@
-package cz.neumimto.rpg.sponge.inventory.sockets;
+package cz.neumimto.rpg.common.inventory.sockets;
 
-import org.spongepowered.api.CatalogType;
-import org.spongepowered.api.util.annotation.CatalogedBy;
 
-@CatalogedBy(SocketTypes.class)
-public class SocketType implements CatalogType {
+public class SocketType {
 
     private final String name;
     private final String id;
@@ -14,12 +11,10 @@ public class SocketType implements CatalogType {
         this.name = name;
     }
 
-    @Override
     public String getName() {
         return name;
     }
 
-    @Override
     public String getId() {
         return id;
     }

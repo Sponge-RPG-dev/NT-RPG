@@ -14,7 +14,6 @@ import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.PassiveScriptSkill;
 import cz.neumimto.rpg.api.skills.types.ScriptSkill;
-import cz.neumimto.rpg.sponge.skills.types.TargetedScriptSkill;
 import cz.neumimto.rpg.api.utils.annotations.CatalogId;
 import cz.neumimto.rpg.common.configuration.SkillTreeDao;
 import cz.neumimto.rpg.common.entity.players.CharacterService;

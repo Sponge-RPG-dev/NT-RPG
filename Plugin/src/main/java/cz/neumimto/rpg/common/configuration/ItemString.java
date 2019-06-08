@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.common.configuration;
 
-import cz.neumimto.rpg.sponge.utils.Utils;
+import cz.neumimto.rpg.api.utils.MathUtils;
 
 public final class ItemString {
     public final String itemId;
@@ -26,7 +26,7 @@ public final class ItemString {
                 break;
             case 2:
                 id = data[0];
-                if (Utils.isNumeric(data[1])) {
+                if (MathUtils.isNumeric(data[1])) {
                     damage = Double.parseDouble(data[1]);
                 } else {
                     model = data[1];
@@ -34,12 +34,12 @@ public final class ItemString {
                 break;
             case 3:
                 id = data[0];
-                if (Utils.isNumeric(data[1])) {
+                if (MathUtils.isNumeric(data[1])) {
                     damage = Double.parseDouble(data[1]);
                     model = data[2];
                     break;
                 }
-                if (Utils.isNumeric(data[2])) {
+                if (MathUtils.isNumeric(data[2])) {
                     damage = Double.parseDouble(data[2]);
                     model = data[1];
                 }

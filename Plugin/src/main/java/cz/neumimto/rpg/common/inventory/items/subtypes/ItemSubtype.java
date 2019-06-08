@@ -1,8 +1,6 @@
-package cz.neumimto.rpg.sponge.inventory.items.subtypes;
+package cz.neumimto.rpg.common.inventory.items.subtypes;
 
-import org.spongepowered.api.CatalogType;
-
-public class ItemSubtype implements CatalogType {
+public class ItemSubtype {
 
     private final String name;
     private final String id;

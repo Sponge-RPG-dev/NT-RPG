@@ -1,21 +1,19 @@
-package cz.neumimto.rpg.sponge.configuration;
+package cz.neumimto.rpg.common.configuration;
 
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
-import org.spongepowered.api.data.type.DyeColor;
-import org.spongepowered.api.text.format.TextColor;
 
 @ConfigSerializable
 public class ClassTypeDefinition implements Comparable<ClassTypeDefinition> {
 
     @Setting("PrimaryColor")
-    private TextColor primaryColor;
+    private String primaryColor;
 
     @Setting("SecondaryColor")
-    private TextColor secondaryColor;
+    private String secondaryColor;
 
     @Setting("DyeColor")
-    private DyeColor dyeColor;
+    private String dyeColor;
 
     @Setting("Changeable")
     private boolean changeable;
@@ -23,7 +21,7 @@ public class ClassTypeDefinition implements Comparable<ClassTypeDefinition> {
     @Setting("Order")
     private int order;
 
-    public ClassTypeDefinition(TextColor primaryColor, TextColor secondaryColor, DyeColor dyeColor, boolean changeable, int order) {
+    public ClassTypeDefinition(String primaryColor, String secondaryColor, String dyeColor, boolean changeable, int order) {
         this.primaryColor = primaryColor;
         this.secondaryColor = secondaryColor;
         this.changeable = changeable;
@@ -34,11 +32,11 @@ public class ClassTypeDefinition implements Comparable<ClassTypeDefinition> {
     public ClassTypeDefinition() {
     }
 
-    public TextColor getPrimaryColor() {
+    public String getPrimaryColor() {
         return primaryColor;
     }
 
-    public TextColor getSecondaryColor() {
+    public String getSecondaryColor() {
         return secondaryColor;
     }
 
@@ -46,7 +44,7 @@ public class ClassTypeDefinition implements Comparable<ClassTypeDefinition> {
         return changeable;
     }
 
-    public DyeColor getDyeColor() {
+    public String getDyeColor() {
         return dyeColor;
     }
 

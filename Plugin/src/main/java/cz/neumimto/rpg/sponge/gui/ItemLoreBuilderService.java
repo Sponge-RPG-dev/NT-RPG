@@ -12,7 +12,7 @@ import cz.neumimto.rpg.sponge.inventory.LoreSectionDelimiter;
 import cz.neumimto.rpg.sponge.inventory.data.DataConstants;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.ItemSocketsData;
-import cz.neumimto.rpg.sponge.inventory.sockets.SocketType;
+import cz.neumimto.rpg.common.inventory.sockets.SocketType;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import org.spongepowered.api.Sponge;

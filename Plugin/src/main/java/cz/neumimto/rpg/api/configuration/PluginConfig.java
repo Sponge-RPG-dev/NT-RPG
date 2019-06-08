@@ -18,10 +18,7 @@
 
 package cz.neumimto.rpg.api.configuration;
 
-import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
 import cz.neumimto.rpg.api.utils.DebugLevel;
-import cz.neumimto.rpg.sponge.configuration.ClassTypeDefinition;
-import cz.neumimto.rpg.sponge.configuration.ClassTypesDeserializer;
 import cz.neumimto.rpg.sponge.configuration.itemDamage.ItemDamageProcessor;
 import cz.neumimto.rpg.sponge.configuration.itemDamage.Max;
 import cz.neumimto.rpg.sponge.inventory.ItemLoreSections;

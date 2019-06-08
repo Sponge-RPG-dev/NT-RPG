@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.sponge.configuration;
 
 import com.google.common.reflect.TypeToken;
+import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
