@@ -92,6 +92,11 @@ public class CommandblockSkillExecutor extends PreloadCharacter {
     }
 
     @Override
+    public Object getEntity() {
+        return mock;
+    }
+
+    @Override
     public boolean hasEffect(String cl) {
         return true;
     }

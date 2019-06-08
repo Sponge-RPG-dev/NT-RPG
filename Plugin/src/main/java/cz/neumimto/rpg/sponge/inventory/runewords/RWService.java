@@ -2,17 +2,15 @@ package cz.neumimto.rpg.sponge.inventory.runewords;
 
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.classes.ClassService;
-import RWDao;
-import cz.neumimto.rpg.common.inventory.crafting.runewords.ItemUpgrade;
-import cz.neumimto.rpg.common.inventory.crafting.runewords.Rune;
-import cz.neumimto.rpg.common.inventory.crafting.runewords.RuneWord;
-import cz.neumimto.rpg.common.inventory.crafting.runewords.RuneWordTemplate;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.effects.EffectParams;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.api.utils.rng.XORShiftRnd;
-import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.common.inventory.crafting.runewords.*;
+import cz.neumimto.rpg.common.inventory.sockets.SocketType;
+import cz.neumimto.rpg.common.inventory.sockets.SocketTypes;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.events.RebuildRunewordEvent;
 import cz.neumimto.rpg.sponge.inventory.ItemUpgradeTransactionResult;
 import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
@@ -21,8 +19,6 @@ import cz.neumimto.rpg.sponge.inventory.data.DataConstants;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.ItemSocketsData;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.ItemStackUpgradeData;
-import cz.neumimto.rpg.common.inventory.sockets.SocketType;
-import cz.neumimto.rpg.common.inventory.sockets.SocketTypes;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
@@ -41,8 +37,8 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 import static cz.neumimto.rpg.api.logging.Log.warn;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 29.10.2015.

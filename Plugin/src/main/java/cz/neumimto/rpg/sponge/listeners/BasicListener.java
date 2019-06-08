@@ -19,14 +19,15 @@
 package cz.neumimto.rpg.sponge.listeners;
 
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.sponge.entities.entities.EntityService;
+import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityType;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.exp.ExperienceSources;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.exp.ExperienceService;
 import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.exp.ExperienceSources;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.utils.ItemStackUtils;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.block.BlockSnapshot;
@@ -72,7 +73,7 @@ import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 public class BasicListener {
 
     @Inject
-    private CharacterService characterService;
+    private SpongeCharacterServise characterService;
 
     @Inject
     private SpongeInventoryService spongeInventoryService;
@@ -90,7 +91,7 @@ public class BasicListener {
         }
 
         Optional<Player> first = event.getCause().first(Player.class);
-        IActiveCharacter character = null;
+        ISpongeCharacter character = null;
         if (first.isPresent()) {
             character = characterService.getCharacter(first.get().getUniqueId());
             if (character.isStub()) {
@@ -168,7 +169,7 @@ public class BasicListener {
     public void onRespawn(RespawnPlayerEvent event) {
         Entity type = event.getTargetEntity();
         if (type.getType() == EntityTypes.PLAYER) {
-            IActiveCharacter character = characterService.getCharacter(type.getUniqueId());
+            ISpongeCharacter character = characterService.getCharacter(type.getUniqueId());
             if (character.isStub()) {
                 return;
             }
@@ -178,7 +179,7 @@ public class BasicListener {
 
     @Listener(order = Order.POST)
     public void onBlockBreak(ChangeBlockEvent.Break event, @First Player player) {
-        IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+        ISpongeCharacter character = characterService.getCharacter(player.getUniqueId());
         for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
             String type = transaction.getOriginal().getState().getType().getId();
 
@@ -227,7 +228,7 @@ public class BasicListener {
                     return;
                 }
             }
-            IActiveCharacter character = characterService.getCharacter(player);
+            ISpongeCharacter character = characterService.getCharacter(player);
             characterService.addExperiences(character, d, ExperienceSources.FISHING);
         }
 

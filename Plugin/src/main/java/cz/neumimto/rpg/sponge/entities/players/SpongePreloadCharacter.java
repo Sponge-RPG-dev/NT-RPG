@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.sponge.entities.players;
 
+import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.common.entity.players.PlayerNotInGameException;
 import cz.neumimto.rpg.common.entity.players.PreloadCharacter;
 import org.spongepowered.api.Sponge;
@@ -28,6 +29,11 @@ public class SpongePreloadCharacter extends PreloadCharacter implements ISpongeC
     @Override
     public UUID getUUID() {
         return uuid;
+    }
+
+    @Override
+    public void sendMessage(int channel, String message) {
+        getPlayer().sendMessage(TextHelper.parse(message));
     }
 
 }

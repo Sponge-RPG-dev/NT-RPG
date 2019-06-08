@@ -19,6 +19,10 @@
 package cz.neumimto.rpg.api.entity.players;
 
 import cz.neumimto.rpg.api.entity.EntityHand;
+import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.entity.IEntityType;
+import cz.neumimto.rpg.api.entity.IReservable;
+import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.entity.players.party.IParty;
@@ -27,15 +31,10 @@ import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
-import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.IEntityType;
-import cz.neumimto.rpg.api.entity.IReservable;
-import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
-import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
 
 import java.util.*;
 
@@ -203,10 +202,6 @@ public interface IActiveCharacter<T> extends IEntity<T> {
     List<Integer> getSlotsToReinitialize();
 
     void setSlotsToReinitialize(List<Integer> slotsToReinitialize);
-
-    Map<String, SkillTreeViewModel> getSkillTreeViewLocation();
-
-    SkillTreeViewModel getLastTimeInvokedSkillTreeView();
 
     void addSkillTreeSpecialization(SkillTreeSpecialization specialization);
 

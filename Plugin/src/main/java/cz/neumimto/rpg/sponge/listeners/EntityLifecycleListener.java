@@ -3,14 +3,16 @@ package cz.neumimto.rpg.sponge.listeners;
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
-import cz.neumimto.rpg.sponge.entities.entities.EntityService;
+import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityType;
-import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.exp.ExperienceSources;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
@@ -42,7 +44,7 @@ import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 public class EntityLifecycleListener {
 
     @Inject
-    private CharacterService characterService;
+    private SpongeCharacterServise characterService;
 
     @Inject
     private EffectService effectService;
@@ -65,7 +67,7 @@ public class EntityLifecycleListener {
     @Listener
     public void onPlayerLogin(ClientConnectionEvent.Join event) {
         //  IActiveCharacter character = characterService.getTarget(event.getTarget().getUniqueId());
-        characterService.checkPlayerDataStatus(event.getTargetEntity());
+        characterService.checkPlayerDataStatus(event.getTargetEntity().getUniqueId());
     }
 
     @Listener
@@ -123,12 +125,12 @@ public class EntityLifecycleListener {
 
 
             if (source != null) {
-                IActiveCharacter character = characterService.getCharacter(source.getUniqueId());
+                ISpongeCharacter character = characterService.getCharacter(source.getUniqueId());
                 if (character != null) {
                     if (!Utils.isLivingEntity(source)) {
                         return;
                     }
-                    double exp = entityService.getExperiences(targetEntity);
+                    double exp = entityService.getExperiences(targetEntity.getWorld().getName(), targetEntity.getType().getId());
 
                     exp += character.getExperienceBonusFor(targetEntity.getLocation().getExtent().getName(), targetEntity.getType());
                     String experienceSource = targetEntity.getType() == EntityTypes.PLAYER ? ExperienceSources.PVP : ExperienceSources.PVE;
@@ -136,8 +138,8 @@ public class EntityLifecycleListener {
                     if (character.hasParty()) {
                         exp *= pluginConfig.PARTY_EXPERIENCE_MULTIPLIER;
                         double dist = Math.pow(pluginConfig.PARTY_EXPERIENCE_SHARE_DISTANCE, 2);
-                        Set<IActiveCharacter> set = new HashSet<>();
-                        for (IActiveCharacter member : character.getParty().getPlayers()) {
+                        Set<ISpongeCharacter> set = new HashSet<>();
+                        for (ISpongeCharacter member : character.getParty().getPlayers()) {
                             Player player = member.getPlayer();
                             if (player.getLocation().getPosition()
                                     .distanceSquared(character.getPlayer().getLocation().getPosition()) <= dist) {
@@ -145,7 +147,7 @@ public class EntityLifecycleListener {
                             }
                         }
                         exp /= set.size();
-                        for (IActiveCharacter character1 : set) {
+                        for (ISpongeCharacter character1 : set) {
                             characterService.addExperiences(character1, exp, experienceSource);
                         }
                     } else {
@@ -160,8 +162,8 @@ public class EntityLifecycleListener {
                 SkillDamageSource skillDamageSource = sds.get();
                 IEntity caster = skillDamageSource.getSourceIEntity();
                 if (caster.getType() == IEntityType.CHARACTER) {
-                    double exp = entityService.getExperiences(event.getTargetEntity());
-                    characterService.addExperiences((IActiveCharacter) caster, exp, ExperienceSources.PVE);
+                    double exp = entityService.getExperiences(event.getTargetEntity().getWorld().getName(), event.getTargetEntity().getType().getId());
+                    characterService.addExperiences((ISpongeCharacter) caster, exp, ExperienceSources.PVE);
                 }
             }
             entityService.remove(event.getTargetEntity().getUniqueId());

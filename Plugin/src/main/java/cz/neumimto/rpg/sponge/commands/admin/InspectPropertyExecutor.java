@@ -1,10 +1,11 @@
 package cz.neumimto.rpg.sponge.commands.admin;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.api.utils.TriConsumer;
-import cz.neumimto.rpg.sponge.entities.entities.EntityService;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.utils.TriConsumer;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -29,9 +30,9 @@ public class InspectPropertyExecutor implements CommandExecutor {
 
     private TriConsumer<CommandSource, String, Player> PROPERTY_DETAIL = (src, data, player) -> {
         SpongePropertyService ps = NtRpgPlugin.GlobalScope.spongePropertyService;
-        CharacterService cs = NtRpgPlugin.GlobalScope.characterService;
-        ;
-        EntityService es = NtRpgPlugin.GlobalScope.entityService;
+        SpongeCharacterServise cs = NtRpgPlugin.GlobalScope.characterService;
+
+        EntityService es = Rpg.get().getEntityService();
 
         try {
             int idByName = ps.getIdByName(data);

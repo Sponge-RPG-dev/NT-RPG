@@ -51,7 +51,7 @@ import java.util.stream.Collectors;
  * Created by NeumimTo on 26.12.2014.
  */
 
-public abstract class ActiveCharacter implements IActiveCharacter {
+public abstract class ActiveCharacter<T> implements IActiveCharacter<T> {
 
     protected transient UUID pl;
     protected JPACharacterBase base;
@@ -103,7 +103,6 @@ public abstract class ActiveCharacter implements IActiveCharacter {
 
     private Set<SkillTreeSpecialization> specs = new HashSet<>();
 
-    private transient Map<String, SkillTreeViewModel> skillTreeViewLocation;
     private transient Map<String, Integer> attributeSession = new HashMap<>();
 
     private transient Map<Class<?>, RpgInventory> inventory;
@@ -125,7 +124,6 @@ public abstract class ActiveCharacter implements IActiveCharacter {
         this.base = base;
         this.skills = new PlayerSkillHandlers.SHARED();
         this.slotsToReinitialize = new ArrayList<>();
-        this.skillTreeViewLocation = new HashMap<>();
         this.denySlotInteractionArr = new HashSet<>();
         this.inventory = new HashMap<>();
         this.requiresDamageRecalculation = true;
@@ -603,21 +601,6 @@ public abstract class ActiveCharacter implements IActiveCharacter {
             return true;
         }
         return getParty().getPlayers().contains(character);
-    }
-
-    @Override
-    public Map<String, SkillTreeViewModel> getSkillTreeViewLocation() {
-        return skillTreeViewLocation;
-    }
-
-    @Override
-    public SkillTreeViewModel getLastTimeInvokedSkillTreeView() {
-        for (SkillTreeViewModel skillTreeViewModel : skillTreeViewLocation.values()) {
-            if (skillTreeViewModel.isCurrent()) {
-                return skillTreeViewModel;
-            }
-        }
-        return null;
     }
 
     @Override

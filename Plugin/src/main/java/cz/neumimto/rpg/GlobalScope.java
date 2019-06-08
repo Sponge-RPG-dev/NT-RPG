@@ -20,24 +20,24 @@ package cz.neumimto.rpg;
 
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.classes.ClassService;
+import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.events.effect.EventFactoryService;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.common.assets.AssetService;
-import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
-import cz.neumimto.rpg.sponge.entities.entities.EntityService;
-import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
-import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
-import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.parties.PartyServiceImpl;
-import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import cz.neumimto.rpg.common.scripting.JSLoader;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.commands.CommandService;
+import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
+import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
+import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
+import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
+import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
 import org.spongepowered.api.Game;
 
@@ -51,7 +51,7 @@ import javax.inject.Singleton;
 public class GlobalScope {
 
     @Inject
-    public CharacterService characterService;
+    public SpongeCharacterServise characterService;
 
     @Inject
     public EffectService effectService;

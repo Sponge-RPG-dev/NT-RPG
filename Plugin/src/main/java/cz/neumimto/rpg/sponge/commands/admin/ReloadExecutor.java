@@ -135,8 +135,8 @@ public class ReloadExecutor implements CommandExecutor {
                         if (playersCharacters.isEmpty()) {
                             continue;
                         }
-                        JPACharacterBase max = playersCharacters.stream().max(cmp).get();
-                        ActiveCharacter activeCharacter = NtRpgPlugin.GlobalScope.characterService.createActiveCharacter(player.getUniqueId(), max);
+                        CharacterBase max = playersCharacters.stream().max(cmp).get();
+                        IActiveCharacter activeCharacter = NtRpgPlugin.GlobalScope.characterService.createActiveCharacter(player.getUniqueId(), max);
                         NtRpgPlugin.GlobalScope.characterService.setActiveCharacter(player.getUniqueId(), activeCharacter);
                         NtRpgPlugin.GlobalScope.characterService.invalidateCaches(activeCharacter);
                         NtRpgPlugin.GlobalScope.characterService.assignPlayerToCharacter(player);

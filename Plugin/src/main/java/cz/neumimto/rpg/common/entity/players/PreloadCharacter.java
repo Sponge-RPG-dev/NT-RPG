@@ -18,10 +18,12 @@
 
 package cz.neumimto.rpg.common.entity.players;
 
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.EffectContainer;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.EntityHand;
+import cz.neumimto.rpg.api.entity.IReservable;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
@@ -29,13 +31,12 @@ import cz.neumimto.rpg.api.entity.players.party.IParty;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
-import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
+import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
-import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
-import cz.neumimto.rpg.api.entity.IReservable;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
 
 import java.util.*;
 
@@ -43,17 +44,15 @@ import java.util.*;
 /**
  * Created by NeumimTo on 23.7.2015.
  */
-public abstract class PreloadCharacter implements IActiveCharacter {
+public abstract class PreloadCharacter<T> implements IActiveCharacter<T> {
 
     private static float[] characterProperties = new float[PropertyServiceImpl.LAST_ID];
-    private IReservable mana = new CharacterMana(this);
     protected UUID uuid;
-    private CharacterHealth health = new CharacterHealthStub(this);
+
     private boolean isusinggui;
 
     public PreloadCharacter(UUID uuid) {
         this.uuid = uuid;
-        mana.setMaxValue(0);
     }
 
 
@@ -84,7 +83,7 @@ public abstract class PreloadCharacter implements IActiveCharacter {
 
     @Override
     public boolean isInvulnerable() {
-        return pluginConfig.ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS;
+        return Rpg.get().getPluginConfig().ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS;
     }
 
     @Override
@@ -174,9 +173,6 @@ public abstract class PreloadCharacter implements IActiveCharacter {
 
     @Override
     public float getProperty(int index) {
-        if (index == SpongeDefaultProperties.walk_speed) { //let player move around even without character
-            return 0.2f;
-        }
         return 0;
     }
 
@@ -207,7 +203,7 @@ public abstract class PreloadCharacter implements IActiveCharacter {
 
     @Override
     public IReservable getMana() {
-        return mana;
+        return null;
     }
 
     @Override
@@ -217,17 +213,11 @@ public abstract class PreloadCharacter implements IActiveCharacter {
 
     @Override
     public IReservable getHealth() {
-        return health;
+        return null;
     }
 
     @Override
     public void setHealth(IReservable health) {
-
-    }
-
-
-    @Override
-    public void resetRightClicks() {
 
     }
 
@@ -381,7 +371,7 @@ public abstract class PreloadCharacter implements IActiveCharacter {
 
     @Override
     public IParty getParty() {
-        return new SpongeParty(this);
+        return null;
     }
 
     @Override
@@ -433,16 +423,6 @@ public abstract class PreloadCharacter implements IActiveCharacter {
     @Override
     public boolean isDetached() {
         return true;
-    }
-
-    @Override
-    public Map<java.lang.String, SkillTreeViewModel> getSkillTreeViewLocation() {
-        return Collections.emptyMap();
-    }
-
-    @Override
-    public SkillTreeViewModel getLastTimeInvokedSkillTreeView() {
-        return null;
     }
 
     @Override

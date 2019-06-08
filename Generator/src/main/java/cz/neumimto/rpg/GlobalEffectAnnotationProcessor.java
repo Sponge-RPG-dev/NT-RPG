@@ -22,7 +22,7 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
 
 	private String template =  //fuck it
 			"\n" +
-					"import cz.neumimto.rpg.effects.IEffectConsumer;\n" +
+					"import cz.neumimto.rpg.api.entity.IEffectConsumer;\n" +
 					"import cz.neumimto.rpg.api.effects.IGlobalEffect;\n" +
 					"import cz.neumimto.rpg.api.effects.model.EffectModelFactory;\n" +
 					"\n" +
