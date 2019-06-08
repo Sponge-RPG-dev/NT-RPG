@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.common.inventory.crafting.runewords;
 
 import cz.neumimto.rpg.common.inventory.sockets.SocketType;
-import cz.neumimto.rpg.sponge.inventory.sockets.SocketTypes;
+import cz.neumimto.rpg.common.inventory.sockets.SocketTypes;
 
 public class Gem extends ItemUpgrade {
 

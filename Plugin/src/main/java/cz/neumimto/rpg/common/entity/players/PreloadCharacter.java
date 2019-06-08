@@ -39,7 +39,6 @@ import cz.neumimto.rpg.api.entity.IReservable;
 
 import java.util.*;
 
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 23.7.2015.

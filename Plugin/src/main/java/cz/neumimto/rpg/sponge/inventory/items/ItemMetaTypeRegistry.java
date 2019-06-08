@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.sponge.inventory.items;
 
 import com.google.common.collect.Maps;
+import cz.neumimto.rpg.common.inventory.items.ItemMetaType;
 import org.spongepowered.api.registry.AdditionalCatalogRegistryModule;
 import org.spongepowered.api.registry.util.RegisterCatalog;
 

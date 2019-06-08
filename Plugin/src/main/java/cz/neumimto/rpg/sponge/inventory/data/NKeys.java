@@ -5,7 +5,7 @@ import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.sponge.inventory.ItemDamage;
 import cz.neumimto.rpg.sponge.inventory.LoreDurability;
 import cz.neumimto.rpg.sponge.inventory.LoreSectionDelimiter;
-import cz.neumimto.rpg.sponge.inventory.items.ItemMetaType;
+import cz.neumimto.rpg.common.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.common.inventory.sockets.SocketType;
 import cz.neumimto.rpg.sponge.gui.SkillTreeControllsButton;

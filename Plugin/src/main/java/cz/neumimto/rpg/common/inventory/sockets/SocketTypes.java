@@ -1,6 +1,4 @@
-package cz.neumimto.rpg.sponge.inventory.sockets;
-
-import cz.neumimto.rpg.common.inventory.sockets.SocketType;
+package cz.neumimto.rpg.common.inventory.sockets;
 
 /**
  * Created by NeumimTo on 14.1.2018.

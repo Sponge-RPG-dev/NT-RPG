@@ -2,7 +2,6 @@ package cz.neumimto.rpg.common.inventory.crafting.runewords;
 
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.common.inventory.sockets.SocketType;
-import org.spongepowered.api.Sponge;
 
 import java.util.HashMap;
 import java.util.Map;

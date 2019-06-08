@@ -1,11 +1,9 @@
-package cz.neumimto.rpg.sponge.inventory.items;
-
-import org.spongepowered.api.CatalogType;
+package cz.neumimto.rpg.common.inventory.items;
 
 /**
  * Created by NeumimTo on 30.3.2018.
  */
-public class ItemMetaType implements CatalogType {
+public class ItemMetaType {
 
     private final String name;
     private final String id;
@@ -15,12 +13,10 @@ public class ItemMetaType implements CatalogType {
         this.name = name;
     }
 
-    @Override
     public String getId() {
         return id;
     }
 
-    @Override
     public String getName() {
         return name;
     }

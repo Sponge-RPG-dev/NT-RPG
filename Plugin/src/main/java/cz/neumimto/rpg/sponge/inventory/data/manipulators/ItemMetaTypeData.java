@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.sponge.inventory.data.manipulators;
 
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
-import cz.neumimto.rpg.sponge.inventory.items.ItemMetaType;
-import cz.neumimto.rpg.sponge.inventory.items.ItemMetaTypes;
+import cz.neumimto.rpg.common.inventory.items.ItemMetaType;
+import cz.neumimto.rpg.common.inventory.items.ItemMetaTypes;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;

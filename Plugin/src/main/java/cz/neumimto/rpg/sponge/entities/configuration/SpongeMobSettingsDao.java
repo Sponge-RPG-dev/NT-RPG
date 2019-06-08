@@ -11,6 +11,8 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.entity.living.Living;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import javax.inject.Singleton;
@@ -58,5 +60,9 @@ public class SpongeMobSettingsDao extends MobSettingsDao {
     }
 
 
+    @Listener
+    public void load(GameStartedServerEvent event) {
+        cache = createDefaults("MobSettings.conf");
+    }
 
 }

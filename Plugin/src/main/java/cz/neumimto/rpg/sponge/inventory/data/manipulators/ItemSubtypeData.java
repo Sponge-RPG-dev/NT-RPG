@@ -2,7 +2,7 @@ package cz.neumimto.rpg.sponge.inventory.data.manipulators;
 
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtype;
-import cz.neumimto.rpg.sponge.inventory.items.subtypes.ItemSubtypes;
+import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtypes;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;

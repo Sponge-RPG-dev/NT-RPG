@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.commands.item;
 
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.sponge.inventory.items.ItemMetaType;
+import cz.neumimto.rpg.common.inventory.items.ItemMetaType;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
