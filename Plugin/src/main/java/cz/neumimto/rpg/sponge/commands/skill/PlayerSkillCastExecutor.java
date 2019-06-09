@@ -1,13 +1,16 @@
 package cz.neumimto.rpg.sponge.commands.skill;
 
 import cz.neumimto.core.localization.Arg;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.api.gui.Gui;
+import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.localization.LocalizationKeys;
+import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.mods.SkillExecutorCallback;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -26,8 +29,9 @@ public class PlayerSkillCastExecutor implements CommandExecutor {
         ISkill skill = args.<ISkill>getOne(Text.of("skill")).get();
 
         PlayerSkillContext info = character.getSkillInfo(skill.getId());
+        final LocalizationService localizationService = Rpg.get().getLocalizationService();
         if (info == PlayerSkillContext.Empty || info == null) {
-            src.sendMessage(Localizations.CHARACTER_DOES_NOT_HAVE_SKILL.toText(Arg.arg("skill", skill.getName())));
+            src.sendMessage(TextHelper.parse(localizationService.translate(LocalizationKeys.CHARACTER_DOES_NOT_HAVE_SKILL, Arg.arg("skill", skill.getName()))));
             //TODO: maybe return?
         }
         NtRpgPlugin.GlobalScope.skillService.executeSkill(character, info, new SkillExecutorCallback() {
@@ -37,16 +41,17 @@ public class PlayerSkillCastExecutor implements CommandExecutor {
                     case ON_COOLDOWN:
                         break;
                     case NO_MANA:
-                        Gui.sendMessage(character, Localizations.NO_MANA, Arg.EMPTY);
+                        character.sendMessage(localizationService.translate(LocalizationKeys.NO_MANA));
                         break;
                     case NO_HP:
-                        Gui.sendMessage(character, Localizations.NO_HP, Arg.EMPTY);
+                        character.sendMessage(localizationService.translate(LocalizationKeys.NO_HP));
                         break;
                     case CASTER_SILENCED:
-                        Gui.sendMessage(character, Localizations.PLAYER_IS_SILENCED, Arg.EMPTY);
+                        character.sendMessage(localizationService.translate(LocalizationKeys.PLAYER_IS_SILENCED));
                         break;
                     case NO_TARGET:
-                        Gui.sendMessage(character, Localizations.NO_TARGET, Arg.EMPTY);
+                        character.sendMessage(localizationService.translate(LocalizationKeys.NO_TARGET));
+                        break;
                 }
             }
         });

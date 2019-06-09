@@ -1,18 +1,24 @@
 package cz.neumimto.rpg.sponge.effects.common.def;
 
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.api.localization.LocalizationKeys;
+import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.common.effects.CoreEffectTypes;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.boss.BossBarColors;
 import org.spongepowered.api.boss.BossBarOverlays;
 import org.spongepowered.api.boss.ServerBossBar;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
@@ -60,11 +66,14 @@ public class BossBarExpNotifier extends SpongeEffectBase<Object> implements IEff
             sessionWrapper.currentSessionExp += exps;
             DecimalFormat df = new DecimalFormat("#.00");
 
+            LocalizationService localizationService = Rpg.get().getLocalizationService();
+            String preferedColor = playerClassData.getClassDefinition().getPreferedColor();
+            TextColor textColor = Sponge.getRegistry().getType(TextColor.class, preferedColor).orElse(TextColors.WHITE);
 
             serverBossBar.setName(
-                    Text.builder(Utils.capitalizeFirst(classname)).color(playerClassData.getClassDefinition().getPreferedColor())
-                            .append(Text.builder(" ").append(Localizations.LEVEL.toText()).append(Text.of(": ")).color(TextColors.DARK_GRAY)
-                                    .build())
+                    Text.builder(Utils.capitalizeFirst(classname)).color(textColor)
+                            .append(Text.of(localizationService.translate(LocalizationKeys.LEVEL)))
+                            .append(Text.of(": ")).color(TextColors.DARK_GRAY)
                             .append(Text.builder(String.valueOf(playerClassData.getLevel())).color(TextColors.GOLD).build())
                             .append(Text.builder(" +" + df.format(sessionWrapper.currentSessionExp)).color(TextColors.GREEN).build())
                             .append(Text.builder(" " + df.format(playerClassData.getExperiencesFromLevel())
@@ -76,7 +85,7 @@ public class BossBarExpNotifier extends SpongeEffectBase<Object> implements IEff
                             .build());
 
 
-            serverBossBar.setPercent((float) Utils
+            serverBossBar.setPercent((float) MathUtils
                     .getPercentage(playerClassData.getExperiencesFromLevel(), playerClassData.getClassDefinition().getLevelProgression().getLevelMargins()[playerClassData.getLevel()])
                     / 100);
             serverBossBar.setVisible(true);

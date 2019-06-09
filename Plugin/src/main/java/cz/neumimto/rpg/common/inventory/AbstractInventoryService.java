@@ -7,13 +7,13 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractInventoryService implements InventoryService {
+public abstract class AbstractInventoryService<T extends IActiveCharacter> implements InventoryService<T> {
 
 
     protected Map<Class<?>, ManagedInventory> managedInventories = new HashMap<>();
 
     @Override
-    public void initializeManagedSlots(IActiveCharacter activeCharacter) {
+    public void initializeManagedSlots(T activeCharacter) {
         Map<Class<?>, RpgInventory> managedInventory = activeCharacter.getManagedInventory();
         for (Map.Entry<Class<?>, ManagedInventory> entry : managedInventories.entrySet()) {
             Class<?> key = entry.getKey();

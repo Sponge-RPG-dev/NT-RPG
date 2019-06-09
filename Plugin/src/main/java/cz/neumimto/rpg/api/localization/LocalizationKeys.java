@@ -75,4 +75,24 @@ public class LocalizationKeys {
     public static final String RUNE_LIST = "gui.label.rune-list";
 
     public static final String ON_COOLDOWN = "player.action-on-cooldown.message";
+
+
+    public static final String ITEM_DAMAGE = "gui.label.item-damage";
+    public static final String SKILL_VALUE_PER_LEVEL = "gui.label.skill.setting-start-at";
+    public static final String SKILL_VALUE_STARTS_AT = "gui.label.skill.setting-per-level";;
+    public static final String CONFIRM_SKILL_SELECTION_BUTTON = "gui.button.label.confirm.skill-selection";
+    public static final String WEAPONS_MENU_HELP = "gui.label.weapons.tooltip";
+    public static final String WEAPONS = "gui.label.weapons";
+    public static final String ARMOR = "gui.label.armor";
+    public static final String ARMOR_MENU_HELP = "gui.label.armor.tooltip";
+    public static final String PROPERTIES = "gui.label.generic.properties";
+    public static final String CLASS_TYPES = "gui.label.class-types";
+    public static final String BACK = "gui.button.back";
+    public static final String LEVEL = "gui.label.level";
+    public static final String PARTY_CREATED = "player.party-created.message";
+    public static final String NO_MANA = "player.skill-cast.precondition.no-mana.message";
+    public static final String NO_HP = "player.skill-cast.precondition.no-hp.message";
+    public static final String PLAYER_IS_SILENCED = "player.skill-cast.precondition.silenced.message";
+    public static final String NO_TARGET = "player.skill-cast.precondition.no-targed.message";
+    public static final String CHARACTER_DOES_NOT_HAVE_SKILL = "player.skill-cast.precondition.no-skillaccess.message";
 }

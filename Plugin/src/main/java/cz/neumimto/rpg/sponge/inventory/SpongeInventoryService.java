@@ -21,14 +21,12 @@ package cz.neumimto.rpg.sponge.inventory;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import cz.neumimto.core.localization.TextHelper;
-import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.common.configuration.ItemString;
-import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
-import cz.neumimto.rpg.common.inventory.ManagedInventory;
-import cz.neumimto.rpg.common.inventory.SlotEffectSource;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.effects.EffectParams;
+import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
@@ -39,22 +37,23 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillCost;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.api.utils.Console;
-import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.common.reloading.Reload;
-import cz.neumimto.rpg.common.reloading.ReloadService;
-import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
-import cz.neumimto.rpg.sponge.inventory.data.NKeys;
-import cz.neumimto.rpg.sponge.inventory.data.manipulators.*;
+import cz.neumimto.rpg.common.configuration.ItemString;
+import cz.neumimto.rpg.common.configuration.SkillItemCost;
+import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
+import cz.neumimto.rpg.common.inventory.ManagedInventory;
+import cz.neumimto.rpg.common.inventory.SlotEffectSource;
 import cz.neumimto.rpg.common.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtypes;
-import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.gui.ItemLoreBuilderService;
-import cz.neumimto.rpg.common.configuration.SkillItemCost;
+import cz.neumimto.rpg.sponge.inventory.data.NKeys;
+import cz.neumimto.rpg.sponge.inventory.data.manipulators.*;
+import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
+import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import ninja.leaping.configurate.SimpleConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
@@ -82,23 +81,16 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.regex.Pattern;
 
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 22.7.2015.
  */
 @Singleton
 @ResourceLoader.ListenerClass
-public class SpongeInventoryService extends AbstractInventoryService {
-
-    public static ItemType ITEM_SKILL_BIND = ItemTypes.BLAZE_POWDER;
-
-    public static Pattern REGEXP_NUMBER = Pattern.compile("-?\\d+");
-
-    public static Text NORMAL_RARITY;
+public class SpongeInventoryService extends AbstractInventoryService<ISpongeCharacter> {
 
     @Inject
     private ISkillService skillService;
@@ -107,7 +99,7 @@ public class SpongeInventoryService extends AbstractInventoryService {
     private Game game;
 
     @Inject
-    private CharacterService characterService;
+    private SpongeCharacterServise characterService;
 
     @Inject
     private EffectService effectService;
@@ -133,11 +125,6 @@ public class SpongeInventoryService extends AbstractInventoryService {
     @Inject
     private SpongeItemService itemService;
 
-
-    @Reload(on = ReloadService.PLUGIN_CONFIG)
-    public void init() {
-        NORMAL_RARITY = Localizations.NORMAL_RARITY.toText();
-    }
 
     @Listener
     //Dump items once game started, so we can assume that registries wont change anymore
@@ -180,14 +167,14 @@ public class SpongeInventoryService extends AbstractInventoryService {
     }
 
 
-    public void initializeCharacterInventory(IActiveCharacter character) {
+    public void initializeCharacterInventory(ISpongeCharacter character) {
         if (inventoryInteractionHandler.handleInventoryInitializationPre(character)) {
             fillInventory(character);
             inventoryInteractionHandler.handleInventoryInitializationPost(character);
         }
     }
 
-    private void fillInventory(IActiveCharacter character) {
+    private void fillInventory(ISpongeCharacter character) {
         Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
         Player player = character.getPlayer();
         for (Map.Entry<Class<?>, RpgInventory> e : managedInventory.entrySet()) {
@@ -360,7 +347,7 @@ public class SpongeInventoryService extends AbstractInventoryService {
     }
 
     @Override
-    public Set<ActiveSkillPreProcessorWrapper> processItemCost(IActiveCharacter character, PlayerSkillContext skillInfo) {
+    public Set<ActiveSkillPreProcessorWrapper> processItemCost(ISpongeCharacter character, PlayerSkillContext skillInfo) {
         SkillCost invokeCost = skillInfo.getSkillData().getInvokeCost();
         if (invokeCost == null) {
             return Collections.emptySet();

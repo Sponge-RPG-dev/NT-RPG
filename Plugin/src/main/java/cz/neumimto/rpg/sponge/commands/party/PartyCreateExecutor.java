@@ -1,10 +1,10 @@
 package cz.neumimto.rpg.sponge.commands.party;
 
-import cz.neumimto.core.localization.Arg;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.api.gui.Gui;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.sponge.entities.players.party.SpongeParty;
+import cz.neumimto.rpg.api.localization.LocalizationKeys;
+import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -16,18 +16,17 @@ public class PartyCreateExecutor implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src);
+        LocalizationService localizationService = Rpg.get().getLocalizationService();
         if (character.isStub()) {
-            character.sendMessage();
-            Gui.sendMessage(character, Localizations.CHARACTER_IS_REQUIRED, Arg.EMPTY);
+            character.sendMessage(localizationService.translate(LocalizationKeys.CHARACTER_IS_REQUIRED));
             return CommandResult.success();
         }
         if (character.hasParty()) {
-            Gui.sendMessage(character, Localizations.ALREADY_IN_PARTY, Arg.EMPTY);
+            character.sendMessage(localizationService.translate(LocalizationKeys.ALREADY_IN_PARTY));
             return CommandResult.success();
         }
-        SpongeParty party = new SpongeParty(character);
-        character.setParty(party);
-        Gui.sendMessage(character, Localizations.PARTY_CREATED, Arg.EMPTY);
+        Rpg.get().getPartyService().createNewParty(character);
+        character.sendMessage(localizationService.translate(LocalizationKeys.PARTY_CREATED));
         return CommandResult.success();
     }
 }

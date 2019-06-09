@@ -4,10 +4,10 @@ import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.common.effects.CoreEffectTypes;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
-import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.boss.BossBarColors;
 import org.spongepowered.api.boss.BossBarOverlays;
 import org.spongepowered.api.boss.ServerBossBar;
@@ -65,7 +65,7 @@ public class ManaBarNotifier extends SpongeEffectBase<Object> implements IEffect
 
 
         if (character.getMana().getMaxValue() > 0) {
-            bossBar.setPercent((float) (Utils.getPercentage(character.getMana().getValue(), character.getMana().getMaxValue()) * 0.01f));
+            bossBar.setPercent((float) (MathUtils.getPercentage(character.getMana().getValue(), character.getMana().getMaxValue()) * 0.01f));
             bossBar.setVisible(true);
         }
         setLastTickTime(System.currentTimeMillis());

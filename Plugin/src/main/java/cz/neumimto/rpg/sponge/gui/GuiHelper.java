@@ -4,6 +4,7 @@ import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.ISkillService;
@@ -11,6 +12,7 @@ import cz.neumimto.rpg.api.skills.SkillPathData;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.sponge.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
@@ -42,10 +44,12 @@ import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.item.inventory.property.SlotPos;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Block;
 import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Item;
@@ -108,8 +112,8 @@ public class GuiHelper {
         Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST)
                 .property(InventoryTitle.of(Text.of(w.getName(), w.getPreferedColor(), TextStyles.BOLD)))
                 .build(plugin);
-
-        makeBorder(i, NtRpgPlugin.pluginConfig.CLASS_TYPES.get(w.getClassType()).getDyeColor());
+        String dyeColor = NtRpgPlugin.pluginConfig.CLASS_TYPES.get(w.getClassType()).getDyeColor();
+        makeBorder(i, toDyeColor(dyeColor));
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(1, 4))).offer(toItemStack(w));
 
         if (!w.getWeapons().isEmpty()) {
@@ -131,25 +135,25 @@ public class GuiHelper {
         ClassTypeDefinition classTypeDefinition = NtRpgPlugin.pluginConfig.CLASS_TYPES.get(type);
         Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST)
                 .property(InventoryTitle.of(
-                        Text.builder("[ ").color(classTypeDefinition.getSecondaryColor())
-                                .append(Text.builder(type).color(classTypeDefinition.getPrimaryColor()).style(TextStyles.BOLD).build())
-                                .append(Text.builder(" ]").color(classTypeDefinition.getSecondaryColor()).build())
+                        Text.builder("[ ").color(toTextColor(classTypeDefinition.getSecondaryColor()))
+                                .append(Text.builder(type).color(toTextColor(classTypeDefinition.getPrimaryColor())).style(TextStyles.BOLD).build())
+                                .append(Text.builder(" ]").color(toTextColor(classTypeDefinition.getSecondaryColor())).build())
                                 .build()))
                 .build(plugin);
-        GuiHelper.makeBorder(i, classTypeDefinition.getDyeColor());
+        GuiHelper.makeBorder(i, toDyeColor(classTypeDefinition.getDyeColor()));
 
         NtRpgPlugin.GlobalScope.classService.getClassDefinitions().stream()
                 .filter(a -> a.getClassType().equalsIgnoreCase(type))
                 .forEach(a -> i.offer(GuiHelper.toItemStack(a)));
 
-        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 4))).offer(back("classes", Localizations.BACK.toText()));
+        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 4))).offer(back("classes", translate(LocalizationKeys.BACK)));
 
         return i;
     }
 
     public static Inventory createMenuInventoryClassTypesView() {
         Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST)
-                .property(InventoryTitle.of(Localizations.CLASS_TYPES.toText()))
+                .property(InventoryTitle.of(translate(LocalizationKeys.CLASS_TYPES)))
                 .build(plugin);
 
         makeBorder(i, DyeColors.WHITE);
@@ -172,7 +176,7 @@ public class GuiHelper {
     public static ItemStack createPropertyCommand(ClassDefinition group) {
         ItemStack i = itemStack(ItemTypes.BOOK);
         i.offer(NKeys.MENU_INVENTORY, true);
-        i.offer(Keys.DISPLAY_NAME, Localizations.PROPERTIES.toText());
+        i.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.PROPERTIES));
         String cc = NtRpgPlugin.GlobalScope.injector.getInstance(InfoCommand.class).getAliases().iterator().next();
         i.offer(new InventoryCommandItemMenuData(cc + " properties-initial " + group.getName()));
         return i;
@@ -181,7 +185,7 @@ public class GuiHelper {
     public static ItemStack createAttributesCommand(ClassDefinition group) {
         ItemStack i = itemStack(ItemTypes.BOOK);
         i.offer(NKeys.MENU_INVENTORY, true);
-        i.offer(Keys.DISPLAY_NAME, Localizations.ATTRIBUTES.toText());
+        i.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.ATTRIBUTES));
         String cc = NtRpgPlugin.GlobalScope.injector.getInstance(InfoCommand.class).getAliases().iterator().next();
         i.offer(new InventoryCommandItemMenuData(cc + " attributes-initial " + group.getName()));
         return i;
@@ -190,8 +194,8 @@ public class GuiHelper {
     public static ItemStack createArmorCommand(ClassDefinition group) {
         ItemStack i = itemStack(ItemTypes.DIAMOND_CHESTPLATE);
         i.offer(NKeys.MENU_INVENTORY, true);
-        i.offer(Keys.DISPLAY_NAME, Localizations.ARMOR.toText());
-        i.offer(Keys.ITEM_LORE, Collections.singletonList(Localizations.ARMOR_MENU_HELP.toText()));
+        i.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.ARMOR));
+        i.offer(Keys.ITEM_LORE, Collections.singletonList(translate(LocalizationKeys.ARMOR_MENU_HELP)));
         i.offer(new InventoryCommandItemMenuData("armor " + group.getName()));
         return i;
     }
@@ -199,8 +203,8 @@ public class GuiHelper {
     public static ItemStack createWeaponCommand(ClassDefinition group) {
         ItemStack i = itemStack(ItemTypes.DIAMOND_SWORD);
         i.offer(NKeys.MENU_INVENTORY, true);
-        i.offer(Keys.DISPLAY_NAME, Localizations.WEAPONS.toText());
-        i.offer(Keys.ITEM_LORE, Collections.singletonList(Localizations.WEAPONS_MENU_HELP.toText()));
+        i.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.WEAPONS));
+        i.offer(Keys.ITEM_LORE, Collections.singletonList(translate(LocalizationKeys.WEAPONS_MENU_HELP)));
         i.offer(new InventoryCommandItemMenuData("weapons " + group.getName()));
         return i;
     }
@@ -237,7 +241,7 @@ public class GuiHelper {
 
     public static ItemStack back(ClassDefinition g) {
         ItemStack of = itemStack(ItemTypes.PAPER);
-        of.offer(Keys.DISPLAY_NAME, Localizations.BACK.toText());
+        of.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.BACK));
         of.offer(new InventoryCommandItemMenuData("class " + g.getName()));
         return of;
     }
@@ -259,10 +263,10 @@ public class GuiHelper {
     }
 
 
-    public static Inventory createSkillTreeInventoryViewTemplate(IActiveCharacter character, SkillTree skillTree) {
+    public static Inventory createSkillTreeInventoryViewTemplate(ISpongeCharacter character, SkillTree skillTree) {
         Inventory i = Inventory.builder()
                 .of(InventoryArchetypes.DOUBLE_CHEST)
-                .property(InventoryTitle.of(Localizations.SKILLTREE.toText()))
+                .property(InventoryTitle.of(translate(LocalizationKeys.SKILLTREE)))
                 .property(AcceptsItems.of(Collections.EMPTY_LIST))
                 .listener(ClickInventoryEvent.Primary.class,
                         event -> new SkillTreeInventoryListener().onOptionSelect(event, (Player) event.getCause().root()))
@@ -308,19 +312,19 @@ public class GuiHelper {
 
     public static ItemStack createSkillTreeConfirmButtom() {
         ItemStack itemStack = itemStack(ItemTypes.KNOWLEDGE_BOOK);
-        itemStack.offer(Keys.DISPLAY_NAME, Localizations.CONFIRM_SKILL_SELECTION_BUTTON.toText());
+        itemStack.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.CONFIRM_SKILL_SELECTION_BUTTON));
         itemStack.offer(new SkillTreeInventoryViewControllsData(SkillTreeControllsButton.CONFIRM));
         return itemStack;
     }
 
-    public static Inventory createSkillDetailInventoryView(IActiveCharacter character, SkillTree skillTree, SkillData skillData) {
+    public static Inventory createSkillDetailInventoryView(ISpongeCharacter character, SkillTree skillTree, SkillData skillData) {
         Inventory build = Inventory.builder()
                 .of(InventoryArchetypes.DOUBLE_CHEST)
                 .property(InventoryTitle.of(Text.builder(skillData.getSkill().getLocalizableName()).color(TextColors.DARK_GREEN).style(TextStyles.BOLD)
                         .build()))
                 .build(plugin);
 
-        ItemStack back = back("skilltree " + character.getLastTimeInvokedSkillTreeView().getViewedClass().getName(), Localizations.SKILLTREE.toText());
+        ItemStack back = back("skilltree " + character.getLastTimeInvokedSkillTreeView().getViewedClass().getName(), translate(LocalizationKeys.SKILLTREE));
         build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back);
 
         if (skillData instanceof SkillPathData) {
@@ -390,15 +394,13 @@ public class GuiHelper {
                     of.offer(Keys.DISPLAY_NAME, Text.builder(s1).build());
                     of.offer(new MenuInventoryData(true));
                     of.offer(Keys.ITEM_LORE, Arrays.asList(
-                            Text.builder().append(Localizations.SKILL_VALUE_STARTS_AT.toText())
-                                    .style(TextStyles.BOLD)
-                                    .color(TextColors.GOLD)
+                            Text.builder().append(translate(LocalizationKeys.SKILL_VALUE_STARTS_AT))
                                     .append(Text.builder(": " + init)
                                             .color(TextColors.GREEN).style(TextStyles.BOLD)
                                             .build())
                                     .build()
                             ,
-                            Text.builder().append(Localizations.SKILL_VALUE_PER_LEVEL.toText())
+                            Text.builder().append(translate(LocalizationKeys.SKILL_VALUE_PER_LEVEL))
                                     .style(TextStyles.BOLD).color(TextColors.GOLD)
                                     .append(Text.builder(": " + lbonus)
                                             .color(TextColors.GREEN).style(TextStyles.BOLD)
@@ -413,7 +415,7 @@ public class GuiHelper {
     }
 
 
-    public static ItemStack interactiveModeToitemStack(IActiveCharacter character, SkillTreeViewModel.InteractiveMode interactiveMode) {
+    public static ItemStack interactiveModeToitemStack(ISpongeCharacter character, SkillTreeViewModel.InteractiveMode interactiveMode) {
 
         String translation = null;
         ItemType itemType = null;
@@ -459,7 +461,7 @@ public class GuiHelper {
 
     public static ItemStack rpgItemTypeToItemStack(SpongeRpgItemType configRPGItemType) {
         ItemStack q = itemStack(configRPGItemType.getItemType());
-        Text lore = Text.builder().append(Localizations.ITEM_DAMAGE.toText())
+        Text lore = Text.builder().append(translate(LocalizationKeys.ITEM_DAMAGE))
                 .append(Text.builder(": " + configRPGItemType.getDamage())
                         .style(TextStyles.BOLD)
                         .color(NtRpgPlugin.GlobalScope.damageService.getColorByDamage(configRPGItemType.getDamage()))
@@ -477,10 +479,10 @@ public class GuiHelper {
         String sItemType = a.getItemType();
         ItemType type = Sponge.getRegistry().getType(ItemType.class, sItemType).orElse(ItemTypes.STONE);
         ItemStack itemStack = itemStack(type);
-        itemStack.offer(Keys.DISPLAY_NAME, Text.builder(a.getName()).color(a.getPreferedColor()).style(TextStyles.BOLD).build());
+        itemStack.offer(Keys.DISPLAY_NAME, Text.builder(a.getName()).color(toTextColor(a.getPreferedColor())).style(TextStyles.BOLD).build());
 
         if (a.getCustomLore().isEmpty()) {
-            itemStack.offer(Keys.ITEM_LORE, a.getCustomLore());
+            itemStack.offer(Keys.ITEM_LORE, a.getCustomLore().stream().map(TextHelper::parse).collect(Collectors.toList()));
         } else {
             List<Text> lore = new ArrayList<>();
             String description = a.getDescription();
@@ -527,5 +529,23 @@ public class GuiHelper {
 
     public static ItemStack itemStack(String itemType) {
         return itemStack(Sponge.getRegistry().getType(ItemType.class, itemType).orElse(ItemTypes.STONE));
+    }
+
+    private static DyeColor toDyeColor(String id) {
+        return Sponge.getRegistry().getType(DyeColor.class, id).orElseGet(() -> {
+            Log.warn("Unknown text color " + id);
+            return DyeColors.WHITE;
+        });
+    }
+
+    private static TextColor toTextColor(String id) {
+        return Sponge.getRegistry().getType(TextColor.class, id).orElseGet(() -> {
+            Log.warn("Unknown text color " + id);
+            return TextColors.WHITE;
+        });
+    }
+
+    private static Text translate(String id) {
+        return TextHelper.parse(Rpg.get().getLocalizationService().translate(id));
     }
 }

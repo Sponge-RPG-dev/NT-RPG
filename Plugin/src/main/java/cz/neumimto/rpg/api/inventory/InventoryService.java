@@ -7,15 +7,15 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import java.nio.file.Path;
 import java.util.Set;
 
-public interface InventoryService {
+public interface InventoryService<T extends IActiveCharacter> {
 
     void loadItemGroups(Path path);
 
-    void initializeManagedSlots(IActiveCharacter activeCharacter);
+    void initializeManagedSlots(T activeCharacter);
 
     boolean isManagedInventory(Class aClass, int slotId);
 
-    Set<ActiveSkillPreProcessorWrapper> processItemCost(IActiveCharacter character, PlayerSkillContext info);
+    Set<ActiveSkillPreProcessorWrapper> processItemCost(T character, PlayerSkillContext info);
 
-    void initializeCharacterInventory(IActiveCharacter character);
+    void initializeCharacterInventory(T character);
 }
