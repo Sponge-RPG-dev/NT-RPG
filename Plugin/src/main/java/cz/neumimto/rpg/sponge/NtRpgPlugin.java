@@ -23,31 +23,22 @@ import com.google.inject.Injector;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.PluginCore;
 import cz.neumimto.rpg.GlobalScope;
-import cz.neumimto.rpg.sponge.persistance.PersistenceHandler;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.rng.PseudoRandomDistribution;
+import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.common.persistance.model.JPABaseCharacterAttribute;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterSkill;
 import cz.neumimto.rpg.common.utils.io.FileUtils;
-import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
-import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.sponge.configuration.Settings;
+import cz.neumimto.rpg.sponge.configuration.SpongePluginConfig;
 import cz.neumimto.rpg.sponge.inventory.data.*;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.*;
-import cz.neumimto.rpg.common.inventory.items.ItemMetaType;
-import cz.neumimto.rpg.sponge.inventory.items.ItemMetaTypeRegistry;
-import cz.neumimto.rpg.common.inventory.items.ItemMetaTypes;
-import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtype;
-import cz.neumimto.rpg.sponge.inventory.items.subtypes.ItemSubtypeRegistry;
-import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtypes;
-import cz.neumimto.rpg.common.inventory.sockets.SocketType;
-import cz.neumimto.rpg.sponge.inventory.sockets.SocketTypeRegistry;
-import cz.neumimto.rpg.common.inventory.sockets.SocketTypes;
-import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.sponge.listeners.DebugListener;
+import cz.neumimto.rpg.sponge.persistance.PersistenceHandler;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
 import cz.neumimto.rpg.sponge.utils.Placeholders;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
@@ -96,6 +87,7 @@ public class NtRpgPlugin extends Rpg {
 
     public static SpongeExecutorService asyncExecutor;
     public static PluginConfig pluginConfig;
+    public static SpongePluginConfig spongePluginConfig;
 
     @Inject
     public Logger logger;
@@ -147,7 +139,7 @@ public class NtRpgPlugin extends Rpg {
         PluginCore.MANAGED_JPA_TYPES.add(JPABaseCharacterAttribute.class);
         PluginCore.MANAGED_JPA_TYPES.add(JPACharacterSkill.class);
         PluginCore.MANAGED_JPA_TYPES.add(JPACharacterClass.class);
-        Sponge.getEventManager().registerListeners(this, new PersistenceHandler(this));
+        Sponge.getEventManager().registerListeners(this, new PersistenceHandler());
         new NKeys();
         DataRegistration.builder()
                 .manipulatorId("item_attribute_ref")
@@ -313,29 +305,6 @@ public class NtRpgPlugin extends Rpg {
                 .builder(new SkillBindData.Builder())
                 .buildAndRegister(plugin);
 
-        Sponge.getRegistry().registerModule(SocketType.class, new SocketTypeRegistry());
-        Sponge.getRegistry().registerModule(AttributeConfig.class, NtRpgPlugin.GlobalScope.spongePropertyService);
-        Sponge.getRegistry().registerModule(ItemMetaType.class, new ItemMetaTypeRegistry());
-        Sponge.getRegistry().registerModule(ItemSubtype.class, new ItemSubtypeRegistry());
-    }
-
-    @Listener
-    public void postInit(GameRegistryEvent.Register<SocketType> event) {
-        event.register(SocketTypes.ANY);
-        event.register(SocketTypes.GEM);
-        event.register(SocketTypes.JEWEL);
-        event.register(SocketTypes.RUNE);
-    }
-
-    @Listener
-    public void postInit2(GameRegistryEvent.Register<ItemMetaType> event) {
-        event.register(ItemMetaTypes.CHARM);
-        event.register(ItemMetaTypes.RUNEWORD);
-    }
-
-    @Listener
-    public void postInit3(GameRegistryEvent.Register<ItemSubtype> event) {
-        event.register(ItemSubtypes.ANY);
     }
 
     @Listener
@@ -345,10 +314,6 @@ public class NtRpgPlugin extends Rpg {
         event.register(NDamageType.DAMAGE_CHECK);
     }
 
-    @Listener
-    public void postInit9(GameRegistryEvent.Register<AttributeConfig> event) {
-        //?
-    }
 
     @Listener
     public void onPluginLoad(GamePostInitializationEvent event) {
@@ -405,19 +370,27 @@ public class NtRpgPlugin extends Rpg {
         if (!properties.exists()) {
             FileUtils.generateConfigFile(new PluginConfig(), properties);
         }
+        File sproperties = new File(NtRpgPlugin.workingDir, "SpongeSpecificSettings.conf");
+        if (!sproperties.exists()) {
+            FileUtils.generateConfigFile(new PluginConfig(), sproperties);
+        }
         try {
             ObjectMapper<PluginConfig> mapper = ObjectMapper.forClass(PluginConfig.class);
             HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(properties.toPath()).build();
             pluginConfig = mapper.bind(new PluginConfig()).populate(hcl.load());
 
-            List<Map.Entry<String, ClassTypeDefinition>> list = new ArrayList<>(pluginConfig.CLASS_TYPES.entrySet());
+            ObjectMapper<SpongePluginConfig> mapper2 = ObjectMapper.forClass(SpongePluginConfig.class);
+            HoconConfigurationLoader hcl2 = HoconConfigurationLoader.builder().setPath(sproperties.toPath()).build();
+            spongePluginConfig = mapper2.bind(new SpongePluginConfig()).populate(hcl2.load());
+
+            List<Map.Entry<String, ClassTypeDefinition>> list = new ArrayList<>(spongePluginConfig.CLASS_TYPES.entrySet());
             list.sort(Map.Entry.comparingByValue());
 
             Map<String, ClassTypeDefinition> result = new LinkedHashMap<>();
             for (Map.Entry<String, ClassTypeDefinition> entry : list) {
                 result.put(entry.getKey(), entry.getValue());
             }
-            pluginConfig.CLASS_TYPES = result;
+            spongePluginConfig.CLASS_TYPES = result;
         } catch (ObjectMappingException | IOException e) {
             e.printStackTrace();
         }

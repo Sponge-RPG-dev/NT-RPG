@@ -4,16 +4,16 @@ import com.google.inject.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.entity.IEntityType;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
-import cz.neumimto.rpg.sponge.entities.entities.EntityService;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.IEntityType;
-import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.events.damage.*;
+import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
 import cz.neumimto.rpg.sponge.skills.ProjectileProperties;
 import org.spongepowered.api.data.type.HandTypes;
@@ -42,7 +42,7 @@ public class DamageListener {
     private SpongeDamageService spongeDamageService;
 
     @Inject
-    private EntityService entityService;
+    private SpongeEntityService entityService;
 
     @Inject
     private SpongeItemService itemService;
@@ -102,7 +102,7 @@ public class DamageListener {
         }
     }
 
-    private void processWeaponDamageEarly(DamageEntityEvent event, EntityDamageSource source, IEntity attacker, IEntity target) {
+    private void processWeaponDamageEarly(DamageEntityEvent event, EntityDamageSource source, IEntity<Living> attacker, IEntity target) {
         double newdamage = event.getBaseDamage();
 
         RpgItemStack rpgItemStack = null;
@@ -180,7 +180,7 @@ public class DamageListener {
         if (attacker.getType() == IEntityType.CHARACTER) {
             IActiveCharacter c = (IActiveCharacter) attacker;
             if (c.hasPreferedDamageType()) {
-                type = c.getDamageType();
+                type = spongeDamageService.damageTypeById(c.getDamageType());
             }
         }
         double newdamage = event.getBaseDamage() * spongeDamageService.getEntityDamageMult(attacker, type);
@@ -249,7 +249,7 @@ public class DamageListener {
         }
     }
 
-    private void processProjectileDamageEarly(DamageEntityEvent event, IndirectEntityDamageSource source, IEntity attacker, IEntity target, Projectile projectile) {
+    private void processProjectileDamageEarly(DamageEntityEvent event, IndirectEntityDamageSource source, IEntity<Living> attacker, IEntity target, Projectile projectile) {
         double newdamage = event.getBaseDamage();
         if (attacker.getType() == IEntityType.CHARACTER) {
             IActiveCharacter c = (IActiveCharacter) attacker;

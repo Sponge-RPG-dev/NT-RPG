@@ -5,18 +5,19 @@ import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
+import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.UserActionType;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
-import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.effects.common.def.ClickComboActionComponent;
 import cz.neumimto.rpg.sponge.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.events.PlayerDataPreloadComplete;
 import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
+import cz.neumimto.rpg.sponge.utils.PermissionUtils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
@@ -68,7 +69,7 @@ public class SpongeCharacterServise extends CharacterService<ISpongeCharacter> {
     }
 
     @Override
-    public ISpongeCharacter createCharacter(UUID player, JPACharacterBase characterBase) {
+    public ISpongeCharacter createCharacter(UUID player, CharacterBase characterBase) {
         SpongeCharacter spongeCharacter = new SpongeCharacter(player, characterBase, PropertyServiceImpl.LAST_ID);
         spongeCharacter.setMana(new CharacterMana(spongeCharacter));
         spongeCharacter.setHealth(new CharacterHealth(spongeCharacter));
@@ -90,6 +91,11 @@ public class SpongeCharacterServise extends CharacterService<ISpongeCharacter> {
     @Override
     protected boolean hasCharacter(UUID uniqueId) {
         return characters.containsKey(uniqueId);
+    }
+
+    @Override
+    protected CharacterBase createCharacterBase() {
+        return new JPACharacterBase();
     }
 
     public ISpongeCharacter getCharacter(Player player) {
@@ -202,5 +208,17 @@ public class SpongeCharacterServise extends CharacterService<ISpongeCharacter> {
         params.put("id", characterSkill);
         dad.update("delete from CharacterSkill where skillId = :id", params);
 
+    }
+
+    @Override
+    public int canCreateNewCharacter(UUID uniqueId, String name) {
+        List<CharacterBase> list = getPlayersCharacters(uniqueId);
+        if (list.size() >= PermissionUtils.getMaximalCharacterLimit(uniqueId)) {
+            return 1;
+        }
+        if (list.stream().anyMatch(c -> c.getName().equalsIgnoreCase(name))) {
+            return 2;
+        }
+        return 0;
     }
 }

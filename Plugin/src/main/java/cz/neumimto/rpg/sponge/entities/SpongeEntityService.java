@@ -2,13 +2,13 @@ package cz.neumimto.rpg.sponge.entities;
 
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.*;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.events.skill.SkillHealEvent;
-import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.entity.configuration.MobsConfig;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
+import cz.neumimto.rpg.sponge.entities.configuration.SpongeMobSettingsDao;
 import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
@@ -18,13 +18,12 @@ import org.spongepowered.api.entity.living.Living;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.nio.file.Path;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 import static cz.neumimto.rpg.api.logging.Log.info;
 import static cz.neumimto.rpg.api.logging.Log.warn;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 19.12.2015.
@@ -35,7 +34,7 @@ public class SpongeEntityService implements EntityService<Living> {
     private HashMap<UUID, SpongeMob> entityHashMap = new HashMap<>();
 
     @Inject
-    private MobSettingsDao dao;
+    private SpongeMobSettingsDao dao;
 
     @Inject
     private PropertyService spongePropertyService;
@@ -57,6 +56,10 @@ public class SpongeEntityService implements EntityService<Living> {
             iEntity = createEntity(id);
         }
         return iEntity;
+    }
+
+    public IEntity get(Entity id) {
+        return get((Living)id);
     }
 
     private IMob createEntity(Living entity) {
@@ -100,6 +103,14 @@ public class SpongeEntityService implements EntityService<Living> {
             return aDouble;
         }
         return 0;
+    }
+
+    public double getMobDamage(Living entity) {
+        return getMobDamage(entity.getWorld().getName(), entity.getType().getId());
+    }
+
+    public double getExperiences(Living entity) {
+        return getExperiences(entity.getWorld().getName(), entity.getType().getId());
     }
 
     @Override
@@ -157,6 +168,11 @@ public class SpongeEntityService implements EntityService<Living> {
         return setEntityHealth(event.getEntity(), entity.getHealth().getValue() + event.getAmount());
     }
 
+    @Override
+    public void reload() {
+        dao.load(null);
+    }
+
     /**
      * Sets entity's hp to chosen amount.
      *
@@ -183,16 +199,14 @@ public class SpongeEntityService implements EntityService<Living> {
         entityToFullHealth.getHealth().setValue(entityToFullHealth.getHealth().getMaxValue());
     }
 
-    public void reloadMobConfiguration() {
-        dao.load(null);
-    }
 
     /**
      * Updates character walkspeed to match SpongeDefaultProperties.walk_speed property
      *
      * @param entity
      */
-    public void updateWalkSpeed(ISpongeEntity entity) {
+    @Override
+    public void updateWalkSpeed(IEntity<Living> entity) {
         double speed = getEntityProperty(entity, SpongeDefaultProperties.walk_speed);
         entity.getEntity().offer(Keys.WALKING_SPEED, speed);
         if (pluginConfig.DEBUG.isBalance()) {

@@ -16,4 +16,8 @@ public interface EntityService<T> {
     float getEntityProperty(IEffectConsumer entity, int id);
 
     double healEntity(IEntity entity, float amount, IRpgElement source);
+
+    void updateWalkSpeed(IEntity<T> activeCharacter);
+
+    void reload();
 }

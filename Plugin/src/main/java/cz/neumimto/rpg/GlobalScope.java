@@ -21,7 +21,6 @@ package cz.neumimto.rpg;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.events.effect.EventFactoryService;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.localization.LocalizationService;
@@ -31,6 +30,7 @@ import cz.neumimto.rpg.common.scripting.JSLoader;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.commands.CommandService;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
+import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
@@ -81,7 +81,7 @@ public class GlobalScope {
     public RWService runewordService;
 
     @Inject
-    public EntityService entityService;
+    public SpongeEntityService entityService;
 
     @Inject
     public PartyServiceImpl partyService;

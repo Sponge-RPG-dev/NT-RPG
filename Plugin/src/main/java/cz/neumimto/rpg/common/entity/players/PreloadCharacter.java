@@ -44,7 +44,7 @@ import java.util.*;
 /**
  * Created by NeumimTo on 23.7.2015.
  */
-public abstract class PreloadCharacter<T> implements IActiveCharacter<T> {
+public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCharacter<T, P> {
 
     private static float[] characterProperties = new float[PropertyServiceImpl.LAST_ID];
     protected UUID uuid;
@@ -370,22 +370,22 @@ public abstract class PreloadCharacter<T> implements IActiveCharacter<T> {
     }
 
     @Override
-    public IParty getParty() {
+    public P getParty() {
         return null;
     }
 
     @Override
-    public void setParty(IParty party) {
+    public void setParty(P party) {
 
     }
 
     @Override
-    public IParty getPendingPartyInvite() {
+    public P getPendingPartyInvite() {
         return null;
     }
 
     @Override
-    public void setPendingPartyInvite(IParty party) {
+    public void setPendingPartyInvite(P party) {
 
     }
 

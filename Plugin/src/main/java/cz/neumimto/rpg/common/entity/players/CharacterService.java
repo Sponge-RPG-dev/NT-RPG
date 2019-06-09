@@ -48,6 +48,7 @@ import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.leveling.SkillTreeType;
+import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.common.persistance.dao.CharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.PlayerDao;
 import cz.neumimto.rpg.api.skills.SkillData;
@@ -180,8 +181,6 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
         }
     }
 
-
-
     /**
      * @param name
      * @return Initialized CharacterBase in the default state, The entity is not persisted yet
@@ -294,9 +293,9 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
                 warn(" - Unknown attribute stored in the database - " + at.getName());
             }
         }
-        
-        
-        for (PlayerClassData nClass : character.getClasses().values()) {
+
+        Map<String, PlayerClassData> classes = character.getClasses();
+        for (PlayerClassData nClass : classes.values()) {
             applyGroupEffects(character, nClass.getClassDefinition());
         }
 
@@ -427,7 +426,8 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
         for (int i = 0; i < primary.length; i++) {
             pval = 0;
             sval = 0;
-            for (PlayerClassData cdata : character.getClasses().values()) {
+            Map<String, PlayerClassData> classes = character.getClasses();
+            for (PlayerClassData cdata : classes.values()) {
                 ClassDefinition classDefinition = cdata.getClassDefinition();
                 float[] propBonus = classDefinition.getPropBonus();
                 if (propBonus != null) {
@@ -453,7 +453,8 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
         float[] secondary = character.getSecondaryProperties();
         float sval = 0;
         for (int i = 0; i < secondary.length; i++) {
-            for (PlayerClassData cdata : character.getClasses().values()) {
+            Map<String, PlayerClassData> classes = character.getClasses();
+            for (PlayerClassData cdata : classes.values()) {
                 ClassDefinition classDefinition = cdata.getClassDefinition();
                 float[] propLevelBonus = classDefinition.getPropLevelBonus();
                 if (propLevelBonus != null) {
@@ -483,7 +484,8 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
 
                 PlayerSkillContext info = new PlayerSkillContext(classDefinitionByName, iSkill, character);
                 info.setLevel(characterSkill.getLevel());
-                PlayerClassData playerClassData = character.getClasses().get(name);
+                Map<String, PlayerClassData> classes = character.getClasses();
+                PlayerClassData playerClassData = classes.get(name);
                 SkillData info1 = playerClassData.getClassDefinition().getSkillTree().getSkills().get(iSkill.getId());
                 if (info1 != null) {
                     toInit.add(info);
@@ -548,17 +550,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
      * 0 - ok
      */
     @Override
-    public int canCreateNewCharacter(UUID uniqueId, String name) {
-        //todo use db query
-        List<CharacterBase> list = getPlayersCharacters(uniqueId);
-        if (list.size() >= PermissionUtils.getMaximalCharacterLimit(uniqueId)) {
-            return 1;
-        }
-        if (list.stream().anyMatch(c -> c.getName().equalsIgnoreCase(name))) {
-            return 2;
-        }
-        return 0;
-    }
+    public abstract int canCreateNewCharacter(UUID uniqueId, String name);
 
     @Override
     public ActionResult canUpgradeSkill(T character, ClassDefinition classDef, ISkill skill) {
@@ -643,7 +635,8 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     public ActionResult canLearnSkill(T character, ClassDefinition classDef, ISkill skill) {
         PlayerClassData nClass = null;
         SkillTree skillTree = classDef.getSkillTree();
-        for (PlayerClassData playerClassData : character.getClasses().values()) {
+        Map<String, PlayerClassData> classes = character.getClasses();
+        for (PlayerClassData playerClassData : classes.values()) {
             if (playerClassData.getClassDefinition().getSkillTree() == skillTree) {
                 nClass = playerClassData;
                 break;
@@ -866,7 +859,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     public void characterSetMaxHealth(T character, float newHealht) {
         double health = character.getHealth().getValue();
         double max = character.getHealth().getMaxValue();
-        double percent = Utils.getPercentage(health, max);
+        double percent = MathUtils.getPercentage(health, max);
         character.getHealth().setMaxValue(newHealht);
         character.getHealth().setValue(newHealht / percent);
     }
@@ -953,7 +946,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
         CompletableFuture.runAsync(() -> {
             info("Saving CharacterClass " + characterClass.getId(), DebugLevel.DEVELOP);
             characterClassDao.update(characterClass);
-        }, NtRpgPlugin.asyncExecutor);
+        }, Rpg.get().getAsyncExecutor());
     }
 
     @Override
@@ -1044,7 +1037,8 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
         }
 
         character.setRequiresDamageRecalculation(true);
-        for (PlayerClassData nClass : character.getClasses().values()) {
+        Map<String, PlayerClassData> classes = character.getClasses();
+        for (PlayerClassData nClass : classes.values()) {
             applyGroupEffects(character, nClass.getClassDefinition());
         }
 
@@ -1098,7 +1092,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
 
         DependencyGraph classDependencyGraph = klass.getClassDependencyGraph();
 
-        Set<ClassDefinition> c = character.getClasses().values().stream().map(PlayerClassData::getClassDefinition).collect(Collectors.toSet());
+        Set<ClassDefinition> c = classes.values().stream().map(PlayerClassData::getClassDefinition).collect(Collectors.toSet());
         boolean ok = classDependencyGraph.isValidFor(c);
 
         if (!ok) {
@@ -1123,7 +1117,8 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
                     return ActionResult.withErrorMessage(text);
                 }
                 ClassDefinition classDefinition = classByType.getClassDefinition();
-                if (!classDefinition.getClassDependencyGraph().isValidFor(character.getClasses()
+
+                if (!classDefinition.getClassDependencyGraph().isValidFor(classes
                         .values().stream().map(PlayerClassData::getClassDefinition).collect(Collectors.toSet()))) {
                     String text = localizationService.translate(LocalizationKeys.MISSING_CLASS_DEPENDENCIES);
                     return ActionResult.withErrorMessage(text);
@@ -1234,7 +1229,8 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     }
 
     private void removeTransientAttribute(T character, AttributeConfig key, Integer value) {
-        character.getTransientAttributes().merge(key.getId(), value, (b, a) -> a - b);
+        Map<String, Integer> transientAttributes = character.getTransientAttributes();
+        transientAttributes.merge(key.getId(), value, (b, a) -> a - b);
     }
 
     @Override

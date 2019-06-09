@@ -2,18 +2,16 @@ package cz.neumimto.rpg.sponge.commands.admin;
 
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
-import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.entity.players.PreloadCharacter;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.common.scripting.JSLoader;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
@@ -43,7 +41,7 @@ public class ReloadExecutor implements CommandExecutor {
                 q = a[i];
                 if (q.equalsIgnoreCase("skills") || q.equalsIgnoreCase("s")) {
                     jsLoader.reloadSkills();
-                    CharacterService build = NtRpgPlugin.GlobalScope.characterService;
+                    SpongeCharacterServise build = NtRpgPlugin.GlobalScope.characterService;
                     ISkillService skillService = NtRpgPlugin.GlobalScope.skillService;
                     build.getCharacters()
                             .stream()
@@ -78,7 +76,7 @@ public class ReloadExecutor implements CommandExecutor {
         } else if (a[0].equalsIgnoreCase("settings")) {
             NtRpgPlugin.GlobalScope.plugin.reloadMainPluginConfig();
         } else if (a[0].equalsIgnoreCase("mobs")) {
-            NtRpgPlugin.GlobalScope.entityService.reloadMobConfiguration();
+            NtRpgPlugin.GlobalScope.entityService.reload();
         } else if (a[0].equalsIgnoreCase("classes")) {
             //Check if configs are ok
             warn("[RELOAD] Attempting to reload classes from config files...");
@@ -104,7 +102,7 @@ public class ReloadExecutor implements CommandExecutor {
                     if (character.isStub()) {
                         continue;
                     }
-                    PreloadCharacter preloadCharacter = NtRpgPlugin.GlobalScope.characterService.buildDummyChar(player.getUniqueId());
+                    ISpongeCharacter preloadCharacter = NtRpgPlugin.GlobalScope.characterService.buildDummyChar(player.getUniqueId());
                     NtRpgPlugin.GlobalScope.characterService.registerDummyChar(preloadCharacter);
                 }
                 Log.info("[RELOAD] Purging effect caches");
@@ -113,7 +111,7 @@ public class ReloadExecutor implements CommandExecutor {
                 //todo purge all skill
                 //todo purge all skilltrees
 
-                for (JPACharacterBase characterBase : characterBases) {
+                for (CharacterBase characterBase : characterBases) {
                     Log.info("[RELOAD] saving character " + characterBase.getLastKnownPlayerName());
                     NtRpgPlugin.GlobalScope.characterService.save(characterBase);
                 }
@@ -128,7 +126,7 @@ public class ReloadExecutor implements CommandExecutor {
                     //todo load skilltrees
 
                     NtRpgPlugin.GlobalScope.classService.loadClasses();
-                    Comparator<CharacterBase> cmp = Comparator.comparing(JPACharacterBase::getUpdated);
+                    Comparator<CharacterBase> cmp = Comparator.comparing(CharacterBase::getUpdated);
                     for (Player player : Sponge.getServer().getOnlinePlayers()) {
                         List<CharacterBase> playersCharacters =
                                 NtRpgPlugin.GlobalScope.characterService.getPlayersCharacters(player.getUniqueId());
@@ -136,10 +134,10 @@ public class ReloadExecutor implements CommandExecutor {
                             continue;
                         }
                         CharacterBase max = playersCharacters.stream().max(cmp).get();
-                        IActiveCharacter activeCharacter = NtRpgPlugin.GlobalScope.characterService.createActiveCharacter(player.getUniqueId(), max);
+                        ISpongeCharacter activeCharacter = NtRpgPlugin.GlobalScope.characterService.createActiveCharacter(player.getUniqueId(), max);
                         NtRpgPlugin.GlobalScope.characterService.setActiveCharacter(player.getUniqueId(), activeCharacter);
                         NtRpgPlugin.GlobalScope.characterService.invalidateCaches(activeCharacter);
-                        NtRpgPlugin.GlobalScope.characterService.assignPlayerToCharacter(player);
+                        NtRpgPlugin.GlobalScope.characterService.assignPlayerToCharacter(player.getUniqueId());
                     }
                 }).submit(NtRpgPlugin.GlobalScope.plugin);
             } catch (ObjectMappingException e) {

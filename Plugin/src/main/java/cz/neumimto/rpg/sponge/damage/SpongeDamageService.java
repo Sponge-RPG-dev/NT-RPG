@@ -26,6 +26,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
@@ -61,7 +62,7 @@ public class SpongeDamageService extends DamageServiceImpl<Living> {
         if (character.isStub() || type == null) {
             return 1;
         }
-        double base = character.getBaseProjectileDamage(type)
+        double base = character.getBaseProjectileDamage(type.getId())
                 + entityService.getEntityProperty(character, SpongeDefaultProperties.projectile_damage_bonus);
         if (type == EntityTypes.SPECTRAL_ARROW || type == EntityTypes.TIPPED_ARROW) {
             base *= entityService.getEntityProperty(character, SpongeDefaultProperties.arrow_damage_mult);
@@ -148,5 +149,9 @@ public class SpongeDamageService extends DamageServiceImpl<Living> {
     @Override
     public void damageEntity(IEntity<Living> entity, double value) {
         entity.getEntity().damage(value, DamageSource.builder().build());
+    }
+
+    public DamageType damageTypeById(String damageType) {
+        return Sponge.getRegistry().getType(DamageType.class, damageType).orElseThrow(() -> new RuntimeException("Invalid damage type " + damageType));
     }
 }

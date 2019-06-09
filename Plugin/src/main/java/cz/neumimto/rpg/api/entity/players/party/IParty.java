@@ -5,16 +5,16 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import java.util.Set;
 import java.util.UUID;
 
-public interface IParty {
-    void addPlayer(IActiveCharacter character);
+public interface IParty<T extends IActiveCharacter> {
+    void addPlayer(T character);
 
-    IActiveCharacter getLeader();
+    T getLeader();
 
-    void setLeader(IActiveCharacter leader);
+    void setLeader(T leader);
 
-    void removePlayer(IActiveCharacter character);
+    void removePlayer(T character);
 
-    Set<IActiveCharacter> getPlayers();
+    Set<T> getPlayers();
 
     Set<UUID> getInvites();
 

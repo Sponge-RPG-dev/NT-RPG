@@ -25,7 +25,10 @@ import cz.neumimto.rpg.sponge.inventory.ItemLoreSections;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -221,4 +224,6 @@ public class PluginConfig {
 
     @Setting(comment = "If set to true player has to choose classes in an order as they are defined in the section \"CLASS_TYPES\"")
     public boolean RESPECT_CLASS_SELECTION_ORDER = true;
+
+
 }

@@ -19,27 +19,27 @@
 package cz.neumimto.rpg.common.entity.players;
 
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.effects.EffectSourceType;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.EntityHand;
+import cz.neumimto.rpg.api.entity.IReservable;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.api.entity.players.party.IParty;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
-import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
+import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.api.skills.IPlayerSkillHandler;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
-import cz.neumimto.rpg.api.effects.EffectSourceType;
-import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.common.skills.PlayerSkillHandlers;
 import cz.neumimto.rpg.common.skills.types.ItemAccessSkill;
-import cz.neumimto.rpg.api.entity.IReservable;
-import cz.neumimto.rpg.api.entity.players.party.IParty;
 import org.jline.utils.Log;
 
 import java.lang.ref.WeakReference;
@@ -51,10 +51,10 @@ import java.util.stream.Collectors;
  * Created by NeumimTo on 26.12.2014.
  */
 
-public abstract class ActiveCharacter<T> implements IActiveCharacter<T> {
+public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCharacter<T, P> {
 
     protected transient UUID pl;
-    protected JPACharacterBase base;
+    protected CharacterBase base;
 
     private Map<String, PlayerClassData> classes = new HashMap<>();
 
@@ -78,7 +78,7 @@ public abstract class ActiveCharacter<T> implements IActiveCharacter<T> {
     private IReservable mana;
     private IReservable health;
 
-    private transient IParty party;
+    private transient P party;
 
     private transient Map<String, IEffectContainer<Object, IEffect<Object>>> effects = new HashMap<>();
     private IPlayerSkillHandler skills;
@@ -90,7 +90,7 @@ public abstract class ActiveCharacter<T> implements IActiveCharacter<T> {
     private transient Map<String, Double> projectileDamage = new HashMap<>();
     private transient Set<RpgItemType> allowedOffHandWeapons = new HashSet<>();
     private Map<String, Long> cooldowns = new HashMap<>();
-    private transient WeakReference<IParty> pendingPartyInvite = new WeakReference<>(null);
+    private transient WeakReference<P> pendingPartyInvite = new WeakReference<>(null);
     private transient double weaponDamage;
     private transient double armorvalue;
 
@@ -117,7 +117,7 @@ public abstract class ActiveCharacter<T> implements IActiveCharacter<T> {
     private boolean requiresDamageRecalculation;
     private int lastHotbarSlotInteraction = -1;
 
-    public ActiveCharacter(UUID uuid, JPACharacterBase base, int propertyCount) {
+    public ActiveCharacter(UUID uuid, CharacterBase base, int propertyCount) {
         this.pl = uuid;
         this.primaryProperties = new float[propertyCount];
         this.secondaryProperties = new float[propertyCount];
@@ -430,7 +430,7 @@ public abstract class ActiveCharacter<T> implements IActiveCharacter<T> {
     }
 
     @Override
-    public JPACharacterBase getCharacterBase() {
+    public CharacterBase getCharacterBase() {
         return base;
     }
 
@@ -497,12 +497,12 @@ public abstract class ActiveCharacter<T> implements IActiveCharacter<T> {
     }
 
     @Override
-    public IParty getParty() {
+    public P getParty() {
         return party;
     }
 
     @Override
-    public void setParty(IParty party) {
+    public void setParty(P party) {
         if (this.party != null) {
             party.removePlayer(this);
         }
@@ -570,12 +570,12 @@ public abstract class ActiveCharacter<T> implements IActiveCharacter<T> {
     }
 
     @Override
-    public IParty getPendingPartyInvite() {
+    public P getPendingPartyInvite() {
         return pendingPartyInvite.get();
     }
 
     @Override
-    public void setPendingPartyInvite(IParty party) {
+    public void setPendingPartyInvite(P party) {
         pendingPartyInvite = new WeakReference<>(party);
     }
 

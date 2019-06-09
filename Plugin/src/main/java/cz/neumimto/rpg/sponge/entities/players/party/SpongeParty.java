@@ -35,20 +35,20 @@ import java.util.UUID;
 /**
  * Created by NeumimTo on 10.8.2015.
  */
-public class SpongeParty implements IParty {
+public class SpongeParty implements IParty<ISpongeCharacter> {
 
     private Set<ISpongeCharacter> players = new HashSet<>();
-    private IActiveCharacter leader;
+    private ISpongeCharacter leader;
     private Set<UUID> invites = new HashSet<>();
     private Team team;
 
-    public SpongeParty(IActiveCharacter leader) {
+    public SpongeParty(ISpongeCharacter leader) {
         this.leader = leader;
         addPlayer(leader);
     }
 
     @Override
-    public void addPlayer(IActiveCharacter c) {
+    public void addPlayer(ISpongeCharacter c) {
         ISpongeCharacter character = (ISpongeCharacter) c;
         players.add(character);
         if (team == null) {
@@ -64,23 +64,23 @@ public class SpongeParty implements IParty {
     }
 
     @Override
-    public IActiveCharacter getLeader() {
+    public ISpongeCharacter getLeader() {
         return leader;
     }
 
     @Override
-    public void setLeader(IActiveCharacter leader) {
+    public void setLeader(ISpongeCharacter leader) {
         this.leader = leader;
     }
 
     @Override
-    public void removePlayer(IActiveCharacter character) {
+    public void removePlayer(ISpongeCharacter character) {
         players.remove(character);
         team.removeMember(((ISpongeCharacter)character).getPlayer().getTeamRepresentation());
     }
 
     @Override
-    public Set<IActiveCharacter> getPlayers() {
+    public Set<ISpongeCharacter> getPlayers() {
         return Collections.unmodifiableSet(players);
     }
 

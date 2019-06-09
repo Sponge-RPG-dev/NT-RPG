@@ -3,6 +3,9 @@ package cz.neumimto.rpg.sponge;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.RpgApi;
+import cz.neumimto.rpg.api.damage.DamageService;
+import cz.neumimto.rpg.api.entity.EntityService;
+import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.events.effect.EventFactoryService;
@@ -13,6 +16,7 @@ import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.text.Text;
@@ -123,5 +127,15 @@ public final class SpongeRpgApi implements RpgApi {
     @Override
     public ICharacterService<IActiveCharacter> getCharacterService() {
         return NtRpgPlugin.GlobalScope.characterService;
+    }
+
+    @Override
+    public EntityService<IEntity> getEntityService() {
+        return NtRpgPlugin.GlobalScope.entityService;
+    }
+
+    @Override
+    public DamageService getDamageService() {
+        return NtRpgPlugin.GlobalScope.damageService;
     }
 }

@@ -41,7 +41,7 @@ import java.util.*;
 /**
  * Created by NeumimTo on 23.7.2015.
  */
-public interface IActiveCharacter<T> extends IEntity<T> {
+public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
 
     Map<String, PlayerClassData> getClasses();
 
@@ -58,9 +58,9 @@ public interface IActiveCharacter<T> extends IEntity<T> {
 
     Map<Class<?>, RpgInventory> getManagedInventory();
 
-    IParty getParty();
+    P getParty();
 
-    void setParty(IParty party);
+    void setParty(P party);
 
     String getName();
 
@@ -146,9 +146,9 @@ public interface IActiveCharacter<T> extends IEntity<T> {
 
     boolean isPartyLeader();
 
-    IParty getPendingPartyInvite();
+    P getPendingPartyInvite();
 
-    void setPendingPartyInvite(IParty party);
+    void setPendingPartyInvite(P party);
 
     boolean canUse(RpgItemType weaponItemType, EntityHand h);
 

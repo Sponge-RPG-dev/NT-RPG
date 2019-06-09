@@ -1,15 +1,15 @@
 package cz.neumimto.rpg.sponge.commands.item;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.RpgItemType;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
-import cz.neumimto.rpg.sponge.entities.entities.EntityService;
+import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -66,8 +66,8 @@ public class InspectItemDamageExecutor implements CommandExecutor {
         }
         src.sendMessage(Text.of(TextColors.GOLD, "=================="));
         SpongeDamageService ds = NtRpgPlugin.GlobalScope.damageService;
-        CharacterService cs = NtRpgPlugin.GlobalScope.characterService;
-        EntityService es = NtRpgPlugin.GlobalScope.entityService;
+        SpongeCharacterServise cs = NtRpgPlugin.GlobalScope.characterService;
+        SpongeEntityService es = NtRpgPlugin.GlobalScope.entityService;
         SpongePropertyService ps = NtRpgPlugin.GlobalScope.spongePropertyService;
         IActiveCharacter character = cs.getCharacter(player);
         src.sendMessage(Text.of(TextColors.RED, "Damage: ", ds.getCharacterItemDamage(character, fromItemStack)));

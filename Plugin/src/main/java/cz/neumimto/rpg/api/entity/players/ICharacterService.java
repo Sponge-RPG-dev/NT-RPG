@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public interface ICharacterService<T> {
+
     T buildDummyChar(UUID uuid);
 
     void registerDummyChar(T dummy);
