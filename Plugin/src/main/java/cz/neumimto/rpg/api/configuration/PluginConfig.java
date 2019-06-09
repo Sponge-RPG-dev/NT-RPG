@@ -18,17 +18,17 @@
 
 package cz.neumimto.rpg.api.configuration;
 
+import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
 import cz.neumimto.rpg.api.utils.DebugLevel;
+import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
+import cz.neumimto.rpg.sponge.configuration.ClassTypesDeserializer;
 import cz.neumimto.rpg.sponge.configuration.itemDamage.ItemDamageProcessor;
 import cz.neumimto.rpg.sponge.configuration.itemDamage.Max;
 import cz.neumimto.rpg.sponge.inventory.ItemLoreSections;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -225,5 +225,11 @@ public class PluginConfig {
     @Setting(comment = "If set to true player has to choose classes in an order as they are defined in the section \"CLASS_TYPES\"")
     public boolean RESPECT_CLASS_SELECTION_ORDER = true;
 
-
+    @Setting(comment = "Class types")
+    @CustomAdapter(ClassTypesDeserializer.class)
+    public Map<String, ClassTypeDefinition> CLASS_TYPES = new LinkedHashMap<String, ClassTypeDefinition>() {{
+        put("Race", new ClassTypeDefinition("GREEN", "DARK_GREEN", "GREEN", false, 1));
+        put("Primary", new ClassTypeDefinition("YELLOW", "GOLD", "YELLOW", true, 2));
+        put("Profession", new ClassTypeDefinition("GRAY", "BLACK", "GRAY", true, 3));
+    }};
 }

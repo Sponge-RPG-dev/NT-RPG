@@ -13,11 +13,5 @@ import java.util.Map;
 @ConfigSerializable
 public class SpongePluginConfig {
 
-    @Setting(comment = "Class types")
-    @CustomAdapter(ClassTypesDeserializer.class)
-    public Map<String, ClassTypeDefinition> CLASS_TYPES = new LinkedHashMap<String, ClassTypeDefinition>() {{
-        put("Race", new ClassTypeDefinition(TextColors.GREEN.getId(), TextColors.DARK_GREEN.getId(), DyeColors.GREEN.getId(), false, 1));
-        put("Primary", new ClassTypeDefinition(TextColors.YELLOW.getId(), TextColors.GOLD.getId(), DyeColors.YELLOW.getId(), true, 2));
-        put("Profession", new ClassTypeDefinition(TextColors.GRAY.getId(), TextColors.BLACK.getId(), DyeColors.GRAY.getId(), true, 3));
-    }};
+
 }

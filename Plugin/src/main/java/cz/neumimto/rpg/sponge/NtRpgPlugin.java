@@ -34,7 +34,6 @@ import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterSkill;
 import cz.neumimto.rpg.common.utils.io.FileUtils;
 import cz.neumimto.rpg.sponge.configuration.Settings;
-import cz.neumimto.rpg.sponge.configuration.SpongePluginConfig;
 import cz.neumimto.rpg.sponge.inventory.data.*;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.*;
 import cz.neumimto.rpg.sponge.listeners.DebugListener;
@@ -87,7 +86,6 @@ public class NtRpgPlugin extends Rpg {
 
     public static SpongeExecutorService asyncExecutor;
     public static PluginConfig pluginConfig;
-    public static SpongePluginConfig spongePluginConfig;
 
     @Inject
     public Logger logger;
@@ -379,18 +377,14 @@ public class NtRpgPlugin extends Rpg {
             HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(properties.toPath()).build();
             pluginConfig = mapper.bind(new PluginConfig()).populate(hcl.load());
 
-            ObjectMapper<SpongePluginConfig> mapper2 = ObjectMapper.forClass(SpongePluginConfig.class);
-            HoconConfigurationLoader hcl2 = HoconConfigurationLoader.builder().setPath(sproperties.toPath()).build();
-            spongePluginConfig = mapper2.bind(new SpongePluginConfig()).populate(hcl2.load());
-
-            List<Map.Entry<String, ClassTypeDefinition>> list = new ArrayList<>(spongePluginConfig.CLASS_TYPES.entrySet());
+            List<Map.Entry<String, ClassTypeDefinition>> list = new ArrayList<>(pluginConfig.CLASS_TYPES.entrySet());
             list.sort(Map.Entry.comparingByValue());
 
             Map<String, ClassTypeDefinition> result = new LinkedHashMap<>();
             for (Map.Entry<String, ClassTypeDefinition> entry : list) {
                 result.put(entry.getKey(), entry.getValue());
             }
-            spongePluginConfig.CLASS_TYPES = result;
+            pluginConfig.CLASS_TYPES = result;
         } catch (ObjectMappingException | IOException e) {
             e.printStackTrace();
         }
