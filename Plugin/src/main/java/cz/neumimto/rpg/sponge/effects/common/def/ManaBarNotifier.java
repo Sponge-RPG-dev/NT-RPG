@@ -3,10 +3,10 @@ package cz.neumimto.rpg.sponge.effects.common.def;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
-import cz.neumimto.rpg.common.effects.CoreEffectTypes;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.effects.CoreEffectTypes;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.boss.BossBarColors;
 import org.spongepowered.api.boss.BossBarOverlays;
@@ -32,7 +32,7 @@ public class ManaBarNotifier extends SpongeEffectBase<Object> implements IEffect
     private ServerBossBar bossBar;
 
 
-    public ManaBarNotifier(SpongeCharacter consumer) {
+    public ManaBarNotifier(ISpongeCharacter consumer) {
         super(name, consumer);
         this.character = consumer;
         this.player = consumer.getPlayer();

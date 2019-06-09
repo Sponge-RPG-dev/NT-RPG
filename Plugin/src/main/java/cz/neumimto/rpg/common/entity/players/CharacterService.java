@@ -1006,7 +1006,8 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
 
     @Override
     public void addTransientAttribute(T character, AttributeConfig attribute, int amount) {
-        character.getTransientAttributes().merge(attribute.getId(), amount, Integer::sum);
+        Map<String, Integer> i = character.getTransientAttributes();
+        i.merge(attribute.getId(), amount, Integer::sum);
         if (!attribute.getPropBonus().isEmpty()) {
             applyAttributeValue(character, attribute, amount);
         }

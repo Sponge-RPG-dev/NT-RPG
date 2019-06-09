@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.api.localization;
 
-import cz.neumimto.core.localization.LocalizableParametrizedText;
+import org.spongepowered.api.text.Text;
 
 public class LocalizationKeys {
     public static final String PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE = "player.skill.learned.global.message";
@@ -50,4 +50,19 @@ public class LocalizationKeys {
     public static final String PLAYER_MSG_PARTY_JOINED = "player.party-joined.message";
 
     public static final String PLAYER_SILENCED = "player.silenced.message";
+    public static final String NO_PERMISSIONS = "no.permission.message";
+    public static final String PLAYER_IS_OFFLINE_MSG = "player.offline.message";
+    public static final String CHARACTER_IS_REQUIRED = "player.missing-character.message";
+
+    public static final String CONFIRM = "gui.button.confirm";
+    public static final String SKILLTREE = "gui.label.skilltree";
+    public static final String ATTRIBUTES = "gui.label.attributes";
+    public static final String CANNOT_USE_ITEM_CONFIGURATION_REASON_OFFHAND = "player.cannot-use-item.config.message";
+    public static final String CANNOT_USE_ITEM_LEVEL_REASON = "player.cannot-use-item.ilevel.message";;
+    public static final String CANNOT_USE_ITEM_LORE_REASON = "player.cannot-use-item.other.message";;
+    public static final String RUNEWORD_ITEMS_MENU = ;
+    public static final String RUNEWORD_ALLOWED_GROUPS_MENU = ;
+    public static final String RUNEWORD_BLOCKED_GROUPS_MENU = ;
+    public static final String RUNEWORD_DETAILS_MENU = ;
+    public static final String CANNOT_USE_ITEM_CONFIGURATION_REASON = ;
 }

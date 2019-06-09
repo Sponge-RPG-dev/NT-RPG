@@ -19,18 +19,22 @@
 package cz.neumimto.rpg.sponge.commands;
 
 import com.google.inject.Singleton;
+import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.classes.ClassService;
+import cz.neumimto.rpg.api.localization.LocalizationKeys;
+import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.sponge.configuration.CommandLocalization;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import cz.neumimto.rpg.common.inventory.crafting.runewords.RuneWord;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
@@ -58,10 +62,13 @@ public class InfoCommand extends CommandBase {
     Game game;
 
     @Inject
-    private CharacterService characterService;
+    private SpongeCharacterServise characterService;
 
     @Inject
     private ISkillService skillService;
+
+    @Inject
+    private LocalizationService localizationService;
 
     @Inject
     private NtRpgPlugin plugin;
@@ -96,13 +103,13 @@ public class InfoCommand extends CommandBase {
             if (o.isPresent()) {
                 Player player = o.get();
                 if (player != commandSource && !player.hasPermission("list.character.others")) {
-                    player.sendMessage(Localizations.NO_PERMISSIONS.toText());
+                    player.sendMessage(translate(LocalizationKeys.NO_PERMISSIONS));
                     return CommandResult.empty();
                 }
                 printPlayerInfo(commandSource, args, player);
                 return CommandResult.success();
             } else {
-                commandSource.sendMessage(Localizations.PLAYER_IS_OFFLINE_MSG.toText());
+                commandSource.sendMessage(translate(LocalizationKeys.PLAYER_IS_OFFLINE_MSG));
             }
         } else if (args[0].equalsIgnoreCase("character")) {
             if (commandSource instanceof Player) {
@@ -163,11 +170,11 @@ public class InfoCommand extends CommandBase {
             if (!character.isStub()) {
                 Gui.sendStatus(character);
             } else {
-                player.sendMessage(Localizations.CHARACTER_IS_REQUIRED.toText());
+                player.sendMessage(translate(LocalizationKeys.CHARACTER_IS_REQUIRED));
 
             }
         } else if (args[0].equalsIgnoreCase("skilltree")) {
-            IActiveCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
+            ISpongeCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
             SkillTree skillTree = character.getPrimaryClass().getClassDefinition().getSkillTree();
             if (args.length == 2) {
                 for (ClassDefinition configClass : classService.getClassDefinitions()) {
@@ -217,6 +224,10 @@ public class InfoCommand extends CommandBase {
 
     private String getSmallInfo(CharacterBase character) {
         return TextColors.GOLD + ", C:" + character.getCharacterClasses().stream().map(CharacterClass::getName).collect(Collectors.joining(", "));
+    }
+
+    private Text translate(String key) {
+        return TextHelper.parse(localizationService.translate(key));
     }
 
 

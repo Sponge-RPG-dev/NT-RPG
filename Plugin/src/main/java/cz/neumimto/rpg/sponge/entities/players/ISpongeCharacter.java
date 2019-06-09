@@ -5,8 +5,11 @@ import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongeParty;
+import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
+
+import java.util.Map;
 
 public interface ISpongeCharacter extends IActiveCharacter<Player, SpongeParty>, ISpongeEntity<Player>, IEntity<Player> {
 
@@ -24,4 +27,7 @@ public interface ISpongeCharacter extends IActiveCharacter<Player, SpongeParty>,
     }
 
 
+    Map<String, SkillTreeViewModel> getSkillTreeViewLocation();
+
+    SkillTreeViewModel getLastTimeInvokedSkillTreeView();
 }

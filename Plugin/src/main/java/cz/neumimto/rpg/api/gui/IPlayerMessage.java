@@ -36,79 +36,79 @@ import java.util.List;
 /**
  * Created by NeumimTo on 6.8.2015.
  */
-public interface IPlayerMessage {
+public interface IPlayerMessage<T extends IActiveCharacter> {
 
     boolean isClientSideGui();
 
-    void sendMessage(IActiveCharacter player, LocalizableParametrizedText message, Arg arg);
+    void sendMessage(T player, LocalizableParametrizedText message, Arg arg);
 
-    void sendCooldownMessage(IActiveCharacter player, String message, double cooldown);
+    void sendCooldownMessage(T player, String message, double cooldown);
 
-    void sendEffectStatus(IActiveCharacter player, EffectStatusType type, IEffect effect);
+    void sendEffectStatus(T player, EffectStatusType type, IEffect effect);
 
-    void invokeCharacterMenu(IActiveCharacter player, List<CharacterBase> characterBases);
+    void invokeCharacterMenu(T player, List<CharacterBase> characterBases);
 
-    void sendPlayerInfo(IActiveCharacter character, List<CharacterBase> target);
+    void sendPlayerInfo(T character, List<CharacterBase> target);
 
-    void sendPlayerInfo(IActiveCharacter character, IActiveCharacter target);
+    void sendPlayerInfo(T character, T target);
 
-    void showExpChange(IActiveCharacter character, String classname, double expchange);
+    void showExpChange(T character, String classname, double expchange);
 
-    void showLevelChange(IActiveCharacter character, PlayerClassData clazz, int level);
+    void showLevelChange(T character, PlayerClassData clazz, int level);
 
-    void sendStatus(IActiveCharacter character);
+    void sendStatus(T character);
 
-    void invokerDefaultMenu(IActiveCharacter character);
+    void invokerDefaultMenu(T character);
 
-    void sendListOfCharacters(IActiveCharacter player, CharacterBase currentlyCreated);
+    void sendListOfCharacters(T player, CharacterBase currentlyCreated);
 
-    void showClassInfo(IActiveCharacter character, ClassDefinition cc);
+    void showClassInfo(T character, ClassDefinition cc);
 
-    void sendListOfRunes(IActiveCharacter character);
+    void sendListOfRunes(T character);
 
-    void displayGroupArmor(ClassDefinition g, IActiveCharacter target);
+    void displayGroupArmor(ClassDefinition g, T target);
 
-    void displayGroupWeapon(ClassDefinition g, IActiveCharacter target);
+    void displayGroupWeapon(ClassDefinition g, T target);
 
-    void sendClassInfo(IActiveCharacter target, ClassDefinition configClass);
+    void sendClassInfo(T target, ClassDefinition configClass);
 
-    void displayAttributes(IActiveCharacter target, ClassDefinition group);
+    void displayAttributes(T target, ClassDefinition group);
 
-    void displayRuneword(IActiveCharacter character, RuneWord rw, boolean linkToRWList);
+    void displayRuneword(T character, RuneWord rw, boolean linkToRWList);
 
-    void displayRunewordBlockedGroups(IActiveCharacter character, RuneWord rw);
+    void displayRunewordBlockedGroups(T character, RuneWord rw);
 
-    void displayRunewordRequiredGroups(IActiveCharacter character, RuneWord rw);
+    void displayRunewordRequiredGroups(T character, RuneWord rw);
 
-    void displayRunewordAllowedGroups(IActiveCharacter character, RuneWord rw);
+    void displayRunewordAllowedGroups(T character, RuneWord rw);
 
-    void displayRunewordAllowedItems(IActiveCharacter character, RuneWord rw);
+    void displayRunewordAllowedItems(T character, RuneWord rw);
 
-    void displayHealth(IActiveCharacter character);
+    void displayHealth(T character);
 
-    void displayMana(IActiveCharacter character);
+    void displayMana(T character);
 
-    void sendCannotUseItemNotification(IActiveCharacter character, String item, CannotUseItemReason reason);
+    void sendCannotUseItemNotification(T character, String item, CannotUseItemReason reason);
 
-    void openSkillTreeMenu(IActiveCharacter player);
+    void openSkillTreeMenu(T player);
 
-    void moveSkillTreeMenu(IActiveCharacter character);
+    void moveSkillTreeMenu(T character);
 
-    void displaySkillDetailsInventoryMenu(IActiveCharacter character, SkillTree tree, String command);
+    void displaySkillDetailsInventoryMenu(T character, SkillTree tree, String command);
 
-    void displayInitialProperties(ClassDefinition byName, IActiveCharacter player);
+    void displayInitialProperties(ClassDefinition byName, T player);
 
-    void sendCannotUseItemInOffHandNotification(String futureOffHandItem, IActiveCharacter character, CannotUseItemReason reason);
+    void sendCannotUseItemInOffHandNotification(String futureOffHandItem, T character, CannotUseItemReason reason);
 
-    void skillExecution(IActiveCharacter character, PlayerSkillContext skill);
+    void skillExecution(T character, PlayerSkillContext skill);
 
-    void sendClassesByType(IActiveCharacter character, String def);
+    void sendClassesByType(T character, String def);
 
-    void sendClassTypes(IActiveCharacter character);
+    void sendClassTypes(T character);
 
-    void displayCharacterMenu(IActiveCharacter character);
+    void displayCharacterMenu(T character);
 
-    void displayCharacterAttributes(IActiveCharacter character);
+    void displayCharacterAttributes(T character);
 
-    void displayCurrentClicks(IActiveCharacter character, String combo);
+    void displayCurrentClicks(T character, String combo);
 }

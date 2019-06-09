@@ -3,9 +3,10 @@ package cz.neumimto.rpg.sponge.effects.common.def;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
-import cz.neumimto.rpg.common.effects.CoreEffectTypes;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.common.effects.CoreEffectTypes;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.boss.BossBarColors;
@@ -26,14 +27,14 @@ public class BossBarExpNotifier extends SpongeEffectBase<Object> implements IEff
     public static final String name = "BossBarExp";
     private Map<String, SessionWrapper> bossBarMap = new HashMap<>();
 
-    public BossBarExpNotifier(SpongeCharacter consumer) {
+    public BossBarExpNotifier(ISpongeCharacter consumer) {
         super(name, consumer);
         effectTypes.add(CoreEffectTypes.GUI);
         setPeriod(5000);
         setDuration(-1);
     }
 
-    public void notifyExpChange(SpongeCharacter character, String clazz, double exps) {
+    public void notifyExpChange(ISpongeCharacter character, String clazz, double exps) {
         final String classname = clazz.toLowerCase();
         Optional<PlayerClassData> first =
                 character.getClasses().values().stream().filter(a -> a.getClassDefinition().getName().equalsIgnoreCase(classname)).findFirst();

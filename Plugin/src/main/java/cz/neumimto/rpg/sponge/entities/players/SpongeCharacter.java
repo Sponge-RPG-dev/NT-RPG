@@ -38,10 +38,12 @@ public class SpongeCharacter extends ActiveCharacter<Player, SpongeParty> implem
 
     }
 
+    @Override
     public Map<String, SkillTreeViewModel> getSkillTreeViewLocation() {
         return skillTreeViewLocation;
     }
 
+    @Override
     public SkillTreeViewModel getLastTimeInvokedSkillTreeView() {
         for (SkillTreeViewModel skillTreeViewModel : skillTreeViewLocation.values()) {
             if (skillTreeViewModel.isCurrent()) {
