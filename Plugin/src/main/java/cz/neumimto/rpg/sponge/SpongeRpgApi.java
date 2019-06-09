@@ -14,6 +14,8 @@ import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
+import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.Living;
@@ -125,12 +127,12 @@ public final class SpongeRpgApi implements RpgApi {
     }
 
     @Override
-    public ICharacterService<IActiveCharacter> getCharacterService() {
+    public SpongeCharacterServise getCharacterService() {
         return NtRpgPlugin.GlobalScope.characterService;
     }
 
     @Override
-    public EntityService<IEntity> getEntityService() {
+    public SpongeEntityService getEntityService() {
         return NtRpgPlugin.GlobalScope.entityService;
     }
 

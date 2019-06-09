@@ -2,6 +2,7 @@ package cz.neumimto.rpg.sponge.entities;
 
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.api.entity.IEntity;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.PotionEffectData;
 import org.spongepowered.api.effect.potion.PotionEffect;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public interface ISpongeEntity<T extends Living> extends IEffectConsumer {
+public interface ISpongeEntity<T extends Living> extends IEffectConsumer, IEntity<T> {
 
     T getEntity();
 

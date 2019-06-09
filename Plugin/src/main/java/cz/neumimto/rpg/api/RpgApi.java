@@ -4,14 +4,12 @@ import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;
+import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.events.effect.EventFactoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.ISkillService;
-import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 
 import java.util.Collection;
 import java.util.List;
@@ -53,9 +51,9 @@ public interface RpgApi {
 
     Executor getAsyncExecutor();
 
-    ICharacterService<IActiveCharacter> getCharacterService();
+    <C extends ICharacterService> C getCharacterService();
 
-    EntityService<IEntity> getEntityService();
+    <E extends EntityService> E getEntityService();
 
     DamageService getDamageService();
 }
