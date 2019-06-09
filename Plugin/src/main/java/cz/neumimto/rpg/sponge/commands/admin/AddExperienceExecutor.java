@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.sponge.commands.admin;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -23,7 +23,7 @@ public class AddExperienceExecutor implements CommandExecutor {
         Optional<ClassDefinition> classDefinition = args.getOne("class");
         Optional<String> expSource = args.getOne("source");
 
-        IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
+        ISpongeCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
         Collection<PlayerClassData> classes = character.getClasses().values();
 
         if (classDefinition.isPresent()) {

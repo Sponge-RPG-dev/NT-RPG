@@ -1,9 +1,13 @@
 package cz.neumimto.rpg.sponge.commands.character;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.api.utils.ActionResult;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.localization.LocalizationKeys;
+import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.api.utils.ActionResult;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -17,17 +21,18 @@ public class CharacterChooseClassExecutor implements CommandExecutor {
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         ClassDefinition configClass = args.<ClassDefinition>getOne("class").get();
 
+        LocalizationService localizationService = Rpg.get().getLocalizationService();
         if (!src.hasPermission("ntrpg.class." + configClass.getName().toLowerCase())) {
-            src.sendMessage(Localizations.NO_PERMISSIONS.toText());
+            src.sendMessage(TextHelper.parse(localizationService.translate(LocalizationKeys.NO_PERMISSIONS)));
             return CommandResult.empty();
         }
         if (!(src instanceof Player)) {
             throw new IllegalStateException("Cannot be run as a console");
         }
         Player player = (Player) src;
-        IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
+        ISpongeCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
         if (character.isStub()) {
-            player.sendMessage(Localizations.CHARACTER_IS_REQUIRED.toText());
+            src.sendMessage(TextHelper.parse(localizationService.translate(LocalizationKeys.CHARACTER_IS_REQUIRED)));
             return CommandResult.empty();
         }
         ActionResult result = NtRpgPlugin.GlobalScope.characterService.canGainClass(character, configClass);

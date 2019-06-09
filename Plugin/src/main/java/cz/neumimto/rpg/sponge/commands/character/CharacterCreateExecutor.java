@@ -1,11 +1,14 @@
 package cz.neumimto.rpg.sponge.commands.character;
 
 import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.gui.Gui;
+import cz.neumimto.rpg.api.localization.LocalizationKeys;
+import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.sponge.configuration.CommandLocalization;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -23,12 +26,13 @@ public class CharacterCreateExecutor implements CommandExecutor {
         String a = args.<String>getOne("name").get();
         CompletableFuture.runAsync(() -> {
             Player player = (Player) src;
-            CharacterService characterService = NtRpgPlugin.GlobalScope.characterService;
+            SpongeCharacterServise characterService = NtRpgPlugin.GlobalScope.characterService;
             int i = characterService.canCreateNewCharacter(player.getUniqueId(), a);
+            LocalizationService localizationService = Rpg.get().getLocalizationService();
             if (i == 1) {
-                src.sendMessage(Localizations.REACHED_CHARACTER_LIMIT.toText());
+                src.sendMessage(TextHelper.parse(localizationService.translate(LocalizationKeys.REACHED_CHARACTER_LIMIT)));
             } else if (i == 2) {
-                src.sendMessage(Localizations.CHARACTER_EXISTS.toText());
+                src.sendMessage(TextHelper.parse(localizationService.translate(LocalizationKeys.CHARACTER_EXISTS)));
             } else if (i == 0) {
                 JPACharacterBase characterBase = new JPACharacterBase();
                 characterBase.setUuid(player.getUniqueId());

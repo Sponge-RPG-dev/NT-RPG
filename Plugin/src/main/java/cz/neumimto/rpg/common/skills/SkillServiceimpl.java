@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.common.skills;
 
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.gui.Gui;
@@ -112,7 +113,8 @@ public abstract class SkillServiceimpl implements ISkillService {
 
     @Override
     public PlayerSkillContext invokeSkillByCombo(String combo, IActiveCharacter character) {
-        for (PlayerSkillContext playerSkillContext : character.getSkills().values()) {
+        Map<String, PlayerSkillContext> skills = character.getSkills();
+        for (PlayerSkillContext playerSkillContext : skills.values()) {
             if (combo.equals(playerSkillContext.getSkillData().getCombination())) {
                 executeSkill(character, playerSkillContext, new SkillExecutorCallback());
                 return playerSkillContext;
@@ -257,7 +259,7 @@ public abstract class SkillServiceimpl implements ISkillService {
             s.setModel(scriptSkillModel);
             //	IoC.get().get(sk, s);
             s.initScript();
-            if (pluginConfig.DEBUG.isDevelop()) {
+            if (Rpg.get().getPluginConfig().DEBUG.isDevelop()) {
                 info("-------- Created skill from skill def.");
                 info("+ ClassName " + s.getClass().getName());
                 info("+ ClassLoader " + s.getClass().getClassLoader());

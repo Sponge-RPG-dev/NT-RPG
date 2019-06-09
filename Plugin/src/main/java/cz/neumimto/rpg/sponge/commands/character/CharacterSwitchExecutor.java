@@ -1,10 +1,13 @@
 package cz.neumimto.rpg.sponge.commands.character;
 
-import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.localization.LocalizationKeys;
+import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -21,17 +24,18 @@ public class CharacterSwitchExecutor implements CommandExecutor {
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         args.<String>getOne("name").ifPresent(s -> {
             Player player = (Player) src;
+            LocalizationService localizationService = Rpg.get().getLocalizationService();
             IActiveCharacter current = NtRpgPlugin.GlobalScope.characterService.getCharacter(player);
             if (current != null && current.getName().equalsIgnoreCase(s)) {
-                player.sendMessage(Localizations.ALREADY_CUURENT_CHARACTER.toText());
+                player.sendMessage(TextHelper.parse(localizationService.translate(LocalizationKeys.ALREADY_CUURENT_CHARACTER)));
                 return;
             }
             CompletableFuture.runAsync(() -> {
                 List<CharacterBase> playersCharacters = NtRpgPlugin.GlobalScope.characterService.getPlayersCharacters(player.getUniqueId());
                 boolean b = false;
-                for (JPACharacterBase playersCharacter : playersCharacters) {
+                for (CharacterBase playersCharacter : playersCharacters) {
                     if (playersCharacter.getName().equalsIgnoreCase(s)) {
-                        ActiveCharacter character =
+                        ISpongeCharacter character =
                                 NtRpgPlugin.GlobalScope.characterService.createActiveCharacter(player.getUniqueId(), playersCharacter);
 
                         Sponge.getScheduler()
@@ -40,7 +44,7 @@ public class CharacterSwitchExecutor implements CommandExecutor {
                                 .execute(() -> {
                                     NtRpgPlugin.GlobalScope.characterService.setActiveCharacter(player.getUniqueId(), character);
                                     NtRpgPlugin.GlobalScope.characterService.invalidateCaches(character);
-                                    NtRpgPlugin.GlobalScope.characterService.assignPlayerToCharacter(player);
+                                    NtRpgPlugin.GlobalScope.characterService.assignPlayerToCharacter(player.getUniqueId());
                                 })
                                 .submit(NtRpgPlugin.GlobalScope.plugin);
 
@@ -52,7 +56,7 @@ public class CharacterSwitchExecutor implements CommandExecutor {
                     }
                 }
                 if (!b) {
-                    player.sendMessage(Localizations.NON_EXISTING_CHARACTER.toText());
+                    player.sendMessage(TextHelper.parse(localizationService.translate(LocalizationKeys.NON_EXISTING_CHARACTER)));
                 }
             }, NtRpgPlugin.asyncExecutor);
         });

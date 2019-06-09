@@ -1,17 +1,18 @@
 package cz.neumimto.rpg.sponge.commands.admin;
 
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.SkillSettings;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.mods.SkillExecutorCallback;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.types.IActiveSkill;
-import cz.neumimto.rpg.api.skills.SkillData;
+import cz.neumimto.rpg.api.utils.MathUtils;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.commandblocks.CommandblockSkillExecutor;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -55,9 +56,9 @@ public class ExecuteSkillExecutor implements CommandExecutor {
             Vector3d headRotation = head.map(s -> {
                 String[] split = s.split(";");
                 return new Vector3d(
-                        Double.parseDouble(Utils.extractNumber(split[0])),
-                        Double.parseDouble(Utils.extractNumber(split[1])),
-                        Double.parseDouble(Utils.extractNumber(split[2]))
+                        Double.parseDouble(MathUtils.extractNumber(split[0])),
+                        Double.parseDouble(MathUtils.extractNumber(split[1])),
+                        Double.parseDouble(MathUtils.extractNumber(split[2]))
                 );
             }).orElse(new Vector3d());
             character = CommandblockSkillExecutor.wrap(location, headRotation);
@@ -103,7 +104,7 @@ public class ExecuteSkillExecutor implements CommandExecutor {
                     @Override
                     public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
                         Long e = System.nanoTime();
-                        character.getPlayer().sendMessage(Text.of("Exec Time: " + TimeUnit.MILLISECONDS.convert(e - l, TimeUnit.NANOSECONDS)));
+                        character.sendMessage("Exec Time: " + TimeUnit.MILLISECONDS.convert(e - l, TimeUnit.NANOSECONDS));
                     }
                 });
             }};

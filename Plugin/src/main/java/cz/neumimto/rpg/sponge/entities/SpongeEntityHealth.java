@@ -3,13 +3,14 @@ package cz.neumimto.rpg.sponge.entities;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityResource;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.entity.living.Living;
 
 /**
  * Created by NeumimTo on 18.6.2017.
  */
 public class SpongeEntityHealth implements IEntityResource {
 
-    public IEntity entity;
+    public IEntity<Living> entity;
 
     public SpongeEntityHealth(IEntity entity) {
         this.entity = entity;

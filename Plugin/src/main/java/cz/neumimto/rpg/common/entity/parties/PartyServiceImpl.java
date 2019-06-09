@@ -36,13 +36,13 @@ import javax.inject.Inject;
 /**
  * Created by NeumimTo on 2.9.2015.
  */
-public abstract class PartyServiceImpl implements PartyService {
+public abstract class PartyServiceImpl<T extends IActiveCharacter> implements PartyService<T> {
 
     @Inject
     private LocalizationService localizationService;
 
     @Override
-    public void createNewParty(IActiveCharacter leader) {
+    public void createNewParty(T leader) {
         PartyCreateEvent event = Rpg.get().getEventFactory().createEventInstance(PartyCreateEvent.class);
         if (!Rpg.get().postEvent(event)) {
             event.setCharacter(leader);
@@ -51,10 +51,10 @@ public abstract class PartyServiceImpl implements PartyService {
         }
     }
 
-    protected abstract IParty createParty(IActiveCharacter leader);
+    protected abstract IParty createParty(T leader);
 
     @Override
-    public boolean kickCharacterFromParty(IParty party, IActiveCharacter kicked) {
+    public boolean kickCharacterFromParty(IParty party, T kicked) {
         if (party.getPlayers().contains(kicked)) {
             PartyLeaveEvent event = Rpg.get().getEventFactory().createEventInstance(PartyLeaveEvent.class);
             event.setCharacter(kicked);
@@ -73,7 +73,7 @@ public abstract class PartyServiceImpl implements PartyService {
     }
 
     @Override
-    public void sendPartyInvite(IParty party, IActiveCharacter character) {
+    public void sendPartyInvite(IParty party, T character) {
         PartyInviteEvent event = Rpg.get().getEventFactory().createEventInstance(PartyInviteEvent.class);
         event.setCharacter(character);
         event.setParty(party);
@@ -93,7 +93,7 @@ public abstract class PartyServiceImpl implements PartyService {
     }
 
     @Override
-    public void addToParty(IParty party, IActiveCharacter character) {
+    public void addToParty(IParty party, T character) {
         if (character.isStub()) {
             return;
         }

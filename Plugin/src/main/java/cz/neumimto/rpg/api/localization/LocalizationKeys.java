@@ -95,4 +95,8 @@ public class LocalizationKeys {
     public static final String PLAYER_IS_SILENCED = "player.skill-cast.precondition.silenced.message";
     public static final String NO_TARGET = "player.skill-cast.precondition.no-targed.message";
     public static final String CHARACTER_DOES_NOT_HAVE_SKILL = "player.skill-cast.precondition.no-skillaccess.message";
+    public static final String CHARACTER_EXISTS = "player.character-already-exists.message";
+    public static final String REACHED_CHARACTER_LIMIT = "player.reached-character-limit.message";
+    public static final String ALREADY_CUURENT_CHARACTER = "player.character-already-selected.message";
+    public static final String NON_EXISTING_CHARACTER = "player.non-existing-character.message";;
 }
