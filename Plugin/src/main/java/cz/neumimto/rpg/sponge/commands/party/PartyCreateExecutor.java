@@ -17,6 +17,7 @@ public class PartyCreateExecutor implements CommandExecutor {
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src);
         if (character.isStub()) {
+            character.sendMessage();
             Gui.sendMessage(character, Localizations.CHARACTER_IS_REQUIRED, Arg.EMPTY);
             return CommandResult.success();
         }

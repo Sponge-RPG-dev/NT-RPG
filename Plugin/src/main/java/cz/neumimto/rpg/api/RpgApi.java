@@ -4,6 +4,7 @@ import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.entity.EntityService;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.events.effect.EventFactoryService;
@@ -56,4 +57,6 @@ public interface RpgApi {
     <E extends EntityService> E getEntityService();
 
     DamageService getDamageService();
+
+    PropertyService getPropertyService();
 }

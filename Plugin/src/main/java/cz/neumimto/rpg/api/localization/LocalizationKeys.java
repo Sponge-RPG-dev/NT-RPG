@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.api.localization;
 
-import org.spongepowered.api.text.Text;
-
 public class LocalizationKeys {
     public static final String PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE = "player.skill.learned.global.message";
     public static final String PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE = "player.skill.upgraded.global.message";
@@ -57,12 +55,24 @@ public class LocalizationKeys {
     public static final String CONFIRM = "gui.button.confirm";
     public static final String SKILLTREE = "gui.label.skilltree";
     public static final String ATTRIBUTES = "gui.label.attributes";
-    public static final String CANNOT_USE_ITEM_CONFIGURATION_REASON_OFFHAND = "player.cannot-use-item.config.message";
-    public static final String CANNOT_USE_ITEM_LEVEL_REASON = "player.cannot-use-item.ilevel.message";;
-    public static final String CANNOT_USE_ITEM_LORE_REASON = "player.cannot-use-item.other.message";;
-    public static final String RUNEWORD_ITEMS_MENU = ;
-    public static final String RUNEWORD_ALLOWED_GROUPS_MENU = ;
-    public static final String RUNEWORD_BLOCKED_GROUPS_MENU = ;
-    public static final String RUNEWORD_DETAILS_MENU = ;
-    public static final String CANNOT_USE_ITEM_CONFIGURATION_REASON = ;
+    public static final String CANNOT_USE_ITEM_CONFIGURATION_REASON_OFFHAND = "player.cannot-use-item-offhand.config.message";
+    public static final String CANNOT_USE_ITEM_CONFIGURATION_REASON = "player.cannot-use-item.config.message";
+    public static final String CANNOT_USE_ITEM_LEVEL_REASON = "player.cannot-use-item.ilevel.message";
+    public static final String CANNOT_USE_ITEM_LORE_REASON = "player.cannot-use-item.other.message";
+    public static final String RUNEWORD_ITEMS_MENU = "gui.label.rw.menu";
+    public static final String RUNEWORD_ITEMS_MENU_TOOLTIP = "gui.label.rw.menu.tooltip";
+    public static final String RUNEWORD_ALLOWED_GROUPS_MENU = "gui.label.rw.allowed-classes";
+    public static final String RUNEWORD_BLOCKED_GROUPS_MENU = "gui.label.rw.blocked-classes";
+    public static final String RUNEWORD_DETAILS_MENU = "gui.label.rw.info";
+    public static final String INITIAL_VALUE = "gui.label.generic.initial-value";
+
+    public static final String NO_PRIMARY_CLASS = "player.no-class-warning.message";
+
+    public static final String RUNEWORD_ALLOWED_GROUPS_MENU_TOOLTIP = "gui.label.rw.allowed-classes.tooltip";
+    public static final String RUNEWORD_BLOCKED_GROUPS_MENU_TOOLTIP = "gui.label.rw.blocked-classes.tooltip";
+
+    public static final String HEALTH = "gui.label.hp";
+    public static final String RUNE_LIST = "gui.label.rune-list";
+
+    public static final String ON_COOLDOWN = "player.action-on-cooldown.message";
 }

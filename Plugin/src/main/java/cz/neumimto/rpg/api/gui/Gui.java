@@ -20,19 +20,17 @@ package cz.neumimto.rpg.api.gui;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.neumimto.core.localization.Arg;
-import cz.neumimto.core.localization.LocalizableParametrizedText;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.effects.EffectStatusType;
-import cz.neumimto.rpg.api.inventory.CannotUseItemReason;
-import cz.neumimto.rpg.common.inventory.crafting.runewords.RuneWord;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.api.inventory.CannotUseItemReason;
+import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.api.skills.tree.SkillTree;
+import cz.neumimto.rpg.common.inventory.crafting.runewords.RuneWord;
 import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 
 import java.util.List;
@@ -58,10 +56,6 @@ public class Gui {
             return mod;
         }
         return vanilla;
-    }
-
-    public static void sendMessage(IActiveCharacter player, LocalizableParametrizedText message, Arg arg) {
-        getMessageTypeOf(player).sendMessage(player, message, arg);
     }
 
     public static void sendCooldownMessage(IActiveCharacter player, String skillname, double cooldown) {

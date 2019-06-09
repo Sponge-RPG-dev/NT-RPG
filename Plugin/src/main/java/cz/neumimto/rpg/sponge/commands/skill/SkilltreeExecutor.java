@@ -1,13 +1,15 @@
 package cz.neumimto.rpg.sponge.commands.skill;
 
-import cz.neumimto.core.localization.Arg;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.api.gui.Gui;
-import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
+import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.api.gui.Gui;
+import cz.neumimto.rpg.api.localization.LocalizationKeys;
+import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.api.skills.tree.SkillTree;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -23,16 +25,19 @@ public class SkilltreeExecutor implements CommandExecutor {
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         if (src instanceof Player) {
             Player p = (Player) src;
-            IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(p);
+            ISpongeCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(p);
+            LocalizationService localizationService = NtRpgPlugin.GlobalScope.localizationService;
             if (character.isStub()) {
-                p.sendMessage(Localizations.CHARACTER_IS_REQUIRED.toText());
+                String translate = localizationService.translate(LocalizationKeys.CHARACTER_IS_REQUIRED);
+                p.sendMessage(TextHelper.parse(translate));
                 return CommandResult.empty();
             }
             Optional<ClassDefinition> aClass = args.getOne("class");
             if (!aClass.isPresent()) {
                 PlayerClassData primaryClass = character.getPrimaryClass();
                 if (primaryClass == null) {
-                    Gui.sendMessage(character, Localizations.NO_PRIMARY_CLASS, Arg.EMPTY);
+                    String translate = localizationService.translate(LocalizationKeys.NO_PRIMARY_CLASS);
+                    p.sendMessage(TextHelper.parse(translate));
                     return CommandResult.builder().build();
                 }
                 aClass = Optional.of(primaryClass.getClassDefinition());

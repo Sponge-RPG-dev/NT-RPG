@@ -19,15 +19,14 @@
 package cz.neumimto.rpg.sponge.gui;
 
 import cz.neumimto.core.localization.Arg;
-import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.EffectStatusType;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
@@ -38,7 +37,6 @@ import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
@@ -61,6 +59,7 @@ import cz.neumimto.rpg.sponge.inventory.data.*;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.SkillTreeNode;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
+import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
 import cz.neumimto.rpg.sponge.utils.ItemStackUtils;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.Game;
@@ -124,7 +123,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     @Inject
     private CharacterService characterService;
     @Inject
-    private ISkillService skillService;
+    private SpongeSkillService skillService;
     @Inject
     private PlayerDao playerDao;
 
@@ -153,13 +152,8 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     }
 
     @Override
-    public void sendMessage(ISpongeCharacter player, LocalizableParametrizedText message, Arg arg) {
-        player.sendMessage(message, arg);
-    }
-
-    @Override
     public void sendCooldownMessage(ISpongeCharacter player, String message, double cooldown) {
-        player.sendMessage(LocalizationKeys.ON_COOLDOWN, Arg.arg("skill", message).with("time", cooldown));
+        player.sendMessage(localizationService.translate(LocalizationKeys.ON_COOLDOWN, Arg.arg("skill", message).with("time", cooldown)));
     }
 
     @Override
@@ -498,10 +492,9 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     @Override
     public void displayRuneword(ISpongeCharacter character, RuneWord rw, boolean linkToRWList) {
         Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
-        String cmd = infoCommand.getAliases().get(0);
         if (linkToRWList) {
             if (character.getPlayer().hasPermission("ntrpg.runewords.list")) {
-                i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back("runes", LocalizationKeys.RUNE_LIST.toText()));
+                i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back("runes", translate(LocalizationKeys.RUNE_LIST)));
             }
         }
 
@@ -511,7 +504,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
             is.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.RUNEWORD_ITEMS_MENU));
             is.offer(Keys.ITEM_LORE,
                     Collections.singletonList(
-                            LocalizationKeys.RUNEWORD_ITEMS_MENU_TOOLTIP.toText(Arg.arg("runeword", rw.getName()))
+                            translate(LocalizationKeys.RUNEWORD_ITEMS_MENU_TOOLTIP, Arg.arg("runeword", rw.getName()))
                     )
             );
             is.offer(new InventoryCommandItemMenuData("runeword " + rw.getName() + " allowed-items"));
@@ -520,10 +513,10 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
         if (!rw.getAllowedGroups().isEmpty()) {
             ItemStack is = GuiHelper.itemStack(ItemTypes.LEATHER_HELMET);
-            is.offer(Keys.DISPLAY_NAME, LocalizationKeys.RUNEWORD_ALLOWED_GROUPS_MENU);
+            is.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.RUNEWORD_ALLOWED_GROUPS_MENU));
             is.offer(Keys.ITEM_LORE,
                     Collections.singletonList(
-                            LocalizationKeys.RUNEWORD_ALLOWED_GROUPS_MENU_TOOLTIP.toText(Arg.arg("runeword", rw.getName()))
+                            translate(LocalizationKeys.RUNEWORD_ALLOWED_GROUPS_MENU_TOOLTIP, Arg.arg("runeword", rw.getName()))
                     )
             );
             is.offer(Keys.HIDE_ATTRIBUTES, true);
@@ -536,7 +529,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
             is.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.RUNEWORD_BLOCKED_GROUPS_MENU));
             is.offer(Keys.ITEM_LORE,
                     Collections.singletonList(
-                            LocalizationKeys.RUNEWORD_BLOCKED_GROUPS_MENU_TOOLTIP.toText(Arg.arg("runeword", rw.getName()))
+                            translate(LocalizationKeys.RUNEWORD_BLOCKED_GROUPS_MENU_TOOLTIP, Arg.arg("runeword", rw.getName()))
                     )
             );
             is.offer(new InventoryCommandItemMenuData("runeword " + rw.getName() + " blocked-classes"));
@@ -593,7 +586,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     public void displayRunewordAllowedItems(ISpongeCharacter character, RuneWord rw) {
         Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0)))
-                .offer(back("runeword " + rw.getName(), translate(LocalizationKeys.RUNEWORD_DETAILS_MENU));
+                .offer(back("runeword " + rw.getName(), translate(LocalizationKeys.RUNEWORD_DETAILS_MENU)));
         int x = 1;
         int y = 2;
         for (String type : rw.getAllowedItems()) {
@@ -650,7 +643,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
         of.offer(new MenuInventoryData(true));
         List<Text> lore = new ArrayList<>();
-        lore.add(LocalizationKeys.INITIAL_VALUE.toText(Arg.arg("value", value)));
+        lore.add(translate(LocalizationKeys.INITIAL_VALUE,Arg.arg("value", value)));
         if (key.getDescription() != null) {
             lore.addAll(getItemLore(key.getDescription()));
         }
@@ -666,7 +659,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
         //todo implement
         //double reservedAmount = character.getHealth().getReservedAmount();
 
-        Text a = LocalizationKeys.HEALTH.toText(Arg.arg("current", value).with("maxValue", maxValue));
+        Text a = translate(LocalizationKeys.HEALTH, Arg.arg("current", value).with("maxValue", maxValue));
         character.getPlayer().sendMessage(a);
     }
 
@@ -736,7 +729,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     @Override
     public void sendCannotUseItemInOffHandNotification(String futureOffHandItem, ISpongeCharacter character, CannotUseItemReason reason) {
         if (reason == CannotUseItemReason.CONFIG) {
-            character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, translate(LocalizationKeys.CANNOT_USE_ITEM_CONFIGURATION_REASON_OFFHAND);
+            character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, translate(LocalizationKeys.CANNOT_USE_ITEM_CONFIGURATION_REASON_OFFHAND));
         } else if (reason == CannotUseItemReason.LEVEL) {
             character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, translate(LocalizationKeys.CANNOT_USE_ITEM_LEVEL_REASON));
         } else if (reason == CannotUseItemReason.LORE) {
@@ -882,7 +875,8 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
                 .offer(commit);
 
 
-        Collection<AttributeConfig> allOf = Sponge.getRegistry().getAllOf(AttributeConfig.class);
+
+        Collection<AttributeConfig> allOf = Rpg.get().getPropertyService().getAttributes().values();
 
         int q = 0;
         for (AttributeConfig attribute : allOf) {
@@ -914,6 +908,10 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     
     private Text translate(String key) {
         return TextHelper.parse(localizationService.translate(key));
+    }
+
+    private Text translate(String key, Arg arg) {
+        return TextHelper.parse(localizationService.translate(key, arg));
     }
 }
 
