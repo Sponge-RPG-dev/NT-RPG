@@ -4,7 +4,7 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
-public interface IActiveSkill {
+public interface IActiveSkill<T extends IActiveCharacter> {
 
-    void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext modifier);
+    void  cast(T character, PlayerSkillContext info, SkillContext modifier);
 }

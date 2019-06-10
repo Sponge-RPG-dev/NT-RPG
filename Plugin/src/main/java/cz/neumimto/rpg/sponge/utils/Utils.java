@@ -26,6 +26,8 @@ import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
@@ -173,7 +175,7 @@ public class Utils {
     }
 
     //todo
-    public static boolean canDamage(IActiveCharacter character, Living l) {
+    public static boolean canDamage(ISpongeCharacter character, Living l) {
         if (character.getPlayer() == l) {
             return false;
         }
@@ -195,7 +197,7 @@ public class Utils {
         return l.damage(0, build);
     }
 
-    public static boolean canDamage(IEntity entity, Living l) {
+    public static boolean canDamage(ISpongeEntity entity, Living l) {
         DamageSource build = new SpongeEntityDamageSourceBuilder()
                 .entity(entity.getEntity())
                 .type(NDamageType.DAMAGE_CHECK)

@@ -6,6 +6,7 @@ import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityType;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.apache.commons.lang3.NotImplementedException;
 import org.spongepowered.api.data.key.Keys;
@@ -31,7 +32,7 @@ public class SkillTargetProcessors {
                     @SkillComponent.Param("radius")
             }
     )
-    public static final BiFunction<IEntity, Number, List<IEntity>> NEARBY_ALLIES = ((entity, radius) -> {
+    public static final BiFunction<IEntity<Living>, Number, List<IEntity>> NEARBY_ALLIES = ((entity, radius) -> {
         Collection<Entity> nearbyEntities = entity.getEntity().getNearbyEntities(radius.doubleValue());
         List<IEntity> nearby = new ArrayList<>();
         if (entity.getType() == IEntityType.MOB) {
@@ -89,7 +90,7 @@ public class SkillTargetProcessors {
                 throw new NotImplementedException(":(");
             }
         } else if (caster.getType() == IEntityType.CHARACTER) {
-            IActiveCharacter character = (IActiveCharacter) caster;
+            ISpongeCharacter character = (ISpongeCharacter) caster;
             Living targetedEntity = Utils.getTargetedEntity(character, range.intValue());
             if (targetedEntity != null) {
                 if (Utils.canDamage(character, targetedEntity)) {

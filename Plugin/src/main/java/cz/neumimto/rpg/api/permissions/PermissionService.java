@@ -5,15 +5,15 @@ import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 
 import java.util.Set;
 
-public interface PermissionService {
+public interface PermissionService<T extends IActiveCharacter> {
 
-    boolean hasPermission(IActiveCharacter character, String value);
+    boolean hasPermission(T character, String value);
 
-    void removePermissions(IActiveCharacter character, Set<String> perms);
+    void removePermissions(T character, Set<String> perms);
 
-    void addPermissions(IActiveCharacter character, Set<String> perms);
+    void addPermissions(T character, Set<String> perms);
 
-    void addAllPermissions(IActiveCharacter character, PlayerClassData classDefinition);
+    void addAllPermissions(T character, PlayerClassData classDefinition);
 
-    void addPermissions(IActiveCharacter character, PlayerClassData classDefinition);
+    void addPermissions(T character, PlayerClassData classDefinition);
 }

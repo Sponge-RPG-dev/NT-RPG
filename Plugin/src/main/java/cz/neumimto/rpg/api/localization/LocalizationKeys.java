@@ -98,5 +98,19 @@ public class LocalizationKeys {
     public static final String CHARACTER_EXISTS = "player.character-already-exists.message";
     public static final String REACHED_CHARACTER_LIMIT = "player.reached-character-limit.message";
     public static final String ALREADY_CUURENT_CHARACTER = "player.character-already-selected.message";
-    public static final String NON_EXISTING_CHARACTER = "player.non-existing-character.message";;
+    public static final String NON_EXISTING_CHARACTER = "player.non-existing-character.message";
+
+    public static final String ITEM_EFFECTS_SECTION = "item.label.section.effects";
+    public static final String ITEM_RARITY_SECTION = "item.label.section.rarity";
+    public static final String ITEM_DAMAGE_SECTION = "item.label.section.damage";
+    public static final String ITEM_LEVEL_SECTION = "item.label.section.level";
+    public static final String ITEM_SOCKETS_SECTION = "item.label.section.sockets";
+    public static final String ITEM_ATTRIBUTES_SECTIO = "item.label.section.attributes";
+    public static final String ITEM_REQUIREMENTS_SECTION = "item.label.section.requirements";
+    public static final String ITEM_META_TYPE_NAME = "item.label.section.meta_type";
+    public static final String UNKNOWN_RARITY = "item.label.unknown-rarity";
+    public static final String SOCKET_EMPTY = "iteml.label.socket-empty";
+    public static final String CLASS_HAS_NO_SKILLTREE = "class.no-skilltree.message";
+    public static final String CANNOT_BIND_NON_EXECUTABLE_SKILL = "player.skill-unbindable.message";
+    public static final String NO_ITEM_IN_HAND = "player.no-item-in-hand.message";
 }

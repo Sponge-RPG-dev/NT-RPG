@@ -2,19 +2,23 @@ package cz.neumimto.rpg.sponge.gui;
 
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.EffectParams;
+import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.localization.LocalizationKeys;
+import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.common.inventory.sockets.SocketType;
 import cz.neumimto.rpg.common.reloading.Reload;
 import cz.neumimto.rpg.common.reloading.ReloadService;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.inventory.ItemLoreSections;
 import cz.neumimto.rpg.sponge.inventory.LoreSectionDelimiter;
 import cz.neumimto.rpg.sponge.inventory.data.DataConstants;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.ItemSocketsData;
-import cz.neumimto.rpg.common.inventory.sockets.SocketType;
-import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
@@ -24,6 +28,7 @@ import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -72,14 +77,14 @@ public class ItemLoreBuilderService {
         groupMinLevelColor = Sponge.getRegistry().getType(TextColor.class, pluginConfig.ITEM_LORE_GROUP_MIN_LEVEL_COLOR).get();
 
 
-        effectSection = Localizations.ITEM_EFFECTS_SECTION.toText();
-        rarity = Localizations.ITEM_RARITY_SECTION.toText();
-        damage = Localizations.ITEM_DAMAGE_SECTION.toText();
-        level = Localizations.ITEM_LEVEL_SECTION.toText();
-        sockets = Localizations.ITEM_SOCKETS_SECTION.toText();
-        attributes = Localizations.ITEM_ATTRIBUTES_SECTIO.toText();
-        requirements = Localizations.ITEM_REQUIREMENTS_SECTION.toText();
-        metaType = Localizations.ITEM_META_TYPE_NAME.toText();
+        effectSection = TextHelper.parse(LocalizationKeys.ITEM_EFFECTS_SECTION);
+        rarity = TextHelper.parse(LocalizationKeys.ITEM_RARITY_SECTION);
+        damage = TextHelper.parse(LocalizationKeys.ITEM_DAMAGE_SECTION);
+        level = TextHelper.parse(LocalizationKeys.ITEM_LEVEL_SECTION);
+        sockets = TextHelper.parse(LocalizationKeys.ITEM_SOCKETS_SECTION);
+        attributes = TextHelper.parse(LocalizationKeys.ITEM_ATTRIBUTES_SECTIO);
+        requirements = TextHelper.parse(LocalizationKeys.ITEM_REQUIREMENTS_SECTION);
+        metaType = TextHelper.parse(LocalizationKeys.ITEM_META_TYPE_NAME);
 
         loreOrder = pluginConfig.ITEM_LORE_ORDER.stream().map(ItemLoreSections::valueOf).collect(Collectors.toList());
 
@@ -90,7 +95,7 @@ public class ItemLoreBuilderService {
             rarityMap.put(i, t);
         }
 
-        unknownRarity = Localizations.UNKNOWN_RARITY.toText();
+        unknownRarity = TextHelper.parse(LocalizationKeys.UNKNOWN_RARITY);
 
     }
 
@@ -149,7 +154,8 @@ public class ItemLoreBuilderService {
                 createDelimiter(ItemLoreBuilderService.sockets);
                 for (int i = 0; i < sockets.size(); i++) {
                     if (DataConstants.EMPTY_SOCKET.equals(content.get(i))) {
-                        t.add(Localizations.SOCKET_EMPTY.toText(Arg.arg("socket", sockets.get(i).getName())));
+                        String msg = Rpg.get().getLocalizationService().translate(LocalizationKeys.SOCKET_EMPTY, Arg.arg("socket", sockets.get(i).getName()));
+                        t.add(TextHelper.parse(msg));
                     } else {
                         t.add(Text.builder("- ").color(TextColors.DARK_RED).append(content).build());
                     }
@@ -228,7 +234,7 @@ public class ItemLoreBuilderService {
                                         .color(TextColors.DARK_RED)
                                         .style(TextStyles.BOLD)
                                         .append(Text.builder(byName.getName())
-                                                .color(byName.getPreferedColor())
+                                                .color(toTextColor(byName.getPreferedColor()))
                                                 .append(Text.builder(": ").color(TextColors.GRAY).style(TextStyles.BOLD).build())
                                                 .append(Text.builder(String.valueOf(value)).color(groupMinLevelColor).build())
                                                 .build())
@@ -239,12 +245,19 @@ public class ItemLoreBuilderService {
                                         .color(TextColors.DARK_RED)
                                         .style(TextStyles.BOLD)
                                         .append(Text.builder(byName.getName())
-                                                .color(byName.getPreferedColor())
+                                                .color(toTextColor(byName.getPreferedColor()))
                                                 .build())
                                         .build());
                     }
                 }
             }
+        }
+
+        private TextColor toTextColor(String id) {
+            return Sponge.getRegistry().getType(TextColor.class, id).orElseGet(() -> {
+                Log.warn("unknown text color " + id);
+                return TextColors.WHITE;
+            });
         }
 
         private Text translateRarity(Integer r) {

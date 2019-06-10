@@ -3,6 +3,8 @@ package cz.neumimto.rpg.sponge.commands.item;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
@@ -90,7 +92,8 @@ public class ItemAddGlobalEffectExecutor implements CommandExecutor {
             player.sendMessage(TextHelper.parse("Enchantment " + effect.getName() + " added"));
             return CommandResult.success();
         } else {
-            player.sendMessage(Localizations.NO_ITEM_IN_HAND.toText());
+            String translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.NO_ITEM_IN_HAND);
+            player.sendMessage(TextHelper.parse(translate));
         }
         return CommandResult.empty();
     }

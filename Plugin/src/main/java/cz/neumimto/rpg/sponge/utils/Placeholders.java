@@ -1,10 +1,10 @@
 package cz.neumimto.rpg.sponge.utils;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import me.rojo8399.placeholderapi.Placeholder;
 import me.rojo8399.placeholderapi.PlaceholderService;
 import me.rojo8399.placeholderapi.Source;
@@ -25,7 +25,7 @@ import static cz.neumimto.rpg.api.logging.Log.error;
 public class Placeholders {
 
     @Inject
-    private CharacterService characterService;
+    private SpongeCharacterServise characterService;
 
     public void init() {
         Sponge.getServiceManager().provide(PlaceholderService.class).ifPresent(a -> {

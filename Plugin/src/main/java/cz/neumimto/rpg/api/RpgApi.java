@@ -59,7 +59,7 @@ public interface RpgApi {
 
     DamageService getDamageService();
 
-    PropertyService getPropertyService();
+    <P extends PropertyService> P getPropertyService();
 
-    PartyService getPartyService();
+    <P extends PartyService> P getPartyService();
 }

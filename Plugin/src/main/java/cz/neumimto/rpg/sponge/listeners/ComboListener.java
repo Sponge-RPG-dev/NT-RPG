@@ -2,9 +2,9 @@ package cz.neumimto.rpg.sponge.listeners;
 
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.common.entity.players.UserActionType;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.UserActionType;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
@@ -24,7 +24,7 @@ import javax.inject.Inject;
 public class ComboListener {
 
     @Inject
-    private CharacterService characterService;
+    private SpongeCharacterServise characterService;
 
     @Listener
     @Include({

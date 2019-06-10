@@ -30,6 +30,7 @@ import cz.neumimto.rpg.api.skills.SkillsDefinition;
 import cz.neumimto.rpg.common.utils.io.FileUtils;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import net.bytebuddy.dynamic.loading.MultipleParentClassLoader;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
@@ -55,7 +56,7 @@ public class JSLoader {
 
     private static ScriptEngine engine;
 
-    private static Path scripts_root = Paths.get(NtRpgPlugin.workingDir + "/scripts");
+    private static Path scripts_root;
 
     private static Object listener;
 
@@ -80,8 +81,9 @@ public class JSLoader {
         return engine;
     }
 
-    public void initEngine() {
+    public void initEngine(Path path) {
         try {
+            scripts_root = path;
             FileUtils.createDirectoryIfNotExists(scripts_root);
             loadNashorn();
             if (engine != null) {
@@ -105,7 +107,7 @@ public class JSLoader {
         list.addAll(resourceLoader.getClassLoaderMap().values());
         MultipleParentClassLoader multipleParentClassLoader = new MultipleParentClassLoader(list);
         engine = (ScriptEngine) fct.getClass().getMethod("getScriptEngine", String[].class, ClassLoader.class)
-                .invoke(fct, pluginConfig.JJS_ARGS.split(" "), multipleParentClassLoader);
+                .invoke(fct, Rpg.get().getPluginConfig().JJS_ARGS.split(" "), multipleParentClassLoader);
     }
 
     private void setup() {
@@ -153,7 +155,7 @@ public class JSLoader {
             dumpDocumentedFunctions(skillComponents);
             bindings.put("Folder", scripts_root);
             bindings.put("Rpg", Rpg.get());
-            if (pluginConfig.DEBUG.isDevelop()) {
+            if (Rpg.get().getPluginConfig().DEBUG.isDevelop()) {
                 info("JSLOADER ====== Bindings");
                 Map<String, Object> sorted = new TreeMap<>(bindings);
                 for (Map.Entry<String, Object> e : sorted.entrySet()) {

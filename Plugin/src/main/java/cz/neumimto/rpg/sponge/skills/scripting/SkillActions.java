@@ -1,22 +1,23 @@
 package cz.neumimto.rpg.sponge.skills.scripting;
 
 import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.skills.F;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.skills.scripting.SkillScriptContext;
+import cz.neumimto.rpg.api.utils.TriConsumer;
 import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.skills.F;
-import cz.neumimto.rpg.api.utils.TriConsumer;
-import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
-import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectType;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.text.Text;
@@ -48,7 +49,7 @@ public class SkillActions {
                     @SkillComponent.Param("@returns - true if the damage was dealt"),
             }
     )
-    public static F.QuadFunction<IEntity, IEntity, Number, SkillScriptContext, Boolean> DAMAGE = (caster, target, damage, context) -> {
+    public static F.QuadFunction<IEntity<Living>, IEntity<Living>, Number, SkillScriptContext, Boolean> DAMAGE = (caster, target, damage, context) -> {
         SkillDamageSource s = new SkillDamageSourceBuilder()
                 .fromSkill(context.getSkill())
                 .setSource(caster)
@@ -68,7 +69,7 @@ public class SkillActions {
                     @SkillComponent.Param("@returns - true if the damage was dealt"),
             }
     )
-    public static F.PentaFunction<IEntity, IEntity, Number, String, SkillScriptContext, Boolean> DAMAGE_WITH_TYPE = (caster, target, damage, damageType, context) -> {
+    public static F.PentaFunction<IEntity<Living>, IEntity<Living>, Number, String, SkillScriptContext, Boolean> DAMAGE_WITH_TYPE = (caster, target, damage, damageType, context) -> {
         Optional<DamageType> type = Sponge.getRegistry().getType(DamageType.class, damageType);
         if (!type.isPresent()) {
             throw new RuntimeException(
@@ -181,7 +182,7 @@ public class SkillActions {
                     @SkillComponent.Param("@return - location object"),
             }
     )
-    public static Function<IEntity, Location> GET_LOCATION = iEntity -> iEntity.getEntity().getLocation();
+    public static Function<IEntity<Living>, Location> GET_LOCATION = iEntity -> iEntity.getEntity().getLocation();
 
     @SkillComponent(
             value = "Adds potion effect to the entity",
@@ -191,7 +192,7 @@ public class SkillActions {
                     @SkillComponent.Param("builder - potion effect builder"),
             }
     )
-    public static BiConsumer<IEffectConsumer, PotionEffect.Builder> ADD_POTION_EFFECT = (iEffectConsumer, builder) -> {
+    public static BiConsumer<ISpongeEntity, PotionEffect.Builder> ADD_POTION_EFFECT = (iEffectConsumer, builder) -> {
         PotionEffect build = builder.build();
         iEffectConsumer.addPotionEffect(build);
     };

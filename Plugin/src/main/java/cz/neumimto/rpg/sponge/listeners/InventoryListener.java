@@ -25,6 +25,8 @@ import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
@@ -70,7 +72,7 @@ import java.util.Optional;
 public class InventoryListener {
 
     @Inject
-    private CharacterService characterService;
+    private SpongeCharacterServise characterService;
 
     @Inject
     private InventoryHandler inventoryHandler;
@@ -133,8 +135,8 @@ public class InventoryListener {
         CarriedInventory<? extends Carrier> inventory = player.getInventory();
         Hotbar query = inventory.query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
         int selectedSlotIndex = query.getSelectedSlotIndex();
-
-        RpgInventory rpgInventory = character.getManagedInventory().get(inventory.getClass());
+        Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
+        RpgInventory rpgInventory = managedInventory.get(inventory.getClass());
         if (rpgInventory.getManagedSlots().containsKey(selectedSlotIndex)) {
             ManagedSlot currentHand = rpgInventory.getManagedSlots().get(selectedSlotIndex);
             Optional<RpgItemStack> content = currentHand.getContent();
@@ -225,7 +227,8 @@ public class InventoryListener {
                     return;
                 }
                 IActiveCharacter character = characterService.getCharacter(player);
-                RpgInventory rpgInventory = character.getManagedInventory().get(aClass);
+                Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
+                RpgInventory rpgInventory =managedInventory.get(aClass);
                 ManagedSlot managedSlot = rpgInventory.getManagedSlots().get(slotId);
                 Optional<RpgItemStack> future = itemService.getRpgItemStack(slotTransaction.getFinal().createStack());
                 Optional<RpgItemStack> original = itemService.getRpgItemStack(slotTransaction.getOriginal().createStack());
@@ -276,7 +279,7 @@ public class InventoryListener {
     @Listener
     @IsCancelled(Tristate.FALSE)
     public void onDimensionTravel(MoveEntityEvent.Teleport.Portal event, @Root Player player) {
-        IActiveCharacter character = characterService.getCharacter(player);
+        ISpongeCharacter character = characterService.getCharacter(player);
         if (!character.isStub()) {
             characterService.respawnCharacter(character);
         }
@@ -304,7 +307,8 @@ public class InventoryListener {
         } else {
             RpgItemStack futureOff = rpgItemStackOff.get();
             RpgItemStack futureMain = rpgItemStackMain.get();
-            RpgInventory rpgInventory = character.getManagedInventory().get(player.getInventory());
+            Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
+            RpgInventory rpgInventory = managedInventory.get(player.getInventory());
 
             Hotbar hotbar = player.getInventory()
                     .query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));

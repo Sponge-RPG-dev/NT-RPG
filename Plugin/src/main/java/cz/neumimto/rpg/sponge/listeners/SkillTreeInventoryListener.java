@@ -1,17 +1,17 @@
 package cz.neumimto.rpg.sponge.listeners;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.sponge.inventory.data.NKeys;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.gui.SkillTreeControllsButton;
+import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
+import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
@@ -24,7 +24,7 @@ import java.util.Iterator;
  */
 public class SkillTreeInventoryListener {
 
-    private final CharacterService characterService;
+    private final SpongeCharacterServise characterService;
 
     private final NtRpgPlugin plugin;
 
@@ -43,7 +43,7 @@ public class SkillTreeInventoryListener {
             if (t.getOriginal().get(NKeys.SKILLTREE_CONTROLLS).isPresent()) {
                 event.setCancelled(true);
                 SkillTreeControllsButton command = t.getOriginal().get(NKeys.SKILLTREE_CONTROLLS).get();
-                IActiveCharacter character = characterService.getCharacter(player);
+                ISpongeCharacter character = characterService.getCharacter(player);
                 SkillTreeViewModel viewModel = character.getLastTimeInvokedSkillTreeView();
                 switch (command) {
                     case NORTH:

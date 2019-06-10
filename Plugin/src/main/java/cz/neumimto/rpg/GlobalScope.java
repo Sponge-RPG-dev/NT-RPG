@@ -25,13 +25,13 @@ import cz.neumimto.rpg.api.events.effect.EventFactoryService;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.common.assets.AssetService;
-import cz.neumimto.rpg.common.entity.parties.PartyServiceImpl;
 import cz.neumimto.rpg.common.scripting.JSLoader;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.commands.CommandService;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
@@ -84,7 +84,7 @@ public class GlobalScope {
     public SpongeEntityService entityService;
 
     @Inject
-    public PartyServiceImpl partyService;
+    public SpongePartyService partyService;
 
     @Inject
     public SpongePropertyService spongePropertyService;

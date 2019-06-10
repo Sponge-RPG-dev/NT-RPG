@@ -18,9 +18,9 @@
 
 package cz.neumimto.rpg.sponge.entities.players;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.IReservable;
-import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import org.spongepowered.api.data.key.Keys;
 
 /**
@@ -48,12 +48,12 @@ public class CharacterHealth implements IReservable {
     //todo implement reserved amounts
     @Override
     public void setReservedAmnout(float f) {
-        activeCharacter.setProperty(SpongeDefaultProperties.reserved_health, f);
+        activeCharacter.setProperty(CommonProperties.reserved_health, f);
     }
 
     @Override
     public double getReservedAmount() {
-        return NtRpgPlugin.GlobalScope.entityService.getEntityProperty(activeCharacter, SpongeDefaultProperties.reserved_health);
+        return NtRpgPlugin.GlobalScope.entityService.getEntityProperty(activeCharacter, CommonProperties.reserved_health);
     }
 
     @Override
@@ -68,11 +68,11 @@ public class CharacterHealth implements IReservable {
 
     @Override
     public double getRegen() {
-        return NtRpgPlugin.GlobalScope.entityService.getEntityProperty(activeCharacter, SpongeDefaultProperties.health_regen);
+        return NtRpgPlugin.GlobalScope.entityService.getEntityProperty(activeCharacter, CommonProperties.health_regen);
     }
 
     @Override
     public void setRegen(float f) {
-        activeCharacter.setProperty(SpongeDefaultProperties.health_regen, f);
+        activeCharacter.setProperty(CommonProperties.health_regen, f);
     }
 }

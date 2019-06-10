@@ -412,7 +412,7 @@ public class NtRpgPlugin extends Rpg {
         GlobalScope.spongePropertyService.init(Paths.get(NtRpgPlugin.workingDir + "/Attributes.conf"), Paths.get(NtRpgPlugin.workingDir + File.separator + "properties_dump.info"));
         GlobalScope.spongePropertyService.reLoadAttributes(Paths.get(NtRpgPlugin.workingDir + "/Attributes.conf"));
         GlobalScope.spongePropertyService.loadMaximalServerPropertyValues(Paths.get(NtRpgPlugin.workingDir, "max_server_property_values.properties"));
-        GlobalScope.jsLoader.initEngine();
+        GlobalScope.jsLoader.initEngine(Paths.get(NtRpgPlugin.workingDir + "/scripts"));
         GlobalScope.rwService.load();
         GlobalScope.classService.loadClasses();
         GlobalScope.vanillaMessaging.load();

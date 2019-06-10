@@ -36,6 +36,9 @@ public class SpongeEffectService extends EffectService {
     @Inject
     private Game game;
 
+    @Inject
+    private NtRpgPlugin plugin;
+
     private Task effectTask;
 
     public void startEffectScheduler() {

@@ -34,7 +34,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
  * Created by NeumimTo on 26.7.2015.
  */
 @JsBinding(JsBinding.Type.CLASS)
-public abstract class ActiveSkill extends AbstractSkill implements IActiveSkill {
+public abstract class ActiveSkill<T extends IActiveCharacter> extends AbstractSkill implements IActiveSkill<T> {
 
     @Inject
     private InventoryService inventoryService;
@@ -65,7 +65,7 @@ public abstract class ActiveSkill extends AbstractSkill implements IActiveSkill 
         skillContext.next(character, info, skillContext);
     }
 
-    public abstract void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext modifier);
+    public abstract void cast(T character, PlayerSkillContext info, SkillContext modifier);
 
 
     public SkillContext createSkillExecutorContext(PlayerSkillContext esi) {
