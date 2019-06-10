@@ -18,9 +18,10 @@
 package cz.neumimto.rpg.sponge.damage;
 
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.skills.ISkill;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.cause.entity.damage.source.common.AbstractEntityDamageSource;
 
@@ -53,7 +54,7 @@ public class SkillDamageSourceBuilder extends AbstractEntityDamageSource.Abstrac
         return nSource;
     }
 
-    public SkillDamageSourceBuilder setSource(IEntity source) {
+    public SkillDamageSourceBuilder setSource(IEntity<? extends Living> source) {
         this.nSource = source;
         this.source = source.getEntity();
         return this;

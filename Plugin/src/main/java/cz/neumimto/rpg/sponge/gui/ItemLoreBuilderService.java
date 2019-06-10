@@ -5,10 +5,10 @@ import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.EffectParams;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
-import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.inventory.sockets.SocketType;
 import cz.neumimto.rpg.common.reloading.Reload;
@@ -28,7 +28,6 @@ import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -122,8 +121,9 @@ public class ItemLoreBuilderService {
 
         public void attributeMapToItemLorePart(Map<String, Integer> a) {
             int k = 0;
+            PropertyService propertyService = Rpg.get().getPropertyService();
             for (Map.Entry<String, Integer> e : a.entrySet()) {
-                AttributeConfig attribute = Sponge.getRegistry().getType(AttributeConfig.class, e.getKey()).get();
+                AttributeConfig attribute = propertyService.getAttributeById(e.getKey()).get();
                 String name = attribute.getName();
                 int charsToRead = 3;
                 if (name.startsWith("&")) {

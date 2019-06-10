@@ -30,7 +30,7 @@ import java.util.Date;
  * Created by NeumimTo on 24.7.2015.
  */
 @MappedSuperclass
-public abstract class JPATimestampEntity implements TimestampEntity {
+public abstract class JPATimestampEntity  implements TimestampEntity {
 
     @Column(name = "updated")
     private Date updated;

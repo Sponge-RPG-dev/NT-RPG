@@ -98,6 +98,10 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
 
     Map<String, Long> getCooldowns();
 
+    default Long getCooldown(String action) {
+        return getCooldowns().get(action);
+    }
+
     boolean hasCooldown(String thing);
 
     double getBaseWeaponDamage(RpgItemType type);
@@ -245,4 +249,6 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
     int getLastHotbarSlotInteraction();
 
     void setLastHotbarSlotInteraction(int last);
+
+    void sendNotification(String message);
 }

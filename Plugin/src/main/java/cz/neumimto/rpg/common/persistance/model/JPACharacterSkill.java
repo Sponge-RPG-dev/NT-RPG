@@ -11,7 +11,7 @@ import javax.persistence.*;
  * Created by ja on 8.10.2016.
  */
 @Entity(name = "rpg_character_skill")
-public class JPACharacterSkill implements CharacterSkill {
+public class JPACharacterSkill extends JPATimestampEntity implements CharacterSkill {
 
     @Id
     @GeneratedValue(generator = "native")

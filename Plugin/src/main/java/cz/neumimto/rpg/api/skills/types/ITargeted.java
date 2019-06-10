@@ -26,6 +26,6 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 /**
  * Created by NeumimTo on 1.1.2015.
  */
-public interface ITargeted {
-    void castOn(IEntity target, IActiveCharacter source, PlayerSkillContext info, SkillContext skillContext);
+public interface ITargeted<T extends IActiveCharacter> {
+    void castOn(IEntity target, T source, PlayerSkillContext info, SkillContext skillContext);
 }

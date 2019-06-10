@@ -1,15 +1,17 @@
 package cz.neumimto.rpg.sponge.effects.common.def;
 
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.gui.Gui;
+import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -21,7 +23,7 @@ import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
  * Created by NeumimTo on 28.8.2017.
  */
 @Generate(id = "name", description = "A component which enables click-combos")
-public class ClickComboActionComponent extends EffectBase implements IEffectContainer {
+public class ClickComboActionComponent extends SpongeEffectBase implements IEffectContainer {
 
     public static final String name = "ClickCombos";
 
@@ -31,7 +33,7 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 
     private boolean notifyIfCancelled;
 
-    private IActiveCharacter character;
+    private ISpongeCharacter character;
 
     private long lastTimeUsed;
 
@@ -41,12 +43,12 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 
     @Generate.Constructor
     public ClickComboActionComponent(IEffectConsumer t, long duration) {
-        this(t);
+        this((ISpongeCharacter) t);
     }
 
-    public ClickComboActionComponent(IEffectConsumer t) {
+    public ClickComboActionComponent(ISpongeCharacter t) {
         super(name, t);
-        character = (IActiveCharacter) t;
+        character = t;
         setPeriod(pluginConfig.CLICK_COMBO_MAX_INVERVAL_BETWEEN_ACTIONS);
         setDuration(-1L);
     }
@@ -127,7 +129,7 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
     public void cancel(boolean byShift) {
         length = 0;
         combination = null;
-        resetCurrentClicks(this, byShift);
+        resetCurrentClicks();
         notifyIfCancelled = false;
     }
 
@@ -138,7 +140,6 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
         }
     }
 
-
     public String getCurrent() {
         return combination == null ? "" : combination.toString();
     }
@@ -146,7 +147,6 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
     public IActiveCharacter getCharacter() {
         return character;
     }
-
 
     @Override
     public IEffectContainer constructEffectContainer() {
@@ -172,9 +172,8 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
         return combination != null;
     }
 
-    public static void resetCurrentClicks(ClickComboActionComponent clickComboActionComponent, boolean byShift) {
-
-        Rpg.get().getCharacterService().sendClientNotification(clickComboActionComponent.getConsumer(). Localizations.CANCELLED.toText());
+    public static void resetCurrentClicks() {
+        Rpg.get().getLocalizationService().translate(LocalizationKeys.CANCELLED);
     }
 
 }

@@ -7,6 +7,7 @@ import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityType;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.apache.commons.lang3.NotImplementedException;
 import org.spongepowered.api.data.key.Keys;
@@ -71,7 +72,7 @@ public class SkillTargetProcessors {
                     @SkillComponent.Param("@returns - An entity instance or null"),
             }
     )
-    public static final BiFunction<IEntity, Number, IEntity> TARGETED_ENEMY = (caster, range) -> {
+    public static final BiFunction<IEntity<? extends Living>, Number, IEntity> TARGETED_ENEMY = (caster, range) -> {
         if (caster.getType() == IEntityType.MOB) {
 
             Living entity = caster.getEntity();
@@ -90,7 +91,7 @@ public class SkillTargetProcessors {
                 throw new NotImplementedException(":(");
             }
         } else if (caster.getType() == IEntityType.CHARACTER) {
-            ISpongeCharacter character = (ISpongeCharacter) caster;
+            ISpongeCharacter character = (SpongeCharacter) caster;
             Living targetedEntity = Utils.getTargetedEntity(character, range.intValue());
             if (targetedEntity != null) {
                 if (Utils.canDamage(character, targetedEntity)) {

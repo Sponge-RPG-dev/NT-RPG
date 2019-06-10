@@ -808,12 +808,8 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
     @Override
     public void skillExecution(ISpongeCharacter character, PlayerSkillContext skill) {
-        character.sendMessage(ChatTypes.ACTION_BAR,
-                Text.builder(skill.getSkill().getName())
-                        .style(TextStyles.BOLD)
-                        .color(TextColors.GOLD)
-                        .build()
-        );
+        String msg = Rpg.get().getLocalizationService().translate(LocalizationKeys.SKILL_EXECUTED_MESSAGE, "skill", skill.getSkill().getName());
+        character.sendNotification(msg);
     }
 
     @Override

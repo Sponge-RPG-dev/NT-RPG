@@ -7,6 +7,7 @@ import cz.neumimto.rpg.sponge.entities.players.party.SpongeParty;
 import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.chat.ChatTypes;
 
 import java.util.Collections;
 import java.util.Map;
@@ -53,6 +54,11 @@ public class SpongePreloadCharacter extends PreloadCharacter<Player, SpongeParty
     @Override
     public void sendMessage(int channel, String message) {
         getPlayer().sendMessage(TextHelper.parse(message));
+    }
+
+    @Override
+    public void sendNotification(String message) {
+        getPlayer().sendMessage(ChatTypes.ACTION_BAR, TextHelper.parse(message));
     }
 
 }

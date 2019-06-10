@@ -4,9 +4,9 @@ package cz.neumimto.rpg.sponge.effects.common.mechanics;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
+import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
-import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.text.format.TextColors;
@@ -30,7 +30,7 @@ public class CooldownObserver extends SpongeEffectBase implements IEffectContain
         super(name, character);
         this.character = character;
         setDuration(duration);
-        String s = Utils.extractNumber(value);
+        String s = MathUtils.extractNumber(value);
         long l = 1000;
         if (s != null) {
             l = Long.parseLong(s);

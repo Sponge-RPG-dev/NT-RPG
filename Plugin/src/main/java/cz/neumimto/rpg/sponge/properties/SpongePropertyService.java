@@ -42,6 +42,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.text.Collator;
 import java.util.*;
+import java.util.function.Supplier;
 
 import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 import static cz.neumimto.rpg.api.logging.Log.info;
@@ -51,20 +52,13 @@ import static cz.neumimto.rpg.api.logging.Log.info;
  */
 
 @Singleton
-public class SpongePropertyService extends PropertyServiceImpl implements AdditionalCatalogRegistryModule<AttributeConfig> {
+public class SpongePropertyService extends PropertyServiceImpl {
 
     @Inject
     private NtRpgPlugin plugin;
 
     @Inject
     private ItemService itemService;
-
-    public Map<String, AttributeConfig> attributeMap = new HashMap<>();
-
-    @Override
-    public Map<String, AttributeConfig> getAttributes() {
-        return attributeMap;
-    }
 
     @Override
     public void reLoadAttributes(Path attributeFilePath) {
@@ -79,6 +73,8 @@ public class SpongePropertyService extends PropertyServiceImpl implements Additi
         } catch (ObjectMappingException | IOException e) {
             e.printStackTrace();
         }
+
+
     }
 
 
@@ -111,20 +107,5 @@ public class SpongePropertyService extends PropertyServiceImpl implements Additi
                 }
             }
         }
-    }
-
-    @Override
-    public void registerAdditionalCatalog(AttributeConfig extraCatalog) {
-        getAttributes().put(extraCatalog.getId(), extraCatalog);
-    }
-
-    @Override
-    public Optional<AttributeConfig> getById(String id) {
-        return getAttributeById(id);
-    }
-
-    @Override
-    public Collection<AttributeConfig> getAll() {
-        return getAttributes().values();
     }
 }

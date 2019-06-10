@@ -7,6 +7,7 @@ import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityType;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
@@ -26,10 +27,10 @@ import java.util.function.Consumer;
                 @SkillComponent.Param("allyEntity - callback")
         }
 )
-public class For_Each_Nearby_Ally implements TriConsumer<IEntity, Number, Consumer<IEntity>> {
+public class For_Each_Nearby_Ally implements TriConsumer<ISpongeEntity, Number, Consumer<ISpongeEntity>> {
 
     @Override
-    public void accept(IEntity entity, Number radius, Consumer<IEntity> consumer) {
+    public void accept(ISpongeEntity entity, Number radius, Consumer<ISpongeEntity> consumer) {
         Collection<Entity> nearbyEntities = entity.getEntity().getNearbyEntities(radius.doubleValue());
         if (entity.getType() == IEntityType.MOB) {
             for (Entity nearbyEntity : nearbyEntities) {

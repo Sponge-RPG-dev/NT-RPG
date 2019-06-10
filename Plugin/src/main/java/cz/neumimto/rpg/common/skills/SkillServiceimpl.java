@@ -94,7 +94,8 @@ public abstract class SkillServiceimpl implements ISkillService {
             callback.doNext(character, esi, new SkillContext().result(SkillResult.NEGATIVE_SKILL_LEVEL));
             return;
         }
-        Long aLong = character.getCooldowns().get(esi.getSkill().getName());
+
+        Long aLong = character.getCooldown(esi.getSkill().getName());
         long servertime = System.currentTimeMillis();
         if (aLong != null && aLong > servertime) {
             Gui.sendCooldownMessage(character, esi.getSkill().getName(), ((aLong - servertime) / 1000.0));

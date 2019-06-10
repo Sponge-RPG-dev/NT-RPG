@@ -20,6 +20,7 @@ package cz.neumimto.rpg.sponge.listeners;
 
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
@@ -29,8 +30,6 @@ import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.utils.ItemStackUtils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.type.HandTypes;
@@ -96,8 +95,8 @@ public class InventoryListener {
         }
 
         SlotTransaction slotTransaction = event.getTransactions().get(0);
-
-        RpgInventory rpgInventory = character.getManagedInventory().get(targetInventory.getClass());
+        Map<Class<?>,RpgInventory> managedInventory = character.getManagedInventory();
+        RpgInventory rpgInventory = managedInventory.get(targetInventory.getClass());
 
         if (rpgInventory != null) {
             Slot slot = slotTransaction.getSlot();
@@ -166,8 +165,8 @@ public class InventoryListener {
 
                 int last = character.getLastHotbarSlotInteraction();
                 if (selectedSlotIndex != last) {
-
-                    Map<Integer, ManagedSlot> managedSlots = character.getManagedInventory().get(inventory.getClass()).getManagedSlots();
+                    Map<Class<?>,RpgInventory> managedInventory = character.getManagedInventory();
+                    Map<Integer, ManagedSlot> managedSlots = managedInventory.get(inventory.getClass()).getManagedSlots();
 
                     if (managedSlots.containsKey(selectedSlotIndex)) {
                         ManagedSlot managedSlot = managedSlots.get(selectedSlotIndex);

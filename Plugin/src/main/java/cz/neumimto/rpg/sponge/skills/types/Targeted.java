@@ -16,8 +16,10 @@
 
 package cz.neumimto.rpg.sponge.skills.types;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.events.skill.SkillTargetAttemptEvent;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
@@ -25,13 +27,12 @@ import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.types.ITargeted;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.events.skill.SkillTargetAttemptEvent;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.entity.living.Living;
 
-public abstract class Targeted extends ActiveSkill implements ITargeted {
+public abstract class Targeted extends ActiveSkill<ISpongeCharacter> implements ITargeted<ISpongeCharacter> {
 
     @Override
     public void init() {
@@ -40,7 +41,7 @@ public abstract class Targeted extends ActiveSkill implements ITargeted {
     }
 
     @Override
-    public void cast(IActiveCharacter caster, PlayerSkillContext info, SkillContext skillContext) {
+    public void cast(ISpongeCharacter caster, PlayerSkillContext info, SkillContext skillContext) {
         int range = skillContext.getIntNodeValue(SkillNodes.RANGE);
         Living l = Utils.getTargetedEntity(caster, range);
         if (l == null) {
@@ -67,6 +68,6 @@ public abstract class Targeted extends ActiveSkill implements ITargeted {
             skillContext.next((IActiveCharacter) event.getCaster(), info, SkillResult.CANCELLED); //dont chain
             return;
         }
-        castOn(event.getTarget(), (IActiveCharacter) event.getCaster(), info, skillContext);
+        castOn(event.getTarget(), (ISpongeCharacter) event.getCaster(), info, skillContext);
     }
 }

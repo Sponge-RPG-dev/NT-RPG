@@ -113,4 +113,6 @@ public class LocalizationKeys {
     public static final String CLASS_HAS_NO_SKILLTREE = "class.no-skilltree.message";
     public static final String CANNOT_BIND_NON_EXECUTABLE_SKILL = "player.skill-unbindable.message";
     public static final String NO_ITEM_IN_HAND = "player.no-item-in-hand.message";
+    public static final String SKILL_EXECUTED_MESSAGE = "player.skill-executed.notification";
+    public static final String CANCELLED = "player.action-cancelled.notification";
 }

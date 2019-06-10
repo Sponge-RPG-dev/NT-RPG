@@ -407,7 +407,6 @@ public class NtRpgPlugin extends Rpg {
         GlobalScope.inventorySerivce.loadItemGroups(Paths.get(NtRpgPlugin.workingDir));
 
         GlobalScope.experienceService.load();
-        GlobalScope.spongeInventoryService.init();
         GlobalScope.skillService.load();
         GlobalScope.spongePropertyService.init(Paths.get(NtRpgPlugin.workingDir + "/Attributes.conf"), Paths.get(NtRpgPlugin.workingDir + File.separator + "properties_dump.info"));
         GlobalScope.spongePropertyService.reLoadAttributes(Paths.get(NtRpgPlugin.workingDir + "/Attributes.conf"));

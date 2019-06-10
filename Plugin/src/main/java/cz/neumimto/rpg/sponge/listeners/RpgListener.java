@@ -19,11 +19,11 @@
 package cz.neumimto.rpg.sponge.listeners;
 
 import com.google.inject.Singleton;
-import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.permissions.PermissionService;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.events.PlayerGuiModInitEvent;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.sponge.events.character.SpongeCharacterChangeGroupEvent;
 import cz.neumimto.rpg.sponge.events.party.SpongePartyJoinEvent;
 import org.spongepowered.api.event.Listener;
@@ -43,7 +43,7 @@ import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 public class RpgListener {
 
     @Inject
-    private CharacterService characterService;
+    private SpongeCharacterServise characterService;
 
     @Inject
     private ClassService classService;

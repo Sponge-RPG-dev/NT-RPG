@@ -117,6 +117,11 @@ public class CommandblockSkillExecutor extends PreloadCharacter {
     }
 
     @Override
+    public void sendNotification(String message) {
+
+    }
+
+    @Override
     public boolean hasCooldown(String thing) {
         return false;
     }

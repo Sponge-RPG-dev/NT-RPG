@@ -10,7 +10,7 @@ import javax.persistence.*;
  * Created by NeumimTo on 8.10.2016.
  */
 @Entity(name = "rpg_character_attribute")
-public class JPABaseCharacterAttribute implements BaseCharacterAttribute {
+public class JPABaseCharacterAttribute extends JPATimestampEntity implements BaseCharacterAttribute {
 
     @Id
     @GeneratedValue(generator = "native")

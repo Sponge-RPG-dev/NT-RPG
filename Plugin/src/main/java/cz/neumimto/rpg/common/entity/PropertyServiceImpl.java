@@ -1,10 +1,11 @@
 package cz.neumimto.rpg.common.entity;
 
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.properties.Property;
 import cz.neumimto.rpg.api.utils.Console;
-import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -32,12 +33,14 @@ public abstract class PropertyServiceImpl implements PropertyService {
 
     private Set<Integer> damageRecalc = new HashSet<>();
 
+    private Map<String, AttributeConfig> attributeMap = new HashMap<>();
+
     protected float[] maxValues;
 
 
     @Override
     public void registerProperty(String name, int id) {
-        info("A new property " + name + "; assigned id: " + id, pluginConfig.DEBUG);
+        info("A new property " + name + "; assigned id: " + id, Rpg.get().getPluginConfig().DEBUG);
         idMap.put(name, id);
         nameMap.put(id, name);
     }
@@ -181,6 +184,20 @@ public abstract class PropertyServiceImpl implements PropertyService {
     @Override
     public Optional<AttributeConfig> getAttributeById(String attribute) {
         return Optional.ofNullable(getAttributes().get(attribute));
+    }
+
+    @Override
+    public Map<String, AttributeConfig> getAttributes() {
+        return attributeMap;
+    }
+
+
+    public Optional<AttributeConfig> getById(String id) {
+        return getAttributeById(id);
+    }
+
+    public Collection<AttributeConfig> getAll() {
+        return getAttributes().values();
     }
 
 }

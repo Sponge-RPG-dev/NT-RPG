@@ -25,6 +25,7 @@ import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.utils.TriConsumer;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.skills.ProjectileProperties;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.projectile.Projectile;
@@ -36,14 +37,14 @@ import java.util.Optional;
 /**
  * Created by NeumimTo on 12.3.2015.
  */
-public abstract class SkillShot extends ActiveSkill {
+public abstract class SkillShot extends ActiveSkill<ISpongeCharacter> {
 
     @Inject
     private Game game;
 
 
     @Override
-    public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext modifier) {
+    public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext modifier) {
         Optional<Projectile> projectile = character.getPlayer().launchProjectile(getProjectile(character, info));
         if (projectile.isPresent()) {
             ProjectileProperties projectileProperties = getProjectileProperties(character, info, modifier, projectile.get());
