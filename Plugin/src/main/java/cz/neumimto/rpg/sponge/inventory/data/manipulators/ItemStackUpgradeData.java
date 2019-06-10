@@ -1,14 +1,13 @@
 package cz.neumimto.rpg.sponge.inventory.data.manipulators;
 
-import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.common.inventory.sockets.SocketType;
 import cz.neumimto.rpg.common.inventory.sockets.SocketTypes;
+import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.DataManipulatorBuilder;
-import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableSingleCatalogData;
-import org.spongepowered.api.data.manipulator.mutable.common.AbstractSingleCatalogData;
+import org.spongepowered.api.data.manipulator.mutable.common.AbstractData;
 import org.spongepowered.api.data.merge.MergeFunction;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.api.data.persistence.InvalidDataException;
@@ -16,7 +15,7 @@ import org.spongepowered.api.data.persistence.InvalidDataException;
 import java.util.Optional;
 
 
-public class ItemStackUpgradeData extends AbstractSingleCatalogData<SocketType, ItemStackUpgradeData, ItemStackUpgradeData.Immutable> {
+public class ItemStackUpgradeData extends AbstractData<SocketType, ItemStackUpgradeData, ItemStackUpgradeData.Immutable> {
 
 
     public ItemStackUpgradeData(SocketType value) {

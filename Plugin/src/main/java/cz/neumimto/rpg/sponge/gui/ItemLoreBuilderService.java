@@ -2,7 +2,7 @@ package cz.neumimto.rpg.sponge.gui;
 
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.entity.PropertyService;
@@ -38,7 +38,7 @@ import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
  * Created by NeumimTo on 20.1.2018.
  */
 @Singleton
-@ResourceLoader.ListenerClass
+@IResourceLoader.ListenerClass
 public class ItemLoreBuilderService {
 
     private static TextColor effectName;

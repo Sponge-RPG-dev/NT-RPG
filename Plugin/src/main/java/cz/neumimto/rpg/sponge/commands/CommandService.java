@@ -19,16 +19,12 @@
 package cz.neumimto.rpg.sponge.commands;
 
 import cz.neumimto.rpg.GlobalScope;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.api.gui.Gui;
-import cz.neumimto.rpg.sponge.commands.arguments.CommandSkillArgument;
-import cz.neumimto.rpg.sponge.configuration.CommandLocalization;
-import cz.neumimto.rpg.common.inventory.items.ItemMetaType;
-import cz.neumimto.rpg.common.inventory.sockets.SocketType;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.gui.Gui;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.commands.admin.*;
+import cz.neumimto.rpg.sponge.commands.arguments.CommandSkillArgument;
 import cz.neumimto.rpg.sponge.commands.character.*;
 import cz.neumimto.rpg.sponge.commands.elements.*;
 import cz.neumimto.rpg.sponge.commands.item.*;
@@ -37,6 +33,8 @@ import cz.neumimto.rpg.sponge.commands.party.PartyCreateExecutor;
 import cz.neumimto.rpg.sponge.commands.party.PartyInviteExecutor;
 import cz.neumimto.rpg.sponge.commands.party.PartyKickExecutor;
 import cz.neumimto.rpg.sponge.commands.skill.*;
+import cz.neumimto.rpg.sponge.configuration.CommandLocalization;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandResult;
@@ -65,7 +63,7 @@ public class CommandService {
     private GlobalScope globalScope;
 
     @Inject
-    private CharacterService characterService;
+    private SpongeCharacterServise characterService;
 
     public void registerStandartCommands() {
         registerAdminCommands();
@@ -460,7 +458,8 @@ public class CommandService {
         CommandSpec itemAddSocket = CommandSpec.builder()
                 .description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_SOCKET))
                 .arguments(
-                        GenericArguments.catalogedElement(Text.of("type"), SocketType.class)
+                        new CommandElementMapLookup(Text.of("type"),
+                                () -> NtRpgPlugin.GlobalScope.itemService.getSocketTypes())
                 )
                 .executor(new ItemAddSocketExecutor())
                 .build();
@@ -492,7 +491,8 @@ public class CommandService {
         CommandSpec itemAddType = CommandSpec.builder()
                 .description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_ADMIN_ITEM_TYPE))
                 .arguments(
-                        GenericArguments.catalogedElement(Text.of("type"), ItemMetaType.class)
+                        new CommandElementMapLookup(Text.of("type"),
+                                () -> NtRpgPlugin.GlobalScope.itemService.getItemMetaTypes())
                 )
                 .executor(new ItemAddTypeExecutor())
                 .build();

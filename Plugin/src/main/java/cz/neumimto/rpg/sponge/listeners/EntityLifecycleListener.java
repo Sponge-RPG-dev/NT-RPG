@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.listeners;
 
 import com.google.inject.Singleton;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityType;
@@ -40,7 +40,7 @@ import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
  * Created by NeumimTo on 3.1.2016.
  */
 @Singleton
-@ResourceLoader.ListenerClass
+@IResourceLoader.ListenerClass
 public class EntityLifecycleListener {
 
     @Inject

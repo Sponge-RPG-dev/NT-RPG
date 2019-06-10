@@ -19,19 +19,18 @@
 package cz.neumimto.rpg.sponge.properties;
 
 import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.items.ItemService;
-import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.attributes.Attributes;
+import cz.neumimto.rpg.api.items.ItemService;
+import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
-import org.spongepowered.api.registry.AdditionalCatalogRegistryModule;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -41,11 +40,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.text.Collator;
-import java.util.*;
-import java.util.function.Supplier;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 28.12.2014.
@@ -66,10 +66,11 @@ public class SpongePropertyService extends PropertyServiceImpl {
             ObjectMapper<Attributes> mapper = NotSoStupidObjectMapper.forClass(Attributes.class);
             HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(attributeFilePath).build();
             Attributes attributes = mapper.bind(new Attributes()).populate(hcl.load());
-            attributes.getAttributes().forEach(a -> Sponge.getRegistry().register(AttributeConfig.class, new AttributeConfig(a)));
+
+            attributes.getAttributes().forEach(a -> attributeMap.put(a.getId(), new AttributeConfig(a)));
 
 
-            itemService.registerItemAttributes(Rpg.get().getAttributes());
+            itemService.registerItemAttributes(Rpg.get().getPropertyService().getAttributes().values());
         } catch (ObjectMappingException | IOException e) {
             e.printStackTrace();
         }

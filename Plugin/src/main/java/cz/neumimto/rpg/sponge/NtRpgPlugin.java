@@ -32,7 +32,7 @@ import cz.neumimto.rpg.common.persistance.model.JPABaseCharacterAttribute;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterSkill;
-import cz.neumimto.rpg.common.utils.io.FileUtils;
+import cz.neumimto.rpg.sponge.utils.io.FileUtils;
 import cz.neumimto.rpg.sponge.configuration.Settings;
 import cz.neumimto.rpg.sponge.inventory.data.*;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.*;
@@ -411,7 +411,7 @@ public class NtRpgPlugin extends Rpg {
         GlobalScope.spongePropertyService.init(Paths.get(NtRpgPlugin.workingDir + "/Attributes.conf"), Paths.get(NtRpgPlugin.workingDir + File.separator + "properties_dump.info"));
         GlobalScope.spongePropertyService.reLoadAttributes(Paths.get(NtRpgPlugin.workingDir + "/Attributes.conf"));
         GlobalScope.spongePropertyService.loadMaximalServerPropertyValues(Paths.get(NtRpgPlugin.workingDir, "max_server_property_values.properties"));
-        GlobalScope.jsLoader.initEngine(Paths.get(NtRpgPlugin.workingDir + "/scripts"));
+        GlobalScope.jsLoader.initEngine();
         GlobalScope.rwService.load();
         GlobalScope.classService.loadClasses();
         GlobalScope.vanillaMessaging.load();

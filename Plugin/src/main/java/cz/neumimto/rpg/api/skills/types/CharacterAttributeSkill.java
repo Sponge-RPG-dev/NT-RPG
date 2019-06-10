@@ -78,7 +78,7 @@ public class CharacterAttributeSkill extends AbstractSkill {
                 String attribute = subc.getString("attribute");
                 int level = subc.getInt("skill-level");
                 int val = subc.getInt("attribute-value");
-                Optional<AttributeConfig> type = Rpg.get().getAttributeById(attribute);
+                Optional<AttributeConfig> type = Rpg.get().getPropertyService().getAttributeById(attribute);
                 if (!type.isPresent()) {
                     warn("Unknown attribute " + attribute + " in " + context.getId());
                     continue;

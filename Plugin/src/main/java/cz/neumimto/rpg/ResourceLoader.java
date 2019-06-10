@@ -25,6 +25,7 @@ import cz.neumimto.core.PluginCore;
 import cz.neumimto.core.Repository;
 import cz.neumimto.core.localization.ResourceBundle;
 import cz.neumimto.core.localization.ResourceBundles;
+import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.localization.LocalizationService;
@@ -49,8 +50,6 @@ import org.spongepowered.api.Game;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.*;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -69,7 +68,7 @@ import static cz.neumimto.rpg.api.logging.Log.info;
  */
 @SuppressWarnings("unchecked")
 @Singleton
-public class ResourceLoader {
+public class ResourceLoader extends IResourceLoader {
 
     private final static String INNERCLASS_SEPARATOR = "$";
 
@@ -255,10 +254,10 @@ public class ResourceLoader {
                             cz.neumimto.rpg.api.utils.Console.RESET + " loaded class " +
                             cz.neumimto.rpg.api.utils.Console.GREEN + clazz.getSimpleName() + Console.RESET, pluginConfig
                             .DEBUG);
-                    loadClass(clazz, classLoader);
+                    loadClass(clazz);
                 } else {
                     clazz = Class.forName(className);
-                    loadClass(clazz, this.getClass().getClassLoader());
+                    loadClass(clazz);
                 }
             } catch (Exception e) {
                 error("Could not load the class [" + className + "]" + e.getMessage(), e);
@@ -267,7 +266,8 @@ public class ResourceLoader {
         info("Finished loading of jarfile " + file.getName());
     }
 
-    public Object loadClass(Class<?> clazz, ClassLoader classLoader) throws IllegalAccessException, InstantiationException {
+    @Override
+    public Object loadClass(Class<?> clazz) throws IllegalAccessException, InstantiationException {
         //Properties
         if (clazz == IGlobalEffect.class) {
             return null;
@@ -341,6 +341,7 @@ public class ResourceLoader {
         return container;
     }
 
+    @Override
     public URLClassLoader getConfigClassLoader() {
         return configClassLaoder;
     }
@@ -355,26 +356,4 @@ public class ResourceLoader {
         }
     }
 
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface ListenerClass {
-
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface Skill {
-
-        String value();
-
-        boolean dynamicLocalizationNodes() default true;
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface Command {
-
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface ModelMapper {
-
-    }
 }

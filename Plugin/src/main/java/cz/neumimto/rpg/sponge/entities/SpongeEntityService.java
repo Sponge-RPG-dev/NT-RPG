@@ -206,7 +206,7 @@ public class SpongeEntityService implements EntityService<Living> {
      * @param entity
      */
     @Override
-    public void updateWalkSpeed(IEntity<Living> entity) {
+    public void updateWalkSpeed(IEntity<? extends Living> entity) {
         double speed = getEntityProperty(entity, SpongeDefaultProperties.walk_speed);
         entity.getEntity().offer(Keys.WALKING_SPEED, speed);
         if (pluginConfig.DEBUG.isBalance()) {

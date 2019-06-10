@@ -78,7 +78,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     private ISkillService skillService;
 
     @Inject
-    private PlayerDao playerDao;
+    protected PlayerDao playerDao;
 
     @Inject
     protected InventoryService inventoryService;

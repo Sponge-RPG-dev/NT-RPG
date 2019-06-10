@@ -20,7 +20,7 @@ package cz.neumimto.rpg.sponge.gui;
 
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.effects.EffectService;
@@ -99,7 +99,7 @@ import static cz.neumimto.rpg.sponge.gui.GuiHelper.*;
  * Created by NeumimTo on 6.8.2015.
  */
 @Singleton
-@ResourceLoader.ListenerClass
+@IResourceLoader.ListenerClass
 public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
     private static final String skillname = "sk";

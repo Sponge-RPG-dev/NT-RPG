@@ -2,17 +2,20 @@ package cz.neumimto.rpg.common.items;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
-import cz.neumimto.rpg.api.entity.PropertyService;
-import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.items.*;
 import cz.neumimto.rpg.common.configuration.ItemString;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
-import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.common.inventory.items.ItemMetaType;
+import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtype;
+import cz.neumimto.rpg.common.inventory.sockets.SocketType;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -27,7 +30,12 @@ public abstract class AbstractItemService implements ItemService {
     protected Map<String, RpgItemType> items = new HashMap<>();
 
     protected Map<String, ItemClass> weaponClassMap = new HashMap<>();
+    protected Map<String, SocketType> socketTypes = new HashMap<>();
+    protected Map<String, ItemMetaType> itemMetaTypes = new HashMap<>();
+    protected Map<String, ItemSubtype> itemSubtypes = new HashMap<>();
+
     protected Map<AttributeConfig, Integer> itemAttributesPlaceholder;
+
 
     @Override
     public Optional<ItemClass> getWeaponClassByName(String clazz) {
@@ -91,7 +99,7 @@ public abstract class AbstractItemService implements ItemService {
 
     @Override
     public ClassItem createClassItemSpecification(RpgItemType key, Double value, IEffectSourceProvider provider) {
-        value = NtRpgPlugin.pluginConfig.ITEM_DAMAGE_PROCESSOR.get(value, key.getDamage());
+        value = Rpg.get().getPluginConfig().ITEM_DAMAGE_PROCESSOR.get(value, key.getDamage());
         return new ClassItemImpl(key, value, 0);
     }
 
@@ -108,7 +116,7 @@ public abstract class AbstractItemService implements ItemService {
 
     @Override
     public boolean checkItemAttributeRequirements(IActiveCharacter character, ManagedSlot managedSlot, RpgItemStack rpgItemStack) {
-        Collection<AttributeConfig> attributes = Rpg.get().getAttributes();
+        Collection<AttributeConfig> attributes = Rpg.get().getPropertyService().getAttributes().values();
         Map<AttributeConfig, Integer> inventoryRequirements = new HashMap<>();
         for (AttributeConfig attribute : attributes) {
             inventoryRequirements.put(attribute, 0);
@@ -213,7 +221,8 @@ public abstract class AbstractItemService implements ItemService {
     @Override
     public boolean checkItemClassRequirements(IActiveCharacter character, RpgItemStack rpgItemStack) {
         for (Map.Entry<ClassDefinition, Integer> entry : rpgItemStack.getClassRequirements().entrySet()) {
-            PlayerClassData playerClassData = character.getClasses().get(entry.getKey().getName());
+
+            PlayerClassData playerClassData = character.getClassByName(entry.getKey().getName());
             if (playerClassData == null) {
                 return false;
             }
@@ -230,6 +239,18 @@ public abstract class AbstractItemService implements ItemService {
         for (AttributeConfig attribute : attributes) {
             itemAttributesPlaceholder.put(attribute, 0);
         }
+    }
+
+    public Map<String, SocketType> getSocketTypes() {
+        return socketTypes;
+    }
+
+    public Map<String, ItemMetaType> getItemMetaTypes() {
+        return itemMetaTypes;
+    }
+
+    public Map<String, ItemSubtype> getItemSubtypes() {
+        return itemSubtypes;
     }
 }
 

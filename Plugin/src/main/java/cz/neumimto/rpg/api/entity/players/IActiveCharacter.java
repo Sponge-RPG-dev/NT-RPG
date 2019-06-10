@@ -251,4 +251,8 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
     void setLastHotbarSlotInteraction(int last);
 
     void sendNotification(String message);
+
+    default PlayerClassData getClassByName(String name) {
+        return getClasses().get(name);
+    }
 }

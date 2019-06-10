@@ -122,7 +122,7 @@ public class SkillSettings {
     }
 
     public static Set<String> getComplexKeySuffixes() {
-        Set<String> collect = Rpg.get().getAttributes().stream()
+        Set<String> collect = Rpg.get().getPropertyService().getAttributes().values().stream()
                 .map(attribute -> "_per_" + attribute.getId())
                 .collect(Collectors.toSet());
         collect.add(bonus);

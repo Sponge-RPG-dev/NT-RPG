@@ -20,6 +20,7 @@ package cz.neumimto.rpg.common.persistance.dao;
 
 import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
@@ -101,7 +102,7 @@ public class ClassDefinitionDao {
                         } else {
                             String name = (String) load.getNode("Name").getValue();
                             String classType = (String) load.getNode("ClassType").getValue();
-                            Map<String, ClassTypeDefinition> types = NtRpgPlugin.pluginConfig.CLASS_TYPES;
+                            Map<String, ClassTypeDefinition> types = Rpg.get().getPluginConfig().CLASS_TYPES;
                             ClassTypeDefinition classTypeDefinition = null;
 
                             for (Map.Entry<String, ClassTypeDefinition> e : types.entrySet()) {

@@ -22,6 +22,7 @@ import cz.neumimto.rpg.common.reloading.Reload;
 import cz.neumimto.rpg.common.reloading.ReloadService;
 import cz.neumimto.rpg.common.skills.SkillServiceimpl;
 import cz.neumimto.rpg.sponge.gui.SkillTreeInterfaceModel;
+import cz.neumimto.rpg.sponge.skills.types.TargetedScriptSkill;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.item.ItemType;
@@ -29,7 +30,6 @@ import org.spongepowered.api.item.ItemTypes;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,6 +68,7 @@ public class SpongeSkillService extends SkillServiceimpl {
             guiModelByCharacter.put(split[0].charAt(0), model);
             i++;
         }
+        scriptSkillsParents.put("targetted", TargetedScriptSkill.class);
     }
 
     public SkillTreeInterfaceModel getGuiModelByCharacter(Character character) {

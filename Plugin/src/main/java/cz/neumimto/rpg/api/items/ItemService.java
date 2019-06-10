@@ -8,10 +8,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public interface ItemService {
 
@@ -51,4 +48,5 @@ public interface ItemService {
     boolean checkItemClassRequirements(IActiveCharacter character, RpgItemStack rpgItemStack);
 
     void registerItemAttributes(Collection<AttributeConfig> attributes);
+
 }

@@ -109,7 +109,7 @@ public class PlayerSkillContext {
 
             Set<String> complexKeySuffixes = SkillSettings.getComplexKeySuffixes();
 
-            Collection<AttributeConfig> attributes = Rpg.get().getAttributes();
+            Collection<AttributeConfig> attributes = Rpg.get().getPropertyService().getAttributes().values();
             populateCache(complexKeySuffixes, attributes);
             if (previousSize == 0) {
                 previousSize = cachedComputedSkillSettings.size();

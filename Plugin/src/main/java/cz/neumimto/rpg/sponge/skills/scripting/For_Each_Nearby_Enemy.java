@@ -1,13 +1,12 @@
 package cz.neumimto.rpg.sponge.skills.scripting;
 
-import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.api.utils.TriConsumer;
 import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.api.utils.TriConsumer;
-import cz.neumimto.rpg.api.skills.scripting.JsBinding;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
@@ -26,16 +25,16 @@ import java.util.function.Consumer;
                 @SkillComponent.Param("consumer - callback"),
         }
 )
-public class For_Each_Nearby_Enemy implements TriConsumer<ISpongeEntity, Number, Consumer<ISpongeEntity>> {
+public class For_Each_Nearby_Enemy implements TriConsumer<ISpongeEntity, Number, Consumer<IEntity>> {
 
     @Override
-    public void accept(ISpongeEntity entity, Number radius, Consumer<ISpongeEntity> consumer) {
+    public void accept(ISpongeEntity entity, Number radius, Consumer<IEntity> consumer) {
         Collection<Entity> nearbyEntities = entity.getEntity().getNearbyEntities(radius.doubleValue());
-        IActiveCharacter character = (IActiveCharacter) entity;
+        ISpongeCharacter character = (ISpongeCharacter) entity;
         for (Entity nearbyEntity : nearbyEntities) {
             if (nearbyEntity instanceof Living) {
                 Living living = (Living) nearbyEntity;
-                ISpongeEntity iEntity = NtRpgPlugin.GlobalScope.entityService.get(nearbyEntity);
+                IEntity iEntity = NtRpgPlugin.GlobalScope.entityService.get(nearbyEntity);
                 if (!iEntity.isFriendlyTo(character) && Utils.canDamage(character, living)) {
                     consumer.accept(iEntity);
                 }

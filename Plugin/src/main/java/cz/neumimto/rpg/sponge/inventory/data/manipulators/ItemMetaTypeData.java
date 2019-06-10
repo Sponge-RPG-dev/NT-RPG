@@ -1,8 +1,9 @@
 package cz.neumimto.rpg.sponge.inventory.data.manipulators;
 
-import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.common.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.common.inventory.items.ItemMetaTypes;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
@@ -47,7 +48,7 @@ public class ItemMetaTypeData extends AbstractSingleData<ItemMetaType, ItemMetaT
 
     public Optional<ItemMetaTypeData> from(DataView view) {
         if (view.contains(NKeys.ITEM_META_TYPE.getQuery())) {
-            setValue(Sponge.getRegistry().getType(ItemMetaType.class, view.getString(NKeys.ITEM_META_TYPE.getQuery()).get()).get());
+            setValue(NtRpgPlugin.GlobalScope.itemService.getItemMetaTypes().get(view.getString(NKeys.ITEM_META_TYPE.getQuery()).get()));
             return Optional.of(this);
         }
         return Optional.empty();

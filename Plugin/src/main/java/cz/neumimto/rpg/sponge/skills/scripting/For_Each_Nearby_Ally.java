@@ -27,10 +27,10 @@ import java.util.function.Consumer;
                 @SkillComponent.Param("allyEntity - callback")
         }
 )
-public class For_Each_Nearby_Ally implements TriConsumer<ISpongeEntity, Number, Consumer<ISpongeEntity>> {
+public class For_Each_Nearby_Ally implements TriConsumer<ISpongeEntity, Number, Consumer<IEntity>> {
 
     @Override
-    public void accept(ISpongeEntity entity, Number radius, Consumer<ISpongeEntity> consumer) {
+    public void accept(ISpongeEntity entity, Number radius, Consumer<IEntity> consumer) {
         Collection<Entity> nearbyEntities = entity.getEntity().getNearbyEntities(radius.doubleValue());
         if (entity.getType() == IEntityType.MOB) {
             for (Entity nearbyEntity : nearbyEntities) {

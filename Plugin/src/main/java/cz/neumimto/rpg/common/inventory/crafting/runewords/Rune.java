@@ -8,7 +8,6 @@ import cz.neumimto.rpg.common.inventory.sockets.SocketTypes;
  */
 public class Rune extends ItemUpgrade {
 
-
     @Override
     public SocketType getSocketType() {
         return SocketTypes.RUNE;

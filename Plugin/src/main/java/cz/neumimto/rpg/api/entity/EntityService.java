@@ -17,7 +17,7 @@ public interface EntityService<T> {
 
     double healEntity(IEntity entity, float amount, IRpgElement source);
 
-    void updateWalkSpeed(IEntity<T> activeCharacter);
+    void updateWalkSpeed(IEntity<? extends T> activeCharacter);
 
     void reload();
 }

@@ -6,9 +6,8 @@ import cz.neumimto.rpg.api.entity.IEntityResource;
 import cz.neumimto.rpg.api.entity.IMob;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.party.IParty;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
-import cz.neumimto.rpg.sponge.entities.players.party.SpongeParty;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.Living;
 
@@ -20,7 +19,7 @@ import java.util.UUID;
 /**
  * Created by NeumimTo on 19.12.2015.
  */
-public class SpongeMob implements ISpongeEntity<Living>, IMob {
+public class SpongeMob implements ISpongeEntity<Living>, IMob<Living> {
 
     private double experiences;
     private Living entity;
@@ -52,16 +51,16 @@ public class SpongeMob implements ISpongeEntity<Living>, IMob {
     public boolean isFriendlyTo(IActiveCharacter characterr) {
         Optional<Optional<UUID>> uuid = getEntity().get(Keys.TAMED_OWNER);
         if (uuid.isPresent()) {
-            SpongeCharacter character = (SpongeCharacter) characterr;
+            ISpongeCharacter character = (ISpongeCharacter) characterr;
             Optional<UUID> uuid1 = uuid.get();
             if (uuid1.isPresent()) {
                 UUID uuid2 = uuid1.get();
                 if (character.getPlayer().getUniqueId().equals(uuid2)) {
                     return true;
                 }
-                IParty party = character.getParty();
-                for (IActiveCharacter iActiveCharacter : party.getPlayers()) {
-                    UUID uniqueId = ((SpongeCharacter)iActiveCharacter).getPlayer().getUniqueId();
+                IParty<ISpongeCharacter> party = character.getParty();
+                for (ISpongeCharacter iActiveCharacter : party.getPlayers()) {
+                    UUID uniqueId = iActiveCharacter.getPlayer().getUniqueId();
                     if (uuid2.equals(uniqueId)) {
                         return true;
                     }

@@ -2,6 +2,7 @@ package cz.neumimto.rpg.sponge.commands.elements;
 
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.ArgumentParseException;
@@ -43,8 +44,13 @@ public class PartyMemberCommandElement extends CommandElement {
 
     @Override
     public List<String> complete(CommandSource src, CommandArgs args, CommandContext context) {
-        return NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src).getParty().getPlayers()
-                .stream().map(IActiveCharacter::getPlayer).map(Player::getName).collect(Collectors.toList());
+        return NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src)
+                .getParty()
+                .getPlayers()
+                .stream()
+                .map(ISpongeCharacter::getPlayer)
+                .map(Player::getName)
+                .collect(Collectors.toList());
     }
 
     @Override

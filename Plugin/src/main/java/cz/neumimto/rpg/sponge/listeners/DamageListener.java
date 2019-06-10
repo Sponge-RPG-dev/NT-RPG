@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.listeners;
 
 import com.google.inject.Singleton;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.IEntity;
@@ -35,7 +35,7 @@ import java.util.Optional;
 import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 @Singleton
-@ResourceLoader.ListenerClass
+@IResourceLoader.ListenerClass
 public class DamageListener {
 
     @Inject

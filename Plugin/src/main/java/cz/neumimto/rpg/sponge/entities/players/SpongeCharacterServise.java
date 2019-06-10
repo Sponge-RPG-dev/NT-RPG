@@ -4,7 +4,6 @@ import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
@@ -15,6 +14,7 @@ import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.effects.common.def.ClickComboActionComponent;
 import cz.neumimto.rpg.sponge.effects.common.def.CombatEffect;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
+import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
 import cz.neumimto.rpg.sponge.events.PlayerDataPreloadComplete;
 import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 import cz.neumimto.rpg.sponge.utils.PermissionUtils;
@@ -44,7 +44,7 @@ public class SpongeCharacterServise extends CharacterService<ISpongeCharacter> {
     private SpongeEntityService spongeEntityService;
 
     @Inject
-    private PartyService partyService;
+    private SpongePartyService partyService;
 
     protected Map<UUID, ISpongeCharacter> characters = new HashMap<>();
 
@@ -203,11 +203,7 @@ public class SpongeCharacterServise extends CharacterService<ISpongeCharacter> {
 
     @Override
     public void removePersistantSkill(CharacterSkill characterSkill) {
-        //language=HQL
-        Map<String, Object> params = new HashMap<>();
-        params.put("id", characterSkill);
-        dad.update("delete from CharacterSkill where skillId = :id", params);
-
+        playerDao.removePeristantSkill(characterSkill);
     }
 
     @Override

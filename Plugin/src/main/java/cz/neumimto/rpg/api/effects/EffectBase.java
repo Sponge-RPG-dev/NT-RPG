@@ -209,4 +209,5 @@ public abstract class EffectBase<Value> implements IEffect<Value> {
         this.setPeriod(period);
         this.setDuration(duration);
     }
+
 }

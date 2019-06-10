@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.listeners;
 
 import com.google.inject.Singleton;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.UserActionType;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
@@ -20,7 +20,7 @@ import org.spongepowered.api.event.item.inventory.InteractItemEvent;
 import javax.inject.Inject;
 
 @Singleton
-@ResourceLoader.ListenerClass
+@IResourceLoader.ListenerClass
 public class ComboListener {
 
     @Inject

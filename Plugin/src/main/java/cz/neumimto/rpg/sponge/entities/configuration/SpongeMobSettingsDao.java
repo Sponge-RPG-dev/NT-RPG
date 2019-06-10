@@ -1,10 +1,10 @@
 package cz.neumimto.rpg.sponge.entities.configuration;
 
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.entity.configuration.MobsConfig;
 import cz.neumimto.rpg.common.entity.configuration.RootMobConfig;
-import cz.neumimto.rpg.common.utils.io.FileUtils;
+import cz.neumimto.rpg.sponge.utils.io.FileUtils;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Singleton
-@ResourceLoader.ListenerClass
+@IResourceLoader.ListenerClass
 public class SpongeMobSettingsDao extends MobSettingsDao {
 
     @Override

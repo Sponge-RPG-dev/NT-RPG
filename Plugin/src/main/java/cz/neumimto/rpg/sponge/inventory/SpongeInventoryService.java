@@ -21,7 +21,7 @@ package cz.neumimto.rpg.sponge.inventory;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import cz.neumimto.core.localization.TextHelper;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.EffectService;
@@ -89,7 +89,7 @@ import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
  * Created by NeumimTo on 22.7.2015.
  */
 @Singleton
-@ResourceLoader.ListenerClass
+@IResourceLoader.ListenerClass
 public class SpongeInventoryService extends AbstractInventoryService<ISpongeCharacter> {
 
     @Inject
@@ -311,8 +311,7 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
 
         List<String> itemMetaSubtypes = c.getStringList("ItemMetaSubtypes");
 
-        //will break in get 8
-        itemMetaSubtypes.stream().map(ItemSubtype::new).forEach(a -> Sponge.getRegistry().register(ItemSubtype.class, a));
+        itemMetaSubtypes.stream().map(ItemSubtype::new).forEach(a -> itemService.getItemSubtypes().get(a));
     }
 
 
@@ -329,12 +328,12 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
                     SlotEffectSource slotEffectSource = new SlotEffectSource(Integer.parseInt(split[0]), ItemSubtypes.ANY);
                     slotEffectSourceHashMap.put(slotEffectSource.getSlotId(), slotEffectSource);
                 } else {
-                    Optional<ItemSubtype> type = Sponge.getRegistry().getType(ItemSubtype.class, split[1]);
-                    if (!type.isPresent()) {
-                        type = Optional.of(ItemSubtypes.ANY);
+                    ItemSubtype type = itemService.getItemSubtypes().get(split[1]);
+                    if (type == null) {
+                        type = ItemSubtypes.ANY;
                         error("Could not find subtype " + split[1]);
                     }
-                    SlotEffectSource slotEffectSource = new SlotEffectSource(Integer.parseInt(split[0]), type.get());
+                    SlotEffectSource slotEffectSource = new SlotEffectSource(Integer.parseInt(split[0]), type);
                     slotEffectSourceHashMap.put(slotEffectSource.getSlotId(), slotEffectSource);
                 }
             }

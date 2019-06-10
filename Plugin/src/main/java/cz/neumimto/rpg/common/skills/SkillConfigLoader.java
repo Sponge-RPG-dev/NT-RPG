@@ -1,7 +1,8 @@
 package cz.neumimto.rpg.common.skills;
 
+import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
@@ -34,14 +35,14 @@ public class SkillConfigLoader {
 
     public ISkill build(String id) {
         info("Generating class for the skill " + id, DebugLevel.DEVELOP);
-        ResourceLoader rl = NtRpgPlugin.GlobalScope.injector.getInstance(ResourceLoader.class);
+
         ByteBuddy byteBuddy = new ByteBuddy();
         String[] split = id.split(":");
         String name = split[split.length - 1];
-
+        IResourceLoader rl = Rpg.get().getResourceLoader();
         Class<? extends ISkill> value = byteBuddy.subclass(type)
                 .name("cz.neumimto.generated." + name + System.currentTimeMillis())
-                .annotateType(AnnotationDescription.Builder.ofType(ResourceLoader.Skill.class)
+                .annotateType(AnnotationDescription.Builder.ofType(IResourceLoader.Skill.class)
                         .define("value", id)
                         .build())
                 .make()
@@ -49,7 +50,7 @@ public class SkillConfigLoader {
                 .getLoaded();
         Object o = null;
         try {
-            o = rl.loadClass(value, getClass().getClassLoader());
+            o = rl.loadClass(value);
         } catch (IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
         }

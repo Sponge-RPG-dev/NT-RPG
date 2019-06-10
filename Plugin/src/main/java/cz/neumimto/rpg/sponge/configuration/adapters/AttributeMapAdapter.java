@@ -1,12 +1,12 @@
 package cz.neumimto.rpg.sponge.configuration.adapters;
 
 import com.google.common.reflect.TypeToken;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.spongepowered.api.Sponge;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,16 +27,14 @@ public class AttributeMapAdapter implements TypeSerializer<Map<AttributeConfig, 
         for (Map.Entry<Object, ? extends ConfigurationNode> entry : childrenMap.entrySet()) {
             String key = (String) entry.getKey();
 
-            Optional<AttributeConfig> type1 = Sponge.getRegistry().getType(AttributeConfig.class, key);
+            Optional<AttributeConfig> type1 = Rpg.get().getPropertyService().getAttributeById(key);
             if (type1.isPresent()) {
                 AttributeConfig attribute = type1.get();
                 int anInt = entry.getValue().getInt();
                 map.put(attribute, anInt);
             } else {
                 warn("Unknown attribute " + key + ". Should be one of: " +
-                        Sponge.getRegistry().getAllOf(AttributeConfig.class)
-                                .stream()
-                                .map(AttributeConfig::getId)
+                        Rpg.get().getPropertyService().getAttributes().keySet().stream()
                                 .collect(Collectors.joining(", "))
                 );
             }

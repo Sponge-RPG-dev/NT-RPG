@@ -27,7 +27,7 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.SkillsDefinition;
-import cz.neumimto.rpg.common.utils.io.FileUtils;
+import cz.neumimto.rpg.sponge.utils.io.FileUtils;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
@@ -81,9 +81,9 @@ public class JSLoader {
         return engine;
     }
 
-    public void initEngine(Path path) {
+    public void initEngine() {
         try {
-            scripts_root = path;
+            scripts_root = Paths.get(Rpg.get().getWorkingDirectory() + "/scripts");
             FileUtils.createDirectoryIfNotExists(scripts_root);
             loadNashorn();
             if (engine != null) {

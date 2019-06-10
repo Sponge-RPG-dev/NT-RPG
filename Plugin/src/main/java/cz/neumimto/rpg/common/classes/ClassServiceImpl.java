@@ -74,8 +74,8 @@ public class ClassServiceImpl implements ClassService {
         Set<String> intersection = new HashSet<>();
 
         Set<String> toBeRemoved = new HashSet<>();
-
-        for (PlayerClassData nClass : character.getClasses().values()) {
+        Map<String, PlayerClassData> map = character.getClasses();
+        for (PlayerClassData nClass : map.values()) {
             ClassDefinition configClass = nClass.getClassDefinition();
             if (configClass == toBeReplaced) {
                 for (PlayerClassPermission pgp : configClass.getPermissions()) {

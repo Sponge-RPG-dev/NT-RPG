@@ -2,6 +2,7 @@ package cz.neumimto.skills.active;
 
 import cz.neumimto.effects.positive.SoulBindEffect;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
@@ -27,7 +28,7 @@ import java.util.UUID;
  */
 @Singleton
 @ResourceLoader.Skill("ntrpg:soulbind")
-@ResourceLoader.ListenerClass
+@IResourceLoader.ListenerClass
 public class SkillSoulbind extends ActiveSkill {
 
 	public static final String name = "Soulbind";

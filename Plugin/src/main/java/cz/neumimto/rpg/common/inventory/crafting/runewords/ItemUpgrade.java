@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * Created by NeumimTo on 21.1.2018.
  */
-public class ItemUpgrade extends HashMap<String, Object> {
+public abstract class ItemUpgrade extends HashMap<String, Object> {
 
     public static final String NAME = "NAME";
     public static final String SOCKET_TYPE = "SOCKET_TYPE";
@@ -24,10 +24,7 @@ public class ItemUpgrade extends HashMap<String, Object> {
         super(m);
     }
 
-    public SocketType getSocketType() {
-        String s = (String) get(SOCKET_TYPE);
-        return s == null ? null : Sponge.getRegistry().getType(SocketType.class, s).get();
-    }
+    public abstract SocketType getSocketType();
 
     public void setSocketType(SocketType socketType) {
         put(SOCKET_TYPE, socketType.getId());

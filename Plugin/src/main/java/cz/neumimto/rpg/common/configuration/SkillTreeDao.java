@@ -19,19 +19,18 @@
 package cz.neumimto.rpg.common.configuration;
 
 import com.typesafe.config.*;
-import cz.neumimto.rpg.api.skills.mods.SkillPreprocessorFactories;
-import cz.neumimto.rpg.common.skills.SkillConfigLoader;
-import cz.neumimto.rpg.common.skills.SkillConfigLoaders;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
+import cz.neumimto.rpg.api.skills.mods.SkillPreprocessorFactories;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.types.StartingPoint;
-import cz.neumimto.rpg.api.utils.Pair;
-import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
-import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
+import cz.neumimto.rpg.api.utils.MathUtils;
+import cz.neumimto.rpg.common.skills.SkillConfigLoader;
+import cz.neumimto.rpg.common.skills.SkillConfigLoaders;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -41,7 +40,8 @@ import java.util.Optional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static cz.neumimto.rpg.api.logging.Log.*;
+import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.api.logging.Log.warn;
 
 /**
  * Created by NeumimTo on 24.7.2015.
@@ -64,8 +64,14 @@ public class SkillTreeDao {
     }
 
     protected void populateMap(Map<String, SkillTree> map, Config config) {
-
         SkillTree skillTree = new SkillTree();
+        if (loadTree(config, skillTree)) {
+            return;
+        }
+        map.put(skillTree.getId(), skillTree);
+    }
+
+    protected boolean loadTree(Config config, SkillTree skillTree) {
         try {
             skillTree.setDescription(config.getString("Description"));
         } catch (ConfigException e) {
@@ -76,7 +82,7 @@ public class SkillTreeDao {
             skillTree.setId(config.getString("Name"));
         } catch (ConfigException e) {
             warn("Missing \"Name\" skipping to another file");
-            return;
+            return true;
         }
         skillTree.getSkills().put(StartingPoint.NODE_NAME, StartingPoint.SKILL_DATA);
         try {
@@ -87,60 +93,15 @@ public class SkillTreeDao {
             warn("Missing \"Skills\" section. No skills defined");
 
         }
-
-        try {
-            List<String> asciiMap = config.getStringList("AsciiMap");
-            Optional<String> max = asciiMap.stream().max(Comparator.comparingInt(String::length));
-            if (max.isPresent()) {
-                int length = max.get().length();
-                int rows = asciiMap.size();
-
-                short[][] array = new short[rows][length];
-
-                int i = 0;
-                int j = 0;
-                StringBuilder num = new StringBuilder();
-                for (String s : asciiMap) {
-                    for (char c1 : s.toCharArray()) {
-                        if (Character.isDigit(c1)) {
-                            num.append(c1);
-                            continue;
-                        } else if (c1 == 'X') {
-                            skillTree.setCenter(new Pair<>(i, j));
-                            j++;
-                            continue;
-                        }
-                        if (!num.toString().equals("")) {
-                            array[i][j] = Short.parseShort(num.toString());
-                            j++;
-                        }
-                        SkillTreeInterfaceModel guiModelByCharacter = NtRpgPlugin.GlobalScope.skillService.getGuiModelByCharacter(c1);
-                        if (guiModelByCharacter != null) {
-                            array[i][j] = guiModelByCharacter.getId();
-                        }
-                        num = new StringBuilder();
-                        j++;
-                    }
-                    j = 0;
-                    i++;
-                }
-                skillTree.setSkillTreeMap(array);
-            }
-        } catch (ConfigException | ArrayIndexOutOfBoundsException ignored) {
-            error("Could not read ascii map in the skilltree " + skillTree.getId(), ignored);
-            skillTree.setSkillTreeMap(new short[][]{});
-        }
-        map.put(skillTree.getId(), skillTree);
+        return false;
     }
 
     private void createConfigSkills(List<? extends ConfigObject> sub, SkillTree skillTree) {
         for (ConfigObject co : sub) {
             Config c = co.toConfig();
             String id = c.getString("SkillId");
-            Optional<ISkill> byId = NtRpgPlugin.GlobalScope.skillService.getById(id);
-            if (!byId.isPresent()) {
-
-                ISkill skill = null;
+            ISkill skill = Rpg.get().getSkillService().getSkills().get(id.toLowerCase());;
+            if (skill == null) {
                 try {
                     String type = c.getString("Type");
                     SkillConfigLoader loader = SkillConfigLoaders.getById(type)
@@ -298,7 +259,7 @@ public class SkillTreeDao {
         try {
             info.setSkillName(c.getString("Name"));
             info(" - Alternate name defined for skill " + info.getSkill().getId() + " > " + info.getSkillName());
-            NtRpgPlugin.GlobalScope.skillService.registerSkillAlternateName(info.getSkillName(), info.getSkill());
+            Rpg.get().getSkillService().registerSkillAlternateName(info.getSkillName(), info.getSkill());
         } catch (ConfigException missing) {
             info.setSkillName(info.getSkill().getLocalizableName());
         }
@@ -306,14 +267,14 @@ public class SkillTreeDao {
         SkillSettings skillSettings = new SkillSettings();
         try {
             Config settings = c.getConfig("SkillSettings");
-            Collection<AttributeConfig> attributes = Rpg.get().getAttributes();
+            Collection<AttributeConfig> attributes = Rpg.get().getPropertyService().getAttributes().values();
             outer:
             for (Map.Entry<String, ConfigValue> e : settings.entrySet()) {
                 if (e.getKey().endsWith(SkillSettings.bonus)) {
                     continue;
                 }
                 String val = e.getValue().render();
-                if (Utils.isNumeric(val)) {
+                if (MathUtils.isNumeric(val)) {
                     float norm = Float.parseFloat(val);
                     for (AttributeConfig attribute : attributes) {
                         String s = "_per_" + attribute.getId();
@@ -396,11 +357,10 @@ public class SkillTreeDao {
         final String lowercased = id.toLowerCase();
         SkillData info = tree.getSkills().get(lowercased);
         if (info == null) {
-            ISkill skill = NtRpgPlugin.GlobalScope.skillService.getById(lowercased)
-                    .orElseThrow(
-                            () -> new IllegalStateException("Could not find a skill " + lowercased + " referenced in the skilltree " + tree.getId
-                                    ()));
-
+            ISkill skill = Rpg.get().getSkillService().getSkills().get(lowercased);
+            if (skill == null) {
+                throw new IllegalStateException("Could not find a skill " + lowercased + " referenced in the skilltree " + tree.getId());
+            }
             info = skill.constructSkillData();
             info.setSkill(skill);
             tree.getSkills().put(lowercased, info);

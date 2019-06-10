@@ -20,14 +20,15 @@ package cz.neumimto.rpg.common.effects.core;
 
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.EffectBase;
+import cz.neumimto.rpg.api.effects.EffectStatusType;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.entity.CommonProperties;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.events.character.CharacterManaRegainEvent;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.common.effects.CoreEffectTypes;
-import cz.neumimto.rpg.api.effects.EffectStatusType;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
-import cz.neumimto.rpg.api.events.character.CharacterManaRegainEvent;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
 /**
  * Created by NeumimTo on 9.8.2015.
@@ -40,14 +41,24 @@ public class DefaultManaRegeneration extends EffectBase {
     private static final String remove = "You've lost mana regenartion.";
     private IActiveCharacter character;
 
-    public DefaultManaRegeneration(IEffectConsumer character, long duration, Void value) {
+    public DefaultManaRegeneration(IEffectConsumer character, long duration) {
         super(name, character);
         this.character = (IActiveCharacter) character;
-        setPeriod(NtRpgPlugin.pluginConfig.MANA_REGENERATION_RATE);
+        setPeriod(Rpg.get().getPluginConfig().MANA_REGENERATION_RATE);
         setApplyMessage(apply);
         setExpireMessage(remove);
         setDuration(-1);
         effectTypes.add(CoreEffectTypes.MANA_REGEN);
+    }
+
+    @Override
+    public void setConsumer(IEffectConsumer consumer) {
+        this.character = (IActiveCharacter) consumer;
+    }
+
+    @Override
+    public IEffectConsumer getConsumer() {
+        return character;
     }
 
     @Override
@@ -68,7 +79,7 @@ public class DefaultManaRegeneration extends EffectBase {
             return;
         }
         double regen = character.getMana().getRegen()
-                * NtRpgPlugin.GlobalScope.entityService.getEntityProperty(character, SpongeDefaultProperties.mana_regen_mult);
+                * Rpg.get().getEntityService().getEntityProperty(character, CommonProperties.mana_regen_mult);
 
         CharacterManaRegainEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterManaRegainEvent.class);
         event.setTarget(character);

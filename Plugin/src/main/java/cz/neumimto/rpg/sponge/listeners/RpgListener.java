@@ -19,7 +19,7 @@
 package cz.neumimto.rpg.sponge.listeners;
 
 import com.google.inject.Singleton;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
@@ -39,7 +39,7 @@ import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
  * Created by NeumimTo on 12.2.2015.
  */
 @Singleton
-@ResourceLoader.ListenerClass
+@IResourceLoader.ListenerClass
 public class RpgListener {
 
     @Inject

@@ -2,6 +2,7 @@ package cz.neumimto.skills.active;
 
 import cz.neumimto.effects.positive.Invisibility;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
@@ -19,7 +20,7 @@ import javax.inject.Singleton;
  */
 @Singleton
 @ResourceLoader.Skill("ntrpg:invisibility")
-@ResourceLoader.ListenerClass
+@IResourceLoader.ListenerClass
 public class SkillInvisibility extends ActiveSkill {
 
 	@Inject

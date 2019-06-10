@@ -2,27 +2,20 @@ package cz.neumimto.rpg.sponge;
 
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.RpgApi;
+import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.PropertyService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.ICharacterService;
-import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.events.effect.EventFactoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.ISkillService;
-import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
-import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
 import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.text.Text;
@@ -31,22 +24,11 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.Executor;
 
 public final class SpongeRpgApi implements RpgApi {
 
     protected SpongeRpgApi() {
-    }
-
-    @Override
-    public Collection<AttributeConfig> getAttributes() {
-        return Sponge.getRegistry().getAllOf(AttributeConfig.class);
-    }
-
-    @Override
-    public Optional<AttributeConfig> getAttributeById(String id) {
-        return Sponge.getRegistry().getType(AttributeConfig.class, id);
     }
 
     @Override
@@ -153,5 +135,15 @@ public final class SpongeRpgApi implements RpgApi {
     @Override
     public SpongePartyService getPartyService() {
         return NtRpgPlugin.GlobalScope.partyService;
+    }
+
+    @Override
+    public String getWorkingDirectory() {
+        return NtRpgPlugin.workingDir;
+    }
+
+    @Override
+    public IResourceLoader getResourceLoader() {
+        return NtRpgPlugin.GlobalScope.resourceLoader;
     }
 }

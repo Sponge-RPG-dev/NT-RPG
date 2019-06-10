@@ -22,6 +22,7 @@ import cz.neumimto.core.PersistentContext;
 import cz.neumimto.core.Repository;
 import cz.neumimto.core.dao.GenericDao;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -31,7 +32,9 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.Query;
 
 import javax.inject.Singleton;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -167,5 +170,24 @@ public class PlayerDao extends GenericDao<CharacterBase> {
     @Override
     public SessionFactory getFactory() {
         return this.factory;
+    }
+
+    public void removePeristantSkill(CharacterSkill characterSkill) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", characterSkill);
+        String hql = "delete from CharacterSkill where skillId = :id";
+
+        Session session = getFactory().openSession();
+        Query query = session.createQuery(hql);
+        Transaction transaction = session.beginTransaction();
+        query.setParameter("id", characterSkill.getId());
+
+        try {
+            query.executeUpdate();
+            transaction.commit();
+        } catch (Throwable t) {
+            transaction.rollback();
+            throw new RuntimeException(t);
+        }
     }
 }

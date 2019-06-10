@@ -58,11 +58,14 @@ public abstract class SkillServiceimpl implements ISkillService {
 
     protected Map<String, ISkillType> skillTypes = new HashMap<>();
 
+    protected Map<String, Class<?>> scriptSkillsParents = new HashMap<>();
 
     @Override
     public void load() {
         init();
         skillTrees.putAll(skillTreeDao.getAll());
+        scriptSkillsParents.put("active",ActiveScriptSkill.class);
+        scriptSkillsParents.put("passive",PassiveScriptSkill.class);
     }
 
     @Override
@@ -221,20 +224,10 @@ public abstract class SkillServiceimpl implements ISkillService {
             return null;
         }
 
-        Class type = null;
-        switch (parent.toLowerCase()) {
-            case "targetted":
-                type = TargetedScriptSkill.class;
-                break;
-            case "active":
-                type = ActiveScriptSkill.class;
-                break;
-            case "passive":
-                type = PassiveScriptSkill.class;
-                break;
-            default:
-                warn("Could not load skill " + scriptSkillModel.getId() + " unknown parent " + scriptSkillModel.getParent());
-                return null;
+        Class type = scriptSkillsParents.get(parent.toLowerCase());
+        if (type == null) {
+            warn("Could not load skill " + scriptSkillModel.getId() + " unknown parent " + scriptSkillModel.getParent());
+            return null;
         }
 
         Class sk = new ByteBuddy()
