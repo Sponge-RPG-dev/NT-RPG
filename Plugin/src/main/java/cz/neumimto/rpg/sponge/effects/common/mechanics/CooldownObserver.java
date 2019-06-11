@@ -29,7 +29,7 @@ public class CooldownObserver extends SpongeEffectBase implements IEffectContain
 
     public CooldownObserver(IEffectConsumer character, long duration, String value) {
         super(name, character);
-        this.character = character;
+        this.character = (SpongeCharacter) character;
         setDuration(duration);
         String s = MathUtils.extractNumber(value);
         long l = 1000;

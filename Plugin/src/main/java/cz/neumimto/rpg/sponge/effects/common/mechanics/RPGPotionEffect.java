@@ -3,6 +3,7 @@ package cz.neumimto.rpg.sponge.effects.common.mechanics;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
@@ -20,7 +21,7 @@ public abstract class RPGPotionEffect extends SpongeEffectBase<Long> implements 
 
     private Set<PotionEffect> potions;
 
-    public RPGPotionEffect(String name, ISpongeEntity iEffectConsumer,
+    public RPGPotionEffect(String name, IEffectConsumer iEffectConsumer,
                            long duration,
                            PotionEffect.Builder pe) {
         super(name, iEffectConsumer);
@@ -32,14 +33,14 @@ public abstract class RPGPotionEffect extends SpongeEffectBase<Long> implements 
     @Override
     public void onApply(IEffect self) {
         for (PotionEffect potion : potions) {
-            getConsumer().addPotionEffect(potion);
+            ((ISpongeEntity)getConsumer()).addPotionEffect(potion);
         }
     }
 
     @Override
     public void onRemove(IEffect self) {
         for (PotionEffect potion : potions) {
-            getConsumer().removePotionEffect(potion.getType());
+            ((ISpongeEntity)getConsumer()).removePotionEffect(potion.getType());
         }
     }
 

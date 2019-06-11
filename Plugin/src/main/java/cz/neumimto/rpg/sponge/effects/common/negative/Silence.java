@@ -2,6 +2,7 @@ package cz.neumimto.rpg.sponge.effects.common.negative;
 
 import cz.neumimto.rpg.api.effects.CommonEffectTypes;
 import cz.neumimto.rpg.api.effects.Generate;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 
@@ -14,7 +15,7 @@ public class Silence extends SpongeEffectBase {
 
     public static String name = "Silence";
 
-    public Silence(ISpongeEntity consumer, long duration) {
+    public Silence(IEffectConsumer consumer, long duration) {
         super(name, consumer);
         setDuration(duration);
         effectTypes.add(CommonEffectTypes.SILENCE);

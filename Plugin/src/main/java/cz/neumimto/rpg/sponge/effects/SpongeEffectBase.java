@@ -8,19 +8,19 @@ import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 @JsBinding(JsBinding.Type.CLASS)
 public class SpongeEffectBase<VALUE> extends EffectBase<VALUE> {
 
-    private ISpongeEntity entity;
+    private IEffectConsumer entity;
 
-    public SpongeEffectBase(String name, ISpongeEntity consumer) {
+    public SpongeEffectBase(String name, IEffectConsumer consumer) {
         super(name, consumer);
     }
 
     @Override
-    public ISpongeEntity getConsumer() {
+    public IEffectConsumer getConsumer() {
         return entity;
     }
 
     @Override
     public void setConsumer(IEffectConsumer consumer) {
-        this.entity = (ISpongeEntity) consumer;
+        this.entity = consumer;
     }
 }
