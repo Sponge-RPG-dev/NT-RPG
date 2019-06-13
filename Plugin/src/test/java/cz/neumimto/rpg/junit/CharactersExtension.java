@@ -30,7 +30,7 @@ public class CharactersExtension implements ParameterResolver {
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return parameterContext.getParameter().getType() == IActiveCharacter.class;
+        return parameterContext.getParameter().getType().isAssignableFrom(IActiveCharacter.class);
     }
 
     @Override

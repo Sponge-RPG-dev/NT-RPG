@@ -20,6 +20,7 @@ public class NtRpgExtension implements BeforeAllCallback {
         NtRpgPlugin.pluginConfig = new PluginConfig();
         NtRpgPlugin.workingDir = ".";
         NtRpgPlugin.GlobalScope = new GlobalScope();
+        new RpgTest();
     }
 
 }

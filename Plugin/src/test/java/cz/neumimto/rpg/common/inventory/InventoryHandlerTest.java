@@ -45,8 +45,8 @@ class InventoryHandlerTest {
     private ISpongeCharacter character;
 
     @BeforeEach
-    public void beforeEach(@Stage(READY) ISpongeCharacter character) {
-        this.character = character;
+    public void beforeEach(@Stage(READY) IActiveCharacter character) {
+        this.character = (ISpongeCharacter) character;
     }
 
     @ParameterizedTest
