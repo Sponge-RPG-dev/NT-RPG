@@ -1,5 +1,6 @@
 package cz.neumimto.rpg;
 
+import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
@@ -38,7 +39,7 @@ import java.util.UUID;
 public class SkillManipulationTests {
 
     @Inject
-    private CharacterService characterService;
+    private ICharacterService characterService;
 
     @Inject
     private EventFactoryService eventFactoryService;

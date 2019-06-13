@@ -47,6 +47,7 @@ public class AssetsLoadingTest {
         bindings.put("ScriptExecutorSkill", ScriptExecutorSkill.class);
         JSLoader.getEngine().eval("var ScriptExecutorSkill = Java.type(\"cz.neumimto.rpg.api.skills.scripting.ScriptExecutorSkill\")");
         JSLoader.getEngine().setBindings(bindings, ScriptContext.GLOBAL_SCOPE);
+        skillService.init();
     }
 
     @Test

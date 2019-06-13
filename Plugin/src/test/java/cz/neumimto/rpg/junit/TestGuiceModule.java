@@ -4,6 +4,7 @@ import com.google.inject.*;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.GuiceTest;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.TestSkillService;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.effects.EffectService;
@@ -108,7 +109,7 @@ public class TestGuiceModule extends AbstractModule {
         bind(PermissionService.class).to(TestPermissionService.class);
         bind(EventFactoryService.class).to(TestEventFactory.class);
         bind(LocalizationService.class).to(TestLocalizationService.class);
-        bind(ISkillService.class).to(SpongeSkillService.class);
+        bind(ISkillService.class).to(TestSkillService.class);
         bind(AssetService.class).to(TestAssetService.class);
         bind(new TypeLiteral<ICharacterService<? extends IActiveCharacter>>(){}).to(SpongeCharacterServise.class);
 
