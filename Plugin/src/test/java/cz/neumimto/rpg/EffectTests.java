@@ -1,5 +1,6 @@
 package cz.neumimto.rpg;
 
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.EffectStackingStrategy;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
@@ -44,6 +45,7 @@ public class EffectTests {
         NtRpgPlugin.pluginConfig.DEBUG = DebugLevel.NONE;
         NtRpgPlugin.GlobalScope = new GlobalScope();
         NtRpgPlugin.GlobalScope.plugin = new NtRpgPlugin();
+
     }
 
     @BeforeAll
@@ -53,7 +55,7 @@ public class EffectTests {
         character = new SpongeCharacter(UUID.randomUUID(), characterBase, 1);
 
         effect = createEffectMock("test");
-
+        new RpgTest();
     }
 
     private static TickableEffect createEffectMock(String name) {
