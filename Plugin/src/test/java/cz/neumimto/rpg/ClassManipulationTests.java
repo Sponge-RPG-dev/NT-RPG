@@ -1,6 +1,7 @@
 package cz.neumimto.rpg;
 
 
+import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
@@ -41,7 +42,7 @@ public class ClassManipulationTests {
     ClassDefinition ps3;
 
     @Inject
-    CharacterService characterService;
+    ICharacterService<IActiveCharacter> characterService;
 
     private IActiveCharacter character;
 
