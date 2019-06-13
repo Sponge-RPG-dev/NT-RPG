@@ -12,17 +12,7 @@ public class TestPermissionService implements PermissionService {
 
     @Override
     public boolean hasPermission(IActiveCharacter character, String value) {
-        return true;
-    }
-
-    @Override
-    public void removePermissions(IActiveCharacter character, Set<String> perms) {
-
-    }
-
-    @Override
-    public void addPermissions(IActiveCharacter character, Set<String> perms) {
-
+        return false;
     }
 
     @Override
@@ -32,6 +22,16 @@ public class TestPermissionService implements PermissionService {
 
     @Override
     public void addPermissions(IActiveCharacter character, PlayerClassData classDefinition) {
+
+    }
+
+    @Override
+    public void addPermissions(IActiveCharacter character, Set perms) {
+
+    }
+
+    @Override
+    public void removePermissions(IActiveCharacter character, Set perms) {
 
     }
 }

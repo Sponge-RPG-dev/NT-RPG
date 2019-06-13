@@ -54,17 +54,6 @@ public class TestHelper {
     }
 
 
-    public static void initLocalizations() throws Exception {
-        Field[] fields = Localizations.class.getFields();
-        Text text = Mockito.mock(Text.class);
-        LocalizableParametrizedText mock = Mockito.mock(LocalizableParametrizedText.class);
-        Mockito.when(mock.toText()).thenReturn(text);
-        Mockito.when(mock.toText(Matchers.any())).thenReturn(text);
-        for (Field field : fields) {
-            field.set(null, mock);
-        }
-    }
-
     public static void setupLog() {
         Log.setLogger(LoggerFactory.getLogger("test"));
     }

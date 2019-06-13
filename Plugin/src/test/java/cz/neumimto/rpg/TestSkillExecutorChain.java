@@ -7,6 +7,7 @@ import cz.neumimto.rpg.sponge.configuration.AttributeConfiguration;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.SkillSettings;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
 import it.unimi.dsi.fastutil.objects.AbstractObject2FloatMap;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 import org.junit.jupiter.api.Assertions;
@@ -35,7 +36,6 @@ public class TestSkillExecutorChain {
 
     @BeforeAll
     public static void init() throws Exception {
-        TestHelper.initLocalizations();
         TestHelper.setupLog();
 
         complexKeySuffixes = new HashSet<>();
@@ -72,7 +72,7 @@ public class TestSkillExecutorChain {
         objectObjectHashMap.put(agi.getId(), 0);
         TestUtils.setField(characterBase, "cachedAttributes", objectObjectHashMap);
 
-        activeCharacter = new ActiveCharacter(UUID.randomUUID(), characterBase, 0);
+        activeCharacter = new SpongeCharacter(UUID.randomUUID(), characterBase, 0);
 
 
     }

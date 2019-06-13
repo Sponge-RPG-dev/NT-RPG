@@ -15,7 +15,6 @@ public class NtRpgExtension implements BeforeAllCallback {
 
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
-        TestHelper.initLocalizations();
         new RpgTest();
         Log.setLogger(LoggerFactory.getLogger("TestLogger"));
         NtRpgPlugin.pluginConfig = new PluginConfig();

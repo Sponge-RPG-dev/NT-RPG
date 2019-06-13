@@ -29,9 +29,7 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 28.12.2014.
  */
-@Singleton
 public interface ClassService  {
-
 
     Map<String, ClassDefinition> getClasses();
 

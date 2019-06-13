@@ -47,9 +47,6 @@ public abstract class SkillServiceimpl implements ISkillService {
     @Inject
     private JSLoader jsLoader;
 
-    @Inject
-    private CharacterService characterService;
-
     protected Map<String, ISkill> skills = new HashMap<>();
 
     protected Map<String, SkillTree> skillTrees = new ConcurrentHashMap<>();

@@ -12,6 +12,7 @@ import cz.neumimto.rpg.junit.TestGuiceModule;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
@@ -41,10 +42,10 @@ class InventoryHandlerTest {
     @Inject
     private ItemService itemService;
 
-    private IActiveCharacter character;
+    private ISpongeCharacter character;
 
     @BeforeEach
-    public void beforeEach(@Stage(READY) IActiveCharacter character) {
+    public void beforeEach(@Stage(READY) ISpongeCharacter character) {
         this.character = character;
     }
 

@@ -11,6 +11,8 @@ import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -48,10 +50,10 @@ public class CharactersExtension implements ParameterResolver {
     }
 
 
-    private IActiveCharacter initializedCharacter() {
+    private ISpongeCharacter initializedCharacter() {
         JPACharacterBase characterBase = new JPACharacterBase();
 
-        ActiveCharacter activeCharacter = new ActiveCharacter(UUID.randomUUID(), characterBase, TestPropertyService.LAST_ID);
+        ISpongeCharacter activeCharacter = new SpongeCharacter(UUID.randomUUID(), characterBase, TestPropertyService.LAST_ID);
 
 
         CharacterClass primaryCC = new JPACharacterClass();

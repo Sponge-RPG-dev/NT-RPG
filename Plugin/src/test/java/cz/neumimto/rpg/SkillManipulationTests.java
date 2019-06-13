@@ -18,6 +18,7 @@ import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
@@ -27,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
+import org.spongepowered.api.Sponge;
 
 import javax.inject.Inject;
 import java.util.UUID;
@@ -65,10 +67,7 @@ public class SkillManipulationTests {
     ActiveCharacter character;
     PlayerClassData playerClassData;
 
-    @BeforeAll
-    public static void init() throws Exception {
-        TestHelper.initLocalizations();
-    }
+
 
     @BeforeEach
     public void before() throws Exception {
@@ -138,7 +137,7 @@ public class SkillManipulationTests {
         characterBase = new JPACharacterBase();
         characterBase.getCharacterClasses().add(characterClass);
 
-        character = new ActiveCharacter(UUID.randomUUID(), characterBase, 0);
+        character = new SpongeCharacter(UUID.randomUUID(), characterBase, 0);
 
         playerClassData = new PlayerClassData(classDefinition, characterClass);
         character.addClass(playerClassData);

@@ -35,9 +35,6 @@ import static cz.neumimto.rpg.api.logging.Log.info;
 public class SpongeCharacterServise extends CharacterService<ISpongeCharacter> {
 
     @Inject
-    private Game game;
-
-    @Inject
     private NtRpgPlugin plugin;
 
     @Inject
@@ -104,19 +101,24 @@ public class SpongeCharacterServise extends CharacterService<ISpongeCharacter> {
 
     @Override
     protected void addCharacterToGame(UUID id, ISpongeCharacter character, List<CharacterBase> playerChars) {
-        game.getScheduler().createTaskBuilder().name("Callback-PlayerDataLoad" + id).execute(() -> {
-            PlayerDataPreloadComplete event = new PlayerDataPreloadComplete(id, playerChars);
-            game.getEventManager().post(event);
 
-            Optional<Player> popt = game.getServer().getPlayer(event.getPlayer());
-            if (popt.isPresent()) {
-                finalizePlayerDataPreloadStage(id, character, event);
-                assignPlayerToCharacter(id);
-                initActiveCharacter(character);
-            } else {
-                playerDataPreloadStagePlayerNotReady(id, character);
-            }
+        Sponge.getScheduler().createTaskBuilder().name("Callback-PlayerDataLoad" + id).execute(() -> {
+            completePlayerDataPreloading(id, character, playerChars);
         }).submit(plugin);
+    }
+
+    protected void completePlayerDataPreloading(UUID id, ISpongeCharacter character, List<CharacterBase> playerChars) {
+        PlayerDataPreloadComplete event = new PlayerDataPreloadComplete(id, playerChars);
+        Game game = Sponge.getGame();
+        game.getEventManager().post(event);
+        Optional<Player> popt = game.getServer().getPlayer(event.getPlayer());
+        if (popt.isPresent()) {
+            finalizePlayerDataPreloadStage(id, character, event);
+            assignPlayerToCharacter(id);
+            initActiveCharacter(character);
+        } else {
+            playerDataPreloadStagePlayerNotReady(id, character);
+        }
     }
 
     @Override

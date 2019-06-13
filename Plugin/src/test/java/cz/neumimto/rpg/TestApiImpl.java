@@ -1,28 +1,31 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.core.localization.Arg;
+import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.RpgApi;
+import cz.neumimto.rpg.api.configuration.PluginConfig;
+import cz.neumimto.rpg.api.damage.DamageService;
+import cz.neumimto.rpg.api.entity.EntityService;
+import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.players.ICharacterService;
+import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.events.effect.EventFactoryService;
 import cz.neumimto.rpg.api.items.ItemService;
+import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.junit.TestDictionary;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
+import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 
 import java.io.InputStream;
 import java.util.*;
+import java.util.concurrent.*;
 
 public class TestApiImpl implements RpgApi {
-
-    @Override
-    public Collection<AttributeConfig> getAttributes() {
-        return Arrays.asList(TestDictionary.AGI, TestDictionary.STR);
-    }
-
-    @Override
-    public Optional<AttributeConfig> getAttributeById(String id) {
-        return Optional.empty();
-    }
 
     @Override
     public ItemService getItemService() {
@@ -79,5 +82,56 @@ public class TestApiImpl implements RpgApi {
     @Override
     public ISkillService getSkillService() {
         return NtRpgPlugin.GlobalScope.skillService;
+    }
+
+    @Override
+    public LocalizationService getLocalizationService() {
+        return NtRpgPlugin.GlobalScope.localizationService;
+    }
+
+    @Override
+    public PluginConfig getPluginConfig() {
+        return NtRpgPlugin.pluginConfig;
+    }
+
+    @Override
+    public Executor getAsyncExecutor() {
+        return Executors.newFixedThreadPool(2);
+    }
+
+    @Override
+    public SpongeCharacterServise getCharacterService() {
+        return NtRpgPlugin.GlobalScope.characterService;
+    }
+
+
+    @Override
+    public SpongeEntityService getEntityService() {
+        return NtRpgPlugin.GlobalScope.entityService;
+    }
+
+    @Override
+    public DamageService getDamageService() {
+        return NtRpgPlugin.GlobalScope.damageService;
+    }
+
+    @Override
+    public SpongePropertyService getPropertyService() {
+        return NtRpgPlugin.GlobalScope.spongePropertyService;
+    }
+
+    @Override
+    public SpongePartyService getPartyService() {
+        return NtRpgPlugin.GlobalScope.partyService;
+    }
+
+    @Override
+    public String getWorkingDirectory() {
+        return NtRpgPlugin.workingDir;
+    }
+
+    @Override
+    public IResourceLoader getResourceLoader() {
+        return NtRpgPlugin.GlobalScope.resourceLoader;
     }
 }

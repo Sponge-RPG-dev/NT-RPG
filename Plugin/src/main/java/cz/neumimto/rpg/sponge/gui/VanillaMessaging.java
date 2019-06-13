@@ -55,6 +55,7 @@ import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.sponge.effects.common.def.ManaBarNotifier;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.inventory.data.*;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.SkillTreeNode;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
@@ -106,24 +107,34 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     public static Map<SkillTreeControllsButton, SkillTreeInterfaceModel> controlls;
     @Inject
     private Game game;
+
     @Inject
     private LocalizationService localizationService;
+
     @Inject
     private ClassService classService;
+
     @Inject
     private EffectService effectService;
+
     @Inject
     private NtRpgPlugin plugin;
+
     @Inject
     private RWService rwService;
+
     @Inject
     private InfoCommand infoCommand;
+
     @Inject
     private SpongeDamageService spongeDamageService;
+
     @Inject
-    private CharacterService characterService;
+    private SpongeCharacterServise characterService;
+
     @Inject
     private SpongeSkillService skillService;
+
     @Inject
     private PlayerDao playerDao;
 

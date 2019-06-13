@@ -5,6 +5,7 @@ import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.*;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.events.skill.SkillHealEvent;
 import cz.neumimto.rpg.common.entity.configuration.MobsConfig;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
@@ -40,7 +41,7 @@ public class SpongeEntityService implements EntityService<Living> {
     private PropertyService spongePropertyService;
 
     @Inject
-    private CharacterService<IActiveCharacter> characterService;
+    private ICharacterService<IActiveCharacter> characterService;
 
     @Inject
     private EffectService effectService;

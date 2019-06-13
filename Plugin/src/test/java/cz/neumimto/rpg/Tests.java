@@ -3,6 +3,7 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.common.classes.ClassServiceImpl;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
@@ -54,7 +55,7 @@ public class Tests {
 
     @Test
     public void testPermissionsManagement() {
-        ClassService classService = new ClassService();
+        ClassService classService = new ClassServiceImpl();
         ActiveCharacter character = Mockito.mock(ActiveCharacter.class);
         when(character.getLevel()).thenReturn(2);
 

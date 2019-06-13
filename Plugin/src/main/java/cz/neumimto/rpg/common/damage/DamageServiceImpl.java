@@ -16,9 +16,6 @@ public abstract class DamageServiceImpl<T> implements DamageService<T> {
     protected EntityService entityService;
 
     @Inject
-    protected CharacterService characterService;
-
-    @Inject
     protected ClassService classService;
 
     @Override
