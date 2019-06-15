@@ -23,6 +23,9 @@ public class LocalizationServiceImpl implements LocalizationService {
     @Override
     public String translate(String key, Arg args) {
         String s = map.get(key);
+        if (s == null) {
+            return key;
+        }
         Map<String, Object> params = args.getParams();
         return StringUtils.replaceEach(s, params.keySet().stream().toArray(String[]::new), params.values().stream().map(Object::toString).toArray(String[]::new));
     }
@@ -30,17 +33,27 @@ public class LocalizationServiceImpl implements LocalizationService {
     @Override
     public String translate(String message, String singleKey, String singleArg) {
         String s = map.get(message);
+        if (s == null) {
+            return message;
+        }
         return StringUtils.replace(s, singleKey, singleArg);
     }
 
     @Override
     public String translate(String staticMessage) {
-        return map.get(staticMessage);
+        String s =  map.get(staticMessage);
+        if (s == null) {
+            return staticMessage;
+        }
+        return s;
     }
 
     @Override
     public List<String> translateMultiline(String s) {
         List<String> s1 = mapMultiLine.get(s);
+        if (s1 == null) {
+            return Arrays.asList(s);
+        }
         return s1;
     }
 
