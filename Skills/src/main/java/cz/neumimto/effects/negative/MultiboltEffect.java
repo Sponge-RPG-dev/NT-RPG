@@ -2,13 +2,14 @@ package cz.neumimto.effects.negative;
 
 import cz.neumimto.Decorator;
 import cz.neumimto.model.MultiboltModel;
-import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
-import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
+import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
+import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
 import org.spongepowered.api.entity.living.Living;
 
@@ -16,7 +17,7 @@ import org.spongepowered.api.entity.living.Living;
  * Created by NeumimTo on 6.7.2017.
  */
 @JsBinding(JsBinding.Type.CLASS)
-public class MultiboltEffect extends EffectBase<MultiboltModel> {
+public class MultiboltEffect extends SpongeEffectBase<MultiboltModel> {
 
 	private final IEntity source;
 	private final MultiboltModel model;
@@ -45,7 +46,7 @@ public class MultiboltEffect extends EffectBase<MultiboltModel> {
 	}
 
 	public void damage() {
-		Living entity = getConsumer().getEntity();
+		Living entity = ((ISpongeEntity)getConsumer()).getEntity();
 		SkillDamageSource s = new SkillDamageSourceBuilder()
 				.setEffect(this)
 				.setSource(source)

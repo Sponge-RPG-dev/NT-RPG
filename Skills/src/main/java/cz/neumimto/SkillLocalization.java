@@ -1,8 +1,6 @@
 package cz.neumimto;
 
-import cz.neumimto.core.localization.LocalizableParametrizedText;
 import cz.neumimto.core.localization.Localization;
-import org.spongepowered.api.text.Text;
 
 /**
  * Created by NeumimTo on 23.12.2015.
@@ -11,9 +9,9 @@ import org.spongepowered.api.text.Text;
 @Localization("localizations/ntrpg_skills_localization.properties")
 public class SkillLocalization {
 
-	public static Text TELEPORTATION_SCROLL;
-	public static Text ASTRONOMY_CANNOT_SEE_THE_SKY;
-	public static Text TELEPORT_LOCATION_OBSTRUCTED;
-	public static LocalizableParametrizedText CANNOT_DRIK_POTION_TYPE;
-	public static LocalizableParametrizedText CANNOT_DRIK_POTION_TYPE_COOLDOWN;
+	public static String TELEPORTATION_SCROLL = "skill.teleportation-scroll.label";
+	public static String ASTRONOMY_CANNOT_SEE_THE_SKY = "skill.astronomy-obstucted-sky-view.message";
+	public static String TELEPORT_LOCATION_OBSTRUCTED = "skill.cannot-teleport.message";
+	public static String CANNOT_DRIK_POTION_TYPE = "skill.cannot-drink-potion.message";
+	public static String CANNOT_DRIK_POTION_TYPE_COOLDOWN = "skill.cannot-drink-potion-cooldown.message";
 }

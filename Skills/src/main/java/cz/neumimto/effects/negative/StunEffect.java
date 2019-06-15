@@ -6,6 +6,7 @@ import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.CommonEffectTypes;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.sponge.effects.ShapedEffectDecorator;
+import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import org.spongepowered.api.effect.particle.ParticleEffect;
@@ -29,10 +30,12 @@ public class StunEffect extends ShapedEffectDecorator<Location<World>> {
 			.quantity(8)
 			.type(ParticleTypes.CRITICAL_HIT)
 			.build();
+	private ISpongeEntity consumer;
 
 	public StunEffect(IEffectConsumer consumer, long duration) {
 		super(name, consumer);
-		setValue(consumer.getEntity().getLocation());
+		this.consumer = (ISpongeEntity) consumer;
+		setValue((this.consumer).getEntity().getLocation());
 		setDuration(duration);
 		setPeriod(10);
 		setPrinterCount(1);
@@ -45,14 +48,14 @@ public class StunEffect extends ShapedEffectDecorator<Location<World>> {
 	@Override
 	public void onTick(IEffect self) {
 		if (getLastTickTime() <= System.currentTimeMillis() - tickRate) {
-			getConsumer().getEntity().setLocation(getValue());
+			consumer.getEntity().setLocation(getValue());
 		}
 	}
 
 	@Override
 	public void draw(Vector3d vec) {
-		Location<Extent> add = getConsumer().getLocation().add(vec).add(vec3d);
-		World extent = getConsumer().getEntity().getLocation().getExtent();
+		Location<Extent> add = consumer.getLocation().add(vec).add(vec3d);
+		World extent = consumer.getEntity().getLocation().getExtent();
 		extent.spawnParticles(particleEffect, add.getPosition());
 
 	}

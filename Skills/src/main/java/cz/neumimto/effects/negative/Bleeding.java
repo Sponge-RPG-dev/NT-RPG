@@ -1,11 +1,12 @@
 package cz.neumimto.effects.negative;
 
-import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
+import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
@@ -19,7 +20,7 @@ import org.spongepowered.api.world.World;
  * Created by NeumimTo on 5.8.2017.
  */
 @JsBinding(JsBinding.Type.CLASS)
-public class Bleeding extends EffectBase<Double> {
+public class Bleeding extends SpongeEffectBase<Double> {
 
 	public static final String name = "Bleeding";
 	private static ParticleEffect particleEffect = ParticleEffect.builder()
@@ -30,11 +31,11 @@ public class Bleeding extends EffectBase<Double> {
 							.blockType(BlockTypes.REDSTONE_BLOCK)
 							.build())
 			.build();
-	private IActiveCharacter caster;
+	private ISpongeCharacter caster;
 	private SkillDamageSource source;
 	private double damage;
 
-	public Bleeding(IEffectConsumer consumer, IActiveCharacter caster, SkillDamageSource source, double damage, long period, long duration) {
+	public Bleeding(IEffectConsumer consumer, ISpongeCharacter caster, SkillDamageSource source, double damage, long period, long duration) {
 		super(name, consumer);
 		this.caster = caster;
 		setDuration(duration);
@@ -45,9 +46,10 @@ public class Bleeding extends EffectBase<Double> {
 
 	@Override
 	public void onTick(IEffect self) {
-		if (Utils.canDamage(caster, getConsumer().getEntity())) {
-			getConsumer().getEntity().damage(damage, source);
-			Location<World> location = getConsumer().getEntity().getLocation();
+		ISpongeEntity consumer = (ISpongeEntity) getConsumer();
+		if (Utils.canDamage(caster, consumer.getEntity())) {
+			consumer.getEntity().damage(damage, source);
+			Location<World> location = consumer.getEntity().getLocation();
 			location.getExtent().spawnParticles(particleEffect, location.getPosition());
 		}
 	}

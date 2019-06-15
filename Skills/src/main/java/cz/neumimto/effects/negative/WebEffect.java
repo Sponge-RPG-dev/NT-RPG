@@ -2,10 +2,11 @@ package cz.neumimto.effects.negative;
 
 import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
-import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
+import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.world.Location;
@@ -15,7 +16,7 @@ import org.spongepowered.api.world.World;
  * Created by NeumimTo on 20.8.2017.
  */
 @JsBinding(JsBinding.Type.CLASS)
-public class WebEffect extends EffectBase<Long> {
+public class WebEffect extends SpongeEffectBase<Long> {
 
 	public static String name = "Web";
 	private Vector3i[] vector3is = new Vector3i[9];
@@ -29,7 +30,7 @@ public class WebEffect extends EffectBase<Long> {
 	@Override
 	public void onApply(IEffect self) {
 		super.onApply(self);
-		Location<World> location = getConsumer().getEntity().getLocation();
+		Location<World> location = ((ISpongeEntity)getConsumer()).getEntity().getLocation();
 		Vector3d position = location.getPosition();
 		int floorY = position.getFloorY();
 		BlockState build = BlockState.builder().blockType(BlockTypes.WEB).build();
@@ -56,7 +57,7 @@ public class WebEffect extends EffectBase<Long> {
 	@Override
 	public void onRemove(IEffect self) {
 		super.onRemove(self);
-		Location<World> location = getConsumer().getEntity().getLocation();
+		Location<World> location = ((ISpongeEntity)getConsumer()).getEntity().getLocation();
 		BlockState build = BlockState.builder().blockType(BlockTypes.AIR).build();
 
 		for (Vector3i vector3i : vector3is) {

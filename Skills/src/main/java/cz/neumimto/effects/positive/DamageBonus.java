@@ -18,13 +18,15 @@
 
 package cz.neumimto.effects.positive;
 
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
+import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.api.entity.IEntityType;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
-import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
-import org.spongepowered.api.entity.EntityTypes;
+import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 
 import java.util.Map;
 
@@ -61,19 +63,21 @@ public class DamageBonus extends SpongeEffectBase {
 
 	@Override
 	public void onApply(IEffect self) {
-		getConsumer().setProperty(SpongeDefaultProperties.weapon_damage_bonus,
-				getConsumer().getProperty(SpongeDefaultProperties.weapon_damage_bonus) + bonusDamage);
-		if (getConsumer().getEntity().getType() == EntityTypes.PLAYER) {
-			getGlobalScope().damageService.recalculateCharacterWeaponDamage((IActiveCharacter) getConsumer());
+		getConsumer().setProperty(CommonProperties.weapon_damage_bonus,
+				getConsumer().getProperty(CommonProperties.weapon_damage_bonus) + bonusDamage);
+		ISpongeEntity iSpongeEntity = (ISpongeEntity) getConsumer();
+		if (iSpongeEntity.getType() == IEntityType.CHARACTER) {
+			Rpg.get().getDamageService().recalculateCharacterWeaponDamage((IActiveCharacter) getConsumer());
 		}
 	}
 
 	@Override
 	public void onRemove(IEffect self) {
-		getConsumer().setProperty(SpongeDefaultProperties.weapon_damage_bonus,
-				getConsumer().getProperty(SpongeDefaultProperties.weapon_damage_bonus) - bonusDamage);
-		if (getConsumer().getEntity().getType() == EntityTypes.PLAYER) {
-			getGlobalScope().damageService.recalculateCharacterWeaponDamage((IActiveCharacter) getConsumer());
+		getConsumer().setProperty(CommonProperties.weapon_damage_bonus,
+				getConsumer().getProperty(CommonProperties.weapon_damage_bonus) - bonusDamage);
+		ISpongeEntity iSpongeEntity = (ISpongeEntity) getConsumer();
+		if (iSpongeEntity.getType() == IEntityType.CHARACTER) {
+			Rpg.get().getDamageService().recalculateCharacterWeaponDamage((IActiveCharacter) getConsumer());
 		}
 	}
 }

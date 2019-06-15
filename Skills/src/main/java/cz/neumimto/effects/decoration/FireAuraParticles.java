@@ -3,6 +3,7 @@ package cz.neumimto.effects.decoration;
 import cz.neumimto.ParticleUtils;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import org.spongepowered.api.effect.particle.ParticleEffect;
@@ -18,7 +19,7 @@ public class FireAuraParticles extends SpongeEffectBase {
 
 	private STAGE stage;
 
-	public FireAuraParticles(ISpongeEntity character, long duration) {
+	public FireAuraParticles(IEffectConsumer character, long duration) {
 		super(name, character);
 		setDuration(duration);
 		stage = STAGE.A;
@@ -27,7 +28,7 @@ public class FireAuraParticles extends SpongeEffectBase {
 
 	@Override
 	public void onTick(IEffect self) {
-		stage = stage.process(getConsumer());
+		stage = stage.process((ISpongeEntity) getConsumer());
 	}
 
 	private enum STAGE {

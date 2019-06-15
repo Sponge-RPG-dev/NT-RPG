@@ -11,22 +11,23 @@ import cz.neumimto.events.DamageDodgedEvent;
 import cz.neumimto.events.ManaDrainEvent;
 import cz.neumimto.model.*;
 import cz.neumimto.rpg.api.IResourceLoader;
-import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.api.gui.Gui;
-import cz.neumimto.rpg.api.utils.rng.XORShiftRnd;
-import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
+import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityType;
 import cz.neumimto.rpg.api.entity.IReservable;
-import cz.neumimto.rpg.api.events.damage.DamageIEntityEarlyEvent;
-import cz.neumimto.rpg.api.events.damage.DamageIEntityLateEvent;
-import cz.neumimto.rpg.api.events.damage.IEntityWeaponDamageEarlyEvent;
-import cz.neumimto.rpg.api.events.effect.EffectApplyEvent;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
+import cz.neumimto.rpg.api.gui.Gui;
+import cz.neumimto.rpg.api.utils.rng.XORShiftRnd;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectService;
+import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.events.damage.SpongeDamageIEntityEarlyEvent;
+import cz.neumimto.rpg.sponge.events.damage.SpongeDamageIEntityLateEvent;
+import cz.neumimto.rpg.sponge.events.damage.SpongeEntityWeaponDamageEarlyEvent;
+import cz.neumimto.rpg.sponge.events.effects.SpongeEffectApplyEvent;
 import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import cz.neumimto.skills.active.GrapplingHook;
 import org.spongepowered.api.Game;
@@ -38,10 +39,12 @@ import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.data.value.mutable.ListValue;
 import org.spongepowered.api.effect.sound.SoundTypes;
 import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.EnderPearl;
 import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.entity.projectile.arrow.TippedArrow;
+import org.spongepowered.api.entity.projectile.source.ProjectileSource;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.action.CollideEvent;
@@ -80,13 +83,13 @@ public class SkillListener {
 	private NtRpgPlugin plugin;
 
 	@Inject
-	private CharacterService characterService;
+	private SpongeCharacterServise characterService;
 
 	@Inject
-	private EntityService entityService;
+	private SpongeEntityService entityService;
 
 	@Inject
-	private EffectService effectService;
+	private SpongeEffectService effectService;
 
 	@Inject
 	private SpongePropertyService spongePropertyService;
@@ -112,12 +115,18 @@ public class SkillListener {
 
 	@Listener
 	@SuppressWarnings("unchecked")
-	public void onEntityDamage(DamageIEntityEarlyEvent event, @First EntityDamageSource damageSource) {
+	public void onEntityDamage(SpongeDamageIEntityEarlyEvent event, @First EntityDamageSource damageSource) {
 		IEntity source;
-		if (damageSource.getSource() instanceof Projectile)
-			source = entityService.get(((Projectile) damageSource.getSource()).getShooter());
-		else source = entityService.get(damageSource.getSource().getUniqueId());
-
+		if (damageSource.getSource() instanceof Projectile) {
+			ProjectileSource shooter = ((Projectile) damageSource.getSource()).getShooter();
+			if (shooter instanceof Living) {
+				source = entityService.get((Living)shooter);
+			} else {
+				return;
+			}
+		} else {
+			return;
+		}
 		//invis
 		if (event.getTarget().hasEffect(Invisibility.name)) {
 			effectService.removeEffectContainer(event.getTarget().getEffect(Invisibility.name), event.getTarget());
@@ -141,7 +150,7 @@ public class SkillListener {
 	}
 
 	@Listener(order = Order.LAST)
-	public void onEntityDamageLast(DamageIEntityLateEvent event) {
+	public void onEntityDamageLast(SpongeDamageIEntityLateEvent event) {
 		if (event.getTarget().hasEffect(ManaShieldEffect.name)) {
 			IEffectContainer<ManaShieldEffectModel, ManaShieldEffect> effect = event.getTarget().getEffect(ManaShieldEffect.name);
 			if (event.getTarget().getType() == IEntityType.CHARACTER) {
@@ -161,7 +170,7 @@ public class SkillListener {
 
 
 	@Listener
-	public void onWeaponDamage(IEntityWeaponDamageEarlyEvent event, @First EntityDamageSource damageSource) {
+	public void onWeaponDamage(SpongeEntityWeaponDamageEarlyEvent event, @First EntityDamageSource damageSource) {
 		IEntity source = entityService.get(damageSource.getSource());
 		IEntity target = event.getTarget();
 
@@ -196,7 +205,7 @@ public class SkillListener {
 			IEffectContainer<BashModel, Bash> effect = source.getEffect(Bash.name);
 			BashModel stackedValue = effect.getStackedValue();
 			long time = System.currentTimeMillis();
-			float reduced = entityService.getEntityProperty(target, SpongeDefaultProperties.cooldown_reduce_mult);
+			float reduced = entityService.getEntityProperty(target, CommonProperties.cooldown_reduce_mult);
 			long cooldown = (long) (reduced * (float) stackedValue.cooldown);
 			if (stackedValue.lasttime + cooldown <= time) {
 				int rnd = random.nextInt(100);
@@ -236,7 +245,7 @@ public class SkillListener {
 	}
 
 	@Listener
-	public void onStunApply(EffectApplyEvent<StunEffect> event, @First IEntity source) {
+	public void onStunApply(SpongeEffectApplyEvent<StunEffect> event, @First IEntity source) {
 		float f = entityService.getEntityProperty(source, AdditionalProperties.stun_duration_mult);
 		event.getEffect().setDuration((long) (f * event.getEffect().getDuration()));
 	}
@@ -346,7 +355,7 @@ public class SkillListener {
 	@Listener
 	public void event(CollideEvent.Impact event, @First(typeFilter = TippedArrow.class) TippedArrow arrow) {
 		if (GrapplingHook.cache.containsKey(arrow.getUniqueId())) {
-			IActiveCharacter character = characterService.getCharacter(((Player) arrow.getShooter()).getUniqueId());
+			ISpongeCharacter character = characterService.getCharacter(((Player) arrow.getShooter()).getUniqueId());
 			Player player = character.getPlayer();
 			Vector3d velocity = player.getLocation().getPosition().sub(event.getImpactPoint().getPosition()).normalize().mul(-2);
 

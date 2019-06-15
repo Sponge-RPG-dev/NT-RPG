@@ -18,22 +18,23 @@
 
 package cz.neumimto.effects.positive;
 
-import cz.neumimto.rpg.api.effects.EffectBase;
+import cz.neumimto.rpg.api.effects.EffectStatusType;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.effects.EffectStatusType;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
-import cz.neumimto.rpg.common.effects.core.DefaultManaRegeneration;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.gui.Gui;
+import cz.neumimto.rpg.common.effects.core.DefaultManaRegeneration;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 import cz.neumimto.rpg.sponge.entities.players.CharacterHealth;
 import cz.neumimto.rpg.sponge.entities.players.CharacterMana;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
 
 /**
  * Created by ja on 4.9.2015.
  */
 @Generate(id = "name", description = "An effect which will redirect all skill's mana consumption to the health pool")
-public class BloodMagicEffect extends EffectBase {
+public class BloodMagicEffect extends SpongeEffectBase {
 
 	public static String name = "BloodMagic";
 	private static String apply = "You have gained " + name;
@@ -65,7 +66,7 @@ public class BloodMagicEffect extends EffectBase {
 	@Override
 	public void onRemove(IEffect self) {
 		Gui.sendEffectStatus(consumer, EffectStatusType.EXPIRED, this);
-		consumer.setMana(new CharacterMana(consumer));
+		consumer.setMana(new CharacterMana((SpongeCharacter) consumer));
 		//todo re-add mana regain event, or set period of mana regen to long.maxval; + listener
 	}
 

@@ -8,6 +8,7 @@ import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
+import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.particle.ParticleEffect;
@@ -46,13 +47,13 @@ public class ManaShieldEffect extends SpongeEffectBase<ManaShieldEffectModel> {
 	@Override
 	public void onApply(IEffect self) {
 		super.onApply(self);
-		init(apply_effect, getConsumer().getEntity());
+		init(apply_effect, ((ISpongeEntity)getConsumer()).getEntity());
 	}
 
 	@Override
 	public void onRemove(IEffect self) {
 		super.onRemove(self);
-		remove(remove_effect, getConsumer().getEntity());
+		remove(remove_effect, ((ISpongeEntity)getConsumer()).getEntity());
 	}
 
 	public void init(ParticleEffect pe, Entity e) {

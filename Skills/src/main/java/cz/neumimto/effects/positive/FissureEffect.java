@@ -7,6 +7,7 @@ import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
+import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.property.entity.EyeLocationProperty;
 import org.spongepowered.api.entity.Entity;
@@ -40,7 +41,7 @@ public class FissureEffect extends SpongeEffectBase<Integer> {
         setDuration(duration);
         setPeriod(125);
 
-        Living entity = character.getEntity();
+        Living entity = ((ISpongeEntity)character).getEntity();
         Vector3d r = entity.getRotation();
         direction = Quaterniond.fromAxesAnglesDeg(r.getX(), -r.getY(), r.getZ()).getDirection();
         direction = new Vector3d(direction.getX(), 0, direction.getZ());

@@ -4,6 +4,7 @@ import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.SkillLocalization;
 import cz.neumimto.Utils;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
@@ -13,7 +14,6 @@ import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.world.weather.Weathers;
 
 import javax.inject.Singleton;
@@ -43,7 +43,8 @@ public class Astronomy extends ActiveSkill<ISpongeCharacter> {
 		if (character1.getWorld().getWeather() == Weathers.CLEAR) {
 			Vector3d position = character1.getLocation().getPosition();
 			if (character1.getWorld().getHighestYAt(position.getFloorX(), position.getFloorZ()) > position.getFloorY()) {
-				character1.sendMessage(ChatTypes.ACTION_BAR, SkillLocalization.ASTRONOMY_CANNOT_SEE_THE_SKY);
+				String translate = Rpg.get().getLocalizationService().translate(SkillLocalization.ASTRONOMY_CANNOT_SEE_THE_SKY);
+				character.sendNotification(translate);
 				skillContext.next(character, info, skillContext.result(SkillResult.CANCELLED));
 				return;
 			}
@@ -52,7 +53,8 @@ public class Astronomy extends ActiveSkill<ISpongeCharacter> {
 			skillContext.next(character, info, skillContext.result(SkillResult.OK));
 			return;
 		}
-		character1.sendMessage(ChatTypes.ACTION_BAR, SkillLocalization.ASTRONOMY_CANNOT_SEE_THE_SKY);
+		String translate = Rpg.get().getLocalizationService().translate(SkillLocalization.ASTRONOMY_CANNOT_SEE_THE_SKY);
+		character.sendNotification(translate);
 		skillContext.next(character, info, skillContext.result(SkillResult.CANCELLED));
 		return;
 	}

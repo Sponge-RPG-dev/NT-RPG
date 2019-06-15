@@ -5,6 +5,9 @@ import com.flowpowered.math.vector.Vector3i;
 import cz.neumimto.Decorator;
 import cz.neumimto.SkillLocalization;
 import cz.neumimto.Utils;
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.math.VectorUtils;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
@@ -83,7 +86,7 @@ public class PortalEffect extends ShapedEffectDecorator {
 			double manaPerLookup, double manaPerEntity, long entityLookupInterval,
 			double chanceToFail, boolean safe) {
 		super(name, consumer);
-		this.castLocation = consumer.getLocation().add(0, 1, 0);
+		this.castLocation = ((ISpongeEntity)getConsumer()).getLocation().add(0, 1, 0);
 		this.targetLocation = targetLocation;
 		this.manaPerLookup = manaPerLookup;
 		this.manaPerEntity = manaPerEntity;
@@ -117,7 +120,10 @@ public class PortalEffect extends ShapedEffectDecorator {
 							candidate.setLocation(processChanceToFail(safeLocation.get()));
 							drainMana(manaPerEntity);
 						} else {
-							getConsumer().sendMessage(SkillLocalization.TELEPORT_LOCATION_OBSTRUCTED);
+							if (getConsumer() instanceof ISpongeCharacter) {
+								String translate = Rpg.get().getLocalizationService().translate(SkillLocalization.TELEPORT_LOCATION_OBSTRUCTED);
+								((ISpongeCharacter) getConsumer()).sendMessage(translate);
+							}
 							setDuration(0);
 						}
 					}
@@ -208,7 +214,7 @@ public class PortalEffect extends ShapedEffectDecorator {
 	public Vector3d[] getVertices() {
 		if (vertices == null) {
 			vertices = new Vector3d[30];
-			Decorator.ellipse(vertices, 1, 3, 1, getConsumer().getRotation());
+			Decorator.ellipse(vertices, 1, 3, 1, ((ISpongeEntity)getConsumer()).getRotation());
 		}
 		return vertices;
 	}

@@ -2,13 +2,13 @@ package cz.neumimto.effects.positive;
 
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
+import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
@@ -42,7 +42,7 @@ public class ArrowstormEffect extends SpongeEffectBase implements IEffectContain
 	@Override
 	public void onTick(IEffect self) {
 		if (arrows != 0) {
-			Living entity = getConsumer().getEntity();
+			Living entity = ((ISpongeEntity)getConsumer()).getEntity();
 			World world = entity.getWorld();
 			Vector3d rotation = entity.getRotation();
 			Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();

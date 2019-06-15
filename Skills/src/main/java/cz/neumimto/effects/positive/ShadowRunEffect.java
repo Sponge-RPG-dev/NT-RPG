@@ -8,10 +8,12 @@ import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.utils.rng.XORShiftRnd;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
+import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
+import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -34,16 +36,18 @@ public class ShadowRunEffect extends SpongeEffectBase<ShadowRunModel> {
 	@Override
 	public void onApply(IEffect self) {
 		super.onApply(self);
-		getConsumer().getEntity().offer(Keys.VANISH, true);
-		getConsumer().getEntity().offer(Keys.VANISH_PREVENTS_TARGETING, true);
+		ISpongeEntity consumer = (ISpongeEntity) getConsumer();
+		Living l = consumer.getEntity();
+		l.offer(Keys.VANISH, true);
+		l.offer(Keys.VANISH_PREVENTS_TARGETING, true);
 		getConsumer().addProperty(SpongeDefaultProperties.walk_speed, getValue().walkspeed);
-		NtRpgPlugin.GlobalScope.entityService.updateWalkSpeed(getConsumer());
+		NtRpgPlugin.GlobalScope.entityService.updateWalkSpeed(consumer);
 	}
 
 	@Override
 	public void onTick(IEffect self) {
 		int i = rnd.nextInt(5);
-		Location<World> location = getConsumer().getLocation();
+		Location<World> location = ((ISpongeEntity)getConsumer()).getLocation();
 		World extent = location.getExtent();
 		extent.spawnParticles(ParticleEffect.builder()
 						.quantity(i)
@@ -56,9 +60,11 @@ public class ShadowRunEffect extends SpongeEffectBase<ShadowRunModel> {
 	@Override
 	public void onRemove(IEffect self) {
 		super.onRemove(self);
-		getConsumer().getEntity().offer(Keys.VANISH, false);
-		getConsumer().getEntity().offer(Keys.VANISH_PREVENTS_TARGETING, false);
+		ISpongeEntity consumer = (ISpongeEntity) getConsumer();
+		Living l = consumer.getEntity();
+		l.offer(Keys.VANISH, false);
+		l.offer(Keys.VANISH_PREVENTS_TARGETING, false);
 		getConsumer().addProperty(SpongeDefaultProperties.walk_speed, -getValue().walkspeed);
-		NtRpgPlugin.GlobalScope.entityService.updateWalkSpeed(getConsumer());
+		NtRpgPlugin.GlobalScope.entityService.updateWalkSpeed(consumer);
 	}
 }

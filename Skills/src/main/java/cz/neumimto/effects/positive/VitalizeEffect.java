@@ -11,6 +11,7 @@ import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 import cz.neumimto.rpg.sponge.entities.players.CharacterMana;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 
 /**
  * Created by NeumimTo on 16.9.2018.
@@ -21,14 +22,14 @@ public class VitalizeEffect extends SpongeEffectBase<VitalizeEffectModel> {
 
 	public static final String name = "Vitalize";
 
-	private IActiveCharacter character;
+	private ISpongeCharacter character;
 
 	public VitalizeEffect(IEffectConsumer consumer, long duration, VitalizeEffectModel effectModel) {
 		super(name, consumer);
 		setValue(effectModel);
 		setStackable(false, null);
 		if (consumer instanceof IActiveCharacter) {
-			character = (IActiveCharacter) consumer;
+			character = (ISpongeCharacter) consumer;
 		}
 		setDuration(duration);
 		setPeriod(effectModel.period);

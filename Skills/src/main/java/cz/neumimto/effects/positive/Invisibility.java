@@ -1,11 +1,11 @@
 package cz.neumimto.effects.positive;
 
-import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
+import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.Living;
 
@@ -28,13 +28,13 @@ public class Invisibility extends SpongeEffectBase implements IEffectContainer {
 
 	@Override
 	public void onApply(IEffect self) {
-		Living entity = getConsumer().getEntity();
+		Living entity = ((ISpongeEntity)getConsumer()).getEntity();
 		entity.offer(Keys.VANISH, true);
 	}
 
 	@Override
 	public void onRemove(IEffect self) {
-		Living entity = getConsumer().getEntity();
+		Living entity = ((ISpongeEntity)getConsumer()).getEntity();
 		entity.offer(Keys.VANISH, false);
 	}
 

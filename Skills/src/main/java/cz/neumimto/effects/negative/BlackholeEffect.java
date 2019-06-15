@@ -5,7 +5,7 @@ import com.flowpowered.math.vector.Vector3i;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.sponge.effects.ShapedEffectDecorator;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
@@ -28,14 +28,14 @@ public class BlackholeEffect extends ShapedEffectDecorator<Location<World>> {
 	private Location<World> targetLocation;
 	private AABB aabb;
 	private double r;
-	private IActiveCharacter character;
+	private ISpongeCharacter character;
 
 	public BlackholeEffect(IEffectConsumer consumer, long duration, long lookupPeriod, double diameter, Location<World> targetLocation) {
 		super(name, consumer);
 		this.targetLocation = targetLocation;
 		setDuration(duration);
 		setPeriod(lookupPeriod);
-		character = (IActiveCharacter) consumer;
+		character = (ISpongeCharacter) consumer;
 		this.targetLocation = targetLocation;
 		r = diameter / 2;
 		aabb = new AABB(targetLocation.getX() - r,
