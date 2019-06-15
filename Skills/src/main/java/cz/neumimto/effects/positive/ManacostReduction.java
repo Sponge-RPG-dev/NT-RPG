@@ -1,15 +1,15 @@
 package cz.neumimto.effects.positive;
 
-import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.effects.stacking.DoubleEffectStackingStrategy;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 
 /**
  * Created by fs on 21.9.15.
  */
 @Generate(id = "name", description = "An effect which decreases skill's manacost")
-public class ManacostReduction extends EffectBase<Double> {
+public class ManacostReduction extends SpongeEffectBase<Double> {
 
 	public static String name = "Manacost Reduction";
 

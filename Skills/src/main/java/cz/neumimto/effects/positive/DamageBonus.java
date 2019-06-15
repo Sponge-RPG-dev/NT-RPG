@@ -18,11 +18,11 @@
 
 package cz.neumimto.effects.positive;
 
-import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 import org.spongepowered.api.entity.EntityTypes;
 
@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * Created by NeumimTo on 6.8.2015.
  */
-public class DamageBonus extends EffectBase {
+public class DamageBonus extends SpongeEffectBase {
 
 	public static final String name = "Bonus Damage";
 	float bonusDamage;

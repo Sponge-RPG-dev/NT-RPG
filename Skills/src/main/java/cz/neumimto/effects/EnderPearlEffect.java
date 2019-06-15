@@ -1,11 +1,11 @@
 package cz.neumimto.effects;
 
-import cz.neumimto.rpg.api.effects.EffectBase;
-import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.EffectContainer;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.stacking.MinLongStackingStrategy;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 
 
 /**
@@ -13,7 +13,7 @@ import cz.neumimto.rpg.api.skills.scripting.JsBinding;
  */
 @JsBinding(JsBinding.Type.CLASS)
 @Generate(id = "name", description = "An effect which allows target to throw and  teleport via ender pearl")
-public class EnderPearlEffect extends EffectBase<Long> {
+public class EnderPearlEffect extends SpongeEffectBase<Long> {
 
 	public static final String name = "Ender Pearl";
 

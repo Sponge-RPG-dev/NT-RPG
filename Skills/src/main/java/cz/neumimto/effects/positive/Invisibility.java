@@ -5,6 +5,7 @@ import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.Living;
 
@@ -16,7 +17,7 @@ import java.util.Set;
  */
 
 @Generate(id = "name", description = "An effect which makes the target invisible (Not by potion effect but by packets")
-public class Invisibility extends EffectBase implements IEffectContainer {
+public class Invisibility extends SpongeEffectBase implements IEffectContainer {
 
 	public static String name = "Invisibility";
 

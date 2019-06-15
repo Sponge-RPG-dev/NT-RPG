@@ -2,13 +2,13 @@ package cz.neumimto.effects.positive;
 
 import cz.neumimto.effects.decoration.ParticleSpawner;
 import cz.neumimto.model.ManaShieldEffectModel;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
-import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
+import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleOptions;
@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 @JsBinding(JsBinding.Type.CLASS)
 @Generate(id = "name", description = "Redirects all incoming damage to mana")
-public class ManaShieldEffect extends EffectBase<ManaShieldEffectModel> {
+public class ManaShieldEffect extends SpongeEffectBase<ManaShieldEffectModel> {
 
 	public static final String name = "ManaShield";
 

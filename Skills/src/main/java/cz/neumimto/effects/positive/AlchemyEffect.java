@@ -1,16 +1,16 @@
 package cz.neumimto.effects.positive;
 
-import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 
 /**
  * Created by NeumimTo on 9.7.2017.
  */
 @JsBinding(JsBinding.Type.CLASS)
 @Generate(id = "name", description = "A component which allows player to interact with brewning stand block")
-public class AlchemyEffect extends EffectBase {
+public class AlchemyEffect extends SpongeEffectBase {
 
 	public static final String name = "Alchemy";
 

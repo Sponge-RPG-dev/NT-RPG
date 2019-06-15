@@ -24,6 +24,7 @@ import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import org.spongepowered.api.effect.particle.ParticleEffect;
@@ -52,7 +53,7 @@ import org.spongepowered.api.world.World;
  * Global effect can work as item enchantments, and be accessible from commands
  */
 @Generate(id = "name", inject = true, description = "An effect which increases target walk speed")
-public class SpeedBoost extends EffectBase {
+public class SpeedBoost extends SpongeEffectBase {
 
 	public static final String name = "Speed";
 

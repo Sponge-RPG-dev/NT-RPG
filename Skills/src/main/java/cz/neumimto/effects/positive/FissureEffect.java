@@ -2,11 +2,11 @@ package cz.neumimto.effects.positive;
 
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.property.entity.EyeLocationProperty;
 import org.spongepowered.api.entity.Entity;
@@ -21,7 +21,7 @@ import java.util.*;
 
 @JsBinding(JsBinding.Type.CLASS)
 @Generate(id = "name", description = "Builds a tempoar wall of dirt")
-public class FissureEffect extends EffectBase<Integer> {
+public class FissureEffect extends SpongeEffectBase<Integer> {
 
     public static Set<UUID> animatedBlocks = new HashSet<>();
     public static String name = "Fissure";

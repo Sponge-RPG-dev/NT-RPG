@@ -1,12 +1,12 @@
 package cz.neumimto.effects.positive;
 
-import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.stacking.FloatEffectStackingStrategy;
-import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.entity.PropertyContainer;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 
 /**
@@ -14,7 +14,7 @@ import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
  */
 @JsBinding(JsBinding.Type.CLASS)
 @Generate(id = "name", description = "Increases resistance against fire, ice and lightning damage")
-public class ElementalResistanceEffect extends EffectBase<Float> {
+public class ElementalResistanceEffect extends SpongeEffectBase<Float> {
 
 	public static final String name = "Elemental Resistance";
 

@@ -1,14 +1,14 @@
 package cz.neumimto.effects;
 
-import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.effects.stacking.FloatEffectStackingStrategy;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 
 /**
  * Created NeumimTo ja on 1.8.2017.
  */
-public abstract class SingleResistanceValueEffect extends EffectBase<Float> {
+public abstract class SingleResistanceValueEffect extends SpongeEffectBase<Float> {
 
 	private final int propertyId;
 

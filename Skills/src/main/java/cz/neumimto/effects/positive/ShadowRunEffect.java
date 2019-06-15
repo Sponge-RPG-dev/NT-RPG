@@ -1,13 +1,13 @@
 package cz.neumimto.effects.positive;
 
 import cz.neumimto.model.ShadowRunModel;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.utils.rng.XORShiftRnd;
-import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.api.utils.rng.XORShiftRnd;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.effect.particle.ParticleEffect;
@@ -18,7 +18,7 @@ import org.spongepowered.api.world.World;
 
 @JsBinding(JsBinding.Type.CLASS)
 @Generate(id = "name", description = "An invisibility, the next attack will deal increased damage and break the invisibility")
-public class ShadowRunEffect extends EffectBase<ShadowRunModel> {
+public class ShadowRunEffect extends SpongeEffectBase<ShadowRunModel> {
 
 	public static final String name = "ShadowRun";
 	public static XORShiftRnd rnd = new XORShiftRnd();

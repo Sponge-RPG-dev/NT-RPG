@@ -1,14 +1,13 @@
 package cz.neumimto.rpg.sponge.effects;
 
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 
 /**
  * Created by NeumimTo on 29.7.2017.
  */
-public abstract class ShapedEffectDecorator<Value> extends EffectBase<Value> {
+public abstract class ShapedEffectDecorator<Value> extends SpongeEffectBase<Value> {
 
     int iter = 0;
     private int printerCount;

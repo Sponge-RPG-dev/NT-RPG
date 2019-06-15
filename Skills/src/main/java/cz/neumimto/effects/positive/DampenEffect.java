@@ -1,11 +1,11 @@
 package cz.neumimto.effects.positive;
 
-import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.effects.stacking.ValueProcessor;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 
 /**
  * Created by NeumimTo on 7.7.2017.
@@ -13,7 +13,7 @@ import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 @JsBinding(JsBinding.Type.CLASS)
 @Generate(id = "name", description = "An effect which cancels all incoming damage to the target, if attacking player has manapool "
 		+ "below specific % value")
-public class DampenEffect extends EffectBase<Double> {
+public class DampenEffect extends SpongeEffectBase<Double> {
 
 	public static final String name = "Dampen";
 

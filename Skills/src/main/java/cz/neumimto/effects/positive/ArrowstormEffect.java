@@ -8,6 +8,7 @@ import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
@@ -26,7 +27,7 @@ import static com.flowpowered.math.TrigMath.sin;
  */
 @JsBinding(JsBinding.Type.CLASS)
 @Generate(id = "name", description = "A periodic effect which shoots an arrow in a way the entity is looking at every x ticks")
-public class ArrowstormEffect extends EffectBase implements IEffectContainer {
+public class ArrowstormEffect extends SpongeEffectBase implements IEffectContainer {
 
 	public static final String name = "Arrowstorm";
 	private int arrows;
