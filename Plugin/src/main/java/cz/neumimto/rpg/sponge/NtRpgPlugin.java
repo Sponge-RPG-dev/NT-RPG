@@ -18,10 +18,12 @@
 
 package cz.neumimto.rpg.sponge;
 
+import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.core.PluginCore;
+import cz.neumimto.core.migrations.DbMigrationService;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
@@ -48,6 +50,7 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.data.DataRegistration;
+import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.game.GameRegistryEvent;
@@ -88,10 +91,19 @@ public class NtRpgPlugin extends Rpg {
     public static PluginConfig pluginConfig;
 
     @Inject
+    public DbMigrationService dbMigrationService;
+
+    @Inject
     public Logger logger;
 
     @Inject
     private PluginContainer plugin;
+
+    @Inject
+    private Game game;
+
+    @Inject
+    private CauseStackManager causeStackManager;
 
     @Inject
     @ConfigDir(sharedRoot = false)
@@ -103,6 +115,11 @@ public class NtRpgPlugin extends Rpg {
 
     @Inject
     private Injector injector;
+
+    //todo remove
+    public static DbMigrationService getDBMigrationService() {
+        return GlobalScope.plugin.dbMigrationService;
+    }
 
     @Listener
     public void initializeApi(GameConstructionEvent event) {
@@ -128,7 +145,10 @@ public class NtRpgPlugin extends Rpg {
             info("Placeholders Disabled");
         }
 
-        Injector childInjector = injector.createChildInjector(new SpongeGuiceModule());
+
+        Injector childInjector = Guice.createInjector(
+                new SpongeGuiceModule(this, logger, game, causeStackManager)
+        );
 
         GlobalScope = childInjector.getInstance(GlobalScope.class);
 

@@ -11,6 +11,7 @@ import cz.neumimto.rpg.common.persistance.model.JPABaseCharacterAttribute;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterSkill;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import org.spongepowered.api.event.Listener;
 
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class PersistenceHandler {
     @Listener
     public void onFindDbSchemaMigrationsEvent(FindDbSchemaMigrationsEvent event) throws IOException {
         if (event.validForContext("nt-rpg")) {
-            DbMigrationService dms =  injector.getInstance(DbMigrationService.class);
+            DbMigrationService dms =  NtRpgPlugin.getDBMigrationService();
             List<String> migrations = Arrays.asList(
                     "sql/%s/040918-init-db.sql",
                     "sql/%s/060119-update-2.0.0.sql"

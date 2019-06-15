@@ -31,19 +31,11 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
-import java.security.CodeSource;
 
 /**
  * Created by NeumimTo on 31.1.2015.
  */
 public class FileUtils {
-
-
-    public static String getJarContainingFolder(Class<?> aclass) throws Exception {
-        CodeSource codeSource = aclass.getProtectionDomain().getCodeSource();
-        String str = codeSource.getLocation().toURI().toString().split("!")[0].substring(10);
-        return str;
-    }
 
     public static URL getPluginUrl() {
         URL clsUrl = NtRpgPlugin.class.getResource(NtRpgPlugin.class.getSimpleName() + ".class");

@@ -4,12 +4,10 @@ import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.*;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.events.skill.SkillHealEvent;
 import cz.neumimto.rpg.common.entity.configuration.MobsConfig;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.sponge.entities.configuration.SpongeMobSettingsDao;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
@@ -41,7 +39,7 @@ public class SpongeEntityService implements EntityService<Living> {
     private PropertyService spongePropertyService;
 
     @Inject
-    private ICharacterService<IActiveCharacter> characterService;
+    private SpongeCharacterServise characterService;
 
     @Inject
     private EffectService effectService;
