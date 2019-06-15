@@ -76,13 +76,13 @@ public class JPACharacterBase extends JPATimestampEntity implements CharacterBas
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastReset;
 
-    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "characterBase")
+    @OneToMany(targetEntity = JPACharacterSkill.class, fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "characterBase")
     private Set<CharacterSkill> characterSkills = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "characterBase")
+    @OneToMany(targetEntity = JPACharacterClass.class, fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "characterBase")
     private Set<CharacterClass> characterClasses = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "characterBase")
+    @OneToMany(targetEntity = JPABaseCharacterAttribute.class, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "characterBase")
     @Access(AccessType.FIELD)
     private Set<BaseCharacterAttribute> baseCharacterAttribute = new HashSet<>();
 

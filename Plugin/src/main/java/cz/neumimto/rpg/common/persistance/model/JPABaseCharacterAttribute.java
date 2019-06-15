@@ -18,7 +18,7 @@ public class JPABaseCharacterAttribute extends JPATimestampEntity implements Bas
     @Column(name = "attribute_id")
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = JPACharacterBase.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "character_id", nullable = false)
     private CharacterBase characterBase;
 

@@ -18,7 +18,7 @@ public class JPACharacterClass extends JPATimestampEntity implements CharacterCl
     @Column(name = "class_id")
     private Long classId;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = JPACharacterBase.class)
     @JoinColumn(name = "character_id")
     private CharacterBase characterBase;
 

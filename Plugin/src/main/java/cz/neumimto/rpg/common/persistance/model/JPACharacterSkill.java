@@ -19,14 +19,14 @@ public class JPACharacterSkill extends JPATimestampEntity implements CharacterSk
     @Column(name = "skill_id")
     private Long skillId;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = JPACharacterBase.class)
     @JoinColumn(name = "character_id")
     private CharacterBase characterBase;
 
     private int level;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "class_id", nullable = true)
+    @ManyToOne(targetEntity = JPACharacterClass.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "class_id")
     private CharacterClass fromClass;
 
     @Column(name = "catalog_id")
