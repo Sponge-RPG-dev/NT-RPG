@@ -425,7 +425,7 @@ public class NtRpgPlugin extends Rpg {
         }
         GlobalScope.itemService.loadItemGroups(Paths.get(NtRpgPlugin.workingDir));
         GlobalScope.inventorySerivce.loadItemGroups(Paths.get(NtRpgPlugin.workingDir));
-
+        GlobalScope.eventFactory.registerEventProviders();
         GlobalScope.experienceService.load();
         GlobalScope.skillService.load();
         GlobalScope.spongePropertyService.init(Paths.get(NtRpgPlugin.workingDir + "/Attributes.conf"), Paths.get(NtRpgPlugin.workingDir + File.separator + "properties_dump.info"));
@@ -439,6 +439,7 @@ public class NtRpgPlugin extends Rpg {
         GlobalScope.effectService.startEffectScheduler();
         GlobalScope.particleDecorator.initModels();
         GlobalScope.damageService.createDamageToColorMapping();
+
     }
 
 }

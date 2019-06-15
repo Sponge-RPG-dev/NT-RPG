@@ -56,7 +56,7 @@ public class PlayerDao extends GenericDao<CharacterBase> {
      */
     public List<CharacterBase> getPlayersCharacters(UUID uuid) {
         Session session = getFactory().openSession();
-        Query query = session.createQuery("SELECT a FROM CharacterBase a WHERE a.uuid=:id AND a.markedForRemoval = null  ORDER BY a.updated DESC");
+        Query query = session.createQuery("SELECT a FROM JPACharacterBase a WHERE a.uuid=:id AND a.markedForRemoval = null  ORDER BY a.updated DESC");
         query.setParameter("id", uuid);
         List list = query.list();
         session.close();
@@ -94,7 +94,7 @@ public class PlayerDao extends GenericDao<CharacterBase> {
     public CharacterBase getCharacter(UUID player, String name) {
         Session s = getFactory().openSession();
         s.beginTransaction();
-        Query query = s.createQuery("SELECT a FROM CharacterBase a WHERE a.uuid=:uuid and a.name=:name AND a.markedForRemoval = null");
+        Query query = s.createQuery("SELECT a FROM JPACharacterBase a WHERE a.uuid=:uuid and a.name=:name AND a.markedForRemoval = null");
         query.setParameter("uuid", player);
         query.setParameter("name", name);
         List<CharacterBase> list = query.list();
@@ -108,7 +108,7 @@ public class PlayerDao extends GenericDao<CharacterBase> {
     public int getCharacterCount(UUID uuid) {
         Session s = getFactory().openSession();
         s.beginTransaction();
-        Query query = s.createQuery("SELECT COUNT(c.id) FROM CharacterBase c WHERE c.uuid=:id AND a.markedForRemoval = null");
+        Query query = s.createQuery("SELECT COUNT(c.id) FROM JPACharacterBase c WHERE c.uuid=:id AND a.markedForRemoval = null");
         query.setParameter("id", uuid);
         int i = query.getFirstResult();
         s.close();
@@ -124,7 +124,7 @@ public class PlayerDao extends GenericDao<CharacterBase> {
         Transaction transaction = session.beginTransaction();
         int i = -1;
         try {
-            Query query = session.createQuery("DELETE FROM CharacterBase where uuid=:uuid");
+            Query query = session.createQuery("DELETE FROM JPACharacterBase where uuid=:uuid");
             query.setParameter("uuid", uniqueId);
             i = query.executeUpdate();
             transaction.commit();
@@ -147,7 +147,7 @@ public class PlayerDao extends GenericDao<CharacterBase> {
     }
 
     public int markCharacterForRemoval(UUID player, String charName) {
-        String hql = "update CharacterBase b set b.markedForRemoval=:t where uuid= :uid AND lower(name)= :name";
+        String hql = "update JPACharacterBase b set b.markedForRemoval=:t where uuid= :uid AND lower(name)= :name";
         Session session = getFactory().openSession();
         Query query = session.createQuery(hql);
         Transaction transaction = session.beginTransaction();

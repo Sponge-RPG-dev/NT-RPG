@@ -15,9 +15,14 @@ import cz.neumimto.rpg.sponge.events.skill.SpongeSkillPostUsageEvent;
 import cz.neumimto.rpg.sponge.events.skill.SpongeSkillPreUsageEvent;
 import cz.neumimto.rpg.sponge.events.skill.SpongeSkillTargetAttemptEvent;
 
+import javax.inject.Singleton;
+
+@Singleton
 public class SpongeEventFactory extends EventFactoryImpl {
+
     @Override
     public void registerEventProviders() {
+        //by iface
         super.registerProvider(CharacterAttributeChange.class, SpongeCharacterAttributeChange::new);
         super.registerProvider(CharacterChangeGroupEvent.class, SpongeCharacterChangeGroupEvent::new);
         super.registerProvider(CharacterGainedLevelEvent.class, SpongeCharacterGainedLevelEvent::new);
@@ -44,5 +49,32 @@ public class SpongeEventFactory extends EventFactoryImpl {
         super.registerProvider(SkillPostUsageEvent.class, SpongeSkillPostUsageEvent::new);
         super.registerProvider(SkillPreUsageEvent.class, SpongeSkillPreUsageEvent::new);
         super.registerProvider(SkillTargetAttemptEvent.class, SpongeSkillTargetAttemptEvent::new);
+        //by impl
+        super.registerProvider(SpongeCharacterAttributeChange.class, SpongeCharacterAttributeChange::new);
+        super.registerProvider(SpongeCharacterChangeGroupEvent.class, SpongeCharacterChangeGroupEvent::new);
+        super.registerProvider(SpongeCharacterGainedLevelEvent.class, SpongeCharacterGainedLevelEvent::new);
+        super.registerProvider(SpongeCharacterInitializedEvent.class, SpongeCharacterInitializedEvent::new);
+        super.registerProvider(SpongeCharacterManaRegainEvent.class, SpongeCharacterManaRegainEvent::new);
+        super.registerProvider(SpongeCharacterSkillLearnAttemptEvent.class, SpongeCharacterSkillLearnAttemptEvent::new);
+        super.registerProvider(SpongeCharacterSkillRefundAttemptEvent.class, SpongeCharacterSkillRefundAttemptEvent::new);
+        super.registerProvider(SpongeCharacterSkillUpgradeEvent.class, SpongeCharacterSkillUpgradeEvent::new);
+        super.registerProvider(SpongeCharacterWeaponUpdateEvent.class, SpongeCharacterWeaponUpdateEvent::new);
+        super.registerProvider(SpongeEventCharacterArmorPostUpdate.class, SpongeEventCharacterArmorPostUpdate::new);
+        super.registerProvider(SpongeDamageIEntityEarlyEvent.class, SpongeDamageIEntityEarlyEvent::new);
+        super.registerProvider(SpongeDamageIEntityLateEvent.class, SpongeDamageIEntityLateEvent::new);
+        super.registerProvider(SpongeEntitySkillDamageEarlyEvent.class, SpongeEntitySkillDamageEarlyEvent::new);
+        super.registerProvider(SpongeEntitySkillDamageLateEvent.class, SpongeEntitySkillDamageLateEvent::new);
+        super.registerProvider(SpongeEntityWeaponDamageEarlyEvent.class, SpongeEntityWeaponDamageEarlyEvent::new);
+        super.registerProvider(SpongeEntityWeaponDamageLateEvent.class, SpongeEntityWeaponDamageLateEvent::new);
+        super.registerProvider(SpongeEffectApplyEvent.class, SpongeEffectApplyEvent::new);
+        super.registerProvider(SpongeEffectRemoveEvent.class, SpongeEffectRemoveEvent::new);
+        super.registerProvider(SpongePartyCreateEvent.class, SpongePartyCreateEvent::new);
+        super.registerProvider(SpongePartyInviteEvent.class, SpongePartyInviteEvent::new);
+        super.registerProvider(SpongePartyJoinEvent.class, SpongePartyJoinEvent::new);
+        super.registerProvider(SpongePartyLeaveEvent.class, SpongePartyLeaveEvent::new);
+        super.registerProvider(SpongeHealEvent.class, SpongeHealEvent::new);
+        super.registerProvider(SpongeSkillPostUsageEvent.class, SpongeSkillPostUsageEvent::new);
+        super.registerProvider(SpongeSkillPreUsageEvent.class, SpongeSkillPreUsageEvent::new);
+        super.registerProvider(SpongeSkillTargetAttemptEvent.class, SpongeSkillTargetAttemptEvent::new);
     }
 }
