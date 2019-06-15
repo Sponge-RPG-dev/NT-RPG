@@ -145,8 +145,12 @@ public class SpongeEffectService extends EffectService {
 
                     List<String> description = iSkill.getDescription();
                     StringBuilder desc = new StringBuilder();
-                    for (String text : description) {
-                        desc.append(text);
+                    if (description == null) {
+                        desc.append("null");
+                    } else {
+                        for (String text : description) {
+                            desc.append(text);
+                        }
                     }
                     s = s.replaceAll("\\{\\{skill\\.description}}", desc.toString());
 

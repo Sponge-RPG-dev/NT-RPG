@@ -298,7 +298,7 @@ public class ResourceLoader extends IResourceLoader {
                 skill.setDescription(localizationService.translateMultiline(key + ".desc"));
                 skill.setLore(localizationService.translateMultiline(key + ".lore"));
             }
-            if (skill.getLocalizableName().isEmpty()) {
+            if (skill.getLocalizableName() == null || skill.getLocalizableName().isEmpty()) {
                 String name = skill.getClass().getSimpleName();
                 name = name.startsWith("Skill") ? name.substring("Skill".length()) : name;
                 skill.setLocalizableName(name);

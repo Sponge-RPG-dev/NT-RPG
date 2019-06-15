@@ -21,18 +21,17 @@ package cz.neumimto.rpg.api.skills.types;
 import cz.neumimto.core.localization.Arg;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.players.ICharacterService;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.ISkillType;
 import cz.neumimto.rpg.api.skills.SkillSettings;
-import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
-import cz.neumimto.rpg.api.utils.annotations.CatalogId;
+import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.api.utils.DebugLevel;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.utils.annotations.CatalogId;
 
 import javax.inject.Inject;
 import java.util.HashSet;
@@ -46,9 +45,6 @@ import java.util.Set;
  */
 @JsBinding(JsBinding.Type.CLASS)
 public abstract class AbstractSkill implements ISkill {
-
-    @Inject
-    protected ICharacterService<IActiveCharacter> characterService;
 
     @Inject
     protected LocalizationService localizationService;

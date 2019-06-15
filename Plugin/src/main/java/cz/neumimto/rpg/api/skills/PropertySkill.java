@@ -2,16 +2,16 @@ package cz.neumimto.rpg.api.skills;
 
 import com.google.inject.Inject;
 import com.typesafe.config.Config;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.types.AbstractSkill;
-import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.utils.Console;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +63,7 @@ public class PropertySkill extends AbstractSkill {
         PropertySkillData skillData = (PropertySkillData) skill.getSkillData();
         for (Wrapper property : skillData.properties) {
             if (fc.apply(property.level, skill.getTotalLevel())) {
-                characterService.changePropertyValue(character, property.propertyId, property.value * i);
+                Rpg.get().getCharacterService().changePropertyValue(character, property.propertyId, property.value * i);
             }
         }
     }

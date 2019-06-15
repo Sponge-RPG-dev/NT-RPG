@@ -3,17 +3,17 @@ package cz.neumimto.skills.active;
 import cz.neumimto.effects.positive.SoulBindEffect;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
-import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
@@ -38,6 +38,9 @@ public class SkillSoulbind extends ActiveSkill<ISpongeCharacter> {
 	@Inject
 	private EffectService effectService;
 
+	@Inject
+	private SpongeCharacterServise characterServise;
+
 	@Override
 	public void init() {
 		super.init();
@@ -51,7 +54,7 @@ public class SkillSoulbind extends ActiveSkill<ISpongeCharacter> {
 		float range = skillContext.getFloatNodeValue(SkillNodes.RANGE);
 		Living targettedEntity = Utils.getTargetedEntity(iActiveCharacter, (int) range);
 		if (targettedEntity != null && targettedEntity.getType() == EntityTypes.PLAYER) {
-			IActiveCharacter character = characterService.getCharacter(targettedEntity.getUniqueId());
+			ISpongeCharacter character = characterServise.getCharacter(targettedEntity.getUniqueId());
 			if (iActiveCharacter.getParty().getPlayers().contains(character)) {
 				SoulBindEffect effect = new SoulBindEffect(iActiveCharacter, character);
 				effect.setDuration(skillContext.getLongNodeValue(SkillNodes.DURATION));
@@ -69,7 +72,7 @@ public class SkillSoulbind extends ActiveSkill<ISpongeCharacter> {
 		}
 		if (event.getTargetEntity().getType() == EntityTypes.PLAYER) {
 			UUID id = event.getTargetEntity().getUniqueId();
-			IActiveCharacter character = characterService.getCharacter(id);
+			ISpongeCharacter character = characterServise.getCharacter(id);
 			IEffectContainer container = character.getEffect(name);
 			if (container == null) {
 				return;

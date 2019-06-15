@@ -113,7 +113,7 @@ public class NtRpgPlugin extends Rpg {
 
     public static final Set<String> INTEGRATIONS = new HashSet<>();
 
-    @Inject
+
     private Injector injector;
 
     //todo remove
@@ -146,11 +146,11 @@ public class NtRpgPlugin extends Rpg {
         }
 
 
-        Injector childInjector = Guice.createInjector(
+        injector = Guice.createInjector(
                 new SpongeGuiceModule(this, logger, game, causeStackManager)
         );
 
-        GlobalScope = childInjector.getInstance(GlobalScope.class);
+        GlobalScope = injector.getInstance(GlobalScope.class);
 
 
         PluginCore.MANAGED_JPA_TYPES.add(JPACharacterBase.class);
