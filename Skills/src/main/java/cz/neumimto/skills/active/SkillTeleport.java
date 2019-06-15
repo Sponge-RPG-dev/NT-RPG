@@ -5,10 +5,10 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
-import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -27,17 +27,17 @@ import java.util.Optional;
  */
 @Singleton
 @ResourceLoader.Skill("ntrpg:teleport")
-public class SkillTeleport extends ActiveSkill {
+public class SkillTeleport extends ActiveSkill<ISpongeCharacter> {
 
 	public void init() {
 		super.init();
 		settings.addNode(SkillNodes.RANGE, 20, 20);
 		addSkillType(SkillType.TELEPORT);
-		setIcon(ItemTypes.END_PORTAL_FRAME);
+		setIcon(ItemTypes.END_PORTAL_FRAME.getId());
 	}
 
 	@Override
-	public void cast(IActiveCharacter character, PlayerSkillContext playerSkillContext, SkillContext skillContext) {
+	public void cast(ISpongeCharacter character, PlayerSkillContext playerSkillContext, SkillContext skillContext) {
 		Player player = character.getPlayer();
 		double doubleNodeValue = skillContext.getDoubleNodeValue(SkillNodes.RANGE);
 

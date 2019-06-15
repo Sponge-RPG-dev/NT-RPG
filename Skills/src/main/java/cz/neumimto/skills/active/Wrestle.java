@@ -2,18 +2,18 @@ package cz.neumimto.skills.active;
 
 import cz.neumimto.effects.negative.StunEffect;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.entity.EntityService;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
-import cz.neumimto.rpg.sponge.entities.entities.EntityService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
-import cz.neumimto.rpg.api.skills.types.ActiveSkill;
-import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
@@ -27,7 +27,7 @@ import javax.inject.Singleton;
  */
 @Singleton
 @ResourceLoader.Skill("ntrpg:wrestle")
-public class Wrestle extends ActiveSkill {
+public class Wrestle extends ActiveSkill<ISpongeCharacter> {
 
 	@Inject
 	private EffectService effectService;
@@ -38,7 +38,7 @@ public class Wrestle extends ActiveSkill {
 	@Override
 	public void init() {
 		super.init();
-		setDamageType(DamageTypes.ATTACK);
+		setDamageType(DamageTypes.ATTACK.getId());
 		settings.addNode(SkillNodes.RADIUS, 3, 0.5f);
 		settings.addNode(SkillNodes.DURATION, 1, 0.1f);
 		settings.addNode(SkillNodes.DAMAGE, 1, 0.5f);
@@ -47,7 +47,7 @@ public class Wrestle extends ActiveSkill {
 	}
 
 	@Override
-	public void cast(IActiveCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+	public void cast(ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
 		int radius = skillContext.getIntNodeValue(SkillNodes.RADIUS);
 		float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
 		long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);

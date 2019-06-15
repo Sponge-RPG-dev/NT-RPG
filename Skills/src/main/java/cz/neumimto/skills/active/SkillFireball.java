@@ -6,12 +6,14 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.sponge.skills.ProjectileProperties;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
-import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
+import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
+import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.skills.ProjectileProperties;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
@@ -20,6 +22,7 @@ import org.spongepowered.api.entity.projectile.Snowball;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.world.World;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import static com.flowpowered.math.TrigMath.cos;
@@ -30,12 +33,15 @@ import static com.flowpowered.math.TrigMath.sin;
  */
 @Singleton
 @ResourceLoader.Skill("ntrpg:fireball")
-public class SkillFireball extends ActiveSkill {
+public class SkillFireball extends ActiveSkill<ISpongeCharacter> {
+
+	@Inject
+	private SpongeDamageService spongeDamageService;
 
 	@Override
 	public void init() {
 		super.init();
-		setDamageType(DamageTypes.FIRE);
+		setDamageType(DamageTypes.FIRE.getId());
 		settings.addNode(SkillNodes.DAMAGE, 10, 10);
 		settings.addNode(SkillNodes.VELOCITY, 1.5f, .5f);
 		addSkillType(SkillType.SUMMON);
@@ -45,7 +51,7 @@ public class SkillFireball extends ActiveSkill {
 	}
 
 	@Override
-	public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+	public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
 		Player p = character.getPlayer();
 		World world = p.getWorld();
 		Entity optional = world.createEntity(EntityTypes.SNOWBALL, p.getLocation().getPosition()
@@ -63,9 +69,9 @@ public class SkillFireball extends ActiveSkill {
 		SkillDamageSourceBuilder build = new SkillDamageSourceBuilder();
 		build.fromSkill(this);
 		build.setSource(character);
-		build.type(getDamageType());
+		build.type(spongeDamageService.damageTypeById(getDamageType()));
 		projectileProperties.onHit((event, caster, target) -> {
-			target.getEntity().damage(projectileProperties.getDamage(), build.build());
+			((ISpongeEntity)target).getEntity().damage(projectileProperties.getDamage(), build.build());
 		});
 		skillContext.next(character, info, skillContext.result(SkillResult.OK));
 	}

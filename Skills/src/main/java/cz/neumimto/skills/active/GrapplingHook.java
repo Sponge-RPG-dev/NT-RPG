@@ -2,15 +2,15 @@ package cz.neumimto.skills.active;
 
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
-import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
@@ -39,7 +39,7 @@ import static com.flowpowered.math.TrigMath.sin;
  */
 @Singleton
 @ResourceLoader.Skill("ntrpg:grapplinghook")
-public class GrapplingHook extends ActiveSkill {
+public class GrapplingHook extends ActiveSkill<ISpongeCharacter> {
 
 	public static Map<UUID, Long> cache = new LinkedHashMap<UUID, Long>() {
 		@Override
@@ -58,11 +58,11 @@ public class GrapplingHook extends ActiveSkill {
 		addSkillType(SkillType.PROJECTILE);
 		addSkillType(SkillType.SUMMON);
 		addSkillType(SkillType.STEALTH);
-		setIcon(ItemTypes.LEAD);
+		setIcon(ItemTypes.LEAD.getId());
 	}
 
 	@Override
-	public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+	public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
 		Player p = character.getPlayer();
 		World world = p.getWorld();
 		Entity optional = world.createEntity(EntityTypes.TIPPED_ARROW, p.getLocation().getPosition()

@@ -2,14 +2,14 @@ package cz.neumimto.skills.active;
 
 import cz.neumimto.Decorator;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.sponge.entities.entities.EntityService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
-import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import org.spongepowered.api.item.ItemTypes;
 
 import javax.inject.Inject;
@@ -20,7 +20,7 @@ import javax.inject.Singleton;
  */
 @Singleton
 @ResourceLoader.Skill("ntrpg:groupheal")
-public class GroupHeal extends ActiveSkill {
+public class GroupHeal extends ActiveSkill<ISpongeCharacter> {
 
 	@Inject
 	private EntityService entityService;
@@ -31,15 +31,15 @@ public class GroupHeal extends ActiveSkill {
 		settings.addNode(SkillNodes.HEALED_AMOUNT, 10, 10);
 		addSkillType(SkillType.HEALING);
 		addSkillType(SkillType.AOE);
-		setIcon(ItemTypes.PAPER);
+		setIcon(ItemTypes.PAPER.getId());
 	}
 
 	@Override
-	public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+	public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
 		float amnt = skillContext.getFloatNodeValue(SkillNodes.HEALED_AMOUNT);
 		if (character.hasParty()) {
 			double rad = Math.pow(skillContext.getDoubleNodeValue(SkillNodes.RADIUS), 2);
-			for (IActiveCharacter a : character.getParty().getPlayers()) {
+			for (ISpongeCharacter a : character.getParty().getPlayers()) {
 				if (a.getLocation().getPosition().distanceSquared(character.getLocation().getPosition()) <= rad) {
 					entityService.healEntity(a, amnt, this);
 					Decorator.healEffect(a.getLocation());

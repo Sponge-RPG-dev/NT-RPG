@@ -2,16 +2,17 @@ package cz.neumimto.skills.active;
 
 import cz.neumimto.effects.negative.StunEffect;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
-import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.skills.types.Targeted;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
@@ -35,11 +36,11 @@ public class Stun extends Targeted {
 		settings.addNode(SkillNodes.DURATION, 4500, 100);
 		addSkillType(SkillType.PHYSICAL);
 		addSkillType(SkillType.MOVEMENT);
-		setDamageType(DamageTypes.ATTACK);
+		setDamageType(DamageTypes.ATTACK.getId());
 	}
 
 	@Override
-	public void castOn(IEntity target, IActiveCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+	public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
 		long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
 		double damage = skillContext.getDoubleNodeValue(SkillNodes.DAMAGE);
 		StunEffect stunEffect = new StunEffect(target, duration);
@@ -49,7 +50,7 @@ public class Stun extends Targeted {
 					.fromSkill(this)
 					.setSource(source)
 					.build();
-			target.getEntity().damage(damage, s);
+			((ISpongeEntity)target).getEntity().damage(damage, s);
 		}
 		skillContext.next(source, info, skillContext.result(SkillResult.OK));
 	}

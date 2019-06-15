@@ -4,18 +4,18 @@ import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.Decorator;
 import cz.neumimto.effects.negative.Blindness;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.entity.EntityService;
+import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
-import cz.neumimto.rpg.sponge.entities.entities.EntityService;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
-import cz.neumimto.rpg.api.skills.types.ActiveSkill;
-import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleOptions;
@@ -35,7 +35,7 @@ import java.util.Set;
  */
 @Singleton
 @ResourceLoader.Skill("ntrpg:despair")
-public class Despair extends ActiveSkill {
+public class Despair extends ActiveSkill<ISpongeCharacter> {
 
 	@Inject
 	private EntityService entityService;
@@ -46,18 +46,18 @@ public class Despair extends ActiveSkill {
 	@Override
 	public void init() {
 		super.init();
-		setDamageType(DamageTypes.MAGIC);
+		setDamageType(DamageTypes.MAGIC.getId());
 		settings.addNode(SkillNodes.DURATION, 1000L, 500);
 		settings.addNode(SkillNodes.DAMAGE, 10L, 1.5f);
 		settings.addNode(SkillNodes.RADIUS, 7L, 2);
 		addSkillType(SkillType.AOE);
 		addSkillType(SkillType.ESCAPE);
 		addSkillType(SkillType.STEALTH);
-		setIcon(ItemTypes.COAL.getType());
+		setIcon(ItemTypes.COAL.getType().getId());
 	}
 
 	@Override
-	public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+	public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
 		int k = skillContext.getIntNodeValue(SkillNodes.RADIUS);
 		Set<Entity> nearbyEntities = Utils.getNearbyEntities(character.getEntity().getLocation(), k);
 		double damage = skillContext.getDoubleNodeValue(SkillNodes.DAMAGE);

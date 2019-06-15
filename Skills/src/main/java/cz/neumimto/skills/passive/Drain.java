@@ -27,7 +27,7 @@ public class Drain extends PassiveSkill {
 	public Drain() {
 		super(ManaDrainEffect.name);
 		settings.addNode(SkillNodes.AMOUNT, 1, 1);
-		setDamageType(DamageTypes.ATTACK);
+		setDamageType(DamageTypes.ATTACK.getId());
 		addSkillType(SkillType.HEALTH_DRAIN);
 		addSkillType(SkillType.DRAIN);
 	}

@@ -3,15 +3,15 @@ package cz.neumimto.skills.active;
 import cz.neumimto.effects.positive.ShadowRunEffect;
 import cz.neumimto.model.ShadowRunModel;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
-import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import org.spongepowered.api.data.property.block.GroundLuminanceProperty;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -22,7 +22,7 @@ import java.util.Optional;
 
 @Singleton
 @ResourceLoader.Skill("ntrpg:shadowrun")
-public class ShadowRun extends ActiveSkill {
+public class ShadowRun extends ActiveSkill<ISpongeCharacter> {
 
 	@Inject
 	private EffectService effectService;
@@ -41,7 +41,7 @@ public class ShadowRun extends ActiveSkill {
 	}
 
 	@Override
-	public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+	public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
 		Location<World> location = character.getPlayer().getLocation();
 		Optional<GroundLuminanceProperty> property = location.add(0, -1, 0).getBlock().getProperty(GroundLuminanceProperty.class);
 		GroundLuminanceProperty groundLuminanceProperty = property.get();

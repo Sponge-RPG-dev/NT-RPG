@@ -1,15 +1,16 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.entity.EntityService;
+import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
-import cz.neumimto.rpg.sponge.entities.entities.EntityService;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.skills.types.Targeted;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
@@ -33,11 +34,11 @@ public class Empathy extends Targeted {
 		super.init();
 		settings.addNode(SkillNodes.MULTIPLIER, 5, 10);
 		settings.addNode("max-damage", 100, 10);
-		setDamageType(DamageTypes.MAGIC);
+		setDamageType(DamageTypes.MAGIC.getId());
 	}
 
 	@Override
-	public void castOn(IEntity target, IActiveCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+	public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
 		Player entity = source.getEntity();
 		Double max = entity.get(Keys.MAX_HEALTH).get();
 		Double a = entity.get(Keys.HEALTH).get();
@@ -51,7 +52,7 @@ public class Empathy extends Targeted {
 				.fromSkill(this)
 				.setSource(source)
 				.build();
-		target.getEntity().damage(a, build);
+		((ISpongeEntity)target).getEntity().damage(a, build);
 		skillContext.next(source, info, SkillResult.OK);
 	}
 }

@@ -6,10 +6,10 @@ import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
-import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import org.spongepowered.api.data.key.Keys;
 
 import javax.inject.Singleton;
@@ -19,7 +19,7 @@ import javax.inject.Singleton;
  */
 @Singleton
 @ResourceLoader.Skill("ntrpg:jump")
-public class SkillJump extends ActiveSkill {
+public class SkillJump extends ActiveSkill<ISpongeCharacter> {
 
 	public void init() {
 		super.init();
@@ -32,7 +32,7 @@ public class SkillJump extends ActiveSkill {
 
 
 	@Override
-	public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+	public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
 		Vector3d rotation = character.getEntity().getRotation();
 		Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();
 		Vector3d mul = new Vector3d(0, 1, 0).mul(skillContext.getFloatNodeValue(SkillNodes.VELOCITY));

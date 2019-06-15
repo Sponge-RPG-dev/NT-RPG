@@ -3,15 +3,15 @@ package cz.neumimto.skills.active;
 import cz.neumimto.effects.negative.MultiboltEffect;
 import cz.neumimto.model.MultiboltModel;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
-import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
 import cz.neumimto.rpg.sponge.skills.types.Targeted;
 
@@ -32,7 +32,7 @@ public class Multibolt extends Targeted {
 	@Override
 	public void init() {
 		super.init();
-		setDamageType(NDamageType.LIGHTNING);
+		setDamageType(NDamageType.LIGHTNING.getId());
 		settings.addNode(SkillNodes.DAMAGE, 10, 20);
 		settings.addNode("times-hit", 10, 20);
 		addSkillType(SkillType.ELEMENTAL);
@@ -40,7 +40,7 @@ public class Multibolt extends Targeted {
 	}
 
 	@Override
-	public void castOn(IEntity target, IActiveCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+	public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
 		float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
 		int timesToHit = skillContext.getIntNodeValue("times-hit");
 		MultiboltModel model = new MultiboltModel(timesToHit, damage);

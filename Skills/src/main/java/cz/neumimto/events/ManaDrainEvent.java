@@ -1,15 +1,15 @@
 package cz.neumimto.events;
 
 import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.sponge.events.AbstractCancellableNEvent;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.sponge.events.CancellableNEvent;
 
 /**
  * Created by NeumimTo on 7.7.2017.
  */
 @JsBinding(JsBinding.Type.CLASS)
-public class ManaDrainEvent extends AbstractCancellableNEvent {
+public class ManaDrainEvent extends CancellableNEvent {
 
 	private final IEntity source;
 	private final IActiveCharacter target;

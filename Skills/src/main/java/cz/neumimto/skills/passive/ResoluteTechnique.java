@@ -24,7 +24,7 @@ public class ResoluteTechnique extends PassiveSkill {
 
 	public ResoluteTechnique() {
 		super(ResoluteTechniqueEffect.name);
-		setDamageType(DamageTypes.ATTACK);
+		setDamageType(DamageTypes.ATTACK.getId());
 		addSkillType(SkillType.PHYSICAL);
 	}
 

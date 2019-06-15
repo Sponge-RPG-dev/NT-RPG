@@ -12,6 +12,8 @@ import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
@@ -29,7 +31,7 @@ import java.util.UUID;
 @Singleton
 @ResourceLoader.Skill("ntrpg:soulbind")
 @IResourceLoader.ListenerClass
-public class SkillSoulbind extends ActiveSkill {
+public class SkillSoulbind extends ActiveSkill<ISpongeCharacter> {
 
 	public static final String name = "Soulbind";
 
@@ -45,7 +47,7 @@ public class SkillSoulbind extends ActiveSkill {
 	}
 
 	@Override
-	public void cast(IActiveCharacter iActiveCharacter, PlayerSkillContext playerSkillContext, SkillContext skillContext) {
+	public void cast(ISpongeCharacter iActiveCharacter, PlayerSkillContext playerSkillContext, SkillContext skillContext) {
 		float range = skillContext.getFloatNodeValue(SkillNodes.RANGE);
 		Living targettedEntity = Utils.getTargetedEntity(iActiveCharacter, (int) range);
 		if (targettedEntity != null && targettedEntity.getType() == EntityTypes.PLAYER) {
@@ -78,9 +80,9 @@ public class SkillSoulbind extends ActiveSkill {
 				SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
 
 				if (effect.getConsumer() == character) {
-					effect.getTarget().getEntity().damage(event.getBaseDamage(), builder.build());
+					((ISpongeEntity)effect.getTarget()).getEntity().damage(event.getBaseDamage(), builder.build());
 				} else {
-					effect.getConsumer().getEntity().damage(event.getBaseDamage(), builder.build());
+					((ISpongeEntity)effect.getTarget()).getEntity().damage(event.getBaseDamage(), builder.build());
 				}
 			}
 		}

@@ -2,13 +2,13 @@ package cz.neumimto.skills.active;
 
 import cz.neumimto.effects.negative.WebEffect;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
-import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.skills.types.Targeted;
 import org.spongepowered.api.item.ItemTypes;
 
@@ -29,11 +29,11 @@ public class Web extends Targeted {
 	public void init() {
 		super.init();
 		settings.addNode(SkillNodes.DURATION, 5000, 100);
-		setIcon(ItemTypes.WEB);
+		setIcon(ItemTypes.WEB.getId());
 	}
 
 	@Override
-	public void castOn(IEntity target, IActiveCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+	public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
 		long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
 		WebEffect eff = new WebEffect(target, duration);
 		effectService.addEffect(eff, this);

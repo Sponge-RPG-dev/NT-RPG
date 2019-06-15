@@ -1,14 +1,14 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.sponge.entities.entities.EntityService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
-import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
@@ -29,7 +29,7 @@ import java.util.UUID;
  */
 @Singleton
 @ResourceLoader.Skill("ntrpg:droptnt")
-public class DropTNT extends ActiveSkill {
+public class DropTNT extends ActiveSkill<ISpongeCharacter> {
 
     public static Map<UUID, Float> DROPPED_TNTS = new HashMap<>();
 
@@ -43,11 +43,11 @@ public class DropTNT extends ActiveSkill {
         settings.addNode("explosion-radius", 3 ,0.1f);
         addSkillType(SkillType.PHYSICAL);
         addSkillType(SkillType.SUMMON);
-        setIcon(ItemTypes.TNT);
+        setIcon(ItemTypes.TNT.getId());
     }
 
     @Override
-    public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
         Player player = character.getPlayer();
         Location<World> location = player.getLocation();
         World extent = location.getExtent();

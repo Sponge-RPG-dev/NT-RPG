@@ -29,7 +29,7 @@ public class Critical extends PassiveSkill {
 		super(CriticalEffect.name);
 		settings.addNode(SkillNodes.CHANCE, 10, 20);
 		settings.addNode(SkillNodes.MULTIPLIER, 10, 20);
-		setDamageType(DamageTypes.ATTACK);
+		setDamageType(DamageTypes.ATTACK.getId());
 		addSkillType(SkillType.PHYSICAL);
 	}
 

@@ -3,13 +3,13 @@ package cz.neumimto.skills.passive;
 import cz.neumimto.effects.positive.Bash;
 import cz.neumimto.model.BashModel;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.entity.EntityService;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
-import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.sponge.entities.entities.EntityService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.skills.types.PassiveSkill;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.api.skills.types.PassiveSkill;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
 import javax.inject.Inject;
@@ -34,7 +34,7 @@ public class Basher extends PassiveSkill {
 		settings.addNode(SkillNodes.CHANCE, 0.1f, 0.005f);
 		settings.addNode(SkillNodes.PERIOD, 2500, -100);
 		settings.addNode(SkillNodes.DURATION, 1000, 50f);
-		setDamageType(DamageTypes.ATTACK);
+		setDamageType(DamageTypes.ATTACK.getId());
 		addSkillType(SkillType.PHYSICAL);
 	}
 

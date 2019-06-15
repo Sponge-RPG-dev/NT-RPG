@@ -2,15 +2,15 @@ package cz.neumimto.skills.active;
 
 import cz.neumimto.effects.positive.AllSkillsBonus;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.entity.EntityService;
+import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
-import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.sponge.entities.entities.EntityService;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.skills.types.Targeted;
 import org.spongepowered.api.item.ItemTypes;
 
@@ -36,11 +36,11 @@ public class Dementia extends Targeted {
 		settings.addNode(SkillNodes.DURATION, 30000, 1500);
 		settings.addNode("skill-level", 1, 2);
 		addSkillType(SkillType.DISEASE);
-		setIcon(ItemTypes.ROTTEN_FLESH);
+		setIcon(ItemTypes.ROTTEN_FLESH.getId());
 	}
 
 	@Override
-	public void castOn(IEntity target, IActiveCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+	public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
 		long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
 		int skillLevel = skillContext.getIntNodeValue("skill-level");
 		AllSkillsBonus bonus = new AllSkillsBonus(target, duration, -1 * skillLevel);
