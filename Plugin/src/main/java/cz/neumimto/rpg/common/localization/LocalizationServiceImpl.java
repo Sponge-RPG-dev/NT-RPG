@@ -58,11 +58,6 @@ public class LocalizationServiceImpl implements LocalizationService {
     }
 
     @Override
-    public void loadTranslations(Class<?> clazz) {
-
-    }
-
-    @Override
     public void loadResourceBundle(String resourceBundle, Locale locale, URLClassLoader localizationsClassLoader) {
         ResourceBundle translations = ResourceBundle.getBundle(resourceBundle, locale, localizationsClassLoader);
         Enumeration<String> keys = translations.getKeys();

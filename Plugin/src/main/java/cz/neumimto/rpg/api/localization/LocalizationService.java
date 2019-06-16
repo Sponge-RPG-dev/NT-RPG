@@ -18,7 +18,5 @@ public interface LocalizationService {
 
     List<String> translateMultiline(String s);
 
-    void loadTranslations(Class<?> clazz);
-
     void loadResourceBundle(String resourceBundle, Locale locale, URLClassLoader localizationsClassLoader);
 }

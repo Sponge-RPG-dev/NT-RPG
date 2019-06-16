@@ -1,12 +1,16 @@
 package cz.neumimto;
 
-import cz.neumimto.core.localization.Localization;
+
+import cz.neumimto.rpg.api.localization.Localization;
 
 /**
  * Created by NeumimTo on 23.12.2015.
  */
 
-@Localization("localizations/ntrpg_skills_localization.properties")
+@Localization({
+		"localizations/ntrpg_skills_cs.properties",
+		"localizations/ntrpg_skills_en.properties"
+})
 public class SkillLocalization {
 
 	public static String TELEPORTATION_SCROLL = "skill.teleportation-scroll.label";

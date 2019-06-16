@@ -23,27 +23,28 @@ import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.configuration.ConfigurationContainer;
 import cz.neumimto.core.PluginCore;
 import cz.neumimto.core.Repository;
-import cz.neumimto.core.localization.ResourceBundle;
-import cz.neumimto.core.localization.ResourceBundles;
 import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
+import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
+import cz.neumimto.rpg.api.effects.model.EffectModelMapper;
+import cz.neumimto.rpg.api.localization.Localization;
 import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.properties.PropertyContainer;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.ISkillService;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
-import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.api.skills.scripting.JsBinding;
-import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
-import cz.neumimto.rpg.api.effects.model.EffectModelMapper;
-import cz.neumimto.rpg.common.utils.ResourceClassLoader;
-import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import cz.neumimto.rpg.common.scripting.JSLoader;
+import cz.neumimto.rpg.common.utils.ResourceClassLoader;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.commands.CommandBase;
 import cz.neumimto.rpg.sponge.commands.CommandService;
+import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import org.apache.commons.io.FileUtils;
 import org.spongepowered.api.Game;
 
@@ -53,15 +54,16 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 import static cz.neumimto.rpg.api.logging.Log.error;
 import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 27.12.2014.
@@ -316,14 +318,25 @@ public class ResourceLoader extends IResourceLoader {
         if (clazz.isAnnotationPresent(JsBinding.class)) {
             jsLoader.getDataToBind().put(clazz, clazz.getAnnotation(JsBinding.class).value());
         }
-        if (clazz.isAnnotationPresent(ResourceBundles.class)) {
-            ResourceBundles annotation = clazz.getAnnotation(ResourceBundles.class);
-            File localizations = new File(NtRpgPlugin.workingDir + "/localizations");
+        if (clazz.isAnnotationPresent(Localization.class)) {
+            Localization annotation = clazz.getAnnotation(Localization.class);
+            File localizations = new File(Rpg.get().getWorkingDirectory() + "/localizations");
             if (!localizations.exists()) {
                 localizations.mkdir();
             }
-            for (ResourceBundle resourceBundle : annotation.value()) {
-                resourceBundles.add(resourceBundle.value());
+
+            for (String localizationFile : annotation.value()) {
+                try (InputStream resourceAsStream = clazz.getClassLoader().getResourceAsStream(localizationFile)){
+                    byte[] buffer = new byte[resourceAsStream.available()];
+                    resourceAsStream.read(buffer);
+                    String[] split = localizationFile.split("/");
+                    File targetFile = new File(localizations, split[split.length - 1]);
+                    OutputStream outStream = new FileOutputStream(targetFile);
+                    outStream.write(buffer);
+                    outStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
         if (IGlobalEffect.class.isAssignableFrom(clazz)) {
@@ -351,8 +364,24 @@ public class ResourceLoader extends IResourceLoader {
     }
 
     public void reloadLocalizations(Locale locale) {
-        for (String resourceBundle : resourceBundles) {
-            localizationService.loadResourceBundle(resourceBundle, locale, localizationsClassLoader);
+        File localizations = new File(Rpg.get().getWorkingDirectory() + "/localizations");
+        String language = locale.getLanguage();
+        File[] files = localizations.listFiles();
+        for (File file : files) {
+            if (file.getName().endsWith(language+".properties")) {
+                try (FileInputStream input = new FileInputStream(file)){
+                    Properties properties = new Properties();
+                    properties.load(new InputStreamReader(input, Charset.forName("UTF-8")));
+                    for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+                        if (entry.getValue() != null && !((String)entry.getValue()).isEmpty()) {
+                            localizationService.addTranslationKey(entry.getKey().toString(), entry.getValue().toString());
+                        }
+                    }
+
+                } catch (IOException e) {
+                    Log.error("Could not read localization file " + file.getName(), e);
+                }
+            }
         }
     }
 
