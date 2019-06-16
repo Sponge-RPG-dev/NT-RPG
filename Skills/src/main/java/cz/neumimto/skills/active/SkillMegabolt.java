@@ -29,7 +29,7 @@ public class SkillMegabolt extends ActiveSkill<ISpongeCharacter> {
 	@Override
 	public void init() {
 		super.init();
-		setDamageType(NDamageType.LIGHTNING.toString());
+		setDamageType(NDamageType.LIGHTNING.getId());
 		settings.addNode(SkillNodes.DAMAGE, 10, 10);
 		settings.addNode(SkillNodes.RADIUS, 30, 5);
 		addSkillType(SkillType.AOE);
