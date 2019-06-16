@@ -165,7 +165,6 @@ public class PluginConfig {
     @Setting
     public String ITEM_LORE_RARITY_COLOR = "DARK_GRAY";
 
-
     @Setting
     public String ITEM_LORE_GROUP_MIN_LEVEL_COLOR = "DARK_PURPLE";
 

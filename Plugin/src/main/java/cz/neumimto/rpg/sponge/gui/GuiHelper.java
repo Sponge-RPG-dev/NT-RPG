@@ -110,7 +110,7 @@ public class GuiHelper {
 
     public static Inventory createMenuInventoryClassDefView(ClassDefinition w) {
         Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST)
-                .property(InventoryTitle.of(Text.of(w.getName(), w.getPreferedColor(), TextStyles.BOLD)))
+                .property(InventoryTitle.of(Text.of(w.getName(), toTextColor(w.getPreferedColor()), TextStyles.BOLD)))
                 .build(plugin);
         String dyeColor = NtRpgPlugin.pluginConfig.CLASS_TYPES.get(w.getClassType()).getDyeColor();
         makeBorder(i, toDyeColor(dyeColor));
@@ -168,7 +168,10 @@ public class GuiHelper {
     public static ItemStack createClassTypeDefinitionCommand(String type) {
         ItemStack i = itemStack(ItemTypes.CRAFTING_TABLE);
         i.offer(new MenuInventoryData(true));
-        i.offer(Keys.DISPLAY_NAME, Text.of(NtRpgPlugin.pluginConfig.CLASS_TYPES.get(type).getPrimaryColor(), type));
+        i.offer(Keys.DISPLAY_NAME,
+                Text.builder(type)
+                        .color(toTextColor(Rpg.get().getPluginConfig().CLASS_TYPES.get(type).getPrimaryColor()))
+                        .build());
         i.offer(new InventoryCommandItemMenuData("classes " + type));
         return i;
     }
@@ -235,12 +238,14 @@ public class GuiHelper {
     public static ItemStack back(String command, Text displayName) {
         ItemStack of = itemStack(ItemTypes.PAPER);
         of.offer(Keys.DISPLAY_NAME, displayName);
+        of.offer(new MenuInventoryData(true));
         of.offer(new InventoryCommandItemMenuData(command));
         return of;
     }
 
     public static ItemStack back(ClassDefinition g) {
         ItemStack of = itemStack(ItemTypes.PAPER);
+        of.offer(new MenuInventoryData(true));
         of.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.BACK));
         of.offer(new InventoryCommandItemMenuData("class " + g.getName()));
         return of;
