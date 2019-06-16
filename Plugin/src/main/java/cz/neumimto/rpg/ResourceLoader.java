@@ -366,9 +366,11 @@ public class ResourceLoader extends IResourceLoader {
     public void reloadLocalizations(Locale locale) {
         File localizations = new File(Rpg.get().getWorkingDirectory() + "/localizations");
         String language = locale.getLanguage();
+        Log.info("Loading localization from language " + language);
         File[] files = localizations.listFiles();
         for (File file : files) {
             if (file.getName().endsWith(language+".properties")) {
+                Log.info("Loading localization from file " + file.getName());
                 try (FileInputStream input = new FileInputStream(file)){
                     Properties properties = new Properties();
                     properties.load(new InputStreamReader(input, Charset.forName("UTF-8")));
