@@ -173,7 +173,7 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
 							varModel = parameters.get(1);
 						}
 					} else {
-						if (parameters.get(2).toString().startsWith("Void")) {
+						if (parameters.get(2).toString().equalsIgnoreCase("Void")) {
 							_template = _template.replaceAll("%init%", init3_void);
 						} else {
 							_template = _template.replaceAll("%init%", init3);
@@ -187,8 +187,8 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
 							}
 						}
 					}
-					TypeMirror mirror = varModel.asType();
-					if (varModel.asType() instanceof DeclaredType) {
+					if (varModel != null && varModel.asType() instanceof DeclaredType) {
+						TypeMirror mirror = varModel.asType();
 						if (!javaTypes.containsKey(mirror.toString())) {
 							DeclaredType declaredType = (DeclaredType) varModel.asType();
 							TypeElement fieldTypeElement = (TypeElement) declaredType.asElement();
@@ -208,9 +208,7 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
 							generateModelMapper(modelSimpleName, modelMapperFor, elements, element);
 						}
 					}
-
 					generateGlobalEffect(_template, (TypeElement) element, fieldName, model);
-
 				}
 			}
 

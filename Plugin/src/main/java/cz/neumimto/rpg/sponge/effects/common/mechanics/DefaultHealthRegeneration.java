@@ -4,7 +4,6 @@ import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
-import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -18,7 +17,7 @@ public class DefaultHealthRegeneration extends SpongeEffectBase implements IEffe
 
     public static final String name = "DefaultHealthRegen";
 
-    public DefaultHealthRegeneration(IEffectConsumer character, long duration) {
+    public DefaultHealthRegeneration(IEffectConsumer character) {
         super(name, character);
     }
 

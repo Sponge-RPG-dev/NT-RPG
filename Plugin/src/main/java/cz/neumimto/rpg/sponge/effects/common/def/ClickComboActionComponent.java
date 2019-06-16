@@ -27,7 +27,7 @@ public class ClickComboActionComponent extends SpongeEffectBase implements IEffe
 
     public static final String name = "ClickCombos";
 
-    StringBuilder combination;
+    private StringBuilder combination;
 
     private long k = 0;
 
@@ -42,11 +42,11 @@ public class ClickComboActionComponent extends SpongeEffectBase implements IEffe
     private static long MIN_DELAY = 125L;
 
     @Generate.Constructor
-    public ClickComboActionComponent(IEffectConsumer t, long duration) {
+    public ClickComboActionComponent(IEffectConsumer t) {
         this((ISpongeCharacter) t);
     }
 
-    public ClickComboActionComponent(ISpongeCharacter t) {
+    private ClickComboActionComponent(ISpongeCharacter t) {
         super(name, t);
         character = t;
         setPeriod(pluginConfig.CLICK_COMBO_MAX_INVERVAL_BETWEEN_ACTIONS);
