@@ -119,6 +119,9 @@ public class SpongeEffectService extends EffectService {
                         if (EffectModelFactory.typeMappers.containsKey(modelType)) {
                             s = s.replaceAll("\\{\\{effect\\.parameter}}", modelType.getSimpleName());
                             s = s.replaceAll("\\{\\{effect\\.parameters}}", "");
+                        } else if (modelType == null) {
+                            s = s.replaceAll("\\{\\{effect\\.parameter}}", "");
+                            s = s.replaceAll("\\{\\{effect\\.parameters}}", "");
                         } else {
                             Field[] fields = modelType.getFields();
                             s = s.replaceAll("\\{\\{effect\\.parameter}}", "");

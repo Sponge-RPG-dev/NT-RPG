@@ -41,7 +41,7 @@ public class DefaultManaRegeneration extends EffectBase {
     private static final String remove = "You've lost mana regenartion.";
     private IActiveCharacter character;
 
-    public DefaultManaRegeneration(IEffectConsumer character, Void v) {
+    public DefaultManaRegeneration(IEffectConsumer character) {
         super(name, character);
         this.character = (IActiveCharacter) character;
         setPeriod(Rpg.get().getPluginConfig().MANA_REGENERATION_RATE);

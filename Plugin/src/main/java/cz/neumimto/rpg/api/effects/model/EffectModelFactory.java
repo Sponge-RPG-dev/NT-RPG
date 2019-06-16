@@ -67,7 +67,7 @@ public class EffectModelFactory {
             }
         }
         if (c == null) {
-            throw new RuntimeException("No valid constructor for " + effect.getSimpleName());
+            return null;
         }
         Parameter parameter = c.getParameters()[c.getParameters().length - 1];
         return parameter.getType();
