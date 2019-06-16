@@ -20,6 +20,6 @@ public class CommandSkillArgument extends PatternMatchingCommandElement {
 
     @Override
     protected Object getValue(String choice) throws IllegalArgumentException {
-        return Rpg.get().getSkillService().getById(choice);
+        return Rpg.get().getSkillService().getById(choice).orElse(null);
     }
 }

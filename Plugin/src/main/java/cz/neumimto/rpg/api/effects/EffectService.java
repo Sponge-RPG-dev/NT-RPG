@@ -143,7 +143,6 @@ public abstract class EffectService {
      */
     @SuppressWarnings("unchecked")
     public <T extends IEffect> boolean addEffect(T effect, IEffectSourceProvider effectSourceProvider, IEntity entitySource) {
-
         IEffectContainer eff = effect.getConsumer().getEffect(effect.getName());
         if (Rpg.get().getPluginConfig().DEBUG.isDevelop()) {
             IEffectConsumer consumer1 = effect.getConsumer();
@@ -202,7 +201,6 @@ public abstract class EffectService {
     }
 
     protected void removeEffectContainer(IEffectContainer container, IEffect effect, IEffectConsumer consumer) {
-
         if (effect == container) {
             if (!effect.getConsumer().isDetached()) {
                 effect.onRemove(effect);

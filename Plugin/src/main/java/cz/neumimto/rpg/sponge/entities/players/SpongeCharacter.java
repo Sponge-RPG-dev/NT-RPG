@@ -27,7 +27,14 @@ public class SpongeCharacter extends ActiveCharacter<Player, SpongeParty> implem
 
     @Override
     public void sendMessage(int channel, String message) {
-
+        switch (channel){
+            case 0:
+                sendMessage(message);
+                break;
+            case 2:
+                sendNotification(message);
+                break;
+        }
     }
 
     @Override
@@ -37,12 +44,12 @@ public class SpongeCharacter extends ActiveCharacter<Player, SpongeParty> implem
 
     @Override
     public boolean isDetached() {
-        return getPlayer() == null;
+        return getPlayer() != null;
     }
 
     @Override
     public void sendMessage(String message) {
-
+        getPlayer().sendMessage(TextHelper.parse(message));
     }
 
     @Override

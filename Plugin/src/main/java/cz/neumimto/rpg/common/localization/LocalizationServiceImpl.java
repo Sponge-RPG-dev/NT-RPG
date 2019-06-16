@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.inject.Singleton;
 import java.net.URLClassLoader;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Singleton
 public class LocalizationServiceImpl implements LocalizationService {
@@ -24,7 +25,7 @@ public class LocalizationServiceImpl implements LocalizationService {
     public String translate(String key, Arg args) {
         String s = map.get(key);
         if (s == null) {
-            return key;
+            return key + " | " + args.getParams().keySet().stream().collect(Collectors.joining(","));
         }
         Map<String, Object> params = args.getParams();
         return StringUtils.replaceEach(s, params.keySet().stream().toArray(String[]::new), params.values().stream().map(Object::toString).toArray(String[]::new));
@@ -34,7 +35,7 @@ public class LocalizationServiceImpl implements LocalizationService {
     public String translate(String message, String singleKey, String singleArg) {
         String s = map.get(message);
         if (s == null) {
-            return message;
+            return message + " | " + singleKey;
         }
         return StringUtils.replace(s, singleKey, singleArg);
     }
