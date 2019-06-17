@@ -76,5 +76,8 @@ public class SpongeEventFactory extends EventFactoryImpl {
         super.registerProvider(SpongeSkillPostUsageEvent.class, SpongeSkillPostUsageEvent::new);
         super.registerProvider(SpongeSkillPreUsageEvent.class, SpongeSkillPreUsageEvent::new);
         super.registerProvider(SpongeSkillTargetAttemptEvent.class, SpongeSkillTargetAttemptEvent::new);
+        super.registerProvider(SpongeEntityProjectileDamageLateEvent.class, SpongeEntityProjectileDamageLateEvent::new);
+        super.registerProvider(SpongeEntityProjectileDamageEarlyEvent.class, SpongeEntityProjectileDamageEarlyEvent::new);
+
     }
 }

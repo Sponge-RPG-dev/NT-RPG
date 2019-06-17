@@ -204,8 +204,6 @@ public abstract class EffectService {
         if (effect == container) {
             if (!effect.getConsumer().isDetached()) {
                 effect.onRemove(effect);
-            }
-            if (!consumer.isDetached()) {
                 consumer.removeEffect(effect);
             }
         } else if (container.getEffects().contains(effect)) {
