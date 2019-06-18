@@ -25,7 +25,7 @@ dependencies {
 
     compile 'com.scireum:parsii:1.5'
     
-    testCompile 'org.spongepowered:spongeapi:' + project.spongeApiVersion
+    testCompileOnly 'org.spongepowered:spongeapi:' + project.spongeApiVersion
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
     testCompile 'org.junit.jupiter:junit-jupiter-engine:5.4.1'
