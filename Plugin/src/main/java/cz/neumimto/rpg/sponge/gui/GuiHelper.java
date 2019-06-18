@@ -87,6 +87,7 @@ public class GuiHelper {
 
     public static ItemStack itemStack(ItemType type) {
         ItemStack is = ItemStack.of(type, 1);
+        is.offer(new MenuInventoryData(true));
         is.offer(Keys.HIDE_ATTRIBUTES, true);
         is.offer(Keys.HIDE_MISCELLANEOUS, true);
         return is;
@@ -103,7 +104,6 @@ public class GuiHelper {
         } else {
             is = a.toItemStack();
         }
-        is.offer(new MenuInventoryData(true));
         is.offer(Keys.DISPLAY_NAME, Text.of(type));
         return is;
     }

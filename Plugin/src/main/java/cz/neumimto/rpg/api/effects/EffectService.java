@@ -218,6 +218,7 @@ public abstract class EffectService {
         } else {
 
         }
+        effect.setConsumer(null);
     }
 
     /**
@@ -328,7 +329,6 @@ public abstract class EffectService {
             Iterator<IEffect<Object>> iterator2 = next.getEffects().iterator();
             while (iterator2.hasNext()) {
                 IEffect<Object> next1 = iterator2.next();
-                next1.setConsumer(null);
                 pendingRemovals.add(next1);
                 iterator2.remove();
             }
