@@ -19,9 +19,7 @@
 package cz.neumimto.rpg.common.entity.players;
 
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.effects.EffectSourceType;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.effects.IEffectContainer;
+import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.entity.EntityHand;
 import cz.neumimto.rpg.api.entity.IReservable;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -72,7 +70,7 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     private transient float[] secondaryProperties;
 
     private transient boolean invulnerable;
-    private transient boolean silenced = false;
+
     private transient boolean isusingguimod;
 
     private IReservable mana;
@@ -131,11 +129,12 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
 
     @Override
     public boolean isSilenced() {
-        return silenced;
-    }
-
-    public void setSilenced(boolean silenced) {
-        this.silenced = silenced;
+        for (IEffectContainer<Object, IEffect<Object>> container : effects.values()) {
+            for (IEffect effect : container.getEffects()) {
+                if (effect.getEffectTypes().contains(CommonEffectTypes.SILENCE)) return true;
+            }
+        }
+        return false;
     }
 
     @Override
