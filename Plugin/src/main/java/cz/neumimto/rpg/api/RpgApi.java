@@ -10,7 +10,7 @@ import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.LocalizationService;
-import cz.neumimto.rpg.api.skills.ISkillService;
+import cz.neumimto.rpg.api.skills.SkillService;
 
 import java.util.List;
 import java.util.Map;
@@ -38,7 +38,7 @@ public interface RpgApi {
 
     EventFactoryService getEventFactory();
 
-    ISkillService getSkillService();
+    SkillService getSkillService();
 
     LocalizationService getLocalizationService();
 

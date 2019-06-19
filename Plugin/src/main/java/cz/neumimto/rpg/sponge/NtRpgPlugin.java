@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.sponge;
 
+import static cz.neumimto.rpg.api.logging.Log.info;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -30,11 +31,7 @@ import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.rng.PseudoRandomDistribution;
 import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
-import cz.neumimto.rpg.common.persistance.model.JPABaseCharacterAttribute;
-import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
-import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
-import cz.neumimto.rpg.common.persistance.model.JPACharacterSkill;
-import cz.neumimto.rpg.sponge.utils.io.FileUtils;
+import cz.neumimto.rpg.common.persistance.model.*;
 import cz.neumimto.rpg.sponge.configuration.Settings;
 import cz.neumimto.rpg.sponge.inventory.data.*;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.*;
@@ -42,6 +39,7 @@ import cz.neumimto.rpg.sponge.listeners.DebugListener;
 import cz.neumimto.rpg.sponge.persistance.PersistenceHandler;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
 import cz.neumimto.rpg.sponge.utils.Placeholders;
+import cz.neumimto.rpg.sponge.utils.io.FileUtils;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -62,7 +60,6 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.SpongeExecutorService;
 
-import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -71,8 +68,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-
-import static cz.neumimto.rpg.api.logging.Log.info;
+import javax.annotation.Resource;
 
 /**
  * Created by NeumimTo on 29.4.2015.
@@ -327,6 +323,7 @@ public class NtRpgPlugin extends Rpg {
 
     @Listener
     public void postInit7(GameRegistryEvent.Register<DamageType> event) {
+        event.register(NDamageType.FIRE);
         event.register(NDamageType.ICE);
         event.register(NDamageType.LIGHTNING);
         event.register(NDamageType.DAMAGE_CHECK);

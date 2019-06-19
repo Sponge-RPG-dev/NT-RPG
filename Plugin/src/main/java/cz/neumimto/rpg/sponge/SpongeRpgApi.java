@@ -9,7 +9,7 @@ import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.LocalizationService;
-import cz.neumimto.rpg.api.skills.ISkillService;
+import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
@@ -93,7 +93,7 @@ public final class SpongeRpgApi implements RpgApi {
     }
 
     @Override
-    public ISkillService getSkillService() {
+    public SkillService getSkillService() {
         return NtRpgPlugin.GlobalScope.skillService;
     }
 

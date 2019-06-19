@@ -18,6 +18,9 @@
 
 package cz.neumimto.rpg;
 
+import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 import com.google.inject.Injector;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.configuration.ConfigurationContainer;
@@ -30,12 +33,13 @@ import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.api.effects.model.EffectModelMapper;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.localization.Localization;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.properties.PropertyContainer;
 import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.skills.ISkillService;
+import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
@@ -44,12 +48,9 @@ import cz.neumimto.rpg.common.utils.ResourceClassLoader;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.commands.CommandBase;
 import cz.neumimto.rpg.sponge.commands.CommandService;
-import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import org.apache.commons.io.FileUtils;
 import org.spongepowered.api.Game;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -60,10 +61,8 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
-import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.api.logging.Log.info;
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 27.12.2014.
@@ -103,7 +102,7 @@ public class ResourceLoader extends IResourceLoader {
     }
 
     @Inject
-    private ISkillService skillService;
+    private SkillService skillService;
 
     @Inject
     private ClassService classService;
@@ -112,7 +111,7 @@ public class ResourceLoader extends IResourceLoader {
     private EffectService effectService;
 
     @Inject
-    private SpongePropertyService spongePropertyService;
+    private PropertyService propertyService;
 
     @Inject
     private CommandService commandService;
@@ -313,7 +312,7 @@ public class ResourceLoader extends IResourceLoader {
         }
         if (clazz.isAnnotationPresent(PropertyContainer.class)) {
             info("Found Property container class" + clazz.getName(), pluginConfig.DEBUG);
-            spongePropertyService.processContainer(clazz);
+            propertyService.processContainer(clazz);
         }
         if (clazz.isAnnotationPresent(JsBinding.class)) {
             jsLoader.getDataToBind().put(clazz, clazz.getAnnotation(JsBinding.class).value());
@@ -326,7 +325,7 @@ public class ResourceLoader extends IResourceLoader {
             }
 
             for (String localizationFile : annotation.value()) {
-                try (InputStream resourceAsStream = clazz.getClassLoader().getResourceAsStream(localizationFile)){
+                try (InputStream resourceAsStream = clazz.getClassLoader().getResourceAsStream(localizationFile)) {
                     byte[] buffer = new byte[resourceAsStream.available()];
                     resourceAsStream.read(buffer);
                     String[] split = localizationFile.split("/");
@@ -369,13 +368,13 @@ public class ResourceLoader extends IResourceLoader {
         Log.info("Loading localization from language " + language);
         File[] files = localizations.listFiles();
         for (File file : files) {
-            if (file.getName().endsWith(language+".properties")) {
+            if (file.getName().endsWith(language + ".properties")) {
                 Log.info("Loading localization from file " + file.getName());
-                try (FileInputStream input = new FileInputStream(file)){
+                try (FileInputStream input = new FileInputStream(file)) {
                     Properties properties = new Properties();
                     properties.load(new InputStreamReader(input, Charset.forName("UTF-8")));
                     for (Map.Entry<Object, Object> entry : properties.entrySet()) {
-                        if (entry.getValue() != null && !((String)entry.getValue()).isEmpty()) {
+                        if (entry.getValue() != null && !((String) entry.getValue()).isEmpty()) {
                             localizationService.addTranslationKey(entry.getKey().toString(), entry.getValue().toString());
                         }
                     }

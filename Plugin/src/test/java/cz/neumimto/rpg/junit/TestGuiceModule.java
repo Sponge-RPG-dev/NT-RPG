@@ -18,7 +18,7 @@ import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.permissions.PermissionService;
-import cz.neumimto.rpg.api.skills.ISkillService;
+import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.assets.TestAssetService;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
@@ -101,7 +101,7 @@ public class TestGuiceModule extends AbstractModule {
         bind(PermissionService.class).to(TestPermissionService.class);
         bind(EventFactoryService.class).to(TestEventFactory.class);
         bind(LocalizationService.class).to(TestLocalizationService.class);
-        bind(ISkillService.class).to(TestSkillService.class);
+        bind(SkillService.class).to(TestSkillService.class);
         bind(AssetService.class).to(TestAssetService.class);
         bind(new TypeLiteral<ICharacterService<? extends IActiveCharacter>>() {
         }).to(SpongeCharacterServise.class);

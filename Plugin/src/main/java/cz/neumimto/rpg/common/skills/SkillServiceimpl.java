@@ -1,8 +1,12 @@
 package cz.neumimto.rpg.common.skills;
 
+import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.api.logging.Log.warn;
+import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.*;
@@ -17,26 +21,19 @@ import cz.neumimto.rpg.api.skills.types.PassiveScriptSkill;
 import cz.neumimto.rpg.api.skills.types.ScriptSkill;
 import cz.neumimto.rpg.api.utils.annotations.CatalogId;
 import cz.neumimto.rpg.common.configuration.SkillTreeDao;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.scripting.JSLoader;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import javax.inject.Inject;
 import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
+import javax.inject.Inject;
 
-import static cz.neumimto.rpg.api.logging.Log.*;
-
-public abstract class SkillServiceimpl implements ISkillService {
+public abstract class SkillServiceimpl implements SkillService {
 
     @Inject
     private SkillTreeDao skillTreeDao;
@@ -61,8 +58,8 @@ public abstract class SkillServiceimpl implements ISkillService {
     public void load() {
         init();
         skillTrees.putAll(skillTreeDao.getAll());
-        scriptSkillsParents.put("active",ActiveScriptSkill.class);
-        scriptSkillsParents.put("passive",PassiveScriptSkill.class);
+        scriptSkillsParents.put("active", ActiveScriptSkill.class);
+        scriptSkillsParents.put("passive", PassiveScriptSkill.class);
     }
 
     @Override

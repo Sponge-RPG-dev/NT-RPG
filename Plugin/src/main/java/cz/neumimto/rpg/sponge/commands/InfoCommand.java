@@ -20,24 +20,24 @@ package cz.neumimto.rpg.sponge.commands;
 
 import com.google.inject.Singleton;
 import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.classes.ClassService;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.gui.Gui;
-import cz.neumimto.rpg.api.skills.ISkillService;
+import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.api.persistance.model.CharacterClass;
+import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
+import cz.neumimto.rpg.common.inventory.crafting.runewords.RuneWord;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.configuration.CommandLocalization;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
-import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
-import cz.neumimto.rpg.common.inventory.crafting.runewords.RuneWord;
-import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -46,10 +46,10 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 
-import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.inject.Inject;
 
 /**
  * Created by NeumimTo on 23.7.2015.
@@ -65,7 +65,7 @@ public class InfoCommand extends CommandBase {
     private SpongeCharacterServise characterService;
 
     @Inject
-    private ISkillService skillService;
+    private SkillService skillService;
 
     @Inject
     private LocalizationService localizationService;

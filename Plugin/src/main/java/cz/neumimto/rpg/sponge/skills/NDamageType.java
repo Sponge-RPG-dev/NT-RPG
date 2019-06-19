@@ -37,6 +37,23 @@ public class NDamageType {
         }
     };
 
+    public static final DamageType FIRE = new DamageType() {
+        @Override
+        public String getId() {
+            return "ntrpg:fire";
+        }
+
+        @Override
+        public String getName() {
+            return "fire";
+        }
+
+        @Override
+        public String toString() {
+            return "Fire";
+        }
+    };
+
     public static final DamageType LIGHTNING = new DamageType() {
         @Override
         public String getId() {

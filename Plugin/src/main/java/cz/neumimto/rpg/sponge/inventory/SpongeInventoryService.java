@@ -18,6 +18,8 @@
 
 package cz.neumimto.rpg.sponge.inventory;
 
+import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import cz.neumimto.core.localization.TextHelper;
@@ -31,10 +33,7 @@ import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.RpgItemStack;
-import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.skills.ISkillService;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.SkillCost;
+import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.configuration.ItemString;
@@ -74,16 +73,13 @@ import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.text.Text;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.*;
-
-import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 22.7.2015.
@@ -93,7 +89,7 @@ import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 public class SpongeInventoryService extends AbstractInventoryService<ISpongeCharacter> {
 
     @Inject
-    private ISkillService skillService;
+    private SkillService skillService;
 
     @Inject
     private Game game;
@@ -167,6 +163,7 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
     }
 
 
+    @Override
     public void initializeCharacterInventory(ISpongeCharacter character) {
         if (inventoryInteractionHandler.handleInventoryInitializationPre(character)) {
             fillInventory(character);

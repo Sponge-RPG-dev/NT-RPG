@@ -19,11 +19,11 @@
 package cz.neumimto.rpg.sponge.damage;
 
 import com.google.common.collect.Lists;
-import cz.neumimto.rpg.api.items.ClassItem;
-import cz.neumimto.rpg.common.damage.DamageServiceImpl;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.items.ClassItem;
+import cz.neumimto.rpg.common.damage.DamageServiceImpl;
 import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
 import org.spongepowered.api.Sponge;
@@ -36,9 +36,9 @@ import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 
-import javax.inject.Singleton;
 import java.util.*;
 import java.util.stream.Collectors;
+import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 4.8.15.
@@ -79,7 +79,7 @@ public class SpongeDamageService extends DamageServiceImpl<Living> {
         if (source == DamageTypes.MAGIC) {
             return entityService.getEntityProperty(entity, SpongeDefaultProperties.magic_damage_protection_mult);
         }
-        if (source == DamageTypes.FIRE) {
+        if (source == NDamageType.FIRE) {
             return entityService.getEntityProperty(entity, SpongeDefaultProperties.fire_damage_protection_mult);
         }
         if (source == NDamageType.LIGHTNING) {
@@ -98,7 +98,7 @@ public class SpongeDamageService extends DamageServiceImpl<Living> {
         if (source == DamageTypes.MAGIC) {
             return entityService.getEntityProperty(entity, SpongeDefaultProperties.magic_damage_bonus_mult);
         }
-        if (source == DamageTypes.FIRE) {
+        if (source == NDamageType.FIRE) {
             return entityService.getEntityProperty(entity, SpongeDefaultProperties.fire_damage_bonus_mult);
         }
         if (source == NDamageType.LIGHTNING) {

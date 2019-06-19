@@ -18,15 +18,15 @@
 
 package cz.neumimto.rpg.sponge.gui;
 
-import cz.neumimto.rpg.api.skills.ISkillService;
+import cz.neumimto.rpg.api.skills.SkillService;
 import org.spongepowered.api.Game;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 1.9.2015.
@@ -38,7 +38,7 @@ public class GuiService {
     private Game game;
 
     @Inject
-    private ISkillService skillService;
+    private SkillService skillService;
 
     private Map<String, String> skillIconsUrls = new HashMap<>();
 

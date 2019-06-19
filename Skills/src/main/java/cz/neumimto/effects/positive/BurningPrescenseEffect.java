@@ -10,13 +10,13 @@ import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.skills.NDamageType;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
-import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
 
 /**
@@ -57,7 +57,7 @@ public class BurningPrescenseEffect extends EffectBase<BPModel> {
                 ISpongeCharacter character = (ISpongeCharacter) getConsumer();
                 SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
                 builder.setEffect(this);
-                builder.type(DamageTypes.FIRE);
+                builder.type(NDamageType.FIRE);
                 builder.setSource(character);
                 SkillDamageSource sds = builder.build();
                 for (Entity target : entity.getNearbyEntities(radius)) {
@@ -77,7 +77,7 @@ public class BurningPrescenseEffect extends EffectBase<BPModel> {
                 SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
                 builder.setEffect(this);
                 builder.setSource((IEntity) getConsumer());
-                builder.type(DamageTypes.FIRE);
+                builder.type(NDamageType.FIRE);
                 SkillDamageSource sds = builder.build();
                 for (Entity target : entity.getNearbyEntities(radius)) {
                     if (!Utils.isLivingEntity(target)) {

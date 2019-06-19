@@ -17,19 +17,25 @@
  */
 package cz.neumimto.rpg.common.entity.players;
 
-import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.persistance.model.*;
-import cz.neumimto.rpg.api.utils.ActionResult;
+import static cz.neumimto.core.localization.Arg.arg;
+import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.api.logging.Log.warn;
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
+import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
+import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.entity.CommonProperties;
+import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;
+import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.DependencyGraph;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.api.entity.players.leveling.SkillTreeType;
 import cz.neumimto.rpg.api.events.character.*;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.inventory.InventoryService;
@@ -37,37 +43,25 @@ import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.permissions.PermissionService;
-import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.skills.ISkillService;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.SkillDependency;
+import cz.neumimto.rpg.api.persistance.model.*;
+import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
-import cz.neumimto.rpg.api.configuration.PluginConfig;
-import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.api.entity.CommonProperties;
-import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
-import cz.neumimto.rpg.api.entity.players.leveling.SkillTreeType;
+import cz.neumimto.rpg.api.utils.ActionResult;
+import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.common.persistance.dao.CharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.PlayerDao;
-import cz.neumimto.rpg.api.skills.SkillData;
-import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterSkill;
 import cz.neumimto.rpg.common.utils.exceptions.MissingConfigurationException;
-
 import cz.neumimto.rpg.sponge.events.PlayerDataPreloadComplete;
 
-import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-
-import static cz.neumimto.core.localization.Arg.arg;
-import static cz.neumimto.rpg.api.logging.Log.info;
-import static cz.neumimto.rpg.api.logging.Log.warn;
+import javax.inject.Inject;
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -75,7 +69,7 @@ import static cz.neumimto.rpg.api.logging.Log.warn;
 public abstract class CharacterService<T extends IActiveCharacter> implements ICharacterService<T> {
 
     @Inject
-    private ISkillService skillService;
+    private SkillService skillService;
 
     @Inject
     protected PlayerDao playerDao;
@@ -227,7 +221,8 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     public List<CharacterBase> getPlayersCharacters(UUID id) {
         return playerDao.getPlayersCharacters(id);
     }
-    
+
+    @Override
     public void putInSaveQueue(CharacterBase base) {
         CompletableFuture.runAsync(() -> {
             long k = System.currentTimeMillis();
@@ -242,16 +237,17 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
      *
      * @param base
      */
+    @Override
     public void save(CharacterBase base) {
         base.onUpdate();
         playerDao.update(base);
     }
-    
+
+    @Override
     public void createAndUpdate(CharacterBase base) {
         base.onCreate();
         playerDao.createAndUpdate(base);
     }
-
 
 
     /**
@@ -506,7 +502,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
         }
         return toInit;
     }
-    
+
     @Override
     public T createActiveCharacter(UUID player, CharacterBase characterBase) {
         characterBase = playerDao.fetchCharacterBase(characterBase);

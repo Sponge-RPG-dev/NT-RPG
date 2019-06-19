@@ -18,25 +18,25 @@
 
 package cz.neumimto.rpg.common.scripting;
 
+import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.api.logging.Log.info;
 import com.google.inject.Injector;
+import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.skills.SkillService;
+import cz.neumimto.rpg.api.skills.SkillsDefinition;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.skills.ISkillService;
-import cz.neumimto.rpg.api.skills.SkillsDefinition;
-import cz.neumimto.rpg.sponge.utils.io.FileUtils;
-import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.utils.io.FileUtils;
 import net.bytebuddy.dynamic.loading.MultipleParentClassLoader;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.script.*;
+
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -44,9 +44,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.*;
 import java.util.*;
-
-import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.api.logging.Log.info;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.script.*;
 
 /**
  * Created by NeumimTo on 13.3.2015.
@@ -70,7 +70,7 @@ public class JSLoader {
     private ResourceLoader resourceLoader;
 
     @Inject
-    private ISkillService skillService;
+    private SkillService skillService;
 
     @Inject
     private AssetService assetService;

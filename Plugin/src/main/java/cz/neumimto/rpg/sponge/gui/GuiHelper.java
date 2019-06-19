@@ -1,27 +1,23 @@
 package cz.neumimto.rpg.sponge.gui;
 
+import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Block;
+import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Item;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.skills.ISkillService;
-import cz.neumimto.rpg.api.skills.SkillPathData;
-import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.api.skills.SkillData;
-import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
-import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
-import cz.neumimto.rpg.sponge.inventory.data.InventoryCommandItemMenuData;
-import cz.neumimto.rpg.sponge.inventory.data.MenuInventoryData;
-import cz.neumimto.rpg.sponge.inventory.data.NKeys;
-import cz.neumimto.rpg.sponge.inventory.data.SkillTreeInventoryViewControllsData;
-import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.skills.*;
+import cz.neumimto.rpg.api.skills.tree.SkillTree;
+import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.commands.InfoCommand;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.inventory.data.*;
+import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
 import cz.neumimto.rpg.sponge.listeners.SkillTreeInventoryListener;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
 import cz.neumimto.rpg.sponge.utils.Utils;
@@ -51,9 +47,6 @@ import org.spongepowered.api.text.format.TextStyles;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Block;
-import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Item;
-
 /**
  * Created by ja on 29.12.2016.
  */
@@ -81,6 +74,7 @@ public class GuiHelper {
         damageTypeToItemStack.put(DamageTypes.VOID, Block.of(BlockTypes.PORTAL));
         damageTypeToItemStack.put(DamageTypes.MAGIC, Item.of(ItemTypes.ENCHANTED_BOOK));
 
+        damageTypeToItemStack.put(NDamageType.FIRE, Block.of(BlockTypes.FIRE));
         damageTypeToItemStack.put(NDamageType.ICE, Block.of(BlockTypes.ICE));
         damageTypeToItemStack.put(NDamageType.LIGHTNING, Item.of(ItemTypes.NETHER_STAR));
     }
@@ -340,7 +334,7 @@ public class GuiHelper {
             of.offer(new MenuInventoryData(true));
             build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(1, 0))).offer(of);
 
-            ISkillService skillService = NtRpgPlugin.GlobalScope.skillService;
+            SkillService skillService = NtRpgPlugin.GlobalScope.skillService;
 
             int i = 0;
             int j = 2;

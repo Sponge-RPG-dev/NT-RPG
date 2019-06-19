@@ -1,12 +1,14 @@
 package cz.neumimto.rpg.sponge.commands.admin;
 
+import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.api.logging.Log.warn;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.skills.ISkillService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.common.scripting.JSLoader;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
@@ -24,9 +26,6 @@ import org.spongepowered.api.text.Text;
 
 import java.util.*;
 
-import static cz.neumimto.rpg.api.logging.Log.info;
-import static cz.neumimto.rpg.api.logging.Log.warn;
-
 public class ReloadExecutor implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
@@ -42,7 +41,7 @@ public class ReloadExecutor implements CommandExecutor {
                 if (q.equalsIgnoreCase("skills") || q.equalsIgnoreCase("s")) {
                     jsLoader.reloadSkills();
                     SpongeCharacterServise build = NtRpgPlugin.GlobalScope.characterService;
-                    ISkillService skillService = NtRpgPlugin.GlobalScope.skillService;
+                    SkillService skillService = NtRpgPlugin.GlobalScope.skillService;
                     build.getCharacters()
                             .stream()
                             .forEach(qw -> {
