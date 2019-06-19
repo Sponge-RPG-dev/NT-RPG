@@ -20,11 +20,8 @@ package cz.neumimto.effects.positive;
 
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.effects.Generate;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.effects.IGlobalEffect;
+import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
-import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
@@ -53,53 +50,53 @@ import org.spongepowered.api.world.World;
  * Global effect can work as item enchantments, and be accessible from commands
  */
 @Generate(id = "name", inject = true, description = "An effect which increases target walk speed")
-public class SpeedBoost extends SpongeEffectBase {
+public class SpeedBoost extends EffectBase {
 
-	public static final String name = "Speed";
+    public static final String name = "Speed";
 
-	public static IGlobalEffect<SpeedBoost> global;
+    public static IGlobalEffect<SpeedBoost> global;
 
-	private float speedbonus;
+    private float speedbonus;
 
-	public SpeedBoost(IEffectConsumer consumer, long duration, float speedbonus) {
-		super(name, consumer);
-		this.speedbonus = speedbonus;
-		setDuration(duration);
-	}
+    public SpeedBoost(IEffectConsumer consumer, long duration, float speedbonus) {
+        super(name, consumer);
+        this.speedbonus = speedbonus;
+        setDuration(duration);
+    }
 
-	@Override
-	public String getName() {
-		return name;
-	}
+    @Override
+    public String getName() {
+        return name;
+    }
 
-	@Override
-	public void onApply(IEffect self) {
-		super.onApply(self);
-		getConsumer().setProperty(SpongeDefaultProperties.walk_speed, getConsumer().getProperty(SpongeDefaultProperties.walk_speed) + speedbonus);
-		ISpongeEntity consumer = (ISpongeEntity) getConsumer();
-		Rpg.get().getEntityService().updateWalkSpeed(consumer);
-		Location<World> location = consumer.getLocation();
+    @Override
+    public void onApply(IEffect self) {
+        super.onApply(self);
+        getConsumer().setProperty(SpongeDefaultProperties.walk_speed, getConsumer().getProperty(SpongeDefaultProperties.walk_speed) + speedbonus);
+        ISpongeEntity consumer = (ISpongeEntity) getConsumer();
+        Rpg.get().getEntityService().updateWalkSpeed(consumer);
+        Location<World> location = consumer.getLocation();
 
-		ParticleEffect build = ParticleEffect.builder()
-				.type(ParticleTypes.CLOUD)
-				.velocity(new Vector3d(0, 0.8, 0))
-				.quantity(2).build();
-		for (Vector3d vector3d : ParticleDecorator.smallCircle) {
-			location.getExtent().spawnParticles(build, location.getPosition().add(vector3d));
-		}
-	}
+        ParticleEffect build = ParticleEffect.builder()
+                .type(ParticleTypes.CLOUD)
+                .velocity(new Vector3d(0, 0.8, 0))
+                .quantity(2).build();
+        for (Vector3d vector3d : ParticleDecorator.smallCircle) {
+            location.getExtent().spawnParticles(build, location.getPosition().add(vector3d));
+        }
+    }
 
-	@Override
-	public void onRemove(IEffect self) {
-		super.onRemove(self);
-		getConsumer().setProperty(SpongeDefaultProperties.walk_speed,
-				Rpg.get().getEntityService().getEntityProperty(getConsumer(), SpongeDefaultProperties.walk_speed) - speedbonus);
-		Rpg.get().getEntityService().updateWalkSpeed((ISpongeEntity)getConsumer());
-	}
+    @Override
+    public void onRemove(IEffect self) {
+        super.onRemove(self);
+        getConsumer().setProperty(SpongeDefaultProperties.walk_speed,
+                Rpg.get().getEntityService().getEntityProperty(getConsumer(), SpongeDefaultProperties.walk_speed) - speedbonus);
+        Rpg.get().getEntityService().updateWalkSpeed((ISpongeEntity) getConsumer());
+    }
 
-	@Override
-	public boolean requiresRegister() {
-		return true;
-	}
+    @Override
+    public boolean requiresRegister() {
+        return true;
+    }
 
 }

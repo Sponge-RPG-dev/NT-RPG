@@ -1,11 +1,8 @@
 package cz.neumimto.rpg.sponge.effects.common.mechanics;
 
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
-import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import org.spongepowered.api.effect.potion.PotionEffect;
 
@@ -17,7 +14,7 @@ import java.util.Set;
  * Created by NeumimTo on 12.8.2017.
  */
 @JsBinding(JsBinding.Type.CLASS)
-public abstract class RPGPotionEffect extends SpongeEffectBase<Long> implements IEffectContainer<Long, RPGPotionEffect> {
+public abstract class RPGPotionEffect extends EffectBase<Long> implements IEffectContainer<Long, RPGPotionEffect> {
 
     private Set<PotionEffect> potions;
 
@@ -33,14 +30,14 @@ public abstract class RPGPotionEffect extends SpongeEffectBase<Long> implements 
     @Override
     public void onApply(IEffect self) {
         for (PotionEffect potion : potions) {
-            ((ISpongeEntity)getConsumer()).addPotionEffect(potion);
+            ((ISpongeEntity) getConsumer()).addPotionEffect(potion);
         }
     }
 
     @Override
     public void onRemove(IEffect self) {
         for (PotionEffect potion : potions) {
-            ((ISpongeEntity)getConsumer()).removePotionEffect(potion.getType());
+            ((ISpongeEntity) getConsumer()).removePotionEffect(potion.getType());
         }
     }
 

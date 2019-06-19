@@ -1,29 +1,25 @@
 package cz.neumimto.rpg.sponge.effects.common.def;
 
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.effects.Generate;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.effects.IEffectContainer;
+import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
-
 /**
  * Created by NeumimTo on 28.8.2017.
  */
 @Generate(id = "name", description = "A component which enables click-combos")
-public class ClickComboActionComponent extends SpongeEffectBase implements IEffectContainer {
+public class ClickComboActionComponent extends EffectBase implements IEffectContainer {
 
     public static final String name = "ClickCombos";
 

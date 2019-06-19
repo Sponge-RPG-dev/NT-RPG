@@ -2,11 +2,11 @@ package cz.neumimto.effects.positive;
 
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
+import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
-import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.property.entity.EyeLocationProperty;
@@ -22,7 +22,7 @@ import java.util.*;
 
 @JsBinding(JsBinding.Type.CLASS)
 @Generate(id = "name", description = "Builds a tempoar wall of dirt")
-public class FissureEffect extends SpongeEffectBase<Integer> {
+public class FissureEffect extends EffectBase<Integer> {
 
     public static Set<UUID> animatedBlocks = new HashSet<>();
     public static String name = "Fissure";
@@ -31,8 +31,8 @@ public class FissureEffect extends SpongeEffectBase<Integer> {
     private Vector3d position;
     private Iterator<BlockRayHit<World>> iterator;
 
-    private static Vector3d velocity1 = new Vector3d(0,-2,0);
-    private static Vector3d velocity2 = new Vector3d(0,2,0);
+    private static Vector3d velocity1 = new Vector3d(0, -2, 0);
+    private static Vector3d velocity2 = new Vector3d(0, 2, 0);
 
     public FissureEffect(IEffectConsumer character, long duration, int range) {
         super(name, character);
@@ -41,12 +41,12 @@ public class FissureEffect extends SpongeEffectBase<Integer> {
         setDuration(duration);
         setPeriod(125);
 
-        Living entity = ((ISpongeEntity)character).getEntity();
+        Living entity = ((ISpongeEntity) character).getEntity();
         Vector3d r = entity.getRotation();
         direction = Quaterniond.fromAxesAnglesDeg(r.getX(), -r.getY(), r.getZ()).getDirection();
         direction = new Vector3d(direction.getX(), 0, direction.getZ());
         Optional<EyeLocationProperty> data = entity.getProperty(EyeLocationProperty.class);
-        position = data.map(EyeLocationProperty::getValue).orElse(entity.getLocation().getPosition()).add(0,-1,0);
+        position = data.map(EyeLocationProperty::getValue).orElse(entity.getLocation().getPosition()).add(0, -1, 0);
 
         iterator = BlockRay.from(entity.getLocation().getExtent(), position)
                 .narrowPhase(false)
@@ -65,7 +65,7 @@ public class FissureEffect extends SpongeEffectBase<Integer> {
 
             Entity block = world.createEntity(EntityTypes.FALLING_BLOCK, next.getBlockPosition());
             block.offer(Keys.VELOCITY, velocity1);
-            block.offer(Keys.FALLING_BLOCK_STATE, world.getBlock(next.getBlockPosition().add(0,-1,0)));
+            block.offer(Keys.FALLING_BLOCK_STATE, world.getBlock(next.getBlockPosition().add(0, -1, 0)));
             world.spawnEntity(block);
         }
     }

@@ -19,10 +19,7 @@
 package cz.neumimto.rpg.common.effects.core;
 
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.effects.EffectBase;
-import cz.neumimto.rpg.api.effects.EffectStatusType;
-import cz.neumimto.rpg.api.effects.Generate;
-import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -48,12 +45,7 @@ public class DefaultManaRegeneration extends EffectBase {
         setApplyMessage(apply);
         setExpireMessage(remove);
         setDuration(-1);
-        effectTypes.add(CoreEffectTypes.MANA_REGEN);
-    }
-
-    @Override
-    public void setConsumer(IEffectConsumer consumer) {
-        this.character = (IActiveCharacter) consumer;
+        addEffectType(CoreEffectTypes.MANA_REGEN);
     }
 
     @Override

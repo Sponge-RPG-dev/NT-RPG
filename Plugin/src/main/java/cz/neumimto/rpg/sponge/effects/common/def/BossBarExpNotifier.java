@@ -1,15 +1,12 @@
 package cz.neumimto.rpg.sponge.effects.common.def;
 
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.common.effects.CoreEffectTypes;
-import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
@@ -28,7 +25,7 @@ import java.util.*;
 /**
  * Created by NeumimTo on 25.6.2016.
  */
-public class BossBarExpNotifier extends SpongeEffectBase<Object> implements IEffectContainer<Object, BossBarExpNotifier> {
+public class BossBarExpNotifier extends EffectBase<Object> implements IEffectContainer<Object, BossBarExpNotifier> {
 
     public static final String name = "BossBarExp";
     private Map<String, SessionWrapper> bossBarMap = new HashMap<>();

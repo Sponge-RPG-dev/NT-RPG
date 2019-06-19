@@ -219,7 +219,7 @@ public abstract class EffectService {
         } else {
 
         }
-        effect.setConsumer(null);
+        //effect.setConsumer(null);
     }
 
     /**

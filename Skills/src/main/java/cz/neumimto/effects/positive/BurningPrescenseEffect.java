@@ -2,16 +2,12 @@ package cz.neumimto.effects.positive;
 
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.model.BPModel;
-import cz.neumimto.rpg.api.effects.EffectContainer;
-import cz.neumimto.rpg.api.effects.Generate;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.effects.IEffectContainer;
+import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
-import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
@@ -28,7 +24,7 @@ import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
  */
 @JsBinding(JsBinding.Type.CLASS)
 @Generate(id = "name", description = "An effect which periodically damages all enemies around the target")
-public class BurningPrescenseEffect extends SpongeEffectBase<BPModel> {
+public class BurningPrescenseEffect extends EffectBase<BPModel> {
 
     public static final String name = "Burning Prescense";
     public static ParticleEffect CASTER_EFFECT = ParticleEffect.builder()
@@ -53,7 +49,7 @@ public class BurningPrescenseEffect extends SpongeEffectBase<BPModel> {
 
     @Override
     public void onTick(IEffect self) {
-        Living entity = ((ISpongeEntity)getConsumer()).getEntity();
+        Living entity = ((ISpongeEntity) getConsumer()).getEntity();
         entity.getLocation().getExtent().spawnParticles(CASTER_EFFECT, entity.getLocation().getPosition());
         float radius = getValue().radius;
         if (radius > 0) {

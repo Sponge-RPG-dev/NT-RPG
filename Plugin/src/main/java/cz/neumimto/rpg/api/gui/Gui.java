@@ -31,7 +31,6 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.inventory.crafting.runewords.RuneWord;
-import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 
 import java.util.List;
 
@@ -42,12 +41,12 @@ import java.util.List;
 @Singleton
 public class Gui {
 
-    public static VanillaMessaging vanilla;
+    public static IPlayerMessage vanilla;
 
     public static IPlayerMessage mod;
 
     @Inject
-    public Gui(VanillaMessaging vanilla) {
+    public Gui(IPlayerMessage vanilla) {
         Gui.vanilla = vanilla;
     }
 

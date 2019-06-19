@@ -1,10 +1,10 @@
 package cz.neumimto.effects.positive;
 
 import cz.neumimto.EffectLocalization;
+import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
-import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 
 import java.util.Collections;
 import java.util.Set;
@@ -13,40 +13,39 @@ import java.util.Set;
  * Created by NeumimTo on 6.2.2016.
  */
 @JsBinding(JsBinding.Type.CLASS)
-public class SoulBindEffect extends SpongeEffectBase implements IEffectContainer {
+public class SoulBindEffect extends EffectBase implements IEffectContainer {
 
-	private final IEffectConsumer target;
+    private final IEffectConsumer target;
 
-	public SoulBindEffect(IEffectConsumer caster, IEffectConsumer target) {
-		super("souldbind",caster);
-		this.target = target;
-		setConsumer(caster);
-		setExpireMessage(EffectLocalization.SOULBIND_EXPIRE);
-	}
+    public SoulBindEffect(IEffectConsumer caster, IEffectConsumer target) {
+        super("souldbind", caster);
+        this.target = target;
+        setExpireMessage(EffectLocalization.SOULBIND_EXPIRE);
+    }
 
-	public IEffectConsumer getTarget() {
-		return target;
-	}
+    public IEffectConsumer getTarget() {
+        return target;
+    }
 
 
-	@Override
-	public Set<SoulBindEffect> getEffects() {
-		return Collections.singleton(this);
-	}
+    @Override
+    public Set<SoulBindEffect> getEffects() {
+        return Collections.singleton(this);
+    }
 
-	@Override
-	public Object getStackedValue() {
-		return null;
-	}
+    @Override
+    public Object getStackedValue() {
+        return null;
+    }
 
-	@Override
-	public void setStackedValue(Object o) {
+    @Override
+    public void setStackedValue(Object o) {
 
-	}
+    }
 
-	@Override
-	public SoulBindEffect constructEffectContainer() {
-		return this;
-	}
+    @Override
+    public SoulBindEffect constructEffectContainer() {
+        return this;
+    }
 
 }

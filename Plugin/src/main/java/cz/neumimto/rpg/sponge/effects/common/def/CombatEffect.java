@@ -1,20 +1,18 @@
 package cz.neumimto.rpg.sponge.effects.common.def;
 
-import cz.neumimto.rpg.common.effects.CoreEffectTypes;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
+import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
+import cz.neumimto.rpg.common.effects.CoreEffectTypes;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
 
 import java.lang.ref.WeakReference;
-
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 10.10.2015.
  */
 
-public class CombatEffect extends SpongeEffectBase {
+public class CombatEffect extends EffectBase {
 
     public static final String name = "CombatTimer";
     private IActiveCharacter character;

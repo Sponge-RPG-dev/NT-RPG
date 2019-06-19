@@ -26,12 +26,14 @@ import java.util.Set;
 /**
  * Created by NeumimTo.
  */
-public abstract class EffectBase<Value> implements IEffect<Value> {
+public abstract class EffectBase<VALUE> implements IEffect<VALUE> {
 
     protected Set<EffectType> effectTypes = new HashSet<>();
     private boolean stackable = false;
 
     private String name;
+
+    private IEffectConsumer consumer;
 
     private long duration = -1;
     private long period = -1;
@@ -43,27 +45,28 @@ public abstract class EffectBase<Value> implements IEffect<Value> {
 
     private IEffectSourceProvider effectSourceProvider;
 
-    private Value value;
+    private VALUE value;
 
-    private EffectStackingStrategy<Value> effectStackingStrategy;
+    private EffectStackingStrategy<VALUE> effectStackingStrategy;
 
-    private IEffectContainer<Value, IEffect<Value>> container;
+    private IEffectContainer<VALUE, IEffect<VALUE>> container;
 
     private boolean tickingDisabled = false;
-
-    public EffectBase(String name, IEffectConsumer consumer) {
-        this();
-        this.name = name;
-        setConsumer(consumer);
-    }
 
     public EffectBase() {
         timeCreated = System.currentTimeMillis();
     }
 
-    @Override
-    public boolean requiresRegister() {
-        return getDuration() >= 0 || getPeriod() >= 0;
+    public EffectBase(String name, IEffectConsumer consumer) {
+        this.name = name;
+        this.consumer = consumer;
+    }
+
+    public void init(IEffectConsumer consumer, String name, long duration, long period) {
+        this.name = name;
+        this.consumer = consumer;
+        this.setPeriod(period);
+        this.setDuration(duration);
     }
 
     @Override
@@ -72,12 +75,22 @@ public abstract class EffectBase<Value> implements IEffect<Value> {
     }
 
     @Override
+    public IEffectConsumer getConsumer() {
+        return consumer;
+    }
+
+    @Override
+    public boolean requiresRegister() {
+        return getDuration() >= 0 || getPeriod() >= 0;
+    }
+
+    @Override
     public boolean isStackable() {
         return stackable;
     }
 
     @Override
-    public void setStackable(boolean b, EffectStackingStrategy<Value> stackingStrategy) {
+    public void setStackable(boolean b, EffectStackingStrategy<VALUE> stackingStrategy) {
         this.stackable = b;
         setEffectStackingStrategy(stackingStrategy);
     }
@@ -142,8 +155,8 @@ public abstract class EffectBase<Value> implements IEffect<Value> {
         return effectTypes;
     }
 
-    public void setEffectTypes(Set<EffectType> effectTypes) {
-        this.effectTypes = effectTypes;
+    protected void addEffectType(EffectType e) {
+        effectTypes.add(e);
     }
 
     @Override
@@ -157,40 +170,33 @@ public abstract class EffectBase<Value> implements IEffect<Value> {
     }
 
     @Override
-    public Value getValue() {
+    public VALUE getValue() {
         return value;
     }
 
     @Override
-    public void setValue(Value o) {
+    public void setValue(VALUE o) {
         this.value = o;
     }
 
     @Override
-    public EffectStackingStrategy<Value> getEffectStackingStrategy() {
+    public EffectStackingStrategy<VALUE> getEffectStackingStrategy() {
         return effectStackingStrategy;
     }
 
     @Override
-    public void setEffectStackingStrategy(EffectStackingStrategy<Value> effectStackingStrategy) {
+    public void setEffectStackingStrategy(EffectStackingStrategy<VALUE> effectStackingStrategy) {
         this.effectStackingStrategy = effectStackingStrategy;
     }
 
     @Override
-    public IEffectContainer<Value, IEffect<Value>> getEffectContainer() {
+    public IEffectContainer<VALUE, IEffect<VALUE>> getEffectContainer() {
         return container;
     }
 
     @Override
-    public void setEffectContainer(IEffectContainer<Value, IEffect<Value>> iEffectContainer) {
+    public void setEffectContainer(IEffectContainer<VALUE, IEffect<VALUE>> iEffectContainer) {
         this.container = iEffectContainer;
-    }
-
-    protected void addEffectType(EffectType e) {
-        if (effectTypes == null) {
-            effectTypes = new HashSet<>();
-        }
-        effectTypes.add(e);
     }
 
     @Override
@@ -201,13 +207,6 @@ public abstract class EffectBase<Value> implements IEffect<Value> {
     @Override
     public void setTickingDisabled(boolean tickingDisabled) {
         this.tickingDisabled = tickingDisabled;
-    }
-
-    public void init(IEffectConsumer consumer, String name, long duration, long period) {
-        this.setConsumer(consumer);
-        this.name = name;
-        this.setPeriod(period);
-        this.setDuration(duration);
     }
 
 }

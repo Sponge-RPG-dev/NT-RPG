@@ -1,27 +1,21 @@
 package cz.neumimto.rpg.sponge.effects.common.mechanics;
 
 
-import cz.neumimto.rpg.api.effects.Generate;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.effects.IEffectContainer;
+import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.utils.MathUtils;
-import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.text.format.TextColors;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 26.4.17.
  */
 @Generate(id = "name", description = "A component which will be displaying cooldowns in the action bar")
-public class CooldownObserver extends SpongeEffectBase implements IEffectContainer {
+public class CooldownObserver extends EffectBase implements IEffectContainer {
 
     public static final String name = "CooldownObserver";
 

@@ -1,10 +1,7 @@
 package cz.neumimto.effects.positive;
 
-import cz.neumimto.rpg.api.effects.Generate;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.effects.IEffectContainer;
+import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
-import cz.neumimto.rpg.sponge.effects.SpongeEffectBase;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.Living;
@@ -17,44 +14,44 @@ import java.util.Set;
  */
 
 @Generate(id = "name", description = "An effect which makes the target invisible (Not by potion effect but by packets")
-public class Invisibility extends SpongeEffectBase implements IEffectContainer {
+public class Invisibility extends EffectBase implements IEffectContainer {
 
-	public static String name = "Invisibility";
+    public static String name = "Invisibility";
 
-	public Invisibility(IEffectConsumer consumer, long duration) {
-		super(name, consumer);
-		setDuration(duration);
-	}
+    public Invisibility(IEffectConsumer consumer, long duration) {
+        super(name, consumer);
+        setDuration(duration);
+    }
 
-	@Override
-	public void onApply(IEffect self) {
-		Living entity = ((ISpongeEntity)getConsumer()).getEntity();
-		entity.offer(Keys.VANISH, true);
-	}
+    @Override
+    public void onApply(IEffect self) {
+        Living entity = ((ISpongeEntity) getConsumer()).getEntity();
+        entity.offer(Keys.VANISH, true);
+    }
 
-	@Override
-	public void onRemove(IEffect self) {
-		Living entity = ((ISpongeEntity)getConsumer()).getEntity();
-		entity.offer(Keys.VANISH, false);
-	}
+    @Override
+    public void onRemove(IEffect self) {
+        Living entity = ((ISpongeEntity) getConsumer()).getEntity();
+        entity.offer(Keys.VANISH, false);
+    }
 
-	@Override
-	public IEffectContainer constructEffectContainer() {
-		return this;
-	}
+    @Override
+    public IEffectContainer constructEffectContainer() {
+        return this;
+    }
 
-	@Override
-	public Set<Invisibility> getEffects() {
-		return Collections.singleton(this);
-	}
+    @Override
+    public Set<Invisibility> getEffects() {
+        return Collections.singleton(this);
+    }
 
-	@Override
-	public Object getStackedValue() {
-		return null;
-	}
+    @Override
+    public Object getStackedValue() {
+        return null;
+    }
 
-	@Override
-	public void setStackedValue(Object o) {
+    @Override
+    public void setStackedValue(Object o) {
 
-	}
+    }
 }
